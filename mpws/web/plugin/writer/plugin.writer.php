@@ -385,9 +385,20 @@ class pluginWriter {
     private function _displayQueueDefault ($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         libraryRequest::storeOrGetRefererUrl();
-        $model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['ORDERS'], $toolbox->getDatabaseObj(), 'Status = "NEW"');
-        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.datatable'];
+        //$model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['ORDERS'], $toolbox->getDatabaseObj(), 'Status = "NEW"');
         
+        $statuses = array('OPEN', 'REJECTED', 'PENDING');
+        foreach ($statuses as $stat) {
+            $model['PLUGINS']['WRITER']['DATA_TASKS'][$stat] = $toolbox->getDatabaseObj()
+                    ->reset()
+                    ->select('*')
+                    ->from('writer_orders')
+                    ->where('WriterID', '=', '0')
+                    ->orWhere('InternalStatus', '=', '"'.$stat.'"')
+                    ->query();
+        }
+
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.datatable'];
     }
     
     private function _displayStatisticDefault ($toolbox, $plugin) {
