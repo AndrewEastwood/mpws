@@ -1,0 +1,74 @@
+<div class="MPWSContentDisplay">
+    <b>Preview New Writer</b>
+    <form action="?display=writers&action=<?=$model['PLUGINS']['WRITER']['action'];?>&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm MPWSFormPreview">
+
+        <div class="MPWSFormFields">
+
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Name:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['Name'];?>&nbsp;</span>
+            <input type="hidden" name="writer_name" value="<?=$model['PLUGINS']['WRITER']['data']['Name'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Login:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['Login'];?>&nbsp;</span>
+            <input type="hidden" name="writer_login" value="<?=$model['PLUGINS']['WRITER']['data']['Login'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <?php if($model['PLUGINS']['WRITER']['action'] === 'create') : ?>
+            <label for="MPWSField_WriterPasswordID" class="MPWSFieldLabel">Password:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['Password'];?>&nbsp;</span>
+            <input type="hidden" name="writer_password" value="<?=$model['PLUGINS']['WRITER']['data']['Password'];?>">
+            <div class="MPWSSeparator"></div>
+            <?php endif ?>
+
+            <label for="MPWSField_WriterSubjectsID" class="MPWSFieldLabel">Subjects:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['Subjects'];?>&nbsp;</span>
+            <input type="hidden" name="writer_subjects" value="<?=$model['PLUGINS']['WRITER']['data']['Subjects'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterCardNumberID" class="MPWSFieldLabel">Card Number:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['CardNumber'];?>&nbsp;</span>
+            <input type="hidden" name="writer_cardnumber" value="<?=$model['PLUGINS']['WRITER']['data']['CardNumber'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterUniversityID" class="MPWSFieldLabel">University:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['University'];?>&nbsp;</span>
+            <input type="hidden" name="writer_university" value="<?=$model['PLUGINS']['WRITER']['data']['University'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEmailID" class="MPWSFieldLabel">Email:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['Email'];?>&nbsp;</span>
+            <input type="hidden" name="writer_email" value="<?=$model['PLUGINS']['WRITER']['data']['Email'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterIMID" class="MPWSFieldLabel">IM:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['IM'];?>&nbsp;</span>
+            <input type="hidden" name="writer_im" value="<?=$model['PLUGINS']['WRITER']['data']['IM'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone:</label>
+            <span><?=$model['PLUGINS']['WRITER']['data']['Phone'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Enabled:</label>
+            <span><?=empty($model['PLUGINS']['WRITER']['data']['Active'])?'No':'Yes';?></span>
+            <input type="hidden" name="writer_phone" value="<?=$model['PLUGINS']['WRITER']['data']['Phone'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <input type="hidden" name="writer_active" value="<?=$model['PLUGINS']['WRITER']['data']['Active'];?>">
+        </div>
+
+        <p class="MPWSAdditionalActions">
+            <input type="checkbox" name="writer_notify" id="MPWSField_WriterNotifyID" class="MPWSCheckbox" <?=empty($_POST['writer_notify'])?'':'checked="checked"';?>/>
+            <label for="MPWSField_WriterNotifyID" class="MPWSFieldLabel">Send notification to writer on email.</label>
+        </p>
+
+        <hr size="2"/>
+        <input type="submit" name="do" value="Save"/>
+        <input type="submit" name="do" value="Edit"/>
+        <!--<input type="submit" name="do" value="Cancel"/>-->
+    </form>
+    <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+        <input type="submit" value="Back To Writers"/>
+    </form>
+</div>

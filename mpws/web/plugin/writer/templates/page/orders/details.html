@@ -1,0 +1,243 @@
+<div class="MPWSContentDisplay">
+    <h2>Order Details</h2>
+    
+    <h3>Student</h3>
+    <form action="?display=orders&action=details&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm MPWSFormDetails">
+        <div class="MPWSFormFields">
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Name:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Name'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Login:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Login'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEmailID" class="MPWSFieldLabel">Email:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Email'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Phone'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Enabled:</label>
+            <span class="MPWSValue"><?=empty($model['PLUGINS']['WRITER']['DATA_STUDENT']['Active'])?'No':'Yes';?></span>
+            <div class="MPWSSeparator"></div>
+        </div>
+    </form>  
+        
+    <hr size="2"/>
+    
+    <?php if (!empty($model['PLUGINS']['WRITER']['DATA_WRITER'])) : ?>
+        <h3>Assigned to Writer</h3>
+        <form action="?display=writers" method="POST" class="MPWSForm MPWSFormInfo">
+            <div class="MPWSFormFields">
+                <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Name:</label>
+                <span><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['Name'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+
+                <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Login:</label>
+                <span><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['Login'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+
+                <label for="MPWSField_WriterCardNumberID" class="MPWSFieldLabel">Card Number:</label>
+                <span><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['CardNumber'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+
+                <label for="MPWSField_WriterEmailID" class="MPWSFieldLabel">Email:</label>
+                <span><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['Email'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+
+                <label for="MPWSField_WriterIMID" class="MPWSFieldLabel">IM:</label>
+                <span><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['IM'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone:</label>
+                <span><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['Phone'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Online:</label>
+                <span><?=empty($model['PLUGINS']['WRITER']['DATA_WRITER']['IsOnline'])?'No':'Yes';?></span>
+                <div class="MPWSSeparator"></div>
+
+                <input type="hidden" name="writer_active" value="<?=$model['PLUGINS']['WRITER']['DATA']['Active'];?>">
+            </div>
+        </form>
+    <?php elseif ($model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED']) : ?>
+        <strong class="MPWSSystemMessage">This order is unassigned!</strong>
+    <?php endif ?>
+    
+    <form action="" method="POST" class="MPWSForm">
+        <label for="MPWSField_WriterTargetID" class="MPWSFieldLabel">Change Writer:</label>
+        <select name="assign_order_to">
+            <option value="0">Unassigned</option>
+            <?php
+                foreach ($model['PLUGINS']['WRITER']['TO_LIST'] as $option)
+                    echo '<option value="'.$option['ID'].'">' . $option['Name'] . '</option>';
+            ?>
+        </select>
+        <hr size="2"/>
+        <input type="submit" name="do" value="Assign To Writer"/>
+    </form>
+    
+    <h3>Order Information</h3>
+    <form action="" method="POST" class="MPWSForm MPWSFormDetails" name="order_details_form">
+        <div class="MPWSFormFields">
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Title:</label>
+            <span class="MPWSValue"><?=ucfirst($model['PLUGINS']['WRITER']['DATA']['Title']);?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Status:</label>
+            <span class="MPWSIcon MPWSIcon_<?=libraryView::getFrendlyClassName($model['PLUGINS']['WRITER']['DATA']['Status']);?>">&nbsp;</span>
+            <span class="MPWSValue">
+                <?=libraryView::getFrendlyClassName($model['PLUGINS']['WRITER']['DATA']['Status']);?>
+                &nbsp; | new status: 
+                <select name="set_order_status">
+                    <option value="NEW">New</option>
+                    <option value="IN PROGRESS">In Progress</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="CLOSED">Closed</option>
+                </select>
+            </span>
+            
+            <div class="MPWSSeparator"></div>
+            <h3>Dates And Deadline</h3>
+            
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['DateCreated'];?></span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['DateDeadline'];?></span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_PRICE']['Hours'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Weeks To Complete</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_PRICE']['Weeks'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <hr size="2"/>
+            <h3>Order Price</h3>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Type</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_PRICE']['Name'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Value</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_PRICE']['Price'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Academic Level</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Level'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Paper format</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Format'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Order Price</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Price'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <!--
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Discount:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Discount'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div -->
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total Pages:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Pages'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional notes:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Description'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <hr size="2"/>
+            <h3>Invoices</h3>
+            
+            <!-- Order Invoice -->
+            <?php if (empty($model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER'])) : ?>
+                <h4>This Order Is Unpaid! Please contact Buyer!</h4>
+            <?php else : ?>
+                <h4>Received Payment</h4>
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['total'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Credit Card Processed</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['credit_card_processed'];?></span>
+                <div class="MPWSSeparator"></div>
+            <?php endif ?>
+            <!-- Order Refund -->
+            <?php if (!empty($model['PLUGINS']['WRITER']['DATA_INVOICE_REFUND'])) : ?>
+                <h4>Refund Information</h4>
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_REFUND']['total'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Credit Card Processed</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_REFUND']['credit_card_processed'];?></span>
+                <div class="MPWSSeparator"></div>
+            <?php endif ?>
+            
+            
+            <hr size="2"/>
+            <h3>Writer Section</h3>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Writer Credits</label>
+            <span class="MPWSValue">
+                <input type="text" id="MPWSField_PriceNameID" class="MPWSTextBox" name="order_credits" value="<?=$model['PLUGINS']['WRITER']['DATA']['Credits'];?>" placeholder="Credits"/>
+            </span>
+            <div class="MPWSSeparator"></div>
+            
+            <hr size="2"/>
+            
+            <input type="submit" name="do" value="Save Order"/>
+        </div>
+    </form>
+    <hr size="2"/>
+    <div class="MPWSInlineForms">
+        <form action="" method="POST">
+            <input type="submit" value="Make Refund"/>
+        </form>
+        <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+            <input type="submit" value="Back To Orders"/>
+        </form>
+        <form action="?display=messages&action=send-to-order&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST">
+            <input type="submit" value="Leave Message"/>
+        </form>
+    </div>
+
+    
+    <h3>Messages</h3>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $entry) { ?>
+        <div class="MPWSSection MPWSSectionOrderMessages">
+            <div class="MPWSBlock MPWSBlockMessageState">
+                <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataState">
+                    Is new:
+                    <input type="checkbox" 
+                        name="message_notify" 
+                        id="MPWSControl_MessageMarkAsReadID" 
+                        class="MPWSCheckbox MPWSControl_MessageMarkAsRead" 
+                        mpws-action="mark_as_read"
+                        mpws-oid="<?=$entry['ID']?>"
+                        mpws-realm="<?=libraryRequest::getPage();?>"
+                        <?=$entry['IsUnread']?'checked="checked"':'';?>
+                    />
+                </span>
+            </div>
+            <div class="MPWSBlock MPWSBlockMessageBody">
+                <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataSubject"><?=$entry['Subject'];?></span>
+                <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataDateCreated"><?=$entry['DateCreated'];?></span>
+                <div class="MPWSSeparator"></div>
+                <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataMessages"><?=$entry['Message'];?></span>
+            </div>
+        </div>
+    <?php } ?>
+
+    <hr size="2"/>
+    <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+        <input type="submit" value="Back To Orders"/>
+    </form>
+</div>

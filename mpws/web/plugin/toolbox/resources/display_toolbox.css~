@@ -1,0 +1,131 @@
+/* TOOLBOX */
+body {background: #336699 url('toolbox_bg.jpg') repeat-x; color: #333;}
+
+h3 {color: #eee;}
+
+.MPWSPageToolbox {margin: 0px auto; width: 800px; background: #aaa; margin-top: 50px;}
+.MPWSPageToolbox a, .MPWSPageToolbox a:visited {color: #dedede; text-decoration: underline;}
+.MPWSPageToolbox a:hover {color: #fff; text-decoration: underline;}
+
+
+/* Div Table */
+.MPWSDivTable {overflow: hidden; zoom: 1; border: 1px solid #565656; padding: 3px 5px; background: #999;}
+    .MPWSDivTable .MPWSDivTableRow {overflow: hidden; zoom: 1; padding: 5px 0px;}
+    .MPWSDivTable .MPWSDivTableCell {float: left; width: 50px;}
+    .MPWSDivTable .MPWSDivTableRowHeader {border-bottom: 1px solid #eee;}
+    .MPWSDivTable .MPWSDivTableCellHeader {font-weight: bold;}
+    .MPWSDivTable .MPWSDivTableRowData {border-top: 1px solid #ddd;}
+    .MPWSDivTable .MPWSDivTableRowData:hover {background: #aaa;}
+    .MPWSDivTable .MPWSDivTableCellData {}
+    /* cell sizes */
+    .MPWSDivTable .MPWSDivTableCellSize0_5 {width: 25px;}
+    .MPWSDivTable .MPWSDivTableCellSize1_5 {width: 75px;}
+    .MPWSDivTable .MPWSDivTableCellSize2 {width: 100px;}
+    .MPWSDivTable .MPWSDivTableCellSize2_5 {width: 125px;}
+    .MPWSDivTable .MPWSDivTableCellSize3 {width: 150px;}
+    .MPWSDivTable .MPWSDivTableCellSize3_5 {width: 175px;}
+    .MPWSDivTable .MPWSDivTableCellSize4 {width: 200px;}
+    .MPWSDivTable .MPWSDivTableCellSize4_5 {width: 225px;}
+    .MPWSDivTable .MPWSDivTableCellSize5 {width: 250px;}
+    /* cell statements */
+    .MPWSDivTable .MPWSDivTableCellDataState_0 {background: url('icons/cross.png') no-repeat;}
+    .MPWSDivTable .MPWSDivTableCellDataState_1 {background: url('icons/tick.png') no-repeat;}
+
+/* Form */
+.MPWSForm {}
+    /* Form Edit */
+    .MPWSFormEdit {}
+    /* Form Preview */
+    .MPWSFormPreview {}
+
+/* Additional Submission Controls */
+.MPWSForm .MPWSAdditionalActions {border: 1px solid #888; background: #aaa; margin: 5px 0; padding: 10px;}
+    .MPWSForm .MPWSAdditionalActions .MPWSFieldLabel {float: none; width: auto; vertical-align: middle;}
+    .MPWSForm .MPWSAdditionalActions .MPWSCheckbox {vertical-align: middle; margin: 0px; width: 13px; height: 13px;}
+
+/* Components */
+
+
+/* Pagination */
+.MPWSComponentPagination {}
+    .MPWSComponentPagination .MPWSComponentSummary {background: #777;padding: 10px;font-size: 11px; border-left: 1px solid #565656; border-right: 1px solid #565656;}
+    .MPWSComponentPagination .MPWSComponentSummaryRow {}
+        .MPWSComponentPagination .MPWSComponentSummaryRow label {float: left; width: 130px;}
+        .MPWSComponentPagination .MPWSComponentSummaryRow .MPWSValue {}
+    .MPWSComponentPaginationBody {border: 1px solid #565656; padding: 10px; overflow: hidden; zoom: 1;}
+        .MPWSComponentPaginationBody .MPWSPaginationEdgeLinks {float: left; border-right: 2px solid #565656; margin-right: 10px;}
+        .MPWSComponentPaginationBody .MPWSPaginationPageLinks {}
+        .MPWSComponentPaginationBody a.MPWSPaginationLink {display: block; float: left; border: 1px solid #555; padding: 3px 7px; margin: 0px 10px 0px 0px; background: #999; text-decoration: none;}
+        .MPWSComponentPaginationBody a.MPWSPaginationLink:hover {background: #aaa; text-decoration: none;}
+        .MPWSComponentPaginationBody a.MPWSPaginationLinkCurrent {background: #ccc; color: #333; text-decoration: none;}
+
+/* SearchBox */
+.MPWSComponentSearchBox {}
+    .MPWSComponentSearchBox .MPWSFormSearchBox {margin: 0px; background: #777; padding: 10px; font-size: 11px; border-style: solid; border-color: #565656; border-width: 1px 1px 0px 1px;}
+    .MPWSComponentSearchBox .MPWSComponentSummary {background: #777;padding: 10px;font-size: 11px; border-left: 1px solid #565656; border-right: 1px solid #565656;}
+
+
+/* Custom Status */
+.MPWSDivTableCellDataState_New {background: url('icons/new.png') no-repeat;}
+.MPWSDivTableCellDataState_InProgress {background: url('icons/status.png') no-repeat;}
+.MPWSDivTableCellDataState_Pending {background: url('icons/clock.png') no-repeat;}
+.MPWSDivTableCellDataState_Closed {background: url('icons/tick.png') no-repeat;}
+
+
+/* custom sections */
+.MPWSDivTableRowDataOrderMessages {margin: 0px 0px 10px 0px; background: #aaa; padding: 10px; border: 1px dotted #eee;}
+    .MPWSDivTableRowDataOrderMessages .MPWSDivTableCellDataSubject {float: left; font-weight: bold;}
+    .MPWSDivTableRowDataOrderMessages .MPWSDivTableCellDataDateCreated {float: right;}
+    .MPWSDivTableRowDataOrderMessages .MPWSDivTableCellDataMessages {}
+    .MPWSDivTableRowDataOrderMessages .MPWSSeparator {height: 5px; clear: left;}
+
+
+/* layout */
+
+
+.MPWSWrapperLayoutToolbox {
+   border: 1px solid rgba(0,0,0,0.5);
+   border-radius: 0px 0px 0px 0px;
+   background: rgba(0,0,0,0.25);
+   box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+   -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+   -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+   -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+}
+
+.MPWSLayoutToolbox {
+    padding: 20px;
+    overflow: hidden;
+    zoom: 1;
+}
+
+.MPWSContentDisplay {
+    background: #aaa;
+    border-radius: 10px;
+    border: 1px solid #777;
+    padding: 5px 15px 15px;
+    box-shadow: 0px 0px 10px #eee;
+}
+
+.MPWSComponent {}
+
+.MPWSComponentMenu {float: left; width: 200px; margin-top: 20px;}
+.MPWSComponentMenu ul {margin: 0px; padding: 0px 0px 10px 10px; list-style: none; line-height: 1.5em;}
+.MPWSComponentMenu ul li {}
+.MPWSComponentMenu ul li a {font-size: 14px; font-weight: bold;}
+.MPWSComponentMenu ul li ul li a {font-size: 12px; font-weight: normal;}
+
+.MPWSComponentContent {margin-top: 20px;}
+.MPWSComponentContent .MPWSContentDisplay {margin-left: 220px;}
+    .MPWSComponentContent .MPWSContentDisplayLogin {margin-left: 0px;}
+
+
+
+.MPWSForm {overflow: hidden; zoom: 1; background: #999; padding: 10px; border: 1px dotted #eee; margin: 0px 0px 10px 0px;}
+.MPWSForm .MPWSFieldLabel {float: left; width: 200px;}
+.MPWSForm .MPWSFormFields {overflow: hidden; zoom: 1;}
+
+.MPWSTableAction {margin: 10px 0px;}
+
+a.MPWSLinkButton {border: 1px solid #565656; padding: 3px 5px; background: #999; color: #eee; text-decoration: none;}
+    a.MPWSLinkButton:hover {background: #adadad; text-decoration: none;}

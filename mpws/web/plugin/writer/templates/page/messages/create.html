@@ -1,0 +1,60 @@
+<div class="MPWSContentDisplay">
+    <h2>Send a New Message</h2>
+    <?php
+        if(count($model['PLUGINS']['WRITER']['messages'])) {
+            echo '<b>We\'ve found some errors in the fileds below:</b>';
+            echo '<ul>';
+            foreach ($model['PLUGINS']['WRITER']['messages'] as $msg)
+                echo '<li>' . $msg . '</li>';
+            echo '</ul>';
+        }
+    ?>
+    <form action="?display=messages&action=<?=$model['PLUGINS']['WRITER']['action'];?>" method="POST" class="MPWSForm">
+
+        <div class="MPWSFormFields">
+
+            <label for="MPWSField_WriterFromID" class="MPWSFieldLabel">From:</label>
+            <span>Webmaster</span>
+            <div class="MPWSSeparator"></div>
+
+            <?php
+                if(count($model['PLUGINS']['WRITER']['TO_LIST'])) {
+                    echo '<label for="MPWSField_WriterTargetID" class="MPWSFieldLabel">To:</label>';
+                    echo '<select name="messages_to">';
+                    foreach ($model['PLUGINS']['WRITER']['TO_LIST'] as $option)
+                        if (
+                                !empty($model['PLUGINS']['WRITER']['DATA']['To']) && 
+                                $model['PLUGINS']['WRITER']['DATA']['To'] == $option['ID'] || 
+                                !empty($model['PLUGINS']['WRITER']['oid']) && 
+                                $model['PLUGINS']['WRITER']['oid'] == $option['ID']
+                            )
+                            echo '<option value="'.$option['ID'].'" selected="selected">' . $option['Name'] . '</option>';
+                        else
+                            echo '<option value="'.$option['ID'].'">' . $option['Name'] . '</option>';
+                    echo '</select>';
+                    echo '<div class="MPWSSeparator"></div>';
+                }
+            ?>
+
+            <label for="MPWSField_WriterSubjectID" class="MPWSFieldLabel">Subject:</label>
+            <input type="text" id="MPWSField_WriterSubjectID" class="MPWSTextBox" name="messages_subject" value="<?=$model['PLUGINS']['WRITER']['DATA']['Subject'];?>" placeholder="Subjects"/>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterMessageID" class="MPWSFieldLabel">Message:</label>
+            <textarea id="MPWSField_WriterMessageID" cols="30" rows="8" class="MPWSTextBox" name="messages_message"><?=$model['PLUGINS']['WRITER']['DATA']['Message'];?></textarea>
+            <div class="MPWSSeparator"></div>
+        </div>
+
+        <p class="MPWSAdditionalActions">
+            <input type="checkbox" name="message_notify" id="MPWSField_WriterNotifyID" class="MPWSCheckbox" <?=empty($_POST['message_notify'])?'':'checked="checked"';?>/>
+            <label for="MPWSField_WriterNotifyID" class="MPWSFieldLabel">Send copy to recipient on email.</label>
+        </p>
+
+        <hr size="2"/>
+        <input type="submit" name="do" value="Send"/>
+        <input type="submit" name="do" value="Preview"/>
+        <!--<input type="submit" name="do" value="Cancel"/>-->
+    </form>
+    <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+        <input type="submit" value="Back To Messages"/>
+    </form>
+</div>

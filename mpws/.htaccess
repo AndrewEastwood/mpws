@@ -1,0 +1,55 @@
+Options +FollowSymLinks
+RewriteEngine on
+RewriteBase /
+
+#######################
+######## COMMON #######
+#######################
+
+#ErrorDocument 404 /engine/dispatcher/dispatcher.Public.php?page=404&action=default
+
+# Static Resources
+# css and javascript
+# ---
+RewriteRule static/(mpws|toolbox)([A-Za-z]+).(css|js)?(.*) /engine/dispatcher/dispatcher.Static.php?request=text&action=default&realm=$1&name=$2&type=$3$4 [QSA]
+# ---
+RewriteRule static/icons/([A-Za-z0-9_-]+).(gif|png|jpeg|jpg)?(.*)   /engine/dispatcher/dispatcher.Static.php?request=image&action=default&realm=common&name=icons\%2F$1&type=$2$3 [QSA]
+# ---
+RewriteRule static/([A-Za-z0-9_-]+).(gif|png|jpeg|jpg)?(.*)   /engine/dispatcher/dispatcher.Static.php?request=image&action=default&realm=common&name=$1&type=$2$3 [QSA]
+
+# Common Api Requests
+RewriteRule api/(\w+).js?(.*)   /engine/dispatcher/dispatcher.Api.php?page=$1&action=api$2 [QSA]
+
+# Uploaded Data
+#RewriteRule data/(\w+)-(\w+).jpg /data/ishop/$1/$2.jpg
+#RewriteRule data/(..)_(..)_(..)/(.*).jpg /data/ishop/articles/$1-$2-$3/$4.jpg
+
+# Dynamic Data Feeds
+#RewriteRule feed/(.*).xml /engine/dispatcher/dispatcher.Common.php?request=resource&action=default&realm=public&name=$1&type=feed$3 [QSA]
+
+#######################
+######## ADMIN ########
+#######################
+
+RewriteRule mpws/(\w+).html?(.*) /engine/dispatcher/dispatcher.Toolbox.php?page=$1&action=default$2 [QSA]
+
+#######################
+######### WEB #########
+#######################
+
+# startup file
+DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=index&action=default
+
+# public pages
+RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?page=$1&action=default$2 [QSA]
+
+# custom pages
+
+RewriteRule page/purchase.php?(.*) /engine/dispatcher/dispatcher.Public.php?page=purchase&action=default$2 [QSA]
+
+#######################
+######## TOOLS ########
+#######################
+
+#service pages
+#RewriteRule service/(\w+).html(.*) /engine/tools/tools.php?tool=$1&$2

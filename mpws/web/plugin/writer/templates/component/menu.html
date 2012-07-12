@@ -1,0 +1,21 @@
+<ul>
+    <li>
+        <a href="writer.html?display=home">Writer</a>
+        <ul>
+            <li><a href="writer.html?display=queue">Task Queue</a></li>
+            <li><a href="writer.html?display=statistic">Statistic</a></li>
+            <li><a href="writer.html?display=prices">Prices</a></li>
+<!--            <li><a href="writer.html?display=documents">Documents</a></li>
+            <li><a href="writer.html?display=subjects">Subjects</a></li>-->
+            <li><a href="writer.html?display=messages">Messages</a></li>
+            <li><a href="writer.html?display=writers">Writers</a></li>
+            <li><a href="writer.html?display=students">Students</a></li>
+            <li><a href="writer.html?display=orders&sort=Status.asc">Orders
+            <?php 
+                if (!empty($model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS']))
+                    echo '(' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] . ')';
+            ?>
+            </a></li>
+        </ul>
+    </li>
+</ul>

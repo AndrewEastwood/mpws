@@ -1,0 +1,52 @@
+<div class="MPWSContentDisplay">
+    <h2>Order History</h2>
+    <h3>Writer: <?=$model['PLUGINS']['WRITER']['DATA']['Name'];?></h3>
+    
+    <h3>Select Date</h3>
+    <form action="" method="POST" class="MPWSForm MPWSFormInfo">
+            <label class="MPWSFieldLabel">Start Date:</label>
+            <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="start_date" value="<?=$model['PLUGINS']['WRITER']['DATA_DATE_START'];?>"/>
+            <div class="MPWSSeparator"></div>
+            <label class="MPWSFieldLabel">End Date:</label>
+            <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="end_date" value="<?=$model['PLUGINS']['WRITER']['DATA_DATE_END'];?>"/>
+            <div class="MPWSSeparator"></div>
+        <hr size="2"/>
+        <input type="submit" name="do" value="Show Orders"/>
+    </form>
+
+    
+    <h3>Total Credits: <?=$model['PLUGINS']['WRITER']['DATA_CREDITS'];?></h3>
+    
+    
+    <div class="MPWSDivTable">
+        <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
+                Title
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
+                Credits
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+        </div>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_ORDERS'] as $entry) { ?>
+        <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>" target="blank">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Credits'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
+        </div>
+    <?php } ?>
+    </div>
+
+    <div class="MPWSInlineForms">
+        <form action="?display=writers&action=details&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST">
+            <input type="submit" value="Back To Details"/>
+        </form>
+        <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+            <input type="submit" value="Back To Writers"/>
+        </form>
+    </div>
+</div>

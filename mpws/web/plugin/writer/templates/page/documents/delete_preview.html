@@ -1,0 +1,19 @@
+<div class="MPWSContentDisplay">
+    <h3>Delete Document</h3>
+    <form action="?display=documents&action=<?=$model['PLUGINS']['WRITER']['action'];?>&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm MPWSFormDelete">
+
+        <div class="MPWSFormFields">
+
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Name:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Name'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+        </div>
+
+        <hr size="2"/>
+        <input type="submit" name="do" value="Delete"/>
+    </form>
+    <form action="?display=documents" method="POST">
+        <input type="submit" value="Back To Documents"/>
+    </form>
+</div>

@@ -1,0 +1,16 @@
+<div class="MPWSContentDisplay MPWSContentDisplayLogin">
+<?php
+    /*if (count($model['PLUGINS']['TOOLBOX']['data']['messages'])) {
+        echo '<ul>';
+        foreach($model['PLUGINS']['TOOLBOX']['data']['messages'] as $msg)
+            echo '<li>' . $msg . '</li>';
+        echo '</ul>';
+    }*/
+?>
+
+<form action="?display=home" method="POST">
+    <input type="text" name="mpws_ulogin" value="" placeholder="Login"/>
+    <input type="password" name="mpws_upwd" value="" placeholder="Password"/>
+    <input type="submit" name="do" value="SignIn"/>
+</form>
+</div>

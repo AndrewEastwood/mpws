@@ -1,0 +1,90 @@
+<div class="MPWSContentDisplay">
+    <h2>Writer Details</h2>
+    
+    <h3>Writer</h3>
+    <form action="?display=writers" method="POST" class="MPWSForm MPWSFormInfo">
+
+        <div class="MPWSFormFields">
+
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Name:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Name'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Login:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Login'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterSubjectsID" class="MPWSFieldLabel">Subjects:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Subjects'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterCardNumberID" class="MPWSFieldLabel">Card Number:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['CardNumber'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterUniversityID" class="MPWSFieldLabel">University:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['University'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEmailID" class="MPWSFieldLabel">Email:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Email'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterIMID" class="MPWSFieldLabel">IM:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['IM'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Phone'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Enabled:</label>
+            <span><?=empty($model['PLUGINS']['WRITER']['DATA']['Active'])?'No':'Yes';?></span>
+            <div class="MPWSSeparator"></div>
+
+            <input type="hidden" name="writer_active" value="<?=$model['PLUGINS']['WRITER']['DATA']['Active'];?>">
+        </div>
+
+    </form>
+    
+    <div class="MPWSInlineForms">
+        <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+            <input type="submit" value="Back To Writers"/>
+        </form>
+        <form action="?display=writers&action=orderhistory&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST">
+            <input type="submit" value="Order History"/>
+        </form>
+    </div>
+    <hr size="2"/>
+    
+    <h3>Orders</h3>
+    <div class="MPWSDivTable">
+        <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
+                <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Title.asc', 'Title.desc', 'Title.asc'));?>">Title</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">
+                <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Status.asc', 'Status.desc', 'Status.asc'));?>">Status</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">
+                <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Pages.asc', 'Pages.desc', 'Pages.asc'));?>">Pages</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
+        </div>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_ORDERS'] as $entry) { ?>
+        <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1 MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['Status']);?>" title="<?=libraryView::getFrendlyClassName($entry['Status']);?>">&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
+        </div>
+    <?php } ?>
+    </div>
+    
+</div>

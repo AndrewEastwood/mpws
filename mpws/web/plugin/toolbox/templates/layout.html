@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MPWS Toolbox</title>
+    <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
+    <script type="text/javascript" src="/static/toolboxAction.js"></script>
+    <?php if (!empty($model['USER']['ACTIVE'])) : ?>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart']});
+        // security token
+        mpws.token = '<?=libraryRequest::getOrValidatePageSecurityToken();?>';
+    </script>
+    <?php endif ?>
+</head>
+<body>
+
+<div class="MPWSPage MPWSPageToolbox">
+
+    <div class="MPWSWrapper MPWSWrapperLayoutToolbox">
+        <div class="MPWSLayout MPWSLayoutToolbox">
+            <h2>MPWS Welcomes You!</h2>
+            <?php if (!empty($model['USER']['ACTIVE'])) : ?>
+                <div class="MPWSComponent MPWSComponentUserInfo">
+                    You are signed in as: <b><?=$model['USER']['NAME'];?></b>
+                    <form action="index.html" method="POST">
+                        <input type="submit" name="do" value="logout"/>
+                    </form>
+                    Site url: <a href="//<?=$_SERVER['HTTP_HOST'];?>" target="_blank"><?=MPWS_CUSTOMER;?></a>
+                </div>
+            <?php endif ?>
+            <hr size="2">
+            <?php if (!empty($model['USER']['ACTIVE'])) : ?>
+                <div class="MPWSComponent MPWSComponentMenu">
+                    <?=$model['html']['menu'];?>
+                </div>
+            <?php endif ?>
+            <div class="MPWSComponent MPWSComponentContent">
+                <?php
+                    if(count($model['html']['messages'])) {
+                        echo '<div class="MPWSComponent MPWSComponenContentMessages">';
+                        echo '<h4>System Messages:</h4>';
+                        echo '<ul>';
+                        foreach ($model['html']['messages'] as $msg)
+                            echo '<li>' . $msg . '</li>';
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+                ?>
+                <?=$model['html']['content'];?>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

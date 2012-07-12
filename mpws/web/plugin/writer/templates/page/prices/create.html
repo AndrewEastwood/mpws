@@ -1,0 +1,39 @@
+<div class="MPWSContentDisplay">
+    <h2><?=ucfirst($model['PLUGINS']['WRITER']['action']);?> Price</h2>
+    <?php
+        if(count($model['PLUGINS']['WRITER']['messages'])) {
+            echo '<b>We\'ve found some errors in the fileds below:</b>';
+            echo '<ul>';
+            foreach ($model['PLUGINS']['WRITER']['messages'] as $msg)
+                echo '<li>' . $msg . '</li>';
+            echo '</ul>';
+        }
+    ?>
+    <form action="?display=prices&action=<?=$model['PLUGINS']['WRITER']['action'];?>&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm">
+
+        <div class="MPWSFormFields">
+            
+            <label for="MPWSField_PriceNameID" class="MPWSFieldLabel">Name:</label>
+            <input type="text" id="MPWSField_PriceNameID" class="MPWSTextBox" name="price_name" value="<?=$model['PLUGINS']['WRITER']['DATA']['Name'];?>" placeholder="Name"/>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_PriceValueID" class="MPWSFieldLabel">Price</label>
+            <input type="text" id="MPWSField_PriceValueID" class="MPWSTextBox" name="price_value" value="<?=$model['PLUGINS']['WRITER']['DATA']['Price'];?>" placeholder="Price"/>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_PriceHoursID" class="MPWSFieldLabel">Hours</label>
+            <input type="text" id="MPWSField_PriceHoursID" class="MPWSTextBox" name="price_hours" value="<?=$model['PLUGINS']['WRITER']['DATA']['Hours'];?>" placeholder="Hours"/>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_PriceWeeksID" class="MPWSFieldLabel">Weeks</label>
+            <input type="text" id="MPWSField_PriceWeeksID" class="MPWSTextBox" name="price_weeks" value="<?=$model['PLUGINS']['WRITER']['DATA']['Weeks'];?>" placeholder="Weeks"/>
+            <div class="MPWSSeparator"></div>
+        </p>
+
+        <hr size="2"/>
+        <input type="submit" name="do" value="Save"/>
+    </form>
+    <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+        <input type="submit" value="Back To Prices"/>
+    </form>
+</div>

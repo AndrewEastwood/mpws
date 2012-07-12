@@ -1,0 +1,41 @@
+<div class="MPWSContentDisplay">
+    <b>Preview Message</b>
+    <form action="?display=messages&action=<?=$model['PLUGINS']['WRITER']['action'];?>" method="POST" class="MPWSForm MPWSFormPreview">
+
+        <div class="MPWSFormFields">
+
+            <label for="MPWSField_WriterFromID" class="MPWSFieldLabel">From:</label>
+            <span>Webmaster</span>
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterSubjectID" class="MPWSFieldLabel">To:</label>
+            <span><?=$model['PLUGINS']['WRITER']['TO_LIST']['Name'];?>&nbsp;</span>
+            <input type="hidden" name="messages_to" value="<?=$model['PLUGINS']['WRITER']['DATA']['To'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterSubjectID" class="MPWSFieldLabel">Subject:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Subject'];?>&nbsp;</span>
+            <input type="hidden" name="messages_subject" value="<?=$model['PLUGINS']['WRITER']['DATA']['Subject'];?>">
+            <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterMessageID" class="MPWSFieldLabel">Message:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA']['Message'];?>&nbsp;</span>
+            <input type="hidden" name="messages_message" value="<?=$model['PLUGINS']['WRITER']['DATA']['Message'];?>">
+            <div class="MPWSSeparator"></div>
+
+        </div>
+
+        <p class="MPWSAdditionalActions">
+            <input type="checkbox" name="message_notify" id="MPWSField_WriterNotifyID" class="MPWSCheckbox" <?=empty($_POST['message_notify'])?'':'checked="checked"';?>/>
+            <label for="MPWSField_WriterNotifyID" class="MPWSFieldLabel">Send copy to recipient on email.</label>
+        </p>
+
+        <hr size="2"/>
+        <input type="submit" name="do" value="Send"/>
+        <input type="submit" name="do" value="Edit"/>
+        <!--<input type="submit" name="do" value="Cancel"/>-->
+    </form>
+    <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+        <input type="submit" value="Back To Messages"/>
+    </form>
+</div>

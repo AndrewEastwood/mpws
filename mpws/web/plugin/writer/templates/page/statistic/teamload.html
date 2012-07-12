@@ -1,0 +1,71 @@
+<div class="MPWSContentDisplay MPWSContentDisplayCharts">
+    <h2><?=ucfirst(libraryRequest::getDisplay('home'));?></h2>
+    
+    
+    <h3>Tasks That Must By Almost Completed</h3>
+    <div class="MPWSDivTable">
+        <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Title</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Status</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Created</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Deadline</span>
+        </div>
+        <?php foreach($model['PLUGINS']['WRITER']['DATA_EXPIRED'] as $key => $expireTasks) { ?>
+            
+            <h3>
+            <?php if ($key == 0) : ?>
+                Tasks Are Expired
+            <?php else : ?>
+                Tasks Expired In <?=$key;?> hours
+            <?php endif ?>
+            </h3>
+            <?php foreach($expireTasks as $entry) { ?>
+                <div class="MPWSDivTableRow MPWSDivTableRowData MPWSStatusExpiration_<?=$key;?>">
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                        <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
+                    </span>
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?></span>
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1 MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['Status']);?>" title="<?=libraryView::getFrendlyClassName($entry['Status']);?>">&nbsp;</span>
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['DateCreated'];?></span>
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['DateDeadline'];?></span>
+                </div>
+            <?php } ?>
+        <?php } ?>
+    </div>
+    <hr size="2"/>
+
+    <h3>Team Load Coverage</h3>
+    <div id="chart_div">Chart Is Empty. There are no active tasks.</div>
+
+    <h3>Free Writers</h3>
+    <div class="MPWSDivTable">
+        <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Name</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader">Active</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader">Online</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Last Access</span>
+        </div>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_FREE_WRITERS'] as $entry) { ?>
+        <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize0_5">
+                <a href="?display=writers&action=edit&oid=<?=$entry['ID'];?>">Edit</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize0_5">
+                <a href="?display=writers&action=details&oid=<?=$entry['ID'];?>">Info</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=writers&action=delete&oid=<?=$entry['ID'];?>">Delete</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['Name'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataState_<?=$entry['Active'];?>">&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataState_<?=$entry['IsOnline'];?>">&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateLastAccess'];?></span>
+        </div>
+    <?php } ?>
+    </div>
+    
+</div>

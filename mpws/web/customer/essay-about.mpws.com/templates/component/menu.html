@@ -1,0 +1,8 @@
+<div class="MPWSMenu">
+    <h3><?=libraryView::getFrendlyLabel($model['COMPONENT_KEY']);?></h3>
+    <ul>
+    <?php foreach($model['COMPONENT_DATA'] as $link => $title) : ?>
+        <li><a href="<?=$link;?>"><?=$title;?></a></li>
+    <?php endforeach ?>
+    </ul>
+</div>

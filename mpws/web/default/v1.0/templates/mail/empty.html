@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title><?=$model['SUBJECT'];?></title>
+    <style>
+        @media only screen and (max-device-width: 480px) { 
+            .table, .cell {
+                 width: 300px !important;
+            }
+        }
+    </style>
+</head>
+<body margin="0" padding="0" style="background-color:#333333;padding:0;margin:0;">
+
+    <table cellpadding="0" cellspacing="0" border="0" style="background-color:#333333;padding:0;margin:0;" width="95%">
+        <tr>
+            <td>
+
+    <table cellpadding="0" cellspacing="0" border="0" align="center" style="padding:0;margin:0;width:550px;" width="550">
+        <tr>
+            <td style="background:#FFFFFF;padding:10px;border-bottom:2px solid #DDDDDD;" align="left">
+                <img src="https://dl.dropbox.com/u/6858514/EMAILS/DEFAULT/logo.gif" width="300" height="79" style="width:300px;height:79px;">
+            </td>
+        </tr>
+        <tr>
+            <td style="background:#F3F3F3;padding:10px;">
+                <h1 style="font-family:Arial,sans-serif;font-size:16px;color:#000000;font-weight:bold;">
+                    Welcomes! Demo Welcome String!
+                </h1>
+                <table cellpadding="2" cellspacing="0" border="0" style="background-color:#F0F0F0;padding:0;margin:0;border:1px solid #E5E5E5;width:100%;" class="content" width="100%">
+                    <tr>
+                        <td width="30%" style="width:30%;">Dwemo Row</td>
+                        <td style="font-weight:bold;">Demo Value</td>
+                    </tr>
+                </table>
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;color:#333333;">
+                    You can visit <a href="<?=$model['DATA']['TargetUrl'];?>" style="color:#993300;">Personal Home Page</a> (block with link to page).
+                </p>
+                <p style="font-family:Arial,sans-serif;font-size:12px;color:#333333;font-weight: bold;">
+                    Important messages <br>
+                    Adduitional Information:
+                    <ul style="font-family:Arial,sans-serif;font-size:11px;color:#993300;">
+                        <li>... item 1</li>
+                        <li>... item 2</li>
+                    </ul>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="background:#DDDDDD;padding:10px;">
+                <p class="footer" style="font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:18px;color:#333333;margin:0 0 10px;">
+                    You may contact <a href="mailto:<?=$model['DATA']['SupportEmail'];?>" style="color:#993300;">Customer Support</a>
+                    with questions or concerns related to customer support and satisfaction.
+                </p>
+            </td>
+        </tr>
+    </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<div>
+    
+<form action="/page/make-order.html" method="POST"> 
+    
+    <div class="MPWSSection">
+        <label>Title</label>
+        <span><?=$model['CUSTOMER']['DATA']['Title'];?></span>
+        <input type="hidden" name="order_title" value="<?=$model['CUSTOMER']['DATA']['Title'];?>"/>
+    </div>
+    
+    <div class="MPWSSection">
+        <label>Email to deliver paper</label>
+        <span><?=$model['CUSTOMER']['DATA']['Email'];?></span>
+        <input type="hidden" name="order_email" value="<?=$model['CUSTOMER']['DATA']['Email'];?>"/>
+    </div>
+    
+    <div class="MPWSSection">
+        <label>Number of pages</label>
+        <span><?=$model['CUSTOMER']['DATA']['Pages'];?></span>
+        <input type="hidden" name="order_pages" value="<?=$model['CUSTOMER']['DATA']['Pages'];?>"/>
+    </div>
+    <div class="MPWSSection">
+        <label>Delivery date</label>
+        <span><?=$model['CUSTOMER']['DATA_PRICE']['Name'];?></span>
+        <input type="hidden" name="order_price" value="<?=$model['CUSTOMER']['DATA']['PriceID'];?>"/>
+    </div>
+    
+    <div class="MPWSSection">
+        <label>Academic level</label>
+        <span><?=$model['CUSTOMER']['DATA']['Level'];?></span>
+        <input type="hidden" name="order_level" value="<?=$model['CUSTOMER']['DATA']['Level'];?>"/>
+    </div>
+    
+    <div class="MPWSSection">
+        <label>Paper format</label>
+        <span><?=$model['CUSTOMER']['DATA']['Format'];?></span>
+        <input type="hidden" name="order_format" value="<?=$model['CUSTOMER']['DATA']['Format'];?>"/>
+    </div>
+
+    <div class="MPWSSection">
+        <label>Number of sources</label>
+        <span><?=$model['CUSTOMER']['DATA']['Sources'];?></span>
+        <input type="hidden" name="order_sources" value="<?=$model['CUSTOMER']['DATA']['Sources'];?>"/>
+    </div>
+
+    <div class="MPWSSection">
+        <label>Paper instructions</label>
+        <textarea name="order_notes"><?=$model['CUSTOMER']['DATA']['Description'];?></textarea>
+    </div>
+    
+    <p class="MPWSAdditionalActions">
+        <div class="MPWSSection">
+            <label>Total cost</label>
+            <span><?=$model['CUSTOMER']['DATA_PRICE']['Price']*$model['CUSTOMER']['DATA']['Pages'];?></span>
+        </div>
+    </p>
+
+    <input type="hidden" name="session_key" value="<?=$model['CUSTOMER']['DATA_SESSION'];?>"/>
+    <input type="submit" name="do" value="Edit"/>
+    <input type="submit" name="do" value="Checkout"/>
+</form>
+    
+    
+</div>
