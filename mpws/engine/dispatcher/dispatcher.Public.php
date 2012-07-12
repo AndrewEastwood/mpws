@@ -19,7 +19,6 @@
         require_once $objectFile;
     // include web config
     include $DR . '/engine/system/config/config.web.php';
-    include $DR . '/engine/system/config/config.paths.php';
 
     /* prepare public environment */
 

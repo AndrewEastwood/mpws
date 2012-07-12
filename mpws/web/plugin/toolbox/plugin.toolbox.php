@@ -122,8 +122,9 @@ class pluginToolbox {
         //echo '<br>Current User: ' . $_SESSION['USER']['NAME'];
         //echo '<br>Logined since: ' . $_SESSION['USER']['SINCE'];
         //echo '<br>Last access ' . $_SESSION['USER']['LAST_ACCESS'];
+        $_state = $this->_userVerifySession($toolbox, $plugin);
         $user = $_SESSION['USER'];
-        $user['STATE'] = $this->_userVerifySession($toolbox, $plugin);
+        $user['STATE'] = $_state;
         $user['ACTIVE'] = ($user['STATE'] == 'USER_AUTHORIZED' || $user['STATE'] == 'USER_ALIVE');
         //$model['USER'] = $user;
         //var_dump($user);
@@ -134,7 +135,7 @@ class pluginToolbox {
         global $config;
         debug('_userVerifySession');
 
-        $model = &$toolbox->getModel();
+        //$model = &$toolbox->getModel();
         // logout user
         if (libraryRequest::isPostFormAction('logout')) {
             //echo 'olololo';

@@ -44,6 +44,7 @@ class libraryStaticResourceManager {
         //var_dump($container);
 
         $packages = array();
+        $data = '';
         foreach ($container as $item) {
             //echo '/*' . $item . '*/';
             $data .= (file_get_contents($item) . $lineBreak);
@@ -95,6 +96,7 @@ class libraryStaticResourceManager {
         $lineBreak = PHP_EOL.'/* join '.str_pad('', 50, '=').' */'.PHP_EOL;
 
         $packages = array();
+        $data = '';
         foreach ($container as $item) {
             $data .= (file_get_contents($item) . $lineBreak);
             $packages[] = basename($item);

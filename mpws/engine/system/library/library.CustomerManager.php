@@ -40,7 +40,8 @@ class libraryCustomerManager {
         /* default path */
         $this->_defaultPath = DR . '/web/default/' . MPWS_VERSION;
         /* extended library */
-        $nativeExLibraryName = trim(str_replace(range(0,9), '', md5($this->_customerName)));
+        //$nativeExLibraryName = trim(str_replace(range(0,9), '', md5($this->_customerName)));
+        $nativeExLibraryName = 'customer';
         $this->_e_library = DR . '/web/customer/' . $this->_customerName . '/' . $nativeExLibraryName . '.php';
 
         $this->initManager();
@@ -57,7 +58,7 @@ class libraryCustomerManager {
         return $this->_databaseObj;
     }
     /* model object */
-    public function &getModel ($content, $scope = 'page') {
+    public function &getModel () {
         /*$m = array();
 
         $m['customer'] = $this->_customerName;
@@ -224,7 +225,7 @@ class libraryCustomerManager {
         $dump .= '<hr size="2">';
         $dump .= '<br> Configurations:<br>';
         foreach ($this->_s_configs[$this->_customerName] as $key => $val)
-            $dump .= '<br> -- ' . $key . ' from ' . $val['path'];
+            $dump .= '<br> -- ' . $key . ' from ' . $val;
         $dump .= '<br> Templates:<br>';
         foreach ($this->_s_templates[$this->_customerName] as $key => $val)
             $dump .= '<br> -- ' . $key . ' from ' . $val;

@@ -72,8 +72,12 @@
         <select name="assign_order_to">
             <option value="0">Unassigned</option>
             <?php
-                foreach ($model['PLUGINS']['WRITER']['TO_LIST'] as $option)
-                    echo '<option value="'.$option['ID'].'">' . $option['Name'] . '</option>';
+                foreach ($model['PLUGINS']['WRITER']['TO_LIST'] as $option) {
+                    $_state = '';
+                    if ($option['ID'] == $model['PLUGINS']['WRITER']['DATA_WRITER']['ID'])
+                        $_state = ' selected="selected"';
+                    echo '<option value="'.$option['ID'].'"'.$_state.'>' . $option['Name'] . '</option>';
+                }
             ?>
         </select>
         <hr size="2"/>

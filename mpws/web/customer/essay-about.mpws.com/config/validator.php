@@ -39,8 +39,8 @@
         'Billing_Phone' => 'user_billing_phone',
         'Billing_PostalCode' => 'user_billing_postalcode',
         'Billing_State' => 'user_billing_state',
-        'Current Password' => 'user_current_password'
-        'NewPassword' => 'user_new_password'
+        'Current Password' => 'user_current_password',
+        'NewPassword' => 'user_new_password',
         'NewPasswordConfirm' => 'user_new_password_confirm'
     );
     

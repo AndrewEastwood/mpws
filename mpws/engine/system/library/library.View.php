@@ -4,6 +4,8 @@ class libraryView
 {
 
     public function getTemplateResult ($model, $templateFile) {
+        if (empty($templateFile))
+            return false;
         ob_start();
         include $templateFile;
         return ob_get_clean();

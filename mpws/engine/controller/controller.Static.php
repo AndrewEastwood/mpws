@@ -57,7 +57,8 @@ class controllerStatic {
     private function _ieImage() {
         $staticResMgr = new libraryStaticResourceManager();
         $filePath = $staticResMgr->GetImageContent(urldecode($_GET['name']).'.'.strtolower($_GET['type']), $_GET['realm']);
-        //if (!empty($filePath))
+        if (empty($filePath))
+            return false;
             //$im = imagecreatefromjpeg($filePath);
         header('Content-type: image/jpg');
         header('Content-Length: ' . filesize($filePath));

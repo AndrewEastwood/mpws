@@ -10,13 +10,13 @@ class libraryRequest {
     static function getPage ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('page', $defaultValue, $switch, $valueOnSwitch);
     }
-    static function getAction ($defaultValue, $switch, $valueOnSwitch) {
+    static function getAction ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('action', $defaultValue, $switch, $valueOnSwitch);
     }
-    static function getApiFn ($defaultValue, $switch, $valueOnSwitch) {
+    static function getApiFn ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('fn', $defaultValue, $switch, $valueOnSwitch);
     }
-    static function getApiParam ($defaultValue, $switch, $valueOnSwitch) {
+    static function getApiParam ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         $param = urldecode(self::getValue('p', $defaultValue, $switch, $valueOnSwitch));
         //var_dump($param);
         parse_str($param, $param);
@@ -33,7 +33,7 @@ class libraryRequest {
             return $c;
         return $param;
     }
-    static function getOID ($defaultValue, $switch, $valueOnSwitch) {
+    static function getOID ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('oid', $defaultValue, $switch, $valueOnSwitch);
     }
     static function getValue($key, $defaultValue = null, $switch = null, $valueOnSwitch = null) {
@@ -47,7 +47,7 @@ class libraryRequest {
     static function getPostPage ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getPostValue('page', $defaultValue, $switch, $valueOnSwitch);
     }
-    static function getPostAction ($defaultValue, $switch, $valueOnSwitch) {
+    static function getPostAction ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getPostValue('action', $defaultValue, $switch, $valueOnSwitch);
     }
     static function getPostValue($key, $defaultValue = null, $switch = null, $valueOnSwitch = null) {
