@@ -180,10 +180,10 @@ class pluginWriter {
     private function _componentNewIncoming($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         /* get new orders */
-        $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] = $toolbox->getDatabaseObj()->getCount('writer_orders', ' Status="NEW"');
+        $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] = $toolbox->getDatabaseObj()->getCount('writer_orders', ' WriterID=0');
         
         if ($model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'])
-            $model['html']['messages'][] = 'You have ' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] . ' new orders. (<a href="writer.html?display=orders&sort=Status.asc">see all</a>)';
+            $model['html']['messages'][] = 'You have ' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] . ' new orders. (<a href="writer.html?display=orders&sort=WriterID.asc">see all</a>)';
     }
     private function _componentMessages ($toolbox, $plugin) { }
     
@@ -376,9 +376,9 @@ class pluginWriter {
     private function _displayHome($toolbox, $plugin, $postaction = '') {
         //echo '_displayWritersDefault';
         $model = &$toolbox->getModel();
-        $users = $toolbox->getDatabaseObj()->select('*')
+        /*$users = $toolbox->getDatabaseObj()->select('*')
             ->from('mpws_users')
-            ->fetchData();
+            ->fetchData();*/
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.home'];
     }
 
@@ -387,18 +387,25 @@ class pluginWriter {
         libraryRequest::storeOrGetRefererUrl();
         //$model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['ORDERS'], $toolbox->getDatabaseObj(), 'Status = "NEW"');
         
+        $customer_config_mdbc = $toolbox->getCustomerObj()->GetCustomerConfiguration('MDBC');
         $statuses = array('OPEN', 'REJECTED', 'PENDING');
         foreach ($statuses as $stat) {
-            $model['PLUGINS']['WRITER']['DATA_TASKS'][$stat] = $toolbox->getDatabaseObj()
+            $model['PLUGINS']['WRITER']['DATA'][$stat] = 
+                $toolbox->getDatabaseObj()
                     ->reset()
                     ->select('*')
                     ->from('writer_orders')
                     ->where('WriterID', '=', '0')
                     ->orWhere('InternalStatus', '=', '"'.$stat.'"')
-                    ->query();
+                    ->orderBy('DateCreated')
+                    ->order('DESC')
+                    ->fetchData();
         }
-
-        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.datatable'];
+        
+        //var_dump($model['PLUGINS']['WRITER']['DATA']);
+        $model['PLUGINS']['WRITER']['DATE_FORMAT'] = $customer_config_mdbc['DB_DATE_FORMAT'];
+        
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.queue.datatable'];
     }
     
     private function _displayStatisticDefault ($toolbox, $plugin) {
@@ -1404,13 +1411,14 @@ class pluginWriter {
                 ->where('ID', '=', $oid)
                 ->query();
         }
-        if (libraryRequest::isPostFormAction('save order')) {
+        if (libraryRequest::isPostFormAction('update order')) {
             //echo 'saving order';
             $toolbox->getDatabaseObj()
                 ->update('writer_orders')
                 ->set(
                     array(
-                        'Status' => libraryRequest::getPostValue('set_order_status'),
+                        'PublicStatus' => libraryRequest::getPostValue('set_order_publicstatus'),
+                        'InternalStatus' => libraryRequest::getPostValue('set_order_internalstatus'),
                         'Credits' => libraryRequest::getPostValue('order_credits')
                     )
                 )
@@ -1471,6 +1479,24 @@ class pluginWriter {
             ->from('writer_writers')
             ->fetchData();
         
+        $data_sources = $toolbox->getDatabaseObj()
+            ->select('SourceURL')
+            ->from('writer_sources')
+            ->where('OrderToken', '=', $data_order['OrderToken'])
+            ->fetchData();
+        
+        $data_document = $toolbox->getDatabaseObj()
+            ->select('Name')
+            ->from('writer_documents')
+            ->where('ID', '=', $data_order['DocumentID'])
+            ->fetchRow();
+        
+        $data_subject = $toolbox->getDatabaseObj()
+            ->select('Name')
+            ->from('writer_subjects')
+            ->where('ID', '=', $data_order['SubjectID'])
+            ->fetchRow();
+        
         $isWriterEmpty = empty($data_writer);// && !empty($data_order['WriterID']);
 
         if (empty($data_order)) {
@@ -1478,8 +1504,19 @@ class pluginWriter {
             $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
             return;
         }
+        
+        // dropdown menus
+        $_dr_publicStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'PublicStatus');
+        $_dr_internalStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'InternalStatus');
+        
+        //var_dump($_dr_publicStatus);
+        
 
         $model['PLUGINS']['WRITER']['DATA'] = $data_order;
+        $model['PLUGINS']['WRITER']['DATA_P_STAT'] = $_dr_publicStatus;
+        $model['PLUGINS']['WRITER']['DATA_I_STAT'] = $_dr_internalStatus;
+        $model['PLUGINS']['WRITER']['DATA_DOCUMENT'] = $data_document;
+        $model['PLUGINS']['WRITER']['DATA_SUBJECT'] = $data_subject;
         $model['PLUGINS']['WRITER']['DATA_MESSAGES'] = $data_messages;
         $model['PLUGINS']['WRITER']['DATA_STUDENT'] = $data_student;
         $model['PLUGINS']['WRITER']['DATA_WRITER'] = $data_writer;
@@ -1487,6 +1524,7 @@ class pluginWriter {
         $model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER'] = $data_invoice_order;
         $model['PLUGINS']['WRITER']['DATA_INVOICE_REFUND'] = $data_invoice_refund;
         $model['PLUGINS']['WRITER']['TO_LIST'] = $data_writers;
+        $model['PLUGINS']['WRITER']['DATA_SOURCES'] = $data_sources;
         $model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED'] = $isWriterEmpty;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.details'];
     }

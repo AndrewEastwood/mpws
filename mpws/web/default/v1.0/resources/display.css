@@ -756,7 +756,7 @@
 .MPWSForm {}
     .MPWSForm .MPWSSeparator {height: 4px;}
     
-    .MPWSComponenContentMessages {margin-left: 220px; padding: 0px 10px; border: 1px solid #eee; background: #fff; display: block; margin-bottom: 20px; border-radius: 10px;}
+    .MPWSComponenContentMessages {margin-left: 120px; padding: 0px 10px; border: 1px solid #eee; background: #fff; display: block; margin-bottom: 20px; border-radius: 10px;}
         .MPWSComponenContentMessages h4 {color: #333;}
         .MPWSComponenContentMessages ul {}
         .MPWSComponenContentMessages ul li {font-size: 12px; font-weight: bold; color: #930;}

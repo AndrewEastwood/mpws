@@ -325,6 +325,8 @@ class customer {
         //var_dump($validator['DATAMAP']['ORDER']);
         // preview
         
+        //var_dump(libraryRequest::getPostValue('order_source_links'));
+        
         // session key
         $_sessionKey = md5(mt_rand(1, 1000));
         $model['CUSTOMER']['DATA_SESSION'] = $_sessionKey;
@@ -349,7 +351,23 @@ class customer {
                         ->fetchRow();
                 // preview
                 if (libraryRequest::isPostFormAction('proceed')) {
+                    
+                    
+                    $docInfo = $customer->getDatabaseObj()
+                            ->select('*')
+                            ->from('writer_documents')
+                            ->where('ID', '=', $data['DocumentID'])
+                            ->fetchRow();
+                    $subjInfo = $customer->getDatabaseObj()
+                            ->select('*')
+                            ->from('writer_subjects')
+                            ->where('ID', '=', $data['SubjectID'])
+                            ->fetchRow();
+                    
+                    
                     $model['CUSTOMER']['DATA_PRICE'] = $priceInfo;
+                    $model['CUSTOMER']['DATA_DOC'] = $docInfo;
+                    $model['CUSTOMER']['DATA_SUBJECT'] = $subjInfo;
                     //$model['CUSTOMER']['DATA_DEADLINE'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
                     $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order_preview');
                 }
@@ -361,7 +379,12 @@ class customer {
                     // make temp user
                     $_userName = 'eu_' . libraryUtils::genRandomString(10);
                     $_userPwd = 'eu_' . libraryUtils::generatePassword(9, 8);
+                    
+                    // make user token
                     $_userToken = md5($_userPwd . $_userName . $data['Email'] . date($mdbc['DB_DATE_FORMAT']));
+                    
+                    // make order token
+                    $_o_token = md5($_userToken . mktime());
                     
                     $student = array(
                         'Name' => $_userName,
@@ -380,10 +403,25 @@ class customer {
                         ->fields(array_keys($student))
                         ->values(array_values($student))
                         ->query();
+                    
+                    
+                    // save sources
+                    if (!empty($data['SourceLinks'])) {
+                        
+                        foreach ($data['SourceLinks'] as $link)
+                            $customer->getDatabaseObj()
+                                ->reset()
+                                ->insertInto('writer_sources')
+                                ->fields(array('OrderToken', 'SourceURL', 'DateCreated'))
+                                ->values(array($_o_token, $link, date($mdbc['DB_DATE_FORMAT'])))
+                                ->query();
+                    }
+                        
 
                     // remove non-accepted fileds
                     unset($data['Email']);
                     unset($data['Sources']);
+                    unset($data['SourceLinks']);
                     
                     // append additional information
                     
@@ -398,8 +436,6 @@ class customer {
                     $_saveTime = mktime();
                     $_deadlineTime = $_saveTime + (60 * 60 * ($priceInfo['Hours'] + (24 * 7 * $priceInfo['Weeks'])));
                     
-                    // make order token
-                    $_o_token = md5($_userToken . mktime());
                     
                     // fill order information
                     $data['StudentID'] = $newStudent['ID'];
@@ -495,12 +531,22 @@ class customer {
                 ->select('*')
                 ->from('writer_prices')
                 ->fetchData();
+        $documents = $customer->getDatabaseObj()
+                ->select('*')
+                ->from('writer_documents')
+                ->fetchData();
+        $subjects = $customer->getDatabaseObj()
+                ->select('*')
+                ->from('writer_subjects')
+                ->fetchData();
 
         //echo '<pre>' . print_r($data, true) . '</pre>';
 
         $model['CUSTOMER']['DATA'] = $data;
         $model['CUSTOMER']['DATA_FIELDS'] = $dataFields;
         $model['CUSTOMER']['DATA_PRICES'] = $prices;
+        $model['CUSTOMER']['DATA_DOCS'] = $documents;
+        $model['CUSTOMER']['DATA_SUBJECTS'] = $subjects;
 
         //var_dump($model['CONFIG']);
         //var_dump($fields);

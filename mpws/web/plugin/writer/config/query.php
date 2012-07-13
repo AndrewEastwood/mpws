@@ -17,21 +17,21 @@
                     count(*) 
                 FROM `writer_orders`
                 WHERE WriterID = wr.ID
-                AND Status = "PENDING"
+                AND PublicStatus = "PENDING"
             ) as `PendingOrderCount`, 
             (
                 SELECT 
                     count(*) 
                 FROM `writer_orders`
                 WHERE WriterID = wr.ID
-                AND Status = "IN PROGRESS"
+                AND PublicStatus = "IN PROGRESS"
             ) as `InProgressOrderCount`, 
             (
                 SELECT 
                     count(*) 
                 FROM `writer_orders`
                 WHERE WriterID = wr.ID
-                AND Status = "NEW"
+                AND PublicStatus = "NEW"
             ) as `NewOrderCount`
         FROM `writer_writers`  as `wr` 
         LEFT JOIN `writer_orders` as `wo` ON wr.ID = wo.WriterID
@@ -43,7 +43,7 @@
             *, ( 
                 (UNIX_TIMESTAMP(  `DateDeadline` ) - UNIX_TIMESTAMP( NOW( ) ) ) /3600) AS  `HoursLeft`
         FROM writer_orders
-        WHERE STATUS !=  "CLOSED"
+        WHERE PublicStatus !=  "CLOSED"
         HAVING HoursLeft < 4;';
 
     $plugin['QUERY']['API']['STAT_WRITERS_FREE'] = '
@@ -54,5 +54,5 @@
             `writer_orders` AS  `wo` 
         RIGHT JOIN
             writer_writers AS  `wr` ON wo.WriterID = wr.ID
-        WHERE wo.ID IS NULL';
+        WHERE wo.ID IS NULL AND wr.Active = 1 AND wr.IsOnline = 1';
         

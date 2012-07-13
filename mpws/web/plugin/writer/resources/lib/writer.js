@@ -73,7 +73,12 @@ mpws.module.define('writer', (function(window, document, $){
             mpws.api.objectRequest(this);
         });
         // date pickers
-        $('.MPWSControlOrderDateRange').datepicker({dateFormat: "yy-mm-dd 00:00:00"});
+        $('.MPWSControlOrderDateRange').datepicker({
+                dateFormat: "yy-mm-dd 00:00:00",
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true
+        });
         //- assign order to writer
         
         //mpws.tools.log();

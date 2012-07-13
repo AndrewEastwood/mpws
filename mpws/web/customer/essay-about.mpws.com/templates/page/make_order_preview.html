@@ -2,6 +2,18 @@
     
 <form action="/page/make-order.html" method="POST"> 
     
+    
+    <div class="MPWSSection">
+        <label>Document Type</label>
+        <span><?=$model['CUSTOMER']['DATA_DOC']['Name'];?></span>
+        <input type="hidden" name="order_doc" value="<?=$model['CUSTOMER']['DATA']['DocumentID'];?>"/>
+    </div>
+    <div class="MPWSSection">
+        <label>Subject</label>
+        <span><?=$model['CUSTOMER']['DATA_SUBJECT']['Name'];?></span>
+        <input type="hidden" name="order_subject" value="<?=$model['CUSTOMER']['DATA']['SubjectID'];?>"/>
+    </div>
+    
     <div class="MPWSSection">
         <label>Title</label>
         <span><?=$model['CUSTOMER']['DATA']['Title'];?></span>
@@ -43,6 +55,18 @@
         <input type="hidden" name="order_sources" value="<?=$model['CUSTOMER']['DATA']['Sources'];?>"/>
     </div>
 
+    <div class="MPWSSection">
+        <label>Sources</label>
+        <ul>
+        <?php foreach ($model['CUSTOMER']['DATA']['SourceLinks'] as $link) : ?>
+            <li>
+            <a href="<?=$link;?>" target="blank"><?=basename($link);?></a>
+            <input type="hidden" name="order_source_links[]" value="<?=$link;?>"/>
+            </li>
+        <?php endforeach ?>
+        </ul>
+    </div>
+    
     <div class="MPWSSection">
         <label>Paper instructions</label>
         <textarea name="order_notes"><?=$model['CUSTOMER']['DATA']['Description'];?></textarea>

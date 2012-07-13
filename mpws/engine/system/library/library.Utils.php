@@ -24,6 +24,26 @@ class libraryUtils {
         return $matches[1];
     }
     
+    static public function getDateTimeHoursDiff ($start, $end = false, $format = false) {
+        
+        if(!$format) $format = 'Y-m-d H:i:s'; 
+        
+        if(!$end) $end = date($format); 
+        
+        $start = strtotime($start);
+        $end = strtotime($end);
+        
+        
+        
+        $seconds = $end - $start;
+        $fullHours = $seconds / (60 * 24);
+        
+        //echo $end . '-' . $start .'--------======' . $seconds . '_______';
+        
+        
+        return 'X';//$fullHours;
+    }
+    
     static public function generatePassword($length=9, $strength=0) {
         // src: http://www.webtoolkit.info/php-random-password-generator.html
 	$vowels = 'aeuy';

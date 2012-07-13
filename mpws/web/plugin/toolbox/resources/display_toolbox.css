@@ -3,7 +3,7 @@ body {background: #336699 url('toolbox_bg.jpg') repeat-x; color: #333;}
 
 h3 {color: #eee;}
 
-.MPWSPageToolbox {margin: 0px auto; width: 800px; background: #aaa; margin-top: 50px;}
+.MPWSPageToolbox {margin: 0px auto; width: 1000px; background: #aaa; margin-top: 50px;}
 .MPWSPageToolbox a, .MPWSPageToolbox a:visited {color: #dedede; text-decoration: underline;}
 .MPWSPageToolbox a:hover {color: #fff; text-decoration: underline;}
 
@@ -66,6 +66,7 @@ h3 {color: #eee;}
 
 
 /* Custom Status */
+.MPWSDivTableCellDataState {padding-left: 25px;}
 .MPWSDivTableCellDataState_New {background: url('icons/exclamation-red.png') no-repeat;}
 .MPWSDivTableCellDataState_InProgress {background: url('icons/status.png') no-repeat;}
 .MPWSDivTableCellDataState_Pending {background: url('icons/clock.png') no-repeat;}
@@ -109,14 +110,14 @@ h3 {color: #eee;}
 
 .MPWSComponent {}
 
-.MPWSComponentMenu {float: left; width: 200px; margin-top: 20px;}
+.MPWSComponentMenu {float: left; width: 120px; margin-top: 20px;}
 .MPWSComponentMenu ul {margin: 0px; padding: 0px 0px 10px 10px; list-style: none; line-height: 1.5em;}
 .MPWSComponentMenu ul li {}
 .MPWSComponentMenu ul li a {font-size: 14px; font-weight: bold;}
 .MPWSComponentMenu ul li ul li a {font-size: 12px; font-weight: normal;}
 
 .MPWSComponentContent {margin-top: 20px;}
-.MPWSComponentContent .MPWSContentDisplay {margin-left: 220px;}
+.MPWSComponentContent .MPWSContentDisplay {margin-left: 120px;}
     .MPWSComponentContent .MPWSContentDisplayLogin {margin-left: 0px;}
 
 

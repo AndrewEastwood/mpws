@@ -47,25 +47,33 @@
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
                 <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Title.asc', 'Title.desc', 'Title.asc'));?>">Title</a>
             </span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">
-                <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Status.asc', 'Status.desc', 'Status.asc'));?>">Status</a>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
+                <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'PublicStatus.asc', 'PublicStatus.desc', 'PublicStatus.asc'));?>">Public Status</a>
             </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
+                <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'InternalStatus.asc', 'InternalStatus.desc', 'InternalStatus.asc'));?>">Internal Status</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Assigned</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">
                 <a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Pages.asc', 'Pages.desc', 'Pages.asc'));?>">Pages</a>
             </span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Hours Left</span>
         </div>
     <?php foreach($model['PLUGINS']['WRITER']['DATA'] as $entry) { ?>
         <div class="MPWSDivTableRow MPWSDivTableRowData">
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
                 <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
             </span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1 MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['Status']);?>" title="<?=libraryView::getFrendlyClassName($entry['Status']);?>">&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['PublicStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['PublicStatus']);?>"><?=libraryView::getFrendlyLabel($entry['PublicStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>"><?=libraryView::getFrendlyLabel($entry['InternalStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=($entry['WriterID']?'<a href="?display=writers&action=details&oid='.$entry['WriterID'].'" target="blank">info</a>':'-');?>&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateCreated'],$entry['DateDeadline'], $model['PLUGINS']['WRITER']['DATE_FORMAT']);?></span>
         </div>
     <?php } ?>
     </div>

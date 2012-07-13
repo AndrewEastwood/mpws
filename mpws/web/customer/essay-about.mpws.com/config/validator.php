@@ -12,7 +12,11 @@
         'Format' => 'order_format',
         'Pages' => 'order_pages',
         'Sources' => 'order_sources',
-        'Email' => 'order_email'
+        'Email' => 'order_email',
+        'SourceLinks' => 'order_source_links',
+        'TimeZone' => 'order_timezone',
+        'DocumentID' => 'order_doc',
+        'SubjectID' => 'order_subject'
     );
     
     // db field names to html form fields

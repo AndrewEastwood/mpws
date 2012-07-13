@@ -531,6 +531,26 @@
                 $statement[] = 'LIMIT ' . $this->_limit;
             }
         }
+        
+        // utils
+        
+        public function getEnumValues($table, $field) {
+            
+            if (empty($field))
+                return array();
+            
+            $data = $this->fetchRow('SHOW COLUMNS FROM ' . $table . ' WHERE Field LIKE \'' . $field . '\'');
+
+            if (empty($data['Type']))
+                return array();
+
+            $matches = null;
+            $returnValue = preg_match_all('/\'(.*?)\'/', $data['Type'], $matches);
+            if ($returnValue == 0)
+                return array();
+            
+            return $matches[1];
+        }
     }
     
 ?>

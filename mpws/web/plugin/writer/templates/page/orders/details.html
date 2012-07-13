@@ -87,24 +87,55 @@
     <h3>Order Information</h3>
     <form action="" method="POST" class="MPWSForm MPWSFormDetails" name="order_details_form">
         <div class="MPWSFormFields">
+            
+
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Document Type:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_DOCUMENT']['Name'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Subject:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_SUBJECT']['Name'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
             <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Title:</label>
             <span class="MPWSValue"><?=ucfirst($model['PLUGINS']['WRITER']['DATA']['Title']);?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
 
-            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Status:</label>
-            <span class="MPWSIcon MPWSIcon_<?=libraryView::getFrendlyClassName($model['PLUGINS']['WRITER']['DATA']['Status']);?>">&nbsp;</span>
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Public Status:</label>
+            <span class="MPWSIcon MPWSIcon_<?=libraryView::getFrendlyClassName($model['PLUGINS']['WRITER']['DATA']['PublicStatus']);?>">&nbsp;</span>
             <span class="MPWSValue">
-                <?=libraryView::getFrendlyClassName($model['PLUGINS']['WRITER']['DATA']['Status']);?>
-                &nbsp; | new status: 
-                <select name="set_order_status">
-                    <option value="NEW">New</option>
-                    <option value="IN PROGRESS">In Progress</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="CLOSED">Closed</option>
+                <select name="set_order_publicstatus">
+                <?php
+                    foreach ($model['PLUGINS']['WRITER']['DATA_P_STAT'] as $option) {
+                        echo $option;
+                        $_state = '';
+                        if ($option == $model['PLUGINS']['WRITER']['DATA']['PublicStatus'])
+                            $_state = ' selected="selected"';
+                        echo '<option value="'.$option.'"'.$_state.'>' . $option . '</option>';
+                    }
+                ?>
                 </select>
             </span>
-            
             <div class="MPWSSeparator"></div>
+
+            <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Internal Status:</label>
+            <span class="MPWSIcon MPWSIcon_<?=libraryView::getFrendlyClassName($model['PLUGINS']['WRITER']['DATA']['InternalStatus']);?>">&nbsp;</span>
+            <span class="MPWSValue">
+                <select name="set_order_internalstatus">
+                <?php
+                    foreach ($model['PLUGINS']['WRITER']['DATA_I_STAT'] as $option) {
+                        echo $option;
+                        $_state = '';
+                        if ($option == $model['PLUGINS']['WRITER']['DATA']['InternalStatus'])
+                            $_state = ' selected="selected"';
+                        echo '<option value="'.$option.'"'.$_state.'>' . $option . '</option>';
+                    }
+                ?>
+                </select>
+            </span>
+            <div class="MPWSSeparator"></div>
+            
+            
             <h3>Dates And Deadline</h3>
             
             <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
@@ -159,6 +190,22 @@
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Description'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
             
+
+            <hr size="2"/>
+            <h3>Sources</h3>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional sources:</label>
+            <span class="MPWSValue">
+            <ul>
+            <?php foreach ($model['PLUGINS']['WRITER']['DATA_SOURCES'] as $link) : ?>
+                <li>
+                    <a href="<?=$link['SourceURL'];?>" target="blank"><?=basename($link['SourceURL']);?></a>
+                </li>
+            <?php endforeach ?>
+            </ul>
+            </span>
+            <div class="MPWSSeparator"></div>
+
             <hr size="2"/>
             <h3>Invoices</h3>
             
@@ -195,9 +242,13 @@
             </span>
             <div class="MPWSSeparator"></div>
             
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Reworks</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['ReworkCount'];?></span>
+            <div class="MPWSSeparator"></div>
+            
             <hr size="2"/>
             
-            <input type="submit" name="do" value="Save Order"/>
+            <input type="submit" name="do" value="Update Order"/>
         </div>
     </form>
     <hr size="2"/>
