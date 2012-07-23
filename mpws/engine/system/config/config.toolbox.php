@@ -4,7 +4,7 @@
     $config['TOOLBOX']['HEADERS'] = array(
         'Content-type: text/html; charset=utf8'
     );
-    $config['TOOLBOX']['TIMEZONE'] = 'UTC';
+    $config['TOOLBOX']['TIMEZONE'] = 'GMT+2';
     $config['TOOLBOX']['SESSION_TIME'] = 30 * 60;
     $config['TOOLBOX']['ICONV-ENCODING'] = array(
         'internal_encoding' => 'UTF-8',

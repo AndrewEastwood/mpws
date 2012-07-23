@@ -147,6 +147,10 @@ class libraryCustomerManager {
             //echo '<br>| default key: ' . $_ckey;
             unset($default);
         }
+        
+        
+        // allow to use in customer config
+        $default = $_merged;
 
         foreach ($_customer as $_cfile) {
             $_ckey = strtoupper(basename($_cfile, '.php'));

@@ -10,7 +10,7 @@ class libraryValidator {
                 //echo '<br>|  ['.$key.'] validating value = ' . (empty($value)?'EMPTY':$value);
                 //echo ' PATTERN = ' . $rules[$key];
                
-                if (empty($value)) {
+                if (!isset($value)) {
                     //echo '   ........<= has errro!!!';
                     $messages[] = 'Error is occured in the field "' . $key .'"';
                 } elseif (!empty($rules[$key]) && !self::validateString($value, $rules[$key])) {

@@ -1,7 +1,7 @@
 <div class="MPWSContentDisplay">
     <h2>Order Details</h2>
     
-    <h3>Student</h3>
+    <h3>Student <a href="?display=students&action=details&oid=<?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['ID'];?>" target="blank">view full profile</a></h3>
     <form action="?display=orders&action=details&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm MPWSFormDetails">
         <div class="MPWSFormFields">
             <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Name:</label>
@@ -18,6 +18,18 @@
 
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone:</label>
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Phone'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            <hr size="2"/>
+
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Billing Email:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Billing_Email'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Billing Phone:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Billing_Phone'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
+            
             <div class="MPWSSeparator"></div>
 
             <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Enabled:</label>

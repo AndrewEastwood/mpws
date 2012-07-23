@@ -1,5 +1,6 @@
 
     $customer['MAIL'] = array();
-    $customer['MAIL']['ACTION_TRIGGERS'] = array(
-        'ON_NEW_ORDER' => $default['MAIL']['SUPPORT']
-    );
+    
+    /* SEND EMAIL ON ACTION WITH TOOLBOX MODE ONLY */
+    /* IS NOT IMPLEMENTED */
+    $customer['MAIL']['ACTION_TRIGGERS'] = array();

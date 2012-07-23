@@ -8,7 +8,7 @@
     }*/
 ?>
 
-<form action="?display=home" method="POST">
+<form action="?<?=(empty($_SERVER['QUERY_STRING'])?'display=home':$_SERVER['QUERY_STRING']);?>" method="POST">
     <input type="text" name="mpws_ulogin" value="" placeholder="Login"/>
     <input type="password" name="mpws_upwd" value="" placeholder="Password"/>
     <input type="submit" name="do" value="SignIn"/>

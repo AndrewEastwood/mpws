@@ -216,7 +216,20 @@ class customer {
         //var_dump($_POST);
         
         // get merchant id
-        $merchant_order_id = libraryRequest::getValue('merchant_order_id');
+        $merchant_order_id_data = explode('-', libraryRequest::getValue('merchant_order_id'));
+        $merchant_order_id = '';
+        $user_login = '';
+        
+        if (!empty($merchant_order_id_data[0]))
+            $merchant_order_id = $merchant_order_id_data[0];
+        if (!empty($merchant_order_id_data[1]))
+            $user_login = $merchant_order_id_data[1];
+        
+        //var_dump($_GET);
+        //var_dump($merchant_order_id_data);
+        //echo 'MID = ' . $merchant_order_id;
+        //echo '<br>';
+        //echo 'USER LOGIN = ' . $user_login;
         
         // check for double opening
         $invoiceInfo = $customer->getDatabaseObj()
@@ -226,7 +239,7 @@ class customer {
                 ->fetchRow();
 
         // if second opening
-        if (empty($invoiceInfo)) {
+        if (!empty($invoiceInfo)) {
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.index');
             return;
         }
@@ -269,6 +282,29 @@ class customer {
                 ->fields(array_keys($invoice))
                 ->values(array_values($invoice))
                 ->query();
+        
+        if (!empty($user_login)) {
+            $user_billing_info = array(
+                'Billing_FirstName' => libraryRequest::getValue('card_holder_name'),
+                'Billing_LastName' => '',
+                'Billing_Email' => libraryRequest::getValue('email'),
+                'Billing_Phone' => libraryRequest::getValue('phone'),
+                'Billing_Address' => libraryRequest::getValue('street_address') . libraryRequest::getValue('street_address2'),
+                'Billing_City' => libraryRequest::getValue('city'),
+                'Billing_State' => libraryRequest::getValue('state'),
+                'Billing_PostalCode' => libraryRequest::getValue('zip'),
+                'Billing_Country' => libraryRequest::getValue('country'),
+                'Name' => libraryRequest::getValue('card_holder_name')
+            );
+            $customer->getDatabaseObj()
+                    ->reset()
+                    ->update('writer_students')
+                    ->set($user_billing_info)
+                    ->where('Login', '=', $user_login)
+                    ->query();
+        }
+            
+        
         
         $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase');
     }
@@ -314,6 +350,7 @@ class customer {
     }
     private function _pageMakeOrder ($customer) {
         //echo 'ololo';
+        
         $model = &$customer->getModel();
         $validator = $customer->getCustomerConfiguration('VALIDATOR');
         $messages = array();
@@ -322,6 +359,22 @@ class customer {
         
         //echo '<br><br><br><br><br><br><br>';
         
+        /*
+            $libView = new libraryView();
+            $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
+            $recipient['TO'] = 'soulcor@gmail.com';
+            $recipient['SUBJECT'] = 'New order has been created';
+            $recipient['DATA'] = array(
+                'Name' => 'eu_spuc5pja0r',
+                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . '5c920345b06da0f16e68ae658ca46353'
+            );
+            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
+            // send email message to system
+            libraryMailer::sendEMail($recipient);
+            //unset($recipient['MESSAGE']);
+            var_dump($recipient);  */    
+
         //var_dump($validator['DATAMAP']['ORDER']);
         // preview
         
@@ -376,6 +429,18 @@ class customer {
                    
                     $mdbc = $customer->getCustomerConfiguration('MDBC');
                     $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+                    
+                    // add condition to avoid new profile when user is loggined
+                    if ($model['USER']['ACTIVE']) {
+                        // fill all billing fields
+                        
+                        
+                    } else {
+                        // make new user
+                        
+                    }
+                    
+                    
                     // make temp user
                     $_userName = 'eu_' . libraryUtils::genRandomString(10);
                     $_userPwd = 'eu_' . libraryUtils::generatePassword(9, 8);
@@ -441,7 +506,7 @@ class customer {
                     $data['StudentID'] = $newStudent['ID'];
                     $data['Price'] = $data['Pages'] * $priceInfo['Price'];
                     $data['Discount'] = 0;
-                    $data['Credits'] = round($data['Price'] / 3, 2);
+                    $data['Credits'] = round($data['Price'] / 4, 0);
                     $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT'], $_saveTime);
                     $data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
                     $data['RefundToken'] = '';
@@ -455,6 +520,7 @@ class customer {
                         ->values(array_values($data))
                         ->query();
                     
+                    /* NOTIFY BUYER */
                     //$notifyWriter = libraryRequest::getPostValue('writer_notify');
                     //if (!empty($notifyWriter)) {
                         // form email object
@@ -469,33 +535,52 @@ class customer {
                             'TargetUrl' => $customer_config_mail['URLS']['ACTIVATE'] . $_userToken,
                             'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
                         );
-                        
-                        
                         //var_dump($recipient);
-                        
                         // get html message
                         $libView = new libraryView();
                         $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.student.new'));
-                        // send email message
+                        // send email message to new user
                         libraryMailer::sendEMail($recipient);
                         
                         
+                        /* SYSTEM NOTIFY */
+                        $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
+                        $recipient['SUBJECT'] = 'New order has been created';
+                        $recipient['DATA'] = array(
+                            'Name' => $_userName,
+                            'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
+                        );
+                        $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
+                        // send email message to system
+                        libraryMailer::sendEMail($recipient);
+
                         // set public data
                         //$model['CUSTOMER']['DATA_EMAIL'] = $student['Email'];
                         //$model['CUSTOMER']['DATA_TOKEN'] = $_o_token;
                         
+                        // general information
                         $_order = array();
                         $_order['sid'] = '1799160';
                         $_order['quantity'] = '1';
                         $_order['product_id'] = '1';
-                        $_order['merchant_order_id'] = $_o_token;
+                        $_order['merchant_order_id'] = $_o_token . '-' . $_userName;
                         $_order['email'] = $student['Email'];
                         $_order['submit'] = 'Buy from 2CO';
+                        // billing information
+                        // if user is loggined
+                        if (!empty($model['USER']['ID'])) {
+                            $user = $customer->getDatabaseObj()
+                                ->select('*')
+                                ->from('writer_students')
+                                ->where('ID', '=', $model['USER']['ID'])
+                                ->fetchRow();
+                            
+                        }
                         
                         libraryRequest::locationRedirect($_order, 'https://www.2checkout.com/checkout/purchase');
                         exit;
                         
-                        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order_saved');
+                        //$model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order_saved');
                     //}
                     
                     return;
@@ -547,6 +632,17 @@ class customer {
         $model['CUSTOMER']['DATA_PRICES'] = $prices;
         $model['CUSTOMER']['DATA_DOCS'] = $documents;
         $model['CUSTOMER']['DATA_SUBJECTS'] = $subjects;
+        
+        
+        if (!libraryRequest::isPostFormActionMatchAny('proceed', 'checkout') && !empty($model['USER']['ID'])) {
+            $user = $customer->getDatabaseObj()
+                ->select('Email')
+                ->from('writer_students')
+                ->where('ID', '=', $model['USER']['ID'])
+                ->fetchRow();
+            $model['CUSTOMER']['DATA']['Email'] = $user['Email'];
+        }
+                
 
         //var_dump($model['CONFIG']);
         //var_dump($fields);
@@ -560,6 +656,11 @@ class customer {
 
 
     private function _accountDeskCommonOrders ($customer, $orderStatus = array('NEW', 'PENDING', 'REWORK',  'IN PROGRESS', 'REJECTED')) {
+        
+        
+        echo '<pre>' . print_r($customer->getCustomerConfiguration('MAIL'), true) . '</pre>';
+        
+        
         $model = &$customer->getModel();
         // get new tasks
         echo $_SESSION['WEB_USER']['TYPE'].'ID'. '='. $_SESSION['WEB_USER']['ID'];
@@ -567,10 +668,10 @@ class customer {
         foreach ($orderStatus as $orderStatus)
             $data[$orderStatus] = $customer->getDatabaseObj()
                     ->reset()
-                    ->select('ID, Title, Price, Pages, Format, DateCreated, DateDeadline, Status, ReworkCount')
+                    ->select('ID, Title, Price, Pages, Format, DateCreated, DateDeadline, PublicStatus, ReworkCount')
                     ->from('writer_orders')
                     ->where($_SESSION['WEB_USER']['TYPE'].'ID', '=', $_SESSION['WEB_USER']['ID'])
-                    ->andWhere('Status', '=', $orderStatus)
+                    ->andWhere('PublicStatus', '=', $orderStatus)
                     ->fetchData();
         // do not show student rejected status
         // render rows with previous status

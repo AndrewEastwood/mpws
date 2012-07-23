@@ -2,18 +2,20 @@
     <h2><?=ucfirst(libraryRequest::getDisplay('home'));?></h2>
     
     
-    <h3>Tasks That Must By Almost Completed</h3>
+    <h3>Tasks That Must Be Almost Completed</h3>
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Title</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Status</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Public Status</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Internal Status</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Assigned</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Created</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Deadline</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Hours Left</span>
         </div>
         <?php foreach($model['PLUGINS']['WRITER']['DATA_EXPIRED'] as $key => $expireTasks) { ?>
-            
             <h3>
             <?php if ($key == 0) : ?>
                 Tasks Are Expired
@@ -23,14 +25,17 @@
             </h3>
             <?php foreach($expireTasks as $entry) { ?>
                 <div class="MPWSDivTableRow MPWSDivTableRowData MPWSStatusExpiration_<?=$key;?>">
-                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
-                        <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
-                    </span>
-                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?></span>
-                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1 MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['Status']);?>" title="<?=libraryView::getFrendlyClassName($entry['Status']);?>">&nbsp;</span>
-                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
-                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['DateCreated'];?></span>
-                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['DateDeadline'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['PublicStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['PublicStatus']);?>"><?=libraryView::getFrendlyLabel($entry['PublicStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>"><?=libraryView::getFrendlyLabel($entry['InternalStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=($entry['WriterID']?'<a href="?display=writers&action=details&oid='.$entry['WriterID'].'" target="blank">info</a>':'-');?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline']);?></span>
                 </div>
             <?php } ?>
         <?php } ?>

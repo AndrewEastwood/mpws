@@ -58,7 +58,7 @@
     <div class="MPWSSection">
         <label>Sources</label>
         <ul>
-        <?php foreach ($model['CUSTOMER']['DATA']['SourceLinks'] as $link) : ?>
+        <?php if (!empty($model['CUSTOMER']['DATA']['SourceLinks'])) foreach ($model['CUSTOMER']['DATA']['SourceLinks'] as $link) : ?>
             <li>
             <a href="<?=$link;?>" target="blank"><?=basename($link);?></a>
             <input type="hidden" name="order_source_links[]" value="<?=$link;?>"/>

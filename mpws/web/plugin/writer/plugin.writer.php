@@ -396,11 +396,13 @@ class pluginWriter {
                     ->select('*')
                     ->from('writer_orders')
                     ->where('WriterID', '=', '0')
-                    ->orWhere('InternalStatus', '=', '"'.$stat.'"')
+                    ->andWhere('InternalStatus', '=', $stat)
                     ->orderBy('DateCreated')
                     ->order('DESC')
                     ->fetchData();
         }
+        
+        //var_dump($model['PLUGINS']['WRITER']['DATA']);
         
         //var_dump($model['PLUGINS']['WRITER']['DATA']);
         $model['PLUGINS']['WRITER']['DATE_FORMAT'] = $customer_config_mdbc['DB_DATE_FORMAT'];
@@ -455,6 +457,7 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['DATA_FREE_WRITERS'] = $freeWriters;
         
+        $model['PLUGINS']['WRITER']['DATA_EXPIRED'] = array();
         if (!empty($expiredTasks0))
             $model['PLUGINS']['WRITER']['DATA_EXPIRED']['0'] = $expiredTasks0;
         if (!empty($expiredTasks1))
@@ -497,6 +500,9 @@ class pluginWriter {
         
         if (libraryRequest::isPostFormAction('save')) {
             $data = libraryRequest::getPostMapContainer($plugin['config']['VALIDATOR']['DATAMAP']['PRICES']);
+            
+            //var_dump($data);
+            
             /* validate fileds */
             libraryValidator::validateData($data, $plugin['config']['VALIDATOR']['FILTER']['PRICES'], $messages);
             // if ok to proceed
@@ -851,7 +857,7 @@ class pluginWriter {
         $data_orders = array();
         if (libraryRequest::isPostFormAction('show orders')) {
             $data_orders = $toolbox->getDatabaseObj()
-                ->select('ID, Title, DateCreated, Credits')
+                ->select('*')
                 ->from('writer_orders')
                 ->where('WriterID', '=', $oid)
                 ->andWhere('DateCreated', '>', libraryRequest::getPostValue('start_date'))
@@ -1380,36 +1386,65 @@ class pluginWriter {
         $action = libraryRequest::getAction();
         $oid = libraryRequest::getOID();
         $data = array();
+        
+        // check for token id
+        $token = libraryRequest::getValue('token');
+        
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
         $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
         $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = false;
 
+        // check for empty oid
         if(empty($oid)) {
-            // set template
-            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
-            return;
+            // and for token
+            if (empty($token)) {
+                // set template
+                $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                return;
+            }
+            $data_order = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('OrderToken', '=', $token)
+                ->fetchRow();
+            if (empty($data_order['ID'])) {
+                // set template
+                $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                return;
+            }
+            else
+                $oid = $data_order['ID']; 
         }
+        
 
+        // get order record
+        $data_order = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_orders')
+            ->where('ID', '=', $oid)
+            ->fetchRow();
+        
+        // get writer info
+        $currentWriterID = $data_order['WriterID'];
+        if (libraryRequest::isPostFormAction('assign to writer'))
+            $currentWriterID = libraryRequest::getPostValue('assign_order_to');
+        $data_writer = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_writers')
+            ->where('ID', '=', $currentWriterID)
+            ->fetchRow();
+        
         if (libraryRequest::isPostFormAction('send message')) {
-
             echo 'sending message';
             $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'MESSAGE_SEND';
             //return;
         }
         if (libraryRequest::isPostFormAction('order history')) {
-
             $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'ORDERS_SHOW';
             echo 'order history';
             //return;
-        }
-        if (libraryRequest::isPostFormAction('assign to writer')) {
-            $toolbox->getDatabaseObj()
-                ->update('writer_orders')
-                ->set(array('WriterID' => libraryRequest::getPostValue('assign_order_to')))
-                ->where('ID', '=', $oid)
-                ->query();
         }
         if (libraryRequest::isPostFormAction('update order')) {
             //echo 'saving order';
@@ -1425,12 +1460,37 @@ class pluginWriter {
                 ->where('ID', '=', $oid)
                 ->query();
         }
-
-        $data_order = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('writer_orders')
-            ->where('ID', '=', $oid)
-            ->fetchRow();
+        if (libraryRequest::isPostFormAction('assign to writer')) {
+            $toolbox->getDatabaseObj()
+                ->update('writer_orders')
+                ->set(array('WriterID' => $currentWriterID))
+                ->where('ID', '=', $oid)
+                ->query();
+            /* NOTIFY WRITER ABOUT NEW ASSIGNMENT */
+            // when $new_writer_id == 0 - then order is unassigned
+            if ($currentWriterID != 0) {
+                // get new writer info
+                $customer_config_mail = $toolbox->getCustomerObj()->GetCustomerConfiguration('MAIL');
+                
+                // form email object
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $data_writer['Email'];
+                $recipient['NAME'] = $data_writer['Name'];
+                $recipient['SUBJECT'] = 'New order is assigned to you';
+                $recipient['DATA'] = array(
+                    'DateDeadline' => $data_order['DateDeadline'],
+                    'HoursLeft' => libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline']),
+                    'TargetUrl' => $customer_config_mail['URLS']['LOGIN'],
+                    'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
+                );
+                // get html message
+                $libView = new libraryView();
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $plugin['templates']['mail.writers.assignment']);
+                //var_dump($recipient);
+                // send email message
+                libraryMailer::sendEMail($recipient);
+            }
+        }
         
         $data_invoice_order = array();
         if (!empty($data_order['OrderToken']))
@@ -1460,12 +1520,6 @@ class pluginWriter {
             ->select('*')
             ->from('writer_students')
             ->where('ID', '=', $data_order['StudentID'])
-            ->fetchRow();
-        
-        $data_writer = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('writer_writers')
-            ->where('ID', '=', $data_order['WriterID'])
             ->fetchRow();
         
         $data_price = $toolbox->getDatabaseObj()
@@ -1527,6 +1581,8 @@ class pluginWriter {
         $model['PLUGINS']['WRITER']['DATA_SOURCES'] = $data_sources;
         $model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED'] = $isWriterEmpty;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.details'];
+        
+        
     }
 }
 

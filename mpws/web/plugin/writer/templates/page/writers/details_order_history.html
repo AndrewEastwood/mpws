@@ -21,22 +21,28 @@
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
-                Title
-            </span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">
-                Credits
-            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Title</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Public Status</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Internal Status</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Hours Left</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Credits</span>
         </div>
     <?php foreach($model['PLUGINS']['WRITER']['DATA_ORDERS'] as $entry) { ?>
         <div class="MPWSDivTableRow MPWSDivTableRowData">
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
-                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>" target="blank">Details</a>
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
             </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Title'];?>&nbsp;</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Credits'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['PublicStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['PublicStatus']);?>"><?=libraryView::getFrendlyLabel($entry['PublicStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>"><?=libraryView::getFrendlyLabel($entry['InternalStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Credits'];?></span>
         </div>
     <?php } ?>
     </div>

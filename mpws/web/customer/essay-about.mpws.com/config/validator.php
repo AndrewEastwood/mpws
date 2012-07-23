@@ -55,7 +55,7 @@
         'Level' => '/High School|College|University/',
         'Format' => '/MLA|APA|Chicago|Turabian/',
         'Pages' => '/\d{1,2}/',
-        'Sources' => '/\d{1,2}/',
+        //'Sources' => '/\d{1,2}/',
         'Email' => '/(?=^.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}/'
     );
     
