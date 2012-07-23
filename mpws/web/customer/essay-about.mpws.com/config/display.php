@@ -49,20 +49,20 @@
     
     $customer['DISPLAY']['ACCOUNT_MENU'] = array(
         'STUDENT' => Array (
-            '/page/account.html?action=orders' => 'Orders', // Active
-            //'/page/account.html?action=pending' => 'Pending',
-            //'/page/account.html?action=rework' => 'Rework',
-            //'/page/account.html?action=completed' => 'Completed',
-            '/page/account.html?action=history' => 'History',
-            '/page/account.html?action=settings' => 'Settings'
+            '/page/account.html?display=orders' => 'Orders', // Active
+            //'/page/account.html?display=pending' => 'Pending',
+            //'/page/account.html?display=rework' => 'Rework',
+            //'/page/account.html?display=completed' => 'Completed',
+            '/page/account.html?display=history' => 'History',
+            '/page/account.html?display=settings' => 'Settings'
         ),
         'WRITER' => Array (
-            '/page/account.html?action=new' => 'New Orders',
-            '/page/account.html?action=pending' => 'Pending',
-            '/page/account.html?action=rework' => 'Rework',
-            '/page/account.html?action=completed' => 'Completed',
-            '/page/account.html?action=history' => 'History',
-            '/page/account.html?action=settings' => 'Settings'
+            '/page/account.html?display=orders' => 'Orders',
+            //'/page/account.html?display=pending' => 'Pending',
+            //'/page/account.html?display=rework' => 'Rework',
+            //'/page/account.html?display=completed' => 'Completed',
+            '/page/account.html?display=history' => 'History',
+            '/page/account.html?display=settings' => 'Settings'
         )
     );
 

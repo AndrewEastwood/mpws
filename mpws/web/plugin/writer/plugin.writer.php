@@ -455,6 +455,33 @@ class pluginWriter {
         // get online writers that do not have tasks
         $freeWriters = $toolbox->getDatabaseObj()->fetchData($plugin['config']['QUERY']['API']['STAT_WRITERS_FREE']);
 
+        // get rejected orders by writers
+        $order_groups['PENDING'] = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('InternalStatus', '=', 'PENDING')
+                ->fetchData();
+        
+        // waiting for approval before sending to review
+        $order_groups['REJECTED'] = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('InternalStatus', '=', 'REJECTED')
+                ->fetchData();
+        // orders to rework by students
+        $order_groups['REWORK'] = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('PublicStatus', '=', 'REWORK')
+                ->fetchData();
+        // orders to refund by students
+        $order_groups['TO REFUND'] = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('PublicStatus', '=', 'TO REFUND')
+                ->fetchData();
+        
+        
         $model['PLUGINS']['WRITER']['DATA_FREE_WRITERS'] = $freeWriters;
         
         $model['PLUGINS']['WRITER']['DATA_EXPIRED'] = array();
@@ -468,6 +495,10 @@ class pluginWriter {
             $model['PLUGINS']['WRITER']['DATA_EXPIRED']['3'] = $expiredTasks3;
         if (!empty($expiredTasks4))
             $model['PLUGINS']['WRITER']['DATA_EXPIRED']['4'] = $expiredTasks4;
+        
+        // orders by statuses
+        $model['PLUGINS']['WRITER']['DATA_O_GROUPS'] = $order_groups;
+        
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.statistic.teamload'];
     }
     
@@ -1417,7 +1448,43 @@ class pluginWriter {
             else
                 $oid = $data_order['ID']; 
         }
-        
+
+        if (libraryRequest::isPostFormAction('send message')) {
+            echo 'sending message';
+            $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'MESSAGE_SEND';
+            //return;
+        }
+        if (libraryRequest::isPostFormAction('order history')) {
+            $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'ORDERS_SHOW';
+            echo 'order history';
+            //return;
+        }
+        if (libraryRequest::isPostFormAction('approve order')) {
+            $order_status = array(
+                'PublicStatus' => 'PENDING',
+                'InternalStatus' => 'APPROVED'
+            );
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->update('writer_orders')
+                ->set($order_status)
+                ->where('ID', '=', $oid)
+                ->query();
+        }
+        if (libraryRequest::isPostFormAction('update order')) {
+            //echo 'saving order';
+            $toolbox->getDatabaseObj()
+                ->update('writer_orders')
+                ->set(
+                    array(
+                        'PublicStatus' => libraryRequest::getPostValue('set_order_publicstatus'),
+                        'InternalStatus' => libraryRequest::getPostValue('set_order_internalstatus'),
+                        'Credits' => libraryRequest::getPostValue('order_credits')
+                    )
+                )
+                ->where('ID', '=', $oid)
+                ->query();
+        }
 
         // get order record
         $data_order = $toolbox->getDatabaseObj()
@@ -1436,30 +1503,6 @@ class pluginWriter {
             ->where('ID', '=', $currentWriterID)
             ->fetchRow();
         
-        if (libraryRequest::isPostFormAction('send message')) {
-            echo 'sending message';
-            $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'MESSAGE_SEND';
-            //return;
-        }
-        if (libraryRequest::isPostFormAction('order history')) {
-            $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'ORDERS_SHOW';
-            echo 'order history';
-            //return;
-        }
-        if (libraryRequest::isPostFormAction('update order')) {
-            //echo 'saving order';
-            $toolbox->getDatabaseObj()
-                ->update('writer_orders')
-                ->set(
-                    array(
-                        'PublicStatus' => libraryRequest::getPostValue('set_order_publicstatus'),
-                        'InternalStatus' => libraryRequest::getPostValue('set_order_internalstatus'),
-                        'Credits' => libraryRequest::getPostValue('order_credits')
-                    )
-                )
-                ->where('ID', '=', $oid)
-                ->query();
-        }
         if (libraryRequest::isPostFormAction('assign to writer')) {
             $toolbox->getDatabaseObj()
                 ->update('writer_orders')
@@ -1471,6 +1514,7 @@ class pluginWriter {
             if ($currentWriterID != 0) {
                 // get new writer info
                 $customer_config_mail = $toolbox->getCustomerObj()->GetCustomerConfiguration('MAIL');
+                $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
                 
                 // form email object
                 $recipient = $customer_config_mail['NOTIFY'];
@@ -1478,8 +1522,8 @@ class pluginWriter {
                 $recipient['NAME'] = $data_writer['Name'];
                 $recipient['SUBJECT'] = 'New order is assigned to you';
                 $recipient['DATA'] = array(
-                    'DateDeadline' => $data_order['DateDeadline'],
-                    'HoursLeft' => libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline']),
+                    'DateDeadline' => libraryUtils::subDateHours($data_order['DateDeadline'], 2, $customer_config_mdbc['DB_DATE_FORMAT']),
+                    'HoursLeft' => libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline']) - 2,
                     'TargetUrl' => $customer_config_mail['URLS']['LOGIN'],
                     'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
                 );

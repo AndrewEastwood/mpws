@@ -1,0 +1,199 @@
+<h2>Order Details</h2>
+<hr size="2"/>
+
+<div class="MPWSOrderDetailsBlock">
+
+<?php
+    if(count($model['CUSTOMER']['MESSAGES'])) {
+        echo '<b>We\'ve found some errors in the fields below:</b>';
+        echo '<ul>';
+        foreach ($model['CUSTOMER']['MESSAGES'] as $msg)
+            echo '<li>' . $msg . '</li>';
+        echo '</ul>';
+    }
+?>
+
+<h2>#<?=ucfirst($model['CUSTOMER']['DATA']['ID']);?>. <?=ucfirst($model['CUSTOMER']['DATA']['Title']);?></h2>
+    
+<form action="" method="POST" class="MPWSForm MPWSFormDetails" name="order_details_form">
+    <div class="MPWSFormFields">
+
+        <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Document Type:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_DOCUMENT']['Name'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Subject:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_SUBJECT']['Name'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Title:</label>
+        <span class="MPWSValue"><?=ucfirst($model['CUSTOMER']['DATA']['Title']);?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Status:</label>
+        <span class="MPWSValue"><?=libraryView::getFrendlyClassName($model['CUSTOMER']['DATA']['PublicStatus']);?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <h3>Dates And Deadline</h3>
+
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['DateCreated'];?></span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+        <span class="MPWSValue">
+            <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="order_deadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>
+        </span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
+        <span class="MPWSValue"><?=libraryUtils::getDateTimeHoursDiff($model['CUSTOMER']['DATA']['DateDeadline']);?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <hr size="2"/>
+        <h3>Order Price</h3>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Type</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_PRICE']['Name'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Value</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_PRICE']['Price'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Academic Level</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Level'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Paper format</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Format'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Order Price</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Price'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total Pages:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Pages'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional notes:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Description'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+
+        <hr size="2"/>
+        <h3>Sources</h3>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional sources:</label>
+        <a href="#_addmore" id="MPWSOrderAddMoreSourcesID">add +1</a>
+        <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
+            <!-- sources from preview page -->
+            <?php if (!empty($model['CUSTOMER']['DATA_SOURCES'])) foreach ($model['CUSTOMER']['DATA_SOURCES'] as $link) : ?>
+                <div class="MPWSSourceRow">
+                <input type="text" name="order_source_links[]" value="<?=$link['SourceURL'];?>"/><a href="#_remove" id="MPWSOrderRemoveSourcesID">remove</a>
+                </div>
+            <?php endforeach ?>
+        </div>
+        
+        <div class="MPWSSeparator"></div>
+
+        <?php if (!empty($model['CUSTOMER']['DATA']['ResolutionDocumentLink'])) : ?>
+        <h3>Resolution Document</h3>
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Click the following link to download document:</label>
+        <span class="MPWSValue"><a target="blank" href="<?=$model['CUSTOMER']['DATA']['ResolutionDocumentLink'];?>">CLICK HERE</a></span>
+        <div class="MPWSSeparator"></div>
+        <?php endif ?>
+        
+        <hr size="2"/>
+        <h3>Invoices</h3>
+
+        <!-- Order Invoice -->
+        <?php if (empty($model['CUSTOMER']['DATA_INVOICE_ORDER'])) : ?>
+            <h4>This Order Is Unpaid.</h4>
+        <?php else : ?>
+            <h4>Payment</h4>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Paid</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_INVOICE_ORDER']['total'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Credit Card Processed</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_INVOICE_ORDER']['credit_card_processed'];?></span>
+            <div class="MPWSSeparator"></div>
+        <?php endif ?>
+        <!-- Order Refund -->
+        <?php if (!empty($model['CUSTOMER']['DATA_INVOICE_REFUND'])) : ?>
+            <h4>Refund Information</h4>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Paid</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_INVOICE_REFUND']['total'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Credit Card Processed</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_INVOICE_REFUND']['credit_card_processed'];?></span>
+            <div class="MPWSSeparator"></div>
+        <?php endif ?>
+
+
+        <hr size="2"/>
+        <h3>Work Process</h3>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Reworks</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['ReworkCount'];?></span>
+        <div class="MPWSSeparator"></div>
+  
+        <hr size="2"/>
+        <h3>Order Actions</h3>
+
+        <input type="submit" name="do" value="Save Changes"/>
+        <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'PENDING') : ?>
+            <input type="submit" name="do" value="Send To Rework"/>
+        <?php endif ?>
+        <?php if($model['CUSTOMER']['DATA']['InternalStatus'] != 'CLOSED') : ?>
+            <input type="submit" name="do" value="Close Order"/>
+        <?php else : ?>
+            <input type="submit" name="do" value="Reopen Order"/>
+        <?php endif ?>
+        <input type="submit" name="do" value="Want Refund"/>
+    </div>
+</form>
+
+<hr size="2"/>
+
+<h3>Messages</h3>
+
+<div class="MPWSBlock">
+    <form action="" method="POST">
+        <label for="MPWSField_WriterSubjectID" class="MPWSFieldLabel">Subject:</label>
+        <input type="text" id="MPWSField_WriterSubjectID" class="MPWSTextBox" name="messages_subject" placeholder="Subjects"/>
+        <div class="MPWSSeparator"></div>
+        <label for="MPWSField_WriterMessageID" class="MPWSFieldLabel">Message:</label>
+        <textarea id="MPWSField_WriterMessageID" cols="30" rows="8" class="MPWSTextBox" name="messages_message"></textarea>
+        <div class="MPWSSeparator"></div>
+        <input type="submit" name="do" value="Post Message"/>
+    </form>
+</div>
+
+<?php foreach($model['CUSTOMER']['DATA_MESSAGES'] as $entry) { ?>
+    <div class="MPWSSection MPWSSectionOrderMessages">
+        <div class="MPWSBlock MPWSBlockMessageState">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataState">
+                Is new:
+                <input type="checkbox" 
+                    name="message_notify" 
+                    id="MPWSControl_MessageMarkAsReadID" 
+                    class="MPWSCheckbox MPWSControl_MessageMarkAsRead" 
+                    mpws-action="mark_as_read"
+                    mpws-oid="<?=$entry['ID']?>"
+                    mpws-realm="public"
+                    <?=$entry['IsUnread']?'checked="checked"':'';?>
+                />
+            </span>
+        </div>
+        <div class="MPWSBlock MPWSBlockMessageBody">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataSubject"><?=$entry['Subject'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataDateCreated"><?=$entry['DateCreated'];?></span>
+            <div class="MPWSSeparator"></div>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataMessages"><?=$entry['Message'];?></span>
+        </div>
+    </div>
+<?php } ?>
+
+<div>

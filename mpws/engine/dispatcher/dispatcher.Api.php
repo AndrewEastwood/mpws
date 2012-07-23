@@ -32,7 +32,7 @@
     /* controller */
 
     //$SESSION['MPWS-REALM'] = MPWS_REQUEST;
-    //echo $_GET['action'];
+    //echo $_GET['page'];
     switch(strtolower($_GET['page'])) {
         case 'public': 
             $controller = new controllerPublic();

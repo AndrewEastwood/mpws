@@ -10,6 +10,8 @@ mpws.module.define('essay-about', (function(window, document, $){
         });
         // date pickers
         $('.MPWSControlOrderDateRange').datepicker({
+                showOn: "button",
+                buttonImage: "/static/icons/calendar.png",
                 dateFormat: "yy-mm-dd 00:00:00",
                 changeMonth: true,
                 changeYear: true,
@@ -37,6 +39,17 @@ mpws.module.define('essay-about', (function(window, document, $){
             }
             
         });
+        
+        // add +1 order source
+        $('#MPWSOrderAddMoreSourcesID').click(function(){
+            var _field = '<div class="MPWSSourceRow"><input type="text" name="order_source_links[]" value=""/><a href="#_remove" id="MPWSOrderRemoveSourcesID">remove</a></div>';
+            $('#MPWSSectionOrderSourcesLinksID').append(_field);
+        });
+        // remove order source
+        $('#MPWSOrderRemoveSourcesID').live('click', function(){
+            $(this).parent().remove();
+        });
+        
     });
     
     return { };

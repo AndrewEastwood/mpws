@@ -93,6 +93,8 @@ class libraryCustomerManager {
         if (!empty($mdbc))
             $this->_databaseObj->connect($mdbc);
         
+        //var_dump($methodNames);
+        
         foreach ($methodNames as $method) {
             $results[] = $exLibObj->$method($this, $p);
         }

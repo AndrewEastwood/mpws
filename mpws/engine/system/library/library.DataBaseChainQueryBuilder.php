@@ -164,6 +164,10 @@
 
             return $this;
         }
+        
+        public function getNewID () {
+            return mysql_insert_id();
+        }
 
         // END OF MPWS DATABASE INJECTION
 

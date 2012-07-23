@@ -42,12 +42,19 @@
         'Billing_LastName' => 'user_billing_lastname',
         'Billing_Phone' => 'user_billing_phone',
         'Billing_PostalCode' => 'user_billing_postalcode',
-        'Billing_State' => 'user_billing_state',
-        'Current Password' => 'user_current_password',
+        'Billing_State' => 'user_billing_state'
+    );
+    
+    $customer['VALIDATOR']['DATAMAP']['ACCOUNT_PWD_UPDATE'] = array(
+        'CurrentPassword' => 'user_current_password',
         'NewPassword' => 'user_new_password',
         'NewPasswordConfirm' => 'user_new_password_confirm'
     );
     
+    $customer['VALIDATOR']["DATAMAP"]['MESSAGES'] = array(
+        'Subject' => 'messages_subject',
+        'Message' => 'messages_message',
+    );
     
     $customer['VALIDATOR']["FILTER"]['ORDER'] = array(
         'Title' => '',
@@ -67,8 +74,19 @@
     );
     
     $customer['VALIDATOR']["FILTER"]['ACCOUNT_UPDATE'] = array(
-        'Name' => '/^[a-z0-9_-\s\.]{3,35}$/',
-        'Login' => '/^[a-z0-9_-]{3,15}$/',
-        'Password' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
+        'Name' => '/^[a-zA-Z0-9_-\s\.]{3,35}$/',
+        'Login' => '/^[a-zA-Z0-9_-]{3,15}$/',
         'Email' => '/(?=^.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}/'
+    );
+
+    $customer['VALIDATOR']["FILTER"]['ACCOUNT_PWD_UPDATE'] = array(
+        'CurrentPassword' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
+        'NewPassword' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
+        'NewPasswordConfirm' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/'
+    );
+    
+
+    $customer['VALIDATOR']["FILTER"]['MESSAGES'] = array(
+        'Subject' => '/^(?=^.{10,50}$)[a-zA-Z\s.?!*+=-_]+$/',
+        'Message' => '/^(?=^.{10,350}$)[a-zA-Z\s.]+$/'
     );

@@ -35,3 +35,7 @@
 .MPWSDivTableCellDataState_InProgress {background: url('icons/status.png') no-repeat;}
 .MPWSDivTableCellDataState_Pending {background: url('icons/clock.png') no-repeat;}
 .MPWSDivTableCellDataState_Closed {background: url('icons/tick.png') no-repeat;}
+
+
+.MPWSOrderDetailsBlock {background-color: #fff; padding: 20px; margin: 0px auto; width: 60%; color: #333;}
+.MPWSOrderDetailsBlock hr {height: 1px; background-color: #aaa; border: 1px solid #eee;}

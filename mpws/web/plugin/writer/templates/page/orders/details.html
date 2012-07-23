@@ -159,11 +159,7 @@
             <div class="MPWSSeparator"></div>
 
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
-            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_PRICE']['Hours'];?>&nbsp;</span>
-            <div class="MPWSSeparator"></div>
-            
-            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Weeks To Complete</label>
-            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_PRICE']['Weeks'];?>&nbsp;</span>
+            <span class="MPWSValue"><?=libraryUtils::getDateTimeHoursDiff($model['PLUGINS']['WRITER']['DATA']['DateDeadline']);?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
             
             <hr size="2"/>
@@ -257,10 +253,13 @@
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Reworks</label>
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['ReworkCount'];?></span>
             <div class="MPWSSeparator"></div>
-            
+
             <hr size="2"/>
-            
+
             <input type="submit" name="do" value="Update Order"/>
+            <?php if ($model['PLUGINS']['WRITER']['DATA']['InternalStatus']) : ?>
+                <input type="submit" name="do" value="Approve Order"/>
+            <?php endif ?>
         </div>
     </form>
     <hr size="2"/>

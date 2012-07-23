@@ -23,12 +23,31 @@ class libraryUtils {
             return array();
         return $matches[1];
     }
+
+    static public function groupArrayRowsByField($array, $key) {
+        $_groups = array();
+        foreach ($array as $rowEntry) {
+           if (isset($rowEntry[$key]))
+               $_groups[$rowEntry[$key]][] = $rowEntry;
+           else
+               $_groups['UNGROUPED'][] = $rowEntry;
+        }
+        return $_groups;
+    }
     
     static public function getDateTimeHoursDiff ($targetDate) {
         $target_m = strtotime($targetDate);
         $diff = ($target_m - mktime());
         $toHours = 3600;
         return round($diff / $toHours, 1);
+    }
+    
+    static public function subDateHours($date, $hours, $format = false) {
+        $date_m = strtotime($date);
+        $date_m -= $hours * 3600;
+        if (!$format)
+            return $date_m;
+        return date($format, $date_m);
     }
     
     static public function generatePassword($length=9, $strength=0) {
