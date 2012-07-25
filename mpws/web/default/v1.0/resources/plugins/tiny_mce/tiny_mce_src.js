@@ -12236,7 +12236,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				if (s.popup_css)
 					s.popup_css = t.documentBaseURI.toAbsolute(s.popup_css);
 				else
-					s.popup_css = t.baseURI.toAbsolute("themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
+					s.popup_css = t.baseURI.toAbsolute("/static/wysiwyg/tiny_mce/themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
 			}
 
 			if (s.popup_css_add)

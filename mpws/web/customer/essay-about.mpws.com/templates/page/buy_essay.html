@@ -49,8 +49,11 @@
     </div>
 <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
     <div class="MPWSDivTableRow MPWSDivTableRowData">
-        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5">
+        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize0_5">
             <a href="?action=buy&oid=<?=$entry['ID'];?>">buy</a>
+        </span>
+        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+            <a href="?action=details&oid=<?=$entry['ID'];?>">details</a>
         </span>
         <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize5"><?=$entry['Title'];?></span>
         <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Pages'];?></span>

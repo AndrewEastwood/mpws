@@ -32,7 +32,7 @@
         <input type="hidden" name="order_pages" value="<?=$model['CUSTOMER']['DATA']['Pages'];?>"/>
     </div>
     <div class="MPWSSection">
-        <label>Delivery date</label>
+        <label>Price Type</label>
         <span><?=$model['CUSTOMER']['DATA_PRICE']['Name'];?></span>
         <input type="hidden" name="order_price" value="<?=$model['CUSTOMER']['DATA']['PriceID'];?>"/>
     </div>
@@ -70,6 +70,18 @@
     <div class="MPWSSection">
         <label>Paper instructions</label>
         <textarea name="order_notes"><?=$model['CUSTOMER']['DATA']['Description'];?></textarea>
+    </div>
+    
+    <div class="MPWSSection">
+        <label>Delivery date</label>
+        <span><?=$model['CUSTOMER']['DATA']['DateDeadline'];?></span>
+        <input type="hidden" name="order_datedeadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>
+    </div>
+    
+    <div class="MPWSSection">
+        <label>Your Time Zone</label>
+        <span><?=$model['CUSTOMER']['DATA_TIMEZONE']['Title'];?></span>
+        <input type="hidden" name="order_timezone" value="<?=$model['CUSTOMER']['DATA']['TimeZone'];?>"/>
     </div>
     
     <p class="MPWSAdditionalActions">

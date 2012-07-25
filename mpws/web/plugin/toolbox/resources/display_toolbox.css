@@ -71,6 +71,12 @@ h3 {color: #eee;}
 .MPWSDivTableCellDataState_InProgress {background: url('icons/status.png') no-repeat;}
 .MPWSDivTableCellDataState_Pending {background: url('icons/clock.png') no-repeat;}
 .MPWSDivTableCellDataState_Closed {background: url('icons/tick.png') no-repeat;}
+.MPWSDivTableCellDataState_Open {background: url('icons/leaf.png') no-repeat;}
+.MPWSDivTableCellDataState_Rejected {background: url('icons/minus-circle.png') no-repeat;}
+.MPWSDivTableCellDataState_Rework {background: url('icons/lifebuoy.png') no-repeat;}
+.MPWSDivTableCellDataState_Reopen {background: url('icons/arrow-090.png') no-repeat;}
+.MPWSDivTableCellDataState_ToRefund {background: url('icons/money.png') no-repeat;}
+.MPWSDivTableCellDataState_Approved {background: url('icons/thumb-up.png') no-repeat;}
 
 
 /* custom sections */

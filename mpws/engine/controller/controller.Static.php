@@ -65,6 +65,9 @@ class controllerStatic {
         $filePath = $staticResMgr->GetContent(urldecode($_module_path), $_GET['realm']);
         
         switch ($_GET['type']) {
+            case 'htm':
+                header("Content-type: text/html");
+                return readfile($filePath);
             case 'css':
                 header("Content-type: text/css");
                 return readfile($filePath);
@@ -77,6 +80,10 @@ class controllerStatic {
                 return readfile($filePath);
             case 'gif':
                 header('Content-type: image/gif');
+                header('Content-Length: ' . filesize($filePath));
+                return readfile($filePath);
+            case 'png':
+                header('Content-type: image/png');
                 header('Content-Length: ' . filesize($filePath));
                 return readfile($filePath);
         }

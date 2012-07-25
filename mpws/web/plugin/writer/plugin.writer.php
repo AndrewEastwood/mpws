@@ -188,7 +188,8 @@ class pluginWriter {
     private function _componentNewIncoming($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         /* get new orders */
-        $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] = $toolbox->getDatabaseObj()->getCount('writer_orders', ' WriterID=0');
+        $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] = $toolbox->getDatabaseObj()
+                ->getCount('writer_orders', ' WriterID=0 && PublicStatus <> "CLOSED"');
         
         if ($model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'])
             $model['html']['messages'][] = 'You have ' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] . ' new orders. (<a href="writer.html?display=orders&sort=WriterID.asc">see all</a>)';
@@ -758,6 +759,8 @@ class pluginWriter {
                     // force return to home page
                     return 'home';
                 } elseif ($action === 'create') {
+                    $customer_config_mdbc = $toolbox->getCustomerObj()->GetCustomerConfiguration('MDBC');
+                    $data['DateCreated'] = date($customer_config_mdbc['DB_DATE_FORMAT']);
                     $toolbox->getDatabaseObj()
                         ->insertInto('writer_sale')
                         ->fields(array_keys($data))
@@ -1885,14 +1888,27 @@ class pluginWriter {
     public function cross_method ($params = false) {
         if (empty($params['fn']))
             return false;
-        //echo '<br>calling method';
+        //echo '<br>calling method:' . $params['fn'] . '<br>';
+        $fRez = null;
         switch($params['fn']) {
             case 'useremoval': {
-                //$this
-                $this->cross_useremoval($params);
+                $fRez = $this->cross_useremoval($params);
+                break;
+            }
+            case '2co_product': {
+                $fRez = $this->cross_2co_product($params);
+                break;
+            }
+            case '2co_import': {
+                $fRez = $this->cross_2co_import($params);
+                break;
+            }
+            case '2co_product_list': {
+                $fRez = $this->cross_2co_product_list($params);
                 break;
             }
         }
+        return $fRez;
     }
     
     private function cross_useremoval ($params = false) {
@@ -1910,8 +1926,194 @@ class pluginWriter {
         
         //var_dump($exAccounts);
         //echo '<pre>' . print_r($exAccounts, true) . '</pre>';
+        return true;
     }
     
+    private function cross_2co_product ($params) {
+        
+        echo 'inside cross_2co_product';
+        
+        //var_dump($params);
+        
+        if (empty($params['ACCOUNT']))
+            return 'ACCOUNT_EMPTY';
+        
+        if (empty($params['ACCOUNT']['API']))
+            return 'API_UNDEFINED';
+        
+        if (empty($params['DATA']['ORDER']))
+            return 'ORDER_EMPTY';
+        
+        if (empty($params['DATA']['PRICE']))
+            return 'PRICE_EMPTY';
+        
+        $account_api = $params['ACCOUNT']['API'];
+        $order = $params['DATA']['ORDER'];
+        
+        if (empty($order['PriceID']) || empty($order['Pages']))
+            return 'PRICE_OR_PAGE_EMPTY';
+        
+        // make product id
+        $checkoutPID = $order['PriceID'].$order['Pages'];
+        
+        // add realm
+        if (!empty($params['REALM']))
+            $checkoutPID = $params['REALM'].$checkoutPID;
+        
+        // get 2checkout products 
+        $ch = curl_init($account_api['METHODS']['list_products'] . '?vendor_product_id=' . $checkoutPID);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POST, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, $account_api['USER'].':'.$account_api['PWD']);
+        $output = curl_exec($ch);
+        curl_close($ch);
+
+        // convert responce to native array
+        $coResponse = json_decode($output, true);
+        //echo '<pre>' . print_r($coResponse, true) . '</pre>';
+
+        // return error code if occured
+        if(isset($coResponse['errors'][0]['code'])) {
+            //echo 'Vendor Product ID ' . $checkoutPID;
+            $code = $coResponse['errors'][0]['code'];
+            // return code if we do not create new product
+            if ($code === 'RECORD_NOT_FOUND' && empty($params['CREATE_IF_EMPTY']))
+                return $code;
+        }
+        
+        $isAdded = ($coResponse['response_code'] === 'OK' && count($coResponse['products']));
+
+        // skip adding new product
+        if ($isAdded || empty($params['CREATE_IF_EMPTY'])) {
+            
+            if ($isAdded)
+                return $coResponse['products'][0];
+            
+            // return responce code 
+            if (!empty($coResponse['response_code']))
+                return $coResponse['response_code'];
+            return false;
+        }
+        
+        // create new product on demand
+        $product = array(
+            'name' => $params['DATA']['PRICE']['Name'],
+            'vendor_product_id' => $checkoutPID,
+            'category_id' => '15',
+        );
+        //product price
+        if (!empty($order['Suma']))
+            $product['price'] = $order['Suma'];
+        else
+            $product['price'] = ($params['DATA']['PRICE']['Price'] * $order['Pages']);
+        // product description
+        $description = 'Essay.'.PHP_EOL;
+        if (!empty($params['DATA']['PRICE']))
+            $description .= trim($params['DATA']['PRICE']['Name']) . '.' . PHP_EOL;
+        /*
+        if (!empty($params['DATA']['SUBJECT']))
+            $description .= $params['DATA']['SUBJECT']['Name'] . PHP_EOL;
+        if (!empty($params['DATA']['DOCUMENT']))
+            $description .= $params['DATA']['DOCUMENT']['Name'] . PHP_EOL;
+        */
+        $description .= 'Total pages: ' . $order['Pages'];
+        $product['description'] = $description;
+        $product['long_description'] = $description;
+
+        // create post data
+        $_postData = '';
+        foreach ($product as $key => $val)
+            $_postData .= $key . '=' . urlencode(trim($val)) . '&';
+
+        //echo '<br>API POST DATA: ' . $_postData;
+        
+        //echo "https://www.2checkout.com/api/products/create_product?" . implode('&', $product); 
+        $ch = curl_init($account_api['METHODS']['create_product']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $_postData);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, $account_api['USER'].':'.$account_api['PWD']);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        
+        // convert responce to native array
+        $coResponse = json_decode($output, true);
+        //echo '<pre>' . print_r($coResponse, true) . '</pre>';
+        
+        // return error code if occured
+        if(isset($coResponse['errors'][0]['code']))
+            return $coResponse['errors'][0]['code'];
+
+        // return responce code
+        //if (!empty($coResponse['response_code']))
+        //    return $coResponse['response_code'];
+        
+        return $coResponse;
+    }
+    
+    private function cross_2co_import () {
+        // import all price types 
+        // we'll delete product native serivice page
+        return false;
+    }
+    
+    private function cross_2co_product_list ($params) {
+        echo 'inside cross_2co_product';
+        
+        //var_dump($params);
+        
+        if (empty($params['ACCOUNT']['API']))
+            return 'API_UNDEFINED';
+        
+        if (empty($params['PRODUCT_ID']))
+            return 'PRODUCT_ID_EMPTY';
+
+        $account_api = $params['ACCOUNT']['API'];
+ 
+        // get 2checkout products 
+        $ch = curl_init($account_api['METHODS']['list_products'] . '?vendor_product_id=' . $params['PRODUCT_ID']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POST, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, $account_api['USER'].':'.$account_api['PWD']);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        
+        // convert responce to native array
+        $coResponse = json_decode($output, true);
+        
+        // return error code if occured
+        if(isset($coResponse['errors'][0]['code'])) {
+            //echo 'Vendor Product ID ' . $checkoutPID;
+            $code = $coResponse['errors'][0]['code'];
+            // return code if we do not create new product
+            if ($code === 'RECORD_NOT_FOUND' && empty($params['CREATE_IF_EMPTY']))
+                return $code;
+        }
+        
+        $isAdded = ($coResponse['response_code'] === 'OK' && count($coResponse['products']));
+
+        // skip adding new product
+        if ($isAdded) {
+            return $coResponse['products'][0];
+        } 
+        
+        return $coResponse['response_code'];
+    }
 }
 
 

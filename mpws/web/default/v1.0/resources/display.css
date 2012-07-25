@@ -79,6 +79,12 @@
         .MPWSIcon_InProgress {background: url('icons/status.png') no-repeat;}
         .MPWSIcon_Pending {background: url('icons/clock.png') no-repeat;}
         .MPWSIcon_Closed {background: url('icons/tick.png') no-repeat;}
+        .MPWSIcon_Open {background: url('icons/leaf.png') no-repeat;}
+        .MPWSIcon_Rejected {background: url('icons/minus-circle.png') no-repeat;}
+        .MPWSIcon_Rework {background: url('icons/lifebuoy.png') no-repeat;}
+        .MPWSIcon_Reopen {background: url('icons/arrow-090.png') no-repeat;}
+        .MPWSIcon_ToRefund {background: url('icons/money.png') no-repeat;}
+        .MPWSIcon_Approved {background: url('icons/thumb-up.png') no-repeat;}
         
     /* TAGS */
     .MPWSTag {}

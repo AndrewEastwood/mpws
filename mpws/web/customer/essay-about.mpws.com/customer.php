@@ -497,6 +497,7 @@ class customer {
         // preview or checkout actions
         $isPreviewOrSave = libraryRequest::isPostFormActionMatchAny('proceed', 'checkout');
         // user object
+        // it contains user info if buyer is loggined
         $user = array();
         // add condition to avoid new profile when user is loggined
         if ($model['USER']['ACTIVE']) {
@@ -514,8 +515,6 @@ class customer {
             libraryValidator::validateData($data, $validator['FILTER']['ORDER'], $messages);
             $model['CUSTOMER']['MESSAGES'] = $messages;
         }
-        
-        
         // preview or save data
         // if action detected and no error messages
         if ($_SESSION['MPWS_ORDER_SESSION'] == libraryRequest::getPostValue('session_key') && empty($messages)) {
@@ -544,16 +543,47 @@ class customer {
                         ->from('writer_subjects')
                         ->where('ID', '=', $data['SubjectID'])
                         ->fetchRow();
-
+                $timeZone = $customer->getDatabaseObj()
+                        ->select('*')
+                        ->from('mpws_timezone')
+                        ->where('ID', '=', $data['TimeZone'])
+                        ->fetchRow();
 
                 $model['CUSTOMER']['DATA_PRICE'] = $priceInfo;
                 $model['CUSTOMER']['DATA_DOC'] = $docInfo;
                 $model['CUSTOMER']['DATA_SUBJECT'] = $subjInfo;
+                $model['CUSTOMER']['DATA_TIMEZONE'] = $timeZone;
                 //$model['CUSTOMER']['DATA_DEADLINE'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
                 $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order_preview');
             } // -end of preview
             // save order
             if (libraryRequest::isPostFormAction('checkout')) {
+
+                // check for product existance
+                $payment = $customer->getCustomerConfiguration('PAYMENT');
+                
+                // 2CO INTEGRATION
+                // check or create new product
+                $param = array(
+                    'DATA' => array(
+                        'ORDER' => $data,
+                        'PRICE' => $priceInfo,
+                        'SUBJECT' => $priceInfo,
+                        'DOCUMENT' => $docInfo
+                    ),
+                    'CREATE_IF_EMPTY' => true,
+                    'REALM' => 'E',
+                    'ACCOUNT' => $payment['2CO']
+                );
+                $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
+                //echo '2CO Status: ' . $product['assigned_product_id'];
+                // check if product exists
+                // we use "assigned_product_id" to sell current product
+                if (empty($product['assigned_product_id'])) {
+                    $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
+                    return;
+                }
+                // END OF 2CO INTEGRATION
 
                 $mdbc = $customer->getCustomerConfiguration('MDBC');
                 $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
@@ -613,16 +643,24 @@ class customer {
                 unset($data['SourceLinks']);
 
                 // append additional information
-                $_saveTime = mktime();
-                $_deadlineTime = $_saveTime + (60 * 60 * ($priceInfo['Hours'] + (24 * 7 * $priceInfo['Weeks'])));
-
+                //$_saveTime = mktime();
+                //$_deadlineTime = $_saveTime + (60 * 60 * ($priceInfo['Hours'] + (24 * 7 * $priceInfo['Weeks']))); // uncommet to use standart deadline value by price
+                
+                // get timezone offset
+                $timeZone = $customer->getDatabaseObj()
+                        ->select('*')
+                        ->from('mpws_timezone')
+                        ->where('ID', '=', $data['TimeZone'])
+                        ->fetchRow();
+                
                 // fill order information
                 $data['StudentID'] = $user['ID'];
                 $data['Price'] = $data['Pages'] * $priceInfo['Price'];
                 $data['Discount'] = 0;
                 $data['Credits'] = round($data['Price'] / 4, 0);
-                $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT'], $_saveTime);
-                $data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
+                $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+                //$data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
+                $data['TimeZone'] = $timeZone['Offset'];
                 $data['RefundToken'] = '';
                 $data['OrderToken'] = $_o_token;
 
@@ -634,7 +672,6 @@ class customer {
                     ->values(array_values($data))
                     ->query();
 
-                
                 $libView = new libraryView();
                 
                 /* NOTIFY BUYER IF NEW */
@@ -672,16 +709,13 @@ class customer {
                 // set public data
                 //$model['CUSTOMER']['DATA_EMAIL'] = $student['Email'];
                 //$model['CUSTOMER']['DATA_TOKEN'] = $_o_token;
-
-                $payment = $customer->getCustomerConfiguration('PAYMENT');
-                // general information
-                $_order = $payment['2CO'];
-                //$_order['sid'] = '1799160';
-                //$_order['quantity'] = '1';
-                //$_order['product_id'] = '1';
+                
+                // 2checkout integration
+                // order general information
+                $_order = $payment['2CO']['FORM'];
+                $_order['product_id'] = $product['assigned_product_id'];
                 $_order['merchant_order_id'] = $_o_token . '-' . $user['Login'];
                 $_order['email'] = $user['Email'];
-                //$_order['submit'] = 'Buy from 2CO';
                 // billing information if user is loggined
                 if ($model['USER']['ACTIVE']) {
                     $_order['card_holder_name'] = $user['Billing_FirstName'];
@@ -694,8 +728,8 @@ class customer {
                     $_order['phone'] = $user['Billing_Phone'];
                     $_order['pay_method'] = $user['CC'];
                 }
-
-                libraryRequest::locationRedirect($_order, 'https://www.2checkout.com/checkout/purchase');
+                //var_dump($_order);
+                libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
                 exit;
             }
             
@@ -723,13 +757,18 @@ class customer {
                 ->select('*')
                 ->from('writer_subjects')
                 ->fetchData();
-
+        $timezones = $customer->getDatabaseObj()
+                ->select('*')
+                ->from('mpws_timezone')
+                ->fetchData();
+        
         // set data
         $model['CUSTOMER']['DATA'] = $data;
         $model['CUSTOMER']['DATA_FIELDS'] = $dataFields;
         $model['CUSTOMER']['DATA_PRICES'] = $prices;
         $model['CUSTOMER']['DATA_DOCS'] = $documents;
         $model['CUSTOMER']['DATA_SUBJECTS'] = $subjects;
+        $model['CUSTOMER']['DATA_TIMEZONES'] = $timezones;
         
         // populate user fields
         if (!$isPreviewOrSave) {
@@ -741,9 +780,150 @@ class customer {
     private function _pageBuyEssay ($customer) {
         $model = &$customer->getModel();
         
-        $datatable = $customer->getCustomerConfiguration('DATATABLE');
-        $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj());
-        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay');
+        // user object
+        // it contains user info if buyer is loggined
+        $user = array();
+        // add condition to avoid new profile when user is loggined
+        if ($model['USER']['ACTIVE']) {
+            $user = $customer->getDatabaseObj()
+                ->select('*')
+                ->from('writer_students')
+                ->where('ID', '=', $model['USER']['ID'])
+                ->fetchRow();
+            $model['CUSTOMER']['DATA_USER'] = $user;
+        }
+        
+        // get action
+        $action = libraryRequest::getAction();
+        
+        // buy action
+        if ($action == 'buy') {
+            $oid = libraryRequest::getOID();
+            
+            if (empty($oid)) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
+                return;
+            }
+
+            $sale = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('*')
+                    ->from('writer_sale')
+                    ->where('ID', '=', $oid)
+                    ->fetchRow();
+            
+            if (empty($sale)) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
+                return;
+            }
+            
+            
+            // check for product existance
+            $payment = $customer->getCustomerConfiguration('PAYMENT');
+
+            // 2CO INTEGRATION
+            // check or create new product
+            $param = array(
+                'DATA' => array(
+                    'ORDER' => array(
+                        'PriceID' => $oid,
+                        'Pages' => $sale['Pages'],
+                        'Suma' => $sale['Price']
+                    ),
+                    'PRICE' => array(
+                        'Name' => $sale['Title']
+                    )
+                ),
+                'CREATE_IF_EMPTY' => true,
+                'REALM' => 'B',
+                'ACCOUNT' => $payment['2CO']
+            );
+            $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
+            //echo '2CO Status: ' . $product['assigned_product_id'];
+            // check if product exists
+            // we use "assigned_product_id" to sell current product
+            if (empty($product['assigned_product_id'])) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
+                return;
+            }
+            // END OF 2CO INTEGRATION
+
+            $mdbc = $customer->getCustomerConfiguration('MDBC');
+            //$customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+            
+            
+            // make order token
+            $_o_token = md5($user['UserToken'] . mktime());
+            
+            // fill order information
+            $data['SaleID'] = $oid;
+            if (!empty($user['ID']))
+                $data['StudentID'] = $user['ID'];
+            $data['SalesToken'] = $_o_token;
+            $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+            
+            // save new order
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_sales')
+                ->fields(array_keys($data))
+                ->values(array_values($data))
+                ->query();
+
+            $libView = new libraryView();
+            /* SYSTEM NOTIFY */
+            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
+            $recipient['SUBJECT'] = 'New Sale';
+            $recipient['DATA'] = array(
+                'Title' => $sale['Title'],
+                'Name' => $user['Name'],
+                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_SALE_LINK'] . $_o_token
+            );
+            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.sale_created'));
+            // send email message to system
+            libraryMailer::sendEMail($recipient);
+
+            // 2checkout integration
+            // order general information
+            $_order = $payment['2CO']['FORM'];
+            $_order['product_id'] = $product['assigned_product_id'];
+            $_order['merchant_order_id'] = $_o_token;
+            $_order['return_url'] = $_SERVER['HTTP_REFERER'];
+            
+            var_dump($_order);
+            libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
+            exit;
+        }
+        // if details requested
+        if ($action == 'details'){
+            $oid = libraryRequest::getOID();
+            
+            if (empty($oid)) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
+                return;
+            }
+            
+            $model['CUSTOMER']['DATA'] = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('*')
+                    ->from('writer_sale')
+                    ->where('ID', '=', $oid)
+                    ->fetchRow();
+            
+            if (empty($model['CUSTOMER']['DATA'])) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
+                return;
+            }
+            
+            $model['CUSTOMER']['REFERER'] = libraryRequest::storeOrGetRefererUrl(false);
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details');
+        } else {
+            libraryRequest::storeOrGetRefererUrl();
+            // show all essays
+            $datatable = $customer->getCustomerConfiguration('DATATABLE');
+            $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj());
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay');
+        }
     }
 
     

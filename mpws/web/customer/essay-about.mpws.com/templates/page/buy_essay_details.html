@@ -1,0 +1,20 @@
+<h3><?=$model['CUSTOMER']['DATA']['Title'];?></h3>
+
+<div class="MPWSOrderDetailsBlock">
+    <div class="MPWSComponentSummaryRow">
+        <label>Page Count:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Pages'];?></span>
+    </div>
+    <div class="MPWSComponentSummaryRow">
+        <label>Price:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['Price'];?></span>
+    </div>
+    <div class="MPWSComponentSummaryRow">
+        <label>Sample Text:</label>
+        <div class="MPWSScrollContainer"><?=$model['CUSTOMER']['DATA']['Sample'];?></div>
+    </div>
+    
+    <h3><a href="?action=buy&oid=<?=$model['CUSTOMER']['DATA']['ID'];?>">buy this essay</a></h3>
+    <h4><a href="<?=$model['CUSTOMER']['REFERER'];?>">go back</a></h4>
+
+</div>

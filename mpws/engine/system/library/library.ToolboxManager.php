@@ -93,7 +93,7 @@ class libraryToolboxManager {
         $po = $pluginsObj->getPluginObj($pluginName);
         //var_dump($po);
         $params['fn'] = $methodName;
-        $po->cross_method($params);
+        return $po->cross_method($params);
     }
 
 }

@@ -54,6 +54,20 @@ mpws.module.define('essay-about', (function(window, document, $){
         if(tinyMCE)
             tinyMCE.baseURL = "http://essay-about.mpws.com/static/wysiwyg/tiny_mce";
         
+        // make order datetime picker
+        $('#MPWSControlMakeOrderDateDeadlineID').datetimepicker({
+                showOn: "button",
+                buttonImage: "/static/icons/calendar.png",
+                dateFormat: "yy-mm-dd",
+                timeFormat: "hh:00:00",
+                changeMonth: true,
+                changeYear: true,
+                showMinute: false,
+                showButtonPanel: true,
+                minDate: new Date(new Date().getTime() + (3*60*60*1000))
+        });
+        
+        
     });
     
     return { };
