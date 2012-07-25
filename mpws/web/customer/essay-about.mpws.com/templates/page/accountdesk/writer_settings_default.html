@@ -1,0 +1,29 @@
+<h2>Your Settings</h2>
+<hr size="2"/>
+
+<form action="" method="POST">
+    <?php foreach($model['CUSTOMER']['DATA'] as $key => $value) : ?>
+    <?php if ($key == 'Password') continue; ?>
+    <div class="MPWSSection MPWSSection_<?=$key;?>">
+        <label><?=libraryView::splitWordsByUpperCase($key);?></label>
+        <input type="text" name="user_<?=strtolower($key);?>" value="<?=$value;?>"/>
+    </div>
+    <?php endforeach ?>
+
+    <hr size="2"/>
+    <input type="submit" name="do" value="Update"/>
+</form>
+
+<form action="" method="POST">
+    <label>Current Password</label>
+    <input type="text" name="user_current_password" value=""/>
+    <div class="MPWSSeparator"></div>
+    <label>New Password</label>
+    <input type="text" name="user_new_password" value=""/>
+    <div class="MPWSSeparator"></div>
+    <label>Confirm Password</label>
+    <input type="text" name="user_new_password_confirm" value=""/>
+    <div class="MPWSSeparator"></div>
+    <hr size="2"/>
+    <input type="submit" name="do" value="Change Password"/>
+</form>

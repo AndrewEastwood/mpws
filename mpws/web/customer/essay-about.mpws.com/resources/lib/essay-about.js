@@ -50,6 +50,10 @@ mpws.module.define('essay-about', (function(window, document, $){
             $(this).parent().remove();
         });
         
+        // init base url
+        if(tinyMCE)
+            tinyMCE.baseURL = "http://essay-about.mpws.com/static/wysiwyg/tiny_mce";
+        
     });
     
     return { };

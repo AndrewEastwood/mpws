@@ -20,7 +20,8 @@
     );
 
     $default['MAIL']['INFO'] = array(
-        'TO' => 'info@essay-about.com',
+        //'TO' => 'info@essay-about.com',
+        'TO' => 'soulcor@gmail.com',
         'EMAIL' => 'info@essay-about.com',
         'FROM' => 'no-reply@essay-about.com',
         'NAME' => 'Info',

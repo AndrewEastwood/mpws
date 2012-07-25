@@ -54,6 +54,7 @@
         private $_db_link_id = 0;
         private $_db_query_id = 0;
         private $_db_selectCount = 0;
+        private $_useSanitize = true;
 
         public function connect($config) {
             $this->_db_server = $config['DB_HOST'];
@@ -88,6 +89,7 @@
             if (empty($sql))
                 $sql = $this->build(true);
             //echo 'Query: ' . $sql;
+            $this->_useSanitize = true;
             $this->_db_query_id = @mysql_query($sql, $this->_db_link_id);
             if (!$this->_db_query_id) {
                 $this->oops("<b>MySQL Query fail:</b> $sql");
@@ -162,6 +164,13 @@
             $this->_order = 'ASC';
             $this->_groupBy = array();
 
+            $this->_useSanitize = true;
+            
+            return $this;
+        }
+        
+        public function stopSanitize () {
+            $this->_useSanitize = false;
             return $this;
         }
         
@@ -288,8 +297,12 @@
         }
 
         protected function _sanitizeValue($val, $search = false) {
+            if (!$this->_useSanitize)
+                return $val;
             if (!is_numeric($val)) {
-                $val = '\'' . $val . '\'';
+                //$val = addcslashes(mysql_real_escape_string($val), "%_");
+                $val = mysql_real_escape_string($val);
+                $val = '\'' .  $val . '\'';
             }
             return $val;
         }

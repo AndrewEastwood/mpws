@@ -85,6 +85,16 @@ class libraryToolboxManager {
     public function getDump() {
         return $this->_pluginsObj->getDump();
     }
+    
+    /* crossmode call */
+    static public function callPluginMethod ($pluginName, $methodName, $params = false) {
+        //echo 'callPluginMethod';
+        $pluginsObj = new libraryPluginManager();
+        $po = $pluginsObj->getPluginObj($pluginName);
+        //var_dump($po);
+        $params['fn'] = $methodName;
+        $po->cross_method($params);
+    }
 
 }
 

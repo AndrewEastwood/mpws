@@ -10,3 +10,4 @@
     /* Action Collection To Email */
     $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_ORDER'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_STATUS_CHANGED'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_REGISTRATION'] = $default['MAIL']['INFO'];

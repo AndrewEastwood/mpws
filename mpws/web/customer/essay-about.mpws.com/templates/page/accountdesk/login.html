@@ -1,6 +1,16 @@
 <h1>Register Or LogIn!</h1>
 
 
+<?php
+    if(count($model['CUSTOMER']['MESSAGES'])) {
+        echo '<b>We\'ve found some errors in the fields below:</b>';
+        echo '<ul>';
+        foreach ($model['CUSTOMER']['MESSAGES'] as $msg)
+            echo '<li>' . $msg . '</li>';
+        echo '</ul>';
+    }
+?>
+
 <form action="" method="POST">
     
     <input type="text" name="user_name" value="" placeholder="name"/>
@@ -8,9 +18,9 @@
     <input type="text" name="user_login" value="" placeholder="login"/>
     <input type="submit" name="do" value="Check">
     <div></div>
-    <input type="password" name="user_pwd" value="" placeholder="pwd"/>
+    <input type="password" name="user_pwd" value="" placeholder="password"/>
     <div></div>
-    <input type="password" name="user_pwd_dbl" value="" placeholder="confirm pwd"/>
+    <input type="password" name="user_pwd_dbl" value="" placeholder="confirm password"/>
     <div></div>
     <input type="text" name="user_email" value="" placeholder="email"/>
     <div></div>

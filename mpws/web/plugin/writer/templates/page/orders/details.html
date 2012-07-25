@@ -197,23 +197,28 @@
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional notes:</label>
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Description'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
-            
 
             <hr size="2"/>
             <h3>Sources</h3>
 
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional sources:</label>
+            <div class="MPWSSeparator"></div>
             <span class="MPWSValue">
             <ul>
             <?php foreach ($model['PLUGINS']['WRITER']['DATA_SOURCES'] as $link) : ?>
-                <li>
-                    <a href="<?=$link['SourceURL'];?>" target="blank"><?=basename($link['SourceURL']);?></a>
-                </li>
+                <li><a href="<?=$link['SourceURL'];?>" target="blank"><?=basename($link['SourceURL']);?></a></li>
             <?php endforeach ?>
             </ul>
             </span>
             <div class="MPWSSeparator"></div>
 
+            <?php if (!empty($model['PLUGINS']['WRITER']['DATA']['ResolutionDocumentLink'])) : ?>
+            <h3>Resolution Document</h3>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Link to document:</label>
+            <span class="MPWSValue"><a target="blank" href="<?=$model['PLUGINS']['WRITER']['DATA']['ResolutionDocumentLink'];?>">CLICK HERE</a></span>
+            <div class="MPWSSeparator"></div>
+            <?php endif ?>
+            
             <hr size="2"/>
             <h3>Invoices</h3>
             
@@ -254,17 +259,21 @@
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['ReworkCount'];?></span>
             <div class="MPWSSeparator"></div>
 
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Reworks Left</label>
+            <span class="MPWSValue"><?=(3 - $model['PLUGINS']['WRITER']['DATA']['ReworkCount']);?></span>
+            <div class="MPWSSeparator"></div>
+
             <hr size="2"/>
 
             <input type="submit" name="do" value="Update Order"/>
-            <?php if ($model['PLUGINS']['WRITER']['DATA']['InternalStatus']) : ?>
+            <?php if ($model['PLUGINS']['WRITER']['DATA']['InternalStatus'] == 'PENDING') : ?>
                 <input type="submit" name="do" value="Approve Order"/>
             <?php endif ?>
         </div>
     </form>
     <hr size="2"/>
     <div class="MPWSInlineForms">
-        <form action="" method="POST">
+        <form action="" method="POST" style="display:none">
             <input type="submit" value="Make Refund"/>
         </form>
         <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
@@ -277,10 +286,11 @@
 
     
     <h3>Messages</h3>
+    <div class="MPWSSection MPWSSectionOrderMessages">
     <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $entry) { ?>
-        <div class="MPWSSection MPWSSectionOrderMessages">
+        <div class="MPWSSectionOrderMessage MPWSSectionOrderMessage_<?=$entry['Owner'];?>">
             <div class="MPWSBlock MPWSBlockMessageState">
-                <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataState">
+                <span class="MPWSDivTableCell">
                     Is new:
                     <input type="checkbox" 
                         name="message_notify" 
@@ -294,13 +304,18 @@
                 </span>
             </div>
             <div class="MPWSBlock MPWSBlockMessageBody">
+                <div class="MPWSMessageInformation">
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataOwner">Message Owner: <?=$entry['Owner'];?></span>
+                    <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataDateCreated">Date: <?=$entry['DateCreated'];?></span>
+                </div>
                 <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataSubject"><?=$entry['Subject'];?></span>
-                <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataDateCreated"><?=$entry['DateCreated'];?></span>
+                
                 <div class="MPWSSeparator"></div>
                 <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataMessages"><?=$entry['Message'];?></span>
             </div>
         </div>
     <?php } ?>
+    </div>
 
     <hr size="2"/>
     <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">

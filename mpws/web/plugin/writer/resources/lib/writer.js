@@ -52,7 +52,18 @@ mpws.module.define('writer', (function(window, document, $){
                     'width':500,
                     'height':300,
                     'backgroundColor': '#eee',
-                    'isStacked': true
+                    'isStacked': true,
+                    'hAxis': {
+                        'baseline': 0,
+                        'minValue': 0,
+                        'logScale': 0,
+                        'minorGridlines': {
+                            'count': 0
+                        },
+                        'viewWindow': {
+                            'min': 0
+                        }
+                    }
                 };
 
 
@@ -62,7 +73,6 @@ mpws.module.define('writer', (function(window, document, $){
                 //mpws.tools.log('count');
             }
         }
-        
     }
     
     $(document).ready(function () {
@@ -82,8 +92,12 @@ mpws.module.define('writer', (function(window, document, $){
         //- assign order to writer
         
         //mpws.tools.log();
+        if($('#chart_div').length)
+            mpws.api.pageRequest('get_teamload', _drawChart);
         
-        mpws.api.pageRequest('get_teamload', _drawChart);
+        // init base url
+        if(tinyMCE)
+            tinyMCE.baseURL = "http://essay-about.mpws.com/static/wysiwyg/tiny_mce";
     });
 
     return {

@@ -138,12 +138,19 @@
         <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Reworks</label>
         <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['ReworkCount'];?></span>
         <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Reworks Left</label>
+        <span class="MPWSValue"><?=(3 - $model['CUSTOMER']['DATA']['ReworkCount']);?></span>
+        <div class="MPWSSeparator"></div>
   
         <hr size="2"/>
         <h3>Order Actions</h3>
 
+        <?php if($model['CUSTOMER']['DATA']['InternalStatus'] != 'CLOSED') : ?>
         <input type="submit" name="do" value="Save Changes"/>
-        <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'PENDING') : ?>
+        <?php endif ?>
+        <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'PENDING' && 
+                 $model['CUSTOMER']['DATA']['ReworkCount'] < 3) : ?>
             <input type="submit" name="do" value="Send To Rework"/>
         <?php endif ?>
         <?php if($model['CUSTOMER']['DATA']['InternalStatus'] != 'CLOSED') : ?>

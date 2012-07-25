@@ -1,0 +1,103 @@
+<h3>Buy Ready Essay</h3>
+
+<div class="MPWSComponent MPWSComponentSearchBox">
+    <div class="MPWSComponentHeader">
+        <h3>Search Box</h3>
+    </div>
+    <div class="MPWSComponentBody MPWSComponentSearchBoxBody">
+        <form action="" class="MPWSForm MPWSFormSearchBox" method="POST">
+            <div class="MPWSFormFields">
+                <label for="MPWSField_SubjectNameID" class="MPWSFieldLabel">Title:</label>
+                <input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_documents_Title" value="<?=libraryRequest::getPostValue('searchbox_sale_Title');?>" placeholder="... part of title"/>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_SubjectNameID" class="MPWSFieldLabel">Description:</label>
+                <input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_documents_Description" value="<?=libraryRequest::getPostValue('searchbox_sale_Description');?>" placeholder="... part of description"/>
+                <div class="MPWSSeparator"></div>
+            </div>
+            <hr size="2"/>
+            <input type="submit" name="do" value="Search"/>
+            <?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
+                <input type="submit" name="do" value="Discard"/>
+            <?php endif ?>
+        </form>
+    </div>
+    <?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
+    <div class="MPWSComponentSummary">
+        <div class="MPWSComponentSummaryRow">
+            <label>Your search request is:</label>
+            <span class="MPWSValue">
+            <?php
+                $_filterString = array();
+                foreach($model['CUSTOMER']['SEARCHBOX']['FILTER'] as $sbKey => $sbVal)
+                    $_filterString[] = ' field "' . $sbKey . '" contains value "' . trim($sbVal, '%') . '"';
+                echo 'The ' . implode(', and the ', $_filterString);
+            ?>
+            </span>
+        </div>
+    </div>
+    <?php endif ?>
+</div>
+
+
+
+<div class="MPWSDivTable">
+    <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Actions</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize5"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Title.asc', 'Title.desc', 'Title.asc'));?>">Title</a></span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Pages.asc', 'Pages.desc', 'Pages.asc'));?>">Pages</a></span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Price.asc', 'Price.desc', 'Price.asc'));?>">Price</a></span>
+    </div>
+<?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
+    <div class="MPWSDivTableRow MPWSDivTableRowData">
+        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5">
+            <a href="?action=buy&oid=<?=$entry['ID'];?>">buy</a>
+        </span>
+        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize5"><?=$entry['Title'];?></span>
+        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Pages'];?></span>
+        <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Price'];?></span>
+    </div>
+<?php } ?>
+</div>
+
+<div class="MPWSComponent MPWSComponentPagination">
+    <div class="MPWSComponentSummary">
+        <div class="MPWSComponentSummaryRow">
+            <label>Filtered Records:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['RECORDS'];?></span>
+        </div>
+        <div class="MPWSComponentSummaryRow">
+            <label>Total Records:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['RECORDS_ALL'];?></span>
+        </div>
+        <div class="MPWSComponentSummaryRow">
+            <label>Table Always Shows:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['LIMIT'];?></span>
+        </div>
+        <div class="MPWSComponentSummaryRow">
+            <label>Total Pages:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['PAGES'];?></span>
+        </div>
+        <div class="MPWSComponentSummaryRow">
+            <label>Current Page:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['CURRENT'];?></span>
+        </div>
+    </div>
+    <div class="MPWSComponentBody MPWSComponentPaginationBody">
+        <?php 
+            //echo '<pre>'.print_r($_SERVER, true) . '</pre>';
+            if (!empty($model['CUSTOMER']['EDGELINKS'])) {
+                echo '<div class="MPWSPaginationEdgeLinks">';
+                foreach ($model['CUSTOMER']['EDGELINKS'] as $key => $page)
+                    echo '<a href="?'.$page.'" class="MPWSLink MPWSPaginationLink">' . $key . '</a>';
+                echo '</div>';
+            }
+            echo '<div class="MPWSPaginationPageLinks">';
+            foreach ($model['CUSTOMER']['PAGELINKS'] as $key => $page)
+                if ($key == $model['CUSTOMER']['CURRENT'])
+                    echo '<a href="?'.$page.'" class="MPWSLink MPWSPaginationLink MPWSPaginationLinkCurrent">' . $key . '</a>';
+                else
+                    echo '<a href="?'.$page.'" class="MPWSLink MPWSPaginationLink">' . $key . '</a>';
+            echo '</div>';
+        ?>
+    </div>
+</div>

@@ -13,7 +13,7 @@
     <input type="submit" name="do" value="Show Orders"/>
 </form>
 
-<h3>Total: <?=$model['CUSTOMER']['DATA_SUMA'];?></h3>
+<h3>Total: <?=$model['CUSTOMER']['DATA_SUMA'];?>$</h3>
 
 <div class="MPWSDivTable">
     <div class="MPWSDivTableRow MPWSDivTableRowHeader">
@@ -22,22 +22,22 @@
         <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Status</span>
         <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
         <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Price</span>
-        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Reworks</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Reworks</span>
         <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
         <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
     </div>
     <?php foreach($model['CUSTOMER']['DATA'] as $entry) : ?>
         <div class="MPWSDivTableRow MPWSDivTableRowData">
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
-                <a href="?action=details&oid=<?=$entry['ID'];?>">Details</a>
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
             </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize3"><?=$entry['Title'];?>&nbsp;</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['Status']);?>" title="<?=libraryView::getFrendlyClassName($entry['Status']);?>"><?=libraryView::getFrendlyLabel($entry['Status']);?>&nbsp;</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Price'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['ReworkCount'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=libraryView::getFrendlyLabel($entry['PublicStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Price'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=$entry['ReworkCount'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?>&nbsp;</span>
         </div>
     <?php endforeach ?>
 </div>

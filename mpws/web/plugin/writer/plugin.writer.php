@@ -115,7 +115,11 @@ class pluginWriter {
     private function _displayTriggerOnActive($toolbox, $plugin) {
         //$model = &$toolbox->getModel();
 
-        switch (libraryRequest::getDisplay('home')){
+        // remove expired accounts
+        $param['dbo'] = $toolbox->getDatabaseObj();
+        $this->cross_useremoval($param);
+
+        switch (libraryRequest::getDisplay('home')) {
             case 'queue' : {
                 $this->_displayQueue($toolbox, $plugin);
                 break;
@@ -130,6 +134,10 @@ class pluginWriter {
             }
             case 'documents' : {
                 $this->_displayDocuments($toolbox, $plugin);
+                break;
+            }
+            case 'sale' : {
+                $this->_displaySale($toolbox, $plugin);
                 break;
             }
             case 'subjects' : {
@@ -257,6 +265,28 @@ class pluginWriter {
 
         if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
             $this->_displayDocuments($toolbox, $plugin, $innerAction);
+    }
+    private function _displaySale($toolbox, $plugin, $postaction = '') {
+        //echo '_displayWritersDefault';
+        $action = libraryRequest::getAction();
+        if (!empty($postaction))
+            $action = $postaction;
+        $innerAction = '';
+        switch($action) {
+            case 'edit':
+            case 'create':
+                $innerAction = $this->_displaySaleEdit($toolbox, $plugin);
+                break;
+            case 'delete':
+                $innerAction = $this->_displaySaleDelete($toolbox, $plugin);
+                break;
+            default:
+                $innerAction = $this->_displaySaleDefault($toolbox, $plugin);
+                break;
+        }
+
+        if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
+            $this->_displaySale($toolbox, $plugin, $innerAction);
     }
     private function _displaySubjects($toolbox, $plugin, $postaction = '') {
         //echo '_displayWritersDefault';
@@ -480,6 +510,12 @@ class pluginWriter {
                 ->from('writer_orders')
                 ->where('PublicStatus', '=', 'TO REFUND')
                 ->fetchData();
+        // reopened
+        $order_groups['REOPEN'] = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('PublicStatus', '=', 'REOPEN')
+                ->fetchData();
         
         
         $model['PLUGINS']['WRITER']['DATA_FREE_WRITERS'] = $freeWriters;
@@ -515,8 +551,44 @@ class pluginWriter {
             //$model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.prices.error'];
     }
     private function _displayPricesDelete ($toolbox, $plugin) {
-        
-        
+        $model = &$toolbox->getModel();
+
+        $action = libraryRequest::getAction();
+        $oid = libraryRequest::getOID();
+        $data = array();
+
+        $model['PLUGINS']['WRITER']['oid'] = $oid;
+        $model['PLUGINS']['WRITER']['action'] = $action;
+        if(empty($oid)) {
+            // set template
+            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+            return;
+        }
+
+        $data = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_prices')
+            ->where('ID', '=', $oid)
+            ->fetchRow();
+
+        if (empty($data)) {
+            // set template
+            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+            return;
+        }
+
+        if (libraryRequest::isPostFormAction('delete')) {
+            $toolbox->getDatabaseObj()
+                ->deleteFrom('writer_prices')
+                ->where('ID', '=', $oid)
+                ->query();
+
+            return 'home';
+        }
+
+        $model['PLUGINS']['WRITER']['DATA'] = $data;
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.prices.delete_preview'];
+
     }
     private function _displayPricesEdit ($toolbox, $plugin) {
         $model = &$toolbox->getModel();
@@ -586,7 +658,7 @@ class pluginWriter {
                 $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
                 return;
             }
-            if (!libraryRequest::isPostFormActionMatchAny('edit'))
+            if (!libraryRequest::isPostFormActionMatchAny('save'))
                 $data = $document;
         }
         if ($action === 'create') {
@@ -600,6 +672,134 @@ class pluginWriter {
         
         
         
+    }
+
+    /* documents */
+    private function _displaySaleDefault ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+        libraryRequest::storeOrGetRefererUrl();
+        $model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['SALE'], $toolbox->getDatabaseObj());
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.sale.datatable'];
+    }
+    private function _displaySaleDelete ($toolbox, $plugin) {
+
+        $model = &$toolbox->getModel();
+
+        $action = libraryRequest::getAction();
+        $oid = libraryRequest::getOID();
+        $data = array();
+
+        $model['PLUGINS']['WRITER']['oid'] = $oid;
+        $model['PLUGINS']['WRITER']['action'] = $action;
+        if(empty($oid)) {
+            // set template
+            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+            return;
+        }
+
+        $data = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_sale')
+            ->where('ID', '=', $oid)
+            ->fetchRow();
+
+        if (empty($data)) {
+            // set template
+            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+            return;
+        }
+
+        if (libraryRequest::isPostFormAction('delete')) {
+            $toolbox->getDatabaseObj()
+                ->deleteFrom('writer_sale')
+                ->where('ID', '=', $oid)
+                ->query();
+
+            return 'home';
+        }
+
+        $model['PLUGINS']['WRITER']['DATA'] = $data;
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.sale.delete_preview'];
+
+    }
+    private function _displaySaleEdit ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+        $messages = array();
+        //var_dump($plugin);
+        $action = libraryRequest::getAction();
+        $oid = libraryRequest::getOID();
+        $data = array();
+        $model['PLUGINS']['WRITER']['oid'] = $oid;
+        $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
+
+        if (libraryRequest::isPostFormAction('save')) {
+            $data = libraryRequest::getPostMapContainer($plugin['config']['VALIDATOR']['DATAMAP']['SALE']);
+            
+            //var_dump($data);
+            
+            /* validate fileds */
+            libraryValidator::validateData($data, $plugin['config']['VALIDATOR']['FILTER']['SALE'], $messages);
+            // if ok to proceed
+            //echo 'olololo';
+            if (empty($messages)) {
+                if ($action === 'edit') {
+                    // check if oid is not empty
+                    if (empty($oid)) {
+                        // set template
+                        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                        return;
+                    }
+                    $toolbox->getDatabaseObj()
+                        ->update('writer_sale')
+                        ->set($data)
+                        ->where('ID', '=', $oid)
+                        ->query();
+                    // force return to home page
+                    return 'home';
+                } elseif ($action === 'create') {
+                    $toolbox->getDatabaseObj()
+                        ->insertInto('writer_sale')
+                        ->fields(array_keys($data))
+                        ->values(array_values($data))
+                        ->query();
+                    // force return to home page
+                    return 'home';
+                } else
+                    $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                return;
+            } else
+                $model['PLUGINS']['WRITER']['messages'] = $messages;
+        }
+        if (libraryRequest::isPostFormAction('cancel')) {
+            return 'home';
+        }
+        if (libraryRequest::isPostFormAction('edit')) {
+            // uncomment to use preview form
+            //data = libraryRequest::getPostMapContainer($plugin['config']['VALIDATOR']['DATAMAP']['SUBJECTS']);
+        }
+        // in edit mode validate oid
+        if ($action === 'edit' && !empty($oid)) {
+            $document = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_sale')
+                ->where('ID', '=', $oid)
+                ->fetchRow();
+            if (empty($document)) {
+                // set template
+                $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                return;
+            }
+            if (!libraryRequest::isPostFormActionMatchAny('save'))
+                $data = $document;
+        }
+        if ($action === 'create') {
+            
+        }
+
+        // set template
+        $model['PLUGINS']['WRITER']['DATA'] = $data;
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.sale.create'];
     }
 
     /* documents */
@@ -715,7 +915,7 @@ class pluginWriter {
                 $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
                 return;
             }
-            if (!libraryRequest::isPostFormActionMatchAny('edit', 'preview'))
+            if (!libraryRequest::isPostFormActionMatchAny('save'))
                 $data = $document;
         }
         if ($action === 'create') {
@@ -840,7 +1040,7 @@ class pluginWriter {
                 $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
                 return;
             }
-            if (!libraryRequest::isPostFormActionMatchAny('edit', 'preview'))
+            if (!libraryRequest::isPostFormActionMatchAny('save'))
                 $data = $subject;
         }
         if ($action === 'create') {
@@ -1470,20 +1670,51 @@ class pluginWriter {
                 ->set($order_status)
                 ->where('ID', '=', $oid)
                 ->query();
+            
+            $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
+            /* save internal message */
+            $message['Subject'] = 'Order Was Approved To Review.';
+            $message['Message'] = libraryUtils::arrayHtmlDump($order_status);
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($customer_config_mdbc['DB_DATE_FORMAT']);
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            
         }
         if (libraryRequest::isPostFormAction('update order')) {
             //echo 'saving order';
+            
+            $order_new_changes = array(
+                'PublicStatus' => libraryRequest::getPostValue('set_order_publicstatus'),
+                'InternalStatus' => libraryRequest::getPostValue('set_order_internalstatus'),
+                'Credits' => libraryRequest::getPostValue('order_credits')
+            );
+            
             $toolbox->getDatabaseObj()
                 ->update('writer_orders')
-                ->set(
-                    array(
-                        'PublicStatus' => libraryRequest::getPostValue('set_order_publicstatus'),
-                        'InternalStatus' => libraryRequest::getPostValue('set_order_internalstatus'),
-                        'Credits' => libraryRequest::getPostValue('order_credits')
-                    )
-                )
+                ->set($order_new_changes)
                 ->where('ID', '=', $oid)
                 ->query();
+            
+            $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
+            /* save internal message */
+            $message['Subject'] = 'Order Was Updated.';
+            $message['Message'] = libraryUtils::arrayHtmlDump($order_new_changes);
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($customer_config_mdbc['DB_DATE_FORMAT']);
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            
         }
 
         // get order record
@@ -1509,12 +1740,32 @@ class pluginWriter {
                 ->set(array('WriterID' => $currentWriterID))
                 ->where('ID', '=', $oid)
                 ->query();
+            
+            $customer_config_mail = $toolbox->getCustomerObj()->GetCustomerConfiguration('MAIL');
+            $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
+                
+            /* save internal message */
+            if ($currentWriterID == 0) {
+                $message['Subject'] = 'Order Was Unassigned.';
+                $message['Message'] = 'Sent to Task Queue';
+            } else {
+                $message['Subject'] = 'Order Was Assigned To Writer.';
+                $message['Message'] = 'Assigned To: <a href="writer.html?display=writers&action=details&oid='.$currentWriterID.'">' . $data_writer['Name'] . '</a>';
+            }
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($customer_config_mdbc['DB_DATE_FORMAT']);
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            
             /* NOTIFY WRITER ABOUT NEW ASSIGNMENT */
             // when $new_writer_id == 0 - then order is unassigned
-            if ($currentWriterID != 0) {
+            if ($currentWriterID != 0 && false) {
                 // get new writer info
-                $customer_config_mail = $toolbox->getCustomerObj()->GetCustomerConfiguration('MAIL');
-                $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
                 
                 // form email object
                 $recipient = $customer_config_mail['NOTIFY'];
@@ -1534,6 +1785,7 @@ class pluginWriter {
                 // send email message
                 libraryMailer::sendEMail($recipient);
             }
+            
         }
         
         $data_invoice_order = array();
@@ -1628,6 +1880,38 @@ class pluginWriter {
         
         
     }
+
+    /* cross methods */
+    public function cross_method ($params = false) {
+        if (empty($params['fn']))
+            return false;
+        //echo '<br>calling method';
+        switch($params['fn']) {
+            case 'useremoval': {
+                //$this
+                $this->cross_useremoval($params);
+                break;
+            }
+        }
+    }
+    
+    private function cross_useremoval ($params = false) {
+        //echo 'cross_useremoval<br><br><br>';
+        if (empty($params['dbo']))
+            return false;
+        
+        $dbo = $params['dbo'];
+        $dbo->reset()
+            ->stopSanitize()
+            ->deleteFrom('writer_students')
+            ->where('IsTemporary', '=', 1)
+            ->andWhere('DateCreated', '<', 'NOW() - INTERVAL 3 DAY')
+            ->query();
+        
+        //var_dump($exAccounts);
+        //echo '<pre>' . print_r($exAccounts, true) . '</pre>';
+    }
+    
 }
 
 

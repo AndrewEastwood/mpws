@@ -20,6 +20,7 @@
         'MAIN' => Array(
             '/page/index.html' => 'Home',
             '/page/make-order.html' => 'Make Order',
+            '/page/buy-essay.html' => 'Buy Essay',
             '/page/account.html' => 'Account',
             '/page/how-it-works.html' => 'How It Works',
             '/page/contacts.html' => 'Contact Us'

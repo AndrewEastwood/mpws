@@ -23,6 +23,24 @@ class libraryUtils {
             return array();
         return $matches[1];
     }
+    
+    static public function arrayHtmlDump ($array, &$stringDump = '', $level = 0) {
+        foreach ($array as $key => $val) {
+            $stringDump .= '<div>';
+            $stringDump .= str_pad('', 5 * $level, '. ');
+            $stringDump .= $key . ': ';
+            if (is_array($val)) {
+                $stringDump .= '<br>' . PHP_EOL;
+                self::arrayHtmlDump($val, $stringDump, $level + 1);
+            } else
+                $stringDump .= $val;
+            $stringDump .= '</div>' . PHP_EOL;
+        }
+        
+        if ($level == 0)
+            return $stringDump;
+        return true;
+    }
 
     static public function groupArrayRowsByField($array, $key) {
         $_groups = array();

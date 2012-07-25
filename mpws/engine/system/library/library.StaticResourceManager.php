@@ -114,7 +114,7 @@ class libraryStaticResourceManager {
         return $metainfo . $data;
     }
 
-    public function GetImageContent ($name, $realm, $owner = '') {
+    public function GetContent ($name, $realm, $owner = '') {
 
         $c = MPWS_CUSTOMER;
         $v = MPWS_VERSION;

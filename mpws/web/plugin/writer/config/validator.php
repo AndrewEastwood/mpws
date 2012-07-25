@@ -31,6 +31,15 @@
         'Name' => 'document_name'
     );
 
+    $plugin['VALIDATOR']["DATAMAP"]['SALE'] = array(
+        'Title' => 'sale_title',
+        'Description' => 'sale_description',
+        'Sample' => 'sale_sample',
+        'Pages' => 'sale_pages',
+        'Price' => 'sale_price',
+        'DocumentURL' => 'sale_documenturl'
+    );
+    
     $plugin['VALIDATOR']["DATAMAP"]['PRICES'] = array(
         'Name' => 'price_name',
         'Price' => 'price_value',
@@ -59,6 +68,12 @@
 
     $plugin['VALIDATOR']["FILTER"]['DOCUMENTS'] = array(
         'Name' => '/^(?=^.{10,150}$)[a-zA-Z\s.?!*+=-_]+$/'
+    );
+    
+    $plugin['VALIDATOR']["FILTER"]['SALE'] = array(
+        'Title' => '/^.{3,50}$/',
+        'Pages' => '/\d+/',
+        'Price' => '/^\d+\.\d{0,2}?$/'
     );
 
     $plugin['VALIDATOR']["FILTER"]['PRICES'] = array(

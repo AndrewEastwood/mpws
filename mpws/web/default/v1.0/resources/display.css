@@ -766,9 +766,14 @@
     .MPWSSystemMessage {font-size: 14px; font-weight: bold; color: #930; padding: 10px; border: 1px solid #eee; background: #fff; display: block;}
     .MPWSSystemMessage *:hover {border-color: #fff; background: #eee;}
     
-    .MPWSSectionOrderMessages {margin: 0px 0px 10px 0px; background: #AAA; border: 1px dotted #EEE; overflow: hidden; zoom: 1;}
+    .MPWSSectionOrderMessage {margin: 0px 0px 10px 0px; background: #999; border: 1px dotted #EEE; overflow: hidden; zoom: 1;}
         .MPWSBlockMessageState {float: left; width: 70px; padding: 10px;}
         .MPWSBlockMessageBody {margin-left: 80px; padding: 15px 10px;}
+        .MPWSBlockMessageBody .MPWSDivTableCellDataOwner {display: block; font-weight: bold; float: left;}
+        .MPWSBlockMessageBody .MPWSDivTableCellDataSubject {display: block; padding-bottom: 5px; font-size: 15px; border-bottom: 1px dotted #eee;}
+        .MPWSBlockMessageBody .MPWSDivTableCellDataDateCreated {}
+        .MPWSBlockMessageBody .MPWSDivTableCellDataMessages {padding: 15px 0px; display: block;}
+        .MPWSBlockMessageBody .MPWSMessageInformation {padding-bottom: 5px; overflow: hidden; zoom: 1; text-align: right;}
         
         
         
@@ -782,3 +787,6 @@
     .MPWSStatusExpiration_1 {background-color: #633;}
     .MPWSStatusExpiration_2 {background-color: #B66;}
     .MPWSStatusExpiration_4 {background-color: #A88;}
+    
+    
+    .MPWSScrollContainer {overflow: scroll; width: 500px; height: 400px; word-break: break-all;}

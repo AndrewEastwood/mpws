@@ -1,0 +1,35 @@
+<h2>Your Orders</h2>
+<hr size="2"/>
+
+<div class="MPWSDivTable MPWSDivTableWithGroups">
+    <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize3">Title</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Status</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Price</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Reworks</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
+    </div>
+    <?php foreach($model['CUSTOMER']['DATA'] as $groupKey => $groupEntry) : ?>
+    <?php if (empty($groupEntry)) continue; ?>
+    
+    <h3 class="MPWSDivTableGroupTitle"><?=$groupKey;?></h3>
+    <?php foreach($groupEntry as $entry) : ?>
+        <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize3"><?=$entry['Title'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=libraryView::getFrendlyLabel($entry['PublicStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Credits'];?>$&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=$entry['ReworkCount'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?>&nbsp;</span>
+        </div>
+    <?php endforeach ?>
+
+    <?php endforeach ?>
+</div>

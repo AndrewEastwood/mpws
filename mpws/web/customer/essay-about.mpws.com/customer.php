@@ -24,6 +24,10 @@ class customer {
                 $this->_pageMakeOrder($customer);
                 break;
             }
+            case 'buy-essay':{
+                $this->_pageBuyEssay($customer);
+                break;
+            }
             case 'index':
                 $this->_pageIndex($customer);
                 break;
@@ -103,8 +107,9 @@ class customer {
     }
     
     private function api_mark_as_read ($customer) {
+        //echo $p['oid'];
         $model = &$customer->getModel();
-        if (!$model['user']['ACTIVE'])
+        if (!$model['USER']['ACTIVE'])
             return false;
         $p = libraryRequest::getApiParam();
         if (isset($p['checked']) && isset($p['oid']))
@@ -152,8 +157,112 @@ class customer {
     }
     private function _pageAccount ($customer) {
         $model = &$customer->getModel();
-
+        
+        // remove expired accounts
+        $param['dbo'] = $customer->getDatabaseObj();
+        libraryToolboxManager::callPluginMethod('writer', 'useremoval', $param);
+        
         //var_dump($model['USER']);
+                // register action
+        if (libraryRequest::isPostFormAction('register')) {
+            $messages = array();
+            
+            // validate data
+            $validator = $customer->getCustomerConfiguration('VALIDATOR');
+            $data = libraryRequest::getPostMapContainer($validator['DATAMAP']['ACCOUNT_CREATE']);
+            libraryValidator::validateData($data, $validator['FILTER']['ACCOUNT_CREATE'], $messages);
+            
+            if ($data['Password'] !== $data['Password2'])
+                $messages[] = 'Confirmation password does not match with main.';
+            
+            if (!empty($messages)) {
+                $model['CUSTOMER']['MESSAGES'] = $messages;
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.accountdesk.login');
+                return;
+            }
+            
+            // look for the same login or email
+            $doubleLogin = $customer->getDatabaseObj()
+                ->reset()
+                ->select('Login')
+                ->from('writer_students')
+                ->where('Login', '=', $data['Login'])
+                ->fetchRow();
+            $doubleEmail = $customer->getDatabaseObj()
+                ->reset()
+                ->select('Login')
+                ->from('writer_students')
+                ->where('Email', '=', $data['Email'])
+                ->fetchRow();
+            if (!empty($doubleLogin))
+                $messages[] = 'This login is already used.';
+            if (!empty($doubleEmail))
+                $messages[] = 'This email is already used.';
+
+            if (!empty($messages)) {
+                $model['CUSTOMER']['MESSAGES'] = $messages;
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.accountdesk.login');
+                return;
+            }
+            
+            $mdbc = $customer->getCustomerConfiguration('MDBC');
+            $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+                
+            // make new user token
+            $_userToken = md5($data['Password'] . $data['Name'] . $data['Email'] . date($mdbc['DB_DATE_FORMAT']));
+            
+            // save new user
+            $user = array(
+                'Name' => $data['Name'],
+                'Login' => $data['Login'],
+                'Password' => md5($data['Password']),
+                'Email' => $data['Email'],
+                'Active' => 0,
+                'IsTemporary' => 1,
+                'UserToken' => $_userToken,
+                'DateCreated' => date($mdbc['DB_DATE_FORMAT']),
+                'DateLastAccess' => date($mdbc['DB_DATE_FORMAT'])
+            );
+            // save new user
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_students')
+                ->fields(array_keys($user))
+                ->values(array_values($user))
+                ->query();
+            
+            $libView = new libraryView();
+            // form email object
+            $recipient = $customer_config_mail['NOTIFY'];
+            $recipient['TO'] = $user['Email'];
+            $recipient['NAME'] = $user['Name'];
+            $recipient['SUBJECT'] = 'Your account has been created';
+            $recipient['DATA'] = array(
+                'Login' => $user['Login'],
+                'Name' => $user['Name'],
+                'Password' => $data['Password'], // raw user password
+                'TargetUrl' => $customer_config_mail['URLS']['ACTIVATE'] . $user['UserToken'],
+                'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
+            );
+            //var_dump($recipient);
+            // get html message
+            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.student.new'));
+            // send email message to new user
+            libraryMailer::sendEMail($recipient);
+            
+            /* system email notification */
+            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_REGISTRATION'];
+            $recipient['SUBJECT'] = 'New User Is Registered';
+            $recipient['DATA'] = array(
+                'Name' => $user['Name']
+            );
+            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.user_registered'));
+            // send email message to system
+            libraryMailer::sendEMail($recipient);
+            
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.accountdesk.registered');
+            return;
+        }
         
         // check for login
         if (!$model['USER']['ACTIVE']) {
@@ -224,7 +333,7 @@ class customer {
                 $templateName = $model['CUSTOMER']['TEMPLATE_NAME'];
             // prepend account type name
             $templateName = strtolower($_SESSION['WEB_USER']['TYPE'] . '_' . $templateName);
-            echo '<br><br><br>USING TEMPLATE NAME:  =====> ' . $templateName;
+            //echo '<br><br><br>USING TEMPLATE NAME:  =====> ' . $templateName;
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.accountdesk.' . $templateName);
         }
         $model['LAYOUT'] = 'accountdesk';
@@ -347,6 +456,12 @@ class customer {
         
         if (empty($studentInfo)) {
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.activate_error');
+            return;
+        }
+        
+        // check for double activation
+        if (!$studentInfo['IsTemporary']) {
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.accountdesk.login');
             return;
         }
         
@@ -545,7 +660,6 @@ class customer {
 
                 /* SYSTEM NOTIFY */
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
-                $recipient['TO'] = 'soulcor@gmail.com';
                 $recipient['SUBJECT'] = 'New order has been created';
                 $recipient['DATA'] = array(
                     'Name' => $user['Name'],
@@ -559,14 +673,15 @@ class customer {
                 //$model['CUSTOMER']['DATA_EMAIL'] = $student['Email'];
                 //$model['CUSTOMER']['DATA_TOKEN'] = $_o_token;
 
+                $payment = $customer->getCustomerConfiguration('PAYMENT');
                 // general information
-                $_order = array();
-                $_order['sid'] = '1799160';
-                $_order['quantity'] = '1';
-                $_order['product_id'] = '1';
+                $_order = $payment['2CO'];
+                //$_order['sid'] = '1799160';
+                //$_order['quantity'] = '1';
+                //$_order['product_id'] = '1';
                 $_order['merchant_order_id'] = $_o_token . '-' . $user['Login'];
                 $_order['email'] = $user['Email'];
-                $_order['submit'] = 'Buy from 2CO';
+                //$_order['submit'] = 'Buy from 2CO';
                 // billing information if user is loggined
                 if ($model['USER']['ACTIVE']) {
                     $_order['card_holder_name'] = $user['Billing_FirstName'];
@@ -623,12 +738,21 @@ class customer {
                 $model['CUSTOMER']['DATA']['Email'] = $user['Email'];
         }
     }
+    private function _pageBuyEssay ($customer) {
+        $model = &$customer->getModel();
+        
+        $datatable = $customer->getCustomerConfiguration('DATATABLE');
+        $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj());
+        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay');
+    }
 
-    public function _accountDeskCommonOrders_details ($customer) {
+    
+    private function _accountDeskCommonOrders_details ($customer) {
         $model = &$customer->getModel();
         $oid = libraryRequest::getOID();
         $messages = array();
-        
+        $mdbc = $customer->getCustomerConfiguration('MDBC');
+            
         // check for empty oid
         if(empty($oid)) {
             $model['CUSTOMER']['TEMPLATE_NAME'] = 'orders_error';
@@ -655,8 +779,115 @@ class customer {
         }
         
         /* order actions */
+        // start rework
+        if (libraryRequest::isPostFormAction('start working') && $model['USER']['IS_WRITER']) {
+            $order_status = array(
+                'PublicStatus' => 'IN PROGRESS',
+                'InternalStatus' => 'OPEN'
+            );
+            $customer->getDatabaseObj()
+                ->reset()
+                ->update('writer_orders')
+                ->set($order_status)
+                ->where('ID', '=', $oid)
+                ->query();
+            /* save internal message */
+            $message['Subject'] = 'Writer Started This Order';
+            $message['Message'] = 'Public Status: IN PROGRESS';
+            $message['WriterID'] = $model['USER']['ID'];
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            /* alter already selected order info */
+            $data_order['PublicStatus'] = 'IN PROGRESS';
+            $data_order['InternalStatus'] = 'OPEN';
+        }
         // send to rework
-        if (libraryRequest::isPostFormAction('send to rework')) {
+        if (libraryRequest::isPostFormAction('accept') && $model['USER']['IS_WRITER']) {
+            $order_status = array(
+                'PublicStatus' => 'IN PROGRESS'
+            );
+            $customer->getDatabaseObj()
+                ->reset()
+                ->update('writer_orders')
+                ->set($order_status)
+                ->where('ID', '=', $oid)
+                ->query();
+            /* save internal message */
+            $message['Subject'] = 'Writer Started This Order';
+            $message['Message'] = 'Public Status: IN PROGRESS';
+            $message['WriterID'] = $model['USER']['ID'];
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            /* alter already selected order info */
+            $data_order['PublicStatus'] = 'IN PROGRESS';
+        }
+        if (libraryRequest::isPostFormAction('reject') && $model['USER']['IS_WRITER']) {
+            $order_status = array(
+                'InternalStatus' => 'REJECTED'
+            );
+            $customer->getDatabaseObj()
+                ->reset()
+                ->update('writer_orders')
+                ->set($order_status)
+                ->where('ID', '=', $oid)
+                ->query();
+            /* save internal message */
+            $message['Subject'] = 'Order Is Rejected By Writer';
+            $message['Message'] = 'Assign this order to another writer.';
+            $message['WriterID'] = $model['USER']['ID'];
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            /* alter already selected order info */
+            $data_order['InternalStatus'] = 'REJECTED';
+        }
+        if (libraryRequest::isPostFormAction('send to review') && $model['USER']['IS_WRITER']) {
+            $order_status = array(
+                'InternalStatus' => 'PENDING'
+            );
+            $customer->getDatabaseObj()
+                ->reset()
+                ->update('writer_orders')
+                ->set($order_status)
+                ->where('ID', '=', $oid)
+                ->query();
+            /* save internal message */
+            $message['Subject'] = 'Need Approval';
+            $message['Message'] = 'Waiting for approval.';
+            $message['WriterID'] = $model['USER']['ID'];
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            /* alter already selected order info */
+            $data_order['InternalStatus'] = 'PENDING';
+        }
+        if (libraryRequest::isPostFormAction('send to rework') && $model['USER']['IS_STUDENT']) {
             
             if ($data_order['ReworkCount'] == 3)
                 $messages[] = 'You can not send to rework more then 3 times.';
@@ -673,14 +904,13 @@ class customer {
                     ->where('ID', '=', $oid)
                     ->query();
                 /* save internal message */
-                $mdbc = $customer->getCustomerConfiguration('MDBC');
                 $message['Subject'] = 'Buyer Wants To Rework';
                 $message['Message'] = 'Ask owner for more details to rework.';
                 $message['StudentID'] = $model['USER']['ID'];
                 $message['OrderID'] = $oid;
                 $message['Owner'] = 'SYSTEM';
                 $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-                $data_messages = $customer->getDatabaseObj()
+                $customer->getDatabaseObj()
                     ->reset()
                     ->insertInto('writer_messages')
                     ->fields(array_keys($message))
@@ -693,7 +923,7 @@ class customer {
             }
         }
         // want refund
-        if (libraryRequest::isPostFormAction('want refund')) {
+        if (libraryRequest::isPostFormAction('want refund') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'TO REFUND',
                 'InternalStatus' => 'OPEN'
@@ -705,14 +935,13 @@ class customer {
                 ->where('ID', '=', $oid)
                 ->query();
             /* save internal message */
-            $mdbc = $customer->getCustomerConfiguration('MDBC');
             $message['Subject'] = 'Buyer Wants Refund';
             $message['Message'] = 'You must clarify the reason of refund action.';
             $message['StudentID'] = $model['USER']['ID'];
             $message['OrderID'] = $oid;
             $message['Owner'] = 'SYSTEM';
             $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-            $data_messages = $customer->getDatabaseObj()
+            $customer->getDatabaseObj()
                 ->reset()
                 ->insertInto('writer_messages')
                 ->fields(array_keys($message))
@@ -722,7 +951,7 @@ class customer {
             $data_order['PublicStatus'] = 'TO REFUND';
             $data_order['InternalStatus'] = 'OPEN';
         }
-        if (libraryRequest::isPostFormAction('reopen order')) {
+        if (libraryRequest::isPostFormAction('reopen order') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'REOPEN',
                 'InternalStatus' => 'OPEN'
@@ -734,14 +963,13 @@ class customer {
                 ->where('ID', '=', $oid)
                 ->query();
             /* save internal message */
-            $mdbc = $customer->getCustomerConfiguration('MDBC');
             $message['Subject'] = 'Order Is Reopened';
             $message['Message'] = 'Owner has reopened this order.';
             $message['StudentID'] = $model['USER']['ID'];
             $message['OrderID'] = $oid;
             $message['Owner'] = 'SYSTEM';
             $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-            $data_messages = $customer->getDatabaseObj()
+            $customer->getDatabaseObj()
                 ->reset()
                 ->insertInto('writer_messages')
                 ->fields(array_keys($message))
@@ -752,7 +980,7 @@ class customer {
             $data_order['InternalStatus'] = 'OPEN';
         }
         // close order
-        if (libraryRequest::isPostFormAction('close order')) {
+        if (libraryRequest::isPostFormAction('close order') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'CLOSED',
                 'InternalStatus' => 'CLOSED'
@@ -764,14 +992,13 @@ class customer {
                 ->where('ID', '=', $oid)
                 ->query();
             /* save internal message */
-            $mdbc = $customer->getCustomerConfiguration('MDBC');
             $message['Subject'] = 'Order Is Closed';
             $message['Message'] = 'Owner has closed this order.';
             $message['StudentID'] = $model['USER']['ID'];
             $message['OrderID'] = $oid;
             $message['Owner'] = 'SYSTEM';
             $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-            $data_messages = $customer->getDatabaseObj()
+            $customer->getDatabaseObj()
                 ->reset()
                 ->insertInto('writer_messages')
                 ->fields(array_keys($message))
@@ -781,20 +1008,22 @@ class customer {
             $data_order['PublicStatus'] = 'CLOSED';
             $data_order['InternalStatus'] = 'CLOSED';
         }
-        // posn new message
+        // post new message
         if (libraryRequest::isPostFormAction('post message')) {
             $validator = $customer->getCustomerConfiguration('VALIDATOR');
-            $mdbc = $customer->getCustomerConfiguration('MDBC');
             $message = libraryRequest::getPostMapContainer($validator['DATAMAP']['MESSAGES']);
             libraryValidator::validateData($message, $validator['FILTER']['MESSAGES'], $messages);
             // check for errors
             if (!count($messages)) {
-                $message['StudentID'] = $model['USER']['ID'];
+                if($model['USER']['IS_STUDENT'])
+                    $message['StudentID'] = $model['USER']['ID'];
+                if($model['USER']['IS_WRITER'])
+                    $message['WriterID'] = $model['USER']['ID'];
                 $message['OrderID'] = $oid;
                 $message['Owner'] = strtoupper($model['USER']['TYPE']);
                 $message['IsPublic'] = 1;
                 $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-                $data_messages = $customer->getDatabaseObj()
+                $customer->getDatabaseObj()
                     ->reset()
                     ->insertInto('writer_messages')
                     ->fields(array_keys($message))
@@ -803,9 +1032,35 @@ class customer {
             
                 /* notify writer with new message */
             }
+        } // post message
+        if (libraryRequest::isPostFormAction('save changes') && $model['USER']['IS_WRITER']) {
+            $docLink = libraryRequest::getPostValue('order_resolution_document');
+            $customer->getDatabaseObj()
+                ->reset()
+                ->update('writer_orders')
+                ->set(array('ResolutionDocumentLink' => $docLink))
+                ->where('ID', '=', $oid)
+                ->query();
+            
+            /* save internal message */
+            $message['Subject'] = 'Resolution Document Is Modified';
+            $message['Message'] = 'Document Link: ' . $docLink;
+            $message['StudentID'] = $model['USER']['ID'];
+            $message['OrderID'] = $oid;
+            $message['Owner'] = 'SYSTEM';
+            $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+            $customer->getDatabaseObj()
+                ->reset()
+                ->insertInto('writer_messages')
+                ->fields(array_keys($message))
+                ->values(array_values($message))
+                ->query();
+            
+            /* alter already selected order info */
+            $data_order['ResolutionDocumentLink'] = $docLink;
         }
-        if (libraryRequest::isPostFormAction('save changes')) {
-            $mdbc = $customer->getCustomerConfiguration('MDBC');
+        // save changes
+        if (libraryRequest::isPostFormAction('save changes') && $model['USER']['IS_STUDENT']) {
             
             $deadline = libraryRequest::getPostValue('order_deadline');
             
@@ -823,11 +1078,14 @@ class customer {
                     /* save internal message */
                     $message['Subject'] = 'Date Deadline is changed';
                     $message['Message'] = $data_order['DateDeadline'] . ' => ' . $deadline;
-                    $message['StudentID'] = $model['USER']['ID'];
+                    if($model['USER']['IS_STUDENT'])
+                        $message['StudentID'] = $model['USER']['ID'];
+                    if($model['USER']['IS_STUDENT'])
+                        $message['WriterID'] = $model['USER']['ID'];
                     $message['OrderID'] = $oid;
                     $message['Owner'] = 'SYSTEM';
                     $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-                    $data_messages = $customer->getDatabaseObj()
+                    $customer->getDatabaseObj()
                         ->reset()
                         ->insertInto('writer_messages')
                         ->fields(array_keys($message))
@@ -852,14 +1110,14 @@ class customer {
                 ->where('OrderToken', '=', $data_order['OrderToken'])
                 ->fetchData();
             $_c_sources = array();
-            foreach ($currentSources as $key => $val)
+            foreach ($currentSources as $val)
                 $_c_sources[] = $val['SourceURL'];
             // get new sources
             $_sources = libraryRequest::getPostValue('order_source_links');
             if (empty($_sources))
                 $_sources = array();
             // compare arrays
-            $srcDiff = array_diff_assoc($_c_sources, $_sources);
+            $srcDiff = array_diff_assoc($_sources, $_c_sources);
             
             //echo '<pre>'.print_r($_c_sources, true).'</pre>';
             //echo '<pre>'.print_r($_sources, true).'</pre>';
@@ -894,21 +1152,31 @@ class customer {
                 $message['OrderID'] = $oid;
                 $message['Owner'] = 'SYSTEM';
                 $message['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-                $data_messages = $customer->getDatabaseObj()
+                $customer->getDatabaseObj()
                     ->reset()
                     ->insertInto('writer_messages')
                     ->fields(array_keys($message))
                     ->values(array_values($message))
                     ->query();
             }
-        }
+        } // save changes action
         
         // collect order data and related items
-        $data_messages = $customer->getDatabaseObj()
+        $customer->getDatabaseObj()
             ->select('*')
             ->from('writer_messages')
-            ->where('OrderID', '=', $oid)
-            ->andWhere('IsPublic', '=', 1)
+            ->where('OrderID', '=', $oid);
+        
+        // select public messages only if it is student account
+        if ($model['USER']['IS_STUDENT'])
+            $customer->getDatabaseObj()->andWhere('IsPublic', '=', 1);
+        if ($model['USER']['IS_WRITER']) {
+            $customer->getDatabaseObj()
+                ->andWhere('StudentID', '<>', 'NULL')
+                ->orWhere('WriterID', '<>', 'NULL'); 
+        }
+        
+        $data_messages = $customer->getDatabaseObj()
             ->orderBy('DateCreated')
             ->order('DESC')
             ->fetchData();
@@ -969,23 +1237,24 @@ class customer {
         $model['CUSTOMER']['DATA_INVOICE_ORDER'] = $data_invoice_order;
         $model['CUSTOMER']['DATA_INVOICE_REFUND'] = $data_invoice_refund;
         $model['CUSTOMER']['DATA_SOURCES'] = $data_sources;
+        $model['CUSTOMER']['DATA_DEADLINE'] = libraryUtils::subDateHours($data_order['DateDeadline'], 2, $mdbc['DB_DATE_FORMAT']);
         $model['CUSTOMER']['MESSAGES'] = $messages;
         //$model['CUSTOMER']['template'] = $plugin['templates']['page.orders.details'];
     }
-    public function _accountDeskCommonOrders_all ($customer) {
+    private function _accountDeskCommonOrders_all ($customer) {
         $model = &$customer->getModel();
         // get new tasks
-        echo $_SESSION['WEB_USER']['TYPE'].'ID'. '='. $_SESSION['WEB_USER']['ID'];
+        //echo $_SESSION['WEB_USER']['TYPE'].'ID'. '='. $_SESSION['WEB_USER']['ID'];
         $data = $customer->getDatabaseObj()
                 ->reset()
-                ->select('ID, Title, Price, Pages, Format, DateCreated, DateDeadline, PublicStatus, ReworkCount')
+                //->select('ID, Title, Price, Pages, Format, DateCreated, DateDeadline, PublicStatus, ReworkCount')
+                ->select('*')
                 ->from('writer_orders')
                 ->where($_SESSION['WEB_USER']['TYPE'].'ID', '=', $_SESSION['WEB_USER']['ID'])
                 ->andWhere('PublicStatus', '<>', 'CLOSED')
                 ->fetchData();
         $model['CUSTOMER']['DATA'] = libraryUtils::groupArrayRowsByField($data, 'PublicStatus');
     }
-
     private function _accountDeskCommonHistoryOrders ($customer) {
         $model = &$customer->getModel();
         $data_orders = array();
@@ -995,7 +1264,7 @@ class customer {
                 ->select('*')
                 ->from('writer_orders')
                 ->where($_SESSION['WEB_USER']['TYPE'].'ID', '=', $_SESSION['WEB_USER']['ID'])
-                ->andWhere('Status', '=', 'CLOSED')
+                ->andWhere('PublicStatus', '=', 'CLOSED')
                 ->andWhere('DateCreated', '>', libraryRequest::getPostValue('start_date'))
                 ->andWhere('DateCreated', '<', libraryRequest::getPostValue('end_date'))
                 ->fetchData();
@@ -1015,45 +1284,54 @@ class customer {
         $model['CUSTOMER']['DATA'] = $data_orders;
         $model['CUSTOMER']['DATA_SUMA'] = $data_suma;
     }
-
     private function _accountDeskCommonSettings ($customer) {
         $model = &$customer->getModel();
         $messages = array();
         $data = array();
+        $data_pwd = array();
         
         
+        // change password (common usage)
         if (libraryRequest::isPostFormAction('change password')) {
             $validator = $customer->getCustomerConfiguration('VALIDATOR');
-            $data = libraryRequest::getPostMapContainer($validator['DATAMAP']['ACCOUNT_PWD_UPDATE']);
-            libraryValidator::validateData($data, $validator['FILTER']['ACCOUNT_PWD_UPDATE'], $messages);
+            $data_pwd = libraryRequest::getPostMapContainer($validator['DATAMAP']['ACCOUNT_PWD_UPDATE']);
+            libraryValidator::validateData($data_pwd, $validator['FILTER']['ACCOUNT_PWD_UPDATE'], $messages);
             // get current password
             $currentUser = $customer->getDatabaseObj()
                 ->reset()
-                ->select('Password')
+                ->select('Email, Password')
                 ->from($model['USER']['REALM'])
                 ->where('ID', '=', $model['USER']['ID'])
                 ->fetchRow();
-            
-            if ($currentUser['Password'] !== md5($data['CurrentPassword']))
+            //eu_na$agava%
+            if ($currentUser['Password'] !== md5($data_pwd['CurrentPassword']))
                 $messages[] = 'Wrong current password.';
             
-            var_dump($currentUser);
+            if ($data_pwd['NewPassword'] !== $data_pwd['NewPasswordConfirm'])
+                $messages[] = 'Confirmation password does not match with new.';
+            
+            
+            //var_dump($data_pwd);
+            //var_dump($currentUser);
             
             if (empty($messages)) {
-                /*
                 $customer->getDatabaseObj()
                     ->update($model['USER']['REALM'])
-                    ->set($data)
+                    ->set(array('Password' => md5($data_pwd['NewPassword'])))
                     ->where('ID', '=', $model['USER']['ID'])
                     ->query();
-                $messages[] = 'Your password was changed.';*/
+                $messages[] = 'Your password was changed.';
+                /* Notify User The Pwd Is Changed */
             }
             
             
-        } elseif (libraryRequest::isPostFormAction('update')) {
+        }
+        // update profile information
+        if (libraryRequest::isPostFormAction('update')) {
+            $validatorKey = strtoupper($model['USER']['TYPE']) . '_ACCOUNT_UPDATE';
             $validator = $customer->getCustomerConfiguration('VALIDATOR');
-            $data = libraryRequest::getPostMapContainer($validator['DATAMAP']['ACCOUNT_UPDATE']);
-            libraryValidator::validateData($data, $validator['FILTER']['ACCOUNT_UPDATE'], $messages);
+            $data = libraryRequest::getPostMapContainer($validator['DATAMAP'][$validatorKey]);
+            libraryValidator::validateData($data, $validator['FILTER'][$validatorKey], $messages);
             // check for double login
             $doubleUser = $customer->getDatabaseObj()
                 ->reset()
@@ -1065,7 +1343,8 @@ class customer {
             if (!empty($doubleUser))
                 $messages[] = 'This login is already used.';
 
-            //var_dump($data);
+            var_dump($messages);
+            var_dump($data);
             //var_dump(array_keys($data));
             //echo '<br><br><br>';
             //var_dump(array_values($data));
@@ -1078,19 +1357,30 @@ class customer {
                     ->query();
                 $messages[] = 'Your account information was updated successfully.';
             }
-        } else {
-            // get user information
-            $data = $customer->getDatabaseObj()
-                ->reset()
-                ->select('Name, Login, Email, Phone,
-                    Billing_FirstName, Billing_LastName,
-                    Billing_Email, Billing_Phone, Billing_Address,
-                    Billing_City, Billing_State, Billing_PostalCode,
-                    Billing_Country')
-                ->from($model['USER']['REALM'])
-                ->where('ID', '=', $model['USER']['ID'])
-                ->fetchRow();
         }
+        
+        $selectFields = '';
+        if ($model['USER']['IS_STUDENT'])
+            $selectFields = 'Name, Login, Email, Phone,
+                Billing_FirstName, Billing_LastName,
+                Billing_Email, Billing_Phone, Billing_Address,
+                Billing_City, Billing_State, Billing_PostalCode,
+                Billing_Country';
+        if ($model['USER']['IS_WRITER'])
+            $selectFields = 'Name, Login, Subjects, CardNumber, 
+                CardType, University, Email, IM, Phone';
+        
+        // get user information
+        $data = $customer->getDatabaseObj()
+            ->reset()
+            ->select($selectFields)
+            ->from($model['USER']['REALM'])
+            ->where('ID', '=', $model['USER']['ID'])
+            ->fetchRow();
+        
+        //var_dump($model['USER']['REALM']);
+        //var_dump($selectFields);
+        //var_dump($data);
         
         $model['CUSTOMER']['DATA'] = $data;
         $model['CUSTOMER']['MESSAGES'] = $messages;
@@ -1112,6 +1402,9 @@ class customer {
         $user = isset($_SESSION['WEB_USER'])?$_SESSION['WEB_USER']:array();
         $user['STATE'] = $state;
         $user['ACTIVE'] = ($user['STATE'] == 'USER_AUTHORIZED' || $user['STATE'] == 'USER_ALIVE');
+        $user['IS_STUDENT'] = ($user['TYPE'] == 'Student');
+        $user['IS_WRITER'] = ($user['TYPE'] == 'Writer');
+        
         //$model['USER'] = $user;
         //echo '<br>_userGetInfo<br>';
         //var_dump($user);
@@ -1130,7 +1423,7 @@ class customer {
         // logout user
         if (libraryRequest::isPostFormAction('logout')) {
             //echo 'olololo';
-            echo '--------------------------- logout';
+            //echo '--------------------------- logout';
             if(!empty($_SESSION['WEB_USER'])) {
                 // put user offline
                 if (!empty($_SESSION['WEB_USER']['ID']))

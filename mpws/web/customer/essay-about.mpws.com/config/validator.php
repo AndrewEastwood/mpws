@@ -29,7 +29,7 @@
     );
     
     // db field names to html form fields
-    $customer['VALIDATOR']['DATAMAP']['ACCOUNT_UPDATE'] = array(
+    $customer['VALIDATOR']['DATAMAP']['STUDENT_ACCOUNT_UPDATE'] = array(
         'Name' => 'user_name',
         'Login' => 'user_login',
         'Email' => 'user_email',
@@ -43,6 +43,18 @@
         'Billing_Phone' => 'user_billing_phone',
         'Billing_PostalCode' => 'user_billing_postalcode',
         'Billing_State' => 'user_billing_state'
+    );
+    
+    $customer['VALIDATOR']['DATAMAP']['WRITER_ACCOUNT_UPDATE'] = array(
+        'Name' => 'user_name',
+        'Login' => 'user_login',
+        'Email' => 'user_email',
+        'Phone' => 'user_phone',
+        'Subjects' => 'user_subjects',
+        'CardNumber' => 'user_cardnumber',
+        'CardType' => 'user_cardtype',
+        'University' => 'user_university',
+        'IM' => 'user_im'
     );
     
     $customer['VALIDATOR']['DATAMAP']['ACCOUNT_PWD_UPDATE'] = array(
@@ -67,9 +79,10 @@
     );
     
     $customer['VALIDATOR']["FILTER"]['ACCOUNT_CREATE'] = array(
-        'Name' => '/^[a-z0-9_-\s\.]{3,35}$/',
-        'Login' => '/^[a-z0-9_-]{3,15}$/',
+        'Name' => '/^[a-zA-Z0-9_-\s\.]{3,35}$/',
+        'Login' => '/^[a-zA-Z0-9_-]{3,15}$/',
         'Password' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
+        'Password2' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
         'Email' => '/(?=^.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}/'
     );
     
@@ -80,13 +93,9 @@
     );
 
     $customer['VALIDATOR']["FILTER"]['ACCOUNT_PWD_UPDATE'] = array(
-        'CurrentPassword' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
         'NewPassword' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/',
         'NewPasswordConfirm' => '/^(?=^.{8,16}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/'
     );
     
 
-    $customer['VALIDATOR']["FILTER"]['MESSAGES'] = array(
-        'Subject' => '/^(?=^.{10,50}$)[a-zA-Z\s.?!*+=-_]+$/',
-        'Message' => '/^(?=^.{10,350}$)[a-zA-Z\s.]+$/'
-    );
+    $customer['VALIDATOR']["FILTER"]['MESSAGES'] = array();

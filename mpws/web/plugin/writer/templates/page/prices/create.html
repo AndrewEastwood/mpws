@@ -12,7 +12,6 @@
     <form action="?display=prices&action=<?=$model['PLUGINS']['WRITER']['action'];?>&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm">
 
         <div class="MPWSFormFields">
-            
             <label for="MPWSField_PriceNameID" class="MPWSFieldLabel">Name:</label>
             <input type="text" id="MPWSField_PriceNameID" class="MPWSTextBox" name="price_name" value="<?=$model['PLUGINS']['WRITER']['DATA']['Name'];?>" placeholder="Name"/>
             <div class="MPWSSeparator"></div>
@@ -28,7 +27,7 @@
             <label for="MPWSField_PriceWeeksID" class="MPWSFieldLabel">Weeks</label>
             <input type="text" id="MPWSField_PriceWeeksID" class="MPWSTextBox" name="price_weeks" value="<?=$model['PLUGINS']['WRITER']['DATA']['Weeks'];?>" placeholder="Weeks"/>
             <div class="MPWSSeparator"></div>
-        </p>
+        </div>
 
         <hr size="2"/>
         <input type="submit" name="do" value="Save"/>

@@ -4,6 +4,7 @@ class controllerStatic {
 
     public function processRequests() {
         //var_dump($_SERVER);
+        //var_dump($_GET);
         // check resource accesibility
         if (!$this->requestAccesibility()) {
             //echo 'denided';
@@ -17,6 +18,10 @@ class controllerStatic {
             }
             case 'image' : {
                 $content = $this->_ieImage();
+                return;
+            }
+            case 'wysiwyg' : {
+                $content = $this->_ieWYSIWYG();
                 return;
             }
         }
@@ -54,9 +59,32 @@ class controllerStatic {
     }
 
     /* internal executors */
+    private function _ieWYSIWYG () {
+        $staticResMgr = new libraryStaticResourceManager();
+        $_module_path = 'plugins/' . $_GET['name'] . '/' . $_GET['path'] . '.' . $_GET['type'];
+        $filePath = $staticResMgr->GetContent(urldecode($_module_path), $_GET['realm']);
+        
+        switch ($_GET['type']) {
+            case 'css':
+                header("Content-type: text/css");
+                return readfile($filePath);
+            case 'js':
+                header("Content-type: text/javascript");
+                return readfile($filePath);  
+            case 'jpg':
+                header('Content-type: image/jpg');
+                header('Content-Length: ' . filesize($filePath));
+                return readfile($filePath);
+            case 'gif':
+                header('Content-type: image/gif');
+                header('Content-Length: ' . filesize($filePath));
+                return readfile($filePath);
+        }
+    }
+    
     private function _ieImage() {
         $staticResMgr = new libraryStaticResourceManager();
-        $filePath = $staticResMgr->GetImageContent(urldecode($_GET['name']).'.'.strtolower($_GET['type']), $_GET['realm']);
+        $filePath = $staticResMgr->GetContent(urldecode($_GET['name']).'.'.strtolower($_GET['type']), $_GET['realm']);
         if (empty($filePath))
             return false;
             //$im = imagecreatefromjpeg($filePath);

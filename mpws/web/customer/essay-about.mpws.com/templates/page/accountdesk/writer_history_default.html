@@ -1,0 +1,43 @@
+<h2>Order History</h2>
+<hr size="2"/>
+
+<h3>Select Date</h3>
+<form action="" method="POST" class="MPWSForm MPWSFormInfo">
+        <label class="MPWSFieldLabel">Start Date:</label>
+        <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="start_date" value="<?=$model['CUSTOMER']['DATA_DATE_START'];?>"/>
+        <div class="MPWSSeparator"></div>
+        <label class="MPWSFieldLabel">End Date:</label>
+        <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="end_date" value="<?=$model['CUSTOMER']['DATA_DATE_END'];?>"/>
+        <div class="MPWSSeparator"></div>
+    <hr size="2"/>
+    <input type="submit" name="do" value="Show Orders"/>
+</form>
+
+<h3>Total: <?=$model['CUSTOMER']['DATA_SUMA'];?>$</h3>
+
+<div class="MPWSDivTable">
+    <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize3">Title</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Status</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Price</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Reworks</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+        <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Deadline</span>
+    </div>
+    <?php foreach($model['CUSTOMER']['DATA'] as $entry) : ?>
+        <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=orders&action=details&oid=<?=$entry['ID'];?>">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize3"><?=$entry['Title'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=libraryView::getFrendlyLabel($entry['PublicStatus']);?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Credits'];?>$&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=$entry['ReworkCount'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?>&nbsp;</span>
+        </div>
+    <?php endforeach ?>
+</div>
