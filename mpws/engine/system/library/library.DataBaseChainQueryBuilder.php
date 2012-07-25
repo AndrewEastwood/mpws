@@ -55,6 +55,7 @@
         private $_db_query_id = 0;
         private $_db_selectCount = 0;
         private $_useSanitize = true;
+        private $_stopResetTillQuery = false;
 
         public function connect($config) {
             $this->_db_server = $config['DB_HOST'];
@@ -88,7 +89,7 @@
         public function query($sql = '') {
             if (empty($sql))
                 $sql = $this->build(true);
-            //echo 'Query: ' . $sql;
+            //echo '<br>Query: ' . $sql;
             $this->_useSanitize = true;
             $this->_db_query_id = @mysql_query($sql, $this->_db_link_id);
             if (!$this->_db_query_id) {
@@ -109,9 +110,10 @@
             return $out;
         }
 
-        public function getCount($table, $filter = '') {
+        public function getCount($table, $filter = '', $beforeConditionHook = '') {
             if (!empty($filter))
                 $filter = ' WHERE ' . $filter;
+            $filter = $beforeConditionHook . $filter;
             $row = $this->fetchRow('SELECT count(*) as `count` FROM ' . $table . $filter);
             if (isset($row['count']))
                 return $row['count'];
@@ -147,6 +149,13 @@
         }
 
         public function reset() {
+            
+            if ($this->_stopNextReset) {
+                //echo '<br>reset skipped';
+                $this->_stopNextReset = false;
+                return $this;
+            }
+            
             $this->_operation = '';
             $this->_fields = array();
             $this->_values = array();
@@ -171,6 +180,11 @@
         
         public function stopSanitize () {
             $this->_useSanitize = false;
+            return $this;
+        }
+        public function stopReset () {
+            //echo '<br>stop reset till first query';
+            $this->_stopNextReset = true;
             return $this;
         }
         

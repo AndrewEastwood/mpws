@@ -39,6 +39,16 @@
         'SIZE' => '3',
         'EDGES' => 'FIRST-PREV-NEXT-LAST'
     );
+
+    $plugin['DATATABLE']['SALES'] = array(
+        'TABLE' => 'writer_sales',
+        'PAGEKEY' => 'pg',
+        'SORTKEY' => 'sort',
+        'SEARCH_KEY_PREFIX' => 'searchbox_sales_',
+        'LIMIT' => '40',
+        'SIZE' => '3',
+        'EDGES' => 'FIRST-PREV-NEXT-LAST'
+    );
     
     $plugin['DATATABLE']['SUBJECTS'] = array(
         'TABLE' => 'writer_subjects',

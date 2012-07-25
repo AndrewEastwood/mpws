@@ -140,6 +140,10 @@ class pluginWriter {
                 $this->_displaySale($toolbox, $plugin);
                 break;
             }
+            case 'sales' : {
+                $this->_displaySales($toolbox, $plugin);
+                break;
+            }
             case 'subjects' : {
                 $this->_displaySubjects($toolbox, $plugin);
                 break;
@@ -190,9 +194,14 @@ class pluginWriter {
         /* get new orders */
         $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] = $toolbox->getDatabaseObj()
                 ->getCount('writer_orders', ' WriterID=0 && PublicStatus <> "CLOSED"');
+        /* get new sales */
+        $model['PLUGINS']['WRITER']['COM']['INCOMIG']['SALES'] = $toolbox->getDatabaseObj()
+                ->getCount('writer_sales', ' IsActive = 1');
         
         if ($model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'])
             $model['html']['messages'][] = 'You have ' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['ORDERS'] . ' new orders. (<a href="writer.html?display=orders&sort=WriterID.asc">see all</a>)';
+        if ($model['PLUGINS']['WRITER']['COM']['INCOMIG']['SALES'])
+            $model['html']['messages'][] = 'You have sold ' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['SALES'] . ' documents. (<a href="writer.html?display=sales&sort=IsActive.asc">see all</a>)';
     }
     private function _componentMessages ($toolbox, $plugin) { }
     
@@ -288,6 +297,24 @@ class pluginWriter {
 
         if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
             $this->_displaySale($toolbox, $plugin, $innerAction);
+    }
+    private function _displaySales($toolbox, $plugin, $postaction = '') {
+        //echo '_displayWritersDefault';
+        $action = libraryRequest::getAction();
+        if (!empty($postaction))
+            $action = $postaction;
+        $innerAction = '';
+        switch($action) {
+            case 'details':
+                $innerAction = $this->_displaySalesDetails($toolbox, $plugin);
+                break;
+            default:
+                $innerAction = $this->_displaySalesDefault($toolbox, $plugin);
+                break;
+        }
+
+        if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
+            $this->_displaySales($toolbox, $plugin, $innerAction);
     }
     private function _displaySubjects($toolbox, $plugin, $postaction = '') {
         //echo '_displayWritersDefault';
@@ -675,7 +702,7 @@ class pluginWriter {
         
     }
 
-    /* documents */
+    /* sale */
     private function _displaySaleDefault ($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         libraryRequest::storeOrGetRefererUrl();
@@ -805,6 +832,107 @@ class pluginWriter {
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.sale.create'];
     }
 
+    /* sales */
+    private function _displaySalesDefault ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+        libraryRequest::storeOrGetRefererUrl();
+        
+        $dbo = $toolbox->getDatabaseObj()
+            ->stopReset()
+            ->leftJoin('writer_sale')
+            ->on('writer_sales.SaleID', '=', 'writer_sale.ID');
+                
+        // custom search join
+        $customJoin = ' LEFT JOIN writer_sale ON writer_sales.SaleID = writer_sale.ID ';
+        
+        $model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['SALES'], $dbo, false, $customJoin);
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.sales.datatable'];
+    }
+    private function _displaySalesDetails ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+
+        $action = libraryRequest::getAction();
+        $oid = libraryRequest::getOID();
+        
+        // check for token id
+        $token = libraryRequest::getValue('token');
+        
+        $model['PLUGINS']['WRITER']['oid'] = $oid;
+        $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
+        $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = false;
+
+        // check for empty oid
+        if(empty($oid)) {
+            // and for token
+            if (empty($token)) {
+                // set template
+                $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                return;
+            }
+            $data_order = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_sales')
+                ->where('SalesToken', '=', $token)
+                ->fetchRow();
+            if (empty($data_order['ID'])) {
+                // set template
+                $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
+                return;
+            }
+            else
+                $oid = $data_order['ID']; 
+        }
+
+        // get order record
+        $data_order = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_sales')
+            ->where('ID', '=', $oid)
+            ->fetchRow();
+
+        if (libraryRequest::isPostFormAction('close sale')) {
+            
+        }
+        
+        
+        $data_invoice_order = array();
+        if (!empty($data_order['SalesToken']))
+            $data_invoice_order = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_invoices')
+                ->where('merchant_order_id', '=', $data_order['SalesToken'])
+                ->fetchRow();
+        
+        $data_invoice_refund = array();
+        if (!empty($data_order['RefundToken']))
+            $data_invoice_refund = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_invoices')
+                ->where('merchant_order_id', '=', $data_order['RefundToken'])
+                ->fetchRow();
+
+        $data_student = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_students')
+            ->where('ID', '=', $data_order['StudentID'])
+            ->fetchRow();
+        
+        $data_sale = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_sale')
+            ->where('ID', '=', $data_order['SaleID'])
+            ->fetchRow();
+        
+
+        $model['PLUGINS']['WRITER']['DATA'] = $data_order;
+        $model['PLUGINS']['WRITER']['DATA_STUDENT'] = $data_student;
+        $model['PLUGINS']['WRITER']['DATA_SALE'] = $data_sale;
+        $model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER'] = $data_invoice_order;
+        $model['PLUGINS']['WRITER']['DATA_INVOICE_REFUND'] = $data_invoice_refund;
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.sales.details'];
+    }
+    
     /* documents */
     private function _displayDocumentsDefault ($toolbox, $plugin) {
         $model = &$toolbox->getModel();
@@ -1880,8 +2008,6 @@ class pluginWriter {
         $model['PLUGINS']['WRITER']['DATA_SOURCES'] = $data_sources;
         $model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED'] = $isWriterEmpty;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.details'];
-        
-        
     }
 
     /* cross methods */

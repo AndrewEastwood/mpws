@@ -5,7 +5,7 @@
 
 class libraryComponents
 {
-    public static function comDataTable ($config, $dbLink, $condition = '') {
+    public static function comDataTable ($config, $dbLink, $condition = '', $beforeConditionHook = '') {
         $com = array();
 
         $com['SEARCHBOX'] = array();
@@ -29,7 +29,7 @@ class libraryComponents
             $_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] = false;
         }
 
-        $com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE'], $condition);
+        $com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE'], $condition, $beforeConditionHook);
 
         if (empty($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']])) {
             $com['SEARCHBOX']['ACTIVE'] = false;
@@ -42,7 +42,7 @@ class libraryComponents
                 $_searchBoxFilterString[] = $condition;
             foreach ($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] as $sbKey => $sbVal)
                 $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
-            $com['RECORDS'] = $dbLink->getCount($config['TABLE'], implode('AND', $_searchBoxFilterString));
+            $com['RECORDS'] = $dbLink->getCount($config['TABLE'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
         }
 
         //$com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE']);
@@ -128,9 +128,9 @@ class libraryComponents
                 $_cnd = explode(' ', $condition, 3);
                 //var_dump($_cnd);
                 if ($_conditionasAdded == 0)
-                $dbLink->where(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"'));
+                    $dbLink->where(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"'));
                 else
-                $dbLink->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"'));
+                    $dbLink->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"'));
             }
 
             // sorting
@@ -141,7 +141,7 @@ class libraryComponents
                     $_direction = trim(strtolower($sort[1]));
                     if ($_direction == 'asc' || $_direction == 'desc') {
                         $dbLink
-                            ->orderBy($sort[0])
+                            ->orderBy($config['TABLE'].'.'.$sort[0])
                             ->order($_direction);
                     }
                     

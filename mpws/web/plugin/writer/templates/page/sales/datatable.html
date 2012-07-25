@@ -1,8 +1,5 @@
 <div class="MPWSContentDisplay">
     <h3><?=ucfirst(libraryRequest::getDisplay('home'));?></h3>
-    <div class="MPWSTableAction">
-        <a href="?display=sale&action=create" class="MPWSLinkButton">Create New Sale</a>
-    </div>
     <hr size="2">
 
     <div class="MPWSComponent MPWSComponentSearchBox">
@@ -10,13 +7,13 @@
             <h3>Search Box</h3>
         </div>
         <div class="MPWSComponentBody MPWSComponentSearchBoxBody">
-            <form action="?display=sale" class="MPWSForm MPWSFormSearchBox" method="POST">
+            <form action="?display=sales" class="MPWSForm MPWSFormSearchBox" method="POST">
                 <div class="MPWSFormFields">
                     <label for="MPWSField_SubjectNameID" class="MPWSFieldLabel">Title:</label>
-                    <input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_sale_Title" value="<?=libraryRequest::getPostValue('searchbox_sale_Title');?>" placeholder="... part of title"/>
+                    <input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_sales_Title" value="<?=libraryRequest::getPostValue('searchbox_sales_Title');?>" placeholder="... part of title"/>
                     <div class="MPWSSeparator"></div>
                     <label for="MPWSField_SubjectNameID" class="MPWSFieldLabel">Description:</label>
-                    <input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_sale_Description" value="<?=libraryRequest::getPostValue('searchbox_sale_Description');?>" placeholder="... part of description"/>
+                    <input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_sales_Description" value="<?=libraryRequest::getPostValue('searchbox_sales_Description');?>" placeholder="... part of description"/>
                     <div class="MPWSSeparator"></div>
                 </div>
                 <hr size="2"/>
@@ -45,22 +42,23 @@
 
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1_5">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize5"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Title.asc', 'Title.desc', 'Title.asc'));?>">Title</a></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'IsActive.asc', 'IsActive.desc', 'IsActive.asc'));?>">Active</a></span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Pages.asc', 'Pages.desc', 'Pages.asc'));?>">Pages</a></span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Price.asc', 'Price.desc', 'Price.asc'));?>">Price</a></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'DateCreated.asc', 'DateCreated.desc', 'DateCreated.asc'));?>">Date Created</a></span>
         </div>
     <?php foreach($model['PLUGINS']['WRITER']['DATA'] as $entry) { ?>
         <div class="MPWSDivTableRow MPWSDivTableRowData">
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize0_5">
-                <a href="?display=sale&action=edit&oid=<?=$entry['ID'];?>">Edit</a>
-            </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
-                <a href="?display=sale&action=delete&oid=<?=$entry['ID'];?>">Delete</a>
+                <a href="?display=sales&action=details&oid=<?=$entry['ID'];?>">Details</a>
             </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize5"><?=$entry['Title'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1 MPWSDivTableCellDataState_<?=$entry['IsActive'];?>">&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Pages'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Price'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
         </div>
     <?php } ?>
     </div>
