@@ -261,7 +261,14 @@
         }
 
         public function select($fields) {
+            
+            // mpws patch
+            if ($this->_operation == 'SELECT')
+                return $this;
+            
             $this->_setOperation('select');
+            //$this->_operation = 'SELECT';
+            
             $args = $this->_getArgs(func_get_args());
             foreach ($args as $arg) {
                 $this->addField($arg);

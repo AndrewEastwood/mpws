@@ -59,17 +59,20 @@
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['Billing_Country'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
             
-            
-
         </div>
 
 
     </form>
     
-    <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
-        <input type="submit" value="Back To Students"/>
-    </form>
-    
+    <div class="MPWSInlineForms">
+        <form action="<?=$model['PLUGINS']['WRITER']['referer'];?>" method="POST">
+            <input type="submit" value="Back To Students"/>
+        </form>
+        <form action="?display=students&action=history&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST">
+            <input type="submit" value="History"/>
+        </form>
+    </div>
+
     <h3>Orders</h3>
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
@@ -96,6 +99,30 @@
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline']);?></span>
+        </div>
+    <?php } ?>
+    </div>
+    
+    <h3>Bought Items</h3>
+    <div class="MPWSDivTable">
+        <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize5">Title</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Active</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Pages</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Price</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Date Created</span>
+        </div>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_SALES'] as $entry) { ?>
+        <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=sales&action=details&oid=<?=$entry['ID'];?>">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize5"><?=$entry['Title'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1 MPWSDivTableCellDataState_<?=$entry['IsActive'];?>">&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Pages'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Price'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
         </div>
     <?php } ?>
     </div>

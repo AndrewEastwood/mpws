@@ -298,6 +298,7 @@ class pluginWriter {
         if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
             $this->_displaySale($toolbox, $plugin, $innerAction);
     }
+    
     private function _displaySales($toolbox, $plugin, $postaction = '') {
         //echo '_displayWritersDefault';
         $action = libraryRequest::getAction();
@@ -316,6 +317,7 @@ class pluginWriter {
         if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
             $this->_displaySales($toolbox, $plugin, $innerAction);
     }
+    
     private function _displaySubjects($toolbox, $plugin, $postaction = '') {
         //echo '_displayWritersDefault';
         $action = libraryRequest::getAction();
@@ -397,6 +399,9 @@ class pluginWriter {
                 break;
             case 'details':
                 $innerAction = $this->_displayStudentsDetails($toolbox, $plugin);
+                break;
+            case 'history':
+                $innerAction = $this->_displayStudentsDetailsHistory($toolbox, $plugin);
                 break;
             default:
                 $innerAction = $this->_displayStudentsDefault($toolbox, $plugin);
@@ -839,6 +844,7 @@ class pluginWriter {
         
         $dbo = $toolbox->getDatabaseObj()
             ->stopReset()
+            ->select('writer_sale.ID as `SID`, writer_sales.ID as `ID`, IsActive, Title, Description,  Pages, Price, writer_sales.DateCreated')
             ->leftJoin('writer_sale')
             ->on('writer_sales.SaleID', '=', 'writer_sale.ID');
                 
@@ -884,6 +890,15 @@ class pluginWriter {
                 $oid = $data_order['ID']; 
         }
 
+        if (libraryRequest::isPostFormAction('close sale')) {
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->update('writer_sales')
+                ->set(array('IsActive' => 0))
+                ->where('ID', '=', $oid)
+                ->query();
+        }
+        
         // get order record
         $data_order = $toolbox->getDatabaseObj()
             ->select('*')
@@ -891,11 +906,6 @@ class pluginWriter {
             ->where('ID', '=', $oid)
             ->fetchRow();
 
-        if (libraryRequest::isPostFormAction('close sale')) {
-            
-        }
-        
-        
         $data_invoice_order = array();
         if (!empty($data_order['SalesToken']))
             $data_invoice_order = $toolbox->getDatabaseObj()
@@ -1523,23 +1533,32 @@ class pluginWriter {
             $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'MESSAGE_SEND';
             //return;
         }
-        $toolbox->getDatabaseObj()
-                ->select('*')
-                ->from('writer_orders')
-                ->where('StudentID', '=', $oid);
-                    
-        if (libraryRequest::isPostFormAction('show orders')) {
-            $toolbox->getDatabaseObj()
-                ->andWhere('DateCreated', '>', libraryRequest::getPostValue('start_date'))
-                ->andWhere('DateCreated', '<', libraryRequest::getPostValue('end_date'));
-            
-            $model['PLUGINS']['WRITER']['DATA_DATE_START'] = libraryRequest::getPostValue('start_date');
-            $model['PLUGINS']['WRITER']['DATA_DATE_END'] = libraryRequest::getPostValue('end_date');
-        }
         
+        // orders
+        // get data this year
+        $data_orders = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_orders')
+            ->where('StudentID', '=', $oid)
+            ->andWhere('DateCreated', '>', date('Y-01-01 00:00:00'))
+            ->orderBy('DateCreated')
+            ->order('DESC')
+            ->fetchData();
         
-        $data_orders = $toolbox->getDatabaseObj()->fetchData();
+        // bought items
+        // get data this year
+        $data_sales = $toolbox->getDatabaseObj()
+            ->select('writer_sale.ID as `SID`, writer_sales.ID as `ID`, IsActive, Title, Description,  Pages, Price, writer_sales.DateCreated')
+            ->from('writer_sales')
+            ->leftJoin('writer_sale')
+            ->on('writer_sales.SaleID', '=', 'writer_sale.ID')
+            ->where('StudentID', '=', $oid)
+            ->andWhere('writer_sales.DateCreated', '>', date('Y-01-01 00:00:00'))
+            ->orderBy('writer_sales.DateCreated')
+            ->order('DESC')
+            ->fetchData();
 
+        // student information
         $data = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('writer_students')
@@ -1554,7 +1573,88 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['DATA'] = $data;
         $model['PLUGINS']['WRITER']['DATA_ORDERS'] = $data_orders;
+        $model['PLUGINS']['WRITER']['DATA_SALES'] = $data_sales;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.students.details'];
+    }
+    private function _displayStudentsDetailsHistory ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+
+        $action = libraryRequest::getAction();
+        $oid = libraryRequest::getOID();
+        $data = array();
+
+        $model['PLUGINS']['WRITER']['oid'] = $oid;
+        $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
+        
+        if(empty($oid)) {
+            // set template
+            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.students.error'];
+            return;
+        }
+        
+        $data = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_students')
+            ->where('ID', '=', $oid)
+            ->fetchRow();
+
+        //$toolbox->getDatabaseObj()
+        $data_order_credits = 0;
+        $data_sales_credits = 0;
+        $data_orders = array();
+        $data_sales = array();
+        if (libraryRequest::isPostFormAction('show order and bought items')) {
+            $data_orders = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('writer_orders')
+                ->where('StudentID', '=', $oid)
+                ->andWhere('DateCreated', '>', libraryRequest::getPostValue('start_date'))
+                ->andWhere('DateCreated', '<', libraryRequest::getPostValue('end_date'))
+                ->fetchData();
+            
+            foreach ($data_orders as $entry)
+                $data_order_credits += $entry['Price'];
+            
+            $model['PLUGINS']['WRITER']['DATA_DATE_START'] = libraryRequest::getPostValue('start_date');
+            $model['PLUGINS']['WRITER']['DATA_DATE_END'] = libraryRequest::getPostValue('end_date');
+        //} if (libraryRequest::isPostFormAction('show sales')) {
+            $data_sales = $toolbox->getDatabaseObj()
+                ->select('writer_sale.ID as `SID`, writer_sales.ID as `ID`, IsActive, Title, Description,  Pages, Price, writer_sales.DateCreated')
+                ->from('writer_sales')
+                ->leftJoin('writer_sale')
+                ->on('writer_sales.SaleID', '=', 'writer_sale.ID')
+                ->from('writer_sales')
+                ->where('StudentID', '=', $oid)
+                ->andWhere('writer_sales.DateCreated', '>', libraryRequest::getPostValue('sales_start_date'))
+                ->andWhere('writer_sales.DateCreated', '<', libraryRequest::getPostValue('sales_end_date'))
+                ->fetchData();
+            
+            foreach ($data_sales as $entry)
+                $data_sales_credits += $entry['Price'];
+            
+            $model['PLUGINS']['WRITER']['DATA_SALES_DATE_START'] = libraryRequest::getPostValue('sales_start_date');
+            $model['PLUGINS']['WRITER']['DATA_SALES_DATE_END'] = libraryRequest::getPostValue('sales_end_date');
+        }
+        
+        
+        //$data_orders = $toolbox->getDatabaseObj()->fetchData();
+        
+        
+        if (empty($data)) {
+            // set template
+            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.students.error'];
+            return;
+        }
+        
+        
+        $model['PLUGINS']['WRITER']['DATA'] = $data;
+        $model['PLUGINS']['WRITER']['DATA_ORDERS'] = $data_orders;
+        $model['PLUGINS']['WRITER']['DATA_SALES'] = $data_sales;
+        $model['PLUGINS']['WRITER']['DATA_ORDER_CREDITS'] = $data_order_credits;
+        $model['PLUGINS']['WRITER']['DATA_SALES_CREDITS'] = $data_sales_credits;
+        $model['PLUGINS']['WRITER']['DATA_SUMMA'] = $data_order_credits + $data_sales_credits;
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.students.details_history'];
     }
     
     /* messages */
@@ -2192,7 +2292,7 @@ class pluginWriter {
         // we'll delete product native serivice page
         return false;
     }
-    
+
     private function cross_2co_product_list ($params) {
         echo 'inside cross_2co_product';
         

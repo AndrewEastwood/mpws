@@ -1,7 +1,7 @@
 <div class="MPWSContentDisplay">
     <h2>Sales Details</h2>
     
-    <?php if (!empty($model['PLUGINS']['WRITER']['DATA']['ResolutionDocumentLink'])) : ?>
+    <?php if (!empty($model['PLUGINS']['WRITER']['DATA_STUDENT'])) : ?>
     <h3>Student <a href="?display=students&action=details&oid=<?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['ID'];?>" target="blank">view full profile</a></h3>
     <form action="?display=orders&action=details&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm MPWSFormDetails">
         <div class="MPWSFormFields">
@@ -49,7 +49,7 @@
             <h3>General Information</h3>
             
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Title</label>
-            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_SALE']['Name'];?>&nbsp;</span>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_SALE']['Title'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
             
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Description</label>
@@ -93,7 +93,7 @@
         
         <hr size="2"/>
         
-        <?php if (empty($model['PLUGINS']['WRITER']['DATA']['IsActive'])) : ?>
+        <?php if ($model['PLUGINS']['WRITER']['DATA']['IsActive']) : ?>
             <input type="submit" name="do" value="Close Sale"/>
         <?php else : ?>
             <h4>This Sale Is Closed</h4>

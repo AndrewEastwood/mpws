@@ -872,7 +872,7 @@ class customer {
 
             $libView = new libraryView();
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
+            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_SALE'];
             $recipient['SUBJECT'] = 'New Sale';
             $recipient['DATA'] = array(
                 'Title' => $sale['Title'],
