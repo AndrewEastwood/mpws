@@ -849,7 +849,7 @@ class customer {
             // END OF 2CO INTEGRATION
 
             $mdbc = $customer->getCustomerConfiguration('MDBC');
-            //$customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+            $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
             
             
             // make order token
@@ -881,7 +881,7 @@ class customer {
             );
             $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.sale_created'));
             // send email message to system
-            libraryMailer::sendEMail($recipient);
+            //libraryMailer::sendEMail($recipient);
 
             // 2checkout integration
             // order general information

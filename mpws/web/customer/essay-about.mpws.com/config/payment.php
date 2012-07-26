@@ -14,7 +14,7 @@
             'METHODS' => array(
                 'list_products' => 'https://www.2checkout.com/api/products/list_products',
                 'create_product' => 'https://www.2checkout.com/api/products/create_product',
-                'purchase' => 'https://www.2checkout.com/checkout/purchase'
+                'purchase' => 'https://www.2checkout.com/checkout/spurchase'
             )
         ),
         'PRODUCT_CATEGORY' => 15
