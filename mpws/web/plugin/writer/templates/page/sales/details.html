@@ -1,5 +1,5 @@
 <div class="MPWSContentDisplay">
-    <h2>Sales Details</h2>
+    <h2>Sale Details</h2>
     
     <?php if (!empty($model['PLUGINS']['WRITER']['DATA_STUDENT'])) : ?>
     <h3>Student <a href="?display=students&action=details&oid=<?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['ID'];?>" target="blank">view full profile</a></h3>
@@ -70,6 +70,9 @@
             <!-- Order Invoice -->
             <?php if (empty($model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER'])) : ?>
                 <h4>This Order Is Unpaid! Please contact Buyer!</h4>
+                <h3>You can delete this record if it was created by mistake: 
+                    <input type="submit" name="do" value="Remove This Sale"/>
+                </h3>
             <?php else : ?>
                 <h4>Received Payment</h4>
                 <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total</label>

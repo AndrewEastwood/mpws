@@ -591,6 +591,7 @@ class customer {
 
                 $mdbc = $customer->getCustomerConfiguration('MDBC');
                 $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+                $libView = new libraryView();
 
                 // user token
                 //$_student = array();
@@ -624,6 +625,39 @@ class customer {
                     // get new student's id
                     //$_student = $student;
                     $user['ID'] = $customer->getDatabaseObj()->getNewID();
+                    
+                    /* SYSTEM NOTIFY */
+                    if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_NEW_AUTOUSER'])) {
+                        $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_AUTOUSER'];
+                        $recipient['SUBJECT'] = 'New autouser created';
+                        $recipient['DATA'] = array(
+                            'Name' => $user['Name'],
+                            'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_STUDENT_LINK_OID'] . $user['ID']
+                        );
+                        $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_new_autouser'));
+                        // send email message to system
+                        libraryMailer::sendEMail($recipient);
+                    }
+                    
+                    /* NOTIFY BUYER IF NEW */
+                    // form email object
+                    $recipient = $customer_config_mail['NOTIFY'];
+                    $recipient['TO'] = $user['Email'];
+                    $recipient['NAME'] = $user['Name'];
+                    $recipient['SUBJECT'] = 'Your account has been created';
+                    $recipient['DATA'] = array(
+                        'Login' => $user['Login'],
+                        'Name' => $user['Name'],
+                        'Password' => $_userPwd, // raw user password
+                        'TargetUrl' => $customer_config_mail['URLS']['ACTIVATE'] . $user['UserToken'],
+                        'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
+                    );
+                    //var_dump($recipient);
+                    // get html message
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.student.new'));
+                    // send email message to new user
+                    libraryMailer::sendEMail($recipient);
+                    
                     
                 }
                 
@@ -675,40 +709,19 @@ class customer {
                     ->fields(array_keys($data))
                     ->values(array_values($data))
                     ->query();
-
-                $libView = new libraryView();
                 
-                /* NOTIFY BUYER IF NEW */
-                if (!$model['USER']['ACTIVE']) {
-                    // form email object
-                    $recipient = $customer_config_mail['NOTIFY'];
-                    $recipient['TO'] = $user['Email'];
-                    $recipient['NAME'] = $user['Name'];
-                    $recipient['SUBJECT'] = 'Your account has been created';
+                /* SYSTEM NOTIFY */
+                if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'])) {
+                    $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
+                    $recipient['SUBJECT'] = 'New order has been created';
                     $recipient['DATA'] = array(
-                        'Login' => $user['Login'],
                         'Name' => $user['Name'],
-                        'Password' => $_userPwd, // raw user password
-                        'TargetUrl' => $customer_config_mail['URLS']['ACTIVATE'] . $user['UserToken'],
-                        'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
+                        'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
                     );
-                    //var_dump($recipient);
-                    // get html message
-                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.student.new'));
-                    // send email message to new user
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_created'));
+                    // send email message to system
                     libraryMailer::sendEMail($recipient);
                 }
-
-                /* SYSTEM NOTIFY */
-                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_ORDER'];
-                $recipient['SUBJECT'] = 'New order has been created';
-                $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
-                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-                );
-                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-                // send email message to system
-                libraryMailer::sendEMail($recipient);
 
                 // set public data
                 //$model['CUSTOMER']['DATA_EMAIL'] = $student['Email'];
@@ -936,7 +949,9 @@ class customer {
         $oid = libraryRequest::getOID();
         $messages = array();
         $mdbc = $customer->getCustomerConfiguration('MDBC');
-            
+        $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+        $libView = new libraryView();
+
         // check for empty oid
         if(empty($oid)) {
             $model['CUSTOMER']['TEMPLATE_NAME'] = 'orders_error';
@@ -949,6 +964,7 @@ class customer {
             ->from('writer_orders')
             ->where('ID', '=', $oid)
             ->fetchRow();
+
         
         // on wrong order id
         if(empty($data_order)) {
@@ -956,14 +972,33 @@ class customer {
             return;
         }
         
-        // check if order created current user
-        if ($model['USER']['ID'] != $data_order['StudentID']) {
+        // prevent crossprofile access to orders
+        if (($model['USER']['IS_WRITER'] && $model['USER']['ID'] != $data_order['WriterID']) ||
+            ($model['USER']['IS_STUDENT'] && $model['USER']['ID'] != $data_order['StudentID'])) {
             $model['CUSTOMER']['TEMPLATE_NAME'] = 'orders_error';
             return;
         }
         
+        // get user
+        $user_writer = array();
+        $user_student = array();
+        if ($model['USER']['ACTIVE']) {
+            $user_student = $customer->getDatabaseObj()
+                ->select('ID, Email, Name')
+                ->from('writer_students')
+                ->where('ID', '=', $data_order['StudentID'])
+                ->fetchRow();
+            $user_writer = $customer->getDatabaseObj()
+                ->select('ID, Email, Name')
+                ->from('writer_writers')
+                ->where('ID', '=', $data_order['StudentID'])
+                ->fetchRow();
+        }
+        
         /* order actions */
+        // **********************************************************
         // start rework
+        // **********************************************************
         if (libraryRequest::isPostFormAction('start working') && $model['USER']['IS_WRITER']) {
             $order_status = array(
                 'PublicStatus' => 'IN PROGRESS',
@@ -988,11 +1023,39 @@ class customer {
                 ->fields(array_keys($message))
                 ->values(array_values($message))
                 ->query();
+            
+            /* SYSTEM NOTIFY */
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'];
+                $recipient['SUBJECT'] = 'Rework Strated';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_started'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            /* USER NOTIFY */
+            if (!empty($user_student['Email'])) {
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $user_student['Email'];
+                $recipient['SUBJECT'] = 'Rework Started';
+                $recipient['DATA'] = array(
+                    'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.student_order_started'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            
             /* alter already selected order info */
             $data_order['PublicStatus'] = 'IN PROGRESS';
             $data_order['InternalStatus'] = 'OPEN';
         }
-        // send to rework
+        // **********************************************************
+        // order accepted
+        // **********************************************************
         if (libraryRequest::isPostFormAction('accept') && $model['USER']['IS_WRITER']) {
             $order_status = array(
                 'PublicStatus' => 'IN PROGRESS'
@@ -1018,19 +1081,36 @@ class customer {
                 ->query();
             
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'];
-            $recipient['SUBJECT'] = 'Order Accepted';
-            $recipient['DATA'] = array(
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-            // send email message to system
-            libraryMailer::sendEMail($recipient);
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'];
+                $recipient['SUBJECT'] = 'Order Accepted';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_accepted'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            /* USER NOTIFY */
+            if (!empty($user_student['Email'])) {
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $user_student['Email'];
+                $recipient['SUBJECT'] = 'Order Started';
+                $recipient['DATA'] = array(
+                    'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.student_order_accepted'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
             
             /* alter already selected order info */
             $data_order['PublicStatus'] = 'IN PROGRESS';
         }
+        // **********************************************************
+        // order rejected
+        // **********************************************************
         if (libraryRequest::isPostFormAction('reject') && $model['USER']['IS_WRITER']) {
             $order_status = array(
                 'InternalStatus' => 'REJECTED'
@@ -1056,18 +1136,27 @@ class customer {
                 ->query();
             
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REJECTED'];
-            $recipient['SUBJECT'] = 'Order Accepted';
-            $recipient['DATA'] = array(
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-            // send email message to system
-            libraryMailer::sendEMail($recipient);
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REJECTED'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REJECTED'];
+                $recipient['SUBJECT'] = 'Order Rejected';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_rejected'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            
+            // do not notify user about rejection
+            // it is still NEW for user
+            
             /* alter already selected order info */
             $data_order['InternalStatus'] = 'REJECTED';
         }
+        // **********************************************************
+        // writer sent to review
+        // **********************************************************
         if (libraryRequest::isPostFormAction('send to review') && $model['USER']['IS_WRITER']) {
             $order_status = array(
                 'InternalStatus' => 'PENDING'
@@ -1093,19 +1182,27 @@ class customer {
                 ->query();
             
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REVIEW'];
-            $recipient['SUBJECT'] = 'Order Accepted';
-            $recipient['DATA'] = array(
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-            // send email message to system
-            libraryMailer::sendEMail($recipient);
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REVIEW'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REVIEW'];
+                $recipient['SUBJECT'] = 'Waiting For Approval';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_to_review'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
             
+            // user will receive message as soon as webmaster approve this order
+            // it is still IN PROGRESS for user
+
             /* alter already selected order info */
             $data_order['InternalStatus'] = 'PENDING';
         }
+        // **********************************************************
+        // student sent to rework
+        // **********************************************************
         if (libraryRequest::isPostFormAction('send to rework') && $model['USER']['IS_STUDENT']) {
             
             if ($data_order['ReworkCount'] == 3)
@@ -1137,15 +1234,29 @@ class customer {
                     ->query();
             
                 /* SYSTEM NOTIFY */
-                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REWORK'];
-                $recipient['SUBJECT'] = 'Order Accepted';
-                $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
-                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-                );
-                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-                // send email message to system
-                libraryMailer::sendEMail($recipient);
+                if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REWORK'])) {
+                    $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REWORK'];
+                    $recipient['SUBJECT'] = 'Need To Rework';
+                    $recipient['DATA'] = array(
+                        'Name' => $user['Name'],
+                        'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                    );
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_to_rework'));
+                    // send email message to system
+                    libraryMailer::sendEMail($recipient);
+                }
+                /* WRITER NOTIFY */
+                if (!empty($user_writer['Email'])) {
+                    $recipient = $customer_config_mail['NOTIFY'];
+                    $recipient['TO'] = $user_writer['Email'];
+                    $recipient['SUBJECT'] = 'Need To Rework';
+                    $recipient['DATA'] = array(
+                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                    );
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.writer_order_to_rework'));
+                    // send email message to system
+                    libraryMailer::sendEMail($recipient);
+                }
             
                 /* alter already selected order info */
                 $data_order['PublicStatus'] = 'REWORK';
@@ -1153,7 +1264,9 @@ class customer {
                 $data_order['ReworkCount']++;
             }
         }
+        // **********************************************************
         // want refund
+        // **********************************************************
         if (libraryRequest::isPostFormAction('want refund') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'TO REFUND',
@@ -1180,20 +1293,37 @@ class customer {
                 ->query();
             
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REFUND'];
-            $recipient['SUBJECT'] = 'Order Accepted';
-            $recipient['DATA'] = array(
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-            // send email message to system
-            libraryMailer::sendEMail($recipient);
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REFUND'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REFUND'];
+                $recipient['SUBJECT'] = 'Buyer Wants Refund';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_to_refund'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            /* WRITER NOTIFY */
+            if (!empty($user_writer['Email'])) {
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $user_writer['Email'];
+                $recipient['SUBJECT'] = 'Buyer Wants Refund';
+                $recipient['DATA'] = array(
+                    'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.writer_order_to_refund'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
             
             /* alter already selected order info */
             $data_order['PublicStatus'] = 'TO REFUND';
             $data_order['InternalStatus'] = 'OPEN';
         }
+        // **********************************************************
+        // reopen order
+        // **********************************************************
         if (libraryRequest::isPostFormAction('reopen order') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'REOPEN',
@@ -1220,21 +1350,37 @@ class customer {
                 ->query();
             
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REOPENED'];
-            $recipient['SUBJECT'] = 'Order Accepted';
-            $recipient['DATA'] = array(
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-            // send email message to system
-            libraryMailer::sendEMail($recipient);
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REOPENED'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REOPENED'];
+                $recipient['SUBJECT'] = 'Buyer Reopened Order';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_reopened'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            /* WRITER NOTIFY */
+            if (!empty($user_writer['Email'])) {
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $user_writer['Email'];
+                $recipient['SUBJECT'] = 'Buyer Reopened Order';
+                $recipient['DATA'] = array(
+                    'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.writer_order_reopened'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
             
             /* alter already selected order info */
             $data_order['PublicStatus'] = 'REOPEN';
             $data_order['InternalStatus'] = 'OPEN';
         }
+        // **********************************************************
         // close order
+        // **********************************************************
         if (libraryRequest::isPostFormAction('close order') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'CLOSED',
@@ -1261,21 +1407,37 @@ class customer {
                 ->query();
             
             /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_CLOSED'];
-            $recipient['SUBJECT'] = 'Order Closed';
-            $recipient['DATA'] = array(
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-            // send email message to system
-            libraryMailer::sendEMail($recipient);
+            if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_CLOSED'])) {
+                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_CLOSED'];
+                $recipient['SUBJECT'] = 'Buyer Closed Order';
+                $recipient['DATA'] = array(
+                    'Name' => $user['Name'],
+                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_closed'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
+            /* WRITER NOTIFY */
+            if (!empty($user_writer['Email'])) {
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $user_writer['Email'];
+                $recipient['SUBJECT'] = 'Buyer Closed Order';
+                $recipient['DATA'] = array(
+                    'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                );
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.writer_order_closed'));
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
             
             /* alter already selected order info */
             $data_order['PublicStatus'] = 'CLOSED';
             $data_order['InternalStatus'] = 'CLOSED';
         }
+        // **********************************************************
         // post new message
+        // **********************************************************
         if (libraryRequest::isPostFormAction('post message')) {
             $validator = $customer->getCustomerConfiguration('VALIDATOR');
             $message = libraryRequest::getPostMapContainer($validator['DATAMAP']['MESSAGES']);
@@ -1297,21 +1459,48 @@ class customer {
                     ->values(array_values($message))
                     ->query();
             
-                /* notify writer with new message */
-
-            
                 /* SYSTEM NOTIFY */
-                $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'];
-                $recipient['SUBJECT'] = 'New Comment';
-                $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
-                    'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK'] . $_o_token
-                );
-                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.order_created'));
-                // send email message to system
-                libraryMailer::sendEMail($recipient);
+                if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'])) {
+                    $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'];
+                    $recipient['SUBJECT'] = 'New Comment';
+                    $recipient['DATA'] = array(
+                        'Name' => $user['Name'],
+                        'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                    );
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_commented'));
+                    // send email message to system
+                    libraryMailer::sendEMail($recipient);
+                }
+                /* notify writer with new message */
+                if($model['USER']['IS_WRITER']) {
+                    $recipient = $customer_config_mail['NOTIFY'];
+                    $recipient['TO'] = $user_student['Email'];
+                    $recipient['SUBJECT'] = 'New Comment';
+                    $recipient['DATA'] = array(
+                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                    );
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.student_order_commented'));
+                    // send email message to system
+                    libraryMailer::sendEMail($recipient);
+                }
+                /* notify student with new message */
+                if($model['USER']['IS_STUDENT']) {
+                    $recipient = $customer_config_mail['NOTIFY'];
+                    $recipient['TO'] = $user_writer['Email'];
+                    $recipient['SUBJECT'] = 'New Comment';
+                    $recipient['DATA'] = array(
+                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                    );
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.writer_order_commented'));
+                    // send email message to system
+                    libraryMailer::sendEMail($recipient);
+                }
+            
             }
         } // post message
+        // **********************************************************
+        // save changes
+        // **********************************************************
         if (libraryRequest::isPostFormAction('save changes') && $model['USER']['IS_WRITER']) {
             $docLink = libraryRequest::getPostValue('order_resolution_document');
             $customer->getDatabaseObj()
@@ -1338,7 +1527,9 @@ class customer {
             /* alter already selected order info */
             $data_order['ResolutionDocumentLink'] = $docLink;
         }
+        // **********************************************************
         // save changes
+        // **********************************************************
         if (libraryRequest::isPostFormAction('save changes') && $model['USER']['IS_STUDENT']) {
             
             $deadline = libraryRequest::getPostValue('order_deadline');

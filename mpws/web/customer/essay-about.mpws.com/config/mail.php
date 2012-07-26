@@ -5,7 +5,10 @@
         'LOGIN' => 'http://' . $_SERVER['SERVER_NAME'] . '/page/account.html',
         'ACTIVATE' => 'http://' . $_SERVER['SERVER_NAME'] . '/page/activate.html?digest=',
         'TOOLBOX_ORDER_LINK' => 'http://' . $_SERVER['SERVER_NAME'] . '/mpws/writer.html?display=orders&amp;action=details&amp;token=',
-        'TOOLBOX_SALE_LINK' => 'http://' . $_SERVER['SERVER_NAME'] . '/mpws/writer.html?display=sales&amp;action=details&amp;token='
+        'TOOLBOX_ORDER_LINK_OID' => 'http://' . $_SERVER['SERVER_NAME'] . '/mpws/writer.html?display=orders&amp;action=details&amp;oid=',
+        'TOOLBOX_STUDENT_LINK_OID' => 'http://' . $_SERVER['SERVER_NAME'] . '/mpws/writer.html?display=students&amp;action=details&amp;oid=',
+        'TOOLBOX_SALE_LINK' => 'http://' . $_SERVER['SERVER_NAME'] . '/mpws/writer.html?display=sales&amp;action=details&amp;token=',
+        'ACCOUNT_ORDER_LINK' => 'http://' . $_SERVER['SERVER_NAME'] . '/page/account.html?display=orders&amp;action=details&amp;oid='
     );
 
     /* Action Collection To Email */
@@ -13,6 +16,7 @@
     $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_SALE'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_STATUS_CHANGED'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_REGISTRATION'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_AUTOUSER'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_REJECTED'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_TO_REVIEW'] = $default['MAIL']['INFO'];

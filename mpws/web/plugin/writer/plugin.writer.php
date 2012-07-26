@@ -550,6 +550,13 @@ class pluginWriter {
                 ->where('PublicStatus', '=', 'REOPEN')
                 ->fetchData();
         
+        // unpaid orders
+        $unpaid['ORDERS'] = $toolbox->getDatabaseObj()->fetchData($plugin['config']['QUERY']['STAT_UNPAID_ORDERS']);
+        // unpaid sales
+        $unpaid['SALES'] = $toolbox->getDatabaseObj()->fetchData($plugin['config']['QUERY']['STAT_UNPAID_SALES']);
+
+        //var_dump();
+        
         
         $model['PLUGINS']['WRITER']['DATA_FREE_WRITERS'] = $freeWriters;
         
@@ -567,6 +574,12 @@ class pluginWriter {
         
         // orders by statuses
         $model['PLUGINS']['WRITER']['DATA_O_GROUPS'] = $order_groups;
+        
+        // unpaid items
+        if (empty($unpaid['ORDERS']) && empty($unpaid['SALES']))
+            $model['PLUGINS']['WRITER']['DATA_UNPAID'] = false;
+        else
+            $model['PLUGINS']['WRITER']['DATA_UNPAID'] = $unpaid;
         
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.statistic.teamload'];
     }
@@ -897,6 +910,15 @@ class pluginWriter {
                 ->set(array('IsActive' => 0))
                 ->where('ID', '=', $oid)
                 ->query();
+        }
+        
+        if (libraryRequest::isPostFormAction('remove this sale')) {
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->deleteFrom('writer_sales')
+                ->where('ID', '=', $oid)
+                ->query();
+            return 'home';
         }
         
         // get order record

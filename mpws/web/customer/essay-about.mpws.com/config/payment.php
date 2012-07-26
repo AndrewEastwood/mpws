@@ -6,7 +6,9 @@
     $customer['PAYMENT']['2CO'] = array(
         'FORM' => array(
             'sid' => '1799160',
-            'quantity' => '1'
+            'quantity' => '1',
+            'fixed' => 'Y',
+            'skip_landing' => 'Y'
         ),
         'API' => array(
             'USER' => 'DemoAPI',

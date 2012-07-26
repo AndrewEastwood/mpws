@@ -1,7 +1,6 @@
 <div class="MPWSContentDisplay MPWSContentDisplayCharts">
     <h2><?=ucfirst(libraryRequest::getDisplay('home'));?></h2>
-    
-    
+
     <h3>Tasks That Must Be Almost Completed</h3>
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
@@ -76,7 +75,43 @@
         <?php } ?>
     </div>
     <hr size="2"/>
-
+    
+    <?php if (!empty($model['PLUGINS']['WRITER']['DATA_UNPAID'])) : ?>
+    <h3>Unpaid Items</h3>
+    <div class="MPWSDivTable">
+        <div class="MPWSDivTableRow MPWSDivTableRowHeader">
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize4">Title</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Owner</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Price</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Pages</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Created</span>
+        </div>
+        <?php foreach($model['PLUGINS']['WRITER']['DATA_UNPAID'] as $groupKey => $groupItems) { ?>
+            <?php if (empty($groupItems)) continue; ?>
+            <h3><?=$groupKey;?></h3>
+            <?php foreach($groupItems as $entry) { ?>
+                <div class="MPWSDivTableRow MPWSDivTableRowData">
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <a href="?display=<?=strtolower($groupKey);?>&action=details&oid=<?=$entry['ID'];?>">Details</a>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize4"><?=$entry['Title'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+                <?=(empty($entry['StudentID'])?'-':'
+                <a href="?display=students&action=details&oid='.$entry['StudentID'].'">Profile</a>
+                ');?>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Price'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?>&nbsp;</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
+                </div>
+            <?php } ?>
+        <?php } ?>
+    </div>
+    <hr size="2"/>
+    <?php endif ?>
+    
+    
     <h3>Team Load Coverage</h3>
     <div id="chart_div">Chart Is Empty. There are no active tasks.</div>
 

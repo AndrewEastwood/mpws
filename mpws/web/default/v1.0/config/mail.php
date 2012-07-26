@@ -6,7 +6,8 @@
         'FROM' => 'Webmaster <webmaster@' . MPWS_CUSTOMER . '>',
         'CONTENT_TYPE' => 'text/html; charset=iso-8859-1'
     );
-
+    
+    // public notify
     $default['MAIL']['NOTIFY'] = array(
         'EMAIL' => 'no-reply@' . MPWS_CUSTOMER,
         'FROM' => 'Information <no-reply@' . MPWS_CUSTOMER . '>',
@@ -19,12 +20,12 @@
         'CONTENT_TYPE' => 'text/html; charset=iso-8859-1'
     );
 
+    // system notify
     $default['MAIL']['INFO'] = array(
         //'TO' => 'info@essay-about.com',
-        'TO' => 'soulcor@gmail.com',
-        'EMAIL' => 'info@essay-about.com',
-        'FROM' => 'no-reply@essay-about.com',
-        'NAME' => 'Info',
+        'TO' => 'ua.clients.support@gmail.com',
+        'EMAIL' => 'no-reply@' . MPWS_CUSTOMER,
+        'FROM' => 'Information <no-reply@' . MPWS_CUSTOMER . '>',
         'CONTENT_TYPE' => 'text/html; charset=iso-8859-1'
     );
     

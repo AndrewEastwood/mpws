@@ -56,3 +56,23 @@
             writer_writers AS  `wr` ON wo.WriterID = wr.ID
         WHERE wo.ID IS NULL AND wr.Active = 1 AND wr.IsOnline = 1';
         
+    $plugin['QUERY']['STAT_UNPAID_ORDERS'] = '
+        SELECT 
+            writer_orders.ID, Title, Price, Pages, StudentID, writer_orders.DateCreated, writer_invoices.invoice_id
+        FROM 
+            `writer_orders`
+        LEFT JOIN 
+            `writer_invoices` ON writer_orders.OrderToken = writer_invoices.merchant_order_id
+        WHERE writer_invoices.invoice_id IS NULL';
+    
+    $plugin['QUERY']['STAT_UNPAID_SALES'] = '
+        SELECT 
+            writer_sales.ID, Title, Price, Pages, StudentID, writer_sales.DateCreated, writer_invoices.invoice_id
+        FROM 
+            `writer_sales`
+        LEFT JOIN 
+            `writer_sale` ON writer_sales.SaleID = writer_sale.ID 
+        LEFT JOIN 
+            `writer_invoices` ON writer_sales.SalesToken = writer_invoices.merchant_order_id
+        WHERE writer_invoices.invoice_id IS NULL';
+        
