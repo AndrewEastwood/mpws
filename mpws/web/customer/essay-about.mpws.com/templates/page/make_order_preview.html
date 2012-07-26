@@ -69,7 +69,8 @@
     
     <div class="MPWSSection">
         <label>Paper instructions</label>
-        <textarea name="order_notes"><?=$model['CUSTOMER']['DATA']['Description'];?></textarea>
+        <span><?=$model['CUSTOMER']['DATA']['Description'];?></span>
+        <input type="hidden" name="order_notes" value="<?=$model['CUSTOMER']['DATA']['Description'];?>"/>
     </div>
     
     <div class="MPWSSection">

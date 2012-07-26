@@ -13,3 +13,11 @@
     $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_SALE'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_STATUS_CHANGED'] = $default['MAIL']['INFO'];
     $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_REGISTRATION'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_REJECTED'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_TO_REVIEW'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_TO_REWORK'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_TO_REFUND'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_REOPENED'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_CLOSED'] = $default['MAIL']['INFO'];
+    $customer['MAIL']['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'] = $default['MAIL']['INFO'];

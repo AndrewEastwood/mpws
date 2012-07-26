@@ -11,6 +11,10 @@ class libraryMailer {
     }
 
     public static function sendEMail ($recipients) {
+        
+        // stop sending emails
+        if (!MPWS_ENABLE_EMAILS)
+            return false;
 
         $_recipients = array();
 
