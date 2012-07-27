@@ -33,33 +33,12 @@
         <span class="MPWSValue"><?=libraryView::getFrendlyClassName($model['CUSTOMER']['DATA']['PublicStatus']);?>&nbsp;</span>
         <div class="MPWSSeparator"></div>
 
-        <h3>Dates</h3>
-        
-        
-        <h4>Local Dates</h4>
-        
-        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
-        <span class="MPWSValue">GMT <?=$model['CUSTOMER']['DATA']['TimeZone'];?></span>
-        <div class="MPWSSeparator"></div>
-        
-        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Local Time:</label>
-        <span class="MPWSValue">GMT <?=$model['CUSTOMER']['DATA']['TimeZone'];?></span>
-        <div class="MPWSSeparator"></div>
-        
-        
-        <h4>Server Dates</h4>
-        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Server Time:</label>
-        <span class="MPWSValue">GMT <?=(date('Z')/3600) . date(' e Y-m-d H:i:s');?></span>
-        <div class="MPWSSeparator"></div>
-        
+        <h3>Dates And Deadline</h3>
 
         <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
-        <pre class="MPWSValue"><?=var_dump(utime($model['CUSTOMER']['DATA']['DateCreated'], $model['CUSTOMER']['DATA']['TimeZone']));?></pre>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['DateCreated'];?></span>
         <div class="MPWSSeparator"></div>
 
-        
-        <h3>Deadline</h3>
-        
         <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
         <span class="MPWSValue">
             <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="order_deadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>

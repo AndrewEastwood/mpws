@@ -39,6 +39,8 @@ class customer {
                 $this->_pageIndex($customer);
                 break;
             case 'account':
+                // set layout
+                $model['LAYOUT'] = 'layout_inner';
                 $this->_pageAccount($customer);
                 break;
             case 'activate':
@@ -597,7 +599,6 @@ class customer {
         // preview or save data
         // if action detected and no error messages
         if ($_SESSION['MPWS_ORDER_SESSION'] == libraryRequest::getPostValue('session_key') && empty($messages)) {
-            
             //echo 'PROCEED INSIDE';
             // set new session key
             $_SESSION['MPWS_ORDER_SESSION'] = $_sessionKey;
@@ -650,7 +651,7 @@ class customer {
                     'DATA' => array(
                         'ORDER' => $data,
                         'PRICE' => $priceInfo,
-                        'SUBJECT' => $priceInfo,
+                        'SUBJECT' => $subjInfo,
                         'DOCUMENT' => $docInfo
                     ),
                     'CREATE_IF_EMPTY' => true,
@@ -658,7 +659,7 @@ class customer {
                     'ACCOUNT' => $payment['2CO']
                 );
                 $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
-                //echo '2CO Status: ' . $product['assigned_product_id'];
+                //echo '2CO Status: ' . $product;
                 // check if product exists
                 // we use "assigned_product_id" to sell current product
                 if (empty($product['assigned_product_id'])) {
@@ -987,7 +988,7 @@ class customer {
             $_order['merchant_order_id'] = $_o_token;
             $_order['return_url'] = $_SERVER['HTTP_REFERER'];
             
-            var_dump($_order);
+            //var_dump($_order);
             libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
             exit;
         }
@@ -1654,10 +1655,15 @@ class customer {
             
             $deadline = libraryRequest::getPostValue('order_deadline');
             
+            
+            // conver to system deadline
+            //$newDeadline = utime($deadline, );
+            
+            
             // check if deadline is changed
-            if ($deadline !== $data_order['DateDeadline']) {
+            if (true || $deadline !== $data_order['DateDeadline']) {
                 // save new deadline
-                if ($deadline > date($mdbc['DB_DATE_FORMAT'])) {
+                if (true ||  $deadline > date($mdbc['DB_DATE_FORMAT'])) {
                     $customer->getDatabaseObj()
                         ->reset()
                         ->update('writer_orders')
@@ -1819,7 +1825,14 @@ class customer {
                 ->where('merchant_order_id', '=', $data_order['RefundToken'])
                 ->fetchRow();
         
+        
+        //$usertime = timeInfo($data_order['TimeZone']);
+        //echo '<pre>' . print_r($usertime, true) . '</pre>';
+        
         $model['CUSTOMER']['DATA'] = $data_order;
+        //$model['CUSTOMER']['TIME'] = utime(date('Y-m-d H:i:s'), $data_order['TimeZone']);
+        /*$model['CUSTOMER']['TIME_CREATED'] = utime($data_order['DateCreated'], $data_order['TimeZone']);
+        $model['CUSTOMER']['TIME_DEADLINE'] = utime($data_order['DateDeadline'], $data_order['TimeZone']);*/
         $model['CUSTOMER']['DATA_DOCUMENT'] = $data_document;
         $model['CUSTOMER']['DATA_SUBJECT'] = $data_subject;
         $model['CUSTOMER']['DATA_MESSAGES'] = $data_messages;

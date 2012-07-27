@@ -13,6 +13,8 @@
     <input type="submit" name="do" value="Show Orders"/>
 </form>
 
+<?php if (!empty($model['CUSTOMER']['DATA'])) : ?>
+
 <h3>Total: <?=$model['CUSTOMER']['DATA_SUMA'];?>$</h3>
 
 <table cellpadding="5" cellspacing="0" border="0" width="100%">
@@ -42,5 +44,6 @@
     </tr>
 <?php endforeach ?>
 </table>
+<?php endif ?>
 
 </div>

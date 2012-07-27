@@ -18,15 +18,30 @@
 <div id="header">
 	<div id="top_menu_wrapper">
     	<div class="top_menu_base">
-        	<form action="/page/account.html" method="post" name="form1">
-                        Username: <input type="text" name="username" /><br />
-                        Password: <input type="password" name="pword" /><br />
-                        <input type="submit"  /><br />
-                        
-                        <a href="/page/account.html">account</a>
-                </form>
+        <?php if($model['USER']['ACTIVE']) : ?>
+            <?=$model['HTML']['COMPONENT']['MENU_ACCOUNT'];?>
+            <form action="/page/account.html" method="POST">
+                <div>Welcome: <?=$model['USER']['NAME'];?></div>
+                <div>You are signed is as: <?=$model['USER']['TYPE'];?></div>
+                <input type="submit" name="do" value="Logout">
+            </form>
+        <?php else : ?>
+            <form action="/page/account.html" method="POST">
+                <input type="text" name="user_login" value="" placeholder="login"/>
+                <div></div>
+                <input type="password" name="user_pwd" value="" placeholder="pwd"/>
+                <div></div>
+                <input type="submit" name="do" value="Log In">
+            </form>
+        <?php endif ?>
         </div>
-    	<div class="top_menu_button">Please Login</div>
+    	<div class="top_menu_button">
+        <?php if($model['USER']['ACTIVE']) : ?>
+            Welcome: <?=$model['USER']['NAME'];?>
+        <?php else : ?>
+            Please Login
+        <?php endif ?>
+        </div>
 	</div>
     
 	<div id="contacts">

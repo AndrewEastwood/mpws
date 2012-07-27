@@ -2201,7 +2201,7 @@ class pluginWriter {
     
     private function cross_2co_product ($params) {
         
-        echo 'inside cross_2co_product';
+        //echo 'inside cross_2co_product';
         
         //var_dump($params);
         
@@ -2230,8 +2230,15 @@ class pluginWriter {
         if (!empty($params['REALM']))
             $checkoutPID = $params['REALM'].$checkoutPID;
         
+        
+        
+        //echo 'curl_init';
+        
         // get 2checkout products 
         $ch = curl_init($account_api['METHODS']['list_products'] . '?vendor_product_id=' . $checkoutPID);
+        // Not doing any verification of SSL certificates
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 0);
@@ -2239,10 +2246,20 @@ class pluginWriter {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 100);
         curl_setopt($ch, CURLOPT_USERPWD, $account_api['USER'].':'.$account_api['PWD']);
+        //echo 'curl_exec';
+        
         $output = curl_exec($ch);
+        //var_dump($ch);
         curl_close($ch);
+        
+        //echo 'curl_close';
+        //echo $account_api['USER'].':'.$account_api['PWD'];
+        
+        //echo $account_api['METHODS']['list_products'] . '?vendor_product_id=' . $checkoutPID;
 
+        //echo $output;
         // convert responce to native array
         $coResponse = json_decode($output, true);
         //echo '<pre>' . print_r($coResponse, true) . '</pre>';
