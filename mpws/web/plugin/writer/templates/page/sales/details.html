@@ -48,6 +48,10 @@
             <hr size="2"/>
             <h3>General Information</h3>
             
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Date</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_SALE']['DateCreated'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+            
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Title</label>
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_SALE']['Title'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
@@ -76,7 +80,13 @@
             <?php else : ?>
                 <h4>Received Payment</h4>
                 <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total</label>
-                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['total'];?></span>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['total'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Email</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['email'];?>&nbsp;</span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['phone'];?>&nbsp;</span>
                 <div class="MPWSSeparator"></div>
                 <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Credit Card Processed</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER']['credit_card_processed'];?></span>

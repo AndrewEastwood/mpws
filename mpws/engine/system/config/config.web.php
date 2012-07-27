@@ -4,7 +4,8 @@
     $config['WEB']['HEADERS'] = array(
         'Content-type: text/html; charset=utf8'
     );
-    $config['WEB']['TIMEZONE'] = 'GMT+2';
+    //$config['WEB']['TIMEZONE'] = 'Europe/Kiev';
+    $config['WEB']['TIMEZONE'] = 'Australia/Sydney';
     $config['WEB']['SESSION_TIME'] = 30 * 60;
     $config['WEB']['ICONV-ENCODING'] = array(
         'internal_encoding' => 'UTF-8',

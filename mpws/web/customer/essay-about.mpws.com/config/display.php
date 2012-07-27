@@ -18,33 +18,34 @@
         'RSS' => Array(
         ),
         'MAIN' => Array(
-            '/page/index.html' => 'Home',
-            '/page/make-order.html' => 'Make Order',
-            '/page/buy-essay.html' => 'Buy Essay',
-            '/page/account.html' => 'Account',
-            '/page/how-it-works.html' => 'How It Works',
-            '/page/contacts.html' => 'Contact Us'
+            '/page/buy-essays.html' => 'Buy ready <br />ESSAYS!',
+            '/page/free-essays.html' => 'Free <br />ESSAYS!',
+            '/page/home.html' => 'Home',
+            '/page/faq.html' => 'FAQ',
+            '/page/services.html' => 'Services',
+            '/page/discounts.html' => 'Discounts',
+            '/page/prices.html' => 'Prices',
+            '/page/terms.html' => 'Terms and Conditions'
         ),
         'FOOTER' => Array(
-            '/page/make-order.html' => 'Make Order',
-            '/page/about-us.html' => 'About Us',
-            '/page/account.html' => 'Account',
-            '/page/terms.html' => 'Terms &amp; Conditions',
-            '/page/privacy.html' => 'Privacy Policy',
-            '/page/how-it-works.html' => 'How It Works',
-            '/page/contacts.html' => 'Contact Us',
-            '/page/faqs.html' => 'FAQs'
+            '/page/make-order.html' => '<strong>Buy ready ESSAYS!</strong>',
+            '/page/about-us.html' => '<strong>FreeESSAYS</strong>',
+            '/page/account.html' => 'Home',
+            '/page/terms.html' => 'FAQ',
+            '/page/privacy.html' => 'Services',
+            '/page/how-it-works.html' => 'Discounts',
+            '/page/contacts.html' => 'Prices',
+            '/page/faqs.html' => 'Terms and Conditions'
         ),
         'HEADER' => Array(
-            '/page/make-order.html' => 'Make Order',
-            '/page/about-us.html' => 'About Us',
-            '/page/user.html' => 'Account',
-            '/page/register.html' => 'Register',
-            '/page/terms.html' => 'Terms &amp; Conditions',
-            '/page/privacy.html' => 'Privacy Policy',
-            '/page/how-it-works.html' => 'How It Works',
-            '/page/contacts.html' => 'Contact Us',
-            '/page/faqs.html' => 'FAQs'
+            '/page/buy-essays.html' => 'Buy ready ESSAYS!',
+            '/page/free-essays.html' => 'Free ESSAYS!',
+            '/page/home.html' => 'Home',
+            '/page/faq.html' => 'FAQ',
+            '/page/services.html' => 'Services',
+            '/page/discounts.html' => 'Discounts',
+            '/page/prices.html' => 'Prices',
+            '/page/terms.html' => 'Terms and Conditions'
         )
     );
     

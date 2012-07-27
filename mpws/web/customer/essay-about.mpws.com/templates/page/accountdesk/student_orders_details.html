@@ -1,7 +1,6 @@
-<h2>Order Details</h2>
-<hr size="2"/>
+<h1>Order Details</h1>
 
-<div class="MPWSOrderDetailsBlock">
+<div class="content">
 
 <?php
     if(count($model['CUSTOMER']['MESSAGES'])) {
@@ -34,12 +33,33 @@
         <span class="MPWSValue"><?=libraryView::getFrendlyClassName($model['CUSTOMER']['DATA']['PublicStatus']);?>&nbsp;</span>
         <div class="MPWSSeparator"></div>
 
-        <h3>Dates And Deadline</h3>
+        <h3>Dates</h3>
+        
+        
+        <h4>Local Dates</h4>
+        
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
+        <span class="MPWSValue">GMT <?=$model['CUSTOMER']['DATA']['TimeZone'];?></span>
+        <div class="MPWSSeparator"></div>
+        
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Local Time:</label>
+        <span class="MPWSValue">GMT <?=$model['CUSTOMER']['DATA']['TimeZone'];?></span>
+        <div class="MPWSSeparator"></div>
+        
+        
+        <h4>Server Dates</h4>
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Server Time:</label>
+        <span class="MPWSValue">GMT <?=(date('Z')/3600) . date(' e Y-m-d H:i:s');?></span>
+        <div class="MPWSSeparator"></div>
+        
 
         <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
-        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['DateCreated'];?></span>
+        <pre class="MPWSValue"><?=var_dump(utime($model['CUSTOMER']['DATA']['DateCreated'], $model['CUSTOMER']['DATA']['TimeZone']));?></pre>
         <div class="MPWSSeparator"></div>
 
+        
+        <h3>Deadline</h3>
+        
         <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
         <span class="MPWSValue">
             <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="order_deadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>
@@ -146,19 +166,29 @@
         <hr size="2"/>
         <h3>Order Actions</h3>
 
-        <?php if($model['CUSTOMER']['DATA']['InternalStatus'] != 'CLOSED') : ?>
-        <input type="submit" name="do" value="Save Changes"/>
-        <?php endif ?>
-        <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'PENDING' && 
-                 $model['CUSTOMER']['DATA']['ReworkCount'] < 3) : ?>
-            <input type="submit" name="do" value="Send To Rework"/>
-        <?php endif ?>
-        <?php if($model['CUSTOMER']['DATA']['InternalStatus'] != 'CLOSED') : ?>
-            <input type="submit" name="do" value="Close Order"/>
-        <?php else : ?>
+        <?php if($model['CUSTOMER']['DATA']['InternalStatus'] == 'CLOSED') : ?>
             <input type="submit" name="do" value="Reopen Order"/>
+        <?php else: ?>
+        
+            <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'PENDING' && 
+                    $model['CUSTOMER']['DATA']['ReworkCount'] < 3) : ?>
+                <input type="submit" name="do" value="Send To Rework"/>
+            <?php endif ?>
+        
+            <input type="submit" name="do" value="Save Changes"/>
+            <input type="submit" name="do" value="Close Order"/>
+            
+            <?php if($model['CUSTOMER']['DATA']['PublicStatus'] != 'TO REFUND') : ?>
+                <input type="submit" name="do" value="Want Refund"/>
+            <?php endif ?>
+        
         <?php endif ?>
-        <input type="submit" name="do" value="Want Refund"/>
+        
+        
+        <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'TO REFUND') : ?>
+            <h4>Waiting for refund.</h4>
+        <?php endif ?>
+
     </div>
 </form>
 
@@ -203,4 +233,6 @@
     </div>
 <?php } ?>
 
+<div>
+    
 <div>

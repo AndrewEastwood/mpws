@@ -70,13 +70,14 @@
     );
     
     $customer['VALIDATOR']["FILTER"]['ORDER'] = array(
-        'Title' => '',
+        'Title' => '/^[\[\]=,\?!&@~\{\}\+\'\.\*()a-zA-Z0-9_-\s]{3,35}$/',
         'PriceID' => '/\d+/',
         'Level' => '/High School|College|University/',
         'Format' => '/MLA|APA|Chicago|Turabian/',
         'Pages' => '/\d{1,2}/',
         //'Sources' => '/\d{1,2}/',
-        'Email' => '/(?=^.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}/'
+        'Email' => '/(?=^.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}/',
+        'DateDeadline' => '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/'
     );
     
     $customer['VALIDATOR']["FILTER"]['ACCOUNT_CREATE'] = array(

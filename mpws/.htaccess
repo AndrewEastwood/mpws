@@ -11,6 +11,8 @@ RewriteBase /
 # Static Resources
 # css and javascript
 # ---
+RewriteRule static/public/(.*)\.(css|js)?(.*) /engine/dispatcher/dispatcher.Static.php?request=public&action=default&realm=public&name=$1&type=$2$3 [QSA]
+# ---
 RewriteRule static/(mpws|toolbox)([A-Za-z]+).(css|js)?(.*) /engine/dispatcher/dispatcher.Static.php?request=text&action=default&realm=$1&name=$2&type=$3$4 [QSA]
 # ---
 RewriteRule static/icons/([A-Za-z0-9_-]+).(gif|png|jpeg|jpg)?(.*)   /engine/dispatcher/dispatcher.Static.php?request=image&action=default&realm=common&name=icons\%2F$1&type=$2$3 [QSA]
@@ -40,7 +42,7 @@ RewriteRule mpws/(\w+).html?(.*) /engine/dispatcher/dispatcher.Toolbox.php?page=
 #######################
 
 # startup file
-DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=index&action=default
+DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=home&action=default
 
 # public pages
 RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?page=$1&action=default$2 [QSA]

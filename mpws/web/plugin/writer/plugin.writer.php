@@ -1901,17 +1901,34 @@ class pluginWriter {
             else
                 $oid = $data_order['ID']; 
         }
+        
+        // get order record
+        $data_order = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_orders')
+            ->where('ID', '=', $oid)
+            ->fetchRow();
+        
+        // get writer info
+        $currentWriterID = $data_order['WriterID'];
+        if (libraryRequest::isPostFormAction('assign to writer'))
+            $currentWriterID = libraryRequest::getPostValue('assign_order_to');
+        $data_writer = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_writers')
+            ->where('ID', '=', $currentWriterID)
+            ->fetchRow();
+        
+        $data_student = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_students')
+            ->where('ID', '=', $data_order['StudentID'])
+            ->fetchRow();
 
-        if (libraryRequest::isPostFormAction('send message')) {
-            echo 'sending message';
-            $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'MESSAGE_SEND';
-            //return;
-        }
-        if (libraryRequest::isPostFormAction('order history')) {
-            $model['PLUGINS']['WRITER']['INTERNAL_ACTION'] = 'ORDERS_SHOW';
-            echo 'order history';
-            //return;
-        }
+
+        // **********************************************************
+        // approve order
+        // **********************************************************
         if (libraryRequest::isPostFormAction('approve order')) {
             $order_status = array(
                 'PublicStatus' => 'PENDING',
@@ -1925,6 +1942,7 @@ class pluginWriter {
                 ->query();
             
             $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
+            $customer_config_mail = $toolbox->getCustomerObj()->getCustomerConfiguration('MAIL');
             /* save internal message */
             $message['Subject'] = 'Order Was Approved To Review.';
             $message['Message'] = libraryUtils::arrayHtmlDump($order_status);
@@ -1937,8 +1955,27 @@ class pluginWriter {
                 ->fields(array_keys($message))
                 ->values(array_values($message))
                 ->query();
+            /* STUDENT NOTIFY */
+            if (!empty($data_student['Email'])) {
+                $recipient = $customer_config_mail['NOTIFY'];
+                $recipient['TO'] = $data_student['Email'];
+                $recipient['SUBJECT'] = 'Order Is Ready To Review';
+                $recipient['DATA'] = array(
+                    'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                );
+                $libView = new libraryView();
+                $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $plugin['templates']['mail.students.order_to_review']);
+                // send email message to system
+                libraryMailer::sendEMail($recipient);
+            }
             
+            /* alter already selected order record */
+            $data_order['PublicStatus'] = 'PENDING';
+            $data_order['InternalStatus'] = 'APPROVED';
         }
+        // **********************************************************
+        // update order
+        // **********************************************************
         if (libraryRequest::isPostFormAction('update order')) {
             //echo 'saving order';
             
@@ -1968,25 +2005,14 @@ class pluginWriter {
                 ->values(array_values($message))
                 ->query();
             
+            /* alter already selected order record */
+            $data_order['PublicStatus'] = $order_new_changes['PublicStatus'];
+            $data_order['InternalStatus'] = $order_new_changes['InternalStatus'];
+            $data_order['Credits'] = $order_new_changes['Credits'];
         }
-
-        // get order record
-        $data_order = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('writer_orders')
-            ->where('ID', '=', $oid)
-            ->fetchRow();
-        
-        // get writer info
-        $currentWriterID = $data_order['WriterID'];
-        if (libraryRequest::isPostFormAction('assign to writer'))
-            $currentWriterID = libraryRequest::getPostValue('assign_order_to');
-        $data_writer = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('writer_writers')
-            ->where('ID', '=', $currentWriterID)
-            ->fetchRow();
-        
+        // **********************************************************
+        // assign to writer
+        // **********************************************************
         if (libraryRequest::isPostFormAction('assign to writer')) {
             $toolbox->getDatabaseObj()
                 ->update('writer_orders')
@@ -2017,7 +2043,7 @@ class pluginWriter {
             
             /* NOTIFY WRITER ABOUT NEW ASSIGNMENT */
             // when $new_writer_id == 0 - then order is unassigned
-            if ($currentWriterID != 0 && false) {
+            if ($currentWriterID != 0) {
                 // get new writer info
                 
                 // form email object
@@ -2039,6 +2065,8 @@ class pluginWriter {
                 libraryMailer::sendEMail($recipient);
             }
             
+            /* alter already selected order record */
+            $data_order['WriterID'] = $currentWriterID;
         }
         
         $data_invoice_order = array();
@@ -2064,12 +2092,6 @@ class pluginWriter {
             ->orderBy('DateCreated')
             ->order('DESC')
             ->fetchData();
-        
-        $data_student = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('writer_students')
-            ->where('ID', '=', $data_order['StudentID'])
-            ->fetchRow();
         
         $data_price = $toolbox->getDatabaseObj()
             ->select('*')

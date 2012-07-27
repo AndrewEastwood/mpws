@@ -22,13 +22,20 @@ class customer {
         switch(libraryRequest::getPage('index')){
             case 'make-order':{
                 $this->_pageMakeOrder($customer);
+                $model['LAYOUT'] = 'layout_inner';
                 break;
             }
-            case 'buy-essay':{
+            case 'buy-essays':{
                 $this->_pageBuyEssay($customer);
+                $model['LAYOUT'] = 'layout_inner';
                 break;
             }
-            case 'index':
+            case 'free-essays':{
+                $this->_pageFreeEssay($customer);
+                $model['LAYOUT'] = 'layout_inner';
+                break;
+            }
+            case 'home':
                 $this->_pageIndex($customer);
                 break;
             case 'account':
@@ -36,17 +43,25 @@ class customer {
                 break;
             case 'activate':
                 $this->_pageActivate($customer);
+                $model['LAYOUT'] = 'layout_inner';
                 break;
             case 'purchase':
                 $this->_pagePurchase($customer);
+                $model['LAYOUT'] = 'layout_inner';
                 break;
             default:{
                 $this->_pageNotFound($customer);
+                $model['LAYOUT'] = 'layout_inner';
                 break;
             }
         }
         
         $this->_componentMenu($customer);
+        
+        
+        // remove expired accounts
+        $param['dbo'] = $customer->getDatabaseObj();
+        libraryToolboxManager::callPluginMethod('writer', 'useremoval', $param);
     }
     
     public function render ($customer) {
@@ -77,8 +92,9 @@ class customer {
         $libView = new libraryView();
         $model = &$customer->getModel();
         
-        $layout = 'layout';
+        $layout = 'layout_startup';
         
+        // overriden default layout
         if (!empty($model['LAYOUT']))
             $layout = $model['LAYOUT'];
        
@@ -147,20 +163,18 @@ class customer {
         
         //var_dump($model['CUSTOMER']['COMPONENT']['MENU']);
     }
-    
-    
+
     /* pages */
-    
     private function _pageNotFound ($customer) {
         $model = &$customer->getModel();
         $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.404');
     }
-    private function _pageAccount ($customer) {
+    private function _pageAccount ($customer, $innerReturnDisplay = false) {
         $model = &$customer->getModel();
         
-        // remove expired accounts
-        $param['dbo'] = $customer->getDatabaseObj();
-        libraryToolboxManager::callPluginMethod('writer', 'useremoval', $param);
+        //echo '<br>******* 1 ****<br>';
+        //echo 'customer is empty ' . (empty($customer)?'+':'-');
+        //echo '<br>******* 2 ****<br>';
         
         //var_dump($model['USER']);
                 // register action
@@ -270,41 +284,43 @@ class customer {
             return;
         }
 
+        // if account is not activated we show message
         if ($model['USER']['TEMPORARY'])
             $model['CUSTOMER']['MESSAGES'][] = '
                 Your account will be deleted in 73 hours.<br>
                 To activate your account please click <a href="/page/activate.html?digest='.$model['USER']['TOKEN'].'" target="blank">here</a>';
 
+        
+        
         //$messages = array();
         $display = libraryRequest::getDisplay('orders');
         $action = libraryRequest::getAction('default');
 
+        
         //echo '<br><br>ACTION SWITCHER ['.$action.']<br><br>';
         //if (libraryRequest::isPostFormAction('logout')) {}
+        
+        // internal return display
+        if (!empty($innerReturnDisplay)) {
+            // set new display
+            $display = $innerReturnDisplay;
+            // set default action
+            $action = 'default';
+            // reset previous return
+            $innerReturnDisplay = false;
+        }
+        
+        //echo '<br>display is ' . $display;
+        //echo '<br>action is ' . $action;
+        
+        // trigger display
         switch ($display) {
-            /*
-            case "active": {
-                $this->_accountDeskCommonOrders($customer, 'IN PROGRESS');
-                break;
-            }
-            case "rework": {
-                $this->_accountDeskCommonOrders($customer, 'REWORK');
-                break;
-            }
-            case "pending": {
-                $this->_accountDeskCommonOrders($customer, 'PENDING');
-                break;
-            }
-            case "completed": {
-                $this->_accountDeskCommonOrders($customer, 'CLOSED');
-                break;
-            }*/
             case "settings": {
-                $this->_accountDeskCommonSettings($customer);
+                $innerReturnDisplay = $this->_accountDeskCommonSettings($customer);
                 break;
             }
             case "history": {
-                $this->_accountDeskCommonHistoryOrders($customer);
+                $innerReturnDisplay = $this->_accountDeskCommonHistoryOrders($customer);
                 break;
             }
             case "orders":
@@ -312,17 +328,27 @@ class customer {
                 //$display = 'orders';
                 switch ($action) {
                     case "details": {
-                        $this->_accountDeskCommonOrders_details($customer);
+                        $innerReturnDisplay = $this->_accountDeskCommonOrders_details($customer);
                         break;
                     }
                     default: {
-                        $this->_accountDeskCommonOrders_all($customer);
+                        $innerReturnDisplay = $this->_accountDeskCommonOrders_all($customer);
                         break;
                     }
                 }
                 break;
             }
         }
+        
+        // jump to another display
+        if (!empty($innerReturnDisplay)) {
+            //echo '<br> internal redirect to display ' . $innerReturnDisplay . '<br>';
+            //echo '<br>customer is empty ' . (empty($customer)?'+':'-');
+            $this->_pageAccount($customer, $innerReturnDisplay);
+            //echo '<br>---------';
+            return;
+        }
+            
 
         // set template
         if (empty($model['CUSTOMER']['TEMPLATE'])) {
@@ -336,17 +362,19 @@ class customer {
             //echo '<br><br><br>USING TEMPLATE NAME:  =====> ' . $templateName;
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.accountdesk.' . $templateName);
         }
-        $model['LAYOUT'] = 'accountdesk';
+        
+        // set layout
+        $model['LAYOUT'] = 'layout_admin';
     }
     private function _pagePurchase ($customer) {
         $model = &$customer->getModel();
         
         //var_dump($_POST);
         
-        echo '<pre>' . print_r($_GET, true) . '</pre>';
         
         // get merchant id
         $merchant_order_id_data = explode('-', libraryRequest::getValue('merchant_order_id'));
+        $merchant_product_id = libraryRequest::getValue('merchant_product_id');
         $merchant_order_id = '';
         $user_login = '';
         
@@ -361,6 +389,15 @@ class customer {
         //echo '<br>';
         //echo 'USER LOGIN = ' . $user_login;
         
+        //echo '<pre>' . print_r($_GET, true) . '</pre>';
+        
+
+        // empty merchant id or product id
+        if (empty($merchant_order_id) || empty($merchant_product_id)) {
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
+            return;
+        }
+        
         // check for double opening
         $invoiceInfo = $customer->getDatabaseObj()
                 ->select('*')
@@ -368,30 +405,49 @@ class customer {
                 ->where('merchant_order_id', '=', $merchant_order_id)
                 ->fetchRow();
 
+        //var_dump($invoiceInfo);
+        
         // if second opening
         if (!empty($invoiceInfo)) {
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.index');
             return;
         }
-        
-        
-        if (empty($merchant_order_id)) {
-            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
-            return;
-        }
 
-        // get order info
-        $orderInfo = $customer->getDatabaseObj()
-                ->select('*')
-                ->from('writer_orders')
-                ->where('OrderToken', '=', $merchant_order_id)
-                ->fetchRow();
+        //echo 'MID:' . $merchant_order_id;
+        //echo 'PRODUCT:' . $merchant_product_id;
+        
+        $orderInfo = array();
+        // detect invoice type
+        switch($merchant_product_id[0]) {
+            // order
+            case 'E': {
+                //echo 'CUSTOM ORDER';
+                $orderInfo = $customer->getDatabaseObj()
+                    ->select('ID')
+                    ->from('writer_orders')
+                    ->where('OrderToken', '=', $merchant_order_id)
+                    ->fetchRow();
+                break;
+            }
+            // ready product
+            case 'B': {
+                //echo 'READY ESSAY';
+                $orderInfo = $customer->getDatabaseObj()
+                    ->select('ID')
+                    ->from('writer_sales')
+                    ->where('SalesToken', '=', $merchant_order_id)
+                    ->fetchRow();
+                break;
+            }
+        }
         
         // if no order
         if (empty($orderInfo)) {
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
             return;
         }
+        
+        //echo 'Saving invoice';
         
         // save invoice
         $invoice = array();
@@ -401,6 +457,8 @@ class customer {
         $invoice['key'] = libraryRequest::getValue('key');
         $invoice['order_number'] = libraryRequest::getValue('order_number');
         $invoice['total'] = libraryRequest::getValue('total');
+        $invoice['email'] = libraryRequest::getValue('email');
+        $invoice['phone'] = libraryRequest::getValue('phone');
         $invoice['credit_card_processed'] = libraryRequest::getValue('credit_card_processed');
         $invoice['merchant_order_id'] = $merchant_order_id;
         
@@ -416,24 +474,37 @@ class customer {
         // save user biliing information
         // check before if user has billing info
         if (!empty($user_login)) {
-            $user_billing_info = array(
-                'Billing_FirstName' => libraryRequest::getValue('card_holder_name'),
-                'Billing_LastName' => '',
-                'Billing_Email' => libraryRequest::getValue('email'),
-                'Billing_Phone' => libraryRequest::getValue('phone'),
-                'Billing_Address' => libraryRequest::getValue('street_address') . libraryRequest::getValue('street_address2'),
-                'Billing_City' => libraryRequest::getValue('city'),
-                'Billing_State' => libraryRequest::getValue('state'),
-                'Billing_PostalCode' => libraryRequest::getValue('zip'),
-                'Billing_Country' => libraryRequest::getValue('country'),
-                'Name' => libraryRequest::getValue('card_holder_name')
-            );
-            $customer->getDatabaseObj()
+            
+            // check if it is not modified by user
+            $student = $customer->getDatabaseObj()
                     ->reset()
-                    ->update('writer_students')
-                    ->set($user_billing_info)
+                    ->select('ModifiedBy')
+                    ->from('writer_students')
                     ->where('Login', '=', $user_login)
                     ->query();
+            
+            // if it is unchanged
+            if ($student['ModifiedBy'] == 'SYSTEM') {
+                $user_billing_info = array(
+                    'Billing_FirstName' => libraryRequest::getValue('card_holder_name'),
+                    'Billing_LastName' => '',
+                    'Billing_Email' => libraryRequest::getValue('email'),
+                    'Billing_Phone' => libraryRequest::getValue('phone'),
+                    'Billing_Address' => libraryRequest::getValue('street_address') . libraryRequest::getValue('street_address2'),
+                    'Billing_City' => libraryRequest::getValue('city'),
+                    'Billing_State' => libraryRequest::getValue('state'),
+                    'Billing_PostalCode' => libraryRequest::getValue('zip'),
+                    'Billing_Country' => libraryRequest::getValue('country'),
+                    'Name' => libraryRequest::getValue('card_holder_name')
+                );
+                // save billing information
+                $customer->getDatabaseObj()
+                        ->reset()
+                        ->update('writer_students')
+                        ->set($user_billing_info)
+                        ->where('Login', '=', $user_login)
+                        ->query();
+            }
         }
             
         
@@ -515,14 +586,19 @@ class customer {
         
         // validate data when preview or save
         if ($isPreviewOrSave) {
+            //echo 'IS PREVIEW OR SAVE';
             /* validate fileds */
             libraryValidator::validateData($data, $validator['FILTER']['ORDER'], $messages);
             $model['CUSTOMER']['MESSAGES'] = $messages;
         }
+        
+        //var_dump($messages);
+        
         // preview or save data
         // if action detected and no error messages
         if ($_SESSION['MPWS_ORDER_SESSION'] == libraryRequest::getPostValue('session_key') && empty($messages)) {
             
+            //echo 'PROCEED INSIDE';
             // set new session key
             $_SESSION['MPWS_ORDER_SESSION'] = $_sessionKey;
  
@@ -536,6 +612,7 @@ class customer {
             // preview
             if (libraryRequest::isPostFormAction('proceed')) {
 
+                //echo 'PROCEED INSIDE';
 
                 $docInfo = $customer->getDatabaseObj()
                         ->select('*')
@@ -558,6 +635,7 @@ class customer {
                 $model['CUSTOMER']['DATA_SUBJECT'] = $subjInfo;
                 $model['CUSTOMER']['DATA_TIMEZONE'] = $timeZone;
                 //$model['CUSTOMER']['DATA_DEADLINE'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
+                //echo '111111111';
                 $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order_preview');
             } // -end of preview
             // save order
@@ -750,9 +828,11 @@ class customer {
                 exit;
             }
             
-        }
+        } else
+            $isPreviewOrSave = false;
             
         // edit mode
+        //echo 'EDIT MODE';
         
         // set new session key
         $_SESSION['MPWS_ORDER_SESSION'] = $_sessionKey;
@@ -938,12 +1018,46 @@ class customer {
             libraryRequest::storeOrGetRefererUrl();
             // show all essays
             $datatable = $customer->getCustomerConfiguration('DATATABLE');
-            $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj());
+            $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj(), 'Price <> 0');
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay');
         }
     }
+    private function _pageFreeEssay ($customer) {
+        $model = &$customer->getModel();
+        // get action
+        $action = libraryRequest::getAction();
+        // if details requested
+        if ($action == 'details'){
+            $oid = libraryRequest::getOID();
+            
+            if (empty($oid)) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
+                return;
+            }
+            
+            $model['CUSTOMER']['DATA'] = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('*')
+                    ->from('writer_sale')
+                    ->where('ID', '=', $oid)
+                    ->fetchRow();
+            
+            if (empty($model['CUSTOMER']['DATA'])) {
+                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
+                return;
+            }
+            
+            $model['CUSTOMER']['REFERER'] = libraryRequest::storeOrGetRefererUrl(false);
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.free_essay_details');
+        } else {
+            libraryRequest::storeOrGetRefererUrl();
+            // show all essays
+            $datatable = $customer->getCustomerConfiguration('DATATABLE');
+            $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj(), 'Price = 0');
+            $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.free_essay');
+        }
+    }
 
-    
     private function _accountDeskCommonOrders_details ($customer) {
         $model = &$customer->getModel();
         $oid = libraryRequest::getOID();
@@ -965,12 +1079,16 @@ class customer {
             ->where('ID', '=', $oid)
             ->fetchRow();
 
-        
         // on wrong order id
         if(empty($data_order)) {
             $model['CUSTOMER']['TEMPLATE_NAME'] = 'orders_error';
             return;
         }
+        
+        // do not display rejected order for writer
+        // redirect to all orders page
+        if ($model['USER']['IS_WRITER'] && $data_order['InternalStatus'] == 'REJECTED')
+            return 'orders';
         
         // prevent crossprofile access to orders
         if (($model['USER']['IS_WRITER'] && $model['USER']['ID'] != $data_order['WriterID']) ||
@@ -991,7 +1109,7 @@ class customer {
             $user_writer = $customer->getDatabaseObj()
                 ->select('ID, Email, Name')
                 ->from('writer_writers')
-                ->where('ID', '=', $data_order['StudentID'])
+                ->where('ID', '=', $data_order['WriterID'])
                 ->fetchRow();
         }
         
@@ -1029,7 +1147,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'];
                 $recipient['SUBJECT'] = 'Rework Strated';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_writer['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_started'));
@@ -1085,7 +1203,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_ACCEPTED'];
                 $recipient['SUBJECT'] = 'Order Accepted';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_writer['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_accepted'));
@@ -1140,7 +1258,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REJECTED'];
                 $recipient['SUBJECT'] = 'Order Rejected';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_writer['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_rejected'));
@@ -1153,6 +1271,8 @@ class customer {
             
             /* alter already selected order info */
             $data_order['InternalStatus'] = 'REJECTED';
+            
+            return 'orders';
         }
         // **********************************************************
         // writer sent to review
@@ -1186,7 +1306,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REVIEW'];
                 $recipient['SUBJECT'] = 'Waiting For Approval';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_writer['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_to_review'));
@@ -1238,7 +1358,7 @@ class customer {
                     $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REWORK'];
                     $recipient['SUBJECT'] = 'Need To Rework';
                     $recipient['DATA'] = array(
-                        'Name' => $user['Name'],
+                        'Name' => $user_student['Name'],
                         'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                     );
                     $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_to_rework'));
@@ -1270,7 +1390,7 @@ class customer {
         if (libraryRequest::isPostFormAction('want refund') && $model['USER']['IS_STUDENT']) {
             $order_status = array(
                 'PublicStatus' => 'TO REFUND',
-                'InternalStatus' => 'OPEN'
+                'InternalStatus' => 'CLOSED'
             );
             $customer->getDatabaseObj()
                 ->reset()
@@ -1297,7 +1417,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_TO_REFUND'];
                 $recipient['SUBJECT'] = 'Buyer Wants Refund';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_student['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_to_refund'));
@@ -1319,7 +1439,7 @@ class customer {
             
             /* alter already selected order info */
             $data_order['PublicStatus'] = 'TO REFUND';
-            $data_order['InternalStatus'] = 'OPEN';
+            $data_order['InternalStatus'] = 'CLOSED';
         }
         // **********************************************************
         // reopen order
@@ -1354,7 +1474,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_REOPENED'];
                 $recipient['SUBJECT'] = 'Buyer Reopened Order';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_student['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_reopened'));
@@ -1411,7 +1531,7 @@ class customer {
                 $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_CLOSED'];
                 $recipient['SUBJECT'] = 'Buyer Closed Order';
                 $recipient['DATA'] = array(
-                    'Name' => $user['Name'],
+                    'Name' => $user_student['Name'],
                     'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                 );
                 $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_closed'));
@@ -1462,9 +1582,9 @@ class customer {
                 /* SYSTEM NOTIFY */
                 if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'])) {
                     $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'];
-                    $recipient['SUBJECT'] = 'New Comment';
+                    $recipient['SUBJECT'] = 'New Comment From ' . strtolower($model['USER']['TYPE']);
                     $recipient['DATA'] = array(
-                        'Name' => $user['Name'],
+                        'Name' => strtolower($model['USER']['TYPE']),
                         'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
                     );
                     $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_commented'));
@@ -1593,8 +1713,10 @@ class customer {
             //echo '<pre>'.print_r($_sources, true).'</pre>';
             //echo '<pre>'.print_r($srcDiff, true).'</pre>';
             
+            $isAllRemoved = (count($currentSources) > 0 && count($_sources) == 0);
+            
             // proceed if sources were changed
-            if (count($srcDiff)) {
+            if (count($srcDiff) || $isAllRemoved) {
                 // remove previous links
                 $customer->getDatabaseObj()
                     ->deleteFrom('writer_sources')
@@ -1715,14 +1837,25 @@ class customer {
         $model = &$customer->getModel();
         // get new tasks
         //echo $_SESSION['WEB_USER']['TYPE'].'ID'. '='. $_SESSION['WEB_USER']['ID'];
-        $data = $customer->getDatabaseObj()
-                ->reset()
-                //->select('ID, Title, Price, Pages, Format, DateCreated, DateDeadline, PublicStatus, ReworkCount')
-                ->select('*')
-                ->from('writer_orders')
-                ->where($_SESSION['WEB_USER']['TYPE'].'ID', '=', $_SESSION['WEB_USER']['ID'])
-                ->andWhere('PublicStatus', '<>', 'CLOSED')
-                ->fetchData();
+        $data = array();
+        if ($model['USER']['IS_WRITER'])
+            $data = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('*')
+                    ->from('writer_orders')
+                    ->where($_SESSION['WEB_USER']['TYPE'].'ID', '=', $_SESSION['WEB_USER']['ID'])
+                    ->andWhere('PublicStatus', '<>', 'CLOSED')
+                    ->andWhere('InternalStatus', '<>', 'REJECTED')
+                    ->fetchData();
+        if ($model['USER']['IS_STUDENT'])
+            $data = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('*')
+                    ->from('writer_orders')
+                    ->where($_SESSION['WEB_USER']['TYPE'].'ID', '=', $_SESSION['WEB_USER']['ID'])
+                    ->andWhere('PublicStatus', '<>', 'CLOSED')
+                    ->fetchData();
+        
         $model['CUSTOMER']['DATA'] = libraryUtils::groupArrayRowsByField($data, 'PublicStatus');
     }
     private function _accountDeskCommonHistoryOrders ($customer) {
@@ -1818,6 +1951,9 @@ class customer {
             //var_dump(array_keys($data));
             //echo '<br><br><br>';
             //var_dump(array_values($data));
+            
+            // user has changed account information
+            $data['ModifiedBy'] = 'USER';
             
             if (empty($messages)) {
                 $customer->getDatabaseObj()

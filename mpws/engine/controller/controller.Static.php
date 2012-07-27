@@ -10,6 +10,10 @@ class controllerStatic {
             //echo 'denided';
             return false;
         }
+        
+        //echo 'static controller';
+        //echo strtolower($_GET['request']);
+        
         $content = '';
         switch (strtolower($_GET['request'])) {
             case 'text' : {
@@ -22,6 +26,10 @@ class controllerStatic {
             }
             case 'wysiwyg' : {
                 $content = $this->_ieWYSIWYG();
+                return;
+            }
+            case 'public' : {
+                $content = $this->_iePublic();
                 return;
             }
         }
@@ -59,10 +67,37 @@ class controllerStatic {
     }
 
     /* internal executors */
+    private function _iePublic () {
+        $staticResMgr = new libraryStaticResourceManager();
+        $_module_path = $_GET['name'] . '.' . $_GET['type'];
+        
+        //var_dump($_GET);
+        
+        $_module_path = '/public/' . $_module_path;
+        
+        //echo $_module_path;
+        
+        $filePath = $staticResMgr->GetContent(urldecode($_module_path), $_GET['realm']);
+
+        if (empty($filePath))
+            return false;
+        
+        switch ($_GET['type']) {
+            case 'css':
+                header("Content-type: text/css");
+                return readfile($filePath);
+            case 'js':
+                header("Content-type: text/javascript");
+                return readfile($filePath);  
+        }
+    }
     private function _ieWYSIWYG () {
         $staticResMgr = new libraryStaticResourceManager();
         $_module_path = 'plugins/' . $_GET['name'] . '/' . $_GET['path'] . '.' . $_GET['type'];
         $filePath = $staticResMgr->GetContent(urldecode($_module_path), $_GET['realm']);
+        
+        if (empty($filePath))
+            return false;
         
         switch ($_GET['type']) {
             case 'htm':

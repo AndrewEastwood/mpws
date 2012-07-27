@@ -1,5 +1,5 @@
-<h2>Order Details</h2>
-<hr size="2"/>
+<h1>Order Details</h1>
+<div class="content">
 
 <div class="MPWSOrderDetailsBlock">
 
@@ -134,6 +134,10 @@
         
         <?php if($model['CUSTOMER']['DATA']['InternalStatus'] == 'PENDING') : ?>
             <h4>Webmaster is reviewing your order.</h4>
+        <?php endif ?>
+        
+        <?php if($model['CUSTOMER']['DATA']['PublicStatus'] == 'TO REFUND') : ?>
+            <h4>Webmaster will take further actions.</h4>
         <?php endif ?>
         
     </div>

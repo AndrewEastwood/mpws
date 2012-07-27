@@ -63,8 +63,8 @@ mpws.module.define('essay-about', (function(window, document, $){
                 changeMonth: true,
                 changeYear: true,
                 showMinute: false,
-                showButtonPanel: true,
-                minDate: new Date(new Date().getTime() + (3*60*60*1000))
+                showButtonPanel: true//,
+                //minDate: new Date(new Date().getTime() + (3*60*60*1000))
         });
         
         

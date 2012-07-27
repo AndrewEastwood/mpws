@@ -12,14 +12,14 @@
             </a></li>
             <li><hr size="1" width="100"/></li>
             <li><a href="writer.html?display=sale">To Sale</a></li>
-            <li><a href="writer.html?display=sales">Sold Items
+            <li><a href="writer.html?display=sales&sort=DateCreated.desc">Sold Items
             <?php 
                 if (!empty($model['PLUGINS']['WRITER']['COM']['INCOMIG']['SALES']))
                     echo '(' . $model['PLUGINS']['WRITER']['COM']['INCOMIG']['SALES'] . ')';
             ?>
             </a></li>
             <li><hr size="1" width="100"/></li>
-            <li><a href="writer.html?display=messages">Messages</a></li>
+            <li><a href="writer.html?display=messages&sort=DateCreated.desc">Messages</a></li>
             <li><hr size="1" width="100"/></li>
             <li><a href="writer.html?display=prices">Prices</a></li>
             <li><a href="writer.html?display=documents">Documents</a></li>

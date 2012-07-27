@@ -1,4 +1,30 @@
 <?php
+
+    function utime ($serverDateTimeString, $userTimezone) {
+        $utime = array();
+        
+        $userTimezone *= 3600;
+        
+        /* CURRENT TIME*/
+        $utime['C_SEVER'] = date('Y-m-d H:i:s');
+        $utime['C_USER'] = date('Y-m-d H:i:s', time() + $userTimezone);
+        
+        /* OFFSET */
+        $utime['SEVER_OFFSET'] = date('Z') / 3600;
+        $utime['USER_OFFSET'] = $userTimezone / 3600;
+        
+        /* PROVIDED TIME  */
+        $utime['USER'] = date('Y-m-d H:i:s', strtotime($serverDateTimeString) + $userTimezone);
+        $utime['SERVER'] = $serverDateTimeString;
+        
+        /* DIFF */
+        $utime['DIFF'] = (date('Z') / 3600) - $userTimezone / 3600;
+        
+        return $utime;
+    }
+
+
+
     // global methods
     // will be moved to 
     function debug ($value) {

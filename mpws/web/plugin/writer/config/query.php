@@ -63,7 +63,8 @@
             `writer_orders`
         LEFT JOIN 
             `writer_invoices` ON writer_orders.OrderToken = writer_invoices.merchant_order_id
-        WHERE writer_invoices.invoice_id IS NULL';
+        WHERE writer_invoices.invoice_id IS NULL
+        ORDER BY writer_orders.DateCreated DESC';
     
     $plugin['QUERY']['STAT_UNPAID_SALES'] = '
         SELECT 
@@ -74,5 +75,6 @@
             `writer_sale` ON writer_sales.SaleID = writer_sale.ID 
         LEFT JOIN 
             `writer_invoices` ON writer_sales.SalesToken = writer_invoices.merchant_order_id
-        WHERE writer_invoices.invoice_id IS NULL';
+        WHERE writer_invoices.invoice_id IS NULL
+        ORDER BY writer_sales.DateCreated DESC';
         
