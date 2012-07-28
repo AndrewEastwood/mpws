@@ -21,18 +21,18 @@ class customer {
         
         switch(libraryRequest::getPage('index')){
             case 'make-order':{
-                $this->_pageMakeOrder($customer);
                 $model['LAYOUT'] = 'layout_inner';
+                $this->_pageMakeOrder($customer);
                 break;
             }
             case 'buy-essays':{
-                $this->_pageBuyEssay($customer);
                 $model['LAYOUT'] = 'layout_inner';
+                $this->_pageBuyEssay($customer);
                 break;
             }
             case 'free-essays':{
-                $this->_pageFreeEssay($customer);
                 $model['LAYOUT'] = 'layout_inner';
+                $this->_pageFreeEssay($customer);
                 break;
             }
             case 'home':
@@ -44,16 +44,16 @@ class customer {
                 $this->_pageAccount($customer);
                 break;
             case 'activate':
-                $this->_pageActivate($customer);
                 $model['LAYOUT'] = 'layout_inner';
+                $this->_pageActivate($customer);
                 break;
             case 'purchase':
-                $this->_pagePurchase($customer);
                 $model['LAYOUT'] = 'layout_inner';
+                $this->_pagePurchase($customer);
                 break;
             default:{
-                $this->_pageNotFound($customer);
                 $model['LAYOUT'] = 'layout_inner';
+                $this->_pageNotFound($customer);
                 break;
             }
         }
@@ -411,6 +411,7 @@ class customer {
         
         // if second opening
         if (!empty($invoiceInfo)) {
+            $model['LAYOUT'] = 'layout_startup';
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.index');
             return;
         }
@@ -483,7 +484,10 @@ class customer {
                     ->select('ModifiedBy')
                     ->from('writer_students')
                     ->where('Login', '=', $user_login)
-                    ->query();
+                    ->fetchRow();
+            
+            //echo '<br>SAVE STUDENT BILLIING INFORMATION';
+            //var_dump($student);
             
             // if it is unchanged
             if ($student['ModifiedBy'] == 'SYSTEM') {
@@ -614,6 +618,7 @@ class customer {
             if (libraryRequest::isPostFormAction('proceed')) {
 
                 //echo 'PROCEED INSIDE';
+                
 
                 $docInfo = $customer->getDatabaseObj()
                         ->select('*')
@@ -628,9 +633,12 @@ class customer {
                 $timeZone = $customer->getDatabaseObj()
                         ->select('*')
                         ->from('mpws_timezone')
-                        ->where('ID', '=', $data['TimeZone'])
+                        ->where('ID', '=', $data['TimeZoneID'])
                         ->fetchRow();
 
+                
+                echo 'WILL SAVE DEADLINE ' . convDT($data['DateDeadline'], 'UTC', $timeZone['TZ']);
+                
                 $model['CUSTOMER']['DATA_PRICE'] = $priceInfo;
                 $model['CUSTOMER']['DATA_DOC'] = $docInfo;
                 $model['CUSTOMER']['DATA_SUBJECT'] = $subjInfo;
@@ -691,6 +699,7 @@ class customer {
                         'Active' => 0,
                         'IsTemporary' => 1,
                         'UserToken' => $_userToken,
+                        'TimeZoneID' => $data['TimeZoneID'],
                         'DateCreated' => date($mdbc['DB_DATE_FORMAT']),
                         'DateLastAccess' => date($mdbc['DB_DATE_FORMAT'])
                     );
@@ -767,7 +776,7 @@ class customer {
                 $timeZone = $customer->getDatabaseObj()
                         ->select('*')
                         ->from('mpws_timezone')
-                        ->where('ID', '=', $data['TimeZone'])
+                        ->where('ID', '=', $data['TimeZoneID'])
                         ->fetchRow();
                 
                 // fill order information
@@ -776,8 +785,9 @@ class customer {
                 $data['Discount'] = 0;
                 $data['Credits'] = round($data['Price'] / 4, 0);
                 $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+                $data['DateDeadline'] = convDT($data['DateDeadline'], 'UTC', $timeZone['TZ']);
                 //$data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
-                $data['TimeZone'] = $timeZone['Offset'];
+                //$data['TimeZone'] = $timeZone['TimeZone'];
                 $data['RefundToken'] = '';
                 $data['OrderToken'] = $_o_token;
 
@@ -1103,12 +1113,12 @@ class customer {
         $user_student = array();
         if ($model['USER']['ACTIVE']) {
             $user_student = $customer->getDatabaseObj()
-                ->select('ID, Email, Name')
+                ->select('ID, Email, Name, TimeZoneID')
                 ->from('writer_students')
                 ->where('ID', '=', $data_order['StudentID'])
                 ->fetchRow();
             $user_writer = $customer->getDatabaseObj()
-                ->select('ID, Email, Name')
+                ->select('ID, Email, Name, TimeZoneID')
                 ->from('writer_writers')
                 ->where('ID', '=', $data_order['WriterID'])
                 ->fetchRow();
@@ -1824,6 +1834,70 @@ class customer {
                 ->from('writer_invoices')
                 ->where('merchant_order_id', '=', $data_order['RefundToken'])
                 ->fetchRow();
+        
+        $data_timezone_o = $customer->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $data_order['TimeZoneID'])
+            ->fetchRow();
+        /*$data_timezone_u = $customer->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $user_student['TimeZoneID'])
+            ->fetchRow();*/
+        $data_timezone_w = $customer->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $user_writer['TimeZoneID'])
+            ->fetchRow();
+        
+        // --- order
+        $dto['UTC'] = $data_order['DateDeadline'];
+        $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_timezone_o['TZ'], 'UTC');
+        $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_timezone_w['TZ'], 'UTC');
+        
+        // --- now
+        $dto['nUTC'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
+        $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_o['TZ']);
+        $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_w['TZ']);
+        
+        echo '<br>- - - -  -- - - - - - DEADLINE ORIGINAL<br>';
+        echo '<br>UTC/SYSTEM: ' . $dto['UTC'];
+        echo '<br>ORDER: ' . $dto['ORDER'];
+        echo '<br>WRITER: ' . $dto['WRITER'];
+        
+        echo '<br>- - - -  -- - - - - - NOW<br>';
+        echo '<br>SERVER: ' . date($mdbc['DB_DATE_FORMAT']);
+        echo '<br>UTC/SYSTEM: ' . $dto['nUTC'];
+        echo '<br>ORDER: ' . $dto['nORDER'];
+        echo '<br>WRITER: ' . $dto['nWRITER'];
+        
+        echo '<br>- - - -  -- - - - - - HOURS LEFT<br>';
+        echo '<br>UTC/SYSTEM: ' . libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
+        echo '<br>ORDER: ' . libraryUtils::getDateTimeHoursDiff($dto['ORDER'], $dto['nORDER']);
+        echo '<br>WRITER: ' . libraryUtils::getDateTimeHoursDiff($dto['WRITER'], $dto['nWRITER']);
+        
+        echo '<br>- - - -  -- - - - - - DEADLINE FOR WRITER -2Hours<br>';
+        echo '<br>UTC/SYSTEM: ' . libraryUtils::subDateHours($dto['UTC'], 2, $mdbc['DB_DATE_FORMAT']);
+        echo '<br>ORDER: ' . libraryUtils::subDateHours($dto['ORDER'], 2, $mdbc['DB_DATE_FORMAT']);
+        echo '<br>WRITER: ' . libraryUtils::subDateHours($dto['WRITER'], 2, $mdbc['DB_DATE_FORMAT']);
+        
+        
+        
+        echo '<br>- - - -  -- - - - - - HOURS LEFT -2Hours<br>';
+        echo '<br>UTC/SYSTEM: ' . (libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']) - 2);
+        echo '<br>ORDER: ' . (libraryUtils::getDateTimeHoursDiff($dto['ORDER'], $dto['nORDER']) - 2);
+        echo '<br>WRITER: ' . (libraryUtils::getDateTimeHoursDiff($dto['WRITER'], $dto['nWRITER']) - 2);
+        
+        //var_dump($data_order['TimeZoneID']);
+        
+        //echo $data_timezone['TZ'];
+        
+        //echo '<br>- - - -  -- - - - - - NOW <br>';
+        //toGreenwichTime(date('Y-m-d H:i:s'), $data_timezone['TZ']);
+        //echo '<br>- - - -  -- - - - - - DEADLINE <br>';
+        //toGreenwichTime($data_order['DateDeadline'], $data_timezone['TZ']);
+        
         
         
         //$usertime = timeInfo($data_order['TimeZone']);

@@ -166,7 +166,7 @@
             <?php
                 foreach($model['CUSTOMER']['DATA_TIMEZONES'] as $e) {
                     $selected = '';
-                    if ($model['CUSTOMER']['DATA']['TimeZone'] == $e['ID'])
+                    if ($model['CUSTOMER']['DATA']['TimeZoneID'] == $e['ID'])
                         $selected = ' selected="selected"';
                     echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Title'].'</option>';
                 }

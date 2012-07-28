@@ -53,9 +53,12 @@ class libraryUtils {
         return $_groups;
     }
     
-    static public function getDateTimeHoursDiff ($targetDate) {
+    static public function getDateTimeHoursDiff ($targetDate, $startDate = false) {
         $target_m = strtotime($targetDate);
-        $diff = ($target_m - mktime());
+        if (empty($startDate))
+            $diff = ($target_m - mktime());
+        else
+            $diff = ($target_m - strtotime($startDate));
         $toHours = 3600;
         return round($diff / $toHours, 1);
     }

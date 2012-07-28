@@ -1,130 +1,44 @@
 <?php
 
-
-    /**    Returns the offset from the origin timezone to the remote timezone, in seconds.
-    *    @param $remote_tz;
-    *    @param $origin_tz; If null the servers current timezone is used as the origin.
-    *    @return int;
-    */
-    function get_timezone_offset($remote_tz, $origin_tz = null) {
-        if($origin_tz === null) {
-            if(!is_string($origin_tz = date_default_timezone_get())) {
-                return false; // A UTC timestamp was returned -- bail out!
-            }
-        }
-        $origin_dtz = new DateTimeZone($origin_tz);
-        $remote_dtz = new DateTimeZone($remote_tz);
-        $origin_dt = new DateTime("now", $origin_dtz);
-        $remote_dt = new DateTime("now", $remote_dtz);
-        $offset = $origin_dtz->getOffset($origin_dt) - $remote_dtz->getOffset($remote_dt);
-        return $offset;
-    }
-
-
-    function toUserTime ($timezone, $dateTime = false, $format = 'Y-m-d H:i:s') {
-        if (empty($dateTime))
-            return date($format, time() + ($timezone * 3600 ));
-        return date($format, strtotime($dateTime) + ($timezone * 3600 ));
-    }
-    
-    function toServerTime ($dateTime, $format = 'Y-m-d H:i:s') {
-        return date($format, strtotime($dateTime) + date('Z'));
-    }
-    
-    function timeInfo ($userTimeZone, $userTime = false, $serverTime = false, $format = 'Y-m-d H:i:s') {
-        $serverTimeZone = date('Z') / 3600;
+    function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
+        $date = false;
         
-        /* SERVER INFO */
-        $server = array();
-        $server['NOW'] = date($format);
-        $server['OFFSET'] = $serverTimeZone;
-        if ($serverTimeZone == 0)
-            $server['GMT'] = 'Etc/GMT';
-        elseif ($serverTimeZone > 0)
-            $server['GMT'] = 'Etc/GMT+' . $serverTimeZone;
+        /* set time with server TZ or specific TZ */
+        if (empty($fromTZ))
+            $date = new DateTime($dt);
         else
-            $server['GMT'] = 'Etc/GMT' . $serverTimeZone;
-        //$server['IN_USER'] = toUserTime($userTimeZone, $server['NOW']);
+            $date = new DateTime($dt, new DateTimeZone($fromTZ));
         
-        /* USER */
-        $user = array();
-        $user['NOW'] = toUserTime($userTimeZone, date($format));
-        $user['OFFSET'] = $userTimeZone;
-        if ($userTimeZone == 0)
-            $user['GMT'] = 'Etc/GMT';
-        elseif ($userTimeZone > 0)
-            $user['GMT'] = 'Etc/GMT+' . $userTimeZone;
-        else
-            $user['GMT'] = 'Etc/GMT' . $userTimeZone;
-        //$user['IN_SERVER'] = toServerTime($user['NOW']);
+        /* set target TZ */
+        $date->setTimezone(new DateTimeZone($toTZ));
         
-        
-        
-        
-        /* REQUESTED TIME */
-        if (!empty($userTime)) {
-            $req['USER'] = $userTime;
-            $req['USER_TO_SERVER'] = toServerTime($userTime);
-        }
-        if (!empty($serverTime)) {
-            $req['SERVER'] = $serverTime;
-            $req['SERVER_TO_USER'] = toUserTime($userTimeZone, $serverTime);
-        }
-        
-        $req['TZ'] = get_timezone_offset($user['GMT'], $server['GMT']);
-
-        return array(
-            'SERVER' => $server,
-            'USER' => $user,
-            'INFO' => $req
-        );
+        return $date->format($format);
     }
 
-/*
-    // get server time by user
-    // austin -6   <--- user is here
-    // kiev +2     <--- server is here
-    // diff 8 hours
-    function stime ($userDateTimeString, $userTimezone) {
-        $stime = array();
+    function getGreenwichTime ($dateTimeString, $format = 'Y-m-d H:i:s') {
+        /* Server Time */
+        $date = new DateTime($dateTimeString);
         
-        $userTimezone *= 3600;
-        
-        /* CURRENT TIME* /
-        $utime['C_SERVER'] = date('Y-m-d H:i:s');
-        $utime['C_USER'] = date('Y-m-d H:i:s', time() + $userTimezone);
-        
-        /* OFFSET * /
-        $utime['SEVER_OFFSET'] = date('Z') / 3600;
-        $utime['USER_OFFSET'] = $userTimezone / 3600;
-        
-        /* PROVIDED TIME  * /
-        $utime['USER'] = date('Y-m-d H:i:s', strtotime($serverDateTimeString) + $userTimezone);
-        $utime['SERVER'] = $serverDateTimeString;
-        
-        return $stime;
+        /* London Time */
+        $date->setTimezone(new DateTimeZone('GMT0'));
+        //echo 'Server Time: ' . $date->format('Y-m-d H:i:sP') . '<br>';
+        return $date->format($format);
     }
 
-    // get user time by server
-    function utime ($userTimezone) {
-        $utime = array();
-        
-        $userTimezone *= 3600;
-        
-        
-        
-        
-        /* DIFF * /
-        $utime['DIFF'] = (date('Z') / 3600) - $userTimezone / 3600;
-        
-        /* GMT * /
-        $utime['U_GMT'] = 'GMT ' . $userTimezone / 3600;
-        $utime['S_GMT'] = 'GMT ' . $utime['SEVER_OFFSET'];
-        
-        
-        return $utime;
-    }*/
+    function serverTime ($timeString, $userTimeZone) {
 
+        /* Server Time */
+        $date = new DateTime($timeString);
+        echo 'Server Time: ' . $date->format('Y-m-d H:i:sP') . '<br>';
+        
+        /* London Time */
+        $date->setTimezone(new DateTimeZone('GMT0'));
+        echo 'London Time: ' . $date->format('Y-m-d H:i:sP') . '<br>';
+        
+        /* User Time */
+        $date->setTimezone(new DateTimeZone($userTimeZone));
+        echo $userTimeZone . ' Time: ' . $date->format('Y-m-d H:i:sP') . '<br>';
+    }
 
 
     // global methods
