@@ -1,6 +1,10 @@
 <?php
 
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
+        
+        if (empty($dt))
+            $dt = date($format);
+        
         $date = false;
         
         /* set time with server TZ or specific TZ */

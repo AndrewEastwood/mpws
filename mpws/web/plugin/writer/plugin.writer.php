@@ -1308,6 +1308,12 @@ class pluginWriter {
             ->where('ID', '=', $oid)
             ->fetchRow();
         
+        $dataTZ = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $data['TimeZoneID'])
+            ->fetchRow();
+        
         // get order this year
         $data_orders = $toolbox->getDatabaseObj()
             ->select('*')
@@ -1326,6 +1332,9 @@ class pluginWriter {
         }
 
         $model['PLUGINS']['WRITER']['DATA'] = $data;
+        $model['PLUGINS']['WRITER']['DATA_TZ'] = $dataTZ;
+        $model['PLUGINS']['WRITER']['TIME'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'Y-m-d H:i:s');
+        $model['PLUGINS']['WRITER']['TIME_OFFSET'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'P');
         $model['PLUGINS']['WRITER']['DATA_ORDERS'] = $data_orders;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.details'];
 
@@ -1586,6 +1595,12 @@ class pluginWriter {
             ->from('writer_students')
             ->where('ID', '=', $oid)
             ->fetchRow();
+        
+        $dataTZ = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $data['TimeZoneID'])
+            ->fetchRow();
 
         if (empty($data)) {
             // set template
@@ -1594,6 +1609,9 @@ class pluginWriter {
         }
 
         $model['PLUGINS']['WRITER']['DATA'] = $data;
+        $model['PLUGINS']['WRITER']['DATA_TZ'] = $dataTZ;
+        $model['PLUGINS']['WRITER']['TIME'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'Y-m-d H:i:s');
+        $model['PLUGINS']['WRITER']['TIME_OFFSET'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'P');
         $model['PLUGINS']['WRITER']['DATA_ORDERS'] = $data_orders;
         $model['PLUGINS']['WRITER']['DATA_SALES'] = $data_sales;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.students.details'];
@@ -2134,10 +2152,43 @@ class pluginWriter {
         $_dr_publicStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'PublicStatus');
         $_dr_internalStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'InternalStatus');
         
+        
+        $data_timezone_o = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $data_order['TimeZoneID'])
+            ->fetchRow();
+        /*$data_timezone_u = $customer->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $user_student['TimeZoneID'])
+            ->fetchRow();*/
+        $data_timezone_w = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('mpws_timezone')
+            ->where('ID', '=', $data_writer['TimeZoneID'])
+            ->fetchRow();
+        
+        /* Local Deadlines */
+        $dto['UTC'] = $data_order['DateDeadline'];
+        $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_timezone_o['TZ'], 'UTC');
+        $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_timezone_w['TZ'], 'UTC');
+        /* Local Times */
+        $dto['nUTC'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
+        $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_o['TZ']);
+        $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_w['TZ']);
+        /* Offsets */
+        $dto['pUTC'] = convDT(false, 'UTC', false, 'P');
+        $dto['pORDER'] = convDT(false, $data_timezone_o['TZ'], false, 'P');
+        $dto['pWRITER'] = convDT(false, $data_timezone_w['TZ'], false, 'P');
+        /* Hours Left */
+        $dto['LEFT'] = libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
+        
         //var_dump($_dr_publicStatus);
         
 
         $model['PLUGINS']['WRITER']['DATA'] = $data_order;
+        $model['PLUGINS']['WRITER']['TIME'] = $dto;
         $model['PLUGINS']['WRITER']['DATA_P_STAT'] = $_dr_publicStatus;
         $model['PLUGINS']['WRITER']['DATA_I_STAT'] = $_dr_internalStatus;
         $model['PLUGINS']['WRITER']['DATA_DOCUMENT'] = $data_document;

@@ -148,21 +148,56 @@
             <div class="MPWSSeparator"></div>
             
             
-            <h3>Dates And Deadline</h3>
+            <h3>Local Dates And Deadline</h3>
             
-            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
-            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['DateCreated'];?></span>
-            <div class="MPWSSeparator"></div>
-
-            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
-            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['DateDeadline'];?></span>
-            <div class="MPWSSeparator"></div>
-
-            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
-            <span class="MPWSValue"><?=libraryUtils::getDateTimeHoursDiff($model['PLUGINS']['WRITER']['DATA']['DateDeadline']);?>&nbsp;</span>
-            <div class="MPWSSeparator"></div>
+            <fieldset>
+                <legend>UTC Time</legend>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['nUTC'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['UTC'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['pUTC'];?> Hours</span>
+                <div class="MPWSSeparator"></div>
+            </fieldset>
             
-            <hr size="2"/>
+            <br/>
+            
+            <fieldset>
+                <legend>Writer Local Time</legend>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['nWRITER'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['WRITER'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['pWRITER'];?> Hours</span>
+                <div class="MPWSSeparator"></div>
+                <big>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Hours To Complete:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['LEFT'];?></span>
+                </big>
+                <div class="MPWSSeparator"></div>
+            </fieldset>
+            
+            <br/>
+            
+            <fieldset>
+                <legend>Order Local Time</legend>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['nORDER'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['ORDER'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['pORDER'];?> Hours</span>
+                <div class="MPWSSeparator"></div>
+            </fieldset>
+            
             <h3>Order Price</h3>
             
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Type</label>

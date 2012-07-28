@@ -15,6 +15,7 @@
         'Email' => 'order_email',
         'SourceLinks' => 'order_source_links',
         'TimeZoneID' => 'order_timezone',
+        'TimeZoneName' => 'order_timezone2',
         'DateDeadline' => 'order_datedeadline',
         'DocumentID' => 'order_doc',
         'SubjectID' => 'order_subject'

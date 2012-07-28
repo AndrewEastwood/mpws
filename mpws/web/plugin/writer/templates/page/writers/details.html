@@ -13,6 +13,18 @@
             <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Login:</label>
             <span><?=$model['PLUGINS']['WRITER']['DATA']['Login'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
+            
+            <h3>Local Time</h3>
+            
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Time Zone:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA_TZ']['Title'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+                
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Local Time:</label>
+            <span><?=$model['PLUGINS']['WRITER']['TIME'];?>&nbsp; Current Offset: <?=$model['PLUGINS']['WRITER']['TIME_OFFSET'];?> hours</span>
+            <div class="MPWSSeparator"></div>
+                
+            <h3>Additional Information</h3>
 
             <label for="MPWSField_WriterSubjectsID" class="MPWSFieldLabel">Subjects:</label>
             <span><?=$model['PLUGINS']['WRITER']['DATA']['Subjects'];?>&nbsp;</span>

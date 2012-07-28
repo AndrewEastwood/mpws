@@ -1,5 +1,28 @@
 <div class="MPWSContentDisplay">
     <h3>Details</h3>
+    
+    
+        <?php
+            
+            
+
+
+
+echo '<select name="userTimeZone">';
+foreach(DateTimeZone::listIdentifiers() as $tz) {
+    $current_tz = new DateTimeZone($tz);
+    $offset =  $current_tz->getOffset($dt);
+    $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+    $abbr = $transition[0]['abbr'];
+
+    echo '<option value="' ,$tz, '">' ,$tz, ' [' ,$abbr, ' ', formatOffset($offset), ']</option>';
+}
+echo '</select>';  
+            
+        
+        ?>
+    
+    
     <form action="?display=students&action=details&oid=<?=$model['PLUGINS']['WRITER']['oid'];?>" method="POST" class="MPWSForm MPWSFormPreview">
 
         <div class="MPWSFormFields">
@@ -22,6 +45,16 @@
 
             <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Enabled:</label>
             <span><?=empty($model['PLUGINS']['WRITER']['DATA']['Active'])?'No':'Yes';?></span>
+            <div class="MPWSSeparator"></div>
+            
+            <h3>Local Time</h3>
+            
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Time Zone:</label>
+            <span><?=$model['PLUGINS']['WRITER']['DATA_TZ']['Title'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+                
+            <label for="MPWSField_WriterLoginID" class="MPWSFieldLabel">Local Time:</label>
+            <span><?=$model['PLUGINS']['WRITER']['TIME'];?>&nbsp; Current Offset: <?=$model['PLUGINS']['WRITER']['TIME_OFFSET'];?> hours</span>
             <div class="MPWSSeparator"></div>
             
             <hr size="2"/>

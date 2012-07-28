@@ -600,6 +600,9 @@ class customer {
         
         //var_dump($messages);
         
+        // time zones
+        $model['CUSTOMER']['TIME_TZ'] = libraryUtils::getTimeZones();
+        
         // preview or save data
         // if action detected and no error messages
         if ($_SESSION['MPWS_ORDER_SESSION'] == libraryRequest::getPostValue('session_key') && empty($messages)) {
@@ -869,6 +872,7 @@ class customer {
                 ->select('*')
                 ->from('mpws_timezone')
                 ->fetchData();
+        
         
         // set data
         $model['CUSTOMER']['DATA'] = $data;
