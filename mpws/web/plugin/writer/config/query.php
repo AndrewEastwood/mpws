@@ -32,7 +32,28 @@
                 FROM `writer_orders`
                 WHERE WriterID = wr.ID
                 AND PublicStatus = "NEW"
-            ) as `NewOrderCount`
+            ) as `NewOrderCount`, 
+            (
+                SELECT 
+                    count(*) 
+                FROM `writer_orders`
+                WHERE WriterID = wr.ID
+                AND PublicStatus = "REWORK"
+            ) as `ReworkOrderCount`, 
+            (
+                SELECT 
+                    count(*) 
+                FROM `writer_orders`
+                WHERE WriterID = wr.ID
+                AND PublicStatus = "REOPEN"
+            ) as `ReopenOrderCount`, 
+            (
+                SELECT 
+                    count(*) 
+                FROM `writer_orders`
+                WHERE WriterID = wr.ID
+                AND PublicStatus = "TO REFUND"
+            ) as `ToRefundOrderCount`
         FROM `writer_writers`  as `wr` 
         LEFT JOIN `writer_orders` as `wo` ON wr.ID = wo.WriterID
         GROUP BY wr.Name;';

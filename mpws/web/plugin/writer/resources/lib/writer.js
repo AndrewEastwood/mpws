@@ -19,7 +19,7 @@ mpws.module.define('writer', (function(window, document, $){
             //var column_order_new = ['New'];
             //var column_order_pending = ['Pending'];
             //var column_order_working = ['Working'];
-            var rows = [['Name', 'New', 'Pending', 'Working']];
+            var rows = [['Name', 'New', 'Pending', 'Working', 'Reopen', 'Rework', 'To Refund']];
             var _addedRowsCount = 0;
             for (var idx in a.writerToOrderCount) {
                 var _row = a.writerToOrderCount[idx];
@@ -28,7 +28,14 @@ mpws.module.define('writer', (function(window, document, $){
                 //column_order_pending.push(+_row.PendingOrderCount);
                 //column_order_working.push(+_row.InProgressOrderCount);
                 if (+_row.AllOrderCount != 0) {
-                    rows.push([_row.Name, +_row.NewOrderCount, +_row.PendingOrderCount, +_row.InProgressOrderCount]);
+                    rows.push([_row.Name, 
+                            +_row.NewOrderCount, 
+                            +_row.PendingOrderCount, 
+                            +_row.InProgressOrderCount,
+                            +_row.ReopenOrderCount,
+                            +_row.ReworkOrderCount,
+                            +_row.ToRefundOrderCount,
+                    ]);
                     _addedRowsCount++;
                 }
                 //mpws.tools.log();
