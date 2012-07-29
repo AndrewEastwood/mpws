@@ -1308,11 +1308,11 @@ class pluginWriter {
             ->where('ID', '=', $oid)
             ->fetchRow();
         
-        $dataTZ = $toolbox->getDatabaseObj()
+        /*$dataTZ = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
             ->where('ID', '=', $data['TimeZoneID'])
-            ->fetchRow();
+            ->fetchRow();*/
         
         // get order this year
         $data_orders = $toolbox->getDatabaseObj()
@@ -1332,9 +1332,8 @@ class pluginWriter {
         }
 
         $model['PLUGINS']['WRITER']['DATA'] = $data;
-        $model['PLUGINS']['WRITER']['DATA_TZ'] = $dataTZ;
-        $model['PLUGINS']['WRITER']['TIME'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'Y-m-d H:i:s');
-        $model['PLUGINS']['WRITER']['TIME_OFFSET'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'P');
+        $model['PLUGINS']['WRITER']['TIME'] = convDT(false, $data['TimeZone'], false, 'Y-m-d H:i:s');
+        $model['PLUGINS']['WRITER']['TIME_OFFSET'] = convDT(false, $data['TimeZone'], false, 'P');
         $model['PLUGINS']['WRITER']['DATA_ORDERS'] = $data_orders;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.details'];
 
@@ -1596,11 +1595,11 @@ class pluginWriter {
             ->where('ID', '=', $oid)
             ->fetchRow();
         
-        $dataTZ = $toolbox->getDatabaseObj()
+        /*$dataTZ = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
             ->where('ID', '=', $data['TimeZoneID'])
-            ->fetchRow();
+            ->fetchRow();*/
 
         if (empty($data)) {
             // set template
@@ -1609,9 +1608,9 @@ class pluginWriter {
         }
 
         $model['PLUGINS']['WRITER']['DATA'] = $data;
-        $model['PLUGINS']['WRITER']['DATA_TZ'] = $dataTZ;
-        $model['PLUGINS']['WRITER']['TIME'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'Y-m-d H:i:s');
-        $model['PLUGINS']['WRITER']['TIME_OFFSET'] = convDT(false, $model['PLUGINS']['WRITER']['DATA_TZ']['TZ'], false, 'P');
+        //$model['PLUGINS']['WRITER']['DATA_TZ'] = $dataTZ;
+        $model['PLUGINS']['WRITER']['TIME'] = convDT(false, $data['TimeZone'], false, 'Y-m-d H:i:s');
+        $model['PLUGINS']['WRITER']['TIME_OFFSET'] = convDT(false, $data['TimeZone'], false, 'P');
         $model['PLUGINS']['WRITER']['DATA_ORDERS'] = $data_orders;
         $model['PLUGINS']['WRITER']['DATA_SALES'] = $data_sales;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.students.details'];
@@ -2153,34 +2152,34 @@ class pluginWriter {
         $_dr_internalStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'InternalStatus');
         
         
-        $data_timezone_o = $toolbox->getDatabaseObj()
+        /*$data_timezone_o = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
             ->where('ID', '=', $data_order['TimeZoneID'])
-            ->fetchRow();
+            ->fetchRow();*/
         /*$data_timezone_u = $customer->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
             ->where('ID', '=', $user_student['TimeZoneID'])
             ->fetchRow();*/
-        $data_timezone_w = $toolbox->getDatabaseObj()
+        /*$data_timezone_w = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
             ->where('ID', '=', $data_writer['TimeZoneID'])
-            ->fetchRow();
+            ->fetchRow();*/
         
         /* Local Deadlines */
         $dto['UTC'] = $data_order['DateDeadline'];
-        $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_timezone_o['TZ'], 'UTC');
-        $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_timezone_w['TZ'], 'UTC');
+        $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_order['TimeZone'], 'UTC');
+        $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_writer['TimeZone'], 'UTC');
         /* Local Times */
         $dto['nUTC'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
-        $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_o['TZ']);
-        $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_w['TZ']);
+        $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_order['TimeZone']);
+        $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_writer['TimeZone']);
         /* Offsets */
         $dto['pUTC'] = convDT(false, 'UTC', false, 'P');
-        $dto['pORDER'] = convDT(false, $data_timezone_o['TZ'], false, 'P');
-        $dto['pWRITER'] = convDT(false, $data_timezone_w['TZ'], false, 'P');
+        $dto['pORDER'] = convDT(false, $data_order['TimeZone'], false, 'P');
+        $dto['pWRITER'] = convDT(false, $data_writer['TimeZone'], false, 'P');
         /* Hours Left */
         $dto['LEFT'] = libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
         

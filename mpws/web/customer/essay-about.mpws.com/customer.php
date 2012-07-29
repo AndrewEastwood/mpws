@@ -633,19 +633,19 @@ class customer {
                         ->from('writer_subjects')
                         ->where('ID', '=', $data['SubjectID'])
                         ->fetchRow();
-                $timeZone = $customer->getDatabaseObj()
+                /*$timeZone = $customer->getDatabaseObj()
                         ->select('*')
                         ->from('mpws_timezone')
                         ->where('ID', '=', $data['TimeZoneID'])
-                        ->fetchRow();
+                        ->fetchRow();*/
 
                 
-                echo 'WILL SAVE DEADLINE ' . convDT($data['DateDeadline'], 'UTC', $timeZone['TZ']);
+                //echo 'WILL SAVE DEADLINE ' . convDT($data['DateDeadline'], 'UTC', $timeZone['TZ']);
                 
                 $model['CUSTOMER']['DATA_PRICE'] = $priceInfo;
                 $model['CUSTOMER']['DATA_DOC'] = $docInfo;
                 $model['CUSTOMER']['DATA_SUBJECT'] = $subjInfo;
-                $model['CUSTOMER']['DATA_TIMEZONE'] = $timeZone;
+                //$model['CUSTOMER']['DATA_TIMEZONE'] = $timeZone;
                 //$model['CUSTOMER']['DATA_DEADLINE'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
                 //echo '111111111';
                 $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order_preview');
@@ -702,7 +702,7 @@ class customer {
                         'Active' => 0,
                         'IsTemporary' => 1,
                         'UserToken' => $_userToken,
-                        'TimeZoneID' => $data['TimeZoneID'],
+                        'TimeZone' => $data['TimeZone'],
                         'DateCreated' => date($mdbc['DB_DATE_FORMAT']),
                         'DateLastAccess' => date($mdbc['DB_DATE_FORMAT'])
                     );
@@ -776,19 +776,19 @@ class customer {
                 //$_deadlineTime = $_saveTime + (60 * 60 * ($priceInfo['Hours'] + (24 * 7 * $priceInfo['Weeks']))); // uncommet to use standart deadline value by price
                 
                 // get timezone offset
-                $timeZone = $customer->getDatabaseObj()
+                /*$timeZone = $customer->getDatabaseObj()
                         ->select('*')
                         ->from('mpws_timezone')
                         ->where('ID', '=', $data['TimeZoneID'])
-                        ->fetchRow();
+                        ->fetchRow();*/
                 
                 // fill order information
                 $data['StudentID'] = $user['ID'];
                 $data['Price'] = $data['Pages'] * $priceInfo['Price'];
                 $data['Discount'] = 0;
                 $data['Credits'] = round($data['Price'] / 4, 0);
-                $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-                $data['DateDeadline'] = convDT($data['DateDeadline'], 'UTC', $timeZone['TZ']);
+                $data['DateCreated'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC', $data['TimeZone']);
+                $data['DateDeadline'] = convDT($data['DateDeadline'], 'UTC', $data['TimeZone']);
                 //$data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
                 //$data['TimeZone'] = $timeZone['TimeZone'];
                 $data['RefundToken'] = '';
@@ -868,10 +868,10 @@ class customer {
                 ->select('*')
                 ->from('writer_subjects')
                 ->fetchData();
-        $timezones = $customer->getDatabaseObj()
+        /*$timezones = $customer->getDatabaseObj()
                 ->select('*')
                 ->from('mpws_timezone')
-                ->fetchData();
+                ->fetchData();*/
         
         
         // set data
@@ -880,13 +880,15 @@ class customer {
         $model['CUSTOMER']['DATA_PRICES'] = $prices;
         $model['CUSTOMER']['DATA_DOCS'] = $documents;
         $model['CUSTOMER']['DATA_SUBJECTS'] = $subjects;
-        $model['CUSTOMER']['DATA_TIMEZONES'] = $timezones;
+        //$model['CUSTOMER']['DATA_TIMEZONES'] = $timezones;
         
         // populate user fields
         if (!$isPreviewOrSave) {
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order');
-            if ($model['USER']['ACTIVE'])
+            if ($model['USER']['ACTIVE']) {
                 $model['CUSTOMER']['DATA']['Email'] = $user['Email'];
+                $model['CUSTOMER']['DATA']['TimeZone'] = $user['TimeZone'];
+            }
         }
     }
     private function _pageBuyEssay ($customer) {
@@ -1117,12 +1119,12 @@ class customer {
         $user_student = array();
         if ($model['USER']['ACTIVE']) {
             $user_student = $customer->getDatabaseObj()
-                ->select('ID, Email, Name, TimeZoneID')
+                ->select('ID, Email, Name, TimeZone')
                 ->from('writer_students')
                 ->where('ID', '=', $data_order['StudentID'])
                 ->fetchRow();
             $user_writer = $customer->getDatabaseObj()
-                ->select('ID, Email, Name, TimeZoneID')
+                ->select('ID, Email, Name, TimeZone')
                 ->from('writer_writers')
                 ->where('ID', '=', $data_order['WriterID'])
                 ->fetchRow();
@@ -1669,19 +1671,22 @@ class customer {
             
             $deadline = libraryRequest::getPostValue('order_deadline');
             
-            
-            // conver to system deadline
+            // conver to UTC deadline
             //$newDeadline = utime($deadline, );
+            $utcDeadline = convDT($deadline, 'UTC', $data_order['TimeZone']);
+            $utcNow = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
             
-            
+            //echo 'USER DEADLINE: ' . $deadline;
+            //echo 'UTC DEADLINE: ' . $utcDeadline;
+
             // check if deadline is changed
-            if (true || $deadline !== $data_order['DateDeadline']) {
+            if ($utcDeadline !== $data_order['DateDeadline']) {
                 // save new deadline
-                if (true ||  $deadline > date($mdbc['DB_DATE_FORMAT'])) {
+                if ($utcDeadline > $utcNow) {
                     $customer->getDatabaseObj()
                         ->reset()
                         ->update('writer_orders')
-                        ->set(array('DateDeadline' => $deadline))
+                        ->set(array('DateDeadline' => $utcDeadline))
                         ->where('ID', '=', $oid)
                         ->query();
 
@@ -1706,8 +1711,9 @@ class customer {
 
 
                     /* alter already selected order info */
-                    $data_order['DateDeadline'] = $deadline;
-                }
+                    $data_order['DateDeadline'] = $utcDeadline;
+                } else 
+                    $messages[] = 'Deadline - must be greater than ' . convDT(false, $data_order['TimeZone']);
             }
             
             /* save new sources */
@@ -1838,7 +1844,7 @@ class customer {
                 ->from('writer_invoices')
                 ->where('merchant_order_id', '=', $data_order['RefundToken'])
                 ->fetchRow();
-        
+        /*
         $data_timezone_o = $customer->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
@@ -1848,7 +1854,7 @@ class customer {
             ->select('*')
             ->from('mpws_timezone')
             ->where('ID', '=', $user_student['TimeZoneID'])
-            ->fetchRow();*/
+            ->fetchRow();*-/
         $data_timezone_w = $customer->getDatabaseObj()
             ->select('*')
             ->from('mpws_timezone')
@@ -1892,7 +1898,7 @@ class customer {
         echo '<br>UTC/SYSTEM: ' . (libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']) - 2);
         echo '<br>ORDER: ' . (libraryUtils::getDateTimeHoursDiff($dto['ORDER'], $dto['nORDER']) - 2);
         echo '<br>WRITER: ' . (libraryUtils::getDateTimeHoursDiff($dto['WRITER'], $dto['nWRITER']) - 2);
-        
+        */
         //var_dump($data_order['TimeZoneID']);
         
         //echo $data_timezone['TZ'];
@@ -1907,7 +1913,40 @@ class customer {
         //$usertime = timeInfo($data_order['TimeZone']);
         //echo '<pre>' . print_r($usertime, true) . '</pre>';
         
+        /* Local Deadlines */
+        $dto['UTC'] = $data_order['DateDeadline'];
+        $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_order['TimeZone'], 'UTC');
+        if (!empty($user_writer['TimeZone']))
+            $dto['WRITER'] = convDT($data_order['DateDeadline'], $user_writer['TimeZone'], 'UTC');
+        /* Local Times */
+        $dto['nUTC'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
+        $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_order['TimeZone']);
+        if (!empty($user_writer['TimeZone']))
+            $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $user_writer['TimeZone']);
+        /* Offsets */
+        $dto['pUTC'] = convDT(false, 'UTC', false, 'P');
+        $dto['pORDER'] = convDT(false, $data_order['TimeZone'], false, 'P');
+        if (!empty($user_writer['TimeZone']))
+            $dto['pWRITER'] = convDT(false, $user_writer['TimeZone'], false, 'P');
+        /* Hours Left */
+        $dto['LEFT'] = libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
+        /* Date Created */
+        $dto['dcUTC'] = $data_order['DateCreated'];
+        $dto['dcORDER'] = convDT($data_order['DateCreated'], $data_order['TimeZone'], 'UTC');
+        if (!empty($user_writer['TimeZone']))
+            $dto['dcWRITER'] = convDT($data_order['DateCreated'], $user_writer['TimeZone'], 'UTC');
+        
+        /* Deadline -2 Hours */
+        $dto['h2ORDER'] = libraryUtils::subDateHours($dto['ORDER'], 2, $mdbc['DB_DATE_FORMAT']);
+        $dto['h2WRITER'] = libraryUtils::subDateHours($dto['WRITER'], 2, $mdbc['DB_DATE_FORMAT']);
+        
+        if ($model['USER']['IS_WRITER'])
+            $model['CUSTOMER']['USER'] = $user_writer;
+        if ($model['USER']['IS_STUDENT'])
+            $model['CUSTOMER']['USER'] = $user_student;
+        
         $model['CUSTOMER']['DATA'] = $data_order;
+        $model['CUSTOMER']['TIME'] = $dto;
         //$model['CUSTOMER']['TIME'] = utime(date('Y-m-d H:i:s'), $data_order['TimeZone']);
         /*$model['CUSTOMER']['TIME_CREATED'] = utime($data_order['DateCreated'], $data_order['TimeZone']);
         $model['CUSTOMER']['TIME_DEADLINE'] = utime($data_order['DateDeadline'], $data_order['TimeZone']);*/
@@ -1920,7 +1959,7 @@ class customer {
         $model['CUSTOMER']['DATA_INVOICE_ORDER'] = $data_invoice_order;
         $model['CUSTOMER']['DATA_INVOICE_REFUND'] = $data_invoice_refund;
         $model['CUSTOMER']['DATA_SOURCES'] = $data_sources;
-        $model['CUSTOMER']['DATA_DEADLINE'] = libraryUtils::subDateHours($data_order['DateDeadline'], 2, $mdbc['DB_DATE_FORMAT']);
+        //$model['CUSTOMER']['DATA_DEADLINE'] = libraryUtils::subDateHours($data_order['DateDeadline'], 2, $mdbc['DB_DATE_FORMAT']);
         $model['CUSTOMER']['MESSAGES'] = $messages;
         //$model['CUSTOMER']['template'] = $plugin['templates']['page.orders.details'];
     }
@@ -1929,7 +1968,7 @@ class customer {
         // get new tasks
         //echo $_SESSION['WEB_USER']['TYPE'].'ID'. '='. $_SESSION['WEB_USER']['ID'];
         $data = array();
-        if ($model['USER']['IS_WRITER'])
+        if ($model['USER']['IS_WRITER']) {
             $data = $customer->getDatabaseObj()
                     ->reset()
                     ->select('*')
@@ -1938,6 +1977,19 @@ class customer {
                     ->andWhere('PublicStatus', '<>', 'CLOSED')
                     ->andWhere('InternalStatus', '<>', 'REJECTED')
                     ->fetchData();
+            // get user
+            if ($model['USER']['ACTIVE']) {
+                $mdbc = $customer->getCustomerConfiguration('MDBC');
+                $model['CUSTOMER']['DB_DATE_FORMAT'] = $mdbc['DB_DATE_FORMAT'];
+                $model['CUSTOMER']['USER'] = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('TimeZone')
+                    ->from('writer_writers')
+                    ->where('ID', '=', $model['USER']['ID'])
+                    ->fetchRow();
+            }
+            
+        }
         if ($model['USER']['IS_STUDENT'])
             $data = $customer->getDatabaseObj()
                     ->reset()
@@ -1951,6 +2003,18 @@ class customer {
     }
     private function _accountDeskCommonHistoryOrders ($customer) {
         $model = &$customer->getModel();
+        $mdbc = $customer->getCustomerConfiguration('MDBC');
+        
+        // user
+        $user_writer = array();
+        if ($model['USER']['ACTIVE']) {
+            $model['CUSTOMER']['USER'] = $customer->getDatabaseObj()
+                ->select('TimeZone')
+                ->from('writer_writers')
+                ->where('ID', '=', $model['USER']['ID'])
+                ->fetchRow();
+        }
+        
         $data_orders = array();
         $data_suma = 0;
         if (libraryRequest::isPostFormAction('show orders')) {
@@ -1975,6 +2039,7 @@ class customer {
             $model['CUSTOMER']['DATA_DATE_START'] = libraryRequest::getPostValue('start_date');
             $model['CUSTOMER']['DATA_DATE_END'] = libraryRequest::getPostValue('end_date');
         }
+        $model['CUSTOMER']['DB_DATE_FORMAT'] = $mdbc['DB_DATE_FORMAT'];
         $model['CUSTOMER']['DATA'] = $data_orders;
         $model['CUSTOMER']['DATA_SUMA'] = $data_suma;
     }
@@ -2037,12 +2102,12 @@ class customer {
             if (!empty($doubleUser))
                 $messages[] = 'This login is already used.';
 
-            var_dump($messages);
-            var_dump($data);
+            //var_dump($messages);
+            //var_dump($data);
             //var_dump(array_keys($data));
             //echo '<br><br><br>';
             //var_dump(array_values($data));
-            
+
             // user has changed account information
             $data['ModifiedBy'] = 'USER';
             
@@ -2062,10 +2127,10 @@ class customer {
                 Billing_FirstName, Billing_LastName,
                 Billing_Email, Billing_Phone, Billing_Address,
                 Billing_City, Billing_State, Billing_PostalCode,
-                Billing_Country';
+                Billing_Country, TimeZone';
         if ($model['USER']['IS_WRITER'])
             $selectFields = 'Name, Login, Subjects, CardNumber, 
-                CardType, University, Email, IM, Phone';
+                CardType, University, Email, IM, Phone, TimeZone';
         
         // get user information
         $data = $customer->getDatabaseObj()
@@ -2079,6 +2144,8 @@ class customer {
         //var_dump($selectFields);
         //var_dump($data);
         
+        // time zones
+        $model['CUSTOMER']['TIME_TZ'] = libraryUtils::getTimeZones();
         $model['CUSTOMER']['DATA'] = $data;
         $model['CUSTOMER']['MESSAGES'] = $messages;
         //$data['Password'] = false;

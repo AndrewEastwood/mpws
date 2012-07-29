@@ -4,11 +4,13 @@
 
 <?php
     if(count($model['CUSTOMER']['MESSAGES'])) {
-        echo '<b>We\'ve found some errors in the fields below:</b>';
+        echo '<div id="msg02">
+        <span><b>We\'ve found some issues in the fields below:</b></span>';
         echo '<ul>';
         foreach ($model['CUSTOMER']['MESSAGES'] as $msg)
             echo '<li>' . $msg . '</li>';
         echo '</ul>';
+        echo '</div>';
     }
 ?>
 
@@ -34,22 +36,28 @@
         <div class="MPWSSeparator"></div>
 
         <h3>Dates And Deadline</h3>
-
-        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
-        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['DateCreated'];?></span>
+        
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['TimeZone'];?></span>
         <div class="MPWSSeparator"></div>
-
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['pORDER'];?> Hours</span>
+        <div class="MPWSSeparator"></div>
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['dcORDER'];?></span>
+        <div class="MPWSSeparator"></div>
+        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['nORDER'];?></span>
+        <div class="MPWSSeparator"></div>
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
+        <span class="MPWSValue"><big><?=$model['CUSTOMER']['TIME']['LEFT'];?></big>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
         <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
         <span class="MPWSValue">
-            <input type="text" class="MPWSTextBox MPWSControlOrderDateRange" name="order_deadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>
+            <input name="order_deadline" id="MPWSControlMakeOrderDateDeadlineID" value="<?=$model['CUSTOMER']['TIME']['ORDER'];?>"/>
         </span>
         <div class="MPWSSeparator"></div>
 
-        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
-        <span class="MPWSValue"><?=libraryUtils::getDateTimeHoursDiff($model['CUSTOMER']['DATA']['DateDeadline']);?>&nbsp;</span>
-        <div class="MPWSSeparator"></div>
-
-        <hr size="2"/>
         <h3>Order Price</h3>
 
         <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Type</label>

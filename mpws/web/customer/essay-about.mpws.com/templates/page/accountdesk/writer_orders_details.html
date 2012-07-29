@@ -5,11 +5,13 @@
 
 <?php
     if(count($model['CUSTOMER']['MESSAGES'])) {
-        echo '<b>We\'ve found some errors in the fields below:</b>';
+        echo '<div id="msg02">
+        <span><b>Search results</b></span>';
         echo '<ul>';
         foreach ($model['CUSTOMER']['MESSAGES'] as $msg)
             echo '<li>' . $msg . '</li>';
         echo '</ul>';
+        echo '</div>';
     }
 ?>
 
@@ -36,19 +38,47 @@
 
         <h3>Dates And Deadline</h3>
 
-        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
-        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['DateCreated'];?></span>
-        <div class="MPWSSeparator"></div>
-
-        <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
-        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA_DEADLINE'];?></span>
-        <div class="MPWSSeparator"></div>
-
-        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
-        <span class="MPWSValue"><?=libraryUtils::getDateTimeHoursDiff($model['CUSTOMER']['DATA']['DateDeadline']) - 2;?>&nbsp;</span>
-        <div class="MPWSSeparator"></div>
-
-        <hr size="2"/>
+        <fieldset>
+            <legend>Owner Local Time</legend>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['TimeZone'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['pORDER'];?> Hours</span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['dcORDER'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['nORDER'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h2ORDER'];?></span>
+            <div class="MPWSSeparator"></div>
+        </fieldset>
+        
+        <fieldset>
+            <legend>Your Local Time</legend>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['USER']['TimeZone'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['pWRITER'];?> Hours</span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['dcWRITER'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['nWRITER'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h2WRITER'];?></span>
+            <div class="MPWSSeparator"></div>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
+            <span class="MPWSValue"><big><?=($model['CUSTOMER']['TIME']['LEFT'] - 2);?></big>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+        </fieldset>
+        
         <h3>General Information</h3>
 
         <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Academic Level</label>

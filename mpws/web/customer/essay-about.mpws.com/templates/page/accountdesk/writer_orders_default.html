@@ -13,6 +13,7 @@
             <td class="cell01">Reworks</td>
             <td class="cell01">Created</td>
             <td class="cell01">Deadline</td>
+            <td class="cell01">Hours Left</td>
         </tr>
     <?php foreach($groupEntry as $idx => $entry) : ?>
         <?php $__className = 'cell02'.(($idx%2==0)?'a':'b'); ?>
@@ -25,8 +26,15 @@
             <td class="<?=$__className;?>"><?=$entry['Pages'];?></td>
             <td class="<?=$__className;?>"><?=$entry['Price'];?></td>
             <td class="<?=$__className;?>"><?=$entry['ReworkCount'];?></td>
-            <td class="<?=$__className;?>"><?=$entry['DateCreated'];?></td>
-            <td class="<?=$__className;?>"><?=$entry['DateDeadline'];?></td>
+            <td class="<?=$__className;?>">
+                <?=convDT($entry['DateCreated'],$model['CUSTOMER']['USER']['TimeZone'],'UTC');?>
+            </td>
+            <td class="<?=$__className;?>">
+                <?=libraryUtils::subDateHours(convDT($entry['DateDeadline'],$model['CUSTOMER']['USER']['TimeZone'],'UTC'), 2, $model['CUSTOMER']['DB_DATE_FORMAT']);?>
+            </td>
+            <td class="<?=$__className;?>">
+                <?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline'], convDT(false, 'UTC'))-2;?>
+            </td>
         </tr>
     <?php endforeach ?>
     </table>

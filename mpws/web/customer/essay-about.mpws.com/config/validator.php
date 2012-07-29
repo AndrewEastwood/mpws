@@ -14,8 +14,7 @@
         'Sources' => 'order_sources',
         'Email' => 'order_email',
         'SourceLinks' => 'order_source_links',
-        'TimeZoneID' => 'order_timezone',
-        'TimeZoneName' => 'order_timezone2',
+        'TimeZone' => 'order_timezone',
         'DateDeadline' => 'order_datedeadline',
         'DocumentID' => 'order_doc',
         'SubjectID' => 'order_subject'
@@ -44,7 +43,8 @@
         'Billing_LastName' => 'user_billing_lastname',
         'Billing_Phone' => 'user_billing_phone',
         'Billing_PostalCode' => 'user_billing_postalcode',
-        'Billing_State' => 'user_billing_state'
+        'Billing_State' => 'user_billing_state',
+        'TimeZone' => 'user_timezone'
     );
     
     $customer['VALIDATOR']['DATAMAP']['WRITER_ACCOUNT_UPDATE'] = array(
@@ -56,7 +56,8 @@
         'CardNumber' => 'user_cardnumber',
         'CardType' => 'user_cardtype',
         'University' => 'user_university',
-        'IM' => 'user_im'
+        'IM' => 'user_im',
+        'TimeZone' => 'user_timezone'
     );
     
     $customer['VALIDATOR']['DATAMAP']['ACCOUNT_PWD_UPDATE'] = array(
