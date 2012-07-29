@@ -102,6 +102,10 @@ mpws.module.define('writer', (function(window, document, $){
         if($('#chart_div').length)
             mpws.api.pageRequest('get_teamload', _drawChart);
         
+        // order tabs
+        if (mpws.display == 'orders')
+            $("#MPWSOrderMessagesTabsID").tabs();
+        
         // init base url
         if(tinyMCE)
             tinyMCE.baseURL = "http://essay-about.mpws.com/static/wysiwyg/tiny_mce";

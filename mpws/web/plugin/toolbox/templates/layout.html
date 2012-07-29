@@ -11,6 +11,10 @@
         google.load('visualization', '1.0', {'packages':['corechart']});
         // security token
         mpws.token = '<?=libraryRequest::getOrValidatePageSecurityToken();?>';
+        // page
+        mpws.page = '<?=libraryRequest::getPage();?>';
+        // display
+        mpws.display = '<?=libraryRequest::getDisplay();?>';
     </script>
     <?php endif ?>
 </head>

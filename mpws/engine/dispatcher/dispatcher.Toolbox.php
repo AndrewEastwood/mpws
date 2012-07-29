@@ -45,6 +45,10 @@
 
     $_SESSION['MPWS-REALM'] = MPWS_REQUEST;
 
+    $start_time = mktime();
+    //echo '<p style="display:none">Start Time: ' . mktime() . '</p>';
     $controller = new controllerToolbox();
     $controller->processRequests();
+    //echo '<p style="display:none">End Time: ' . mktime() . '</p>';
+    //echo '<p style="display:none">Script Time: ' . (mktime() - $start_time) . '</p>';
 ?>

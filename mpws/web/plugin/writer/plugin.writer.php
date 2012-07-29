@@ -2102,10 +2102,20 @@ class pluginWriter {
                 ->where('merchant_order_id', '=', $data_order['RefundToken'])
                 ->fetchRow();
         
-        $data_messages = $toolbox->getDatabaseObj()
+        $data_messages['MESSAGES'] = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('writer_messages')
             ->where('OrderID', '=', $oid)
+            ->andWhere('Owner', '<>', 'SYSTEM')
+            ->orderBy('DateCreated')
+            ->order('DESC')
+            ->fetchData();
+
+        $data_messages['HISTORY'] = $toolbox->getDatabaseObj()
+            ->select('*')
+            ->from('writer_messages')
+            ->where('OrderID', '=', $oid)
+            ->andWhere('Owner', '=', 'SYSTEM')
             ->orderBy('DateCreated')
             ->order('DESC')
             ->fetchData();

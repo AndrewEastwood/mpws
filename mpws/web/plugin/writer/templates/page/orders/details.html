@@ -327,8 +327,19 @@
 
     
     <h3>Messages</h3>
-    <div class="MPWSSection MPWSSectionOrderMessages">
-    <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $entry) { ?>
+    <div id="MPWSOrderMessagesTabsID">
+    	<ul>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $groupKey => $group) { ?>
+        <?php if(empty($group)) continue; ?>
+            <li><a href="#MPWSOrderMessagesTab_<?=$groupKey;?>"><?=$groupKey;?></a></li>
+    <?php } ?>
+	</ul>
+    <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $groupKey => $group) { ?>
+        <?php if(empty($group)) continue; ?>
+
+    <div class="MPWSSection MPWSSectionOrderMessages" id="MPWSOrderMessagesTab_<?=$groupKey;?>">
+
+    <?php foreach($group as $entry) { ?>
         <div class="MPWSSectionOrderMessage MPWSSectionOrderMessage_<?=$entry['Owner'];?>">
             <div class="MPWSBlock MPWSBlockMessageState">
                 <span class="MPWSDivTableCell">
@@ -356,6 +367,11 @@
             </div>
         </div>
     <?php } ?>
+
+    </div>
+    
+    <?php } ?>
+    
     </div>
 
     <hr size="2"/>
