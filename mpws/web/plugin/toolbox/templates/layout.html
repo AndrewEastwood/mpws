@@ -3,6 +3,7 @@
 <head>
     <title>MPWS Toolbox</title>
     <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="/static/toolboxAction.js"></script>
     <?php if (!empty($model['USER']['ACTIVE'])) : ?>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -20,15 +21,19 @@
 </head>
 <body>
 
+<?php if (!empty($model['USER']['ACTIVE'])) : ?>
 <div class="MPWSPage MPWSPageToolbox">
+<?php else : ?>
+<div class="MPWSPage MPWSPageToolbox MPWSPageDisplay_Login">
+<?php endif ?>
 
     <div class="MPWSWrapper MPWSWrapperLayoutToolbox">
         <div class="MPWSLayout MPWSLayoutToolbox">
-            <h2>MPWS Welcomes You!</h2>
+            <h2>TEAM LEAD WORKDESK</h2>
             <?php if (!empty($model['USER']['ACTIVE'])) : ?>
                 <div class="MPWSComponent MPWSComponentUserInfo">
-                    You are signed in as: <b><?=$model['USER']['NAME'];?></b>
                     <form action="index.html" method="POST">
+                        You are signed in as: <b><?=$model['USER']['NAME'];?></b>
                         <input type="submit" name="do" value="logout"/>
                     </form>
                     Site url: <a href="//<?=$_SERVER['HTTP_HOST'];?>" target="_blank"><?=MPWS_CUSTOMER;?></a>
@@ -52,7 +57,10 @@
                         echo '</div>';
                     }
                 ?>
+                <div class="MPWSMainContentWrapper">
                 <?=$model['html']['content'];?>
+                <p class="MPWSEmptyParagraph">&nbsp</p>
+                </div>
             </div>
         </div>
     </div>

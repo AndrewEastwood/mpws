@@ -108,7 +108,7 @@ mpws.module.define('writer', (function(window, document, $){
         
         // init base url
         if(tinyMCE)
-            tinyMCE.baseURL = "http://essay-about.mpws.com/static/wysiwyg/tiny_mce";
+            tinyMCE.baseURL = "/static/wysiwyg/tiny_mce";
     });
 
     return {

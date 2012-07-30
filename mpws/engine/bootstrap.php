@@ -10,7 +10,7 @@
     // set PROD | DEV
     define('MPWS_ENV', 'DEV');
     //
-    define('MPWS_ENABLE_EMAILS', false);
+    define('MPWS_ENABLE_EMAILS', true);
     
     
     //var_dump(parse_url($_SERVER['HTTP_HOST']));

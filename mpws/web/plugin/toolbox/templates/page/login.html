@@ -9,8 +9,14 @@
 ?>
 
 <form action="?<?=(empty($_SERVER['QUERY_STRING'])?'display=home':$_SERVER['QUERY_STRING']);?>" method="POST">
+    <p>
     <input type="text" name="mpws_ulogin" value="" placeholder="Login"/>
+    </p>
+    <p>
     <input type="password" name="mpws_upwd" value="" placeholder="Password"/>
+    </p>
+    <p>
     <input type="submit" name="do" value="SignIn"/>
+    </p>
 </form>
 </div>

@@ -1,15 +1,20 @@
 /* TOOLBOX */
-body {background: #336699 url('toolbox_bg.jpg') repeat-x; color: #333;}
+
+body {/*background: #336699 url('toolbox_bg.jpg') repeat-x*/; color: #333; background-color: #B3C6B9;}
+
 
 h3 {color: #eee;}
 
-.MPWSPageToolbox {margin: 0px auto; width: 1000px; background: #aaa; margin-top: 50px;}
-.MPWSPageToolbox a, .MPWSPageToolbox a:visited {color: #dedede; text-decoration: underline;}
-.MPWSPageToolbox a:hover {color: #fff; text-decoration: underline;}
+.MPWSPageToolbox {margin: 0px auto; width: 1000px; background: #7A9C85; margin-top: 50px;}
+.MPWSPageToolbox a, .MPWSPageToolbox a:visited {color: #DBD1A1; text-decoration: underline;}
+.MPWSPageToolbox a:hover {color: #BF9358; text-decoration: underline;}
+.MPWSPageToolbox hr {background-color: #7A9C85; border-color: #ddd; border-width: 0 0 1px;}
 
+.MPWSMainContentWrapper {background: #7A9C85;}
+    .MPWSMainContentWrapper p.MPWSEmptyParagraph {margin-top: 0px;}
 
 /* Div Table */
-.MPWSDivTable {overflow: hidden; zoom: 1; border: 1px solid #565656; padding: 3px 5px; background: #999;}
+.MPWSDivTable {overflow: hidden; zoom: 1; border: 1px solid #565656; padding: 3px 5px; background: #777;}
     .MPWSDivTable .MPWSDivTableRow {overflow: hidden; zoom: 1; padding: 5px 0px;}
     .MPWSDivTable .MPWSDivTableCell {float: left; width: 50px;}
     .MPWSDivTable .MPWSDivTableRowHeader {border-bottom: 1px solid #eee;}
@@ -32,11 +37,14 @@ h3 {color: #eee;}
     .MPWSDivTable .MPWSDivTableCellDataState_1 {background: url('icons/tick.png') no-repeat;}
 
 /* Form */
-.MPWSForm {}
+.MPWSForm {background-color: #B3C6B9; color: #444;}
+.MPWSForm h3 {color: #444;}
     /* Form Edit */
     .MPWSFormEdit {}
     /* Form Preview */
     .MPWSFormPreview {}
+/* Form Override */
+.MPWSContentDisplay .MPWSForm {background-color: #B3C6B9; color: #444;}
 
 /* Additional Submission Controls */
 .MPWSForm .MPWSAdditionalActions {border: 1px solid #888; background: #aaa; margin: 5px 0; padding: 10px;}
@@ -44,6 +52,8 @@ h3 {color: #eee;}
     .MPWSForm .MPWSAdditionalActions .MPWSCheckbox {vertical-align: middle; margin: 0px; width: 13px; height: 13px;}
 
 /* Components */
+.MPWSComponentUserInfo {}
+    .MPWSComponentUserInfo form {}
 
 
 /* Pagination */
@@ -52,7 +62,7 @@ h3 {color: #eee;}
     .MPWSComponentPagination .MPWSComponentSummaryRow {}
         .MPWSComponentPagination .MPWSComponentSummaryRow label {float: left; width: 130px;}
         .MPWSComponentPagination .MPWSComponentSummaryRow .MPWSValue {}
-    .MPWSComponentPaginationBody {border: 1px solid #565656; padding: 10px; overflow: hidden; zoom: 1;}
+    .MPWSComponentPaginationBody {border: 1px solid #565656; background: #9C967A; padding: 10px; overflow: hidden; zoom: 1;}
         .MPWSComponentPaginationBody .MPWSPaginationEdgeLinks {float: left; border-right: 2px solid #565656; margin-right: 10px;}
         .MPWSComponentPaginationBody .MPWSPaginationPageLinks {}
         .MPWSComponentPaginationBody a.MPWSPaginationLink {display: block; float: left; border: 1px solid #555; padding: 3px 7px; margin: 0px 10px 0px 0px; background: #999; text-decoration: none;}
@@ -107,11 +117,11 @@ h3 {color: #eee;}
 }
 
 .MPWSContentDisplay {
-    background: #aaa;
+    /*background: #7A9C85;
     border-radius: 10px;
-    border: 1px solid #888;
+    border: 1px solid #A1ABDB;
+    box-shadow: 0px 0px 10px #eee;*/
     padding: 5px 15px 15px;
-    box-shadow: 0px 0px 10px #eee;
 }
 
 .MPWSComponent {}
@@ -119,11 +129,17 @@ h3 {color: #eee;}
 .MPWSComponentMenu {float: left; width: 120px; margin-top: 20px;}
 .MPWSComponentMenu ul {margin: 0px; padding: 0px 0px 10px 10px; list-style: none; line-height: 1.5em;}
 .MPWSComponentMenu ul li {}
+.MPWSComponentMenu ul li ul li {padding: 2px 0px 3px;}
+.MPWSComponentMenu ul li ul li:hover {background-color: #D1DDD5; color: #A3783E; padding-left: 10px;}
+.MPWSComponentMenu ul li ul li:hover a {color: #A3783E;}
+.MPWSComponentMenu ul li ul li:hover hr {margin-left: -5px;}
 .MPWSComponentMenu ul li a {font-size: 14px; font-weight: bold;}
 .MPWSComponentMenu ul li ul li a {font-size: 12px; font-weight: normal;}
 
-.MPWSComponentContent {margin-top: 20px;}
-.MPWSComponentContent .MPWSContentDisplay {margin-left: 120px;}
+.MPWSComponentContent {margin-top: 20px; margin-left: 120px;
+    border-radius: 10px;
+    border: 1px solid #fff; background: #fff;}
+.MPWSComponentContent .MPWSContentDisplay {}
     .MPWSComponentContent .MPWSContentDisplayLogin {margin-left: 0px;}
 
 
@@ -136,3 +152,18 @@ h3 {color: #eee;}
 
 a.MPWSLinkButton {border: 1px solid #565656; padding: 3px 5px; background: #999; color: #eee; text-decoration: none;}
     a.MPWSLinkButton:hover {background: #adadad; text-decoration: none;}
+
+.MPWSComponenContentMessages {margin: 0px; border-radius: 0px; border: 0px none;}
+    .MPWSComponenContentMessages ul li {font-size: 12px; font-weight: bold; color: #BF7858;}
+
+/* Plugin Common */
+.MPWSMenu {}
+.MPWSMenu .MPWSMenuHeader {display: none;}
+
+
+/* Plugin Toolbox */
+.MPWSMenuToolbox {display: none;}
+
+.MPWSPageDisplay_Login {}
+    .MPWSPageDisplay_Login .MPWSComponentContent {border: 0px none; margin: 5px; background-color: transparent;}
+    .MPWSPageDisplay_Login .MPWSMainContentWrapper {background-color: transparent;}

@@ -167,7 +167,9 @@ class pluginWriter {
             case 'home' :
             default : {
                 // do default action
-                $this->_displayHome($toolbox, $plugin);
+                //$this->_displayHome($toolbox, $plugin);
+                // override to show queue on home page
+                $this->_displayQueue($toolbox, $plugin);
             }
         }
 
