@@ -5,19 +5,20 @@
 <title>Easy-Essay.com</title>
 <link rel="stylesheet/less" type="text/css" href="/static/public/inner.css">
 <link rel="stylesheet" type="text/css" href="/static/mpwsDisplay.css">
-  	<!-- PNG FIX for IE6 -->
-  	<!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
-	<!--[if lte IE 6]>
-		<script type="text/javascript" src="/static/public/supersleight-min.js"></script>
-	<![endif]-->
+    <!-- PNG FIX for IE6 -->
+    <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
+    <!--[if lte IE 6]>
+        <script type="text/javascript" src="/static/public/supersleight-min.js"></script>
+    <![endif]-->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/static/mpwsAction.js" type="text/javascript"></script>
 <script src="/static/public/less.js" type="text/javascript"></script>
 <script src="/static/public/slide.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="header">
-	<div id="top_menu_wrapper">
-    	<div class="top_menu_base">
+    <div id="top_menu_wrapper">
+        <div class="top_menu_base">
         <?php if($model['USER']['ACTIVE']) : ?>
             <?=$model['HTML']['COMPONENT']['MENU_ACCOUNT'];?>
             <form action="/page/account.html" method="POST">
@@ -35,28 +36,28 @@
             </form>
         <?php endif ?>
         </div>
-    	<div class="top_menu_button">
+        <div class="top_menu_button">
         <?php if($model['USER']['ACTIVE']) : ?>
             Welcome: <?=$model['USER']['NAME'];?>
         <?php else : ?>
             Please Login
         <?php endif ?>
         </div>
-	</div>
+    </div>
     
-	<div id="contacts">
-    	<a href="#">
-        	<img src="/static/contacts_skype.png" />
-			<img src="/static/currently_online.png" style="left:100%;top:-5px;" />
-        	Talk to TeamLead
+    <div id="contacts">
+        <a href="#">
+            <img src="/static/contacts_skype.png" />
+            <img src="/static/currently_online.png" style="left:100%;top:-5px;" />
+            Talk to TeamLead
         </a>
         <a href="#">
-        	<img src="/static/contacts_mail.png" />
-        	Send us eMail
+            <img src="/static/contacts_mail.png" />
+            Send us eMail
         </a>
         <a href="#">
-        	<img src="/static/contacts_phone.png" />
-        	Call Us
+            <img src="/static/contacts_phone.png" />
+            Call Us
         </a>
     </div>
 </div>
