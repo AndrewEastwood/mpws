@@ -1,5 +1,13 @@
 <?php
 
+    function arrExtend (&$arrSrc, $arrExt) {
+        if (empty($arrSrc)) {
+            $arrSrc = $arrExt;
+            return;
+        }
+        $arrSrc = array_merge($arrSrc, $arrExt);
+    }
+
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
         
         if (empty($dt))

@@ -94,7 +94,7 @@
         'TABLE' => 'writer_orders',
         'PAGEKEY' => 'pg',
         'SORTKEY' => 'sort',
-        'SEARCH_KEY_PREFIX' => 'searchbox_order_',
+        'SEARCH_KEY_PREFIX' => 'searchbox_orders_',
         'LIMIT' => '30',
         'SIZE' => '3',
         'EDGES' => 'FIRST-PREV-NEXT-LAST'

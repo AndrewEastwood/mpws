@@ -14,13 +14,15 @@ h3 {color: #eee;}
     .MPWSMainContentWrapper p.MPWSEmptyParagraph {margin-top: 0px;}
 
 /* Div Table */
-.MPWSDivTable {overflow: hidden; zoom: 1; border: 1px solid #565656; padding: 3px 5px; background: #777;}
-    .MPWSDivTable .MPWSDivTableRow {overflow: hidden; zoom: 1; padding: 5px 0px;}
+.MPWSDivTable {overflow: hidden; zoom: 1; border: 1px solid #565656; padding: 3px 5px; background: #ddd; color: #333;}
+    .MPWSDivTable a, .MPWSDivTable a:hover {color: #555;}
+    .MPWSDivTable a:visited {color: #555;}
+    .MPWSDivTable .MPWSDivTableRow {overflow: hidden; zoom: 1; padding: 5px;}
     .MPWSDivTable .MPWSDivTableCell {float: left; width: 50px;}
     .MPWSDivTable .MPWSDivTableRowHeader {border-bottom: 1px solid #eee;}
     .MPWSDivTable .MPWSDivTableCellHeader {font-weight: bold;}
     .MPWSDivTable .MPWSDivTableRowData {border-top: 1px solid #ddd;}
-    .MPWSDivTable .MPWSDivTableRowData:hover {background: #aaa;}
+    .MPWSDivTable .MPWSDivTableRowData:hover {background: #eee;}
     .MPWSDivTable .MPWSDivTableCellData {}
     /* cell sizes */
     .MPWSDivTable .MPWSDivTableCellSize0_5 {width: 25px;}
@@ -58,7 +60,7 @@ h3 {color: #eee;}
 
 /* Pagination */
 .MPWSComponentPagination {}
-    .MPWSComponentPagination .MPWSComponentSummary {background: #777;padding: 10px;font-size: 11px; border-left: 1px solid #565656; border-right: 1px solid #565656;}
+    .MPWSComponentPagination .MPWSComponentSummary {background: #ddd; padding: 10px;font-size: 11px; border-left: 1px solid #565656; border-right: 1px solid #565656; color: #333;}
     .MPWSComponentPagination .MPWSComponentSummaryRow {}
         .MPWSComponentPagination .MPWSComponentSummaryRow label {float: left; width: 130px;}
         .MPWSComponentPagination .MPWSComponentSummaryRow .MPWSValue {}
@@ -70,9 +72,9 @@ h3 {color: #eee;}
         .MPWSComponentPaginationBody a.MPWSPaginationLinkCurrent {background: #ccc; color: #333; text-decoration: none;}
 
 /* SearchBox */
-.MPWSComponentSearchBox {}
-    .MPWSComponentSearchBox .MPWSFormSearchBox {margin: 0px; background: #777; padding: 10px; font-size: 11px; border-style: solid; border-color: #565656; border-width: 1px 1px 0px 1px;}
-    .MPWSComponentSearchBox .MPWSComponentSummary {background: #777;padding: 10px;font-size: 11px; border-left: 1px solid #565656; border-right: 1px solid #565656;}
+.MPWSComponentSearchBox {margin-bottom: 20px;}
+    .MPWSComponentSearchBox .MPWSFormSearchBox {margin: 0px; background: #ddd; padding: 10px; font-size: 12px; color: #333; border-style: solid; border-color: #565656; border-width: 1px;}
+    .MPWSComponentSearchBox .MPWSComponentSummary {background: #9C967A;padding: 10px;font-size: 14px; border: 1px solid #565656; margin-top: -1px;}
 
 
 /* Custom Status */
@@ -97,6 +99,7 @@ h3 {color: #eee;}
     .MPWSDivTableRowDataOrderMessages .MPWSSeparator {height: 5px; clear: left;}
 
 
+    .MPWSSectionOrderMessage {background-color: #ddd;}
 /* layout */
 
 
@@ -167,3 +170,11 @@ a.MPWSLinkButton {border: 1px solid #565656; padding: 3px 5px; background: #999;
 .MPWSPageDisplay_Login {}
     .MPWSPageDisplay_Login .MPWSComponentContent {border: 0px none; margin: 5px; background-color: transparent;}
     .MPWSPageDisplay_Login .MPWSMainContentWrapper {background-color: transparent;}
+
+    
+    
+/* jQuery UI */
+.ui-widget-header {border: 1px solid #9C967A; background: #9C967A;}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {border: 1px solid #9C967A; background: #fff; color: #9C967A;}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {color: #7A9C85;}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {color: #7A9C85;}

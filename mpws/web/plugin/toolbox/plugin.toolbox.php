@@ -51,7 +51,7 @@ class pluginToolbox {
         $model = &$toolbox->getModel();
         switch (libraryRequest::getDisplay('home', !$model['USER']['ACTIVE'], 'login')){
             case 'users' : {
-                $this->_displayUsers($toolbox, $plugin);
+                //$this->_displayUsers($toolbox, $plugin);
                 break;
             }
             case 'login' : {

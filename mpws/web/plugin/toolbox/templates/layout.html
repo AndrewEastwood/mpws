@@ -31,13 +31,20 @@
         <div class="MPWSLayout MPWSLayoutToolbox">
             <h2>TEAM LEAD WORKDESK</h2>
             <?php if (!empty($model['USER']['ACTIVE'])) : ?>
-                <div class="MPWSComponent MPWSComponentUserInfo">
-                    <form action="index.html" method="POST">
-                        You are signed in as: <b><?=$model['USER']['NAME'];?></b>
-                        <input type="submit" name="do" value="logout"/>
-                    </form>
-                    Site url: <a href="//<?=$_SERVER['HTTP_HOST'];?>" target="_blank"><?=MPWS_CUSTOMER;?></a>
+            <div class="MPWSComponent MPWSComponentUserInfo">
+                <form action="index.html" method="POST">
+                    You are signed in as: <b><?=$model['USER']['NAME'];?></b>
+                    <input type="submit" name="do" value="logout"/>
+                </form>
+                Site url: <a href="//<?=$_SERVER['HTTP_HOST'];?>" target="_blank"><?=MPWS_CUSTOMER;?></a>
+                <?php if (!empty($model['html']['TOOLS'])) : ?>
+                <div>
+                    <?php foreach($model['html']['TOOLS'] as $action => $title) : ?>
+                    <a href="<?=$action?>"><?=$title?></a>
+                    <?php endforeach ?>
                 </div>
+                <?php endif ?>
+            </div>
             <?php endif ?>
             <hr size="2">
             <?php if (!empty($model['USER']['ACTIVE'])) : ?>

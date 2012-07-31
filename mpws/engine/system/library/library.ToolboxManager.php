@@ -54,6 +54,9 @@ class libraryToolboxManager {
         foreach ($methodNames as $method)
             $results[] = $this->_pluginsObj->runPlugins($method, &$this);
         //var_dump($results);
+        $model = $this->getModel();
+        if (empty($model['html']['content']))
+            return 'The page you have requested cannot be found.';
         return implode('', $results);
 
         //$allPlugins = $this->_pluginsObj->getAllPlugins();

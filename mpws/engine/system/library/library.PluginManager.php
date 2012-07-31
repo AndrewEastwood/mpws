@@ -54,9 +54,20 @@ class libraryPluginManager
         //echo 'Executing: ' . $action;
         $_p_caller = explode('@', $action);
         if (count($_p_caller) == 1) {
-            //echo ' for all|||     ';
+            
+            // move this property to config
+            $startupPlugin = $this->getPlugin('toolbox');
+            $_p_results['toolbox'] = $startupPlugin['obj']->$action($context, $_plugin);
+
+            // run all other plugins
             foreach ($this->_s_plugins as $_name => $_plugin)
+                if($_name != 'toolbox')
+                    $_p_results[$_name] = $_plugin['obj']->$action($context, $_plugin);
+
+            //echo ' for all|||     ';
+            /*foreach ($this->_s_plugins as $_name => $_plugin)
                 $_p_results[$_name] = $_plugin['obj']->$action($context, $_plugin);
+            */
         } elseif (count($_p_caller) == 2) {
             $_name = strtolower($_p_caller[0]);
             $_plugin = $this->getPlugin($_name);
