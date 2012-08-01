@@ -3,7 +3,9 @@
 class pluginToolbox {
 
     public function main($toolbox, $plugin) {
-        //echo '***TOOLBOX MAIN***';
+        //echo '<br>***TOOLBOX MAIN***';
+        //echo '<br>Requested page is: ' . libraryRequest::getPage();
+        //echo '<br>Plugin key is: ' . $plugin['key'];
         $this->_displayTriggerOnCommonStart($toolbox, $plugin);
         if (libraryRequest::getPage() === strtolower($plugin['key']))
             $this->_displayTriggerOnActive($toolbox, $plugin);
@@ -26,6 +28,8 @@ class pluginToolbox {
             $model['html']['menu'] .= $model['html']['toolbox']['com']['menu'];
         }
 
+        //echo '<br>Render Template: ' . $model['PLUGINS']['TOOLBOX']['template'];
+        
         /* set html data */
         $model['html']['content'] .= $libView->getTemplateResult($model, $model['PLUGINS']['TOOLBOX']['template']);
         //echo '***TOOLBOX RENDER END***';
@@ -43,15 +47,16 @@ class pluginToolbox {
         $model = &$toolbox->getModel();
         if (!$model['USER']['ACTIVE'])
             return;
-        echo 'WOOOHO !!!toolbox api   !!!!! ';
-        
+        //echo 'WOOOHO !!!toolbox api   !!!!! ';
     }
     /* display triggers */
     private function _displayTriggerOnActive($toolbox, $plugin) {
+        //echo '<br>***TOOLBOX ACTIVE***';
+        
         $model = &$toolbox->getModel();
         switch (libraryRequest::getDisplay('home', !$model['USER']['ACTIVE'], 'login')){
             case 'users' : {
-                //$this->_displayUsers($toolbox, $plugin);
+                $this->_displayUsers($toolbox, $plugin);
                 break;
             }
             case 'login' : {
@@ -67,6 +72,7 @@ class pluginToolbox {
 
     }
     private function _displayTriggerOnInActive($toolbox, $plugin) {
+        //echo '<br>***TOOLBOX IN-ACTIVE***';
 
     }
     private function _displayTriggerOnCommonStart($toolbox, $plugin) {

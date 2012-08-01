@@ -8,7 +8,7 @@
     }*/
 ?>
 
-<form action="?<?=(empty($_SERVER['QUERY_STRING'])?'display=home':$_SERVER['QUERY_STRING']);?>" method="POST">
+<form action="?<?=(empty($_SERVER['QUERY_STRING'])?'display=home':libraryRequest::getNewUrl());?>" method="POST">
     <p>
     <input type="text" name="mpws_ulogin" value="" placeholder="Login"/>
     </p>

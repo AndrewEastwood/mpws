@@ -3,6 +3,7 @@
 class pluginEditor {
 
     public function main($toolbox, $plugin) {
+        //echo '<br> ******* EDITOR  ****** ';
         $model = &$toolbox->getModel();
         if (!$model['USER']['ACTIVE'])
             return;
@@ -24,15 +25,20 @@ class pluginEditor {
         /* gat all components as html */
         if ($model['USER']['ACTIVE'] && !empty($model['PLUGINS']['EDITOR']['COM'])) {
             foreach ($model['PLUGINS']['EDITOR']['COM'] as $key => $component)
-                $model['html']['edtor']['com'][strtolower($key)] = $libView->getTemplateResult($model, $model['PLUGINS']['EDITOR']['COM'][$key]['template']);
+                $model['html']['editor']['com'][strtolower($key)] = $libView->getTemplateResult($model, $model['PLUGINS']['EDITOR']['COM'][$key]['template']);
             $model['html']['menu'] .= $model['html']['editor']['com']['menu'];
         }
+        
+        //var_dump($model['html']['menu']);
         
         /* set html data */
         $model['html']['content'] .= $libView->getTemplateResult($model, $model['PLUGINS']['EDITOR']['template']);
     }
 
     public function layout($toolbox, $plugin) {
+        
+        //var_dump();
+        
         //echo '***WRITER LAYOUT***';
         $libView = new libraryView();
         $model = &$toolbox->getModel();
@@ -44,8 +50,11 @@ class pluginEditor {
     
     /* components */
     private function _componentMenu($toolbox, $plugin) {
+        //echo '<br> ******* EDITOR _componentMenu  ****** ';
         $model = &$toolbox->getModel();
         $model['PLUGINS']['EDITOR']['COM']['MENU']['template'] = $plugin['templates']['component.menu'];
+        //echo $plugin['templates']['component.menu'];
+        //echo $model['PLUGINS']['EDITOR']['COM']['MENU']['template'];
     }
     
     /* display triggers */
@@ -59,7 +68,7 @@ class pluginEditor {
         
         // editor tools
         $tools = array(
-            '/?action=edit&inner-session=' . md5('SecretKey!&$f_%') => 'Edit Static Content'
+            '/?action=edit&inner-session=' . md5('SecretKey!&$f_%') => 'Live Site Edit Mode'
         );
         
         arrExtend($model['html']['TOOLS'], $tools);*/

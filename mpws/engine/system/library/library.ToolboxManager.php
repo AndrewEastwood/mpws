@@ -50,6 +50,9 @@ class libraryToolboxManager {
         //----global $config;
         // skip requested method name
         // otherwise simply make chnages according to it
+        
+        //echo $this->getDump();
+        
         $results = array();
         foreach ($methodNames as $method)
             $results[] = $this->_pluginsObj->runPlugins($method, &$this);

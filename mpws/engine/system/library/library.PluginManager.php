@@ -56,14 +56,15 @@ class libraryPluginManager
         if (count($_p_caller) == 1) {
             
             // move this property to config
-            $startupPlugin = $this->getPlugin('toolbox');
-            $_p_results['toolbox'] = $startupPlugin['obj']->$action($context, $_plugin);
+            $startupPlugin = $this->getPlugin('TOOLBOX');
+            $_p_results['TOOLBOX'] = $startupPlugin['obj']->$action($context, $startupPlugin);
 
             // run all other plugins
             foreach ($this->_s_plugins as $_name => $_plugin)
-                if($_name != 'toolbox')
+                if($_name != 'TOOLBOX') {
+                    //echo $_name . ' with action ' . $action . '<br>';
                     $_p_results[$_name] = $_plugin['obj']->$action($context, $_plugin);
-
+                }
             //echo ' for all|||     ';
             /*foreach ($this->_s_plugins as $_name => $_plugin)
                 $_p_results[$_name] = $_plugin['obj']->$action($context, $_plugin);
@@ -80,6 +81,9 @@ class libraryPluginManager
             }
         }
         $_results = implode('', $_p_results);
+        
+        //var_dump($_results);
+        
         return $_results;
     }
     public function getPluginConfig ($name, $key) {

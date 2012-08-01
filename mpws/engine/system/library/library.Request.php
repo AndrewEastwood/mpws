@@ -117,9 +117,11 @@ class libraryRequest {
     }
 
     static function getNewUrl($key = '', $value = '', $remove = array('page', 'action')) {
-        $_data = false;
+        $_data = array();
         parse_str($_SERVER['QUERY_STRING'], $_data);
-        $_data[$key] = $value;
+        
+        if (!empty($key))
+            $_data[$key] = $value;
 
         // remove hidden keys
 
