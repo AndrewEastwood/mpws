@@ -6,6 +6,15 @@
             return;
         }
         $arrSrc = array_merge($arrSrc, $arrExt);
+        return $arrSrc;
+    }
+    
+    function extendParent ($arrSrc, $arrExt) {
+        if (empty($arrSrc)) {
+            $arrSrc = $arrExt;
+            return;
+        }
+        return array_merge_recursive($arrSrc, $arrExt);;
     }
 
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {

@@ -5,112 +5,113 @@
 class libraryStaticResourceManager {
 
     // get merged styling for specific customer
-    public function GetStylesheetContent ($realm) {
+    public function GetStaticContent ($realm) {
 
         $c = MPWS_CUSTOMER;
         $v = MPWS_VERSION;
-        //require_once "global.site.php";
-        $resourceFilePath = DR . '/data/bin/'.$c.'_'.$realm.'.css';
+        $p = strtolower($_SESSION['MPWS_PLUGIN_ACTIVE']);
+        
+        // requested file name
+        $name = $_GET['name'] . DOT . $_GET['type'];
+        
+        // saved resource path
         $resourceFileDir = DR . '/data/bin';
+        $resourceFilePath = $resourceFileDir . '/'.$realm.'_'.$name;
+        
+        // get already saved file
         if (!file_exists($resourceFileDir))
             mkdir($resourceFileDir, 0777, true);
-
-        if (file_exists($resourceFilePath) && !(isset($_GET['force']) || MPWS_ENV === 'DEV'))
+        elseif (file_exists($resourceFilePath) && !(isset($_GET['force']) || MPWS_ENV === 'DEV'))
             return file_get_contents($resourceFilePath);
-
-        //echo $v;
-        //echo DR . '---'.$c.'---';
-
-        //echo 'getting CSS for realm ' . $realm;
-
-        if ($realm === 'toolbox') {
-            // customer files
-            $realmSource = glob(DR . '/web/plugin/*/resources/*.css');
-            $realmSourceP = glob(DR . '/web/plugin/*/resources/plugins/*/*.css');
+        
+        // get configurtion
+        $cfg = false;
+        switch ($realm) {
+            case 'toolbox':
+                $obj = new libraryPluginManager(false);
+                $cfg = $obj->getConfiguration($p, 'RESOURCES');
+                //echo 'use toolbox resources';
+                break;
+            case 'mpws':
+                //echo 'use customer resources';
+                $obj = new libraryCustomerManager($c, false);//getConfig('RESOURCES');
+                $cfg = $obj->getCustomerConfiguration('RESOURCES');
+                break;
         }
-        if ($realm === 'mpws') {
-            // customer files
-            $realmSource = glob(DR . '/web/customer/'.$c.'/resources/*.css');
-            $realmSourceP = glob(DR . '/web/customer/'.$c.'/resources/plugins/*/*.css');
+        
+        
+        //echo '<br>| Loading: ' . $name;
+        //var_dump($cfg);
+        //var_dump($cfg['STATIC'][$name]);
+        //echo $_SESSION['MPWS_PLUGIN_ACTIVE'];
+        
+        if (empty($cfg['STATIC']) || empty($cfg['STATIC'][$name]))
+            return false;
+        
+        $filesToLoad = array();
+        $filesToImport = array();
+        
+        // walk by resource
+        foreach ($cfg['STATIC'][$name] as $origin => $resFiles) {
+            switch (strtoupper($origin)) {
+                case 'DEFAULT':
+                    foreach ($resFiles as $filePath)
+                        if (file_exists(DR . '/web/default/'.$v.'/resources/'.$filePath))
+                            $filesToLoad[] = DR . '/web/default/'.$v.'/resources/'.$filePath;
+                    break;
+                case 'OWNER':
+                    //echo '<br>|Customer file ' . print_r($resFiles, true) ;
+                    if ($realm == 'mpws') {
+                    foreach ($resFiles as $filePath)
+                        if (file_exists(DR . '/web/customer/'.$c.'/resources/'.$filePath))
+                            $filesToLoad[] = DR . '/web/customer/'.$c.'/resources/'.$filePath;
+                    } elseif ($realm == 'toolbox') {
+                    foreach ($resFiles as $filePath)
+                        if (file_exists(DR . '/web/plugin/'.$p.'/resources/'.$filePath))
+                            $filesToLoad[] = DR . '/web/plugin/'.$p.'/resources/'.$filePath;
+                    }
+                    break;
+                case 'AUTO':
+                    foreach ($resFiles as $filePath) {
+                        if (file_exists(DR . '/web/customer/'.$c.'/resources/'.$filePath))
+                            $filesToLoad[] = DR . '/web/customer/'.$c.'/resources/'.$filePath;
+                        elseif (file_exists(DR . '/web/default/'.$v.'/resources/'.$filePath))
+                            $filesToLoad[] = DR . '/web/default/'.$v.'/resources/'.$filePath;
+                    }
+                    break;
+                case 'IMPORT':
+                    $filesToImport = $resFiles;
+                    break;
+            }
         }
-        // default files
-        $default = glob(DR . '/web/default/'.$v.'/resources/*.css');
-        $defaultP = glob(DR . '/web/default/'.$v.'/resources/plugins/*/*.css');
-
-        $container = array_merge($default, $defaultP, $realmSource, $realmSourceP);
-        $metainfo = '/* MPWS CSS PACKAGE */'.PHP_EOL.'/* mpws published on '.date('M d, Y H:i:s').' */'.PHP_EOL;
-        $lineBreak = PHP_EOL.'/* join '.str_pad('', 50, '=').' */'.PHP_EOL;
-
-        //var_dump($container);
-
-        $packages = array();
+        
+        //var_dump($filesToLoad);
+        
+        // set metainfo
+        $metainfo .= '/* Packages: ' . PHP_EOL . ' * ' . 
+                implode(';' . PHP_EOL . ' * ', $filesToLoad) . PHP_EOL . ' */' . 
+                PHP_EOL . PHP_EOL . PHP_EOL;
+        $lineBreak = PHP_EOL.'/*'.str_pad('', 25, '*').' line break '.str_pad('', 25, '*').'*/'.PHP_EOL;
+        
+        // read all files
         $data = '';
-        foreach ($container as $item) {
+        foreach ($filesToLoad as $item) {
             //echo '/*' . $item . '*/';
             $data .= (file_get_contents($item) . $lineBreak);
-            $packages[] = basename($item);
         }
-        //$data = str_replace('%SITEPATH%', SITEURL . "web/resources/".strtolower(TITLE)."/" ,$metainfo);
-
-        $metainfo .= '/* Packages: ' . implode('; ', $packages). ' */' . PHP_EOL . PHP_EOL . PHP_EOL;
+        
+        // add import files (CSS only !!!!)
+        if (!empty($filesToImport))
+            foreach ($filesToImport as $item)
+                $metainfo .= PHP_EOL . '@import url(\'' . $item . '\');';
+        
         // compress data and store package
         if (MPWS_ENV === 'PROD') {
             $data = libraryMinifyCSSCompressor::process($data);
             file_put_contents($resourceFilePath, $metainfo  . $data);
         }
-
-        return $metainfo . $data;
-    }
-
-
-    // get merged styling for specific customer
-    public function GetJavascriptContent ($realm) {
-
-        $c = MPWS_CUSTOMER;
-        $v = MPWS_VERSION;
-        //require_once "global.site.php";
-        $resourceFilePath = DR . '/data/bin/'.$c.'_'.$realm.'.js';
-        $resourceFileDir = DR . '/data/bin';
-        if (!file_exists($resourceFileDir))
-            mkdir($resourceFileDir, 0777, true);
-
-        if (file_exists($resourceFilePath) && !(isset($_GET['force']) || MPWS_ENV === 'DEV'))
-            return file_get_contents($resourceFilePath);
-
-        if ($realm === 'toolbox') {
-            // customer files
-            $realmSource = glob(DR . '/web/plugin/*/resources/lib/*.js');
-            $realmSourceP = glob(DR . '/web/plugin/*/resources/plugins/*/*.js');
-        }
-        if ($realm === 'mpws') {
-            // customer files
-            $realmSource = glob(DR . '/web/customer/'.$c.'/resources/lib/*.js');
-            $realmSourceP = glob(DR . '/web/customer/'.$c.'/resources/plugins/*/*.js');
-        }
-        // default files
-        $default = glob(DR . '/web/default/'.$v.'/resources/lib/*.js');
-        $defaultP = glob(DR . '/web/default/'.$v.'/resources/plugins/*/*.js');
-
-        $container = array_merge($default, $defaultP, $realmSource, $realmSourceP);
-        $metainfo = '/* MPWS JS PACKAGE */'.PHP_EOL.'/* mpws published on '.date('M d, Y H:i:s').' */'.PHP_EOL;
-        $lineBreak = PHP_EOL.'/* join '.str_pad('', 50, '=').' */'.PHP_EOL;
-
-        $packages = array();
-        $data = '';
-        foreach ($container as $item) {
-            $data .= (file_get_contents($item) . $lineBreak);
-            $packages[] = basename($item);
-        }
-        //$data = str_replace('%SITEPATH%', SITEURL . "web/resources/".strtolower(TITLE)."/" ,$metainfo);
-
-        $metainfo .= '/* Packages: ' . implode('; ', $packages). ' */' . PHP_EOL . PHP_EOL . PHP_EOL;
-
-        // compress data and store package
-        if (MPWS_ENV === 'PROD') {
-            $data = libraryMinifyJSCompressor::minify($data);
-            file_put_contents($resourceFilePath, $metainfo . $data);
-        }
-
+        
+        
         return $metainfo . $data;
     }
 

@@ -432,10 +432,11 @@
     
     
     
-    .MPWSStatusExpiration_0 {background-color: #A00;}
-    .MPWSStatusExpiration_1 {background-color: #633;}
-    .MPWSStatusExpiration_2 {background-color: #B66;}
-    .MPWSStatusExpiration_4 {background-color: #A88;}
+    .MPWSStatusExpiration_0 {background-color: #F00;}
+    .MPWSStatusExpiration_1 {background-color: #F44;}
+    .MPWSStatusExpiration_2 {background-color: #F88;}
+    .MPWSStatusExpiration_3 {background-color: #FAA;}
+    .MPWSStatusExpiration_4 {background-color: #FDD;}
     
     
     .MPWSScrollContainer {overflow: scroll; width: 500px; height: 400px; word-break: break-all;}

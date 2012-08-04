@@ -100,6 +100,8 @@ class customer {
         if (!empty($model['LAYOUT']))
             $layout = $model['LAYOUT'];
        
+        //echo $customer->getDump();
+        
         return $libView->getTemplateResult($model, $customer->getCustomerTemplate($layout)); 
     }
     
@@ -149,8 +151,10 @@ class customer {
     private function _componentMenu($customer) {
         $model = &$customer->getModel();
         
+        $display = $customer->getCustomerConfiguration('display');
+        
         // set all menus
-        foreach ($model['CONFIG']['DISPLAY']['PUBLIC_MENU'] as $key => $entry) {
+        foreach ($display['PUBLIC_MENU'] as $key => $entry) {
             $model['CUSTOMER']['COMPONENT']['MENU_' . $key]['DATA'] = $entry;
             $model['CUSTOMER']['COMPONENT']['MENU_' . $key]['TEMPLATE'] = $customer->getCustomerTemplate('component.menu');
         }
@@ -158,11 +162,9 @@ class customer {
         // check for user
         if ($model['USER']['ACTIVE']) {
             $key = strtoupper($_SESSION['WEB_USER']['TYPE']);
-            $model['CUSTOMER']['COMPONENT']['MENU_ACCOUNT']['DATA'] = $model['CONFIG']['DISPLAY']['ACCOUNT_MENU'][$key];
+            $model['CUSTOMER']['COMPONENT']['MENU_ACCOUNT']['DATA'] = $display['ACCOUNT_MENU'][$key];
             $model['CUSTOMER']['COMPONENT']['MENU_ACCOUNT']['TEMPLATE'] = $customer->getCustomerTemplate('component.menu');
         }
-        
-        
         //var_dump($model['CUSTOMER']['COMPONENT']['MENU']);
     }
 

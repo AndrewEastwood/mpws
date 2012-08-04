@@ -28,8 +28,10 @@
             <input type="text" class="MPWSTextBox" name="sale_documenturl" value="<?=$model['PLUGINS']['WRITER']['DATA']['DocumentURL'];?>" placeholder="Document URL"/>
             <div class="MPWSSeparator"></div>
             <label class="MPWSFieldLabel">Sample:</label>
-            <textarea class="MPWSSmartStyleOneTextArea" name="sale_sample"><?=$model['PLUGINS']['WRITER']['DATA']['Sample'];?></textarea>
-            <div class="MPWSSeparator"></div>
+            <div class="MPWSWysiwygContainer">
+                <textarea class="MPWSSmartStyleOneTextArea" id="MPWSSmartStyleOneTextAreaID" name="sale_sample"><?=$model['PLUGINS']['WRITER']['DATA']['Sample'];?></textarea>
+                <div class="MPWSSeparator"></div>
+            </div>
         </div>
 
         <hr size="2"/>
@@ -41,4 +43,13 @@
 </div>
 
 
-<script>tinymce.init({mode: "textareas", theme: "advanced", width: "580", height: "380"});</script>
+<script>
+    
+bkLib.onDomLoaded(function() {
+    new nicEditor({iconsPath : '/static/nicEditorIcons.gif', fullPanel : true}).panelInstance('MPWSSmartStyleOneTextAreaID');
+});
+
+if (window.tinymce)
+    tinymce.init({mode: "textareas", theme: "advanced", width: "580", height: "380"});
+
+</script>

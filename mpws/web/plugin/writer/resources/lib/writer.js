@@ -107,8 +107,10 @@ mpws.module.define('writer', (function(window, document, $){
             $("#MPWSOrderMessagesTabsID").tabs();
         
         // init base url
-        if(tinyMCE)
+        if(window.tinyMCE)
             tinyMCE.baseURL = "/static/wysiwyg/tiny_mce";
+        
+        
     });
 
     return {

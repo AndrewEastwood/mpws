@@ -28,10 +28,11 @@ class controllerStatic {
                 $content = $this->_ieWYSIWYG();
                 return;
             }
-            case 'public' : {
+            // will be removed per extended config
+            /*case 'public' : {
                 $content = $this->_iePublic();
                 return;
-            }
+            }*/
         }
         switch (strtolower($_GET['action'])) {
             case 'default' :
@@ -46,7 +47,7 @@ class controllerStatic {
         //echo '|session realm is ' . $_SESSION['MPWS-REALM'];
         //return true;
 
-        $r = strtolower($_GET['realm']);
+        //$r = strtolower($_GET['realm']);
         //echo '|request realm is ' . $r;
         //echo '|session realm is ' . $_SESSION['MPWS-REALM'];
         //var_dump($_GET);
@@ -67,30 +68,7 @@ class controllerStatic {
     }
 
     /* internal executors */
-    private function _iePublic () {
-        $staticResMgr = new libraryStaticResourceManager();
-        $_module_path = $_GET['name'] . '.' . $_GET['type'];
-        
-        //var_dump($_GET);
-        
-        $_module_path = '/public/' . $_module_path;
-        
-        //echo $_module_path;
-        
-        $filePath = $staticResMgr->GetContent(urldecode($_module_path), $_GET['realm']);
 
-        if (empty($filePath))
-            return false;
-        
-        switch ($_GET['type']) {
-            case 'css':
-                header("Content-type: text/css");
-                return readfile($filePath);
-            case 'js':
-                header("Content-type: text/javascript");
-                return readfile($filePath);  
-        }
-    }
     private function _ieWYSIWYG () {
         $staticResMgr = new libraryStaticResourceManager();
         $_module_path = 'plugins/' . $_GET['name'] . '/' . $_GET['path'] . '.' . $_GET['type'];
@@ -123,7 +101,6 @@ class controllerStatic {
                 return readfile($filePath);
         }
     }
-    
     private function _ieImage() {
         $staticResMgr = new libraryStaticResourceManager();
         $filePath = $staticResMgr->GetContent(urldecode($_GET['name']).'.'.strtolower($_GET['type']), $_GET['realm']);
@@ -143,18 +120,15 @@ class controllerStatic {
         $staticResMgr = new libraryStaticResourceManager();
         //$resFile = $_GET['name'];
         //$resType = $_GET['type'];
-        $content = '';
         switch (strtolower($_GET['type'])) {
             case 'css':
                 header("Content-type: text/css");
-                $content = $staticResMgr->GetStylesheetContent($_GET['realm']);
                 break;
             case 'js':
                 header("Content-type: text/javascript");
-                $content = $staticResMgr->GetJavascriptContent($_GET['realm']);
                 break;
         }
-        return $content;
+        return $staticResMgr->GetStaticContent($_GET['realm']);;
     }
 
 }

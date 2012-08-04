@@ -3,19 +3,29 @@
     // static resources
     $default['RESOURCES'] = array();
 
-    $default['RESOURCES']['PAGE_STYLES'] = Array(
-        'static/mpwsDisplay.css'
+    $default['RESOURCES']['STATIC'] = Array(
+        /* StyleSheets */
+        /* IMPORT Group is used for CSS only */
+        'toolboxDisplay.css' => Array(
+            'DEFAULT' => Array(
+                'plugins/theme/jquery-ui-1.8.21.custom.css'
+            ),
+            'OWNER' => Array(
+            ),
+            'AUTO' => Array(
+                'display.css',
+                'displayShared.css',
+                'displayToolbox.css'
+            ),
+            'IMPORT' => Array(),
+        ),
+        /* JavaScripts */
+        'toolboxAction.js' => Array(
+            'DEFAULT' => Array(
+                'lib/mpws.core.js',
+                'lib/mpws.api.js'
+            ),
+            'OWNER' => Array(),
+            'AUTO' => Array()
+        )
     );
-
-    $default['RESOURCES']['SCRIPTS'] = Array(
-        'static/mpwsAction.js'
-    );
-    
-    $default['RESOURCES']['PUBLIC_PACKAGES'] = array(
-        'jquery-1.7.2.js',
-        'mpws.loader.js',
-        'mpws.core.js',
-        'mpws.api.js'
-    );
-
-    $default['RESOURCES']['DATA_FOLDERS'] = Array();

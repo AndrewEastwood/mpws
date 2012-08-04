@@ -20,9 +20,9 @@ class libraryCustomerManager {
     protected $_databaseObj;
 
     /* dump data info */
-    private $_dump_configPaths;
+    //private $_dump_configPaths;
 
-    function __construct ($customerName = '') {
+    function __construct ($customerName = '', $doInit = true) {
         if (empty($customerName))
             $this->_customerName = MPWS_CUSTOMER;
         else
@@ -44,15 +44,13 @@ class libraryCustomerManager {
         $nativeExLibraryName = 'customer';
         $this->_e_library = DR . '/web/customer/' . $this->_customerName . '/' . $nativeExLibraryName . '.php';
 
-        $this->initManager();
+        if ($doInit)
+            $this->initManager();
         
         
-        $this->_databaseObj = new libraryDataBaseChainQueryBuilder();
 
-        $this->_model['CONFIG'] = $this->_s_configs[$this->_customerName];
+        //$this->_model['CONFIG'] = $this->_s_configs[$this->_customerName];
     }
-
-    
 
     public function getDatabaseObj() {
         return $this->_databaseObj;
@@ -106,81 +104,66 @@ class libraryCustomerManager {
     /* init methods */
     private function initManager () {
         //echo 'initManager';
-        $this->getCustomerConfiguration();
-        $this->getCustomerTemplate();
-        $this->getCustomerProperty();
+        //$this->getCustomerConfiguration();
+        //$this->getCustomerTemplate();
+        //$this->getCustomerProperty();
 
+        $this->_databaseObj = new libraryDataBaseChainQueryBuilder();
+        
         if (file_exists($this->_e_library))
             require_once $this->_e_library;
 
     }
 
-    public function getCustomerConfiguration ($name = '', $reload = false) {
-
-        
-        $name = strtoupper($name);
-
-        if (!$reload && !empty($this->_s_configs[$this->_customerName])) {
-            if ($name === '')
-                return $this->_s_configs[$this->_customerName];
-            if (isset($this->_s_configs[$this->_customerName][$name]))
-                return $this->_s_configs[$this->_customerName][$name];
-            else
-                return false;
-        }
-
-        $_default = glob($this->_defaultPath . '/config/*.php');
-        $_customer = glob($this->_customerPath . '/config/*.php');
-        
-        //echo $this->_defaultPath;
-        //echo $this->_customerPath;
-        
-        //var_dump($_default);
-        //var_dump($_customer);
-        
-        $_merged = array();
-        foreach ($_default as $_cfile) {
-            $_ckey = strtoupper(basename($_cfile, '.php'));
-            //echo '<br>| default key =======> ' . $_ckey;
-            
-            eval(file_get_contents($_cfile));
-            //$this->_dump_configPaths[$_ckey] = $_cfile;
-            $_merged[$_ckey] = $default[$_ckey];
-            //echo '<br>| default key: ' . $_ckey;
-            unset($default);
-        }
-        
-        
-        // allow to use in customer config
-        $default = $_merged;
-
-        foreach ($_customer as $_cfile) {
-            $_ckey = strtoupper(basename($_cfile, '.php'));
-            eval(file_get_contents($_cfile));
-            //$this->_dump_configPaths[$_ckey] = $_cfile;
-            //echo '<br>| customer key =======> '.$_ckey ;
-            //if ($_ckey === 'MAIL') var_dump($customer[$_ckey]);
-            $_merged[$_ckey] = array_merge($_merged[$_ckey], $customer[$_ckey]);
-            unset($customer);
-        }
-
-        // store loaded configuration files
-        $this->_s_configs[$this->_customerName] = $_merged;
-
-        if ($name === '')
-            return $_merged;
-        if (isset($_merged[$name]))
-            return $_merged[$name];
-
-        return false;
+    public function getCustomerConfiguration ($name) {
+        $key = strtoupper($name);
+        // check if exists
+        if (empty($key))
+            return false;
+        // return configuration
+        if (!empty($this->_s_configs[$this->_customerName][$key]))
+            return $this->_s_configs[$this->_customerName][$key];
+        // load requested config
+        $_default = $this->_defaultPath . '/config/'.strtolower($name).'.php';
+        $_customer = $this->_customerPath . '/config/'.strtolower($name).'.php';
+        //echo '<br>|DefaultPath: ' . $this->_defaultPath . '/config/'.$_name.'.php';
+        //echo '<br>|CustomerPath: ' . $this->_customerPath . '/config/'.$_name.'.php';
+        // get default config
+        if (file_exists($_default))
+            eval(file_get_contents($_default));
+        else
+            $default = array();
+        // get customer config
+        if (file_exists($_customer))
+            eval(file_get_contents($_customer));
+        else
+            $customer = array();
+        $this->_s_configs[$this->_customerName][$key] = array_merge($default[$key], $customer[$key]);
+        return $this->_s_configs[$this->_customerName][$key];
     }
 
-    public function getCustomerTemplate ($name = '') {
+    public function getCustomerTemplate ($name) {
 
-        if (!empty($name))
+        $name = strtolower($name);
+        // return existed template
+        if (!empty($this->_s_templates[$this->_customerName][$name]))
             return $this->_s_templates[$this->_customerName][$name];
         
-
+        
+        $_default = $this->_defaultPath . '/templates/' . str_replace(DOT, DS, $name) . '.html';
+        $_customer = $this->_customerPath . '/templates/' . str_replace(DOT, DS, $name) . '.html';
+        
+        //echo '<br>| Customer Template file: ' . $_customer;
+        //echo '<br>| Default Template file: ' . $_default;
+        
+        if (file_exists($_customer))
+            $this->_s_templates[$this->_customerName][$name] = $_customer;
+        if (file_exists($_default))
+            $this->_s_templates[$this->_customerName][$name] = $_default;
+        
+        return $this->_s_templates[$this->_customerName][$name];
+        
+        /*
         $_default = $this->_defaultPath . '/templates/';
         $_customer = $this->_customerPath . '/templates/';
 
@@ -189,11 +172,12 @@ class libraryCustomerManager {
         
         foreach ($templatesC as $key => $tpl)
             $templates[$key] = $tpl;
-
+        
         // store loaded configuration files
         $this->_s_templates[$this->_customerName] = $templates;
-
         return false;
+
+        */
      }
 
     public function getCustomerProperty ($name = '') { }
@@ -230,15 +214,16 @@ class libraryCustomerManager {
             $dump .= '<br>' . (str_pad('', 10, '.')) . '[' . str_pad($key, 25, ' ') . '] <=====> ' . $val;
         $dump .= '<hr size="2">';
         $dump .= '<br> Configurations:<br>';
+        if (!empty($this->_s_configs[$this->_customerName]))
         foreach ($this->_s_configs[$this->_customerName] as $key => $val)
             $dump .= '<br> -- ' . $key . ' from ' . $val;
         $dump .= '<br> Templates:<br>';
+        if (!empty($this->_s_templates[$this->_customerName]))
         foreach ($this->_s_templates[$this->_customerName] as $key => $val)
             $dump .= '<br> -- ' . $key . ' from ' . $val;
 
         return $dump;
     }
-
 
 }
 

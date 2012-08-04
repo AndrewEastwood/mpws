@@ -59,6 +59,7 @@ class pluginEditor {
     
     /* display triggers */
     private function _displayTriggerOnActive($toolbox, $plugin) {
+        $_SESSION['MPWS_PLUGIN_ACTIVE'] = 'EDITOR';
     }
     private function _displayTriggerOnInActive($toolbox, $plugin) {
     }

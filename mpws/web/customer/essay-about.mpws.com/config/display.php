@@ -52,17 +52,11 @@
     $customer['DISPLAY']['ACCOUNT_MENU'] = array(
         'STUDENT' => Array (
             '/page/account.html?display=orders' => 'Orders', // Active
-            //'/page/account.html?display=pending' => 'Pending',
-            //'/page/account.html?display=rework' => 'Rework',
-            //'/page/account.html?display=completed' => 'Completed',
             '/page/account.html?display=history' => 'History',
             '/page/account.html?display=settings' => 'Settings'
         ),
         'WRITER' => Array (
             '/page/account.html?display=orders' => 'Orders',
-            //'/page/account.html?display=pending' => 'Pending',
-            //'/page/account.html?display=rework' => 'Rework',
-            //'/page/account.html?display=completed' => 'Completed',
             '/page/account.html?display=history' => 'History',
             '/page/account.html?display=settings' => 'Settings'
         )

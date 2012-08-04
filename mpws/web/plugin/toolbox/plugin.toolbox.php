@@ -53,6 +53,8 @@ class pluginToolbox {
     private function _displayTriggerOnActive($toolbox, $plugin) {
         //echo '<br>***TOOLBOX ACTIVE***';
         
+        $_SESSION['MPWS_PLUGIN_ACTIVE'] = 'TOOLBOX';
+        
         $model = &$toolbox->getModel();
         switch (libraryRequest::getDisplay('home', !$model['USER']['ACTIVE'], 'login')){
             case 'users' : {

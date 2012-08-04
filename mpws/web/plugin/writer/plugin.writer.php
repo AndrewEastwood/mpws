@@ -114,7 +114,13 @@ class pluginWriter {
     /* display triggers */
     private function _displayTriggerOnActive($toolbox, $plugin) {
         //$model = &$toolbox->getModel();
+        
+        //echo 'WRITER IS ACTIVE';
 
+        $_SESSION['MPWS_PLUGIN_ACTIVE'] = 'WRITER';
+        
+        //echo $_SESSION['MPWS_PLUGIN_ACTIVE'] . ' IS ACTIVE';
+        
         // remove expired accounts
         $param['dbo'] = $toolbox->getDatabaseObj();
         $this->cross_useremoval($param);

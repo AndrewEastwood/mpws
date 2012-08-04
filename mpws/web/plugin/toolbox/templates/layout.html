@@ -2,11 +2,11 @@
 <html>
 <head>
     <title>MPWS Toolbox</title>
-    <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
     <script type="text/javascript" src="/static/toolboxAction.js"></script>
     <?php if (!empty($model['USER']['ACTIVE'])) : ?>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
         // Load the Visualization API and the piechart package.
         google.load('visualization', '1.0', {'packages':['corechart']});

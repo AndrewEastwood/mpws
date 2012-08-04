@@ -14,11 +14,12 @@ class libraryPluginManager
     /* dump data info */
     private $_dump_configPaths;
 
-    public function __construct () {
+    public function __construct ($doInit = true) {
         $this->_pluginPath = DR . '/web/plugin';
         $this->_defaultPath = DR . '/web/default/' . MPWS_VERSION;
 
-        $this->initAllPlugins();
+        if ($doInit)
+            $this->initAllPlugins();
     }
 
     public function checkPlugin ($name) {
@@ -98,11 +99,8 @@ class libraryPluginManager
             return $p['templates'][$key];
         return false;
 
-    }/*
-    public function getPluginTemplatePage ($name, $key) {
+    }
 
-    }*/
-    
     public function initAllPlugins () {
         $this->loadPluginObjects();
         $this->loadPluginConfigs();
@@ -116,7 +114,7 @@ class libraryPluginManager
             //echo '<br> loading: '.$pItem;
             include $pItem;
             $matches = null;
-            $returnValue = preg_match('/^(\\w+).(\\w+).(\\w+)$/', basename($pItem), $matches);
+            preg_match('/^(\\w+).(\\w+).(\\w+)$/', basename($pItem), $matches);
             $pluginName = trim($matches[1]).trim($matches[2]);
             $pluginNameKey = strtoupper(trim($matches[2]));
             //echo '<br># adding plugin: key ' . $pluginNameKey.' with name ' . $pluginName;
@@ -127,19 +125,39 @@ class libraryPluginManager
             $this->setPlugin($pluginNameKey, 'dir', dirname($pItem));
             $this->setPlugin($pluginNameKey, 'obj', new $pluginName());
 
-            /*
-            //$this->_s_plugins[$pluginNameKey]['key'] = $pluginNameKey;
-            $this->_s_plugins[$pluginNameKey]['name'] = $pluginName;
-            $this->_s_plugins[$pluginNameKey]['path'] = $pItem;
-            $this->_s_plugins[$pluginNameKey]['dir'] = dirname($pItem);
-            $this->_s_plugins[$pluginNameKey]['obj'] = new $pluginName();
-            */
-
-            //var_dump($this->_s_plugins[$pluginNameKey]['obj']);
         }
         //echo '[added plugins := ' . count($this->_s_plugins);
     }
 
+    public function getConfiguration ($pluginName, $configName) {
+        $_plugin = $this->_pluginPath . '/' . strtolower($pluginName) . '/config/'.strtolower($configName).'.php';
+        $_default = $this->_defaultPath . '/config/'.strtolower($configName).'.php';
+        
+        //echo '<br>| PLUGIN: ' . $_plugin;
+        //echo '<br>| DEFAULT: ' . $_default;
+        
+        if (file_exists($_default))
+            eval(file_get_contents($_default));
+        if (file_exists($_plugin))
+            eval(file_get_contents($_plugin));
+        
+        //echo 'CONFIG NAME: ' . $configName;
+        //var_dump($default);
+        
+        $cfg = false;
+        if (!empty($plugin))
+            $cfg = array_merge($default, $plugin);
+        else
+            $cfg = $default;
+        
+        //var_dump($cfg);
+        
+        if (isset($cfg[$configName]))
+            return $cfg[$configName];
+        
+        return false;
+    }
+    
     private function loadPluginConfigs () {
         foreach ($this->_s_plugins as $pItem) {
             // get configuration
@@ -161,25 +179,10 @@ class libraryPluginManager
         foreach ($this->_s_plugins as $pItem) {
             // get configuration
             $pTemplatePath = $pItem['dir'] . '/templates/';
-            //$pTemplateFiles = glob($pTemplatePath . '*.html');
-            //$pTemplateFilesDirs = glob($pTemplatePath . '*/*.html');
-            //$pTemplates = array_merge($pTemplateFiles, $pTemplateFilesDirs);
-            
             $templates = libraryFileManager::getAllFilesFromDirectoryAsMap($pTemplatePath, '.html');
-            
-            //var_dump($templates);
-            
-            /*
-            $templates = array();
-            foreach ($pTemplates as $_tfile) {
-                $tKey = str_replace(array($pTemplatePath,'/'), array('','.'), $_tfile);
-                $templates[strtolower(basename($tKey, '.html'))] = $_tfile;
-            }*/
             $this->setPlugin($pItem['key'], 'templates', $templates);
         }
     }
-    
-
 
     public function getDump () {
         $dump = '<h2>Plugin Dump:</h2>';
