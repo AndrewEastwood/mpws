@@ -1,0 +1,45 @@
+<div class="MPWSContentDisplay">
+    <h2><?=ucfirst($model['PLUGINS']['EDITOR']['action']);?> Property</h2>
+    <?php
+        if(count($model['PLUGINS']['EDITOR']['messages'])) {
+            echo '<b>We\'ve found some errors in the fileds below:</b>';
+            echo '<ul>';
+            foreach ($model['PLUGINS']['EDITOR']['messages'] as $msg)
+                echo '<li>' . $msg . '</li>';
+            echo '</ul>';
+        }
+    ?>
+    <form action="?display=content&action=<?=$model['PLUGINS']['EDITOR']['action'];?>&oid=<?=$model['PLUGINS']['EDITOR']['oid'];?>" method="POST" class="MPWSForm">
+
+        <div class="MPWSFormFields">
+            <label for="MPWSField_PriceNameID" class="MPWSFieldLabel">Property Name:</label>
+            <input type="text" id="MPWSField_PriceNameID" class="MPWSTextBox" name="content_property" value="<?=$model['PLUGINS']['EDITOR']['DATA']['Property'];?>" placeholder="Name"/>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_PriceValueID" class="MPWSFieldLabel">Page Owner</label>
+            <input type="text" id="MPWSField_PriceValueID" class="MPWSTextBox" name="content_pageowner" value="<?=$model['PLUGINS']['EDITOR']['DATA']['PageOwner'];?>" placeholder="Price"/>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_PriceHoursID" class="MPWSFieldLabel">Text</label>
+            <div class="MPWSWysiwygContainer">
+                <textarea class="MPWSSmartStyleOneTextArea" id="MPWSSmartStyleOneTextAreaID" name="content_value"><?=$model['PLUGINS']['EDITOR']['DATA']['Value'];?></textarea>
+                <div class="MPWSSeparator"></div>
+            </div>
+            <div class="MPWSSeparator"></div>
+        </div>
+
+        <hr size="2"/>
+        <input type="submit" name="do" value="Save"/>
+    </form>
+    <form action="<?=$model['PLUGINS']['EDITOR']['referer'];?>" method="POST">
+        <input type="submit" value="Back To Properties"/>
+    </form>
+</div>
+
+<script>
+    
+bkLib.onDomLoaded(function() {
+    new nicEditor({iconsPath : '/static/nicEditorIcons.gif'}).panelInstance('MPWSSmartStyleOneTextAreaID');
+});
+
+</script>

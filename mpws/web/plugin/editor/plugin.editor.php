@@ -39,7 +39,7 @@ class pluginEditor {
         
         //var_dump();
         
-        //echo '***WRITER LAYOUT***';
+        //echo '***EDITOR LAYOUT***';
         $libView = new libraryView();
         $model = &$toolbox->getModel();
         return $libView->getTemplateResult($model, $plugin['templates']['layout']);
@@ -55,11 +55,33 @@ class pluginEditor {
         $model['PLUGINS']['EDITOR']['COM']['MENU']['template'] = $plugin['templates']['component.menu'];
         //echo $plugin['templates']['component.menu'];
         //echo $model['PLUGINS']['EDITOR']['COM']['MENU']['template'];
+        
     }
     
     /* display triggers */
     private function _displayTriggerOnActive($toolbox, $plugin) {
         $_SESSION['MPWS_PLUGIN_ACTIVE'] = 'EDITOR';
+
+        switch (libraryRequest::getDisplay('home')) {
+            case 'content' : {
+                $this->_displayContent($toolbox, $plugin);
+                break;
+            }
+            case 'live' : {
+                // /?action=edit&inner-session=<?=md5('SecretKey!&$f_%')
+                $sk = 'SecretKey!&$f_%';
+                $innerkey = md5(MPWS_CUSTOMER . $sk);
+                setcookie("MPWS_LIVE_EDIT", $innerkey, time()+3600, "/", MPWS_CUSTOMER);
+                $map = array(
+                    'action' => 'edit',
+                    'inner-session' => $innerkey
+                );
+                libraryRequest::locationRedirect($map, 'http://' . MPWS_CUSTOMER);
+                break;
+                
+            }
+        }
+
     }
     private function _displayTriggerOnInActive($toolbox, $plugin) {
     }
@@ -79,6 +101,114 @@ class pluginEditor {
         $this->_componentMenu($toolbox, $plugin);
     }
     
+    /* display */
+    private function _displayContent($toolbox, $plugin, $postaction = '') {
+        //echo '_displayContent';
+        $action = libraryRequest::getAction();
+        if (!empty($postaction))
+            $action = $postaction;
+        $innerAction = '';
+        switch($action) {
+            case 'edit':
+            case 'create':
+                $innerAction = $this->_displayContentEdit($toolbox, $plugin);
+                break;
+            default:
+                $innerAction = $this->_displayContentDefault($toolbox, $plugin);
+                break;
+        }
+
+        if (!empty($innerAction) && strcasecmp($innerAction, $action) != 0)
+            $this->_displayContent($toolbox, $plugin, $innerAction);
+    }
+
+    /* content */
+    private function _displayContentDefault ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+        libraryRequest::storeOrGetRefererUrl();
+        $model['PLUGINS']['EDITOR'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['CONTENT'], $toolbox->getDatabaseObj());
+        $model['PLUGINS']['EDITOR']['template'] = $plugin['templates']['page.content.datatable'];
+        
+    }
+    private function _displayContentEdit ($toolbox, $plugin) {
+        $model = &$toolbox->getModel();
+        $messages = array();
+        //var_dump($plugin);
+        $action = libraryRequest::getAction();
+        $oid = libraryRequest::getOID();
+        $data = array();
+        $model['PLUGINS']['EDITOR']['oid'] = $oid;
+        $model['PLUGINS']['EDITOR']['action'] = $action;
+        $model['PLUGINS']['EDITOR']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
+        
+        if (libraryRequest::isPostFormAction('save')) {
+            $data = libraryRequest::getPostMapContainer($plugin['config']['VALIDATOR']['DATAMAP']['CONTENT']);
+            
+            //var_dump($data);
+            
+            /* validate fileds */
+            libraryValidator::validateData($data, $plugin['config']['VALIDATOR']['FILTER']['CONTENT'], $messages);
+            // if ok to proceed
+            //echo 'olololo';
+            if (empty($messages)) {
+                if ($action === 'edit') {
+                    // check if oid is not empty
+                    if (empty($oid)) {
+                        // set template
+                        $model['PLUGINS']['EDITOR']['template'] = $plugin['templates']['state.error'];
+                        return;
+                    }
+                    $toolbox->getDatabaseObj()
+                        ->update('editor_content')
+                        ->set($data)
+                        ->where('ID', '=', $oid)
+                        ->query();
+                    // force return to home page
+                    return 'home';
+                } elseif ($action === 'create') {
+                    $toolbox->getDatabaseObj()
+                        ->insertInto('editor_content')
+                        ->fields(array_keys($data))
+                        ->values(array_values($data))
+                        ->query();
+                    // force return to home page
+                    return 'home';
+                } else
+                    $model['PLUGINS']['EDITOR']['template'] = $plugin['templates']['state.error'];
+                return;
+            } else
+                $model['PLUGINS']['EDITOR']['messages'] = $messages;
+        }
+        if (libraryRequest::isPostFormAction('cancel')) {
+            return 'home';
+        }
+        if (libraryRequest::isPostFormAction('edit')) {
+            // uncomment to use preview form
+            //data = libraryRequest::getPostMapContainer($plugin['config']['VALIDATOR']['DATAMAP']['SUBJECTS']);
+        }
+        // in edit mode validate oid
+        if ($action === 'edit' && !empty($oid)) {
+            $document = $toolbox->getDatabaseObj()
+                ->select('*')
+                ->from('editor_content')
+                ->where('ID', '=', $oid)
+                ->fetchRow();
+            if (empty($document)) {
+                // set template
+                $model['PLUGINS']['EDITOR']['template'] = $plugin['templates']['state.error'];
+                return;
+            }
+            if (!libraryRequest::isPostFormActionMatchAny('save'))
+                $data = $document;
+        }
+        if ($action === 'create') {
+            
+        }
+
+        // set template
+        $model['PLUGINS']['EDITOR']['DATA'] = $data;
+        $model['PLUGINS']['EDITOR']['template'] = $plugin['templates']['page.content.create'];
+    }
 }
 
 ?>

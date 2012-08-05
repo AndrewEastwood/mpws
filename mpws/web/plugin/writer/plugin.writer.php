@@ -722,10 +722,6 @@ class pluginWriter {
         // set template
         $model['PLUGINS']['WRITER']['DATA'] = $data;
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.prices.create'];
-        
-        
-        
-        
     }
 
     /* sale */

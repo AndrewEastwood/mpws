@@ -31,6 +31,14 @@
             'AUTO' => Array(),
             'IMPORT' => Array()
         ),
+        'mpwsEdit.css' => Array(
+            'DEFAULT' => Array(),
+            'OWNER' => Array(
+                'edit.css'
+            ),
+            'AUTO' => Array(),
+            'IMPORT' => Array()
+        ),
         'mpwsTheme.css' => Array(
             'DEFAULT' => Array(),
             'OWNER' => Array(),
@@ -43,11 +51,20 @@
         'mpwsLight.js' => Array(
             'DEFAULT' => Array(
                 'lib/mpws.core.js',
-                'lib/mpws.api.js'
+                'lib/mpws.api.js',
             ),
             'OWNER' => Array(
                 'lib/less.js',
                 'lib/slide.js'
+            ),
+            'AUTO' => Array()
+        ),
+        'mpwsEditable.js' => Array(
+            'DEFAULT' => Array(
+                'plugins/nicEdit/nicEdit.js',
+            ),
+            'OWNER' => Array(
+                'lib/edit.js'
             ),
             'AUTO' => Array()
         ),

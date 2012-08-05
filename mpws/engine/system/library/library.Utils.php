@@ -16,6 +16,15 @@ class libraryUtils {
         $array = $_array;
     }
     
+    static public function convertDBDataToMap($dbdata, $key, $value) {
+        $map = array();
+        foreach ($dbdata as $row) {
+            if (isset($row[$key]) && isset($row[$value]))
+                $map[$row[$key]] = $row[$value];
+        }
+        return $map;
+    }
+    
     static public function getArrayFromDBEnum ($string) {
         $matches = null;
         $returnValue = preg_match_all('/\'(.*?)\'/', $string, $matches);

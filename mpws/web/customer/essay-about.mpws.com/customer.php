@@ -15,6 +15,17 @@ class customer {
         $model['USER'] = $this->_userGetInfo($customer);
         $model['CUSTOMER']['MESSAGES'] = array();
         
+        // check for live edit mode
+        $sk = 'SecretKey!&$f_%';
+        $innerkey = md5(MPWS_CUSTOMER . $sk);
+        //echo libraryRequest::getValue('inner-session');
+        //var_dump($_GET);
+        
+        if($_COOKIE['MPWS_LIVE_EDIT'] == $innerkey &&
+            libraryRequest::getValue('inner-session') == $innerkey){
+            $model['MODE'] = 'LIVEEDIT';
+        }
+        
         //var_dump($model['USER']);
         //echo '<br>--------------------------------------------<br>';
         
@@ -83,6 +94,17 @@ class customer {
         }
         //$model['html']['menu'] .= $model['html']['writer']['com']['menu'];
         
+        /* get properties */
+        $props = $customer->getDatabaseObj()
+            ->reset()
+            ->select('Property, Value')
+            ->from('editor_content')
+            ->where('PageOwner', '=', libraryRequest::getPage('index'))
+            ->fetchData();
+        $model['PROPS'] = libraryUtils::convertDBDataToMap($props, 'Property', 'Value');
+
+        //var_dump($model['PROPS']);
+        //var_dump($model['PROPS']);
         
         /* set html data */
         $model['HTML']['CONTENT'] = $libView->getTemplateResult($model, $model['CUSTOMER']['TEMPLATE']);
