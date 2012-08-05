@@ -48,6 +48,23 @@ class pluginEditor {
     public function api($toolbox, $plugin) {
     }
     
+
+    /* cross methods */
+    public function cross_method ($params = false) {
+        //echo '<br>calling method:' . $params['fn'] . '<br>';
+        if (empty($params['fn']))
+            return false;
+        //echo '<br>calling method:' . $params['fn'] . '<br>';
+        $fRez = null;
+        switch($params['fn']) {
+            case 'savechanges': {
+                $fRez = $this->cross_savechanges($params);
+                break;
+            }
+        }
+        return $fRez;
+    }
+    
     /* components */
     private function _componentMenu($toolbox, $plugin) {
         //echo '<br> ******* EDITOR _componentMenu  ****** ';
@@ -209,6 +226,104 @@ class pluginEditor {
         $model['PLUGINS']['EDITOR']['DATA'] = $data;
         $model['PLUGINS']['EDITOR']['template'] = $plugin['templates']['page.content.create'];
     }
+
+    /* cross methods */
+    private function cross_savechanges ($params) {
+        
+        //echo 'cross_savechanges';
+        
+        $sk = 'SecretKey!&$f_%';
+        $innerkey = md5(MPWS_CUSTOMER . $sk);
+        //echo libraryRequest::getValue('inner-session');
+        //var_dump($_GET);
+        
+        // check for complete satup
+        $isComplete = false;
+        if (isset($_COOKIE['MPWS_LIVE_EDIT_MODE']) && $_COOKIE['MPWS_LIVE_EDIT_MODE'] == 'OK')
+            $isComplete = true;
+        else {
+            if (libraryRequest::getValue('inner-session') == $innerkey) {
+                $isComplete = true;
+                setcookie('MPWS_LIVE_EDIT_MODE', 'OK', time()+3600, "/", MPWS_CUSTOMER);
+            }
+        }
+        
+        $returnMode = false;
+        
+        // save changes
+        if($isComplete && $_COOKIE['MPWS_LIVE_EDIT'] == $innerkey) {
+            $returnMode = 'LIVEEDIT';
+            
+            // action switcher
+            switch (libraryRequest::getPostFormAction()) {
+                case 'Save Changes': {
+                    //echo '<br>SAVING CHANGES!!!!!';
+                    //echo libraryRequest::getPostValue('text_index_why_choose');
+                    
+                    // get all properties
+                    //$props = array();
+                    $dbo = $params['dbo'];
+                    foreach ($_POST as $key => $value) {
+                        $matches = null;
+                        preg_match('/(\\w+)\\@(\\w+)\\@(.*)/', $key, $matches);
+                        if (count($matches) != 4 || $matches[1] != 'property')
+                            continue;
+
+                        // add property
+                        $property = array(
+                            'Property' => $matches[3],
+                            'PageOwner' => $matches[2],
+                            'Value' => $value
+                        );
+                        
+                        //var_dump($params);
+                        
+                        // check if property exists
+                        $dbProp = $dbo->reset()
+                            ->select('id')
+                            ->from('editor_content')
+                            ->where('Property', '=', $matches[3])
+                            ->andWhere('PageOwner', '=', $matches[2])
+                            ->fetchRow();
+                        
+                        $isNew = empty($dbProp);
+                        
+                        // save
+                        if ($isNew)
+                            $dbo->reset()
+                                ->insertInto('editor_content')
+                                ->fields(array_keys($property))
+                                ->values(array_values($property))
+                                ->query();
+                        else
+                            $dbo->reset()
+                                ->update('editor_content')
+                                ->set($property)
+                                ->where('Property', '=', $matches[3])
+                                ->andWhere('PageOwner', '=', $matches[2])
+                                ->query();
+                    }
+                    
+                    //var_dump($props);
+                    
+                    break;
+                }
+                case 'Exit Editor': {
+                    $returnMode = false;
+                    setcookie('MPWS_LIVE_EDIT_MODE', '', time()-3600, "/", MPWS_CUSTOMER);
+                    setcookie('MPWS_LIVE_EDIT', '', time()-3600, "/", MPWS_CUSTOMER);
+                    break;
+                }
+                    
+            }
+        } else {
+            setcookie('MPWS_LIVE_EDIT_MODE', '', time()-3600, "/", MPWS_CUSTOMER);
+        }
+        
+        return $returnMode;
+    }
+    
+    
 }
 
 ?>

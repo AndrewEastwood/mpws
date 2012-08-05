@@ -94,11 +94,12 @@ class libraryToolboxManager {
     
     /* crossmode call */
     static public function callPluginMethod ($pluginName, $methodName, $params = false) {
-        //echo 'callPluginMethod';
-        $pluginsObj = new libraryPluginManager();
-        $po = $pluginsObj->getPluginObj($pluginName);
+        $pluginsObj = new libraryPluginManager(false);
+        //echo 'callPluginMethod ' . $pluginName;
+        $po = $pluginsObj->loadPlugin($pluginName);
         //var_dump($po);
         $params['fn'] = $methodName;
+        //var_dump($params);
         return $po->cross_method($params);
     }
 

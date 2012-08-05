@@ -15,22 +15,12 @@ class customer {
         $model['USER'] = $this->_userGetInfo($customer);
         $model['CUSTOMER']['MESSAGES'] = array();
         
-        // check for live edit mode
-        $sk = 'SecretKey!&$f_%';
-        $innerkey = md5(MPWS_CUSTOMER . $sk);
-        //echo libraryRequest::getValue('inner-session');
-        //var_dump($_GET);
-        
-        if($_COOKIE['MPWS_LIVE_EDIT'] == $innerkey &&
-            libraryRequest::getValue('inner-session') == $innerkey){
-            $model['MODE'] = 'LIVEEDIT';
-        }
         
         //var_dump($model['USER']);
         //echo '<br>--------------------------------------------<br>';
         
         
-        switch(libraryRequest::getPage('index')){
+        switch(libraryRequest::getPage('home')){
             case 'make-order':{
                 $model['LAYOUT'] = 'layout_inner';
                 $this->_pageMakeOrder($customer);
@@ -75,6 +65,8 @@ class customer {
         // remove expired accounts
         $param['dbo'] = $customer->getDatabaseObj();
         libraryToolboxManager::callPluginMethod('writer', 'useremoval', $param);
+        // check for live edit mode or save changes
+        $model['MODE'] = libraryToolboxManager::callPluginMethod('editor', 'savechanges', $param);
     }
     
     public function render ($customer) {

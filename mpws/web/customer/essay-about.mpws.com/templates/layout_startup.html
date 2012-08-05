@@ -15,22 +15,33 @@
 <!--[if lte IE 6]>
     <script type="text/javascript" src="/static/mpwsActionIE6.js"></script>
 <![endif]-->
+<script type="text/javascript">
+    // security token
+    mpws.token = '<?=libraryRequest::getOrValidatePageSecurityToken();?>';
+    // page
+    mpws.page = '<?=libraryRequest::getPage();?>';
+</script>
 </head>
 <body>
     
 
+<form method="POST" action="">
+        
+        
 <?php if ($model['MODE'] === 'LIVEEDIT') : ?>
 <div class="MPWSTopSlider">
     <img src="/static/logo.gif">
     <div id="MPWSEditPanelID"></div>
-    <form method="GET" action="?">
+    <div class="MPWSButtonBlock">
+        <input type="submit" name="do" value="Save Changes">
         <input type="submit" name="do" value="Exit Editor">
-    </form>
+    </div>
 </div>
 <?php endif ?>
     
     
 <div id="header">
+    <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
     <div id="top_menu_wrapper">
         <div class="top_menu_base">
         <?php if($model['USER']['ACTIVE']) : ?>
@@ -58,6 +69,7 @@
         <?php endif ?>
         </div>
     </div>
+    <?php endif ?>
     
     <div id="contacts">
         <a href="#">
@@ -102,5 +114,6 @@ editable.goLiveEdit();
 </script>
 <? endif ?>
 
+</form>
 </body>
 </html>

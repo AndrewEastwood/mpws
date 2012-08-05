@@ -21,6 +21,9 @@
                 return defaultValue;
             return value;
         },
+        random: function () {
+            return Math.floor(Math.random()*Math.pow(2,56)).toString(36);  
+        },
         onload: $(document).ready
     };
     

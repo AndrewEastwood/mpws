@@ -1,8 +1,8 @@
-.MPWSTopSlider {margin: 0px 50px; width: 950px; margin-top: -10px;
+.MPWSTopSlider {margin: 0px 50px; width: 970px; margin-top: -10px;
 border-radius: 0px 0px 10px 10px; position: absolute; z-index: 999999;
 padding: 1px 10px 5px; overflow: hidden; background: #090 url('overlay.jpg') no-repeat;}
 
-.MPWSTopSlider img {width: 128px; float: left; margin-right: 50px; margin-top: 5px;}
+.MPWSTopSlider img {width: 128px; float: left; margin-right: 10px; margin-top: 5px;}
 .MPWSTopSlider #MPWSEditPanelID {width: 610px;float: left;margin: 8px 10px 10px;}
-.MPWSTopSlider form {margin: 8px 10px 10px; float: right;}
+.MPWSTopSlider .MPWSButtonBlock {margin: 10px; float: right;}
 .MPWSTopSlider input {}

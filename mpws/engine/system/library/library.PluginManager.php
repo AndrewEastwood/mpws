@@ -41,7 +41,7 @@ class libraryPluginManager
     }
     public function getPluginObj ($name) {
         $name = strtoupper($name);
-        //echo '<br>| --------- request for plugin ' . $name;
+        echo '<br>| --------- request for plugin ' . $name;
         if (isset($this->_s_plugins[$name]['obj']))
             return $this->_s_plugins[$name]['obj'];
         return false;
@@ -101,6 +101,35 @@ class libraryPluginManager
 
     }
 
+    public function loadPlugin ($name, $pItem = false) {
+        
+        if (!empty($name))
+            $pItem = $this->_pluginPath . '/'.$name.'/plugin.'.$name.'.php';
+        
+        if (!file_exists($pItem))
+            return false;
+        
+        include $pItem;
+        $matches = null;
+        preg_match('/^(\\w+).(\\w+).(\\w+)$/', basename($pItem), $matches);
+        $pluginName = trim($matches[1]).trim($matches[2]);
+        $pluginNameKey = strtoupper(trim($matches[2]));
+        //echo '<br># adding plugin: key ' . $pluginNameKey.' with name ' . $pluginName;
+        $obj = new $pluginName();
+        
+        $this->setPlugin($pluginNameKey, 'key', $pluginNameKey);
+        $this->setPlugin($pluginNameKey, 'name', $pluginName);
+        $this->setPlugin($pluginNameKey, 'path', $pItem);
+        $this->setPlugin($pluginNameKey, 'dir', dirname($pItem));
+        $this->setPlugin($pluginNameKey, 'obj', $obj);
+        
+        //var_dump($obj);
+        
+        
+        return $obj;
+    }
+    
+    
     public function initAllPlugins () {
         $this->loadPluginObjects();
         $this->loadPluginConfigs();
@@ -112,19 +141,7 @@ class libraryPluginManager
         // add all plugin
         foreach ($pFiles as $pItem) {
             //echo '<br> loading: '.$pItem;
-            include $pItem;
-            $matches = null;
-            preg_match('/^(\\w+).(\\w+).(\\w+)$/', basename($pItem), $matches);
-            $pluginName = trim($matches[1]).trim($matches[2]);
-            $pluginNameKey = strtoupper(trim($matches[2]));
-            //echo '<br># adding plugin: key ' . $pluginNameKey.' with name ' . $pluginName;
-
-            $this->setPlugin($pluginNameKey, 'key', $pluginNameKey);
-            $this->setPlugin($pluginNameKey, 'name', $pluginName);
-            $this->setPlugin($pluginNameKey, 'path', $pItem);
-            $this->setPlugin($pluginNameKey, 'dir', dirname($pItem));
-            $this->setPlugin($pluginNameKey, 'obj', new $pluginName());
-
+            $this->loadPlugin(false, $pItem);
         }
         //echo '[added plugins := ' . count($this->_s_plugins);
     }
