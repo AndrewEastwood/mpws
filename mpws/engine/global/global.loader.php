@@ -28,6 +28,14 @@
                     $libPath = '/engine/system/library/library.';
                     break;
                 }
+                case 'object': {
+                    $libPath = '/engine/system/object/object.';
+                    break;
+                }
+                case 'i': {
+                    $libPath = '/engine/system/interface/interface.';
+                    break;
+                }
             }
             unset($pieces[0]);
             $libPath = $DR . $libPath . implode('', $pieces) . '.php';

@@ -65,5 +65,6 @@
             echo sprintf(strlen($value) > 50?$format_long:$format_short, $value);
         }
     }
+    
 
 ?>
