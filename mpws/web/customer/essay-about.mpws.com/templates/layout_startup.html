@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Easy-Essay.com</title>
+<title><?=$model['CONFIG']['DISPLAY']['TITLE'];?></title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet/less" type="text/css" href="/static/mpwsStyle.css">
 <script src="/static/mpwsLight.js" type="text/javascript"></script>
@@ -23,12 +23,9 @@
 </script>
 </head>
 <body>
-    
 
-<form method="POST" action="">
-        
-        
 <?php if ($model['MODE'] === 'LIVEEDIT') : ?>
+<form method="POST" action="">
 <div class="MPWSTopSlider">
     <img src="/static/mpws-log_mini_eee.png">
     <div id="MPWSEditPanelID"></div>
@@ -72,12 +69,12 @@
     <?php endif ?>
     
     <div id="contacts">
-        <a href="#">
+        <a href="<?=$model['CONFIG']['MAIL']['IM']['SKYPE'];?>">
             <img src="/static/contacts_skype.png" />
             <img src="/static/currently_online.png" style="left:100%;top:-5px;" />
             Talk to TeamLead
         </a>
-        <a href="#">
+        <a href="mailto:<?=$model['CONFIG']['MAIL']['SUPPORT']['EMAIL'];?>">
             <img src="/static/contacts_mail.png" />
             Send us eMail
         </a>
@@ -112,8 +109,8 @@
 //mpws.tools.log('go live edit');
 editable.goLiveEdit();
 </script>
+</form>
 <? endif ?>
 
-</form>
 </body>
 </html>

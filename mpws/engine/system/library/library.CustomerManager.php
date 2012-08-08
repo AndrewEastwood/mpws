@@ -156,10 +156,10 @@ class libraryCustomerManager {
         //echo '<br>| Customer Template file: ' . $_customer;
         //echo '<br>| Default Template file: ' . $_default;
         
-        if (file_exists($_customer))
-            $this->_s_templates[$this->_customerName][$name] = $_customer;
         if (file_exists($_default))
             $this->_s_templates[$this->_customerName][$name] = $_default;
+        if (file_exists($_customer))
+            $this->_s_templates[$this->_customerName][$name] = $_customer;
         
         return $this->_s_templates[$this->_customerName][$name];
         

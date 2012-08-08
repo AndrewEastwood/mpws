@@ -1,8 +1,9 @@
-.MPWSTopSlider {margin: 0px 50px; width: 970px; margin-top: -10px;
-border-radius: 0px 0px 10px 10px; position: absolute; z-index: 999999;
-padding: 1px 10px 5px; overflow: hidden; background: #090 url('overlay.jpg') no-repeat;}
-
-.MPWSTopSlider img {width: 121x; float: left; margin-right: 10px; margin-top: 5px;}
-.MPWSTopSlider #MPWSEditPanelID {width: 610px;float: left;margin: 8px 10px 10px;}
+.MPWSTopSlider {margin: 0px 50px; left: 25px; right: 25px; /*width: 980px;*/ margin-top: -80px;
+border-radius: 0px 0px 10px 10px; position: fixed; z-index: 999999;
+padding: 1px 10px 1px; overflow: hidden; background: #090 url('overlay.jpg') no-repeat center top; box-shadow: 0 0 10px black; opacity: .9;}
+.MPWSTopSlider  div.nicEdit-panelContain {background: none !important; border: 0px none !important;}
+.MPWSTopSlider img {opacity: .5; width: 121x; float: left; margin-right: 50px; margin-top: 5px;}
+.MPWSTopSlider #MPWSEditPanelID {width: 610px;float: left;margin: 11px 10px 10px;}
 .MPWSTopSlider .MPWSButtonBlock {margin: 10px; float: right;}
-.MPWSTopSlider input {}
+.MPWSTopSlider input {cursor: pointer; border: 1px solid #ddd; border-radius: 5px; padding: 3px 10px; background: #9c0; color: #fff;}
+.MPWSTopSlider input:hover {background: #06c; color: #fff;}

@@ -32,3 +32,6 @@
     $default['MAIL']['ACTION_TRIGGERS'] = array();
 
     $default['MAIL']['URLS'] = array();
+    
+    /* Other IMs */
+    $default['MAIL']['IM'] = array();

@@ -53,8 +53,9 @@ class customer {
                 $this->_pagePurchase($customer);
                 break;
             default:{
+                // render static page or 404
                 $model['LAYOUT'] = 'layout_inner';
-                $this->_pageNotFound($customer);
+                $this->_pageStatic($customer);
                 break;
             }
         }
@@ -95,6 +96,11 @@ class customer {
             ->fetchData();
         $model['PROPS'] = libraryUtils::convertDBDataToMap($props, 'Property', 'Value');
 
+
+        $model['CONFIG']['DISPLAY'] = $customer->getCustomerConfiguration('display');
+        $model['CONFIG']['MAIL'] = $customer->getCustomerConfiguration('mail');
+
+        //var_dump($model['CONFIG']['MAIL']);
         //var_dump($model['PROPS']);
         //var_dump($model['PROPS']);
         
@@ -183,9 +189,18 @@ class customer {
     }
 
     /* pages */
-    private function _pageNotFound ($customer) {
+    private function _pageStatic ($customer) {
         $model = &$customer->getModel();
-        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.404');
+        //echo $customer->getDump();
+        
+        $page = libraryRequest::getPage('404');
+        $tpl = $customer->getCustomerTemplate('page.static.'.strtolower($page));
+
+        
+        if (empty($tpl))
+            $tpl = $customer->getCustomerTemplate('page.404');
+
+        $model['CUSTOMER']['TEMPLATE'] = $tpl;
     }
     private function _pageAccount ($customer, $innerReturnDisplay = false) {
         $model = &$customer->getModel();

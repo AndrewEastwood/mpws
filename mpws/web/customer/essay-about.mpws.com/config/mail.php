@@ -10,6 +10,11 @@
         'TOOLBOX_SALE_LINK' => 'http://' . $_SERVER['SERVER_NAME'] . '/mpws/writer.html?display=sales&amp;action=details&amp;token=',
         'ACCOUNT_ORDER_LINK' => 'http://' . $_SERVER['SERVER_NAME'] . '/page/account.html?display=orders&amp;action=details&amp;oid='
     );
+    
+    /* Other IMs */
+    $customer['MAIL']['IM'] = array(
+        'SKYPE' => 'skype:essay_about_teamlead?chat'
+    );
 
     /* Action Collection To Email */
     $customer['MAIL']['ACTION_TRIGGERS']['ON_NEW_ORDER'] = $default['MAIL']['INFO'];

@@ -281,7 +281,7 @@ body{
     .ic02{
         background: url(inshort.png) no-repeat 5px -90px;
     }
-    .block>a>img{
+    .block>img{
         position:absolute;
         bottom:-110px;
         left:65px

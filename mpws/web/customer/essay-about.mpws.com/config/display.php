@@ -1,5 +1,3 @@
-
-
     $customer['DISPLAY'] = array();
     // customer domain
     $customer['DISPLAY']['DOMAIN'] = 'essay-about.mpws.com';
@@ -22,27 +20,27 @@
             '/page/free-essays.html' => 'Free <br />ESSAYS!',
             '/page/home.html' => 'Home',
             '/page/faq.html' => 'FAQ',
-            '/page/services.html' => 'Services',
+            '/page/account.html' => 'Join Us',
             '/page/discounts.html' => 'Discounts',
             '/page/prices.html' => 'Prices',
             '/page/terms.html' => 'Terms and Conditions'
         ),
         'FOOTER' => Array(
-            '/page/make-order.html' => '<strong>Buy ready ESSAYS!</strong>',
-            '/page/about-us.html' => '<strong>FreeESSAYS</strong>',
-            '/page/account.html' => 'Home',
-            '/page/terms.html' => 'FAQ',
-            '/page/privacy.html' => 'Services',
-            '/page/how-it-works.html' => 'Discounts',
-            '/page/contacts.html' => 'Prices',
-            '/page/faqs.html' => 'Terms and Conditions'
+            '/page/buy-essays.html' => '<strong>Buy ready ESSAYS!</strong>',
+            '/page/free-essays.html' => '<strong>FreeESSAYS</strong>',
+            '/page/home.html' => 'Home',
+            '/page/faq.html' => 'FAQ',
+            '/page/account.html' => 'Join Us',
+            '/page/discounts.html' => 'Discounts',
+            '/page/prices.html' => 'Prices',
+            '/page/terms.html' => 'Terms and Conditions'
         ),
         'HEADER' => Array(
             '/page/buy-essays.html' => 'Buy ready ESSAYS!',
-            '/page/free-essays.html' => 'Free ESSAYS!',
+            '/page/free-essays.html' => 'FreeESSAYS',
             '/page/home.html' => 'Home',
             '/page/faq.html' => 'FAQ',
-            '/page/services.html' => 'Services',
+            '/page/account.html' => 'Join Us',
             '/page/discounts.html' => 'Discounts',
             '/page/prices.html' => 'Prices',
             '/page/terms.html' => 'Terms and Conditions'
@@ -52,11 +50,17 @@
     $customer['DISPLAY']['ACCOUNT_MENU'] = array(
         'STUDENT' => Array (
             '/page/account.html?display=orders' => 'Orders', // Active
+            //'/page/account.html?display=pending' => 'Pending',
+            //'/page/account.html?display=rework' => 'Rework',
+            //'/page/account.html?display=completed' => 'Completed',
             '/page/account.html?display=history' => 'History',
             '/page/account.html?display=settings' => 'Settings'
         ),
         'WRITER' => Array (
             '/page/account.html?display=orders' => 'Orders',
+            //'/page/account.html?display=pending' => 'Pending',
+            //'/page/account.html?display=rework' => 'Rework',
+            //'/page/account.html?display=completed' => 'Completed',
             '/page/account.html?display=history' => 'History',
             '/page/account.html?display=settings' => 'Settings'
         )
