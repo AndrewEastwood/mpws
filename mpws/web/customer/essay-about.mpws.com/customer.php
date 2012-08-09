@@ -984,7 +984,7 @@ class customer {
                 'ACCOUNT' => $payment['2CO']
             );
             $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
-            echo '2CO Status: ' . $product['assigned_product_id'];
+            //echo '2CO Status: ' . $product['assigned_product_id'];
             // check if product exists
             // we use "assigned_product_id" to sell current product
             if (empty($product['assigned_product_id'])) {
