@@ -197,6 +197,8 @@ class libraryPluginManager
             // get configuration
             $pTemplatePath = $pItem['dir'] . '/templates/';
             $templates = libraryFileManager::getAllFilesFromDirectoryAsMap($pTemplatePath, '.html');
+            //var_dump($templates);
+            
             $this->setPlugin($pItem['key'], 'templates', $templates);
         }
     }

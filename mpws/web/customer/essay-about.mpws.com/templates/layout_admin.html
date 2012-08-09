@@ -20,7 +20,9 @@
 <div id="header">
     <div id="top_menu_wrapper">
         <div class="top_menu_base">
+            <div class="top_menu_base_wrapper">
             <?=$model['HTML']['COMPONENT']['MENU_HEADER'];?>
+            </div>
             <div class="separator"></div>
             <?php if($model['USER']['ACTIVE']) : ?>
                 <form action="/page/account.html" method="POST">

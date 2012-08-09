@@ -50,7 +50,7 @@
 
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize4"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Subject.asc', 'Subject.desc', 'Subject.asc'));?>">Subject</a></span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Owner.asc', 'Owner.desc', 'Owner.asc'));?>">Owner</a></span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'IsUnread.asc', 'IsUnread.desc', 'IsUnread.asc'));?>">Is New</a></span>
@@ -61,9 +61,6 @@
         <div class="MPWSDivTableRow MPWSDivTableRowData">
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
                 <a href="?display=messages&action=details&oid=<?=$entry['ID'];?>">Details</a>
-            </span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
-                <a href="?display=messages&action=delete&oid=<?=$entry['ID'];?>">Delete</a>
             </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize4"><?=$entry['Subject'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Owner'];?></span>

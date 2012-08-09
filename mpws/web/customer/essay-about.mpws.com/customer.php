@@ -984,7 +984,7 @@ class customer {
                 'ACCOUNT' => $payment['2CO']
             );
             $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
-            //echo '2CO Status: ' . $product['assigned_product_id'];
+            echo '2CO Status: ' . $product['assigned_product_id'];
             // check if product exists
             // we use "assigned_product_id" to sell current product
             if (empty($product['assigned_product_id'])) {
@@ -1036,6 +1036,7 @@ class customer {
             $_order['return_url'] = $_SERVER['HTTP_REFERER'];
             
             //var_dump($_order);
+            //https://www.2checkout.com/checkout/purchase?sid=1788351&quantity=1&fixed=Y&skip_landing=Y&demo=N&product_id=2
             libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
             exit;
         }

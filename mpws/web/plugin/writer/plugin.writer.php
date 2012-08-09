@@ -27,6 +27,10 @@ class pluginWriter {
                 $model['html']['writer']['com'][strtolower($key)] = $libView->getTemplateResult($model, $model['PLUGINS']['WRITER']['COM'][$key]['template']);
             $model['html']['menu'] .= $model['html']['writer']['com']['menu'];
         }
+        
+        //var_dump($model);
+        
+        //echo $model['PLUGINS']['WRITER']['template'];
 
         /* set html data */
         $model['html']['content'] .= $libView->getTemplateResult($model, $model['PLUGINS']['WRITER']['template']);
@@ -402,9 +406,9 @@ class pluginWriter {
             case 'edit':
                 $innerAction = $this->_displayStudentsEdit($toolbox, $plugin);
                 break;
-            case 'delete':
+            /*case 'delete':
                 $innerAction = $this->_displayStudentsDelete($toolbox, $plugin);
-                break;
+                break;*/
             case 'details':
                 $innerAction = $this->_displayStudentsDetails($toolbox, $plugin);
                 break;
@@ -430,9 +434,9 @@ class pluginWriter {
             case 'send-to-order':
                 $innerAction = $this->_displayMessagesCreate($toolbox, $plugin);
                 break;
-            case 'delete':
+            /*case 'delete':
                 $innerAction = $this->_displayMessagesDelete($toolbox, $plugin);
-                break;
+                break;*/
             case 'details':
                 $innerAction = $this->_displayMessagesDetails($toolbox, $plugin);
                 break;
@@ -613,6 +617,7 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
         if(empty($oid)) {
             // set template
             $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
@@ -741,6 +746,7 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
         if(empty($oid)) {
             // set template
             $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
@@ -986,6 +992,7 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
         if(empty($oid)) {
             // set template
             $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
@@ -1111,6 +1118,7 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
         if(empty($oid)) {
             // set template
             $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['state.error'];
@@ -1352,6 +1360,7 @@ class pluginWriter {
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
+        $model['PLUGINS']['WRITER']['referer'] = libraryRequest::storeOrGetRefererUrl(false);
 
 
         if(empty($oid)) {
@@ -1365,6 +1374,8 @@ class pluginWriter {
             ->from('writer_writers')
             ->where('ID', '=', $oid)
             ->fetchRow();
+        
+        //var_dump($data);
 
         if (empty($data)) {
             // set template
@@ -1403,7 +1414,9 @@ class pluginWriter {
         }
 
         $model['PLUGINS']['WRITER']['data'] = $data;
-        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers_delete_preview'];
+        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.delete_preview'];
+        
+        //echo 'end';
     }
     private function _displayWritersEdit ($toolbox, $plugin) {
 
@@ -1489,8 +1502,8 @@ class pluginWriter {
                             $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $plugin['templates']['mail.writers.created']);
                             // send email message
                             libraryMailer::sendEMail($recipient);
-                            $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.create_save'];
                         }
+                        $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.create_save'];
                     }
                     else
                         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.create_error'];
@@ -1499,7 +1512,7 @@ class pluginWriter {
                     $model['PLUGINS']['WRITER']['data'] = $data;
                     $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.create_preview'];
                 } else
-                    $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page_writers_error'];
+                    $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.writers.error'];
                 return;
             } else
                 $model['PLUGINS']['WRITER']['messages'] = $messages;
@@ -2419,7 +2432,7 @@ class pluginWriter {
     }
 
     private function cross_2co_product_list ($params) {
-        echo 'inside cross_2co_product';
+        //echo 'inside cross_2co_product';
         
         //var_dump($params);
         

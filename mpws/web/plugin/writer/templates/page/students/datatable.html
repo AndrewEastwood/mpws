@@ -49,9 +49,9 @@
 
     <div class="MPWSDivTable">
         <div class="MPWSDivTableRow MPWSDivTableRowHeader">
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2">Actions</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Name.asc', 'Name.desc', 'Name.asc'));?>">Name</a></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize3"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Email.asc', 'Email.desc', 'Email.asc'));?>">Email</a></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize1">Actions</span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize3"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Name.asc', 'Name.desc', 'Name.asc'));?>">Name</a></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize4"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Email.asc', 'Email.desc', 'Email.asc'));?>">Email</a></span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader"><a href="?<?=libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_GET['sort'], 'Active.asc', 'Active.desc', 'Active.asc'));?>">Active</a></span>
             <span class="MPWSDivTableCell MPWSDivTableCellHeader MPWSDivTableCellSize2_5">Last Access</span>
         </div>
@@ -60,11 +60,8 @@
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
                 <a href="?display=students&action=details&oid=<?=$entry['ID'];?>">Details</a>
             </span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
-                <a href="?display=students&action=delete&oid=<?=$entry['ID'];?>">Delete</a>
-            </span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2"><?=$entry['Name'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize3"><?=$entry['Email'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize3"><?=$entry['Name'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize4"><?=$entry['Email'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellDataState_<?=$entry['Active'];?>">&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateLastAccess'];?></span>
         </div>

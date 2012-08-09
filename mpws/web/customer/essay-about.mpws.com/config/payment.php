@@ -9,7 +9,8 @@
             'sid' => '1788351',
             'quantity' => '1',
             'fixed' => 'Y',
-            'skip_landing' => 'Y'
+            'skip_landing' => 'Y',
+            'demo' => 'Y'
         ),
         'API' => array(
             //'USER' => 'DemoAPI',
@@ -19,7 +20,7 @@
             'METHODS' => array(
                 'list_products' => 'https://www.2checkout.com/api/products/list_products',
                 'create_product' => 'https://www.2checkout.com/api/products/create_product',
-                'purchase' => 'https://www.2checkout.com/checkout/spurchase'
+                'purchase' => 'https://www.2checkout.com/checkout/purchase'
             )
         ),
         'PRODUCT_CATEGORY' => 15
