@@ -66,5 +66,11 @@
         }
     }
     
+    function valueOnEnv($variants) {
+        if (isset($variants[MPWS_ENV]))
+            return $variants[MPWS_ENV];
+        return null;
+    }
+    
 
 ?>

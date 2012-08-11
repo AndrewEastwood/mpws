@@ -61,9 +61,14 @@ class customer {
         }
         
         $this->_componentMenu($customer);
+        $this->_componentUserInfo($customer);
+        
+        // switcher test
+        //echo valueOnEnv(array('DEV' => 1, 'PROD' => 2));
         
         
         // remove expired accounts
+        $param = array();
         $param['dbo'] = $customer->getDatabaseObj();
         libraryToolboxManager::callPluginMethod('writer', 'useremoval', $param);
         // check for live edit mode or save changes
@@ -165,9 +170,54 @@ class customer {
     private function api_check_login ($customer) {
         //$p = libraryRequest::getApiParam();
         
+        $p = libraryRequest::getApiParam();
+        $doubleLogin = $customer->getDatabaseObj()
+            ->reset()
+            ->select('count(*) as `TOTAL`')
+            ->from('writer_students')
+            ->where('Login', '=', $p['value'])
+            ->fetchRow();
+
+        return libraryUtils::getJSON(array(
+            'login' => $p['value'],
+            'isAvailable' => ($doubleLogin['TOTAL'] == '0')
+        ));
+        
+        //return libraryUtils::getJSON(array('ololo'));
     }
     
     /* components */
+    private function _componentUserInfo($customer) {
+        $model = &$customer->getModel();
+        if ($model['USER']['IS_WRITER']) {
+            $data['NEW'] = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('count(*) as `COUNT`')
+                    ->from('writer_orders')
+                    ->where($model['USER']['TYPE'].'ID', '=', $model['USER']['ID'])
+                    ->andWhere('PublicStatus', '=', 'NEW')
+                    ->fetchRow();
+            $data['REWORK'] = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('count(*) as `COUNT`')
+                    ->from('writer_orders')
+                    ->where($model['USER']['TYPE'].'ID', '=', $model['USER']['ID'])
+                    ->andWhere('PublicStatus', '=', 'REWORK')
+                    ->fetchRow();
+        }
+        if ($model['USER']['IS_STUDENT'])
+            $data['PENDING'] = $customer->getDatabaseObj()
+                    ->reset()
+                    ->select('count(*) as `COUNT`')
+                    ->from('writer_orders')
+                    ->where($model['USER']['TYPE'].'ID', '=', $model['USER']['ID'])
+                    ->andWhere('PublicStatus', '=', 'PENDING')
+                    ->fetchData();
+
+        $model['NOTIFY'] = $data;
+        
+        //var_dump($model['NOTIFY']);
+    }
     private function _componentMenu($customer) {
         $model = &$customer->getModel();
         
@@ -219,8 +269,10 @@ class customer {
             $data = libraryRequest::getPostMapContainer($validator['DATAMAP']['ACCOUNT_CREATE']);
             libraryValidator::validateData($data, $validator['FILTER']['ACCOUNT_CREATE'], $messages);
             
+            $model['REGISTER']['DATA'] = $data;
+            
             if ($data['Password'] !== $data['Password2'])
-                $messages[] = 'Confirmation password does not match with main.';
+                $messages[] = 'Confirmation password does not match with the main.';
             
             if (!empty($messages)) {
                 $model['CUSTOMER']['MESSAGES'] = $messages;
@@ -1627,14 +1679,17 @@ class customer {
                     ->fields(array_keys($message))
                     ->values(array_values($message))
                     ->query();
-            
+            //echo '<br>|' . strip_tags($message['Message']);
+            //echo '<br>|' . $message['Message'];
                 /* SYSTEM NOTIFY */
                 if (!empty($customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'])) {
                     $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_ORDER_COMMENTED'];
                     $recipient['SUBJECT'] = 'New Comment From ' . strtolower($model['USER']['TYPE']);
                     $recipient['DATA'] = array(
                         'Name' => strtolower($model['USER']['TYPE']),
-                        'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid
+                        'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_ORDER_LINK_OID'] . $oid,
+                        'Details' => strip_tags($message['Message']),
+                        'PostedBy' => strtolower($model['USER']['TYPE']),
                     );
                     $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_order_commented'));
                     // send email message to system
@@ -1646,7 +1701,8 @@ class customer {
                     $recipient['TO'] = $user_student['Email'];
                     $recipient['SUBJECT'] = 'New Comment';
                     $recipient['DATA'] = array(
-                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid,
+                        'Details' => strip_tags($message['Message'])
                     );
                     $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.student_order_commented'));
                     // send email message to system
@@ -1658,7 +1714,8 @@ class customer {
                     $recipient['TO'] = $user_writer['Email'];
                     $recipient['SUBJECT'] = 'New Comment';
                     $recipient['DATA'] = array(
-                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid
+                        'TargetUrl' => $customer_config_mail['URLS']['ACCOUNT_ORDER_LINK'] . $oid,
+                        'Details' => strip_tags($message['Message'])
                     );
                     $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.writer_order_commented'));
                     // send email message to system
@@ -2009,18 +2066,15 @@ class customer {
                     ->andWhere('PublicStatus', '<>', 'CLOSED')
                     ->andWhere('InternalStatus', '<>', 'REJECTED')
                     ->fetchData();
-            // get user
-            if ($model['USER']['ACTIVE']) {
-                $mdbc = $customer->getCustomerConfiguration('MDBC');
-                $model['CUSTOMER']['DB_DATE_FORMAT'] = $mdbc['DB_DATE_FORMAT'];
-                $model['CUSTOMER']['USER'] = $customer->getDatabaseObj()
-                    ->reset()
-                    ->select('TimeZone')
-                    ->from('writer_writers')
-                    ->where('ID', '=', $model['USER']['ID'])
-                    ->fetchRow();
-            }
-            
+            // get user info
+            $mdbc = $customer->getCustomerConfiguration('MDBC');
+            $model['CUSTOMER']['DB_DATE_FORMAT'] = $mdbc['DB_DATE_FORMAT'];
+            $model['CUSTOMER']['USER'] = $customer->getDatabaseObj()
+                ->reset()
+                ->select('TimeZone')
+                ->from('writer_writers')
+                ->where('ID', '=', $model['USER']['ID'])
+                ->fetchRow();
         }
         if ($model['USER']['IS_STUDENT'])
             $data = $customer->getDatabaseObj()

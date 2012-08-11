@@ -59,7 +59,6 @@ body{
 
 #top_menu_wrapper{
     position:absolute;
-    width:300px;
     z-index:999;
     .top_menu_base{
         .shadow;
@@ -68,11 +67,23 @@ body{
         height:150px;
         padding:10px;
         display:none;
+        background-image: url(top_slider_bg.png);
         .top_menu_base_wrapper{
-            width:600px;
+            position:relative;
+            width:400px;
+            height:150px;
             margin:0 auto;
+            margin-left:250px;
             background: url(footerLogo.png) no-repeat;
-            padding-left:60px;
+            padding-left:100px;
+        }
+        .loggout{
+            width:200px;
+            float:left;
+            text-align:left;
+            top:0;
+            left:0;
+            padding:10px;
         }
     }
     .top_menu_button{
@@ -85,7 +96,16 @@ body{
         width:150px;
         text-align:center;
         cursor:pointer;
-    }   
+    }
+    & a{
+        color: #0f6db7;
+        display:block;
+        text-decoration:none;
+        padding:2px 15px;
+    }
+}
+.logged{
+    width:600px;
 }
 
 #header{
@@ -193,7 +213,15 @@ body{
         top:-115px;
         right:30px;
         border:none;
-        
+        text-decoration: none;
+    }
+    .MPWSOrderButton {
+        width: 121px;
+        height: 115px;
+        background: url('static/orderNow.png') no-repeat 0 0;
+        &:hover {
+            background-image: url('static/orderNowHover.png');
+        }
     }
 }
 
@@ -355,5 +383,55 @@ a.pagination_active{
     clear: both;
 }
 
+.MPWSMessage {text-align: left; margin-bottom: 5px;}
+    .MPWSMessageWelcome {font-weight: bold;}
+    .MPWSMessageNotify {font-weight: bold; color: #69B433; padding: 5px 0px 0px 10px; font-size: 11px;}
+    .MPWSMessageNotifyNew {}
+    .MPWSMessageNotifyRework {}
+    .MPWSMessageNotifyPending {}
+    .MPWSMessageNote {color: #06C; padding-top: 5px; margin-top: 5px;  font-size: 11px; font-style: italic; border-top: 1px solid #555;}
+    
+    .MPWSFormHint {
+        color: #555;
+        font-size: 10px;
+        margin-bottom: 10px;
+        ul {
+            margin: 0px 0px 0px 15px;
+            padding: 0px 10px;
+            li {font-size: 10px; font-style: italic;}
+        }
+    }
+    
+    .MPWSPage_Account .content {overflow: hidden;}
+    
+    .MPWSPageForm {
+        float: left;
+        width: 320px;
+        padding: 20px;
+        &.MPWSPageRegisterForm {
+            background: url('vsep.gif') repeat-y right top;
+            input#MPWSButtonCheckLoginID {
+                margin: 0px 0px 10px;
+                width: auto;
+                font-size: 10px;
+            }
+        }
+        &.MPWSPageLoginForm {
+            input.MPWSControlText {margin: 0px 0px 15px;}
+            padding: 20px 0px 20px 45px;
+        }
+        input.MPWSControlText {
+            font-size: 14px;
+            width: 280px;
+        }
+        input.MPWSControlButton {
+            font-size: 14px;
+            width: 100px;
+            margin: 20px 0px;
+        }
+        .MPWSFormHint {width: 270px;}
+    }
+
+.MPWSJSTooltip_UserDoubleLogin {margin-top: -55px; margin-left: 25px; border-color: #888;}
 
 

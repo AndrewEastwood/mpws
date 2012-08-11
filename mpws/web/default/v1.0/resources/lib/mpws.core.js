@@ -1,6 +1,6 @@
-// MPWS Core
-// ---------
-
+/* MPWS Core
+ * ---------
+ */
 (function (window, document, $, mpws) {
 
     mpws.tools = {

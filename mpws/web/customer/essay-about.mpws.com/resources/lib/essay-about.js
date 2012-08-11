@@ -18,6 +18,7 @@ mpws.module.define('essay-about', (function(window, document, $){
                 showButtonPanel: true
         });
         
+        // resources
         $('#MPWSOrderSourceCountID').change(function(){
             // get current sources count
             var _currentSrcs = $('#MPWSSectionOrderSourcesLinksID input[type="text"]');
@@ -25,7 +26,7 @@ mpws.module.define('essay-about', (function(window, document, $){
             var _field = '<div class="MPWSSourceRow"><input type="text" name="order_source_links[]" value=""/></div>';
             var _cDiff = _newCount - _currentSrcs.length;
             
-                console.log(_newCount);
+            //console.log(_newCount);
             if (_currentSrcs.length < _newCount) {
                 var _newFields = '';
                 for(var i = 0; i < _cDiff ; i++)
@@ -63,8 +64,39 @@ mpws.module.define('essay-about', (function(window, document, $){
                 //minDate: new Date(new Date().getTime() + (3*60*60*1000))
         });
         
+        // login availability
+        $('#MPWSButtonCheckLoginID').click(function(){
+            var requester = mpws.api.getObjectJSON(this);
+            requester.value = $('#MPWSControlTextUserLoginRegisterID').val();
+            //mpws.tools.log(requester);
+            //mpws.tools.log(requester.getUrl());
+            mpws.api.send(requester.getUrl(), false, mpwsLoginStateReceived)
+            // MPWSControlTextUserLoginRegisterID
+        });
         
     });
+    
+    function mpwsLoginStateReceived (data) {
+        var _tooltip = new mpws.ui.tooltip();
+        _tooltip.setup({
+            binder: 'MPWSControlTextUserLoginRegisterID',
+            prefix: 'UserDoubleLogin',
+            removeAfter: 5000
+        });
+        
+        
+        //mpws.tools.log(_tooltip.getSettings());
+        
+        if (data && data.login == '')
+            _tooltip.setup({text:'Login is empty.'}).showModal();
+        else {
+            if (data && !data.isAvailable)
+                _tooltip.setup({text:'Login is already used.'}).showModal();
+            else
+                _tooltip.setup({text:'Available.'}).showModal();
+        }
+        //mpws.tools.log(data);
+    }
     
     return { };
 })(window, document, jQuery));

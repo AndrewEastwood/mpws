@@ -1,6 +1,8 @@
 <div id="diagram">
     <img src="/static/scheme.png" alt="How it works" style="padding-top:50px;" />
-    <a href="/page/make-order.html"><img src="/static/orderNow.png"/></a>
+    <a href="/page/make-order.html" id="order_now">
+        <div class="MPWSOrderButton">&nbsp;</div>
+    </a>
     <div id="whyUs">
         <div class="MPWSStaticContentWrapper" title="Why choose us">
         <?=getValue($model['PROPS']['WHY_CHOOSE_US']);?>

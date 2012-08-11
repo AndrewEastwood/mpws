@@ -22,8 +22,10 @@
 
     // system notify
     $default['MAIL']['INFO'] = array(
-        //'TO' => 'info@essay-about.com',
-        'TO' => 'ua.clients.support@gmail.com',
+        'TO' => valueOnEnv(array(
+            'DEV' => 'ua.clients.support@gmail.com',
+            'PROD' => 'info@essay-about.com',
+        )),
         'EMAIL' => 'no-reply@' . MPWS_CUSTOMER,
         'FROM' => 'Information <no-reply@' . MPWS_CUSTOMER . '>',
         'CONTENT_TYPE' => 'text/html; charset=iso-8859-1'

@@ -23,7 +23,7 @@
     mpws.page = '<?=libraryRequest::getPage();?>';
 </script>
 </head>
-<body>
+<body class="MPWSPage_<?=ucfirst(libraryRequest::getPage('home'));?>">
 
 <?php if ($model['MODE'] === 'LIVEEDIT') : ?>
 <form method="POST" action="">
@@ -37,43 +37,57 @@
 </div>
 <?php endif ?>
 
+
 <div id="header">
     <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
     <div id="top_menu_wrapper">
-        <div class="top_menu_base">
         <?php if($model['USER']['ACTIVE']) : ?>
-            <div class="top_menu_base_wrapper">
-            <?=$model['HTML']['COMPONENT']['MENU_ACCOUNT'];?>
+        <div class="top_menu_base logged">
+            <div class="loggout"> 
+                <form action="/page/account.html" method="POST">
+                    <div class="MPWSMessage MPWSMessageWelcome">Welcome: <?=$model['USER']['NAME'];?></div>
+                    <?php if(!empty($model['NOTIFY']['NEW']['COUNT'])) : ?>
+                        <div class="MPWSMessage MPWSMessageNotify MPWSMessageNotifyNew">You have <?=$model['NOTIFY']['NEW']['COUNT'];?> new order(s).</div>
+                    <?php endif ?>
+                    <?php if(!empty($model['NOTIFY']['REWORK']['COUNT'])) : ?>
+                        <div class="MPWSMessage MPWSMessageNotify MPWSMessageNotifyRework">You have <?=$model['NOTIFY']['REWORK']['COUNT'];?> order(s) to rework.</div>
+                    <?php endif ?>
+                    <?php if(!empty($model['NOTIFY']['PENDING']['COUNT'])) : ?>
+                        <div class="MPWSMessage MPWSMessageNotify MPWSMessageNotifyPending">You have <?=$model['NOTIFY']['PENDING']['COUNT'];?> order(s) to review.</div>
+                    <?php endif ?>
+                    <div class="MPWSMessage MPWSMessageNote">Please do not forget to do log out before you leave your account page.</div>
+                    <input type="submit" name="do" value="Logout">
+                </form>
             </div>
-            <form action="/page/account.html" method="POST">
-                <div>Welcome: <?=$model['USER']['NAME'];?></div>
-                <div>You are signed is as: <?=$model['USER']['TYPE'];?></div>
-                <input type="submit" name="do" value="Logout">
-            </form>
-        <?php else : ?>
-        <form action="/page/account.html" method="post" style="margin-bottom:30px;">
-        <table cellpadding="5" cellspacing="0" border="0" width="50%" align="center">
-        <tr>
-        <td class="cell02">Username</td>
-        <td class="cell02"><input type="text" name="user_login" value="" /></td>
-        </tr>
-        <tr>
-        <td class="cell02">Password</td>
-        <td class="cell02"><input type="password" name="user_pwd" value="" /></td>
-        </tr>
-        <tr>
-        <td colspan="2" align="center"><input name="do" type="submit" value="Log In" /></td>
-        </tr>
-        </table>
-        </form>
-        <?php endif ?>
+            <div class="top_menu_base_wrapper">
+                <?=$model['HTML']['COMPONENT']['MENU_ACCOUNT'];?>
+            </div>
         </div>
-        <div class="top_menu_button">
-        <?php if($model['USER']['ACTIVE']) : ?>
-            Welcome: <?=$model['USER']['NAME'];?>
         <?php else : ?>
-            Please Login
+        <div class="top_menu_base">
+            <form action="/page/account.html" method="post" style="margin-bottom:30px;">
+                <table cellpadding="5" cellspacing="0" border="0" width="50%" align="center">
+                    <tr>
+                        <td class="cell02">Username</td>
+                        <td class="cell02"><input type="text" name="user_login" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td class="cell02">Password</td>
+                        <td class="cell02"><input type="password" name="user_pwd" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center"><input name="do" type="submit" value="Log In" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
         <?php endif ?>
+        <div class="top_menu_button">
+            <?php if($model['USER']['ACTIVE']) : ?>
+                Welcome: <?=$model['USER']['NAME'];?>
+            <?php else : ?>
+                My Writing Desk
+            <?php endif ?>
         </div>
     </div>
     <?php endif ?>

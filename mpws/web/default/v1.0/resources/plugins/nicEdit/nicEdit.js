@@ -878,7 +878,7 @@ var nicEditorPane = bkClass.extend({
 		this.elm = elm;
 		this.pos = elm.pos();
 		
-		this.contain = new bkElement('div').setStyle({zIndex : '99999', overflow : 'hidden', position : 'absolute', left : this.pos[0]+'px', top : this.pos[1]+'px'})
+		this.contain = new bkElement('div').setStyle({zIndex : '999999', overflow : 'hidden', position : 'fixed', left : this.pos[0]+'px', top : this.pos[1]+'px'})
 		this.pane = new bkElement('div').setStyle({fontSize : '12px', border : '1px solid #ccc', 'overflow': 'hidden', padding : '4px', textAlign: 'left', backgroundColor : '#ffffc9'}).addClass('pane').setStyle(options).appendTo(this.contain);
 		
 		if(openButton && !openButton.options.noClose) {

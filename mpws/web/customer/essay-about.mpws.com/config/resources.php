@@ -40,7 +40,9 @@
             'IMPORT' => Array()
         ),
         'mpwsTheme.css' => Array(
-            'DEFAULT' => Array(),
+            'DEFAULT' => Array(
+                'shared.css'
+            ),
             'OWNER' => Array(),
             'AUTO' => Array(
                 'plugins/theme/jquery-ui-1.8.21.custom.css'
@@ -52,6 +54,7 @@
             'DEFAULT' => Array(
                 'lib/mpws.core.js',
                 'lib/mpws.api.js',
+                'lib/mpws.ui.js',
             ),
             'OWNER' => Array(
                 'lib/less.js',

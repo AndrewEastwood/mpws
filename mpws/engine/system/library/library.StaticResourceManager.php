@@ -88,7 +88,7 @@ class libraryStaticResourceManager {
         //var_dump($filesToLoad);
         
         // set metainfo
-        $metainfo .= '/* Packages: ' . PHP_EOL . ' * ' . 
+        $metainfo .= '/* ['.date('Y-m-d H:i:s').'] MPWS Packages: ' . PHP_EOL . ' * ' . 
                 implode(';' . PHP_EOL . ' * ', $filesToLoad) . PHP_EOL . ' */' . 
                 PHP_EOL . PHP_EOL . PHP_EOL;
         $lineBreak = PHP_EOL.'/*'.str_pad('', 25, '*').' line break '.str_pad('', 25, '*').'*/'.PHP_EOL;
@@ -107,8 +107,14 @@ class libraryStaticResourceManager {
         
         // compress data and store package
         if (MPWS_ENV === 'PROD') {
-            $data = libraryMinifyCSSCompressor::process($data);
-            file_put_contents($resourceFilePath, $metainfo  . $data);
+            if ($_GET['type'] == 'js') {
+                $data = libraryMinifyJSCompressor::minify($data);
+                file_put_contents($resourceFilePath, $metainfo  . $data);
+            }
+            if ($_GET['type'] == 'css') {
+                $data = libraryMinifyCSSCompressor::process($data);
+                file_put_contents($resourceFilePath, $metainfo  . $data);
+            }
         }
         
         
