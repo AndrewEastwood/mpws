@@ -78,6 +78,8 @@ class pluginWriter {
                 break;
         }
         
+        $model['html']['content'] = $result;
+        
         return $result;
         //echo 'ololololo api writer';
     }
@@ -88,7 +90,7 @@ class pluginWriter {
     }
     private function api_mark_as_read ($toolbox, $plugin) {
         $p = libraryRequest::getApiParam();
-        
+        //echo 'api_mark_as_read';
         if (isset($p['checked']) && isset($p['oid']))
             $toolbox->getDatabaseObj()
                 ->update('writer_messages')
@@ -2198,15 +2200,18 @@ class pluginWriter {
         /* Local Deadlines */
         $dto['UTC'] = $data_order['DateDeadline'];
         $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_order['TimeZone'], 'UTC');
-        $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_writer['TimeZone'], 'UTC');
+        if (!empty($data_writer))
+            $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_writer['TimeZone'], 'UTC');
         /* Local Times */
         $dto['nUTC'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
         $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_order['TimeZone']);
-        $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_writer['TimeZone']);
+        if (!empty($data_writer))
+            $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_writer['TimeZone']);
         /* Offsets */
         $dto['pUTC'] = convDT(false, 'UTC', false, 'P');
         $dto['pORDER'] = convDT(false, $data_order['TimeZone'], false, 'P');
-        $dto['pWRITER'] = convDT(false, $data_writer['TimeZone'], false, 'P');
+        if (!empty($data_writer))
+            $dto['pWRITER'] = convDT(false, $data_writer['TimeZone'], false, 'P');
         /* Hours Left */
         $dto['LEFT'] = libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
         

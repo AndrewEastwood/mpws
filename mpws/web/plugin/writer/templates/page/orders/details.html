@@ -76,8 +76,15 @@
             </div>
         </form>
     <?php elseif ($model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED']) : ?>
+    <?php if (!empty($model['PLUGINS']['WRITER']['DATA']['WriterID'])) : ?>
+        <strong class="MPWSSystemMessage">Order was assigned to writer, that was probably removed from the database!</strong>
+        <strong class="MPWSSystemMessage">Assign this order to another writer!</strong>
+    <?php else : ?>
         <strong class="MPWSSystemMessage">This order is unassigned!</strong>
     <?php endif ?>
+    <?php endif ?>
+
+
     
     <form action="" method="POST" class="MPWSForm">
         <label for="MPWSField_WriterTargetID" class="MPWSFieldLabel">Change Writer:</label>
@@ -165,6 +172,7 @@
             
             <br/>
             
+            <?php if (!empty($model['PLUGINS']['WRITER']['DATA_WRITER'])) : ?>
             <fieldset>
                 <legend>Writer Local Time</legend>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
@@ -187,6 +195,7 @@
             </fieldset>
             
             <br/>
+            <?php endif ?>
             
             <fieldset>
                 <legend>Order Local Time</legend>

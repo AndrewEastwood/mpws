@@ -1,7 +1,5 @@
 <div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now">
-        <div class="MPWSOrderButton">&nbsp;</div>
-    </a>
+	<a href="/page/make-order.html" id="order_now"><img src="/static/orderNow.png"/></a>
 	<h1>Free ready Essays!</h1>
 	<div class="content">
         <table cellpadding="5" cellspacing="0" border="0" width="100%">
@@ -32,5 +30,10 @@
      	<a href="<?=$model['CUSTOMER']['DATA']['DocumentURL'];?>" target="blank" class="btn01">Download</a>
         <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
      </center>
+    </div>
+</div>
+<div id="base-text">
+    <div class="MPWSStaticContentWrapper" title="Get Free Essays">
+    <?=getValue($model['PROPS']['GET_FREE_ESSAYS']);?>
     </div>
 </div>

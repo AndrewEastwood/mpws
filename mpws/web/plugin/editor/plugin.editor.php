@@ -260,12 +260,19 @@ class pluginEditor {
                     //echo '<br>SAVING CHANGES!!!!!';
                     //echo libraryRequest::getPostValue('text_index_why_choose');
                     
+                    //var_dump($_POST);
+                    
                     // get all properties
                     //$props = array();
                     $dbo = $params['dbo'];
                     foreach ($_POST as $key => $value) {
                         $matches = null;
-                        preg_match('/(\\w+)\\@(\\w+)\\@(.*)/', $key, $matches);
+                        preg_match('/(.*)@(.*)@(.*)/', $key, $matches);
+                        
+                        
+                        
+                        //var_dump($matches);
+                        
                         if (count($matches) != 4 || $matches[1] != 'property')
                             continue;
 

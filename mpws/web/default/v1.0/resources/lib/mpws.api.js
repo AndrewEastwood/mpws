@@ -32,7 +32,7 @@
     
     function _objectRequest (sender, callback) {
         var requester = _getObjectJSON(sender);
-        _sendRequest(requester.url, false, callback);
+        _sendRequest(requester.getUrl(), false, callback);
         return true;
     }
     
@@ -60,7 +60,7 @@
                 _params += '&id=' + this.id;
                 _params += '&value=' + this.value;
                 _params += '&checked=' + this.checked;
-                _params += '&token=' + this.token || '';
+                _params += '&token=' + mpws.token || '';
                 if (typeof(this.oid) !== 'undefined')
                     _params += '&oid=' + this.oid;
                 if (typeof(this.custom) !== 'undefined')
