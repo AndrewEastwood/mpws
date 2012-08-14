@@ -7,11 +7,14 @@
 
     function mpwsTooltip (text, binder, prefix, removeAfter) {
         
-        var _text = text;
+        var _text = text || ' ';
         var _binder = binder;
         var _prefix = prefix || 'Default';
         var _removeAfter = removeAfter || -1;
         var _self = this;
+        var _onclick;
+        var _animateIn = 1500;
+        var _animateOut = 500;
         
         
         function _getTooltip () {
@@ -47,6 +50,9 @@
             _binder = settings.binder || _binder;
             _prefix = settings.prefix || _prefix;
             _removeAfter = settings.removeAfter || _removeAfter;
+            _onclick = settings.onclick || _onclick;
+            _animateIn = settings.animateIn || _animateIn;
+            _animateOut = settings.animateOut || _animateOut;
             
             return this;
         };
@@ -61,38 +67,46 @@
         }
 
         this.clear = function (selector, callback) {
+            var cbRez = false;
             //mpws.tools.log('clear');
             var $items = $(selector);
             if ($items.length)
                 $items.animate(
                     {opacity:0,'margin-top':'100px'},
-                    500,
+                    _animateOut,
                     function(){
                         $(this).remove();
                         if (!!callback)
-                            callback();
+                            cbRez = callback();
                     }
                 );
             else
                 if (!!callback)
-                    callback();
+                    cbRez = callback();
+    
+            return cbRez;
+
         };
 
         this.clearAll = function (callback) {
             //mpws.tools.log('clearAll');
-            this.clear('.MPWSJSTooltip', callback);
+            var cbRez = this.clear('.MPWSJSTooltip', callback);
+            if (!!callback)
+                return cbRez;
         };
         
         
-        this.showModal = function () {
+        this.showModal = function (callback) {
             //mpws.tools.log('-----------2');
             //mpws.tools.log(this.clearAll);
             //mpws.tools.log('-----------2');
             //mpws.tools.log('showModal');
-            this.clearAll(this.show);
+            var cbRez = this.clearAll(this.show);
+            if (!!callback)
+                cbRez = callback();
         };
         
-        this.show = function () {
+        this.show = function (callback) {
             //mpws.tools.log('show');
             var _id = 'MPWSJSTooltip_' + mpws.tools.random() + 'ID';
             var _tooltip = _getTooltip();
@@ -105,11 +119,13 @@
 
             if (_removeAfter > 0) {
                 //mpws.tools.log('-----------will be removed after ' + _removeAfter);
-                _tooltip.object.animate({opacity:1,top:_tooltip.target.top}, 1500, function (){
+                _tooltip.object.animate({opacity:1,top:_tooltip.target.top}, _animateIn, function (){
                     setInterval(function(){_self.clear('#' + _id);},_removeAfter)
                 });
             } else
-                _tooltip.object.animate({opacity:1,top:_tooltip.target.top}, 1500);
+                _tooltip.object.animate({opacity:1,top:_tooltip.target.top}, _animateIn);
+            if (!!callback)
+                callback(_id);
         };
  
     };

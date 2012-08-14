@@ -24,6 +24,12 @@
         random: function () {
             return Math.floor(Math.random()*Math.pow(2,56)).toString(36);  
         },
+        parseUrl: function (url) {
+            var _host = url.replace('//www.','//').split('://')[1].split('.')[0];
+            return {
+                host: _host
+            };
+        },
         onload: $(document).ready
     };
     

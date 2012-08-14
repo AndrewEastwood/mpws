@@ -18,8 +18,8 @@
         
     <div class="content">
 
-    	<form action="/page/make-order.html" method="post" style="margin-bottom:30px;">
-    	<table cellpadding="5" cellspacing="0" border="0" width="90%" align="center">
+        <form action="/page/make-order.html" method="post" style="margin-bottom:30px;">
+        <table cellpadding="5" cellspacing="0" border="0" width="90%" align="center">
         <tr>
             <td colspan="2" align="center" class="cell01">Order Form</td>
         </tr>
@@ -70,7 +70,7 @@
             <td class="cell04a">
                 <select name="order_pages">
                 <?php
-                    for($i=1;$i<=20;$i++) {
+                    for($i=1;$i<=30;$i++) {
                         $selected = '';
                         if ($model['CUSTOMER']['DATA']['Pages'] == $i)
                             $selected = ' selected="selected"';
@@ -138,6 +138,14 @@
                 }
             ?>
             </select>
+            <div class="MPWSFormHint" id="MPWSFormHintSourceBannerID">
+                You should put the link to the sources into the fileds below.
+                We recomment to use the following services to upload your source and get th url:
+                <ul>
+                    <li><a href="http://ge.tt/" target="blank" class="MPWSSourceTipBanner">http://ge.tt</a></li>
+                    <li><a href="http://www.filefactory.com/" target="blank" class="MPWSSourceTipBanner">http://www.filefactory.com</a></li>
+                </ul>
+            </div>
             <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
                 <div class="MPWSSourceRow"></div>
                 <!-- sources from preview page -->

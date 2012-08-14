@@ -73,6 +73,28 @@ mpws.module.define('essay-about', (function(window, document, $){
             mpws.api.send(requester.getUrl(), false, mpwsLoginStateReceived)
             // MPWSControlTextUserLoginRegisterID
         });
+
+        // upload banner
+        if (mpws.page === "make-order") {
+            var _tooltip = new mpws.ui.tooltip();
+            _tooltip.setup({
+                binder: 'MPWSFormHintSourceBannerID',
+                prefix: 'SourceTipBanner',
+                animateIn: 500,
+                animateOut: 250
+            });
+            $('a.MPWSSourceTipBanner').hover(
+                function(){
+                    _tooltip.setup({
+                        prefix: 'SourceTipBanner_' + mpws.tools.parseUrl($(this).attr('href')).host
+                    }).showModal();
+                },
+                function(){
+                    _tooltip.clearAll();
+                }
+            );
+        }
+
         
     });
     

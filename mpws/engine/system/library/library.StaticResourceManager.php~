@@ -101,7 +101,7 @@ class libraryStaticResourceManager {
         }
         
         // add import files (CSS only !!!!)
-        if (!empty($filesToImport))
+        if (MPWS_ENV === 'DEV' && !empty($filesToImport))
             foreach ($filesToImport as $item)
                 $metainfo .= PHP_EOL . '@import url(\'' . $item . '\');';
         
