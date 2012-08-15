@@ -408,6 +408,10 @@ a.pagination_active{
         float: left;
         width: 320px;
         padding: 20px;
+        div.MPWSFormTitle {
+            font-size: 16px;
+            padding: 0px 0px 20px;
+        }
         &.MPWSPageRegisterForm {
             background: url('vsep.gif') repeat-y right top;
             input#MPWSButtonCheckLoginID {
@@ -435,3 +439,30 @@ a.pagination_active{
 .MPWSJSTooltip_UserDoubleLogin {margin-top: -55px; margin-left: 25px; border-color: #888;}
 
 
+.MPWSControlPaperInstructions {width: 450px; height: 150px;}
+
+.MPWSJSTooltip_SourceTipBanner_ge {
+    margin-left: -20px;
+    border-color: #888;
+    margin-top: -35px;
+    width: 460px;
+    height: 35px;
+    background: #888 url('fileshare_banner_gett.gif') no-repeat left top;
+}
+.MPWSJSTooltip_SourceTipBanner_filefactory {
+    margin-left: -20px;
+    border-color: #888;
+    margin-top: -15px;
+    width: 460px;
+    height: 35px;
+    background: #888 url('fileshare_banner_filefactory.gif') no-repeat left top;
+}
+
+#MPWSFormHintSourceBannerID {
+    width: 350px;
+    margin-top: 5px;
+    ul {
+        margin-top: 5px;
+        li {padding: 5px;}
+    }
+}

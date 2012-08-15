@@ -38,7 +38,7 @@ editable.goLiveEdit = function(){
     
     // init nicEdit
     bkLib.onDomLoaded(function() {
-        var myNicEditor = new nicEditor({iconsPath : '/static/nicEditorIcons.gif'});
+        var myNicEditor = new nicEditor({iconsPath : '/static/nicEditorIcons.gif', fullPanel : true});
 
         // set panel
         myNicEditor.setPanel('MPWSEditPanelID');

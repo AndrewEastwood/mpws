@@ -270,7 +270,7 @@ var nicEditorConfig = bkClass.extend({
     },
     iconsPath : '../nicEditorIcons.gif',
     buttonList : ['save','bold','italic','underline','left','center','right','justify','ol','ul','fontFormat','indent','outdent','image','upload','link','unlink','forecolor','bgcolor'],
-    iconList : {"bgcolor":1,"forecolor":2,"bold":3,"center":4,"hr":5,"indent":6,"italic":7,"justify":8,"left":9,"ol":10,"outdent":11,"removeformat":12,"right":13,"save":24,"strikethrough":15,"subscript":16,"superscript":17,"ul":18,"underline":19,"image":20,"link":21,"unlink":22,"close":23,"arrow":25}
+    iconList : {"xhtml":1,"bgcolor":2,"forecolor":3,"bold":4,"center":5,"hr":6,"indent":7,"italic":8,"justify":9,"left":10,"ol":11,"outdent":12,"removeformat":13,"right":14,"save":15,"strikethrough":16,"subscript":17,"superscript":18,"ul":19,"underline":20,"image":21,"link":22,"unlink":23,"close":24,"arrow":25}
     
 });
 /* END CONFIG */
@@ -878,7 +878,7 @@ var nicEditorPane = bkClass.extend({
         this.elm = elm;
         this.pos = elm.pos();
         
-        this.contain = new bkElement('div').setStyle({zIndex : '999999', overflow : 'hidden', position : 'fixed', left : this.pos[0]+'px', top : this.pos[1]+'px'})
+        this.contain = new bkElement('div').setStyle({zIndex : '9999999', overflow : 'hidden', position : 'fixed', left : this.pos[0]+'px', top : this.pos[1]+'px'})
         this.pane = new bkElement('div').setStyle({fontSize : '12px', border : '1px solid #ccc', 'overflow': 'hidden', padding : '4px', textAlign: 'left', backgroundColor : '#ffffc9'}).addClass('pane').setStyle(options).appendTo(this.contain);
         
         if(openButton && !openButton.options.noClose) {
@@ -1046,8 +1046,8 @@ nicEditors.registerPlugin(nicButtonTips);
  /* START CONFIG */
 var nicSelectOptions = {
     buttons : {
-        'fontSize' : {name : __('Select Font Size'), type : 'nicEditorFontSizeSelect', command : 'fontsize'},
-        'fontFamily' : {name : __('Select Font Family'), type : 'nicEditorFontFamilySelect', command : 'fontname'},
+        //'fontSize' : {name : __('Select Font Size'), type : 'nicEditorFontSizeSelect', command : 'fontsize'},
+        //'fontFamily' : {name : __('Select Font Family'), type : 'nicEditorFontFamilySelect', command : 'fontname'},
         'fontFormat' : {name : __('Select Font Format'), type : 'nicEditorFontFormatSelect', command : 'formatBlock'}
     }
 };
@@ -1332,25 +1332,31 @@ nicEditors.registerPlugin(nicPlugin,nicImageOptions);
 
 
 /* START CONFIG */
-var nicSaveOptions = {
+var nicCodeOptions = {
     buttons : {
-        'save' : {name : __('Save this content'), type : 'nicEditorSaveButton'}
+        'xhtml' : {name : 'Edit HTML', type : 'nicCodeButton'}
     }
+    
 };
 /* END CONFIG */
 
-var nicEditorSaveButton = nicEditorButton.extend({
-    init : function() {
-        if(!this.ne.options.onSave) {
-            this.margin.setStyle({'display' : 'none'});
-        }
+var nicCodeButton = nicEditorAdvancedButton.extend({
+    width : '350px',
+        
+    addPane : function() {
+        this.addForm({
+            '' : {type : 'title', txt : 'Edit HTML'},
+            'code' : {type : 'content', 'value' : this.ne.selectedInstance.getContent(), style : {width: '500px', height : '300px'}}
+        });
     },
-    mouseClick : function() {
-        var onSave = this.ne.options.onSave;
-        var selectedInstance = this.ne.selectedInstance;
-        onSave(selectedInstance.getContent(), selectedInstance.elm.id, selectedInstance);
+    
+    submit : function(e) {
+        var code = this.inputs['code'].value;
+        this.ne.selectedInstance.setContent(code);
+        this.removePane();
     }
 });
 
-nicEditors.registerPlugin(nicPlugin,nicSaveOptions);
+nicEditors.registerPlugin(nicPlugin,nicCodeOptions);
+
 

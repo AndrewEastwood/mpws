@@ -80,8 +80,8 @@ mpws.module.define('essay-about', (function(window, document, $){
             _tooltip.setup({
                 binder: 'MPWSFormHintSourceBannerID',
                 prefix: 'SourceTipBanner',
-                animateIn: 500,
-                animateOut: 250
+                animateIn: 1,
+                animateOut: 1
             });
             $('a.MPWSSourceTipBanner').hover(
                 function(){

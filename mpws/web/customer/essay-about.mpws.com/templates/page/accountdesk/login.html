@@ -3,10 +3,6 @@
     <h1>Join Us</h1>
     <div class="content">
 
-        <div class="MPWSStaticContentWrapper" title="Join Us General">
-        <?=getValue($model['PROPS']['JOIN_US_GENERAL']);?>
-        </div>
-
         <?php
             if(count($model['CUSTOMER']['MESSAGES'])) {
                 echo '<b>We\'ve found some errors in the fields below:</b>';
@@ -26,6 +22,7 @@
 
         <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
         <form action="" method="POST" class="MPWSPageForm MPWSPageRegisterForm">
+            <div class="MPWSFormTitle MPWSFormTitle_New">Student Registration</div>
             <input type="text" class="MPWSControl MPWSControlText" name="user_name" value="<?=$model['REGISTER']['DATA']['Name'];?>" placeholder="name"/>
             <div class="MPWSFormHint">Your name can contain blank spaces, upper and lower case characters, numbers, hyphen and underscore only.</div>
             <div></div>
@@ -60,6 +57,7 @@
         </form>
 
         <form action="" method="POST" class="MPWSPageForm MPWSPageLoginForm">
+            <div class="MPWSFormTitle MPWSFormTitle_Login">Your Personal Desk</div>
             <input type="text" class="MPWSControl MPWSControlText" name="user_login" value="" placeholder="login"/>
             <div></div>
             <input type="password" class="MPWSControl MPWSControlText" name="user_pwd" value="" placeholder="password"/>
@@ -68,10 +66,5 @@
         </form>
         <?php endif ?>
 
-    </div>
-</div>
-<div id="base-text">
-    <div class="MPWSStaticContentWrapper" title="Join Us">
-    <?=getValue($model['PROPS']['JOIN_US']);?>
     </div>
 </div>

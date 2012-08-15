@@ -20,7 +20,7 @@
             '/page/free-essays.html' => 'Free <br />ESSAYS!',
             '/page/home.html' => 'Home',
             '/page/faq.html' => 'FAQ',
-            '/page/account.html' => 'Join Us',
+            '/page/joinus.html' => 'Join Us',
             '/page/discounts.html' => 'Discounts',
             '/page/prices.html' => 'Prices',
             '/page/terms.html' => 'Terms and Conditions'
@@ -30,7 +30,7 @@
             '/page/free-essays.html' => '<strong>FreeESSAYS</strong>',
             '/page/home.html' => 'Home',
             '/page/faq.html' => 'FAQ',
-            '/page/account.html' => 'Join Us',
+            '/page/joinus.html' => 'Join Us',
             '/page/discounts.html' => 'Discounts',
             '/page/prices.html' => 'Prices',
             '/page/terms.html' => 'Terms and Conditions'
@@ -40,7 +40,7 @@
             '/page/free-essays.html' => 'FreeESSAYS',
             '/page/home.html' => 'Home',
             '/page/faq.html' => 'FAQ',
-            '/page/account.html' => 'Join Us',
+            '/page/joinus.html' => 'Join Us',
             '/page/discounts.html' => 'Discounts',
             '/page/prices.html' => 'Prices',
             '/page/terms.html' => 'Terms and Conditions'
