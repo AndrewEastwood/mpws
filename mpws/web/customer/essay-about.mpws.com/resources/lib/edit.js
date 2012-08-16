@@ -46,8 +46,6 @@ editable.goLiveEdit = function(){
         // set editors
         for (var wwItem in _wwIds)
             myNicEditor.addInstance(_wwIds[wwItem]);
-       // show top panel
-       $('div.MPWSTopSlider').animate({marginTop: '-10px'}, 3000);
 
     });
      

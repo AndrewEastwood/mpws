@@ -30,6 +30,12 @@
                 host: _host
             };
         },
+        getDailyString: function (strings) {
+            var d = new Date();
+            if (strings[d.getDay()] !== undefined)
+                return strings[d.getDay()];
+            return '';
+        }
         onload: $(document).ready
     };
     

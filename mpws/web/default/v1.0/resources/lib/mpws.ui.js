@@ -130,6 +130,97 @@
  
     };
 
+    function mpwsLiveEditor () {
+        
+        var _settings = {
+            elements: 'div.MPWSStaticContentWrapper',
+            propNameAttr: 'title',
+            editBar: {},
+            editor: false
+        };
+        
+        function _showEditBar () {
+            if (typeof(editor) === 'undefined')
+                return false;
+            
+            // wrap all elements
+            $('body').wrapInner('<form method="post" action="" id="MPWSFormLiveEditorID">');
+            
+            // set top panel
+            $('#MPWSFormLiveEditorID').prepend(' \
+                <div class="MPWSTopSlider" style="margin-top:-100px;"> \
+                    <img src="/static/mpws-log_mini_eee.png"> \
+                    <div id="MPWSEditPanelID"></div> \
+                    <div class="MPWSButtonBlock"> \
+                        <input type="submit" name="do" id="MPWSFormLiveEditorButtonSaveID" value="Save Changes"> \
+                        <input type="submit" name="do" id="MPWSFormLiveEditorButtonExitID" value="Exit Editor"> \
+                    </div> \
+                </div>');
+            
+        }
+
+        this.setup = function (settings) {
+            $.extend(true, _settings, settings);
+            return this;
+        };
+        
+        this.closeEdit = function () {
+            $('#MPWSFormLiveEditorButtonExitID').click();
+            return this;
+        }
+        
+        this.doEdit = function (callback) {
+
+            var _wwIds = [];
+            
+            // remove all forms
+            $('form').remove();
+            
+            //
+            if (!_showEditBar())
+                return false;
+            
+            
+            // get all static wrappers
+            $('div.MPWSStaticContentWrapper').each(function(){
+                $(this).hide();
+                
+                // set id
+                var _propId = $(this).attr('title');
+                
+                if (!!!_propId)
+                    return false;
+                
+                // normalize key
+                _propId = mpws.page + '@' + _propId.toUpperCase().replace(/ /g, '_');
+
+                // control id
+                var _wwId = 'MPWSEditBox_' + mpws.tools.random() + 'ID';
+                _wwIds.push(_wwId);
+                
+                var editControl = $('<textarea>')
+                    .attr('name', 'property@' + _propId)
+                    .attr('id', _wwId)
+                    .css({
+                        width: '100%',
+                        border: '2px solid #0e0'
+                    })
+                    .text($(this).html());
+                $(this).after(editControl);
+            });
+
+            // send textarea IDs to callback
+            if (typeof(callback) === 'function')
+                callback(_wwIds);
+
+           // show top panel
+           $('div.MPWSTopSlider').animate({marginTop: '-10px'}, 3000);
+       
+            return this;
+        };
+
+    }
+    
     mpws.ui = {
         tooltip: mpwsTooltip
     }
