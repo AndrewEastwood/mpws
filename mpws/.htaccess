@@ -47,10 +47,3 @@ RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?
 
 # custom pages
 RewriteRule page/purchase.php?(.*) /engine/dispatcher/dispatcher.Public.php?page=purchase&action=default$2 [QSA]
-
-#######################
-######## TOOLS ########
-#######################
-
-#service pages
-#RewriteRule service/(\w+).html(.*) /engine/tools/tools.php?tool=$1&$2
