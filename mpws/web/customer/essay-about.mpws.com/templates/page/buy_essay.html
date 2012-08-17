@@ -62,12 +62,14 @@
             <tr>
                 <td class="cell01">TITLE</td>
                 <td class="cell01">PAGES</td>
+                <td class="cell01">DESCRIPTION</td>
                 <td class="cell01">PRICE</td>
             </tr>
             <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
             <tr>
                 <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Title'];?></a></td>
                 <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a></td>
+                <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Description'];?></a></td>
                 <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Price'];?>$</a></td>
             </tr>
             <?php } ?>
