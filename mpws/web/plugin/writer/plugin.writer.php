@@ -794,6 +794,8 @@ class pluginWriter {
         if (libraryRequest::isPostFormAction('save')) {
             $data = libraryRequest::getPostMapContainer($plugin['config']['VALIDATOR']['DATAMAP']['SALE']);
             
+            // set price format
+            $data['Price'] = sprintf("%.2f", $data['Price']);
             //var_dump($data);
             
             /* validate fileds */
@@ -856,6 +858,11 @@ class pluginWriter {
         if ($action === 'create') {
             
         }
+
+        // set price format
+        $data['Price'] = sprintf("%.2f", $data['Price']);
+        
+        libraryUtils::htmlValues($data);
 
         // set template
         $model['PLUGINS']['WRITER']['DATA'] = $data;

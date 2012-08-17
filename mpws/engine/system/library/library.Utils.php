@@ -50,6 +50,11 @@ class libraryUtils {
             return $stringDump;
         return true;
     }
+    
+    static public function htmlValues(&$array) {
+        foreach ($array as &$item)
+            $item = htmlentities($item, ENT_QUOTES);
+    }
 
     static public function groupArrayRowsByField($array, $key) {
         $_groups = array();

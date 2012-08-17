@@ -107,13 +107,15 @@
                 $this->query($sql);
             $out =  @mysql_fetch_assoc($this->_db_query_id);
             $this->freeResult($this->_db_query_id);//var_dump($out);
+            //foreach ($out as &$item)
+            //    $item = htmlentities($item, ENT_QUOTES);
             return $out;
         }
 
         public function getCount($table, $filter = '', $beforeConditionHook = '') {
             if (!empty($filter))
-                $filter = ' WHERE ' . $filter;
-            $filter = $beforeConditionHook . $filter;
+                $filter = ' WHERE ' . $filter . ' ';
+            $filter = $beforeConditionHook . ' ' . $filter;
             $row = $this->fetchRow('SELECT count(*) as `count` FROM ' . $table . $filter);
             if (isset($row['count']))
                 return $row['count'];
@@ -127,6 +129,8 @@
                 $this->query($sql);
             $out = array();
             while ($row = @mysql_fetch_assoc($this->_db_query_id)){
+                //foreach ($row as &$item)
+                //    $item = htmlentities($item, ENT_QUOTES);
                 $out[] = $row;
             }
             $this->freeResult($this->_db_query_id);//var_dump($out);
@@ -325,6 +329,7 @@
                 $val = mysql_real_escape_string($val);
                 $val = '\'' .  $val . '\'';
             }
+            //echo $val;
             return $val;
         }
 

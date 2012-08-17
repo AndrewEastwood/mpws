@@ -35,13 +35,19 @@ class libraryComponents
             $com['SEARCHBOX']['ACTIVE'] = false;
             $com['RECORDS'] = $com['RECORDS_ALL'];
         } else {
+        
+            //echo 'IS ACTIVE';
+        
             $com['SEARCHBOX']['ACTIVE'] = true;
             $com['SEARCHBOX']['FILTER'] = $_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']];
             $_searchBoxFilterString = array();
             if (!empty($condition))
-                $_searchBoxFilterString[] = $condition;
+                $_searchBoxFilterString[] = $condition . ' ';
             foreach ($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] as $sbKey => $sbVal)
                 $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
+
+            //echo implode('AND', $_searchBoxFilterString);
+                
             $com['RECORDS'] = $dbLink->getCount($config['TABLE'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
         }
 
@@ -128,9 +134,9 @@ class libraryComponents
                 $_cnd = explode(' ', $condition, 3);
                 //var_dump($_cnd);
                 if ($_conditionasAdded == 0)
-                    $dbLink->where(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"'));
+                    $dbLink->where(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
                 else
-                    $dbLink->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"'));
+                    $dbLink->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
             }
 
             // sorting
