@@ -466,3 +466,19 @@ a.pagination_active{
         li {padding: 5px;}
     }
 }
+
+#contacts .MPWSOnlineName {
+    position: absolute;
+    left:100%;
+    top:-5px;
+    width: 105px;
+    height: 30px;
+    background: url('currently_online.png') no-repeat;
+    span {
+        color: #9C0;
+        font-size: 15px;
+        display: block;
+        margin-top: 10px;
+        text-align: center;
+    }
+}

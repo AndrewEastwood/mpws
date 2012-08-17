@@ -7,7 +7,6 @@
 <link rel="stylesheet/less" type="text/css" href="/static/mpwsStyle.css">
 <script src="/static/mpwsLight.js" type="text/javascript"></script>
 <?php if ($model['MODE'] === 'LIVEEDIT') : ?>
-<link rel="stylesheet" type="text/css" href="/static/mpwsEdit.css">
 <script src="/static/mpwsEditable.js" type="text/javascript"></script>
 <?php endif ?>
 <!-- PNG FIX for IE6 -->
@@ -24,21 +23,7 @@
 </head>
 <body class="MPWSPage_<?=ucfirst(libraryRequest::getPage('home'));?>">
 
-<?php if ($model['MODE'] === 'LIVEEDIT') : ?>
-<form method="POST" action="">
-<div class="MPWSTopSlider">
-    <img src="/static/mpws-log_mini_eee.png">
-    <div id="MPWSEditPanelID"></div>
-    <div class="MPWSButtonBlock">
-        <input type="submit" name="do" value="Save Changes">
-        <input type="submit" name="do" value="Exit Editor">
-    </div>
-</div>
-<?php endif ?>
-    
-    
 <div id="header">
-    <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
     <div id="top_menu_wrapper">
         <?php if($model['USER']['ACTIVE']) : ?>
         <div class="top_menu_base logged">
@@ -89,12 +74,11 @@
             <?php endif ?>
         </div>
     </div>
-    <?php endif ?>
     
     <div id="contacts">
         <a href="<?=$model['CONFIG']['MAIL']['IM']['SKYPE'];?>">
             <img src="/static/contacts_skype.png" />
-            <img src="/static/currently_online.png" style="left:100%;top:-5px;" />
+            <div class="MPWSOnlineName"><span></span></div>
             Talk to TeamLead
         </a>
         <a href="mailto:<?=$model['CONFIG']['MAIL']['SUPPORT']['EMAIL'];?>">
@@ -125,15 +109,6 @@
         <?=$model['HTML']['COMPONENT']['MENU_FOOTER'];?>
     </div>
 </div>
-
-
-<?php if ($model['MODE'] === 'LIVEEDIT') : ?>
-<script>
-//mpws.tools.log('go live edit');
-editable.goLiveEdit();
-</script>
-</form>
-<? endif ?>
 
 </body>
 </html>

@@ -130,25 +130,43 @@
  
     };
 
-    function mpwsLiveEditor () {
-        
+    function mpwsLiveEditor (settings) {
+
         var _settings = {
             elements: 'div.MPWSStaticContentWrapper',
-            propNameAttr: 'title',
-            editBar: {},
-            editor: false
+            propertyNameSource: 'title',
+            editBar: {
+                setup: "opacity:0;",
+                animation: {
+                    fx: {marginTop:'-10px',opacity:0.95},
+                    time: 1500
+                }
+            },
+            editor: false,
+            isActive: $.cookie("MPWS_LIVE_EDIT_MODE") === 'OK',
+            isAutomatic: true,
+            callback : false,
+            customElementsToRemove: false
         };
         
         function _showEditBar () {
-            if (typeof(editor) === 'undefined')
+            mpws.tools.log('_showEditBar');
+            if (typeof(_settings.editor) === 'undefined')
                 return false;
-            
+
+            // remove all forms
+            $('form').remove();
+
             // wrap all elements
             $('body').wrapInner('<form method="post" action="" id="MPWSFormLiveEditorID">');
-            
+
+            // remove vustom elements
+            if (_settings.customElementsToRemove)
+                $(_settings.customElementsToRemove).remove();
+
             // set top panel
             $('#MPWSFormLiveEditorID').prepend(' \
-                <div class="MPWSTopSlider" style="margin-top:-100px;"> \
+                <div class="MPWSTopSlider" style="margin-top:-40px;'+_settings.editBar.setup+'"> \
                     <img src="/static/mpws-log_mini_eee.png"> \
                     <div id="MPWSEditPanelID"></div> \
                     <div class="MPWSButtonBlock"> \
@@ -157,36 +175,52 @@
                     </div> \
                 </div>');
             
-        }
+            return true;
+        };
 
         this.setup = function (settings) {
+            mpws.tools.log('setup');
+            if (!!settings.isActive)
+                settings.isActive = $.cookie("MPWS_LIVE_EDIT_MODE") === 'OK';
             $.extend(true, _settings, settings);
+
+            //mpws.tools.log(_settings);
+
+            if (_settings.isAutomatic && _settings.isActive)
+                this.doEdit();
+
             return this;
         };
         
         this.closeEdit = function () {
+            mpws.tools.log('closeEdit');
             $('#MPWSFormLiveEditorButtonExitID').click();
             return this;
         }
         
-        this.doEdit = function (callback) {
+        this.doEdit = function () {
+            mpws.tools.log('doEdit');
+            //mpws.tools.log(_settings);
 
-            var _wwIds = [];
-            
-            // remove all forms
-            $('form').remove();
-            
-            //
+            // exit if inactive
+            if (!_settings.isActive)
+                return false;
+            mpws.tools.log('doEdit: is active');
+
+            // setup top edit bar
             if (!_showEditBar())
                 return false;
-            
-            
+            mpws.tools.log('doEdit: edit bar is installed');
+
+            // our edit boxes
+            var _wwIds = [];
+
             // get all static wrappers
-            $('div.MPWSStaticContentWrapper').each(function(){
+            $(_settings.elements).each(function(){
                 $(this).hide();
                 
                 // set id
-                var _propId = $(this).attr('title');
+                var _propId = $(this).attr(_settings.propertyNameSource);
                 
                 if (!!!_propId)
                     return false;
@@ -210,19 +244,22 @@
             });
 
             // send textarea IDs to callback
-            if (typeof(callback) === 'function')
-                callback(_wwIds);
+            if (typeof(_settings.callback) === 'function')
+                _settings.callback(_wwIds, _settings);
 
-           // show top panel
-           $('div.MPWSTopSlider').animate({marginTop: '-10px'}, 3000);
+           // show/animate top panel
+           $('div.MPWSTopSlider').animate(_settings.editBar.animation.fx, _settings.editBar.animation.time);
        
             return this;
         };
 
+        if (typeof(settings) !== 'undefined')
+            this.setup(settings);
     }
     
     mpws.ui = {
-        tooltip: mpwsTooltip
+        tooltip: mpwsTooltip,
+        liveEditor: mpwsLiveEditor
     }
 
 })(window, document, jQuery, (window.mpws = window.mpws || {})); 

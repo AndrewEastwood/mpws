@@ -7,7 +7,10 @@ class libraryComponents
 {
     public static function comDataTable ($config, $dbLink, $condition = '', $beforeConditionHook = '') {
         $com = array();
-
+        
+        $pageName = strtoupper(libraryRequest::getPage('Default'));
+        $sessionSearchKey =  'MPWS_SEARCH_OF_' . $config['TABLE'] . '_' . $pageName;
+        
         $com['SEARCHBOX'] = array();
         // detect search request
         if (libraryRequest::isPostFormAction('search')) {
@@ -21,17 +24,17 @@ class libraryComponents
                 if ($returnValue === 0 && !empty($_pval))
                     $searchbox[str_replace($config['SEARCH_KEY_PREFIX'], '', $_pkey)] = '%'.mysql_escape_string($_pval).'%';
             }
-            $_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] = $searchbox;
+            $_SESSION[$sessionSearchKey] = $searchbox;
             $com['SEARCHBOX']['ACTIVE'] = true;
 
         }
         if (libraryRequest::isPostFormAction('discard')) {
-            $_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] = false;
+            $_SESSION[$sessionSearchKey] = false;
         }
 
         $com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE'], $condition, $beforeConditionHook);
 
-        if (empty($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']])) {
+        if (empty($_SESSION[$sessionSearchKey])) {
             $com['SEARCHBOX']['ACTIVE'] = false;
             $com['RECORDS'] = $com['RECORDS_ALL'];
         } else {
@@ -39,11 +42,11 @@ class libraryComponents
             //echo 'IS ACTIVE';
         
             $com['SEARCHBOX']['ACTIVE'] = true;
-            $com['SEARCHBOX']['FILTER'] = $_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']];
+            $com['SEARCHBOX']['FILTER'] = $_SESSION[$sessionSearchKey];
             $_searchBoxFilterString = array();
             if (!empty($condition))
                 $_searchBoxFilterString[] = $condition . ' ';
-            foreach ($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] as $sbKey => $sbVal)
+            foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal)
                 $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
 
             //echo implode('AND', $_searchBoxFilterString);
@@ -118,7 +121,7 @@ class libraryComponents
             // searchbox
             if($com['SEARCHBOX']['ACTIVE']) {
                 $_firstConditionWasAdded = false;
-                foreach ($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']] as $sbKey => $sbVal) {
+                foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
                     if ($_firstConditionWasAdded)
                         $dbLink->andWhere($sbKey, 'LIKE', $sbVal);
                     else {

@@ -8,7 +8,7 @@
     </div>
     
         <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
-        <form action="" method="POST" style="margin-bottom:30px;">
+        <form action="#results" method="POST" style="margin-bottom:30px;">
         <table cellpadding="5" cellspacing="0" border="0" width="50%" align="center">
         <tr>
             <td colspan="2" align="center" class="cell01">Search Essay</td>
@@ -35,6 +35,7 @@
         
     <?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
 
+        <div id="results">
         <?php if(empty($model['CUSTOMER']['DATA'])) : ?>
             <div id="msg02">
                 <span><b>Search results</b></span>
@@ -42,19 +43,20 @@
             </div>
         <?php else : ?>
             <div id="msg01">
-                <span><b>Search results</b></span>
-                <span>Browsing results matching
+                <span><b>Search results:</b></span>
+                <span><?=$model['CUSTOMER']['RECORDS'];?> works found containing:
                     <b>
                     <?php
                         $_filterString = array();
                         foreach($model['CUSTOMER']['SEARCHBOX']['FILTER'] as $sbKey => $sbVal)
-                            $_filterString[] = ' field "' . $sbKey . '" contains value "' . trim($sbVal, '%') . '"';
-                        echo 'The ' . implode(', and the ', $_filterString);
+                            $_filterString[] = trim($sbVal, '%');
+                        echo '"' . implode(', ', $_filterString) . '"';
                     ?>
                     </b>
                 </span>
             </div>
         <?php endif ?>
+        </div>
 
     <?php endif ?>
             

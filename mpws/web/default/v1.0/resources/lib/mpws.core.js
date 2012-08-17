@@ -33,9 +33,9 @@
         getDailyString: function (strings) {
             var d = new Date();
             if (strings[d.getDay()] !== undefined)
-                return strings[d.getDay()];
+                return strings[d.getDay()-1];
             return '';
-        }
+        },
         onload: $(document).ready
     };
     
@@ -44,8 +44,7 @@
         this.define = function (name, obj) {
             if (!_modules.hasOwnProperty(name))
                 _modules[name] = obj;
-            
-            mpws.tools.log(_modules);
+            //mpws.tools.log(_modules);
         };
         this.get = function (name) {
             return _modules[name];

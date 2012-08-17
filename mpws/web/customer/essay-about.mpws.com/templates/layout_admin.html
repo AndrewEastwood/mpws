@@ -12,13 +12,18 @@
 <!--[if lte IE 6]>
     <script type="text/javascript" src="js/pngfix/supersleight-min.js"></script>
 <![endif]-->
+<script type="text/javascript">
+    // security token
+    mpws.token = '<?=libraryRequest::getOrValidatePageSecurityToken();?>';
+    // page
+    mpws.page = '<?=libraryRequest::getPage();?>';
+</script>
 </head>
 
 <body class="MPWSPage_<?=ucfirst(libraryRequest::getPage('home'));?>">
 
         
 <div id="header">
-    <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
     <div id="top_menu_wrapper">
         <?php if($model['USER']['ACTIVE']) : ?>
         <div class="top_menu_base logged">
@@ -69,12 +74,11 @@
             <?php endif ?>
         </div>
     </div>
-    <?php endif ?>
 
     <div id="contacts">
         <a href="<?=$model['CONFIG']['MAIL']['IM']['SKYPE'];?>">
             <img src="/static/contacts_skype.png" />
-                <img src="/static/currently_online.png" style="left:100%;top:-5px;" />
+            <div class="MPWSOnlineName"><span></span></div>
             Talk to TeamLead
         </a>
         <a href="mailto:<?=$model['CONFIG']['MAIL']['SUPPORT']['EMAIL'];?>">

@@ -8,7 +8,9 @@
         /* StyleSheets */
         /* IMPORT Group is used for CSS only */
         'mpwsStyle.css' => Array(
-            'DEFAULT' => Array(),
+            'DEFAULT' => Array(
+                'shared.css'
+            ),
             'OWNER' => Array(
                 'start.css'
             ),
@@ -16,7 +18,9 @@
             'IMPORT' => Array()
         ),
         'mpwsInner.css' => Array(
-            'DEFAULT' => Array(),
+            'DEFAULT' => Array(
+                'shared.css'
+            ),
             'OWNER' => Array(
                 'inner.css'
             ),
@@ -31,18 +35,8 @@
             'AUTO' => Array(),
             'IMPORT' => Array()
         ),
-        'mpwsEdit.css' => Array(
-            'DEFAULT' => Array(),
-            'OWNER' => Array(
-                'edit.css'
-            ),
-            'AUTO' => Array(),
-            'IMPORT' => Array()
-        ),
         'mpwsTheme.css' => Array(
-            'DEFAULT' => Array(
-                'shared.css'
-            ),
+            'DEFAULT' => Array(),
             'OWNER' => Array(),
             'AUTO' => Array(
                 'plugins/theme/jquery-ui-1.8.21.custom.css'
@@ -55,10 +49,12 @@
                 'lib/mpws.core.js',
                 'lib/mpws.api.js',
                 'lib/mpws.ui.js',
+                'plugins/jquery.cookie.js'
             ),
             'OWNER' => Array(
                 'lib/less.js',
-                'lib/slide.js'
+                'lib/slide.js',
+                'lib/essay-about.js'
             ),
             'AUTO' => Array()
         ),
@@ -66,9 +62,7 @@
             'DEFAULT' => Array(
                 'plugins/nicEdit/nicEdit.js',
             ),
-            'OWNER' => Array(
-                'lib/edit.js'
-            ),
+            'OWNER' => Array(),
             'AUTO' => Array()
         ),
         'mpwsActionIE6.js' => Array(
@@ -88,9 +82,6 @@
             'DEFAULT' => Array(
                 'plugins/jquery-ui/jquery-ui-1.8.22.custom.js',
                 'plugins/jquery-ui/jquery.ui.timepicker.addon.js'
-            ),
-            'OWNER' => Array(
-                'lib/essay-about.js'
             )
         )
     );
