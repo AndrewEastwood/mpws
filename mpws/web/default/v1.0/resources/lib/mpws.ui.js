@@ -257,9 +257,132 @@
             this.setup(settings);
     }
     
+    function mpwsFileUpload (settings) {
+        var _settings = {
+            injectTo: 'div#MPWSFileUploadSection',
+            isAutomatic: true,
+            callback: false,
+            fileInputName: 'mpws_files',
+            properties: {
+                link_add: '+1 source',
+                link_remove: 'remove'
+            }
+        };
+        
+        var _self = this;
+        
+        var _html = {
+            buttons: {},
+            links: {
+                // append one more input file
+                add: $('<a>')
+                    .attr({
+                        type: 'button',
+                        href: 'javascript://'
+                    })
+                    .addClass('MPWSLinkAddFile')
+                    .text(_settings.properties.link_add),
+                // remove linked input file
+                remove: $('<a>')
+                    .attr({
+                        type: 'button',
+                        href: 'javascript://'
+                    })
+                    .addClass('MPWSLinkRemoveile')
+                    .text(_settings.properties.link_remove)
+            },
+            inputs: {
+                file: $('<input>')
+                    .attr({
+                        type: 'file',
+                        name: _settings.fileInputName + '[]'
+                    })
+                    .addClass('MPWSControlInput MPWSControlInputFileUpload')
+            },
+            sections: {
+                controlField: $('<div>')
+                    .attr({
+                        id: 'MPWSSectionControlField'
+                    }),
+                fileField: $('<div>')
+                    .addClass('MPWSSectionFileUploadField'),
+                fileContainer: $('<div>')
+                    .attr({
+                        id: 'MPWSSectionFileUploadContainer'
+                    })
+            }
+        };
+        
+        this.setup = function (settings) {
+            mpws.tools.log('setup');
+            if (typeof(settings) !== 'undefined')
+                $.extend(true, _settings, settings);
+            mpws.tools.log(_settings);
+            if (_settings.isAutomatic)
+                this.doInject();
+            return this;
+        };
+        
+        function _getLiveObj (htmlObj) {
+            return $('#' + htmlObj.attr('id'));
+        };
+        
+        function _getHtmlObj(htmlObj) {
+            return htmlObj.clone();
+        }
+        
+        this.doInject = function () {
+            mpws.tools.log('doInject');
+            mpws.tools.log(_html);
+            
+            // get inject element
+            var _$injectElem = $(_settings.injectTo);
+            
+            if (_$injectElem.length == 0)
+                return false;
+            
+            // add control section
+            
+            var _controls = _html.sections.controlField;
+            var _fileContainer = _html.sections.fileContainer;
+            
+            // add link
+            var _add = _html.links.add;
+            _add.click(function(){
+                mpws.tools.log('_add.click');
+                var _fFld = _getHtmlObj(_html.sections.fileField);
+                var _remove = _getHtmlObj(_html.links.remove);
+                _remove.click(function(){
+                    mpws.tools.log('_remove.click');
+                    $(this).parent().remove();
+                });
+                _fFld.append(_getHtmlObj(_html.inputs.file));
+                _fFld.append(_remove);
+                _fFld.attr('id', 'MPWSFileField_' + mpws.tools.random() + '_ID');
+                mpws.tools.log(_fFld);
+                //_getLiveObj(_html.sections.fileContainer).prepend(_fFld);
+                $('#MPWSSectionFileUploadContainer').append(_fFld);
+            });
+            _controls.append(_add);
+                      
+            var _$fileUploader = $('<div>')
+                .attr('id', 'MPWSWidgetFileUpload')
+                .append(_controls)
+                .append(_fileContainer);
+            
+            
+            _$injectElem.append(_$fileUploader);
+            
+            
+        }
+        
+        this.setup(settings);
+    }
+    
     mpws.ui = {
         tooltip: mpwsTooltip,
-        liveEditor: mpwsLiveEditor
+        liveEditor: mpwsLiveEditor,
+        fileUpload: mpwsFileUpload
     }
 
 })(window, document, jQuery, (window.mpws = window.mpws || {})); 

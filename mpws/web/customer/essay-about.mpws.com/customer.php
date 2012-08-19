@@ -676,6 +676,9 @@ class customer {
         // validate data when preview or save
         if ($isPreviewOrSave) {
             //echo 'IS PREVIEW OR SAVE';
+            
+            var_dump($_FILES);
+            
             /* validate fileds */
             libraryValidator::validateData($data, $validator['FILTER']['ORDER'], $messages);
             $model['CUSTOMER']['MESSAGES'] = $messages;

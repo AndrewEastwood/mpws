@@ -94,6 +94,10 @@ mpws.module.define('essay-about', (function(window, document, $){
             $('#MPWSOrderRemoveSourcesID').live('click', function(){
                 $(this).parent().remove();
             });
+            
+            
+            // file upload
+            new mpws.ui.fileUpload();
         }
 
         /* non account pages */
