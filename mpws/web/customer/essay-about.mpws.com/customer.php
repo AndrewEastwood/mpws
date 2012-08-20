@@ -649,6 +649,8 @@ class customer {
     private function _pageMakeOrder ($customer) {
         //echo 'ololo';
         
+        //echo convDT(false, 'GMT+2', 'GMT0');
+        
         $model = &$customer->getModel();
         $validator = $customer->getCustomerConfiguration('VALIDATOR');
         $messages = array();
@@ -687,7 +689,7 @@ class customer {
         //var_dump($messages);
         
         // time zones
-        $model['CUSTOMER']['TIME_TZ'] = libraryUtils::getTimeZones();
+        $model['CUSTOMER']['TIME_TZ'] = libraryUtils::getTimeZones(true);
         
         // preview or save data
         // if action detected and no error messages
@@ -785,6 +787,7 @@ class customer {
                         'Login' => $_userName,
                         'Password' => md5($_userPwd),
                         'Email' => $data['Email'],
+                        'IM' => $data['IM'],
                         'Active' => 0,
                         'IsTemporary' => 1,
                         'UserToken' => $_userToken,
@@ -854,6 +857,7 @@ class customer {
 
                 // remove non-accepted fileds
                 unset($data['Email']);
+                unset($data['IM']);
                 unset($data['Sources']);
                 unset($data['SourceLinks']);
 
@@ -974,6 +978,7 @@ class customer {
             if ($model['USER']['ACTIVE']) {
                 $model['CUSTOMER']['DATA']['Email'] = $user['Email'];
                 $model['CUSTOMER']['DATA']['TimeZone'] = $user['TimeZone'];
+                $model['CUSTOMER']['DATA']['IM'] = $user['IM'];
             }
         }
     }

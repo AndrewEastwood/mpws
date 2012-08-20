@@ -512,6 +512,23 @@ class libraryFileManager
         */
     }
 
+    
+    
+    
+    /* FileUploader v2.0 */
+    
+    public static function FU_StoreTempFiles () {
+        
+    }
+    
+    public static function FU_PostFiles () {
+        // return file names
+        // use md5 of time() to get unic file name
+    }
+    
+    
+    
+    
 }
 
 ?>

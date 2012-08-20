@@ -17,7 +17,8 @@
         'TimeZone' => 'order_timezone',
         'DateDeadline' => 'order_datedeadline',
         'DocumentID' => 'order_doc',
-        'SubjectID' => 'order_subject'
+        'SubjectID' => 'order_subject',
+        'IM' => 'order_im'
     );
     
     // db field names to html form fields

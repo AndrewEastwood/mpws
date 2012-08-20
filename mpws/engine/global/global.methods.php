@@ -24,20 +24,52 @@
     }
 
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
+        // NOTE: preg_match is temporary disabled
+        //echo 'convDT:' . $fromTZ . ' => ' . $toTZ;
         
         if (empty($dt))
             $dt = date($format);
         
         $date = false;
+        $matches = false;
         
         /* set time with server TZ or specific TZ */
         if (empty($fromTZ))
             $date = new DateTime($dt);
-        else
-            $date = new DateTime($dt, new DateTimeZone($fromTZ));
-        
+        else {
+            /* check for GMTXXX time zome */
+            /*try {
+                preg_match($fromTZ, '/^GMT(.*)$/', $matches);
+            } catch (Exception $ex) { debug($ex); };
+            */
+            if (count($matches) == 2) {
+                echo 'ololololol';
+                $isNegative = $matches[1] < 0;
+                $interval = new DateInterval('PT'.(+$isNegative).'H');
+                if($isNegative)
+                    $date->sub($interval);
+                else
+                    $date->add($interval);
+            } else
+                $date = new DateTime($dt, new DateTimeZone($fromTZ));
+        }
+
         /* set target TZ */
-        $date->setTimezone(new DateTimeZone($toTZ));
+        /* check for GMTXXX time zome */
+        /*$matches = false;
+        try {
+            preg_match($toTZ, '/^GMT(.*)$/', $matches);
+        } catch (Exception $ex) { debug($ex); };*/
+        if (count($matches) == 2) {
+            echo 'ololololol';
+            $isNegative = $matches[1] < 0;
+            $interval = new DateInterval('PT'.(+$isNegative).'H');
+            if($isNegative)
+                $date->sub($interval);
+            else
+                $date->add($interval);
+        } else
+            $date->setTimezone(new DateTimeZone($toTZ));
         
         return $date->format($format);
     }
