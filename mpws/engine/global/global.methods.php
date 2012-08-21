@@ -28,7 +28,7 @@
         //echo 'convDT:' . $fromTZ . ' => ' . $toTZ;
         
         if (empty($dt))
-            $dt = date($format);
+            $dt = null;//date($format);
         
         $date = false;
         $matches = false;

@@ -30,3 +30,7 @@
     $default['DISPLAY']['DESCRIPTION_2'] = '';
     //
     $default['DISPLAY']['PAGE_TITLES'] = array();
+    
+    $default['DISPLAY']['LOCALE'] = 'en_US';
+    
+    $default['DISPLAY']['TIMEZONE'] = 'Europe/Kiev';

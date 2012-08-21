@@ -1,5 +1,5 @@
 <h1>Your Settings</h1>
-<div class="content">
+<div class="content deskSettings">
 
 <form action="" method="POST">
     <?php foreach($model['CUSTOMER']['DATA'] as $key => $value) : ?>
@@ -30,14 +30,20 @@
 </form>
 
 <form action="" method="POST">
+    <div class="MPWSSection">
     <label>Current Password</label>
     <input type="text" name="user_current_password" value=""/>
+    </div>
     <div class="MPWSSeparator"></div>
+    <div class="MPWSSection">
     <label>New Password</label>
     <input type="text" name="user_new_password" value=""/>
+    </div>
     <div class="MPWSSeparator"></div>
+    <div class="MPWSSection">
     <label>Confirm Password</label>
     <input type="text" name="user_new_password_confirm" value=""/>
+    </div>
     <div class="MPWSSeparator"></div>
     <hr size="2"/>
     <input type="submit" name="do" value="Change Password"/>

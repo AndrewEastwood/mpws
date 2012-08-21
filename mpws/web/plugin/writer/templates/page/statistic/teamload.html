@@ -32,8 +32,8 @@
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>"><?=libraryView::getFrendlyLabel($entry['InternalStatus']);?>&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=($entry['WriterID']?'<a href="?display=writers&action=details&oid='.$entry['WriterID'].'" target="blank">info</a>':'-');?>&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=convDT($entry['DateCreated'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC');?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=convDT($entry['DateDeadline'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC');?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline']);?></span>
                 </div>
             <?php } ?>
@@ -67,8 +67,12 @@
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5 MPWSDivTableCellDataState MPWSDivTableCellDataState_<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>" title="<?=libraryView::getFrendlyClassName($entry['InternalStatus']);?>"><?=libraryView::getFrendlyLabel($entry['InternalStatus']);?>&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1_5"><?=($entry['WriterID']?'<a href="?display=writers&action=details&oid='.$entry['WriterID'].'" target="blank">info</a>':'-');?>&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateDeadline'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5">
+                <?=convDT($entry['DateCreated'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC');?>
+            </span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5">
+                <?=convDT($entry['DateDeadline'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC');?>
+            </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline']);?></span>
                 </div>
             <?php } ?>
@@ -103,7 +107,9 @@
             </span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Price'];?>&nbsp;</span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?>&nbsp;</span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=$entry['DateCreated'];?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5">
+                <?=($groupKey==='ORDERS')?(convDT($entry['DateCreated'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC')):$entry['DateCreated'];?>
+            </span>
                 </div>
             <?php } ?>
         <?php } ?>

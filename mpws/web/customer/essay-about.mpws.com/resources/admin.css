@@ -329,3 +329,17 @@ table{
         text-align: center;
     }
 }
+
+.deskSettings {
+    form {margin-top: 20px;}
+    .MPWSSection {
+        padding-bottom: 15px;
+        label {float: left; width: 150px; font-weight: bold;}
+    }
+}
+
+.MPWSBlockQuickSettings {padding: 5px 20px;}
+
+.MPWSIcon {width: 20px;float: left;}
+    .MPWSIcon_Online {background: url('icons/status.png') no-repeat;}
+    .MPWSIcon_Offline {background: url('icons/status-offline.png') no-repeat;}

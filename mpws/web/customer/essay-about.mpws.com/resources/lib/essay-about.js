@@ -35,8 +35,12 @@ mpws.module.define('essay-about', (function(window, document, $){
                 mpws.api.send(requester.getUrl(), false, mpwsLoginStateReceived)
                 // MPWSControlTextUserLoginRegisterID
             });
-            // chnages message status
+            // changes message status
             $('.MPWSControl_MessageMarkAsRead').click(function(){
+                mpws.api.objectRequest(this);
+            });
+            // changes writer's online status
+            $('#MPWSControl_SetOnlineStatusID').click(function(){
                 mpws.api.objectRequest(this);
             });
         }

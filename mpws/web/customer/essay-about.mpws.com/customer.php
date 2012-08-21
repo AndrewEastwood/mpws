@@ -147,6 +147,9 @@ class customer {
             case 'mark_as_read':
                 $result = $this->api_mark_as_read($customer);
                 break;
+            case 'set_online_status':
+                $result = $this->api_set_online_status($customer);
+                break;
         }
         return $result;
     }
@@ -185,6 +188,27 @@ class customer {
         
         //return libraryUtils::getJSON(array('ololo'));
     }
+    private function api_set_online_status ($customer) {
+        //echo $p['oid'];
+        $model = &$customer->getModel();
+        if (!$model['USER']['ACTIVE'])
+            return false;
+        $p = libraryRequest::getApiParam();
+        if (isset($p['checked'])) {
+            $customer->getDatabaseObj()
+                ->update('writer_writers')
+                ->set(array('IsOnline' => $p['checked']))
+                ->where('ID', '=', $model['USER']['ID'])
+                ->query();
+            // set online status
+            $user = isset($_SESSION['WEB_USER'])?$_SESSION['WEB_USER']:array();
+            $user['ONLINE'] = $p['checked'];
+            $_SESSION['WEB_USER'] = $user;
+            return true;
+        }
+        return false;
+    }
+    
     
     /* components */
     private function _componentUserInfo($customer) {
@@ -877,7 +901,7 @@ class customer {
                 $data['Price'] = $data['Pages'] * $priceInfo['Price'];
                 $data['Discount'] = 0;
                 $data['Credits'] = round($data['Price'] / 4, 0);
-                $data['DateCreated'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC', $data['TimeZone']);
+                $data['DateCreated'] = convDT(null, 'UTC', $data['TimeZone']);
                 $data['DateDeadline'] = convDT($data['DateDeadline'], 'UTC', $data['TimeZone']);
                 //$data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], $_deadlineTime);
                 //$data['TimeZone'] = $timeZone['TimeZone'];
@@ -1216,11 +1240,12 @@ class customer {
                 ->where('ID', '=', $data_order['StudentID'])
                 ->fetchRow();
             $user_writer = $customer->getDatabaseObj()
-                ->select('ID, Email, Name, TimeZone')
+                ->select('ID, Email, Name, TimeZone, IsOnline')
                 ->from('writer_writers')
                 ->where('ID', '=', $data_order['WriterID'])
                 ->fetchRow();
         }
+        
         
         /* order actions */
         // **********************************************************
@@ -1786,10 +1811,30 @@ class customer {
                         ->set(array('DateDeadline' => $utcDeadline))
                         ->where('ID', '=', $oid)
                         ->query();
-
+                    //libraryUtils::subDateHours($wto['DateDeadline'], 1, $customer_config_mdbc['DB_DATE_FORMAT'])
+                    
+                    $wto['OldDateDeadline'] = convDT($data_order['DateDeadline'], $data_order['TimeZone'], 'UTC');
+                    $wto['NewDateDeadline'] = $deadline;
+                    $wto['h1OldDateDeadline'] = libraryUtils::subDateHours($wto['OldDateDeadline'], 1, $mdbc['DB_DATE_FORMAT']);
+                    $wto['h1NewDateDeadline'] = libraryUtils::subDateHours($wto['NewDateDeadline'], 1, $mdbc['DB_DATE_FORMAT']);
+                    if (!empty($user_writer)) {
+                        $wto['WrOldDateDeadline'] = convDT($data_order['DateDeadline'],$user_writer['TimeZone'],'UTC');
+                        $wto['WrNewDateDeadline'] = convDT($utcDeadline,$user_writer['TimeZone'],'UTC');
+                        $wto['h1WrOldDateDeadline'] = libraryUtils::subDateHours($wto['WrOldDateDeadline'], 1, $mdbc['DB_DATE_FORMAT']);
+                        $wto['h1WrNewDateDeadline'] = libraryUtils::subDateHours($wto['WrNewDateDeadline'], 1, $mdbc['DB_DATE_FORMAT']);
+                    }
+                    
                     /* save internal message */
                     $message['Subject'] = 'Date Deadline is changed';
-                    $message['Message'] = $data_order['DateDeadline'] . ' => ' . $deadline;
+                    $message['Message'] =
+                    'Owner Local Time: <br>' . 
+                    $wto['h1OldDateDeadline'] . ' => ' . $wto['h1NewDateDeadline'];
+                    if (!empty($user_writer)) {
+                        $message['Message'] .= 
+                        '<br>Writer Local Time: <br>' . 
+                        $wto['h1WrOldDateDeadline'] . ' => ' . $wto['h1WrNewDateDeadline'];
+                    }
+
                     if($model['USER']['IS_STUDENT'])
                         $message['StudentID'] = $model['USER']['ID'];
                     if($model['USER']['IS_STUDENT'])
@@ -2033,20 +2078,22 @@ class customer {
         if (!empty($user_writer['TimeZone']))
             $dto['dcWRITER'] = convDT($data_order['DateCreated'], $user_writer['TimeZone'], 'UTC');
         
-        /* Deadline -2 Hours */
-        $dto['h2ORDER'] = libraryUtils::subDateHours($dto['ORDER'], 2, $mdbc['DB_DATE_FORMAT']);
-        $dto['h2WRITER'] = libraryUtils::subDateHours($dto['WRITER'], 2, $mdbc['DB_DATE_FORMAT']);
+        /* Deadline -1 Hours */
+        $dto['h1ORDER'] = libraryUtils::subDateHours($dto['ORDER'], 1, $mdbc['DB_DATE_FORMAT']);
+        if (!empty($dto['WRITER']))
+        $dto['h1WRITER'] = libraryUtils::subDateHours($dto['WRITER'], 1, $mdbc['DB_DATE_FORMAT']);
         
         if ($model['USER']['IS_WRITER'])
             $model['CUSTOMER']['USER'] = $user_writer;
-        if ($model['USER']['IS_STUDENT'])
+        if ($model['USER']['IS_STUDENT']) {
             $model['CUSTOMER']['USER'] = $user_student;
-        
+        }
         $model['CUSTOMER']['DATA'] = $data_order;
         $model['CUSTOMER']['TIME'] = $dto;
         //$model['CUSTOMER']['TIME'] = utime(date('Y-m-d H:i:s'), $data_order['TimeZone']);
         /*$model['CUSTOMER']['TIME_CREATED'] = utime($data_order['DateCreated'], $data_order['TimeZone']);
         $model['CUSTOMER']['TIME_DEADLINE'] = utime($data_order['DateDeadline'], $data_order['TimeZone']);*/
+        $model['CUSTOMER']['WRITER_STATUS'] = $user_writer['IsOnline'];
         $model['CUSTOMER']['DATA_DOCUMENT'] = $data_document;
         $model['CUSTOMER']['DATA_SUBJECT'] = $data_subject;
         $model['CUSTOMER']['DATA_MESSAGES'] = $data_messages;
@@ -2349,6 +2396,7 @@ class customer {
                         'ID' => $user['ID'],
                         'NAME' => $user['Name'],
                         'LOGIN' => $user['Login'],
+                        'ONLINE' => (isset($user['IsOnline'])?$user['IsOnline']:false),
                         'REALM' => $_accountRealm,
                         'TYPE' => $_userType,
                         'TEMPORARY' => !empty($user['IsTemporary']),

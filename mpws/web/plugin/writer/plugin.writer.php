@@ -481,6 +481,10 @@ class pluginWriter {
         
         //var_dump($model['PLUGINS']['WRITER']['DATA']);
         
+        // custom time zone
+        $model['PLUGINS']['WRITER']['CUSTOM'] = array(
+            'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE']
+        );
         //var_dump($model['PLUGINS']['WRITER']['DATA']);
         $model['PLUGINS']['WRITER']['DATE_FORMAT'] = $customer_config_mdbc['DB_DATE_FORMAT'];
         
@@ -571,6 +575,10 @@ class pluginWriter {
 
         //var_dump();
         
+        // custom time zone
+        $model['PLUGINS']['WRITER']['CUSTOM'] = array(
+            'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE']
+        );
         
         $model['PLUGINS']['WRITER']['DATA_FREE_WRITERS'] = $freeWriters;
         
@@ -1904,6 +1912,12 @@ class pluginWriter {
         $model = &$toolbox->getModel();
         libraryRequest::storeOrGetRefererUrl();
         $model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['ORDERS'], $toolbox->getDatabaseObj());
+
+        // custom time zone
+        $model['PLUGINS']['WRITER']['CUSTOM'] = array(
+            'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE']
+        );
+        
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.datatable'];
         
     }
@@ -2087,14 +2101,18 @@ class pluginWriter {
             if ($currentWriterID != 0) {
                 // get new writer info
                 
+                // convert dates to writer's time zone
+                $wto['DateDeadline'] = convDT($data_order['DateDeadline'], $data_writer['TimeZone'], 'UTC');
+                $wto['DateCreated'] = convDT($data_order['DateCreated'], $data_writer['TimeZone'], 'UTC');
+                
                 // form email object
                 $recipient = $customer_config_mail['NOTIFY'];
                 $recipient['TO'] = $data_writer['Email'];
                 $recipient['NAME'] = $data_writer['Name'];
                 $recipient['SUBJECT'] = 'New order is assigned to you';
                 $recipient['DATA'] = array(
-                    'DateDeadline' => libraryUtils::subDateHours($data_order['DateDeadline'], 2, $customer_config_mdbc['DB_DATE_FORMAT']),
-                    'HoursLeft' => libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline']) - 2,
+                    'DateDeadline' => libraryUtils::subDateHours($wto['DateDeadline'], 1, $customer_config_mdbc['DB_DATE_FORMAT']),
+                    'HoursLeft' => libraryUtils::getDateTimeHoursDiff($wto['DateDeadline']) - 1,
                     'TargetUrl' => $customer_config_mail['URLS']['LOGIN'],
                     'SupportEmail' => $customer_config_mail['SUPPORT']['EMAIL']
                 );
@@ -2225,8 +2243,16 @@ class pluginWriter {
         /* Hours Left */
         $dto['LEFT'] = libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
         
-        //var_dump($_dr_publicStatus);
+        /* custom time zone */
+        $dto['CUSTOM_1'] = convDT($data_order['DateDeadline'], $plugin['config']['DISPLAY']['TIMEZONE'], 'UTC');
+        $dto['nCUSTOM_1'] = convDT(date($mdbc['DB_DATE_FORMAT']), $plugin['config']['DISPLAY']['TIMEZONE']);
+        $dto['pCUSTOM_1'] = convDT(false, $plugin['config']['DISPLAY']['TIMEZONE'], false, 'P');
+        $dto['dcCUSTOM_1'] = convDT($data_order['DateCreated'], $plugin['config']['DISPLAY']['TIMEZONE'], 'UTC');
+        $dto['tzCUSTOM_1'] = $plugin['config']['DISPLAY']['TIMEZONE'];
         
+        
+        //echo $plugin['config']['DISPLAY']['TIMEZONE'];
+        //var_dump($plugin['config']);
 
         $model['PLUGINS']['WRITER']['DATA'] = $data_order;
         $model['PLUGINS']['WRITER']['TIME'] = $dto;
@@ -2243,6 +2269,9 @@ class pluginWriter {
         $model['PLUGINS']['WRITER']['TO_LIST'] = $data_writers;
         $model['PLUGINS']['WRITER']['DATA_SOURCES'] = $data_sources;
         $model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED'] = $isWriterEmpty;
+        $model['PLUGINS']['WRITER']['CUSTOM'] = array(
+            'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE']
+        );
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.details'];
     }
 

@@ -53,7 +53,7 @@
             <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['nORDER'];?></span>
             <div class="MPWSSeparator"></div>
             <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
-            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h2ORDER'];?></span>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h1ORDER'];?></span>
             <div class="MPWSSeparator"></div>
         </fieldset>
         
@@ -72,12 +72,18 @@
             <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['nWRITER'];?></span>
             <div class="MPWSSeparator"></div>
             <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
-            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h2WRITER'];?></span>
+            <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h1WRITER'];?></span>
             <div class="MPWSSeparator"></div>
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
-            <span class="MPWSValue"><big><?=($model['CUSTOMER']['TIME']['LEFT'] - 2);?></big>&nbsp;</span>
+            <span class="MPWSValue"><big><?=($model['CUSTOMER']['TIME']['LEFT'] - 1);?></big>&nbsp;</span>
             <div class="MPWSSeparator"></div>
         </fieldset>
+        
+        <h3>Writer Status</h3>
+        <div class="MPWSUserStatus">
+            You is currently <?=$model['CUSTOMER']['WRITER_STATUS']?'online':'offline'?>
+            <div class="MPWSIcon MPWSIcon_<?=$model['CUSTOMER']['WRITER_STATUS']?'Online':'Offline'?>">&nbsp;</div>
+        </div>
         
         <h3>General Information</h3>
 

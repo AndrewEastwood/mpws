@@ -59,6 +59,12 @@
         </span>
         <div class="MPWSSeparator"></div>
 
+        <h3>Writer Status</h3>
+        <div class="MPWSUserStatus">
+            Writer is currently <?=$model['CUSTOMER']['WRITER_STATUS']?'online':'offline'?>
+            <div class="MPWSIcon MPWSIcon_<?=$model['CUSTOMER']['WRITER_STATUS']?'Online':'Offline'?>">&nbsp;</div>
+        </div>
+        
         <h3>Order Price</h3>
 
         <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Price Type</label>

@@ -98,7 +98,25 @@
 
 <div id="content_wrapper">
     <a href="/page/make-order.html" id="order_now"><img src="/static/orderNow.png"/></a>
-        <?=$model['HTML']['CONTENT'];?>
+    
+    <?php if ($model['USER']['IS_WRITER']) : ?>
+    <h1>Quick Settings</h1>
+    <div class="MPWSBlock MPWSBlockQuickSettings">
+        <div class="MPWSSection">
+        <label for="MPWSControl_SetOnlineStatusID">I am online:</label>
+            <input type="checkbox" 
+                name="writer_status" 
+                id="MPWSControl_SetOnlineStatusID" 
+                class="MPWSCheckbox MPWSControl_SetOnlineStatus" 
+                mpws-action="set_online_status"
+                mpws-realm="public"
+                <?=$model['USER']['ONLINE']?'checked="checked"':'';?>
+            />
+        </div>
+    </div>
+    <?php endif ?>
+    
+    <?=$model['HTML']['CONTENT'];?>
 </div>
 
 <div id="guarantee">
