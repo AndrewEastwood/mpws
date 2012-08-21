@@ -16,6 +16,10 @@
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Email'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
 
+            <label for="MPWSField_WriterEmailID" class="MPWSFieldLabel">IM:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['IM'];?>&nbsp;</span>
+            <div class="MPWSSeparator"></div>
+
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Phone:</label>
             <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_STUDENT']['Phone'];?>&nbsp;</span>
             <div class="MPWSSeparator"></div>
@@ -159,6 +163,9 @@
             
             <fieldset>
                 <legend>UTC Time</legend>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['dcUTC'];?></span>
+                <div class="MPWSSeparator"></div>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['nUTC'];?></span>
                 <div class="MPWSSeparator"></div>
@@ -177,6 +184,9 @@
                 <legend>Writer Local Time</legend>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['TimeZone'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['dcWRITER'];?></span>
                 <div class="MPWSSeparator"></div>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['nWRITER'];?></span>
@@ -201,6 +211,9 @@
                 <legend>Order Local Time</legend>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['TimeZone'];?></span>
+                <div class="MPWSSeparator"></div>
+                <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
+                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['dcORDER'];?></span>
                 <div class="MPWSSeparator"></div>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Now:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['nORDER'];?></span>
@@ -337,12 +350,12 @@
     
     <h3>Messages</h3>
     <div id="MPWSOrderMessagesTabsID">
-    	<ul>
+        <ul>
     <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $groupKey => $group) { ?>
         <?php if(empty($group)) continue; ?>
             <li><a href="#MPWSOrderMessagesTab_<?=$groupKey;?>"><?=$groupKey;?></a></li>
     <?php } ?>
-	</ul>
+        </ul>
     <?php foreach($model['PLUGINS']['WRITER']['DATA_MESSAGES'] as $groupKey => $group) { ?>
         <?php if(empty($group)) continue; ?>
 

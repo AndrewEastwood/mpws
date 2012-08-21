@@ -57,6 +57,7 @@ mpws.module.define('essay-about', (function(window, document, $){
                     buttonImage: "/static/icons/calendar.png",
                     dateFormat: "yy-mm-dd",
                     timeFormat: "hh:00:00",
+                    timezone: '-6000',
                     changeMonth: true,
                     changeYear: true,
                     showMinute: false,

@@ -1913,10 +1913,9 @@ class pluginWriter {
         $action = libraryRequest::getAction();
         $oid = libraryRequest::getOID();
         $data = array();
-        
+
         // check for token id
         $token = libraryRequest::getValue('token');
-        
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
@@ -1944,14 +1943,14 @@ class pluginWriter {
             else
                 $oid = $data_order['ID']; 
         }
-        
+
         // get order record
         $data_order = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('writer_orders')
             ->where('ID', '=', $oid)
             ->fetchRow();
-        
+
         // get writer info
         $currentWriterID = $data_order['WriterID'];
         if (libraryRequest::isPostFormAction('assign to writer'))
@@ -1961,13 +1960,12 @@ class pluginWriter {
             ->from('writer_writers')
             ->where('ID', '=', $currentWriterID)
             ->fetchRow();
-        
+
         $data_student = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('writer_students')
             ->where('ID', '=', $data_order['StudentID'])
             ->fetchRow();
-
 
         // **********************************************************
         // approve order
@@ -1983,7 +1981,7 @@ class pluginWriter {
                 ->set($order_status)
                 ->where('ID', '=', $oid)
                 ->query();
-            
+
             $customer_config_mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
             $customer_config_mail = $toolbox->getCustomerObj()->getCustomerConfiguration('MAIL');
             /* save internal message */
@@ -2011,7 +2009,7 @@ class pluginWriter {
                 // send email message to system
                 libraryMailer::sendEMail($recipient);
             }
-            
+
             /* alter already selected order record */
             $data_order['PublicStatus'] = 'PENDING';
             $data_order['InternalStatus'] = 'APPROVED';
@@ -2219,6 +2217,11 @@ class pluginWriter {
         $dto['pORDER'] = convDT(false, $data_order['TimeZone'], false, 'P');
         if (!empty($data_writer))
             $dto['pWRITER'] = convDT(false, $data_writer['TimeZone'], false, 'P');
+        /* Date Created */
+        $dto['dcUTC'] = $data_order['DateCreated'];
+        $dto['dcORDER'] = convDT($data_order['DateCreated'], $data_order['TimeZone'], 'UTC');
+        if (!empty($data_writer))
+            $dto['dcWRITER'] = convDT($data_order['DateCreated'], $data_writer['TimeZone'], 'UTC');
         /* Hours Left */
         $dto['LEFT'] = libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
         

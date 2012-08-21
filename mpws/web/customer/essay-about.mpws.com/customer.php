@@ -679,7 +679,7 @@ class customer {
         if ($isPreviewOrSave) {
             //echo 'IS PREVIEW OR SAVE';
             
-            var_dump($_FILES);
+            //var_dump($_FILES);
             
             /* validate fileds */
             libraryValidator::validateData($data, $validator['FILTER']['ORDER'], $messages);
@@ -1877,20 +1877,20 @@ class customer {
         } // save changes action
         
         // collect order data and related items
+        
+        // get messages
         $customer->getDatabaseObj()
             ->select('*')
             ->from('writer_messages')
             ->where('OrderID', '=', $oid);
-        
         // select public messages only if it is student account
         if ($model['USER']['IS_STUDENT'])
             $customer->getDatabaseObj()->andWhere('IsPublic', '=', 1);
         if ($model['USER']['IS_WRITER']) {
-            $customer->getDatabaseObj()
+            /*$customer->getDatabaseObj()
                 ->andWhere('StudentID', '<>', 'NULL')
-                ->orWhere('WriterID', '<>', 'NULL'); 
+                ->orWhere('WriterID', '<>', 'NULL'); */
         }
-        
         $data_messages = $customer->getDatabaseObj()
             ->orderBy('DateCreated')
             ->order('DESC')
@@ -2239,7 +2239,7 @@ class customer {
         //var_dump($data);
         
         // time zones
-        $model['CUSTOMER']['TIME_TZ'] = libraryUtils::getTimeZones();
+        $model['CUSTOMER']['TIME_TZ'] = libraryUtils::getTimeZones(true);
         $model['CUSTOMER']['DATA'] = $data;
         $model['CUSTOMER']['MESSAGES'] = $messages;
         //$data['Password'] = false;

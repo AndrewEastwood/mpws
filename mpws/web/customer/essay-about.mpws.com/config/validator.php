@@ -45,7 +45,8 @@
         'Billing_Phone' => 'user_billing_phone',
         'Billing_PostalCode' => 'user_billing_postalcode',
         'Billing_State' => 'user_billing_state',
-        'TimeZone' => 'user_timezone'
+        'TimeZone' => 'user_timezone',
+        'IM' => 'user_im'
     );
     
     $customer['VALIDATOR']['DATAMAP']['WRITER_ACCOUNT_UPDATE'] = array(

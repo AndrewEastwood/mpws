@@ -10,6 +10,9 @@ h3 {color: #eee;}
 .MPWSPageToolbox a:hover {color: #BF9358; text-decoration: underline;}
 .MPWSPageToolbox hr {background-color: #7A9C85; border-color: #ddd; border-width: 0 0 1px;}
 
+.MPWSPageToolbox .MPWSComponentContent a, .MPWSPageToolbox .MPWSComponentContent a:visited {color: #5B4322; text-decoration: underline;}
+.MPWSPageToolbox .MPWSComponentContent a:hover {color: #7F5E31; text-decoration: underline;}
+
 .MPWSMainContentWrapper {background: #7A9C85;}
     .MPWSMainContentWrapper p.MPWSEmptyParagraph {margin-top: 0px;}
 
