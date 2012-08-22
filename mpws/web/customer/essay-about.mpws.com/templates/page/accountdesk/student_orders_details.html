@@ -55,7 +55,7 @@
         <div class="MPWSSeparator"></div>
         <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
         <span class="MPWSValue">
-            <input name="order_deadline" id="MPWSControlMakeOrderDateDeadlineID" value="<?=$model['CUSTOMER']['TIME']['ORDER'];?>"/>
+            <input name="order_deadline" id="MPWSControlMakeOrderDateDeadlineID" value="<?=date('Y-m-d h:i:s A',strtotime($model['CUSTOMER']['TIME']['ORDER']));?>"/>
         </span>
         <div class="MPWSSeparator"></div>
 

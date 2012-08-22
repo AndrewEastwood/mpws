@@ -896,6 +896,12 @@ class customer {
                         ->where('ID', '=', $data['TimeZoneID'])
                         ->fetchRow();*/
                 
+                
+                // convert am\pm to 34h
+                $data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], strtotime($data['DateDeadline']));
+                
+                //var_dump($data);
+                
                 // fill order information
                 $data['StudentID'] = $user['ID'];
                 $data['Price'] = $data['Pages'] * $priceInfo['Price'];
@@ -907,6 +913,8 @@ class customer {
                 //$data['TimeZone'] = $timeZone['TimeZone'];
                 $data['RefundToken'] = '';
                 $data['OrderToken'] = $_o_token;
+                
+                
 
                 // save new order
                 $customer->getDatabaseObj()
@@ -1792,6 +1800,8 @@ class customer {
         if (libraryRequest::isPostFormAction('save changes') && $model['USER']['IS_STUDENT']) {
             
             $deadline = libraryRequest::getPostValue('order_deadline');
+            // convert am\pm to 24h
+            $deadline = date($mdbc['DB_DATE_FORMAT'], strtotime($deadline));
             
             // conver to UTC deadline
             //$newDeadline = utime($deadline, );
@@ -2105,6 +2115,9 @@ class customer {
         $model['CUSTOMER']['DATA_SOURCES'] = $data_sources;
         //$model['CUSTOMER']['DATA_DEADLINE'] = libraryUtils::subDateHours($data_order['DateDeadline'], 2, $mdbc['DB_DATE_FORMAT']);
         $model['CUSTOMER']['MESSAGES'] = $messages;
+        $model['CUSTOMER']['CUSTOM'] =array(
+            'DB_DATE_FORMAT' => $mdbc['DB_DATE_FORMAT']
+        );
         //$model['CUSTOMER']['template'] = $plugin['templates']['page.orders.details'];
     }
     private function _accountDeskCommonOrders_all ($customer) {

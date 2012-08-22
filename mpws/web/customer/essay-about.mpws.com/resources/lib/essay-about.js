@@ -54,17 +54,19 @@ mpws.module.define('essay-about', (function(window, document, $){
             $('.MPWSControlOrderDateRange').datepicker({
                     showOn: "button",
                     buttonImage: "/static/icons/calendar.png",
-                    dateFormat: "yy-mm-dd 00:00:00",
+                    dateFormat: "yy-mm-dd 00:00:00 TT",
                     changeMonth: true,
                     changeYear: true,
-                    showButtonPanel: true
+                    showButtonPanel: true,
+                    ampm: true,
             });
             // make order datetime picker
             $('#MPWSControlMakeOrderDateDeadlineID').datetimepicker({
                     showOn: "button",
+                    ampm: true,
                     buttonImage: "/static/icons/calendar.png",
                     dateFormat: "yy-mm-dd",
-                    timeFormat: "hh:00:00",
+                    timeFormat: "hh:00:00 TT",
                     timezone: '-6000',
                     changeMonth: true,
                     changeYear: true,
