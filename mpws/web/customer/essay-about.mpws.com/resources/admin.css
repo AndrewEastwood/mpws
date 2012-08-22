@@ -196,6 +196,9 @@ table{
 .cell02a{
     background:@bg_lightGrey;
 }
+.cell02b{
+    .cell02;
+}
 
 .cell03{
     background-color:@bg_darkGray;
