@@ -24,7 +24,7 @@
     $default['MAIL']['INFO'] = array(
         'TO' => valueOnEnv(array(
             'DEV' => 'ua.clients.support@gmail.com',
-            'PROD' => 'info@essay-about.com',
+            'PROD' => 'info@essay-about.com'
         )),
         'EMAIL' => 'no-reply@' . MPWS_CUSTOMER,
         'FROM' => 'Information <no-reply@' . MPWS_CUSTOMER . '>',
