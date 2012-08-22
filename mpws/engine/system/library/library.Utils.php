@@ -67,6 +67,28 @@ class libraryUtils {
         return $_groups;
     }
     
+    static public function dtFormatSwitch($datetime, $to24h, $format = false) {
+        if (empty($format)) 
+            $format = 'Y-m-d ' . (($to24h)?' H:i:s':' h:i:s A');
+        else {
+            if ($to24h) {
+                // replace 'H' to 'h'
+                if (strpos($format, 'H') >= 0)
+                    $format = str_replace('H', 'h', $format);
+                if (strpos($format, 'A') < 0)
+                    $format .= ' A';
+            } else {
+                // replace 'h' to 'H'
+                if (strpos($format, 'h') >= 0)
+                    $format = str_replace('h', 'H', $format);
+                // remove AM\PM format
+                $format = str_replace(array('A', 'a'), '', $format);
+            }
+        }
+            
+        return date($format, strtotime($datetime));
+    }
+    
     static public function getDateTimeHoursDiff ($targetDate, $startDate = false) {
         $target_m = strtotime($targetDate);
         if (empty($startDate))
