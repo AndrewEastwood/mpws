@@ -3,6 +3,10 @@ mpws.module.define('essay-about', (function(window, document, $){
 
     $(document).ready(function () {
 
+        /* all pages */
+        //get team-lead name by schedule
+        $('div.MPWSOnlineName span').text(mpws.tools.getDailyString(['Joshua', 'Daniel', 'Ethan', 'Caleb', 'Emily', 'Mia', 'Madison']));
+
         /* make an order page */
         if (mpws.page === "make-order") {
             // upload banner
@@ -120,10 +124,6 @@ mpws.module.define('essay-about', (function(window, document, $){
                 }
             });
         }
-
-        /* all pages */
-        //get team-lead name by schedule
-        $('div.MPWSOnlineName span').text(mpws.tools.getDailyString(['Joshua', 'Daniel', 'Ethan', 'Caleb', 'Emily', 'Mia', 'Madison']));
 
     });
 
