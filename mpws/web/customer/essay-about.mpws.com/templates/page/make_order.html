@@ -161,10 +161,18 @@
                     </div>
                 <?php endforeach ?>
             </div>
-                
-                
-                <div id="MPWSFileUploadSection"></div>
-                
+            </td>
+        </tr>
+        <tr>
+            <td class="cell04">Additional files</td>
+            <td class="cell04a">
+            <div id="MPWSFileUploadSection">
+                <noscript>Please enable JavaScript for file upload widget</noscript>
+            </div>
+            <script>
+                // file upload
+                new mpws.ui.fileUpload({realm: 'eafile'});
+            <script>
             </td>
         </tr>
         <tr>

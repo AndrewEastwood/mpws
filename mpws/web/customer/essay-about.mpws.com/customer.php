@@ -675,6 +675,12 @@ class customer {
         
         //echo convDT(false, 'GMT+2', 'GMT0');
         
+        if (empty($_SESSION['MPWS_SITE_SESSION']))
+            $_SESSION['MPWS_SITE_SESSION'] = md5(time() . mt_rand(1, 1000));
+        
+        //echo $_SESSION['MPWS_SITE_SESSION'];
+        //echo ini_get('session.gc_maxlifetime');
+        
         $model = &$customer->getModel();
         $validator = $customer->getCustomerConfiguration('VALIDATOR');
         $messages = array();
@@ -686,6 +692,7 @@ class customer {
         $model['CUSTOMER']['DATA'] = $data;
         // preview or checkout actions
         $isPreviewOrSave = libraryRequest::isPostFormActionMatchAny('proceed', 'checkout');
+        
         // user object
         // it contains user info if buyer is loggined
         $user = array();
@@ -959,6 +966,11 @@ class customer {
                     $_order['phone'] = $user['Billing_Phone'];
                     $_order['pay_method'] = $user['CC'];
                 }
+                
+                // save uploads
+                // link uploads to the order entry
+                libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], $_o_token);
+
                 //var_dump($_order);
                 libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
                 exit;
@@ -1006,12 +1018,20 @@ class customer {
         
         // populate user fields
         if (!$isPreviewOrSave) {
+            
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.make_order');
             if ($model['USER']['ACTIVE']) {
                 $model['CUSTOMER']['DATA']['Email'] = $user['Email'];
                 $model['CUSTOMER']['DATA']['TimeZone'] = $user['TimeZone'];
                 $model['CUSTOMER']['DATA']['IM'] = $user['IM'];
             }
+        }
+        
+        // file uploader
+        if ($isPreviewOrSave) {
+            $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
+        } else {
+            $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
         }
     }
     private function _pageBuyEssay ($customer) {

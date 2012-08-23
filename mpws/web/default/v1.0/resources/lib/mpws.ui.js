@@ -262,6 +262,8 @@
             injectTo: 'div#MPWSFileUploadSection',
             isAutomatic: true,
             callback: false,
+            maxUploads: 5,
+            realm: 'default',
             fileInputName: 'mpws_files',
             properties: {
                 link_add: '+1 source',
@@ -270,6 +272,8 @@
         };
         
         var _self = this;
+        
+        var _uploadCounter = 1;
         
         var _html = {
             buttons: {},
@@ -331,6 +335,10 @@
             return htmlObj.clone();
         }
         
+        function _getFUKey () {
+            return 'mpws_fu_' + (_settings.realm || 'default');
+        }
+        
         this.doInject = function () {
             mpws.tools.log('doInject');
             mpws.tools.log(_html);
@@ -350,25 +358,43 @@
             var _add = _html.links.add;
             _add.click(function(){
                 mpws.tools.log('_add.click');
+                if (_uploadCounter > _settings.maxUploads) {
+                    $(this).hide();
+                    return;
+                }
                 var _fFld = _getHtmlObj(_html.sections.fileField);
                 var _remove = _getHtmlObj(_html.links.remove);
+                var _file = _getHtmlObj(_html.inputs.file);
+                
+                // init file realm
+                _file.attr('name',_getFUKey() + '[]');
+                
                 _remove.click(function(){
                     mpws.tools.log('_remove.click');
                     $(this).parent().remove();
+                    _uploadCounter--;
+                    if (_add.css('display') == 'none')
+                        _add.css({'display':''});
                 });
-                _fFld.append(_getHtmlObj(_html.inputs.file));
+                _fFld.append(_file);
                 _fFld.append(_remove);
                 _fFld.attr('id', 'MPWSFileField_' + mpws.tools.random() + '_ID');
                 mpws.tools.log(_fFld);
                 //_getLiveObj(_html.sections.fileContainer).prepend(_fFld);
                 $('#MPWSSectionFileUploadContainer').append(_fFld);
+                
+                _uploadCounter++;
+                
+                if (_uploadCounter > _settings.maxUploads)
+                    $(this).hide();
             });
             _controls.append(_add);
                       
             var _$fileUploader = $('<div>')
                 .attr('id', 'MPWSWidgetFileUpload')
+                .append(_fileContainer)
                 .append(_controls)
-                .append(_fileContainer);
+                .append('<input type="hidden" name="fileUploadKey" value="'+_getFUKey()+'">');
             
             
             _$injectElem.append(_$fileUploader);

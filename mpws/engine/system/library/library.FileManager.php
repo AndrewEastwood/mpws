@@ -517,13 +517,56 @@ class libraryFileManager
     
     /* FileUploader v2.0 */
     
-    public static function FU_StoreTempFiles () {
+    public static function FU_StoreTempFiles ($sessionKey) {
+        // get files by upload key
+        $key = $_POST['fileUploadKey'];
+        if (empty($key))
+            return 'Unable to get upload key';
         
+        $tempDir = DR . DS . 'data' . DS . 'temp' . DS . $sessionKey;
+        
+        //make directory
+        if (!file_exists($tempDir)) 
+            mkdir($tempDir, 0777, true);
+        
+        //echo 'SAVING TO: ' . $tempDir;
+
+        //var_dump($_FILES);
+        
+        //$fileInfo = array();
+        
+        // return all temporary uploaded files
+        foreach ($_FILES[$key]['tmp_name'] as $fileIndex => $fileTmpName) 
+            if(move_uploaded_file($fileTmpName, $tempDir . DS . $_FILES[$key]['name'][$fileIndex]));
+                /*$fileInfo[$sessionKey][] = array(
+                    $_FILES[$key][$fileIndex]['name'],
+                    $_FILES[$key][$fileIndex]['size'],
+                    $_FILES[$key][$fileIndex]['error'],
+                    $_FILES[$key][$fileIndex]['tmp_name']
+                );*/
+
+        return glob($tempDir . DS . '*');
     }
     
-    public static function FU_PostFiles () {
+    public static function FU_GetSessionContent($sessionKey) {
+        $tempDir = DR . DS . 'data' . DS . 'temp' . DS . $sessionKey;
+        if(file_exists($tempDir))
+            return glob($tempDir . DS . '*');
+        return false;
+    }
+    
+    public static function FU_PostFiles ($sessionKey, $owner) {
         // return file names
         // use md5 of time() to get unic file name
+        $uploadDir = DR . DS . 'data' . DS . 'uploads' . DS . $owner;
+        $tmpFiles = self::FU_GetSessionContent($sessionKey);
+        $fileMap = array();
+        foreach ($tmpFiles as $fileItem) {
+            $storedFilePath = $uploadDir . DS . basename($fileItem);
+            renname($fileItem, $storedFilePath);
+            $fileMap[] = array('OWNER' => $owner, 'FILEPATH' => $storedFilePath);
+        }
+        return $fileMap;
     }
     
     

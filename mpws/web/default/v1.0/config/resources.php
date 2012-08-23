@@ -29,3 +29,8 @@
             'AUTO' => Array()
         )
     );
+    
+    // define css mode
+    // CSS, LESS
+    // will be added in 1.8.0.x
+    //$default['RESOURCES']['MODE'] = 'CSS';
