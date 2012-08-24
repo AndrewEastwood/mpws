@@ -161,6 +161,9 @@ class libraryRequest {
 
     
     public static function postRedirect ($values, $host, $action) {
+        // MPWS PERMISSION CHECK
+        if (!MPWS_ENABLE_REDIRECTS)
+            return;
         $post_data = '';
         foreach($values as $key => $value)
             $post_data .= ($key . '=' . $value . '&');
@@ -175,6 +178,9 @@ class libraryRequest {
     }
     
     public static function locationRedirect($values, $location) {
+        // MPWS PERMISSION CHECK
+        if (!MPWS_ENABLE_REDIRECTS)
+            return;
         $post_data = '';
         foreach($values as $key => $value)
             $post_data .= ($key . '=' . $value . '&');
@@ -202,6 +208,12 @@ class libraryRequest {
         $res_hdr = false           /* Include HTTP response headers */ 
         ) 
     { 
+        
+        
+        // MPWS PERMISSION CHECK
+        if(!MPWS_ENABLE_REDIRECTS)
+            return;
+        
         $ret = ''; 
         $verb = strtoupper($verb); 
         $cookie_str = ''; 

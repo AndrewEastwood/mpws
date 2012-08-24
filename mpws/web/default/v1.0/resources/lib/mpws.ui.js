@@ -294,6 +294,14 @@
                         href: 'javascript://'
                     })
                     .addClass('MPWSLinkRemoveile')
+                    .text(_settings.properties.link_remove),
+                // delete linked input file
+                cancel: $('<a>')
+                    .attr({
+                        type: 'button',
+                        href: 'javascript://'
+                    })
+                    .addClass('MPWSLinkCancel')
                     .text(_settings.properties.link_remove)
             },
             inputs: {
@@ -320,8 +328,6 @@
                     .attr({
                         id: 'MPWSSectionControlField'
                     }),
-                fileField: $('<div>')
-                    .addClass('MPWSSectionFileUploadField'),
                 fileContainer: $('<div>')
                     .attr({
                         id: 'MPWSSectionFileUploadContainer'
@@ -329,7 +335,9 @@
                 fileUploadedContainer: $('<div>')
                     .attr({
                         id: 'MPWSSectionFileUploadedContainer'
-                    })
+                    }),
+                fileField: $('<div>')
+                    .addClass('MPWSSectionFileUploadField')
             }
         };
         
@@ -374,9 +382,26 @@
             // add uploaded files
             if (_settings.files.length) {
                 _uploadCounter = _settings.files.length;
-                _cleaner = "$('#MPWSControlInputFileUploadCleanup').val($(this).text());$(this).parent().remove();"
-                for (fileIndex in _settings.files)
-                    _fileUploadedContainer.append('<div class="MPWSFileUploadedItem" onclick="'+_cleaner+'">'+_settings.files[fileIndex]+'</div>');
+                //mpws.tools.log(_settings.files.length);
+                for (fileIndex in _settings.files) {
+                    var _ufFld = _getHtmlObj(_html.sections.fileField);
+                    _ufFld.append('<span>' +_settings.files[fileIndex]+ '</span>')
+                    _ufFld.append(_getHtmlObj(_html.links.cancel).click(function(){
+                        mpws.tools.log('cancel upload file');
+                        // get existed files to remove
+                        var _rmfiles = $('#MPWSControlInputFileUploadCleanup').val();
+                        $('#MPWSControlInputFileUploadCleanup').val(_rmfiles + _settings.files[fileIndex] + ';');
+                        // remove file row
+                        $(this).parent().remove();
+                        // increase upload counter
+                        _uploadCounter--;
+                        // make add link visible
+                        if (_add.css('display') == 'none')
+                            _add.css({'display':''});
+                    }));
+                    _fileUploadedContainer.append(_ufFld);
+                }
+                    
             }
             
             
@@ -384,7 +409,7 @@
             var _add = _html.links.add;
             _add.click(function(){
                 mpws.tools.log('_add.click');
-                if (_uploadCounter > _settings.maxUploads) {
+                if (_uploadCounter > _settings.maxUploads - 1) {
                     $(this).hide();
                     return;
                 }
@@ -411,7 +436,7 @@
                 
                 _uploadCounter++;
                 
-                if (_uploadCounter > _settings.maxUploads)
+                if (_uploadCounter > _settings.maxUploads - 1)
                     $(this).hide();
             });
 

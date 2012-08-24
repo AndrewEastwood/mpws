@@ -6,6 +6,14 @@ RewriteBase /
 ######## COMMON #######
 #######################
 
+
+# uploaded data
+#RewriteRule upload/(.*)-(.*)/(.*) /rdd.php?a=$1&b=$2&c=$3
+RewriteRule upload/(.*)-(.*)/(.*) /data/$1/$2/$3 [QSA]
+# get data file locked for owner
+RewriteRule storage/(..)_(..)_(..)/(.*)?owner=(.*) /data/uploads/$1-$2-$3/$5/$4 [QSA]
+
+
 #ErrorDocument 404 /engine/dispatcher/dispatcher.Public.php?page=404&action=default
 
 # Static Resources
@@ -47,3 +55,8 @@ RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?
 
 # custom pages
 RewriteRule page/purchase.php?(.*) /engine/dispatcher/dispatcher.Public.php?page=purchase&action=default$2 [QSA]
+
+# TOOLING
+
+# services
+RewriteRule service/(.*).php?(.*) /tooling/$1/index.php?$2 [QSA]

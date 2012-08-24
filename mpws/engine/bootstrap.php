@@ -11,8 +11,9 @@
     define('MPWS_ENV', 'DEV');
     //
     define('MPWS_ENABLE_EMAILS', false);
-    
-    
+    //
+    define('MPWS_ENABLE_REDIRECTS', false);
+
     //var_dump(parse_url($_SERVER['HTTP_HOST']));
     
     

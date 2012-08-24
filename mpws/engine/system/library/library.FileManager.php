@@ -535,7 +535,14 @@ class libraryFileManager
         
         //$fileInfo = array();
         
+        // cancel files
+        $filesToCancel = explode(';', $_POST['fileCleanup']);
+        foreach ($filesToCancel as $fileToCancel)
+            if (!is_dir($tempDir . DS . $fileToCancel) && file_exists($tempDir . DS . $fileToCancel))
+                unlink($tempDir . DS . $fileToCancel);
+        
         // return all temporary uploaded files
+        if (!empty($_FILES))
         foreach ($_FILES[$key]['tmp_name'] as $fileIndex => $fileTmpName) 
             if(move_uploaded_file($fileTmpName, $tempDir . DS . $_FILES[$key]['name'][$fileIndex]));
                 /*$fileInfo[$sessionKey][] = array(
@@ -557,27 +564,76 @@ class libraryFileManager
     
     public static function FU_GetSessionContent($sessionKey) {
         $tempDir = DR . DS . 'data' . DS . 'temp' . DS . $sessionKey;
+        $rez = array(
+            'PATH' => $tempDir,
+            'GLOB' => array(),
+            'JSON' => '[]'
+        );
         if(file_exists($tempDir)) {
+            self::putAccessLog($tempDir, true);
             $glob = glob($tempDir . DS . '*');
-            return array('GLOB' => $glob, 'JSON' => self::globToJSON($glob));
+            $rez['GLOB'] = $glob;
+            $rez['JSON'] = self::globToJSON($glob);
         }
-        return false;
+        return $rez;
     }
     
     public static function FU_PostFiles ($sessionKey, $owner) {
         // return file names
         // use md5 of time() to get unic file name
-        $uploadDir = DR . DS . 'data' . DS . 'uploads' . DS . $owner;
+        $uploadDir = DR . DS . 'data' . DS . 'uploads' . DS . date('Y-m-d') . DS . $owner;
+        //make directory
+        if (!file_exists($uploadDir)) 
+            mkdir($uploadDir, 0777, true);
+        
         $tmpFiles = self::FU_GetSessionContent($sessionKey);
         $fileMap = array();
-        foreach ($tmpFiles as $fileItem) {
+        foreach ($tmpFiles['GLOB'] as $fileItem) {
             $storedFilePath = $uploadDir . DS . basename($fileItem);
-            renname($fileItem, $storedFilePath);
+            rename($fileItem, $storedFilePath);
             $fileMap[] = array('OWNER' => $owner, 'FILEPATH' => $storedFilePath);
         }
+        // trunkate temporary dir
+        self::rrmdir($tmpFiles['PATH']);
         return $fileMap;
     }
     
+    
+    public static function putAccessLog ($fileContainer, $affectDirAccessTimeOnly = false) {
+        // source from http://www.php.net/manual/en/function.fputs.php#88916
+        // file container where all texts are to be written
+        $fileContainer .= DS . date("MjY").'.log';
+
+        // open the said file
+        $filePointer = fopen($fileContainer,"w+");
+
+        // text to be written in the file
+        $logMsg = "You are located at ".$_SERVER["REMOTE_ADDR"]."\n";
+
+        // below is where the log message has been written to a file.
+        fputs($filePointer,$logMsg);
+
+        // close the open said file after writing the text
+        fclose($filePointer);
+        
+        // remove file
+        if ($affectDirAccessTimeOnly)
+            unlink($fileContainer);
+    }
+    
+    public static function rrmdir($dir) {
+        // from: http://www.php.net/manual/en/function.rmdir.php#98622
+        if (is_dir($dir)) { 
+            $objects = scandir($dir); 
+            foreach ($objects as $object) { 
+                if ($object != "." && $object != "..") { 
+                    if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
+                } 
+            } 
+            reset($objects); 
+            rmdir($dir); 
+        } 
+    } 
     
     
     

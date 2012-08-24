@@ -868,8 +868,6 @@ class customer {
                     $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.student.new'));
                     // send email message to new user
                     libraryMailer::sendEMail($recipient);
-                    
-                    
                 }
                 
                 // make order token
@@ -967,10 +965,6 @@ class customer {
                     $_order['pay_method'] = $user['CC'];
                 }
                 
-                // save uploads
-                // link uploads to the order entry
-                libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], $_o_token);
-
                 //var_dump($_order);
                 libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
                 exit;
@@ -1029,7 +1023,14 @@ class customer {
         
         // file uploader
         if ($isPreviewOrSave) {
-            $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
+            
+            // save uploads
+            // link uploads to the order entry
+            // added for testing purposes
+            libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], 'demo');
+            
+            
+            //$ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
         } else {
             $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
         }
