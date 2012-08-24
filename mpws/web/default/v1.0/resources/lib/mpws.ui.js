@@ -263,6 +263,7 @@
             isAutomatic: true,
             callback: false,
             maxUploads: 5,
+            files: [],
             realm: 'default',
             fileInputName: 'mpws_files',
             properties: {
@@ -273,7 +274,7 @@
         
         var _self = this;
         
-        var _uploadCounter = 1;
+        var _uploadCounter = 0;
         
         var _html = {
             buttons: {},
@@ -301,7 +302,18 @@
                         type: 'file',
                         name: _settings.fileInputName + '[]'
                     })
-                    .addClass('MPWSControlInput MPWSControlInputFileUpload')
+                    .addClass('MPWSControlInput MPWSControlInputFileUpload'),
+                fileUploadKey: $('<input>')
+                    .attr({
+                        type: 'hidden',
+                        name: 'fileUploadKey'
+                    }),
+                fileCleanup: $('<input>')
+                    .attr({
+                        type: 'hidden',
+                        name: 'fileCleanup',
+                        id: 'MPWSControlInputFileUploadCleanup'
+                    })
             },
             sections: {
                 controlField: $('<div>')
@@ -313,6 +325,10 @@
                 fileContainer: $('<div>')
                     .attr({
                         id: 'MPWSSectionFileUploadContainer'
+                    }),
+                fileUploadedContainer: $('<div>')
+                    .attr({
+                        id: 'MPWSSectionFileUploadedContainer'
                     })
             }
         };
@@ -353,6 +369,16 @@
             
             var _controls = _html.sections.controlField;
             var _fileContainer = _html.sections.fileContainer;
+            var _fileUploadedContainer = _html.sections.fileUploadedContainer;
+            
+            // add uploaded files
+            if (_settings.files.length) {
+                _uploadCounter = _settings.files.length;
+                _cleaner = "$('#MPWSControlInputFileUploadCleanup').val($(this).text());$(this).parent().remove();"
+                for (fileIndex in _settings.files)
+                    _fileUploadedContainer.append('<div class="MPWSFileUploadedItem" onclick="'+_cleaner+'">'+_settings.files[fileIndex]+'</div>');
+            }
+            
             
             // add link
             var _add = _html.links.add;
@@ -388,18 +414,21 @@
                 if (_uploadCounter > _settings.maxUploads)
                     $(this).hide();
             });
+
+            // add controls
             _controls.append(_add);
-                      
+            _controls.append(_html.inputs.fileUploadKey.val(_getFUKey()));
+            _controls.append(_html.inputs.fileCleanup);
+            
+            // combine sections
             var _$fileUploader = $('<div>')
                 .attr('id', 'MPWSWidgetFileUpload')
                 .append(_fileContainer)
-                .append(_controls)
-                .append('<input type="hidden" name="fileUploadKey" value="'+_getFUKey()+'">');
+                .append(_fileUploadedContainer)
+                .append(_controls);
             
-            
+            // inject file uploader
             _$injectElem.append(_$fileUploader);
-            
-            
         }
         
         this.setup(settings);

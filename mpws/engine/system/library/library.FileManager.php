@@ -545,13 +545,22 @@ class libraryFileManager
                     $_FILES[$key][$fileIndex]['tmp_name']
                 );*/
 
-        return glob($tempDir . DS . '*');
+        return self::FU_GetSessionContent($sessionKey);
+    }
+    
+    public static function globToJSON ($globList) {
+        $map = array();
+        foreach ($globList as $fileName)
+            $map[] = basename($fileName);
+        return libraryUtils::getJSON($map);
     }
     
     public static function FU_GetSessionContent($sessionKey) {
         $tempDir = DR . DS . 'data' . DS . 'temp' . DS . $sessionKey;
-        if(file_exists($tempDir))
-            return glob($tempDir . DS . '*');
+        if(file_exists($tempDir)) {
+            $glob = glob($tempDir . DS . '*');
+            return array('GLOB' => $glob, 'JSON' => self::globToJSON($glob));
+        }
         return false;
     }
     

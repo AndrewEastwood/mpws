@@ -91,7 +91,7 @@
             <td class="cell04">Additional files</td>
             <td class="cell04a">
                 <ul>
-                <?php if (!empty($model['CUSTOMER']['UPLOADS'])) foreach ($model['CUSTOMER']['UPLOADS'] as $uploadItem) : ?>
+                <?php if (!empty($model['CUSTOMER']['UPLOADS'])) foreach ($model['CUSTOMER']['UPLOADS']['GLOB'] as $uploadItem) : ?>
                     <li>
                     <a href="<?=$link;?>" target="blank"><?=basename($uploadItem);?></a>
                     <input type="hidden" name="order_uploads[]" value="<?=$uploadItem;?>"/>

@@ -1029,10 +1029,12 @@ class customer {
         
         // file uploader
         if ($isPreviewOrSave) {
-            $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
+            $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
         } else {
-            $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
+            $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
         }
+        
+        //var_dump($ff);
     }
     private function _pageBuyEssay ($customer) {
         $model = &$customer->getModel();
