@@ -28,7 +28,9 @@
             'IMPORT' => Array()
         ),
         'mpwsAdmin.css' => Array(
-            'DEFAULT' => Array(),
+            'DEFAULT' => Array(
+                'shared.css'
+            ),
             'OWNER' => Array(
                 'admin.css'
             ),

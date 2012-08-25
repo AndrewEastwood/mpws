@@ -63,8 +63,8 @@ class libraryComponents
         $com['PAGES'] = round($com['RECORDS'] / $com['LIMIT'] + 0.4);
         
         // cleanup junk page values
-        $com['CURRENT'] = mysqlreal_escape_string($com['CURRENT']);
-        if (!is_number($com['CURRENT']) || 
+        $com['CURRENT'] = mysql_escape_string($com['CURRENT']);
+        if (!is_numeric($com['CURRENT']) || 
             $com['CURRENT'] < 1 || 
             $com['CURRENT'] > $com['PAGES'])
             $com['CURRENT'] = 1;

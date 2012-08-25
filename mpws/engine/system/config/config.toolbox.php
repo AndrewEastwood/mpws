@@ -12,4 +12,5 @@
         'output_encoding' => 'ISO-8859-1'
     );
     $config['TOOLBOX']['STARTUP_PLUGIN'] = 'TOOLBOX';
+    
 ?>

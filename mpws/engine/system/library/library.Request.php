@@ -181,10 +181,14 @@ class libraryRequest {
         // MPWS PERMISSION CHECK
         if (!MPWS_ENABLE_REDIRECTS)
             return;
+        header('Location: ' . self::getLocationString($values, $location));
+    }
+    
+    public static function getLocationString ($values, $location) {
         $post_data = '';
         foreach($values as $key => $value)
             $post_data .= ($key . '=' . $value . '&');
-        header('Location: ' . $location . '?' . $post_data);
+        return $location . '?' . $post_data;
     }
  
     /*

@@ -93,14 +93,24 @@ class libraryToolboxManager {
     }
     
     /* crossmode call */
+    static private $pluginsObj;
     static public function callPluginMethod ($pluginName, $methodName, $params = false) {
-        $pluginsObj = new libraryPluginManager(false);
+        //echo 'callPluginMethod<br>';
+        //echo '------ callPluginMethod 1<br>';
+        if (!self::$pluginsObj)
+            self::$pluginsObj = new libraryPluginManager(false);
         //echo 'callPluginMethod ' . $pluginName;
-        $po = $pluginsObj->loadPlugin($pluginName);
+        $po = self::$pluginsObj->loadPlugin($pluginName);
+        //echo '------ callPluginMethod 2<br>';
         //var_dump($po);
         $params['fn'] = $methodName;
+        //echo '------ callPluginMethod 3<br>';
         //var_dump($params);
-        return $po->cross_method($params);
+        $rez = $po->cross_method($params);
+        //echo '------ callPluginMethod 4<br>';
+        //unlink($po);
+        //unlink($pluginsObj);
+        return $rez;
     }
 
 }

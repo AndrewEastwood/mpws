@@ -138,28 +138,28 @@
             <?php
                 for($i=0;$i<=20;$i++) {
                     $selected = '';
-                    if ($model['CUSTOMER']['DATA']['Sources'] == $i)
+                    if ($model['CUSTOMER']['DATA']['UseSources'] == $i)
                         $selected = ' selected="selected"';
                     echo '<option value="'.$i.'"'.$selected .'>'.$i.'</option>';
                 }
             ?>
             </select>
-            <div class="MPWSFormHint" id="MPWSFormHintSourceBannerID">
-                You should put the link to the sources into the fields below.
-                We recommend using the following services to upload your source and get the url:
-                <ul>
-                    <li><a href="http://ge.tt/" target="blank" class="MPWSSourceTipBanner">http://ge.tt</a></li>
-                    <li><a href="http://www.filefactory.com/" target="blank" class="MPWSSourceTipBanner">http://www.filefactory.com</a></li>
-                </ul>
+            <div class="MPWSFormHint<?=($model['CUSTOMER']['DATA']['UseSources']?'':' MPWSHidden');?>" id="MPWSFormHintSourceBannerID">
+                Additionally you can provide us the links to preferred sources to use.<br>
+                Please put them into the fields below.
             </div>
             <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
                 <div class="MPWSSourceRow"></div>
                 <!-- sources from preview page -->
-                <?php if (!empty($model['CUSTOMER']['DATA']['SourceLinks'])) foreach ($model['CUSTOMER']['DATA']['SourceLinks'] as $link) : ?>
+                <?php for($i=0;$i<$model['CUSTOMER']['DATA']['UseSources'];$i++) : ?>
                     <div class="MPWSSourceRow">
-                    <input type="text" name="order_source_links[]" value="<?=$link;?>"/>
+                    <?php if (empty($model['CUSTOMER']['DATA']['SourceLinks'][$i])) : ?>
+                        <input type="text" name="order_source_links[]" value=""/>
+                    <?php else : ?>
+                        <input type="text" name="order_source_links[]" value="<?=$model['CUSTOMER']['DATA']['SourceLinks'][$i];?>"/>
+                    <?php endif ?>
                     </div>
-                <?php endforeach ?>
+                <?php endfor ?>
             </div>
             </td>
         </tr>

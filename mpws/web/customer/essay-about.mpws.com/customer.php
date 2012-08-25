@@ -474,6 +474,8 @@ class customer {
         
         // set layout
         $model['LAYOUT'] = 'layout_admin';
+        //echo 'Account: ' . $model['CUSTOMER']['TEMPLATE'];
+        //var_dump($model);
     }
     private function _pagePurchase ($customer) {
         $model = &$customer->getModel();
@@ -693,6 +695,9 @@ class customer {
         // preview or checkout actions
         $isPreviewOrSave = libraryRequest::isPostFormActionMatchAny('proceed', 'checkout');
         
+        
+        //var_dump($data['SourceLinks']);
+        
         // user object
         // it contains user info if buyer is loggined
         $user = array();
@@ -876,18 +881,19 @@ class customer {
                 // save sources
                 if (!empty($data['SourceLinks'])) {
                     foreach ($data['SourceLinks'] as $link)
-                        $customer->getDatabaseObj()
-                            ->reset()
-                            ->insertInto('writer_sources')
-                            ->fields(array('OrderToken', 'SourceURL', 'DateCreated'))
-                            ->values(array($_o_token, $link, date($mdbc['DB_DATE_FORMAT'])))
-                            ->query();
+                        if (!empty($link))
+                            $customer->getDatabaseObj()
+                                ->reset()
+                                ->insertInto('writer_sources')
+                                ->fields(array('OrderToken', 'SourceURL', 'DateCreated'))
+                                ->values(array($_o_token, $link, date($mdbc['DB_DATE_FORMAT'])))
+                                ->query();
                 }
 
                 // remove non-accepted fileds
                 unset($data['Email']);
                 unset($data['IM']);
-                unset($data['Sources']);
+                //unset($data['Sources']);
                 unset($data['SourceLinks']);
 
                 // append additional information
@@ -1045,9 +1051,9 @@ class customer {
             //libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], 'demo');
             
             
-            $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
+            $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
         } else {
-            $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
+            $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
         }
         
         //var_dump($ff);
@@ -1281,7 +1287,7 @@ class customer {
         $user_student = array();
         if ($model['USER']['ACTIVE']) {
             $user_student = $customer->getDatabaseObj()
-                ->select('ID, Email, Name, TimeZone')
+                ->select('*')
                 ->from('writer_students')
                 ->where('ID', '=', $data_order['StudentID'])
                 ->fetchRow();
@@ -1967,6 +1973,35 @@ class customer {
                     ->values(array_values($message))
                     ->query();
             }
+            
+            
+            // uploads
+
+            // save uploaded files
+            libraryFileManager::FU_StoreTempFiles($data_order['OrderToken']);
+            $uploadedFiles = libraryFileManager::FU_PostFiles($data_order['OrderToken'], $data_order['OrderToken']);
+            $_uploadFileds = array('Path', 'Owner', 'DateCreated');
+            foreach ($uploadedFiles as $uploadedItem)
+                $customer->getDatabaseObj()
+                    ->reset()
+                    ->insertInto('mpws_uploads')
+                    ->fields($_uploadFileds)
+                    ->values(array(
+                        $uploadedItem['FILEPATH'],
+                        $uploadedItem['OWNER'],
+                        convDT(null, 'UTC', $data['TimeZone'])
+                    ))
+                    ->query();
+            // remove uploaded files
+            $cleanupUplods = explode(';', libraryRequest::getPostValue('fileCleanup'));
+            foreach ($cleanupUplods as $toCleanup)
+                $customer->getDatabaseObj()
+                    ->reset()
+                    ->deleteFrom('mpws_uploads')
+                    ->where('Owner', '=', $data_order['OrderToken'])
+                    ->andWhere('Path', 'LIKE', '%/' . $toCleanup)
+                    ->query();
+            
         } // save changes action
         
         // collect order data and related items
@@ -2019,6 +2054,15 @@ class customer {
             ->where('ID', '=', $data_order['SubjectID'])
             ->fetchRow();
         
+        $data_uploads = $customer->getDatabaseObj()
+            ->select('Path, DateCreated, Owner')
+            ->from('mpws_uploads')
+            ->where('Owner', '=', $data_order['OrderToken'])
+            ->fetchData();
+        
+        //var_dump(libraryFileManager::dbLinksToJson($data_uploads));
+        $data_uploads = libraryFileManager::getUploadLinks($data_uploads);
+       
         $data_invoice_order = array();
         if (!empty($data_order['OrderToken']))
             $data_invoice_order = $customer->getDatabaseObj()
@@ -2034,74 +2078,54 @@ class customer {
                 ->from('writer_invoices')
                 ->where('merchant_order_id', '=', $data_order['RefundToken'])
                 ->fetchRow();
-        /*
-        $data_timezone_o = $customer->getDatabaseObj()
-            ->select('*')
-            ->from('mpws_timezone')
-            ->where('ID', '=', $data_order['TimeZoneID'])
-            ->fetchRow();
-        /*$data_timezone_u = $customer->getDatabaseObj()
-            ->select('*')
-            ->from('mpws_timezone')
-            ->where('ID', '=', $user_student['TimeZoneID'])
-            ->fetchRow();*-/
-        $data_timezone_w = $customer->getDatabaseObj()
-            ->select('*')
-            ->from('mpws_timezone')
-            ->where('ID', '=', $user_writer['TimeZoneID'])
-            ->fetchRow();
         
-        // --- order
-        $dto['UTC'] = $data_order['DateDeadline'];
-        $dto['ORDER'] = convDT($data_order['DateDeadline'], $data_timezone_o['TZ'], 'UTC');
-        $dto['WRITER'] = convDT($data_order['DateDeadline'], $data_timezone_w['TZ'], 'UTC');
-        
-        // --- now
-        $dto['nUTC'] = convDT(date($mdbc['DB_DATE_FORMAT']), 'UTC');
-        $dto['nORDER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_o['TZ']);
-        $dto['nWRITER'] = convDT(date($mdbc['DB_DATE_FORMAT']), $data_timezone_w['TZ']);
-        
-        echo '<br>- - - -  -- - - - - - DEADLINE ORIGINAL<br>';
-        echo '<br>UTC/SYSTEM: ' . $dto['UTC'];
-        echo '<br>ORDER: ' . $dto['ORDER'];
-        echo '<br>WRITER: ' . $dto['WRITER'];
-        
-        echo '<br>- - - -  -- - - - - - NOW<br>';
-        echo '<br>SERVER: ' . date($mdbc['DB_DATE_FORMAT']);
-        echo '<br>UTC/SYSTEM: ' . $dto['nUTC'];
-        echo '<br>ORDER: ' . $dto['nORDER'];
-        echo '<br>WRITER: ' . $dto['nWRITER'];
-        
-        echo '<br>- - - -  -- - - - - - HOURS LEFT<br>';
-        echo '<br>UTC/SYSTEM: ' . libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']);
-        echo '<br>ORDER: ' . libraryUtils::getDateTimeHoursDiff($dto['ORDER'], $dto['nORDER']);
-        echo '<br>WRITER: ' . libraryUtils::getDateTimeHoursDiff($dto['WRITER'], $dto['nWRITER']);
-        
-        echo '<br>- - - -  -- - - - - - DEADLINE FOR WRITER -2Hours<br>';
-        echo '<br>UTC/SYSTEM: ' . libraryUtils::subDateHours($dto['UTC'], 2, $mdbc['DB_DATE_FORMAT']);
-        echo '<br>ORDER: ' . libraryUtils::subDateHours($dto['ORDER'], 2, $mdbc['DB_DATE_FORMAT']);
-        echo '<br>WRITER: ' . libraryUtils::subDateHours($dto['WRITER'], 2, $mdbc['DB_DATE_FORMAT']);
+        // page links
+        $model['CUSTOMER']['LINKS'] = array();
         
         
-        
-        echo '<br>- - - -  -- - - - - - HOURS LEFT -2Hours<br>';
-        echo '<br>UTC/SYSTEM: ' . (libraryUtils::getDateTimeHoursDiff($data_order['DateDeadline'], $dto['nUTC']) - 2);
-        echo '<br>ORDER: ' . (libraryUtils::getDateTimeHoursDiff($dto['ORDER'], $dto['nORDER']) - 2);
-        echo '<br>WRITER: ' . (libraryUtils::getDateTimeHoursDiff($dto['WRITER'], $dto['nWRITER']) - 2);
-        */
-        //var_dump($data_order['TimeZoneID']);
-        
-        //echo $data_timezone['TZ'];
-        
-        //echo '<br>- - - -  -- - - - - - NOW <br>';
-        //toGreenwichTime(date('Y-m-d H:i:s'), $data_timezone['TZ']);
-        //echo '<br>- - - -  -- - - - - - DEADLINE <br>';
-        //toGreenwichTime($data_order['DateDeadline'], $data_timezone['TZ']);
-        
-        
-        
-        //$usertime = timeInfo($data_order['TimeZone']);
-        //echo '<pre>' . print_r($usertime, true) . '</pre>';
+        // check for unpaid item
+        if (empty($model['CUSTOMER']['DATA_INVOICE_ORDER'])) {
+            // check for product existance
+            $payment = $customer->getCustomerConfiguration('PAYMENT');
+
+            // 2CO INTEGRATION
+            // check or create new product
+            $param = array(
+                'DATA' => array(
+                    'ORDER' => $data_order,
+                    'PRICE' => $data_order['Price'],
+                    'SUBJECT' => $data_subject['Name'],
+                    'DOCUMENT' => $data_document['Name']
+                ),
+                'CREATE_IF_EMPTY' => true,
+                'REALM' => 'E',
+                'ACCOUNT' => $payment['2CO']
+            );
+            $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
+            
+            // 2checkout integration
+            // order general information
+            $_order = $payment['2CO']['FORM'];
+            $_order['product_id'] = $product['assigned_product_id'];
+            $_order['merchant_order_id'] = $data_order['OrderToken'] . '-' . $user_student['Login'];
+            $_order['email'] = $user_student['Email'];
+            // billing information if user is loggined
+            if ($model['USER']['ACTIVE']) {
+                $_order['card_holder_name'] = $user_student['Billing_FirstName'];
+                $_order['street_address'] = $user_student['Billing_Address'];
+                $_order['city'] = $user_student['Billing_City'];
+                $_order['state'] = $user_student['Billing_State'];
+                $_order['zip'] = $user_student['Billing_PostalCode'];
+                $_order['country'] = $user_student['Billing_Country'];
+                $_order['email'] = $user_student['Billing_Email'];
+                $_order['phone'] = $user_student['Billing_Phone'];
+                $_order['pay_method'] = 'CC';
+            }
+            
+            
+            //var_dump($user_student);
+            $model['CUSTOMER']['LINKS']['BUY'] = libraryRequest::getLocationString($_order, $payment['2CO']['API']['METHODS']['purchase'], true);
+        }
         
         /* Local Deadlines */
         $dto['UTC'] = $data_order['DateDeadline'];
@@ -2153,9 +2177,12 @@ class customer {
         $model['CUSTOMER']['DATA_SOURCES'] = $data_sources;
         //$model['CUSTOMER']['DATA_DEADLINE'] = libraryUtils::subDateHours($data_order['DateDeadline'], 2, $mdbc['DB_DATE_FORMAT']);
         $model['CUSTOMER']['MESSAGES'] = $messages;
+        $model['CUSTOMER']['UPLOADS'] = $data_uploads;
         $model['CUSTOMER']['CUSTOM'] =array(
             'DB_DATE_FORMAT' => $mdbc['DB_DATE_FORMAT']
         );
+        
+        //echo 'ololol';
         //$model['CUSTOMER']['template'] = $plugin['templates']['page.orders.details'];
     }
     private function _accountDeskCommonOrders_all ($customer) {
@@ -2461,8 +2488,8 @@ class customer {
                     $customer->getDatabaseObj()
                             ->update($_accountRealm)
                             ->set(array(
-                                'DateLastAccess' => date($customer_config_mdbc['DB_DATE_FORMAT']),
-                                'IsOnline' => 1
+                                'DateLastAccess' => date($customer_config_mdbc['DB_DATE_FORMAT'])
+                                //'IsOnline' => 1
                             ))
                             ->where('ID', '=', $user['ID'])
                             ->query();
@@ -2481,7 +2508,8 @@ class customer {
         if ($sessionIdle) {
             //echo 'USER_TIMEOUT';
             // put user offline
-            if (!empty($_SESSION['WEB_USER']['ID']))
+            // skip putting user to offline
+            if (false && !empty($_SESSION['WEB_USER']['ID']))
                 $customer->getDatabaseObj()
                         ->update($_SESSION['WEB_USER']['REALM'])
                         ->set(array('IsOnline' => 0))

@@ -285,7 +285,11 @@
             <hr size="2"/>
             <h3>Sources</h3>
 
-            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional sources:</label>
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Number of sources:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['UseSources'];?></span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Preferred links:</label>
             <div class="MPWSSeparator"></div>
             <span class="MPWSValue">
             <ul>
@@ -294,6 +298,22 @@
             <?php endforeach ?>
             </ul>
             </span>
+            <div class="MPWSSeparator"></div>
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional files:</label>
+            <div class="MPWSSeparator"></div>
+            <span class="MPWSValue">
+            <ul>
+            <?php foreach ($model['PLUGINS']['WRITER']['UPLOADS']['MAP'] as $link => $title) : ?>
+                <li><a href="<?=$link;?>" target="blank"><?=$title;?></a></li>
+            <?php endforeach ?>
+            </ul>
+            </span>
+            <div class="MPWSSeparator"></div>
+            
+            
+            <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Security Token:</label>
+            <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['OrderToken'];?></span>
             <div class="MPWSSeparator"></div>
 
             <?php if (!empty($model['PLUGINS']['WRITER']['DATA']['ResolutionDocumentLink'])) : ?>
@@ -309,6 +329,9 @@
             <!-- Order Invoice -->
             <?php if (empty($model['PLUGINS']['WRITER']['DATA_INVOICE_ORDER'])) : ?>
                 <h4>This Order Is Unpaid! Please contact Buyer!</h4>
+                <h3>You can delete this order if it was created by mistake: 
+                    <input type="submit" name="do" value="Remove This Order"/>
+                </h3>
             <?php else : ?>
                 <h4>Received Payment</h4>
                 <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Total</label>

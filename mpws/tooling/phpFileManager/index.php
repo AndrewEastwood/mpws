@@ -44,6 +44,16 @@
 // +--------------------------------------------------
 // | Header and Globals
 // +--------------------------------------------------
+
+    // document root path reference
+    $DR = $_SERVER['DOCUMENT_ROOT'];
+    // bootstrap
+    include $DR . '/engine/bootstrap.php';
+    // include global files
+    $globals = glob($DR . '/engine/global/global.*.php');
+    foreach ($globals as $globalFile)
+        require_once $globalFile;
+    librarySecurity::wwwAuth();
     header("Pragma: no-cache");
     header("Cache-Control: no-store");
     foreach ($_GET as $key => $val) $$key=htmldecode($val);

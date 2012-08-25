@@ -17,7 +17,7 @@
 
 <h2>#<?=ucfirst($model['CUSTOMER']['DATA']['ID']);?>. <?=ucfirst($model['CUSTOMER']['DATA']['Title']);?></h2>
     
-<form action="" method="POST" class="MPWSForm MPWSFormDetails" name="order_details_form">
+<form action="" method="POST" class="MPWSForm MPWSFormDetails" enctype="multipart/form-data" name="order_details_form">
     <div class="MPWSFormFields">
 
         <label for="MPWSField_WriterNameID" class="MPWSFieldLabel">Document Type:</label>
@@ -99,15 +99,30 @@
         <hr size="2"/>
         <h3>Sources</h3>
 
-        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional sources:</label>
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Number of sources:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['UseSources'];?>&nbsp;</span>
         <a href="#_addmore" id="MPWSOrderAddMoreSourcesID">add +1</a>
         <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
             <!-- sources from preview page -->
             <?php if (!empty($model['CUSTOMER']['DATA_SOURCES'])) foreach ($model['CUSTOMER']['DATA_SOURCES'] as $link) : ?>
                 <div class="MPWSSourceRow">
-                <input type="text" name="order_source_links[]" value="<?=$link['SourceURL'];?>"/><a href="#_remove" id="MPWSOrderRemoveSourcesID">remove</a>
+                <input type="text" size="45" name="order_source_links[]" value="<?=$link['SourceURL'];?>"/><a href="#_remove" id="MPWSOrderRemoveSourcesID">remove</a>
                 </div>
             <?php endforeach ?>
+        </div>
+        
+        <div class="MPWSSeparator"></div><br>
+        
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional files:</label>
+        <div class="MPWSSeparator"></div>
+        <div class="MPWSSection">
+            <div id="MPWSFileUploadSection">
+                <noscript>Please enable JavaScript for file upload widget</noscript>
+            </div>
+            <script>
+                // file upload
+                new mpws.ui.fileUpload({realm: 'eafile',files:<?=$model['CUSTOMER']['UPLOADS']['JSON']?>});
+            </script>
         </div>
         
         <div class="MPWSSeparator"></div>
@@ -125,6 +140,8 @@
         <!-- Order Invoice -->
         <?php if (empty($model['CUSTOMER']['DATA_INVOICE_ORDER'])) : ?>
             <h4>This Order Is Unpaid.</h4>
+            <a href="<?=$model['CUSTOMER']['LINKS']['BUY'];?>" target="blank">Buy from 2CO</a>
+            <div>2CheckOut.com Inc. (Ohio, USA) is a payment facilitator for goods and services provided by essay-about.</div>
         <?php else : ?>
             <h4>Payment</h4>
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Paid</label>

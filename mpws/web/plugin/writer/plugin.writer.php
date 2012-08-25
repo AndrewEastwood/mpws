@@ -2191,6 +2191,13 @@ class pluginWriter {
             ->where('ID', '=', $data_order['SubjectID'])
             ->fetchRow();
         
+        $data_uploads = $toolbox->getDatabaseObj()
+            ->select('Path, DateCreated, Owner')
+            ->from('mpws_uploads')
+            ->where('Owner', '=', $data_order['OrderToken'])
+            ->fetchData();
+        $data_uploads = libraryFileManager::getUploadLinks($data_uploads);
+        
         $isWriterEmpty = empty($data_writer);// && !empty($data_order['WriterID']);
 
         if (empty($data_order)) {
@@ -2202,23 +2209,36 @@ class pluginWriter {
         // dropdown menus
         $_dr_publicStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'PublicStatus');
         $_dr_internalStatus = $toolbox->getDatabaseObj()->getEnumValues('writer_orders', 'InternalStatus');
+
         
+        if (libraryRequest::isPostFormAction('remove this order')) {
+            // remove order
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->deleteFrom('writer_orders')
+                ->where('ID', '=', $oid)
+                ->query();
+            // remove attachments
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->deleteFrom('writer_sources')
+                ->where('OrderToken', '=', $data_order['OrderToken'])
+                ->query();
+            // remove links
+            $toolbox->getDatabaseObj()
+                ->reset()
+                ->deleteFrom('mpws_uploads')
+                ->where('Owner', '=', $data_order['OrderToken'])
+                ->query();
+            // remove files
+            foreach ($data_uploads['SRC'] as $fileEntry) {
+                unlink($fileEntry['Path']);
+                libraryFileManager::removeDirIfEmpty(dirname($fileEntry['Path']));
+            }
+            
+            return 'home';
+        }
         
-        /*$data_timezone_o = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('mpws_timezone')
-            ->where('ID', '=', $data_order['TimeZoneID'])
-            ->fetchRow();*/
-        /*$data_timezone_u = $customer->getDatabaseObj()
-            ->select('*')
-            ->from('mpws_timezone')
-            ->where('ID', '=', $user_student['TimeZoneID'])
-            ->fetchRow();*/
-        /*$data_timezone_w = $toolbox->getDatabaseObj()
-            ->select('*')
-            ->from('mpws_timezone')
-            ->where('ID', '=', $data_writer['TimeZoneID'])
-            ->fetchRow();*/
         
         /* Local Deadlines */
         $dto['UTC'] = $data_order['DateDeadline'];
@@ -2269,6 +2289,7 @@ class pluginWriter {
         $model['PLUGINS']['WRITER']['TO_LIST'] = $data_writers;
         $model['PLUGINS']['WRITER']['DATA_SOURCES'] = $data_sources;
         $model['PLUGINS']['WRITER']['DATA_WRITER_REMOVED'] = $isWriterEmpty;
+        $model['PLUGINS']['WRITER']['UPLOADS'] = $data_uploads;
         $model['PLUGINS']['WRITER']['CUSTOM'] = array(
             'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE']
         );

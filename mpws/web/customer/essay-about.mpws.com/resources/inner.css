@@ -265,6 +265,7 @@ table{
     color:@font_darkBlue;
     text-align:right;
     font-weight:bold;
+    vertical-align:top;
 }
 .cell04a{
     padding-left:20px;

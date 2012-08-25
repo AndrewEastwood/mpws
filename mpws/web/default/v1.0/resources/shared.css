@@ -43,3 +43,23 @@ padding: 1px 10px 1px; overflow: hidden; background: #090 url('overlay.jpg') no-
 .MPWSTopSlider .MPWSButtonBlock {margin: 10px; float: right;}
 .MPWSTopSlider input {cursor: pointer; border: 1px solid #ddd; border-radius: 5px; padding: 3px 10px; background: #9c0; color: #fff;}
 .MPWSTopSlider input:hover {background: #06c; color: #fff;}
+
+
+/* WIDGETS */
+
+/* FILE UPLOAD */
+#MPWSWidgetFileUpload {padding: 10px; border: 1px dashed #eee;}
+    
+    #MPWSWidgetFileUpload #MPWSSectionFileUploadContainer .MPWSSectionFileUploadField {margin-bottom: 20px;}
+
+    #MPWSWidgetFileUpload #MPWSSectionControlField {margin-top: 10px;}
+
+    #MPWSWidgetFileUpload #MPWSSectionFileUploadedContainer {margin: -10px -10px 0px; padding: 10px; background-color: #efefef;}
+        #MPWSWidgetFileUpload #MPWSSectionFileUploadedContainer .MPWSSectionFileUploadField {overflow: hidden; zoom: 1;}
+            #MPWSWidgetFileUpload #MPWSSectionFileUploadedContainer .MPWSSectionFileUploadField a {margin-right: 100px;}
+            #MPWSWidgetFileUpload #MPWSSectionFileUploadedContainer .MPWSSectionFileUploadField span {font-weight: bold;}
+    /* PREVIEW MODE */
+    #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionControlField {display: none;}
+    #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionFileUploadContainer {display: none;}
+    #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionFileUploadedContainer {margin-bottom: -10px;}
+    #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionFileUploadedContainer .MPWSSectionFileUploadField span {float: none;}

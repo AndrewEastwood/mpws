@@ -1,13 +1,2 @@
-http://essay-about.mpws.com/
-http://essay-about.mpws.com/favicon.ico
-http://essay-about.mpws.com/page/account.html
 http://essay-about.mpws.com/page/buy-essays.html
-http://essay-about.mpws.com/page/discounts.html
-http://essay-about.mpws.com/page/faq.html
-http://essay-about.mpws.com/page/free-essays.html
-http://essay-about.mpws.com/page/home.html
-http://essay-about.mpws.com/page/joinus.html
-http://essay-about.mpws.com/page/make-order.html
-http://essay-about.mpws.com/page/prices.html
-http://essay-about.mpws.com/page/terms.html
-http://essay-about.mpws.com/page/testemonials.html
+http://essay-about.mpws.com/tooling/phpFileManager/LICENSE

@@ -11,7 +11,7 @@
         'Level' => 'order_level',
         'Format' => 'order_format',
         'Pages' => 'order_pages',
-        'Sources' => 'order_sources',
+        'UseSources' => 'order_sources',
         'Email' => 'order_email',
         'SourceLinks' => 'order_source_links',
         'TimeZone' => 'order_timezone',

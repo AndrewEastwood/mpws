@@ -2,6 +2,75 @@
 
 class libraryUtils {
 
+    // ORIGIN: http://stackoverflow.com/a/2313270
+    static public function crawl_page($url, $filter = array(), &$seen = array(), $depth = 5)
+    {
+        //static $seen = array();
+        if ($depth === 0)
+            return;
+        //echo '<br> VISITING: ' . $url;
+        $seen[$url] = true;
+        $dom = new DOMDocument('1.0');
+        @$dom->loadHTMLFile($url);
+        $anchors = $dom->getElementsByTagName('a');
+        foreach ($anchors as $element) {
+            $href = $element->getAttribute('href');
+            if ($href[0] === '#')
+                continue;
+            $owner_parts = parse_url($url);
+            $link_parts = parse_url($href);
+            // allow http only
+            if (!empty($link_parts['scheme']) && $link_parts['scheme'] !== 'http')
+                continue;
+            // skip reading link with different host
+            if (isset($owner_parts['host']) &&
+                isset($link_parts['host']) &&
+                $owner_parts['host'] != $link_parts['host'])
+                continue;
+            /***** custom filtering ****/
+            if (!empty($link_parts['query'])) {
+                parse_str($link_parts['query'], $link_query);
+                $isOK = true;
+                foreach ($filter as $key => $val) {
+                    if ($link_query[$key] == $val) {
+                        $isOK = false;
+                        break;
+                    }
+                }
+                if (!$isOK)
+                    continue;
+            }
+            //echo '<pre>' . print_r($owner_parts, true) . '</pre>';
+            //echo '<br>'.$href.'<pre>' . print_r($link_parts, true) . '</pre><hr size="2">';
+            $urlToVisit = $link_parts;
+            // adding scheme
+            if (empty($link_parts['scheme']))
+                $urlToVisit['scheme'] = 'http';
+            // adding host
+            if (empty($link_parts['host']))
+                $urlToVisit['host'] = $owner_parts['host'];
+            // adding path
+            if (empty($link_parts['path']))
+                $urlToVisit['path'] = $owner_parts['path'];
+            // remove fragment
+            if (isset($link_parts['fragment']))
+                unlink($urlToVisit['fragment']);
+            // combine url
+            $linkToPage = $urlToVisit['scheme'] . '://';
+            $linkToPage .= $urlToVisit['host'];
+            $linkToPage .= $urlToVisit['path'];
+            if (!empty($urlToVisit['query']))
+                $linkToPage .= '?' . $urlToVisit['query'];
+            //echo '<hr size="2">' . print_r($urlToVisit, true) . '</pre><hr size="2"><hr size="2">';
+            //echo '<hr size="2">' . $linkToPage . '</pre><hr size="2"><hr size="2">';
+            // skip already visited page
+            if (isset($seen[$linkToPage]))
+                continue;
+            self::crawl_page($linkToPage, $filter, $seen, $depth - 1);
+        }
+        //echo "URL:",$url,PHP_EOL,"<br>";//,"CONTENT:",PHP_EOL,$dom->saveHTML(),PHP_EOL,PHP_EOL;
+        return $seen;
+    }
 
     static public function  valueSelect ($value, $match, $valueOnMatch, $valueOnUnmatch) {
         if ($value == $match)

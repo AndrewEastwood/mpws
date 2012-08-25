@@ -79,7 +79,7 @@ mpws.module.define('essay-about', (function(window, document, $){
                 // get current sources count
                 var _currentSrcs = $('#MPWSSectionOrderSourcesLinksID input[type="text"]');
                 var _newCount = $(this).val();
-                var _field = '<div class="MPWSSourceRow"><input type="text" name="order_source_links[]" value=""/></div>';
+                var _field = '<div class="MPWSSourceRow"><input type="text" size="45" name="order_source_links[]" value=""/></div>';
                 var _cDiff = _newCount - _currentSrcs.length;
                 
                 //console.log(_newCount);
@@ -95,10 +95,17 @@ mpws.module.define('essay-about', (function(window, document, $){
                         $($('#MPWSSectionOrderSourcesLinksID .MPWSSourceRow:gt('+ _newCount +')')).remove();
                 }
                 
+                // show helper text
+                mpws.tools.log(_newCount);
+                if(_newCount > 0)
+                    $('#MPWSFormHintSourceBannerID').removeClass('MPWSHidden');
+                else
+                    $('#MPWSFormHintSourceBannerID').addClass('MPWSHidden');
+                
             });
             // add +1 order source
             $('#MPWSOrderAddMoreSourcesID').click(function(){
-                var _field = '<div class="MPWSSourceRow"><input type="text" name="order_source_links[]" value=""/><a href="#_remove" id="MPWSOrderRemoveSourcesID">remove</a></div>';
+                var _field = '<div class="MPWSSourceRow"><input type="text" size="45" name="order_source_links[]" value=""/><a href="#_remove" id="MPWSOrderRemoveSourcesID">remove</a></div>';
                 $('#MPWSSectionOrderSourcesLinksID').append(_field);
             });
             // remove order source

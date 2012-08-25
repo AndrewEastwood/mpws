@@ -36,6 +36,14 @@
                 return strings[d.getDay()-1];
             return '';
         },
+        getObjectCount: function (obj) {
+            if ($.isArray(obj))
+                return obj.length;
+            var _props = 0;
+            for (propin in obj)
+                _props++;
+            return _props;
+        },
         onload: $(document).ready
     };
     

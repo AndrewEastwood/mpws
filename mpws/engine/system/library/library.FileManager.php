@@ -518,6 +518,7 @@ class libraryFileManager
     /* FileUploader v2.0 */
     
     public static function FU_StoreTempFiles ($sessionKey) {
+        //echo 'FU_StoreTempFiles';
         // get files by upload key
         $key = $_POST['fileUploadKey'];
         if (empty($key))
@@ -563,6 +564,7 @@ class libraryFileManager
     }
     
     public static function FU_GetSessionContent($sessionKey) {
+        //echo 'FU_GetSessionContent';
         $tempDir = DR . DS . 'data' . DS . 'temp' . DS . $sessionKey;
         $rez = array(
             'PATH' => $tempDir,
@@ -579,9 +581,18 @@ class libraryFileManager
     }
     
     public static function FU_PostFiles ($sessionKey, $owner) {
+        //echo 'FU_PostFiles';
         // return file names
         // use md5 of time() to get unic file name
         $uploadDir = DR . DS . 'data' . DS . 'uploads' . DS . date('Y-m-d') . DS . $owner;
+        
+        // remove posted files
+        $filesToCancel = explode(';', $_POST['fileCleanup']);
+        foreach ($filesToCancel as $fileToCancel)
+            if (!is_dir($uploadDir . DS . $fileToCancel) && file_exists($uploadDir . DS . $fileToCancel))
+                unlink($uploadDir . DS . $fileToCancel);
+        self::removeDirIfEmpty($uploadDir);        
+        
         //make directory
         if (!file_exists($uploadDir)) 
             mkdir($uploadDir, 0777, true);
@@ -593,9 +604,20 @@ class libraryFileManager
             rename($fileItem, $storedFilePath);
             $fileMap[] = array('OWNER' => $owner, 'FILEPATH' => $storedFilePath);
         }
+
         // trunkate temporary dir
         self::rrmdir($tmpFiles['PATH']);
+
         return $fileMap;
+    }
+    
+    public static function removeDirIfEmpty ($dir) {
+        //echo 'removeDirIfEmpty';
+        $items = glob($dir . DS . '*');
+        //var_dump($items);
+        //echo 'REMOVING: ' . $dir;
+        if (count($items) === 0 && file_exists($dir) && is_dir($dir))
+            rmdir($dir);
     }
     
     
@@ -634,6 +656,22 @@ class libraryFileManager
             rmdir($dir); 
         } 
     } 
+    
+    public static function getUploadLinks ($dbLinks) {
+        $map = array();
+        $fileKeyPattern = DS.'storage'.DS.'%1$s-%3$s'.DS.'%2$s';
+        
+        //var_dump($dbLinks);
+        
+        // '/storage/'.date('Y-m-d').
+        foreach ($dbLinks as $uploadedItem)
+            $map[sprintf($fileKeyPattern, date('Y-m-d', strtotime($uploadedItem['DateCreated'])), basename($uploadedItem['Path']), $uploadedItem['Owner'])] = basename($uploadedItem['Path']);
+        
+        //var_dump($map);
+        
+        return array('MAP' => $map, 'JSON' => libraryUtils::getJSON($map), 'SRC' => $dbLinks);
+    }
+        
     
     
     

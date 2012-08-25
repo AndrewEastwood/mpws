@@ -111,7 +111,11 @@
         <hr size="2"/>
         <h3>Sources</h3>
 
-        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional sources:</label>
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Number of sources:</label>
+        <span class="MPWSValue"><?=$model['CUSTOMER']['DATA']['UseSources'];?>&nbsp;</span>
+        <div class="MPWSSeparator"></div>
+
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Preferred links:</label>
         <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
             <!-- sources from preview page -->
             <ul>
@@ -122,8 +126,19 @@
             <?php endforeach ?>
             </ul>
         </div>
-        
         <div class="MPWSSeparator"></div>
+        
+        <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Additional files:</label>
+        <div class="MPWSSeparator"></div>
+        <span class="MPWSValue">
+        <ul>
+        <?php foreach ($model['CUSTOMER']['UPLOADS']['MAP'] as $link => $title) : ?>
+            <li><a href="<?=$link;?>" target="blank"><?=$title;?></a></li>
+        <?php endforeach ?>
+        </ul>
+        </span>
+        <div class="MPWSSeparator"></div>
+        
 
         <h3>Resolution Document</h3>
         <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Add document link to review:</label>

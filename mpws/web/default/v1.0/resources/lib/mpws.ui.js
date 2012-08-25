@@ -150,7 +150,7 @@
         };
         
         function _showEditBar () {
-            mpws.tools.log('_showEditBar');
+            //mpws.tools.log('_showEditBar');
             if (typeof(_settings.editor) === 'undefined')
                 return false;
 
@@ -179,7 +179,7 @@
         };
 
         this.setup = function (settings) {
-            mpws.tools.log('setup');
+            //mpws.tools.log('setup');
             if (!!settings.isActive)
                 settings.isActive = $.cookie("MPWS_LIVE_EDIT_MODE") === 'OK';
             $.extend(true, _settings, settings);
@@ -193,24 +193,24 @@
         };
         
         this.closeEdit = function () {
-            mpws.tools.log('closeEdit');
+            //mpws.tools.log('closeEdit');
             $('#MPWSFormLiveEditorButtonExitID').click();
             return this;
         }
         
         this.doEdit = function () {
-            mpws.tools.log('doEdit');
+            //mpws.tools.log('doEdit');
             //mpws.tools.log(_settings);
 
             // exit if inactive
             if (!_settings.isActive)
                 return false;
-            mpws.tools.log('doEdit: is active');
+            //mpws.tools.log('doEdit: is active');
 
             // setup top edit bar
             if (!_showEditBar())
                 return false;
-            mpws.tools.log('doEdit: edit bar is installed');
+            //mpws.tools.log('doEdit: edit bar is installed');
 
             // our edit boxes
             var _wwIds = [];
@@ -269,7 +269,8 @@
             properties: {
                 link_add: '+1 source',
                 link_remove: 'remove'
-            }
+            },
+            showUploadsOnly: false
         };
         
         var _self = this;
@@ -342,10 +343,10 @@
         };
         
         this.setup = function (settings) {
-            mpws.tools.log('setup');
+            //mpws.tools.log('setup');
             if (typeof(settings) !== 'undefined')
                 $.extend(true, _settings, settings);
-            mpws.tools.log(_settings);
+            //mpws.tools.log(_settings);
             if (_settings.isAutomatic)
                 this.doInject();
             return this;
@@ -364,8 +365,8 @@
         }
         
         this.doInject = function () {
-            mpws.tools.log('doInject');
-            mpws.tools.log(_html);
+            //mpws.tools.log('doInject');
+            //mpws.tools.log(_html);
             
             // get inject element
             var _$injectElem = $(_settings.injectTo);
@@ -380,68 +381,91 @@
             var _fileUploadedContainer = _html.sections.fileUploadedContainer;
             
             // add uploaded files
-            if (_settings.files.length) {
-                _uploadCounter = _settings.files.length;
+            var _uploadedFileCount = mpws.tools.getObjectCount(_settings.files);
+            if (_uploadedFileCount) {
+                _uploadCounter = _uploadedFileCount;
                 //mpws.tools.log(_settings.files.length);
                 for (fileIndex in _settings.files) {
                     var _ufFld = _getHtmlObj(_html.sections.fileField);
-                    _ufFld.append('<span>' +_settings.files[fileIndex]+ '</span>')
-                    _ufFld.append(_getHtmlObj(_html.links.cancel).click(function(){
-                        mpws.tools.log('cancel upload file');
-                        // get existed files to remove
-                        var _rmfiles = $('#MPWSControlInputFileUploadCleanup').val();
-                        $('#MPWSControlInputFileUploadCleanup').val(_rmfiles + _settings.files[fileIndex] + ';');
-                        // remove file row
-                        $(this).parent().remove();
-                        // increase upload counter
-                        _uploadCounter--;
-                        // make add link visible
-                        if (_add.css('display') == 'none')
-                            _add.css({'display':''});
-                    }));
+                    
+                    // add remove link
+                    if (!_settings.showUploadsOnly) {
+                        _ufFld.append(_getHtmlObj(_html.links.cancel).click(function(){
+
+                            //mpws.tools.log('cancel upload file: ' + $(this).parent().attr('mpws-file'));
+                            // get existed files to remove
+                            var _rmfiles = $('#MPWSControlInputFileUploadCleanup').val();
+                            $('#MPWSControlInputFileUploadCleanup').val(_rmfiles + $(this).parent().attr('mpws-file') + ';');
+                            // remove file row
+                            $(this).parent().remove();
+                            // increase upload counter
+                            _uploadCounter--;
+                            // make add link visible
+                            if (_add.css('display') == 'none')
+                                _add.css({'display':''});
+                            
+                        }));
+                    }
+                    
+                    // add uploaded item
+                    if ($.isNumeric(fileIndex))
+                        _ufFld.append('<span>' +_settings.files[fileIndex]+ '</span>');
+                    else
+                        _ufFld.append('<span><a href="'+fileIndex+'" target="blank">' +_settings.files[fileIndex]+ '</a></span>');
+                    // add file info
+                    _ufFld.attr('mpws-file', _settings.files[fileIndex]);
+                    
                     _fileUploadedContainer.append(_ufFld);
                 }
                     
             }
             
+            //mpws.tools.log(_settings.files);
             
             // add link
-            var _add = _html.links.add;
-            _add.click(function(){
-                mpws.tools.log('_add.click');
-                if (_uploadCounter > _settings.maxUploads - 1) {
-                    $(this).hide();
-                    return;
-                }
-                var _fFld = _getHtmlObj(_html.sections.fileField);
-                var _remove = _getHtmlObj(_html.links.remove);
-                var _file = _getHtmlObj(_html.inputs.file);
-                
-                // init file realm
-                _file.attr('name',_getFUKey() + '[]');
-                
-                _remove.click(function(){
-                    mpws.tools.log('_remove.click');
-                    $(this).parent().remove();
-                    _uploadCounter--;
-                    if (_add.css('display') == 'none')
-                        _add.css({'display':''});
+            if (!_settings.showUploadsOnly) {
+                var _add = _html.links.add;
+                _add.click(function(){
+                    //mpws.tools.log('_add.click');
+                    if (_uploadCounter > _settings.maxUploads - 1) {
+                        $(this).hide();
+                        return;
+                    }
+                    var _fFld = _getHtmlObj(_html.sections.fileField);
+                    var _remove = _getHtmlObj(_html.links.remove);
+                    var _file = _getHtmlObj(_html.inputs.file);
+
+                    // init file realm
+                    _file.attr('name',_getFUKey() + '[]');
+
+                    _remove.click(function(){
+                        //mpws.tools.log('_remove.click');
+                        $(this).parent().remove();
+                        _uploadCounter--;
+                        if (_add.css('display') == 'none')
+                            _add.css({'display':''});
+                    });
+                    _fFld.append(_file);
+                    _fFld.append(_remove);
+                    _fFld.attr('id', 'MPWSFileField_' + mpws.tools.random() + '_ID');
+                    //mpws.tools.log(_fFld);
+                    //_getLiveObj(_html.sections.fileContainer).prepend(_fFld);
+                    $('#MPWSSectionFileUploadContainer').append(_fFld);
+
+                    _uploadCounter++;
+
+                    if (_uploadCounter > _settings.maxUploads - 1)
+                        $(this).hide();
                 });
-                _fFld.append(_file);
-                _fFld.append(_remove);
-                _fFld.attr('id', 'MPWSFileField_' + mpws.tools.random() + '_ID');
-                mpws.tools.log(_fFld);
-                //_getLiveObj(_html.sections.fileContainer).prepend(_fFld);
-                $('#MPWSSectionFileUploadContainer').append(_fFld);
-                
-                _uploadCounter++;
                 
                 if (_uploadCounter > _settings.maxUploads - 1)
-                    $(this).hide();
-            });
+                    _add.hide();
+                
+                _controls.append(_add);
+            }
+            
 
             // add controls
-            _controls.append(_add);
             _controls.append(_html.inputs.fileUploadKey.val(_getFUKey()));
             _controls.append(_html.inputs.fileCleanup);
             
@@ -451,6 +475,12 @@
                 .append(_fileContainer)
                 .append(_fileUploadedContainer)
                 .append(_controls);
+                
+            // add view mode
+            if (_settings.showUploadsOnly)
+                _$fileUploader.addClass('MPWSViewStateUploadsOnly');
+            else
+                _$fileUploader.addClass('MPWSViewStateNormal');
             
             // inject file uploader
             _$injectElem.append(_$fileUploader);

@@ -23,10 +23,12 @@ class libraryPluginManager
     }
 
     public function checkPlugin ($name) {
+        $name = strtoupper($name);
         return !empty($this->_s_plugins[$name]);
     }
 
     public function setPlugin($name, $key, $value) {
+        $name = strtoupper($name);
         //echo '<br>| --- set plugin ' . $name;
         $this->_s_plugins[$name][$key] = $value;
         //echo '<br>| ------- added plugin ' . $name . '[  '.count($this->_s_plugins).'  ]';
@@ -41,7 +43,7 @@ class libraryPluginManager
     }
     public function getPluginObj ($name) {
         $name = strtoupper($name);
-        echo '<br>| --------- request for plugin ' . $name;
+        //echo '<br>| --------- request for plugin ' . $name;
         if (isset($this->_s_plugins[$name]['obj']))
             return $this->_s_plugins[$name]['obj'];
         return false;
@@ -102,13 +104,22 @@ class libraryPluginManager
     }
 
     public function loadPlugin ($name, $pItem = false) {
+        //echo '<h4>'.$name.'</h4>';
+        //echo '------====== loadPlugin 1<br>';
+        $loadedObj = $this->getPluginObj($name);
+        //var_dump($loadedObj);
+        if (!empty($loadedObj))
+            return $loadedObj;
         
+        //echo '------====== loadPlugin 2<br>';
         if (!empty($name))
             $pItem = $this->_pluginPath . '/'.$name.'/plugin.'.$name.'.php';
         
+        //echo '------====== loadPlugin 3<br>';
         if (!file_exists($pItem))
             return false;
         
+        //echo '------====== loadPlugin 4<br>';
         include $pItem;
         $matches = null;
         preg_match('/^(\\w+).(\\w+).(\\w+)$/', basename($pItem), $matches);

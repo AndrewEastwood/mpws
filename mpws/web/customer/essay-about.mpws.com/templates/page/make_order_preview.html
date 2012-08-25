@@ -75,29 +75,28 @@
         <tr>
             <td class="cell04">Number of sources</td>
             <td class="cell04a">
-                <span><?=$model['CUSTOMER']['DATA']['Sources'];?></span>
-                <input type="hidden" name="order_sources" value="<?=$model['CUSTOMER']['DATA']['Sources'];?>"/>
+                <span><?=$model['CUSTOMER']['DATA']['UseSources'];?></span>
+                <input type="hidden" name="order_sources" value="<?=$model['CUSTOMER']['DATA']['UseSources'];?>"/>
                 <ul>
-                <?php if (!empty($model['CUSTOMER']['DATA']['SourceLinks'])) foreach ($model['CUSTOMER']['DATA']['SourceLinks'] as $link) : ?>
+                <?php if (!empty($model['CUSTOMER']['DATA']['SourceLinks'])) foreach ($model['CUSTOMER']['DATA']['SourceLinks'] as $link) { if (empty($link)) continue; ?>
                     <li>
                     <a href="<?=$link;?>" target="blank"><?=basename($link);?></a>
                     <input type="hidden" name="order_source_links[]" value="<?=$link;?>"/>
                     </li>
-                <?php endforeach ?>
+                <?php } ?>
                 </ul>
             </td>
         </tr>
         <tr>
             <td class="cell04">Additional files</td>
             <td class="cell04a">
-                <ul>
-                <?php if (!empty($model['CUSTOMER']['UPLOADS'])) foreach ($model['CUSTOMER']['UPLOADS']['GLOB'] as $uploadItem) : ?>
-                    <li>
-                    <a href="<?=$link;?>" target="blank"><?=basename($uploadItem);?></a>
-                    <input type="hidden" name="order_uploads[]" value="<?=$uploadItem;?>"/>
-                    </li>
-                <?php endforeach ?>
-                </ul>
+                <div id="MPWSFileUploadSection">
+                    <noscript>Please enable JavaScript for file upload widget</noscript>
+                </div>
+                <script>
+                    // file upload
+                    new mpws.ui.fileUpload({realm: 'eafile',files:<?=$model['CUSTOMER']['UPLOADS']['JSON']?>,showUploadsOnly: true});
+                </script>
             </td>
         </tr>
         <tr>

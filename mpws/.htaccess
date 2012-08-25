@@ -6,12 +6,11 @@ RewriteBase /
 ######## COMMON #######
 #######################
 
-
 # uploaded data
 #RewriteRule upload/(.*)-(.*)/(.*) /rdd.php?a=$1&b=$2&c=$3
-RewriteRule upload/(.*)-(.*)/(.*) /data/$1/$2/$3 [QSA]
+RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]
 # get data file locked for owner
-RewriteRule storage/(..)_(..)_(..)/(.*)?owner=(.*) /data/uploads/$1-$2-$3/$5/$4 [QSA]
+RewriteRule storage/(....)-(..)-(..)-(.*)/(.*)? /data/uploads/$1-$2-$3/$4/$5 [QSA]
 
 
 #ErrorDocument 404 /engine/dispatcher/dispatcher.Public.php?page=404&action=default
