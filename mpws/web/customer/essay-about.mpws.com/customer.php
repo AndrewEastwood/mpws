@@ -902,7 +902,7 @@ class customer {
                         ->fetchRow();*/
                 
                 
-                // convert am\pm to 34h
+                // convert am\pm to 24h
                 $data['DateDeadline'] = date($mdbc['DB_DATE_FORMAT'], strtotime($data['DateDeadline']));
                 
                 //var_dump($data);
@@ -964,6 +964,21 @@ class customer {
                     $_order['phone'] = $user['Billing_Phone'];
                     $_order['pay_method'] = $user['CC'];
                 }
+                
+                // save uploaded files
+                $uploadedFiles = libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], $_o_token);
+                $_uploadFileds = array('Path', 'Owner', 'DateCreated');
+                foreach ($uploadedFiles as $uploadedItem)
+                    $customer->getDatabaseObj()
+                        ->reset()
+                        ->insertInto('mpws_uploads')
+                        ->fields($_uploadFileds)
+                        ->values(array(
+                            $uploadedItem['FILEPATH'],
+                            $uploadedItem['OWNER'],
+                            convDT(null, 'UTC', $data['TimeZone'])
+                        ))
+                        ->query();
                 
                 //var_dump($_order);
                 libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
@@ -1027,10 +1042,10 @@ class customer {
             // save uploads
             // link uploads to the order entry
             // added for testing purposes
-            libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], 'demo');
+            //libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], 'demo');
             
             
-            //$ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
+            $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_StoreTempFiles($_SESSION['MPWS_SITE_SESSION']);
         } else {
             $ff = $model['CUSTOMER']['UPLOADS'] = libraryFileManager::FU_GetSessionContent($_SESSION['MPWS_SITE_SESSION']);
         }
