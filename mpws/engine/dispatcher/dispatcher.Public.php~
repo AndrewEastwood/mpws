@@ -19,6 +19,7 @@
     $objects = glob($DR . '/engine/system/object/object.*.php');
     foreach ($objects as $objectFile)
         require_once $objectFile;
+    echo 'ololol';
     // include web config
     include $DR . '/engine/system/config/config.web.php';
 

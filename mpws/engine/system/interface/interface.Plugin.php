@@ -3,10 +3,10 @@
 interface iPlugin {
     
     /* setup */
-    public function setup ();
+    public function setup ($owner);
     
     /* initail */
-    public function getConfiguration ($key);
+    public function getConfiguration ($name, $key);
     public function getTemplate ($name);
     
     /* running */

@@ -15,6 +15,7 @@ class libraryPluginManager
     private $_dump_configPaths;
 
     public function __construct ($doInit = true) {
+        //echo '__construct';
         $this->_pluginPath = DR . '/web/plugin';
         $this->_defaultPath = DR . '/web/default/' . MPWS_VERSION;
 
@@ -128,6 +129,7 @@ class libraryPluginManager
         //echo '<br># adding plugin: key ' . $pluginNameKey.' with name ' . $pluginName;
         $obj = new $pluginName();
         
+        //if (method_exists($obj, 'getVersion') && $obj->getVersion() != 2)
         $this->setPlugin($pluginNameKey, 'key', $pluginNameKey);
         $this->setPlugin($pluginNameKey, 'name', $pluginName);
         $this->setPlugin($pluginNameKey, 'path', $pItem);
@@ -135,7 +137,8 @@ class libraryPluginManager
         $this->setPlugin($pluginNameKey, 'obj', $obj);
         
         //var_dump($obj);
-        
+        //echo $pluginNameKey;
+        //echo $pluginName;
         
         return $obj;
     }
