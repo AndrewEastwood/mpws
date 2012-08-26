@@ -1,35 +1,37 @@
 <div id="content_wrapper">
-	<a href="/page/make-order.html" id="order_now"><img src="/static/orderNow.png"/></a>
-	<h1>Free ready Essays!</h1>
-	<div class="content">
+    <a href="/page/make-order.html" id="order_now" title="make order">
+        <div class="MPWSOrderButton">&nbsp;</div>
+    </a>
+    <h1>Free ready Essays!</h1>
+    <div class="content hProduct">
         <table cellpadding="5" cellspacing="0" border="0" width="100%">
         <tr>
-        	<td class="cell01" colspan="2">Details</td>
+            <td class="cell01" colspan="2">Details</td>
         </tr>
         <tr>
-        	<td class="cell04">Subject</td>
-            <td class="cell04a"><?=$model['CUSTOMER']['DATA']['Title'];?></td>
+            <td class="cell04">Subject</td>
+            <td class="cell04a"><span class="name"><?=$model['CUSTOMER']['DATA']['Title'];?></span></td>
         </tr>
         <tr>
-        	<td class="cell04">Pages</td>
+            <td class="cell04">Pages</td>
             <td class="cell04a"><?=$model['CUSTOMER']['DATA']['Pages'];?></td>
         </tr>
         </table>
-        
+
         <table cellpadding="5" cellspacing="0" border="0" width="100%">
         <tr>
-        	<td class="cell01">Sample text</td>
+            <td class="cell01">Sample text</td>
         </tr>
         <tr>
-        	<td class="cell05" align="right">
-                    <?=$model['CUSTOMER']['DATA']['Sample'];?>
-                </td>
+            <td class="cell05" align="right">
+                <span class="description"><?=$model['CUSTOMER']['DATA']['Sample'];?></span>
+            </td>
         </tr>
         </table>
-     <center>
-     	<a href="<?=$model['CUSTOMER']['DATA']['DocumentURL'];?>" target="blank" class="btn01">Download</a>
-        <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
-     </center>
+        <center>
+            <a href="<?=$model['CUSTOMER']['DATA']['DocumentURL'];?>" target="blank" class="btn01">Download</a>
+            <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
+        </center>
     </div>
 </div>
 <div id="base-text">

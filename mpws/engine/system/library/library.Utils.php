@@ -11,10 +11,25 @@ class libraryUtils {
         //echo '<br> VISITING: ' . $url;
         $seen[$url] = true;
         $dom = new DOMDocument('1.0');
-        @$dom->loadHTMLFile($url);
+        
+        $pg = libraryRequest::getURL($url);
+        //var_dump($pg);
+        @$dom->loadHTML($pg['content']);
+        
+        //@$dom->loadHTMLFile($url);
+        
+        
+        //echo '<br> VISITING: ' . $url;
         $anchors = $dom->getElementsByTagName('a');
+        
+        //var_dump($dom);
+        
         foreach ($anchors as $element) {
             $href = $element->getAttribute('href');
+            
+            
+            //echo '<hr size="2">' . $href . '<hr size="2"><hr size="2">';
+            
             if ($href[0] === '#')
                 continue;
             $owner_parts = parse_url($url);
@@ -53,8 +68,8 @@ class libraryUtils {
             if (empty($link_parts['path']))
                 $urlToVisit['path'] = $owner_parts['path'];
             // remove fragment
-            if (isset($link_parts['fragment']))
-                unlink($urlToVisit['fragment']);
+            //if (isset($link_parts['fragment']))
+            //    unlink($urlToVisit['fragment']);
             // combine url
             $linkToPage = $urlToVisit['scheme'] . '://';
             $linkToPage .= $urlToVisit['host'];
@@ -62,7 +77,7 @@ class libraryUtils {
             if (!empty($urlToVisit['query']))
                 $linkToPage .= '?' . $urlToVisit['query'];
             //echo '<hr size="2">' . print_r($urlToVisit, true) . '</pre><hr size="2"><hr size="2">';
-            //echo '<hr size="2">' . $linkToPage . '</pre><hr size="2"><hr size="2">';
+            //echo '<hr size="2">' . $linkToPage . '<hr size="2"><hr size="2">';
             // skip already visited page
             if (isset($seen[$linkToPage]))
                 continue;

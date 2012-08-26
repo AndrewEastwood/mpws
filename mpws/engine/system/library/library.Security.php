@@ -3,6 +3,42 @@
 
 class librarySecurity {
     
+    public static function cookieAuth () {
+        $secret_word = 'mpws doughnut security script';
+        if (isset($_POST['user']) && isset($_POST['pwd']) && 
+            $_POST['user'] == 'service' && $_POST['pwd'] == date('Y-m-d')) {
+            setcookie('MPWS_CA', 
+                    $_POST['user'].','.md5($_POST['user'].$secret_word),
+                    time()+600, // 10 minute session
+                    '/service/',
+                    MPWS_CUSTOMER);
+            $username = $_POST['user'];
+        }
+        // validate user
+        if ($_COOKIE['MPWS_CA']) {
+            list($c_username,$cookie_hash) = split(',',$_COOKIE['MPWS_CA']);
+            if (md5($c_username.$secret_word) == $cookie_hash) {
+                $username = $c_username;
+                // increase lifetime
+                setcookie('MPWS_CA', 
+                        $c_username.','.md5($c_username.$secret_word),
+                        time()+300,
+                        '/service/',
+                        MPWS_CUSTOMER);
+            } else {
+                return false;//print "You have sent a bad cookie.";
+            }
+        }
+
+        if ($username) {
+            return true;//print "Welcome, $username.";
+        } else {
+            //print "Welcome, anonymous user.";
+        }
+        return false;
+    }
+    
+    
     public static function wwwAuth ($realm = 'Restricted area') {
         
         if ($_GET['do'] === 'logout') {
@@ -24,6 +60,7 @@ class librarySecurity {
             header('WWW-Authenticate: Digest realm="'.$realm.
                 '",qop="auth",nonce="'.uniqid().'",opaque="'.md5($realm).'"');
 
+            //echo date('Y-m-d');
             die('You are not authorized user.');
         }
         

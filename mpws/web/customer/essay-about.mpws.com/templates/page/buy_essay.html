@@ -1,5 +1,7 @@
 <div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now"><img src="/static/orderNow.png"/></a>
+    <a href="/page/make-order.html" id="order_now" title="make order">
+        <div class="MPWSOrderButton">&nbsp;</div>
+    </a>
     <h1>Buy ready Essays!</h1>
     <div class="content">
 
@@ -15,11 +17,11 @@
         </tr>
         <tr>
             <td class="cell02">By title</td>
-            <td class="cell02"><input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_sale_Title" value="<?=libraryRequest::getPostValue('searchbox_sale_Title');?>" placeholder="... part of title"/></td>
+            <td class="cell02"><input type="text" class="MPWSTextBox" name="searchbox_sale_Title" value="<?=libraryRequest::getPostValue('searchbox_sale_Title');?>" placeholder="... part of title"/></td>
         </tr>
         <tr>
             <td class="cell02">By introduction</td>
-            <td class="cell02"><input type="text" id="MPWSField_SubjectNameID" class="MPWSTextBox" name="searchbox_sale_Sample" value="<?=libraryRequest::getPostValue('searchbox_sale_Sample');?>" placeholder="... part of introduction"/></td>
+            <td class="cell02"><input type="text" class="MPWSTextBox" name="searchbox_sale_Sample" value="<?=libraryRequest::getPostValue('searchbox_sale_Sample');?>" placeholder="... part of introduction"/></td>
         </tr>
         <tr>
             <td colspan="2" align="center">
@@ -68,11 +70,11 @@
                 <td class="cell01">PRICE</td>
             </tr>
             <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
-            <tr>
-                <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Title'];?></a></td>
-                <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a></td>
-                <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Description'];?></a></td>
-                <td class="cell02"><a href="?action=details&oid=<?=$entry['ID'];?>"><?=$entry['Price'];?>$</a></td>
+            <tr class="hProduct">
+                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>" class="name"><?=$entry['Title'];?></a></td>
+                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a></td>
+                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>" class="description"><?=$entry['Description'];?></a></td>
+                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>" class="priace"><?=$entry['Price'];?>$</a></td>
             </tr>
             <?php } ?>
             <?php if(count($model['CUSTOMER']['PAGELINKS']) > 1) : ?>

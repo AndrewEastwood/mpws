@@ -53,7 +53,15 @@
     $globals = glob($DR . '/engine/global/global.*.php');
     foreach ($globals as $globalFile)
         require_once $globalFile;
-    librarySecurity::wwwAuth();
+    //librarySecurity::wwwAuth();
+    if (!librarySecurity::cookieAuth()) {
+        echo '<form method="post" action="">
+            <input type="text" name="user" value=""/>
+            <input type="text" name="pwd" value=""/>
+            <input type="submit" name="do" value="Login"/>
+        </form>';
+        exit;
+    }
     header("Pragma: no-cache");
     header("Cache-Control: no-store");
     foreach ($_GET as $key => $val) $$key=htmldecode($val);

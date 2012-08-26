@@ -4,8 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?=$model['CONFIG']['DISPLAY']['TITLE'];?></title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/mpwsTheme.css">
-<link rel="stylesheet/less" type="text/css" href="/static/mpwsInner.css">
+<link rel="stylesheet" type="text/css" href="/static/mpwsTheme.css"/>
+<link rel="stylesheet/less" type="text/css" href="/static/mpwsInner.css"/>
 <script src="/static/mpwsFull.js" type="text/javascript"></script>
 <?php if ($model['MODE'] === 'LIVEEDIT') : ?>
 <script src="/static/mpwsEditable.js" type="text/javascript"></script>
@@ -78,16 +78,16 @@
     
     <div id="contacts">
         <a href="<?=$model['CONFIG']['MAIL']['IM']['SKYPE'];?>">
-            <img src="/static/contacts_skype.png" />
-            <div class="MPWSOnlineName"><span></span></div>
+            <img src="/static/contacts_skype.png" alt="Skype Us"/>
+            <div class="MPWSOnlineName"><span>&nbsp;</span></div>
             Talk to TeamLead
         </a>
         <a href="mailto:<?=$model['CONFIG']['MAIL']['SUPPORT']['EMAIL'];?>">
-            <img src="/static/contacts_mail.png" />
+            <img src="/static/contacts_mail.png" alt="Email Us"/>
             Send us eMail
         </a>
         <a href="#">
-            <img src="/static/contacts_phone.png" />
+            <img src="/static/contacts_phone.png" alt="Phone Us"/>
             Call Us
         </a>
     </div>
@@ -100,9 +100,9 @@
 <?=$model['HTML']['CONTENT'];?>
 
 <div id="guarantee">
-    <a href="#"><img src="/static/guarantee01.jpg" /></a>
-    <a href="#"><img src="/static/guarantee02.jpg" /></a>
-    <a href="#"><img src="/static/guarantee03.jpg" /></a>
+    <a href="#"><img src="/static/guarantee01.jpg" alt="Guarantee Money Back"/></a>
+    <a href="#"><img src="/static/guarantee02.jpg" alt="Guarantee Satisfaction"/></a>
+    <a href="#"><img src="/static/guarantee03.jpg" alt="Guarantee Confidentiality"/></a>
 </div>
 
 <div id="footer">

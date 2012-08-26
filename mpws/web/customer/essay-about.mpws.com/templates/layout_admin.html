@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Account Desk: <?=$model['USER']['NAME'];?></title>
-<link rel="stylesheet/less" type="text/css" href="/static/mpwsAdmin.css">
-<link rel="stylesheet" type="text/css" href="/static/mpwsTheme.css">
+<link rel="stylesheet/less" type="text/css" href="/static/mpwsAdmin.css"/>
+<link rel="stylesheet" type="text/css" href="/static/mpwsTheme.css"/>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/static/mpwsAdmin.js" type="text/javascript"></script>
 <!-- PNG FIX for IE6 -->
@@ -77,16 +77,16 @@
 
     <div id="contacts">
         <a href="<?=$model['CONFIG']['MAIL']['IM']['SKYPE'];?>">
-            <img src="/static/contacts_skype.png" />
-            <div class="MPWSOnlineName"><span></span></div>
+            <img src="/static/contacts_skype.png" alt="Skype Us"/>
+            <div class="MPWSOnlineName"><span>&nbsp;</span></div>
             Talk to TeamLead
         </a>
         <a href="mailto:<?=$model['CONFIG']['MAIL']['SUPPORT']['EMAIL'];?>">
-            <img src="/static/contacts_mail.png" />
+            <img src="/static/contacts_mail.png" alt="Email Us"/>
             Send us eMail
         </a>
         <a href="#">
-            <img src="/static/contacts_phone.png" />
+            <img src="/static/contacts_phone.png" alt="Phone Us"/>
             Call Us
         </a>
     </div>
@@ -97,7 +97,7 @@
 </div>
 
 <div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now"><img src="/static/orderNow.png"/></a>
+    <a href="/page/make-order.html" id="order_now"><img src="/static/orderNow.png" alt="make order"/></a>
     
     <?php if ($model['USER']['IS_WRITER']) : ?>
     <h1>Quick Settings</h1>

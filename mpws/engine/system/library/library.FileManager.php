@@ -580,11 +580,15 @@ class libraryFileManager
         return $rez;
     }
     
-    public static function FU_PostFiles ($sessionKey, $owner) {
+    public static function FU_PostFiles ($sessionKey, $owner, $postDate = false) {
         //echo 'FU_PostFiles';
         // return file names
         // use md5 of time() to get unic file name
-        $uploadDir = DR . DS . 'data' . DS . 'uploads' . DS . date('Y-m-d') . DS . $owner;
+        if (empty($postDate))
+            $postDate = date('Y-m-d');
+        else 
+            $postDate = date('Y-m-d', strtotime($postDate));
+        $uploadDir = DR . DS . 'data' . DS . 'uploads' . DS . $postDate . DS . $owner;
         
         // remove posted files
         $filesToCancel = explode(';', $_POST['fileCleanup']);

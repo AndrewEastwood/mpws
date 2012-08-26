@@ -7,6 +7,25 @@
 	Tobias Kluge, enarion.net
 */
 
+// document root path reference
+$DR = $_SERVER['DOCUMENT_ROOT'];
+// bootstrap
+include $DR . '/engine/bootstrap.php';
+// include global files
+$globals = glob($DR . '/engine/global/global.*.php');
+foreach ($globals as $globalFile)
+    require_once $globalFile;
+
+//librarySecurity::wwwAuth();
+if (!librarySecurity::cookieAuth()) {
+    echo '<form method="post" action="">
+        <input type="text" name="user" value=""/>
+        <input type="text" name="pwd" value=""/>
+        <input type="submit" name="do" value="Login"/>
+    </form>';
+    exit;
+}
+
 require_once('inc/startup.php');
 
 switch ($state) {

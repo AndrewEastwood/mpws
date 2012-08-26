@@ -972,7 +972,8 @@ class customer {
                 }
                 
                 // save uploaded files
-                $uploadedFiles = libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], $_o_token);
+                $postDate = convDT(null, 'UTC', $data['TimeZone']);
+                $uploadedFiles = libraryFileManager::FU_PostFiles($_SESSION['MPWS_SITE_SESSION'], $_o_token, $postDate);
                 $_uploadFileds = array('Path', 'Owner', 'DateCreated');
                 foreach ($uploadedFiles as $uploadedItem)
                     $customer->getDatabaseObj()
@@ -982,7 +983,7 @@ class customer {
                         ->values(array(
                             $uploadedItem['FILEPATH'],
                             $uploadedItem['OWNER'],
-                            convDT(null, 'UTC', $data['TimeZone'])
+                            $postDate
                         ))
                         ->query();
                 
@@ -1978,8 +1979,9 @@ class customer {
             // uploads
 
             // save uploaded files
+            $postDate = convDT(null, 'UTC', $data['TimeZone']);
             libraryFileManager::FU_StoreTempFiles($data_order['OrderToken']);
-            $uploadedFiles = libraryFileManager::FU_PostFiles($data_order['OrderToken'], $data_order['OrderToken']);
+            $uploadedFiles = libraryFileManager::FU_PostFiles($data_order['OrderToken'], $data_order['OrderToken'], $postDate);
             $_uploadFileds = array('Path', 'Owner', 'DateCreated');
             foreach ($uploadedFiles as $uploadedItem)
                 $customer->getDatabaseObj()
@@ -1989,7 +1991,7 @@ class customer {
                     ->values(array(
                         $uploadedItem['FILEPATH'],
                         $uploadedItem['OWNER'],
-                        convDT(null, 'UTC', $data['TimeZone'])
+                        $postDate
                     ))
                     ->query();
             // remove uploaded files

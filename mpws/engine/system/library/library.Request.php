@@ -287,7 +287,145 @@ class libraryRequest {
     */
 
     }
+          
+
     
+    public static function getURL ($urlString) {
+
+        define("PSNG_CRAWLER_MAX_FILESIZE", 150000); // only 100k data will be scanned
+        define("PSNG_CRAWLER_MAX_GETFILE_TIME", 5);  
+        define("PSNG_VERSION", '1.5.3');
+
+        $url = parse_url($urlString);
+        $url_scheme = isset($url['scheme']) ? $url['scheme'] : '';
+        $url_host = isset($url['host']) ? $url['host'] : '';
+        $url_port = isset($url['port']) ? $url['port'] : '';
+        $url_path = isset($url['path']) ? $url['path'] : '';
+        $url_path = str_replace(' ', '%20', $url_path); // replace spaces in url
+        $url_query = isset($url['query']) ? $url['query'] : '';
+        //$cookie_string = '';
+        /*if (count($this->cookies) > 0) {
+                foreach ($this->cookies as $cookie_name => $cookie) {
+                        // check path - dumb approach (only check if url contains cookie path)
+                        if (strpos($urlString, $cookie['path'])) {
+                                $cookie_string .= $cookie_name . '=' . $cookie[$cookie_name] . '; ';
+                        }
+                }
+                if (strlen($cookie_string) > 0) {
+                        $cookie_string = 'Cookie: ' . $cookie_string ."\r\n";
+                }
+        }
+//		echo "Sending cookie_string: $cookie_string<br>\n";
+        */
+        /*if ($url_port == '') {
+                if ($url_scheme == 'https') {
+                        $url_port = "443";
+                } else {
+                        $url_port = "80";
+                }
+        }*/
+        $url_port = "80";
+        //		debug($url, 'Parsed URL');
+        
+        //echo 'OPENING: ' . $url_host;
+        $fp = fsockopen($url_host, $url_port, $errno, $errstr, /*$this->timeout*/30);
+        if ($fp === FALSE) {
+                //echo 'FAILED';
+                debug($errstr, 'Could not open connection for '.$urlString.' (host: '.$url_host.', port:'.$url_port.'), Errornumber: '.$errno);
+                return array('header' => array(), 'content' => '');
+        }
+        
+        //var_dump($fp);
+        
+        $query_encoded = '';
+        if ($url_query != '') {
+                $query_encoded = '?';
+                foreach (split('&', $url_query) as $id => $quer) {
+                        $v = split('=', $quer);
+                        if ($v[1] != '') {
+                                $query_encoded .= $v[0].'='.rawurlencode($v[1]).'&';
+                        } else {
+                                $query_encoded .= $v[0].'&';
+                        }
+                }
+                $query_encoded = substr($query_encoded, 0, strlen($query_encoded) - 1);
+                $query_encoded = str_replace('%2B','+', $query_encoded);
+        }
+
+        $get = "GET /".$url_path.$query_encoded." HTTP/1.1\r\n";
+        $get .= "Host: ".$url_host."\r\n";
+        //$get .= "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; phpSitemapNG ".PSNG_VERSION.")\r\n";
+        //$get .= "Referer: ".$url_scheme.'://'.$url_host.$url_path."\r\n";
+        //$get .= $cookie_string;
+        $get .= "Connection: close\r\n\r\n";
+        debug(str_replace("\n", "<br>\n", $get), 'GET-Query');
+        socket_set_blocking($fp, TRUE);
+        
+        //echo $get;
+        
+        fwrite($fp, $get);
+
+        $res = '';
+        $head_done = FALSE;
+        $ts_begin = self::microtime_float();
+        // source for chunk-decoding: http://www.phpforum.de/archiv_13065_fsockopen@end@chunked@geht@nicht_anzeigen.html
+
+        // get headers
+        $currentHeader = '';
+        while ( '' != ($line=trim(fgets($fp, 1024))) ) {
+                if ( FALSE !== ($pos=strpos($line, ':')) ) {
+                        $currentHeader = substr($line, 0, $pos);
+                        $header[$currentHeader] = trim(substr($line, $pos+1));
+                } else {
+                        @$header[$currentHeader] .= $line;
+                }
+        }
+
+        // check for chunk encoding
+        if (isset($header['Transfer-Encoding']) && $header['Transfer-Encoding'] == 'chunked') {
+                $chunk = hexdec(fgets($fp, 1024));
+        } else {
+                $chunk = -1;
+        }
+
+        // check file size
+        /*if (isset($header['Content-Length']) && $header['Content-Length'] > PSNG_CRAWLER_MAX_FILESIZE) {
+                info($size, "File size ". $header['Content-Length'] . " of ".$urlString." exceeds file size limit of ".PSNG_CRAWLER_MAX_FILESIZE." byte!");
+                fclose($fp);
+                return array('header' => $header, 'content' => '');
+        }*/
+
+        // get content
+        $res = '';
+        $deadline = 1345664732.5111;
+        while ($chunk != 0 && !feof($fp)) {
+                // echo "chunking...<br>\n";
+            if ($chunk > 0){
+                    $part = fread($fp, $chunk);
+                    $chunk -= strlen($part);
+                    $res .= $part;
+
+                    if ($chunk == 0){
+                        if (fgets($fp, 1024) != "\r\n") debug('Error in chunk-decoding');
+                        $chunk = hexdec(fgets($fp, 1024));
+                    }
+            } else {
+                    $res .= fread($fp, 1024);
+            }
+                // handle local timeout for fetching file
+                if (($ts_middle = self::microtime_float() - $ts_begin) > PSNG_CRAWLER_MAX_GETFILE_TIME) break;
+                // handle global timeout:
+                if (($deadline != 0) && (($deadline - self::microtime_float()) < 0)) break;
+        }
+        fclose($fp);
+
+        return array('header' => $header, 'content' => $res);
+    }
+    
+    public static function microtime_float() {
+        list ($usec, $sec) = explode(" ", microtime());
+        return ((float) $usec + (float) $sec);
+    }
     
 }
 
