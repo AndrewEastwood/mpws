@@ -219,9 +219,9 @@ body{
         width: 121px;
         height: 115px;
         background: url('static/orderNow.png') no-repeat 0 0;
-        &:hover {
+        /*&:hover {
             background-image: url('static/orderNowHover.png');
-        }
+        }*/
     }
 }
 

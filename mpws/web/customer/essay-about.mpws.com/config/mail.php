@@ -13,7 +13,8 @@
     
     /* Other IMs */
     $customer['MAIL']['IM'] = array(
-        'SKYPE' => 'skype:essay_about_teamlead?chat'
+        'SKYPE' => 'skype:essay_about_teamlead?chat',
+        'SKYPE_PHONE' => 'skype:214-884-8035?call'
     );
 
     /* Action Collection To Email */

@@ -1,6 +1,6 @@
 <div id="content_wrapper">
     <a href="/page/make-order.html" id="order_now" title="make order">
-        <div class="MPWSOrderButton">&nbsp;</div>
+        <img src="/static/orderNow4.gif" alt="make order"/>
     </a>
     <h1>Download ready Essays!</h1>
     <div class="content">
@@ -70,11 +70,29 @@
                 <td class="cell01">PRICE</td>
             </tr>
             <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
-            <tr class="hProduct">
-                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>" class="name"><?=$entry['Title'];?></a></td>
-                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a></td>
-                <td class="cell02"><a href="?action=details&amp;oid=<?=$entry['ID'];?>" class="description"><?=$entry['Description'];?></a></td>
-                <td class="cell02">FREE</td>
+            <tr itemscope itemtype="http://data-vocabulary.org/Product">
+                <td class="cell02">
+                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>">
+                        <span itemprop="name"><?=$entry['Title'];?></span>
+                    </a>
+                </td>
+                <td class="cell02">
+                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a>
+                </td>
+                <td class="cell02">
+                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>">
+                        <span itemprop="description category"><?=$entry['Description'];?></span>
+                    </a>
+                </td>
+                <td class="cell02">
+                    <span itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+                        <meta itemprop="currency" content="USD"/>
+                        <span itemprop="price" content="0.00">FREE</span>
+                        <span itemprop="offerURL" content="http://<?=$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>?action=details&amp;oid=<?=$entry['ID'];?>"></span>
+                        <span itemprop="availability" content="in_stock"></span>
+ 
+                    </span>
+                </td>
             </tr>
             <?php } ?>
             <?php if(count($model['CUSTOMER']['PAGELINKS']) > 1) : ?>

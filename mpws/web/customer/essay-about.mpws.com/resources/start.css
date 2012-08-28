@@ -208,10 +208,10 @@ body{
             right:30px;
             border:none;
             background: url('static/orderNow.png') no-repeat 0 0;
-            &:hover {
+            /*&:hover {
                 text-decoration: none;
                 background-image: url('static/orderNowHover.png');
-            }
+            }*/
         }
     
     #whyUs{
