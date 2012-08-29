@@ -346,3 +346,5 @@ table{
 .MPWSIcon {width: 20px;float: left;}
     .MPWSIcon_Online {background: url('icons/status.png') no-repeat;}
     .MPWSIcon_Offline {background: url('icons/status-offline.png') no-repeat;}
+
+#contacts .phoneNumber {font-size: 17px;padding-left: 0px;top: -6px;position: relative;color: white;font-weight: bold;display: block;width: 180px;}

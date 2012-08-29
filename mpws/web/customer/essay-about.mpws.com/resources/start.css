@@ -374,3 +374,5 @@ body{
         text-align: center;
     }
 }
+
+#contacts .phoneNumber {font-size: 17px;padding-left: 0px;top: -6px;position: relative;color: white;font-weight: bold;display: block;width: 180px;}
