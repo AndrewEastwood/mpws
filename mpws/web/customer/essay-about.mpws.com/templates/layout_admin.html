@@ -2,6 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Account Desk: <?=$model['USER']['NAME'];?></title>
+<meta name="description" content="essay-about.com is a custom essay writing service offering essays,research papers, term papers, book reports and dissertations on various themes to help students with their individual writing goals. Customized research paper writing services hence offer expert aid in generating your personal essays, book reports and term papers by delivering an original view on your theme, more comprehensive research, etc." />
+<meta name="keywords" content="essay, custom essay, free essay, writing, write essay, paper, writers, order, low prices, term paper, coursework, research paper, book report, observation report, thesis, dissertation, discount, urgent essay" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet/less" type="text/css" href="/static/mpwsAdmin.css"/>
 <link rel="stylesheet" type="text/css" href="/static/mpwsTheme.css"/>
@@ -66,7 +68,7 @@
             </form>
         </div>
         <?php endif ?>
-        <div class="top_menu_button">
+        <div class="top_menu_button" title="My Writing Desk">
             <?php if($model['USER']['ACTIVE']) : ?>
                 Welcome: <?=$model['USER']['NAME'];?>
             <?php else : ?>
@@ -89,7 +91,7 @@
             <img src="/static/contacts_phone.png" alt="Phone Us"/>
             Call Us
         </a>
-        <span class="phoneNumber">+1-214-884-8035</span>
+        <span class="phoneNumber" alt="phone">+1-214-884-8035</span>
     </div>
 </div>
 
