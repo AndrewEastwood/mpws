@@ -2,7 +2,7 @@
     <h5>Menu Footer</h5>
     <ul>
     <?php foreach($model['CUSTOMER']['COMPONENT']['MENU']['FOOTER'] as $link => $title) { ?>
-        <li title="<?=strip_tags($title);?>"><a href="<?=$link;?>" alt="<?=strip_tags($title);?>"><?=$title;?></a></li>
+        <li title="<?=strip_tags($title);?>"><a href="<?=$link;?>" title="<?=strip_tags($title);?>"><?=$title;?></a></li>
     <?php } ?>
     </ul>
 </div>

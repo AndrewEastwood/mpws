@@ -1,6 +1,6 @@
 <div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now" title="make order">
-        <img src="/static/orderNow4.gif" alt="make order"/>
+    <a href="/page/make-order.html" id="order_now" title="Order Now">
+        <img src="/static/orderNow4.gif" alt="Order Now"/>
     </a>
     <h1>Buy ready Essays!</h1>
     <div class="content">
@@ -72,7 +72,7 @@
             <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
             <tr itemscope itemtype="http://data-vocabulary.org/Product">
                 <td class="cell02">
-                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>">
+                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>" title="Buy <?=htmlentities($entry['Title']);?>">
                         <span itemprop="name"><?=$entry['Title'];?></span>
                     </a>
                 </td>
