@@ -1,120 +1,115 @@
-<div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now" title="Order Now">
-        <img src="/static/orderNow4.gif" alt="Order Now"/>
-    </a>
-    <h1>Buy ready Essays!</h1>
-    <div class="content">
+<h1>Buy ready Essays!</h1>
+<div class="content">
 
-        <div class="MPWSStaticContentWrapper" title="Buy Ready Essays General">
-        <?=getValue($model['PROPS']['BUY_READY_ESSAYS_GENERAL']);?>
-        </div>
-
-        <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
-        <form action="#results" method="POST" style="margin-bottom:30px;">
-        <table cellpadding="5" cellspacing="0" border="0" width="50%" align="center">
-        <tr>
-            <td colspan="2" align="center" class="cell01">Search Essay</td>
-        </tr>
-        <tr>
-            <td class="cell02">By title</td>
-            <td class="cell02"><input type="text" class="MPWSTextBox" name="searchbox_sale_Title" value="<?=libraryRequest::getPostValue('searchbox_sale_Title');?>" placeholder="... part of title"/></td>
-        </tr>
-        <tr>
-            <td class="cell02">By introduction</td>
-            <td class="cell02"><input type="text" class="MPWSTextBox" name="searchbox_sale_Sample" value="<?=libraryRequest::getPostValue('searchbox_sale_Sample');?>" placeholder="... part of introduction"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                    <input type="submit" name="do" value="Search" />
-                    <?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
-                        <input type="submit" name="do" value="Discard"/>
-                    <?php endif ?>
-                </td>
-        </tr>
-        </table>
-        </form>
-        <?php endif ?>
-        
-    <?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
-
-        <div id="results">
-        <?php if(empty($model['CUSTOMER']['DATA'])) : ?>
-            <div id="msg02">
-                <span><b>Search results</b></span>
-                <span><b>No</b> match found</span>
-            </div>
-        <?php else : ?>
-            <div id="msg01">
-                <span><b>Search results:</b></span>
-                <span><?=$model['CUSTOMER']['RECORDS'];?> works found containing:
-                    <b>
-                    <?php
-                        $_filterString = array();
-                        foreach($model['CUSTOMER']['SEARCHBOX']['FILTER'] as $sbKey => $sbVal)
-                            $_filterString[] = trim($sbVal, '%');
-                        echo '"' . implode(', ', $_filterString) . '"';
-                    ?>
-                    </b>
-                </span>
-            </div>
-        <?php endif ?>
-        </div>
-
-    <?php endif ?>
-            
-        <table cellpadding="5" cellspacing="0" border="0" width="100%">
-            <tr>
-                <td class="cell01">TITLE</td>
-                <td class="cell01">PAGES</td>
-                <td class="cell01">DESCRIPTION</td>
-                <td class="cell01">PRICE</td>
-            </tr>
-            <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
-            <tr itemscope itemtype="http://data-vocabulary.org/Product">
-                <td class="cell02">
-                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>" title="Buy <?=htmlentities($entry['Title']);?>">
-                        <span itemprop="name"><?=$entry['Title'];?></span>
-                    </a>
-                </td>
-                <td class="cell02">
-                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a>
-                </td>
-                <td class="cell02">
-                    <a href="?action=details&amp;oid=<?=$entry['ID'];?>">
-                        <span itemprop="description category"><?=$entry['Description'];?></span>
-                    </a>
-                </td>
-                <td class="cell02">
-                    <span itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
-                        <meta itemprop="currency" content="USD"/>
-                        $<span itemprop="price" content="<?=sprintf("%01.2f", $entry['Price']);?>"><?=sprintf("%01.2f", $entry['Price']);?></span>
-                        <span itemprop="offerURL" content="http://<?=$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>?action=details&amp;oid=<?=$entry['ID'];?>"></span>
-                        <span itemprop="availability" content="in_stock"></span>
- 
-                    </span>
-                </td>
-            </tr>
-            <?php } ?>
-            <?php if(count($model['CUSTOMER']['PAGELINKS']) > 1) : ?>
-            <tr>
-                <td class="cell03" colspan="4">
-                <?php 
-                    if (!empty($model['CUSTOMER']['EDGELINKS'])) {
-                        foreach ($model['CUSTOMER']['EDGELINKS'] as $key => $page)
-                            echo '<a href="?'.$page.'" class="pagination">' . $key . '</a>';
-                        echo '<span class="vseparator"> | </span>';
-                    }
-                    foreach ($model['CUSTOMER']['PAGELINKS'] as $key => $page)
-                        if ($key == $model['CUSTOMER']['CURRENT'])
-                            echo '<a href="?'.$page.'" class="pagination_active">' . $key . '</a>';
-                        else
-                            echo '<a href="?'.$page.'" class="pagination">' . $key . '</a>';
-                ?>
-                </td>
-            </tr>
-            <?php endif ?>
-        </table>
+    <div class="MPWSStaticContentWrapper" title="Buy Ready Essays General">
+    <?=getValue($model['PROPS']['BUY_READY_ESSAYS_GENERAL']);?>
     </div>
+
+    <?php if ($model['MODE'] !== 'LIVEEDIT') : ?>
+    <form action="#results" method="POST" style="margin-bottom:30px;">
+    <table cellpadding="5" cellspacing="0" border="0" width="50%" align="center">
+    <tr>
+        <td colspan="2" align="center" class="cell01">Search Essay</td>
+    </tr>
+    <tr>
+        <td class="cell02">By title</td>
+        <td class="cell02"><input type="text" class="MPWSTextBox" name="searchbox_sale_Title" value="<?=libraryRequest::getPostValue('searchbox_sale_Title');?>" placeholder="... part of title"/></td>
+    </tr>
+    <tr>
+        <td class="cell02">By introduction</td>
+        <td class="cell02"><input type="text" class="MPWSTextBox" name="searchbox_sale_Sample" value="<?=libraryRequest::getPostValue('searchbox_sale_Sample');?>" placeholder="... part of introduction"/></td>
+    </tr>
+    <tr>
+        <td colspan="2" align="center">
+                <input type="submit" name="do" value="Search" />
+                <?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
+                    <input type="submit" name="do" value="Discard"/>
+                <?php endif ?>
+            </td>
+    </tr>
+    </table>
+    </form>
+    <?php endif ?>
+    
+<?php if($model['CUSTOMER']['SEARCHBOX']['ACTIVE'] ) : ?>
+
+    <div id="results">
+    <?php if(empty($model['CUSTOMER']['DATA'])) : ?>
+        <div id="msg02">
+            <span><b>Search results</b></span>
+            <span><b>No</b> match found</span>
+        </div>
+    <?php else : ?>
+        <div id="msg01">
+            <span><b>Search results:</b></span>
+            <span><?=$model['CUSTOMER']['RECORDS'];?> works found containing:
+                <b>
+                <?php
+                    $_filterString = array();
+                    foreach($model['CUSTOMER']['SEARCHBOX']['FILTER'] as $sbKey => $sbVal)
+                        $_filterString[] = trim($sbVal, '%');
+                    echo '"' . implode(', ', $_filterString) . '"';
+                ?>
+                </b>
+            </span>
+        </div>
+    <?php endif ?>
+    </div>
+
+<?php endif ?>
+        
+    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td class="cell01">TITLE</td>
+            <td class="cell01">PAGES</td>
+            <td class="cell01">DESCRIPTION</td>
+            <td class="cell01">PRICE</td>
+        </tr>
+        <?php foreach($model['CUSTOMER']['DATA'] as $entry) { ?>
+        <tr itemscope itemtype="http://data-vocabulary.org/Product">
+            <td class="cell02">
+                <a href="?action=details&amp;oid=<?=$entry['ID'];?>" title="Buy <?=htmlentities($entry['Title']);?>">
+                    <span itemprop="name"><?=$entry['Title'];?></span>
+                </a>
+            </td>
+            <td class="cell02">
+                <a href="?action=details&amp;oid=<?=$entry['ID'];?>"><?=$entry['Pages'];?></a>
+            </td>
+            <td class="cell02">
+                <a href="?action=details&amp;oid=<?=$entry['ID'];?>">
+                    <span itemprop="description category"><?=$entry['Description'];?></span>
+                </a>
+            </td>
+            <td class="cell02">
+                <span itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+                    <meta itemprop="currency" content="USD"/>
+                    $<span itemprop="price" content="<?=sprintf("%01.2f", $entry['Price']);?>"><?=sprintf("%01.2f", $entry['Price']);?></span>
+                    <span itemprop="offerURL" content="http://<?=$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>?action=details&amp;oid=<?=$entry['ID'];?>"></span>
+                    <span itemprop="availability" content="in_stock"></span>
+
+                </span>
+            </td>
+        </tr>
+        <?php } ?>
+        <?php if(count($model['CUSTOMER']['PAGELINKS']) > 1) : ?>
+        <tr>
+            <td class="cell03" colspan="4">
+            <?php 
+                if (!empty($model['CUSTOMER']['EDGELINKS'])) {
+                    foreach ($model['CUSTOMER']['EDGELINKS'] as $key => $page)
+                        echo '<a href="?'.$page.'" class="pagination">' . $key . '</a>';
+                    echo '<span class="vseparator"> | </span>';
+                }
+                foreach ($model['CUSTOMER']['PAGELINKS'] as $key => $page)
+                    if ($key == $model['CUSTOMER']['CURRENT'])
+                        echo '<a href="?'.$page.'" class="pagination_active">' . $key . '</a>';
+                    else
+                        echo '<a href="?'.$page.'" class="pagination">' . $key . '</a>';
+            ?>
+            </td>
+        </tr>
+        <?php endif ?>
+    </table>
 </div>
 <div id="base-text">
     <div class="MPWSStaticContentWrapper" title="Buy Ready Essays">

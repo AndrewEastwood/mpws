@@ -1,217 +1,212 @@
-<div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now" title="Order Now">
-        <img src="/static/orderNow4.gif" alt="Order Now"/>
-    </a>
-    <h1>Make an order</h1>
-        
+<h1>Make an order</h1>
+    
 <?php
-    if(count($model['CUSTOMER']['MESSAGES'])) {
-        echo '<div id="msg02">';
-        echo '<span><b>Please fill following fields</b></span>';
-        echo '<ul>';
-        foreach ($model['CUSTOMER']['MESSAGES'] as $msg)
-            echo '<li>' . $msg . '</li>';
-        echo '</ul>';
-        echo '</div>';
-    }
+if(count($model['CUSTOMER']['MESSAGES'])) {
+    echo '<div id="msg02">';
+    echo '<span><b>Please fill following fields</b></span>';
+    echo '<ul>';
+    foreach ($model['CUSTOMER']['MESSAGES'] as $msg)
+        echo '<li>' . $msg . '</li>';
+    echo '</ul>';
+    echo '</div>';
+}
 ?>
-        
-    <div class="content">
+    
+<div class="content">
 
-        <form action="/page/make-order.html" method="post" enctype="multipart/form-data" style="margin-bottom:30px;">
-        <table cellpadding="5" cellspacing="0" border="0" width="90%" align="center">
-        <tr>
-            <td colspan="2" align="center" class="cell01">Order Form</td>
-        </tr>
-        <tr>
-            <td class="cell04">Document type</td>
-            <td class="cell04a">
-                <select name="order_doc">
-                <?php
-                    foreach($model['CUSTOMER']['DATA_DOCS'] as $e) {
-                        $selected = '';
-                        if ($model['CUSTOMER']['DATA']['DocumentID'] == $e['ID'])
-                            $selected = ' selected="selected"';
-                        echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Name'].'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Subject</td>
-            <td class="cell04a">
-                <select name="order_subject">
-                <?php
-                    foreach($model['CUSTOMER']['DATA_SUBJECTS'] as $e) {
-                        $selected = '';
-                        if ($model['CUSTOMER']['DATA']['SubjectID'] == $e['ID'])
-                            $selected = ' selected="selected"';
-                        echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Name'].'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-        </tr>
-         <tr>
-            <td class="cell04">Title</td>
-            <td class="cell04a">
-                <input type="text" name="order_title" value="<?=$model['CUSTOMER']['DATA']['Title'];?>"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Email to deliver paper</td>
-            <td class="cell04a">
-                <input type="text" name="order_email" value="<?=$model['CUSTOMER']['DATA']['Email'];?>"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Your IM:</td>
-            <td class="cell04a">
-                <input type="text" name="order_im" value="<?=$model['CUSTOMER']['DATA']['IM'];?>"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Number of pages</td>
-            <td class="cell04a">
-                <select name="order_pages">
-                <?php
-                    for($i=1;$i<=30;$i++) {
-                        $selected = '';
-                        if ($model['CUSTOMER']['DATA']['Pages'] == $i)
-                            $selected = ' selected="selected"';
-                        echo '<option value="'.$i.'"'.$selected .'>'.$i.'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Price type</td>
-            <td class="cell04a">
-                <select name="order_price">
-                <?php
-                    foreach($model['CUSTOMER']['DATA_PRICES'] as $e) {
-                        $selected = '';
-                        if ($model['CUSTOMER']['DATA']['PriceID'] == $e['ID'])
-                            $selected = ' selected="selected"';
-                        echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Name'].'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Academic level</td>
-            <td class="cell04a">
-                <select name="order_level">
-                <?php
-                    foreach($model['CUSTOMER']['DATA_FIELDS']['Level'] as $e) {
-                        $selected = '';
-                        if ($model['CUSTOMER']['DATA']['Level'] == $e)
-                            $selected = ' selected="selected"';
-                        echo '<option value="'.$e.'"'.$selected .'>'.$e.'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Paper format</td>
-            <td class="cell04a">
-            <select name="order_format">
+    <form action="/page/make-order.html" method="post" enctype="multipart/form-data" style="margin-bottom:30px;">
+    <table cellpadding="5" cellspacing="0" border="0" width="90%" align="center">
+    <tr>
+        <td colspan="2" align="center" class="cell01">Order Form</td>
+    </tr>
+    <tr>
+        <td class="cell04">Document type</td>
+        <td class="cell04a">
+            <select name="order_doc">
             <?php
-                foreach($model['CUSTOMER']['DATA_FIELDS']['Format'] as $e) {
+                foreach($model['CUSTOMER']['DATA_DOCS'] as $e) {
                     $selected = '';
-                    if ($model['CUSTOMER']['DATA']['Format'] == $e)
+                    if ($model['CUSTOMER']['DATA']['DocumentID'] == $e['ID'])
                         $selected = ' selected="selected"';
-                    echo '<option value="'.$e.'"'.$selected .'>'.$e.'</option>';
+                    echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Name'].'</option>';
                 }
             ?>
             </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Number of sources</td>
-            <td class="cell04a">
-            <select name="order_sources" id="MPWSOrderSourceCountID">
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Subject</td>
+        <td class="cell04a">
+            <select name="order_subject">
             <?php
-                for($i=0;$i<=20;$i++) {
+                foreach($model['CUSTOMER']['DATA_SUBJECTS'] as $e) {
                     $selected = '';
-                    if ($model['CUSTOMER']['DATA']['UseSources'] == $i)
+                    if ($model['CUSTOMER']['DATA']['SubjectID'] == $e['ID'])
+                        $selected = ' selected="selected"';
+                    echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Name'].'</option>';
+                }
+            ?>
+            </select>
+        </td>
+    </tr>
+     <tr>
+        <td class="cell04">Title</td>
+        <td class="cell04a">
+            <input type="text" name="order_title" value="<?=$model['CUSTOMER']['DATA']['Title'];?>"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Email to deliver paper</td>
+        <td class="cell04a">
+            <input type="text" name="order_email" value="<?=$model['CUSTOMER']['DATA']['Email'];?>"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Your IM:</td>
+        <td class="cell04a">
+            <input type="text" name="order_im" value="<?=$model['CUSTOMER']['DATA']['IM'];?>"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Number of pages</td>
+        <td class="cell04a">
+            <select name="order_pages">
+            <?php
+                for($i=1;$i<=30;$i++) {
+                    $selected = '';
+                    if ($model['CUSTOMER']['DATA']['Pages'] == $i)
                         $selected = ' selected="selected"';
                     echo '<option value="'.$i.'"'.$selected .'>'.$i.'</option>';
                 }
             ?>
             </select>
-            <div class="MPWSFormHint<?=($model['CUSTOMER']['DATA']['UseSources']?'':' MPWSHidden');?>" id="MPWSFormHintSourceBannerID">
-                Additionally you can provide us the links to preferred sources to use.<br>
-                Please put them into the fields below.
-            </div>
-            <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
-                <div class="MPWSSourceRow"></div>
-                <!-- sources from preview page -->
-                <?php for($i=0;$i<$model['CUSTOMER']['DATA']['UseSources'];$i++) : ?>
-                    <div class="MPWSSourceRow">
-                    <?php if (empty($model['CUSTOMER']['DATA']['SourceLinks'][$i])) : ?>
-                        <input type="text" name="order_source_links[]" value=""/>
-                    <?php else : ?>
-                        <input type="text" name="order_source_links[]" value="<?=$model['CUSTOMER']['DATA']['SourceLinks'][$i];?>"/>
-                    <?php endif ?>
-                    </div>
-                <?php endfor ?>
-            </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Additional files</td>
-            <td class="cell04a">
-            <div id="MPWSFileUploadSection">
-                <noscript>Please enable JavaScript for file upload widget</noscript>
-            </div>
-            <script>
-                // file upload
-                new mpws.ui.fileUpload({realm: 'eafile',files:<?=$model['CUSTOMER']['UPLOADS']['JSON']?>});
-            </script>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Paper instructions</td>
-            <td class="cell04a">
-                <textarea name="order_notes" class="MPWSControl MPWSControlPaperInstructions"><?=$model['CUSTOMER']['DATA']['Description'];?></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Delivery date</td>
-            <td class="cell04a">
-                <input type="text" class="MPWSTextBox" id="MPWSControlMakeOrderDateDeadlineID" name="order_datedeadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Your timezone</td>
-            <td class="cell04a">
-            <select name="order_timezone" class="field_timezone" id="Timezone">
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Price type</td>
+        <td class="cell04a">
+            <select name="order_price">
             <?php
-                foreach($model['CUSTOMER']['TIME_TZ'] as $e) {
+                foreach($model['CUSTOMER']['DATA_PRICES'] as $e) {
                     $selected = '';
-                    if ($model['CUSTOMER']['DATA']['TimeZone'] == $e['key'])
+                    if ($model['CUSTOMER']['DATA']['PriceID'] == $e['ID'])
                         $selected = ' selected="selected"';
-                    echo '<option value="'.$e['key'].'"'.$selected .'>'.$e['title'].'</option>';
+                    echo '<option value="'.$e['ID'].'"'.$selected .'>'.$e['Name'].'</option>';
                 }
             ?>
             </select>
-                
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="session_key" value="<?=$model['CUSTOMER']['DATA_SESSION'];?>"/>
-                <input type="submit" name="do" value="Proceed"/>
-                <div class="cell04a"><h4>ESSAY DISCLAIMER</h4></div>
-                <div class="cell04a">The essays provided here are intended to help you by  providing a guideline and meant to be used for reserach or study purposes.</div>
-            </td>
-        </tr>
-        </table>
-        </form>
-    </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Academic level</td>
+        <td class="cell04a">
+            <select name="order_level">
+            <?php
+                foreach($model['CUSTOMER']['DATA_FIELDS']['Level'] as $e) {
+                    $selected = '';
+                    if ($model['CUSTOMER']['DATA']['Level'] == $e)
+                        $selected = ' selected="selected"';
+                    echo '<option value="'.$e.'"'.$selected .'>'.$e.'</option>';
+                }
+            ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Paper format</td>
+        <td class="cell04a">
+        <select name="order_format">
+        <?php
+            foreach($model['CUSTOMER']['DATA_FIELDS']['Format'] as $e) {
+                $selected = '';
+                if ($model['CUSTOMER']['DATA']['Format'] == $e)
+                    $selected = ' selected="selected"';
+                echo '<option value="'.$e.'"'.$selected .'>'.$e.'</option>';
+            }
+        ?>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Number of sources</td>
+        <td class="cell04a">
+        <select name="order_sources" id="MPWSOrderSourceCountID">
+        <?php
+            for($i=0;$i<=20;$i++) {
+                $selected = '';
+                if ($model['CUSTOMER']['DATA']['UseSources'] == $i)
+                    $selected = ' selected="selected"';
+                echo '<option value="'.$i.'"'.$selected .'>'.$i.'</option>';
+            }
+        ?>
+        </select>
+        <div class="MPWSFormHint<?=($model['CUSTOMER']['DATA']['UseSources']?'':' MPWSHidden');?>" id="MPWSFormHintSourceBannerID">
+            Additionally you can provide us the links to preferred sources to use.<br>
+            Please put them into the fields below.
+        </div>
+        <div class="MPWSSection" id="MPWSSectionOrderSourcesLinksID">
+            <div class="MPWSSourceRow"></div>
+            <!-- sources from preview page -->
+            <?php for($i=0;$i<$model['CUSTOMER']['DATA']['UseSources'];$i++) : ?>
+                <div class="MPWSSourceRow">
+                <?php if (empty($model['CUSTOMER']['DATA']['SourceLinks'][$i])) : ?>
+                    <input type="text" name="order_source_links[]" value=""/>
+                <?php else : ?>
+                    <input type="text" name="order_source_links[]" value="<?=$model['CUSTOMER']['DATA']['SourceLinks'][$i];?>"/>
+                <?php endif ?>
+                </div>
+            <?php endfor ?>
+        </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Additional files</td>
+        <td class="cell04a">
+        <div id="MPWSFileUploadSection">
+            <noscript>Please enable JavaScript for file upload widget</noscript>
+        </div>
+        <script>
+            // file upload
+            new mpws.ui.fileUpload({realm: 'eafile',files:<?=$model['CUSTOMER']['UPLOADS']['JSON']?>});
+        </script>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Paper instructions</td>
+        <td class="cell04a">
+            <textarea name="order_notes" class="MPWSControl MPWSControlPaperInstructions"><?=$model['CUSTOMER']['DATA']['Description'];?></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Delivery date</td>
+        <td class="cell04a">
+            <input type="text" class="MPWSTextBox" id="MPWSControlMakeOrderDateDeadlineID" name="order_datedeadline" value="<?=$model['CUSTOMER']['DATA']['DateDeadline'];?>"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Your timezone</td>
+        <td class="cell04a">
+        <select name="order_timezone" class="field_timezone" id="Timezone">
+        <?php
+            foreach($model['CUSTOMER']['TIME_TZ'] as $e) {
+                $selected = '';
+                if ($model['CUSTOMER']['DATA']['TimeZone'] == $e['key'])
+                    $selected = ' selected="selected"';
+                echo '<option value="'.$e['key'].'"'.$selected .'>'.$e['title'].'</option>';
+            }
+        ?>
+        </select>
+            
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="center">
+            <input type="hidden" name="session_key" value="<?=$model['CUSTOMER']['DATA_SESSION'];?>"/>
+            <input type="submit" name="do" value="Proceed"/>
+            <div class="cell04a"><h4>ESSAY DISCLAIMER</h4></div>
+            <div class="cell04a">The essays provided here are intended to help you by  providing a guideline and meant to be used for reserach or study purposes.</div>
+        </td>
+    </tr>
+    </table>
+    </form>
 </div>

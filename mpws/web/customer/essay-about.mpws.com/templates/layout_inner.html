@@ -114,7 +114,13 @@
     <?=$model['HTML']['COMPONENT']['MENU_MAIN'];?>
 </div>
 
-<?=$model['HTML']['CONTENT'];?>
+<div id="content_wrapper">
+    <a href="/page/make-order.html" id="order_now" title="Order Now">
+        <img src="/static/orderNow4.gif" alt="Order Now"/>
+    </a>
+    <div class="MPWSBlockSocial MPWSBlockShadow"></div>
+    <?=$model['HTML']['CONTENT'];?>
+</div>
 
 <div id="guarantee">
     <a href="#"><img src="/static/guarantee01.jpg" alt="Guarantee Money Back"/></a>

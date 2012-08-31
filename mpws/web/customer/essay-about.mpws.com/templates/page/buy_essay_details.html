@@ -1,52 +1,47 @@
-<div id="content_wrapper">
-    <a href="/page/make-order.html" id="order_now" title="Order Now">
-        <img src="/static/orderNow4.gif" alt="Order Now"/>
-    </a>
-    <h1>Buy ready Essays!</h1>
-    <div class="content" itemscope itemtype="http://data-vocabulary.org/Product">
-        <table cellpadding="5" cellspacing="0" border="0" width="100%">
-        <tr>
-            <td class="cell01" colspan="2">Details</td>
-        </tr>
-        <tr>
-            <td class="cell04">Subject</td>
-            <td class="cell04a">
-                <span itemprop="name"><?=$model['CUSTOMER']['DATA']['Title'];?></span>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell04">Pages</td>
-            <td class="cell04a"><?=$model['CUSTOMER']['DATA']['Pages'];?></td>
-        </tr>
-        <tr>
-            <td class="cell04">Price</td>
-            <td class="cell04a">
-            <span itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
-                <meta itemprop="currency" content="USD"/>
-                $<span itemprop="price" content="<?=sprintf("%01.2f", $model['CUSTOMER']['DATA']['Price']);?>"><?=sprintf("%01.2f", $model['CUSTOMER']['DATA']['Price']);?></span>
-                <span itemprop="offerURL" content="http://<?=$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>"></span>
-                <span itemprop="availability" content="in_stock"></span>
-            </span>
-            </td>
-        </tr>
-        </table>
-        
-        <table cellpadding="5" cellspacing="0" border="0" width="100%">
-        <tr>
-            <td class="cell01">Sample text</td>
-        </tr>
-        <tr>
-            <td class="cell05" align="right">
-                <span itemprop="description category" class="MPWSHidden"><?=$model['CUSTOMER']['DATA']['Description'];?></span>
-                <?=$model['CUSTOMER']['DATA']['Sample'];?>
-            </td>
-        </tr>
-        </table>
-     <center>
-        <a href="?action=buy&amp;oid=<?=$model['CUSTOMER']['DATA']['ID'];?>" class="btn01">Buy</a>
-        <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
-     </center>
-    </div>
+<h1>Buy ready Essays!</h1>
+<div class="content" itemscope itemtype="http://data-vocabulary.org/Product">
+    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td class="cell01" colspan="2">Details</td>
+    </tr>
+    <tr>
+        <td class="cell04">Subject</td>
+        <td class="cell04a">
+            <span itemprop="name"><?=$model['CUSTOMER']['DATA']['Title'];?></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell04">Pages</td>
+        <td class="cell04a"><?=$model['CUSTOMER']['DATA']['Pages'];?></td>
+    </tr>
+    <tr>
+        <td class="cell04">Price</td>
+        <td class="cell04a">
+        <span itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+            <meta itemprop="currency" content="USD"/>
+            $<span itemprop="price" content="<?=sprintf("%01.2f", $model['CUSTOMER']['DATA']['Price']);?>"><?=sprintf("%01.2f", $model['CUSTOMER']['DATA']['Price']);?></span>
+            <span itemprop="offerURL" content="http://<?=$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];?>"></span>
+            <span itemprop="availability" content="in_stock"></span>
+        </span>
+        </td>
+    </tr>
+    </table>
+    
+    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td class="cell01">Sample text</td>
+    </tr>
+    <tr>
+        <td class="cell05" align="right">
+            <span itemprop="description category" class="MPWSHidden"><?=$model['CUSTOMER']['DATA']['Description'];?></span>
+            <?=$model['CUSTOMER']['DATA']['Sample'];?>
+        </td>
+    </tr>
+    </table>
+ <center>
+    <a href="?action=buy&amp;oid=<?=$model['CUSTOMER']['DATA']['ID'];?>" class="btn01">Buy</a>
+    <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
+ </center>
 </div>
 <div id="base-text">
     <div class="MPWSStaticContentWrapper" title="Buy Ready Essays">

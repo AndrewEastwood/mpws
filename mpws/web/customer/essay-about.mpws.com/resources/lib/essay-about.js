@@ -6,6 +6,29 @@ mpws.module.define('essay-about', (function(window, document, $){
         /* all pages */
         //get team-lead name by schedule
         $('div.MPWSOnlineName span').text(mpws.tools.getDailyString(['Joshua', 'Daniel', 'Ethan', 'Caleb', 'Emily', 'Mia', 'Madison']));
+        // social
+        $('div.MPWSBlockSocial').sharrre({
+            share: {
+                googlePlus: true,
+                facebook: true,
+                twitter: true,
+                pinterest: true,
+                delicious: true
+            },
+            buttons: {
+                googlePlus: {size: 'tall'},
+                facebook: {layout: 'box_count'},
+                twitter: {count: 'vertical', via: '_JulienH'},
+                delicious: {size: 'tall'},
+                pinterest: {description: $('meta[name="description"]').attr('content'), layout: 'vertical'}
+            },
+            enableTracking: true,
+            urlCurl: "/service/public/sharrre.php",
+            enableCounter: false
+        });
+        // make it floating
+        mpws.ui.floatingBox('div.MPWSBlockSocial');
+        
 
         /* make an order page */
         if (mpws.page === "make-order") {

@@ -489,10 +489,29 @@
         this.setup(settings);
     }
     
+    function mpwsFloatingBox (selector, topPadding) {
+        if (!$(selector).length)
+            return;
+        var offset = $(selector).offset();
+        var topPadding = topPadding || 15;
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > offset.top) {
+                $(selector).stop().animate({
+                    marginTop: $(window).scrollTop() - offset.top + topPadding
+                });
+            } else {
+                $(selector).stop().animate({
+                    marginTop: 0
+                });
+            };
+        });
+    };
+    
     mpws.ui = {
         tooltip: mpwsTooltip,
         liveEditor: mpwsLiveEditor,
-        fileUpload: mpwsFileUpload
+        fileUpload: mpwsFileUpload,
+        floatingBox: mpwsFloatingBox
     }
 
 })(window, document, jQuery, (window.mpws = window.mpws || {})); 

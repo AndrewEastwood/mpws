@@ -51,7 +51,8 @@
                 'lib/mpws.core.js',
                 'lib/mpws.api.js',
                 'lib/mpws.ui.js',
-                'plugins/jquery.cookie.js'
+                'plugins/jquery.cookie.js',
+                'plugins/jquery.sharrre-1.3.2.js'
             ),
             'OWNER' => Array(
                 'lib/less.js',

@@ -350,6 +350,7 @@ a.pagination_active{
 #base-text{
     .center(700px);
     text-align:justify;
+    padding-bottom: 20px;
 }
 
 #payments,#guarantee{
@@ -485,3 +486,8 @@ a.pagination_active{
 }
 
 #contacts .phoneNumber {font-size: 17px;padding-left: 0px;top: -6px;position: relative;color: white;font-weight: bold;display: block;width: 180px;}
+
+/* Social Box */
+.MPWSBlockSocial.MPWSBlockShadow {display: block; left: -90px;}
+    .MPWSBlockSocial .button  {margin: 15px auto 5px; padding: 5px auto;}
+    .MPWSBlockSocial .button.delicious  {height: 60px;}

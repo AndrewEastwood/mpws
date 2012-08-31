@@ -63,3 +63,7 @@ padding: 1px 10px 1px; overflow: hidden; background: #090 url('overlay.jpg') no-
     #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionFileUploadContainer {display: none;}
     #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionFileUploadedContainer {margin-bottom: -10px;}
     #MPWSWidgetFileUpload.MPWSViewStateUploadsOnly #MPWSSectionFileUploadedContainer .MPWSSectionFileUploadField span {float: none;}
+    
+    
+/* SHADOW CONTAINER */
+.MPWSBlockShadow {text-align: center;line-height: 16px;font-size: 10px;font-family: Arial;border: 1px solid #BBB;min-width: 55px;width: auto;background-color: white;-webkit-border-top-right-radius: 5px;-webkit-border-bottom-right-radius: 5px;-webkit-border-bottom-left-radius: 5px;-webkit-border-top-left-radius: 5px;-moz-border-radius-topright: 5px;-moz-border-radius-bottomright: 5px;-moz-border-radius-bottomleft: 5px;-moz-border-radius-topleft: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;border-top-left-radius: 5px;-moz-background-clip: padding;-webkit-background-clip: padding-box;background-clip: padding-box;-webkit-box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.2);-moz-box-shadow: 1px 0px 15px rgba(0,0,0,0.2);box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.2); padding: 5px; position: absolute; display: none;}
