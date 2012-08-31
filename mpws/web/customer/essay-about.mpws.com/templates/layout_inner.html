@@ -23,6 +23,20 @@
     // page
     mpws.page = '<?=libraryRequest::getPage();?>';
 </script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34471184-1']);
+  _gaq.push(['_setDomainName', 'essay-about.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </head>
 <body class="MPWSPage_<?=ucfirst(libraryRequest::getPage('home'));?>">
 <noscript><h2>Please enable JavaScript to switch the site in fully functional mode</h2></noscript>
