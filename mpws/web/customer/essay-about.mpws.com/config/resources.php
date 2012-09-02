@@ -41,7 +41,8 @@
             'DEFAULT' => Array(),
             'OWNER' => Array(),
             'AUTO' => Array(
-                'plugins/theme/jquery-ui-1.8.21.custom.css'
+                'plugins/theme/jquery-ui-1.8.21.custom.css',
+                'jquery.fancybox.css'
             ),
             'IMPORT' => Array()
         ),
@@ -52,7 +53,8 @@
                 'lib/mpws.api.js',
                 'lib/mpws.ui.js',
                 'plugins/jquery.cookie.js',
-                'plugins/jquery.sharrre-1.3.2.js'
+                'plugins/jquery.sharrre-1.3.2.js',
+                'plugins/fancybox/jquery.fancybox.js'
             ),
             'OWNER' => Array(
                 'lib/less.js',

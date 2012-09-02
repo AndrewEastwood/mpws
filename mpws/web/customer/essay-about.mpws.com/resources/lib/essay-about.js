@@ -28,6 +28,14 @@ mpws.module.define('essay-about', (function(window, document, $){
         });
         // make it floating
         mpws.ui.floatingBox('div.MPWSBlockSocial');
+        //review
+        $('#MPWSLinkWriterReviewID').fancybox({
+            maxWidth    : 800,
+            maxHeight   : 600,
+            fitToView   : false,
+            width       : '70%',
+            height      : '70%'
+        });
         
 
         /* make an order page */

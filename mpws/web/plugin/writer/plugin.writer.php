@@ -28,12 +28,13 @@ class pluginWriter {
             $model['html']['menu'] .= $model['html']['writer']['com']['menu'];
         }
         
-        //var_dump($model);
         
         //echo $model['PLUGINS']['WRITER']['template'];
 
         /* set html data */
         $model['html']['content'] .= $libView->getTemplateResult($model, $model['PLUGINS']['WRITER']['template']);
+        //var_dump($model['html']['content']);
+        //var_dump($model['PLUGINS']['WRITER']['template']);
     }
 
     public function layout($toolbox, $plugin) {

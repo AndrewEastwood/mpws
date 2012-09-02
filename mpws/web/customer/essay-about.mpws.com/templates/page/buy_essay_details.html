@@ -26,7 +26,22 @@
         </td>
     </tr>
     </table>
-    
+
+    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td class="cell01">
+            <span>Reviews</span>
+            <a id="MPWSLinkWriterReviewID" data-fancybox-type="iframe" href="/page/submit_review.html?owner=<?=$model['CUSTOMER']['DATA']['ID'];?>">Write A Review</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell05" align="right">
+            <span itemprop="description category" class="MPWSHidden"><?=$model['CUSTOMER']['DATA']['Description'];?></span>
+            <?=$model['CUSTOMER']['DATA']['Sample'];?>
+        </td>
+    </tr>
+    </table>
+
     <table cellpadding="5" cellspacing="0" border="0" width="100%">
     <tr>
         <td class="cell01">Sample text</td>
@@ -38,10 +53,11 @@
         </td>
     </tr>
     </table>
- <center>
-    <a href="?action=buy&amp;oid=<?=$model['CUSTOMER']['DATA']['ID'];?>" class="btn01">Buy</a>
-    <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
- </center>
+
+     <center>
+        <a href="?action=buy&amp;oid=<?=$model['CUSTOMER']['DATA']['ID'];?>" class="btn01">Buy</a>
+        <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
+     </center>
 </div>
 <div id="base-text">
     <div class="MPWSStaticContentWrapper" title="Buy Ready Essays">

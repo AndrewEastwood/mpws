@@ -23,6 +23,14 @@ class libraryPluginManager
             $this->initAllPlugins();
     }
 
+    public function setContext ($context) {
+        foreach ($this->_s_plugins as $pItem){
+            //var_dump($pItem);
+            if (method_exists($pItem['obj'], 'setContext'))
+                $pItem['obj']->setContext($context);
+        }
+    }
+    
     public function checkPlugin ($name) {
         $name = strtoupper($name);
         return !empty($this->_s_plugins[$name]);
@@ -105,6 +113,12 @@ class libraryPluginManager
     }
 
     public function loadPlugin ($name, $pItem = false) {
+        
+        
+        //echo '<h4>'.$name.'</h4>';
+        //echo '<h4>'.$pItem.'</h4>';
+        //var_dump($config['PLUGINS']);
+        
         //echo '<h4>'.$name.'</h4>';
         //echo '------====== loadPlugin 1<br>';
         $loadedObj = $this->getPluginObj($name);
@@ -112,7 +126,7 @@ class libraryPluginManager
         if (!empty($loadedObj))
             return $loadedObj;
         
-        //echo '------====== loadPlugin 2<br>';
+        //echo '------====== loadPlugin 2<br>' . $name;
         if (!empty($name))
             $pItem = $this->_pluginPath . '/'.$name.'/plugin.'.$name.'.php';
         
@@ -151,10 +165,21 @@ class libraryPluginManager
     }
 
     private function loadPluginObjects () {
+        global $config;
         $pFiles = glob($this->_pluginPath . '/*/plugin.*.php');
         // add all plugin
         foreach ($pFiles as $pItem) {
-            //echo '<br> loading: '.$pItem;
+            $matches = null;
+            preg_match('/^(\\w+).(\\w+).(\\w+)$/', basename($pItem), $matches);
+            $pluginName = trim($matches[2]);
+            
+            //var_dump($config['TOOLBOX']);
+            
+            if (!$config['TOOLBOX']['PLUGINS'][$pluginName])
+                continue;
+            
+            
+            //echo '<br> loading: '.$pluginName;
             $this->loadPlugin(false, $pItem);
         }
         //echo '[added plugins := ' . count($this->_s_plugins);

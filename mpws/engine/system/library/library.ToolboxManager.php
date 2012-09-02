@@ -1,6 +1,6 @@
 <?php
 
-class libraryToolboxManager {
+class libraryToolboxManager extends objectStorable {
 
     protected $_customerObj;
     protected $_pluginsObj;
@@ -9,7 +9,7 @@ class libraryToolboxManager {
 
     function __construct ($customerName = '') {
         $this->_customerObj = new libraryCustomerManager($customerName);
-        $this->_pluginsObj = new libraryPluginManager();
+        $this->_pluginsObj = new libraryPluginManager($this);
         $this->_databaseObj = new libraryDataBaseChainQueryBuilder();
         $this->initManager();
     }
@@ -22,6 +22,9 @@ class libraryToolboxManager {
         $this->_databaseObj->connect($mdbc);
         $this->_model = array();
         $this->_model['PLUGINS'] = array();
+        
+        
+        $this->_pluginsObj->setContext($this);
     }
 
     /*protected function getManagerObject() {
@@ -58,7 +61,14 @@ class libraryToolboxManager {
             $results[] = $this->_pluginsObj->runPlugins($method, &$this);
         //var_dump($results);
         $model = $this->getModel();
-        if (empty($model['html']['content']))
+        
+        //echo  libraryStorage::cache('demo');
+        //echo '<br>-----------------------------------------<br>';
+        //var_dump(libraryStorage::storage('__all__'));
+        
+        $gStore = $this->storeGlobalGet();
+        
+        if (empty($model['HTML']['CONTENT']) && empty($model['html']['content']) && empty($gStore['HTML.CONTENT']))
             return 'The page you have requested cannot be found.';
         return implode('', $results);
 

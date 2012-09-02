@@ -1,18 +1,18 @@
 <?php
 
-class objectPlugin implements iPlugin {
+class objectPlugin extends objectStorable implements iPlugin  {
     
     /* container */
-    private $toolbox;
+    private $context;
     /* internal storage */
     private $templates;
     private $configs;
     private $meta;
     private $version;
     
-    function __construct ($toolbox, $owner = 'plugin') {
+    function __construct ($context, $owner = 'plugin') {
         //echo 'objectPlugin CONSTRUCT';
-        $this->toolbox = $toolbox;
+        $this->context = $context;
         $this->version = 2;
         $this->setup($owner);
     }
@@ -29,6 +29,11 @@ class objectPlugin implements iPlugin {
         $this->configs = array();
         // init templates
         $this->templates = array();
+        // setup storable namespace
+        $this->setNamespace('plugin'.DOT.$owner);
+    }
+    public function setContext ($context) {
+        $this->context = $context;
     }
     
     /* initail */
@@ -74,7 +79,33 @@ class objectPlugin implements iPlugin {
         // get all section
         return $_requestedConfig[$name];
     }
-    public function getTemplate ($name) { }
+    public function getTemplate ($name) {
+        echo 'getting template: ' . $name;
+        
+        
+        //libraryStorage::cache('demo','<br><br><br>test gfgdfg');
+        
+        
+        $templatePath = str_replace(DOT, DS, $name) . '.html';
+        
+        // check in cache
+        if (!empty($this->templates[$name]))
+            return $this->templates[$name];
+        
+        // load template
+        $_template = $this->meta['PATH'] . DS . 'templates' . DS . $templatePath;
+        $_plugin = $this->meta['PLUGIN'] . DS . 'templates' . DS . $templatePath;
+        
+        if (file_exists($_plugin))
+            $_template = $_plugin;
+        
+        // save in cache
+        $this->templates[$name] = $_template;
+        
+        //echo $_template;
+        
+        return $_template;
+    }
     public function getName () { return $this->meta['NAME']; }
     public function getVersion () { return $this->version; }
     
@@ -86,16 +117,60 @@ class objectPlugin implements iPlugin {
         // run common hook on startup
         $this->displayTriggerOnCommonStart();
         // validate access key with plugin name to run in normal mode
-        if (libraryRequest::getPage() === strtolower($this->meta['key']))
+        if (libraryRequest::getPage() === $this->getName())
             $this->displayTriggerOnActive(); // run on active
         else
             $this->displayTriggerOnInActive(); // run in background
         // run common hook in end up
         $this->displayTriggerOnCommonEnd();
     }
-    public function layout() { }
-    public function render() { }
-    public function api() { }
+    public function layout() {
+        //echo '***SHOP LAYOUT***';
+        $libView = new libraryView();
+        //$model = &$this->getModel();
+        return $libView->getTemplateResult($this->storeGet(), $this->templates['LAYOUT']);    
+    }
+    public function render() {
+        echo '<br>***SHOP RENDER***<br>';
+        
+        
+        //$storeG = $this->storeGlobalGet();
+        $store = $this->storeGet();
+        
+        //$this->storeGlobalSet('html', 'demo demo demo');
+        //var_dump($this->getStorage());
+        //$this->storeGlobalSet('html', 'test test test');
+        //var_dump($this->getStorage());
+        //$this->storeGlobalSet('html', 'overwrite test', false);
+        //var_dump($this->getStorage());
+        
+        
+        //$model = &$this->getModel(false);
+        $libView = new libraryView();
+        
+        
+        /* gat all components as html * /
+        if ($model['USER']['ACTIVE'] && !empty($model['PLUGINS']['context']['COM'])) {
+            foreach ($model['PLUGINS']['WRITER']['COM'] as $key => $component)
+                $model['html']['writer']['com'][strtolower($key)] = $libView->getTemplateResult($model, $model['PLUGINS']['WRITER']['COM'][$key]['template']);
+            $model['html']['menu'] .= $model['html']['writer']['com']['menu'];
+        }*/
+        
+        //var_dump($model);
+        //var_dump($storeG);
+        //var_dump($store);
+        
+        /* set html data */
+        $this->storeGlobalSet('html.content', $libView->getTemplateResult($this->getStorage(), $store['TEMPLATE.PATH']));
+        //$storeG['HTML.CONTENT'] .= $libView->getTemplateResult($this->getStorage(), $store['TEMPLATE.PATH']);
+        //$storeG = $this->storeGlobalGet();
+    }
+    public function api() {
+        $model = &$this->getModel();
+        $p = libraryRequest::getApiParam();
+        if (!$model['USER']['ACTIVE'] || empty($p['token']) || !libraryRequest::getOrValidatePageSecurityToken($p['token']))
+            return;
+    }
     public function cross() { }
     public function dump () {
         $dump = '<h2>Plugin Dump:</h2>';
@@ -106,7 +181,7 @@ class objectPlugin implements iPlugin {
         $dump .= '</ul>';
         $dump .= '<br>Configuration:';
         foreach ($this->configs as $key => $val)
-            $dump .= '<li>' . $key . ': ' . $val . '</li>';
+            $dump .= '<li>' . $key . ': <pre>' . print_r($val, true) . '</pre></li>';
         $dump .= '</ul>';
         $dump .= '<br>Templates:';
         foreach ($this->templates as $key => $val)
@@ -117,7 +192,9 @@ class objectPlugin implements iPlugin {
             
     /* hooks */
     protected function displayTriggerOnCommonStart () {}
-    protected function displayTriggerOnActive () {}
+    protected function displayTriggerOnActive () {
+        $_SESSION['MPWS_PLUGIN_ACTIVE'] = 'WRITER';
+    }
     protected function displayTriggerOnInActive () {}
     protected function displayTriggerOnCommonEnd () {}
     

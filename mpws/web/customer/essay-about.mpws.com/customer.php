@@ -52,6 +52,12 @@ class customer {
                 $model['LAYOUT'] = 'layout_inner';
                 $this->_pagePurchase($customer);
                 break;
+
+            case 'submit_review':
+                $model['LAYOUT'] = 'frame_submit';
+                $this->_pageSubmitReview($customer);
+                break;
+
             default:{
                 // render static page or 404
                 $model['LAYOUT'] = 'layout_inner';
@@ -1242,6 +1248,12 @@ class customer {
             $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj(), 'Price = 0');
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.free_essay');
         }
+    }
+
+    private function _pageSubmitReview($customer) {
+        $model = &$customer->getModel();
+
+        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.review.submit');
     }
 
     private function _accountDeskCommonOrders_details ($customer) {
