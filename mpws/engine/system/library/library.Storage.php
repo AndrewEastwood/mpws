@@ -22,18 +22,18 @@ class libraryStorage {
         if ($key == '__all__' && !isset($obj))
             return self::$STORAGE;
         
-        echo '<br>libraryStorage::storage [' . $key . '] ';
+        //echo '<br>libraryStorage::storage [' . $key . '] ';
         $key = strtoupper($key);
         if (isset($obj)) {
-            echo ' saving object!';
-            echo '<i><pre>' . print_r($obj, true) . '</pre></i>';
+            //echo ' saving object!';
+            //echo '<i><pre>' . print_r($obj, true) . '</pre></i>';
             if ($append && isset(self::$STORAGE[$key])) {
                 $obj = self::_mergeData(self::$STORAGE[$key], $obj);
             }
             self::$STORAGE[$key] = $obj;
         }
         
-        echo '<br>';
+        //echo '<br>';
         return self::$STORAGE[$key];
     }
     

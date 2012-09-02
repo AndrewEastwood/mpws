@@ -10,14 +10,13 @@ class pluginShop extends objectPlugin {
     
     final function displayTriggerOnCommonStart () {
         //echo 'SHOP displayTriggerOnCommonStart';
-        //echo $this->getConfiguration('GENERAL', 'NAME');
         //echo $this->dump();
         
         
         
     }
     final function displayTriggerOnActive () {
-        echo '<br> IS ACTIVE <br>';
+        //echo '<br> IS ACTIVE <br>';
         parent::displayTriggerOnActive();
         switch (libraryRequest::getDisplay('home')) {
             case 'home' :
@@ -36,12 +35,21 @@ class pluginShop extends objectPlugin {
         
         
         
-        $this->storeSet('TEMPLATE.PATH', $this->getTemplate('page.queue.datatable'));
-        $this->storeSet('TEMPLATE.NAME', 'page.queue.datatable');
+        $this->store_storeSet('TEMPLATE.PATH', $this->getTemplate('page.queue.datatable'));
+        $this->store_storeSet('TEMPLATE.NAME', 'page.queue.datatable');
         //$pModel = &$this->getModel();
         
         //var_dump($store);
         //$store['TEMPLATE'] = $this->getTemplate('page.queue.datatable');
+        
+        
+        // menu component
+        $menu = libraryView::getLinks($this->getConfiguration('GENERAL', 'MENU'));
+        
+        //var_dump($menu);
+        
+        $this->addComponent('MENU', $menu, 'menu_list');
+        
     }
     
     

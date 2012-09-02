@@ -66,7 +66,7 @@ class libraryToolboxManager extends objectStorable {
         //echo '<br>-----------------------------------------<br>';
         //var_dump(libraryStorage::storage('__all__'));
         
-        $gStore = $this->storeGlobalGet();
+        //var_dump($this->getStorage());
         
         if (empty($model['HTML']['CONTENT']) && empty($model['html']['content']) && empty($gStore['HTML.CONTENT']))
             return 'The page you have requested cannot be found.';

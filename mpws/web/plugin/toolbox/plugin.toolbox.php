@@ -1,6 +1,6 @@
 <?php
 
-class pluginToolbox {
+class pluginToolbox extends objectStorable {
 
     public function main($toolbox, $plugin) {
         //echo '<br>***TOOLBOX MAIN***';
@@ -39,6 +39,11 @@ class pluginToolbox {
         //echo '***TOOLBOX LAYOUT***';
         $libView = new libraryView();
         $model = &$toolbox->getModel();
+        
+        $l = libraryRequest::getValue('l');
+        if (!empty($l)) {
+            return $libView->getTemplateResult($this->getStorage(), $plugin['templates'][$l]);
+        }
         return $libView->getTemplateResult($model, $plugin['templates']['layout']);
     }
 

@@ -33,7 +33,7 @@
         getDailyString: function (strings) {
             var d = new Date();
             if (strings[d.getDay()] !== undefined)
-                return strings[d.getDay()-1];
+                return strings[d.getDay()];
             return '';
         },
         getObjectCount: function (obj) {

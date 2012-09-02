@@ -3,8 +3,8 @@
 
     $plugin['GENERAL']['NAME'] = 'Shop';
     $plugin['GENERAL']['TITLE'] = 'Shop';
+    // use page => key
+    // key will be used from menu.property file
     $plugin['GENERAL']['MENU'] = array(
-        'index.html' => 'Services',
-        'users.html' => 'Users',
-        'exit.html' => 'Exit'
+        'queue.html' => 'shop.queue'
     );

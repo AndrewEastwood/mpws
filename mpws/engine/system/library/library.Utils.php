@@ -93,6 +93,15 @@ class libraryUtils {
         return $valueOnUnmatch;
     }
     
+    static public function filterArrayKeys ($array, $pattern) {
+        $keys = array_keys($array);
+        $filtered = array();
+        for ($i = 0; ($k = $keys[$i]); $i++)
+            if (preg_match($pattern, $k))
+                $filtered[$k] = $array[$k];
+        return $filtered;
+    }
+    
     static public function wrapArrayKeys(&$array, $wrapper){
         $_array = array();
         foreach ($array as $k => $v)

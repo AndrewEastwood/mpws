@@ -62,10 +62,16 @@
     // Path Formatters
 
     define ("DOT", ".");
+    
+    define ("DOG", "@");
+    
+    define ("SHARP", "#");
 
     define ("DS", "/");
 
     define ("BS", "_", true);
+    
+    define ("EQ", "=", true);
 
     define ("US", "..", true);
 
