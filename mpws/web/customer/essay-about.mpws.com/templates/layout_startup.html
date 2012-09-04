@@ -1,6 +1,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<!-- Google Analytics Content Experiment code -->
+<script>function utmx_section(){}function utmx(){}(function(){var
+k='63573308-0',d=document,l=d.location,c=d.cookie;
+if(l.search.indexOf('utm_expid='+k)>0)return;
+function f(n){if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.
+indexOf(';',i);return escape(c.substring(i+n.length+1,j<0?c.
+length:j))}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;d.write(
+'<sc'+'ript src="'+'http'+(l.protocol=='https:'?'s://ssl':
+'://www')+'.google-analytics.com/ga_exp.js?'+'utmxkey='+k+
+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='+new Date().
+valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
+'" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
+</script><script>utmx('url','A/B');</script>
+<!-- End of Google Analytics Content Experiment code -->
 <title><?=$model['CONFIG']['DISPLAY']['TITLE'];?></title>
 <meta name="description" content="essay-about.com is a custom essay writing service offering essays, research papers, term papers, book reports and dissertations on various subjects to help students with their writing assignments. Customized research paper writing services offer expert aid in generating custom research." />
 <meta name="keywords" content="essay, essay about, urgent essay, custom essay, free essay, writing, write essay, paper, writers, order, low prices, term paper, coursework, research paper, book report, observation report, thesis, dissertation, discount" />
@@ -21,6 +35,8 @@
     mpws.token = '<?=libraryRequest::getOrValidatePageSecurityToken();?>';
     // page
     mpws.page = '<?=libraryRequest::getPage();?>';
+    // domain
+    document.domain = '<?=MPWS_CUSTOMER;?>';
 </script>
 <script type="text/javascript">
 

@@ -24,7 +24,7 @@ class objectBase {
         if (!empty($this->_extenders[$alias]) && method_exists($this->_extenders[$alias], $fn))
             return call_user_func_array(array($this->_extenders[$alias], $fn), $args);
         
-        //throw new Exception('MPWS Could not find called method "'.$fn.'". Please check if the class has this method.');
+        throw new Exception('MPWS Could not find called method "'.$fn.'". Please check if the class has this method.');
     }
     
     /* get */
