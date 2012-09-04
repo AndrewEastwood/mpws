@@ -190,6 +190,11 @@
         cssCount = 'height:35px;width:50px;font-size:15px;line-height:35px;',
         cssShare = 'height:18px;line-height:18px;margin-top:3px;';
       }
+      else if (self.options.buttons.delicious.size == 'normal') {//normal
+        var css = 'width:50px;',
+        cssCount = 'display:none;',
+        cssShare = 'float:left;height:25px;line-height:25px;';
+      }
       else{//medium
         var css = 'width:93px;',
         cssCount = 'float:right;padding:0 3px;height:20px;width:26px;line-height:20px;',

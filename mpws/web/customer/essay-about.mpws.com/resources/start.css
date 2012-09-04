@@ -379,5 +379,7 @@ body{
 
 /* Social Box */
 .MPWSBlockSocial.MPWSBlockShadow {display: block; left: -90px;}
-    .MPWSBlockSocial .button  {margin: 15px auto 5px; padding: 5px auto;}
-    .MPWSBlockSocial .button.delicious  {height: 60px;}
+    .MPWSBlockSocial .button  {margin: 15px auto 5px; padding: 5px 0px; width: 65px; overflow: hidden;}
+    .MPWSBlockSocial .button.delicious  {height: 40px;}
+    .MPWSBlockSocial .button.facebook div.fb-like  {padding-left: 12px;}
+    .MPWSBlockSocial .button.facebook div.fb-like .pluginButton {width: 45px;}

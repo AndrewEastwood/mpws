@@ -1,7 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title><?=$model['CONFIG']['DISPLAY']['TITLE'];?> - <?=ucfirst(libraryRequest::getPage());?></title>
+<title>
+<?php
+    if(isset($model['CUSTOMER']['DATA']['Title']))
+        echo $model['CUSTOMER']['DATA']['Title'] . ' - ';
+    echo $model['CONFIG']['DISPLAY']['TITLE'] . ' - ' . ucfirst(libraryRequest::getPage());
+?>
+</title>
 <meta name="description" content="essay-about.com is a custom essay writing service offering essays, research papers, term papers, book reports and dissertations on various subjects to help students with their writing assignments. Customized research paper writing services offer expert aid in generating custom research." />
 <meta name="keywords" content="essay, essay about, urgent essay, custom essay, free essay, writing, write essay, paper, writers, order, low prices, term paper, coursework, research paper, book report, observation report, thesis, dissertation, discount" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

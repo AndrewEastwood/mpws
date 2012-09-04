@@ -27,8 +27,16 @@
     </tr>
     </table>
 
+    <div itemscope itemtype="http://data-vocabulary.org/Review-aggregate" style="display:none;">
+        <span itemprop="itemreviewed">Anonymous</span>
+        <span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">
+        <span itemprop="average">4.9</span> out of <span itemprop="best">5</span>
+        </span> based on <span itemprop="votes">28</span> ratings.
+        <span itemprop="count">12</span> user reviews.
+    </div>
+
     <table cellpadding="5" cellspacing="0" border="0" width="100%">
-    <tr>
+    <tr style="display:none;">
         <td class="cell01">
             <span>Reviews</span>
             <a id="MPWSLinkWriterReviewID" data-fancybox-type="iframe" href="/page/submit_review.html?owner=<?=$model['CUSTOMER']['DATA']['ID'];?>">Write A Review</a>
@@ -36,7 +44,8 @@
     </tr>
     <tr>
         <td class="cell05" align="right">
-            <span itemprop="description category" class="MPWSHidden"><?=$model['CUSTOMER']['DATA']['Description'];?></span>
+            <span itemprop="description" class="MPWSHidden"><?=implode(' ', array_slice(explode(' ', strip_tags($model['CUSTOMER']['DATA']['Sample'])), 0, 50));?>...</span>
+            <span itemprop="category" class="MPWSHidden"><?=$model['CUSTOMER']['DATA']['Description'];?></span>
             <?=$model['CUSTOMER']['DATA']['Sample'];?>
         </td>
     </tr>

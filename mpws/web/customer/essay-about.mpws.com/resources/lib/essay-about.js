@@ -16,11 +16,11 @@ mpws.module.define('essay-about', (function(window, document, $){
                 delicious: true
             },
             buttons: {
-                googlePlus: {size: 'tall'},
-                facebook: {layout: 'box_count'},
-                twitter: {count: 'vertical', via: '_JulienH'},
-                delicious: {size: 'tall'},
-                pinterest: {description: $('meta[name="description"]').attr('content'), layout: 'vertical'}
+                googlePlus: {size: 'standard',annotation: 'none'},
+                facebook: {layout: 'standart'},
+                twitter: {count: 'none', via: 'essay-about.com'},
+                delicious: {size: 'normal'},
+                pinterest: {description: $('meta[name="description"]').attr('content'), layout: 'none'}
             },
             enableTracking: true,
             urlCurl: "/service/public/sharrre.php",
