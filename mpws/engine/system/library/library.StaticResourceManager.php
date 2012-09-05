@@ -155,10 +155,7 @@ class libraryStaticResourceManager {
             return $_owner;
         return $_default;
     }
-    public static function getMacro ($owner, $name, $resourceName) {
-        return self::getTemplate($owner, $name, 'macro' . DS . $resourceName);
-    }
-    public static function getPropery ($owner, $name, $resourceName, $locale = 'en_us') {
+    public static function getProperty ($owner, $name, $resourceName, $locale = 'en_us') {
         $resPath = str_replace(DOT, DS, $resourceName) . '.prop';
         $_owner = DR . '/web/' . $owner . DS . $name . DS . 'property' . DS . $locale . DS . $resPath;
         $_default  = DR . '/web/default/' . MPWS_VERSION . DS . 'property' . DS . $locale . DS . $resPath;

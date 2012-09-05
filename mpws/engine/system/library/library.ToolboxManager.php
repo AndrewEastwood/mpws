@@ -1,6 +1,6 @@
 <?php
 
-class libraryToolboxManager extends objectStorable {
+class libraryToolboxManager extends objectExtWithStorage {
 
     protected $_customerObj;
     protected $_pluginsObj;
@@ -8,6 +8,7 @@ class libraryToolboxManager extends objectStorable {
     protected $_model;
 
     function __construct ($customerName = '') {
+        echo 'libraryToolboxManager __construct';
         $this->_customerObj = new libraryCustomerManager($customerName);
         $this->_pluginsObj = new libraryPluginManager($this);
         $this->_databaseObj = new libraryDataBaseChainQueryBuilder();

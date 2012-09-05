@@ -1,6 +1,6 @@
 <?php
 
-class objectStorable  {
+class objectExtWithStorage  {
     
     private $_namespace;
     

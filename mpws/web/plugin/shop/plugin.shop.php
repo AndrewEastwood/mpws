@@ -1,22 +1,22 @@
 <?php
     
   
-class pluginShop extends objectPlugin {  
+class pluginShop extends objectBaseContextualWebPlugin {  
 
-    function __construct ($context = false) {
+    public function __construct ($context = false) {
         parent::__construct($context, 'shop');
-        //echo 'pluginShop CONSTRUCT';
+        echo 'pluginShop CONSTRUCT';
     }
     
-    final function displayTriggerOnCommonStart () {
+    final protected function displayTriggerOnCommonStart () {
         //echo 'SHOP displayTriggerOnCommonStart';
         //echo $this->dump();
         
         
         
     }
-    final function displayTriggerOnActive () {
-        //echo '<br> IS ACTIVE <br>';
+    final protected function displayTriggerOnActive () {
+        echo '<br> IS ACTIVE <br>';
         parent::displayTriggerOnActive();
         switch (libraryRequest::getDisplay('home')) {
             case 'home' :
@@ -29,13 +29,13 @@ class pluginShop extends objectPlugin {
     
     /* PLUGIN SPEC METHODS */
     
-    final private function _displayQueue () {
-        echo '_displayQueue';
+    private function _displayQueue () {
+        /*echo '_displayQueue';
         
         
         
         
-        $this->store_storeSet('TEMPLATE.PATH', $this->getTemplate('page.queue.datatable'));
+        $this->store_storeSet('TEMPLATE.PATH', $this->res_getResource('page.queue.datatable'));
         $this->store_storeSet('TEMPLATE.NAME', 'page.queue.datatable');
         //$pModel = &$this->getModel();
         
@@ -48,7 +48,7 @@ class pluginShop extends objectPlugin {
         
         //var_dump($menu);
         
-        $this->addComponent('MENU', $menu, 'menu_list');
+        $this->addComponent('MENU', $menu, 'menu_list');*/
         
     }
     

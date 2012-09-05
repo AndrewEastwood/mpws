@@ -1,6 +1,6 @@
 <?php
 
-class pluginToolbox extends objectStorable {
+class pluginToolbox extends objectBaseContextualWebPlugin {
 
     public function main($toolbox, $plugin) {
         //echo '<br>***TOOLBOX MAIN***';
