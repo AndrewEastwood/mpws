@@ -104,5 +104,49 @@
         return null;
     }
     
+    function makeKey ($str, $ret = true) {
+        if($ret)
+            return strtoupper(trim($str));
+        $str = strtoupper(trim($str));
+    }
+    
+    //$d = 'ololololo';
+    //echo makeKey('abc1----');
+    //makeKey(&$d, false);
+    //echo $d;
+    
+    function startsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }
+    
+    function getArguments($func_args) {
+        $fn_args = false;
+        // optimize arguments
+        if (count($func_args) > 1) {
+            foreach ($func_args as $value) {
+                if (is_string($value))
+                    $fn_args[] = $value;
+                if (is_array($value))
+                    foreach ($value as $array_value)
+                        $fn_args[] = $array_value;
+            }
+        } elseif (count($func_args) == 1)
+            $fn_args = $func_args[0];
+        else
+            $fn_args = null;
+        
+        return $fn_args;
+    }
+    
 
 ?>

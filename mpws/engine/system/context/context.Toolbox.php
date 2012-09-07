@@ -1,31 +1,46 @@
 <?php
 
-class libraryToolboxManager extends objectExtWithStorage {
+class contextToolbox extends objectContext  {
 
-    protected $_customerObj;
+   /* protected $_customerObj;
     protected $_pluginsObj;
     protected $_databaseObj;
-    protected $_model;
+    protected $_model;*/
 
-    function __construct ($customerName = '') {
-        echo 'libraryToolboxManager __construct';
-        $this->_customerObj = new libraryCustomerManager($customerName);
+    function __construct () {
+        
+        /* We store plugins insite toolbox context
+         * The Customer Context object has an access to current context
+         */
+        
+        
+        echo 'contextToolbox __construct';
+        
+        /*$this->_customerObj = new libraryCustomerManager($customerName);
         $this->_pluginsObj = new libraryPluginManager($this);
         $this->_databaseObj = new libraryDataBaseChainQueryBuilder();
-        $this->initManager();
+        $this->initManager();*/
+    }
+    
+    final public function call ($runner, $command) {
+        echo '<br>TOOLBOX; Running command: ' . $command[makeKey('method')];
+        
+        
+        $runner->traceCommands();
+        
     }
     
     /* init methods */
     protected function initManager () {
         /* init datatabse */
-        $mdbc = $this->_customerObj->getCustomerConfiguration('MDBC');
+        /*$mdbc = $this->_customerObj->getCustomerConfiguration('MDBC');
         //var_dump($mdbc);
         $this->_databaseObj->connect($mdbc);
         $this->_model = array();
         $this->_model['PLUGINS'] = array();
         
         
-        $this->_pluginsObj->setContext($this);
+        $this->_pluginsObj->setContext($this);*/
     }
 
     /*protected function getManagerObject() {
@@ -38,16 +53,16 @@ class libraryToolboxManager extends objectExtWithStorage {
     }*/
 
     public function getCustomerObj() {
-        return $this->_customerObj;
+        //return $this->_customerObj;
     }
     public function getDatabaseObj() {
-        return $this->_databaseObj;
+        //return $this->_databaseObj;
     }
     public function getPluginsObj() {
-        return $this->_pluginsObj;
+        //return $this->_pluginsObj;
     }
     public function &getModel() {
-        return $this->_model;
+        //return $this->_model;
     }
 
     public function callMethod ($methodNames, $params = false) {
@@ -57,11 +72,11 @@ class libraryToolboxManager extends objectExtWithStorage {
         
         //echo $this->getDump();
         
-        $results = array();
+        /*$results = array();
         foreach ($methodNames as $method)
             $results[] = $this->_pluginsObj->runPlugins($method, &$this);
         //var_dump($results);
-        $model = $this->getModel();
+        $model = $this->getModel();*/
         
         //echo  libraryStorage::cache('demo');
         //echo '<br>-----------------------------------------<br>';
@@ -69,9 +84,9 @@ class libraryToolboxManager extends objectExtWithStorage {
         
         //var_dump($this->getStorage());
         
-        if (empty($model['HTML']['CONTENT']) && empty($model['html']['content']) && empty($gStore['HTML.CONTENT']))
+        /*if (empty($model['HTML']['CONTENT']) && empty($model['html']['content']) && empty($gStore['HTML.CONTENT']))
             return 'The page you have requested cannot be found.';
-        return implode('', $results);
+        return implode('', $results);*/
 
         //$allPlugins = $this->_pluginsObj->getAllPlugins();
         //foreach ($allPlugins as $_name => $_plugin)
@@ -100,15 +115,15 @@ class libraryToolboxManager extends objectExtWithStorage {
     }
 
     public function getDump() {
-        return $this->_pluginsObj->getDump();
+        //return $this->_pluginsObj->getDump();
     }
     
     /* crossmode call */
-    static private $pluginsObj;
-    static public function callPluginMethod ($pluginName, $methodName, $params = false) {
+    //static private $pluginsObj;
+    //static public function callPluginMethod ($pluginName, $methodName, $params = false) {
         //echo 'callPluginMethod<br>';
         //echo '------ callPluginMethod 1<br>';
-        if (!self::$pluginsObj)
+        /*if (!self::$pluginsObj)
             self::$pluginsObj = new libraryPluginManager(false);
         //echo 'callPluginMethod ' . $pluginName;
         $po = self::$pluginsObj->loadPlugin($pluginName);
@@ -121,8 +136,8 @@ class libraryToolboxManager extends objectExtWithStorage {
         //echo '------ callPluginMethod 4<br>';
         //unlink($po);
         //unlink($pluginsObj);
-        return $rez;
-    }
+        return $rez;*/
+    //}
 
 }
 

@@ -8,11 +8,9 @@ class objectBase {
     private $_meta;
     private $_extenders;
     
-    const BASE_OBJECT_T_NONE = '';
-    const BASE_OBJECT_T_PLUGIN = 'plugin';
-    const BASE_OBJECT_T_CUSTOMER = 'customer';
-    
-    public function __construct ($name = 'baseObject', $type = BASE_OBJECT_T_NONE, $version = '1.0') {
+    public function __construct ($name = 'baseObject', $type = '', $version = '1.0') {
+        echo '<br> Base init: "' . $name. '" as "' . $type . '" v.' . $version . '<br>';
+        
         $this->_name = $name;
         $this->_type = $type;
         $this->_version = $version;
@@ -26,7 +24,6 @@ class objectBase {
         /* custom setup */
         $this->objectCustomSetup();
     }
-    
     public function __call ($name, $args) {
         
         list($alias, $fn) = explode('__', $name, 2);

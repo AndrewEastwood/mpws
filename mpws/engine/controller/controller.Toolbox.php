@@ -6,12 +6,37 @@ class controllerToolbox {
         global $config;
 
         
-        $toolbox = new libraryToolboxManager();
+        echo '<br>controllerToolbox<br>';
+        
+        $content = 'default';
+        
+        echo makeKey('context');
+        
+        $mpwsCtx = new contextMPWS();
+        //$tbx = $mpwsCtx->contextToolbox;
+        //var_dump($tbx);
+        //$tbx = $mpwsCtx->getContext('Toolbox');
+        //var_dump($tbx);
+        
+        //$mpwsCtx->addBatchCommands('main', 'render', 'layout');
+        //$mpwsCtx->modifyCommand('main', array('olololo'));
+        
+        $mpwsCtx->addBatchCommands(array('main', 'render', 'layout'));
+        
+        $mpwsCtx->traceCommands();
+        
+        $mpwsCtx->processAll('Toolbox');
+        
+        
+        //$tbx->call(false, false);
+
+
+        /*$toolbox = new contextToolbox();
         //echo 'Requested page : ' . $page;
         $content = 'default';
-        /* get requested page */
+        /* get requested page * /
         switch (strtolower($_GET['page'])) {
-            /* put override here for page request */
+            /* put override here for page request * /
             default : {
                 $methodsToRun = array('main');
                 if (strtolower($_GET['action']) == 'api') {
@@ -26,7 +51,9 @@ class controllerToolbox {
                 $content = $toolbox->callMethod($methodsToRun);
                 break;
             }
-        }
+        }*/
+        
+        
         /* perform requested post action */
         switch (strtolower($_GET['action'])) {
             /* put override here for action request */

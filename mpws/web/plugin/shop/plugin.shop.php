@@ -9,7 +9,7 @@ class pluginShop extends objectBaseContextualWebPlugin {
     }
     
     final protected function displayTriggerOnCommonStart () {
-        //echo 'SHOP displayTriggerOnCommonStart';
+        echo 'SHOP displayTriggerOnCommonStart';
         //echo $this->dump();
         
         

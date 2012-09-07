@@ -1,7 +1,7 @@
 <?php
 
 
-class libraryCustomerManager {
+class contextCustomer {
 
     private $_customerName;
     private $_customerVersion;

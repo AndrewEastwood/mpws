@@ -4,7 +4,7 @@ class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements i
     
     /* Base Implementation */
     public function __construct ($context, $name, $version = '1.0') {
-        parent::__construct($context, $name, BASE_OBJECT_T_PLUGIN, $version);
+        parent::__construct($context, $name, self::$BASE_OBJECT_T_PLUGIN, $version);
     }
     
     final protected function objectCustomSetup() {
@@ -33,7 +33,7 @@ class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements i
 
     /* perform */
     public function main() {
-        echo '<br>***SHOP MAIN***<br>';
+        echo '<br>***objectBaseContextualWebPlugin MAIN***<br>';
         // run common hook on startup
         $this->displayTriggerOnCommonStart();
         // validate access key with plugin name to run in normal mode
@@ -51,7 +51,7 @@ class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements i
         //return $libView->getTemplateResult($this->store_storeGet(), $this->templates['LAYOUT']);    
     }
     public function render() {
-        echo '<br>***SHOP RENDER***<br>';
+        echo '<br>***objectBaseContextualWebPlugin RENDER***<br>';
         
         
         //$storeG = $this->storeGlobalGet();

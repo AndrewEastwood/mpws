@@ -156,8 +156,7 @@ class libraryPluginManager
         
         return $obj;
     }
-    
-    
+
     public function initAllPlugins () {
         $this->loadPluginObjects();
         $this->loadPluginConfigs();
@@ -242,6 +241,51 @@ class libraryPluginManager
         }
     }
 
+    
+    public function loadPluginWithContext ($name, $context) {
+        if (empty($name))
+            throw new Exception('MPWS PluginManager library: empty plugin name');
+
+        // return already loaded object
+        if (!empty($this->_s_plugins[makeKey($name, true)]))
+            return $this->_s_plugins[makeKey($name, true)];
+        
+        $pluginFileName = OBJECT_T_PLUGIN.DOT.$name.DOT.EXT_SCRIPT;
+        $pluginFilePath = $this->_pluginPath . DS . $name . DS . $pluginFileName;
+       
+        if (!file_exists($pluginFilePath))
+            throw new Exception('MPWS PluginManager library: path does not exists: ' . $pluginFilePath);
+        
+        // load plugin
+        include $pluginFilePath;
+        $matches = null;
+        preg_match('/^(\\w+).(\\w+).(\\w+)$/', $pluginFileName, $matches);
+        $pluginObjectName = trim($matches[1]).trim($matches[2]);
+        
+        // store plugin
+        $this->_s_plugins[makeKey($name, true)] = new $pluginObjectName($context);
+    }
+    
+    public function runPluginContextual ($action, $context) {
+        
+        $feedbacks = array();
+        
+        // get requested plugin name
+        list($caller, $fn) = explode('@', $action);
+        
+        // wide command
+        if (empty($caller)) {
+            
+            
+            
+        } else {
+            
+        }
+        
+        return implode('', $feedbacks);
+    }
+    
+    
     public function getDump () {
         $dump = '<h2>Plugin Dump:</h2>';
         $dump .= '<br>Total PLugins: ' . count($this->_s_plugins);
