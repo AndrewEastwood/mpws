@@ -1,8 +1,19 @@
 <?php
 
-class pluginToolbox extends objectBaseContextualWebPlugin {
+class pluginToolbox extends objectBaseWebPlugin {
 
-    public function main($toolbox, $plugin) {
+
+    public function run ($command) { 
+        parent::run($command);
+        
+        $ctx = contextMPWS::instance();
+        
+        
+    }
+    
+    
+    
+    public function old_run_main($toolbox, $plugin) {
         //echo '<br>***TOOLBOX MAIN***';
         //echo '<br>Requested page is: ' . libraryRequest::getPage();
         //echo '<br>Plugin key is: ' . $plugin['key'];
@@ -16,7 +27,7 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
     }
 
     /* combine data with template */
-    public function render($toolbox, $plugin) {
+    public function old_render($toolbox, $plugin) {
         //echo '***TOOLBOX RENDER***';
         $libView = new libraryView();
         $model = &$toolbox->getModel();
@@ -35,7 +46,7 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
         //echo '***TOOLBOX RENDER END***';
     }
 
-    public function layout($toolbox, $plugin) {
+    public function old_layout($toolbox, $plugin) {
         //echo '***TOOLBOX LAYOUT***';
         $libView = new libraryView();
         $model = &$toolbox->getModel();
@@ -48,14 +59,14 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
     }
 
     /* combine data with template */
-    public function api($toolbox, $plugin) {
+    public function old_api($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         if (!$model['USER']['ACTIVE'])
             return;
         //echo 'WOOOHO !!!toolbox api   !!!!! ';
     }
     /* display triggers */
-    private function _displayTriggerOnActive($toolbox, $plugin) {
+    private function old__displayTriggerOnActive($toolbox, $plugin) {
         //echo '<br>***TOOLBOX ACTIVE***';
         
         $_SESSION['MPWS_PLUGIN_ACTIVE'] = 'TOOLBOX';
@@ -78,17 +89,17 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
         }
 
     }
-    private function _displayTriggerOnInActive($toolbox, $plugin) {
+    private function old__displayTriggerOnInActive($toolbox, $plugin) {
         //echo '<br>***TOOLBOX IN-ACTIVE***';
 
     }
-    private function _displayTriggerOnCommonStart($toolbox, $plugin) {
+    private function old__displayTriggerOnCommonStart($toolbox, $plugin) {
         debug('toolbox . _displayTriggerOnCommonStart');
         $model = &$toolbox->getModel();
         $model['USER'] = $this->_userGetInfo($toolbox, $plugin);
         debug($model['USER']);
     }
-    private function _displayTriggerOnCommonEnd($toolbox, $plugin) {
+    private function old__displayTriggerOnCommonEnd($toolbox, $plugin) {
         /* init components */
         $model = &$toolbox->getModel();
         if (!$model['USER']['ACTIVE'])
@@ -98,16 +109,16 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
     }
 
     /* components */
-    private function _componentMenu(&$model, $plugin) {
+    private function old__componentMenu(&$model, $plugin) {
         $model['PLUGINS']['TOOLBOX']['COM']['MENU']['template'] = $plugin['templates']['component.menu'];
     }
 
     /* display */
-    private function _displayHome($toolbox, $plugin) {
+    private function old__displayHome($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         $model['PLUGINS']['TOOLBOX']['template'] = $plugin['templates']['page.home'];
     }
-    private function _displayUsers($toolbox, $plugin) {
+    private function old__displayUsers($toolbox, $plugin) {
         $model = &$toolbox->getModel();
         $users = $toolbox->getDatabaseObj()->select('*')
             ->from('mpws_users')
@@ -118,7 +129,7 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
         $model['PLUGINS']['TOOLBOX']['DATA'] = $users;
         $model['PLUGINS']['TOOLBOX']['template'] = $plugin['templates']['page.users'];
     }
-    private function _displayLogin($toolbox, $plugin) {
+    private function old__displayLogin($toolbox, $plugin) {
         //echo '***TOOLBOX LOGIN***';
         $model = &$toolbox->getModel();
         if ($model['USER']['ACTIVE'])
@@ -130,7 +141,7 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
     /* custom methods */
     /* authorization methods */
     // use this method rather than verifySession
-    private function _userGetInfo($toolbox, $plugin) {
+    private function old__userGetInfo($toolbox, $plugin) {
         debug('_userGetInfo');
         //echo '<br>Current User: ' . $_SESSION['USER']['NAME'];
         //echo '<br>Logined since: ' . $_SESSION['USER']['SINCE'];
@@ -144,7 +155,7 @@ class pluginToolbox extends objectBaseContextualWebPlugin {
         return $user;
     }
     // get session status
-    private function _userVerifySession($toolbox, $plugin) {
+    private function old__userVerifySession($toolbox, $plugin) {
         global $config;
         debug('_userVerifySession');
 

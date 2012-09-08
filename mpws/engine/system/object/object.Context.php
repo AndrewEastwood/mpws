@@ -4,9 +4,10 @@ class objectContext {
     
     function __construct () { }
     
-    public function call ($runner, $command) {
+    public function call ($command, $runner) {
         
-        echo 'objectContext: command: <pre>' . print_r($command, true) . '</pre>';
+        //debug('objectContext:');
+        //debug($command);
         
         throw new Exception('MPWS Base Context Object: you must implmenet call method');
     }

@@ -6,15 +6,18 @@ class contextToolbox extends objectContext  {
     protected $_pluginsObj;
     protected $_databaseObj;
     protected $_model;*/
+    
+    /* We store plugins inside toolbox context
+     * The Customer Context object has an access to current context
+     */
+    private $_pluginManager;
 
     function __construct () {
         
-        /* We store plugins insite toolbox context
-         * The Customer Context object has an access to current context
-         */
+        // do not init older version at startup
+        $this->_pluginManager = new libraryPluginManager(false);
         
-        
-        echo 'contextToolbox __construct';
+        debug('contextToolbox __construct');
         
         /*$this->_customerObj = new libraryCustomerManager($customerName);
         $this->_pluginsObj = new libraryPluginManager($this);
@@ -22,12 +25,10 @@ class contextToolbox extends objectContext  {
         $this->initManager();*/
     }
     
-    final public function call ($runner, $command) {
-        echo '<br>TOOLBOX; Running command: ' . $command[makeKey('method')];
-        
-        
-        $runner->traceCommands();
-        
+    final public function call ($command) {
+        debug('contextToolbox => Running command: ' . $command[makeKey('method')]);
+        $this->_pluginManager->runPluginAsync($command);
+        //$runner->traceCommands();
     }
     
     /* init methods */

@@ -14,7 +14,7 @@
     $config['TOOLBOX']['STARTUP_PLUGIN'] = 'TOOLBOX';
     $config['TOOLBOX']['PLUGINS'] = array(
         'toolbox' => true,
-        'shop' => true,
+        'shop' => false,
         'writer' => false,
         'editor' => false
     );

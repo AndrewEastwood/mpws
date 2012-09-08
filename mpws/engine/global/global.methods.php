@@ -86,15 +86,18 @@
 
     // global methods
     // will be moved to 
-    function debug ($value) {
-        return false;
+    function debug ($value, $title = '') {
+        //return false;
         if (MPWS_ENV == 'DEV') {
-            $format_short = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b>%s</div>';
-            $format_long = '<h5>[DEBUG INFO] '.date('H:i:s').'</h5><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";><pre>%s</pre></div>';
-            if (is_array($value))
-                $value = print_r($value, true);
+            $format_short = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b> %1$s</div>';
+            $format_long = '<b>[DEBUG INFO] '.date('H:i:s').'</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> %2$s<pre>%1$s</pre></div>';
+            //if (is_array($value))
+            //    $value = print_r($value, true);
 
-            echo sprintf(strlen($value) > 50?$format_long:$format_short, $value);
+            if (is_array($value))
+                echo sprintf($format_long, print_r($value, true), $title);
+            else
+                echo sprintf($format_short, $value, $title);
         }
     }
     

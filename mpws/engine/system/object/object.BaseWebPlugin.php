@@ -1,14 +1,14 @@
 <?php
 
-class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements iPlugin {
+class objectBaseWebPlugin extends objectBaseWeb {
     
     /* Base Implementation */
-    public function __construct ($context, $name, $version = '1.0') {
-        parent::__construct($context, $name, self::$BASE_OBJECT_T_PLUGIN, $version);
+    public function __construct ($name, $version = '1.0') {
+        parent::__construct($name, OBJECT_T_PLUGIN, $version);
+        debug('objectBaseWebPlugin: __construct => ' . $name);
     }
     
     final protected function objectCustomSetup() {
-
         // setup meta objectStorable
         $this->setMeta('PATH_OWN', DR . '/web/plugin' . DS . $this->getMeta('NAME'));
         $this->setMeta('PATH_DEF', DR . '/web/default/' . MPWS_VERSION);
@@ -22,36 +22,56 @@ class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements i
         
         // setup storable namespace
         $this->_ex_store__setNamespace($this->getMeta('CLASS'));
-        
         //$this->setNamespace('plugin'.DOT.$owner);
     }
     
-    /* iPlugin Implementation */
-    
-    /* running */
-    public function runAction ($actionName) { }
+    /* iPlugin */
 
-    /* perform */
-    public function main() {
-        echo '<br>***objectBaseContextualWebPlugin MAIN***<br>';
+    /* iPlugin : public api */
+    public function run ($command) { 
+        debug($command, 'objectBaseWebPlugin: run function:');
+        
+        switch ($command[makeKey('method')]) {
+            case 'main':
+                $this->_run_main();
+                break;
+            case 'layout':
+                $this->_run_layout();
+                break;
+            case 'render':
+                $this->_run_render();
+                break;
+            case 'jsapi':
+                $this->_run_jsapi();
+                break;
+            case 'cross':
+                $this->_run_cross();
+                break;
+        }
+        
+    }
+    /* iPlugin : private structure */
+    public function _run_main() {
+        debug('objectBaseWebPlugin => _run_main');
         // run common hook on startup
-        $this->displayTriggerOnCommonStart();
+        $this->_displayTriggerOnCommonStart();
         // validate access key with plugin name to run in normal mode
         if (libraryRequest::getPage() === $this->getObjectName())
-            $this->displayTriggerOnActive(); // run on active
+            $this->_displayTriggerOnActive(); // run on active
         else
-            $this->displayTriggerOnInActive(); // run in background
+            $this->_displayTriggerOnInActive(); // run in background
         // run common hook in end up
-        $this->displayTriggerOnCommonEnd();
+        $this->_displayTriggerOnCommonEnd();
     }
-    public function layout() {
+    public function _run_layout() {
+        debug('objectBaseWebPlugin => _run_layout');
         //echo '***SHOP LAYOUT***';
         //$libView = new libraryView();
         //$model = &$this->getModel();
         //return $libView->getTemplateResult($this->store_storeGet(), $this->templates['LAYOUT']);    
     }
-    public function render() {
-        echo '<br>***objectBaseContextualWebPlugin RENDER***<br>';
+    public function _run_render() {
+        debug('objectBaseWebPlugin => _run_render');
         
         
         //$storeG = $this->storeGlobalGet();
@@ -108,31 +128,17 @@ class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements i
         //$storeG['HTML.CONTENT'] .= $libView->getTemplateResult($this->getStorage(), $store['TEMPLATE.PATH']);
         //$storeG = $this->storeGlobalGet();
     }
-    public function api() {
+    public function _run_jsapi() {
+        debug('objectBaseWebPlugin => _run_jsapi');
         /*$model = &$this->getModel();
         $p = libraryRequest::getApiParam();
         if (!$model['USER']['ACTIVE'] || empty($p['token']) || !libraryRequest::getOrValidatePageSecurityToken($p['token']))
             return;*/
     }
-    public function cross() { }
-    public function dump () {
-        /*$dump = '<h2>Plugin Dump:</h2>';
-        $dump .= '<br>Meta info:';
-        $dump .= '<ul>';
-        foreach ($this->meta as $key => $val)
-            $dump .= '<li>' . $key . ': ' . $val . '</li>';
-        $dump .= '</ul>';
-        $dump .= '<br>Configuration:';
-        foreach ($this->configs as $key => $val)
-            $dump .= '<li>' . $key . ': <pre>' . print_r($val, true) . '</pre></li>';
-        $dump .= '</ul>';
-        $dump .= '<br>Templates:';
-        foreach ($this->templates as $key => $val)
-            $dump .= '<li>' . $key . ': ' . $val . '</li>';
-        $dump .= '</ul>';
-        return '<pre>' . $dump . '</pre>';*/
+    public function _run_cross() {
+        debug('objectBaseWebPlugin => _run_cross');
     }
-            
+
     /* addons */
     public function addComponent ($name, $data, $macros) {
         /*$_storageKey = $this->store_keyPathComponent($name);
@@ -153,12 +159,19 @@ class objectBaseContextualWebPlugin extends objectBaseContextualWeb implements i
     }
     
     /* hooks */
-    protected function displayTriggerOnCommonStart () {}
-    protected function displayTriggerOnActive () {
+    protected function _displayTriggerOnCommonStart () {
+        debug('objectBaseWebPlugin => _displayTriggerOnCommonStart');
+    }
+    protected function _displayTriggerOnActive () {
+        debug('objectBaseWebPlugin => _displayTriggerOnActive');
         $_SESSION['MPWS_PLUGIN_ACTIVE'] = $this->getObjectName();
     }
-    protected function displayTriggerOnInActive () {}
-    protected function displayTriggerOnCommonEnd () {}
+    protected function _displayTriggerOnInActive () {
+        debug('objectBaseWebPlugin => _displayTriggerOnInActive');
+    }
+    protected function _displayTriggerOnCommonEnd () {
+        debug('objectBaseWebPlugin => _displayTriggerOnCommonEnd');
+    }
     
     /* internal */
     

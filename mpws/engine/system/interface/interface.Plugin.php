@@ -2,22 +2,15 @@
 
 interface iPlugin {
     
-    /* setup */
-    //public function setup ($owner);
+    /* public api */
+    public function run ($command);
     
-    /* initail */
-    //public function getConfiguration ($name, $key);
-    //public function getTemplate ($name);
-    
-    /* running */
-    public function runAction ($actionName);
-
-    /* perform */
-    public function main();
-    public function layout();
-    public function render();
-    public function api();
-    public function cross();
+    /* private structure */
+    public function _run_main();
+    public function _run_layout();
+    public function _run_render();
+    public function _run_jsapi();
+    public function _run_cross();
 
 }
 

@@ -6,8 +6,9 @@ class contextMPWS {
     
     private $_contexts;
     private $_commands;
+    private static $_instance;
     
-    public function __construct () {
+    private function __construct () {
         $this->_contexts = array();
         $this->_commands = array();
     }
@@ -17,9 +18,14 @@ class contextMPWS {
             return $this->getContext(str_replace(OBJECT_T_CONTEXT, '', $contextName));
     }
     
-    private function loadContext($name) {
-        
-        
+    public static function instance () {
+        if (empty(self::$_instance))
+            self::$_instance = new contextMPWS();
+        return self::$_instance;
+    }
+    
+    private function loadContext( /* names */ ) {
+
         $fn_args = getArguments(func_get_args());
         
         if (is_string($fn_args)) {
@@ -40,7 +46,7 @@ class contextMPWS {
 
     }
     
-    public function getContext($name) {
+    private function getContext($name) {
         if (empty($this->_contexts[makeKey($name)]))
             $this->loadContext($name);
         
@@ -78,6 +84,7 @@ class contextMPWS {
             }
         }
     }
+    
     public function addCommand ($command, $custom_args = array()) {
         if (!is_string($command))
             throw new Exception('MPWS addCommand Setup Error. Wrong Command Object');
@@ -90,11 +97,10 @@ class contextMPWS {
             $this->_commands[$command][makeKey('arguments')] = $custom_args;
         }
     }
-    
-    
+
     public function traceCommands () {
         foreach ($this->_commands as $cmd)
-            echo '<pre>' . print_r($cmd, true) . '</pre>';
+            debug($cmd, 'Context mpws, tracing command:');
     }
     
     private function makeCommand ($stringFn, $custom_args = array()) {
@@ -150,15 +156,14 @@ class contextMPWS {
             // preload context
             $ctx = $this->getContext($runningContextName);
             // run commad
-            $ctx->call($this, $cmd);
+            $ctx->call($cmd);
             // remove current command
             $this->_commands[$id] = null;
         }
         // cleanup all commands
         $this->_commands = array();
     }
-    
-    
+
 }
 
 ?>

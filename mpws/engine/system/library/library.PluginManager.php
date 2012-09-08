@@ -242,19 +242,24 @@ class libraryPluginManager
     }
 
     
-    public function loadPluginWithContext ($name, $context) {
+    public function getPluginWithContext ($name) {
         if (empty($name))
             throw new Exception('MPWS PluginManager library: empty plugin name');
 
         // return already loaded object
-        if (!empty($this->_s_plugins[makeKey($name, true)]))
+        if (!empty($this->_s_plugins[makeKey($name, true)])) {
+            debug('libraryPluginManager: getPluginWithContext Return Existed Plogin Object: ' . $name);
             return $this->_s_plugins[makeKey($name, true)];
+        }
         
-        $pluginFileName = OBJECT_T_PLUGIN.DOT.$name.DOT.EXT_SCRIPT;
+        $pluginFileName = OBJECT_T_PLUGIN.DOT.$name.EXT_SCRIPT;
         $pluginFilePath = $this->_pluginPath . DS . $name . DS . $pluginFileName;
        
+        debug('libraryPluginManager: getPluginWithContext plugin path: ' . $pluginFilePath);
+
         if (!file_exists($pluginFilePath))
             throw new Exception('MPWS PluginManager library: path does not exists: ' . $pluginFilePath);
+        
         
         // load plugin
         include $pluginFilePath;
@@ -262,26 +267,53 @@ class libraryPluginManager
         preg_match('/^(\\w+).(\\w+).(\\w+)$/', $pluginFileName, $matches);
         $pluginObjectName = trim($matches[1]).trim($matches[2]);
         
+        debug('libraryPluginManager: getPluginWithContext plugin name: ' . $pluginObjectName);
+        
         // store plugin
-        $this->_s_plugins[makeKey($name, true)] = new $pluginObjectName($context);
+        $this->_s_plugins[makeKey($name, true)] = new $pluginObjectName($matches[2]);
+        
+        // return plugin
+        return $this->_s_plugins[makeKey($name, true)];
     }
     
-    public function runPluginContextual ($action, $context) {
+    public function runPluginAsync ($command) {
+        global $config;
+
+        debug($command, 'libraryPluginManager: runPluginContextual action:');
         
         $feedbacks = array();
         
         // get requested plugin name
-        list($caller, $fn) = explode('@', $action);
+        //list($caller, $fn) = explode('@', $action);
         
         // wide command
-        if (empty($caller)) {
-            
-            
-            
+        if ($command[makeKey('caller')] == '*') {
+            // send broadcast message
+            foreach ($config['TOOLBOX']['PLUGINS'] as $name => $isActive) {
+                // skip inactive
+                if (!$isActive)
+                    continue;
+                // get plugin object
+                debug('libraryPluginManager: runPluginContextual => running plugin ' . $name);
+                $plugin = $this->getPluginWithContext($name);
+                //var_dump($plugin);
+                // send message
+                $plugin->run($command);
+            }
         } else {
+            $_caller = $command[makeKey('caller')];
+            // get specific caller (plugin)
+            // skip inactive
+            if ($config['TOOLBOX']['PLUGINS'][$_caller])
+                continue;
+            // get plugin object
+            debug('libraryPluginManager: runPluginContextual => running plugin ' . $_caller);
+            $plugin = $this->getPluginWithContext($_caller);
+            // send message
+            $plugin->run($command);
             
         }
-        
+
         return implode('', $feedbacks);
     }
     

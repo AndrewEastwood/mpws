@@ -3,16 +3,16 @@
 class controllerToolbox {
 
     public function processRequests() {
-        global $config;
+        //global $config;
 
         
-        echo '<br>controllerToolbox<br>';
+        debug('controllerToolbox => processRequests');
         
         $content = 'default';
         
-        echo makeKey('context');
         
-        $mpwsCtx = new contextMPWS();
+        
+        $mpwsCtx = contextMPWS::instance();
         //$tbx = $mpwsCtx->contextToolbox;
         //var_dump($tbx);
         //$tbx = $mpwsCtx->getContext('Toolbox');
