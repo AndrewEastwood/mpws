@@ -110,6 +110,87 @@ class librarySecurity {
         return $needed_parts ? false : $data;
     }
     
+    // events:
+    // * ON_LOGOUT
+    // * ON_VALIDATE
+    // * ON_SUCCESS
+    // * ON_TIMEOUT
+    public static function mpws_session ($login, $pwd, $events, $config, $ctx) {
+        //global $config;
+        debug('_userVerifySession');
+
+        //$model = &$toolbox->getModel();
+        // logout user
+        if (libraryRequest::isPostFormAction('logout')) {
+            if(!empty($_SESSION['USER'])) {
+                // put user offline
+                if (!empty($_SESSION['USER']['ID']) && isset($events['ON_LOGOUT'])) {
+                    $event = $events['ON_LOGOUT'];
+                    $event($login, $pwd, $config, $ctx);
+                }
+                $_SESSION['USER'] = false;
+                return 'USER_FORCE_LOGOUT';
+            }
+            return 'USER_ALREADY_LOGOUT';
+        }
+
+        // do login
+        if (empty($_SESSION['USER'])) {
+            if (libraryRequest::isPostFormAction('signin')) {
+                //echo 'olololo';
+                if (empty($_POST['mpws_ulogin']) || empty($_POST['mpws_upwd']))
+                    return 'USER_EMPTY_CREDENTIALS';
+
+                // attempt to login user
+                $user = false;
+                if (isset($events['ON_VALIDATE'])) {
+                    $event = $events['ON_VALIDATE'];
+                    $event($login, $pwd, $config, $ctx);
+                }
+                    
+                
+                //var_dump($user);
+                if (!empty($user['Id'])) {
+                    //echo 'Make User';
+                    $_SESSION['USER'] = array(
+                        'ID' => $user['ID'],
+                        'NAME' => $user['Name'],
+                        'SINCE' => mktime(),
+                        'LAST_ACCESS' => mktime()
+                    );
+
+                    // set last access
+                    if (isset($events['ON_SUCCESS'])) {
+                        $event = $events['ON_SUCCESS'];
+                        $event($login, $pwd, $config, $ctx);
+                    }
+  
+                    return 'USER_AUTHORIZED';
+                } else
+                    return 'USER_WRONG_CREDENTIALS';
+            } else
+                return 'USER_MUST_LOGIN';
+        }
+
+        // check for session expiration
+        debug('Session time ' . $config['TOOLBOX']['SESSION_TIME']);
+        $sessionIdle = ($_SESSION['USER']['LAST_ACCESS'] + $config['TOOLBOX']['SESSION_TIME']) < mktime();
+        if ($sessionIdle) {
+            //echo 'USER_TIMEOUT';
+            // put user offline
+            if (isset($events['ON_TIMEOUT'])) {
+                $event = $events['ON_TIMEOUT'];
+                $event($login, $pwd, $config, $ctx);
+            }
+            $_SESSION['USER'] = false;
+            return 'USER_TIMEOUT';
+        }
+
+        // keep user alive
+        $_SESSION['USER']['LAST_ACCESS'] = mktime();
+        return 'USER_ALIVE';
+    }
+    
 }
 
 

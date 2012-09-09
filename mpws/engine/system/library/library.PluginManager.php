@@ -279,7 +279,7 @@ class libraryPluginManager
     public function runPluginAsync ($command) {
         global $config;
 
-        debug($command, 'libraryPluginManager: runPluginContextual action:');
+        debug($command, 'libraryPluginManager: runPluginAsync action:');
         
         $feedbacks = array();
         
@@ -294,7 +294,7 @@ class libraryPluginManager
                 if (!$isActive)
                     continue;
                 // get plugin object
-                debug('libraryPluginManager: runPluginContextual => running plugin ' . $name);
+                debug('libraryPluginManager: runPluginAsync => running plugin ' . $name);
                 $plugin = $this->getPluginWithContext($name);
                 //var_dump($plugin);
                 // send message
@@ -303,15 +303,14 @@ class libraryPluginManager
         } else {
             $_caller = $command[makeKey('caller')];
             // get specific caller (plugin)
-            // skip inactive
-            if ($config['TOOLBOX']['PLUGINS'][$_caller])
-                continue;
-            // get plugin object
-            debug('libraryPluginManager: runPluginContextual => running plugin ' . $_caller);
-            $plugin = $this->getPluginWithContext($_caller);
-            // send message
-            $plugin->run($command);
-            
+            // skip if inactive
+            if ($config['TOOLBOX']['PLUGINS'][$_caller]) {
+                // get plugin object
+                debug('libraryPluginManager: runPluginAsync => running plugin ' . $_caller);
+                $plugin = $this->getPluginWithContext($_caller);
+                // send message
+                $plugin->run($command);
+            }
         }
 
         return implode('', $feedbacks);

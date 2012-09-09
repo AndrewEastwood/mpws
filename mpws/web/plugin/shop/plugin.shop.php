@@ -1,7 +1,7 @@
 <?php
     
   
-class pluginShop extends objectBaseContextualWebPlugin {  
+class pluginShop extends objectBaseWebPlugin {  
 
     public function __construct ($context = false) {
         parent::__construct($context, 'shop');

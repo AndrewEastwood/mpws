@@ -6,6 +6,7 @@ class contextMPWS {
     
     private $_contexts;
     private $_commands;
+    private $_runningContextName;
     private static $_instance;
     
     private function __construct () {
@@ -24,10 +25,10 @@ class contextMPWS {
         return self::$_instance;
     }
     
+    /* private */
+    
     private function loadContext( /* names */ ) {
-
         $fn_args = getArguments(func_get_args());
-        
         if (is_string($fn_args)) {
             $contextObjectName = OBJECT_T_CONTEXT.$fn_args;
             // load or throw exception
@@ -42,8 +43,6 @@ class contextMPWS {
                 $this->loadContext($value);
             }
         }
-        
-
     }
     
     private function getContext($name) {
@@ -53,54 +52,10 @@ class contextMPWS {
         return $this->_contexts[makeKey($name)];
     }
     
-    public function addBatchCommands ( /* commands */ ) {
-        $fn_args = getArguments(func_get_args());
-        if (is_string($fn_args)) {
-            $this->addCommand($fn_args);
-            
-        } elseif (is_array($fn_args)) {
-            
-            // two args: batch commands, config
-            if (func_num_args() == 2 &&
-                is_array(func_get_arg(0)) &&
-                is_array(func_get_arg(1))) {
-                
-                // common config
-                $isCommon = count(func_get_arg(1)) == 1;
-                if (!$isCommon && count(func_get_arg(0)) !== count(func_get_arg(1)))
-                    throw new Exception('MPWS Context Batch Commands Setup Error. Wrong Configuration Object');
-                
-                $cmds = func_get_arg(0);
-                $cfgs = func_get_arg(1);
-                foreach ($cmds as $idx => $value)
-                    if ($isCommon)
-                        $this->addCommand($value, $cfgs);
-                    else
-                        $this->addCommand($value, $cfgs[$idx]);
-            } else {
-                foreach ($fn_args as $value) {
-                    $this->addCommand($value);
-                }
-            }
-        }
-    }
-    
-    public function addCommand ($command, $custom_args = array()) {
+    private function getCommand ($command, $custom_args = array()) {
         if (!is_string($command))
             throw new Exception('MPWS addCommand Setup Error. Wrong Command Object');
-        $_cmd = $this->makeCommand($command, $custom_args);
-        $this->_commands[$_cmd[makeKey('id')]] = $_cmd;
-    }
-    
-    public function modifyCommand ($command, $custom_args = array()) {
-        if (isset($this->_commands[$command])){
-            $this->_commands[$command][makeKey('arguments')] = $custom_args;
-        }
-    }
-
-    public function traceCommands () {
-        foreach ($this->_commands as $cmd)
-            debug($cmd, 'Context mpws, tracing command:');
+        return $this->makeCommand($command, $custom_args);
     }
     
     private function makeCommand ($stringFn, $custom_args = array()) {
@@ -144,6 +99,75 @@ class contextMPWS {
         return $cmd;
     }
     
+    private function setCurrentContext ($currentContextName) {
+        $prev = $this->_runningContextName;
+        $this->_runningContextName = $currentContextName;
+        return $prev;
+    }
+    
+    /* public */
+    
+    public function getCurrentContextName () {
+        return $this->_runningContextName;
+    }
+    public function getCurrentContext () {
+        return $this->getContext($this->_runningContextName);
+    }
+    
+    public function addCommand ( /* commands */ ) {
+        $fn_args = getArguments(func_get_args());
+        if (is_string($fn_args)) {
+            //$this->addCommand($fn_args);
+            //var_dump($fn_args);
+            $_cmd = false;
+            if(func_num_args() == 2 && is_array(func_get_arg(1)))
+                $_cmd = $this->getCommand($fn_args, func_get_arg(1));
+            else
+                $_cmd = $this->getCommand($fn_args);
+            $this->_commands[$_cmd[makeKey('id')]] = $_cmd;
+        } elseif (is_array($fn_args)) {
+            
+            // two args: batch commands, config
+            if (func_num_args() == 2 &&
+                is_array(func_get_arg(0)) &&
+                is_array(func_get_arg(1))) {
+                
+                // common config
+                $isCommon = count(func_get_arg(1)) == 1;
+                if (!$isCommon && count(func_get_arg(0)) !== count(func_get_arg(1)))
+                    throw new Exception('MPWS Context Batch Commands Setup Error. Wrong Configuration Object');
+                
+                $cmds = func_get_arg(0);
+                $cfgs = func_get_arg(1);
+                foreach ($cmds as $idx => $value)
+                    if ($isCommon)
+                        $this->addCommand($value, $cfgs);
+                    else
+                        $this->addCommand($value, $cfgs[$idx]);
+            } else {
+                foreach ($fn_args as $value) {
+                    $this->addCommand($value);
+                }
+            }
+        }
+    }
+
+    /*public function _addCommand ($command, $custom_args = array()) {
+        $_cmd = $this->getCommand($command, $custom_args);
+        $this->_commands[$_cmd[makeKey('id')]] = $_cmd;
+    }*/
+    
+    public function modifyCommand ($command, $custom_args = array()) {
+        if (isset($this->_commands[$command])){
+            $this->_commands[$command][makeKey('arguments')] = $custom_args;
+        }
+    }
+
+    public function traceCommands () {
+        foreach ($this->_commands as $cmd)
+            debug($cmd, 'Context mpws, tracing command:');
+    }
+    
     public function processAll ($context, $override = false) {
         if (count($this->_commands) == 0)
             return false;
@@ -155,13 +179,36 @@ class contextMPWS {
                 $runningContextName = $cmd[makeKey('context')];
             // preload context
             $ctx = $this->getContext($runningContextName);
+            // set current context name
+            $prevoiusContextName = $this->setCurrentContext($runningContextName);
             // run commad
             $ctx->call($cmd);
+            // restore previus context
+            $this->setCurrentContext($prevoiusContextName);
             // remove current command
             $this->_commands[$id] = null;
         }
         // cleanup all commands
         $this->_commands = array();
+    }
+    
+    public function directProcess ($command, $context, $override = false) {
+        // prepare command
+        $cmd = $this->getCommand($command);
+        // use provided constext
+        $runningContextName = $context;
+        // get command context name
+        if (!empty($cmd[makeKey('context')]) && !$override)
+            $runningContextName = $cmd[makeKey('context')];
+        // preload context
+        $ctx = $this->getContext($runningContextName);
+        // set current context name
+        $prevoiusContextName = $this->setCurrentContext($runningContextName);
+        // run commad
+        $ctx->call($cmd);
+        // restore previus context
+        $this->setCurrentContext($prevoiusContextName);
+        
     }
 
 }

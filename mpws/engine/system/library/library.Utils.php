@@ -516,6 +516,26 @@ class libraryUtils {
         }
     }
 
+    static public function convValue ($value) {
+        // number
+        if (is_numeric($value))
+            return +$value;
+        
+        // boolean type
+        if (strcasecmp($value, 'true') === 0)
+            return true;
+        if (strcasecmp($value, 'false') === 0)
+            return false;
+
+        // array
+        if (startsWith($value, 'json{') && endsWith($value, '}')) {
+           return json_decode(substr($value, 4), true);
+        }
+
+        // default (string)
+        return $value;
+    }
+    
 }
 
 ?>

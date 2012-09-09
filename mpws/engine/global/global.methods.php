@@ -86,18 +86,37 @@
 
     // global methods
     // will be moved to 
-    function debug ($value, $title = '') {
+    function debug ($value, $title = '', $argsDebug = false) {
         //return false;
         if (MPWS_ENV == 'DEV') {
-            $format_short = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b> %1$s</div>';
-            $format_long = '<b>[DEBUG INFO] '.date('H:i:s').'</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> %2$s<pre>%1$s</pre></div>';
-            //if (is_array($value))
-            //    $value = print_r($value, true);
+            
+            if ($argsDebug) {
+                $bt = debug_backtrace();
+                $_value = $bt[1]['args'];
+                
+                $format_args = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b>%s with arguments:<pre>%s</pre></div>';
+                
+                $debug_args = array();
+                foreach ($_value as $idx => $arg) {
+                    if (is_string($arg))
+                        $debug_args['string'][$idx] = $arg;
+                    if (is_numeric($arg))
+                        $debug_args['numeric'][$idx] = $arg;
+                    if (is_array($arg))
+                        $debug_args['array'][$idx] = $arg;
+                }
+                echo sprintf($format_args, $value . ' ' . $title, print_r($debug_args, true));
+            } else {
+                $format_short = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b> %1$s</div>';
+                $format_long = '<b>[DEBUG INFO] '.date('H:i:s').'</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> %2$s<pre>%1$s</pre></div>';
+                //if (is_array($value))
+                //    $value = print_r($value, true);
 
-            if (is_array($value))
-                echo sprintf($format_long, print_r($value, true), $title);
-            else
-                echo sprintf($format_short, $value, $title);
+                if (is_array($value))
+                    echo sprintf($format_long, print_r($value, true), $title);
+                else
+                    echo sprintf($format_short, $value, $title);
+            }
         }
     }
     

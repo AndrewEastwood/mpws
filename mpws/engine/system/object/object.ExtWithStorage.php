@@ -4,6 +4,16 @@ class objectExtWithStorage  {
     
     private $_namespace;
     
+    /* base object */
+    private $_baseMeta;
+    
+    public function __construct ($baseMetaInit) {
+        debug('objectExtWithStorage', '__construct', true);
+        $this->_baseMeta = $baseMetaInit[0];
+        // setup storable namespace
+        $this->setNamespace($this->_baseMeta['CLASS']);
+    }
+    
     public function setNamespace($namespace) {
         //echo '<br>setting NS: ' . $namespace;
         $this->_namespace = strtoupper($namespace);
@@ -13,8 +23,8 @@ class objectExtWithStorage  {
     
     public function storeGlobalSet($keypath, $obj, $append = true){
         $o = &$this->_getDOB();
-        $ctx = array(strtoupper($keypath) => $obj);
-        $o::storage("GLOBAL", $ctx, $append);
+        $data = array(strtoupper($keypath) => $obj);
+        $o::storage("GLOBAL", $data, $append);
     }
     
     public function storeGlobalGet($keypath = false){
@@ -32,8 +42,8 @@ class objectExtWithStorage  {
 
     public function storeSet ($keypath, $obj, $append = true) {
         $o = &$this->_getDOB();
-        $ctx = array(strtoupper($keypath) => $obj);
-        $o::storage($this->_namespace, $ctx, $append);
+        $data = array(strtoupper($keypath) => $obj);
+        $o::storage($this->_namespace, $data, $append);
     }
     
     public function storeGet ($keypath = false) {

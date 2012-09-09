@@ -2,12 +2,54 @@
 
 class pluginToolbox extends objectBaseWebPlugin {
 
-
     public function run ($command) { 
         parent::run($command);
+        //$ctx = contextMPWS::instance();
+        //$this->_ex_resource__getResource();
         
-        $ctx = contextMPWS::instance();
+        //var_dump($ctx->getCurrentContext());
+        //debug('pluginToolbox current context name is = ' . $ctx->getCurrentContextName());
         
+        //libraryMetaPage::addComponent('test', 'olololo');
+        
+        //echo $this->objectConfiguration['A'];
+        //echo $this->objectTemplate['B']['c'];
+        //echo $this->objectProperty['C'];
+        
+        //echo $this->objectTemplate_b_c;
+        //echo $this->getTemplate('page.404');
+        $this->objectTemplatePath_page_404;
+        $this->objectTemplatePath_page_404;
+        //echo 'ololololololololololo' . objectExtWithResource::TEMPLATE;
+
+        
+        $this->objectProperty_display_pageDescription;
+        $this->objectProperty_display_title;
+        
+        
+        $this->objectConfiguration_display_test;
+        $this->objectConfiguration_display_mas;
+        
+        debug($this->_ex_store__getStorage());
+        
+        
+        
+        /*$cfv = $this->_ex_config__getConfigurationValue('display.mas');
+        
+        echo '<br><br><br><br>';
+        echo 'CONFIG VALUE TYPE IS: ';
+        // bool test
+        if (is_string($cfv)) echo 'STRING;';
+        if ($cfv) echo 'BOOLEAN TRUE;';
+        if (!$cfv) echo 'BOOLEAN FALSE;';
+        if (is_array($cfv)) echo 'ARRAY: <pre>' . print_r($cfv, true) . '</pre>';
+            
+        
+        echo '<br>VALUES IS: ' . $cfv;
+        
+        echo '<br><br><br><br>';*/
+        
+        //echo $this->getProperty('display.pageDescription');
         
     }
     

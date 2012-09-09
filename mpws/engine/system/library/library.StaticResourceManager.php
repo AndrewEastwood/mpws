@@ -1,7 +1,5 @@
 <?php
 
-
-
 class libraryStaticResourceManager {
 
     // get merged styling for specific customer
@@ -146,22 +144,74 @@ class libraryStaticResourceManager {
             return $default;
         return null;
     }
-
-    public static function getTemplate ($owner, $name, $resourceName) {
-        $resPath = str_replace(DOT, DS, $resourceName) . '.html';
-        $_owner = DR . '/web/' . $owner . DS . $name . DS . 'templates' . DS . $resPath;
-        $_default  = DR . '/web/default/' . MPWS_VERSION . DS . 'templates' . DS . $resPath;
-        if (file_exists($_owner))
-            return $_owner;
-        return $_default;
+    
+    public static function getObjectTemplatePath ($resourceName, $objectMeta) {
+        if (empty($objectMeta['TYPE']) &&
+            empty($objectMeta['NAME']) &&
+            empty($objectMeta['PATH_DEF']) &&
+            empty($objectMeta['PATH_DEF']))
+        throw new Exception('libraryStaticResourceManager: getObjectTemplate: Wrong $objectMeta passed');
+        return self::getTemplatePath($objectMeta['TYPE'], $objectMeta['NAME'], $resourceName, $objectMeta);
     }
-    public static function getProperty ($owner, $name, $resourceName, $locale = 'en_us') {
-        $resPath = str_replace(DOT, DS, $resourceName) . '.prop';
-        $_owner = DR . '/web/' . $owner . DS . $name . DS . 'property' . DS . $locale . DS . $resPath;
-        $_default  = DR . '/web/default/' . MPWS_VERSION . DS . 'property' . DS . $locale . DS . $resPath;
+    
+    public static function getObjectPropertyPath ($resourceName, $objectMeta) {
+        if (empty($objectMeta['TYPE']) &&
+            empty($objectMeta['NAME']) &&
+            empty($objectMeta['LOCALE']) &&
+            empty($objectMeta['PATH_DEF']) &&
+            empty($objectMeta['PATH_DEF']))
+        throw new Exception('libraryStaticResourceManager: getObjectProperty: Wrong $objectMeta passed');
+        return self::getPropertyPath($objectMeta['TYPE'], $objectMeta['NAME'], $resourceName, $objectMeta['LOCALE'], $objectMeta);
+    }
+
+    public static function getTemplatePath ($owner, $name, $resourceName, $preDefinedPaths = array()) {
+        debug('libraryStaticResourceManager', 'getTemplatePath', true);
+        $resPath = 'templates' . DS . str_replace(DOT, DS, $resourceName) . '.html';
+        $_default  = DR . '/web/default/' . MPWS_VERSION . DS . $resPath;
+        if (isset($preDefinedPaths['PATH_DEF']))
+            $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
+        $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
+        if (isset($preDefinedPaths['PATH_OWN']))
+            $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
         if (file_exists($_owner))
             return $_owner;
-        return $_default;
+        if (file_exists($_default))
+            return $_default;
+        throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: ' . $resourceName);
+    }
+    public static function getPropertyPath ($owner, $name, $resourceName, $locale = 'en_us', $preDefinedPaths = array()) {
+        debug('libraryStaticResourceManager', 'getPropertyPath', true);
+        $resPath = 'property' . DS . $locale . DS . str_replace(DOT, DS, $resourceName) . '.property';
+        $_default  = DR . '/web/default/' . MPWS_VERSION . DS . $resPath;
+        if (isset($preDefinedPaths['PATH_DEF']))
+            $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
+        $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
+        if (isset($preDefinedPaths['PATH_OWN']))
+            $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
+        if (file_exists($_owner))
+            return $_owner;
+        if (file_exists($_default))
+            return $_default;
+
+        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property does not exsist: ' . $resourceName);
+    }
+    
+    public static function getTemplateValue ($templateFilePath, $propKey) {
+        debug('libraryStaticResourceManager', 'getTemplateValue', true);
+        if (!file_exists($templateFilePath))
+            throw new Exception('libraryStaticResourceManager: getTemplateValue: Template file does not exsist: ' . $templateFilePath);
+        return file_get_contents($templateFilePath);
+    }
+
+    public static function getPropertyValue ($propertyFilePath, $propKey) {
+        debug('libraryStaticResourceManager', 'getPropertyValue', true);
+        if (!file_exists($propertyFilePath))
+            throw new Exception('libraryStaticResourceManager: getPropertyValue: Property file does not exsist: ' . $propertyFilePath);
+        $props = parse_ini_file($propertyFilePath);
+        //debug($props);
+        if (isset($props[$propKey]))
+            return $props[$propKey];
+        throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey);
     }
     
 }

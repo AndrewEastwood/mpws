@@ -6,20 +6,46 @@ class objectExtWithResource {
     const MACRO = 'macro';
     const PROPERTY = 'property';
     
-    private $_ctx;
+    /* base object */
+    private $_baseMeta;
     
-    public function __construct ($context) {
-        $this->_ctx = $context;
+    public function __construct ($baseMetaInit) {
+        debug('objectExtWithResource', '__construct', true);
+        $this->_baseMeta = $baseMetaInit[0];
     }
     
-    public function getResource ($type, $metapath) {
+    public function getResourcePath ($type, $metapath) {
+        debug('objectExtWithResource => getResource: ' . $type . ', ' . $metapath);
+        debug($this->_baseMeta);
         $res = false;
         switch (strtolower($type)) {
             case 'template':
-                $res = libraryStaticResourceManager::getTemplate();
+                $res = libraryStaticResourceManager::getObjectTemplatePath($metapath, $this->_baseMeta);
+                break;
+            case 'property':
+                list($propFileName, $propKey) = explode(DOT, $metapath);
+                $res = libraryStaticResourceManager::getObjectPropertyPath($propFileName, $this->_baseMeta);
+                break;
         }
+        return $res;
     }
     
+    public function getResourceValue ($type, $metapath) {
+        debug('objectExtWithResource => getResourceValue: ' . $type . ', ' . $metapath);
+        $resPath = $this->getResourcePath ($type, $metapath);
+        $resValue = false;
+        switch (strtolower($type)) {
+            case 'template':
+                $resValue = libraryStaticResourceManager::getTemplateValue($resPath);
+                break;
+            case 'property':
+                list($propFileName, $propKey) = explode(DOT, $metapath);
+                $resValue = libraryStaticResourceManager::getPropertyValue($resPath, $propKey);
+                break;
+        }
+        return $resValue;
+    }
+
 }
 
 ?>

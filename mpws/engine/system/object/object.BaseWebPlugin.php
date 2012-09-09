@@ -1,32 +1,14 @@
 <?php
 
-class objectBaseWebPlugin extends objectBaseWeb {
+class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     /* Base Implementation */
     public function __construct ($name, $version = '1.0') {
         parent::__construct($name, OBJECT_T_PLUGIN, $version);
         debug('objectBaseWebPlugin: __construct => ' . $name);
     }
-    
-    final protected function objectCustomSetup() {
-        // setup meta objectStorable
-        $this->setMeta('PATH_OWN', DR . '/web/plugin' . DS . $this->getMeta('NAME'));
-        $this->setMeta('PATH_DEF', DR . '/web/default/' . MPWS_VERSION);
-        // init configuration
-        //$this->configs = array();
-        // init templates
-        //$this->templates = array();
-        // add extender
-        $this->setExtender('objectExtWithStorage', '_ex_store');
-        $this->setExtender('objectExtWithResource', '_ex_resource');
-        
-        // setup storable namespace
-        $this->_ex_store__setNamespace($this->getMeta('CLASS'));
-        //$this->setNamespace('plugin'.DOT.$owner);
-    }
-    
-    /* iPlugin */
 
+    /* iPlugin */
     /* iPlugin : public api */
     public function run ($command) { 
         debug($command, 'objectBaseWebPlugin: run function:');
@@ -139,6 +121,24 @@ class objectBaseWebPlugin extends objectBaseWeb {
         debug('objectBaseWebPlugin => _run_cross');
     }
 
+    /* hooks */
+    protected function _displayTriggerOnCommonStart () {
+        debug('objectBaseWebPlugin => _displayTriggerOnCommonStart');
+    }
+    protected function _displayTriggerOnActive () {
+        debug('objectBaseWebPlugin => _displayTriggerOnActive');
+        $_SESSION['MPWS_PLUGIN_ACTIVE'] = $this->getObjectName();
+    }
+    protected function _displayTriggerOnInActive () {
+        debug('objectBaseWebPlugin => _displayTriggerOnInActive');
+    }
+    protected function _displayTriggerOnCommonEnd () {
+        debug('objectBaseWebPlugin => _displayTriggerOnCommonEnd');
+    }
+    
+    /* internal */
+    
+    
     /* addons */
     public function addComponent ($name, $data, $macros) {
         /*$_storageKey = $this->store_keyPathComponent($name);
@@ -158,22 +158,6 @@ class objectBaseWebPlugin extends objectBaseWeb {
         return $component;*/
     }
     
-    /* hooks */
-    protected function _displayTriggerOnCommonStart () {
-        debug('objectBaseWebPlugin => _displayTriggerOnCommonStart');
-    }
-    protected function _displayTriggerOnActive () {
-        debug('objectBaseWebPlugin => _displayTriggerOnActive');
-        $_SESSION['MPWS_PLUGIN_ACTIVE'] = $this->getObjectName();
-    }
-    protected function _displayTriggerOnInActive () {
-        debug('objectBaseWebPlugin => _displayTriggerOnInActive');
-    }
-    protected function _displayTriggerOnCommonEnd () {
-        debug('objectBaseWebPlugin => _displayTriggerOnCommonEnd');
-    }
-    
-    /* internal */
     
     
 }

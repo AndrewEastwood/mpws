@@ -21,13 +21,13 @@ class controllerToolbox {
         //$mpwsCtx->addBatchCommands('main', 'render', 'layout');
         //$mpwsCtx->modifyCommand('main', array('olololo'));
         
-        $mpwsCtx->addBatchCommands(array('main', 'render', 'layout'));
+        $mpwsCtx->addCommand(array('main'));
         
-        $mpwsCtx->traceCommands();
+        //$mpwsCtx->traceCommands();
         
         $mpwsCtx->processAll('Toolbox');
         
-        
+        //echo libraryMetaPage::getComponent('test');
         //$tbx->call(false, false);
 
 
