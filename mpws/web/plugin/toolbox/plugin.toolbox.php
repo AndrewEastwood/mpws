@@ -4,7 +4,7 @@ class pluginToolbox extends objectBaseWebPlugin {
 
     public function run ($command) { 
         parent::run($command);
-        //$ctx = contextMPWS::instance();
+        $ctx = contextMPWS::instance();
         //$this->_ex_resource__getResource();
         
         //var_dump($ctx->getCurrentContext());
@@ -18,19 +18,32 @@ class pluginToolbox extends objectBaseWebPlugin {
         
         //echo $this->objectTemplate_b_c;
         //echo $this->getTemplate('page.404');
-        $this->objectTemplatePath_page_404;
-        $this->objectTemplatePath_page_404;
+        //$this->objectTemplatePath_page_404;
+        //$this->objectTemplatePath_page_404;
         //echo 'ololololololololololo' . objectExtWithResource::TEMPLATE;
 
         
-        $this->objectProperty_display_pageDescription;
-        $this->objectProperty_display_title;
+        //$this->objectProperty_display_pageDescription;
+        //$this->objectProperty_display_title;
         
         
-        $this->objectConfiguration_display_test;
-        $this->objectConfiguration_display_mas;
+        //$this->objectConfiguration_display_test;
+        //$this->objectConfiguration_display_mas;
+        
+        $ctx->pageModel->addWidget('toolboxmenu',
+            $this->objectTemplatePath_page_404,
+            $ctx->getCurrentContextName());
         
         debug($this->_ex_store__getStorage());
+        
+        
+        echo $ctx->pageModel->dump();
+        
+        
+        
+        $ctx->pageModel->fetchTemplate($this->objectTemplatePath_widget_demo);
+        
+        
         
         
         

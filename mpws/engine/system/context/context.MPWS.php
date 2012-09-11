@@ -14,9 +14,12 @@ class contextMPWS {
         $this->_commands = array();
     }
     
-    public function __get($contextName) {
-        if (startsWith($contextName, OBJECT_T_CONTEXT))
-            return $this->getContext(str_replace(OBJECT_T_CONTEXT, '', $contextName));
+    public function __get($name) {
+        // get context object
+        if (startsWith($name, OBJECT_T_CONTEXT))
+            return $this->getContext(str_replace(OBJECT_T_CONTEXT, '', $name));
+        if ($name === 'pageModel')
+            return $this->getPageModel();
     }
     
     public static function instance () {
@@ -27,7 +30,7 @@ class contextMPWS {
     
     /* private */
     
-    private function loadContext( /* names */ ) {
+    private function loadContext ( /* names */ ) {
         $fn_args = getArguments(func_get_args());
         if (is_string($fn_args)) {
             $contextObjectName = OBJECT_T_CONTEXT.$fn_args;
@@ -45,7 +48,7 @@ class contextMPWS {
         }
     }
     
-    private function getContext($name) {
+    private function getContext ($name) {
         if (empty($this->_contexts[makeKey($name)]))
             $this->loadContext($name);
         
@@ -105,11 +108,16 @@ class contextMPWS {
         return $prev;
     }
     
+    private function getPageModel () {
+        return libraryWebPageModel::instance();
+    }
+    
     /* public */
     
     public function getCurrentContextName () {
         return $this->_runningContextName;
     }
+    
     public function getCurrentContext () {
         return $this->getContext($this->_runningContextName);
     }
@@ -151,11 +159,6 @@ class contextMPWS {
             }
         }
     }
-
-    /*public function _addCommand ($command, $custom_args = array()) {
-        $_cmd = $this->getCommand($command, $custom_args);
-        $this->_commands[$_cmd[makeKey('id')]] = $_cmd;
-    }*/
     
     public function modifyCommand ($command, $custom_args = array()) {
         if (isset($this->_commands[$command])){
@@ -210,7 +213,6 @@ class contextMPWS {
         $this->setCurrentContext($prevoiusContextName);
         
     }
-
 }
 
 ?>

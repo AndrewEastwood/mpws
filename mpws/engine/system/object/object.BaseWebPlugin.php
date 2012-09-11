@@ -137,29 +137,7 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     }
     
     /* internal */
-    
-    
-    /* addons */
-    public function addComponent ($name, $data, $macros) {
-        /*$_storageKey = $this->store_keyPathComponent($name);
-        $_macros = false;
-        if (is_array($macros)) {
-            $_macros = array();
-            foreach ($macros as $macroName)
-                $_macros[$macroName] = $this->getMacro($macroName);
-        } elseif (is_string($macros))
-            $_macros = $this->getMacro($macros);
-        $component = array (
-            'NAME' => strtoupper($name),
-            'DATA' => $data,
-            'MACROS' => $_macros
-        );
-        $this->store_storeSet($_storageKey, $component);
-        return $component;*/
-    }
-    
-    
-    
+
 }
 
 ?>

@@ -1,7 +1,9 @@
 <?php
 
-    // loader
-    function __autoload($className)
+    spl_autoload_register('mpws__autoload');
+    
+    // mpws loader
+    function mpws__autoload($className)
     {
         //echo 'loading ' . $className;
 
@@ -13,8 +15,9 @@
             return false;
 
         $libPath = '';
-        $DR = $_SERVER['DOCUMENT_ROOT'];
+        //$DR = $_SERVER['DOCUMENT_ROOT'];
         $pieces = preg_split('/(?=[A-Z])/', $className, -1);
+        $libName = implode('', array_slice($pieces, 1));
 
         if (count($pieces) <= 1)
             throw new Exception('Wrong loading library name: ' . $className);
@@ -40,16 +43,34 @@
                     $libPath = '/engine/system/interface/interface.';
                     break;
                 }
+                case 'extension': {
+                    //echo 'Including extension ' . $libName;
+                    $libPath = '/engine/system/extension/extension.';
+                    break;
+                }
             }
-            unset($pieces[0]);
-            $libPath = $DR . $libPath . implode('', $pieces) . '.php';
-            //echo $libPath;
-            if (!file_exists($libPath))
-                throw new Exception('Requested library ('.$libPath.') does not exist.');
-                
-                
-            require_once $libPath;
+
+            _import($libPath . $libName . '.php');
         }
+    }
+    
+    function _import ($path) {
+        $DR = $_SERVER['DOCUMENT_ROOT'];
+        if (startsWith($path, 'extension@')) {
+            $extPkg = explode('@', $path);
+            $extLibPath = '/engine/system/extension/';
+            $extMap = parse_ini_file($DR . $extLibPath . 'extension_map.ini', true);
+            //var_dump($extMap);
+            // set extension path
+            if (!empty($extMap[$extPkg[1]]))
+                $path = $extLibPath . $extMap[$extPkg[1]];
+        }
+        $libPath = $DR . $path;
+        //echo '<br> |+++++ ' . $libPath;
+        if (!file_exists($libPath))
+            ;//throw new Exception('Requested library ('.$libPath.') does not exist.');
+        if (file_exists($libPath))
+        require_once $libPath;
     }
 
 ?>
