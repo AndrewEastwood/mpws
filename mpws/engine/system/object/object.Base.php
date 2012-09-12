@@ -10,7 +10,7 @@ class objectBase {
     private $_extenders;
     
     public function __construct ($name = 'baseObject', $type = '', $version = '1.0') {
-        echo '<br> Base init: "' . $name. '" as "' . $type . '" v.' . $version . '<br>';
+        debug('Base init: "' . $name. '" as "' . $type . '" v.' . $version);
         
         $this->_name = $name;
         $this->_type = $type;

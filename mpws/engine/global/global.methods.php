@@ -87,6 +87,8 @@
     // global methods
     // will be moved to 
     function debug ($value, $title = '', $argsDebug = false) {
+        if (!isset($GLOBALS['MPWS_DEBUG']))
+            $GLOBALS['MPWS_DEBUG'] = '';
         //return false;
         if (MPWS_ENV == 'DEV') {
             
@@ -105,7 +107,7 @@
                     if (is_array($arg))
                         $debug_args['array'][$idx] = $arg;
                 }
-                echo sprintf($format_args, $value . ' ' . $title, print_r($debug_args, true));
+                $GLOBALS['MPWS_DEBUG'] .= sprintf($format_args, $value . ' ' . $title, print_r($debug_args, true));
             } else {
                 $format_short = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b> %1$s</div>';
                 $format_long = '<b>[DEBUG INFO] '.date('H:i:s').'</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> %2$s<pre>%1$s</pre></div>';
@@ -113,9 +115,9 @@
                 //    $value = print_r($value, true);
 
                 if (is_array($value))
-                    echo sprintf($format_long, print_r($value, true), $title);
+                    $GLOBALS['MPWS_DEBUG'] .= sprintf($format_long, print_r($value, true), $title);
                 else
-                    echo sprintf($format_short, $value, $title);
+                    $GLOBALS['MPWS_DEBUG'] .= sprintf($format_short, $value, $title);
             }
         }
     }

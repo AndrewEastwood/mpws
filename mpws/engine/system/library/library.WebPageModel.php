@@ -20,7 +20,7 @@ class libraryWebPageModel {
         return self::$_instance;
     }
 
-    public function setPageView ($template, $data, $contextName) {
+    public function setPageView ($template, $contextName, $data = array()) {
         $this->_page = array (
             'DATA' => $data,
             'CONTEXT' => $contextName,
@@ -49,7 +49,7 @@ class libraryWebPageModel {
         }
         // set root block
         $model = array(
-            'a' => 'aaaaaaaa',
+            'debug' => $GLOBALS['MPWS_DEBUG'],
             'model' => array(
                 'context' => $ctx,
                 'widgets' => $this->_widgets
@@ -84,6 +84,7 @@ class libraryWebPageModel {
             case 'smarty':
             default:
                 $tplProvider = new extensionSmarty();//::instance();
+                $tplProvider->clearAllCache();
                 break;
         }
 
