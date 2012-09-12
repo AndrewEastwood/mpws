@@ -13,6 +13,8 @@
     define('MPWS_ENABLE_EMAILS', false);
     //
     define('MPWS_ENABLE_REDIRECTS', false);
+    //
+    define('MPWS_LOG_LEVEL', 1);
 
     //var_dump(parse_url($_SERVER['HTTP_HOST']));
     

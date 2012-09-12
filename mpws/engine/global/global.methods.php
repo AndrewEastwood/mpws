@@ -92,6 +92,8 @@
         //return false;
         if (MPWS_ENV == 'DEV') {
             
+            $_debugLine = '';
+            
             if ($argsDebug) {
                 $bt = debug_backtrace();
                 $_value = $bt[1]['args'];
@@ -107,7 +109,7 @@
                     if (is_array($arg))
                         $debug_args['array'][$idx] = $arg;
                 }
-                $GLOBALS['MPWS_DEBUG'] .= sprintf($format_args, $value . ' ' . $title, print_r($debug_args, true));
+                $_debugLine = sprintf($format_args, $value . ' ' . $title, print_r($debug_args, true));
             } else {
                 $format_short = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b> %1$s</div>';
                 $format_long = '<b>[DEBUG INFO] '.date('H:i:s').'</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> %2$s<pre>%1$s</pre></div>';
@@ -115,10 +117,15 @@
                 //    $value = print_r($value, true);
 
                 if (is_array($value))
-                    $GLOBALS['MPWS_DEBUG'] .= sprintf($format_long, print_r($value, true), $title);
+                    $_debugLine = sprintf($format_long, print_r($value, true), $title);
                 else
-                    $GLOBALS['MPWS_DEBUG'] .= sprintf($format_short, $value, $title);
+                    $_debugLine = sprintf($format_short, $value, $title);
             }
+            
+            $GLOBALS['MPWS_DEBUG'] .= $_debugLine;
+            
+            if (MPWS_LOG_LEVEL == 2)
+                echo $_debugLine;
         }
     }
     

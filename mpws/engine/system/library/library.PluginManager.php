@@ -11,8 +11,6 @@ class libraryPluginManager
     /* stored data */
     private $_s_plugins;
 
-    /* dump data info */
-    private $_dump_configPaths;
 
     public function __construct ($doInit = true) {
         //echo '__construct';

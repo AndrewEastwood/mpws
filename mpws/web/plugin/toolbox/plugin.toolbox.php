@@ -49,7 +49,6 @@ class pluginToolbox extends objectBaseWebPlugin {
         
         
         
-        echo $ctx->pageModel->fetchHtmlPage();
         
         
         

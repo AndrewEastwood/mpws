@@ -1,7 +1,6 @@
 <?php
     
     
-    
     /* dispatcher init */
     // set request realm
     define ('MPWS_REQUEST', 'PUBLIC');

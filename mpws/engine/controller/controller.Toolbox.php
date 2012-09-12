@@ -30,6 +30,7 @@ class controllerToolbox {
         //echo libraryMetaPage::getComponent('test');
         //$tbx->call(false, false);
 
+        echo $mpwsCtx->pageModel->fetchHtmlPage();
 
         /*$toolbox = new contextToolbox();
         //echo 'Requested page : ' . $page;

@@ -12,7 +12,10 @@ class libraryWebPageModel {
     private $_templateProviders;
     private static $_instance;
     
-    private function __construct() { }
+    private function __construct() {
+        $this->_widgets = array();
+        $this->_page = array();
+    }
     
     public static function instance () {
         if (empty(self::$_instance))
@@ -56,7 +59,7 @@ class libraryWebPageModel {
             )
         );
         
-        debug($model);
+        //debug($model);
         
         // fetch page
         debug('Fetching page: ' . $this->_page['TEMPLATE']);
@@ -64,12 +67,18 @@ class libraryWebPageModel {
     }
     
     public function fetchTemplate ($wgt, $model = false) {
+        if (empty($wgt['TEMPLATE']))
+            throw new Exception('libraryWebPageModel Empty Template Name Requested');
+        
+        
         $tp = $this->getTemplateProvider('smarty');
         //echo 'test';
         //var_dump($smarty);
-        if (!empty($model))
-            $tp->assign($model);
         debug('Rendering template: ' . $wgt['TEMPLATE']);
+        
+        if (!empty($model)) {
+            $tp->assign($model);
+        }
         return $tp->fetch($wgt['TEMPLATE']);
     }
     
