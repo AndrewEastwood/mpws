@@ -7,14 +7,17 @@
 _import ('extension@Smarty');
 
 class extensionSmarty extends Smarty {
-   function __construct()
-   {
+
+    //private static $_instance;
+
+    function __construct() {
 
         // Class Constructor.
         // These automatically get set with each new instance.
 
+        //echo '1';
         parent::__construct();
-        
+
         //$this->setTemplateDir(DR . DS . 'data'. DS . 'templates' . DS);
         $this->setCompileDir(DR . DS . 'data'. DS . 'bin' . DS . 'templates_c' . DS);
         $this->setConfigDir(DR . DS . 'data'. DS . 'bin' . DS . 'configs' . DS);
@@ -22,8 +25,15 @@ class extensionSmarty extends Smarty {
 
         $this->caching = Smarty::CACHING_LIFETIME_CURRENT;
         $this->assign('app_name', 'myPhpWebSite');
-        
-   }
+    }
+    
+    /*public static function instance () {
+        echo '1';
+        if (empty(self::$_instance))
+            self::$_instance = new extensionSmarty();
+        return self::$_instance;
+    }*/
+    
 }
 
 ?>

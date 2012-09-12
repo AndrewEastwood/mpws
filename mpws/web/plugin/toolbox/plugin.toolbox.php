@@ -31,17 +31,25 @@ class pluginToolbox extends objectBaseWebPlugin {
         //$this->objectConfiguration_display_mas;
         
         $ctx->pageModel->addWidget('toolboxmenu',
-            $this->objectTemplatePath_page_404,
+            $this->objectTemplatePath_widget_demo,
             $ctx->getCurrentContextName());
         
-        debug($this->_ex_store__getStorage());
+        $ctx->pageModel->addWidget('toolboxmenu2',
+            $this->objectTemplatePath_widget_demo2,
+            $ctx->getCurrentContextName());
+        
+        $ctx->pageModel->setPageView(
+            $this->objectTemplatePath_page_test,
+            $ctx->getCurrentContextName());
+        
+        //debug($this->_ex_store__getStorage());
         
         
-        echo $ctx->pageModel->dump();
+        //echo $ctx->pageModel->dump();
         
         
         
-        $ctx->pageModel->fetchTemplate($this->objectTemplatePath_widget_demo);
+        echo $ctx->pageModel->fetchHtmlPage();
         
         
         
