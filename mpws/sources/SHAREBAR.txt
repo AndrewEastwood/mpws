@@ -1,0 +1,128 @@
+<div class="share_bar share_menu">
+                        
+
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function getfbcount(url) {
+        var fblikes;
+        $.getJSON('http://graph.facebook.com/?id=' + url + '&callback=?', function (data) {
+            fblikes = data.shares;
+            $('.fb_share_btn .count').html(fblikes);
+        });
+    }
+    function gettwcount(url) {
+        var tweets;
+        $.getJSON('http://urls.api.twitter.com/1/urls/count.json?url=' + url + '&callback=?', function (data) {
+            tweets = data.count;
+            $('.tweet_share_btn .count').html(tweets);
+        });
+    }
+    function getpincount(url) {
+        var pins;
+        $.getJSON('http://api.pinterest.com/v1/urls/count.json?url=' + url + '&callback=?', function (data) {
+            pins = data.count;
+            $('.pin_share_btn .count').html(pins);
+        });
+    }
+    function getldcount(url) {
+        var links;
+        $.getJSON('http://www.linkedin.com/countserv/count/share?url=' + url + '&format=jsonp&callback=?', function (data) {
+            links = data.count;
+            $('.ld_share_btn .count').html(links);
+        });
+    }
+    function getsbcount() {
+        $.ajax({ type: 'GET',
+            url: '/social/stumbleupon',
+            dataType: 'json',
+            data: { url: 'http://www.pcmag.com/article2/0,2817,2387377,00.asp' },
+            success: function (data) {
+                $('.sb_share_btn .count').html(data.result.views);
+            }
+        });
+    }
+    function getgpcount() {
+        $.ajax({ type: 'GET',
+            url: '/social/googleplus',
+            dataType: 'json',
+            data: { url: 'http://www.pcmag.com/article2/0,2817,2387377,00.asp' },
+            success: function (data) {
+                $('.gplus_share_btn .count').html(data.count);
+            }
+        });
+    }
+    function tweeturl(){
+            $.ajax({
+                url: "http://api.bit.ly/v3/shorten?",
+                data: {
+                    longUrl: 'http://www.pcmag.com/article2/0,2817,2387377,00.asp',
+                    apiKey: 'R_b98e74b89a913cb88f008ceea9e835e3',
+                    login: 'pcmag'
+                },
+                async: false,
+                dataType: "jsonp",
+                success: function (v) {
+                    var bitly = v.data.url;
+                    $("a.tweet_share").attr("href", bitly);
+                }
+
+            });
+        }
+    $(document).ready(function () {
+        var url = 'http://www.pcmag.com/article2/0,2817,2387377,00.asp';
+        getfbcount(url);
+        gettwcount(url);
+        getpincount(url);
+        getldcount(url);
+        $(getsbcount);
+        $(getgpcount);
+        $(tweeturl);
+            $("a.tweet_share").click(function (e) {
+                e.preventDefault();
+                var url = $("a.tweet_share").attr("href");
+                if(url){
+                    window.open('http://twitter.com/home?status=RT+@PCMag+Plasma+vs.+LCD+vs.+LED%3a+Which+HDTV+Type+is+Best%3f+' +escape(url), '', 'width=525,height=300');
+                }
+                else{
+                     var url = 'http://www.pcmag.com/article2/0,2817,2387377,00.asp';
+                     window.open('http://twitter.com/home?status=RT+@PCMag+Plasma+vs.+LCD+vs.+LED%3a+Which+HDTV+Type+is+Best%3f+' +escape(url), '', 'width=525,height=300');
+                }
+            });
+      });
+</script>
+<ul>
+    <li class="gplus_share_btn share_btn">
+            <a class="gplus_share" target="_blank" title="Share this article on Google+" onclick="window.open('https://plus.google.com/share?&amp;url=http://www.pcmag.com/article2/0,2817,2387377,00.asp&amp;title=Plasma+vs.+LCD+vs.+LED%3a+Which+HDTV+Type+is+Best%3f','','width=700,height=400')"><span>Google</span></a>
+            <span class="count">97</span>
+    </li>
+    <li class="fb_share_btn share_btn">
+        <a class="facebook_share" title="Share this article on Facebook" onclick="window.open('http://www.facebook.com/share.php?u=http://www.pcmag.com/article2/0,2817,2387377,00.asp','','width=525,height=300')">
+        <span>Share</span></a>
+        <span class="count">1821</span>
+    </li>
+    <li class="tweet_share_btn share_btn">
+        <a class="tweet_share" target="_new" title="Share this article on Twitter" href="http://bit.ly/S9TTrH"><span>Tweet</span></a>
+        <span class="count">327</span>
+    </li>
+    <li class="sb_share_btn share_btn">
+        <a class="stumb_share" target="_blank" title="Share this article on Stumble" onclick="window.open('http://stumbleupon.com/submit?url=http://www.pcmag.com/article2/0,2817,2387377,00.asp&amp;title=Plasma+vs.+LCD+vs.+LED%3a+Which+HDTV+Type+is+Best%3f','','width=700,height=400')"><span>Submit</span></a>
+        <span class="count">134</span>
+    </li>
+    <li class="ld_share_btn share_btn">
+        <a class="ln_share" target="_blank" title="Share this article on Linkedin" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&amp;url=http://www.pcmag.com/article2/0,2817,2387377,00.asp&amp;title=Plasma+vs.+LCD+vs.+LED%3a+Which+HDTV+Type+is+Best%3f','','width=700,height=400')"><span>Share</span></a>
+        <span class="count">24</span>
+    </li>
+    <li class="pin_share_btn share_btn">
+        <a class="pin_share" target="_blank" title="Share this article on Pinterest" onclick="window.open('http://pinterest.com/pin/create/button/?url=http://www.pcmag.com/article2/0,2817,2387377,00.asp&amp;title=Plasma+vs.+LCD+vs.+LED%3a+Which+HDTV+Type+is+Best%3f','','width=700,height=600')"><span>Pin It</span></a>
+        <span class="count">2</span>
+    </li>
+
+  
+                        <li class="email_print">
+                            <a class="email-to-a-friend">Email</a>
+                            
+                                <a class="print" href="." onclick="if(typeof CleanPrintPrintHtml!='undefined' &amp;&amp; CleanPrintPrintHtml) CleanPrintPrintHtml('http://www.pcmag.com/article/print/265981'); else window.print(); return false;">Print</a>
+                             
+                        </li>
+                        </ul>
+                    </div>
