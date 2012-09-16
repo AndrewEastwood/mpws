@@ -385,7 +385,7 @@ class customer {
             $recipient['DATA'] = array(
                 'Name' => $user['Name']
             );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.user_registered'));
+            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_user_registered'));
             // send email message to system
             libraryMailer::sendEMail($recipient);
             
