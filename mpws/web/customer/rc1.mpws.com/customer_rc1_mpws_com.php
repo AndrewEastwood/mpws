@@ -6,24 +6,35 @@
  */
 
 class customer_rc1_mpws_com extends objectBaseWebCustomer {
-    
-    protected function objectCustomSetup() {
-        parent::objectCustomSetup();
-        $this->setMeta('PATH_DEF', DR . '/web/default/' . $this->objectConfiguration_customer_version);
-    }
-    
-    
+
     public function run ($command) { 
         parent::run($command);
         $ctx = contextMPWS::instance();
         
-        $ctx->pageModel->addWidget('toolboxmenu2',
+        //$ctx->contextCustomer->getDBO();
+        
+        // get plugin
+        $plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
+        
+        
+        echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo23;
+        echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo2;
+        echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo11;
+        
+        //echo $this->objectTemplatePath_widget_demo2;
+        
+        
+        
+       /* $ctx->pageModel->addWidget('toolboxmenu2',
             $this->objectTemplatePath_widget_demo2,
             $ctx->getCurrentContextName());
         
         $ctx->pageModel->setPageView(
             $this->objectTemplatePath_page_test,
             $ctx->getCurrentContextName());
+        
+        */
+        
     }
     
 }

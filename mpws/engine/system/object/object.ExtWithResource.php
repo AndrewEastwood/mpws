@@ -1,26 +1,31 @@
 <?php
 
-class objectExtWithResource {
+class objectExtWithResource extends objectExtension {
     
     const TEMPLATE = 'template';
     const MACRO = 'macro';
     const PROPERTY = 'property';
     
-    /* base object */
-    private $_baseMeta;
-    
-    public function __construct ($baseMetaInit) {
+    public function __construct($baseMetaInit) {
+        parent::__construct($baseMetaInit);
         debug('objectExtWithResource', '__construct', true);
-        $this->_baseMeta = $baseMetaInit[0];
     }
-    
+
     public function getResourcePath ($type, $metapath) {
         debug('objectExtWithResource => getResource: ' . $type . ', ' . $metapath);
         debug($this->_baseMeta);
+        list($owner, $section, $key) = explode(DOT, $metapath);
+        $useStandartPath = empty($key);
         $res = false;
         switch (strtolower($type)) {
             case 'template':
-                $res = libraryStaticResourceManager::getObjectTemplatePath($metapath, $this->_baseMeta);
+                if ($useStandartPath)
+                    $res = libraryStaticResourceManager::getObjectTemplatePath($metapath, $this->_baseMeta);
+                else {
+                    // temporary override PATH_OWN
+                    //$_path_own = $this->_baseMeta['PATH_OWN'];
+                    
+                }
                 break;
             case 'property':
                 list($propFileName, $propKey) = explode(DOT, $metapath);

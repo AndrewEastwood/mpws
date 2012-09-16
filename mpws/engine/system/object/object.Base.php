@@ -82,6 +82,20 @@ class objectBase {
         //var_dump($this->_extenders);
     }
     
+    /* additional */
+    public function updateExtenders ($initJsonArgs = false) {
+        foreach ($this->_extenders as $object) {
+            // add meta object at the beginning
+            $_objArgs = array($this->_meta);
+            if (!empty($initJsonArgs))
+                foreach ($initJsonArgs as $param)
+                    $_objArgs[] = $param;
+            
+            debug($_objArgs, 'objectBase => updateExtenders');
+            $object->updateExtension($_objArgs);
+        }
+    }
+    
     /* methods */
     protected function objectCustomSetup() { /* customize base object */ }
     protected function objectCustomProperty($name) { /* customize base object */ }

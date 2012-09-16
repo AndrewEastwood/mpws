@@ -1,15 +1,12 @@
 <?php
 
-
 class contextCustomer extends objectContext {
 
-    private $_databaseManager;
+    private $_databaseManagers;
     private $_customerManager;
-    
-    
+
     function __construct () {
         debug('contextCustomer __construct');
-        $this->_databaseManager = new libraryDataBaseChainQueryBuilder();
         $this->_customerManager = new libraryCustomerManager();
     }
     
@@ -17,7 +14,19 @@ class contextCustomer extends objectContext {
         debug('contextCustomer => Running command: ' . $command[makeKey('method')]);
         $this->_customerManager->runCustomerAsync($command);
     }
-
+    
+    final public function getDBO($customerName = MPWS_CUSTOMER) {
+        echo '<br> getting DataBaseObject for '.$customerName.'>>>>>>';
+        // return existed dbo
+        if (isset($this->_databaseManagers[$customerName]))
+            return $this->_databaseManagers[$customerName];
+        // get customer
+        $customer = $this->_customerManager->getCustomer($customerName);
+        // make connect config
+        $this->_databaseManagers[$customerName] = new libraryDataBaseChainQueryBuilder($customer->getDBConnection());
+        // return dbo
+        return $this->_databaseManagers[$customerName];
+    }
 
 }
 

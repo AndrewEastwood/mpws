@@ -56,6 +56,13 @@
         private $_db_selectCount = 0;
         private $_useSanitize = true;
         private $_stopResetTillQuery = false;
+        
+        // MPWS Patch
+        // Init connection in the constructor
+        public function __construct($config = false) {
+            if (is_array($config))
+                $this->connect($config);
+        }
 
         public function connect($config) {
             $this->_db_server = $config['DB_HOST'];

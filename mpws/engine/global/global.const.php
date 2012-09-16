@@ -41,6 +41,10 @@
     define ("OBJECT_T_CUSTOMER", "customer", true);
     define ("OBJECT_T_CONTEXT", "context", true);
  
+    // Connection Type
+    
+    define ("T_CONNECT_DB", 'database', true);
+    
     // Scripts
     
     define("EXT_SCRIPT", DOT."php");

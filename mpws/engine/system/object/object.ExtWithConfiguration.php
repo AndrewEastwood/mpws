@@ -1,14 +1,13 @@
 <?php
 
-class objectExtWithConfiguration  {
-    /* base object */
-    private $_baseMeta;
+class objectExtWithConfiguration extends objectExtension  {
     
-    public function __construct ($baseMetaInit) {
+    public function __construct($baseMetaInit) {
+        parent::__construct($baseMetaInit);
         debug('objectExtWithConfiguration', '__construct', true);
-        $this->_baseMeta = $baseMetaInit[0];
     }
-    
+
+
     public function getConfigurationValue ($metapath) {
         debug('objectExtWithConfiguration: getConfigurationValue: ' . $metapath);
         list($configFileName, $configKey) = explode(DOT, $metapath);

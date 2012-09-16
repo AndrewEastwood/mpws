@@ -8,6 +8,23 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         debug('objectBaseWebCustomer: __construct => ' . $name);
     }
 
+    public function getDBConnection ($connectionType = T_CONNECT_DB) {
+        switch ($connectionType) {
+            case T_CONNECT_DB:
+                return array(
+                    'DB_HOST' => $this->objectConfiguration_mdbc_host,
+                    'DB_USERNAME' => $this->objectConfiguration_mdbc_username,
+                    'DB_PASSWORD' => $this->objectConfiguration_mdbc_password,
+                    'DB_NAME' => $this->objectConfiguration_mdbc_name,
+                    'DB_CHARSET' => $this->objectConfiguration_mdbc_charset
+                );
+            default:
+                break;
+        }
+    }
+    
+    
+    
     /* iPlugin */
     /* iPlugin : public api */
     public function run ($command) { 

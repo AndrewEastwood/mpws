@@ -3,11 +3,16 @@
 class libraryConfigurationManager {
     
     public static function getObjectConfigurationChain ($resourceName, $objectMeta) {
+        
+        debug('libraryConfigurationManager', 'getObjectConfigurationChain', true);
+        
+        
         if (empty($objectMeta['TYPE']) &&
             empty($objectMeta['NAME']) &&
-            empty($objectMeta['PATH_DEF']) &&
+            empty($objectMeta['PATH_WEB']) &&
+            empty($objectMeta['PATH_OWN']) &&
             empty($objectMeta['PATH_DEF']))
-        throw new Exception('libraryStaticResourceManager: getObjectTemplate: Wrong $objectMeta passed');
+        throw new Exception('libraryConfigurationManager: getObjectConfigurationChain: Wrong $objectMeta passed');
         return self::getConfigurationChain($objectMeta['TYPE'], $objectMeta['NAME'], $resourceName, $objectMeta);
     }
 
@@ -20,13 +25,18 @@ class libraryConfigurationManager {
         $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
         if (isset($preDefinedPaths['PATH_OWN']))
             $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
+        $_web = false;
+        if (isset($preDefinedPaths['PATH_WEB']))
+            $_web = $preDefinedPaths['PATH_WEB'] . DS . $resPath;
         $chains = array();
         if (file_exists($_owner))
-            $chains[0] = $_owner;
+            $chains[] = $_owner;
+        if (file_exists($_web))
+            $chains[] = $_web;
         if (file_exists($_default))
-            $chains[1] = $_default;
+            $chains[] = $_default;
         if (count($chains) == 0)
-            throw new Exception('libraryConfigurationManager: getConfigurationPath: requrested configuration does not exsist: ' . $resourceName);
+            throw new Exception('libraryConfigurationManager: getConfigurationChain: requrested configuration does not exsist: ' . $resourceName);
         return $chains;
     }
     

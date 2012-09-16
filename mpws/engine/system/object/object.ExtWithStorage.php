@@ -1,15 +1,12 @@
 <?php
 
-class objectExtWithStorage  {
+class objectExtWithStorage extends objectExtension {
     
     private $_namespace;
-    
-    /* base object */
-    private $_baseMeta;
-    
-    public function __construct ($baseMetaInit) {
+
+    public function __construct($baseMetaInit) {
+        parent::__construct($baseMetaInit);
         debug('objectExtWithStorage', '__construct', true);
-        $this->_baseMeta = $baseMetaInit[0];
         // setup storable namespace
         $this->setNamespace($this->_baseMeta['CLASS']);
     }

@@ -42,13 +42,21 @@ class pluginToolbox extends objectBaseWebPlugin {
             $this->objectTemplatePath_page_test,
             $ctx->getCurrentContextName());
         
+        
+        $users = $ctx->contextCustomer->getDBO()
+                ->select('*')
+                ->from('mpws_users')
+                ->fetchData();
+        
+        var_dump($users);
+        
         //debug($this->_ex_store__getStorage());
         
         
         //echo $ctx->pageModel->dump();
         
         
-        
+        //echo $this->objectConfiguration_mdbc_host;
         
         
         

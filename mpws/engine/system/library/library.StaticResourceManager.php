@@ -148,9 +148,10 @@ class libraryStaticResourceManager {
     public static function getObjectTemplatePath ($resourceName, $objectMeta) {
         if (empty($objectMeta['TYPE']) &&
             empty($objectMeta['NAME']) &&
-            empty($objectMeta['PATH_DEF']) &&
+            empty($objectMeta['PATH_WEB']) &&
+            empty($objectMeta['PATH_OWN']) &&
             empty($objectMeta['PATH_DEF']))
-        throw new Exception('libraryStaticResourceManager: getObjectTemplate: Wrong $objectMeta passed');
+        throw new Exception('libraryStaticResourceManager: getObjectTemplatePath: Wrong $objectMeta passed');
         return self::getTemplatePath($objectMeta['TYPE'], $objectMeta['NAME'], $resourceName, $objectMeta);
     }
     
@@ -158,9 +159,10 @@ class libraryStaticResourceManager {
         if (empty($objectMeta['TYPE']) &&
             empty($objectMeta['NAME']) &&
             empty($objectMeta['LOCALE']) &&
-            empty($objectMeta['PATH_DEF']) &&
+            empty($objectMeta['PATH_WEB']) &&
+            empty($objectMeta['PATH_OWN']) &&
             empty($objectMeta['PATH_DEF']))
-        throw new Exception('libraryStaticResourceManager: getObjectProperty: Wrong $objectMeta passed');
+        throw new Exception('libraryStaticResourceManager: getObjectPropertyPath: Wrong $objectMeta passed');
         return self::getPropertyPath($objectMeta['TYPE'], $objectMeta['NAME'], $resourceName, $objectMeta['LOCALE'], $objectMeta);
     }
 
@@ -173,10 +175,20 @@ class libraryStaticResourceManager {
         $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
         if (isset($preDefinedPaths['PATH_OWN']))
             $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
+        $_web = false;
+        if (isset($preDefinedPaths['PATH_WEB']))
+            $_web = $preDefinedPaths['PATH_WEB'] . DS . $resPath;
         if (file_exists($_owner))
             return $_owner;
+        if (file_exists($_web))
+            return $_web;
         if (file_exists($_default))
             return $_default;
+        
+        var_dump($_owner);
+        var_dump($_web);
+        var_dump($_default);
+        
         throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: ' . $resourceName);
     }
     public static function getPropertyPath ($owner, $name, $resourceName, $locale = 'en_us', $preDefinedPaths = array()) {
@@ -188,11 +200,20 @@ class libraryStaticResourceManager {
         $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
         if (isset($preDefinedPaths['PATH_OWN']))
             $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
+        $_web = false;
+        if (isset($preDefinedPaths['PATH_WEB']))
+            $_web = $preDefinedPaths['PATH_WEB'] . DS . $resPath;
         if (file_exists($_owner))
             return $_owner;
+        if (file_exists($_web))
+            return $_web;
         if (file_exists($_default))
             return $_default;
 
+        var_dump($_owner);
+        var_dump($_web);
+        var_dump($_default);
+        
         throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property does not exsist: ' . $resourceName);
     }
     

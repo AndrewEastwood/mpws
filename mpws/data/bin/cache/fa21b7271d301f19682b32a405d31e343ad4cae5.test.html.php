@@ -11,11 +11,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'nocache_hash' => '1278538729504fd318bf1889-23586382',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5050f59fb6d9a6_07749775',
+  'unifunc' => 'content_50561c07395058_19386385',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5050f59fb6d9a6_07749775')) {function content_5050f59fb6d9a6_07749775($_smarty_tpl) {?><!--
+<?php if ($_valid && !is_callable('content_50561c07395058_19386385')) {function content_50561c07395058_19386385($_smarty_tpl) {?><!--
 To change this template, choose Tools | Templates
 and open the template in the editor.
 -->
@@ -26,7 +26,7 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <pre><div><b>[DEBUG INFO] 23:50:39</b> controllerPublic => processRequests</div><div><b>[DEBUG INFO] 23:50:39</b> contextCustomer __construct</div><div><b>[DEBUG INFO] 23:50:39</b> contextCustomer => Running command: main</div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> libraryCustomerManager: runCustomerAsync action:<pre>Array
+        <pre><div><b>[DEBUG INFO] 21:35:51</b> controllerPublic => processRequests</div><div><b>[DEBUG INFO] 21:35:51</b> contextCustomer __construct</div><div><b>[DEBUG INFO] 21:35:51</b> contextCustomer => Running command: main</div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> libraryCustomerManager: runCustomerAsync action:<pre>Array
 (
     [CALLER] => rc1.mpws.com
     [CONTEXT] => 
@@ -34,7 +34,7 @@ and open the template in the editor.
     [ARGUMENTS] => 
     [ID] => rc1.mpws.com@main
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b> libraryCustomerManager: getCustomer path: /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com/customer_rc1_mpws_com.php</div><div><b>[DEBUG INFO] 23:50:39</b> libraryCustomerManager: getCustomer plugin name: customer_rc1_mpws_com</div><div><b>[DEBUG INFO] 23:50:39</b> Base init: "rc1.mpws.com" as "customer" v.1.0</div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBase: set Extender: objectExtWithStorage<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b> libraryCustomerManager: getCustomer path: /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com/customer_rc1_mpws_com.php</div><div><b>[DEBUG INFO] 21:35:51</b> libraryCustomerManager: getCustomer plugin name: customer_rc1_mpws_com</div><div><b>[DEBUG INFO] 21:35:51</b> Base init: "rc1.mpws.com" as "customer" v.1.0</div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBase: set Extender: objectExtWithStorage<pre>Array
 (
     [0] => Array
         (
@@ -44,12 +44,13 @@ and open the template in the editor.
             [LOCALE] => en_us
             [CLASS] => customer.rc1.mpws.com
             [SCRIPT] => customer.rc1.mpws.com.php
+            [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
             [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
             [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b>objectExtWithStorage __construct with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b>objectExtWithStorage __construct with arguments:<pre>Array
 (
     [array] => Array
         (
@@ -63,6 +64,7 @@ and open the template in the editor.
                             [LOCALE] => en_us
                             [CLASS] => customer.rc1.mpws.com
                             [SCRIPT] => customer.rc1.mpws.com.php
+                            [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                             [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
                             [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                         )
@@ -72,7 +74,7 @@ and open the template in the editor.
         )
 
 )
-</pre></div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBase: set Extender: objectExtWithResource<pre>Array
+</pre></div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBase: set Extender: objectExtWithResource<pre>Array
 (
     [0] => Array
         (
@@ -82,12 +84,13 @@ and open the template in the editor.
             [LOCALE] => en_us
             [CLASS] => customer.rc1.mpws.com
             [SCRIPT] => customer.rc1.mpws.com.php
+            [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
             [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
             [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b>objectExtWithResource __construct with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b>objectExtWithResource __construct with arguments:<pre>Array
 (
     [array] => Array
         (
@@ -101,6 +104,7 @@ and open the template in the editor.
                             [LOCALE] => en_us
                             [CLASS] => customer.rc1.mpws.com
                             [SCRIPT] => customer.rc1.mpws.com.php
+                            [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                             [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
                             [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                         )
@@ -110,7 +114,7 @@ and open the template in the editor.
         )
 
 )
-</pre></div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBase: set Extender: objectExtWithConfiguration<pre>Array
+</pre></div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBase: set Extender: objectExtWithConfiguration<pre>Array
 (
     [0] => Array
         (
@@ -120,12 +124,13 @@ and open the template in the editor.
             [LOCALE] => en_us
             [CLASS] => customer.rc1.mpws.com
             [SCRIPT] => customer.rc1.mpws.com.php
+            [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
             [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
             [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b>objectExtWithConfiguration __construct with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b>objectExtWithConfiguration __construct with arguments:<pre>Array
 (
     [array] => Array
         (
@@ -139,6 +144,7 @@ and open the template in the editor.
                             [LOCALE] => en_us
                             [CLASS] => customer.rc1.mpws.com
                             [SCRIPT] => customer.rc1.mpws.com.php
+                            [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                             [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
                             [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                         )
@@ -148,7 +154,7 @@ and open the template in the editor.
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWeb: getConfiguration: customer.version</div><div><b>[DEBUG INFO] 23:50:39</b> objectExtWithConfiguration: getConfigurationValue: customer.version</div><div><b>[DEBUG INFO] 23:50:39</b>libraryConfigurationManager getConfigurationPath with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getConfiguration: customer.version</div><div><b>[DEBUG INFO] 21:35:51</b> objectExtWithConfiguration: getConfigurationValue: customer.version</div><div><b>[DEBUG INFO] 21:35:51</b>libraryConfigurationManager getConfigurationPath with arguments:<pre>Array
 (
     [string] => Array
         (
@@ -167,6 +173,7 @@ and open the template in the editor.
                     [LOCALE] => en_us
                     [CLASS] => customer.rc1.mpws.com
                     [SCRIPT] => customer.rc1.mpws.com.php
+                    [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                     [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
                     [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                 )
@@ -174,13 +181,15 @@ and open the template in the editor.
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b>libraryConfigurationManager getConfigurationValue with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b>libraryConfigurationManager getConfigurationValue with arguments:<pre>Array
 (
     [array] => Array
         (
             [0] => Array
                 (
                     [0] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com/config/customer.ini
+                    [1] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com/config/customer.ini
+                    [2] => /var/www/mpws/rc_1.0/web/default/v1.0/config/customer.ini
                 )
 
         )
@@ -191,7 +200,7 @@ and open the template in the editor.
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWeb: getConfiguration: Downloaded Configuration: customer.version</div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWebCustomer: __construct => rc1.mpws.com</div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBaseWebPlugin: run function:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getConfiguration: Downloaded Configuration: customer.version</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getConfiguration: customer.version</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getConfiguration: Get Configuration From Cache: customer.version</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWebCustomer: __construct => rc1.mpws.com</div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> objectBaseWebPlugin: run function:<pre>Array
 (
     [CALLER] => rc1.mpws.com
     [CONTEXT] => 
@@ -199,7 +208,7 @@ and open the template in the editor.
     [ARGUMENTS] => 
     [ID] => rc1.mpws.com@main
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWebPlugin => _run_main</div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWebPlugin => _displayTriggerOnCommonStart</div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWebPlugin => _displayTriggerOnInActive</div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWebPlugin => _displayTriggerOnCommonEnd</div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWeb: getTemplatePath: widget.demo2</div><div><b>[DEBUG INFO] 23:50:39</b> objectExtWithResource => getResource: template, widget.demo2</div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> <pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWebPlugin => _run_main</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWebPlugin => _displayTriggerOnCommonStart</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWebPlugin => _displayTriggerOnInActive</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWebPlugin => _displayTriggerOnCommonEnd</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getTemplatePath: widget.demo2</div><div><b>[DEBUG INFO] 21:35:51</b> objectExtWithResource => getResource: template, widget.demo2</div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> <pre>Array
 (
     [NAME] => rc1.mpws.com
     [TYPE] => customer
@@ -207,10 +216,11 @@ and open the template in the editor.
     [LOCALE] => en_us
     [CLASS] => customer.rc1.mpws.com
     [SCRIPT] => customer.rc1.mpws.com.php
+    [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
     [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
     [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b>libraryStaticResourceManager getTemplatePath with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b>libraryStaticResourceManager getTemplatePath with arguments:<pre>Array
 (
     [string] => Array
         (
@@ -229,6 +239,7 @@ and open the template in the editor.
                     [LOCALE] => en_us
                     [CLASS] => customer.rc1.mpws.com
                     [SCRIPT] => customer.rc1.mpws.com.php
+                    [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                     [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
                     [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                 )
@@ -236,7 +247,7 @@ and open the template in the editor.
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWeb: getTemplatePath: Downloaded Template: widget.demo2</div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWeb: getTemplatePath: page.test</div><div><b>[DEBUG INFO] 23:50:39</b> objectExtWithResource => getResource: template, page.test</div><b>[DEBUG INFO] 23:50:39</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> <pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getTemplatePath: Downloaded Template: widget.demo2</div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getTemplatePath: page.test</div><div><b>[DEBUG INFO] 21:35:51</b> objectExtWithResource => getResource: template, page.test</div><b>[DEBUG INFO] 21:35:51</b><div style="margin:10px;padding:10px;border:1px solid #333;background:#aaa;color:#333";> <pre>Array
 (
     [NAME] => rc1.mpws.com
     [TYPE] => customer
@@ -244,10 +255,11 @@ and open the template in the editor.
     [LOCALE] => en_us
     [CLASS] => customer.rc1.mpws.com
     [SCRIPT] => customer.rc1.mpws.com.php
+    [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
     [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
     [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b>libraryStaticResourceManager getTemplatePath with arguments:<pre>Array
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b>libraryStaticResourceManager getTemplatePath with arguments:<pre>Array
 (
     [string] => Array
         (
@@ -266,6 +278,7 @@ and open the template in the editor.
                     [LOCALE] => en_us
                     [CLASS] => customer.rc1.mpws.com
                     [SCRIPT] => customer.rc1.mpws.com.php
+                    [PATH_WEB] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                     [PATH_DEF] => /var/www/mpws/rc_1.0/web/default/v1.0
                     [PATH_OWN] => /var/www/mpws/rc_1.0/web/customer/rc1.mpws.com
                 )
@@ -273,7 +286,7 @@ and open the template in the editor.
         )
 
 )
-</pre></div><div><b>[DEBUG INFO] 23:50:39</b> objectBaseWeb: getTemplatePath: Downloaded Template: page.test</div><div><b>[DEBUG INFO] 23:50:39</b> Fetching wigets: 1</div><div><b>[DEBUG INFO] 23:50:39</b> Rendering template: /var/www/mpws/rc_1.0/web/default/v1.0/templates/widget/demo2.html</div></pre>
+</pre></div><div><b>[DEBUG INFO] 21:35:51</b> objectBaseWeb: getTemplatePath: Downloaded Template: page.test</div><div><b>[DEBUG INFO] 21:35:51</b> Fetching wigets: 1</div><div><b>[DEBUG INFO] 21:35:51</b> Rendering template: /var/www/mpws/rc_1.0/web/default/v1.0/templates/widget/demo2.html</div></pre>
         <hr size="2"/>
         <div>
             

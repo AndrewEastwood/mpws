@@ -12,18 +12,30 @@ class objectBaseWeb extends objectBase {
     protected function objectCustomSetup() {
         // setup locale
         //$this->setObjectLocale($this->objectConfiguration['DISPLAY']['LOCALE']);
-        
+
         // setup meta object
         // non "en_us" locale attribute must be changed at this point
+        $this->setMeta('PATH_WEB', DR . '/web/customer/' . MPWS_CUSTOMER);
         $this->setMeta('PATH_DEF', DR . '/web/default/' . MPWS_VERSION);
+        // do not use identical paths for WEB and OWN
+        //if ($this->getObjectType() !== OBJECT_T_CUSTOMER)
         $this->setMeta('PATH_OWN', DR . '/web/' . $this->getObjectType() . DS . $this->getMeta('NAME'));
-
+        
         // use storage to store
         // templates, config and properties
         $this->setExtender('objectExtWithStorage', '_ex_store');
         $this->setExtender('objectExtWithResource', '_ex_resource');
         $this->setExtender('objectExtWithConfiguration', '_ex_config');
 
+        //var_dump($this->getMeta());
+        
+        // different versions
+        if (MPWS_VERSION != $this->objectConfiguration_customer_version) {
+            $this->setMeta('PATH_DEF', DR . '/web/default/' . $this->objectConfiguration_customer_version);
+            $this->updateExtenders();
+        }
+        
+       
     }
 
     /* extender overrides */
