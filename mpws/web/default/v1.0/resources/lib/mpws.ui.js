@@ -274,72 +274,75 @@
         };
         
         var _self = this;
-        
+
         var _uploadCounter = 0;
-        
-        var _html = {
-            buttons: {},
-            links: {
-                // append one more input file
-                add: $('<a>')
-                    .attr({
-                        type: 'button',
-                        href: 'javascript://'
-                    })
-                    .addClass('MPWSLinkAddFile')
-                    .text(_settings.properties.link_add),
-                // remove linked input file
-                remove: $('<a>')
-                    .attr({
-                        type: 'button',
-                        href: 'javascript://'
-                    })
-                    .addClass('MPWSLinkRemoveile')
-                    .text(_settings.properties.link_remove),
-                // delete linked input file
-                cancel: $('<a>')
-                    .attr({
-                        type: 'button',
-                        href: 'javascript://'
-                    })
-                    .addClass('MPWSLinkCancel')
-                    .text(_settings.properties.link_remove)
-            },
-            inputs: {
-                file: $('<input>')
-                    .attr({
-                        type: 'file',
-                        name: _settings.fileInputName + '[]'
-                    })
-                    .addClass('MPWSControlInput MPWSControlInputFileUpload'),
-                fileUploadKey: $('<input>')
-                    .attr({
-                        type: 'hidden',
-                        name: 'fileUploadKey'
-                    }),
-                fileCleanup: $('<input>')
-                    .attr({
-                        type: 'hidden',
-                        name: 'fileCleanup',
-                        id: 'MPWSControlInputFileUploadCleanup'
-                    })
-            },
-            sections: {
-                controlField: $('<div>')
-                    .attr({
-                        id: 'MPWSSectionControlField'
-                    }),
-                fileContainer: $('<div>')
-                    .attr({
-                        id: 'MPWSSectionFileUploadContainer'
-                    }),
-                fileUploadedContainer: $('<div>')
-                    .attr({
-                        id: 'MPWSSectionFileUploadedContainer'
-                    }),
-                fileField: $('<div>')
-                    .addClass('MPWSSectionFileUploadField')
-            }
+
+        function _html () {
+            var _h = {
+                buttons: {},
+                links: {
+                    // append one more input file
+                    add: $('<a>')
+                        .attr({
+                            type: 'button',
+                            href: 'javascript://'
+                        })
+                        .addClass('MPWSLinkAddFile')
+                        .text(_settings.properties.link_add),
+                    // remove linked input file
+                    remove: $('<a>')
+                        .attr({
+                            type: 'button',
+                            href: 'javascript://'
+                        })
+                        .addClass('MPWSLinkRemoveile')
+                        .text(_settings.properties.link_remove),
+                    // delete linked input file
+                    cancel: $('<a>')
+                        .attr({
+                            type: 'button',
+                            href: 'javascript://'
+                        })
+                        .addClass('MPWSLinkCancel')
+                        .text(_settings.properties.link_remove)
+                },
+                inputs: {
+                    file: $('<input>')
+                        .attr({
+                            type: 'file',
+                            name: _settings.fileInputName + '[]'
+                        })
+                        .addClass('MPWSControlInput MPWSControlInputFileUpload'),
+                    fileUploadKey: $('<input>')
+                        .attr({
+                            type: 'hidden',
+                            name: 'fileUploadKey'
+                        }),
+                    fileCleanup: $('<input>')
+                        .attr({
+                            type: 'hidden',
+                            name: 'fileCleanup',
+                            id: 'MPWSControlInputFileUploadCleanup'
+                        })
+                },
+                sections: {
+                    controlField: $('<div>')
+                        .attr({
+                            id: 'MPWSSectionControlField'
+                        }),
+                    fileContainer: $('<div>')
+                        .attr({
+                            id: 'MPWSSectionFileUploadContainer'
+                        }),
+                    fileUploadedContainer: $('<div>')
+                        .attr({
+                            id: 'MPWSSectionFileUploadedContainer'
+                        }),
+                    fileField: $('<div>')
+                        .addClass('MPWSSectionFileUploadField')
+                }
+            };
+            return _h;
         };
         
         this.setup = function (settings) {
@@ -376,9 +379,9 @@
             
             // add control section
             
-            var _controls = _html.sections.controlField;
-            var _fileContainer = _html.sections.fileContainer;
-            var _fileUploadedContainer = _html.sections.fileUploadedContainer;
+            var _controls = _html().sections.controlField;
+            var _fileContainer = _html().sections.fileContainer;
+            var _fileUploadedContainer = _html().sections.fileUploadedContainer;
             
             // add uploaded files
             var _uploadedFileCount = mpws.tools.getObjectCount(_settings.files);
@@ -386,11 +389,11 @@
                 _uploadCounter = _uploadedFileCount;
                 //mpws.tools.log(_settings.files.length);
                 for (fileIndex in _settings.files) {
-                    var _ufFld = _getHtmlObj(_html.sections.fileField);
+                    var _ufFld = _getHtmlObj(_html().sections.fileField);
                     
                     // add remove link
                     if (!_settings.showUploadsOnly) {
-                        _ufFld.append(_getHtmlObj(_html.links.cancel).click(function(){
+                        _ufFld.append(_getHtmlObj(_html().links.cancel).click(function(){
 
                             //mpws.tools.log('cancel upload file: ' + $(this).parent().attr('mpws-file'));
                             // get existed files to remove
@@ -424,16 +427,16 @@
             
             // add link
             if (!_settings.showUploadsOnly) {
-                var _add = _html.links.add;
+                var _add = _html().links.add;
                 _add.click(function(){
                     //mpws.tools.log('_add.click');
                     if (_uploadCounter > _settings.maxUploads - 1) {
                         $(this).hide();
                         return;
                     }
-                    var _fFld = _getHtmlObj(_html.sections.fileField);
-                    var _remove = _getHtmlObj(_html.links.remove);
-                    var _file = _getHtmlObj(_html.inputs.file);
+                    var _fFld = _getHtmlObj(_html().sections.fileField);
+                    var _remove = _getHtmlObj(_html().links.remove);
+                    var _file = _getHtmlObj(_html().inputs.file);
 
                     // init file realm
                     _file.attr('name',_getFUKey() + '[]');
@@ -449,7 +452,7 @@
                     _fFld.append(_remove);
                     _fFld.attr('id', 'MPWSFileField_' + mpws.tools.random() + '_ID');
                     //mpws.tools.log(_fFld);
-                    //_getLiveObj(_html.sections.fileContainer).prepend(_fFld);
+                    //_getLiveObj(_html().sections.fileContainer).prepend(_fFld);
                     $('#MPWSSectionFileUploadContainer').append(_fFld);
 
                     _uploadCounter++;
@@ -466,8 +469,8 @@
             
 
             // add controls
-            _controls.append(_html.inputs.fileUploadKey.val(_getFUKey()));
-            _controls.append(_html.inputs.fileCleanup);
+            _controls.append(_html().inputs.fileUploadKey.val(_getFUKey()));
+            _controls.append(_html().inputs.fileCleanup);
             
             // combine sections
             var _$fileUploader = $('<div>')

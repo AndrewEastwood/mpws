@@ -167,7 +167,7 @@ if(count($model['CUSTOMER']['MESSAGES'])) {
         </div>
         <script>
             // file upload
-            new mpws.ui.fileUpload({realm: 'eafile',files:<?=$model['CUSTOMER']['UPLOADS']['JSON']?>});
+            new mpws.ui.fileUpload({realm:'eafile',files:<?=$model['CUSTOMER']['UPLOADS']['JSON']?>,properties:{link_add:'add files'}});
         </script>
         </td>
     </tr>

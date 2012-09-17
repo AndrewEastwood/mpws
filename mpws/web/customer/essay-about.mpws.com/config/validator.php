@@ -74,10 +74,10 @@
     );
     
     $customer['VALIDATOR']["FILTER"]['ORDER'] = array(
-        'Title' => '/^[\[\]=,\?!&@~\{\}\+\'\.\*()a-zA-Z0-9_-\s]{3,35}$/',
+        'Title' => '/^[\[\]=,\?!&@~\{\}\+\'\.\*()a-zA-Z0-9_-\s]{3,150}$/',
         'PriceID' => '/\d+/',
-        'Level' => '/High School|College|University/',
-        'Format' => '/MLA|APA|Chicago|Turabian/',
+        'Level' => '/High School|College|University|Masters, MBA|PhD/',
+        'Format' => '/MLA|APA|Chicago|Turabian|Harvard|Other/',
         'Pages' => '/\d{1,2}/',
         //'Sources' => '/\d{1,2}/',
         'Email' => '/(?=^.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}/',
