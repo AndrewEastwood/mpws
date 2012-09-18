@@ -15,7 +15,7 @@ class controllerPublic {
         
         $mpwsCtx->processAll('Customer');
         
-        //echo $mpwsCtx->pageModel->fetchHtmlPage();
+        echo $mpwsCtx->pageModel->fetchHtmlPage();
         /*
         $customer = new libraryCustomerManager();
         //echo 'Requested page : ' . $page;
