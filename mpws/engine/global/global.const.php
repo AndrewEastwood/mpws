@@ -48,5 +48,6 @@
     // Scripts
     
     define("EXT_SCRIPT", DOT."php");
+    define("EXT_TEMPLATE", DOT."html");
 
 ?>

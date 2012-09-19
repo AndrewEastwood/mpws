@@ -87,6 +87,7 @@
     // global methods
     // will be moved to 
     function debug ($value, $title = '', $argsDebug = false) {
+        if (MPWS_LOG_LEVEL == 0) return;
         if (!isset($GLOBALS['MPWS_DEBUG']))
             $GLOBALS['MPWS_DEBUG'] = '';
         //return false;

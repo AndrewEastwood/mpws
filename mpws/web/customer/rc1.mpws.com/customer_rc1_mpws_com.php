@@ -14,7 +14,7 @@ class customer_rc1_mpws_com extends objectBaseWebCustomer {
         //$ctx->contextCustomer->getDBO();
         
         // get plugin
-        //$plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
+        $plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
         
         //echo '<br>|' . $this->objectTemplatePath_layout_page;
         //echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo23;
@@ -23,15 +23,16 @@ class customer_rc1_mpws_com extends objectBaseWebCustomer {
         
         //echo $this->objectTemplatePath_widget_demo2;
         
+        $ctx->pageModel->addWebObject($plgToolbox);
         
         
-        $ctx->pageModel->addWidget('toolboxmenu2',
+        $ctx->pageModel->addWidget('demo2',
             $this->objectTemplatePath_widget_demo2,
-            $ctx->getCurrentContextName());
+            $this);
         
         $ctx->pageModel->setPageView(
             $this->objectTemplatePath_layout_page,
-            $ctx->getCurrentContextName());
+            $this);
         
         
         

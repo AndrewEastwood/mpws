@@ -9,6 +9,7 @@
 
 class objectBaseWeb extends objectBase {
     
+    /* custom setup */
     protected function objectCustomSetup() {
         // setup locale
         //$this->setObjectLocale($this->objectConfiguration['DISPLAY']['LOCALE']);
@@ -16,7 +17,7 @@ class objectBaseWeb extends objectBase {
         // setup meta object
         // non "en_us" locale attribute must be changed at this point
         $this->setMeta('PATH_WEB', DR . '/web/customer/' . MPWS_CUSTOMER);
-        $this->setMeta('PATH_DEF', DR . '/web/default/' . MPWS_VERSION);
+        $this->setMeta('PATH_DEF', DR . '/web/default/' . $this->getObjectVersion());
         // do not use identical paths for WEB and OWN
         //if ($this->getObjectType() !== OBJECT_T_CUSTOMER)
         $this->setMeta('PATH_OWN', DR . '/web/' . $this->getObjectType() . DS . $this->getMeta('NAME'));
@@ -30,16 +31,16 @@ class objectBaseWeb extends objectBase {
         //var_dump($this->getMeta());
         
         // different versions
-        if (MPWS_VERSION != $this->objectConfiguration_customer_version) {
+        // all plugins must use version that customer uses
+        if ($this->getObjectVersion() != $this->objectConfiguration_customer_version) {
             $this->setMeta('PATH_DEF', DR . '/web/default/' . $this->objectConfiguration_customer_version);
+            $this->setMeta('VERSION', $this->objectConfiguration_customer_version);
             $this->updateExtenders();
         }
         
        
     }
-
-    /* extender overrides */
-    final protected function objectCustomProperty($name) {
+    protected function objectCustomProperty($name) {
         if (startsWith($name, 'objectConfiguration'))
             return $this->getConfiguration(str_replace(array('objectConfiguration_', '_'), array('', '.'), $name));
         if (startsWith($name, 'objectTemplatePath'))
@@ -50,7 +51,7 @@ class objectBaseWeb extends objectBase {
         return parent::objectCustomProperty($name);
     }
 
-    /* resource */
+    /* resource access */
     protected function getConfiguration ($metapath) {
         debug('objectBaseWeb: getConfiguration: ' . $metapath);
         $_kp = $this->_ex_store__keyPathConfiguration($metapath);
@@ -91,6 +92,58 @@ class objectBaseWeb extends objectBase {
         return $resValue;
     }
     
+    /* public api */
+    public function run ($command) { 
+        debug($command, 'objectBaseWeb: run function:');
+        switch ($command[makeKey('method')]) {
+            case 'main':
+                $this->_run_main();
+                break;
+            case 'jsapi':
+                $this->_run_jsapi();
+                break;
+            case 'cross':
+                $this->_run_cross();
+                break;
+        }
+    }
+    
+    /* running bridges */
+    private function _run_main() {
+        debug('objectBaseWeb => _run_main');
+        // run common hook on startup
+        $this->_displayTriggerOnCommonStart();
+        // validate access key with plugin name to run in normal mode
+        // or run customer
+        if (libraryRequest::getPage() === $this->getObjectName() || 
+            $this->getObjectType() === OBJECT_T_CUSTOMER)
+            $this->_displayTriggerOnActive(); // run on active
+        else
+            $this->_displayTriggerOnInActive(); // run in background
+        // run common hook in end up
+        $this->_displayTriggerOnCommonEnd();
+    }
+    private function _run_jsapi() {
+        debug('objectBaseWeb => _run_jsapi');
+    }
+    private function _run_cross() {
+        debug('objectBaseWeb => _run_cross');
+    }
+    
+    /* display triggers */
+    protected function _displayTriggerOnCommonStart () {
+        debug('objectBaseWeb => _displayTriggerOnCommonStart');
+    }
+    protected function _displayTriggerOnActive () {
+        debug('objectBaseWeb => _displayTriggerOnActive');
+        $_SESSION['MPWS_'.  makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
+    }
+    protected function _displayTriggerOnInActive () {
+        debug('objectBaseWeb => _displayTriggerOnInActive');
+    }
+    protected function _displayTriggerOnCommonEnd () {
+        debug('objectBaseWeb => _displayTriggerOnCommonEnd');
+    }
 }
 
 ?>

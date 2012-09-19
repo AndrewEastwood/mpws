@@ -15,6 +15,12 @@ class contextCustomer extends objectContext {
         $this->_customerManager->runCustomerAsync($command);
     }
     
+    // simple bridge to libraryCustomerManager->getCustomer
+    final public function getObject ($name) {
+        debug('contextCustomer => getObject: ' . $name);
+        return $this->_customerManager->getCustomer($name);
+    }
+    
     final public function getDBO($customerName = MPWS_CUSTOMER) {
         echo '<br> getting DataBaseObject for '.$customerName.'>>>>>>';
         // return existed dbo

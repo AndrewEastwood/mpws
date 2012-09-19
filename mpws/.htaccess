@@ -39,7 +39,7 @@ RewriteRule mpws/(\w+).html?(.*) /engine/dispatcher/dispatcher.Toolbox.php?page=
 
 ############# WEB #############
 # -- startup file
-DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=home&action=default
+DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=index&action=default
 # -- public pages
 RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?page=$1&action=default$2 [QSA]
 # -- custom pages

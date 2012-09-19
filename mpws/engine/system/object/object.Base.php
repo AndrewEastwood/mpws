@@ -9,17 +9,17 @@ class objectBase {
     private $_meta;
     private $_extenders;
     
-    public function __construct ($name = 'baseObject', $type = '', $version = '1.0') {
-        debug('Base init: "' . $name. '" as "' . $type . '" v.' . $version);
+    public function __construct ($name = 'baseObject', $type = '') {
+        debug('Base init: "' . $name. '" as "' . $type);
         
         $this->_name = $name;
         $this->_type = $type;
-        $this->_version = $version;
+        $this->_version = MPWS_VERSION;
         $this->_locale = 'en_us';
         $this->_meta = array(
             'NAME' => $name,
             'TYPE' => $type,
-            'VERSION' => $version,
+            'VERSION' => MPWS_VERSION,
             'LOCALE' => 'en_us',
             'CLASS' => strtolower($type.DOT.$name),
             'SCRIPT' => strtolower($type.DOT.$name.EXT_SCRIPT)
@@ -44,6 +44,10 @@ class objectBase {
     
     public function __get($name) {
         return $this->objectCustomProperty($name);
+    }
+    
+    public function __toString() {
+        return 'objectBase: ' . $this->getObjectName() . ' t.' . $this->getObjectType();
     }
 
     /* get */

@@ -48,13 +48,6 @@ class contextMPWS {
         }
     }
     
-    private function getContext ($name) {
-        if (empty($this->_contexts[makeKey($name)]))
-            $this->loadContext($name);
-        
-        return $this->_contexts[makeKey($name)];
-    }
-    
     private function getCommand ($command, $custom_args = array()) {
         if (!is_string($command))
             throw new Exception('MPWS addCommand Setup Error. Wrong Command Object');
@@ -113,6 +106,13 @@ class contextMPWS {
     }
     
     /* public */
+    
+    public function getContext ($name) {
+        if (empty($this->_contexts[makeKey($name)]))
+            $this->loadContext($name);
+        
+        return $this->_contexts[makeKey($name)];
+    }
     
     public function getCurrentContextName () {
         return $this->_runningContextName;

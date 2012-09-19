@@ -1,1 +1,3 @@
-DEFAULT DEMO 2 = {$smarty.capture.mymsg};
+{include file=$CURRENT.OBJECT->objectTemplatePath_widget_demo assign='wgt_demo'}
+DEFAULT DEMO 2<br>
+{$wgt_demo}

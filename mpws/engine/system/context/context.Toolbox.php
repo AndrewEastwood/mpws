@@ -17,7 +17,7 @@ class contextToolbox extends objectContext  {
         $this->_pluginManager->runPluginAsync($command);
     }
     
-    // simple bridge to pluginManagwer->getPLuginWithContext
+    // simple bridge to libraryPluginManager->getPLuginWithContext
     final public function getPlugin ($name) {
         debug('contextToolbox => getPlugin: ' . $name);
         return $this->_pluginManager->getPluginWithContext($name);
