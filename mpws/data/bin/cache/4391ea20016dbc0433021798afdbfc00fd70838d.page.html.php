@@ -11,11 +11,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'nocache_hash' => '996130154505798fa017cf1-46267550',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_505a509fd840b2_61200396',
+  'unifunc' => 'content_505b9769e2ff44_77193977',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_505a509fd840b2_61200396')) {function content_505a509fd840b2_61200396($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_505b9769e2ff44_77193977')) {function content_505b9769e2ff44_77193977($_smarty_tpl) {?><!DOCTYPE html>
 <html>
     <head>
         <title>Default Page</title>
@@ -25,7 +25,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <div>
             ------
             DEFAULT DEMO 2<br>
-HELLO WORLD!!!;
+HELLO WORLD!!!;<br>
+Property test = trololo
+
+<br><br><br>
             ------
             
         </div>

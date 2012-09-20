@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-class customer_rc1_mpws_com extends objectBaseWebCustomer {
+class customer_toolbox extends objectBaseWebCustomer {
 
     public function run ($command) { 
         parent::run($command);

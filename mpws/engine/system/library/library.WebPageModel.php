@@ -7,6 +7,7 @@
 
 class libraryWebPageModel {
 
+    private $_site;
     private $_widgets;
     private $_wobs;
     private $_page;
@@ -24,16 +25,24 @@ class libraryWebPageModel {
         return self::$_instance;
     }
     
+    public function removeWebObject ($name) {
+        delete($this->_wobs[makeKey($name)]);
+        return $this;
+    }
     public function addWebObject ($wob) {
         $this->_wobs[makeKey($wob->getObjectName())] = $wob;
         return $this;
     }
+    
+    public function setSiteObject($siteObject) {
+        $this->_site = $siteObject;
+        return $this;
+    }
 
-    public function setPageView ($template, $contextName, $data = array()) {
+    public function setPageView ($template, $data = array()) {
         $this->_page = array (
             'NAME' => basename($template, EXT_TEMPLATE),
             'DATA' => $data,
-            'OBJECT' => $contextName,
             'TEMPLATE' => $template,
             'TYPE' => 'PAGE',
             'HTML' => ''
@@ -41,11 +50,10 @@ class libraryWebPageModel {
         return $this;
     }
     
-    public function addWidget($name, $template, $contextName, $data = array()) {
+    public function addWidget($name, $template, $data = array()) {
         $this->_widgets[makeKey($name, true)] = array (
             'NAME' => makeKey($name, true),
             'DATA' => $data,
-            'OBJECT' => $contextName,
             'TEMPLATE' => $template,
             'TYPE' => 'WIDGET',
             'HTML' => ''
@@ -62,6 +70,7 @@ class libraryWebPageModel {
         $model = array(
             'DEBUG' => $GLOBALS['MPWS_DEBUG'],
             'CONTEXT' => $ctx,
+            'SITE' => $this->_site,
             'WOB' => $this->_wobs,
             'MODEL' => array(
                 'PAGE' => $this->_page,
@@ -96,9 +105,9 @@ class libraryWebPageModel {
         //}
 
         // get running object
-        $currVar = array(
+        /*$currVar = array(
             'CURRENT' => $wgt
-        );
+        );*/
         // assign context
         //$currVar['CURRENT']['CONTEXT'] = $ctx->getContext($wgt['CONTEXT']);
         // set data
