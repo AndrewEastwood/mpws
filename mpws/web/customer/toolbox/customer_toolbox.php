@@ -25,8 +25,7 @@ class customer_toolbox extends objectBaseWebCustomer {
         
         $ctx->pageModel->setSiteObject($this)
             ->addWebObject($plgToolbox)
-            ->addWidget('demo2', $this->objectTemplatePath_widget_demo2)
-            ->setPageView($this->objectTemplatePath_layout_page);
+            ->setPageView($this->objectTemplatePath_layout_default);
         
         
         

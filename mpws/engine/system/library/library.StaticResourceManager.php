@@ -168,7 +168,7 @@ class libraryStaticResourceManager {
 
     public static function getTemplatePath ($owner, $name, $resourceName, $preDefinedPaths = array()) {
         debug('libraryStaticResourceManager', 'getTemplatePath', true);
-        $resPath = 'templates' . DS . str_replace(DOT, DS, $resourceName) . '.html';
+        $resPath = 'template' . DS . str_replace(DOT, DS, $resourceName) . '.html';
         $_default  = DR . '/web/default/' . MPWS_VERSION . DS . $resPath;
         if (isset($preDefinedPaths['PATH_DEF']))
             $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
