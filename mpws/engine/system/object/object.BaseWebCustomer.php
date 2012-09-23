@@ -27,41 +27,52 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
     /* display triggers */
     protected function _displayTriggerOnActive () {
         parent::_displayTriggerOnActive();
+
+        $ctx = contextMPWS::instance();
+        $ctx->pageModel->setSiteObject($this);
+        
         debug('objectBaseWebCustomer => _displayTriggerOnActive');
         //echo 'active page is ' . libraryRequest::getPage();
+        $ret = false;
         switch(libraryRequest::getPage()) {
             case 'index':
-                $this->_displayPage_Index();
+                $ret = $this->_displayPage_Index();
                 break;
             case 'about-us':
-                $this->_displayPage_AboutUs();
+                $ret = $this->_displayPage_AboutUs();
                 break;
             case 'terms':
-                $this->_displayPage_Terms();
+                $ret = $this->_displayPage_Terms();
                 break;
             case 'contacts':
-                $this->_displayPage_Contacts();
+                $ret = $this->_displayPage_Contacts();
                 break;
             // do not implement NotFound page
             // should be used in object implementation
         }
+        return $ret;
     }
     
     /* display pages */
     protected function _displayPage_Index () {
         debug('objectBaseWebCustomer => _displayPage_Home');
+        return true;
     }
     protected function _displayPage_AboutUs () {
         debug('objectBaseWebCustomer => _displayPage_AboutUs');
+        return true;
     }
     protected function _displayPage_Terms () {
         debug('objectBaseWebCustomer => _displayPage_Terms');
+        return true;
     }
     protected function _displayPage_Contacts () {
         debug('objectBaseWebCustomer => _displayPage_Contacts');
+        return true;
     }
     protected function _displayPage_NotFound () {
         debug('objectBaseWebCustomer => _displayPage_Contacts');
+        return true;
     }
 
 }

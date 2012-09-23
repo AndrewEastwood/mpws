@@ -111,14 +111,34 @@ class librarySecurity {
     }
     
     // events:
+    // * ON_START
     // * ON_LOGOUT
     // * ON_VALIDATE
     // * ON_SUCCESS
     // * ON_TIMEOUT
-    public static function mpws_session ($login, $pwd, $events, $config, $ctx) {
+    public static function mpws_session ($events, $lifetime, $ctx) {
         //global $config;
-        debug('_userVerifySession');
+        //debug('_userVerifySession');
 
+        // mpws standart login and pws init
+        $login = libraryRequest::getPostValue('mpws_user_login');
+        $pwd = libraryRequest::getPostValue('mpws_user_pwd');
+        
+        // reinit default values
+        if (isset($events['ON_INIT'])) {
+            $event = $events['ON_INIT'];
+            list($login, $pwd) = $event($ctx);
+        }
+        
+        // do smth on startup
+        if (isset($events['ON_START'])) {
+            $event = $events['ON_START'];
+            $event($login, $pwd, $ctx);
+        }
+        
+        
+        //return false;
+        
         //$model = &$toolbox->getModel();
         // logout user
         if (libraryRequest::isPostFormAction('logout')) {
@@ -126,7 +146,7 @@ class librarySecurity {
                 // put user offline
                 if (!empty($_SESSION['USER']['ID']) && isset($events['ON_LOGOUT'])) {
                     $event = $events['ON_LOGOUT'];
-                    $event($login, $pwd, $config, $ctx);
+                    $event($login, $pwd, $ctx);
                 }
                 $_SESSION['USER'] = false;
                 return 'USER_FORCE_LOGOUT';
@@ -145,12 +165,12 @@ class librarySecurity {
                 $user = false;
                 if (isset($events['ON_VALIDATE'])) {
                     $event = $events['ON_VALIDATE'];
-                    $event($login, $pwd, $config, $ctx);
+                    $user = $event($login, $pwd, $ctx);
                 }
                     
                 
                 //var_dump($user);
-                if (!empty($user['Id'])) {
+                if (!empty($user['ID'])) {
                     //echo 'Make User';
                     $_SESSION['USER'] = array(
                         'ID' => $user['ID'],
@@ -162,7 +182,7 @@ class librarySecurity {
                     // set last access
                     if (isset($events['ON_SUCCESS'])) {
                         $event = $events['ON_SUCCESS'];
-                        $event($login, $pwd, $config, $ctx);
+                        $event($user, $ctx);
                     }
   
                     return 'USER_AUTHORIZED';
@@ -173,14 +193,14 @@ class librarySecurity {
         }
 
         // check for session expiration
-        debug('Session time ' . $config['TOOLBOX']['SESSION_TIME']);
-        $sessionIdle = ($_SESSION['USER']['LAST_ACCESS'] + $config['TOOLBOX']['SESSION_TIME']) < mktime();
+        debug('librarySecurity => mpws_session: Session time ' . $lifetime);
+        $sessionIdle = ($_SESSION['USER']['LAST_ACCESS'] + $lifetime) < mktime();
         if ($sessionIdle) {
             //echo 'USER_TIMEOUT';
             // put user offline
             if (isset($events['ON_TIMEOUT'])) {
                 $event = $events['ON_TIMEOUT'];
-                $event($login, $pwd, $config, $ctx);
+                $event($login, $pwd, $ctx);
             }
             $_SESSION['USER'] = false;
             return 'USER_TIMEOUT';
@@ -190,6 +210,15 @@ class librarySecurity {
         $_SESSION['USER']['LAST_ACCESS'] = mktime();
         return 'USER_ALIVE';
     }
+       
+    public static function mpws_userInfo ($events, $lifetime, $ctx) {
+        debug('librarySecurity => mpws_userInfo');
+        $_state = self::mpws_session($events, $lifetime, $ctx);
+        $user = $_SESSION['USER'];
+        $user[makeKey('STATE')] = $_state;
+        $user[makeKey('ACTIVE')] = ($_state == 'USER_AUTHORIZED' || $_state == 'USER_ALIVE');
+        return $user;
+    } 
     
 }
 

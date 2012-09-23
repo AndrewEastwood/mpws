@@ -7,6 +7,7 @@
 
 class libraryWebPageModel {
 
+    private $_info;
     private $_site;
     private $_widgets;
     private $_wobs;
@@ -17,6 +18,7 @@ class libraryWebPageModel {
     private function __construct() {
         $this->_widgets = array();
         $this->_page = array();
+        $this->_info = $this->getStandartInfo();
     }
     
     public static function instance () {
@@ -25,6 +27,19 @@ class libraryWebPageModel {
         return self::$_instance;
     }
     
+    public function setInfo ($key, $info = false) {
+        if (is_array($key) && empty($info)) {
+            $this->_info = array_merge_recursive($this->_info, $info);
+            return true;
+        }
+        if (is_string($key) && isset($info)) {
+            $this->_info[makeKey($key)] = $info;
+            return true;
+        }
+        throw new Exception('libraryWebPageModel => setInfo: ERROR is coccured while setting new info value ('.$info.') with key ' . $key);
+    }
+
+
     public function removeWebObject ($name) {
         delete($this->_wobs[makeKey($name)]);
         return $this;
@@ -62,6 +77,7 @@ class libraryWebPageModel {
     }
     
     public function fetchHtmlPage () {
+        //echo mktime() . '<br>';
         // get context
         $ctx = contextMPWS::instance();
         // fetch wigets
@@ -77,6 +93,10 @@ class libraryWebPageModel {
                 'WIDGET' => &$this->_widgets
             )
         );
+        // append info
+        if (!empty($this->_info))
+            $model['INFO'] = $this->_info;
+
         // fetch widgets
         foreach ($this->_widgets as $key => $value) {
             debug('fetchHtmlPage: building widget ' . $key);
@@ -85,25 +105,25 @@ class libraryWebPageModel {
         //debug($model);
         // fetch page
         debug('Fetching page: ' . $this->_page['TEMPLATE']);
-        return $this->fetchTemplate($this->_page, $model);
+        $ret = $this->fetchTemplate($this->_page, $model);
+        //echo mktime() . '<br>';
+        return $ret;
     }
     
     public function fetchTemplate ($wgt, $model) {
         if (empty($wgt['TEMPLATE']))
             throw new Exception('libraryWebPageModel Empty Template Name Requested');
-
         // get context
         //$ctx = contextMPWS::instance();
-        
         $tp = $this->getTemplateProvider('smarty');
         //echo 'test';
         //var_dump($smarty);
         debug('Rendering template: ' . $wgt['TEMPLATE']);
-        
         //if (!empty($model)) {
         $tp->assign($model);
+        
+        
         //}
-
         // get running object
         /*$currVar = array(
             'CURRENT' => $wgt
@@ -111,18 +131,14 @@ class libraryWebPageModel {
         // assign context
         //$currVar['CURRENT']['CONTEXT'] = $ctx->getContext($wgt['CONTEXT']);
         // set data
-        $tp->assign($currVar);
-        
+        //$tp->assign($currVar);
         return $tp->fetch($wgt['TEMPLATE']);
     }
     
     private function getTemplateProvider ($name) {
-        
         if (isset($this->_templateProviders[$name]))
             return $this->_templateProviders[$name];
-        
         $tplProvider = null;
-        
         switch ($name) {
             case 'smarty':
             default:
@@ -130,12 +146,23 @@ class libraryWebPageModel {
                 $tplProvider->clearAllCache();
                 break;
         }
-
         $this->_templateProviders[$name] = $tplProvider;
-        
         return $tplProvider;
     }
     
+    public function getStandartInfo () {
+        $info = array();
+        // page token
+        $info[makeKey('TOKEN')] = libraryRequest::getOrValidatePageSecurityToken();
+        // page
+        $info[makeKey('PAGE')] = libraryRequest::getPage();
+        // display
+        $info[makeKey('DISPLAY')] = libraryRequest::getDisplay();
+        // action
+        $info[makeKey('ACTION')] = libraryRequest::getAction();
+        return $info;
+    }
+
     public function dump() {
         return debug($this->_widgets, 'libraryWebPageModel widgets');
     }

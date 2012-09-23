@@ -83,10 +83,10 @@
                 $this->oops ( "Could not set charset: <b>$this->_db_charset</b>." );
             }
             // unset the data so it can't be dumped
-            $this->_db_server='';
-            $this->_db_user='';
-            $this->_db_pass='';
-            $this->_db_database='';
+            $this->_db_server='npws-null';
+            $this->_db_user='npws-null';
+            $this->_db_pass='npws-null';
+            $this->_db_database='npws-null';
         }
 
         public function escape($string) {

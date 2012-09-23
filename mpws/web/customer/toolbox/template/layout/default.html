@@ -1,49 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MPWS Toolbox</title>
+    <title>MPWS Toolbox - {$INFO.PAGE}</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
     <script type="text/javascript" src="/static/toolboxAction.js"></script>
-
-    
+    {literal}
+    <script type="text/javascript">
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart']});
+        // security token
+        mpws.token = '{/literal}{$INFO.TOKEN}{literal}';
+        // page
+        mpws.page = '{/literal}{$INFO.PAGE}{literal}';
+        // display
+        mpws.display = '{/literal}{$INFO.DISPLAY}{literal}';
+        // action
+        mpws.action = '{/literal}{$INFO.ACTION}{literal}';
+    </script>
+    {/literal}
 </head>
 <body>
 
+<div class="MPWSLayout MPWSLayoutToolbox">
 
-<div class="MPWSPage MPWSPageToolbox">
-
-<div class="MPWSPage MPWSPageToolbox MPWSPageDisplay_Login">
-
-    <div class="MPWSWrapper MPWSWrapperLayoutToolbox">
-        <div class="MPWSLayout MPWSLayoutToolbox">
-            <h2>TEAM LEAD WORKDESK</h2>
-            <div class="MPWSComponent MPWSComponentUserInfo">
-                <form action="" method="POST">
-                    You are signed in as: <b>username</b>
-                    <input type="submit" name="do" value="logout"/>
-                </form>
-                Your home page url: <a href="//{$smarty.server.HTTP_HOST}" target="_blank">{$smarty.const.MPWS_CUSTOMER}</a>
-                <div>
-                    tools
-                </div>
-            </div>
-            
-            <hr size="2">
-            
-                <div class="MPWSComponent MPWSComponentMenu">
-                    menu
-                </div>
-            <div class="MPWSComponent MPWSComponentContent">
-                messages
-                <div class="MPWSMainContentWrapper">
-                content
-                <p class="MPWSEmptyParagraph">&nbsp</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    {if $INFO.USER.STATE}
+        {include file=$SITE->objectTemplatePath_page_login}
+    {else}
+        {include file=$SITE->objectTemplatePath_page_normal}
+    {/if}
 
 </div>
 

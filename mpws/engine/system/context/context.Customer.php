@@ -16,18 +16,18 @@ class contextCustomer extends objectContext {
     }
     
     // simple bridge to libraryCustomerManager->getCustomer
-    final public function getObject ($name) {
+    final public function getObject ($name = MPWS_CUSTOMER) {
         debug('contextCustomer => getObject: ' . $name);
         return $this->_customerManager->getCustomer($name);
     }
     
     final public function getDBO($customerName = MPWS_CUSTOMER) {
-        echo '<br> getting DataBaseObject for '.$customerName.'>>>>>>';
+        debug('getting => getDBO for '.$customerName);
         // return existed dbo
         if (isset($this->_databaseManagers[$customerName]))
             return $this->_databaseManagers[$customerName];
         // get customer
-        $customer = $this->_customerManager->getCustomer($customerName);
+        $customer = $this->getObject($customerName);
         // make connect config
         $this->_databaseManagers[$customerName] = new libraryDataBaseChainQueryBuilder($customer->getDBConnection());
         // return dbo

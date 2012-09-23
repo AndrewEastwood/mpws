@@ -1,8 +1,5 @@
 <?php
 
-echo 'oooooo';
-
-
     // detect running customer name
     define('DR', strtolower($_SERVER['DOCUMENT_ROOT']));
     // detect running customer name
@@ -40,7 +37,5 @@ echo 'oooooo';
         return $h;
     }
     
-    
-    echo MPWS_CUSTOMER;
 
 ?>
