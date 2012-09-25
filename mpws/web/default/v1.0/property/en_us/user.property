@@ -1,0 +1,3 @@
+systemWelcomeMessage='You are signed in as:';
+systemUserLastAccess='Last access:';
+formSignoutButtonText='Logout';

@@ -4,6 +4,9 @@
 class libraryRequest {
 
     /* get values */
+    static function getLocale ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
+        return self::getValue('l', $defaultValue, $switch, $valueOnSwitch);
+    }
     static function getDisplay($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('display', $defaultValue, $switch, $valueOnSwitch);
     }

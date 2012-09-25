@@ -2,20 +2,20 @@
 
 class objectBase {
     
-    private $_name;
-    private $_type;
-    private $_version;
-    private $_locale;
+   // private $_name;
+    //private $_type;
+    //private $_version;
+    //private $_locale;
     private $_meta;
     private $_extenders;
     
     public function __construct ($name = 'baseObject', $type = '') {
         debug('Base init: "' . $name. '" as "' . $type);
         
-        $this->_name = $name;
-        $this->_type = $type;
-        $this->_version = MPWS_VERSION;
-        $this->_locale = 'en_us';
+        //$this->_name = $name;
+        //$this->_type = $type;
+        //$this->_version = MPWS_VERSION;
+        //$this->_locale = 'en_us';
         $this->_meta = array(
             'NAME' => $name,
             'TYPE' => $type,
@@ -51,10 +51,10 @@ class objectBase {
     }
 
     /* get */
-    public function getObjectName () { return $this->_name; }
-    public function getObjectType () { return $this->_type; }
-    public function getObjectVersion () { return $this->_version; }
-    public function getObjectLocale () { return $this->_locale; }
+    public function getObjectName () { return $this->getMeta('NAME'); }
+    public function getObjectType () { return $this->getMeta('TYPE'); }
+    public function getObjectVersion () { return $this->getMeta('VERSION'); }
+    public function getObjectLocale () { return $this->getMeta('LOCALE'); }
     public function getExtender ($alias) {
         if (isset($this->_extenders[$alias]))
             return $this->_extenders[$alias];
@@ -66,7 +66,7 @@ class objectBase {
         return $this->_meta[$key];
     }
     /* set */
-    public function setObjectLocale ($val) { $this->_locale = $val; $this->setMeta('LOCALE', $val); }
+    public function setObjectLocale ($val) { $this->setMeta('LOCALE', $val); }
     public function setMeta($key, $val) { $this->_meta[$key] = $val; }
     public function setExtender($extendObjectName, $alias, $initJsonArgs = false) {
         

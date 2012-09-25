@@ -7,16 +7,15 @@
 
 class customer_toolbox extends objectBaseWebCustomer {
 
-    
     protected function _displayTriggerOnCommonStart () {
         parent::_displayTriggerOnCommonStart();
         debug('customer_toolbox => _displayTriggerOnCommonStart');
-        
+
         $ctx = contextMPWS::instance();
         // validate user access
         $events = array();
-        //$events['ON_VALIDATE'] = function($login, $pwd, $config, $ctx) {
-        $events['ON_START'] = function($login, $pwd, $ctx) {
+        $events['ON_VALIDATE'] = function($login, $pwd, $ctx) {
+        //$events['ON_START'] = function($login, $pwd, $ctx) {
             //echo 'ATTEMPT TO LOGIN AS ' . $login . DOG . $pwd;
             return $ctx->contextCustomer->getDBO()
                 ->select('*')
@@ -40,7 +39,15 @@ class customer_toolbox extends objectBaseWebCustomer {
         
         
         $mpws_user = librarySecurity::mpws_userInfo($events, $this->objectConfiguration_customer_sessionTime, $ctx);
+        
+        //var_dump($mpws_user);
+        
         $ctx->pageModel->setInfo('USER', $mpws_user);
+        
+        
+        
+        $ctx->pageModel->addMessage('helloWorld');
+        
     }
     
     protected function _displayTriggerOnActive () {

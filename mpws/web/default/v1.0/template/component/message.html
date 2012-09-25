@@ -1,0 +1,13 @@
+{if isset($_realm) }
+    {if isset($MODEL.MESSAGE[$_realm]) }
+        <div id="MPWSComponentMessage{$_realm|capitalize:0:1}ID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessage{$_realm|capitalize:0:1}">
+        <ul>
+        {foreach $MODEL.MESSAGE[$_realm] as $keyvar=>$itemvar}
+            <li class="MPWSMessage">{$SITE->{"objectProperty_message_`$itemvar`"}}</li>
+        {/foreach}
+        </ul>
+        </div>
+    {else}
+        <p>ERROR at: "{$smarty.template}" Wrong realm type;</p>
+    {/if}
+{/if}

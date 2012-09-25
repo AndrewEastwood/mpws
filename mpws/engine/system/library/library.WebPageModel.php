@@ -12,6 +12,8 @@ class libraryWebPageModel {
     private $_widgets;
     private $_wobs;
     private $_page;
+    private $_messages;
+    private $_customs;
     private $_templateProviders;
     private static $_instance;
     
@@ -25,6 +27,15 @@ class libraryWebPageModel {
         if (empty(self::$_instance))
             self::$_instance = new libraryWebPageModel();
         return self::$_instance;
+    }
+    
+    public function setCustom ($key, $value) {
+        $this->_customs[$key] = $value;
+    }
+
+
+    public function addMessage ($messageKey, $realm = 'COMMON') {
+        $this->_messages[$realm] = $messageKey;
     }
     
     public function setInfo ($key, $info = false) {
@@ -89,8 +100,10 @@ class libraryWebPageModel {
             'SITE' => $this->_site,
             'WOB' => $this->_wobs,
             'MODEL' => array(
+                'MESSAGE' => $this->_messages,
                 'PAGE' => $this->_page,
-                'WIDGET' => &$this->_widgets
+                'WIDGET' => &$this->_widgets,
+                'CUSTOM' => $this->_customs
             )
         );
         // append info

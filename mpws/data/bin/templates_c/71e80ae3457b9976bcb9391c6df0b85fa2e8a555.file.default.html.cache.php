@@ -1,22 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-09-25 22:01:39
-         compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/default.html" */ ?>
-<?php /*%%SmartyHeaderCode:681098806505de7684c3611-91588357%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /* Smarty version Smarty-3.1.11, created on 2012-09-26 00:38:54
+         compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html" */ ?>
+<?php /*%%SmartyHeaderCode:2362038085062240e8c91d5-65005751%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
-    '4c804f4d522c5f198aa6fff1ee163886bfa9fd58' => 
+    '71e80ae3457b9976bcb9391c6df0b85fa2e8a555' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/default.html',
-      1 => 1348599698,
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html',
+      1 => 1348609128,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '681098806505de7684c3611-91588357',
+  'nocache_hash' => '2362038085062240e8c91d5-65005751',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_505de7684f5787_39913365',
+  'unifunc' => 'content_5062240e935ae9_27772355',
   'variables' => 
   array (
     'INFO' => 0,
@@ -24,7 +24,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_505de7684f5787_39913365')) {function content_505de7684f5787_39913365($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5062240e935ae9_27772355')) {function content_5062240e935ae9_27772355($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - <?php echo $_smarty_tpl->tpl_vars['INFO']->value['PAGE'];?>
@@ -51,6 +51,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ';
     </script>
     
+    <meta name="locale" content="<?php echo $_smarty_tpl->tpl_vars['SITE']->value->getObjectLocale();?>
+">
 </head>
 <body>
 

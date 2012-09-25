@@ -1,1 +1,19 @@
-utyutyutyu
+<div class="MPWSPage MPWSPageLogin">
+    
+    
+    
+    <?=(empty($_SERVER['QUERY_STRING'])?'display=home':libraryRequest::getNewUrl());?>
+    
+<form action="?" method="POST">
+    <p>
+    <input type="text" name="mpws_user_login" value="" placeholder="Login"/>
+    </p>
+    <p>
+    <input type="password" name="mpws_user_pwd" value="" placeholder="Password"/>
+    </p>
+    <p>
+    <input type="submit" name="do" value="SignIn"/>
+    </p>
+</form>
+    
+</div>

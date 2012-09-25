@@ -29,6 +29,12 @@ class objectBaseWeb extends objectBase {
         $this->setExtender('objectExtWithConfiguration', '_ex_config');
 
         //var_dump($this->getMeta());
+        $locale = libraryRequest::getLocale($this->objectConfiguration_customer_locale);
+        if ($this->getObjectLocale() != $locale) {
+            $this->setObjectLocale($locale);
+            $this->updateExtenders();
+        }
+        
         
         // different versions
         // all plugins must use version that customer uses

@@ -136,7 +136,7 @@ class librarySecurity {
             $event($login, $pwd, $ctx);
         }
         
-        
+        //echo 'login=' . $login . '; pwd=' . $pwd;
         //return false;
         
         //$model = &$toolbox->getModel();
@@ -158,7 +158,7 @@ class librarySecurity {
         if (empty($_SESSION['USER'])) {
             if (libraryRequest::isPostFormAction('signin')) {
                 //echo 'olololo';
-                if (empty($_POST['mpws_ulogin']) || empty($_POST['mpws_upwd']))
+                if (empty($login) || empty($pwd))
                     return 'USER_EMPTY_CREDENTIALS';
 
                 // attempt to login user
@@ -175,7 +175,7 @@ class librarySecurity {
                     $_SESSION['USER'] = array(
                         'ID' => $user['ID'],
                         'NAME' => $user['Name'],
-                        'SINCE' => mktime(),
+                        'SINCE' => $user['DateLastAccess'],
                         'LAST_ACCESS' => mktime()
                     );
 

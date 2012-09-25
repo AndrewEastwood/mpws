@@ -1,0 +1,16 @@
+<div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
+    <form action="?" method="POST">
+        <div class="MPWSLabelValueRow">
+            <span class="MPWSLabel">{$SITE->objectProperty_user_systemWelcomeMessage}</span>
+            <span class="MPWSValue">{$INFO.USER.NAME}</span>
+        </div><div class="MPWSLabelValueRow">
+            <span class="MPWSLabel">{$SITE->objectProperty_user_systemUserLastAccess}</span>
+            <span class="MPWSValue">{$INFO.USER.SINCE|date_format:$SITE->objectConfiguration_mdbc_datetimeFormat}</span>
+        </div>
+        <div class="MPWSLabelValueRow">
+            <span class="MPWSLabel">{$SITE->objectProperty_site_homePage}</span>
+            <span class="MPWSValue"><a href="{$SITE->objectConfiguration_customer_homepage}" target="blank">{$smarty.const.MPWS_CUSTOMER}</a></span>
+        </div>
+        <button type="submit" name="do" value="logout">{$SITE->objectProperty_user_formSignoutButtonText}</button>
+    </form>
+</div>
