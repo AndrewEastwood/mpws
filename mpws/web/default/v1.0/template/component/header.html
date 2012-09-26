@@ -1,0 +1,9 @@
+<div class="MPWSComponent MPWSComponenHeader">
+    {include file=$SITE->objectTemplatePath_component_logo}
+    {* RENDER ALL ELEMENTS *}
+    {if isset($data)}
+        {foreach $data as $keyvar=>$itemvar}
+            {$itemvar}
+        {/foreach}
+    {/if}
+</div>

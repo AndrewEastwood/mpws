@@ -11,13 +11,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'abf8edb63cc6678831be8cf3eb1498e6961e2517' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/page/toolbox.html',
-      1 => 1348608471,
+      1 => 1348684130,
       2 => 'file',
     ),
     '69efce9731aeeb54451ddefc0c66f864c1ae09b4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemUserInfo.html',
-      1 => 1348610218,
+      1 => 1348684566,
       2 => 'file',
     ),
     '4b6907d3d72d2c63144539dc3dd7241049b78f4d' => 
@@ -26,14 +26,44 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       1 => 1348605107,
       2 => 'file',
     ),
+    '715881089a1e723006cb411bae2d83f09cb7183a' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standart.html',
+      1 => 1348684321,
+      2 => 'file',
+    ),
+    'a297d65371600e951f5bf16207ed21a2b5fd17a0' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/header.html',
+      1 => 1348686514,
+      2 => 'file',
+    ),
+    '0acc49945e64837379fb78db2aad4b0b21c1615a' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/logo.html',
+      1 => 1348684890,
+      2 => 'file',
+    ),
+    '7b07e181672f9c889f7904c12e7d7d4d8f52d21a' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/content.html',
+      1 => 1348684275,
+      2 => 'file',
+    ),
+    '663f554cd257e4d3947bc3ec192716b71147a8a4' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/footer.html',
+      1 => 1348684305,
+      2 => 'file',
+    ),
   ),
   'nocache_hash' => '2362038085062240e8c91d5-65005751',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50622933e3cdf4_72784192',
+  'unifunc' => 'content_506352b4eca768_83495579',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50622933e3cdf4_72784192')) {function content_50622933e3cdf4_72784192($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_506352b4eca768_83495579')) {function content_506352b4eca768_83495579($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - index</title>
@@ -63,34 +93,38 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
             
 
-
-
-
-
-
-<div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
-    <form action="?" method="POST">
+<div class="MPWSPage MPWSPageStandart">
+    <div class="MPWSComponent MPWSComponenHeader">
+    <div class="MPWSComponent MPWSComponentLogo">
+    <a href="http://www.google.com" target="blank" class="MPWSLink">
+        <img src="/static/mpws-log_sm.png" alt="Logo" class="MPWSImage MPWSImageLogo">
+    </a>
+</div>
+    
+                        <div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
+    <form action="" method="POST" class="MPWSForm">
         <div class="MPWSLabelValueRow">
             <span class="MPWSLabel">You are signed in as:</span>
             <span class="MPWSValue">test3</span>
         </div><div class="MPWSLabelValueRow">
             <span class="MPWSLabel">Last access:</span>
-            <span class="MPWSValue">2012-09-26 00:57:30</span>
+            <span class="MPWSValue">2012-09-26 21:28:18</span>
         </div>
         <div class="MPWSLabelValueRow">
             <span class="MPWSLabel">Your home page link is:</span>
-            <span class="MPWSValue"><a href="http://www.google.com" target="blank">toolbox</a></span>
+            <span class="MPWSValue"><a href="http://www.google.com" target="blank" class="MPWSLink">toolbox</a></span>
         </div>
-        <button type="submit" name="do" value="logout">Logout</button>
+        <button type="submit" name="do" value="logout" class="MPWSButton">Logout</button>
     </form>
 </div>
-TOOLBOX CONTENT
-            <div id="MPWSComponentMessageCommonID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessageCommon">
-        <ul>
-                    <li class="MPWSMessage">Hello World!!!!!</li>
-                </ul>
-        </div>
-    
+            </div>
+    <div class="MPWSComponent MPWSComponenContent">
+CONTENT
+</div>
+    <div class="MPWSComponent MPWSComponenFooter">
+    FOOTER
+</div>
+</div>
     
 </div>
 

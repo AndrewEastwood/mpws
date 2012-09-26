@@ -54,27 +54,27 @@ class libraryStaticResourceManager {
             switch (strtoupper($origin)) {
                 case 'DEFAULT':
                     foreach ($resFiles as $filePath)
-                        if (file_exists(DR . '/web/default/'.$v.'/resources/'.$filePath))
-                            $filesToLoad[] = DR . '/web/default/'.$v.'/resources/'.$filePath;
+                        if (file_exists(DR . '/web/default/'.$v.'/resource/'.$filePath))
+                            $filesToLoad[] = DR . '/web/default/'.$v.'/resource/'.$filePath;
                     break;
                 case 'OWNER':
                     //echo '<br>|Customer file ' . print_r($resFiles, true) ;
                     if ($realm == 'mpws') {
                     foreach ($resFiles as $filePath)
-                        if (file_exists(DR . '/web/customer/'.$c.'/resources/'.$filePath))
-                            $filesToLoad[] = DR . '/web/customer/'.$c.'/resources/'.$filePath;
+                        if (file_exists(DR . '/web/customer/'.$c.'/resource/'.$filePath))
+                            $filesToLoad[] = DR . '/web/customer/'.$c.'/resource/'.$filePath;
                     } elseif ($realm == 'toolbox') {
                     foreach ($resFiles as $filePath)
-                        if (file_exists(DR . '/web/plugin/'.$p.'/resources/'.$filePath))
-                            $filesToLoad[] = DR . '/web/plugin/'.$p.'/resources/'.$filePath;
+                        if (file_exists(DR . '/web/plugin/'.$p.'/resource/'.$filePath))
+                            $filesToLoad[] = DR . '/web/plugin/'.$p.'/resource/'.$filePath;
                     }
                     break;
                 case 'AUTO':
                     foreach ($resFiles as $filePath) {
-                        if (file_exists(DR . '/web/customer/'.$c.'/resources/'.$filePath))
-                            $filesToLoad[] = DR . '/web/customer/'.$c.'/resources/'.$filePath;
-                        elseif (file_exists(DR . '/web/default/'.$v.'/resources/'.$filePath))
-                            $filesToLoad[] = DR . '/web/default/'.$v.'/resources/'.$filePath;
+                        if (file_exists(DR . '/web/customer/'.$c.'/resource/'.$filePath))
+                            $filesToLoad[] = DR . '/web/customer/'.$c.'/resource/'.$filePath;
+                        elseif (file_exists(DR . '/web/default/'.$v.'/resource/'.$filePath))
+                            $filesToLoad[] = DR . '/web/default/'.$v.'/resource/'.$filePath;
                     }
                     break;
                 case 'IMPORT':
@@ -128,11 +128,11 @@ class libraryStaticResourceManager {
         //$owner = empty($owner)? MPWS_CUSTOMER : $owner;
         
         // default files
-        $default = DR . '/web/default/'.$v.'/resources/' . $name;
+        $default = DR . '/web/default/'.$v.'/resource/' . $name;
         //if ($realm === 'toolbox') 
         //    $realmSource = DR . '/web/plugin/'.$owner.'/resources/' . $name;
         //if ($realm === 'mpws')
-            $realmSource = DR . '/web/customer/'.$c.'/resources/' . $name;
+            $realmSource = DR . '/web/customer/'.$c.'/resource/' . $name;
 
         //echo $realm;
         //echo $realmSource;

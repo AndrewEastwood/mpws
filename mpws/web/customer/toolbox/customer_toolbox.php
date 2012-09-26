@@ -40,6 +40,9 @@ class customer_toolbox extends objectBaseWebCustomer {
         
         $mpws_user = librarySecurity::mpws_userInfo($events, $this->objectConfiguration_customer_sessionTime, $ctx);
         
+        if (!$mpws_user['ACTIVE'])
+            $ctx->pageModel->setCustom('LOGIN_URL', (empty($_SERVER['QUERY_STRING'])?$this->objectConfiguration_customer_defaultDisplay:libraryRequest::getNewUrl()));
+            
         //var_dump($mpws_user);
         
         $ctx->pageModel->setInfo('USER', $mpws_user);

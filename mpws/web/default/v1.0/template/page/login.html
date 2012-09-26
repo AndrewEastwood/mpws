@@ -1,10 +1,6 @@
 <div class="MPWSPage MPWSPageLogin">
-    
-    
-    
-    <?=(empty($_SERVER['QUERY_STRING'])?'display=home':libraryRequest::getNewUrl());?>
-    
-<form action="?" method="POST">
+
+<form action="?{$MODEL.CUSTOM.LOGIN_URL}" method="POST">
     <p>
     <input type="text" name="mpws_user_login" value="" placeholder="Login"/>
     </p>
@@ -15,5 +11,5 @@
     <input type="submit" name="do" value="SignIn"/>
     </p>
 </form>
-    
+
 </div>
