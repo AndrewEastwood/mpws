@@ -1,3 +1,9 @@
 <div class="MPWSComponent MPWSComponenContent">
-CONTENT
+    {include file=$SITE->objectTemplatePath_component_menu}
+    {* RENDER ALL ELEMENTS *}
+    {if isset($data)}
+        {foreach $data as $keyvar=>$itemvar}
+            {$itemvar}
+        {/foreach}
+    {/if}
 </div>

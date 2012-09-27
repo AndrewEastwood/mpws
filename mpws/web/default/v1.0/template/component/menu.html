@@ -1,0 +1,11 @@
+<div class="MPWSComponent MPWSComponenMenu">
+    {if isset($items)}
+    <ul class="MPWSList MPWSListMenu">
+    {foreach $items as $keyvar=>$itemvar}
+        <li class="MPWSListItem MPWSListItemMenu">
+            <a href="{$itemvar.link}" target="{$itemvar.target}" title="">{$SITE->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}</a>
+        </li>
+    {/foreach}
+    </ul>
+    {/if}
+</div>

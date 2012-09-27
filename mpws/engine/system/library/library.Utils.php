@@ -528,7 +528,7 @@ class libraryUtils {
             return false;
 
         // array
-        if (startsWith($value, 'json{') && endsWith($value, '}')) {
+        if (startsWith($value, '{') && endsWith($value, '}')) {
            return json_decode(substr($value, 4), true);
         }
 
