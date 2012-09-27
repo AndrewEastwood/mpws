@@ -46,38 +46,72 @@ class customer_toolbox extends objectBaseWebCustomer {
         //var_dump($mpws_user);
         
         $ctx->pageModel->setInfo('USER', $mpws_user);
-        
-        
-        
+
         $ctx->pageModel->addMessage('helloWorld');
+
         
     }
     
     protected function _displayTriggerOnActive () {
         $ret = parent::_displayTriggerOnActive();
-        if ($ret)
-            return $ret;
+
         // custom customer pages
         switch(libraryRequest::getPage()) {
             case 'dashboard': {
-                echo 'DASHBOARD';
+                //echo 'DASHBOARD';
+                break;
+            }
+            case 'toolbox': {
+                //echo 'TOOLBOX';
+                $this->_displayPage_Toolbox();
                 break;
             }
         }
+        $ctx = contextMPWS::instance();
+        $ctx->pageModel->setPageView($this->objectTemplatePath_layout_default);
+
+        return $ret;
+    }
+    
+    protected function _displayPage_Toolbox () {
+        debug('customer_toolbox => _displayPage_Home');
+        $ctx = contextMPWS::instance();
+        $plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
+        
+        //var_dump($plgToolbox);
+        
+        //$plgToolbox->run();
+        
+        
+        $ctx->directProcess('toolbox@main', 'Toolbox');
+
+        $ctx->pageModel->addWebObject($plgToolbox);
+        return true;
     }
     
     protected function _displayPage_Index () {
         debug('customer_toolbox => _displayPage_Home');
         $ctx = contextMPWS::instance();
         $plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
-        $ctx->pageModel
-            ->addWebObject($plgToolbox)
-            ->setPageView($this->objectTemplatePath_layout_default);
+        
+        //var_dump($plgToolbox);
+        
+        //$plgToolbox->run();
+        
+        // show all plugins
+        $plgs = $ctx->contextToolbox->getAllEnabledPlugins();
+        
+        
+        
+        
+        $ctx->directProcess('toolbox@main', 'Toolbox');
+
+        $ctx->pageModel->addWebObject($plgToolbox);
         return true;
     }
     
     protected function _displayPage_Dashboard () {
-        
+
     }
     
     /*public function run_5 ($command) { 

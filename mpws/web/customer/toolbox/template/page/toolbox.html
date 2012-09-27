@@ -5,3 +5,12 @@
     header=[$wgt_sysUsrInfo]
     content=[$msg_common]
     footer=[]}
+    
+    
+    
+{$MODEL.CUSTOM.DEMO}
+    
+    
+{foreach $WOB as $webObj}
+    {$webObj->objectProperty_display_displayPropTest}
+{/foreach}

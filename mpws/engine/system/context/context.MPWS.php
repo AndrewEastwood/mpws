@@ -198,7 +198,7 @@ class contextMPWS {
     public function directProcess ($command, $context, $override = false) {
         // prepare command
         $cmd = $this->getCommand($command);
-        // use provided constext
+        // use provided context
         $runningContextName = $context;
         // get command context name
         if (!empty($cmd[makeKey('context')]) && !$override)

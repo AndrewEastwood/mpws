@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'abf8edb63cc6678831be8cf3eb1498e6961e2517' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/page/toolbox.html',
-      1 => 1348684130,
+      1 => 1348777729,
       2 => 'file',
     ),
     '69efce9731aeeb54451ddefc0c66f864c1ae09b4' => 
@@ -47,23 +47,29 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '7b07e181672f9c889f7904c12e7d7d4d8f52d21a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/content.html',
-      1 => 1348684275,
+      1 => 1348768924,
+      2 => 'file',
+    ),
+    'd0b60fd847c51d05aceafa98d1fbb45732576e1e' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html',
+      1 => 1348769917,
       2 => 'file',
     ),
     '663f554cd257e4d3947bc3ec192716b71147a8a4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/footer.html',
-      1 => 1348684305,
+      1 => 1348767794,
       2 => 'file',
     ),
   ),
   'nocache_hash' => '2362038085062240e8c91d5-65005751',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_506352b4eca768_83495579',
+  'unifunc' => 'content_5064bd8e4993a5_24852603',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_506352b4eca768_83495579')) {function content_506352b4eca768_83495579($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5064bd8e4993a5_24852603')) {function content_5064bd8e4993a5_24852603($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - index</title>
@@ -97,7 +103,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <div class="MPWSComponent MPWSComponenHeader">
     <div class="MPWSComponent MPWSComponentLogo">
     <a href="http://www.google.com" target="blank" class="MPWSLink">
-        <img src="/static/mpws-log_sm.png" alt="Logo" class="MPWSImage MPWSImageLogo">
+        <img src="/static/toolbox_logo.gif" alt="Logo" class="MPWSImage MPWSImageLogo">
     </a>
 </div>
     
@@ -108,7 +114,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
             <span class="MPWSValue">test3</span>
         </div><div class="MPWSLabelValueRow">
             <span class="MPWSLabel">Last access:</span>
-            <span class="MPWSValue">2012-09-26 21:28:18</span>
+            <span class="MPWSValue">2012-09-27 22:17:42</span>
         </div>
         <div class="MPWSLabelValueRow">
             <span class="MPWSLabel">Your home page link is:</span>
@@ -119,12 +125,48 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
             </div>
     <div class="MPWSComponent MPWSComponenContent">
-CONTENT
-</div>
+    <div class="MPWSComponent MPWSComponenMenu">
+        <ul class="MPWSList MPWSListMenu">
+            <li class="MPWSListItem MPWSListItemMenu">
+            <a href="index.html" target="_self" title="">Home Page</a>
+        </li>
+            <li class="MPWSListItem MPWSListItemMenu">
+            <a href="dashboard.html" target="_self" title="">Dashboard</a>
+        </li>
+            <li class="MPWSListItem MPWSListItemMenu">
+            <a href="tools.html" target="_self" title="">Tools</a>
+        </li>
+            <li class="MPWSListItem MPWSListItemMenu">
+            <a href="users.html" target="_self" title="">Users</a>
+        </li>
+            <li class="MPWSListItem MPWSListItemMenu">
+            <a href="messages.html" target="_self" title="">Web Messages</a>
+        </li>
+            <li class="MPWSListItem MPWSListItemMenu">
+            <a href="help.html" target="_self" title="">Help</a>
+        </li>
+            </ul>
+    </div>
+    
+                                    <div id="MPWSComponentMessageCommonID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessageCommon">
+        <ul>
+                    <li class="MPWSMessage">Hello World!!!!!</li>
+                </ul>
+        </div>
+    
+            </div>
     <div class="MPWSComponent MPWSComponenFooter">
-    FOOTER
+    
+                </div>
 </div>
-</div>
+    
+    
+    
+
+    
+    
+    qwertyuiop
+
     
 </div>
 

@@ -287,6 +287,7 @@ class libraryPluginManager
         // wide command
         if ($command[makeKey('caller')] == '*') {
             // send broadcast message
+            //echo 'BROADCAST RUN';
             foreach ($config['TOOLBOX']['PLUGINS'] as $name => $isActive) {
                 // skip inactive
                 if (!$isActive)
@@ -299,6 +300,7 @@ class libraryPluginManager
                 $plugin->run($command);
             }
         } else {
+            //echo 'SINGLE RUN';
             $_caller = $command[makeKey('caller')];
             // get specific caller (plugin)
             // skip if inactive

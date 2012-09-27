@@ -529,7 +529,7 @@ class libraryUtils {
 
         // array
         if (startsWith($value, '{') && endsWith($value, '}')) {
-           return json_decode(substr($value, 4), true);
+            return json_decode($value, true);
         }
 
         // default (string)

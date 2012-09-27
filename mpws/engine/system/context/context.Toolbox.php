@@ -22,6 +22,17 @@ class contextToolbox extends objectContext  {
         debug('contextToolbox => getPlugin: ' . $name);
         return $this->_pluginManager->getPluginWithContext($name);
     }
+    
+    final public function getAllEnabledPlugins () {
+        global $config;
+        $plugins = array();
+        foreach ($config['TOOLBOX']['PLUGINS'] as $name => $isActive) {
+            if (!$isActive)
+                continue;
+            $plugins[] = $name;
+        }
+        return $plugins;
+    }
 
 }
 

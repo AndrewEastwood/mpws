@@ -101,17 +101,19 @@ class objectBaseWeb extends objectBase {
     /* public api */
     public function run ($command) { 
         debug($command, 'objectBaseWeb: run function:');
+        $ret = false;
         switch ($command[makeKey('method')]) {
             case 'main':
-                $this->_run_main();
+                $ret = $this->_run_main();
                 break;
             case 'jsapi':
-                $this->_run_jsapi();
+                $ret = $this->_run_jsapi();
                 break;
             case 'cross':
-                $this->_run_cross();
+                $ret = $this->_run_cross();
                 break;
         }
+        return $ret;
     }
     
     /* running bridges */

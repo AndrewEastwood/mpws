@@ -18,8 +18,10 @@
     $objects = glob($DR . '/engine/system/object/object.*.php');
     foreach ($objects as $objectFile)
         require_once $objectFile;
-    // include web config
-    include $DR . '/engine/system/config/config.web.php';
+    // include all configs
+    $configs = glob($DR . '/engine/system/config/config.*.php');
+    foreach ($configs as $configFile)
+        require_once $configFile;
 
     /* prepare public environment */
 

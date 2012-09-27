@@ -2,8 +2,23 @@
 
 class pluginToolbox extends objectBaseWebPlugin {
 
-    public function run ($command) { 
+    protected function _displayTriggerOnActive () {
+        parent::_displayTriggerOnActive();
+        $ctx = contextMPWS::instance();
+        //echo 'OLOLOLO';
+        
+        $ctx->pageModel->setCustom('DEMO', 'DEMO DEMO DEMO');
+    }
+    
+    
+    
+    public function __run ($command) { 
         parent::run($command);
+        
+        
+        //echo 'RUN';
+        
+        
         $ctx = contextMPWS::instance();
         //$this->_ex_resource__getResource();
         
