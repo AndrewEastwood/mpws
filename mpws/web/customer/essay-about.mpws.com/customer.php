@@ -52,12 +52,6 @@ class customer {
                 $model['LAYOUT'] = 'layout_inner';
                 $this->_pagePurchase($customer);
                 break;
-
-            case 'submit_review':
-                $model['LAYOUT'] = 'frame_submit';
-                $this->_pageSubmitReview($customer);
-                break;
-
             default:{
                 // render static page or 404
                 $model['LAYOUT'] = 'layout_inner';
@@ -385,7 +379,7 @@ class customer {
             $recipient['DATA'] = array(
                 'Name' => $user['Name']
             );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.system_user_registered'));
+            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.user_registered'));
             // send email message to system
             libraryMailer::sendEMail($recipient);
             
@@ -1083,105 +1077,124 @@ class customer {
         
         // get action
         $action = libraryRequest::getAction();
+        $action_post = libraryRequest::getPostAction();
+        
+        // recaptcha error
+        $error = false;
         
         // buy action
-        if ($action == 'buy') {
+        if ($action_post == 'buy') {
+            //echo 'BUY';
             $oid = libraryRequest::getOID();
-            
             if (empty($oid)) {
                 $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
                 return;
             }
-
+            //echo '-a';
             $sale = $customer->getDatabaseObj()
                     ->reset()
                     ->select('*')
                     ->from('writer_sale')
                     ->where('ID', '=', $oid)
                     ->fetchRow();
-            
+            //echo '-b';
             if (empty($sale)) {
                 $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
                 return;
             }
-            
-            
-            // check for product existance
-            $payment = $customer->getCustomerConfiguration('PAYMENT');
+            //echo '-c';
+            # was there a reCAPTCHA response?
+            if (libraryRequest::getPostValue('recaptcha_response_field')) {
+                //echo '-d';
+                $privatekey = '6Le6AdcSAAAAALDZCpsKeLWQbGH3icwjKNnhpBWe';
+                $resp = libraryRecaptcha::recaptcha_check_answer ($privatekey,
+                    $_SERVER["REMOTE_ADDR"],
+                    libraryRequest::getPostValue('recaptcha_challenge_field'),
+                    libraryRequest::getPostValue('recaptcha_response_field'));
 
-            // 2CO INTEGRATION
-            // check or create new product
-            $param = array(
-                'DATA' => array(
-                    'ORDER' => array(
-                        'PriceID' => $oid,
-                        'Pages' => $sale['Pages'],
-                        'Suma' => $sale['Price']
-                    ),
-                    'PRICE' => array(
-                        'Name' => $sale['Title']
-                    )
-                ),
-                'CREATE_IF_EMPTY' => true,
-                'REALM' => 'B',
-                'ACCOUNT' => $payment['2CO']
-            );
-            $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
-            //echo '2CO Status: ' . $product['assigned_product_id'];
-            // check if product exists
-            // we use "assigned_product_id" to sell current product
-            if (empty($product['assigned_product_id'])) {
-                $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
-                return;
+                if ($resp->is_valid) {
+                    ;//echo "You got it!";
+                    // check for product existance
+                    $payment = $customer->getCustomerConfiguration('PAYMENT');
+
+                    // 2CO INTEGRATION
+                    // check or create new product
+                    $param = array(
+                        'DATA' => array(
+                            'ORDER' => array(
+                                'PriceID' => $oid,
+                                'Pages' => $sale['Pages'],
+                                'Suma' => $sale['Price']
+                            ),
+                            'PRICE' => array(
+                                'Name' => $sale['Title']
+                            )
+                        ),
+                        'CREATE_IF_EMPTY' => true,
+                        'REALM' => 'B',
+                        'ACCOUNT' => $payment['2CO']
+                    );
+                    $product = libraryToolboxManager::callPluginMethod('writer', '2co_product', $param);
+                    //echo '2CO Status: ' . $product['assigned_product_id'];
+                    // check if product exists
+                    // we use "assigned_product_id" to sell current product
+                    if (empty($product['assigned_product_id'])) {
+                        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.purchase_error');
+                        return;
+                    }
+                    // END OF 2CO INTEGRATION
+
+                    $mdbc = $customer->getCustomerConfiguration('MDBC');
+                    $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
+                    
+                    
+                    // make order token
+                    $_o_token = md5($user['UserToken'] . mktime());
+                    
+                    // fill order information
+                    $data['SaleID'] = $oid;
+                    if (!empty($user['ID']))
+                        $data['StudentID'] = $user['ID'];
+                    $data['SalesToken'] = $_o_token;
+                    $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
+                    
+                    // save new order
+                    $customer->getDatabaseObj()
+                        ->reset()
+                        ->insertInto('writer_sales')
+                        ->fields(array_keys($data))
+                        ->values(array_values($data))
+                        ->query();
+
+                    $libView = new libraryView();
+                    /* SYSTEM NOTIFY */
+                    $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_SALE'];
+                    $recipient['SUBJECT'] = 'New Sale';
+                    $recipient['DATA'] = array(
+                        'Title' => $sale['Title'],
+                        'Name' => $user['Name'],
+                        'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_SALE_LINK'] . $_o_token
+                    );
+                    $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.sale_created'));
+                    // send email message to system
+                    //libraryMailer::sendEMail($recipient);
+
+                    // 2checkout integration
+                    // order general information
+                    $_order = $payment['2CO']['FORM'];
+                    $_order['product_id'] = $product['assigned_product_id'];
+                    $_order['merchant_order_id'] = $_o_token;
+                    $_order['return_url'] = $_SERVER['HTTP_REFERER'];
+                    
+                    //var_dump($_order);
+                    //https://www.2checkout.com/checkout/purchase?sid=1788351&quantity=1&fixed=Y&skip_landing=Y&demo=N&product_id=2
+                    libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
+                    exit;
+                } else {
+                    # set the error code so that we can display it
+                    $error = $resp->error;
+                }
             }
-            // END OF 2CO INTEGRATION
-
-            $mdbc = $customer->getCustomerConfiguration('MDBC');
-            $customer_config_mail = $customer->GetCustomerConfiguration('MAIL');
-            
-            
-            // make order token
-            $_o_token = md5($user['UserToken'] . mktime());
-            
-            // fill order information
-            $data['SaleID'] = $oid;
-            if (!empty($user['ID']))
-                $data['StudentID'] = $user['ID'];
-            $data['SalesToken'] = $_o_token;
-            $data['DateCreated'] = date($mdbc['DB_DATE_FORMAT']);
-            
-            // save new order
-            $customer->getDatabaseObj()
-                ->reset()
-                ->insertInto('writer_sales')
-                ->fields(array_keys($data))
-                ->values(array_values($data))
-                ->query();
-
-            $libView = new libraryView();
-            /* SYSTEM NOTIFY */
-            $recipient = $customer_config_mail['ACTION_TRIGGERS']['ON_NEW_SALE'];
-            $recipient['SUBJECT'] = 'New Sale';
-            $recipient['DATA'] = array(
-                'Title' => $sale['Title'],
-                'Name' => $user['Name'],
-                'TargetUrl' => $customer_config_mail['URLS']['TOOLBOX_SALE_LINK'] . $_o_token
-            );
-            $recipient['MESSAGE'] = $libView->getTemplateResult($recipient, $customer->getCustomerTemplate('mail.notify.sale_created'));
-            // send email message to system
-            //libraryMailer::sendEMail($recipient);
-
-            // 2checkout integration
-            // order general information
-            $_order = $payment['2CO']['FORM'];
-            $_order['product_id'] = $product['assigned_product_id'];
-            $_order['merchant_order_id'] = $_o_token;
-            $_order['return_url'] = $_SERVER['HTTP_REFERER'];
-            
-            //var_dump($_order);
-            //https://www.2checkout.com/checkout/purchase?sid=1788351&quantity=1&fixed=Y&skip_landing=Y&demo=N&product_id=2
-            libraryRequest::locationRedirect($_order, $payment['2CO']['API']['METHODS']['purchase']);
-            exit;
         }
         // if details requested
         if ($action == 'details'){
@@ -1198,6 +1211,9 @@ class customer {
                     ->from('writer_sale')
                     ->where('ID', '=', $oid)
                     ->fetchRow();
+                    
+            $publickey = '6Le6AdcSAAAAALN2LO9uih_L1SBXgiEPMjyVN3YE';
+            $model['CUSTOMER']['CAPTACHA'] = libraryRecaptcha::recaptcha_get_html($publickey, $error);
             
             if (empty($model['CUSTOMER']['DATA'])) {
                 $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.buy_essay_details_error');
@@ -1248,12 +1264,6 @@ class customer {
             $model['CUSTOMER'] = libraryComponents::comDataTable($datatable['SALE'], $customer->getDatabaseObj(), 'Price = 0');
             $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.free_essay');
         }
-    }
-
-    private function _pageSubmitReview($customer) {
-        $model = &$customer->getModel();
-
-        $model['CUSTOMER']['TEMPLATE'] = $customer->getCustomerTemplate('page.review.submit');
     }
 
     private function _accountDeskCommonOrders_details ($customer) {

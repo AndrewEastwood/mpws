@@ -64,8 +64,18 @@
     </table>
 
      <center>
-        <a href="?action=buy&amp;oid=<?=$model['CUSTOMER']['DATA']['ID'];?>" class="btn01">Buy</a>
-        <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
+         <script type="text/javascript">
+         var RecaptchaOptions = {
+            theme : 'white',
+            lang : 'en'
+         };
+         </script>
+        <form action="?action=details&oid=<?=$model['CUSTOMER']['DATA']['ID'];?>" method="POST" id="MPWSFormBuyID" name="buy_essay">
+            <input type="hidden" name="action" value="buy"/>
+            <?=$model['CUSTOMER']['CAPTACHA'];?>
+            <a href="#_buy" class="btn01" onclick="document.forms.buy_essay.submit();">Buy</a>
+            <a href="<?=$model['CUSTOMER']['REFERER'];?>" class="btn01">Back</a>
+        </form>
      </center>
 </div>
 <div id="base-text">
