@@ -68,6 +68,7 @@ class customer_toolbox extends objectBaseWebCustomer {
             }
         }
         $ctx = contextMPWS::instance();
+        $ctx->directProcess('main', 'Toolbox');
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_default);
 
         return $ret;
@@ -104,7 +105,6 @@ class customer_toolbox extends objectBaseWebCustomer {
         
         
         
-        $ctx->directProcess('toolbox@main', 'Toolbox');
 
         $ctx->pageModel->addWebObject($plgToolbox);
         return true;

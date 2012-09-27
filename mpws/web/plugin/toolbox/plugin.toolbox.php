@@ -8,6 +8,9 @@ class pluginToolbox extends objectBaseWebPlugin {
         //echo 'OLOLOLO';
         
         $ctx->pageModel->setCustom('DEMO', 'DEMO DEMO DEMO');
+        
+        
+        
     }
     
     
