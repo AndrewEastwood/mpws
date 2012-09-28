@@ -3,8 +3,8 @@
         file=$SITE->objectTemplatePath_component_menu
         _items=$SITE->objectConfiguration_display_menu}
     {* RENDER ALL ELEMENTS *}
-    {if isset($data)}
-        {foreach $data as $keyvar=>$itemvar}
+    {if isset($_data)}
+        {foreach $_data as $keyvar=>$itemvar}
             {$itemvar}
         {/foreach}
     {/if}

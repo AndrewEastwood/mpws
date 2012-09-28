@@ -55,8 +55,14 @@ class libraryWebPageModel {
         delete($this->_wobs[makeKey($name)]);
         return $this;
     }
-    public function addWebObject ($wob) {
-        $this->_wobs[makeKey($wob->getObjectName())] = $wob;
+    public function addWebObject (/* single wob or wobs */) {
+        $wob = getArguments(func_get_args());
+        if (is_object($wob)) {
+            $this->_wobs[makeKey($wob->getObjectName())] = $wob;
+        } elseif (is_array($wob)) {
+            foreach($wob as $obj)
+                $this->addWebObject($obj);
+        }
         return $this;
     }
     

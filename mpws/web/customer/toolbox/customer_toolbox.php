@@ -36,10 +36,9 @@ class customer_toolbox extends objectBaseWebCustomer {
                 ->where('Id', '=', $user['ID'])
                 ->query();
         };
-        
-        
+
         $mpws_user = librarySecurity::mpws_userInfo($events, $this->objectConfiguration_customer_sessionTime, $ctx);
-        
+
         if (!$mpws_user['ACTIVE'])
             $ctx->pageModel->setCustom('LOGIN_URL', (empty($_SERVER['QUERY_STRING'])?$this->objectConfiguration_customer_defaultDisplay:libraryRequest::getNewUrl()));
             
@@ -52,8 +51,8 @@ class customer_toolbox extends objectBaseWebCustomer {
         
     }
     
-    protected function _displayTriggerOnActive () {
-        $ret = parent::_displayTriggerOnActive();
+    protected function _displayTriggerAsCustomer () {
+        $ret = parent::_displayTriggerAsCustomer();
 
         // custom customer pages
         switch(libraryRequest::getPage()) {
@@ -61,57 +60,26 @@ class customer_toolbox extends objectBaseWebCustomer {
                 //echo 'DASHBOARD';
                 break;
             }
-            case 'toolbox': {
-                //echo 'TOOLBOX';
-                $this->_displayPage_Toolbox();
-                break;
-            }
         }
         $ctx = contextMPWS::instance();
-        $ctx->directProcess('main', 'Toolbox');
+        // run all enabled plugins
+        $ctx->setProcessData('some process data')->directProcess('main', 'Toolbox');
+        $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_default);
 
         return $ret;
     }
-    
-    protected function _displayPage_Toolbox () {
-        debug('customer_toolbox => _displayPage_Home');
-        $ctx = contextMPWS::instance();
-        $plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
-        
-        //var_dump($plgToolbox);
-        
-        //$plgToolbox->run();
-        
-        
-        $ctx->directProcess('toolbox@main', 'Toolbox');
 
-        $ctx->pageModel->addWebObject($plgToolbox);
-        return true;
-    }
-    
     protected function _displayPage_Index () {
         debug('customer_toolbox => _displayPage_Home');
         $ctx = contextMPWS::instance();
-        $plgToolbox = $ctx->contextToolbox->getPlugin('toolbox');
-        
         //var_dump($plgToolbox);
-        
         //$plgToolbox->run();
-        
-        // show all plugins
-        $plgs = $ctx->contextToolbox->getAllEnabledPlugins();
-        
-        
-        
-        
-
-        $ctx->pageModel->addWebObject($plgToolbox);
         return true;
     }
     
     protected function _displayPage_Dashboard () {
-
+        
     }
     
     /*public function run_5 ($command) { 

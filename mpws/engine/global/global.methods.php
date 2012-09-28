@@ -168,6 +168,8 @@
             foreach ($func_args as $value) {
                 if (is_string($value))
                     $fn_args[] = $value;
+                if (is_object($value))
+                    $fn_args[] = $value;
                 if (is_array($value))
                     foreach ($value as $array_value)
                         $fn_args[] = $array_value;

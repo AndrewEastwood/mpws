@@ -240,6 +240,18 @@ class libraryPluginManager
     }
 
     
+    
+    public function getAllEnabledPluginNames () {
+        global $config;
+        $plugins = array();
+        foreach ($config['TOOLBOX']['PLUGINS'] as $name => $isActive) {
+            if (!$isActive)
+                continue;
+            $plugins[$name] = $name;
+        }
+        return $plugins;
+    }
+    
     public function getPluginWithContext ($name) {
         if (empty($name))
             throw new Exception('MPWS PluginManager library: empty plugin name');
@@ -275,45 +287,38 @@ class libraryPluginManager
     }
     
     public function runPluginAsync ($command) {
-        global $config;
-
         debug($command, 'libraryPluginManager: runPluginAsync action:');
-        
         $feedbacks = array();
-        
         // get requested plugin name
         //list($caller, $fn) = explode('@', $action);
-        
+        $pluginNames = $this->getAllEnabledPluginNames();
         // wide command
         if ($command[makeKey('caller')] == '*') {
             // send broadcast message
             //echo 'BROADCAST RUN';
-            foreach ($config['TOOLBOX']['PLUGINS'] as $name => $isActive) {
-                // skip inactive
-                if (!$isActive)
-                    continue;
+            foreach ($pluginNames as $name) {
                 // get plugin object
                 debug('libraryPluginManager: runPluginAsync => running plugin ' . $name);
                 $plugin = $this->getPluginWithContext($name);
                 //var_dump($plugin);
                 // send message
-                $plugin->run($command);
+                $feedbacks[] = $plugin->run($command);
             }
         } else {
             //echo 'SINGLE RUN';
             $_caller = $command[makeKey('caller')];
             // get specific caller (plugin)
             // skip if inactive
-            if ($config['TOOLBOX']['PLUGINS'][$_caller]) {
+            if (isset($pluginNames[$_caller])) {
                 // get plugin object
                 debug('libraryPluginManager: runPluginAsync => running plugin ' . $_caller);
                 $plugin = $this->getPluginWithContext($_caller);
                 // send message
-                $plugin->run($command);
+                $feedbacks[] = $plugin->run($command);
             }
         }
-
-        return implode('', $feedbacks);
+        //return implode('', $feedbacks);
+        return $feedbacks;
     }
     
     

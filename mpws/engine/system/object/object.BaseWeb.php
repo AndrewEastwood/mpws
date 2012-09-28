@@ -123,11 +123,12 @@ class objectBaseWeb extends objectBase {
         $this->_displayTriggerOnCommonStart();
         // validate access key with plugin name to run in normal mode
         // or run customer
-        if (libraryRequest::getPage() === $this->getObjectName() || 
-            $this->getObjectType() === OBJECT_T_CUSTOMER)
-            $this->_displayTriggerOnActive(); // run on active
-        else
-            $this->_displayTriggerOnInActive(); // run in background
+        //if (libraryRequest::getPage() === $this->getObjectName() || 
+        if ($this->getObjectType() === OBJECT_T_CUSTOMER)
+            $this->_displayTriggerAsCustomer(); // run on active
+        //else
+        if ($this->getObjectType() === OBJECT_T_PLUGIN)
+            $this->_displayTriggerAsPlugin(); // run in background
         // run common hook in end up
         $this->_displayTriggerOnCommonEnd();
     }
@@ -142,12 +143,12 @@ class objectBaseWeb extends objectBase {
     protected function _displayTriggerOnCommonStart () {
         debug('objectBaseWeb => _displayTriggerOnCommonStart');
     }
-    protected function _displayTriggerOnActive () {
-        debug('objectBaseWeb => _displayTriggerOnActive');
+    protected function _displayTriggerAsCustomer () {
+        debug('objectBaseWeb => _displayTriggerAsCustomer');
         $_SESSION['MPWS_'.  makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
     }
-    protected function _displayTriggerOnInActive () {
-        debug('objectBaseWeb => _displayTriggerOnInActive');
+    protected function _displayTriggerAsPlugin () {
+        debug('objectBaseWeb => _displayTriggerAsPlugin');
     }
     protected function _displayTriggerOnCommonEnd () {
         debug('objectBaseWeb => _displayTriggerOnCommonEnd');

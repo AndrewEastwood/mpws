@@ -1,6 +1,6 @@
 {* STANDART PAGE IMPLEMENTATION #1 *}
-<div class="MPWSPage MPWSPageStandart">
-    {include file=$SITE->objectTemplatePath_component_header data=$header}
-    {include file=$SITE->objectTemplatePath_component_content data=$content}
-    {include file=$SITE->objectTemplatePath_component_footer data=$footer}
+<div class="MPWSPage MPWSPageStandart MPWSPageStandart{$INFO.DISPLAY|capitalize:0:1}" id="MPWSPageStandart{$INFO.DISPLAY|capitalize:0:1}ID">
+    {include file=$SITE->objectTemplatePath_component_header _data=$_header}
+    {include file=$SITE->objectTemplatePath_component_content _data=$_content}
+    {include file=$SITE->objectTemplatePath_component_footer _data=$_footer}
 </div>

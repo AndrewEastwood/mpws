@@ -2,15 +2,12 @@
 {include assign="msg_common" file=$SITE->objectTemplatePath_component_message _realm='COMMON'}
 {include
     file=$SITE->objectTemplatePath_page_standart
-    header=[$wgt_sysUsrInfo]
-    content=[$msg_common]
-    footer=[]}
-    
-    
-    
+    _header=[$wgt_sysUsrInfo]
+    _content=[$msg_common]
+    _footer=[]}
+
 {$MODEL.CUSTOM.DEMO}
-    
-    
+
 {foreach $WOB as $webObj}
     {$webObj->objectProperty_display_displayPropTest}
 {/foreach}

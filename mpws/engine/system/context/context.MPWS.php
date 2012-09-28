@@ -7,6 +7,7 @@ class contextMPWS {
     private $_contexts;
     private $_commands;
     private $_runningContextName;
+    private $_processData;
     private static $_instance;
     
     private function __construct () {
@@ -208,10 +209,21 @@ class contextMPWS {
         // set current context name
         $prevoiusContextName = $this->setCurrentContext($runningContextName);
         // run commad
-        $ctx->call($cmd);
+        $rez = $ctx->call($cmd);
         // restore previus context
         $this->setCurrentContext($prevoiusContextName);
-        
+        // remove process data
+        $this->_processData = false;
+        return $rez;
+    }
+    
+    // set process data
+    public function getProcessData ($data) {
+        return $this->_processData;
+    }
+    public function setProcessData ($data) {
+        $this->_processData = $data;
+        return $this;
     }
 }
 

@@ -14,24 +14,21 @@ class contextToolbox extends objectContext  {
     
     final public function call ($command) {
         debug('contextToolbox => Running command: ' . $command[makeKey('method')]);
-        $this->_pluginManager->runPluginAsync($command);
+        return $this->_pluginManager->runPluginAsync($command);
     }
     
     // simple bridge to libraryPluginManager->getPLuginWithContext
-    final public function getPlugin ($name) {
+    final public function getObject ($name) {
         debug('contextToolbox => getPlugin: ' . $name);
         return $this->_pluginManager->getPluginWithContext($name);
     }
     
-    final public function getAllEnabledPlugins () {
-        global $config;
-        $plugins = array();
-        foreach ($config['TOOLBOX']['PLUGINS'] as $name => $isActive) {
-            if (!$isActive)
-                continue;
-            $plugins[] = $name;
-        }
-        return $plugins;
+    final public function getAllObjects () {
+        $names = $this->_pluginManager->getAllEnabledPluginNames($name);
+        $objects[] = array();
+        foreach ($names as $name)
+            $objects[$name] = $this->getObject($name);
+        return $objects;
     }
 
 }

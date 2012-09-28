@@ -2,14 +2,16 @@
 
 class pluginToolbox extends objectBaseWebPlugin {
 
-    protected function _displayTriggerOnActive () {
-        parent::_displayTriggerOnActive();
+    protected function _displayTriggerAsPlugin () {
+        parent::_displayTriggerAsPlugin();
         $ctx = contextMPWS::instance();
         //echo 'OLOLOLO';
         
         $ctx->pageModel->setCustom('DEMO', 'DEMO DEMO DEMO');
         
-        
+        // all process data stored here
+        $ctx = contextMPWS::instance();
+        $data = $ctx->getProcessData();
         
     }
     
