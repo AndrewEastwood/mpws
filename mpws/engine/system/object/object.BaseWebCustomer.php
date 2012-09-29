@@ -25,8 +25,8 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
     }
 
     /* display triggers */
-    protected function _displayTriggerOnActive () {
-        parent::_displayTriggerOnActive();
+    protected function _displayTriggerAsCustomer () {
+        parent::_displayTriggerAsCustomer();
 
         $ctx = contextMPWS::instance();
         $ctx->pageModel->setSiteObject($this);

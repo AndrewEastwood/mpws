@@ -214,7 +214,9 @@ class librarySecurity {
     public static function mpws_userInfo ($events, $lifetime, $ctx) {
         debug('librarySecurity => mpws_userInfo');
         $_state = self::mpws_session($events, $lifetime, $ctx);
-        $user = $_SESSION['USER'];
+        $user = array();
+        if (isset($_SESSION['USER']))
+            $user = $_SESSION['USER'];
         $user[makeKey('STATE')] = $_state;
         $user[makeKey('ACTIVE')] = ($_state == 'USER_AUTHORIZED' || $_state == 'USER_ALIVE');
         return $user;

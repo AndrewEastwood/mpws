@@ -4,11 +4,5 @@
 {include
     file=$SITE->{"objectTemplatePath_page_index:default"}
     _header=[$wgt_sysUsrInfo]
-    _content=[$msg_common]
+    _content=[$msg_common, $MODEL.WIDGET.ACTIVE_USERS.HTML]
     _footer=[]}
-
-{$MODEL.CUSTOM.DEMO}
-
-{foreach $WOB as $webObj}
-    {$webObj->objectProperty_display_displayPropTest}
-{/foreach}

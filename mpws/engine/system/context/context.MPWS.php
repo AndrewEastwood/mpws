@@ -8,6 +8,7 @@ class contextMPWS {
     private $_commands;
     private $_runningContextName;
     private $_processData;
+    private $_callStack;
     private static $_instance;
     
     private function __construct () {
@@ -56,8 +57,20 @@ class contextMPWS {
     }
     
     private function makeCommand ($stringFn, $custom_args = array()) {
-        $cmd = array();
-        list($caller, $fn, $context) = explode(DOG, $stringFn);
+        //echo 'Making command of ' . $stringFn;
+        $ctxcmd = new mpwsCommand();
+        $rawCommand = explode(DOG, $stringFn);
+        
+        $caller = false;
+        $fn = false;
+        $context = false;
+        
+        if (!empty($rawCommand[0]))
+            $caller = $rawCommand[0];
+        if (!empty($rawCommand[1]))
+            $fn = $rawCommand[1];
+        if (!empty($rawCommand[2]))
+            $context = $rawCommand[2];
         
         // adjust arguments
         if (empty($fn) && empty($context)) {
@@ -67,33 +80,38 @@ class contextMPWS {
 
         // setup command owner
         if (empty($caller))
-            $cmd[makeKey('caller')] = '*'; // broadcast command
+            $ctxcmd->setCaller('*'); // broadcast command
         else
-            $cmd[makeKey('caller')] = $caller; // will execute in $caller object
-        
+            $ctxcmd->setCaller($caller); // will execute in $caller object
+
         // set context
         // it makes requested comamand crosscontextual that
         // allows to use it inside all defined contexts
         if (empty($context))
-            $cmd[makeKey('context')] = false; // unspecified context
+            $ctxcmd->setContext(false); // unspecified context
         else
-            $cmd[makeKey('context')] = $context; // will run inside $context
+            $ctxcmd->setContext($context); // will run inside $context
         
-        $cmd[makeKey('method')] = $fn;
+        if (strstr($fn, COLON))
+            list($fn, $innerFn) = explode(COLON, $fn);
         
+        $ctxcmd->setMethod($fn);
+        if (isset($innerFn))
+            $ctxcmd->setInnerMethod($innerFn);
+
         // append additional arguments
         if (!empty($custom_args)) {
             $_args = array();
             // reset indexces
             foreach ($custom_args as $val)
                 $_args[] = $val;
-            $cmd[makeKey('arguments')] = $_args;
+            $ctxcmd->setArguments($_args);
         } else 
-            $cmd[makeKey('arguments')] = false;
+            $ctxcmd->setArguments(false);
         
-        $cmd[makeKey('id')] = $stringFn;
+        $ctxcmd->setID($stringFn);
             
-        return $cmd;
+        return $ctxcmd;
     }
     
     private function setCurrentContext ($currentContextName) {
@@ -111,7 +129,6 @@ class contextMPWS {
     public function getContext ($name) {
         if (empty($this->_contexts[makeKey($name)]))
             $this->loadContext($name);
-        
         return $this->_contexts[makeKey($name)];
     }
     
@@ -133,7 +150,7 @@ class contextMPWS {
                 $_cmd = $this->getCommand($fn_args, func_get_arg(1));
             else
                 $_cmd = $this->getCommand($fn_args);
-            $this->_commands[$_cmd[makeKey('id')]] = $_cmd;
+            $this->_commands[$_cmd->getID()] = $_cmd;
         } elseif (is_array($fn_args)) {
             
             // two args: batch commands, config
@@ -161,12 +178,6 @@ class contextMPWS {
         }
     }
     
-    public function modifyCommand ($command, $custom_args = array()) {
-        if (isset($this->_commands[$command])){
-            $this->_commands[$command][makeKey('arguments')] = $custom_args;
-        }
-    }
-
     public function traceCommands () {
         foreach ($this->_commands as $cmd)
             debug($cmd, 'Context mpws, tracing command:');
@@ -179,12 +190,15 @@ class contextMPWS {
         foreach ($this->_commands as $id => $cmd) {
             $runningContextName = $context; // use provided constext
             // get command context name
-            if (!empty($cmd[makeKey('context')]) && !$override)
-                $runningContextName = $cmd[makeKey('context')];
+            $commandContextName = $cmd->getContext();
+            if (!empty($commandContextName) && !$override)
+                $runningContextName = $cmd->getContext();
             // preload context
             $ctx = $this->getContext($runningContextName);
             // set current context name
             $prevoiusContextName = $this->setCurrentContext($runningContextName);
+            // save command
+            $this->_callStack[] = $cmd;
             // run commad
             $ctx->call($cmd);
             // restore previus context
@@ -202,12 +216,15 @@ class contextMPWS {
         // use provided context
         $runningContextName = $context;
         // get command context name
-        if (!empty($cmd[makeKey('context')]) && !$override)
-            $runningContextName = $cmd[makeKey('context')];
+        $commandContextName = $cmd->getContext();
+        if (!empty($commandContextName) && !$override)
+            $runningContextName = $cmd->getContext();
         // preload context
         $ctx = $this->getContext($runningContextName);
         // set current context name
         $prevoiusContextName = $this->setCurrentContext($runningContextName);
+        // save command
+        $this->_callStack[] = $cmd;
         // run commad
         $rez = $ctx->call($cmd);
         // restore previus context
@@ -218,12 +235,19 @@ class contextMPWS {
     }
     
     // set process data
-    public function getProcessData ($data) {
+    public function getProcessData () {
         return $this->_processData;
     }
     public function setProcessData ($data) {
         $this->_processData = $data;
         return $this;
+    }
+    public function getLastCommand ($returnEmpty = true) {
+        if (count($this->_callStack) > 0)
+            return array_pop($this->_callStack);
+        if($returnEmpty)
+            return $this->makeCommand('empty');
+        throw new Exception ('contextMPWS: command stack is empty.');
     }
 }
 

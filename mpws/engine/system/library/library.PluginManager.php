@@ -293,7 +293,7 @@ class libraryPluginManager
         //list($caller, $fn) = explode('@', $action);
         $pluginNames = $this->getAllEnabledPluginNames();
         // wide command
-        if ($command[makeKey('caller')] == '*') {
+        if ($command->getCaller() == '*') {
             // send broadcast message
             //echo 'BROADCAST RUN';
             foreach ($pluginNames as $name) {
@@ -306,7 +306,7 @@ class libraryPluginManager
             }
         } else {
             //echo 'SINGLE RUN';
-            $_caller = $command[makeKey('caller')];
+            $_caller = $command->getCaller();
             // get specific caller (plugin)
             // skip if inactive
             if (isset($pluginNames[$_caller])) {

@@ -168,6 +168,9 @@ class libraryStaticResourceManager {
 
     public static function getTemplatePath ($owner, $name, $resourceName, $preDefinedPaths = array()) {
         debug('libraryStaticResourceManager', 'getTemplatePath', true);
+        $useParent = false;
+        if (strstr($resourceName, COLON))
+            list($resourceName, $useParent) = explode(COLON, $resourceName);
         $resPath = 'template' . DS . str_replace(DOT, DS, $resourceName) . '.html';
         $_default  = DR . '/web/default/' . MPWS_VERSION . DS . $resPath;
         if (isset($preDefinedPaths['PATH_DEF']))
@@ -178,12 +181,37 @@ class libraryStaticResourceManager {
         $_web = false;
         if (isset($preDefinedPaths['PATH_WEB']))
             $_web = $preDefinedPaths['PATH_WEB'] . DS . $resPath;
-        if (file_exists($_owner))
-            return $_owner;
-        if (file_exists($_web))
-            return $_web;
-        if (file_exists($_default))
-            return $_default;
+        
+        switch(makeKey($useParent)) {
+            case 'DEFAULT': {
+                if (file_exists($_default))
+                    return $_default;
+                break;
+            }
+            case 'WEB': {
+                if (file_exists($_web))
+                    return $_web;
+                break;
+            }
+            case 'OWNER': {
+                if (file_exists($_owner))
+                    return $_owner;
+                break;
+            }
+            case 'AUTO':
+            default: {
+                if (file_exists($_owner))
+                    return $_owner;
+                if (file_exists($_web))
+                    return $_web;
+                if (file_exists($_default))
+                    return $_default;
+                break;
+            }
+        }
+        
+        
+        
         
         var_dump($_owner);
         var_dump($_web);

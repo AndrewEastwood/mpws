@@ -14,7 +14,17 @@ class objectExtWithResource extends objectExtension {
     public function getResourcePath ($type, $metapath) {
         debug('objectExtWithResource => getResource: ' . $type . ', ' . $metapath);
         debug($this->_baseMeta);
-        list($owner, $section, $key) = explode(DOT, $metapath);
+        $owner = false;
+        $section = false;
+        $key = false;
+        //list($owner, $section, $key) = 
+        $resourceMP = explode(DOT, $metapath);
+        if (!empty($resourceMP[0]))
+            $owner = $resourceMP[0];
+        if (!empty($resourceMP[1]))
+            $section = $resourceMP[1];
+        if (!empty($resourceMP[2]))
+            $key = $resourceMP[2];
         $useStandartPath = empty($key);
         $res = false;
         switch (strtolower($type)) {

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-09-26 00:38:54
+<?php /* Smarty version Smarty-3.1.11, created on 2012-09-29 17:10:31
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html" */ ?>
 <?php /*%%SmartyHeaderCode:2362038085062240e8c91d5-65005751%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '71e80ae3457b9976bcb9391c6df0b85fa2e8a555' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html',
-      1 => 1348609128,
+      1 => 1348927336,
       2 => 'file',
     ),
   ),
@@ -59,7 +59,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div class="MPWSLayout MPWSLayoutToolbox">
 
     <?php if ($_smarty_tpl->tpl_vars['INFO']->value['USER']['ACTIVE']){?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->objectTemplatePath_page_toolbox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->{"objectTemplatePath_page_".((string)mb_strtolower($_smarty_tpl->tpl_vars['INFO']->value['PAGE'], 'UTF-8'))}, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
     <?php }else{ ?>
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->objectTemplatePath_page_login, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>

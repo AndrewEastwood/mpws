@@ -34,8 +34,7 @@ class objectBaseWeb extends objectBase {
             $this->setObjectLocale($locale);
             $this->updateExtenders();
         }
-        
-        
+
         // different versions
         // all plugins must use version that customer uses
         if ($this->getObjectVersion() != $this->objectConfiguration_customer_version) {
@@ -102,15 +101,12 @@ class objectBaseWeb extends objectBase {
     public function run ($command) { 
         debug($command, 'objectBaseWeb: run function:');
         $ret = false;
-        switch ($command[makeKey('method')]) {
+        switch ($command->getMethod()) {
             case 'main':
                 $ret = $this->_run_main();
                 break;
             case 'jsapi':
                 $ret = $this->_run_jsapi();
-                break;
-            case 'cross':
-                $ret = $this->_run_cross();
                 break;
         }
         return $ret;
@@ -119,26 +115,25 @@ class objectBaseWeb extends objectBase {
     /* running bridges */
     private function _run_main() {
         debug('objectBaseWeb => _run_main');
+        $ret = false;
         // run common hook on startup
         $this->_displayTriggerOnCommonStart();
         // validate access key with plugin name to run in normal mode
         // or run customer
         //if (libraryRequest::getPage() === $this->getObjectName() || 
         if ($this->getObjectType() === OBJECT_T_CUSTOMER)
-            $this->_displayTriggerAsCustomer(); // run on active
+            $ret = $this->_displayTriggerAsCustomer(); // run on active
         //else
         if ($this->getObjectType() === OBJECT_T_PLUGIN)
-            $this->_displayTriggerAsPlugin(); // run in background
+            $ret = $this->_displayTriggerAsPlugin(); // run in background
         // run common hook in end up
         $this->_displayTriggerOnCommonEnd();
+        return $ret;
     }
     private function _run_jsapi() {
         debug('objectBaseWeb => _run_jsapi');
     }
-    private function _run_cross() {
-        debug('objectBaseWeb => _run_cross');
-    }
-    
+
     /* display triggers */
     protected function _displayTriggerOnCommonStart () {
         debug('objectBaseWeb => _displayTriggerOnCommonStart');
@@ -146,9 +141,11 @@ class objectBaseWeb extends objectBase {
     protected function _displayTriggerAsCustomer () {
         debug('objectBaseWeb => _displayTriggerAsCustomer');
         $_SESSION['MPWS_'.  makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
+        return false;
     }
     protected function _displayTriggerAsPlugin () {
         debug('objectBaseWeb => _displayTriggerAsPlugin');
+        return false;
     }
     protected function _displayTriggerOnCommonEnd () {
         debug('objectBaseWeb => _displayTriggerOnCommonEnd');

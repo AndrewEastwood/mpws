@@ -19,9 +19,10 @@
         $pieces = preg_split('/(?=[A-Z])/', $className, -1);
         $libName = implode('', array_slice($pieces, 1));
 
-        if (count($pieces) <= 1)
-            throw new Exception('Wrong loading library name: ' . $className);
-        else {
+        if (count($pieces) <= 1) {
+            //throw new Exception('Wrong loading library name: ' . $className);
+            $libPath = '/engine/system/class/' . $className;
+        } else {
             switch (strtolower($pieces[0])) {
                 case 'controller': {
                     $libPath = '/engine/controller/controller.';
@@ -48,6 +49,10 @@
                     $libPath = '/engine/system/extension/extension.';
                     break;
                 }
+                default: {
+                    $libPath = '/engine/system/class/' . $pieces[0];
+                    break;
+                }
             }
 
             _import($libPath . $libName . '.php');
@@ -70,7 +75,7 @@
         if (!file_exists($libPath))
             ;//throw new Exception('Requested library ('.$libPath.') does not exist.');
         if (file_exists($libPath))
-        require_once $libPath;
+            require_once $libPath;
     }
 
 ?>

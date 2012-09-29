@@ -33,6 +33,8 @@
     define ("EQ", "=", true);
 
     define ("US", "..", true);
+    
+    define ("COLON", ":", true);
 
     // Object Types
     

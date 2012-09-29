@@ -65,7 +65,7 @@ class objectExtWithStorage extends objectExtension {
     
     // get data object
     
-    private function &_getDOB () {
+    private function _getDOB () {
         return libraryStorage::getInstance();
     }
     

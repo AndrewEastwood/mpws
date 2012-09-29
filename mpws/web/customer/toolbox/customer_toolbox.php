@@ -45,25 +45,21 @@ class customer_toolbox extends objectBaseWebCustomer {
         //var_dump($mpws_user);
         
         $ctx->pageModel->setInfo('USER', $mpws_user);
-
         $ctx->pageModel->addMessage('helloWorld');
-
-        
     }
     
     protected function _displayTriggerAsCustomer () {
         $ret = parent::_displayTriggerAsCustomer();
-
         // custom customer pages
         switch(libraryRequest::getPage()) {
             case 'dashboard': {
                 //echo 'DASHBOARD';
+                $this->_displayPage_Dashboard();
                 break;
             }
         }
-        $ctx = contextMPWS::instance();
         // run all enabled plugins
-        $ctx->setProcessData('some process data')->directProcess('main', 'Toolbox');
+        $ctx = contextMPWS::instance();
         $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_default);
 
@@ -72,14 +68,16 @@ class customer_toolbox extends objectBaseWebCustomer {
 
     protected function _displayPage_Index () {
         debug('customer_toolbox => _displayPage_Home');
-        $ctx = contextMPWS::instance();
+        //$ctx = contextMPWS::instance();
         //var_dump($plgToolbox);
         //$plgToolbox->run();
         return true;
     }
     
     protected function _displayPage_Dashboard () {
-        
+        $ctx = contextMPWS::instance();
+        $ctx->directProcess('main:dashboard', 'Toolbox');
+        return true;
     }
     
     /*public function run_5 ($command) { 

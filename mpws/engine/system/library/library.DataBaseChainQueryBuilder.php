@@ -161,9 +161,9 @@
 
         public function reset() {
             
-            if ($this->_stopNextReset) {
+            if ($this->_stopResetTillQuery) {
                 //echo '<br>reset skipped';
-                $this->_stopNextReset = false;
+                $this->_stopResetTillQuery = false;
                 return $this;
             }
             

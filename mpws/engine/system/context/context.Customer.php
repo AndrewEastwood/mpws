@@ -11,7 +11,7 @@ class contextCustomer extends objectContext {
     }
     
     final public function call ($command) {
-        debug('contextCustomer => Running command: ' . $command[makeKey('method')]);
+        debug('contextCustomer => Running command: ' . $command->getMethod());
         $this->_customerManager->runCustomerAsync($command);
     }
     

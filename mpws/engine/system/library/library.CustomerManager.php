@@ -56,7 +56,7 @@ class libraryCustomerManager {
     public function runCustomerAsync ($command) {
         debug($command, 'libraryCustomerManager: runCustomerAsync action:');
         // get specific caller (plugin)
-        $_caller = $command[makeKey('caller')];
+        $_caller = $command->getCaller();
         // get plugin object
         $plugin = $this->getCustomer($_caller);
         // send message

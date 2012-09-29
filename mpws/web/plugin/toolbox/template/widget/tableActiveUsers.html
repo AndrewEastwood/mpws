@@ -1,0 +1,10 @@
+<b>ACTIVE USERS</b>
+<div class="MPWSDivTable">
+{foreach $SELF.DATA as $rowIndex=>$rowData}
+    <div class="MPWSDivTableRow">
+    {foreach $rowData as $cellIndex=>$cellData}
+        <div class="MPWSDivTableCell">{$cellData}</div>
+    {/foreach}
+    </div>
+{/foreach}
+</div>

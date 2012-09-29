@@ -13,7 +13,7 @@ class contextToolbox extends objectContext  {
     }
     
     final public function call ($command) {
-        debug('contextToolbox => Running command: ' . $command[makeKey('method')]);
+        debug('contextToolbox => Running command: ' . $command->getMethod());
         return $this->_pluginManager->runPluginAsync($command);
     }
     
@@ -24,8 +24,8 @@ class contextToolbox extends objectContext  {
     }
     
     final public function getAllObjects () {
-        $names = $this->_pluginManager->getAllEnabledPluginNames($name);
-        $objects[] = array();
+        $names = $this->_pluginManager->getAllEnabledPluginNames();
+        $objects = array();
         foreach ($names as $name)
             $objects[$name] = $this->getObject($name);
         return $objects;

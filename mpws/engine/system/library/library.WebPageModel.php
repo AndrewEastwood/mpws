@@ -99,9 +99,14 @@ class libraryWebPageModel {
         $ctx = contextMPWS::instance();
         // fetch wigets
         debug('Fetching wigets: ' . count($this->_widgets));
+        
+        $debugInfo = false;
+        if (isset($GLOBALS['MPWS_DEBUG']))
+            $debugInfo = $GLOBALS['MPWS_DEBUG'];
+        
         // set root block
         $model = array(
-            'DEBUG' => $GLOBALS['MPWS_DEBUG'],
+            'DEBUG' => $debugInfo,
             'CONTEXT' => $ctx,
             'SITE' => $this->_site,
             'WOB' => $this->_wobs,
@@ -112,6 +117,9 @@ class libraryWebPageModel {
                 'CUSTOM' => $this->_customs
             )
         );
+        
+        //var_dump($this->_widgets);
+        
         // append info
         if (!empty($this->_info))
             $model['INFO'] = $this->_info;
@@ -142,6 +150,7 @@ class libraryWebPageModel {
         $tp->assign($model);
         
         
+        $tp->assign('SELF', $wgt);
         //}
         // get running object
         /*$currVar = array(
