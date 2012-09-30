@@ -17,6 +17,10 @@ class pluginToolbox extends objectBaseWebPlugin {
             case 'dashboard' : 
                 $rez = $this->_commandDashboard();
                 break;
+            case 'default' : 
+            default :
+                $rez = $this->_commandDefault();
+                break;
         }
 
         return $rez;
@@ -32,6 +36,9 @@ class pluginToolbox extends objectBaseWebPlugin {
         $ctx->pageModel->addWidget('ACTIVE_USERS', $this->objectTemplatePath_widget_tableActiveUsers, $users);
     }
     
+    private function _commandDefault () {
+        echo 'DEFAULT TRIGGER';
+    }
 
 
     /* combine data with template */

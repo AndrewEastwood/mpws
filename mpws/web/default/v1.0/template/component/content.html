@@ -2,10 +2,7 @@
     {include
         file=$SITE->objectTemplatePath_component_menu
         _items=$SITE->objectConfiguration_display_menu}
-    {* RENDER ALL ELEMENTS *}
-    {if isset($_data)}
-        {foreach $_data as $itemvar}
-            {$itemvar}
-        {/foreach}
-    {/if}
+    {include
+        file=$SITE->objectTemplatePath_component_dataElements
+        _data=$_data}
 </div>

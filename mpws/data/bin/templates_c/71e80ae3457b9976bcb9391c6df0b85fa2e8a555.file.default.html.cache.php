@@ -1,30 +1,30 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-09-29 17:10:31
+<?php /* Smarty version Smarty-3.1.11, created on 2012-09-30 23:47:17
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html" */ ?>
-<?php /*%%SmartyHeaderCode:2362038085062240e8c91d5-65005751%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:7250735635068afd57b9792-42767894%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '71e80ae3457b9976bcb9391c6df0b85fa2e8a555' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html',
-      1 => 1348927336,
+      1 => 1349021406,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '2362038085062240e8c91d5-65005751',
+  'nocache_hash' => '7250735635068afd57b9792-42767894',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5062240e935ae9_27772355',
   'variables' => 
   array (
     'INFO' => 0,
     'SITE' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5068afd5810737_66974109',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5062240e935ae9_27772355')) {function content_5062240e935ae9_27772355($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5068afd5810737_66974109')) {function content_5068afd5810737_66974109($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - <?php echo $_smarty_tpl->tpl_vars['INFO']->value['PAGE'];?>
@@ -59,7 +59,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div class="MPWSLayout MPWSLayoutToolbox">
 
     <?php if ($_smarty_tpl->tpl_vars['INFO']->value['USER']['ACTIVE']){?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->{"objectTemplatePath_page_".((string)mb_strtolower($_smarty_tpl->tpl_vars['INFO']->value['PAGE'], 'UTF-8'))}, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->{"objectTemplatePath_component_pageDispatcher"}, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
     <?php }else{ ?>
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->objectTemplatePath_page_login, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>

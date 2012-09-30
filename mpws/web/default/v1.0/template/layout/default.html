@@ -27,7 +27,7 @@
 <div class="MPWSLayout MPWSLayoutToolbox">
 
     {if $INFO.USER.ACTIVE}
-        {include file=$SITE->{"objectTemplatePath_page_`$INFO.PAGE|lower`"}}
+        {include file=$SITE->{"objectTemplatePath_component_pageDispatcher"}}
     {else}
         {include file=$SITE->objectTemplatePath_page_login}
     {/if}

@@ -1,17 +1,23 @@
-<?php /*%%SmartyHeaderCode:2362038085062240e8c91d5-65005751%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:7250735635068afd57b9792-42767894%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '71e80ae3457b9976bcb9391c6df0b85fa2e8a555' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/default.html',
-      1 => 1348927336,
+      1 => 1349021406,
       2 => 'file',
     ),
-    '48a01374c6045ce1f4ded1f4efca0a227fdf65db' => 
+    '62e33b07ec504086a62347b14b2fbbdeaa4083e5' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/page/dashboard.html',
-      1 => 1348952433,
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pageDispatcher.html',
+      1 => 1349021707,
+      2 => 'file',
+    ),
+    '6a2bd7a905030f8591c53d6372450316d46fb9b7' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/page/tools.html',
+      1 => 1349038559,
       2 => 'file',
     ),
     '69efce9731aeeb54451ddefc0c66f864c1ae09b4' => 
@@ -24,6 +30,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/message.html',
       1 => 1348605107,
+      2 => 'file',
+    ),
+    '944f420f2f1d1265051400f0aa58ed80b23a7476' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginLinkList.html',
+      1 => 1349022615,
       2 => 'file',
     ),
     'f8c681a28bc173b0a8089654f24b353930927eca' => 
@@ -53,13 +65,19 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '7b07e181672f9c889f7904c12e7d7d4d8f52d21a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/content.html',
-      1 => 1348952232,
+      1 => 1349022472,
       2 => 'file',
     ),
     'd0b60fd847c51d05aceafa98d1fbb45732576e1e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html',
       1 => 1348769917,
+      2 => 'file',
+    ),
+    '531a0bfa0ec2c65a065a6298b73205faca29dadf' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataElements.html',
+      1 => 1349022504,
       2 => 'file',
     ),
     '663f554cd257e4d3947bc3ec192716b71147a8a4' => 
@@ -69,16 +87,16 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '2362038085062240e8c91d5-65005751',
+  'nocache_hash' => '7250735635068afd57b9792-42767894',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_506762bbd79174_31539161',
+  'unifunc' => 'content_5068b1f24150e7_39772222',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_506762bbd79174_31539161')) {function content_506762bbd79174_31539161($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5068b1f24150e7_39772222')) {function content_5068b1f24150e7_39772222($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
-    <title>MPWS Toolbox - dashboard</title>
+    <title>MPWS Toolbox - tools</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
@@ -88,9 +106,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         // Load the Visualization API and the piechart package.
         google.load('visualization', '1.0', {'packages':['corechart']});
         // security token
-        mpws.token = 'dc7161be3dbf2250c8954e560cc35060';
+        mpws.token = '4a931512ce65bdc9ca6808adf92d8783';
         // page
-        mpws.page = 'dashboard';
+        mpws.page = 'tools';
         // display
         mpws.display = '';
         // action
@@ -106,7 +124,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
             
 
 
-<div class="MPWSPage MPWSPageStandartPageStyle1 MPWSPageStandart" id="MPWSPageStandartDashboardID">
+
+    
+        
+    
+<div class="MPWSPage MPWSPageStandartPageStyle1 MPWSPageStandart" id="MPWSPageStandartToolsID">
     <div class="MPWSComponent MPWSComponenHeader">
     <div class="MPWSComponent MPWSComponentLogo">
     <a href="http://www.google.com" target="blank" class="MPWSLink">
@@ -121,7 +143,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
             <span class="MPWSValue">test3</span>
         </div><div class="MPWSLabelValueRow">
             <span class="MPWSLabel">Last access:</span>
-            <span class="MPWSValue">2012-09-29 17:48:46</span>
+            <span class="MPWSValue">2012-09-30 18:50:41</span>
         </div>
         <div class="MPWSLabelValueRow">
             <span class="MPWSLabel">Your home page link is:</span>
@@ -154,49 +176,32 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         </li>
             </ul>
     </div>
+    <div class="MPWSComponent MPWSComponentDataElements">
     
-                                    <div id="MPWSComponentMessageCommonID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessageCommon">
+                        <div class="MPWSBlock">            <div id="MPWSComponentMessageCommonID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessageCommon">
         <ul>
                     <li class="MPWSMessage">Hello World!!!!!</li>
                 </ul>
         </div>
-    
-                    <b>ACTIVE USERS</b>
-<div class="MPWSDivTable">
-    <div class="MPWSDivTableRow">
-            <div class="MPWSDivTableCell">1</div>
-            <div class="MPWSDivTableCell">TestUser</div>
-            <div class="MPWSDivTableCell">fe01ce2a7fbac8fafaed7c982a04e229</div>
-            <div class="MPWSDivTableCell">1</div>
-            <div class="MPWSDivTableCell">0</div>
-            <div class="MPWSDivTableCell">Toolbox:*:all;
-Writer:*:all;</div>
-            <div class="MPWSDivTableCell">2012-06-26 00:00:00</div>
-            <div class="MPWSDivTableCell">2012-06-26 00:00:00</div>
-        </div>
-    <div class="MPWSDivTableRow">
-            <div class="MPWSDivTableCell">2</div>
-            <div class="MPWSDivTableCell">olololo</div>
-            <div class="MPWSDivTableCell">fe01ce2a7fbac8fafaed7c982a04e229</div>
-            <div class="MPWSDivTableCell">1</div>
-            <div class="MPWSDivTableCell">0</div>
-            <div class="MPWSDivTableCell"></div>
-            <div class="MPWSDivTableCell">0000-00-00 00:00:00</div>
-            <div class="MPWSDivTableCell">0000-00-00 00:00:00</div>
-        </div>
-    <div class="MPWSDivTableRow">
-            <div class="MPWSDivTableCell">3</div>
-            <div class="MPWSDivTableCell">test3</div>
-            <div class="MPWSDivTableCell">fe01ce2a7fbac8fafaed7c982a04e229</div>
-            <div class="MPWSDivTableCell">1</div>
-            <div class="MPWSDivTableCell">1</div>
-            <div class="MPWSDivTableCell"></div>
-            <div class="MPWSDivTableCell">2012-09-29 23:43:36</div>
-            <div class="MPWSDivTableCell">2012-06-25 23:56:20</div>
-        </div>
-</div>
-
+    </div>
+                    <div class="MPWSBlock"><div id="MPWSWidgetSystemPluginLinkListID" class="MPWSWidget MPWSWidgetSystemPluginLinkList">
+    <ul class="MPWSList MPWSListPluginLinks">
+            <li class="MPWSListItem MPWSListItemPluginLink">
+            <a href="?plugin=toolbox" title="Toolbox Manager">
+                <div class="MPWSMiniBlock MPWSMiniBlockSurveys" id="MPWSMiniBlockSurveysID">
+                    <div class="MPWSWrapper">
+                        <span class="MPWSText MPWSTextTitle">Toolbox Manager</span>
+                        <span class="MPWSText MPWSTextAction">Manage system</span>
+                        <span class="MPWSText MPWSTextLink">Start here</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+        </ul>
+</div></div>
             </div>
+
+</div>
     <div class="MPWSComponent MPWSComponenFooter">
     
     </div>

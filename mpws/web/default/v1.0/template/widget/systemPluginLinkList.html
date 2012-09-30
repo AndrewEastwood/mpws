@@ -1,0 +1,17 @@
+<div id="MPWSWidgetSystemPluginLinkListID" class="MPWSWidget MPWSWidgetSystemPluginLinkList">
+    <ul class="MPWSList MPWSListPluginLinks">
+    {foreach $WOB as $webObj}
+        <li class="MPWSListItem MPWSListItemPluginLink">
+            <a href="?plugin={$webObj->getObjectName()}" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
+                <div class="MPWSMiniBlock MPWSMiniBlockSurveys" id="MPWSMiniBlockSurveysID">
+                    <div class="MPWSWrapper">
+                        <span class="MPWSText MPWSTextTitle">{$webObj->objectProperty_widget_systemPluginListTitle}</span>
+                        <span class="MPWSText MPWSTextAction">{$webObj->objectProperty_widget_systemPluginListDescription}</span>
+                        <span class="MPWSText MPWSTextLink">{$webObj->objectProperty_widget_systemPluginLinkListStartText}</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+    {/foreach}
+    </ul>
+</div>

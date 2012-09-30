@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-09-30 00:06:03
+<?php /* Smarty version Smarty-3.1.11, created on 2012-09-30 23:47:58
          compiled from "/var/www/mpws/rc_1.0/web/plugin/toolbox/template/widget/tableActiveUsers.html" */ ?>
-<?php /*%%SmartyHeaderCode:8401644275067607ec2b828-92525958%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:11758149695068affe53ba46-50830862%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '8401644275067607ec2b828-92525958',
+  'nocache_hash' => '11758149695068affe53ba46-50830862',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5067607ec57837_42794536',
   'variables' => 
   array (
     'SELF' => 0,
@@ -24,8 +22,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cellData' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5068affe581c53_75778143',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5067607ec57837_42794536')) {function content_5067607ec57837_42794536($_smarty_tpl) {?><b>ACTIVE USERS</b>
+<?php if ($_valid && !is_callable('content_5068affe581c53_75778143')) {function content_5068affe581c53_75778143($_smarty_tpl) {?><b>ACTIVE USERS</b>
 <div class="MPWSDivTable">
 <?php  $_smarty_tpl->tpl_vars['rowData'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['rowData']->_loop = false;
  $_smarty_tpl->tpl_vars['rowIndex'] = new Smarty_Variable;

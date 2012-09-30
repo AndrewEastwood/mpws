@@ -51,10 +51,15 @@ class customer_toolbox extends objectBaseWebCustomer {
     protected function _displayTriggerAsCustomer () {
         $ret = parent::_displayTriggerAsCustomer();
         // custom customer pages
-        switch(libraryRequest::getPage()) {
+        $page = libraryRequest::getPage();
+        switch($page) {
             case 'dashboard': {
                 //echo 'DASHBOARD';
                 $this->_displayPage_Dashboard();
+                break;
+            }
+            case 'tools' : {
+                $this->_displayPage_Tools();
                 break;
             }
         }
@@ -74,9 +79,16 @@ class customer_toolbox extends objectBaseWebCustomer {
         return true;
     }
     
+    // IMPLEMENT (SHOW) STANDART DASHBOART WIDGETS
     protected function _displayPage_Dashboard () {
         $ctx = contextMPWS::instance();
         $ctx->directProcess('main:dashboard', 'Toolbox');
+        return true;
+    }
+    
+    protected function _displayPage_Tools () {
+        $ctx = contextMPWS::instance();
+        $ctx->directProcess('main:default', 'Toolbox');
         return true;
     }
     

@@ -1,0 +1,15 @@
+{* COMPONENT: WIDGET GRABBER *}
+
+{*
+    - selector
+    - realm
+    - 
+
+*}
+
+
+<div class="MPWSComponent MPWSComponentWidgetGrabber">
+{foreach $_widgets as $wgtKey=>$widgetEntry}
+    <div clas="MPWSWidget">{$widgetEntry.HTML}</div>
+{/foreach}
+</div>

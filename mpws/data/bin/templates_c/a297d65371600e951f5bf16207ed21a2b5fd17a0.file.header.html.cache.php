@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-09-29 17:10:34
+<?php /* Smarty version Smarty-3.1.11, created on 2012-09-30 23:47:17
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/header.html" */ ?>
-<?php /*%%SmartyHeaderCode:40160002350634996800435-65038860%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:20570941205068afd5951c32-46604294%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '40160002350634996800435-65038860',
+  'nocache_hash' => '20570941205068afd5951c32-46604294',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50634996802227_06926130',
   'variables' => 
   array (
     'SITE' => 0,
@@ -24,8 +22,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'itemvar' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5068afd59659a6_14417700',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50634996802227_06926130')) {function content_50634996802227_06926130($_smarty_tpl) {?><div class="MPWSComponent MPWSComponenHeader">
+<?php if ($_valid && !is_callable('content_5068afd59659a6_14417700')) {function content_5068afd59659a6_14417700($_smarty_tpl) {?><div class="MPWSComponent MPWSComponenHeader">
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['SITE']->value->objectTemplatePath_component_logo, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
     
