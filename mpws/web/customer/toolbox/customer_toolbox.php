@@ -66,7 +66,7 @@ class customer_toolbox extends objectBaseWebCustomer {
         // run all enabled plugins
         $ctx = contextMPWS::instance();
         $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
-        $ctx->pageModel->setPageView($this->objectTemplatePath_layout_default);
+        $ctx->pageModel->setPageView($this->objectTemplatePath_layout_defaultSystem);
 
         return $ret;
     }

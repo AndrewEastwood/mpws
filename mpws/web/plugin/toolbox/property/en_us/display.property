@@ -1,1 +1,2 @@
-displayPropTest = 'qwertyuiop';
+menuTextUsers = 'User Manager';
+menuTextDescriptionUsers = 'Manage System Users';

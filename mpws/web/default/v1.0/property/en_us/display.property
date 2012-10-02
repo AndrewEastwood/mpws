@@ -1,2 +1,16 @@
-title=property title
-pageDescription=myPhpWebSite builder.
+title='property title';
+pageDescription='myPhpWebSite builder.';
+
+menuTextIndex='Home Page';
+menuTextDashboard='Dashboard';
+menuTextTools='Tools';
+menuTextUsers='Users';
+menuTextHelp='Help';
+menuTextMessages='Web Messages';
+
+menuTextDescriptionIndex='Home Page';
+menuTextDescriptionDashboard='Dashboard';
+menuTextDescriptionTools='Tools';
+menuTextDescriptionUsers='Users';
+menuTextDescriptionHelp='Help';
+menuTextDescriptionMessages='Web Messages';

@@ -271,7 +271,7 @@ class libraryStaticResourceManager {
                  if ($propertyValue != null)
                      return $propertyValue;
             }
-            throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey);
+            throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey . ' in <pre>' . print_r($propertyFilePath, true) . '</pre>');
         }
         elseif (is_string($propertyFilePath)) {
             if (!file_exists($propertyFilePath))
@@ -282,7 +282,7 @@ class libraryStaticResourceManager {
             if (isset($props[$propKey]))
                 return $props[$propKey];
             if (!$fromArray)
-                throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey);
+                throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey . '; filepath: ' . $propertyFilePath);
             return null;
         } else
             throw new Exception('libraryStaticResourceManager: getPropertyValue: Wrong property file path.');

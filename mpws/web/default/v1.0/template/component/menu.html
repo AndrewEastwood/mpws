@@ -1,15 +1,36 @@
+{if isset($_do) }
+    {assign var="DISPLAY_OBJECT" value=$_do}
+{else}
+    {assign var="DISPLAY_OBJECT" value=$SITE}
+{/if}
+
+{$showDescription = false}
+{if isset($_showDescription) }
+    {$showDescription = $_showDescription}
+{/if}
+
 <div class="MPWSComponent MPWSComponenMenu">
     {if isset($_items)}
     <ul class="MPWSList MPWSListMenu">
     {foreach $_items as $keyvar=>$itemvar}
         <li class="MPWSListItem MPWSListItemMenu">
-            <a href="{$itemvar.link}" target="{$itemvar.target}" title="">{$SITE->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}</a>
+            {$_linkText = $DISPLAY_OBJECT->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}
+            <a href="{$itemvar.link}" target="{$itemvar.target}" title="{$_linkText}">
+                <span>{$_linkText}</span>
+                {if $showDescription}
+                <span>{$DISPLAY_OBJECT->{"objectProperty_display_menuTextDescription`$keyvar|capitalize:0:1`"}}</span>
+                {/if}
+            </a>
+            {if isset($itemvar.contains) and ($itemvar.contains eq '__PLUGINS__')}
+                {include file=$DISPLAY_OBJECT->objectTemplatePath_component_menuPlugins}
+            {/if}
         </li>
     {/foreach}
     {if isset($_custom)}
     {foreach $_custom as $keyvar=>$itemvar}
+        {$_linkText = $DISPLAY_OBJECT->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}
         <li class="MPWSListItem MPWSListItemMenu">
-            <a href="{$itemvar.link}" target="{$itemvar.target}" title="">{$SITE->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}</a>
+            <a href="{$itemvar.link}" target="{$itemvar.target}" title="{$_linkText}">{$_linkText}</a>
         </li>
     {/foreach}
     {/if}

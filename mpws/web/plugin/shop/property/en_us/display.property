@@ -1,0 +1,7 @@
+menuTextProducts = 'Products';
+menuTextCategories = 'Categories';
+menuTextOrigins = 'Origins';
+menuTextPromo = 'Promo';
+menuTextBuyers = 'Buyers';
+menuTextOrders = 'Orders';
+menuTextCurrency = 'Currency';

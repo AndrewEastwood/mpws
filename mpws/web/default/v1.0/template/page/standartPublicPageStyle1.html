@@ -1,5 +1,5 @@
 {* STANDART PAGE IMPLEMENTATION #1 *}
-<div class="MPWSPage MPWSPageStandartPageStyle1 MPWSPageStandart{$INFO.DISPLAY|capitalize:0:1}" id="MPWSPageStandart{$INFO.PAGE|capitalize:0:1}ID">
+<div class="MPWSPage MPWSPageDisplay{libraryRequest::getDisplay()|capitalize:0:1} MPWSPageStandartPublicPageStyle1 MPWSPageStandartPublic{$INFO.DISPLAY|capitalize:0:1}" id="MPWSPageStandartPublic{$INFO.PAGE|capitalize:0:1}ID">
     {include file=$SITE->objectTemplatePath_component_header _data=$_header}
     {include file=$SITE->objectTemplatePath_component_content _data=$_content}
     {include file=$SITE->objectTemplatePath_component_footer _data=$_footer}

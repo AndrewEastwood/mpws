@@ -1,8 +1,8 @@
 <div class="MPWSComponent MPWSComponenFooter">
     {* RENDER ALL ELEMENTS *}
     {if isset($data)}
-        {foreach $data as $keyvar=>$itemvar}
-            {$itemvar}
+        {foreach $data as $itemvar}
+            <div class="MPWSBlock">{$itemvar}</div>
         {/foreach}
     {/if}
 </div>

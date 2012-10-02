@@ -2,8 +2,9 @@
     <ul class="MPWSList MPWSListPluginLinks">
     {foreach $WOB as $webObj}
         <li class="MPWSListItem MPWSListItemPluginLink">
-            <a href="?plugin={$webObj->getObjectName()}" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
-                <div class="MPWSMiniBlock MPWSMiniBlockSurveys" id="MPWSMiniBlockSurveysID">
+            
+            <a href="{$webObj->objectConfiguration_object_menuExecObjectPath}?plugin={$webObj->getObjectName()}" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
+                <div class="MPWSMiniBlock">
                     <div class="MPWSWrapper">
                         <span class="MPWSText MPWSTextTitle">{$webObj->objectProperty_widget_systemPluginListTitle}</span>
                         <span class="MPWSText MPWSTextAction">{$webObj->objectProperty_widget_systemPluginListDescription}</span>

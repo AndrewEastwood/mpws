@@ -1,0 +1,9 @@
+<div id="MPWSWidgetSystemPluginLinkMenuID" class="MPWSWidget MPWSWidgetSystemPluginLinkMenu">
+{assign var="active_plugin_name" value=libraryRequest::getPlugin()}
+{assign var="active_plugin_menu" value=$WOB[makeKey($active_plugin_name)]->{"objectConfiguration_display_menuPlugin"}}
+
+{if isset($active_plugin_menu)}
+    {include file=$SITE->objectTemplatePath_component_menu _items=$active_plugin_menu _do=$WOB[makeKey($active_plugin_name)] _showDescription=true}
+{/if}
+
+</div>

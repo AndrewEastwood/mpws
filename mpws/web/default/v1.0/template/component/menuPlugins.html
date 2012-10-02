@@ -1,0 +1,13 @@
+<ul class="MPWSList MPWSListPluginLinks">
+{foreach $WOB as $webObj}
+    <li class="MPWSListItem MPWSListItemPluginLink">
+        <a href="{$webObj->objectConfiguration_object_menuExecObjectPath}?plugin={$webObj->getObjectName()}" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
+            <span class="MPWSText MPWSTextTitle">{$webObj->objectProperty_widget_systemPluginListTitle}</span>
+            {$submenu = $webObj->objectConfiguration_display_menuPlugin}
+            {if !empty($submenu) }
+                {include file=$SITE->objectTemplatePath_component_menu _items=$submenu _do=$webObj}
+            {/if}
+        </a>
+    </li>
+{/foreach}
+</ul>
