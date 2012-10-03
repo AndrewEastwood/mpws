@@ -1,0 +1,26 @@
+{* WIDGET dataTableView *}
+{* Contains:
+	- searchbox
+	- filtering
+	- datatable
+	- pagination
+*}
+
+{* Get Configuration For The Widget *}
+{assign name="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataTableView`$CURRENT.SOURCE.NAME`"}}
+
+{if not empty($DTV_CFG.searchbox)}
+	{include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG}
+{/if}
+
+{if not empty($DTV_CFG.filtering)}
+	{include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG}
+{/if}
+
+{if not empty($DTV_CFG.datatable)}
+	{include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA}
+{/if}
+
+{if not empty($DTV_CFG.pagination)}
+	{include file=$CURRENT.OBJECT->objectTemplatePath_component_pagingBar _confing=$DTV_CFG}
+{/if}

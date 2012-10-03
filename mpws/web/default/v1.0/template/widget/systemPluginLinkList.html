@@ -1,13 +1,13 @@
 <div id="MPWSWidgetSystemPluginLinkListID" class="MPWSWidget MPWSWidgetSystemPluginLinkList">
     <ul class="MPWSList MPWSListPluginLinks">
-    {foreach $WOB as $webObj}
+    {foreach $OBJECT.WOB as $webObj}
         <li class="MPWSListItem MPWSListItemPluginLink">
             
-            <a href="{$webObj->objectConfiguration_object_menuExecObjectPath}?plugin={$webObj->getObjectName()}" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
+            <a href="{$webObj->objectConfiguration_object_menuExecObjectPath}?plugin={$webObj->getObjectName()}" class="MPWSLink" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
                 <div class="MPWSMiniBlock">
                     <div class="MPWSWrapper">
                         <span class="MPWSText MPWSTextTitle">{$webObj->objectProperty_widget_systemPluginListTitle}</span>
-                        <span class="MPWSText MPWSTextAction">{$webObj->objectProperty_widget_systemPluginListDescription}</span>
+                        <span class="MPWSText MPWSTextDescription">{$webObj->objectProperty_widget_systemPluginListDescription}</span>
                         <span class="MPWSText MPWSTextLink">{$webObj->objectProperty_widget_systemPluginLinkListStartText}</span>
                     </div>
                 </div>

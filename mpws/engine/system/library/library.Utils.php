@@ -535,6 +535,10 @@ class libraryUtils {
         // default (string)
         return $value;
     }
+
+    static public function getDebugInfo () {
+        return isset($GLOBALS['MPWS_DEBUG'])?$GLOBALS['MPWS_DEBUG']:false;
+    }
     
 }
 

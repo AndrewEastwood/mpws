@@ -1,8 +1,4 @@
-{if isset($_do) }
-    {assign var="DISPLAY_OBJECT" value=$_do}
-{else}
-    {assign var="DISPLAY_OBJECT" value=$SITE}
-{/if}
+{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($_OBJ, $CURRENT.OBJECT, $OBJECT.SITE)}
 
 {$showDescription = false}
 {if isset($_showDescription) }
@@ -15,10 +11,10 @@
     {foreach $_items as $keyvar=>$itemvar}
         <li class="MPWSListItem MPWSListItemMenu">
             {$_linkText = $DISPLAY_OBJECT->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}
-            <a href="{$itemvar.link}" target="{$itemvar.target}" title="{$_linkText}">
-                <span>{$_linkText}</span>
+            <a href="{$itemvar.link}" target="{$itemvar.target}" class="MPWSLink" title="{$_linkText}">
+                <span class="MPWSText MPWSTextTitle">{$_linkText}</span>
                 {if $showDescription}
-                <span>{$DISPLAY_OBJECT->{"objectProperty_display_menuTextDescription`$keyvar|capitalize:0:1`"}}</span>
+                <span class="MPWSText MPWSTextDescription">{$DISPLAY_OBJECT->{"objectProperty_display_menuTextDescription`$keyvar|capitalize:0:1`"}}</span>
                 {/if}
             </a>
             {if isset($itemvar.contains) and ($itemvar.contains eq '__PLUGINS__')}
@@ -26,14 +22,6 @@
             {/if}
         </li>
     {/foreach}
-    {if isset($_custom)}
-    {foreach $_custom as $keyvar=>$itemvar}
-        {$_linkText = $DISPLAY_OBJECT->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}
-        <li class="MPWSListItem MPWSListItemMenu">
-            <a href="{$itemvar.link}" target="{$itemvar.target}" title="{$_linkText}">{$_linkText}</a>
-        </li>
-    {/foreach}
-    {/if}
     </ul>
     {/if}
 </div>

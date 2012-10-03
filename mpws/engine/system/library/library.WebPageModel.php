@@ -57,8 +57,12 @@ class libraryWebPageModel {
     }
     public function addWebObject (/* single wob or wobs */) {
         $wob = getArguments(func_get_args());
+        if (func_num_args() == 1)
+            $wob = func_get_arg(0);
         if (is_object($wob)) {
-            $this->_wobs[makeKey($wob->getObjectName())] = $wob;
+            $_wobKey = makeKey($wob->getObjectName());
+            if (!isset($this->_wobs[$_wobKey]))
+                $this->_wobs[$_wobKey] = $wob;
         } elseif (is_array($wob)) {
             foreach($wob as $obj)
                 $this->addWebObject($obj);
@@ -82,14 +86,17 @@ class libraryWebPageModel {
         return $this;
     }
     
-    public function addWidget($name, $template, $data = array()) {
+    public function addWidget($owner, $name, $template, $data = array()) {
         $this->_widgets[makeKey($name, true)] = array (
             'NAME' => makeKey($name, true),
+            'WOB_NAME' => $owner->getObjectName(),
             'DATA' => $data,
             'TEMPLATE' => $template,
             'TYPE' => 'WIDGET',
             'HTML' => ''
         );
+        // add wob
+        $this->addWebObject($owner);
         return $this;
     }
     
@@ -100,16 +107,13 @@ class libraryWebPageModel {
         // fetch wigets
         debug('Fetching wigets: ' . count($this->_widgets));
         
-        $debugInfo = false;
-        if (isset($GLOBALS['MPWS_DEBUG']))
-            $debugInfo = $GLOBALS['MPWS_DEBUG'];
-        
         // set root block
         $model = array(
-            'DEBUG' => $debugInfo,
-            'CONTEXT' => $ctx,
-            'SITE' => $this->_site,
-            'WOB' => $this->_wobs,
+            'OBJECT' => array(
+                'CONTEXT' => $ctx,
+                'SITE' => $this->_site,
+                'WOB' => $this->_wobs,
+            ),
             'MODEL' => array(
                 'MESSAGE' => $this->_messages,
                 'PAGE' => $this->_page,
@@ -148,9 +152,15 @@ class libraryWebPageModel {
         debug('Rendering template: ' . $wgt['TEMPLATE']);
         //if (!empty($model)) {
         $tp->assign($model);
-        
-        
-        $tp->assign('SELF', $wgt);
+
+        // set current object
+        $current = array(
+            'OBJECT' => (($wgt['TYPE'] == 'PAGE')?$this->_site:$this->_wobs[makeKey($wgt['WOB_NAME'])]),
+            'SOURCE' => $wgt
+        );
+
+        $tp->assign('CURRENT', $current);
+
         //}
         // get running object
         /*$currVar = array(
@@ -179,15 +189,38 @@ class libraryWebPageModel {
     }
     
     public function getStandartInfo () {
-        $info = array();
+        $info = array(
+            'GET' = array(),
+            'POST' = array()
+        );
+
+        // common info
         // page token
         $info[makeKey('TOKEN')] = libraryRequest::getOrValidatePageSecurityToken();
+        $info[makeKey('DEBUG')] = libraryUtils::getDebugInfo();
+
+        // GET parameters
+
         // page
-        $info[makeKey('PAGE')] = libraryRequest::getPage();
+        $info['GET'][makeKey('PAGE')] = libraryRequest::getPage();
         // display
-        $info[makeKey('DISPLAY')] = libraryRequest::getDisplay();
+        $info['GET'][makeKey('DISPLAY')] = libraryRequest::getDisplay();
         // action
-        $info[makeKey('ACTION')] = libraryRequest::getAction();
+        $info['GET'][makeKey('ACTION')] = libraryRequest::getAction();
+        // plugin
+        $info['GET'][makeKey('PLUGIN')] = libraryRequest::getPlugin();
+
+        // the same things but for post
+
+        // page
+        $info['POST'][makeKey('PAGE')] = libraryRequest::getPostPage();
+        // display
+        $info['POST'][makeKey('DISPLAY')] = libraryRequest::getPostDisplay();
+        // action
+        $info['POST'][makeKey('ACTION')] = libraryRequest::getPostAction();
+        // plugin
+        $info['POST'][makeKey('PLUGIN')] = libraryRequest::getPostPlugin();
+
         return $info;
     }
 

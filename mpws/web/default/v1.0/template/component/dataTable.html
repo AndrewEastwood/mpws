@@ -1,0 +1,47 @@
+{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($_OBJ, $CURRENT.OBJECT, $OBJECT.SITE)}
+<div class="MPWSComponent MPWSComponentDataTable">
+{if isset($DISPLAY_OBJECT.NAME)}
+    {include file=$DISPLAY_OBJECT->objectTemplatePath_component_objectSummary _title=$DISPLAY_OBJECT.NAME _type='component'}
+{/if}
+{* data table content *}
+{if count($_data) gt 0}
+
+    {* render table captions *}
+    {if isset($_confing.datatable.displayCaptions) and $_confing.datatable.displayCaptions}
+        <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
+        {if isset($_confing.datatable.fields)}
+            {foreach $_confing.datatable.fields as $fieldKey}
+                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$fieldKey|capitalize:0:1}">
+                    {$fieldKey}
+                </div>
+            {/foreach}
+        {else}
+            {foreach $_data.0 as $cellEntry}
+                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$cellEntry@key|capitalize:0:1}">
+                    {$cellEntry@key}
+                </div>
+            {/foreach}
+        {/if}
+        </div>
+    {/if}
+
+    {foreach $_data as $rowIndex => $rowEntry}
+        <div class="MPWSDataTableRow MPWSDataTableRow{$rowIndex}">
+        {if isset($_confing.datatable.fields)}
+            {* display all data according to fields *}
+            {foreach $_confing.datatable.fields as $fieldKey}
+                <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize:0:1}">{$rowEntry[$fieldKey]}</div>
+            {/foreach}
+        {else}
+            {* display all data *}
+            {foreach $rowEntry as $fieldKey => $cellEntry}
+                <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize:0:1}">{$cellEntry}</div>
+            {/foreach}
+        {/if}
+        </div>
+    {/foreach}
+
+{else}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Data object does not have content to render" _tpl=$smarty.template}
+{/if}
+</div>

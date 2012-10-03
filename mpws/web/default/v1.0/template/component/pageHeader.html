@@ -1,0 +1,8 @@
+<div class="MPWSComponent MPWSComponenHeader">
+{* RENDER LOGO *}
+{if $SITE->objectConfiguration_display_displayLogo}
+	{include file=$SITE->objectTemplatePath_component_logo}
+{/if}
+{* RENDER ALL ELEMENTS *}
+{include file=$SITE->objectTemplatePath_component_dataElements _data=$_data}
+</div>

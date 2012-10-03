@@ -1,5 +1,5 @@
 {include assign="wgt_grabbed"
-    file=$SITE->objectTemplatePath_component_widgetGrabber
+    file=$CURRENT.OBJECT->objectTemplatePath_component_widgetGrabber
     _widgets=$MODEL.WIDGET}
 
-{include file=$SITE->{"objectTemplatePath_page_system:default"} _content=[$wgt_grabbed]}
+{include file=$CURRENT.OBJECT->{"objectTemplatePath_page_system:default"} _content=[$wgt_grabbed]}

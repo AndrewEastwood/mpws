@@ -20,16 +20,16 @@
         mpws.action = '{/literal}{$INFO.ACTION}{literal}';
     </script>
     {/literal}
-    <meta name="locale" content="{$SITE->getObjectLocale()}">
+    <meta name="locale" content="{$CURRENT.OBJECT->getObjectLocale()}">
 </head>
 <body>
 
 <div class="MPWSLayout MPWSLayoutToolbox">
 
     {if $INFO.USER.ACTIVE}
-        {include file=$SITE->{"objectTemplatePath_component_pageDispatcher"}}
+        {include file=$CURRENT.OBJECT->{"objectTemplatePath_component_pageDispatcher"}}
     {else}
-        {include file=$SITE->objectTemplatePath_page_login}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_page_login}
     {/if}
 
 </div>

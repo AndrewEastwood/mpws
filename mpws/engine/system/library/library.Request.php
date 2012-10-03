@@ -47,6 +47,9 @@ class libraryRequest {
     }
 
     /* get post values */
+    static function getPostPlugin ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
+        return self::getPostValue('plugin', $defaultValue, $switch, $valueOnSwitch);
+    }
     static function getPostDisplay($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getPostValue('display', $defaultValue, $switch, $valueOnSwitch);
     }

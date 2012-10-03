@@ -1,22 +1,19 @@
-{* INDEX: STANDART PAGE IMPLEMENTATION #1 *}
+{* SYSTEM: STANDART PAGE IMPLEMENTATION *}
 
-{include assign="wgt_sysUsrInfo" file=$SITE->objectTemplatePath_widget_systemUserInfo}
-{include assign="msg_common" file=$SITE->objectTemplatePath_component_message _realm='COMMON'}
+{include assign="wgt_sysUsrInfo" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemUserInfo}
+{include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_message _realm='COMMON'}
 
 {$_headers[]=$wgt_sysUsrInfo}
 {$_contents[]=$msg_common}
 {$_footers=Array()}
 
-{assign var="active_plugin_name" value=libraryRequest::getPlugin()}
-
-{if empty($active_plugin_name) }
-    {include assign="wgt_tools" file=$SITE->objectTemplatePath_widget_systemPluginLinkList}
+{if empty($INFO.GET.PLUGIN) }
+    {include assign="wgt_tools" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkList}
     {$_contents[]=$wgt_tools}
 {else}
     {* show active plugin menu *}
-    {assign var="active_display" value=libraryRequest::getDisplay()}
-    {if empty($active_display) }
-        {include assign="wgt_menuList" file=$SITE->objectTemplatePath_widget_systemPluginLinkMenu}
+    {if empty($INFO.GET.DISPLAY) }
+        {include assign="wgt_menuList" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkMenu}
         {$_contents[]=$wgt_menuList}
     {/if}
 {/if}
@@ -32,5 +29,5 @@
     {$_footers = array_merge($_footers, $_footer)}
 {/if}
 
-
-{include file=$SITE->objectTemplatePath_page_standartSystemPageStyle1 _header=$_headers _content=$_contents _footer=$_footers}
+{* render page *}
+{include file=$CURRENT.OBJECT->objectTemplatePath_page_standartSystemPageStyle1 _header=$_headers _content=$_contents _footer=$_footers}

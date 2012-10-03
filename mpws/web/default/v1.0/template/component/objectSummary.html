@@ -1,0 +1,7 @@
+{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($_OBJ, $CURRENT.OBJECT, $OBJECT.SITE)}
+<div class="MPWSComponent MPWSComponentObjectSummary">
+	<span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"objectProperty_`{$_type}`_objectSummaryText`$_title`"}}</span>
+	{if isset($_details)}
+	<span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"objectProperty_`{$_type}`_objectSummaryDetails`_details`"}}</span>
+	{/if}
+</div>
