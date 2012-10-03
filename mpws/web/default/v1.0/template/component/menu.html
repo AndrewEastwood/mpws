@@ -1,4 +1,13 @@
-{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($_OBJ, $CURRENT.OBJECT, $OBJECT.SITE)}
+{assign var="DOs" value=[]}
+
+{if (isset($_OBJ))}
+    {assign var="DOs" value=[$_OBJ]}
+{/if}
+
+{$DOs[] = $CURRENT.OBJECT}
+{$DOs[] = $OBJECT.SITE}
+
+{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($DOs)}
 
 {$showDescription = false}
 {if isset($_showDescription) }

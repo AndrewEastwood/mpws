@@ -33,6 +33,8 @@ class pluginToolbox extends objectBaseWebPlugin {
             ->from('mpws_users')
             ->fetchData();
         
+        //var_dump($this->objectConfiguration_widget_dataTableViewActiveUsers);
+
         $ctx->pageModel->addWidget($this, 'ActiveUsers', $this->objectTemplatePath_widget_dataTableView, $users);
     }
     

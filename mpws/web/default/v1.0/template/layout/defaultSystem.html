@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MPWS Toolbox - {$INFO.PAGE}</title>
+    <title>MPWS Toolbox - {$INFO.GET.PAGE}</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
@@ -13,11 +13,11 @@
         // security token
         mpws.token = '{/literal}{$INFO.TOKEN}{literal}';
         // page
-        mpws.page = '{/literal}{$INFO.PAGE}{literal}';
+        mpws.page = '{/literal}{$INFO.GET.PAGE}{literal}';
         // display
-        mpws.display = '{/literal}{$INFO.DISPLAY}{literal}';
+        mpws.display = '{/literal}{$INFO.GET.DISPLAY}{literal}';
         // action
-        mpws.action = '{/literal}{$INFO.ACTION}{literal}';
+        mpws.action = '{/literal}{$INFO.GET.ACTION}{literal}';
     </script>
     {/literal}
     <meta name="locale" content="{$CURRENT.OBJECT->getObjectLocale()}">

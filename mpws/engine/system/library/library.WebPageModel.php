@@ -88,7 +88,7 @@ class libraryWebPageModel {
     
     public function addWidget($owner, $name, $template, $data = array()) {
         $this->_widgets[makeKey($name, true)] = array (
-            'NAME' => makeKey($name, true),
+            'NAME' => $name,
             'WOB_NAME' => $owner->getObjectName(),
             'DATA' => $data,
             'TEMPLATE' => $template,
@@ -153,6 +153,8 @@ class libraryWebPageModel {
         //if (!empty($model)) {
         $tp->assign($model);
 
+        //var_dump($this->_wobs);
+
         // set current object
         $current = array(
             'OBJECT' => (($wgt['TYPE'] == 'PAGE')?$this->_site:$this->_wobs[makeKey($wgt['WOB_NAME'])]),
@@ -189,10 +191,7 @@ class libraryWebPageModel {
     }
     
     public function getStandartInfo () {
-        $info = array(
-            'GET' = array(),
-            'POST' = array()
-        );
+        $info = array();
 
         // common info
         // page token

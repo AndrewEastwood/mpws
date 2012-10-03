@@ -184,8 +184,10 @@
 
     function glGetFirstNonEmptyValue (/* objects */) {
         $args = func_get_args();
-        foreach ($args as $key => $value) {
-            if (iseet($value) && !empty($value))
+        if (is_array($args[0]))
+            $args = $args[0];
+        foreach ($args as $value) {
+            if (isset($value) && !empty($value))
                 return $value;
         }
     }

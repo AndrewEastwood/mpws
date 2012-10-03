@@ -146,6 +146,7 @@ class objectBaseWeb extends objectBase {
     }
     protected function _displayTriggerAsPlugin () {
         debug('objectBaseWeb => _displayTriggerAsPlugin');
+        $_SESSION['MPWS_'.  makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
         return false;
     }
     protected function _displayTriggerOnCommonEnd () {

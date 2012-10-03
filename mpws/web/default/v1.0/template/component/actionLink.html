@@ -1,0 +1,19 @@
+{if isset($_action)}
+
+{if $_action eq 'edit'}
+	{$_linkAction = '?action=edit&amp;oid=XXX'}
+{elseif $_action eq 'view'}
+	{$_linkAction = '?action=view&amp;oid=XXX'}
+{elseif $_action eq 'delete'}
+	{$_linkAction = '?action=delete&amp;oid=XXX'}
+{else}
+	{$_linkAction = '?action=default&amp;oid=XXX'}
+{/if}
+
+{$_linkText = $CURRENT.OBJECT->{"objectProperty_`$_resource`_`$_name``$_action|capitalize:0:1`"}}
+<a href="{$_linkAction}" class="MPWSLink" target="" mpws-action="{$_action}" title="{$_linkText}">
+	{$_linkText}
+</a>
+{else}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Action name is empty or not provided" _tpl=$smarty.template}
+{/if}

@@ -86,7 +86,7 @@ class libraryStaticResourceManager {
         //var_dump($filesToLoad);
         
         // set metainfo
-        $metainfo .= '/* ['.date('Y-m-d H:i:s').'] MPWS Packages: ' . PHP_EOL . ' * ' . 
+        $metainfo = '/* ['.date('Y-m-d H:i:s').'] MPWS Packages: ' . PHP_EOL . ' * ' . 
                 ((MPWS_ENV === 'DEV')?implode(';' . PHP_EOL . ' * ', $filesToLoad):'') . PHP_EOL . ' */' . 
                 PHP_EOL . PHP_EOL . PHP_EOL;
         $lineBreak = PHP_EOL.'/*'.str_pad('', 25, '*').' line break '.str_pad('', 25, '*').'*/'.PHP_EOL;
