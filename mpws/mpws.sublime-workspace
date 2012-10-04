@@ -79,6 +79,38 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
+			"settings":
+			{
+				"buffer_size": 4320,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/actionLink.html",
+			"settings":
+			{
+				"buffer_size": 2432,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
+			"settings":
+			{
+				"buffer_size": 228,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/GitHub/web/mpws/web/plugin/writer/config/datatable.php",
+			"settings":
+			{
+				"buffer_size": 2839,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -106,6 +138,13 @@
 	[
 		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/dataTableView.html",
 		"/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/config/object.ini",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/config/display.ini",
+		"/D/GitHub/web/mpws/web/default/v1.0/config/object.ini",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkList.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/config/display.ini",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/property/en_us/component.property",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/dataElements.html",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/component/objectSummary.html",
 		"/D/GitHub/web/mpws/web/plugin/toolbox/template/widget/tableActiveUsers.html",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
@@ -117,7 +156,6 @@
 		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/dashboard.html",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/component/menu.html",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkMenu.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkList.html",
 		"/D/GitHub/web/mpws/engine/system/library/library.WebPageModel.php",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/page/standartPublicPageStyle1.html",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/page/standartSystemPageStyle1.html",
@@ -141,7 +179,6 @@
 		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageHeader.html",
 		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageFooter.html",
 		"/D/GitHub/web/mpws/engine/system/library/library.Request.php",
-		"/D/GitHub/web/mpws/web/default/v1.0/config/display.ini",
 		"/D/home/bazaarvoice/defaultui/4.9/default/displays/0000bvps_t2/prr-static-resources/bazaarvoiceUI.less",
 		"/D/BvWork/SublimeProjects/Bazaarvoice-Default-Project.sublime-project",
 		"/C/Windows/System32/drivers/etc/hosts",
@@ -348,8 +385,117 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
+					"settings":
+					{
+						"buffer_size": 4320,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1926,
+								1926
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0,
+						"translation.y": 1104,
+						"zoom_level": 1
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/actionLink.html",
+					"settings":
+					{
+						"buffer_size": 2432,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2432,
+								2432
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0,
+						"translation.y": 192,
+						"zoom_level": 1
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
+					"settings":
+					{
+						"buffer_size": 228,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0,
+						"translation.y": 0,
+						"zoom_level": 1
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/D/GitHub/web/mpws/web/plugin/writer/config/datatable.php",
+					"settings":
+					{
+						"buffer_size": 2839,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0,
+						"translation.y": 0,
+						"zoom_level": 1
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
