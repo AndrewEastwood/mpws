@@ -1,0 +1,418 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"f",
+				"fun: function …"
+			],
+			[
+				"sta",
+				"static"
+			],
+			[
+				"func",
+				"func_get_arg"
+			],
+			[
+				"emp",
+				"empty"
+			],
+			[
+				"fore",
+				"foreach: foreach …"
+			],
+			[
+				"pad",
+				"padding: padding-right: length"
+			],
+			[
+				"dis",
+				"display: display: inline"
+			],
+			[
+				"fon",
+				"font: font-size: size"
+			],
+			[
+				"text",
+				"text"
+			],
+			[
+				"h",
+				"hidden"
+			],
+			[
+				"line",
+				"line"
+			],
+			[
+				"bac",
+				"background: background-image: none"
+			],
+			[
+				"padd",
+				"padding: padding-top: length"
+			],
+			[
+				"i",
+				"if"
+			],
+			[
+				"if",
+				"#if: if (#if)"
+			],
+			[
+				"m",
+				"#m: macro (#m)"
+			],
+			[
+				"RR",
+				"RRFooter"
+			],
+			[
+				"ma",
+				"macro"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392,
+		"selected_items":
+		[
+		],
+		"width": 392
+	},
+	"console":
+	{
+		"height": 0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": true,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/dataTableView.html",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/objectSummary.html",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/template/widget/tableActiveUsers.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/message.html",
+		"/D/GitHub/web/mpws/engine/system/library/library.DataBaseChainQueryBuilder.php",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/exception.html",
+		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/tools.html",
+		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/index.html",
+		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/dashboard.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/menu.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkMenu.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkList.html",
+		"/D/GitHub/web/mpws/engine/system/library/library.WebPageModel.php",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/standartPublicPageStyle1.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/standartSystemPageStyle1.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/system.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/terms.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/contacts.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/index.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/aboutUs.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/page/404.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/layout/defaultSystem.html",
+		"/D/GitHub/web/mpws/engine/system/library/library.Utils.php",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/plugin.toolbox.php",
+		"/D/GitHub/web/mpws/web/default/v1.0/config/widget.ini",
+		"/D/GitHub/web/mpws/web/customer/toolbox/customer_toolbox.php",
+		"/D/GitHub/web/mpws/web/plugin/toolbox/template/page/404.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/config/format.ini",
+		"/D/GitHub/web/mpws/web/default/v1.0/config/mdbc.ini",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/menuPlugins.html",
+		"/D/GitHub/web/mpws/engine/global/global.methods.php",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageContent.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageHeader.html",
+		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageFooter.html",
+		"/D/GitHub/web/mpws/engine/system/library/library.Request.php",
+		"/D/GitHub/web/mpws/web/default/v1.0/config/display.ini",
+		"/D/home/bazaarvoice/defaultui/4.9/default/displays/0000bvps_t2/prr-static-resources/bazaarvoiceUI.less",
+		"/D/BvWork/SublimeProjects/Bazaarvoice-Default-Project.sublime-project",
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/D/svnwork/customers/trunk/working-fm-blindsnet-78844/blindsnet/displays/0328/prr-static-resources/bazaarvoice.css",
+		"/D/svnwork/customers/trunk/working-fm-llbean-97022/llbean/displays/1138/prr-static-resources/bazaarvoiceUI.css",
+		"/D/svnwork/customers/trunk/working-fm-llbean-97022/llbean/displays/1138/prr-templates/termsandconditionsStandalone.properties",
+		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/Default/Global.sublime-settings",
+		"/D/svnwork/customers/trunk/working-fm-blindsnet-78844/blindsnet/displays/0328/prr-static-resources/bazaarvoiceUI.css",
+		"/D/svnwork/customers/trunk/working-fm-northface-103749/northface/displays/7134/prr-static-resources/bazaarvoice.css",
+		"/D/svnwork/customers/trunk/working-fm-northface-103749/northface/displays/7134/profiles-static-resources/bazaarvoiceCP.css",
+		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/User/Global.sublime-settings",
+		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/Default/Default (Windows).sublime-keymap",
+		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/Default/Base File.sublime-settings",
+		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/User/Base File.sublime-settings",
+		"/D/svnwork/customers/trunk/working-fm-proactiv-102367/proactiv/displays/5177/prr-templates/lib/reviewDisplayStyle2.ftl",
+		"/D/svnwork/customers/trunk/working-fm-proactiv-102367/proactiv/displays/5177/prr-templates/lib/ratingComponents.ftl",
+		"/D/svnwork/customers/trunk/working/lego/displays/1360/prr-static-resources/bazaarvoice.css",
+		"/D/svnwork/customers/trunk/working/lego/displays/1360/config/displayConfiguration.xml",
+		"/D/svnwork/customers/trunk/working/lego-fr/displays/1360-fr/prr-static-resources/bazaarvoice.css",
+		"/D/svnwork/customers/trunk/working/lego-de/displays/1360-de/prr-static-resources/bazaarvoiceUI.css",
+		"/D/svnwork/customers/trunk/working/lego-fr/displays/1360-fr/config/displayConfiguration.xml",
+		"/D/svnwork/customers/trunk/working/lego/displays/1360/prr-static-resources/bazaarvoiceUI.css",
+		"/D/home/bazaarvoice/logs/diagnostic/bv.log",
+		"/D/svnwork/customers/trunk/working/lego/displays/1360/prr-templates/editReviewEmbedded.ftl",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/ratingComponents.ftl",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/ratingSummary.ftl",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/config/prrFreeMarkerStaticResourceConfiguration.xml",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-static-resources/bazaarvoice.css",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/reviewDisplayStyle2.ftl",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-static-resources/bazaarvoiceRR_SVP.css",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/shared-static-resources/bvProfile.css",
+		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/feedbackComponents.properties",
+		"/D/svnwork/defaultui/branch/clean/4.7/default/displays/0000/prr-templates/lib/reviewDisplayStyle2.ftl",
+		"/D/svnwork/defaultui/branch/clean/4.7/default/displays/0000/prr-templates/lib/displayComponents.ftl",
+		"/D/svnwork/customers/trunk/switch_to_working-fm-proactiv-102367_prod_c4.bat",
+		"/D/test.ftl",
+		"/D/svnwork/customers/trunk/working/thomascook/displays/7403/prr-static-resources/bazaarvoice.css",
+		"/D/svnwork/customers/trunk/working/thomascook/displays/7403/prr-templates/lib/reviewDisplayStyle3.ftl",
+		"/D/svnwork/customers/trunk/working/thomascook/displays/7403/prr-static-resources/background_BVLogo.jpg",
+		"/D/svnwork/customers/trunk/working/thomascook/config/bundleConfiguration.xml",
+		"/D/svnwork/customers/trunk/working-tomain-thomascook-00000/thomascook/displays/7403/prr-templates/submittedReviewEmbedded.ftl"
+	],
+	"find":
+	{
+		"height": 32
+	},
+	"find_in_files":
+	{
+		"height": 85,
+		"include_history":
+		[
+		],
+		"location_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"TermsAndConditions",
+			"BVTermsAndConditions",
+			"BVRRTermsAndConditions",
+			"BVTermsAndConditions",
+			"videotip",
+			"photo",
+			"#BVRRPhotoTipBox",
+			"#BVRRPhotoTipBoxID",
+			"VRRTipContainer #BVRRPhotoTipBoxID",
+			"VRRTipContainer *, #BVRRPhotoTipBoxID *",
+			"BVRRPhotoSectionContent",
+			"BVProfileReadAllReviewsLink",
+			"UserStatistic",
+			"VRRUserStatistic",
+			"BVRRSExternalSubjectDetailsButton",
+			".BVRRRatingsHistogramButtonPopin, #BVRRRatingsHistogramButtonIEControlsFrame",
+			"BVRRSReviewsSummar",
+			"VRRSReviewsSummar",
+			"VRRRatingsOnlySummaryHead",
+			"RRRatingsOnlySummar",
+			"RRRatingSummaryLinkWriteFirs",
+			">",
+			"VRRSelectedPageNumbe",
+			"alt+d",
+			"Ctrl+d",
+			"feedb",
+			"BVRRReviewFeedbackSummary",
+			"feedback",
+			".BVRRReviewTitle",
+			"review",
+			"ERROR",
+			"09",
+			"less_box_colorPrimaryFader",
+			"less_rounded_radius",
+			"<#escape x as x?html>\n\n<#-- [mvasyliev] added AdditionalFieldsContainer at the bottom of the macro. -->\n<#macro RRReviewDisplayStyle3Summary review preview>\n    <@RRReviewDisplayStyle3SummaryDiv review=review preview=preview>\n\n        <@RRReviewRatingsContainer review=review />\n\n        <@RRUserNicknameContainer review=review />\n\n        <@RRUserLocationContainer review=review />\n\n        <@RRContextDataContainer review=review />\n\n        <@RRAdditionalFieldsContainer review=review />\n\n    </@RRReviewDisplayStyle3SummaryDiv>\n</#macro>\n\n<#-- [mvasyliev] moved RRReviewFeedbackContainer; removed AdditionalFieldsContainer; -->\n<#macro RRReviewDisplayStyle3Main review preview trackerSubject bvtrackingscope>\n\n    <@RRReviewDisplayStyle3MainDiv review=review preview=preview>\n\n        <@RRReviewBadgesContainer review=review />\n\n        <@RRReviewTitleContainer review=review />\n\n        <@RRReviewDateContainer review=review />\n\n        <@RRReviewDisplayStyle3ContentDiv review=review preview=preview>\n\n            <@RRReviewPhotoSection review=review centeringElementID=\"BVRRDisplayContentReviewID${getIDScope()}_${review.id!'preview'}\" trackerSubject=trackerSubject />\n\n            <@RRReviewProsConsContainer review=review />\n\n            <@RRReviewTagsContainer review=review />\n\n            <@RRReviewTextContainer review=review />\n\n            <#if !preview ><@RRReviewFeedbackContainer review=review bvtrackingscope=bvtrackingscope/></#if>\n\n            <@RRReviewVideoContainer review=review centeringElementID=\"BVRRDisplayContentReviewID${getIDScope()}_${review.id!'preview'}\" />\n\n            <@RRReviewProductReferencesContainer review=review />\n\n        </@RRReviewDisplayStyle3ContentDiv>\n\n        <#if !preview >\n\n            <@SpacerDiv cssClass=\"RRBeforeFeedbackContainerSpacer\"/>\n\n            <@RRRecommendedContainer review=review />\n\n            <@SpacerDiv cssClass=\"RRBeforeClientResponseContainerSpacer\"/>\n\n            <@RRReviewClientResponseContainer review=review />\n\n            <@SpacerDiv cssClass=\"RRBeforeSocialLinksContainerSpacer\"/>\n\n            <@RRReviewSocialLinksContainer review=review bvtrackingscope=bvtrackingscope/>\n\n            <@RRSocialBookmarkingReviewFacebookLikeButtonHook>\n                <@RRSocialBookmarkingReviewFacebookLikeButton review=review trackingScope=bvtrackingscope/>\n            </@RRSocialBookmarkingReviewFacebookLikeButtonHook>\n        </#if>\n\n    </@RRReviewDisplayStyle3MainDiv>\n</#macro>\n\n</#escape>\n",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review",
+			"review",
+			"Review"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0
+	},
+	"input":
+	{
+		"height": 29
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0,
+			1
+		],
+		"rows":
+		[
+			0,
+			1
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0,
+		"selected_items":
+		[
+		],
+		"width": 0
+	},
+	"select_project":
+	{
+		"height": 500,
+		"selected_items":
+		[
+			[
+				"",
+				"/D/BvWork/SublimeProjects/Bazaarvoice-Default-Project.sublime-project"
+			]
+		],
+		"width": 380
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 342,
+	"status_bar_visible": true
+}

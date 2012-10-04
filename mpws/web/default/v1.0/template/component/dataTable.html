@@ -1,9 +1,62 @@
+{* Component: DataTable  
+
+    !!!PLEASE COPY THIS MESSAGE TO NEW COMPONENT FILE!!!
+
+    Component Required Arguments:
+    _confing: datatable configuration
+    _data: simple data retreived from DB
+
+
+    !!!DO NOT MODIFY STANDART SECTION!!!
+
+    Standart Required Arguments:
+    _resource: 'widget', 'component', etc. Property text will be given from the file according to this value
+    _ownerType: Each property key must start with this name.
+    _ownerName: influences on property keys
+
+
+    proeprty file: %locale%/%_resource%.proeprty@%_ownerType%+'someText'+%_ownerName%
+
+    Ex.:
+
+    file: en_us/widget.property
+           .      .
+          /|\    /|\
+           |      |
+           |      |_ value of $_resource
+           |_ current locale
+
+
+    entry:  
+        dataTableView ActiveUsers Caption Name
+           .              .         .      .
+          /|\            /|\       /|\    /|\
+           |              |         |      |
+           |              |         |      |_ column key (depends on data)
+           |              |         |_ specifyc property key
+           |              |_ it's $_ownerName value
+           |_ value of $_ownerType
+
+
+   To Populate Standart Arguments Use This Line:
+   _ownerType=$_ownerType _ownerName=$__ownerName _resource=$_resource
+
+    {* standart property key *}
+    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$__ownerName`"}
+
+*}
+
+
 <div class="MPWSComponent MPWSComponentDataTable">
-{if isset($CURRENT.SOURCE.NAME)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _title=$CURRENT.SOURCE.NAME _type='component'}
-{/if}
+
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerType=$_ownerType _ownerName=$__ownerName _resource=$_resource}
+
 {* data table content *}
 {if count($_data) gt 0}
+
+    {* standart property key *}
+    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$__ownerName`"}
+
 
     {* render table captions *}
     {if isset($_confing.datatable.displayCaptions) and $_confing.datatable.displayCaptions}
@@ -11,19 +64,19 @@
 
 
         {if not empty($_confing.datatable.actions)}
-            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">{$CURRENT.OBJECT->objectProperty_widget_dataTableViewCaptionActions}</div>
+            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">{$CURRENT.OBJECT->{"`$__prop__`CaptionActions"}}</div>
         {/if}
 
         {if isset($_confing.datatable.fields)}
             {foreach $_confing.datatable.fields as $fieldKey}
                 <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$fieldKey|capitalize:0:1}">
-                    {$CURRENT.OBJECT->{"objectProperty_widget_dataTableViewCaption`$CURRENT.SOURCE.NAME``$fieldKey`"}}
+                    {$CURRENT.OBJECT->{"`$__prop__`Caption`$fieldKey`"}}
                 </div>
             {/foreach}
         {else}
             {foreach $_data.0 as $cellEntry}
                 <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$cellEntry@key|capitalize:0:1}">
-                    {$CURRENT.OBJECT->{"objectProperty_widget_dataTableViewCaption`$CURRENT.SOURCE.NAME``$cellEntry@key`"}}
+                    {$CURRENT.OBJECT->{"`$__prop__`Caption`$cellEntry@key`"}}
                 </div>
             {/foreach}
         {/if}
@@ -32,26 +85,23 @@
 
     {foreach $_data as $rowIndex => $rowEntry}
         <div class="MPWSDataTableRow MPWSDataTableRow{$rowIndex}">
-        {capture name="dataTableActions"}{/capture}
+
         {if not empty($_confing.datatable.actions)}
-            {capture "dataTableActions"}
-                <div class="MPWSDataTableCell MPWSDataTableCellActions">
-                {foreach $_confing.datatable.actions as $actionName}
-                    <span class="MPWSDataTableCellAction{$actionName|capitalize:0:1}">
-                    {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _name="dataTableViewActionLink`$CURRENT.SOURCE.NAME`" _resource='widget' _action=$actionName}
-                    </span>
-                {/foreach}
-                </div>
-            {/capture}
+            <div class="MPWSDataTableCell MPWSDataTableCellActions">
+            {foreach $_confing.datatable.actions as $actionName}
+                <span class="MPWSDataTableCellAction{$actionName|capitalize:0:1}">
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerType=$_ownerType _ownerName=$__ownerName _resource=$_resource _action=$actionName _oid=$rowEntry['ID']}
+                </span>
+            {/foreach}
+            </div>
         {/if}
+
         {if isset($_confing.datatable.fields)}
-            {$smarty.capture.dataTableActions}
             {* display all data according to fields *}
             {foreach $_confing.datatable.fields as $fieldKey}
                 <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize:0:1}">{$rowEntry[$fieldKey]}</div>
             {/foreach}
         {else}
-            {$smarty.capture.dataTableActions}
             {* display all data *}
             {foreach $rowEntry as $fieldKey => $cellEntry}
                 <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize:0:1}">{$cellEntry}</div>

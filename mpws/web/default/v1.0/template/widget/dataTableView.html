@@ -18,7 +18,7 @@
 {/if}
 
 {if not empty($DTV_CFG.datatable)}
-	{include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA}
+	{include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA _resource='widget' _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
 {/if}
 
 {if not empty($DTV_CFG.pagination)}
