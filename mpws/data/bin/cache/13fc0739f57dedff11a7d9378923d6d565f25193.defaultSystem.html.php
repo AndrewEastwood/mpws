@@ -47,7 +47,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '944f420f2f1d1265051400f0aa58ed80b23a7476' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginLinkList.html',
-      1 => 1349287120,
+      1 => 1349375490,
       2 => 'file',
     ),
     'fee379ac26415e5d616f64f7c05de0bc03ae5909' => 
@@ -107,11 +107,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'nocache_hash' => '484340775506b40efad05a6-83925282',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_506ca79eb43e75_56399684',
+  'unifunc' => 'content_506dee1329c3d5_87760676',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_506ca79eb43e75_56399684')) {function content_506ca79eb43e75_56399684($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_506dee1329c3d5_87760676')) {function content_506dee1329c3d5_87760676($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - dashboard</title>
@@ -200,17 +200,17 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 <div class="MPWSComponent MPWSComponenMenu">
         <ul class="MPWSList MPWSListMenu">
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="index.html" target="_self" class="MPWSLink" title="Home Page">
+                        <a href="/page/index.html" target="_self" class="MPWSLink" title="Home Page">
                 <span class="MPWSText MPWSTextTitle">Home Page</span>
                             </a>
                     </li>
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="dashboard.html" target="_self" class="MPWSLink" title="Dashboard">
+                        <a href="/page/dashboard.html" target="_self" class="MPWSLink" title="Dashboard">
                 <span class="MPWSText MPWSTextTitle">Dashboard</span>
                             </a>
                     </li>
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="tools.html" target="_self" class="MPWSLink" title="Tools">
+                        <a href="/page/tools.html" target="_self" class="MPWSLink" title="Tools">
                 <span class="MPWSText MPWSTextTitle">Tools</span>
                             </a>
                             <div class="MPWSComponent MPWSComponenMenuPlugins">
@@ -226,7 +226,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 <div class="MPWSComponent MPWSComponenMenu">
         <ul class="MPWSList MPWSListMenu">
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="User Manager">
+                        <a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="User Manager">
                 <span class="MPWSText MPWSTextTitle">User Manager</span>
                             </a>
                     </li>
@@ -238,17 +238,17 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 </div>
                     </li>
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="users.html" target="_self" class="MPWSLink" title="Users">
+                        <a href="/page/users.html" target="_self" class="MPWSLink" title="Users">
                 <span class="MPWSText MPWSTextTitle">Users</span>
                             </a>
                     </li>
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="messages.html" target="_self" class="MPWSLink" title="Web Messages">
+                        <a href="/page/messages.html" target="_self" class="MPWSLink" title="Web Messages">
                 <span class="MPWSText MPWSTextTitle">Web Messages</span>
                             </a>
                     </li>
             <li class="MPWSListItem MPWSListItemMenu">
-                        <a href="help.html" target="_self" class="MPWSLink" title="Help">
+                        <a href="/page/help.html" target="_self" class="MPWSLink" title="Help">
                 <span class="MPWSText MPWSTextTitle">Help</span>
                             </a>
                     </li>
@@ -270,7 +270,6 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
                     <div class="MPWSBlock"><div id="MPWSWidgetSystemPluginLinkListID" class="MPWSWidget MPWSWidgetSystemPluginLinkList">
     <ul class="MPWSList MPWSListPluginLinks">
             <li class="MPWSListItem MPWSListItemPluginLink">
-            
             <a href="/page/tools.html?plugin=toolbox" class="MPWSLink" title="Toolbox">
                 <div class="MPWSMiniBlock">
                     <div class="MPWSWrapper">
@@ -293,11 +292,24 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 
 
 
-	<div class="MPWSComponent MPWSComponentDataTable">
-    <div class="MPWSComponent MPWSComponentObjectSummary">
-	<span class="MPWSText MPWSTextTitle">Active Users</span>
-	</div>
+	
 
+<div class="MPWSComponent MPWSComponentDataTable">
+
+
+
+
+
+
+<div class="MPWSComponent MPWSComponentObjectSummary">
+	<span class="MPWSText MPWSTextTitle">Active Users</span>
+	<span class="MPWSText MPWSTextDetails">List of all active users</span>
+</div>
+
+
+
+    
+    
 
     
             <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
@@ -317,100 +329,211 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
                             </div>
     
             <div class="MPWSDataTableRow MPWSDataTableRow0">
-                                                                        <div class="MPWSDataTableCell MPWSDataTableCellActions">
-                                    <span class="MPWSDataTableCellActionEdit">
-                    
-	
-<a href="?action=edit&amp;oid=XXX" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
-	EDIT
-</a>
 
-                    </span>
-                                    <span class="MPWSDataTableCellActionView">
-                    
-	
-<a href="?action=view&amp;oid=XXX" class="MPWSLink" target="" mpws-action="view" title="VIEW">
-	VIEW
-</a>
+                    <div class="MPWSDataTableCell MPWSDataTableCellActions">
+                            <span class="MPWSDataTableCellActionEdit">
+                
 
-                    </span>
-                                    <span class="MPWSDataTableCellActionDelete">
-                    
-	
-<a href="?action=delete&amp;oid=XXX" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
-	REMOVE
-</a>
 
-                    </span>
-                                </div>
-            
-            
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=1" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+		EDIT
+	</a>
+
+
+                </span>
+                            <span class="MPWSDataTableCellActionView">
+                
+
+
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=1" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+		VIEW
+	</a>
+
+
+                </span>
+                            <span class="MPWSDataTableCellActionDelete">
+                
+
+
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=1" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+		REMOVE
+	</a>
+
+
+                </span>
+                        </div>
+        
+                    
                             <div class="MPWSDataTableCell MPWSDataTableCellName">TestUser</div>
                             <div class="MPWSDataTableCell MPWSDataTableCellActive">1</div>
                             <div class="MPWSDataTableCell MPWSDataTableCellDatelastaccess">2012-06-26 00:00:00</div>
                             </div>
             <div class="MPWSDataTableRow MPWSDataTableRow1">
-                                                                        <div class="MPWSDataTableCell MPWSDataTableCellActions">
-                                    <span class="MPWSDataTableCellActionEdit">
-                    
-	
-<a href="?action=edit&amp;oid=XXX" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
-	EDIT
-</a>
 
-                    </span>
-                                    <span class="MPWSDataTableCellActionView">
-                    
-	
-<a href="?action=view&amp;oid=XXX" class="MPWSLink" target="" mpws-action="view" title="VIEW">
-	VIEW
-</a>
+                    <div class="MPWSDataTableCell MPWSDataTableCellActions">
+                            <span class="MPWSDataTableCellActionEdit">
+                
 
-                    </span>
-                                    <span class="MPWSDataTableCellActionDelete">
-                    
-	
-<a href="?action=delete&amp;oid=XXX" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
-	REMOVE
-</a>
 
-                    </span>
-                                </div>
-            
-            
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=2" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+		EDIT
+	</a>
+
+
+                </span>
+                            <span class="MPWSDataTableCellActionView">
+                
+
+
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=2" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+		VIEW
+	</a>
+
+
+                </span>
+                            <span class="MPWSDataTableCellActionDelete">
+                
+
+
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=2" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+		REMOVE
+	</a>
+
+
+                </span>
+                        </div>
+        
+                    
                             <div class="MPWSDataTableCell MPWSDataTableCellName">olololo</div>
                             <div class="MPWSDataTableCell MPWSDataTableCellActive">1</div>
                             <div class="MPWSDataTableCell MPWSDataTableCellDatelastaccess">0000-00-00 00:00:00</div>
                             </div>
             <div class="MPWSDataTableRow MPWSDataTableRow2">
-                                                                        <div class="MPWSDataTableCell MPWSDataTableCellActions">
-                                    <span class="MPWSDataTableCellActionEdit">
-                    
-	
-<a href="?action=edit&amp;oid=XXX" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
-	EDIT
-</a>
 
-                    </span>
-                                    <span class="MPWSDataTableCellActionView">
-                    
-	
-<a href="?action=view&amp;oid=XXX" class="MPWSLink" target="" mpws-action="view" title="VIEW">
-	VIEW
-</a>
+                    <div class="MPWSDataTableCell MPWSDataTableCellActions">
+                            <span class="MPWSDataTableCellActionEdit">
+                
 
-                    </span>
-                                    <span class="MPWSDataTableCellActionDelete">
-                    
-	
-<a href="?action=delete&amp;oid=XXX" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
-	REMOVE
-</a>
 
-                    </span>
-                                </div>
-            
-            
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=3" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+		EDIT
+	</a>
+
+
+                </span>
+                            <span class="MPWSDataTableCellActionView">
+                
+
+
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=3" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+		VIEW
+	</a>
+
+
+                </span>
+                            <span class="MPWSDataTableCellActionDelete">
+                
+
+
+	
+	
+	
+
+			
+	
+				
+	
+	
+
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=3" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+		REMOVE
+	</a>
+
+
+                </span>
+                        </div>
+        
+                    
                             <div class="MPWSDataTableCell MPWSDataTableCellName">test3</div>
                             <div class="MPWSDataTableCell MPWSDataTableCellActive">1</div>
                             <div class="MPWSDataTableCell MPWSDataTableCellDatelastaccess">2012-10-02 21:15:01</div>

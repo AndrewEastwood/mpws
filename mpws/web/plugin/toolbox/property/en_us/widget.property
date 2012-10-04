@@ -1,10 +1,14 @@
 systemPluginListTitle = 'Toolbox';
 systemPluginListDescription = 'System Toolbox Manager';
 
+dataTableViewActiveUsersObjectSummary = 'Active Users';
+dataTableViewActiveUsersObjectDescription = 'List of all active users';
+dataTableViewActiveUsersCaptionActions = 'Actions';
+dataTableViewActiveUsersCaptionName = 'User Name';
+dataTableViewActiveUsersCaptionActive = 'Active';
+dataTableViewActiveUsersCaptionDateLastAccess = 'Last Time Visit';
 
-dataTableViewCaptionActiveUsersName = 'User Name';
-dataTableViewCaptionActiveUsersActive = 'Active';
-dataTableViewCaptionActiveUsersDateLastAccess = 'Last Time Visit';
-dataTableViewActionLinkActiveUsersEdit = 'EDIT';
-dataTableViewActionLinkActiveUsersView = 'VIEW';
-dataTableViewActionLinkActiveUsersDelete = 'REMOVE';
+
+dataTableViewActiveUsersActionLinkEdit = 'EDIT';
+dataTableViewActiveUsersActionLinkView = 'VIEW';
+dataTableViewActiveUsersActionLinkDelete = 'REMOVE';

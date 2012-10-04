@@ -39,23 +39,23 @@
 
 
    To Populate Standart Arguments Use This Line:
-   _ownerType=$_ownerType _ownerName=$__ownerName _resource=$_resource
+   _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource
 
-    {* standart property key *}
-    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$__ownerName`"}
+    standart property key
+    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
 
 *}
 
 
 <div class="MPWSComponent MPWSComponentDataTable">
 
-{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerType=$_ownerType _ownerName=$__ownerName _resource=$_resource}
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource}
 
 {* data table content *}
 {if count($_data) gt 0}
 
     {* standart property key *}
-    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$__ownerName`"}
+    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
 
 
     {* render table captions *}
@@ -90,7 +90,7 @@
             <div class="MPWSDataTableCell MPWSDataTableCellActions">
             {foreach $_confing.datatable.actions as $actionName}
                 <span class="MPWSDataTableCellAction{$actionName|capitalize:0:1}">
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerType=$_ownerType _ownerName=$__ownerName _resource=$_resource _action=$actionName _oid=$rowEntry['ID']}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource _action=$actionName _oid=$rowEntry['ID']}
                 </span>
             {/foreach}
             </div>

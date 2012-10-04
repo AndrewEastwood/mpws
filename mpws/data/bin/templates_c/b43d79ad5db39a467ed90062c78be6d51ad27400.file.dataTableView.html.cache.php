@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-03 22:56:47
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-04 22:49:23
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataTableView.html" */ ?>
 <?php /*%%SmartyHeaderCode:429389730506c8f9c3da3e7-85699197%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'b43d79ad5db39a467ed90062c78be6d51ad27400' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataTableView.html',
-      1 => 1349294202,
+      1 => 1349380150,
       2 => 'file',
     ),
   ),
@@ -41,7 +41,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php }?>
 
 <?php if (!empty($_smarty_tpl->tpl_vars['DTV_CFG']->value['datatable'])){?>
-	<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_dataTable, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_confing'=>$_smarty_tpl->tpl_vars['DTV_CFG']->value,'_data'=>$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']), 0);?>
+	<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_dataTable, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_confing'=>$_smarty_tpl->tpl_vars['DTV_CFG']->value,'_data'=>$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA'],'_resource'=>'widget','_ownerType'=>'dataTableView','_ownerName'=>$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['NAME']), 0);?>
 
 <?php }?>
 
