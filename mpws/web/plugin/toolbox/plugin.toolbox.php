@@ -33,11 +33,17 @@ class pluginToolbox extends objectBaseWebPlugin {
             ->from('mpws_users')
             ->fetchData();
         
-        $comUsers = libraryComponents::comDataTable(,
-            $ctx->contextCustomer->getDBO());
+        /*$comUsers = libraryComponents::comDataTable(,
+            $ctx->contextCustomer->getDBO());*/
         //var_dump($this->objectConfiguration_widget_dataTableViewActiveUsers);
+        
 
-        $ctx->pageModel->addWidget($this, 'ActiveUsers', $this->objectTemplatePath_widget_dataTableView, $users);
+        $dtvUsers = libraryComponents::getDataTableView($this->objectConfiguration_widget_dataTableViewActiveUsers, $ctx->contextCustomer->getDBO());
+        
+        var_dump($dtvUsers);
+        
+
+        $ctx->pageModel->addWidget($this, 'ActiveUsers', $this->objectTemplatePath_widget_dataTableView, $dtvUsers);
     }
     
     private function _commandDefault () {

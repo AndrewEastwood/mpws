@@ -1,0 +1,40 @@
+SEARCH BOX
+
+
+<div class="MPWSComponent MPWSComponentSearchBox">
+    <div class="MPWSComponentHeader">
+        <h3>Search Box</h3>
+    </div>
+    <div class="MPWSComponentBody MPWSComponentSearchBoxBody">
+        <form action="?display=orders" class="MPWSForm MPWSFormSearchBox" method="POST">
+            <div class="MPWSFormFields">
+                <label class="MPWSFieldLabel">Name:</label>
+                <input type="text" class="MPWSTextBox" name="searchbox_orders_Title" value="<?=libraryRequest::getPostValue('searchbox_orders_Title');?>" placeholder="... part of title"/>
+                <div class="MPWSSeparator"></div>
+                <label class="MPWSFieldLabel">Description:</label>
+                <input type="text" class="MPWSTextBox" name="searchbox_student_Description" value="<?=libraryRequest::getPostValue('searchbox_student_Description');?>" placeholder="... part of description"/>
+                <div class="MPWSSeparator"></div>
+            </div>
+            <hr size="2"/>
+            <input type="submit" name="do" value="Search"/>
+            <?php if($model['PLUGINS']['WRITER']['SEARCHBOX']['ACTIVE'] ) : ?>
+                <input type="submit" name="do" value="Discard"/>
+            <?php endif ?>
+        </form>
+    </div>
+    <?php if($model['PLUGINS']['WRITER']['SEARCHBOX']['ACTIVE'] ) : ?>
+    <div class="MPWSComponentSummary">
+        <div class="MPWSComponentSummaryRow">
+            <label>Your search request is:</label>
+            <span class="MPWSValue">
+            <?php
+                $_filterString = array();
+                foreach($model['PLUGINS']['WRITER']['SEARCHBOX']['FILTER'] as $sbKey => $sbVal)
+                    $_filterString[] = ' field "' . $sbKey . '" contains value "' . trim($sbVal, '%') . '"';
+                echo 'The ' . implode(', and the ', $_filterString);
+            ?>
+            </span>
+        </div>
+    </div>
+    <?php endif ?>
+</div>

@@ -1,0 +1,38 @@
+<div class="MPWSComponent MPWSComponenPagingBar">
+    
+    <div class="MPWSBlock MPWSBlockSummary">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Filtered Records:</label>
+            <span class="MPWSValue">{$_data.AVAILABLE}</span>
+        </div>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Total Records:</label>
+            <span class="MPWSValue">{$_data.TOTAL}</span>
+        </div>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Table Always Shows:</label>
+            <span class="MPWSValue">{$_data.LIMIT}</span>
+        </div>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Total Pages:</label>
+            <span class="MPWSValue">{$_data.PAGES}</span>
+        </div>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Current Page:</label>
+            <span class="MPWSValue">{$_data.CURRENT}</span>
+        </div>
+    </div>
+    
+    <div class="MPWSBlock MPWSBlockEdgeLinks">
+    {foreach $_data.EDGES as $pageIndex => $link}
+    <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$pageIndex}</a>
+    {/foreach}
+    </div>
+    
+    <div class="MPWSBlock MPWSBlockPageLinks">
+    {foreach $_data.LINKS as $pageIndex => $link}
+    <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$pageIndex}</a>
+    {/foreach}
+    </div>
+    
+</div>
