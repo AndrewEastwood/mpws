@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-03 22:04:37
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-07 14:59:30
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html" */ ?>
-<?php /*%%SmartyHeaderCode:484340775506b40efad05a6-83925282%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:13723699650716ea2589fe0-63295964%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,20 +11,20 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '484340775506b40efad05a6-83925282',
+  'nocache_hash' => '13723699650716ea2589fe0-63295964',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_506b40efb3ef79_77186456',
   'variables' => 
   array (
     'INFO' => 0,
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50716ea25bc2a2_19355516',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_506b40efb3ef79_77186456')) {function content_506b40efb3ef79_77186456($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_50716ea25bc2a2_19355516')) {function content_50716ea25bc2a2_19355516($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - <?php echo $_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE'];?>

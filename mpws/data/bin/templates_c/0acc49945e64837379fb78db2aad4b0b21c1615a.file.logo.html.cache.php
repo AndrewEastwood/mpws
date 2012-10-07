@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-03 21:21:46
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-07 14:59:30
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/logo.html" */ ?>
-<?php /*%%SmartyHeaderCode:1641250356506b3471c64256-16695910%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:14641370450716ea28f3ba9-24244030%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,19 +11,19 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1641250356506b3471c64256-16695910',
+  'nocache_hash' => '14641370450716ea28f3ba9-24244030',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_506b3471c6d254_24270676',
   'variables' => 
   array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50716ea28ff5d4_24389386',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_506b3471c6d254_24270676')) {function content_506b3471c6d254_24270676($_smarty_tpl) {?><div class="MPWSComponent MPWSComponentLogo">
+<?php if ($_valid && !is_callable('content_50716ea28ff5d4_24389386')) {function content_50716ea28ff5d4_24389386($_smarty_tpl) {?><div class="MPWSComponent MPWSComponentLogo">
     <a href="<?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectConfiguration_customer_homepage;?>
 " target="blank" class="MPWSLink">
         <img src="/static/<?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectConfiguration_display_logoFileName;?>

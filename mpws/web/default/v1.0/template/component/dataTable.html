@@ -51,11 +51,17 @@
 
 {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource}
 
-{* data table content *}
-{if count($_data) gt 0}
+{* standart property key *}
+{assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
 
-    {* standart property key *}
-    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+{* data table content *}
+{if count($_data) eq 0}
+
+    <div class="MPWSBlock">
+        <span class="MPWSText">{$CURRENT.OBJECT->objectProperty_widget_dataTableViewDataEmpty}</span>
+    </div>
+
+{elseif count($_data) gt 0}
 
 
     {* render table captions *}

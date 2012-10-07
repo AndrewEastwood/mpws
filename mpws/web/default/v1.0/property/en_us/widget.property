@@ -1,2 +1,3 @@
 systemPluginLinkListStartText = 'Start here';
 dataTableViewCaptionActions = "Actions";
+dataTableViewDataEmpty= "There are no records to display.";

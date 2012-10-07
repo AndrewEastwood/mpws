@@ -1,1 +1,25 @@
-QF
+<div class="MPWSComponent MPWSComponenQuickFiltering">
+    {foreach $_confing.filtering.fields as $qfEntry}
+
+    <div class="MPWSBlock">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Filtered by {$qfEntry}:</label>
+            <span class="MPWSValue">
+                <a href="
+                   
+                   ?{libraryRequest::getNewUrl(
+                   'sort', 
+                   libraryUtils::valueSelect(, 
+                    'PublicStatus.asc',
+                    'PublicStatus.desc',
+                    'PublicStatus.asc'));">
+                    Public Status
+                </a>
+            </span>
+            
+            
+        </div>
+    </div>
+
+    {/foreach}
+</div>

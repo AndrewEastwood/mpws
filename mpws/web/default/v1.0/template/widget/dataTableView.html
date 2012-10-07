@@ -10,11 +10,11 @@
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataTableView`$CURRENT.SOURCE.NAME`"}}
 
 {if not empty($DTV_CFG.searchbox)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH}
 {/if}
 
 {if not empty($DTV_CFG.filtering)}
-	{include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG}
 {/if}
 
 {if not empty($DTV_CFG.datatable)}

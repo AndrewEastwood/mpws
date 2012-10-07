@@ -1,4 +1,4 @@
-<?php /*%%SmartyHeaderCode:484340775506b40efad05a6-83925282%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:13723699650716ea2589fe0-63295964%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -105,13 +105,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '484340775506b40efad05a6-83925282',
+  'nocache_hash' => '13723699650716ea2589fe0-63295964',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5070af92a80f21_12935325',
+  'unifunc' => 'content_50717426e83984_78310237',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5070af92a80f21_12935325')) {function content_5070af92a80f21_12935325($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_50717426e83984_78310237')) {function content_50717426e83984_78310237($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - dashboard</title>
@@ -290,7 +290,25 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
     <div clas="MPWSWidget">
 
 
-    SEARCH BOX
+    <div class="MPWSComponent MPWSComponentSearchBox">
+    <div class="MPWSComponentHeader">
+        <h3>Search Box</h3>
+    </div>
+    <div class="MPWSComponentBody">
+        <form action="" class="MPWSForm MPWSFormSearchBox" method="POST">
+            <div class="MPWSFormFields">
+                                            <div class="MPWSFormField MPWSFormFieldName">
+                    <label class="MPWSFieldLabel">Name</label>
+                    <input type="text" class="MPWSTextBox" name="searchbox_users_Name" value="" placeholder="... part of title"/>
+                </div>
+                <div class="MPWSSeparator"></div>
+                        </div>
+            <div class="MPWSBlock MPWSBlockFormControls">
+                <input type="submit" name="do" value="Search"/>
+                        </div>
+        </form>
+    </div>
+    </div>
 
 	QF
 
@@ -310,8 +328,8 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 
 
 
-    
-    
+
+
 
     
             <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
@@ -1035,29 +1053,28 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 
     <div class="MPWSComponent MPWSComponenPagingBar">
     
-    <div class="MPWSComponentSummary">
-        <div class="MPWSComponentSummaryRow">
-            <label>Filtered Records:</label>
+    <div class="MPWSBlock MPWSBlockSummary">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Filtered Records:</label>
             <span class="MPWSValue">24</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Total Records:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Total Records:</label>
             <span class="MPWSValue">24</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Table Always Shows:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Table Always Shows:</label>
             <span class="MPWSValue">10</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Total Pages:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Total Pages:</label>
             <span class="MPWSValue">3</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Current Page:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Current Page:</label>
             <span class="MPWSValue">1</span>
         </div>
     </div>
-    
     
     <div class="MPWSBlock MPWSBlockEdgeLinks">
         <a href="?pg=1" class="MPWSLink MPWSLinkPaging">FIRST</a>

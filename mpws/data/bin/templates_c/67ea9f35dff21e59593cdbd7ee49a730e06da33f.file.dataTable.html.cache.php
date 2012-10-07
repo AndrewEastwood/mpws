@@ -1,22 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-04 22:43:41
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-07 15:20:30
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html" */ ?>
-<?php /*%%SmartyHeaderCode:1123728415506c99aad2e8a9-23310502%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:200095914450716ea23bbd53-21516466%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html',
-      1 => 1349379816,
+      1 => 1349612427,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1123728415506c99aad2e8a9-23310502',
+  'nocache_hash' => '200095914450716ea23bbd53-21516466',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_506c99aadffd32_29363438',
+  'unifunc' => 'content_50716ea24756c3_29184802',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -34,7 +34,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_506c99aadffd32_29363438')) {function content_506c99aadffd32_29363438($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_50716ea24756c3_29184802')) {function content_50716ea24756c3_29184802($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 
 
@@ -44,10 +44,17 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 
 
-<?php if (count($_smarty_tpl->tpl_vars['_data']->value)>0){?>
+<?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerType']->value).((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
 
-    
-    <?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerType']->value).((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
+
+<?php if (count($_smarty_tpl->tpl_vars['_data']->value)==0){?>
+
+    <div class="MPWSBlock">
+        <span class="MPWSText"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_widget_dataTableViewDataEmpty;?>
+</span>
+    </div>
+
+<?php }elseif(count($_smarty_tpl->tpl_vars['_data']->value)>0){?>
 
 
     

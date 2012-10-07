@@ -1,17 +1,17 @@
-<?php /*%%SmartyHeaderCode:429389730506c8f9c3da3e7-85699197%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:195843958150716ea22e5538-52488683%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'b43d79ad5db39a467ed90062c78be6d51ad27400' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataTableView.html',
-      1 => 1349561277,
+      1 => 1349603044,
       2 => 'file',
     ),
     '8353ed817f3a10aa18cb6a40909f78201e516c64' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html',
-      1 => 1349557253,
+      1 => 1349612062,
       2 => 'file',
     ),
     'cbb4b263bc8184a28cbef90069561b5b13fa096e' => 
@@ -23,7 +23,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html',
-      1 => 1349379816,
+      1 => 1349612427,
       2 => 'file',
     ),
     '001f27e0f6123b935501ab627af0711ee9f6c81f' => 
@@ -41,21 +41,39 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3f335be90f9375dee6ed29bf829b02878f82aa8b' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html',
-      1 => 1349562191,
+      1 => 1349562325,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '429389730506c8f9c3da3e7-85699197',
+  'nocache_hash' => '195843958150716ea22e5538-52488683',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5070af929a9e39_84964383',
+  'unifunc' => 'content_50717426dee222_98586334',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5070af929a9e39_84964383')) {function content_5070af929a9e39_84964383($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_50717426dee222_98586334')) {function content_50717426dee222_98586334($_smarty_tpl) {?>
 
 
 
-    SEARCH BOX
+    <div class="MPWSComponent MPWSComponentSearchBox">
+    <div class="MPWSComponentHeader">
+        <h3>Search Box</h3>
+    </div>
+    <div class="MPWSComponentBody">
+        <form action="" class="MPWSForm MPWSFormSearchBox" method="POST">
+            <div class="MPWSFormFields">
+                                            <div class="MPWSFormField MPWSFormFieldName">
+                    <label class="MPWSFieldLabel">Name</label>
+                    <input type="text" class="MPWSTextBox" name="searchbox_users_Name" value="" placeholder="... part of title"/>
+                </div>
+                <div class="MPWSSeparator"></div>
+                        </div>
+            <div class="MPWSBlock MPWSBlockFormControls">
+                <input type="submit" name="do" value="Search"/>
+                        </div>
+        </form>
+    </div>
+    </div>
 
 	QF
 
@@ -75,8 +93,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 
 
-    
-    
+
+
 
     
             <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
@@ -800,29 +818,28 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     <div class="MPWSComponent MPWSComponenPagingBar">
     
-    <div class="MPWSComponentSummary">
-        <div class="MPWSComponentSummaryRow">
-            <label>Filtered Records:</label>
+    <div class="MPWSBlock MPWSBlockSummary">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Filtered Records:</label>
             <span class="MPWSValue">24</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Total Records:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Total Records:</label>
             <span class="MPWSValue">24</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Table Always Shows:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Table Always Shows:</label>
             <span class="MPWSValue">10</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Total Pages:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Total Pages:</label>
             <span class="MPWSValue">3</span>
         </div>
-        <div class="MPWSComponentSummaryRow">
-            <label>Current Page:</label>
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">Current Page:</label>
             <span class="MPWSValue">1</span>
         </div>
     </div>
-    
     
     <div class="MPWSBlock MPWSBlockEdgeLinks">
         <a href="?pg=1" class="MPWSLink MPWSLinkPaging">FIRST</a>

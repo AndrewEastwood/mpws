@@ -182,7 +182,15 @@ class libraryComponents
         $pageName = strtoupper(libraryRequest::getPage('Default'));
         $sessionSearchKey =  'MPWS_SEARCH_OF_' . $config['source'] . '_' . $pageName;
         
-        $com['SEARCHBOX'] = array();
+        $com['SEARCHBOX'] = array(
+            'FIELDS' => array(),
+            'ACTIVE' => false,
+            'FILTER' => array(),
+            'WORDS' => array()
+        );
+        // add search fields
+        foreach ($config['searchbox']['fields'] as $searchFieldName)
+            $com['SEARCHBOX']['FIELDS'][$searchFieldName] = $config['searchbox']['searchKeyPrefix'] . $searchFieldName;
         // detect search request
         if (libraryRequest::isPostFormAction('search')) {
 
@@ -192,8 +200,10 @@ class libraryComponents
                 //echo 'prefix = ' . $config['SEARCH_KEY_PREFIX'] .'<br>';
                 //echo 'post key = ' . $_pkey .'<br>';
                 //echo 'result is = ' . $returnValue .'-----<br>';
-                if ($returnValue === 0 && !empty($_pval))
-                    $searchbox[str_replace($config['searchbox']['searchKeyPrefix'], '', $_pkey)] = '%'.mysql_escape_string($_pval).'%';
+                if ($returnValue === 0 && !empty($_pval)) {
+                    $_searckKeyField = str_replace($config['searchbox']['searchKeyPrefix'], '', $_pkey);
+                    $searchbox[$_searckKeyField] = '%'.mysql_escape_string($_pval).'%';
+                }
             }
             $_SESSION[$sessionSearchKey] = $searchbox;
             $com['SEARCHBOX']['ACTIVE'] = true;
@@ -215,8 +225,10 @@ class libraryComponents
             $_searchBoxFilterString = array();
             if (!empty($condition))
                 $_searchBoxFilterString[] = $condition . ' ';
-            foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal)
+            foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
                 $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
+                $com['SEARCHBOX']['WORDS'][$sbKey] = trim($sbVal, '%');
+            }
             //echo implode('AND', $_searchBoxFilterString);
             $com['RECORDS'] = $dbLink->getCount($config['source'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
         }
@@ -240,6 +252,7 @@ class libraryComponents
 
         // fill pages
         $com['PAGELINKS'] = array();
+        $com['EDGELINKS'] = array();
         // get pages offset
         $_edgeLeft = $com['CURRENT'] - $config['pagination']['size'];
         $_edgeRight = $com['CURRENT'] + $config['pagination']['size'];
