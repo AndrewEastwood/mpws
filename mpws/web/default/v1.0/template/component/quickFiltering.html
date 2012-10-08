@@ -1,25 +1,72 @@
-<div class="MPWSComponent MPWSComponenQuickFiltering">
-    {foreach $_confing.filtering.fields as $qfEntry}
+{* Component: DataTable  
 
+    !!!PLEASE COPY THIS MESSAGE TO NEW COMPONENT FILE!!!
+
+    Component Required Arguments:
+    _confing: datatable configuration
+
+
+    !!!DO NOT MODIFY STANDART SECTION!!!
+
+    Standart Required Arguments:
+    _resource: 'widget', 'component', etc. Property text will be given from the file according to this value
+    _ownerType: Each property key must start with this name.
+    _ownerName: influences on property keys
+
+
+    proeprty file: %locale%/%_resource%.proeprty@%_ownerType%+'someText'+%_ownerName%
+
+    Ex.:
+
+    file: en_us/widget.property
+           .      .
+          /|\    /|\
+           |      |
+           |      |_ value of $_resource
+           |_ current locale
+
+
+    entry:  
+        dataTableView ActiveUsers Caption Name
+           .              .         .      .
+          /|\            /|\       /|\    /|\
+           |              |         |      |
+           |              |         |      |_ column key (depends on data)
+           |              |         |_ specifyc property key
+           |              |_ it's $_ownerName value
+           |_ value of $_ownerType
+
+
+   To Populate Standart Arguments Use This Line:
+   _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource
+
+    standart property key
+    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+
+*}
+
+<div class="MPWSComponent MPWSComponenQuickFiltering" id="MPWSComponenQuickFilteringID">
+    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+    {foreach $_confing.filtering.fields as $qfEntry}
     <div class="MPWSBlock">
         <div class="MPWSDataRow">
-            <label class="MPWSLabel">Filtered by {$qfEntry}:</label>
+            <label class="MPWSLabel">
+                {$CURRENT.OBJECT->objectProperty_component_quickFilteringFieldPrefix}
+                {$CURRENT.OBJECT->{"`$__prop__`QuickFilteringField`$qfEntry`"}}
+                {$CURRENT.OBJECT->objectProperty_component_quickFilteringFieldSuffix}
+            </label>
             <span class="MPWSValue">
-                <a href="
-                   
-                   ?{libraryRequest::getNewUrl(
-                   'sort', 
-                   libraryUtils::valueSelect(, 
-                    'PublicStatus.asc',
-                    'PublicStatus.desc',
-                    'PublicStatus.asc'));">
-                    Public Status
+                {$_keyAsc = "`$qfEntry`.asc"}
+                {$_keyDesc = "`$qfEntry`.desc"}
+                {$_requestKey = libraryRequest::getValue($_confing.filtering.sortKey)}
+                
+                {$_filterAction = libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_requestKey, $_keyAsc, $_keyDesc, $_keyAsc))}
+                {$_linkTextKey = libraryUtils::valueSelect($_requestKey, $_keyAsc, "DESC", "ASC")}
+                <a href="?{$_filterAction}#MPWSComponenQuickFilteringID">
+                    {$CURRENT.OBJECT->{"objectProperty_component_quickFilteringAction`$_linkTextKey`"}}
                 </a>
             </span>
-            
-            
         </div>
     </div>
-
     {/foreach}
 </div>

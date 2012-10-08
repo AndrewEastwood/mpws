@@ -14,7 +14,7 @@
 {/if}
 
 {if not empty($DTV_CFG.filtering)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG _resource='widget' _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
 {/if}
 
 {if not empty($DTV_CFG.datatable)}

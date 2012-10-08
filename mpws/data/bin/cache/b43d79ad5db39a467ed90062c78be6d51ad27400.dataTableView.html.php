@@ -1,11 +1,11 @@
-<?php /*%%SmartyHeaderCode:195843958150716ea22e5538-52488683%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:10284384755073417f827212-83124874%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'b43d79ad5db39a467ed90062c78be6d51ad27400' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataTableView.html',
-      1 => 1349603044,
+      1 => 1349731629,
       2 => 'file',
     ),
     '8353ed817f3a10aa18cb6a40909f78201e516c64' => 
@@ -17,7 +17,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cbb4b263bc8184a28cbef90069561b5b13fa096e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html',
-      1 => 1349557286,
+      1 => 1349731783,
       2 => 'file',
     ),
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
@@ -41,17 +41,17 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3f335be90f9375dee6ed29bf829b02878f82aa8b' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html',
-      1 => 1349562325,
+      1 => 1349732678,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '195843958150716ea22e5538-52488683',
+  'nocache_hash' => '10284384755073417f827212-83124874',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50717426dee222_98586334',
+  'unifunc' => 'content_5073494c0ce407_03426903',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50717426dee222_98586334')) {function content_50717426dee222_98586334($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_5073494c0ce407_03426903')) {function content_5073494c0ce407_03426903($_smarty_tpl) {?>
 
 
 
@@ -75,7 +75,42 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     </div>
     </div>
 
-	QF
+    
+<div class="MPWSComponent MPWSComponenQuickFiltering" id="MPWSComponenQuickFilteringID">
+        
+    objectProperty_widget_dataTableViewActiveUsers
+    
+        <div class="MPWSBlock">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">
+                Show 
+                User Names
+                 from 
+            </label>
+            <span class="MPWSValue">
+                                                                
+                                                <a href="?sort=Name.asc&pg=2#MPWSComponenQuickFilteringID">
+                    lower to higher
+                </a>
+            </span>
+        </div>
+    </div>
+        <div class="MPWSBlock">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">
+                Show 
+                Last Visit
+                 from 
+            </label>
+            <span class="MPWSValue">
+                                                                
+                                                <a href="?sort=DateLastAccess.asc&pg=2#MPWSComponenQuickFilteringID">
+                    lower to higher
+                </a>
+            </span>
+        </div>
+    </div>
+    </div>
 
     
 
@@ -130,7 +165,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=24" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=12" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -150,7 +185,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=24" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=12" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -170,7 +205,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=24" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=12" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -200,7 +235,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=23" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=13" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -220,7 +255,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=23" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=13" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -240,7 +275,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=23" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=13" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -270,7 +305,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=22" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=14" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -290,7 +325,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=22" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=14" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -310,7 +345,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=22" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=14" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -340,7 +375,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=21" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=15" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -360,7 +395,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=21" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=15" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -380,7 +415,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=21" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=15" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -410,7 +445,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=20" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=16" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -430,7 +465,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=20" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=16" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -450,7 +485,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=20" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=16" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -480,7 +515,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=19" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=17" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -500,7 +535,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=19" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=17" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -520,7 +555,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=19" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=17" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -620,7 +655,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=17" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=19" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -640,7 +675,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=17" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=19" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -660,7 +695,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=17" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=19" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -690,7 +725,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=16" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=20" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -710,7 +745,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=16" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=20" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -730,7 +765,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=16" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=20" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -760,7 +795,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=15" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=21" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -780,7 +815,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=15" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=21" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -800,7 +835,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=15" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=21" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -837,20 +872,21 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         </div>
         <div class="MPWSDataRow">
             <label class="MPWSLabel">Current Page:</label>
-            <span class="MPWSValue">1</span>
+            <span class="MPWSValue">2</span>
         </div>
     </div>
     
     <div class="MPWSBlock MPWSBlockEdgeLinks">
-        <a href="?pg=1" class="MPWSLink MPWSLinkPaging">FIRST</a>
-        <a href="?pg=2" class="MPWSLink MPWSLinkPaging">NEXT</a>
-        <a href="?pg=3" class="MPWSLink MPWSLinkPaging">LAST</a>
+        <a href="?sort=DateLastAccess.desc&pg=1" class="MPWSLink MPWSLinkPaging">First</a>
+        <a href="?sort=DateLastAccess.desc&pg=1" class="MPWSLink MPWSLinkPaging"><<</a>
+        <a href="?sort=DateLastAccess.desc&pg=3" class="MPWSLink MPWSLinkPaging">>></a>
+        <a href="?sort=DateLastAccess.desc&pg=3" class="MPWSLink MPWSLinkPaging">Last</a>
         </div>
     
     <div class="MPWSBlock MPWSBlockPageLinks">
-        <a href="?pg=1" class="MPWSLink MPWSLinkPaging">1</a>
-        <a href="?pg=2" class="MPWSLink MPWSLinkPaging">2</a>
-        <a href="?pg=3" class="MPWSLink MPWSLinkPaging">3</a>
+        <a href="?sort=DateLastAccess.desc&pg=1" class="MPWSLink MPWSLinkPaging">1</a>
+        <a href="?sort=DateLastAccess.desc&pg=2" class="MPWSLink MPWSLinkPaging">2</a>
+        <a href="?sort=DateLastAccess.desc&pg=3" class="MPWSLink MPWSLinkPaging">3</a>
         </div>
     
 </div>

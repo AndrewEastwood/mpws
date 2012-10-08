@@ -7,14 +7,19 @@
 {$_contents[]=$msg_common}
 {$_footers=Array()}
 
-{if empty($INFO.GET.PLUGIN) }
-    {include assign="wgt_tools" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkList}
-    {$_contents[]=$wgt_tools}
-{else}
-    {* show active plugin menu *}
-    {if empty($INFO.GET.DISPLAY) }
-        {include assign="wgt_menuList" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkMenu}
-        {$_contents[]=$wgt_menuList}
+{$INFO.GET.PAGE}
+
+
+{if $INFO.GET.PAGE == $CURRENT.OBJECT->objectConfiguration_object_menuKeyToShowToolsList}
+    {if empty($INFO.GET.PLUGIN) }
+        {include assign="wgt_tools" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkList}
+        {$_contents[]=$wgt_tools}
+    {else}
+        {* show active plugin menu *}
+        {if empty($INFO.GET.DISPLAY) }
+            {include assign="wgt_menuList" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkMenu}
+            {$_contents[]=$wgt_menuList}
+        {/if}
     {/if}
 {/if}
 

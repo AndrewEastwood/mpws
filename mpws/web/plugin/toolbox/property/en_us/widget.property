@@ -12,3 +12,8 @@ dataTableViewActiveUsersCaptionDateLastAccess = 'Last Time Visit';
 dataTableViewActiveUsersActionLinkEdit = 'EDIT';
 dataTableViewActiveUsersActionLinkView = 'VIEW';
 dataTableViewActiveUsersActionLinkDelete = 'REMOVE';
+
+
+; quick filtering
+dataTableViewActiveUsersQuickFilteringFieldName = "User Names";
+dataTableViewActiveUsersQuickFilteringFieldDateLastAccess = "Last Visit";

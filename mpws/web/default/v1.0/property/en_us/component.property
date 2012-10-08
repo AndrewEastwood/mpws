@@ -1,0 +1,16 @@
+; quick filtering
+quickFilteringFieldPrefix = "Show ";
+quickFilteringFieldSuffix = " from ";
+quickFilteringActionASC = "lower to higher";
+quickFilteringActionDESC = "higher to lower";
+
+; paging bar
+pagingBarSummaryFilteredRecords = "Filtered Records:";
+pagingBarSummaryTotalRecords = "Total Records:";
+pagingBarSummaryPageSize = "Table Always Shows:";
+pagingBarSummaryPageCount = "Total Pages:";
+pagingBarSummaryCurrentPage = "Current Page:";
+pagingBarEdgeLinkFIRST = "First";
+pagingBarEdgeLinkLAST = "Last";
+pagingBarEdgeLinkNEXT = ">>";
+pagingBarEdgeLinkPREV = "<<";

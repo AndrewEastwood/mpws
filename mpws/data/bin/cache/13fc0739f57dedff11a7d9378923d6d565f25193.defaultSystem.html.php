@@ -1,4 +1,4 @@
-<?php /*%%SmartyHeaderCode:13723699650716ea2589fe0-63295964%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:17006204035073417fbbd7a6-58675507%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -29,7 +29,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd6d46df5db445da56cb54532472df58a57c03f2a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html',
-      1 => 1349287120,
+      1 => 1349730934,
       2 => 'file',
     ),
     '69efce9731aeeb54451ddefc0c66f864c1ae09b4' => 
@@ -42,12 +42,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/message.html',
       1 => 1349287120,
-      2 => 'file',
-    ),
-    '944f420f2f1d1265051400f0aa58ed80b23a7476' => 
-    array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginLinkList.html',
-      1 => 1349375490,
       2 => 'file',
     ),
     'fee379ac26415e5d616f64f7c05de0bc03ae5909' => 
@@ -71,7 +65,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'fd493ce1d9a8de3661d7b6fa94771c833d559aee' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartPublicPageStyle1.html',
-      1 => 1349288366,
+      1 => 1349729825,
       2 => 'file',
     ),
     'aa0374ee876c63be03d83fc175f0ba951ad8b0aa' => 
@@ -105,13 +99,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '13723699650716ea2589fe0-63295964',
+  'nocache_hash' => '17006204035073417fbbd7a6-58675507',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50717426e83984_78310237',
+  'unifunc' => 'content_5073494c189bc3_23735810',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50717426e83984_78310237')) {function content_50717426e83984_78310237($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5073494c189bc3_23735810')) {function content_5073494c189bc3_23735810($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - dashboard</title>
@@ -146,8 +140,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 
 
-    
-    
+dashboard
+
+
+
 
     
 
@@ -155,11 +151,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
  
 
-<div class="MPWSPage MPWSPageDisplay MPWSPageStandartPublicPageStyle1 MPWSPageStandartPublic
-Notice: Undefined index: DISPLAY in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/fd493ce1d9a8de3661d7b6fa94771c833d559aee.file.standartPublicPageStyle1.html.cache.php on line 33
-" id="MPWSPageStandartPublic
-Notice: Undefined index: PAGE in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/fd493ce1d9a8de3661d7b6fa94771c833d559aee.file.standartPublicPageStyle1.html.cache.php on line 34
-ID">
+<div class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPageDisplay MPWSPageDashboard" id="MPWSPageStandartPublicDashboardID">
     <div class="MPWSComponent MPWSComponenHeader">
 
 	<div class="MPWSComponent MPWSComponentLogo">
@@ -267,21 +259,6 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
                 </ul>
         </div>
 </div>
-                    <div class="MPWSBlock"><div id="MPWSWidgetSystemPluginLinkListID" class="MPWSWidget MPWSWidgetSystemPluginLinkList">
-    <ul class="MPWSList MPWSListPluginLinks">
-            <li class="MPWSListItem MPWSListItemPluginLink">
-            <a href="/page/tools.html?plugin=toolbox" class="MPWSLink" title="Toolbox">
-                <div class="MPWSMiniBlock">
-                    <div class="MPWSWrapper">
-                        <span class="MPWSText MPWSTextTitle">Toolbox</span>
-                        <span class="MPWSText MPWSTextDescription">System Toolbox Manager</span>
-                        <span class="MPWSText MPWSTextLink">Start here</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        </ul>
-</div></div>
                     <div class="MPWSBlock">
 
 
@@ -310,7 +287,42 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
     </div>
     </div>
 
-	QF
+    
+<div class="MPWSComponent MPWSComponenQuickFiltering" id="MPWSComponenQuickFilteringID">
+        
+    objectProperty_widget_dataTableViewActiveUsers
+    
+        <div class="MPWSBlock">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">
+                Show 
+                User Names
+                 from 
+            </label>
+            <span class="MPWSValue">
+                                                                
+                                                <a href="?sort=Name.asc&pg=2#MPWSComponenQuickFilteringID">
+                    lower to higher
+                </a>
+            </span>
+        </div>
+    </div>
+        <div class="MPWSBlock">
+        <div class="MPWSDataRow">
+            <label class="MPWSLabel">
+                Show 
+                Last Visit
+                 from 
+            </label>
+            <span class="MPWSValue">
+                                                                
+                                                <a href="?sort=DateLastAccess.asc&pg=2#MPWSComponenQuickFilteringID">
+                    lower to higher
+                </a>
+            </span>
+        </div>
+    </div>
+    </div>
 
     
 
@@ -365,7 +377,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=24" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=12" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -385,7 +397,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=24" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=12" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -405,7 +417,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=24" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=12" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -435,7 +447,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=23" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=13" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -455,7 +467,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=23" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=13" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -475,7 +487,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=23" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=13" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -505,7 +517,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=22" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=14" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -525,7 +537,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=22" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=14" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -545,7 +557,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=22" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=14" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -575,7 +587,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=21" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=15" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -595,7 +607,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=21" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=15" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -615,7 +627,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=21" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=15" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -645,7 +657,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=20" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=16" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -665,7 +677,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=20" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=16" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -685,7 +697,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=20" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=16" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -715,7 +727,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=19" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=17" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -735,7 +747,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=19" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=17" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -755,7 +767,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=19" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=17" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -855,7 +867,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=17" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=19" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -875,7 +887,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=17" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=19" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -895,7 +907,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=17" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=19" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -925,7 +937,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=16" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=20" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -945,7 +957,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=16" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=20" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -965,7 +977,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=16" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=20" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -995,7 +1007,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=15" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=edit&amp;oid=21" class="MPWSLink" target="" mpws-action="edit" title="EDIT">
 		EDIT
 	</a>
 
@@ -1015,7 +1027,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=15" class="MPWSLink" target="" mpws-action="view" title="VIEW">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=view&amp;oid=21" class="MPWSLink" target="" mpws-action="view" title="VIEW">
 		VIEW
 	</a>
 
@@ -1035,7 +1047,7 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
 	
 	
 
-	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=15" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
+	<a href="/page/tools.html?plugin=toolbox&amp;display=&amp;action=delete&amp;oid=21" class="MPWSLink" target="" mpws-action="delete" title="REMOVE">
 		REMOVE
 	</a>
 
@@ -1072,20 +1084,21 @@ Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/m
         </div>
         <div class="MPWSDataRow">
             <label class="MPWSLabel">Current Page:</label>
-            <span class="MPWSValue">1</span>
+            <span class="MPWSValue">2</span>
         </div>
     </div>
     
     <div class="MPWSBlock MPWSBlockEdgeLinks">
-        <a href="?pg=1" class="MPWSLink MPWSLinkPaging">FIRST</a>
-        <a href="?pg=2" class="MPWSLink MPWSLinkPaging">NEXT</a>
-        <a href="?pg=3" class="MPWSLink MPWSLinkPaging">LAST</a>
+        <a href="?sort=DateLastAccess.desc&pg=1" class="MPWSLink MPWSLinkPaging">First</a>
+        <a href="?sort=DateLastAccess.desc&pg=1" class="MPWSLink MPWSLinkPaging"><<</a>
+        <a href="?sort=DateLastAccess.desc&pg=3" class="MPWSLink MPWSLinkPaging">>></a>
+        <a href="?sort=DateLastAccess.desc&pg=3" class="MPWSLink MPWSLinkPaging">Last</a>
         </div>
     
     <div class="MPWSBlock MPWSBlockPageLinks">
-        <a href="?pg=1" class="MPWSLink MPWSLinkPaging">1</a>
-        <a href="?pg=2" class="MPWSLink MPWSLinkPaging">2</a>
-        <a href="?pg=3" class="MPWSLink MPWSLinkPaging">3</a>
+        <a href="?sort=DateLastAccess.desc&pg=1" class="MPWSLink MPWSLinkPaging">1</a>
+        <a href="?sort=DateLastAccess.desc&pg=2" class="MPWSLink MPWSLinkPaging">2</a>
+        <a href="?sort=DateLastAccess.desc&pg=3" class="MPWSLink MPWSLinkPaging">3</a>
         </div>
     
 </div>
