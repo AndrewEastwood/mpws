@@ -368,6 +368,13 @@ class libraryUtils {
         return $timezones;
     }
     
+    static public function getTimeZoneTitle ($timeZoneAliasName) {
+        $tzs = self::getTimeZones(true);
+        foreach ($tzs as $tzEntry)
+            if ($tzEntry['key'] == $timeZoneAliasName)
+                return $tzEntry['title'];
+    }
+    
     static public function subDateHours($date, $hours, $format = false) {
         $date_m = strtotime($date);
         $date_m -= $hours * 3600;
