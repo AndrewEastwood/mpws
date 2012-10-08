@@ -183,7 +183,10 @@
             <fieldset>
                 <legend>Writer Local Time</legend>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
-                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA_WRITER']['TimeZone'];?></span>
+                <span class="MPWSValue">
+                    [<?=$model['PLUGINS']['WRITER']['DATA_WRITER']['TimeZone'];?>]
+                    <?=libraryUtils::getTimeZoneTitle($model['PLUGINS']['WRITER']['DATA_WRITER']['TimeZone']);?>
+                </span>
                 <div class="MPWSSeparator"></div>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['dcWRITER'];?></span>
@@ -197,10 +200,12 @@
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Offset:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['pWRITER'];?> Hours</span>
                 <div class="MPWSSeparator"></div>
+                <?php if ($model['PLUGINS']['WRITER']['DATA']['PublicStatus'] != 'CLOSED') : ?>
                 <big>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Hours To Complete:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['LEFT'];?></span>
                 </big>
+                <?php endif ?>
                 <div class="MPWSSeparator"></div>
             </fieldset>
             
@@ -210,7 +215,10 @@
             <fieldset>
                 <legend>Order Local Time</legend>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Time Zone:</label>
-                <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['DATA']['TimeZone'];?></span>
+                <span class="MPWSValue">
+                    [<?=$model['PLUGINS']['WRITER']['DATA']['TimeZone'];?>] 
+                    <?=libraryUtils::getTimeZoneTitle($model['PLUGINS']['WRITER']['DATA']['TimeZone']);?>
+                </span>
                 <div class="MPWSSeparator"></div>
                 <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Date Created:</label>
                 <span class="MPWSValue"><?=$model['PLUGINS']['WRITER']['TIME']['dcORDER'];?></span>

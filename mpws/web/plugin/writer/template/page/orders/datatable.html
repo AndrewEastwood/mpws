@@ -73,7 +73,14 @@
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=$entry['Pages'];?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=convDT($entry['DateCreated'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC');?></span>
             <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize2_5"><?=convDT($entry['DateDeadline'],$model['PLUGINS']['WRITER']['CUSTOM']['TIMEZONE'],'UTC');?></span>
-            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1"><?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline']);?></span>
+            <span class="MPWSDivTableCell MPWSDivTableCellData MPWSDivTableCellSize1">
+            <?php
+                if ($entry['PublicStatus'] !== 'CLOSED')
+                    echo libraryUtils::getDateTimeHoursDiff($entry['DateDeadline'], convDT(date($model['PLUGINS']['WRITER']['CUSTOM']['DB_DATE_FORMAT']), 'UTC'));
+                else
+                    echo '-';
+            ?>
+            </span>
         </div>
     <?php } ?>
     </div>

@@ -28,13 +28,12 @@ class pluginWriter {
             $model['html']['menu'] .= $model['html']['writer']['com']['menu'];
         }
         
+        //var_dump($model);
         
         //echo $model['PLUGINS']['WRITER']['template'];
 
         /* set html data */
         $model['html']['content'] .= $libView->getTemplateResult($model, $model['PLUGINS']['WRITER']['template']);
-        //var_dump($model['html']['content']);
-        //var_dump($model['PLUGINS']['WRITER']['template']);
     }
 
     public function layout($toolbox, $plugin) {
@@ -1914,9 +1913,11 @@ class pluginWriter {
         libraryRequest::storeOrGetRefererUrl();
         $model['PLUGINS']['WRITER'] = libraryComponents::comDataTable($plugin['config']['DATATABLE']['ORDERS'], $toolbox->getDatabaseObj());
 
+        $mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
         // custom time zone
         $model['PLUGINS']['WRITER']['CUSTOM'] = array(
-            'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE']
+            'TIMEZONE' => $plugin['config']['DISPLAY']['TIMEZONE'],
+            'DB_DATE_FORMAT' => $mdbc['DB_DATE_FORMAT']
         );
         
         $model['PLUGINS']['WRITER']['template'] = $plugin['templates']['page.orders.datatable'];
@@ -1931,6 +1932,7 @@ class pluginWriter {
 
         // check for token id
         $token = libraryRequest::getValue('token');
+        $mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
