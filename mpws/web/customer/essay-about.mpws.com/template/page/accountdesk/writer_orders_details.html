@@ -74,9 +74,11 @@
             <label for="MPWSField_WriterEnabledID" class="MPWSFieldLabel">Deadline:</label>
             <span class="MPWSValue"><?=$model['CUSTOMER']['TIME']['h1WRITER'];?></span>
             <div class="MPWSSeparator"></div>
+            <?php if ($model['CUSTOMER']['DATA']['PublicStatus'] != 'CLOSED') : ?>
             <label for="MPWSField_WriterPhoneID" class="MPWSFieldLabel">Hours To Complete</label>
             <span class="MPWSValue"><big><?=($model['CUSTOMER']['TIME']['LEFT'] - 1);?></big>&nbsp;</span>
             <div class="MPWSSeparator"></div>
+            <?php endif ?>
         </fieldset>
         
         <h3>Writer Status</h3>
