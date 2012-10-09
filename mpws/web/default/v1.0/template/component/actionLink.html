@@ -59,22 +59,30 @@
 	{assign var="_linkText" value=$CURRENT.OBJECT->{"`$__prop__`ActionLink`$_action|capitalize:0:1`"}}
 
 
+	{* add standart *}
 	{$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
 	{$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
 	{$_linkActions[]="action=`$_action|lower`"}
 
 	{* add oid *}
 	{if isset($_oid)}
-		{$_linkActions[]="oid=`$_oid`"}
+            {$_linkActions[]="oid=`$_oid`"}
 	{/if}
 
 	{* get action link *}
 	{$_linkAction=implode('&amp;', $_linkActions)}
+        
+        {* link attributes *}
+        {$_attributes[]="title=\"`$_linkText`\""}
+        {$_attributes[]="mpws-action=\"`$_action`\""}
+        {if isset($_target) }
+            {$_attributes[]="target=\"`$_target`\""}
+        {/if}
+        
+	{* get action link attributes *}
+	{$_linkAttr=implode(' ', $_attributes)}
 
-
-	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" target="" mpws-action="{$_action}" title="{$_linkText}">
-		{$_linkText}
-	</a>
+	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr}>{$_linkText}</a>
 
 {else}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Action name is empty or not provided" _tpl=$smarty.template}

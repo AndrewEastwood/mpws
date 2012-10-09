@@ -27,23 +27,7 @@ class pluginToolbox extends objectBaseWebPlugin {
     }
     
     private function _commandDashboard () {
-        $ctx = contextMPWS::instance();
-        $users = $ctx->contextCustomer->getDBO()
-            ->select('*')
-            ->from('mpws_users')
-            ->fetchData();
-        
-        /*$comUsers = libraryComponents::comDataTable(,
-            $ctx->contextCustomer->getDBO());*/
-        //var_dump($this->objectConfiguration_widget_dataTableViewActiveUsers);
-        
-
-        $dtvUsers = libraryComponents::getDataTableView($this->objectConfiguration_widget_dataTableViewActiveUsers, $ctx->contextCustomer->getDBO());
-        
-        var_dump($dtvUsers);
-        
-
-        $ctx->pageModel->addWidget($this, 'ActiveUsers', $this->objectTemplatePath_widget_dataTableView, $dtvUsers);
+        $this->addWidgetDataTableView('ActiveUsers');
     }
     
     private function _commandDefault () {

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 00:11:27
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 23:20:12
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:13832005445073417f8cd134-33322549%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '8353ed817f3a10aa18cb6a40909f78201e516c64' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html',
-      1 => 1349612062,
+      1 => 1349813985,
       2 => 'file',
     ),
   ),
@@ -15,8 +15,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5073417f91d873_69666215',
   'variables' => 
   array (
+    'CURRENT' => 0,
     '_confing' => 0,
     '_data' => 0,
     'field' => 0,
@@ -28,14 +31,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'srchl' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5073417f91d873_69666215',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5073417f91d873_69666215')) {function content_5073417f91d873_69666215($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
-?><div class="MPWSComponent MPWSComponentSearchBox">
-    <div class="MPWSComponentHeader">
-        <h3>Search Box</h3>
-    </div>
+?><div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleHeader, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_title'=>$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxHeader), 0);?>
+
     <div class="MPWSComponentBody">
         <form action="<?php echo $_smarty_tpl->tpl_vars['_confing']->value['searchbox']['formAction'];?>
 " class="MPWSForm MPWSFormSearchBox" method="POST">

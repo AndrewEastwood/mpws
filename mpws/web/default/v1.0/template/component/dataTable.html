@@ -41,18 +41,16 @@
    To Populate Standart Arguments Use This Line:
    _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource
 
-    standart property key
-    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+    standart custom property key
+    {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
 
 *}
 
 
-<div class="MPWSComponent MPWSComponentDataTable">
-
-{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource}
+<div id="MPWSComponentDataTableID" class="MPWSComponent MPWSComponentDataTable">
 
 {* standart property key *}
-{assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+{assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
 
 {* data table content *}
 {if count($_data) eq 0}
@@ -64,6 +62,7 @@
 {elseif count($_data) gt 0}
 
 
+    <div class="MPWSDataTableRows">
     {* render table captions *}
     {if isset($_confing.datatable.displayCaptions) and $_confing.datatable.displayCaptions}
         <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
@@ -92,9 +91,9 @@
     {foreach $_data as $rowIndex => $rowEntry}
         <div class="MPWSDataTableRow MPWSDataTableRow{$rowIndex}">
 
-        {if not empty($_confing.datatable.actions)}
+        {if not empty($_confing.datatable.perRecrodActions)}
             <div class="MPWSDataTableCell MPWSDataTableCellActions">
-            {foreach $_confing.datatable.actions as $actionName}
+            {foreach $_confing.datatable.perRecrodActions as $actionName}
                 <span class="MPWSDataTableCellAction{$actionName|capitalize:0:1}">
                 {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource _action=$actionName _oid=$rowEntry['ID']}
                 </span>
@@ -115,6 +114,8 @@
         {/if}
         </div>
     {/foreach}
+    
+    </div>
 
 {else}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Data object does not have content to render" _tpl=$smarty.template}

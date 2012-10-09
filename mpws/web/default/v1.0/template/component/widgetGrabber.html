@@ -7,9 +7,10 @@
 
 *}
 
-
 <div class="MPWSComponent MPWSComponentWidgetGrabber">
 {foreach $_widgets as $wgtKey=>$widgetEntry}
-    <div clas="MPWSWidget">{$widgetEntry.HTML}</div>
+    <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerBefore"></div>
+    {$widgetEntry.HTML}
+    <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerAfter"></div>
 {/foreach}
 </div>

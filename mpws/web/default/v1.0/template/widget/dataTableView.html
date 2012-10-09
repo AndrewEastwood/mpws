@@ -9,18 +9,25 @@
 {* Get Configuration For The Widget *}
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataTableView`$CURRENT.SOURCE.NAME`"}}
 
+<div id="MPWSWidget{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$CURRENT.SOURCE.NAME}">
+    
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
+
 {if not empty($DTV_CFG.searchbox)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
 {/if}
 
 {if not empty($DTV_CFG.filtering)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG _resource='widget' _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
 {/if}
 
 {if not empty($DTV_CFG.datatable)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _resource='widget' _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTableTopActions _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerType='dataTableView' _ownerName=$CURRENT.SOURCE.NAME}
 {/if}
 
 {if not empty($DTV_CFG.pagination)}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_pagingBar _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.PAGING}
 {/if}
+
+</div>

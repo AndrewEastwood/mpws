@@ -7,6 +7,15 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         parent::__construct($name, OBJECT_T_PLUGIN);
         debug('objectBaseWebPlugin: __construct => ' . $name);
     }
+    
+    
+    /* Plugin Specific Methods */
+    
+    public function addWidgetDataTableView ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtData = libraryComponents::getDataTableView($this->{"objectConfiguration_widget_dataTableView" . $widgetName}, $ctx->contextCustomer->getDBO());
+        $ctx->pageModel->addWidget($this, $widgetName, $this->objectTemplatePath_widget_dataTableView, $wgtData);
+    }
 
 }
 

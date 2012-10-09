@@ -1,0 +1,16 @@
+; widget dataTableView ActiveUsers
+
+ActiveUsersObjectSummary = 'Active Users';
+ActiveUsersObjectDescription = 'List of all active users';
+ActiveUsersCaptionActions = 'Actions';
+ActiveUsersCaptionName = 'User Name';
+ActiveUsersCaptionActive = 'Active';
+ActiveUsersCaptionDateLastAccess = 'Last Time Visit';
+
+ActiveUsersActionLinkEdit = 'EDIT';
+ActiveUsersActionLinkView = 'VIEW';
+ActiveUsersActionLinkDelete = 'REMOVE';
+ActiveUsersActionLinkAdd = 'Create New User';
+
+ActiveUsersQuickFilteringFieldName = 'User Names';
+ActiveUsersQuickFilteringFieldDateLastAccess = 'Last Visit';

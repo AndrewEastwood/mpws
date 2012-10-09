@@ -45,8 +45,9 @@
 
 *}
 
-<div class="MPWSComponent MPWSComponenQuickFiltering" id="MPWSComponenQuickFilteringID">
-    {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+<div id="MPWSComponenQuickFilteringID" class="MPWSComponent MPWSComponenQuickFiltering">
+    {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHeader _title=$CURRENT.OBJECT->objectProperty_component_quickFilteringHeader}
     {foreach $_confing.filtering.fields as $qfEntry}
     <div class="MPWSBlock">
         <div class="MPWSDataRow">

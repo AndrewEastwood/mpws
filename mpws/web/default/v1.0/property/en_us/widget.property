@@ -1,3 +1,12 @@
 systemPluginLinkListStartText = 'Start here';
+
+; systemUserInfo
+systemUserInfoWelcomeMessage='You are signed in as:';
+systemUserInfoLastAccess='Last access:';
+systemUserInfoSignoutButtonText='Logout';
+systemUserInfoHomePageLinkPrefix = 'Your home page link is:';
+
+
+; dataTableView
 dataTableViewCaptionActions = "Actions";
 dataTableViewDataEmpty= "There are no records to display.";

@@ -1,19 +1,2 @@
 systemPluginListTitle = 'Toolbox';
 systemPluginListDescription = 'System Toolbox Manager';
-
-dataTableViewActiveUsersObjectSummary = 'Active Users';
-dataTableViewActiveUsersObjectDescription = 'List of all active users';
-dataTableViewActiveUsersCaptionActions = 'Actions';
-dataTableViewActiveUsersCaptionName = 'User Name';
-dataTableViewActiveUsersCaptionActive = 'Active';
-dataTableViewActiveUsersCaptionDateLastAccess = 'Last Time Visit';
-
-
-dataTableViewActiveUsersActionLinkEdit = 'EDIT';
-dataTableViewActiveUsersActionLinkView = 'VIEW';
-dataTableViewActiveUsersActionLinkDelete = 'REMOVE';
-
-
-; quick filtering
-dataTableViewActiveUsersQuickFilteringFieldName = "User Names";
-dataTableViewActiveUsersQuickFilteringFieldDateLastAccess = "Last Visit";

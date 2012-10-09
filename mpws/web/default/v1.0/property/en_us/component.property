@@ -1,4 +1,8 @@
+; search box
+searchBoxHeader = "Simple Search Box";
+
 ; quick filtering
+quickFilteringHeader = "Quick Data Filtering";
 quickFilteringFieldPrefix = "Show ";
 quickFilteringFieldSuffix = " from ";
 quickFilteringActionASC = "lower to higher";

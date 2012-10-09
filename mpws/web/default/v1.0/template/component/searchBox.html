@@ -1,7 +1,5 @@
-<div class="MPWSComponent MPWSComponentSearchBox">
-    <div class="MPWSComponentHeader">
-        <h3>Search Box</h3>
-    </div>
+<div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHeader _title=$CURRENT.OBJECT->objectProperty_component_searchBoxHeader}
     <div class="MPWSComponentBody">
         <form action="{$_confing.searchbox.formAction}" class="MPWSForm MPWSFormSearchBox" method="POST">
             <div class="MPWSFormFields">

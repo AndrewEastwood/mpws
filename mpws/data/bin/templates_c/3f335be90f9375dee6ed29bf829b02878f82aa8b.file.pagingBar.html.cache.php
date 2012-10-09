@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 00:44:39
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 22:13:46
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html" */ ?>
 <?php /*%%SmartyHeaderCode:14873537655073417fb71ec0-16858364%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3f335be90f9375dee6ed29bf829b02878f82aa8b' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html',
-      1 => 1349732678,
+      1 => 1349809909,
       2 => 'file',
     ),
   ),
@@ -27,7 +27,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5073417fba3853_79236632')) {function content_5073417fba3853_79236632($_smarty_tpl) {?><div class="MPWSComponent MPWSComponenPagingBar">
+<?php if ($_valid && !is_callable('content_5073417fba3853_79236632')) {function content_5073417fba3853_79236632($_smarty_tpl) {?><div id="MPWSComponenPagingBarID" class="MPWSComponent MPWSComponenPagingBar">
     
     <div class="MPWSBlock MPWSBlockSummary">
         <div class="MPWSDataRow">

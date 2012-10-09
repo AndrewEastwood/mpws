@@ -1,16 +1,13 @@
 <div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
     <form action="" method="POST" class="MPWSForm">
-        <div class="MPWSLabelValueRow">
-            <span class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_user_systemWelcomeMessage}</span>
-            <span class="MPWSValue">{$INFO.USER.NAME}</span>
-        </div><div class="MPWSLabelValueRow">
-            <span class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_user_systemUserLastAccess}</span>
-            <span class="MPWSValue">{$INFO.USER.SINCE|date_format:$CURRENT.OBJECT->objectConfiguration_format_dateTimeDisplay}</span>
-        </div>
-        <div class="MPWSLabelValueRow">
-            <span class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_site_homePage}</span>
-            <span class="MPWSValue"><a href="{$SITE->objectConfiguration_customer_homepage}" target="blank" class="MPWSLink">{$smarty.const.MPWS_CUSTOMER}</a></span>
-        </div>
-        <button type="submit" name="do" value="logout" class="MPWSButton">{$CURRENT.OBJECT->objectProperty_user_formSignoutButtonText}</button>
+        {* user name row *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoWelcomeMessage _value=$INFO.USER.NAME}
+        {* last access row *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoLastAccess _value=$INFO.USER.SINCE}
+        {* home page link *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _href=$CURRENT.OBJECT->objectConfiguration_customer_homepage _title=$smarty.const.MPWS_CUSTOMER assign=simpleHyperlinkHomepage}
+        {* home page row *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoHomePageLinkPrefix _value=$simpleHyperlinkHomepage}
+        <button type="submit" name="do" value="logout" class="MPWSButton">{$CURRENT.OBJECT->objectProperty_widget_systemUserInfoSignoutButtonText}</button>
     </form>
 </div>

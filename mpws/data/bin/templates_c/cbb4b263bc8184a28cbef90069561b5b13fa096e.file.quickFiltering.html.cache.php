@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 00:29:47
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 23:33:54
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html" */ ?>
 <?php /*%%SmartyHeaderCode:3985737995073417f92b775-76562892%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cbb4b263bc8184a28cbef90069561b5b13fa096e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html',
-      1 => 1349731783,
+      1 => 1349814810,
       2 => 'file',
     ),
   ),
@@ -19,12 +19,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_5073417f978bc6_09901721',
   'variables' => 
   array (
-    '_resource' => 0,
-    '_ownerType' => 0,
     '_ownerName' => 0,
-    '__prop__' => 0,
-    '_confing' => 0,
     'CURRENT' => 0,
+    '_confing' => 0,
+    '__prop__' => 0,
     'qfEntry' => 0,
     '_requestKey' => 0,
     '_keyAsc' => 0,
@@ -36,12 +34,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5073417f978bc6_09901721')) {function content_5073417f978bc6_09901721($_smarty_tpl) {?>
 
-<div class="MPWSComponent MPWSComponenQuickFiltering" id="MPWSComponenQuickFilteringID">
-    <?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerType']->value).((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
-    
-    <?php echo $_smarty_tpl->tpl_vars['__prop__']->value;?>
+<div id="MPWSComponenQuickFilteringID" class="MPWSComponent MPWSComponenQuickFiltering">
+    <?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_custom_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleHeader, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_title'=>$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_quickFilteringHeader), 0);?>
 
-    
     <?php  $_smarty_tpl->tpl_vars['qfEntry'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['qfEntry']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['_confing']->value['filtering']['fields']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['qfEntry']->key => $_smarty_tpl->tpl_vars['qfEntry']->value){
