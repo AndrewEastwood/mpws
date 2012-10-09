@@ -32,6 +32,11 @@ valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
 <!--[if lte IE 6]>
     <script type="text/javascript" src="/static/mpwsActionIE6.js"></script>
 <![endif]-->
+<!--[if gte IE 8]>
+    <style type="text/css">
+        a, .top_menu_button, #content_wrapper h1 {filter: none !important;}
+    </style>
+<![endif]-->
 <script type="text/javascript">
     // security token
     mpws.token = '<?=libraryRequest::getOrValidatePageSecurityToken();?>';

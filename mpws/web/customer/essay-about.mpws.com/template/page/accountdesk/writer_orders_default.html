@@ -33,7 +33,12 @@
                 <?=libraryUtils::subDateHours(convDT($entry['DateDeadline'],$model['CUSTOMER']['USER']['TimeZone'],'UTC'), 1, $model['CUSTOMER']['DB_DATE_FORMAT']);?>
             </td>
             <td class="<?=$__className;?>">
-                <?=libraryUtils::getDateTimeHoursDiff($entry['DateDeadline'], convDT(false, 'UTC'))-1;?>
+            <?php
+                if ($entry['PublicStatus'] !== 'CLOSED')
+                    echo libraryUtils::getDateTimeHoursDiff($entry['DateDeadline'], convDT(false, 'UTC'))-1;
+                else
+                    echo '-';
+            ?>
             </td>
         </tr>
     <?php endforeach ?>
