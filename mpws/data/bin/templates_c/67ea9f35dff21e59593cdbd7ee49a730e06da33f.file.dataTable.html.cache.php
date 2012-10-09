@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 23:08:35
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-10 00:40:14
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:6786011205073417f9848c5-30494511%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html',
-      1 => 1349813283,
+      1 => 1349818813,
       2 => 'file',
     ),
   ),
@@ -19,8 +19,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_5073417fa708f6_70059683',
   'variables' => 
   array (
-    '_resource' => 0,
-    '_ownerType' => 0,
     '_ownerName' => 0,
     '_data' => 0,
     'CURRENT' => 0,
@@ -41,7 +39,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div id="MPWSComponentDataTableID" class="MPWSComponent MPWSComponentDataTable">
 
 
-<?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerType']->value).((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
+<?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_custom_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
 
 
 <?php if (count($_smarty_tpl->tpl_vars['_data']->value)==0){?>
@@ -112,7 +110,7 @@ $_smarty_tpl->tpl_vars['actionName']->_loop = true;
 ?>
                 <span class="MPWSDataTableCellAction<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['actionName']->value,0,1);?>
 ">
-                <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_actionLink, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_ownerType'=>$_smarty_tpl->tpl_vars['_ownerType']->value,'_ownerName'=>$_smarty_tpl->tpl_vars['_ownerName']->value,'_resource'=>$_smarty_tpl->tpl_vars['_resource']->value,'_action'=>$_smarty_tpl->tpl_vars['actionName']->value,'_oid'=>$_smarty_tpl->tpl_vars['rowEntry']->value['ID']), 0);?>
+                <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_actionLink, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_ownerName'=>$_smarty_tpl->tpl_vars['_ownerName']->value,'_action'=>$_smarty_tpl->tpl_vars['actionName']->value,'_oid'=>$_smarty_tpl->tpl_vars['rowEntry']->value['ID']), 0);?>
 
                 </span>
             <?php } ?>

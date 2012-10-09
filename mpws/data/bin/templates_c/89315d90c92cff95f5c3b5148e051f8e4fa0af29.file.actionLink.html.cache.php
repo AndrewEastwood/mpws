@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 22:59:39
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-10 00:39:21
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/actionLink.html" */ ?>
 <?php /*%%SmartyHeaderCode:8298794195073417fab7b70-74076560%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '89315d90c92cff95f5c3b5148e051f8e4fa0af29' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/actionLink.html',
-      1 => 1349812777,
+      1 => 1349818760,
       2 => 'file',
     ),
   ),
@@ -20,8 +20,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'variables' => 
   array (
     '_action' => 0,
-    '_resource' => 0,
-    '_ownerType' => 0,
     '_ownerName' => 0,
     '__prop__' => 0,
     'CURRENT' => 0,
@@ -43,7 +41,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php if (isset($_smarty_tpl->tpl_vars['_action']->value)){?>
 
 	
-	<?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerType']->value).((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
+	<?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_custom_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
 
 	<?php $_smarty_tpl->tpl_vars["_linkText"] = new Smarty_variable($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."ActionLink".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_action']->value,0,1))}, null, 0);?>
 

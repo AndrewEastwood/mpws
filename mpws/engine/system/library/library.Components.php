@@ -172,10 +172,13 @@ class libraryComponents
         return $com;
     }
 
-    public static function getDataTableView ($config, $dbLink, $params = false) {
+    public static function getDataTableView ($config, $dbLink) {
         // get params
-        $condition = $params['CONDITION'];
-        $beforeConditionHook = $params['CONDITION_HOOK_BEFORE'];
+        
+        
+        
+        $condition = $config['datatable']['condition'];
+        $beforeConditionHook = $config['datatable']['conditionHook'];
         
         $com = array();
         

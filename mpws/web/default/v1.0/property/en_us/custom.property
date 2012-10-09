@@ -1,16 +1,35 @@
-; widget dataTableView ActiveUsers
+; widget DataTableView DashboardActiveUsers
 
-ActiveUsersObjectSummary = 'Active Users';
-ActiveUsersObjectDescription = 'List of all active users';
-ActiveUsersCaptionActions = 'Actions';
-ActiveUsersCaptionName = 'User Name';
-ActiveUsersCaptionActive = 'Active';
-ActiveUsersCaptionDateLastAccess = 'Last Time Visit';
+DashboardActiveUsersObjectSummary = 'Active Users';
+DashboardActiveUsersObjectDescription = 'List of all active users';
+DashboardActiveUsersCaptionActions = 'Actions';
+DashboardActiveUsersCaptionName = 'User Name';
+DashboardActiveUsersCaptionActive = 'Active';
+DashboardActiveUsersCaptionDateLastAccess = 'Last Time Visit';
+DashboardActiveUsersCaptionIsOnline = "Online State";
 
-ActiveUsersActionLinkEdit = 'EDIT';
-ActiveUsersActionLinkView = 'VIEW';
-ActiveUsersActionLinkDelete = 'REMOVE';
-ActiveUsersActionLinkAdd = 'Create New User';
+DashboardActiveUsersActionLinkEdit = 'EDIT';
+DashboardActiveUsersActionLinkView = 'VIEW';
+DashboardActiveUsersActionLinkDelete = 'REMOVE';
+DashboardActiveUsersActionLinkAdd = 'Create New User';
 
-ActiveUsersQuickFilteringFieldName = 'User Names';
-ActiveUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
+DashboardActiveUsersQuickFilteringFieldName = 'User Names';
+DashboardActiveUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
+
+; widget DataTableView SystemUsers
+
+SystemUsersObjectSummary = 'Active Users';
+SystemUsersObjectDescription = 'List of all active users';
+SystemUsersCaptionActions = 'Actions';
+SystemUsersCaptionName = 'User Name';
+SystemUsersCaptionActive = 'Active';
+SystemUsersCaptionDateLastAccess = 'Last Time Visit';
+SystemUsersCaptionIsOnline = "Online State";
+
+SystemUsersActionLinkEdit = 'EDIT';
+SystemUsersActionLinkView = 'VIEW';
+SystemUsersActionLinkDelete = 'REMOVE';
+SystemUsersActionLinkAdd = 'Create New User';
+
+SystemUsersQuickFilteringFieldName = 'User Names';
+SystemUsersQuickFilteringFieldDateLastAccess = 'Last Visit';

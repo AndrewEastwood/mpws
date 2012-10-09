@@ -27,11 +27,17 @@ class pluginToolbox extends objectBaseWebPlugin {
     }
     
     private function _commandDashboard () {
-        $this->addWidgetDataTableView('ActiveUsers');
+        $this->addWidgetDataTableView('DashboardActiveUsers');
     }
     
     private function _commandDefault () {
         echo 'DEFAULT TRIGGER';
+        switch (libraryRequest::getDisplay()) {
+            case "users" : {
+                $this->addWidgetDataTableView('SystemUsers');
+                break;
+            }
+        }
     }
 
 
