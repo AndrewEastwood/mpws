@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 00:15:38
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-10 21:35:02
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html" */ ?>
 <?php /*%%SmartyHeaderCode:20884283515073417fc5f254-50698393%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd6d46df5db445da56cb54532472df58a57c03f2a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html',
-      1 => 1349730934,
+      1 => 1349894101,
       2 => 'file',
     ),
   ),
@@ -46,10 +46,6 @@ $_smarty_tpl->tpl_vars['_headers']->value[] = $_smarty_tpl->tpl_vars['wgt_sysUsr
 <?php $_smarty_tpl->createLocalArrayVariable('_contents', null, 0);
 $_smarty_tpl->tpl_vars['_contents']->value[] = $_smarty_tpl->tpl_vars['msg_common']->value;?>
 <?php $_smarty_tpl->tpl_vars['_footers'] = new Smarty_variable(Array(), null, 0);?>
-
-<?php echo $_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE'];?>
-
-
 
 <?php if ($_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE']==$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectConfiguration_object_menuKeyToShowToolsList){?>
     <?php if (empty($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])){?>

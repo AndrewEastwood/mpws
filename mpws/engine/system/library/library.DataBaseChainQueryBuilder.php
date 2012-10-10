@@ -584,6 +584,10 @@
         
         // utils
         
+        public function getFields($table) {
+            return $this->fetchData('SHOW COLUMNS FROM ' . $table);
+        }
+
         public function getEnumValues($table, $field) {
             
             if (empty($field))

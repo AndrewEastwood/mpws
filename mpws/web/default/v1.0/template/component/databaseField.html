@@ -1,0 +1,5 @@
+{* database field type to html field *}
+
+{if $_type eq 'text' }
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextBox _name=$_name}
+{/if}

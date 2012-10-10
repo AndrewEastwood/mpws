@@ -1,0 +1,13 @@
+{* Get Configuration For The Widget *}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataEditor`$CURRENT.SOURCE.NAME`"}}
+
+<div id="MPWSWidget{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$CURRENT.SOURCE.NAME}">
+    
+    {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
+    
+        <h2>{$fieldEntry.Type}</h2>
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField 
+    _type=$fieldEntry.Type _name=$fieldEntry.Field}
+    {/foreach}
+    
+</div>

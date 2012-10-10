@@ -378,7 +378,27 @@ class libraryComponents
     }
     
     
-    
+    public static function getDataEditor ($config, $dbLink) {
+        // component structure
+        $com = array(
+            "DATA" => false,
+            "FIELDS" => false
+        );
+        // get data
+        if (!empty($dbLink)) {
+            $oid = libraryRequest::getOID();
+            if (isset($oid))
+                $com['DATA'] = $dbLink
+                    ->reset()
+                    ->select('*')
+                    ->from($config['source'])
+                    ->where('ID', '=', $oid)
+                    ->fetchRow();
+            // get fields
+            $com['FIELDS'] = $dbLink->getFields($config['source']);
+        }
+        return $com;
+    }
 }
 
 ?>
