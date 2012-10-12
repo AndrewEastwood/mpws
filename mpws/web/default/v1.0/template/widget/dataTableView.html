@@ -7,23 +7,24 @@
 *}
 
 {* Get Configuration For The Widget *}
+{$_widgetName = "dataTableView`$CURRENT.SOURCE.NAME`"}
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataTableView`$CURRENT.SOURCE.NAME`"}}
 
 <div id="MPWSWidget{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$CURRENT.SOURCE.NAME}">
     
-{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$CURRENT.SOURCE.NAME}
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName}
 
 {if not empty($DTV_CFG.searchbox) and $DTV_CFG.searchbox.enabled}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH _ownerName=$CURRENT.SOURCE.NAME}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH _ownerName=$_widgetName}
 {/if}
 
 {if not empty($DTV_CFG.filtering) and $DTV_CFG.filtering.enabled}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG _ownerName=$CURRENT.SOURCE.NAME}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG _ownerName=$_widgetName}
 {/if}
 
 {if not empty($DTV_CFG.datatable)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTableTopActions _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$CURRENT.SOURCE.NAME}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$CURRENT.SOURCE.NAME}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTableTopActions _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$_widgetName}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$_widgetName}
 {/if}
 
 {if not empty($DTV_CFG.pagination) and $DTV_CFG.pagination.enabled}

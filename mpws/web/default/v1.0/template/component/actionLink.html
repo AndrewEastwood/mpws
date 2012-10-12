@@ -43,7 +43,7 @@
 
 
    To Populate Standart Arguments Use This Line:
-   _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource
+   _ownerName=$_ownerName
 
     standart property key
     {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
@@ -56,7 +56,11 @@
 	{* standart property key *}
 	{assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
 
-	{assign var="_linkText" value=$CURRENT.OBJECT->{"`$__prop__`ActionLink`$_action|capitalize:0:1`"}}
+        {if isset($_useCustomLink)}
+            {assign var="_linkText" value=$CURRENT.OBJECT->{"`$__prop__`ActionLink`$_action|capitalize:0:1`"}}
+        {else}
+            {assign var="_linkText" value=$CURRENT.OBJECT->{"objectProperty_component_actionLink`$_action|upper`"}}
+        {/if}
 
 
 	{* add standart *}
@@ -82,7 +86,9 @@
 	{* get action link attributes *}
 	{$_linkAttr=implode(' ', $_attributes)}
 
-	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr}>{$_linkText}</a>
+	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr} {$_linkText}>
+            {$_linkText}
+        </a>
 
 {else}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Action name is empty or not provided" _tpl=$smarty.template}

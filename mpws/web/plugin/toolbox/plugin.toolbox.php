@@ -35,7 +35,8 @@ class pluginToolbox extends objectBaseWebPlugin {
         switch (libraryRequest::getDisplay()) {
             case "users" : {
                 switch (libraryRequest::getAction()) {
-                    case "add" : {
+                    case "add" :
+                    case "editor" : {
                         $this->addWidgetDataEditor('SystemUsers');
                         break;
                     }

@@ -18,3 +18,37 @@ pagingBarEdgeLinkFIRST = "First";
 pagingBarEdgeLinkLAST = "Last";
 pagingBarEdgeLinkNEXT = ">>";
 pagingBarEdgeLinkPREV = "<<";
+
+; editBox
+editBoxStateDEFAULT = "Create or add new record";
+editBoxStateEDIT = "Editing record";
+editBoxStateEDIT = "Adding new record";
+editBoxStatePREVIEW = "Preview Data";
+editBoxStateSAVE = "Record Saved";
+editBoxStateCANCEL = "Canceled";
+
+; common form buttons
+
+FormPageDefaultButtonSave = "Save";
+FormPageDefaultButtonPreview = "Preview";
+FormPageDefaultButtonCancel = "Cancel";
+
+FormPageEditButtonSave = "Save";
+FormPageEditButtonPreview = "Preview";
+FormPageEditButtonCancel = "Cancel";
+
+FormPagePreviewButtonSave = "Save";
+FormPagePreviewButtonEdit = "Edit";
+FormPagePreviewButtonCancel = "Cancel";
+
+FormPageSaveButtonAdd = "Add One More Record";
+FormPageSaveButtonReturn = "Back To List";
+
+FormPageCancelButtonAdd = "Add One More Record";
+FormPageCancelButtonReturn = "Back To List";
+
+
+actionLinkEDIT = 'Edit';
+actionLinkADD = 'Add New Record';
+actionLinkDELETE = 'Remove';
+actionLinkVIEW = 'View';

@@ -605,6 +605,15 @@
             
             return $matches[1];
         }
+        
+        public static function parseEnum ($dtField) {
+            $matches = null;
+            $returnValue = preg_match_all('/\'(.*?)\'/', $dtField, $matches);
+            if ($returnValue == 0)
+                return array();
+            
+            return $matches[1];
+        }
     }
     
 ?>

@@ -192,5 +192,13 @@
         }
     }
     
-
+    function glGetOnlyNums ($str, $includeChars = array()) {
+        $_num = '';
+        //echo 'OLOLO = ' . $str;
+        for ($i = 0; $i < strlen($str); $i++)
+            if (is_numeric ($str[$i]) || in_array($str[$i], $includeChars))
+                $_num .= $str[$i];
+        return $_num;
+    }
+    
 ?>
