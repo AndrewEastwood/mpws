@@ -1,0 +1,18 @@
+{* default control attribute values *}
+{$_controlCssName = 'DropDown'}
+{$_controlCssNameCustom = "`$_controlCssName``$_name`"}
+{$_controlItems = ''}
+{* init control with passed arguments *}
+{if isset($_items)}
+    {$_controlItems = $_items}
+{/if}
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
+    <select id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="mpws_field_{$_name|lower}" class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
+        {foreach $_controlItems as $_item}
+            <option value="{$_item}">
+                {$CURRENT.OBJECT->{"objectProperty_`$_resource`_`$_ownerName``$_controlCssNameCustom``$_item`"}}
+            </option>
+        {/foreach}
+    </select>
+</div>

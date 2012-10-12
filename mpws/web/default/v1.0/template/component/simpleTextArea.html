@@ -1,0 +1,20 @@
+{* default control attribute values *}
+{$_controlCssName = 'TextArea'}
+{$_controlCssNameCustom = "`$_controlCssName``$_name`"}
+{$_controlValue = false}
+{$_controlColSize = 45}
+{$_controlRowSize = 6}
+{* init control with passed arguments *}
+{if isset($_value)}
+    {$_controlValue = $_value}
+{/if}
+{if isset($_cols)}
+    {$_controlColSize = $_cols}
+{/if}
+{if isset($_rows)}
+    {$_controlRowSize = $_rows}
+{/if}
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
+    <textarea id="MPWSControl{$_controlCssNameCustom}ID" name="mpws_field_{$_name|lower}" cols="{$_controlColSize}" rows="{$_controlRowSize}" class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">{$_controlValue}</textarea>
+</div>

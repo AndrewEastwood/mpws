@@ -1,5 +1,41 @@
-{* database field type to html field *}
+{*  database field type to html field 
 
-{if $_type eq 'text' }
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextBox _name=$_name}
-{/if}
+    INT[(M)] [UNSIGNED] [ZEROFILL]
+    A normal-size integer. The signed range is -2147483648 to 2147483647. The unsigned range is 0 to 4294967295.
+
+    TINYINT[(M)] [UNSIGNED] [ZEROFILL]
+    A very small integer. The signed range is -128 to 127. The unsigned range is 0 to 255.
+
+    BOOL, BOOLEAN
+    These types are synonyms for TINYINT(1). A value of zero is considered false. Non-zero values are considered true: [...]
+*}
+
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+{capture name="control"}
+    {if $_type eq 'text' }
+        {$_standartControlType = 'TextArea'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextArea _name=$_name}
+    {elseif startsWith($_type, 'varchar')}
+        {$_standartControlType = 'TextBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextBox _name=$_name _limit=glGetOnlyNums($_type)}
+    {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean'}
+        {$_standartControlType = 'CheckBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleCheckBox _name=$_name}
+    {elseif startsWith($_type, 'int')}
+        {$_standartControlType = 'TextBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextBox _name=$_name _limit=10}
+    {elseif $_type eq 'datetime'}
+        {$_standartControlType = 'DateTime'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleDateTime _name=$_name _limit=10}
+    {elseif startsWith($_type, 'enum')}
+        {$_standartControlType = 'DropDown'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName}
+    {/if}
+{/capture}
+
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFieldLabel _labelKey="`$_ownerName`Field`$_name`" _resource='custom' _controlName=$_name _controlType=$_standartControlType}
+{$smarty.capture.control}
+
+</div>

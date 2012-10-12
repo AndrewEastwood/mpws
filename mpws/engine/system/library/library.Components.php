@@ -381,6 +381,8 @@ class libraryComponents
     public static function getDataEditor ($config, $dbLink) {
         // component structure
         $com = array(
+            // append form configuration
+            "FORM" =>$config['form'], 
             "DATA" => false,
             "FIELDS" => false
         );

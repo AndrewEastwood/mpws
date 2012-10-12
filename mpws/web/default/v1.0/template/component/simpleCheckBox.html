@@ -1,0 +1,12 @@
+{* default control attribute values *}
+{$_controlCssName = 'CheckBox'}
+{$_controlCssNameCustom = "`$_controlCssName``$_name`"}
+{$_controlValue = ''}
+{* init control with passed arguments *}
+{if isset($_value)}
+    {$_controlValue = " checked=\"`$_value`\""}
+{/if}
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
+    <input id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="mpws_field_{$_name|lower}"{$_controlValue} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
+</div>
