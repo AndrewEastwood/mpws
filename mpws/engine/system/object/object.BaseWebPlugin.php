@@ -11,8 +11,24 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     /* Plugin Specific Methods */
     
+    public function actionHandlerAsDataViewEdit ($widgetName) {
+        switch (libraryRequest::getAction()) {
+            case "new" :
+            case "edit" : {
+                $this->addWidgetDataEditor($widgetName);
+                break;
+            }
+            case "return" :
+            default : {
+                $this->addWidgetDataTableView($widgetName);
+                break;
+            }
+        }
+    }
+    
     public function addWidgetDataTableView ($widgetName) {
         $ctx = contextMPWS::instance();
+        //echo "Getting Widget Configurtion: objectConfiguration_widget_dataTableView" . $widgetName;
         $wgtData = libraryComponents::getDataTableView($this->{"objectConfiguration_widget_dataTableView" . $widgetName}, $ctx->contextCustomer->getDBO());
         $ctx->pageModel->addWidget($this, $widgetName, $this->objectTemplatePath_widget_dataTableView, $wgtData);
     }

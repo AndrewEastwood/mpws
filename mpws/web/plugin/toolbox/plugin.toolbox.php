@@ -34,17 +34,7 @@ class pluginToolbox extends objectBaseWebPlugin {
         echo 'DEFAULT TRIGGER';
         switch (libraryRequest::getDisplay()) {
             case "users" : {
-                switch (libraryRequest::getAction()) {
-                    case "add" :
-                    case "editor" : {
-                        $this->addWidgetDataEditor('SystemUsers');
-                        break;
-                    }
-                    default : {
-                        $this->addWidgetDataTableView('SystemUsers');
-                        break;
-                    }
-                }
+                $this->actionHandlerAsDataViewEdit('SystemUsers');
                 break;
             }
         }

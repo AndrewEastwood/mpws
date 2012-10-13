@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-09 22:13:46
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 00:45:04
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html" */ ?>
-<?php /*%%SmartyHeaderCode:14873537655073417fb71ec0-16858364%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:168933470550788f60cbdf39-71665716%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '14873537655073417fb71ec0-16858364',
+  'nocache_hash' => '168933470550788f60cbdf39-71665716',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5073417fba3853_79236632',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -26,8 +24,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'pageIndex' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50788f60d26e29_03302179',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5073417fba3853_79236632')) {function content_5073417fba3853_79236632($_smarty_tpl) {?><div id="MPWSComponenPagingBarID" class="MPWSComponent MPWSComponenPagingBar">
+<?php if ($_valid && !is_callable('content_50788f60d26e29_03302179')) {function content_50788f60d26e29_03302179($_smarty_tpl) {?><div id="MPWSComponenPagingBarID" class="MPWSComponent MPWSComponenPagingBar">
     
     <div class="MPWSBlock MPWSBlockSummary">
         <div class="MPWSDataRow">

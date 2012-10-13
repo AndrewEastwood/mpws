@@ -59,7 +59,7 @@
         {if isset($_useCustomLink)}
             {assign var="_linkText" value=$CURRENT.OBJECT->{"`$__prop__`ActionLink`$_action|capitalize:0:1`"}}
         {else}
-            {assign var="_linkText" value=$CURRENT.OBJECT->{"objectProperty_component_actionLink`$_action|upper`"}}
+            {assign var="_linkText" value=$CURRENT.OBJECT->{"objectProperty_component_actionLink`$_realm``$_action|upper`"}}
         {/if}
 
 
@@ -79,6 +79,7 @@
         {* link attributes *}
         {$_attributes[]="title=\"`$_linkText`\""}
         {$_attributes[]="mpws-action=\"`$_action`\""}
+        {$_attributes[]="mpws-realm=\"`$_realm|lower`\""}
         {if isset($_target) }
             {$_attributes[]="target=\"`$_target`\""}
         {/if}
@@ -86,7 +87,7 @@
 	{* get action link attributes *}
 	{$_linkAttr=implode(' ', $_attributes)}
 
-	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr} {$_linkText}>
+	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr} title="{$_linkText}">
             {$_linkText}
         </a>
 

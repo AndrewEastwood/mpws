@@ -14,24 +14,28 @@
 <div class="MPWSComponent MPWSComponentDataBaseField">
 
 {capture name="control"}
+    {$_renderMode = 'normal'}
+    {if isset($_readonly) and $_readonly}
+        {$_renderMode = 'hidden'}
+    {/if}
     {if $_type eq 'text' }
         {$_standartControlType = 'TextArea'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextArea _name=$_name}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextArea _name=$_name _renderMode=$_renderMode}
     {elseif startsWith($_type, 'varchar')}
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextBox _name=$_name _limit=glGetOnlyNums($_type)}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode}
     {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean'}
         {$_standartControlType = 'CheckBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleCheckBox _name=$_name}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlCheckBox _name=$_name _renderMode=$_renderMode}
     {elseif startsWith($_type, 'int')}
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextBox _name=$_name _limit=10}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=10 _renderMode=$_renderMode}
     {elseif $_type eq 'datetime'}
         {$_standartControlType = 'DateTime'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleDateTime _name=$_name _limit=10}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDateTime _name=$_name _limit=10 _renderMode=$_renderMode}
     {elseif startsWith($_type, 'enum')}
         {$_standartControlType = 'DropDown'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode}
     {/if}
 {/capture}
 

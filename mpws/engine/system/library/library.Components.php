@@ -239,7 +239,7 @@ class libraryComponents
         //$com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE']);
 
         //var_dump($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']]);
-
+        
         $com['CURRENT'] = libraryRequest::getValue($config['pagination']['pageKey'], 1);
         $com['LIMIT'] = $config['datatable']['limit'];
         $com['PAGES'] = round($com['RECORDS'] / $com['LIMIT'] + 0.4);
@@ -252,7 +252,7 @@ class libraryComponents
             $com['CURRENT'] = 1;
         
         $com['OFFSET'] = ($com['CURRENT'] - 1) * $com['LIMIT'];
-
+        //var_dump($config);
         // fill pages
         $com['PAGELINKS'] = array();
         $com['EDGELINKS'] = array();
@@ -335,10 +335,12 @@ class libraryComponents
 
             // sorting
             $sort = libraryRequest::getValue($config['filtering']['sortKey'], 'ID.desc');
+            
             if (!empty($sort)) {
                 $sort = explode('.', trim($sort));
                 if (count($sort) == 2 && !empty($sort[0]) && !empty($sort[1])) {
                     $_direction = trim(strtolower($sort[1]));
+                    //echo '#####' . $config['source'].'.'.$sort[0] . '####';
                     if ($_direction == 'asc' || $_direction == 'desc') {
                         $dbLink
                             ->orderBy($config['source'].'.'.$sort[0])

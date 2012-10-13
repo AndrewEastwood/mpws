@@ -95,7 +95,7 @@
             <div class="MPWSDataTableCell MPWSDataTableCellActions">
             {foreach $_confing.datatable.perRecrodActions as $actionName}
                 <span class="MPWSDataTableCellAction{$actionName|capitalize:0:1}">
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerName=$_ownerName _action=$actionName _oid=$rowEntry['ID']}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerName=$_ownerName _action=$actionName _oid=$rowEntry['ID'] _realm="RowAction"}
                 </span>
             {/foreach}
             </div>

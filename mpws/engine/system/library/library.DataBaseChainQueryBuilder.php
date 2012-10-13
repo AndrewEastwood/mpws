@@ -120,9 +120,12 @@
         }
 
         public function getCount($table, $filter = '', $beforeConditionHook = '') {
-            if (!empty($filter))
+            if (!empty($filter)) {
                 $filter = ' WHERE ' . $filter . ' ';
-            $filter = $beforeConditionHook . ' ' . $filter;
+                if (!empty($beforeConditionHook))
+                    $filter = $beforeConditionHook . ' ' . $filter;
+            }
+            //echo '####SELECT count(*) as `count` FROM ' . $table . $filter;
             $row = $this->fetchRow('SELECT count(*) as `count` FROM ' . $table . $filter);
             if (isset($row['count']))
                 return $row['count'];

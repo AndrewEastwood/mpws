@@ -1,0 +1,38 @@
+{* default control attribute values *}
+{$_controlName = "mpws_field_`$_name|lower`"}
+{$_controlCssName = 'TextArea'}
+{$_controlCssNameCustom = "`$_controlCssName``$_name`"}
+{$_controlValue = libraryRequest::getPostValue($_controlName, false)}
+{$_controlColSize = 45}
+{$_controlRowSize = 6}
+{$_controlRenderMode = 'normal'}
+{* init control with passed arguments *}
+{if isset($_renderMode)}
+    {$_controlRenderMode = $_renderMode}
+{/if}
+{if empty($_controlValue) and isset($_value)}
+    {$_controlValue = $_value}
+{/if}
+{if isset($_cols)}
+    {$_controlColSize = $_cols}
+{/if}
+{if isset($_rows)}
+    {$_controlRowSize = $_rows}
+{/if}
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
+{if $_controlRenderMode eq 'normal'}
+    
+    {* editable control *}
+    <textarea id="MPWSControl{$_controlCssNameCustom}ID" name="{$_controlName}" cols="{$_controlColSize}" rows="{$_controlRowSize}" class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">{$_controlValue}</textarea>
+           
+{elseif $_controlRenderMode eq 'hidden'}
+    
+    {* display hidden control*}
+    <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
+    <input type="hidden" name="{$_controlName}" value="{$_controlValue}"/>
+         
+{else}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}
+{/if}
+</div>

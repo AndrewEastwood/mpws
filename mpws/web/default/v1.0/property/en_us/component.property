@@ -20,18 +20,17 @@ pagingBarEdgeLinkNEXT = ">>";
 pagingBarEdgeLinkPREV = "<<";
 
 ; editBox
-editBoxStateDEFAULT = "Create or add new record";
+editBoxStateNEW = "Adding new record";
 editBoxStateEDIT = "Editing record";
-editBoxStateEDIT = "Adding new record";
 editBoxStatePREVIEW = "Preview Data";
 editBoxStateSAVE = "Record Saved";
 editBoxStateCANCEL = "Canceled";
 
 ; common form buttons
 
-FormPageDefaultButtonSave = "Save";
-FormPageDefaultButtonPreview = "Preview";
-FormPageDefaultButtonCancel = "Cancel";
+FormPageNewButtonSave = "Save";
+FormPageNewButtonPreview = "Preview";
+FormPageNewButtonCancel = "Cancel";
 
 FormPageEditButtonSave = "Save";
 FormPageEditButtonPreview = "Preview";
@@ -41,14 +40,16 @@ FormPagePreviewButtonSave = "Save";
 FormPagePreviewButtonEdit = "Edit";
 FormPagePreviewButtonCancel = "Cancel";
 
-FormPageSaveButtonAdd = "Add One More Record";
+FormPageSaveButtonNew = "Add One More Record";
 FormPageSaveButtonReturn = "Back To List";
 
-FormPageCancelButtonAdd = "Add One More Record";
+FormPageCancelButtonNew = "Add One More Record";
 FormPageCancelButtonReturn = "Back To List";
 
 
-actionLinkEDIT = 'Edit';
-actionLinkADD = 'Add New Record';
-actionLinkDELETE = 'Remove';
-actionLinkVIEW = 'View';
+; action links
+
+actionLinkTopActionNEW = 'Add New Record';
+actionLinkRowActionEDIT = 'Edit';
+actionLinkRowActionDELETE = 'Remove';
+actionLinkRowActionVIEW = 'View';

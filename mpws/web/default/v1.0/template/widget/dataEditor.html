@@ -5,35 +5,55 @@
 <div id="MPWSWidget{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$CURRENT.SOURCE.NAME}">
     
     {$_formInnerAction = libraryRequest::getPostFormAction()|lower}
+    {$_sourceOID = libraryRequest::getOID()}
     {if empty($_formInnerAction) }
-        {$_formInnerAction = "default"}
+        {$_formInnerAction = "new"}
     {/if}
     
+    {* widget title *}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName _customText=$CURRENT.OBJECT->{"objectProperty_component_editBoxState`$_formInnerAction|upper`"}}
     
-    {if $_formInnerAction eq "default" or $_formInnerAction eq "edit" or $_formInnerAction eq "add"}
-        {* edit/create form page *}
-        <form action="{$DTV_CFG.form.edit.action}" name="data_edit_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.edit.method}" class="MPWSForm MPWSFormEdit">
+    {* editor form *}
+    <form action="{$DTV_CFG.form.$_formInnerAction.action}" name="data_edit_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
+
+    {* page content *}
+    
+    {if $_formInnerAction eq "new"}
+    
+        {* create new form page *}
+        {* completely new record without any initial data *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName}
         {/foreach}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.edit.buttons}
-        </form>
+    
+    {elseif $_formInnerAction eq "edit"}
+    
+        {* edit form page *}
+        {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName}
+        {/foreach}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.edit.buttons}
+        
     {elseif $_formInnerAction eq "preview"}
+    
         {* preview page *}
-        <form action="{$DTV_CFG.form.preview.action}" name="data_preivew_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.preview.method}" class="MPWSForm MPWSFormEdit">
+        {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _readonly=true}
+        {/foreach}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.preview.buttons}
-        </form>
+        
     {elseif $_formInnerAction eq "save"}
+    
         {* saved page *}
-        <form action="{$DTV_CFG.form.save.action}" name="data_save_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.save.method}" class="MPWSForm MPWSFormEdit">
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.save.buttons}
-        </form>
+        
     {elseif $_formInnerAction eq "cancel"}
+    
         {* canceled page *}
-        <form action="{$DTV_CFG.form.cancel.action}" name="data_cancel_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.cancel.method}" class="MPWSForm MPWSFormEdit">
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.cancel.buttons}
-        </form>
     {/if}
+
+    </form>
     
 </div>

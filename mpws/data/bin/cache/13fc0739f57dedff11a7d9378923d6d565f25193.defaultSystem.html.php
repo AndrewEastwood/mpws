@@ -1,4 +1,4 @@
-<?php /*%%SmartyHeaderCode:17006204035073417fbbd7a6-58675507%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:146328702350788f60d89873-89011730%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -111,13 +111,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '17006204035073417fbbd7a6-58675507',
+  'nocache_hash' => '146328702350788f60d89873-89011730',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50786072c28a85_80924060',
+  'unifunc' => 'content_5078b2866440a6_80049343',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50786072c28a85_80924060')) {function content_50786072c28a85_80924060($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_5078b2866440a6_80049343')) {function content_5078b2866440a6_80049343($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>MPWS Toolbox - tools</title>
@@ -136,7 +136,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         // display
         mpws.display = 'users';
         // action
-        mpws.action = 'add';
+        mpws.action = 'new';
     </script>
     
     <meta name="locale" content="en_us">
@@ -181,7 +181,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <div class="MPWSRowLabelValue">
     <span class="MPWSLabel">Last access:</span>
-    <span class="MPWSValue">2012-10-02 21:15:01</span>
+    <span class="MPWSValue">2012-10-13 02:22:37</span>
 </div>
         
         
@@ -276,61 +276,276 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerBefore"></div>
     <div id="MPWSWidgetSystemUsersID" class="MPWSWidget MPWSWidgetSystemUsers">
     
-        
-        <h2>int(11)</h2>
+                
+    
     
 
-        
-        <h2>varchar(100)</h2>
+
+
+
+<div class="MPWSComponent MPWSComponentObjectSummary">
+    <span class="MPWSText MPWSTextTitle">User Editor</span>
+    <span class="MPWSText MPWSTextDetails"> - </span>
+        <span class="MPWSText MPWSTextCustom">Editing record</span>
+    </div>
     
-
-        
-        <h2>text</h2>
     
-    <div class="MPWSControlField MPWSControlFieldTextBox">
-    <input type="text" name="mpws_field_password" value="
-Notice: Undefined index: _value in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 30
+    <form action="" name="data_edit_systemusers" method="POST" class="MPWSForm MPWSFormEditor MPWSFormEditorPageEdit">
 
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 30
-" size="
-Notice: Undefined index: _size in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 31
+    
+    
+        
+        
+                    
 
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 31
-">
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldID">
+    <label for="MPWSControlTextBoxIDID">
+        <span class="MPWSText">Record ID</span>
+    </label>
 </div>
+                            
 
         
-        <h2>tinyint(1)</h2>
+
+
+<div class="MPWSControlField MPWSControlFieldTextBox MPWSControlFieldTextBoxID">
     
-
-        
-        <h2>tinyint(1)</h2>
     
-
-        
-        <h2>text</h2>
     
-    <div class="MPWSControlField MPWSControlFieldTextBox">
-    <input type="text" name="mpws_field_permisions" value="
-Notice: Undefined index: _value in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 30
-
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 30
-" size="
-Notice: Undefined index: _size in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 31
-
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/46a3da0a4ee52804e6bbfe18713f465d58b2f0ed.file.simpleTextBox.html.cache.php on line 31
-">
+    <input id="MPWSControlTextBoxIDID" type="text" name="mpws_field_id" value="" size="25" maxlength="10" class="MPWSControl MPWSControlTextBox MPWSControlTextBoxID">
+           
+    
 </div>
-
-        
-        <h2>datetime</h2>
     
 
-        
-        <h2>datetime</h2>
-    
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldName">
+    <label for="MPWSControlTextBoxNameID">
+        <span class="MPWSText">User Name</span>
+    </label>
+</div>
+                            
 
         
+
+
+<div class="MPWSControlField MPWSControlFieldTextBox MPWSControlFieldTextBoxName">
+    
+    
+    
+    <input id="MPWSControlTextBoxNameID" type="text" name="mpws_field_name" value="" size="25" maxlength="100" class="MPWSControl MPWSControlTextBox MPWSControlTextBoxName">
+           
+    
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPassword">
+    <label for="MPWSControlTextAreaPasswordID">
+        <span class="MPWSText">User Password</span>
+    </label>
+</div>
+                            
+    
+<div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPassword">
+    
+    
+    <textarea id="MPWSControlTextAreaPasswordID" name="mpws_field_password" cols="45" rows="6" class="MPWSControl MPWSControlTextArea MPWSControlTextAreaPassword"></textarea>
+           
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldActive">
+    <label for="MPWSControlCheckBoxActiveID">
+        <span class="MPWSText">Check if user is enabled</span>
+    </label>
+</div>
+                            
+
+    
+<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxActive">
+    
+    
+    
+    
+    <input id="MPWSControlCheckBoxActiveID" type="checkbox" name="mpws_field_active" checked class="MPWSControl MPWSControlCheckBox MPWSControlCheckBoxActive">
+           
+           
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldIsOnline">
+    <label for="MPWSControlCheckBoxIsOnlineID">
+        <span class="MPWSText">Current status</span>
+    </label>
+</div>
+                            
+
+    
+<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxIsOnline">
+    
+    
+    
+    
+    <input id="MPWSControlCheckBoxIsOnlineID" type="checkbox" name="mpws_field_isonline" checked class="MPWSControl MPWSControlCheckBox MPWSControlCheckBoxIsOnline">
+           
+           
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPermisions">
+    <label for="MPWSControlTextAreaPermisionsID">
+        <span class="MPWSText">Access Level</span>
+    </label>
+</div>
+                            
+    
+<div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPermisions">
+    
+    
+    <textarea id="MPWSControlTextAreaPermisionsID" name="mpws_field_permisions" cols="45" rows="6" class="MPWSControl MPWSControlTextArea MPWSControlTextAreaPermisions"></textarea>
+           
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldRole">
+    <label for="MPWSControlDropDownRoleID">
+        <span class="MPWSText">User Role</span>
+    </label>
+</div>
+                            
+        
+<div class="MPWSControlField MPWSControlFieldDropDown MPWSControlFieldDropDownRole">
+    
+    
+    
+    
+    <select id="MPWSControlDropDownRoleID" type="checkbox" name="mpws_field_role" class="MPWSControl MPWSControlDropDown MPWSControlDropDownRole">
+                                <option value="SUPERADMIN">
+                            Administrator
+            </option>
+                                <option value="READER">
+                            Standart User
+            </option>
+                                <option value="REPORTER">
+                            Report User
+            </option>
+            </select>
+           
+
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldDateLastAccess">
+    <label for="MPWSControlDateTimeDateLastAccessID">
+        <span class="MPWSText">Last Visit</span>
+    </label>
+</div>
+                            
+    
+<div class="MPWSControlField MPWSControlFieldDateTime MPWSControlFieldDateTimeDateLastAccess">
+    
+    
+    
+    <input id="MPWSControlDateTimeDateLastAccessID" type="text" name="mpws_field_datelastaccess" value="" size="
+Notice: Undefined index: _controlSize in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
+
+Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
+" class="MPWSControl MPWSControlDateTime MPWSControlDateTimeDateLastAccess">
+           
+</div>
+    
+
+</div>
+                    
+
+<div class="MPWSComponent MPWSComponentDataBaseField">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldDateCreated">
+    <label for="MPWSControlDateTimeDateCreatedID">
+        <span class="MPWSText">Added Since</span>
+    </label>
+</div>
+                            
+    
+<div class="MPWSControlField MPWSControlFieldDateTime MPWSControlFieldDateTimeDateCreated">
+    
+    
+    
+    <input id="MPWSControlDateTimeDateCreatedID" type="text" name="mpws_field_datecreated" value="" size="
+Notice: Undefined index: _controlSize in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
+
+Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
+" class="MPWSControl MPWSControlDateTime MPWSControlDateTimeDateCreated">
+           
+</div>
+    
+
+</div>
+                
+<div class="MPWSControlField MPWSControlFieldFormButtons MPWSControlField
+Notice: Undefined index: _controlCssNameCustom in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/c57828bfbc5d080e08a984bc662a85a828b22044.file.simpleFormButtons.html.cache.php on line 36
+
+Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/c57828bfbc5d080e08a984bc662a85a828b22044.file.simpleFormButtons.html.cache.php on line 36
+">
+            <button id="MPWSControlFormButtonsSaveID" type="submit" name="do" value="Save" class="MPWSControl MPWSControlFormButtons MPWSControlFormButtonsSave">
+            Save
+        </button>
+            <button id="MPWSControlFormButtonsPreviewID" type="submit" name="do" value="Preview" class="MPWSControl MPWSControlFormButtons MPWSControlFormButtonsPreview">
+            Preview
+        </button>
+            <button id="MPWSControlFormButtonsCancelID" type="submit" name="do" value="Cancel" class="MPWSControl MPWSControlFormButtons MPWSControlFormButtonsCancel">
+            Cancel
+        </button>
+    </div>
+        
+    
+    </form>
+    
 </div>
     <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerAfter"></div>
 </div></div>

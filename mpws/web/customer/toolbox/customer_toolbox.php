@@ -30,7 +30,7 @@ class customer_toolbox extends objectBaseWebCustomer {
             return $ctx->contextCustomer->getDBO()
                 ->update('mpws_users')
                 ->set(array(
-                    'DateLastAccess' => date($customer->objectConfiguration_mdbc_datetimeFormat),
+                    'DateLastAccess' => date($customer->objectConfiguration_format_dateTimeDataBase),
                     'IsOnline' => 1
                 ))
                 ->where('Id', '=', $user['ID'])

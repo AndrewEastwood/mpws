@@ -1,22 +1,20 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-12 19:22:27
-         compiled from "/var/www/mpws/web/default/v1.0/template/component/simpleFormButtons.html" */ ?>
-<?php /*%%SmartyHeaderCode:18552097335077e57ca9c077-06880955%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 00:45:10
+         compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFormButtons.html" */ ?>
+<?php /*%%SmartyHeaderCode:81043973850788f66c4d763-16503365%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
-    '903d91440aad38a59f6d2af5f4a037f8c1d06e72' => 
+    'c57828bfbc5d080e08a984bc662a85a828b22044' => 
     array (
-      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleFormButtons.html',
-      1 => 1350058943,
+      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFormButtons.html',
+      1 => 1350066354,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '18552097335077e57ca9c077-06880955',
+  'nocache_hash' => '81043973850788f66c4d763-16503365',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5077e57cad6633_52665048',
   'variables' => 
   array (
     '_controlCssName' => 0,
@@ -27,8 +25,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50788f66c7ec72_61961616',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5077e57cad6633_52665048')) {function content_5077e57cad6633_52665048($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_50788f66c7ec72_61961616')) {function content_50788f66c7ec72_61961616($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('FormButtons', null, 0);?>
 
