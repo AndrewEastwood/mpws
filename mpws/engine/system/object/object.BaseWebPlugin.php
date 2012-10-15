@@ -11,11 +11,14 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     /* Plugin Specific Methods */
     
-    public function actionHandlerAsDataViewEdit ($widgetName) {
+    public function actionHandlerAsDataViewEdit ($widgetName, $events = array()) {
         switch (libraryRequest::getAction()) {
             case "new" :
             case "edit" : {
-                $this->addWidgetDataEditor($widgetName);
+                $e = array();
+                if (isset($events['EDIT']))
+                    $e = $events['EDIT'];
+                $this->addWidgetDataEditor($widgetName, $e);
                 break;
             }
             case "return" :
@@ -34,9 +37,9 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         $ctx->pageModel->addWidget($this, $widgetName, $this->objectTemplatePath_widget_dataTableView, $wgtData);
     }
     
-    public function addWidgetDataEditor ($widgetName) {
+    public function addWidgetDataEditor ($widgetName, $events = array()) {
         $ctx = contextMPWS::instance();
-        $wgtData = libraryComponents::getDataEditor($this->{"objectConfiguration_widget_dataEditor" . $widgetName}, $ctx->contextCustomer->getDBO());
+        $wgtData = libraryComponents::getDataEditor($this->{"objectConfiguration_widget_dataEditor" . $widgetName}, $ctx->contextCustomer->getDBO(), $events);
         $ctx->pageModel->addWidget($this, $widgetName, $this->objectTemplatePath_widget_dataEditor, $wgtData);
         
     }

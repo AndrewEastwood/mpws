@@ -98,7 +98,10 @@ class libraryValidator {
         $_data = libraryRequest::getPostMapContainer($_fields);
         //var_dump($_fields);
         // validate data
-        return self::validateData($_data, $rules);
+        var_dump($_data);
+        $rez['DATA'] = $_data;
+        $rez['ERRORS'] = self::validateData($_data, $rules);
+        return $rez;
     }
 
 }

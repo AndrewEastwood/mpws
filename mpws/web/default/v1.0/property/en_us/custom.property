@@ -1,5 +1,5 @@
 ; widget DataTableView DashboardActiveUsers
-
+; ============================================
 dataTableViewDashboardActiveUsersObjectSummary = 'Active Users';
 dataTableViewDashboardActiveUsersObjectDescription = 'List of all active users';
 dataTableViewDashboardActiveUsersCaptionActions = 'Actions';
@@ -17,7 +17,7 @@ dataTableViewDashboardActiveUsersQuickFilteringFieldName = 'User Names';
 dataTableViewDashboardActiveUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
 
 ; widget DataTableView SystemUsers
-
+; ==================================
 dataTableViewSystemUsersObjectSummary = 'Active Users';
 dataTableViewSystemUsersObjectDescription = 'List of all active users';
 dataTableViewSystemUsersCaptionActions = 'Actions';
@@ -35,6 +35,7 @@ dataTableViewSystemUsersQuickFilteringFieldName = 'User Names';
 dataTableViewSystemUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
 
 ; widget dataEditor SystemUsers
+; ======================================
 dataEditorSystemUsersObjectSummary = 'User Editor';
 dataEditorSystemUsersObjectDescription = " - ";
 dataEditorSystemUsersFieldID = "Record ID";
@@ -50,3 +51,5 @@ dataEditorSystemUsersFieldRole = "User Role";
 dataEditorSystemUsersDropDownRoleSUPERADMIN = "Administrator";
 dataEditorSystemUsersDropDownRoleREADER = "Standart User";
 dataEditorSystemUsersDropDownRoleREPORTER = "Report User";
+
+dataEditorSystemUsersFieldSendEmail = "Notify user by email";

@@ -21,16 +21,16 @@
     {$_controlValue = $_value}
 {/if}
     
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderMode{$_renderMode|capitalize}">
+<div class="MPWSComponent MPWSComponentField MPWSRenderMode{$_renderMode|capitalize}">
 
 {capture name="control"}
-    {if $_type eq 'text' }
+    {if $_type eq 'text' or $_type eq 'textarea' }
         {$_standartControlType = 'TextArea'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextArea _name=$_name _renderMode=$_renderMode _value=$_controlValue}
-    {elseif startsWith($_type, 'varchar')}
+    {elseif startsWith($_type, 'varchar') or $_type eq 'textbox' }
         {$_standartControlType = 'TextBox'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode _value=$_controlValue}
-    {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean'}
+    {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean' or $_type eq 'checkbox'}
         {$_standartControlType = 'CheckBox'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlCheckBox _name=$_name _renderMode=$_renderMode _value=$_controlValue}
     {elseif startsWith($_type, 'int')}
@@ -39,7 +39,7 @@
     {elseif $_type eq 'datetime'}
         {$_standartControlType = 'DateTime'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
-    {elseif startsWith($_type, 'enum')}
+    {elseif startsWith($_type, 'enum') or $_type eq 'select'}
         {$_standartControlType = 'DropDown'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode _value=$_controlValue}
     {/if}

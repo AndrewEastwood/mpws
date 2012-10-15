@@ -49,6 +49,19 @@ class libraryWebPageModel {
         }
         throw new Exception('libraryWebPageModel => setInfo: ERROR is coccured while setting new info value ('.$info.') with key ' . $key);
     }
+    
+    public function getInfo ($key) {
+        return $this->_info[makeKey($key)];
+    }
+    
+    public function allowToProcessPages () {
+        /* depends on user auth */
+        $_user = $this->_info[makeKey('USER')];
+        $_allow = false;
+        if (isset($_user[makeKey('ACTIVE')]))
+            $_allow = $_user[makeKey('ACTIVE')];
+        return $_allow;
+    }
 
 
     public function removeWebObject ($name) {
@@ -197,6 +210,7 @@ class libraryWebPageModel {
         // page token
         $info[makeKey('TOKEN')] = libraryRequest::getOrValidatePageSecurityToken();
         $info[makeKey('DEBUG')] = libraryUtils::getDebugInfo();
+        $info[makeKey('USER')] = libraryUtils::getDebugInfo();
 
         // GET parameters
 

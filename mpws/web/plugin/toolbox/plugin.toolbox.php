@@ -34,6 +34,7 @@ class pluginToolbox extends objectBaseWebPlugin {
         //echo 'DEFAULT TRIGGER';
         switch (libraryRequest::getDisplay()) {
             case "users" : {
+                /* standart data edit and view component complex */
                 $this->actionHandlerAsDataViewEdit('SystemUsers');
                 break;
             }

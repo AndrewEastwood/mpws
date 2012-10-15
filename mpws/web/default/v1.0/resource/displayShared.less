@@ -1,51 +1,19 @@
-/*
-
-Color theme:
-#98A89E
-#BAC0AC
-#FAFAC6
-#FF4411
-#D40015
-See: https://kuler.adobe.com/#themeID/2070991
-
-*/
-body {margin:0; background-color: #98A89E; font-size: 12px; font-family: Arial,sans-serif; padding: 10px;}
-
-.MPWSLayout {}
-
-a.MPWSLink, a.MPWSLink:visited {color: #D40015;}
-a.MPWSLink:hover {color: #D40015; text-decoration: none;}
-
-
-/* COMMON ELEMENTS */
-.MPWSControlRenderModeNormal {
-}
-.MPWSControlRenderModeError {
-}
-
-/* RENDER MODES */
-.MPWSRenderModeError {
-    color: #D40015;
-    input, textarea {border: 1px solid #D40015;}
-}
-
-/* MPWS PAGE */
-.MPWSPage {
-    width: 800px;
-    margin: 0px auto;
-    background-color: #FAFAC6;
-    padding: 20px 30px;
-    box-shadow: 0px 0px 10px #222;
-    border-radius: 10px;
-}
-
 /* COMPONENTS */
 .MPWSComponent {}
+
+.MPWSComponentErrorFieldsList {
+    color: @colorError;
+    padding: 0px 0px 0px 20px;
+}
+
+.MPWSComponentDataBaseField {}
 
 /* COMPONENT: search box */
 .MPWSComponentSearchBox {
     
 }
+
+/* COMPONENT: quick filtering */
 .MPWSComponenQuickFiltering {
     padding: 10px 0px 25px;
     .MPWSDataRow {
@@ -63,18 +31,7 @@ a.MPWSLink:hover {color: #D40015; text-decoration: none;}
     overflow: hidden;
     zoom: 1;
     a.MPWSLink {
-        float: left;
-        border: 1px solid #D40015;
-        padding: 3px 5px;
-        text-decoration: none;
-        &:hover {
-            text-decoration: none;
-            background-color: #D40015;
-            color: #FAFAC6;
-        }
-        &:visited {
-            text-decoration: none;
-        }
+        .linkButton;
     }
 }
 
@@ -111,4 +68,57 @@ a.MPWSLink:hover {color: #D40015; text-decoration: none;}
 
 /* WIDGETS */
 .MPWSWidget {}
+
+
+/* WIDGET: dataeditor */
+
+.MPWSWidgetDataEditor {
+    /* Common */
+    border: 1px dotted #BAC0AC;
+    padding: 10px;
+    .MPWSComponentObjectSummary {
+        font-weight: bold;
+        font-size: 14px;
+        padding-bottom: 5px;
+    }
+    form.MPWSFormEditor {
+        border-top: 1px dotted #BAC0AC;
+        padding: 10px;
+        .MPWSComponentField {
+            overflow: hidden;
+            zoom: 1;
+            padding: 5px 0px 7px;
+            .MPWSFieldLabel {
+                width: 200px;
+                float: left;
+                font-weight: bold;
+                margin-top: 5px;
+            }
+            .MPWSControlField {
+                float: left;
+            }
+        }
+        .MPWSControlFieldFormButtons {
+            border-top: 1px dotted #BAC0AC;
+            padding: 10px 0 0;
+        }
+    }
+    .MPWSBlockDataEditorBottomLinks {
+
+    }
+    
+    /* Edit Page */
+    form.MPWSFormEditorPageEdit {
+    }
+    /* Preview Page */
+    form.MPWSFormEditorPagePreview {
+        .MPWSComponentDataBaseField {
+            .MPWSFieldLabel {
+                margin-top: 0px;
+            }
+        }
+    }
+    /* Save Page */
+    /* Cancel Page */
+}
 

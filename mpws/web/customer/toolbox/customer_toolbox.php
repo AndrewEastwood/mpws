@@ -49,22 +49,29 @@ class customer_toolbox extends objectBaseWebCustomer {
     }
     
     protected function _displayTriggerAsCustomer () {
-        $ret = parent::_displayTriggerAsCustomer();
-        // custom customer pages
-        $page = libraryRequest::getPage();
-        switch($page) {
-            case 'dashboard': {
-                //echo 'DASHBOARD';
-                $this->_displayPage_Dashboard();
-                break;
-            }
-            case 'tools' : {
-                $this->_displayPage_Tools();
-                break;
-            }
-        }
+        
         // run all enabled plugins
         $ctx = contextMPWS::instance();
+        $mpws_user = $ctx->pageModel->getInfo('USER');
+        
+        $ret = parent::_displayTriggerAsCustomer();
+        // custom customer pages
+        if ($ctx->pageModel->allowToProcessPages()) {
+            $page = libraryRequest::getPage();
+            switch($page) {
+                case 'dashboard': {
+                    //echo 'DASHBOARD';
+                    $this->_displayPage_Dashboard();
+                    break;
+                }
+                case 'tools' : {
+                    //
+                    $this->_displayPage_Tools();
+                    break;
+                }
+            }
+        }
+        
         $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_defaultToolbox);
 

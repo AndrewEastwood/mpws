@@ -1,129 +1,129 @@
-<?php /*%%SmartyHeaderCode:1892192525507aee7b632789-30698144%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:702542075507ba5df277520-87354648%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
-    '784a3f42e7f6316dff3b60d20ea358e590c716ce' => 
+    'efc1e02c78037dbcc25f33e7fc223814325526c0' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html',
-      1 => 1350234391,
+      0 => '/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html',
+      1 => 1350280496,
       2 => 'file',
     ),
-    '13fc0739f57dedff11a7d9378923d6d565f25193' => 
+    'f169ec851061427f63366f55936d49966dc76cb1' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1350234078,
+      0 => '/var/www/mpws/web/default/v1.0/template/layout/defaultSystem.html',
+      1 => 1350280496,
       2 => 'file',
     ),
-    '62e33b07ec504086a62347b14b2fbbdeaa4083e5' => 
+    '9e03eb50762ee8db5b6bfbd19c705caf4faed506' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pageDispatcher.html',
-      1 => 1349287656,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/pageDispatcher.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '6a2bd7a905030f8591c53d6372450316d46fb9b7' => 
+    '5f4bd6ce7e249c98908a9aa0a02239951c907430' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/page/tools.html',
-      1 => 1349821193,
+      0 => '/var/www/mpws/web/customer/toolbox/template/page/tools.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'c58f0a31db40716d1815e6896038e85e3e434619' => 
+    'cebc13c56aeef57820b1c2b082b99b20c4f75c99' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/widgetGrabber.html',
-      1 => 1349809493,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/widgetGrabber.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'd6d46df5db445da56cb54532472df58a57c03f2a' => 
+    'dfeef937479aa2f13cd1657eea655744ed1498d8' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html',
-      1 => 1349894101,
+      0 => '/var/www/mpws/web/default/v1.0/template/page/system.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '69efce9731aeeb54451ddefc0c66f864c1ae09b4' => 
+    '929cbd1ddf297f9edb80d79f7d4b55ebae01ad54' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemUserInfo.html',
-      1 => 1349812140,
+      0 => '/var/www/mpws/web/default/v1.0/template/widget/systemUserInfo.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'df8c830f715dc57a9d4bd836a9b95a7bcf8da5f7' => 
+    '26808fba4af343cf50e3a56bc5670443facea7d8' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/divRowLabelValue.html',
-      1 => 1349810994,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/divRowLabelValue.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '26c70ee4d97bcc8ae6e6d1f89d9932f6acdb265b' => 
+    'fa3ac31b0451d94d3da0caded88fd2ba177c2310' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleHyperlink.html',
-      1 => 1349812898,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleHyperlink.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '4b6907d3d72d2c63144539dc3dd7241049b78f4d' => 
+    '0254c4e72400344620e314523c4812fb6574bcb0' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/message.html',
-      1 => 1350249294,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/message.html',
+      1 => 1350280496,
       2 => 'file',
     ),
-    'fee379ac26415e5d616f64f7c05de0bc03ae5909' => 
+    'aeaf422e55ada4a1ec11d8bb75aa496f13696ff0' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartSystemPageStyle1.html',
-      1 => 1349287675,
+      0 => '/var/www/mpws/web/default/v1.0/template/page/standartSystemPageStyle1.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'd0b60fd847c51d05aceafa98d1fbb45732576e1e' => 
+    'cd33b4b0e2534893b619a4efbe9e33a6eea00cf6' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html',
-      1 => 1349290714,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/menu.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'b2768aa8e09878d7f6f1826a659bc1072bf3fe70' => 
+    'b14eefe6fe6079001f40fe8abe15e23051ef9d04' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menuPlugins.html',
-      1 => 1349290726,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/menuPlugins.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'fd493ce1d9a8de3661d7b6fa94771c833d559aee' => 
+    'd0b85a9247966b25bd2cb88ee9ba5b7a90faed9b' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartPublicPageStyle1.html',
-      1 => 1349810070,
+      0 => '/var/www/mpws/web/default/v1.0/template/page/standartPublicPageStyle1.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'aa0374ee876c63be03d83fc175f0ba951ad8b0aa' => 
+    '3c3cdeb9c5b37312bca6c3c4d198cf1985f5226b' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pageHeader.html',
-      1 => 1349288426,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/pageHeader.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '0acc49945e64837379fb78db2aad4b0b21c1615a' => 
+    '6f351b33933fd3cab08081271d1ff0192b3d7b9f' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/logo.html',
-      1 => 1349288503,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/logo.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '531a0bfa0ec2c65a065a6298b73205faca29dadf' => 
+    'bc7728ca62f9b2e19f11d332f240db36cc846e6e' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataElements.html',
-      1 => 1349022504,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/dataElements.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    '64541c85ffcbf963acb20a5522dfc2653e5fd027' => 
+    '9cc00798e5f470a0c032087f334f87841c20079c' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pageContent.html',
-      1 => 1349288438,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/pageContent.html',
+      1 => 1349945264,
       2 => 'file',
     ),
-    'fc6ae292a0740dd0f3e299c3741739a1487bf763' => 
+    '4b7e4c039bbb2894e2f7ce18033096a0a749b700' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pageFooter.html',
-      1 => 1349288441,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/pageFooter.html',
+      1 => 1349945264,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1892192525507aee7b632789-30698144',
+  'nocache_hash' => '702542075507ba5df277520-87354648',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507b337ae22f25_62348013',
+  'unifunc' => 'content_507c4c84400b04_84327982',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_507b337ae22f25_62348013')) {function content_507b337ae22f25_62348013($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_507c4c84400b04_84327982')) {function content_507c4c84400b04_84327982($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>
@@ -194,7 +194,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <div class="MPWSRowLabelValue">
     <span class="MPWSLabel">Last access:</span>
-    <span class="MPWSValue">2012-10-14 22:37:17</span>
+    <span class="MPWSValue">2012-10-15 19:53:04</span>
 </div>
         
         
@@ -287,7 +287,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <div class="MPWSComponent MPWSComponentWidgetGrabber">
     <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerBefore"></div>
-    <div id="MPWSWidgetSystemUsersID" class="MPWSWidget MPWSWidgetSystemUsers">
+    <div id="MPWSWidgetDataEditorSystemUsersID" class="MPWSWidget MPWSWidgetDataEditor MPWSWidgetDataEditorSystemUsers">
     
     
     
@@ -314,7 +314,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldName">
@@ -331,8 +331,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     
-    <span class="MPWSControlReadOnlyValue">fdgfdgfdg</span>
-    <input type="hidden" name="mpws_field_name" value="fdgfdgfdg"/>
+    <span class="MPWSControlReadOnlyValue">demouser</span>
+    <input type="hidden" name="mpws_field_name" value="demouser"/>
          
     
 </div>
@@ -341,7 +341,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPassword">
@@ -358,8 +358,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     
-    <span class="MPWSControlReadOnlyValue">gfgdfgA2s</span>
-    <input type="hidden" name="mpws_field_password" value="gfgdfgA2s"/>
+    <span class="MPWSControlReadOnlyValue">UUUDemo1!</span>
+    <input type="hidden" name="mpws_field_password" value="UUUDemo1!"/>
          
     
 </div>
@@ -368,7 +368,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldActive">
@@ -385,9 +385,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     
         
-        <span class="MPWSControlReadOnlyValue">checked</span>
-        <input type="hidden" name="mpws_field_active" value="checked">
-
+                    <span class="MPWSControlReadOnlyValue">ON</span>
+            <input type="hidden" name="mpws_field_active" value="1">
+        
     
 
 </div>
@@ -396,7 +396,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPermisions">
@@ -409,8 +409,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPermisions MPWSControlRenderModeHidden">
     
     
-    <span class="MPWSControlReadOnlyValue">fgfdghgf hghh ghfgh</span>
-    <input type="hidden" name="mpws_field_permisions" value="fgfdghgf hghh ghfgh"/>
+    <span class="MPWSControlReadOnlyValue">*.*</span>
+    <input type="hidden" name="mpws_field_permisions" value="*.*"/>
          
 </div>
     
@@ -418,7 +418,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldRole">
@@ -433,7 +433,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     <span class="MPWSControlReadOnlyValue">Administrator</span>
-    <input type="hidden" name="mpws_field_role" checked="SUPERADMIN">
+    <input type="hidden" name="mpws_field_role" value="SUPERADMIN">
 
 
 </div>
@@ -441,6 +441,33 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 </div>
                 
+        
+    
+            
+    
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeNormal">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldSendEmail">
+    <label for="MPWSControlCheckBoxSendEmailID">
+        <span class="MPWSText">Notify user by email</span>
+    </label>
+</div>
+                    
+
+        
+
+
+<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxSendEmail MPWSControlRenderModeNormal">
+
+            
+                    <input id="MPWSControlCheckBoxSendEmailID" type="checkbox" name="mpws_field_sendemail" checked class="MPWSControl MPWSControlCheckBox MPWSControlCheckBoxSendEmail">
+            
+
+</div>
+    
+
+</div>
         
     
     
@@ -457,13 +484,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     </div>
     
     </form>
-    
-    
-    
+
     
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
         
-<a href="/page/tools.html?plugin=toolbox&display=users&pg=2" target="_self" class="MPWSLink" title="Back To List">Back To List</a>
+<a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="Back To List">Back To List</a>
     </div>
 
 </div>

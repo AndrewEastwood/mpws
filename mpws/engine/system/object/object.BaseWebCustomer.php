@@ -34,22 +34,26 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         debug('objectBaseWebCustomer => _displayTriggerOnActive');
         //echo 'active page is ' . libraryRequest::getPage();
         $ret = false;
-        switch(libraryRequest::getPage()) {
-            case 'index':
-                $ret = $this->_displayPage_Index();
-                break;
-            case 'about-us':
-                $ret = $this->_displayPage_AboutUs();
-                break;
-            case 'terms':
-                $ret = $this->_displayPage_Terms();
-                break;
-            case 'contacts':
-                $ret = $this->_displayPage_Contacts();
-                break;
-            // do not implement NotFound page
-            // should be used in object implementation
+        
+        if ($ctx->pageModel->allowToProcessPages()) {
+            switch(libraryRequest::getPage()) {
+                case 'index':
+                    $ret = $this->_displayPage_Index();
+                    break;
+                case 'about-us':
+                    $ret = $this->_displayPage_AboutUs();
+                    break;
+                case 'terms':
+                    $ret = $this->_displayPage_Terms();
+                    break;
+                case 'contacts':
+                    $ret = $this->_displayPage_Contacts();
+                    break;
+                // do not implement NotFound page
+                // should be used in object implementation
+            }
         }
+        
         return $ret;
     }
     

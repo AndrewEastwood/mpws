@@ -1,76 +1,76 @@
-<?php /*%%SmartyHeaderCode:105153097350788f668519c0-42081481%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:185444062507bb752d21ec9-66454334%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
-    'c67fabd9c4de5d07cfe491b3db37ad31311f5594' => 
+    'be7e5e2b15fcfe9553056b2b52a6c64faaf67f44' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataEditor.html',
-      1 => 1350251343,
+      0 => '/var/www/mpws/web/default/v1.0/template/widget/dataEditor.html',
+      1 => 1350323107,
       2 => 'file',
     ),
-    '001f27e0f6123b935501ab627af0711ee9f6c81f' => 
+    'b2aaf23207bc3ef5251be5270ea54d71f48d9a4e' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/objectSummary.html',
-      1 => 1350066354,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/objectSummary.html',
+      1 => 1350057923,
       2 => 'file',
     ),
-    '58d5b137345a5af07bb619330436dbfb288a7788' => 
+    '3349bdbf34090f0c005554152d092228d9ae2049' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/databaseField.html',
-      1 => 1350246626,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/controlFieldSwitcher.html',
+      1 => 1350321182,
       2 => 'file',
     ),
-    '569c0239c22ec9c0530c6339abe971e96503f09c' => 
+    '895b30db561d11a1f49691acbd28353b8e852c1e' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlTextBox.html',
-      1 => 1350227472,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlTextBox.html',
+      1 => 1350280496,
       2 => 'file',
     ),
-    '03c192a2b7a2808a9e905faf14ec3009c8742fe1' => 
+    'f91858edc3c80e6c6d6bf864d185f1e815a16972' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFieldLabel.html',
-      1 => 1350066354,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleFieldLabel.html',
+      1 => 1350031670,
       2 => 'file',
     ),
-    '6ca457ada6961b80d2daa3bdaa51d6b7748bb949' => 
+    '854b0970c18a373da7a97c4141a74b667cea772f' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlCheckBox.html',
-      1 => 1350227394,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlCheckBox.html',
+      1 => 1350296452,
       2 => 'file',
     ),
-    '4dfe11729f03ab36fc06597fa2c6e7e34650504f' => 
+    'b764f0eae8ec73c911b59b3da8bd838af3685ae1' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlTextArea.html',
-      1 => 1350227467,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlTextArea.html',
+      1 => 1350280496,
       2 => 'file',
     ),
-    '036cc594ee99b6926daf04f649ffa4d0d238b8e9' => 
+    '6a5eea36a40da3d1a0c85bc196311fe789bc0104' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlDropDown.html',
-      1 => 1350227504,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlDropDown.html',
+      1 => 1350295738,
       2 => 'file',
     ),
-    'c57828bfbc5d080e08a984bc662a85a828b22044' => 
+    '903d91440aad38a59f6d2af5f4a037f8c1d06e72' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFormButtons.html',
-      1 => 1350250828,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleFormButtons.html',
+      1 => 1350280496,
       2 => 'file',
     ),
-    '26c70ee4d97bcc8ae6e6d1f89d9932f6acdb265b' => 
+    'fa3ac31b0451d94d3da0caded88fd2ba177c2310' => 
     array (
-      0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleHyperlink.html',
-      1 => 1349812898,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleHyperlink.html',
+      1 => 1349945264,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '105153097350788f668519c0-42081481',
+  'nocache_hash' => '185444062507bb752d21ec9-66454334',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507b337ad77782_39673535',
+  'unifunc' => 'content_507c4c84360d15_12589236',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_507b337ad77782_39673535')) {function content_507b337ad77782_39673535($_smarty_tpl) {?>
-<div id="MPWSWidgetSystemUsersID" class="MPWSWidget MPWSWidgetSystemUsers">
+<?php if ($_valid && !is_callable('content_507c4c84360d15_12589236')) {function content_507c4c84360d15_12589236($_smarty_tpl) {?>
+<div id="MPWSWidgetDataEditorSystemUsersID" class="MPWSWidget MPWSWidgetDataEditor MPWSWidgetDataEditorSystemUsers">
     
     
     
@@ -97,7 +97,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldName">
@@ -114,8 +114,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     
-    <span class="MPWSControlReadOnlyValue">fdgfdgfdg</span>
-    <input type="hidden" name="mpws_field_name" value="fdgfdgfdg"/>
+    <span class="MPWSControlReadOnlyValue">demouser</span>
+    <input type="hidden" name="mpws_field_name" value="demouser"/>
          
     
 </div>
@@ -124,7 +124,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPassword">
@@ -141,8 +141,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     
-    <span class="MPWSControlReadOnlyValue">gfgdfgA2s</span>
-    <input type="hidden" name="mpws_field_password" value="gfgdfgA2s"/>
+    <span class="MPWSControlReadOnlyValue">UUUDemo1!</span>
+    <input type="hidden" name="mpws_field_password" value="UUUDemo1!"/>
          
     
 </div>
@@ -151,7 +151,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldActive">
@@ -168,9 +168,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     
         
-        <span class="MPWSControlReadOnlyValue">checked</span>
-        <input type="hidden" name="mpws_field_active" value="checked">
-
+                    <span class="MPWSControlReadOnlyValue">ON</span>
+            <input type="hidden" name="mpws_field_active" value="1">
+        
     
 
 </div>
@@ -179,7 +179,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPermisions">
@@ -192,8 +192,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPermisions MPWSControlRenderModeHidden">
     
     
-    <span class="MPWSControlReadOnlyValue">fgfdghgf hghh ghfgh</span>
-    <input type="hidden" name="mpws_field_permisions" value="fgfdghgf hghh ghfgh"/>
+    <span class="MPWSControlReadOnlyValue">*.*</span>
+    <input type="hidden" name="mpws_field_permisions" value="*.*"/>
          
 </div>
     
@@ -201,7 +201,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
                     
         
-<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldRole">
@@ -216,7 +216,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     <span class="MPWSControlReadOnlyValue">Administrator</span>
-    <input type="hidden" name="mpws_field_role" checked="SUPERADMIN">
+    <input type="hidden" name="mpws_field_role" value="SUPERADMIN">
 
 
 </div>
@@ -224,6 +224,33 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 </div>
                 
+        
+    
+            
+    
+<div class="MPWSComponent MPWSComponentField MPWSRenderModeNormal">
+
+
+<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldSendEmail">
+    <label for="MPWSControlCheckBoxSendEmailID">
+        <span class="MPWSText">Notify user by email</span>
+    </label>
+</div>
+                    
+
+        
+
+
+<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxSendEmail MPWSControlRenderModeNormal">
+
+            
+                    <input id="MPWSControlCheckBoxSendEmailID" type="checkbox" name="mpws_field_sendemail" checked class="MPWSControl MPWSControlCheckBox MPWSControlCheckBoxSendEmail">
+            
+
+</div>
+    
+
+</div>
         
     
     
@@ -240,13 +267,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     </div>
     
     </form>
-    
-    
-    
+
     
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
         
-<a href="/page/tools.html?plugin=toolbox&display=users&pg=2" target="_self" class="MPWSLink" title="Back To List">Back To List</a>
+<a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="Back To List">Back To List</a>
     </div>
 
 </div><?php }} ?>

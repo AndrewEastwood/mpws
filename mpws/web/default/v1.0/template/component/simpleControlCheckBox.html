@@ -2,14 +2,14 @@
 {$_controlName = "mpws_field_`$_name|lower`"}
 {$_controlCssName = 'CheckBox'}
 {$_controlCssNameCustom = "`$_controlCssName``$_name`"}
-{$_controlValue = libraryRequest::getPostValue($_controlName)}
+{$_controlValue = libraryRequest::getPostValue($_controlName)|default:"unchecked"}
 {$_controlRenderMode = 'normal'}
 
 {* init control with passed arguments *}
 {if isset($_renderMode)}
     {$_controlRenderMode = $_renderMode}
 {/if}
-{if (empty($_controlValue) and not empty($_value)) or $_controlValue eq "on"}
+{if (empty($_controlValue) and not empty($_value)) or $_controlValue eq "on" or $_controlValue eq "1"}
     {$_controlValue = "checked"}
 {/if}
 
@@ -19,13 +19,21 @@
 
     {if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}
         {* editable control *}
-        <input id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="{$_controlName}" {$_controlValue} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
-
+        {if $_controlValue eq "checked"}
+            <input id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="{$_controlName}" {$_controlValue} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
+        {else}
+            <input id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="{$_controlName}" {$_controlValue} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
+        {/if}
     {elseif $_controlRenderMode eq 'hidden'}
 
         {* display hidden control*}
-        <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
-        <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
+        {if $_controlValue eq "checked"}
+            <span class="MPWSControlReadOnlyValue">ON</span>
+            <input type="hidden" name="{$_controlName}" value="1">
+        {else}
+            <span class="MPWSControlReadOnlyValue">OFF</span>
+            <input type="hidden" name="{$_controlName}" value="0">
+        {/if}
 
     {else}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}

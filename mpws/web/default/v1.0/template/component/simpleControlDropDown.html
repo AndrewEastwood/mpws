@@ -38,7 +38,7 @@
     
     {* display hidden control*}
     <span class="MPWSControlReadOnlyValue">{$CURRENT.OBJECT->{"objectProperty_`$_resource`_`$_ownerName``$_controlCssNameCustom``$_controlValue`"}}</span>
-    <input type="hidden" name="{$_controlName}" checked="{$_controlValue}">
+    <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
 
 {else}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}

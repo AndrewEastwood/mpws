@@ -380,7 +380,7 @@ class libraryComponents
     }
     
     
-    public static function getDataEditor ($config, $dbLink) {
+    public static function getDataEditor ($config, $dbLink, $actionHooks = false) {
         
 
         if (empty($dbLink))
@@ -409,19 +409,100 @@ class libraryComponents
             $editPage = "edit";
             $com['ISNEW'] = false;
         }
-
-        // do common work on save or preview
+        // get fields
+        $_fieldsDB = $dbLink->getFields($config['source']);
+        $_fieldsCOM = array();
+        if (!empty($config['fields']['editable'])) {
+            foreach ($_fieldsDB as $fieldEntry)
+                if (in_array ($fieldEntry['Field'], $config['fields']['editable']))
+                    $_fieldsCOM[] = $fieldEntry;
+        } else
+            $_fieldsCOM = $_fieldsDB;
+        // set fields
+        $com['FIELDS'] = $_fieldsCOM;
+        //var_dump($com['FIELDS']);
+        // do common work on save or preview actions
         if ($editPage == 'save' || $editPage == 'preview') {
-            $com["ERRORS"] = libraryValidator::validateStandartMpwsFields($config['fields'], $config['validators']);
-            var_dump($com['ERRORS']);
+            $validatorRezult = libraryValidator::validateStandartMpwsFields($config['fields']['editable'], $config['validators']);
+            $com['ERRORS'] = $validatorRezult['ERRORS'];
+            // check unique fields
+            if (empty($com["ERRORS"]) && isset($config['fields']['unique']) && !empty($config['fields']['unique'])) {
+                //var_dump($config['fields']['unique']);
+                foreach ($config['fields']['unique'] as $_fieldThatMustBeUnique) {
+                    $_existedRow = $dbLink
+                        ->reset()
+                        ->select('*')
+                        ->from($config['source'])
+                        ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique])
+                        ->fetchRow();
+                    if (!empty($_existedRow))
+                        $com['ERRORS'][] = 'Duplicate' . $_fieldThatMustBeUnique;
+                }
+            }
+            // set editor state on error
             if (!empty($com["ERRORS"])) {
+                var_dump($com['ERRORS']);
                 $editPage = 'edit';
                 $com['VALID'] = false;
             }
+            // save
+            if ($editPage == 'save' && $com['VALID']) {
+                $_data = $validatorRezult['DATA'];
+                // prepend fields
+                $appendFields = getNonEmptyValue($config['fields']['appendBeforeSave'], array());
+                foreach ($appendFields as $appendFieldName)
+                    $_data[$appendFieldName] = false;
+                // before save hook
+                if (isset($actionHooks['ON_BEFORE_SAVE'])) {
+                    $__action = $actionHooks['ON_BEFORE_SAVE'];
+                    $__action($config, $_data);
+                }
+                // standart actions
+                // obfuscate passwords
+                if (isset($_data['Password']))
+                    $_data['Password'] = md5($_data['Password']);
+                // init empty fields
+                if ($com['ISNEW']) {
+                    if(isset($_data['DateCreated']))
+                        $_data['DateCreated'] = date('Y-m-d H:i:s');
+                    if(isset($_data['DateLastAccess']))
+                        $_data['DateLastAccess'] = date('Y-m-d H:i:s');
+                }
+                // adjust field values
+                foreach($com['FIELDS'] as $fieldEntry) {
+                    // checkbox
+                    $_type = strtolower($fieldEntry['Type']);
+                    if ($_type == 'boolean' || $_type == 'bool' || $_type == 'tinyint(1)') {
+                       /* adjust data */
+                        if (empty($_data['Active']))
+                            $_data['Active'] = 0;
+                        else
+                            $_data['Active'] = 1;
+                    }
+                }
+                // update date
+                if (isset($_data['DateUpdated']))
+                    $_data['DateUpdated'] = date('Y-m-d H:i:s');
+                // remove fields
+                $removeFields = getNonEmptyValue($config['fields']['removeBeforeSave'], array());
+                foreach ($removeFields as $removeFieldName)
+                    unset ($_data[$removeFieldName]);
+                // save
+                var_dump($_data);
+                /*$dbLink
+                    ->reset()
+                    ->insertInto($config['source'])
+                    ->fields(array_keys($_data))
+                    ->values(array_values($_data))
+                    ->query();*/
+                // after save hook
+                if (isset($actionHooks['ON_AFTER_SAVE'])) {
+                    $__action = $actionHooks['ON_AFTER_SAVE'];
+                    $__action($config, $_data);
+                }
+                // send email
+            }
         }
-
-        // handle actions
-        
         // get data
         if ($editPage == 'edit' && !$com['ISNEW']) {
             $com['SOURCE'] = $dbLink
@@ -434,20 +515,9 @@ class libraryComponents
             $fieldsToTruncate = $config['form']['edit']['truncateOnLoad'];
             foreach ($fieldsToTruncate as $_fldName)
                 $com['SOURCE'][$_fldName] = null;
-            var_dump($com['SOURCE']);
+            //var_dump($com['SOURCE']);
         }
-        
-        // get fields
-        $_fieldsDB = $dbLink->getFields($config['source']);
-        $_fieldsCOM = array();
-        if (!empty($config['fields'])) {
-            foreach ($_fieldsDB as $fieldEntry)
-                if (in_array ($fieldEntry['Field'], $config['fields']))
-                    $_fieldsCOM[] = $fieldEntry;
-        } else
-            $_fieldsCOM = $_fieldsDB;
-        $com['FIELDS'] = $_fieldsCOM;
-        
+
         $com['EDIT_PAGE'] = getNonEmptyValue($editPage, "new");
         //echo "EDIT PAGE IS:  " . $com['EDIT_PAGE'];
         return $com;

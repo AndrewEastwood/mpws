@@ -1,0 +1,113 @@
+/* 
+    Document   : commonComponents
+    Created on : Oct 15, 2012, 11:52:06 AM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.border (@size: 1px, @type: solid) {
+    border: @size @type @colorBorder;
+}
+.rounded-corners (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+.borderComponent(@radius: 1px) {
+    .border(1px, dotted);
+    .rounded-corners (1px);
+}
+.linkText() {
+    color: @colorLink;
+    text-decoration: underline;
+    &:hover {
+        text-decoration: none;
+    }
+}
+.linkButton() {
+    float: left;
+    .border;
+    .linkText;
+    padding: 3px 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    background-color: @colorBg;
+    color: @colorComponent;
+    &:hover {
+        background-color: @colorLink;
+        color: @colorComponent;
+        cursor: pointer;
+    }
+    &:visited {
+        text-decoration: none;
+    }
+}
+.fontPage () {
+    color: @colorText;
+    font: @textPage;
+}
+.fontComponent () {
+    color: @colorText;
+    font: @textComponent;
+}
+.fontHeader () {
+    color: @colorText;
+    font: @textHeader;
+}
+
+/* DOCUMENT ELEMENTS */
+
+body {
+    margin: 0;
+    padding: 10px;
+    background-color: @colorBg;
+    .fontPage;
+}
+
+button {
+    padding: 3px 5px;
+    .linkButton;
+}
+
+.MPWSLayout {}
+
+/* MPWS PAGE */
+.MPWSPage {
+    width: 800px;
+    margin: 0px auto;
+    background-color: @colorComponent;
+    padding: 20px 30px;
+    box-shadow: 0px 0px 10px #222;
+    border-radius: 10px;
+}
+
+/* LINKS */
+a.MPWSLink {.linkText}
+
+
+/* COMMON ELEMENTS */
+.MPWSHidden {display: none;}
+
+/* CONTROLS */
+.MPWSControlField {
+    /* common */
+    .MPWSControl {
+        .border;
+        padding: 5px;
+    }
+    /* specific controls */
+    .MPWSControlTextBox {
+        width: 300px;
+    }
+    .MPWSControlDropDown {}
+    .MPWSControlTextArea {
+        width: 300px;
+    }
+    .MPWSControlCheckBox {}
+}
+
+/* RENDER MODES */
+.MPWSRenderModeError {
+    color: @colorError;
+    input, textarea {.border;}
+}
