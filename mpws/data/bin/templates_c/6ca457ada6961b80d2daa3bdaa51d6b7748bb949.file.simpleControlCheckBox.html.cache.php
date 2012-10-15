@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 03:14:45
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-14 18:11:48
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlCheckBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:58182695250788f66b4c9e1-39482082%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6ca457ada6961b80d2daa3bdaa51d6b7748bb949' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlCheckBox.html',
-      1 => 1350087283,
+      1 => 1350227394,
       2 => 'file',
     ),
   ),
@@ -31,7 +31,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f66b83d84_79589492')) {function content_50788f66b83d84_79589492($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_50788f66b83d84_79589492')) {function content_50788f66b83d84_79589492($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+?>
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('CheckBox', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
@@ -42,37 +43,39 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php if (isset($_smarty_tpl->tpl_vars['_renderMode']->value)){?>
     <?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable($_smarty_tpl->tpl_vars['_renderMode']->value, null, 0);?>
 <?php }?>
-<?php if ((empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&isset($_smarty_tpl->tpl_vars['_value']->value))||$_smarty_tpl->tpl_vars['_controlValue']->value=="on"){?>
+<?php if ((empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&!empty($_smarty_tpl->tpl_vars['_value']->value))||$_smarty_tpl->tpl_vars['_controlValue']->value=="on"){?>
     <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable("checked", null, 0);?>
 <?php }?>
 
+
+
 <div class="MPWSControlField MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssName']->value;?>
  MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
+ MPWSControlRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_controlRenderMode']->value);?>
 ">
-    
-<?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='normal'){?>
-    
-    
-    
-    <input id="MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
+
+    <?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='normal'||$_smarty_tpl->tpl_vars['_controlRenderMode']->value=='error'){?>
+        
+        <input id="MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
 ID" type="checkbox" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
 " <?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
  class="MPWSControl MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssName']->value;?>
  MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
 ">
-           
-<?php }elseif($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='hidden'){?>
-    
-    
-    <span class="MPWSControlReadOnlyValue"><?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
+
+    <?php }elseif($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='hidden'){?>
+
+        
+        <span class="MPWSControlReadOnlyValue"><?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
 </span>
-    <input type="hidden" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
+        <input type="hidden" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
 " value="<?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
 ">
 
-<?php }else{ ?>
-    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_exception, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_message'=>"Wrong control render mode",'_tpl'=>basename($_smarty_tpl->source->filepath)), 0);?>
+    <?php }else{ ?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_exception, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_message'=>"Wrong control render mode",'_tpl'=>basename($_smarty_tpl->source->filepath)), 0);?>
 
-<?php }?>
-           
+    <?php }?>
+
+
 </div><?php }} ?>

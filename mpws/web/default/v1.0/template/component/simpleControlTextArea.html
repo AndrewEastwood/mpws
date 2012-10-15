@@ -20,8 +20,8 @@
     {$_controlRowSize = $_rows}
 {/if}
 {* control implemetation *}
-<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
-{if $_controlRenderMode eq 'normal'}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">
+{if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}
     
     {* editable control *}
     <textarea id="MPWSControl{$_controlCssNameCustom}ID" name="{$_controlName}" cols="{$_controlColSize}" rows="{$_controlRowSize}" class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">{$_controlValue}</textarea>

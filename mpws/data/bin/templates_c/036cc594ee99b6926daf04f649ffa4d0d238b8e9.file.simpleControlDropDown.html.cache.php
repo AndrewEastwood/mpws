@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 03:04:59
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-14 18:11:48
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlDropDown.html" */ ?>
 <?php /*%%SmartyHeaderCode:146345676550788f66b9aec0-63721127%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '036cc594ee99b6926daf04f649ffa4d0d238b8e9' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlDropDown.html',
-      1 => 1350086688,
+      1 => 1350227504,
       2 => 'file',
     ),
   ),
@@ -24,10 +24,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_controlName' => 0,
     '_renderMode' => 0,
     '_items' => 0,
+    '_controlValue' => 0,
+    '_value' => 0,
     '_controlCssNameCustom' => 0,
     '_controlRenderMode' => 0,
     '_controlItems' => 0,
-    '_controlValue' => 0,
     '_item' => 0,
     '_resource' => 0,
     '_ownerName' => 0,
@@ -35,7 +36,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f66bedc96_99528944')) {function content_50788f66bedc96_99528944($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_50788f66bedc96_99528944')) {function content_50788f66bedc96_99528944($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+?>
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('DropDown', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
@@ -49,12 +51,16 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php if (isset($_smarty_tpl->tpl_vars['_items']->value)){?>
     <?php $_smarty_tpl->tpl_vars['_controlItems'] = new Smarty_variable($_smarty_tpl->tpl_vars['_items']->value, null, 0);?>
 <?php }?>
+<?php if ((empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&!empty($_smarty_tpl->tpl_vars['_value']->value))){?>
+    <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable($_smarty_tpl->tpl_vars['_value']->value, null, 0);?>
+<?php }?>
 
 <div class="MPWSControlField MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssName']->value;?>
  MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
+ MPWSControlRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_controlRenderMode']->value);?>
 ">
     
-<?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='normal'){?>
+<?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='normal'||$_smarty_tpl->tpl_vars['_controlRenderMode']->value=='error'){?>
     
     
     

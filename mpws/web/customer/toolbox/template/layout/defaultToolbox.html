@@ -1,0 +1,10 @@
+{extends file=$OBJECT.SITE->objectTemplatePath_layout_defaultSystem}
+{block name="layoutTitle"}
+    {$OBJECT.SITE->objectProperty_site_title}
+    {$OBJECT.SITE->objectProperty_site_titleSeparator}
+    {$OBJECT.SITE->{"objectProperty_site_page`$INFO.GET.PAGE|capitalize`"}}
+{/block}
+{block name="layoutResources" prepend}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{/block}

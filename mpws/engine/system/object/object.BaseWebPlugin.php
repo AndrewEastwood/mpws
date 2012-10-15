@@ -20,6 +20,7 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
             }
             case "return" :
             default : {
+                libraryRequest::storeOrGetRefererUrl();
                 $this->addWidgetDataTableView($widgetName);
                 break;
             }

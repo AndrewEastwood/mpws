@@ -120,8 +120,11 @@ class libraryRequest {
         if ($store) {
             $_SESSION['MPWS_STORED_URL'.$scope] = $_SERVER['REQUEST_URI'];
         } else {
-            $_data = parse_url($_SESSION['MPWS_STORED_URL'.$scope]);
-            return $_data['path'] . '?' . $_data['query'];
+            if (isset($_SESSION['MPWS_STORED_URL'.$scope])) {
+                $_data = parse_url($_SESSION['MPWS_STORED_URL'.$scope]);
+                return $_data['path'] . '?' . $_data['query'];
+            }
+            return false;
         }
     }
 

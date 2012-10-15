@@ -12,20 +12,19 @@
     {$_controlValue = $_value}
 {/if}
 {* control implemetation *}
-<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
-{if $_controlRenderMode eq 'normal'}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">
+    {if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}
     
-    {* editable control *}
-    
-    <input id="MPWSControl{$_controlCssNameCustom}ID" type="text" name="{$_controlName}" value="{$_controlValue}" size="{$_controlSize}" class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
-           
-{elseif $_controlRenderMode eq 'hidden'}
-    
-    {* display hidden control*}
-    <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
-    <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
+        {* editable control *}
+        <input id="MPWSControl{$_controlCssNameCustom}ID" type="text" name="{$_controlName}" value="{$_controlValue}" size="{$_controlSize}" class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
 
-{else}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}
+    {elseif $_controlRenderMode eq 'hidden'}
+
+        {* display hidden control*}
+        <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
+        <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
+
+    {else}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}
 {/if}
 </div>

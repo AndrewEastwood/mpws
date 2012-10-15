@@ -1,11 +1,17 @@
-<?php /*%%SmartyHeaderCode:146328702350788f60d89873-89011730%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1892192525507aee7b632789-30698144%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
+    '784a3f42e7f6316dff3b60d20ea358e590c716ce' => 
+    array (
+      0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html',
+      1 => 1350234391,
+      2 => 'file',
+    ),
     '13fc0739f57dedff11a7d9378923d6d565f25193' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1349894052,
+      1 => 1350234078,
       2 => 'file',
     ),
     '62e33b07ec504086a62347b14b2fbbdeaa4083e5' => 
@@ -53,7 +59,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '4b6907d3d72d2c63144539dc3dd7241049b78f4d' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/message.html',
-      1 => 1349287120,
+      1 => 1350249294,
       2 => 'file',
     ),
     'fee379ac26415e5d616f64f7c05de0bc03ae5909' => 
@@ -111,20 +117,27 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '146328702350788f60d89873-89011730',
+  'nocache_hash' => '1892192525507aee7b632789-30698144',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5078b2866440a6_80049343',
+  'unifunc' => 'content_507b337ae22f25_62348013',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5078b2866440a6_80049343')) {function content_5078b2866440a6_80049343($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_507b337ae22f25_62348013')) {function content_507b337ae22f25_62348013($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
-    <title>MPWS Toolbox - tools</title>
+    <title>
+    Toolbox
+     - 
+    Tools
+</title>
+    
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
-    <script type="text/javascript" src="/static/toolboxAction.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
+    <script type="text/javascript" src="/static/mpwsDefault.js"></script>
+    
     
     <script type="text/javascript">
         // Load the Visualization API and the piechart package.
@@ -143,7 +156,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </head>
 <body>
 
-<div class="MPWSLayout MPWSLayoutToolbox">
+<div class="MPWSLayout MPWSLayoutDefaultSystem">
 
             
 
@@ -181,7 +194,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <div class="MPWSRowLabelValue">
     <span class="MPWSLabel">Last access:</span>
-    <span class="MPWSValue">2012-10-13 02:22:37</span>
+    <span class="MPWSValue">2012-10-14 22:37:17</span>
 </div>
         
         
@@ -264,8 +277,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div class="MPWSComponent MPWSComponentDataElements">
     
                         <div class="MPWSBlock">    <div id="MPWSComponentMessageCommonID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessageCommon">
-            <ul class="MPWSList MPWSListMessages MPWSListMessagesCommon">
-                    <li class="MPWSListItem MPWSListItemMessage">Hello World!!!!!</li>
+            <ul class="MPWSList">
+                    <li class="MPWSListItem">Hello World!!!!!</li>
                 </ul>
         </div>
 </div>
@@ -276,9 +289,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerBefore"></div>
     <div id="MPWSWidgetSystemUsersID" class="MPWSWidget MPWSWidgetSystemUsers">
     
-                
     
     
+            
 
 
 
@@ -286,45 +299,22 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <div class="MPWSComponent MPWSComponentObjectSummary">
     <span class="MPWSText MPWSTextTitle">User Editor</span>
     <span class="MPWSText MPWSTextDetails"> - </span>
-        <span class="MPWSText MPWSTextCustom">Editing record</span>
+        <span class="MPWSText MPWSTextCustom">Preview Data</span>
     </div>
+        
     
+        
     
-    <form action="" name="data_edit_systemusers" method="POST" class="MPWSForm MPWSFormEditor MPWSFormEditorPageEdit">
+    <form action="" name="data_edit_systemusers" method="POST" class="MPWSForm MPWSFormEditor MPWSFormEditorPagePreview">
 
     
     
+            
         
         
                     
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
-
-
-<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldID">
-    <label for="MPWSControlTextBoxIDID">
-        <span class="MPWSText">Record ID</span>
-    </label>
-</div>
-                            
-
         
-
-
-<div class="MPWSControlField MPWSControlFieldTextBox MPWSControlFieldTextBoxID">
-    
-    
-    
-    <input id="MPWSControlTextBoxIDID" type="text" name="mpws_field_id" value="" size="25" maxlength="10" class="MPWSControl MPWSControlTextBox MPWSControlTextBoxID">
-           
-    
-</div>
-    
-
-</div>
-                    
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldName">
@@ -332,46 +322,53 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <span class="MPWSText">User Name</span>
     </label>
 </div>
-                            
+                    
 
         
 
 
-<div class="MPWSControlField MPWSControlFieldTextBox MPWSControlFieldTextBoxName">
+<div class="MPWSControlField MPWSControlFieldTextBox MPWSControlFieldTextBoxName MPWSControlRenderModeHidden">
     
     
     
-    <input id="MPWSControlTextBoxNameID" type="text" name="mpws_field_name" value="" size="25" maxlength="100" class="MPWSControl MPWSControlTextBox MPWSControlTextBoxName">
-           
+    <span class="MPWSControlReadOnlyValue">fdgfdgfdg</span>
+    <input type="hidden" name="mpws_field_name" value="fdgfdgfdg"/>
+         
     
 </div>
     
 
 </div>
                     
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+        
+<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPassword">
-    <label for="MPWSControlTextAreaPasswordID">
+    <label for="MPWSControlTextBoxPasswordID">
         <span class="MPWSText">User Password</span>
     </label>
 </div>
-                            
+                    
+
+        
+
+
+<div class="MPWSControlField MPWSControlFieldTextBox MPWSControlFieldTextBoxPassword MPWSControlRenderModeHidden">
     
-<div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPassword">
     
     
-    <textarea id="MPWSControlTextAreaPasswordID" name="mpws_field_password" cols="45" rows="6" class="MPWSControl MPWSControlTextArea MPWSControlTextAreaPassword"></textarea>
-           
+    <span class="MPWSControlReadOnlyValue">gfgdfgA2s</span>
+    <input type="hidden" name="mpws_field_password" value="gfgdfgA2s"/>
+         
+    
 </div>
     
 
 </div>
                     
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+        
+<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldActive">
@@ -379,49 +376,27 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <span class="MPWSText">Check if user is enabled</span>
     </label>
 </div>
-                            
+                    
+
+        
+
+
+<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxActive MPWSControlRenderModeHidden">
 
     
-<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxActive">
+        
+        <span class="MPWSControlReadOnlyValue">checked</span>
+        <input type="hidden" name="mpws_field_active" value="checked">
+
     
-    
-    
-    
-    <input id="MPWSControlCheckBoxActiveID" type="checkbox" name="mpws_field_active" checked class="MPWSControl MPWSControlCheckBox MPWSControlCheckBoxActive">
-           
-           
+
 </div>
     
 
 </div>
                     
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
-
-
-<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldIsOnline">
-    <label for="MPWSControlCheckBoxIsOnlineID">
-        <span class="MPWSText">Current status</span>
-    </label>
-</div>
-                            
-
-    
-<div class="MPWSControlField MPWSControlFieldCheckBox MPWSControlFieldCheckBoxIsOnline">
-    
-    
-    
-    
-    <input id="MPWSControlCheckBoxIsOnlineID" type="checkbox" name="mpws_field_isonline" checked class="MPWSControl MPWSControlCheckBox MPWSControlCheckBoxIsOnline">
-           
-           
-</div>
-    
-
-</div>
-                    
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+        
+<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldPermisions">
@@ -429,20 +404,21 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <span class="MPWSText">Access Level</span>
     </label>
 </div>
-                            
+                    
     
-<div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPermisions">
+<div class="MPWSControlField MPWSControlFieldTextArea MPWSControlFieldTextAreaPermisions MPWSControlRenderModeHidden">
     
     
-    <textarea id="MPWSControlTextAreaPermisionsID" name="mpws_field_permisions" cols="45" rows="6" class="MPWSControl MPWSControlTextArea MPWSControlTextAreaPermisions"></textarea>
-           
+    <span class="MPWSControlReadOnlyValue">fgfdghgf hghh ghfgh</span>
+    <input type="hidden" name="mpws_field_permisions" value="fgfdghgf hghh ghfgh"/>
+         
 </div>
     
 
 </div>
                     
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+        
+<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderModeHidden">
 
 
 <div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldRole">
@@ -450,102 +426,46 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <span class="MPWSText">User Role</span>
     </label>
 </div>
-                            
+                    
         
-<div class="MPWSControlField MPWSControlFieldDropDown MPWSControlFieldDropDownRole">
+<div class="MPWSControlField MPWSControlFieldDropDown MPWSControlFieldDropDownRole MPWSControlRenderModeHidden">
     
     
     
-    
-    <select id="MPWSControlDropDownRoleID" type="checkbox" name="mpws_field_role" class="MPWSControl MPWSControlDropDown MPWSControlDropDownRole">
-                                <option value="SUPERADMIN">
-                            Administrator
-            </option>
-                                <option value="READER">
-                            Standart User
-            </option>
-                                <option value="REPORTER">
-                            Report User
-            </option>
-            </select>
-           
-
-</div>
-    
-
-</div>
-                    
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+    <span class="MPWSControlReadOnlyValue">Administrator</span>
+    <input type="hidden" name="mpws_field_role" checked="SUPERADMIN">
 
 
-<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldDateLastAccess">
-    <label for="MPWSControlDateTimeDateLastAccessID">
-        <span class="MPWSText">Last Visit</span>
-    </label>
-</div>
-                            
-    
-<div class="MPWSControlField MPWSControlFieldDateTime MPWSControlFieldDateTimeDateLastAccess">
-    
-    
-    
-    <input id="MPWSControlDateTimeDateLastAccessID" type="text" name="mpws_field_datelastaccess" value="" size="
-Notice: Undefined index: _controlSize in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
-
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
-" class="MPWSControl MPWSControlDateTime MPWSControlDateTimeDateLastAccess">
-           
-</div>
-    
-
-</div>
-                    
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
-
-
-<div class="MPWSFieldLabel MPWSFieldLabelDataEditorSystemUsersFieldDateCreated">
-    <label for="MPWSControlDateTimeDateCreatedID">
-        <span class="MPWSText">Added Since</span>
-    </label>
-</div>
-                            
-    
-<div class="MPWSControlField MPWSControlFieldDateTime MPWSControlFieldDateTimeDateCreated">
-    
-    
-    
-    <input id="MPWSControlDateTimeDateCreatedID" type="text" name="mpws_field_datecreated" value="" size="
-Notice: Undefined index: _controlSize in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
-
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/0e0a8b4e18cb941db66afce81ddbbb8a7cf26093.file.simpleControlDateTime.html.cache.php on line 59
-" class="MPWSControl MPWSControlDateTime MPWSControlDateTimeDateCreated">
-           
 </div>
     
 
 </div>
                 
-<div class="MPWSControlField MPWSControlFieldFormButtons MPWSControlField
-Notice: Undefined index: _controlCssNameCustom in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/c57828bfbc5d080e08a984bc662a85a828b22044.file.simpleFormButtons.html.cache.php on line 36
-
-Notice: Trying to get property of non-object in /media/sda3/Develop/github/web/mpws/data/bin/templates_c/c57828bfbc5d080e08a984bc662a85a828b22044.file.simpleFormButtons.html.cache.php on line 36
-">
-            <button id="MPWSControlFormButtonsSaveID" type="submit" name="do" value="Save" class="MPWSControl MPWSControlFormButtons MPWSControlFormButtonsSave">
+        
+    
+    
+<div class="MPWSControlField MPWSControlFieldFormButtons">
+            <button id="MPWSControlFormButtonsSaveID" type="submit" name="do" value="Save" class="MPWSControl MPWSControlButtonSave">
             Save
         </button>
-            <button id="MPWSControlFormButtonsPreviewID" type="submit" name="do" value="Preview" class="MPWSControl MPWSControlFormButtons MPWSControlFormButtonsPreview">
-            Preview
+            <button id="MPWSControlFormButtonsEditID" type="submit" name="do" value="Edit" class="MPWSControl MPWSControlButtonEdit">
+            Edit
         </button>
-            <button id="MPWSControlFormButtonsCancelID" type="submit" name="do" value="Cancel" class="MPWSControl MPWSControlFormButtons MPWSControlFormButtonsCancel">
+            <button id="MPWSControlFormButtonsCancelID" type="submit" name="do" value="Cancel" class="MPWSControl MPWSControlButtonCancel">
             Cancel
         </button>
     </div>
-        
     
     </form>
     
+    
+    
+    
+    <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
+        
+<a href="/page/tools.html?plugin=toolbox&display=users&pg=2" target="_self" class="MPWSLink" title="Back To List">Back To List</a>
+    </div>
+
 </div>
     <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerAfter"></div>
 </div></div>

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 02:22:35
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-14 18:11:48
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlTextBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:184083270450788f66a37fc8-47597559%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '569c0239c22ec9c0530c6339abe971e96503f09c' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlTextBox.html',
-      1 => 1350083645,
+      1 => 1350227472,
       2 => 'file',
     ),
   ),
@@ -35,7 +35,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f66ab9061_59287309')) {function content_50788f66ab9061_59287309($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_50788f66ab9061_59287309')) {function content_50788f66ab9061_59287309($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+?>
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('TextBox', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
@@ -62,9 +63,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <div class="MPWSControlField MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssName']->value;?>
  MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
+ MPWSControlRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_controlRenderMode']->value);?>
 ">
     
-<?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='normal'){?>
+<?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='normal'||$_smarty_tpl->tpl_vars['_controlRenderMode']->value=='error'){?>
     
     
     <input id="MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>

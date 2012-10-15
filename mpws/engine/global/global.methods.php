@@ -22,6 +22,14 @@
             return $value;
         return $default;
     }
+    
+    function getNonEmptyValue ($value, $default = '') {
+        if (isset($value) && !empty($value))
+            return $value;
+        return $default;
+    }
+    
+    
 
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
         // NOTE: preg_match is temporary disabled

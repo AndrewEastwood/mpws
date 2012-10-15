@@ -3,17 +3,7 @@
 class controllerStatic {
 
     public function processRequests() {
-        //var_dump($_SERVER);
-        //var_dump($_GET);
-        // check resource accesibility
-        if (!$this->requestAccesibility()) {
-            //echo 'denided';
-            return false;
-        }
-        
-        //echo 'static controller';
-        //echo strtolower($_GET['request']);
-        
+
         $content = '';
         switch (strtolower($_GET['request'])) {
             case 'text' : {
@@ -28,11 +18,6 @@ class controllerStatic {
                 $content = $this->_ieWYSIWYG();
                 return;
             }
-            // will be removed per extended config
-            /*case 'public' : {
-                $content = $this->_iePublic();
-                return;
-            }*/
         }
         switch (strtolower($_GET['action'])) {
             case 'default' :
@@ -41,30 +26,6 @@ class controllerStatic {
                 break;
             }
         }
-    }
-
-    private function requestAccesibility() {
-        //echo '|session realm is ' . $_SESSION['MPWS-REALM'];
-        //return true;
-
-        //$r = strtolower($_GET['realm']);
-        //echo '|request realm is ' . $r;
-        //echo '|session realm is ' . $_SESSION['MPWS-REALM'];
-        //var_dump($_GET);
-        // for loggined administrators
-
-        /* if (/*$_SESSION['MPWS-REALM'] === 'TOOLBOX' && * /isset($_SESSION['MPWS-AUTHORIZED']) && $_SESSION['MPWS-AUTHORIZED'] === true)
-            return true;
-
-        //echo 'realm is ' . $r;
-
-        if ($r === 'toolbox' && isset($_SESSION['MPWS-AUTHORIZED']) && $_SESSION['MPWS-AUTHORIZED'] === false)
-            return false;
-        if ($r === 'mpws' || $r === 'common')
-            return true; */
-        
-        //if ($r == 'common' && $SESSION['MPWS-REALM'])
-        return true;
     }
 
     /* internal executors */
@@ -128,7 +89,7 @@ class controllerStatic {
                 header("Content-type: text/javascript");
                 break;
         }
-        return $staticResMgr->GetStaticContent($_GET['realm']);;
+        return $staticResMgr->GetStaticContent();
     }
 
 }

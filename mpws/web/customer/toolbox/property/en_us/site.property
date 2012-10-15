@@ -1,0 +1,6 @@
+title = "Toolbox";
+; page titles
+pageTools = "Tools";
+pageDashboard = "Dashboard";
+pageMessages = "Messages";
+pageUsers = "Users";

@@ -10,32 +10,38 @@
     These types are synonyms for TINYINT(1). A value of zero is considered false. Non-zero values are considered true: [...]
 *}
 
-
-<div class="MPWSComponent MPWSComponentDataBaseField">
+{$_renderMode = 'normal'}
+{$_controlValue = false}
+{if isset($_readonly) and $_readonly}
+    {$_renderMode = 'hidden'}
+{elseif isset($_render)}
+    {$_renderMode = $_render}
+{/if}
+{if isset($_value)}
+    {$_controlValue = $_value}
+{/if}
+    
+<div class="MPWSComponent MPWSComponentDataBaseField MPWSRenderMode{$_renderMode|capitalize}">
 
 {capture name="control"}
-    {$_renderMode = 'normal'}
-    {if isset($_readonly) and $_readonly}
-        {$_renderMode = 'hidden'}
-    {/if}
     {if $_type eq 'text' }
         {$_standartControlType = 'TextArea'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextArea _name=$_name _renderMode=$_renderMode}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextArea _name=$_name _renderMode=$_renderMode _value=$_controlValue}
     {elseif startsWith($_type, 'varchar')}
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode _value=$_controlValue}
     {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean'}
         {$_standartControlType = 'CheckBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlCheckBox _name=$_name _renderMode=$_renderMode}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlCheckBox _name=$_name _renderMode=$_renderMode _value=$_controlValue}
     {elseif startsWith($_type, 'int')}
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=10 _renderMode=$_renderMode}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
     {elseif $_type eq 'datetime'}
         {$_standartControlType = 'DateTime'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDateTime _name=$_name _limit=10 _renderMode=$_renderMode}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
     {elseif startsWith($_type, 'enum')}
         {$_standartControlType = 'DropDown'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode _value=$_controlValue}
     {/if}
 {/capture}
 

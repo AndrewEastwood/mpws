@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 00:45:04
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-14 23:12:46
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html" */ ?>
 <?php /*%%SmartyHeaderCode:110793277150788f60a14db1-70854013%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cbb4b263bc8184a28cbef90069561b5b13fa096e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html',
-      1 => 1349814810,
+      1 => 1350245557,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50788f60a8e6e2_80494003',
   'variables' => 
   array (
     '_ownerName' => 0,
@@ -29,8 +31,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_linkTextKey' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f60a8e6e2_80494003',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50788f60a8e6e2_80494003')) {function content_50788f60a8e6e2_80494003($_smarty_tpl) {?>
 
@@ -61,7 +61,7 @@ $_smarty_tpl->tpl_vars['qfEntry']->_loop = true;
                 <?php $_smarty_tpl->tpl_vars['_filterAction'] = new Smarty_variable(libraryRequest::getNewUrl('sort',libraryUtils::valueSelect($_smarty_tpl->tpl_vars['_requestKey']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value,$_smarty_tpl->tpl_vars['_keyDesc']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value)), null, 0);?>
                 <?php $_smarty_tpl->tpl_vars['_linkTextKey'] = new Smarty_variable(libraryUtils::valueSelect($_smarty_tpl->tpl_vars['_requestKey']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value,"DESC","ASC"), null, 0);?>
                 <a href="?<?php echo $_smarty_tpl->tpl_vars['_filterAction']->value;?>
-#MPWSComponenQuickFilteringID">
+#MPWSComponenQuickFilteringID" class="MPWSLink">
                     <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_component_quickFilteringAction".((string)$_smarty_tpl->tpl_vars['_linkTextKey']->value)};?>
 
                 </a>

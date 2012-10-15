@@ -63,7 +63,7 @@
                 
                 {$_filterAction = libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_requestKey, $_keyAsc, $_keyDesc, $_keyAsc))}
                 {$_linkTextKey = libraryUtils::valueSelect($_requestKey, $_keyAsc, "DESC", "ASC")}
-                <a href="?{$_filterAction}#MPWSComponenQuickFilteringID">
+                <a href="?{$_filterAction}#MPWSComponenQuickFilteringID" class="MPWSLink">
                     {$CURRENT.OBJECT->{"objectProperty_component_quickFilteringAction`$_linkTextKey`"}}
                 </a>
             </span>

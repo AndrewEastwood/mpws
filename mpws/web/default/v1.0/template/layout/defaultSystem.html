@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MPWS Toolbox - {$INFO.GET.PAGE}</title>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <link rel="stylesheet" type="text/css" href="/static/toolboxDisplay.css">
-    <script type="text/javascript" src="/static/toolboxAction.js"></script>
+    <title>{block name="layoutTitle"}MPWS Default - {$INFO.GET.PAGE}{/block}</title>
+    {block name="layoutResources"}
+    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
+    <script type="text/javascript" src="/static/mpwsDefault.js"></script>
+    {/block}
     {literal}
     <script type="text/javascript">
         // Load the Visualization API and the piechart package.
@@ -24,7 +24,7 @@
 </head>
 <body>
 
-<div class="MPWSLayout MPWSLayoutToolbox">
+<div class="MPWSLayout MPWSLayoutDefaultSystem">
 
     {if $INFO.USER.ACTIVE}
         {include file=$CURRENT.OBJECT->{"objectTemplatePath_component_pageDispatcher"}}

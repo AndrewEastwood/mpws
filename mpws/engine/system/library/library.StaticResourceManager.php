@@ -3,18 +3,17 @@
 class libraryStaticResourceManager {
 
     // get merged styling for specific customer
-    public function GetStaticContent ($realm) {
+    public function GetStaticContent () {
 
         $c = MPWS_CUSTOMER;
         $v = MPWS_VERSION;
-        $p = strtolower($_SESSION['MPWS_PLUGIN_ACTIVE']);
         
         // requested file name
         $name = $_GET['name'] . DOT . $_GET['type'];
         
         // saved resource path
         $resourceFileDir = DR . '/data/bin';
-        $resourceFilePath = $resourceFileDir . '/'.$realm.'_'.$name;
+        $resourceFilePath = $resourceFileDir . '/_'.$name;
         
         // get already saved file
         if (!file_exists($resourceFileDir))
@@ -23,34 +22,22 @@ class libraryStaticResourceManager {
             return file_get_contents($resourceFilePath);
         
         // get configurtion
-        $cfg = false;
-        switch ($realm) {
-            case 'toolbox':
-                $obj = new libraryPluginManager(false);
-                $cfg = $obj->getConfiguration($p, 'RESOURCES');
-                //echo 'use toolbox resources';
-                break;
-            case 'mpws':
-                //echo 'use customer resources';
-                $obj = new libraryCustomerManager($c, false);//getConfig('RESOURCES');
-                $cfg = $obj->getCustomerConfiguration('RESOURCES');
-                break;
-        }
+        $ctx = contextMPWS::instance();
+        $customer = $ctx->contextCustomer->getObject();
+        $resourceNamesMap = $customer->objectConfiguration_resources_staticResources;
+        //var_dump($resourceNamesMap);
         
-        
-        //echo '<br>| Loading: ' . $name;
-        //var_dump($cfg);
-        //var_dump($cfg['STATIC'][$name]);
-        //echo $_SESSION['MPWS_PLUGIN_ACTIVE'];
-        
-        if (empty($cfg['STATIC']) || empty($cfg['STATIC'][$name]))
+        $resourceEntry = $resourceNamesMap[$name];
+        if (empty($resourceEntry))
             return false;
+        
+        
         
         $filesToLoad = array();
         $filesToImport = array();
         
         // walk by resource
-        foreach ($cfg['STATIC'][$name] as $origin => $resFiles) {
+        foreach ($resourceEntry as $origin => $resFiles) {
             switch (strtoupper($origin)) {
                 case 'DEFAULT':
                     foreach ($resFiles as $filePath)
@@ -58,16 +45,9 @@ class libraryStaticResourceManager {
                             $filesToLoad[] = DR . '/web/default/'.$v.'/resource/'.$filePath;
                     break;
                 case 'OWNER':
-                    //echo '<br>|Customer file ' . print_r($resFiles, true) ;
-                    if ($realm == 'mpws') {
                     foreach ($resFiles as $filePath)
                         if (file_exists(DR . '/web/customer/'.$c.'/resource/'.$filePath))
                             $filesToLoad[] = DR . '/web/customer/'.$c.'/resource/'.$filePath;
-                    } elseif ($realm == 'toolbox') {
-                    foreach ($resFiles as $filePath)
-                        if (file_exists(DR . '/web/plugin/'.$p.'/resource/'.$filePath))
-                            $filesToLoad[] = DR . '/web/plugin/'.$p.'/resource/'.$filePath;
-                    }
                     break;
                 case 'AUTO':
                     foreach ($resFiles as $filePath) {
@@ -102,6 +82,22 @@ class libraryStaticResourceManager {
         if (!empty($filesToImport))
             foreach ($filesToImport as $item)
                 $metainfo .= PHP_EOL . '@import url(\'' . $item . '\');';
+        
+        
+        // get build mode (for CSS only)
+        if ($_GET['type'] == 'css') {
+            $buildMode = $customer->objectConfiguration_resources_buildMode;
+            switch ($buildMode) {
+                case "CSS" : {
+                    break;
+                }
+                case "LESS" : {
+                    $libLess = new libraryLessc();
+                    $data = $libLess->compile($data);
+                    break;
+                }
+            }
+        }
         
         // compress data and store package
         if (MPWS_ENV === 'PROD') {

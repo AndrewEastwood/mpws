@@ -9,26 +9,27 @@
 {if isset($_renderMode)}
     {$_controlRenderMode = $_renderMode}
 {/if}
-{if (empty($_controlValue) and isset($_value)) or $_controlValue eq "on"}
+{if (empty($_controlValue) and not empty($_value)) or $_controlValue eq "on"}
     {$_controlValue = "checked"}
 {/if}
-{* control implemetation *}
-<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
-    
-{if $_controlRenderMode eq 'normal'}
-    
-    {* editable control *}
-    
-    <input id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="{$_controlName}" {$_controlValue} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
-           
-{elseif $_controlRenderMode eq 'hidden'}
-    
-    {* display hidden control*}
-    <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
-    <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
 
-{else}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}
-{/if}
-           
+{* control implemetation *}
+
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">
+
+    {if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}
+        {* editable control *}
+        <input id="MPWSControl{$_controlCssNameCustom}ID" type="checkbox" name="{$_controlName}" {$_controlValue} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
+
+    {elseif $_controlRenderMode eq 'hidden'}
+
+        {* display hidden control*}
+        <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
+        <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
+
+    {else}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong control render mode" _tpl=$smarty.template}
+    {/if}
+
+
 </div>

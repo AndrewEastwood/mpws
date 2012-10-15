@@ -2,8 +2,8 @@
 
 class libraryValidator {
 
-
-    public static function validateData ($data, $rules, &$messages) {
+    public static function validateData ($data, $rules, &$messages = array()) {
+        $_errorsAt = array();
         //echo 'validate string ';
         foreach ($data as $key => $value) {
             if (isset($rules[$key])) {
@@ -13,17 +13,26 @@ class libraryValidator {
                 if (!isset($value)) {
                     //echo '   ........<= has errro!!!';
                     $messages[] = 'Error is occured in the field "' . $key .'"';
+                    $_errorsAt[] = $key;
                 } elseif (!empty($rules[$key]) && !self::validateString($value, $rules[$key])) {
                     //echo '   ........<= has errro!!!';
                     $messages[] = 'Error is occured in the field "' . $key .'"';
+                    $_errorsAt[] = $key;
                 }
             }
         }
         //echo '<br><br><br><br><br>';
+        return $_errorsAt;
     }
 
     public static function validateString ($string, $rule) {
-        //echo 'validate string ' . $value . ' with rule ' . $rule . '<br>';
+        //echo 'validate string with rule ' . $rule . '<br>';
+        
+        // normlize rule
+        if (!startsWith($rule, "/") && !endsWith($rule, "/"))
+            $rule = "/" . $rule . "/";
+        
+        
         // call validate method
         if ($rule[0] === '@') {
             $fn = substr($rule, 1);
@@ -76,6 +85,20 @@ class libraryValidator {
             if ($digit < 10) { $checksum += $digit; } else { $checksum += ($digit-9); }
         }
         if (($checksum % 10) == 0) return true; else return false;
+    }
+    
+    
+    public static function validateStandartMpwsFields ($fields, $rules) {
+        // getting standart field names
+        $_fields = array();
+        foreach ($fields as $value) {
+            $_fields[$value] = 'mpws_field_' . strtolower($value);
+        }
+        // get data
+        $_data = libraryRequest::getPostMapContainer($_fields);
+        //var_dump($_fields);
+        // validate data
+        return self::validateData($_data, $rules);
     }
 
 }

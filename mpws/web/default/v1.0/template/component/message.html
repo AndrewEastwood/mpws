@@ -1,9 +1,9 @@
 {if isset($_realm) }
     <div id="MPWSComponentMessage{$_realm|capitalize:0:1}ID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessage{$_realm|capitalize:0:1}">
     {if isset($MODEL.MESSAGE[$_realm]) }
-        <ul class="MPWSList MPWSListMessages MPWSListMessages{$_realm|capitalize:0:1}">
+        <ul class="MPWSList">
         {foreach $MODEL.MESSAGE[$_realm] as $keyvar=>$itemvar}
-            <li class="MPWSListItem MPWSListItemMessage">{$CURRENT.OBJECT->{"objectProperty_message_`$itemvar`"}}</li>
+            <li class="MPWSListItem">{$CURRENT.OBJECT->{"objectProperty_message_`$itemvar`"}}</li>
         {/foreach}
         </ul>
     {else}

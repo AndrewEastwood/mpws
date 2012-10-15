@@ -19,12 +19,18 @@ pagingBarEdgeLinkLAST = "Last";
 pagingBarEdgeLinkNEXT = ">>";
 pagingBarEdgeLinkPREV = "<<";
 
-; editBox
-editBoxStateNEW = "Adding new record";
-editBoxStateEDIT = "Editing record";
-editBoxStatePREVIEW = "Preview Data";
-editBoxStateSAVE = "Record Saved";
-editBoxStateCANCEL = "Canceled";
+; editBox 
+
+editBoxStateNewPageNEW = "Adding new record";
+editBoxStateNewPageEDIT = "Adding new record";
+editBoxStateNewPagePREVIEW = "Preview Data";
+editBoxStateNewPageSAVE = "Record Saved";
+editBoxStateNewPageCANCEL = "Canceled";
+
+editBoxStateExistedPageEDIT = "Editing record";
+editBoxStateExistedPagePREVIEW = "Preview Data";
+editBoxStateExistedPageSAVE = "Record Saved";
+editBoxStateExistedPageCANCEL = "Canceled";
 
 ; common form buttons
 
@@ -41,11 +47,10 @@ FormPagePreviewButtonEdit = "Edit";
 FormPagePreviewButtonCancel = "Cancel";
 
 FormPageSaveButtonNew = "Add One More Record";
-FormPageSaveButtonReturn = "Back To List";
 
 FormPageCancelButtonNew = "Add One More Record";
-FormPageCancelButtonReturn = "Back To List";
 
+FormControlLinkReturn = "Back To List";
 
 ; action links
 
@@ -53,3 +58,6 @@ actionLinkTopActionNEW = 'Add New Record';
 actionLinkRowActionEDIT = 'Edit';
 actionLinkRowActionDELETE = 'Remove';
 actionLinkRowActionVIEW = 'View';
+
+; validator header
+validatorHeader = "Some errors were occurred in the fields below:";

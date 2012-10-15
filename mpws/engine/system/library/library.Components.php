@@ -334,7 +334,7 @@ class libraryComponents
             }
 
             // sorting
-            $sort = libraryRequest::getValue($config['filtering']['sortKey'], 'ID.desc');
+            $sort = libraryRequest::getValue($config['filtering']['sortKey'], 'ID.asc');
             
             if (!empty($sort)) {
                 $sort = explode('.', trim($sort));
@@ -381,26 +381,75 @@ class libraryComponents
     
     
     public static function getDataEditor ($config, $dbLink) {
+        
+
+        if (empty($dbLink))
+            throw new Exception('libraryComponents: getDataEditor => dbLink is empty');
+        
         // component structure
         $com = array(
             // append form configuration
-            "FORM" =>$config['form'], 
-            "DATA" => false,
-            "FIELDS" => false
+            "FORM" => $config['form'], 
+            "SOURCE" => false,
+            "FIELDS" => false,
+            "ISNEW" => true,
+            "EDIT_PAGE"  => "new",
+            "REFERER" => libraryRequest::storeOrGetRefererUrl(false),
+            "ERRORS" => false,
+            "VALID" => true
         );
-        // get data
-        if (!empty($dbLink)) {
-            $oid = libraryRequest::getOID();
-            if (isset($oid))
-                $com['DATA'] = $dbLink
-                    ->reset()
-                    ->select('*')
-                    ->from($config['source'])
-                    ->where('ID', '=', $oid)
-                    ->fetchRow();
-            // get fields
-            $com['FIELDS'] = $dbLink->getFields($config['source']);
+        // get edit page name
+        $editPage = strtolower(libraryRequest::getPostFormAction());
+        // normalize page name
+        $editPage = strtolower(trim($editPage));
+        // get oid
+        $oid = libraryRequest::getOID();
+        // adjust states
+        if (isset($oid) && $com['EDIT_PAGE'] == "new") {
+            $editPage = "edit";
+            $com['ISNEW'] = false;
         }
+
+        // do common work on save or preview
+        if ($editPage == 'save' || $editPage == 'preview') {
+            $com["ERRORS"] = libraryValidator::validateStandartMpwsFields($config['fields'], $config['validators']);
+            var_dump($com['ERRORS']);
+            if (!empty($com["ERRORS"])) {
+                $editPage = 'edit';
+                $com['VALID'] = false;
+            }
+        }
+
+        // handle actions
+        
+        // get data
+        if ($editPage == 'edit' && !$com['ISNEW']) {
+            $com['SOURCE'] = $dbLink
+                ->reset()
+                ->select('*')
+                ->from($config['source'])
+                ->where('ID', '=', $oid)
+                ->fetchRow();
+            // truncate on load
+            $fieldsToTruncate = $config['form']['edit']['truncateOnLoad'];
+            foreach ($fieldsToTruncate as $_fldName)
+                $com['SOURCE'][$_fldName] = null;
+            var_dump($com['SOURCE']);
+        }
+        
+        // get fields
+        $_fieldsDB = $dbLink->getFields($config['source']);
+        $_fieldsCOM = array();
+        if (!empty($config['fields'])) {
+            foreach ($_fieldsDB as $fieldEntry)
+                if (in_array ($fieldEntry['Field'], $config['fields']))
+                    $_fieldsCOM[] = $fieldEntry;
+        } else
+            $_fieldsCOM = $_fieldsDB;
+        $com['FIELDS'] = $_fieldsCOM;
+        
+        $com['EDIT_PAGE'] = getNonEmptyValue($editPage, "new");
+        //echo "EDIT PAGE IS:  " . $com['EDIT_PAGE'];
         return $com;
     }
 }

@@ -23,9 +23,9 @@
 
 
 {* control implemetation *}
-<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">
     
-{if $_controlRenderMode eq 'normal'}
+{if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}
     
     {* editable control *}
     <input id="MPWSControl{$_controlCssNameCustom}ID" type="text" name="{$_controlName}" value="{$_controlValue}" size="{$_controlSize}"{$_controlLimit} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">

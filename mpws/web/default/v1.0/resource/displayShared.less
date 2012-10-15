@@ -1,0 +1,114 @@
+/*
+
+Color theme:
+#98A89E
+#BAC0AC
+#FAFAC6
+#FF4411
+#D40015
+See: https://kuler.adobe.com/#themeID/2070991
+
+*/
+body {margin:0; background-color: #98A89E; font-size: 12px; font-family: Arial,sans-serif; padding: 10px;}
+
+.MPWSLayout {}
+
+a.MPWSLink, a.MPWSLink:visited {color: #D40015;}
+a.MPWSLink:hover {color: #D40015; text-decoration: none;}
+
+
+/* COMMON ELEMENTS */
+.MPWSControlRenderModeNormal {
+}
+.MPWSControlRenderModeError {
+}
+
+/* RENDER MODES */
+.MPWSRenderModeError {
+    color: #D40015;
+    input, textarea {border: 1px solid #D40015;}
+}
+
+/* MPWS PAGE */
+.MPWSPage {
+    width: 800px;
+    margin: 0px auto;
+    background-color: #FAFAC6;
+    padding: 20px 30px;
+    box-shadow: 0px 0px 10px #222;
+    border-radius: 10px;
+}
+
+/* COMPONENTS */
+.MPWSComponent {}
+
+/* COMPONENT: search box */
+.MPWSComponentSearchBox {
+    
+}
+.MPWSComponenQuickFiltering {
+    padding: 10px 0px 25px;
+    .MPWSDataRow {
+        overflow: hidden;
+        border-bottom: 1px dashed #BAC0AC;
+        padding: 5px 10px;
+        .MPWSLabel {float: left; width: 200px;}
+        .MPWSValue {}
+    }
+}
+
+/* COMPONENT: data table top actions */
+.MPWSComponentDataTableTopActions {
+    padding: 0px 0 20px;
+    overflow: hidden;
+    zoom: 1;
+    a.MPWSLink {
+        float: left;
+        border: 1px solid #D40015;
+        padding: 3px 5px;
+        text-decoration: none;
+        &:hover {
+            text-decoration: none;
+            background-color: #D40015;
+            color: #FAFAC6;
+        }
+        &:visited {
+            text-decoration: none;
+        }
+    }
+}
+
+
+/* COMPONENT: data table */
+.MPWSComponentDataTable {
+    border: 1px dotted #BAC0AC;
+    .MPWSDataTableRows {
+        .MPWSDataTableRowCaptions {
+            background-color: #BAC0AC;
+            padding-left: 140px;
+            margin-bottom: 10px;
+            a.MPWSLink {
+                color: #D40015;
+                text-decoration: none;
+                &:hover {text-decoration: none;}
+            }
+        }
+        .MPWSDataTableRow {
+            border-bottom: 1px solid #BAC0AC;
+            overflow: hidden;
+            .MPWSDataTableCell {
+                float: left;
+                padding: 5px 5px 2px;
+                width: 100px;
+            }
+            .MPWSDataTableCellActions {
+                width: 130px;
+                span.MPWSDataTableCellAction {padding-right: 5px;}
+            }
+        }
+    }
+}
+
+/* WIDGETS */
+.MPWSWidget {}
+

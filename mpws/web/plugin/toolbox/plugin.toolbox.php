@@ -31,7 +31,7 @@ class pluginToolbox extends objectBaseWebPlugin {
     }
     
     private function _commandDefault () {
-        echo 'DEFAULT TRIGGER';
+        //echo 'DEFAULT TRIGGER';
         switch (libraryRequest::getDisplay()) {
             case "users" : {
                 $this->actionHandlerAsDataViewEdit('SystemUsers');

@@ -4,14 +4,19 @@
 
 <div id="MPWSWidget{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$CURRENT.SOURCE.NAME}">
     
-    {$_formInnerAction = libraryRequest::getPostFormAction()|lower}
-    {$_sourceOID = libraryRequest::getOID()}
-    {if empty($_formInnerAction) }
-        {$_formInnerAction = "new"}
+    {$_formInnerAction = $CURRENT.SOURCE.DATA.EDIT_PAGE}
+
+    {* widget title *}
+    {if $CURRENT.SOURCE.DATA.ISNEW}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName _customText=$CURRENT.OBJECT->{"objectProperty_component_editBoxStateNewPage`$_formInnerAction|upper`"}}
+    {else}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName _customText=$CURRENT.OBJECT->{"objectProperty_component_editBoxStateExistedPage`$_formInnerAction|upper`"}}
     {/if}
     
-    {* widget title *}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName _customText=$CURRENT.OBJECT->{"objectProperty_component_editBoxState`$_formInnerAction|upper`"}}
+    {* error block *}
+    {if not $CURRENT.SOURCE.DATA.VALID}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_errorFieldsList _fields=$CURRENT.SOURCE.DATA.ERRORS _ownerName=$_widgetName}
+    {/if}
     
     {* editor form *}
     <form action="{$DTV_CFG.form.$_formInnerAction.action}" name="data_edit_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
@@ -25,35 +30,58 @@
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName}
         {/foreach}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.edit.buttons}
+
     
     {elseif $_formInnerAction eq "edit"}
     
         {* edit form page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName}
-        {/foreach}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.edit.buttons}
         
-    {elseif $_formInnerAction eq "preview"}
+            {$_editFieldRenderMode = 'normal'}
+            {if not empty($CURRENT.SOURCE.DATA.ERRORS) and in_array($fieldEntry.Field, $CURRENT.SOURCE.DATA.ERRORS) }
+                {$_editFieldRenderMode = 'error'}
+            {/if}
+        
+            {if $CURRENT.SOURCE.DATA.ISNEW}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _render=$_editFieldRenderMode}
+            {else}
+                {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
+                {$_controlValue}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _value=$_controlValue _render=$_editFieldRenderMode}
+            {/if}
+            
+            
+        {/foreach}
+
+    {/if}
+        
+    {if $_formInnerAction eq "preview"}
     
         {* preview page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_databaseField _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _readonly=true}
         {/foreach}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.preview.buttons}
         
     {elseif $_formInnerAction eq "save"}
     
         {* saved page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.save.buttons}
         
     {elseif $_formInnerAction eq "cancel"}
     
         {* canceled page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.cancel.buttons}
+        
     {/if}
-
+    
+    {* form controls *}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.$_formInnerAction.controls}
+    
     </form>
     
+    
+    
+    {* additional links *}
+    <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _href=$CURRENT.SOURCE.DATA.REFERER _title=$CURRENT.OBJECT->objectProperty_component_FormControlLinkReturn}
+    </div>
+
 </div>
