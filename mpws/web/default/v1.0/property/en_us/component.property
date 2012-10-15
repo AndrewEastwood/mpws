@@ -1,14 +1,22 @@
+; ============================
 ; search box
+; ============================
 searchBoxHeader = "Simple Search Box";
 
+
+; ============================
 ; quick filtering
+; ============================
 quickFilteringHeader = "Quick Data Filtering";
 quickFilteringFieldPrefix = "Show ";
 quickFilteringFieldSuffix = " from ";
 quickFilteringActionASC = "lower to higher";
 quickFilteringActionDESC = "higher to lower";
 
+
+; ============================
 ; paging bar
+; ============================
 pagingBarSummaryFilteredRecords = "Filtered Records:";
 pagingBarSummaryTotalRecords = "Total Records:";
 pagingBarSummaryPageSize = "Table Always Shows:";
@@ -19,45 +27,34 @@ pagingBarEdgeLinkLAST = "Last";
 pagingBarEdgeLinkNEXT = ">>";
 pagingBarEdgeLinkPREV = "<<";
 
-; editBox 
 
-editBoxStateNewPageNEW = "Adding new record";
-editBoxStateNewPageEDIT = "Adding new record";
-editBoxStateNewPagePREVIEW = "Preview Data";
-editBoxStateNewPageSAVE = "Record Saved";
-editBoxStateNewPageCANCEL = "Canceled";
-
-editBoxStateExistedPageEDIT = "Editing record";
-editBoxStateExistedPagePREVIEW = "Preview Data";
-editBoxStateExistedPageSAVE = "Record Saved";
-editBoxStateExistedPageCANCEL = "Canceled";
-
-; common form buttons
-
-FormPageNewButtonSave = "Save";
-FormPageNewButtonPreview = "Preview";
-FormPageNewButtonCancel = "Cancel";
-
-FormPageEditButtonSave = "Save";
-FormPageEditButtonPreview = "Preview";
-FormPageEditButtonCancel = "Cancel";
-
-FormPagePreviewButtonSave = "Save";
-FormPagePreviewButtonEdit = "Edit";
-FormPagePreviewButtonCancel = "Cancel";
-
-FormPageSaveButtonNew = "Add One More Record";
-
-FormPageCancelButtonNew = "Add One More Record";
-
-FormControlLinkReturn = "Back To List";
-
+; ============================
 ; action links
-
+; ============================
 actionLinkTopActionNEW = 'Add New Record';
 actionLinkRowActionEDIT = 'Edit';
 actionLinkRowActionDELETE = 'Remove';
 actionLinkRowActionVIEW = 'View';
 
+
+; ============================
+; common form buttons
+; ============================
+formPageNewButtonSave = "Save";
+formPageNewButtonPreview = "Preview";
+formPageNewButtonCancel = "Cancel";
+formPageEditButtonSave = "Save";
+formPageEditButtonPreview = "Preview";
+formPageEditButtonCancel = "Cancel";
+formPagePreviewButtonSave = "Save";
+formPagePreviewButtonEdit = "Edit";
+formPagePreviewButtonCancel = "Cancel";
+formPageSaveButtonNew = "Add One More Record";
+formPageCancelButtonNew = "Add One More Record";
+formControlLinkReturn = "Back To List";
+
+; ============================
 ; validator header
+; ============================
 validatorHeader = "Some errors were occurred in the fields below:";
+

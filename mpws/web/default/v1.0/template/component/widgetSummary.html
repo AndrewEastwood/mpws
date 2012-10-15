@@ -1,4 +1,4 @@
-{* Component: objectSummary  
+{* Component: widgetSummary  
 
     !!!PLEASE COPY THIS MESSAGE TO NEW COMPONENT FILE!!!
 
@@ -51,9 +51,9 @@
 {* standart property key *}
 {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
 
-<div class="MPWSComponent MPWSComponentObjectSummary">
-    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`ObjectSummary"}}</span>
-    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`ObjectDescription"}}</span>
+<div class="MPWSComponent MPWSComponentWidgetSummary">
+    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`WidgetSummary"}}</span>
+    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`WidgetDescription"}}</span>
     {if isset($_customText)}
     <span class="MPWSText MPWSTextCustom">{$_customText}</span>
     {/if}

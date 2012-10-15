@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 00:45:04
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 23:37:22
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataTableView.html" */ ?>
 <?php /*%%SmartyHeaderCode:53139332850788f6087f673-05473734%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'b43d79ad5db39a467ed90062c78be6d51ad27400' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataTableView.html',
-      1 => 1350066354,
+      1 => 1350333413,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50788f6093b741_28399169',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -22,8 +24,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'DTV_CFG' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f6093b741_28399169',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50788f6093b741_28399169')) {function content_50788f6093b741_28399169($_smarty_tpl) {?>
 
@@ -36,7 +36,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ID" class="MPWSWidget MPWSWidget<?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['NAME'];?>
 ">
     
-<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_objectSummary, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_ownerName'=>$_smarty_tpl->tpl_vars['_widgetName']->value), 0);?>
+<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_widgetSummary, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_ownerName'=>$_smarty_tpl->tpl_vars['_widgetName']->value), 0);?>
 
 
 <?php if (!empty($_smarty_tpl->tpl_vars['DTV_CFG']->value['searchbox'])&&$_smarty_tpl->tpl_vars['DTV_CFG']->value['searchbox']['enabled']){?>

@@ -213,16 +213,19 @@ class libraryComponents
 
         }
         if (libraryRequest::isPostFormAction('discard')) {
+            echo 'DISCARD';
             $_SESSION[$sessionSearchKey] = false;
         }
 
         $com['RECORDS_ALL'] = $dbLink->getCount($config['source'], $condition, $beforeConditionHook);
 
         if (empty($_SESSION[$sessionSearchKey])) {
+            echo 'IS IN ACTIVE';
             $com['SEARCHBOX']['ACTIVE'] = false;
+            $com['SEARCHBOX']['FILTER'] = false;
             $com['RECORDS'] = $com['RECORDS_ALL'];
         } else {
-            //echo 'IS ACTIVE';
+            echo 'IS ACTIVE';
             $com['SEARCHBOX']['ACTIVE'] = true;
             $com['SEARCHBOX']['FILTER'] = $_SESSION[$sessionSearchKey];
             $_searchBoxFilterString = array();
@@ -374,6 +377,8 @@ class libraryComponents
             ),
             "SEARCH" => $com['SEARCHBOX']
         );
+        
+        //var_dump($com);
 
         return $dtv;
         

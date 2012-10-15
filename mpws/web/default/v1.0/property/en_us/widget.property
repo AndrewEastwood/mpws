@@ -10,3 +10,21 @@ systemUserInfoHomePageLinkPrefix = 'Your home page link is:';
 ; dataTableView
 dataTableViewCaptionActions = "Actions";
 dataTableViewDataEmpty= "There are no records to display.";
+
+; ============================
+; data editor 
+; ============================
+dataEditorStateNewPageNEW = "Adding new record";
+dataEditorStateNewPageEDIT = "Adding new record";
+dataEditorStateNewPagePREVIEW = "Preview Data";
+dataEditorStateNewPageSAVE = "Record Saved";
+dataEditorStateNewPageCANCEL = "Canceled";
+dataEditorStateExistedPageEDIT = "Editing record";
+dataEditorStateExistedPagePREVIEW = "Preview Data";
+dataEditorStateExistedPageSAVE = "Record Saved";
+dataEditorStateExistedPageCANCEL = "Canceled";
+
+dataEditorTextLabelCancelMain = "You have canceled all changes with the record.";
+dataEditorTextLabelCancelSubText = "Please choose the next action.";
+dataEditorTextLabelSaveMain = "Congratulations! You have save this record.";
+dataEditorTextLabelSaveSubText = "Please choose the next action.";

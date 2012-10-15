@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 00:40:58
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 23:47:49
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFormButtons.html" */ ?>
 <?php /*%%SmartyHeaderCode:81043973850788f66c4d763-16503365%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'c57828bfbc5d080e08a984bc662a85a828b22044' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFormButtons.html',
-      1 => 1350250828,
+      1 => 1350333115,
       2 => 'file',
     ),
   ),
@@ -43,7 +43,7 @@ $_smarty_tpl->tpl_vars['_button']->_loop = true;
 ID" type="submit" name="do" value="<?php echo $_smarty_tpl->tpl_vars['_button']->value;?>
 " class="MPWSControl MPWSControlButton<?php echo $_smarty_tpl->tpl_vars['_button']->value;?>
 ">
-            <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_component_FormPage".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_page']->value))."Button".((string)$_smarty_tpl->tpl_vars['_button']->value)};?>
+            <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_component_formPage".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_page']->value))."Button".((string)$_smarty_tpl->tpl_vars['_button']->value)};?>
 
         </button>
     <?php } ?>

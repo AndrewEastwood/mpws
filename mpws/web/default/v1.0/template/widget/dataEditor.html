@@ -1,5 +1,6 @@
 {* Get Configuration For The Widget *}
-{$_widgetName = "dataEditor`$CURRENT.SOURCE.NAME`"}
+{$_widgetName = "dataEditor"}
+{$_widgetCustomName = "`$_widgetName``$CURRENT.SOURCE.NAME`"}
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataEditor`$CURRENT.SOURCE.NAME`"}}
 
 <div id="MPWSWidgetDataEditor{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidgetDataEditor MPWSWidgetDataEditor{$CURRENT.SOURCE.NAME}">
@@ -8,14 +9,14 @@
 
     {* widget title *}
     {if $CURRENT.SOURCE.DATA.ISNEW}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName _customText=$CURRENT.OBJECT->{"objectProperty_component_editBoxStateNewPage`$_formInnerAction|upper`"}}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_widgetSummary _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateNewPage`$_formInnerAction|upper`"}}
     {else}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_objectSummary _ownerName=$_widgetName _customText=$CURRENT.OBJECT->{"objectProperty_component_editBoxStateExistedPage`$_formInnerAction|upper`"}}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_widgetSummary _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateExistedPage`$_formInnerAction|upper`"}}
     {/if}
     
     {* error block *}
     {if not $CURRENT.SOURCE.DATA.VALID}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_errorFieldsList _fields=$CURRENT.SOURCE.DATA.ERRORS _ownerName=$_widgetName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_errorFieldsList _fields=$CURRENT.SOURCE.DATA.ERRORS _ownerName=$_widgetCustomName}
     {/if}
     
     {* editor form *}
@@ -28,7 +29,7 @@
         {* create new form page *}
         {* completely new record without any initial data *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName}
         {/foreach}
 
     
@@ -43,11 +44,11 @@
             {/if}
         
             {if $CURRENT.SOURCE.DATA.ISNEW}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _render=$_editFieldRenderMode}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode}
             {else}
                 {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
                 {$_controlValue}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _value=$_controlValue _render=$_editFieldRenderMode}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode}
             {/if}
             
             
@@ -59,22 +60,26 @@
     
         {* preview page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetName _readonly=true}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _readonly=true}
         {/foreach}
         
     {elseif $_formInnerAction eq "save"}
     
         {* saved page *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='SaveMain'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='SaveSubText'}
         
     {elseif $_formInnerAction eq "cancel"}
     
         {* canceled page *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='CancelMain'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='CancelSubText'}
         
     {/if}
     
     {* custom fields *}
     {foreach $DTV_CFG.form.$_formInnerAction.customFileds as $fieldName => $fieldType}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldType _name=$fieldName _ownerName=$_widgetName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldType _name=$fieldName _ownerName=$_widgetCustomName}
     {/foreach}
     
     {* form controls *}
@@ -84,7 +89,7 @@
 
     {* additional links *}
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _href=$CURRENT.SOURCE.DATA.REFERER _title=$CURRENT.OBJECT->objectProperty_component_FormControlLinkReturn}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _href=$CURRENT.SOURCE.DATA.REFERER _title=$CURRENT.OBJECT->objectProperty_component_formControlLinkReturn}
     </div>
 
 </div>

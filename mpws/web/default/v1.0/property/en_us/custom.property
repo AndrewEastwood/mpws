@@ -1,43 +1,34 @@
+; ============================
 ; widget DataTableView DashboardActiveUsers
-; ============================================
-dataTableViewDashboardActiveUsersObjectSummary = 'Active Users';
-dataTableViewDashboardActiveUsersObjectDescription = 'List of all active users';
+; ============================
+dataTableViewDashboardActiveUsersWidgetSummary = 'Active Users';
+dataTableViewDashboardActiveUsersWidgetDescription = 'List of all active users';
 dataTableViewDashboardActiveUsersCaptionActions = 'Actions';
 dataTableViewDashboardActiveUsersCaptionName = 'User Name';
 dataTableViewDashboardActiveUsersCaptionActive = 'Active';
 dataTableViewDashboardActiveUsersCaptionDateLastAccess = 'Last Time Visit';
 dataTableViewDashboardActiveUsersCaptionIsOnline = "Online State";
 
-dataTableViewDashboardActiveUsersActionLinkEdit = 'EDIT';
-dataTableViewDashboardActiveUsersActionLinkView = 'VIEW';
-dataTableViewDashboardActiveUsersActionLinkDelete = 'REMOVE';
-dataTableViewDashboardActiveUsersActionLinkAdd = 'Create New User';
 
-dataTableViewDashboardActiveUsersQuickFilteringFieldName = 'User Names';
-dataTableViewDashboardActiveUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
-
+; ============================
 ; widget DataTableView SystemUsers
-; ==================================
-dataTableViewSystemUsersObjectSummary = 'Active Users';
-dataTableViewSystemUsersObjectDescription = 'List of all active users';
+; ============================
+dataTableViewSystemUsersWidgetSummary = 'Active Users';
+dataTableViewSystemUsersWidgetDescription = 'List of all active users';
 dataTableViewSystemUsersCaptionActions = 'Actions';
 dataTableViewSystemUsersCaptionName = 'User Name';
 dataTableViewSystemUsersCaptionActive = 'Active';
 dataTableViewSystemUsersCaptionDateLastAccess = 'Last Time Visit';
 dataTableViewSystemUsersCaptionIsOnline = "Online State";
-
-dataTableViewSystemUsersActionLinkEdit = 'EDIT';
-dataTableViewSystemUsersActionLinkView = 'VIEW';
-dataTableViewSystemUsersActionLinkDelete = 'REMOVE';
-dataTableViewSystemUsersActionLinkAdd = 'Create New User';
-
 dataTableViewSystemUsersQuickFilteringFieldName = 'User Names';
 dataTableViewSystemUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
 
+
+; ============================
 ; widget dataEditor SystemUsers
-; ======================================
-dataEditorSystemUsersObjectSummary = 'User Editor';
-dataEditorSystemUsersObjectDescription = " - ";
+; ============================
+dataEditorSystemUsersWidgetSummary = 'User Editor';
+dataEditorSystemUsersWidgetDescription = " - ";
 dataEditorSystemUsersFieldID = "Record ID";
 dataEditorSystemUsersFieldName = "User Name";
 dataEditorSystemUsersFieldPassword = "User Password";
@@ -47,9 +38,8 @@ dataEditorSystemUsersFieldPermisions = "Access Level";
 dataEditorSystemUsersFieldDateLastAccess = "Last Visit";
 dataEditorSystemUsersFieldDateCreated = "Added Since";
 dataEditorSystemUsersFieldRole = "User Role";
-
 dataEditorSystemUsersDropDownRoleSUPERADMIN = "Administrator";
 dataEditorSystemUsersDropDownRoleREADER = "Standart User";
 dataEditorSystemUsersDropDownRoleREPORTER = "Report User";
-
 dataEditorSystemUsersFieldSendEmail = "Notify user by email";
+dataEditorSystemUsersFieldCustomCaptcha = "hfgjhfjh";

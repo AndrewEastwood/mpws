@@ -34,7 +34,7 @@
     background-color: @colorBg;
     color: @colorComponent;
     &:hover {
-        background-color: @colorLink;
+        background-color: @colorError;
         color: @colorComponent;
         cursor: pointer;
     }
@@ -110,4 +110,47 @@ a.MPWSLink {.linkText}
 .MPWSRenderModeError {
     color: @colorError;
     input, textarea {.border;}
+}
+
+
+.componenMenuHorizontal () {
+    clear: both;
+    display: both;
+    margin: 10px -30px;
+    background-color: @colorBg;
+    .MPWSList {
+        zoom: 1;
+        margin: 0px;
+        padding: 0px;
+        z-index: 999;
+        height: 40px;
+        .MPWSListItem {
+            margin: 0px;
+            padding: 0px;
+            float: left;
+            list-style: none;
+            position: relative;
+            a.MPWSLink {
+                color: @colorComponent;
+                text-decoration: none;
+                font-size: 14px;
+                float: left;
+                padding: 10px;
+                height: 20px;
+                &:hover {
+                    background-color: @colorError;
+                    color: @colorComponent;
+                }
+            }
+            /* hide inner menus */
+            div {display: none;}
+            &:hover div {
+                display: block;
+                position: absolute;
+                width: 150px;
+                z-index: 99999;
+                opacity: 0.9;
+            }
+        }
+    }
 }

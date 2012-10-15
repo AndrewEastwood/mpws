@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-13 00:45:04
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 01:07:14
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:63544814050788f6097fb91-10333071%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '8353ed817f3a10aa18cb6a40909f78201e516c64' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html',
-      1 => 1349813985,
+      1 => 1350338826,
       2 => 'file',
     ),
   ),
@@ -15,22 +15,22 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50788f609fa3d2_88089210',
   'variables' => 
   array (
     'CURRENT' => 0,
     '_confing' => 0,
     '_data' => 0,
     'field' => 0,
-    'fieldKey' => 0,
     '_fieldValue' => 0,
+    'fieldKey' => 0,
     'sbKey' => 0,
     'sbVal' => 0,
     '_filterString' => 0,
     'srchl' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f609fa3d2_88089210',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50788f609fa3d2_88089210')) {function content_50788f609fa3d2_88089210($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
@@ -48,6 +48,9 @@ $_smarty_tpl->tpl_vars['field']->_loop = true;
  $_smarty_tpl->tpl_vars['fieldKey']->value = $_smarty_tpl->tpl_vars['field']->key;
 ?>
                 <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable(libraryRequest::getPostValue($_smarty_tpl->tpl_vars['field']->value), null, 0);?>
+                <?php if (empty($_smarty_tpl->tpl_vars['_fieldValue']->value)&&isset($_smarty_tpl->tpl_vars['_data']->value['FILTER'][$_smarty_tpl->tpl_vars['fieldKey']->value])){?>
+                    <?php $_smarty_tpl->tpl_vars['_fieldValue'] = new Smarty_variable(trim($_smarty_tpl->tpl_vars['_data']->value['FILTER'][$_smarty_tpl->tpl_vars['fieldKey']->value],'%'), null, 0);?>
+                <?php }?>
                 <div class="MPWSFormField MPWSFormField<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value,0,1);?>
 ">
                     <label class="MPWSFieldLabel"><?php echo $_smarty_tpl->tpl_vars['fieldKey']->value;?>

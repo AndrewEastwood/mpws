@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-14 18:11:48
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 22:33:16
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlDropDown.html" */ ?>
 <?php /*%%SmartyHeaderCode:146345676550788f66b9aec0-63721127%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '036cc594ee99b6926daf04f649ffa4d0d238b8e9' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlDropDown.html',
-      1 => 1350227504,
+      1 => 1350327225,
       2 => 'file',
     ),
   ),
@@ -93,7 +93,7 @@ $_smarty_tpl->tpl_vars['_item']->_loop = true;
     <span class="MPWSControlReadOnlyValue"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value).((string)$_smarty_tpl->tpl_vars['_controlCssNameCustom']->value).((string)$_smarty_tpl->tpl_vars['_controlValue']->value)};?>
 </span>
     <input type="hidden" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
-" checked="<?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
+" value="<?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
 ">
 
 <?php }else{ ?>

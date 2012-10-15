@@ -5,6 +5,9 @@
             <div class="MPWSFormFields">
             {foreach $_data.FIELDS as $fieldKey => $field}
                 {assign var="_fieldValue" value=libraryRequest::getPostValue($field)}
+                {if empty($_fieldValue) and isset($_data.FILTER.$fieldKey)}
+                    {$_fieldValue = trim($_data.FILTER.$fieldKey, '%')}
+                {/if}
                 <div class="MPWSFormField MPWSFormField{$fieldKey|capitalize:0:1}">
                     <label class="MPWSFieldLabel">{$fieldKey}</label>
                     <input type="text" class="MPWSTextBox" name="{$field}" value="{$_fieldValue}" placeholder="... part of title"/>
