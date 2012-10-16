@@ -4,6 +4,8 @@ See: https://kuler.adobe.com/#themeID/1994456
 
 */
 
+/* SIMPLE */
+
 @colorText: #333;
 
 @colorBg: #333745;
@@ -19,25 +21,34 @@ See: https://kuler.adobe.com/#themeID/1994456
 @textHeader: bold 14px @tfamily;
 
 
-/* Page Layout */
-body {background: url("tut_metalpattern.jpg");}
-
-
+/* Page Layout Theme 1 */
+body {background: url("tut_metalpattern.jpg") @colorBg; margin: 0; padding: 10px; .fontPage;}
 .MPWSLayout {
-    .MPWSComponenHeader {
-        clear: both;
-        zoom: 1;
-        .MPWSComponentLogo {
-            float: left;
-            margin-right: 20px;
+    /* MPWS PAGE */
+    .MPWSPage {
+        width: 800px;
+        margin: 0px auto;
+        background-color: @colorComponent;
+        padding: 20px 30px;
+        box-shadow: 0px 0px 10px #222;
+        border-radius: 10px;
+        border: 1px solid #333745;
+        /* PAGE COMPONENTS */
+        .MPWSComponenHeader {
+            clear: both;
+            zoom: 1;
+            .MPWSComponentLogo {
+                float: left;
+                margin-right: 20px;
+            }
+            .MPWSComponentDataElements {
+                .MPWSWidgetSystemUserInfo {float: left;}
+                .MPWSComponenMenu {.componenMenuHorizontal;}
+            }
         }
-        .MPWSComponentDataElements {
-            .MPWSWidgetSystemUserInfo {float: left;}
-            .MPWSComponenMenu {.componenMenuHorizontal;}
+        .MPWSComponenContent {
         }
-    }
-    .MPWSComponenContent {
-    }
-    .MPWSComponenFooter {
+        .MPWSComponenFooter {
+        }
     }
 }

@@ -1,6 +1,7 @@
 /* COMPONENTS */
 .MPWSComponent {}
 
+
 .MPWSComponentErrorFieldsList {
     color: @colorError;
     padding: 0px 0px 0px 20px;
@@ -68,6 +69,18 @@
     }
 }
 
+.MPWSComponenPagingBar {
+    .standaloneComponent;
+    .MPWSRowLabelValue {
+        margin: 0px;
+    }
+    .MPWSBlockEdgeLinks {float: left; width: 200px; border-right: 3px solid @colorBg;}
+    .MPWSBlockPageLinks {
+        .MPWSLink {.linkButton}
+        float: left;
+    }
+}
+
 /* WIDGETS */
 .MPWSWidget {}
 
@@ -128,3 +141,4 @@
 .MPWSWidgetSystemUserInfo {
     margin: 0px 10px 10px;
 }
+

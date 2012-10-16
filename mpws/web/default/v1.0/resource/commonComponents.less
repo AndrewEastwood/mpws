@@ -5,6 +5,7 @@
         Purpose of the stylesheet follows.
 */
 
+/* ELEMEMENTS */
 .border (@size: 1px, @type: solid) {
     border: @size @type @colorBorder;
 }
@@ -54,71 +55,22 @@
     color: @colorText;
     font: @textHeader;
 }
-
-/* DOCUMENT ELEMENTS */
-
-body {
-    margin: 0;
+.standaloneComponent () {
+    .border;
     padding: 10px;
-    background-color: @colorBg;
-    .fontPage;
 }
 
-button {
-    padding: 3px 5px;
-    .linkButton;
-}
+/* BASE COMPONENTS */
 
-.MPWSLayout {}
-
-/* MPWS PAGE */
-.MPWSPage {
-    width: 800px;
-    margin: 0px auto;
-    background-color: @colorComponent;
-    padding: 20px 30px;
-    box-shadow: 0px 0px 10px #222;
-    border-radius: 10px;
-}
-
-/* LINKS */
-a.MPWSLink {.linkText}
-
-
-/* COMMON ELEMENTS */
-.MPWSHidden {display: none;}
-
-/* CONTROLS */
-.MPWSControlField {
-    /* common */
-    .MPWSControl {
-        .border;
-        padding: 5px;
-    }
-    /* specific controls */
-    .MPWSControlTextBox {
-        width: 300px;
-    }
-    .MPWSControlDropDown {}
-    .MPWSControlTextArea {
-        width: 300px;
-    }
-    .MPWSControlCheckBox {}
-}
-
-/* RENDER MODES */
-.MPWSRenderModeError {
-    color: @colorError;
-    input, textarea {.border;}
-}
-
+.component () {}
 
 .componenMenuHorizontal () {
     clear: both;
-    display: both;
+    display: block;
     margin: 10px -30px;
     background-color: @colorBg;
-    .MPWSList {
+    box-shadow: 0px 0px 10px @colorBg;
+    .MPWSListMenu, .MPWSListMenuSub {
         zoom: 1;
         margin: 0px;
         padding: 0px;
@@ -142,15 +94,67 @@ a.MPWSLink {.linkText}
                     color: @colorComponent;
                 }
             }
-            /* hide inner menus */
-            div {display: none;}
-            &:hover div {
-                display: block;
-                position: absolute;
-                width: 150px;
-                z-index: 99999;
-                opacity: 0.9;
-            }
+            /* show only next nested menu */
+            &:hover > ul.MPWSListMenuSub {display:block;}
         }
+        /* hide inner menus */
+        .MPWSListMenuSub {
+            display: none;
+            position: absolute;
+            height: auto;
+            background-color: @colorBg;
+            box-shadow: 0px 0px 10px @colorComponent;
+            .MPWSListItem {
+                width: 140px;
+                .border(3px);
+                border-color: @colorBg;
+                a.MPWSLink {width: 120px;}
+            }
+            
+        }
+        /* sub menus */
+        .MPWSListMenuSub1 {top: 38px;}
+        .MPWSListMenuSub2 {top: 15px; left: 80px;}
     }
+
+}
+
+/* DOCUMENT ELEMENTS */
+
+button {
+    padding: 3px 5px;
+    .linkButton;
+}
+
+/* LINKS */
+a.MPWSLink {.linkText}
+
+
+/* COMMON ELEMENTS */
+.MPWSHidden {display: none;}
+.MPWSWrapper {overflow: hidden; zoom: 1;}
+.MPWSBlock {padding: 5px;}
+
+/* CONTROLS */
+.MPWSControlField {
+    /* common */
+    .MPWSControl {
+        .border;
+        padding: 5px;
+    }
+    /* specific controls */
+    .MPWSControlTextBox {
+        width: 300px;
+    }
+    .MPWSControlDropDown {}
+    .MPWSControlTextArea {
+        width: 300px;
+    }
+    .MPWSControlCheckBox {}
+}
+
+/* RENDER MODES */
+.MPWSRenderModeError {
+    color: @colorError;
+    input, textarea {.border;}
 }
