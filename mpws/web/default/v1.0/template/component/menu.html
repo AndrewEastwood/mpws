@@ -14,11 +14,27 @@
     {$showDescription = $_showDescription}
 {/if}
 
+{* get menu index *}
+{$_subIndex = 0}
+{if not empty($_sub)}
+    {$_subIndex = $_sub}
+{/if}
+
+{* print container for root list *}
+{if empty($_subIndex)}
 <div class="MPWSComponent MPWSComponenMenu">
+{/if}
+
     {if isset($_items)}
-    <ul class="MPWSList MPWSListMenu">
+    
+    {if empty($_subIndex)}
+        <ul class="MPWSList MPWSListMenu">
+    {else}
+        <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub{$_subIndex}">
+    {/if}
+        
     {foreach $_items as $keyvar=>$itemvar}
-        <li class="MPWSListItem MPWSListItemMenu">
+        <li class="MPWSListItem">
             {$_linkText = $DISPLAY_OBJECT->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}
             <a href="{$itemvar.link}" target="{$itemvar.target}" class="MPWSLink" title="{$_linkText}">
                 <span class="MPWSText MPWSTextTitle">{$_linkText}</span>
@@ -27,10 +43,25 @@
                 {/if}
             </a>
             {if isset($itemvar.contains) and ($itemvar.contains eq '__PLUGINS__')}
-                {include file=$DISPLAY_OBJECT->objectTemplatePath_component_menuPlugins}
+            <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub{$_subIndex + 1}">
+                {foreach $OBJECT.WOB as $webObj}
+                    <li class="MPWSListItem">
+                        <a href="{$webObj->objectConfiguration_object_menuExecObjectPath}?plugin={$webObj->getObjectName()}" class="MPWSLink" title="{$webObj->objectProperty_widget_systemPluginListTitle}">
+                            <span class="MPWSText">{$webObj->objectProperty_widget_systemPluginListTitle}</span>
+                        </a>
+                        {$submenu = $webObj->objectConfiguration_display_menuPlugin}
+                        {if !empty($submenu) }
+                            {include file=$CURRENT.OBJECT->objectTemplatePath_component_menu _items=$submenu _OBJ=$webObj _sub=$_subIndex + 2}
+                        {/if}
+                    </li>
+                {/foreach}
+            </ul>
             {/if}
         </li>
     {/foreach}
     </ul>
     {/if}
+    
+{if empty($_subIndex)}
 </div>
+{/if}

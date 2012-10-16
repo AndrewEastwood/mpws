@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 08:57:58
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 08:43:12
          compiled from "/var/www/mpws/web/default/v1.0/template/component/quickFiltering.html" */ ?>
 <?php /*%%SmartyHeaderCode:1265422051507ba5e6b0a9e9-58699856%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1a0890e2fef5427fab806f0d3f45ac8d91d053dd' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/quickFiltering.html',
-      1 => 1350280496,
+      1 => 1350366116,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507ba5e6b7ffe7_96710921',
   'variables' => 
   array (
     '_ownerName' => 0,
@@ -29,8 +31,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_linkTextKey' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ba5e6b7ffe7_96710921',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507ba5e6b7ffe7_96710921')) {function content_507ba5e6b7ffe7_96710921($_smarty_tpl) {?>
 
@@ -43,30 +43,40 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 foreach ($_from as $_smarty_tpl->tpl_vars['qfEntry']->key => $_smarty_tpl->tpl_vars['qfEntry']->value){
 $_smarty_tpl->tpl_vars['qfEntry']->_loop = true;
 ?>
-    <div class="MPWSBlock">
-        <div class="MPWSDataRow">
-            <label class="MPWSLabel">
-                <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_quickFilteringFieldPrefix;?>
+    
+    <?php $_smarty_tpl->_capture_stack[0][] = array("row_label", null, null); ob_start(); ?>
+        <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_quickFilteringFieldPrefix;?>
 
-                <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."QuickFilteringField".((string)$_smarty_tpl->tpl_vars['qfEntry']->value)};?>
+        <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."QuickFilteringField".((string)$_smarty_tpl->tpl_vars['qfEntry']->value)};?>
 
-                <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_quickFilteringFieldSuffix;?>
+        <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_quickFilteringFieldSuffix;?>
 
-            </label>
-            <span class="MPWSValue">
-                <?php $_smarty_tpl->tpl_vars['_keyAsc'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['qfEntry']->value).".asc", null, 0);?>
-                <?php $_smarty_tpl->tpl_vars['_keyDesc'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['qfEntry']->value).".desc", null, 0);?>
-                <?php $_smarty_tpl->tpl_vars['_requestKey'] = new Smarty_variable(libraryRequest::getValue($_smarty_tpl->tpl_vars['_confing']->value['filtering']['sortKey']), null, 0);?>
-                
-                <?php $_smarty_tpl->tpl_vars['_filterAction'] = new Smarty_variable(libraryRequest::getNewUrl('sort',libraryUtils::valueSelect($_smarty_tpl->tpl_vars['_requestKey']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value,$_smarty_tpl->tpl_vars['_keyDesc']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value)), null, 0);?>
-                <?php $_smarty_tpl->tpl_vars['_linkTextKey'] = new Smarty_variable(libraryUtils::valueSelect($_smarty_tpl->tpl_vars['_requestKey']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value,"DESC","ASC"), null, 0);?>
-                <a href="?<?php echo $_smarty_tpl->tpl_vars['_filterAction']->value;?>
+    <?php list($_capture_buffer, $_capture_assign, $_capture_append) = array_pop($_smarty_tpl->_capture_stack[0]);
+if (!empty($_capture_buffer)) {
+ if (isset($_capture_assign)) $_smarty_tpl->assign($_capture_assign, ob_get_contents());
+ if (isset( $_capture_append)) $_smarty_tpl->append( $_capture_append, ob_get_contents());
+ Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
+} else $_smarty_tpl->capture_error();?>
+    <?php $_smarty_tpl->_capture_stack[0][] = array("row_value", null, null); ob_start(); ?>
+        <?php $_smarty_tpl->tpl_vars['_keyAsc'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['qfEntry']->value).".asc", null, 0);?>
+        <?php $_smarty_tpl->tpl_vars['_keyDesc'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['qfEntry']->value).".desc", null, 0);?>
+        <?php $_smarty_tpl->tpl_vars['_requestKey'] = new Smarty_variable(libraryRequest::getValue($_smarty_tpl->tpl_vars['_confing']->value['filtering']['sortKey']), null, 0);?>
+        <?php $_smarty_tpl->tpl_vars['_filterAction'] = new Smarty_variable(libraryRequest::getNewUrl('sort',libraryUtils::valueSelect($_smarty_tpl->tpl_vars['_requestKey']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value,$_smarty_tpl->tpl_vars['_keyDesc']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value)), null, 0);?>
+        <?php $_smarty_tpl->tpl_vars['_linkTextKey'] = new Smarty_variable(libraryUtils::valueSelect($_smarty_tpl->tpl_vars['_requestKey']->value,$_smarty_tpl->tpl_vars['_keyAsc']->value,"DESC","ASC"), null, 0);?>
+        <a href="?<?php echo $_smarty_tpl->tpl_vars['_filterAction']->value;?>
 #MPWSComponenQuickFilteringID" class="MPWSLink">
-                    <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_component_quickFilteringAction".((string)$_smarty_tpl->tpl_vars['_linkTextKey']->value)};?>
+            <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_component_quickFilteringAction".((string)$_smarty_tpl->tpl_vars['_linkTextKey']->value)};?>
 
-                </a>
-            </span>
-        </div>
-    </div>
+        </a>
+    <?php list($_capture_buffer, $_capture_assign, $_capture_append) = array_pop($_smarty_tpl->_capture_stack[0]);
+if (!empty($_capture_buffer)) {
+ if (isset($_capture_assign)) $_smarty_tpl->assign($_capture_assign, ob_get_contents());
+ if (isset( $_capture_append)) $_smarty_tpl->append( $_capture_append, ob_get_contents());
+ Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
+} else $_smarty_tpl->capture_error();?>
+    
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_divRowLabelValue, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_label'=>Smarty::$_smarty_vars['capture']['row_label'],'_value'=>Smarty::$_smarty_vars['capture']['row_value']), 0);?>
+
+
     <?php } ?>
 </div><?php }} ?>

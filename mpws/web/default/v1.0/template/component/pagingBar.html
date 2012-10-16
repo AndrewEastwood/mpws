@@ -1,38 +1,33 @@
 <div id="MPWSComponenPagingBarID" class="MPWSComponent MPWSComponenPagingBar">
     
-    <div class="MPWSBlock MPWSBlockSummary">
-        <div class="MPWSDataRow">
-            <label class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryFilteredRecords}</label>
-            <span class="MPWSValue">{$_data.AVAILABLE}</span>
-        </div>
-        <div class="MPWSDataRow">
-            <label class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryTotalRecords}</label>
-            <span class="MPWSValue">{$_data.TOTAL}</span>
-        </div>
-        <div class="MPWSDataRow">
-            <label class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageSize}</label>
-            <span class="MPWSValue">{$_data.LIMIT}</span>
-        </div>
-        <div class="MPWSDataRow">
-            <label class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageCount}</label>
-            <span class="MPWSValue">{$_data.PAGES}</span>
-        </div>
-        <div class="MPWSDataRow">
-            <label class="MPWSLabel">{$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryCurrentPage}</label>
-            <span class="MPWSValue">{$_data.CURRENT}</span>
-        </div>
-    </div>
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryFilteredRecords _value=$_data.AVAILABLE}
     
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryTotalRecords _value=$_data.TOTAL}
+
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageSize _value=$_data.LIMIT}
+    
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageCount _value=$_data.PAGES}
+    
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryCurrentPage _value=$_data.CURRENT}
+
+    <div class="MPWSWrapper">
+        
+    {if not empty($_data.EDGES)}
     <div class="MPWSBlock MPWSBlockEdgeLinks">
     {foreach $_data.EDGES as $edgeName => $link}
-    <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$CURRENT.OBJECT->{"objectProperty_component_pagingBarEdgeLink`$edgeName`"}}</a>
+        <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$CURRENT.OBJECT->{"objectProperty_component_pagingBarEdgeLink`$edgeName`"}}</a>
     {/foreach}
     </div>
+    {/if}
     
+    {if not empty($_data.LINKS) and count($_data.LINKS) gt 0}
     <div class="MPWSBlock MPWSBlockPageLinks">
     {foreach $_data.LINKS as $pageIndex => $link}
-    <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$pageIndex}</a>
+        <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$pageIndex}</a>
     {/foreach}
+    </div>
+    {/if}
+
     </div>
     
 </div>
