@@ -193,18 +193,18 @@ class libraryComponents
         );
         // add search fields
         foreach ($config['searchbox']['fields'] as $searchFieldName)
-            $com['SEARCHBOX']['FIELDS'][$searchFieldName] = $config['searchbox']['searchKeyPrefix'] . $searchFieldName;
+            $com['SEARCHBOX']['FIELDS'][$searchFieldName] = 'mpws_field_' . strtolower($searchFieldName);
         // detect search request
         if (libraryRequest::isPostFormAction('search')) {
 
             $searchbox = array();
             foreach ($_POST as $_pkey => $_pval) {
-                $returnValue = strpos($_pkey, $config['searchbox']['searchKeyPrefix']);
+                $returnValue = strpos($_pkey, 'mpws_field_');
                 //echo 'prefix = ' . $config['SEARCH_KEY_PREFIX'] .'<br>';
                 //echo 'post key = ' . $_pkey .'<br>';
                 //echo 'result is = ' . $returnValue .'-----<br>';
                 if ($returnValue === 0 && !empty($_pval)) {
-                    $_searckKeyField = str_replace($config['searchbox']['searchKeyPrefix'], '', $_pkey);
+                    $_searckKeyField = str_replace('mpws_field_', '', $_pkey);
                     $searchbox[$_searckKeyField] = '%'.mysql_escape_string($_pval).'%';
                 }
             }

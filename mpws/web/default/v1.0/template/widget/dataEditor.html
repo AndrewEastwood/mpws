@@ -29,7 +29,7 @@
         {* create new form page *}
         {* completely new record without any initial data *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _resource='custom'}
         {/foreach}
 
     
@@ -44,11 +44,10 @@
             {/if}
         
             {if $CURRENT.SOURCE.DATA.ISNEW}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode _resource='custom'}
             {else}
                 {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
-                {$_controlValue}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode _resource='custom'}
             {/if}
             
             
@@ -60,7 +59,7 @@
     
         {* preview page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _readonly=true}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _readonly=true _resource='custom'}
         {/foreach}
         
     {elseif $_formInnerAction eq "save"}

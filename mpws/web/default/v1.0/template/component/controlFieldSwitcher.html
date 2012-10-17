@@ -12,6 +12,8 @@
 
 {$_renderMode = 'normal'}
 {$_controlValue = false}
+{$_res = 'component'}
+
 {if isset($_readonly) and $_readonly}
     {$_renderMode = 'hidden'}
 {elseif isset($_render)}
@@ -19,6 +21,9 @@
 {/if}
 {if isset($_value)}
     {$_controlValue = $_value}
+{/if}
+{if isset($_resource)}
+    {$_res = $_resource}
 {/if}
     
 <div class="MPWSComponent MPWSComponentField MPWSRenderMode{$_renderMode|capitalize}">
@@ -45,7 +50,7 @@
     {/if}
 {/capture}
 
-{include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFieldLabel _labelKey="`$_ownerName`Field`$_name`" _resource='custom' _controlName=$_name _controlType=$_standartControlType}
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFieldLabel _labelKey="`$_ownerName`Field`$_name`" _resource=$_res _controlName=$_name _controlType=$_standartControlType}
 {$smarty.capture.control}
 
 </div>

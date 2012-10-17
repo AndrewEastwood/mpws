@@ -61,11 +61,11 @@
         {$_requestKey = libraryRequest::getValue($_confing.filtering.sortKey)}
         {$_filterAction = libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_requestKey, $_keyAsc, $_keyDesc, $_keyAsc))}
         {$_linkTextKey = libraryUtils::valueSelect($_requestKey, $_keyAsc, "DESC", "ASC")}
-        <a href="?{$_filterAction}#MPWSComponenQuickFilteringID" class="MPWSLink">
-            {$CURRENT.OBJECT->{"objectProperty_component_quickFilteringAction`$_linkTextKey`"}}
-        </a>
+        {* sort link *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _title=$CURRENT.OBJECT->{"objectProperty_component_quickFilteringAction`$_linkTextKey`"} _href="?`$_filterAction`#MPWSComponenQuickFilteringID"}
     {/capture}
     
+    {* data row value *}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$smarty.capture.row_label _value=$smarty.capture.row_value}
 
     {/foreach}

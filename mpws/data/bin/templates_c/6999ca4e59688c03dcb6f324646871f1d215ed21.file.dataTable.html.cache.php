@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 08:57:51
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 19:10:46
          compiled from "/var/www/mpws/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:940225903507ba5df0e6130-84725401%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6999ca4e59688c03dcb6f324646871f1d215ed21' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/dataTable.html',
-      1 => 1350280496,
+      1 => 1350490242,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507ba5df2142c6_16210485',
   'variables' => 
   array (
     '_ownerName' => 0,
@@ -29,8 +31,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cellEntry' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ba5df2142c6_16210485',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507ba5df2142c6_16210485')) {function content_507ba5df2142c6_16210485($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
@@ -44,7 +44,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <?php if (count($_smarty_tpl->tpl_vars['_data']->value)==0){?>
 
-    <div class="MPWSBlock">
+    <div class="MPWSBlock MPWSRenderModeError">
         <span class="MPWSText"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_widget_dataTableViewDataEmpty;?>
 </span>
     </div>

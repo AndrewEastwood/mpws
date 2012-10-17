@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 12:46:57
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 16:18:23
          compiled from "/var/www/mpws/web/default/v1.0/template/component/pagingBar.html" */ ?>
 <?php /*%%SmartyHeaderCode:1717060221507ba5e6cd00f1-05075779%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'e98dc992345d0b598994ca191b79a051180fa317' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/pagingBar.html',
-      1 => 1350380813,
+      1 => 1350471184,
       2 => 'file',
     ),
   ),
@@ -62,7 +62,7 @@ $_smarty_tpl->tpl_vars['link']->_loop = true;
     </div>
     <?php }?>
     
-    <?php if (!empty($_smarty_tpl->tpl_vars['_data']->value['LINKS'])&&count($_smarty_tpl->tpl_vars['_data']->value['LINKS'])>0){?>
+    <?php if (!empty($_smarty_tpl->tpl_vars['_data']->value['LINKS'])&&count($_smarty_tpl->tpl_vars['_data']->value['LINKS'])>1){?>
     <div class="MPWSBlock MPWSBlockPageLinks">
     <?php  $_smarty_tpl->tpl_vars['link'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['link']->_loop = false;
  $_smarty_tpl->tpl_vars['pageIndex'] = new Smarty_Variable;

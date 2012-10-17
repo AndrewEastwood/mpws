@@ -2,6 +2,11 @@
 ; search box
 ; ============================
 searchBoxHeader = "Simple Search Box";
+searchBoxResultMessage = "Your search request is:";
+searchBoxResultFilterTextPrefix = "The ";
+searchBoxResultFilterTextFieldPrefix = "field ";
+searchBoxResultFilterTextValuePrefix = " contains value ";
+searchBoxResultFilterTextFieldValueSplitter = ", and the ";
 
 
 ; ============================
@@ -52,6 +57,8 @@ formPagePreviewButtonCancel = "Cancel";
 formPageSaveButtonNew = "Add One More Record";
 formPageCancelButtonNew = "Add One More Record";
 formControlLinkReturn = "Back To List";
+formPageSearchBoxButtonSearch = "Search";
+formPageSearchBoxButtonDiscard = "Reset Search";
 
 ; ============================
 ; validator header

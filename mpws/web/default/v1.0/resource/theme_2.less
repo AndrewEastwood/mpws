@@ -9,7 +9,7 @@ See: https://kuler.adobe.com/#themeID/1994456
 @colorText: #333;
 
 @colorBg: #333745;
-@colorBorder: #77C4D3;
+@colorBorder: #333745;
 @colorComponent: #DAEDE2;
 @colorError: #EA2E49;//;#F6F792;
 @colorLink: #333745;
@@ -28,7 +28,7 @@ body {background: url("tut_metalpattern.jpg") @colorBg; margin: 0; padding: 10px
     .MPWSPage {
         width: 800px;
         margin: 0px auto;
-        background-color: @colorComponent;
+        background: url("mpws_bg.png") @colorComponent repeat-x 0 -40px;
         padding: 20px 30px;
         box-shadow: 0px 0px 10px #222;
         border-radius: 10px;
@@ -42,7 +42,7 @@ body {background: url("tut_metalpattern.jpg") @colorBg; margin: 0; padding: 10px
                 margin-right: 20px;
             }
             .MPWSComponentDataElements {
-                .MPWSWidgetSystemUserInfo {float: left;}
+                .MPWSWidgetSystemUserInfo {float: right;}
                 .MPWSComponenMenu {.componenMenuHorizontal;}
             }
         }

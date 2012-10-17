@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 10:12:19
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 19:16:48
          compiled from "/var/www/mpws/web/default/v1.0/template/component/simpleControlTextBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:1888757376507bb7530979f4-94401191%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '895b30db561d11a1f49691acbd28353b8e852c1e' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlTextBox.html',
-      1 => 1350280496,
+      1 => 1350490601,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507bb75313de33_47850254',
   'variables' => 
   array (
     '_name' => 0,
@@ -32,8 +34,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507bb75313de33_47850254',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507bb75313de33_47850254')) {function content_507bb75313de33_47850254($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
@@ -77,7 +77,10 @@ ID" type="text" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?
  class="MPWSControl MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssName']->value;?>
  MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
 ">
-           
+    <?php if ($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='error'){?>
+        <span class="MPWSText MPWSTextAsterix">*</span>
+    <?php }?>
+
 <?php }elseif($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='hidden'){?>
     
     

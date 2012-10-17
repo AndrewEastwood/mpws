@@ -29,7 +29,10 @@
     
     {* editable control *}
     <input id="MPWSControl{$_controlCssNameCustom}ID" type="text" name="{$_controlName}" value="{$_controlValue}" size="{$_controlSize}"{$_controlLimit} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
-           
+    {if $_controlRenderMode eq 'error'}
+        <span class="MPWSText MPWSTextAsterix">*</span>
+    {/if}
+
 {elseif $_controlRenderMode eq 'hidden'}
     
     {* display hidden control*}

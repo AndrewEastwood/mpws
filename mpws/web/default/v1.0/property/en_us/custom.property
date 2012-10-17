@@ -22,7 +22,7 @@ dataTableViewSystemUsersCaptionDateLastAccess = 'Last Time Visit';
 dataTableViewSystemUsersCaptionIsOnline = "Online State";
 dataTableViewSystemUsersQuickFilteringFieldName = 'User Names';
 dataTableViewSystemUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
-
+dataTableViewSystemUsersSearchBoxFieldName = "User Name";
 
 ; ============================
 ; widget dataEditor SystemUsers

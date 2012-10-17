@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 20:13:17
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 16:19:26
          compiled from "/var/www/mpws/web/default/v1.0/template/component/controlFieldSwitcher.html" */ ?>
 <?php /*%%SmartyHeaderCode:20619230507c442d9a1a99-80075515%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3349bdbf34090f0c005554152d092228d9ae2049' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/controlFieldSwitcher.html',
-      1 => 1350321182,
+      1 => 1350479945,
       2 => 'file',
     ),
   ),
@@ -15,28 +15,32 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507c442da89ad8_38189091',
   'variables' => 
   array (
     '_readonly' => 0,
     '_render' => 0,
     '_value' => 0,
+    '_resource' => 0,
     '_renderMode' => 0,
     '_type' => 0,
     'CURRENT' => 0,
     '_name' => 0,
     '_controlValue' => 0,
     '_ownerName' => 0,
+    '_res' => 0,
     '_standartControlType' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507c442da89ad8_38189091',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507c442da89ad8_38189091')) {function content_507c442da89ad8_38189091($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 
 <?php $_smarty_tpl->tpl_vars['_renderMode'] = new Smarty_variable('normal', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable(false, null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_res'] = new Smarty_variable('component', null, 0);?>
+
 <?php if (isset($_smarty_tpl->tpl_vars['_readonly']->value)&&$_smarty_tpl->tpl_vars['_readonly']->value){?>
     <?php $_smarty_tpl->tpl_vars['_renderMode'] = new Smarty_variable('hidden', null, 0);?>
 <?php }elseif(isset($_smarty_tpl->tpl_vars['_render']->value)){?>
@@ -44,6 +48,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php }?>
 <?php if (isset($_smarty_tpl->tpl_vars['_value']->value)){?>
     <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable($_smarty_tpl->tpl_vars['_value']->value, null, 0);?>
+<?php }?>
+<?php if (isset($_smarty_tpl->tpl_vars['_resource']->value)){?>
+    <?php $_smarty_tpl->tpl_vars['_res'] = new Smarty_variable($_smarty_tpl->tpl_vars['_resource']->value, null, 0);?>
 <?php }?>
     
 <div class="MPWSComponent MPWSComponentField MPWSRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_renderMode']->value);?>
@@ -82,7 +89,7 @@ if (!empty($_capture_buffer)) {
  Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
 } else $_smarty_tpl->capture_error();?>
 
-<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleFieldLabel, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_labelKey'=>((string)$_smarty_tpl->tpl_vars['_ownerName']->value)."Field".((string)$_smarty_tpl->tpl_vars['_name']->value),'_resource'=>'custom','_controlName'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlType'=>$_smarty_tpl->tpl_vars['_standartControlType']->value), 0);?>
+<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleFieldLabel, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_labelKey'=>((string)$_smarty_tpl->tpl_vars['_ownerName']->value)."Field".((string)$_smarty_tpl->tpl_vars['_name']->value),'_resource'=>$_smarty_tpl->tpl_vars['_res']->value,'_controlName'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlType'=>$_smarty_tpl->tpl_vars['_standartControlType']->value), 0);?>
 
 <?php echo Smarty::$_smarty_vars['capture']['control'];?>
 
