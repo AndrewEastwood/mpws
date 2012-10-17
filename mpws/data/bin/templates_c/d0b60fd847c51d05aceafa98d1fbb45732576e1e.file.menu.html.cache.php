@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 22:32:20
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 22:03:25
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html" */ ?>
 <?php /*%%SmartyHeaderCode:180014694050788f61140234-07220271%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd0b60fd847c51d05aceafa98d1fbb45732576e1e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html',
-      1 => 1350327225,
+      1 => 1350414137,
       2 => 'file',
     ),
   ),
@@ -24,12 +24,16 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'OBJECT' => 0,
     'DOs' => 0,
     '_showDescription' => 0,
+    '_sub' => 0,
+    '_subIndex' => 0,
     '_items' => 0,
     'keyvar' => 0,
     'DISPLAY_OBJECT' => 0,
     'itemvar' => 0,
     '_linkText' => 0,
     'showDescription' => 0,
+    'webObj' => 0,
+    'submenu' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
@@ -52,9 +56,26 @@ $_smarty_tpl->tpl_vars['DOs']->value[] = $_smarty_tpl->tpl_vars['OBJECT']->value
     <?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable($_smarty_tpl->tpl_vars['_showDescription']->value, null, 0);?>
 <?php }?>
 
+
+<?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable(0, null, 0);?>
+<?php if (!empty($_smarty_tpl->tpl_vars['_sub']->value)){?>
+    <?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable($_smarty_tpl->tpl_vars['_sub']->value, null, 0);?>
+<?php }?>
+
+
+<?php if (empty($_smarty_tpl->tpl_vars['_subIndex']->value)){?>
 <div class="MPWSComponent MPWSComponenMenu">
+<?php }?>
+
     <?php if (isset($_smarty_tpl->tpl_vars['_items']->value)){?>
-    <ul class="MPWSList MPWSListMenu">
+    
+    <?php if (empty($_smarty_tpl->tpl_vars['_subIndex']->value)){?>
+        <ul class="MPWSList MPWSListMenu">
+    <?php }else{ ?>
+        <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub<?php echo $_smarty_tpl->tpl_vars['_subIndex']->value;?>
+">
+    <?php }?>
+        
     <?php  $_smarty_tpl->tpl_vars['itemvar'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['itemvar']->_loop = false;
  $_smarty_tpl->tpl_vars['keyvar'] = new Smarty_Variable;
  $_from = $_smarty_tpl->tpl_vars['_items']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -62,7 +83,7 @@ foreach ($_from as $_smarty_tpl->tpl_vars['itemvar']->key => $_smarty_tpl->tpl_v
 $_smarty_tpl->tpl_vars['itemvar']->_loop = true;
  $_smarty_tpl->tpl_vars['keyvar']->value = $_smarty_tpl->tpl_vars['itemvar']->key;
 ?>
-        <li class="MPWSListItem MPWSListItemMenu">
+        <li class="MPWSListItem">
             <?php $_smarty_tpl->tpl_vars['_linkText'] = new Smarty_variable($_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{"objectProperty_display_menuText".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['keyvar']->value,0,1))}, null, 0);?>
             <a href="<?php echo $_smarty_tpl->tpl_vars['itemvar']->value['link'];?>
 " target="<?php echo $_smarty_tpl->tpl_vars['itemvar']->value['target'];?>
@@ -76,11 +97,35 @@ $_smarty_tpl->tpl_vars['itemvar']->_loop = true;
                 <?php }?>
             </a>
             <?php if (isset($_smarty_tpl->tpl_vars['itemvar']->value['contains'])&&($_smarty_tpl->tpl_vars['itemvar']->value['contains']=='__PLUGINS__')){?>
-                <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->objectTemplatePath_component_menuPlugins, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+            <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub<?php echo $_smarty_tpl->tpl_vars['_subIndex']->value+1;?>
+">
+                <?php  $_smarty_tpl->tpl_vars['webObj'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['webObj']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['OBJECT']->value['WOB']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['webObj']->key => $_smarty_tpl->tpl_vars['webObj']->value){
+$_smarty_tpl->tpl_vars['webObj']->_loop = true;
+?>
+                    <li class="MPWSListItem">
+                        <a href="<?php echo $_smarty_tpl->tpl_vars['webObj']->value->objectConfiguration_object_menuExecObjectPath;?>
+?plugin=<?php echo $_smarty_tpl->tpl_vars['webObj']->value->getObjectName();?>
+" class="MPWSLink" title="<?php echo $_smarty_tpl->tpl_vars['webObj']->value->objectProperty_widget_systemPluginListTitle;?>
+">
+                            <span class="MPWSText"><?php echo $_smarty_tpl->tpl_vars['webObj']->value->objectProperty_widget_systemPluginListTitle;?>
+</span>
+                        </a>
+                        <?php $_smarty_tpl->tpl_vars['submenu'] = new Smarty_variable($_smarty_tpl->tpl_vars['webObj']->value->objectConfiguration_display_menuPlugin, null, 0);?>
+                        <?php if (!empty($_smarty_tpl->tpl_vars['submenu']->value)){?>
+                            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_menu, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_items'=>$_smarty_tpl->tpl_vars['submenu']->value,'_OBJ'=>$_smarty_tpl->tpl_vars['webObj']->value,'_sub'=>$_smarty_tpl->tpl_vars['_subIndex']->value+2), 0);?>
 
+                        <?php }?>
+                    </li>
+                <?php } ?>
+            </ul>
             <?php }?>
         </li>
     <?php } ?>
     </ul>
     <?php }?>
-</div><?php }} ?>
+    
+<?php if (empty($_smarty_tpl->tpl_vars['_subIndex']->value)){?>
+</div>
+<?php }?><?php }} ?>

@@ -16,7 +16,7 @@
 }
 .borderComponent(@radius: 1px) {
     .border(1px, dotted);
-    .rounded-corners (1px);
+    .rounded-corners (@radius);
 }
 .linkText() {
     color: @colorLink;
@@ -58,6 +58,14 @@
 .standaloneComponent () {
     .border;
     padding: 10px;
+}
+.widgetBase () {
+    .borderComponent(10px);
+    border-color: @colorBg;
+    padding: 10px;
+    margin: 10px 0px 15px;
+    box-shadow: 0px 0px 10px #000;
+    background-color: desaturate(@colorComponent, 50%);
 }
 
 /* BASE COMPONENTS */
@@ -131,6 +139,7 @@ a.MPWSLink {.linkText}
 
 
 /* COMMON ELEMENTS */
+.MPWSText {}
 .MPWSHidden {display: none;}
 .MPWSWrapper {overflow: hidden; zoom: 1;}
 .MPWSBlock {padding: 5px;}
@@ -157,4 +166,9 @@ a.MPWSLink {.linkText}
 .MPWSRenderModeError {
     color: @colorError;
     input, textarea {.border;}
+}
+
+/* BASE ELEMENTS */
+.MPWSWidget {
+    .widgetBase;
 }

@@ -3,7 +3,7 @@
 {$_widgetCustomName = "`$_widgetName``$CURRENT.SOURCE.NAME`"}
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataEditor`$CURRENT.SOURCE.NAME`"}}
 
-<div id="MPWSWidgetDataEditor{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidgetDataEditor MPWSWidgetDataEditor{$CURRENT.SOURCE.NAME}">
+<div id="MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName|capitalize} MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}">
     
     {$_formInnerAction = $CURRENT.SOURCE.DATA.EDIT_PAGE}
 

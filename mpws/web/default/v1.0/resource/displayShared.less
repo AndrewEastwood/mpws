@@ -1,6 +1,29 @@
 /* COMPONENTS */
 .MPWSComponent {}
 
+.MPWSComponentWidgetSummary {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 3px solid @color;
+    .MPWSText {display: block;}
+    .MPWSTextTitle {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .MPWSTextDetails {
+        font-size: 11px;
+        font-style: italic;
+    }
+}
+
+.MPWSComponentHeader {
+    font-size: 14px;
+    color: @colorBg;
+    display: block;
+    border-bottom: 1px solid @color;
+    h3 {font-size: 14px;}
+}
+
 
 .MPWSComponentErrorFieldsList {
     color: @colorError;
@@ -41,20 +64,18 @@
 
 /* COMPONENT: data table */
 .MPWSComponentDataTable {
-    border: 1px dotted #BAC0AC;
+    .standaloneComponent;
     .MPWSDataTableRows {
         .MPWSDataTableRowCaptions {
-            background-color: #BAC0AC;
-            padding-left: 140px;
+            background-color: @colorBorder;
             margin-bottom: 10px;
+            padding: 5px 0px 5px 140px;
             a.MPWSLink {
-                color: #D40015;
-                text-decoration: none;
                 &:hover {text-decoration: none;}
             }
         }
         .MPWSDataTableRow {
-            border-bottom: 1px solid #BAC0AC;
+            border-bottom: 1px solid @colorBorder;
             overflow: hidden;
             .MPWSDataTableCell {
                 float: left;
@@ -65,20 +86,24 @@
                 width: 130px;
                 span.MPWSDataTableCellAction {padding-right: 5px;}
             }
+            &:hover {background-color: @colorBorder;}
         }
     }
 }
 
 .MPWSComponenPagingBar {
     .standaloneComponent;
+    margin-top: 10px;
+    .MPWSWrapper {margin-top: 8px;}
     .MPWSRowLabelValue {
         margin: 0px;
     }
     .MPWSBlockEdgeLinks {float: left; width: 200px; border-right: 3px solid @colorBg;}
     .MPWSBlockPageLinks {
-        .MPWSLink {.linkButton}
+        padding-left: 20px;
         float: left;
     }
+    .MPWSLink {.linkButton}
 }
 
 /* WIDGETS */
@@ -87,17 +112,12 @@
 
 /* WIDGET: dataeditor */
 
+.MPWSWidgetDataTableView {
+}
+
 .MPWSWidgetDataEditor {
-    /* Common */
-    border: 1px dotted #BAC0AC;
-    padding: 10px;
-    .MPWSComponentObjectSummary {
-        font-weight: bold;
-        font-size: 14px;
-        padding-bottom: 5px;
-    }
     form.MPWSFormEditor {
-        border-top: 1px dotted #BAC0AC;
+        border-top: 1px dotted @colorBorder;
         padding: 10px;
         .MPWSComponentField {
             overflow: hidden;
@@ -114,7 +134,7 @@
             }
         }
         .MPWSControlFieldFormButtons {
-            border-top: 1px dotted #BAC0AC;
+            border-top: 1px dotted @colorBorder;
             padding: 10px 0 0;
         }
     }
