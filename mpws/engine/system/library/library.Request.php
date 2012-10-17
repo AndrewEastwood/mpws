@@ -65,6 +65,14 @@ class libraryRequest {
     static function getPostFormAction () {
         return self::value($_POST, 'do');
     }
+    static function getPostFormField ($key, $doEscape = true, $wrap = '') {
+        $_value = self::value($_POST, 'mpws_field_' . strtolower($key));
+        if ($doEscape)
+            $_value = mysql_escape_string($_value);
+        if (!empty($wrap))
+            $_value = $wrap . $_value . $wrap;
+        return $_value;
+    }
     static function isPostFormAction ($equalsToThisValue) { 
         $do = self::value($_POST, 'do');
         //echo '<br>isPostFormAction === ' . $equalsToThisValue . ' == ' . $do;

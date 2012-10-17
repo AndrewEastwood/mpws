@@ -192,42 +192,55 @@ class libraryComponents
             'WORDS' => array()
         );
         // add search fields
-        foreach ($config['searchbox']['fields'] as $searchFieldName)
-            $com['SEARCHBOX']['FIELDS'][$searchFieldName] = 'mpws_field_' . strtolower($searchFieldName);
+        $com['SEARCHBOX']['FIELDS'] = $config['searchbox']['fields'];
+        /*
+        foreach ( as $searchFieldName) {
+            [$searchFieldName] = strtolower($searchFieldName);
+        }*/
         // detect search request
         if (libraryRequest::isPostFormAction('search')) {
-
+            //echo 'SEARCHING';
             $searchbox = array();
-            foreach ($_POST as $_pkey => $_pval) {
-                $returnValue = strpos($_pkey, 'mpws_field_');
-                //echo 'prefix = ' . $config['SEARCH_KEY_PREFIX'] .'<br>';
-                //echo 'post key = ' . $_pkey .'<br>';
-                //echo 'result is = ' . $returnValue .'-----<br>';
-                if ($returnValue === 0 && !empty($_pval)) {
-                    $_searckKeyField = str_replace('mpws_field_', '', $_pkey);
-                    $searchbox[$_searckKeyField] = '%'.mysql_escape_string($_pval).'%';
-                }
+            $_emptyFieldsCount = 0;
+            foreach ($com['SEARCHBOX']['FIELDS'] as $_searchFieldName) {
+                $_fieldValue = libraryRequest::getPostFormField($_searchFieldName, true, '%');
+                if ($_fieldValue == "%%")
+                    $_emptyFieldsCount++;
+                else
+                    $searchbox[$_searchFieldName] = $_fieldValue;
             }
-            $_SESSION[$sessionSearchKey] = $searchbox;
-            $com['SEARCHBOX']['ACTIVE'] = true;
+            //echo 'EMPTY COUNT: ' . $_emptyFieldsCount;
+            //var_dump($searchbox);
+            // check if there is even one non-empty value
+            if ($_emptyFieldsCount != count($com['SEARCHBOX']['FIELDS'])) {
+                $com['SEARCHBOX']['ACTIVE'] = true;
+                $_SESSION[$sessionSearchKey] = $searchbox;
+            } else {
+                //var_dump($searchbox);
+                //echo 'EMPTY ALL SEARCH FIELDS';
+                $com['SEARCHBOX']['ACTIVE'] = false;
+                $_SESSION[$sessionSearchKey] = array();
+            }
 
         }
         if (libraryRequest::isPostFormAction('discard')) {
-            echo 'DISCARD';
+            //echo 'DISCARD';
             $_SESSION[$sessionSearchKey] = false;
+            $com['SEARCHBOX']['ACTIVE'] = false;
         }
 
         $com['RECORDS_ALL'] = $dbLink->getCount($config['source'], $condition, $beforeConditionHook);
 
         if (empty($_SESSION[$sessionSearchKey])) {
-            echo 'IS IN ACTIVE';
+            //echo 'IS IN ACTIVE';
             $com['SEARCHBOX']['ACTIVE'] = false;
             $com['SEARCHBOX']['FILTER'] = false;
             $com['RECORDS'] = $com['RECORDS_ALL'];
         } else {
-            echo 'IS ACTIVE';
+            //echo 'IS ACTIVE';
             $com['SEARCHBOX']['ACTIVE'] = true;
             $com['SEARCHBOX']['FILTER'] = $_SESSION[$sessionSearchKey];
+            //var_dump($com['SEARCHBOX']['FILTER']);
             $_searchBoxFilterString = array();
             if (!empty($condition))
                 $_searchBoxFilterString[] = $condition . ' ';

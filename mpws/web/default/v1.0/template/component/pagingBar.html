@@ -23,7 +23,11 @@
     {if not empty($_data.LINKS) and count($_data.LINKS) gt 1}
     <div class="MPWSBlock MPWSBlockPageLinks">
     {foreach $_data.LINKS as $pageIndex => $link}
-        <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$pageIndex}</a>
+        {if $_data.CURRENT == $pageIndex}
+            <a href="?{$link}" class="MPWSLink MPWSLinkPaging MPWSLinkPagingActive">{$pageIndex}</a>
+        {else}
+            <a href="?{$link}" class="MPWSLink MPWSLinkPaging">{$pageIndex}</a>
+        {/if}
     {/foreach}
     </div>
     {/if}

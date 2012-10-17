@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 22:32:18
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 20:58:56
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/login.html" */ ?>
 <?php /*%%SmartyHeaderCode:1059413055507896874807a9-13047461%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'e517ca49fa332e743f403d0a781c0ae4f2ba9a18' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/login.html',
-      1 => 1350327225,
+      1 => 1350496732,
       2 => 'file',
     ),
   ),
@@ -19,23 +19,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_507896874c7b05_23903338',
   'variables' => 
   array (
-    'MODEL' => 0,
+    'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507896874c7b05_23903338')) {function content_507896874c7b05_23903338($_smarty_tpl) {?><div class="MPWSPage MPWSPageLogin">
-
-<form action="?<?php echo $_smarty_tpl->tpl_vars['MODEL']->value['CUSTOM']['LOGIN_URL'];?>
-" method="POST">
-    <p>
-    <input type="text" name="mpws_user_login" value="" placeholder="Login"/>
-    </p>
-    <p>
-    <input type="password" name="mpws_user_pwd" value="" placeholder="Password"/>
-    </p>
-    <p>
-    <input type="submit" name="do" value="SignIn"/>
-    </p>
-</form>
+<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_mpwsControlLoginForm, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
 </div><?php }} ?>

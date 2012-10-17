@@ -44,6 +44,9 @@
     {elseif $_type eq 'datetime'}
         {$_standartControlType = 'DateTime'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+    {elseif $_type eq 'password'}
+        {$_standartControlType = 'Password'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlPassword _name=$_name _renderMode=$_renderMode _value=$_controlValue}
     {elseif startsWith($_type, 'enum') or $_type eq 'select'}
         {$_standartControlType = 'DropDown'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleControlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode _value=$_controlValue}

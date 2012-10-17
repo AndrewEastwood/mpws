@@ -59,9 +59,16 @@ formPageCancelButtonNew = "Add One More Record";
 formControlLinkReturn = "Back To List";
 formPageSearchBoxButtonSearch = "Search";
 formPageSearchBoxButtonDiscard = "Reset Search";
+formPageLoginButtonSignIn = "Enter Toolbox";
+formPageUserInfoButtonSignOut='Logout';
 
 ; ============================
 ; validator header
 ; ============================
 validatorHeader = "Some errors were occurred in the fields below:";
 
+
+
+
+authBoxFieldLogin = "User Login";
+authBoxFieldPassword = "Password";

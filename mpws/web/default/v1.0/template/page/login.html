@@ -1,15 +1,3 @@
 <div class="MPWSPage MPWSPageLogin">
-
-<form action="?{$MODEL.CUSTOM.LOGIN_URL}" method="POST">
-    <p>
-    <input type="text" name="mpws_user_login" value="" placeholder="Login"/>
-    </p>
-    <p>
-    <input type="password" name="mpws_user_pwd" value="" placeholder="Password"/>
-    </p>
-    <p>
-    <input type="submit" name="do" value="SignIn"/>
-    </p>
-</form>
-
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_mpwsControlLoginForm}
 </div>

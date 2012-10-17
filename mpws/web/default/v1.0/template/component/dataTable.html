@@ -46,8 +46,7 @@
 
 *}
 
-
-<div id="MPWSComponentDataTableID" class="MPWSComponent MPWSComponentDataTable">
+<div id="MPWSComponentDataTable{$_ownerName|capitalize}ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable{$_ownerName|capitalize}">
 
 {* standart property key *}
 {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
@@ -74,13 +73,13 @@
 
         {if isset($_confing.datatable.fields)}
             {foreach $_confing.datatable.fields as $fieldKey}
-                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$fieldKey|capitalize:0:1}">
+                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$fieldKey|capitalize}">
                     {$CURRENT.OBJECT->{"`$__prop__`Caption`$fieldKey`"}}
                 </div>
             {/foreach}
         {else}
             {foreach $_data.0 as $cellEntry}
-                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$cellEntry@key|capitalize:0:1}">
+                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$cellEntry@key|capitalize}">
                     {$CURRENT.OBJECT->{"`$__prop__`Caption`$cellEntry@key`"}}
                 </div>
             {/foreach}
@@ -104,12 +103,12 @@
         {if isset($_confing.datatable.fields)}
             {* display all data according to fields *}
             {foreach $_confing.datatable.fields as $fieldKey}
-                <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize:0:1}">{$rowEntry[$fieldKey]}</div>
+                <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize}">{$rowEntry[$fieldKey]}</div>
             {/foreach}
         {else}
             {* display all data *}
             {foreach $rowEntry as $fieldKey => $cellEntry}
-                <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize:0:1}">{$cellEntry}</div>
+                <div class="MPWSDataTableCell MPWSDataTableCell{$fieldKey|capitalize}">{$cellEntry}</div>
             {/foreach}
         {/if}
         </div>

@@ -121,8 +121,8 @@ class librarySecurity {
         //debug('_userVerifySession');
 
         // mpws standart login and pws init
-        $login = libraryRequest::getPostValue('mpws_user_login');
-        $pwd = libraryRequest::getPostValue('mpws_user_pwd');
+        $login = libraryRequest::getPostFormField('login');
+        $pwd = libraryRequest::getPostFormField('password');
         
         // reinit default values
         if (isset($events['ON_INIT'])) {

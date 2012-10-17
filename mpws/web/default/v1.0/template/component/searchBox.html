@@ -6,12 +6,17 @@
 
     <form action="{$_confing.searchbox.formAction}" class="MPWSForm MPWSFormSearchBox" method="POST">
         {* search fields *}
-        {foreach $_data.FIELDS as $fieldKey => $field}
-            {assign var="_fieldValue" value=libraryRequest::getPostValue($field)}
-            {if empty($_fieldValue) and isset($_data.FILTER["mpws_field_`$fieldKey`"])}
-                {$_fieldValue = trim($_data.FILTER.$fieldKey, '%')}
+        {foreach $_data.FIELDS as $field}
+            {assign var="_fieldValue" value=""}
+            {if $_data.ACTIVE }
+                {assign var="_fieldValue" value=libraryRequest::getPostFormField($field)}
+                {if empty($_fieldValue) and isset($_data.FILTER.$field)}
+                    {$_fieldValue = trim($_data.FILTER.$field, '%')}
+                {/if}
+            {else}
+                {assign var="_fieldValue" value=""}
             {/if}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type='textbox' _name=$fieldKey _value=$_fieldValue _ownerName="`$_ownerName`SearchBox" _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type='textbox' _name=$field _value=$_fieldValue _ownerName="`$_ownerName`SearchBox" _resource='custom'}
         {/foreach}
         {* form buttons *}
 

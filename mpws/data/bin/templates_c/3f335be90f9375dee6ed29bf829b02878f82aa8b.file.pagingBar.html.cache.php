@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 22:03:28
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 23:34:03
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html" */ ?>
 <?php /*%%SmartyHeaderCode:168933470550788f60cbdf39-71665716%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3f335be90f9375dee6ed29bf829b02878f82aa8b' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/pagingBar.html',
-      1 => 1350414137,
+      1 => 1350506034,
       2 => 'file',
     ),
   ),
@@ -62,7 +62,7 @@ $_smarty_tpl->tpl_vars['link']->_loop = true;
     </div>
     <?php }?>
     
-    <?php if (!empty($_smarty_tpl->tpl_vars['_data']->value['LINKS'])&&count($_smarty_tpl->tpl_vars['_data']->value['LINKS'])>0){?>
+    <?php if (!empty($_smarty_tpl->tpl_vars['_data']->value['LINKS'])&&count($_smarty_tpl->tpl_vars['_data']->value['LINKS'])>1){?>
     <div class="MPWSBlock MPWSBlockPageLinks">
     <?php  $_smarty_tpl->tpl_vars['link'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['link']->_loop = false;
  $_smarty_tpl->tpl_vars['pageIndex'] = new Smarty_Variable;
@@ -71,9 +71,15 @@ foreach ($_from as $_smarty_tpl->tpl_vars['link']->key => $_smarty_tpl->tpl_vars
 $_smarty_tpl->tpl_vars['link']->_loop = true;
  $_smarty_tpl->tpl_vars['pageIndex']->value = $_smarty_tpl->tpl_vars['link']->key;
 ?>
-        <a href="?<?php echo $_smarty_tpl->tpl_vars['link']->value;?>
+        <?php if ($_smarty_tpl->tpl_vars['_data']->value['CURRENT']==$_smarty_tpl->tpl_vars['pageIndex']->value){?>
+            <a href="?<?php echo $_smarty_tpl->tpl_vars['link']->value;?>
+" class="MPWSLink MPWSLinkPaging MPWSLinkPagingActive"><?php echo $_smarty_tpl->tpl_vars['pageIndex']->value;?>
+</a>
+        <?php }else{ ?>
+            <a href="?<?php echo $_smarty_tpl->tpl_vars['link']->value;?>
 " class="MPWSLink MPWSLinkPaging"><?php echo $_smarty_tpl->tpl_vars['pageIndex']->value;?>
 </a>
+        <?php }?>
     <?php } ?>
     </div>
     <?php }?>

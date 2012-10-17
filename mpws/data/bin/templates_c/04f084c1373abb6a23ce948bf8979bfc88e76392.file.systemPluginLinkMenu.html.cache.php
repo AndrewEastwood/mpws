@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-14 20:10:50
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 23:23:21
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginLinkMenu.html" */ ?>
 <?php /*%%SmartyHeaderCode:656342445507af21a686c47-42726212%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '04f084c1373abb6a23ce948bf8979bfc88e76392' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginLinkMenu.html',
-      1 => 1349287120,
+      1 => 1350327225,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507af21a6f6dd6_68944385',
   'variables' => 
   array (
     'INFO' => 0,
@@ -23,8 +25,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507af21a6f6dd6_68944385',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507af21a6f6dd6_68944385')) {function content_507af21a6f6dd6_68944385($_smarty_tpl) {?><div id="MPWSWidgetSystemPluginLinkMenuID" class="MPWSWidget MPWSWidgetSystemPluginLinkMenu">
 <?php $_smarty_tpl->tpl_vars["active_plugin_menu"] = new Smarty_variable($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])]->{"objectConfiguration_display_menuPlugin"}, null, 0);?>
