@@ -1,0 +1,19 @@
+{extends file=$CURRENT.OBJECT->{"objectTemplatePath_component_breadcrumb:default"}}
+
+{block name="root"}
+    {if not empty($INFO.GET.PAGE)}
+        {$INFO.GET.PAGE}
+    {/if}
+{/block}
+
+{block name="child"}
+    {if not empty($INFO.GET.PLUGIN)}
+        \ {$INFO.GET.PLUGIN}
+    {/if}
+{/block}
+
+{if not empty($INFO.GET.DISPLAY)}
+    {block name="other"}
+        \ {$INFO.GET.DISPLAY}
+    {/block}
+{/if}

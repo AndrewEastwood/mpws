@@ -1,22 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 21:25:23
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 21:08:44
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataEditor.html" */ ?>
-<?php /*%%SmartyHeaderCode:105153097350788f668519c0-42081481%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:24336973850804473ba3d19-47251449%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'c67fabd9c4de5d07cfe491b3db37ad31311f5594' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/dataEditor.html',
-      1 => 1350494931,
+      1 => 1350583721,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '105153097350788f668519c0-42081481',
+  'nocache_hash' => '24336973850804473ba3d19-47251449',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f669602b3_03678065',
+  'unifunc' => 'content_50804473d32fa8_75628386',
   'variables' => 
   array (
     '_widgetName' => 0,
@@ -32,7 +32,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f669602b3_03678065')) {function content_50788f669602b3_03678065($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_50804473d32fa8_75628386')) {function content_50804473d32fa8_75628386($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <?php $_smarty_tpl->tpl_vars['_widgetName'] = new Smarty_variable("dataEditor", null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_widgetCustomName'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_widgetName']->value).((string)$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['NAME']), null, 0);?>
@@ -68,6 +68,7 @@ ID" class="MPWSWidget MPWSWidget<?php echo smarty_modifier_capitalize($_smarty_t
 " method="<?php echo $_smarty_tpl->tpl_vars['DTV_CFG']->value['form'][$_smarty_tpl->tpl_vars['_formInnerAction']->value]['method'];?>
 " class="MPWSForm MPWSFormEditor MPWSFormEditorPage<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_formInnerAction']->value,0,1);?>
 ">
+        <div class="MPWSFormBody">
 
     
     
@@ -160,10 +161,13 @@ $_smarty_tpl->tpl_vars['fieldType']->_loop = true;
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_controlFieldSwitcher, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>$_smarty_tpl->tpl_vars['fieldType']->value,'_name'=>$_smarty_tpl->tpl_vars['fieldName']->value,'_ownerName'=>$_smarty_tpl->tpl_vars['_widgetCustomName']->value), 0);?>
 
     <?php } ?>
+        </div>
     
+        <div class="MPWSFormFooter">
     
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resource'=>'custom','_page'=>$_smarty_tpl->tpl_vars['_formInnerAction']->value,'_buttons'=>$_smarty_tpl->tpl_vars['DTV_CFG']->value['form'][$_smarty_tpl->tpl_vars['_formInnerAction']->value]['controls']), 0);?>
 
+        </div>
     
     </form>
 

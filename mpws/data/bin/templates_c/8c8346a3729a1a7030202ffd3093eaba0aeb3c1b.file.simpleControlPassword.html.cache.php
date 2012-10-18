@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 20:52:37
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:46:03
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlPassword.html" */ ?>
-<?php /*%%SmartyHeaderCode:1235000979507ef06553e032-13064595%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:107070785080405b4c9488-39163293%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1235000979507ef06553e032-13064595',
+  'nocache_hash' => '107070785080405b4c9488-39163293',
   'function' => 
   array (
   ),
@@ -33,9 +33,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ef0655ca4c8_21100247',
+  'unifunc' => 'content_5080405b54c2a7_01829542',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_507ef0655ca4c8_21100247')) {function content_507ef0655ca4c8_21100247($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5080405b54c2a7_01829542')) {function content_5080405b54c2a7_01829542($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('TextBox', null, 0);?>

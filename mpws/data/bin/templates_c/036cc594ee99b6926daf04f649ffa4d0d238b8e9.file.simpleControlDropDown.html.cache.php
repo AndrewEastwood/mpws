@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 22:33:16
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 21:03:31
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleControlDropDown.html" */ ?>
-<?php /*%%SmartyHeaderCode:146345676550788f66b9aec0-63721127%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:143536655950804473ed76d9-78125227%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '146345676550788f66b9aec0-63721127',
+  'nocache_hash' => '143536655950804473ed76d9-78125227',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f66bedc96_99528944',
   'variables' => 
   array (
     '_name' => 0,
@@ -35,8 +33,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50804474027bb5_27104584',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f66bedc96_99528944')) {function content_50788f66bedc96_99528944($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_50804474027bb5_27104584')) {function content_50804474027bb5_27104584($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('DropDown', null, 0);?>

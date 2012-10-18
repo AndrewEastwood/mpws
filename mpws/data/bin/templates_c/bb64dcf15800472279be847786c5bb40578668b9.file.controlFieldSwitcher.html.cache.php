@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 20:52:37
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:46:03
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/controlFieldSwitcher.html" */ ?>
-<?php /*%%SmartyHeaderCode:2111954693507c64fbd9c336-51753530%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:6512038855080405b334d98-44020857%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '2111954693507c64fbd9c336-51753530',
+  'nocache_hash' => '6512038855080405b334d98-44020857',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507c64fbe61ec2_14809709',
   'variables' => 
   array (
     '_readonly' => 0,
@@ -33,8 +31,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_standartControlType' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5080405b414b67_37227437',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_507c64fbe61ec2_14809709')) {function content_507c64fbe61ec2_14809709($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5080405b414b67_37227437')) {function content_5080405b414b67_37227437($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 
 <?php $_smarty_tpl->tpl_vars['_renderMode'] = new Smarty_variable('normal', null, 0);?>

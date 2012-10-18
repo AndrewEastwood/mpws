@@ -1,22 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 23:18:08
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 21:13:01
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html" */ ?>
-<?php /*%%SmartyHeaderCode:63544814050788f6097fb91-10333071%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:63066346950804394656079-08002126%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '8353ed817f3a10aa18cb6a40909f78201e516c64' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html',
-      1 => 1350504956,
+      1 => 1350583979,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '63544814050788f6097fb91-10333071',
+  'nocache_hash' => '63066346950804394656079-08002126',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f609fa3d2_88089210',
+  'unifunc' => 'content_508043946f6f96_35001769',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -32,7 +32,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f609fa3d2_88089210')) {function content_50788f609fa3d2_88089210($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_508043946f6f96_35001769')) {function content_508043946f6f96_35001769($_smarty_tpl) {?>
 
 
 <div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
@@ -41,6 +41,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     <form action="<?php echo $_smarty_tpl->tpl_vars['_confing']->value['searchbox']['formAction'];?>
 " class="MPWSForm MPWSFormSearchBox" method="POST">
+        <div class="MPWSFormBody">
         
         <?php  $_smarty_tpl->tpl_vars['field'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['field']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['_data']->value['FIELDS']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -54,13 +55,15 @@ $_smarty_tpl->tpl_vars['field']->_loop = true;
                     <?php $_smarty_tpl->tpl_vars['_fieldValue'] = new Smarty_variable(trim($_smarty_tpl->tpl_vars['_data']->value['FILTER'][$_smarty_tpl->tpl_vars['field']->value],'%'), null, 0);?>
                 <?php }?>
             <?php }else{ ?>
-                <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable('', null, 0);?>
+                <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable(false, null, 0);?>
             <?php }?>
             <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_controlFieldSwitcher, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>$_smarty_tpl->tpl_vars['field']->value,'_value'=>$_smarty_tpl->tpl_vars['_fieldValue']->value,'_ownerName'=>((string)$_smarty_tpl->tpl_vars['_ownerName']->value)."SearchBox",'_resource'=>'custom'), 0);?>
 
         <?php } ?>
+        </div>
         
-
+        <div class="MPWSFormFooter">
+        
         <?php if ($_smarty_tpl->tpl_vars['_data']->value['ACTIVE']){?>
             <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Search','Discard'),'_page'=>'SearchBox'), 0);?>
 
@@ -68,6 +71,7 @@ $_smarty_tpl->tpl_vars['field']->_loop = true;
             <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Search'),'_page'=>'SearchBox'), 0);?>
 
         <?php }?>
+        </div>
     </form>
 
     <?php if ($_smarty_tpl->tpl_vars['_data']->value['ACTIVE']){?>

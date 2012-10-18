@@ -5,6 +5,7 @@
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHeader _title=$CURRENT.OBJECT->objectProperty_component_searchBoxHeader}
 
     <form action="{$_confing.searchbox.formAction}" class="MPWSForm MPWSFormSearchBox" method="POST">
+        <div class="MPWSFormBody">
         {* search fields *}
         {foreach $_data.FIELDS as $field}
             {assign var="_fieldValue" value=""}
@@ -18,13 +19,16 @@
             {/if}
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type='textbox' _name=$field _value=$_fieldValue _ownerName="`$_ownerName`SearchBox" _resource='custom'}
         {/foreach}
+        </div>
+        
+        <div class="MPWSFormFooter">
         {* form buttons *}
-
         {if $_data.ACTIVE }
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _buttons=['Search', 'Discard'] _page='SearchBox'}
         {else}
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _buttons=['Search'] _page='SearchBox'}
         {/if}
+        </div>
     </form>
 
     {if $_data.ACTIVE }

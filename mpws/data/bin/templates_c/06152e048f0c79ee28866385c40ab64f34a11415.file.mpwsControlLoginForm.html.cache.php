@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 20:58:56
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:46:03
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/mpwsControlLoginForm.html" */ ?>
-<?php /*%%SmartyHeaderCode:1891586277507ef1e07dafc3-67618608%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:10836561155080405b2f5613-31017665%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1891586277507ef1e07dafc3-67618608',
+  'nocache_hash' => '10836561155080405b2f5613-31017665',
   'function' => 
   array (
   ),
@@ -24,9 +24,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ef1e080a6d0_96190410',
+  'unifunc' => 'content_5080405b32af83_64159801',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_507ef1e080a6d0_96190410')) {function content_507ef1e080a6d0_96190410($_smarty_tpl) {?><div class="MPWSControl MPWSControlComplex MPWSControlComplexLoginForm">
+<?php if ($_valid && !is_callable('content_5080405b32af83_64159801')) {function content_5080405b32af83_64159801($_smarty_tpl) {?><div class="MPWSControl MPWSControlComplex MPWSControlComplexLoginForm">
 
 <?php $_smarty_tpl->tpl_vars['_formAction'] = new Smarty_variable($_smarty_tpl->tpl_vars['MODEL']->value['CUSTOM']['LOGIN_URL'], null, 0);?>
 <?php if (isset($_smarty_tpl->tpl_vars['_action']->value)){?>

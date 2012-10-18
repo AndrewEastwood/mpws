@@ -1,22 +1,20 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 22:03:25
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:55:08
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html" */ ?>
-<?php /*%%SmartyHeaderCode:180014694050788f61140234-07220271%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:8331749085080427c0d6896-04157898%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'd0b60fd847c51d05aceafa98d1fbb45732576e1e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html',
-      1 => 1350414137,
+      1 => 1350579434,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '180014694050788f61140234-07220271',
+  'nocache_hash' => '8331749085080427c0d6896-04157898',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f611ca135_92412748',
   'variables' => 
   array (
     '_OBJ' => 0,
@@ -36,31 +34,23 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'submenu' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5080427c1927d0_26786560',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f611ca135_92412748')) {function content_50788f611ca135_92412748($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5080427c1927d0_26786560')) {function content_5080427c1927d0_26786560($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array(), null, 0);?>
-
 <?php if ((isset($_smarty_tpl->tpl_vars['_OBJ']->value))){?>
     <?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array($_smarty_tpl->tpl_vars['_OBJ']->value), null, 0);?>
 <?php }?>
-
 <?php $_smarty_tpl->createLocalArrayVariable('DOs', null, 0);
 $_smarty_tpl->tpl_vars['DOs']->value[] = $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT'];?>
 <?php $_smarty_tpl->createLocalArrayVariable('DOs', null, 0);
 $_smarty_tpl->tpl_vars['DOs']->value[] = $_smarty_tpl->tpl_vars['OBJECT']->value['SITE'];?>
-
 <?php $_smarty_tpl->tpl_vars["DISPLAY_OBJECT"] = new Smarty_variable(glGetFirstNonEmptyValue($_smarty_tpl->tpl_vars['DOs']->value), null, 0);?>
 
-<?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable(false, null, 0);?>
-<?php if (isset($_smarty_tpl->tpl_vars['_showDescription']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable($_smarty_tpl->tpl_vars['_showDescription']->value, null, 0);?>
-<?php }?>
+<?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_showDescription']->value)===null||$tmp==='' ? false : $tmp), null, 0);?>
 
-
-<?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable(0, null, 0);?>
-<?php if (!empty($_smarty_tpl->tpl_vars['_sub']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable($_smarty_tpl->tpl_vars['_sub']->value, null, 0);?>
-<?php }?>
+<?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_sub']->value)===null||$tmp==='' ? 0 : $tmp), null, 0);?>
 
 
 <?php if (empty($_smarty_tpl->tpl_vars['_subIndex']->value)){?>
@@ -94,6 +84,9 @@ $_smarty_tpl->tpl_vars['itemvar']->_loop = true;
                 <?php if ($_smarty_tpl->tpl_vars['showDescription']->value){?>
                 <span class="MPWSText MPWSTextDescription"><?php echo $_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{"objectProperty_display_menuTextDescription".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['keyvar']->value,0,1))};?>
 </span>
+                <?php }?>
+                <?php if (!empty($_smarty_tpl->tpl_vars['itemvar']->value['contains'])){?>
+                    <span class="MPWSIconArrow"></span>
                 <?php }?>
             </a>
             <?php if (isset($_smarty_tpl->tpl_vars['itemvar']->value['contains'])&&($_smarty_tpl->tpl_vars['itemvar']->value['contains']=='__PLUGINS__')){?>

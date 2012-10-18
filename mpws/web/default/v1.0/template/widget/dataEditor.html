@@ -21,6 +21,7 @@
     
     {* editor form *}
     <form action="{$DTV_CFG.form.$_formInnerAction.action}" name="data_edit_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
+        <div class="MPWSFormBody">
 
     {* page content *}
     
@@ -80,9 +81,12 @@
     {foreach $DTV_CFG.form.$_formInnerAction.customFileds as $fieldName => $fieldType}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldType _name=$fieldName _ownerName=$_widgetCustomName}
     {/foreach}
+        </div>
     
+        <div class="MPWSFormFooter">
     {* form controls *}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.$_formInnerAction.controls}
+        </div>
     
     </form>
 

@@ -1,7 +1,9 @@
 {* get widgets menu *}
 {include assign="wgt_pluginMenu" file=$CURRENT.OBJECT->objectTemplatePath_component_menu _items=$CURRENT.OBJECT->objectConfiguration_display_menuSystem}
+{include assign="wgt_breadcrumb" file=$CURRENT.OBJECT->objectTemplatePath_component_breadcrumb}
 
 {$_header[]=$wgt_pluginMenu}
+{$_header[]=$wgt_breadcrumb}
  
 {* USE STANDART PAGE IMPLEMENTATION #1 *}
 {include file=$CURRENT.OBJECT->objectTemplatePath_page_standartPublicPageStyle1 _header=$_header _content=$_content _footer=$_footer}

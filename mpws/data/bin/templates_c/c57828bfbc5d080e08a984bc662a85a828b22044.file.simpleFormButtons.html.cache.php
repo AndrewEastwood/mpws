@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 20:45:01
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:46:03
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/simpleFormButtons.html" */ ?>
-<?php /*%%SmartyHeaderCode:81043973850788f66c4d763-16503365%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:16941718665080405b55c386-96769482%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '81043973850788f66c4d763-16503365',
+  'nocache_hash' => '16941718665080405b55c386-96769482',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50788f66c7ec72_61961616',
   'variables' => 
   array (
     '_page' => 0,
@@ -27,8 +25,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5080405b589f27_66804489',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50788f66c7ec72_61961616')) {function content_50788f66c7ec72_61961616($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5080405b589f27_66804489')) {function content_5080405b589f27_66804489($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('FormButtons', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlPage'] = new Smarty_variable('', null, 0);?>

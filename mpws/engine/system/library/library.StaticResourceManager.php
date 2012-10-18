@@ -31,7 +31,7 @@ class libraryStaticResourceManager {
         if (empty($resourceEntry))
             return false;
         
-        
+        //echo DR;
         
         $filesToLoad = array();
         $filesToImport = array();
