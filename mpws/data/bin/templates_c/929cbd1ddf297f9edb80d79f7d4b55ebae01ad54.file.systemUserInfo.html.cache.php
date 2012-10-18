@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 08:57:54
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:44:30
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/systemUserInfo.html" */ ?>
 <?php /*%%SmartyHeaderCode:427127429507ba5e2b686d9-16335561%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '929cbd1ddf297f9edb80d79f7d4b55ebae01ad54' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/systemUserInfo.html',
-      1 => 1349945264,
+      1 => 1350538859,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507ba5e2bd8f86_44857205',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -22,8 +24,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'simpleHyperlinkHomepage' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ba5e2bd8f86_44857205',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507ba5e2bd8f86_44857205')) {function content_507ba5e2bd8f86_44857205($_smarty_tpl) {?><div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
     <form action="" method="POST" class="MPWSForm">
@@ -39,7 +39,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_divRowLabelValue, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_label'=>$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_widget_systemUserInfoHomePageLinkPrefix,'_value'=>$_smarty_tpl->tpl_vars['simpleHyperlinkHomepage']->value), 0);?>
 
-        <button type="submit" name="do" value="logout" class="MPWSButton"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_widget_systemUserInfoSignoutButtonText;?>
-</button>
+        
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('SignOut'),'_page'=>'UserInfo'), 0);?>
+
     </form>
 </div><?php }} ?>

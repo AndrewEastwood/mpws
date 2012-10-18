@@ -44,6 +44,17 @@
                 _props++;
             return _props;
         },
+        importLibrary: function (name, isUrl) {
+            var _libUrl = false;
+            if (isUrl)
+                _libUrl = name;
+            else
+                _libUrl = "/static/" + name + ".js";
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = _libUrl;
+            $("head").append(s);
+        },
         onload: $(document).ready
     };
     
@@ -59,6 +70,19 @@
         };
         this.modify = function (name, newObject) {
             _modules[name] = newObject;
+        }
+    }
+    
+    mpws.loader = new function () {
+        var _postScripts = [];
+        this.addPostScript = function(fn) {
+            _postScripts.push(fn);
+        };
+        this.processAll = function () {
+            _postScripts.reverse();
+            //mpws.tools.log(_postScripts);
+            while((fn = _postScripts.pop()) != undefined)
+                fn(mpws.page);
         }
     }
 

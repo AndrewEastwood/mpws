@@ -14,7 +14,7 @@
                     {$_fieldValue = trim($_data.FILTER.$field, '%')}
                 {/if}
             {else}
-                {assign var="_fieldValue" value=""}
+                {assign var="_fieldValue" value=false}
             {/if}
             {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type='textbox' _name=$field _value=$_fieldValue _ownerName="`$_ownerName`SearchBox" _resource='custom'}
         {/foreach}

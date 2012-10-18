@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 16:19:26
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:43:50
          compiled from "/var/www/mpws/web/default/v1.0/template/component/controlFieldSwitcher.html" */ ?>
 <?php /*%%SmartyHeaderCode:20619230507c442d9a1a99-80075515%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3349bdbf34090f0c005554152d092228d9ae2049' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/controlFieldSwitcher.html',
-      1 => 1350479945,
+      1 => 1350538859,
       2 => 'file',
     ),
   ),
@@ -76,6 +76,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='datetime'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('DateTime', null, 0);?>
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleControlDateTime, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+
+    <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='password'){?>
+        <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('Password', null, 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_simpleControlPassword, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
 
     <?php }elseif(startsWith($_smarty_tpl->tpl_vars['_type']->value,'enum')||$_smarty_tpl->tpl_vars['_type']->value=='select'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('DropDown', null, 0);?>

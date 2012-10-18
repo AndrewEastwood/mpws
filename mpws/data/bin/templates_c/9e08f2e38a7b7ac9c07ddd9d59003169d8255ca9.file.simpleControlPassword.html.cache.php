@@ -1,51 +1,60 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:48:01
-         compiled from "/var/www/mpws/web/default/v1.0/template/component/simpleControlTextBox.html" */ ?>
-<?php /*%%SmartyHeaderCode:1888757376507bb7530979f4-94401191%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:43:51
+         compiled from "/var/www/mpws/web/default/v1.0/template/component/simpleControlPassword.html" */ ?>
+<?php /*%%SmartyHeaderCode:140898420507f97170d9dd5-58357043%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
-    '895b30db561d11a1f49691acbd28353b8e852c1e' => 
+    '9e08f2e38a7b7ac9c07ddd9d59003169d8255ca9' => 
     array (
-      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlTextBox.html',
-      1 => 1350539220,
+      0 => '/var/www/mpws/web/default/v1.0/template/component/simpleControlPassword.html',
+      1 => 1350538859,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1888757376507bb7530979f4-94401191',
+  'nocache_hash' => '140898420507f97170d9dd5-58357043',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507bb75313de33_47850254',
   'variables' => 
   array (
     '_name' => 0,
     '_controlCssName' => 0,
+    '_controlName' => 0,
+    '_renderMode' => 0,
+    '_controlValue' => 0,
     '_value' => 0,
     '_size' => 0,
-    '_renderMode' => 0,
     '_limit' => 0,
     '_controlCssNameCustom' => 0,
     '_controlRenderMode' => 0,
-    '_controlName' => 0,
-    '_controlValue' => 0,
     '_controlSize' => 0,
     '_controlLimit' => 0,
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507f9717187c24_88029160',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_507bb75313de33_47850254')) {function content_507bb75313de33_47850254($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_507f9717187c24_88029160')) {function content_507f9717187c24_88029160($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('TextBox', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? libraryRequest::getPostFormField($_smarty_tpl->tpl_vars['_name']->value) : $tmp), null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlSize'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_size']->value)===null||$tmp==='' ? 25 : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable(libraryRequest::getPostValue($_smarty_tpl->tpl_vars['_controlName']->value,false), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlSize'] = new Smarty_variable(25, null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlLimit'] = new Smarty_variable('', null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_renderMode']->value)===null||$tmp==='' ? 'normal' : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable('normal', null, 0);?>
 
 
+<?php if (isset($_smarty_tpl->tpl_vars['_renderMode']->value)){?>
+    <?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable($_smarty_tpl->tpl_vars['_renderMode']->value, null, 0);?>
+<?php }?>
+<?php if (empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&isset($_smarty_tpl->tpl_vars['_value']->value)){?>
+    <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable($_smarty_tpl->tpl_vars['_value']->value, null, 0);?>
+<?php }?>
+<?php if (isset($_smarty_tpl->tpl_vars['_size']->value)){?>
+    <?php $_smarty_tpl->tpl_vars['_controlSize'] = new Smarty_variable($_smarty_tpl->tpl_vars['_size']->value, null, 0);?>
+<?php }?>
 <?php if (isset($_smarty_tpl->tpl_vars['_limit']->value)){?>
     <?php $_smarty_tpl->tpl_vars['_controlLimit'] = new Smarty_variable(" maxlength=\"".((string)$_smarty_tpl->tpl_vars['_limit']->value)."\"", null, 0);?>
 <?php }?>
@@ -61,7 +70,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     
     <input id="MPWSControl<?php echo $_smarty_tpl->tpl_vars['_controlCssNameCustom']->value;?>
-ID" type="text" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
+ID" type="password" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
 " value="<?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>
 " size="<?php echo $_smarty_tpl->tpl_vars['_controlSize']->value;?>
 "<?php echo $_smarty_tpl->tpl_vars['_controlLimit']->value;?>

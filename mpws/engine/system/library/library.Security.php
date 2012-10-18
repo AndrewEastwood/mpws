@@ -141,7 +141,7 @@ class librarySecurity {
         
         //$model = &$toolbox->getModel();
         // logout user
-        if (libraryRequest::isPostFormAction('logout')) {
+        if (libraryRequest::isPostFormAction('signout')) {
             if(!empty($_SESSION['USER'])) {
                 // put user offline
                 if (!empty($_SESSION['USER']['ID']) && isset($events['ON_LOGOUT'])) {

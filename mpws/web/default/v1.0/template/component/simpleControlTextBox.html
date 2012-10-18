@@ -2,21 +2,12 @@
 {$_controlName = "mpws_field_`$_name|lower`"}
 {$_controlCssName = 'TextBox'}
 {$_controlCssNameCustom = "`$_controlCssName``$_name`"}
-{$_controlValue = libraryRequest::getPostFormField($_name)}
-{$_controlSize = 25}
+{$_controlValue = $_value|default:libraryRequest::getPostFormField($_name)}
+{$_controlSize = $_size|default:25}
 {$_controlLimit = ''}
-{$_controlRenderMode = 'normal'}
+{$_controlRenderMode = $_renderMode|default:'normal'}
 
 {* init control with passed arguments *}
-{if isset($_renderMode)}
-    {$_controlRenderMode = $_renderMode}
-{/if}
-{if isset($_value) }
-    {$_controlValue = $_value}
-{/if}
-{if isset($_size)}
-    {$_controlSize = $_size}
-{/if}
 {if isset($_limit)}
     {$_controlLimit = " maxlength=\"`$_limit`\""}
 {/if}

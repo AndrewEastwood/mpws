@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 19:08:36
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:49:22
          compiled from "/var/www/mpws/web/default/v1.0/template/component/searchBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:17149719507ba5e6a38553-38073681%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '11949475bf39a92dd41d7b3b130e15a87110c9cd' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/searchBox.html',
-      1 => 1350490114,
+      1 => 1350539359,
       2 => 'file',
     ),
   ),
@@ -24,7 +24,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_data' => 0,
     'field' => 0,
     '_fieldValue' => 0,
-    'fieldKey' => 0,
     '_ownerName' => 0,
     'sbKey' => 0,
     'sbVal' => 0,
@@ -44,17 +43,20 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 " class="MPWSForm MPWSFormSearchBox" method="POST">
         
         <?php  $_smarty_tpl->tpl_vars['field'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['field']->_loop = false;
- $_smarty_tpl->tpl_vars['fieldKey'] = new Smarty_Variable;
  $_from = $_smarty_tpl->tpl_vars['_data']->value['FIELDS']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['field']->key => $_smarty_tpl->tpl_vars['field']->value){
 $_smarty_tpl->tpl_vars['field']->_loop = true;
- $_smarty_tpl->tpl_vars['fieldKey']->value = $_smarty_tpl->tpl_vars['field']->key;
 ?>
-            <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable(libraryRequest::getPostValue($_smarty_tpl->tpl_vars['field']->value), null, 0);?>
-            <?php if (empty($_smarty_tpl->tpl_vars['_fieldValue']->value)&&isset($_smarty_tpl->tpl_vars['_data']->value['FILTER']["mpws_field_".((string)$_smarty_tpl->tpl_vars['fieldKey']->value)])){?>
-                <?php $_smarty_tpl->tpl_vars['_fieldValue'] = new Smarty_variable(trim($_smarty_tpl->tpl_vars['_data']->value['FILTER'][$_smarty_tpl->tpl_vars['fieldKey']->value],'%'), null, 0);?>
+            <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable('', null, 0);?>
+            <?php if ($_smarty_tpl->tpl_vars['_data']->value['ACTIVE']){?>
+                <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable(libraryRequest::getPostFormField($_smarty_tpl->tpl_vars['field']->value), null, 0);?>
+                <?php if (empty($_smarty_tpl->tpl_vars['_fieldValue']->value)&&isset($_smarty_tpl->tpl_vars['_data']->value['FILTER'][$_smarty_tpl->tpl_vars['field']->value])){?>
+                    <?php $_smarty_tpl->tpl_vars['_fieldValue'] = new Smarty_variable(trim($_smarty_tpl->tpl_vars['_data']->value['FILTER'][$_smarty_tpl->tpl_vars['field']->value],'%'), null, 0);?>
+                <?php }?>
+            <?php }else{ ?>
+                <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable(false, null, 0);?>
             <?php }?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_controlFieldSwitcher, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>$_smarty_tpl->tpl_vars['fieldKey']->value,'_value'=>$_smarty_tpl->tpl_vars['_fieldValue']->value,'_ownerName'=>((string)$_smarty_tpl->tpl_vars['_ownerName']->value)."SearchBox",'_resource'=>'custom'), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_controlFieldSwitcher, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>$_smarty_tpl->tpl_vars['field']->value,'_value'=>$_smarty_tpl->tpl_vars['_fieldValue']->value,'_ownerName'=>((string)$_smarty_tpl->tpl_vars['_ownerName']->value)."SearchBox",'_resource'=>'custom'), 0);?>
 
         <?php } ?>
         

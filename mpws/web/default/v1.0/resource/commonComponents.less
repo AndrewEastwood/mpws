@@ -6,6 +6,17 @@
 */
 
 /* ELEMEMENTS */
+.mp (@m: 0px, @p: 0px) {
+    margin: @m;
+    padding: @p;
+}
+.wh (@w: 0px, @h: 0px) {
+    width: @w;
+    height: @h;
+}
+.bga (@color: @white, @aplha: 1) {
+    background: hsla(hue(@color), saturation(@color), lightness(@color), @aplha);
+}
 .border (@size: 1px, @type: solid) {
     border: @size @type @colorBorder;
 }
@@ -110,13 +121,11 @@
     box-shadow: 0px 0px 10px @colorBg;
     .MPWSListMenu, .MPWSListMenuSub {
         zoom: 1;
-        margin: 0px;
-        padding: 0px;
+        .mp;
         z-index: 999;
         height: 40px;
         .MPWSListItem {
-            margin: 0px;
-            padding: 0px;
+            .mp;
             float: left;
             list-style: none;
             position: relative;
@@ -127,9 +136,26 @@
                 float: left;
                 padding: 10px;
                 height: 20px;
-                &:hover {
-                    background-color: @colorError;
-                    color: @colorComponent;
+                .MPWSText {float: left;}
+                .MPWSIconArrow {
+                    float: left;
+                    width: 10px;
+                    height: 10px;
+                    text-indent: -999em;
+                    overflow: hidden;
+                    background: url("arrows-ffffff.png") no-repeat 0px -100px;
+                    margin-left: 5px;
+                    margin-top: 5px;
+                }
+                &:hover .MPWSIconArrow {
+                    background-position: -10px -100px;
+                }
+            }
+            &:hover {
+                background-color: @colorError;
+                color: @colorComponent;
+                .MPWSIconArrow {
+                    background-position: -10px -100px;
                 }
             }
             /* show only next nested menu */
@@ -140,19 +166,24 @@
             display: none;
             position: absolute;
             height: auto;
-            background-color: @colorBg;
-            box-shadow: 0px 0px 10px @colorComponent;
+            background-color: @colorError;
             .MPWSListItem {
-                width: 140px;
-                .border(3px);
+                width: 130px;
                 border-color: @colorBg;
-                a.MPWSLink {width: 120px;}
+                .mp(0px, 5px);
+                a.MPWSLink {
+                    width: 110px;
+                    &:hover {
+                        background-color: @colorBg;
+                        color: @colorComponent;
+                    }
+                }
             }
             
         }
         /* sub menus */
         .MPWSListMenuSub1 {top: 38px;}
-        .MPWSListMenuSub2 {top: 15px; left: 80px;}
+        .MPWSListMenuSub2 {left: 140px; top: 20px;}
     }
 
 }
@@ -173,6 +204,7 @@ a.MPWSLink {.linkText}
 .MPWSHidden {display: none;}
 .MPWSWrapper {overflow: hidden; zoom: 1;}
 .MPWSBlock {padding: 5px;}
+.MPWSSpacer {clear: both; height: 10px;}
 
 /* CONTROLS */
 .MPWSControlField {

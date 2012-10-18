@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 19:10:46
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:44:30
          compiled from "/var/www/mpws/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:940225903507ba5df0e6130-84725401%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6999ca4e59688c03dcb6f324646871f1d215ed21' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/dataTable.html',
-      1 => 1350490242,
+      1 => 1350538859,
       2 => 'file',
     ),
   ),
@@ -35,8 +35,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php if ($_valid && !is_callable('content_507ba5df2142c6_16210485')) {function content_507ba5df2142c6_16210485($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 
-
-<div id="MPWSComponentDataTableID" class="MPWSComponent MPWSComponentDataTable">
+<div id="MPWSComponentDataTable<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
+ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
+">
 
 
 <?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_custom_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value), null, 0);?>
@@ -69,7 +70,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 foreach ($_from as $_smarty_tpl->tpl_vars['fieldKey']->key => $_smarty_tpl->tpl_vars['fieldKey']->value){
 $_smarty_tpl->tpl_vars['fieldKey']->_loop = true;
 ?>
-                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value,0,1);?>
+                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value);?>
 ">
                     <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."Caption".((string)$_smarty_tpl->tpl_vars['fieldKey']->value)};?>
 
@@ -81,7 +82,7 @@ $_smarty_tpl->tpl_vars['fieldKey']->_loop = true;
 foreach ($_from as $_smarty_tpl->tpl_vars['cellEntry']->key => $_smarty_tpl->tpl_vars['cellEntry']->value){
 $_smarty_tpl->tpl_vars['cellEntry']->_loop = true;
 ?>
-                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['cellEntry']->key,0,1);?>
+                <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['cellEntry']->key);?>
 ">
                     <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."Caption".((string)$_smarty_tpl->tpl_vars['cellEntry']->key)};?>
 
@@ -124,7 +125,7 @@ $_smarty_tpl->tpl_vars['actionName']->_loop = true;
 foreach ($_from as $_smarty_tpl->tpl_vars['fieldKey']->key => $_smarty_tpl->tpl_vars['fieldKey']->value){
 $_smarty_tpl->tpl_vars['fieldKey']->_loop = true;
 ?>
-                <div class="MPWSDataTableCell MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value,0,1);?>
+                <div class="MPWSDataTableCell MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value);?>
 "><?php echo $_smarty_tpl->tpl_vars['rowEntry']->value[$_smarty_tpl->tpl_vars['fieldKey']->value];?>
 </div>
             <?php } ?>
@@ -137,7 +138,7 @@ foreach ($_from as $_smarty_tpl->tpl_vars['cellEntry']->key => $_smarty_tpl->tpl
 $_smarty_tpl->tpl_vars['cellEntry']->_loop = true;
  $_smarty_tpl->tpl_vars['fieldKey']->value = $_smarty_tpl->tpl_vars['cellEntry']->key;
 ?>
-                <div class="MPWSDataTableCell MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value,0,1);?>
+                <div class="MPWSDataTableCell MPWSDataTableCell<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['fieldKey']->value);?>
 "><?php echo $_smarty_tpl->tpl_vars['cellEntry']->value;?>
 </div>
             <?php } ?>

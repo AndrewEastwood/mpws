@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-17 16:18:23
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 08:44:30
          compiled from "/var/www/mpws/web/default/v1.0/template/component/pagingBar.html" */ ?>
 <?php /*%%SmartyHeaderCode:1717060221507ba5e6cd00f1-05075779%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'e98dc992345d0b598994ca191b79a051180fa317' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/pagingBar.html',
-      1 => 1350471184,
+      1 => 1350538859,
       2 => 'file',
     ),
   ),
@@ -71,9 +71,15 @@ foreach ($_from as $_smarty_tpl->tpl_vars['link']->key => $_smarty_tpl->tpl_vars
 $_smarty_tpl->tpl_vars['link']->_loop = true;
  $_smarty_tpl->tpl_vars['pageIndex']->value = $_smarty_tpl->tpl_vars['link']->key;
 ?>
-        <a href="?<?php echo $_smarty_tpl->tpl_vars['link']->value;?>
+        <?php if ($_smarty_tpl->tpl_vars['_data']->value['CURRENT']==$_smarty_tpl->tpl_vars['pageIndex']->value){?>
+            <a href="?<?php echo $_smarty_tpl->tpl_vars['link']->value;?>
+" class="MPWSLink MPWSLinkPaging MPWSLinkPagingActive"><?php echo $_smarty_tpl->tpl_vars['pageIndex']->value;?>
+</a>
+        <?php }else{ ?>
+            <a href="?<?php echo $_smarty_tpl->tpl_vars['link']->value;?>
 " class="MPWSLink MPWSLinkPaging"><?php echo $_smarty_tpl->tpl_vars['pageIndex']->value;?>
 </a>
+        <?php }?>
     <?php } ?>
     </div>
     <?php }?>

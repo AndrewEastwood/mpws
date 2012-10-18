@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 08:57:54
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 09:02:05
          compiled from "/var/www/mpws/web/default/v1.0/template/component/widgetGrabber.html" */ ?>
 <?php /*%%SmartyHeaderCode:1826633666507ba5e2a05832-98159891%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cebc13c56aeef57820b1c2b082b99b20c4f75c99' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/widgetGrabber.html',
-      1 => 1349945264,
+      1 => 1350540107,
       2 => 'file',
     ),
   ),
@@ -15,14 +15,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507ba5e2a685f4_30196117',
   'variables' => 
   array (
     '_widgets' => 0,
     'widgetEntry' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ba5e2a685f4_30196117',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507ba5e2a685f4_30196117')) {function content_507ba5e2a685f4_30196117($_smarty_tpl) {?>
 
@@ -36,9 +36,9 @@ foreach ($_from as $_smarty_tpl->tpl_vars['widgetEntry']->key => $_smarty_tpl->t
 $_smarty_tpl->tpl_vars['widgetEntry']->_loop = true;
  $_smarty_tpl->tpl_vars['wgtKey']->value = $_smarty_tpl->tpl_vars['widgetEntry']->key;
 ?>
-    <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerBefore"></div>
+    <div class="MPWSSpacer MPWSSpacerWidget MPWSSpacerBefore"></div>
     <?php echo $_smarty_tpl->tpl_vars['widgetEntry']->value['HTML'];?>
 
-    <div class="MPWSSpacer MPWSWidgetSpace MPWSSpacerAfter"></div>
+    <div class="MPWSSpacer MPWSSpacerWidget MPWSSpacerAfter"></div>
 <?php } ?>
 </div><?php }} ?>

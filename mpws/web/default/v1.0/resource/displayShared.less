@@ -16,6 +16,13 @@
     }
 }
 
+.MPWSComponentMessagesList {
+    .standaloneComponent;
+    .MPWSList {
+        .MPWSListItem {}
+    }
+}
+
 .MPWSComponentHeader {
     font-size: 14px;
     color: @colorBg;
@@ -116,6 +123,73 @@
 /* WIDGETS */
 .MPWSWidget {}
 
+
+/* WIDGET: system plugin list */
+.MPWSWidgetSystemPluginList {
+    .MPWSList {
+        .mp;
+        overflow: hidden;
+        zoom: 1;
+        list-style: none;
+        padding: 40px 0px;
+        .MPWSListItem {
+            float: left;
+            .MPWSWrapper {
+                //background: @colorBg;//#003D4C;
+                .bga(@colorBg, 0.8);
+                color: #fff;
+                padding: 5px 0px 10px 12px;
+                position: absolute;
+                bottom: 0px;
+                .wh(188px, 20px);
+                overflow: hidden;
+            }
+            .MPWSBlock {
+                .mp;
+                .wh(200px, 200px);
+                -webkit-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2);
+                -moz-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2);
+                box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2);
+                filter:alpha(opacity=30);
+                -moz-opacity: 0.3;
+                -khtml-opacity: 0.3;
+                opacity: 0.3;
+                position: relative;
+                float: left;
+                margin-left: 60px;
+                /* hover state */
+                &:hover {
+                    filter:alpha(opacity=1);
+                    -moz-opacity: 1;
+                    -khtml-opacity: 1;
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
+            .MPWSLink, .MPWSText {text-decoration: none;}
+            .MPWSTextDescription {
+                font-size: 90%;
+                font-weight: normal;
+                font-style: italic;
+                display: block;
+                width: 150px;
+                margin-left: -300px;
+            }
+            .MPWSTextLink {
+                font-size: 120%;
+                font-weight: bold;
+                display: block;
+                background: url("arrows-ffffff.png") no-repeat 155px 4px;
+                text-align: right;
+                padding-right: 40px;
+                margin-right: -300px;
+                color: #fff;
+                margin-top: 7px;
+            }
+
+        }
+    }
+}
 
 /* WIDGET: dataeditor */
 

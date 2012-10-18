@@ -1,7 +1,7 @@
 {* SYSTEM: STANDART PAGE IMPLEMENTATION *}
 
 {include assign="wgt_sysUsrInfo" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemUserInfo}
-{include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_message _realm='COMMON'}
+{include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messagesList _realm='COMMON'}
 
 {$_headers[]=$wgt_sysUsrInfo}
 {$_contents[]=$msg_common}
@@ -9,12 +9,12 @@
 
 {if $INFO.GET.PAGE == $CURRENT.OBJECT->objectConfiguration_object_menuKeyToShowToolsList}
     {if empty($INFO.GET.PLUGIN) }
-        {include assign="wgt_tools" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkList}
+        {include assign="wgt_tools" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginList}
         {$_contents[]=$wgt_tools}
     {else}
         {* show active plugin menu *}
         {if empty($INFO.GET.DISPLAY) }
-            {include assign="wgt_menuList" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginLinkMenu}
+            {include assign="wgt_menuList" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemPluginMenu}
             {$_contents[]=$wgt_menuList}
         {/if}
     {/if}

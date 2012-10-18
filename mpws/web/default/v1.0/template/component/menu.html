@@ -1,24 +1,14 @@
 {assign var="DOs" value=[]}
-
 {if (isset($_OBJ))}
     {assign var="DOs" value=[$_OBJ]}
 {/if}
-
 {$DOs[] = $CURRENT.OBJECT}
 {$DOs[] = $OBJECT.SITE}
-
 {assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($DOs)}
 
-{$showDescription = false}
-{if isset($_showDescription) }
-    {$showDescription = $_showDescription}
-{/if}
-
+{$showDescription = $_showDescription|default:false}
 {* get menu index *}
-{$_subIndex = 0}
-{if not empty($_sub)}
-    {$_subIndex = $_sub}
-{/if}
+{$_subIndex = $_sub|default:0}
 
 {* print container for root list *}
 {if empty($_subIndex)}
@@ -40,6 +30,9 @@
                 <span class="MPWSText MPWSTextTitle">{$_linkText}</span>
                 {if $showDescription}
                 <span class="MPWSText MPWSTextDescription">{$DISPLAY_OBJECT->{"objectProperty_display_menuTextDescription`$keyvar|capitalize:0:1`"}}</span>
+                {/if}
+                {if not empty($itemvar.contains)}
+                    <span class="MPWSIconArrow"></span>
                 {/if}
             </a>
             {if isset($itemvar.contains) and ($itemvar.contains eq '__PLUGINS__')}

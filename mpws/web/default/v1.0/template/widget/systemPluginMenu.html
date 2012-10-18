@@ -1,4 +1,4 @@
-<div id="MPWSWidgetSystemPluginLinkMenuID" class="MPWSWidget MPWSWidgetSystemPluginLinkMenu">
+<div id="MPWSWidgetSystemPluginMenuID" class="MPWSWidget MPWSWidgetSystemPluginMenu">
 {assign var="active_plugin_menu" value=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->{"objectConfiguration_display_menuPlugin"}}
 {if isset($active_plugin_menu)}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_menu _items=$active_plugin_menu _OBJ=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)] _showDescription=true}

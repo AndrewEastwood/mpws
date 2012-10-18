@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-15 08:57:51
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 12:25:09
          compiled from "/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:702542075507ba5df277520-87354648%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'efc1e02c78037dbcc25f33e7fc223814325526c0' => 
     array (
       0 => '/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html',
-      1 => 1350280496,
+      1 => 1350552296,
       2 => 'file',
     ),
     'f169ec851061427f63366f55936d49966dc76cb1' => 
@@ -21,6 +21,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_507ba5df308a83_97702912',
   'variables' => 
   array (
     'OBJECT' => 0,
@@ -28,8 +30,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_507ba5df308a83_97702912',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507ba5df308a83_97702912')) {function content_507ba5df308a83_97702912($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><!DOCTYPE html>
@@ -46,6 +46,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link rel="stylesheet" type="text/css" href="/static/mpwsCustomer.css">
 
     <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
     <script type="text/javascript" src="/static/mpwsDefault.js"></script>

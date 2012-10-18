@@ -28,7 +28,7 @@ dataTableViewSystemUsersSearchBoxFieldName = "User Name";
 ; widget dataEditor SystemUsers
 ; ============================
 dataEditorSystemUsersWidgetSummary = 'User Editor';
-dataEditorSystemUsersWidgetDescription = " - ";
+dataEditorSystemUsersWidgetDescription = "You can edit user settings";
 dataEditorSystemUsersFieldID = "Record ID";
 dataEditorSystemUsersFieldName = "User Name";
 dataEditorSystemUsersFieldPassword = "User Password";

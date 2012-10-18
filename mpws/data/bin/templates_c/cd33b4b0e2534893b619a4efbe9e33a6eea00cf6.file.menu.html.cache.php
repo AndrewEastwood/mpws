@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-16 09:37:13
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 09:30:02
          compiled from "/var/www/mpws/web/default/v1.0/template/component/menu.html" */ ?>
 <?php /*%%SmartyHeaderCode:1408527582507ba5e2dd76e5-69456237%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cd33b4b0e2534893b619a4efbe9e33a6eea00cf6' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/menu.html',
-      1 => 1350369429,
+      1 => 1350541718,
       2 => 'file',
     ),
   ),
@@ -39,28 +39,18 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_507ba5e2e6e6e6_17076004')) {function content_507ba5e2e6e6e6_17076004($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array(), null, 0);?>
-
 <?php if ((isset($_smarty_tpl->tpl_vars['_OBJ']->value))){?>
     <?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array($_smarty_tpl->tpl_vars['_OBJ']->value), null, 0);?>
 <?php }?>
-
 <?php $_smarty_tpl->createLocalArrayVariable('DOs', null, 0);
 $_smarty_tpl->tpl_vars['DOs']->value[] = $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT'];?>
 <?php $_smarty_tpl->createLocalArrayVariable('DOs', null, 0);
 $_smarty_tpl->tpl_vars['DOs']->value[] = $_smarty_tpl->tpl_vars['OBJECT']->value['SITE'];?>
-
 <?php $_smarty_tpl->tpl_vars["DISPLAY_OBJECT"] = new Smarty_variable(glGetFirstNonEmptyValue($_smarty_tpl->tpl_vars['DOs']->value), null, 0);?>
 
-<?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable(false, null, 0);?>
-<?php if (isset($_smarty_tpl->tpl_vars['_showDescription']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable($_smarty_tpl->tpl_vars['_showDescription']->value, null, 0);?>
-<?php }?>
+<?php $_smarty_tpl->tpl_vars['showDescription'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_showDescription']->value)===null||$tmp==='' ? false : $tmp), null, 0);?>
 
-
-<?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable(0, null, 0);?>
-<?php if (!empty($_smarty_tpl->tpl_vars['_sub']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable($_smarty_tpl->tpl_vars['_sub']->value, null, 0);?>
-<?php }?>
+<?php $_smarty_tpl->tpl_vars['_subIndex'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_sub']->value)===null||$tmp==='' ? 0 : $tmp), null, 0);?>
 
 
 <?php if (empty($_smarty_tpl->tpl_vars['_subIndex']->value)){?>
@@ -94,6 +84,9 @@ $_smarty_tpl->tpl_vars['itemvar']->_loop = true;
                 <?php if ($_smarty_tpl->tpl_vars['showDescription']->value){?>
                 <span class="MPWSText MPWSTextDescription"><?php echo $_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{"objectProperty_display_menuTextDescription".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['keyvar']->value,0,1))};?>
 </span>
+                <?php }?>
+                <?php if (!empty($_smarty_tpl->tpl_vars['itemvar']->value['contains'])){?>
+                    <span class="MPWSIconArrow"></span>
                 <?php }?>
             </a>
             <?php if (isset($_smarty_tpl->tpl_vars['itemvar']->value['contains'])&&($_smarty_tpl->tpl_vars['itemvar']->value['contains']=='__PLUGINS__')){?>

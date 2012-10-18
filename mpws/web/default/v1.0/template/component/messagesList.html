@@ -1,5 +1,6 @@
 {if isset($_realm) }
-    <div id="MPWSComponentMessage{$_realm|capitalize:0:1}ID" class="MPWSComponent MPWSComponentMessage MPWSComponentMessage{$_realm|capitalize:0:1}">
+    <div id="MPWSComponentMessagesList{$_realm|capitalize:0:1}ID" class="MPWSComponent MPWSComponentMessagesList MPWSComponentMessagesList{$_realm|capitalize:0:1}">
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHeader _title=$CURRENT.OBJECT->objectProperty_component_messagesListHeader}
     {if isset($MODEL.MESSAGE[$_realm]) }
         <ul class="MPWSList">
         {foreach $MODEL.MESSAGE[$_realm] as $keyvar=>$itemvar}

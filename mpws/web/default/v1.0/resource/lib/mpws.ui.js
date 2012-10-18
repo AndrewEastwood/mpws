@@ -510,11 +510,35 @@
         });
     };
     
+    function mpwsBoxAnimation_1 (selector) {
+        $(selector).hover(
+            function(){
+                var ownerId = $(this).attr('id');
+                // wrapper
+                $('#' + ownerId + ' .MPWSWrapper').stop(true, false).animate({height: '50px'}, 300);
+                // info line
+                $('#' + ownerId + ' .MPWSWrapper .MPWSTextDescription').stop(true, false).animate({marginLeft: '0px'}, 500);
+                // start line
+                $('#' + ownerId + ' .MPWSWrapper .MPWSTextLink').stop(true, false).animate({marginRight: '0px'}, 500);
+            },
+            function(){
+                var ownerId = $(this).attr('id');
+                // wrapper
+                $('#' + ownerId + ' .MPWSWrapper').stop(true, false).animate({height: '20px'}, 500);
+                // info line
+                $('#' + ownerId + ' .MPWSWrapper .MPWSTextDescription').stop(true, false).animate({marginLeft: '-300px'}, 400);
+                // start line
+                $('#' + ownerId + ' .MPWSWrapper .MPWSTextLink').stop(true, false).animate({marginRight: '-300px'}, 400);
+            }
+        );
+    }
+    
     mpws.ui = {
         tooltip: mpwsTooltip,
         liveEditor: mpwsLiveEditor,
         fileUpload: mpwsFileUpload,
-        floatingBox: mpwsFloatingBox
+        floatingBox: mpwsFloatingBox,
+        animBox1: mpwsBoxAnimation_1
     }
 
 })(window, document, jQuery, (window.mpws = window.mpws || {})); 
