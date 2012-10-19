@@ -45,28 +45,27 @@
 
 *}
 
+
+{$componentName = "quickFiltering"}
+
 <div id="MPWSComponenQuickFilteringID" class="MPWSComponent MPWSComponenQuickFiltering">
-    {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key='quickFiltering'}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$componentName}
     {foreach $_confing.filtering.fields as $qfEntry}
-    
-    {capture name="row_label"}
-        {$CURRENT.OBJECT->objectProperty_component_quickFilteringFieldPrefix}
-        {$CURRENT.OBJECT->{"`$__prop__`QuickFilteringField`$qfEntry`"}}
-        {$CURRENT.OBJECT->objectProperty_component_quickFilteringFieldSuffix}
-    {/capture}
-    {capture name="row_value"}
+
         {$_keyAsc = "`$qfEntry`.asc"}
         {$_keyDesc = "`$qfEntry`.desc"}
         {$_requestKey = libraryRequest::getValue($_confing.filtering.sortKey)}
         {$_filterAction = libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_requestKey, $_keyAsc, $_keyDesc, $_keyAsc))}
         {$_linkTextKey = libraryUtils::valueSelect($_requestKey, $_keyAsc, "DESC", "ASC")}
-        {* sort link *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link _title=$CURRENT.OBJECT->{"objectProperty_component_quickFilteringAction`$_linkTextKey`"} _href="?`$_filterAction`#MPWSComponenQuickFilteringID"}
-    {/capture}
-    
-    {* data row value *}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$smarty.capture.row_label _value=$smarty.capture.row_value}
+        {* block control *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+            _type='mpwsLinkAction'
+            _resource='custom'
+            _name="`$componentName|capitalize``$_linkTextKey`"
+            _ownerName=$_ownerName
+            _href="?`$_filterAction`#MPWSComponenQuickFilteringID"
+            _action=$_linkTextKey
+            _mode='system'}
 
     {/foreach}
 </div>

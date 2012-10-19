@@ -46,6 +46,8 @@
 
 *}
 
+{$componentName = "dataTable"}
+
 <div id="MPWSComponentDataTable{$_ownerName|capitalize}ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable{$_ownerName|capitalize}">
     {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key="dataTable"}
 
@@ -65,7 +67,12 @@
     {* render table top captions *}
     {if isset($_confing.datatable.tableTopActions)}
         {foreach $_confing.datatable.tableTopActions as $_actionName}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerName=$_ownerName _action=$_actionName _realm="TopAction"}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                _type='mpwsLinkAction'
+                _name="LinkActionTable`$_actionName|upper`"
+                _ownerName=$componentName
+                _action=$_actionName
+                _mode='system'}
         {/foreach}
     {/if}
     </div>
@@ -104,7 +111,13 @@
             <div class="MPWSDataTableCell MPWSDataTableCellActions">
             {foreach $_confing.datatable.perRecrodActions as $actionName}
                 <span class="MPWSDataTableCellAction MPWSDataTableCellAction{$actionName|capitalize:0:1}">
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerName=$_ownerName _action=$actionName _oid=$rowEntry['ID'] _realm="RowAction"}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                    _type='mpwsLinkAction'
+                    _name="LinkActionRecord`$actionName|upper`"
+                    _ownerName=$componentName
+                    _action=$actionName
+                    _oid=$rowEntry['ID']
+                    _mode='system'}
                 </span>
             {/foreach}
             </div>

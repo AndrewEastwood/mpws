@@ -24,6 +24,11 @@ labelMpwsAuthBoxFieldLogin = "Your Login";
 labelMpwsAuthBoxFieldPassword = "Password";
 
 
+labelDataTableFieldLinkActionTableNEW = "Add New Record";
+labelDataTableFieldLinkActionRecordEDIT = "Edit";
+labelDataTableFieldLinkActionRecordVIEW = "View";
+labelDataTableFieldLinkActionRecordDELETE = "Remove";
+
 ; headers
 ; ============================
 headerMessageListSystem = "Global System Messages:";
@@ -34,3 +39,5 @@ headerSearchBox = "Searchbox";
 headerQuickFiltering = "Quick Filtering";
 headerDataTable = "Matched Records";
 headerMessageListDataEditorValidator = "We have encountered the following issue(s):";
+
+

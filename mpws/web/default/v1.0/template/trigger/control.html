@@ -38,10 +38,35 @@
     {elseif startsWith($_type, 'enum') or $_type eq 'select'}
         {$_standartControlType = 'DropDown'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode _value=$_controlValue}
+        
+     {* MPWS CONTROLS *}
+     {* Contains special arguments than standart html controls *}
+     
+     
+     {elseif $_type eq 'mpwsauth'}
+     {elseif $_type eq 'mpwscaptcha'}
+     {elseif $_type eq 'mpwsemailer'}
+     {elseif $_type eq 'mpwsebuttons'}
+     {elseif $_type eq 'mpwsLinkAction'}
+        
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsLinkAction
+            _ownerName=$_ownerName
+            _renderMode=$_renderMode 
+            _action=$_action
+            _mode=$_mode|default:'normal'
+            _target=$_target|default:''
+            _oid=$_oid|default:''
+            _href=$_href|default:''
+        }
+        
     {/if}
 {/capture}
 
-{include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _controlOwner=$_name+$_standartControlType}
+{if empty($_standartControlType)}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _resource=$_resource|default:'display'}
+{else}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _controlOwner=$_name+$_standartControlType _resource=$_resource|default:'display'}
+{/if}
 {$smarty.capture.control}
 
 </div>
