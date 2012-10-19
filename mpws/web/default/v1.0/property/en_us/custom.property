@@ -1,8 +1,8 @@
 ; ============================
 ; widget DataTableView DashboardActiveUsers
 ; ============================
-dataTableViewDashboardActiveUsersWidgetSummary = 'Active Users';
-dataTableViewDashboardActiveUsersWidgetDescription = 'List of all active users';
+dataTableViewDashboardActiveUsersTitleText = 'Active Users';
+dataTableViewDashboardActiveUsersTitleDescription = 'List of all active users';
 dataTableViewDashboardActiveUsersCaptionActions = 'Actions';
 dataTableViewDashboardActiveUsersCaptionName = 'User Name';
 dataTableViewDashboardActiveUsersCaptionActive = 'Active';
@@ -13,8 +13,8 @@ dataTableViewDashboardActiveUsersCaptionIsOnline = "Online State";
 ; ============================
 ; widget DataTableView SystemUsers
 ; ============================
-dataTableViewSystemUsersWidgetSummary = 'Active Users';
-dataTableViewSystemUsersWidgetDescription = 'List of all active users';
+dataTableViewSystemUsersTitleText = 'Active Users';
+dataTableViewSystemUsersTitleDescription = 'List of all active users';
 dataTableViewSystemUsersCaptionActions = 'Actions';
 dataTableViewSystemUsersCaptionName = 'User Name';
 dataTableViewSystemUsersCaptionActive = 'Active';
@@ -27,19 +27,15 @@ dataTableViewSystemUsersSearchBoxFieldName = "User Name";
 ; ============================
 ; widget dataEditor SystemUsers
 ; ============================
-dataEditorSystemUsersWidgetSummary = 'User Editor';
-dataEditorSystemUsersWidgetDescription = "You can edit user settings";
-dataEditorSystemUsersFieldID = "Record ID";
-dataEditorSystemUsersFieldName = "User Name";
-dataEditorSystemUsersFieldPassword = "User Password";
-dataEditorSystemUsersFieldActive = "Check if user is enabled";
-dataEditorSystemUsersFieldIsOnline = "Current status";
-dataEditorSystemUsersFieldPermisions = "Access Level";
-dataEditorSystemUsersFieldDateLastAccess = "Last Visit";
-dataEditorSystemUsersFieldDateCreated = "Added Since";
-dataEditorSystemUsersFieldRole = "User Role";
+dataEditorSystemUsersTitleText = 'User Editor';
+dataEditorSystemUsersTitleDescription = "You can edit user settings";
+
+labelDataEditorSystemUsersFieldName = "User Name";
+labelDataEditorSystemUsersFieldPassword = "User Password";
+labelDataEditorSystemUsersFieldActive = "Check if user is enabled";
+labelDataEditorSystemUsersFieldPermisions = "Access Level";
+labelDataEditorSystemUsersFieldRole = "User Role";
 dataEditorSystemUsersDropDownRoleSUPERADMIN = "Administrator";
 dataEditorSystemUsersDropDownRoleREADER = "Standart User";
 dataEditorSystemUsersDropDownRoleREPORTER = "Report User";
 dataEditorSystemUsersFieldSendEmail = "Notify user by email";
-dataEditorSystemUsersFieldCustomCaptcha = "hfgjhfjh";

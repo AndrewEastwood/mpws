@@ -1,4 +1,5 @@
 <div id="MPWSWidgetSystemPluginListID" class="MPWSWidget MPWSWidgetSystemPluginList">
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key='SystemPluginList'}
     <ul class="MPWSList">
     {foreach $OBJECT.WOB as $webObj}
         <li id="MPWSListItem{$webObj->getObjectName()|capitalize:0:1}ID" class="MPWSListItem MPWSListItem{$webObj->getObjectName()|capitalize:0:1}">

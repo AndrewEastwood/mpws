@@ -13,7 +13,7 @@
 
 <div id="MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName|capitalize} MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}">
     
-{include file=$CURRENT.OBJECT->objectTemplatePath_component_widgetSummary _ownerName=$_widgetNameCustom}
+{include file=$CURRENT.OBJECT->objectTemplatePath_component_title _ownerName=$_widgetNameCustom}
 
 {if not empty($DTV_CFG.searchbox) and $DTV_CFG.searchbox.enabled}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH _ownerName=$_widgetNameCustom}
@@ -24,7 +24,6 @@
 {/if}
 
 {if not empty($DTV_CFG.datatable)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTableTopActions _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$_widgetNameCustom}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$_widgetNameCustom}
 {/if}
 

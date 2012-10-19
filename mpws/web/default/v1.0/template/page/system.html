@@ -1,11 +1,15 @@
 {* SYSTEM: STANDART PAGE IMPLEMENTATION *}
 
 {include assign="wgt_sysUsrInfo" file=$CURRENT.OBJECT->objectTemplatePath_widget_systemUserInfo}
-{include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messagesList _realm='COMMON'}
 
 {$_headers[]=$wgt_sysUsrInfo}
-{$_contents[]=$msg_common}
 {$_footers=Array()}
+
+{* add system messages *}
+{if isset($MODEL.MESSAGE.COMMON)}
+    {include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$MODEL.MESSAGE.COMMON _ownerName='System'}
+    {$_contents[]=$msg_common}
+{/if}
 
 {if $INFO.GET.PAGE == $CURRENT.OBJECT->objectConfiguration_object_menuKeyToShowToolsList}
     {if empty($INFO.GET.PLUGIN) }

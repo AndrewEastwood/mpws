@@ -1,0 +1,12 @@
+{* default control attribute values *}
+{$_controlCssName = 'FormButtons'}
+{$_controlOwnerName = $_ownerName|default:''|capitalize}
+
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName}">
+    {foreach $_buttons as $_button}
+        <button id="MPWSControl{$_controlCssName}{$_button}ID" type="submit" name="do" value="{$_button}" class="MPWSControl MPWSControlButton{$_button}">
+            {$CURRENT.OBJECT->{"objectProperty_component_controlButton`$_controlOwnerName``$_button`"}}
+        </button>
+    {/foreach}
+</div>

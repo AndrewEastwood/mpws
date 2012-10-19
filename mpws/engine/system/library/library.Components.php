@@ -454,7 +454,7 @@ class libraryComponents
                         ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique])
                         ->fetchRow();
                     if (!empty($_existedRow))
-                        $com['ERRORS'][] = 'Duplicate' . $_fieldThatMustBeUnique;
+                        $com['ERRORS'][] = 'validationErrorDuplicateValueInField' . $_fieldThatMustBeUnique;
                 }
             }
             // set editor state on error

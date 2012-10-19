@@ -1,0 +1,10 @@
+<div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList{$_ownerName|capitalize}">
+{include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key="MessageList`$_ownerName|capitalize`"}
+{if isset($_messages) }
+    <ul class="MPWSList">
+    {foreach $_messages as $keyvar=>$itemvar}
+        <li class="MPWSListItem">{$CURRENT.OBJECT->{"objectProperty_message_`$itemvar`"}}</li>
+    {/foreach}
+    </ul>
+{/if}
+</div>

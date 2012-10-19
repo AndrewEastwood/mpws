@@ -168,10 +168,10 @@ class libraryStaticResourceManager {
         if (strstr($resourceName, COLON))
             list($resourceName, $useParent) = explode(COLON, $resourceName);
         $resPath = 'template' . DS . str_replace(DOT, DS, $resourceName) . '.html';
-        $_default  = DR . '/web/default/' . MPWS_VERSION . DS . $resPath;
+        $_default  = DR . 'web/default/' . MPWS_VERSION . DS . $resPath;
         if (isset($preDefinedPaths['PATH_DEF']))
             $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
-        $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
+        $_owner = DR . 'web/' . $owner . DS . $name . DS . $resPath;
         if (isset($preDefinedPaths['PATH_OWN']))
             $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
         $_web = false;
@@ -216,10 +216,10 @@ class libraryStaticResourceManager {
     public static function getPropertyPath ($owner, $name, $resourceName, $locale = 'en_us', $preDefinedPaths = array()) {
         debug('libraryStaticResourceManager', 'getPropertyPath', true);
         $resPath = 'property' . DS . $locale . DS . str_replace(DOT, DS, $resourceName) . '.property';
-        $_default  = DR . '/web/default/' . MPWS_VERSION . DS . $resPath;
+        $_default  = DR . 'web/default/' . MPWS_VERSION . DS . $resPath;
         if (isset($preDefinedPaths['PATH_DEF']))
             $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
-        $_owner = DR . '/web/' . $owner . DS . $name . DS . $resPath;
+        $_owner = DR . 'web/' . $owner . DS . $name . DS . $resPath;
         if (isset($preDefinedPaths['PATH_OWN']))
             $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
         $_web = false;

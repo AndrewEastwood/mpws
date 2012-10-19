@@ -1,0 +1,47 @@
+{*  database field type to html field 
+
+    INT[(M)] [UNSIGNED] [ZEROFILL]
+    A normal-size integer. The signed range is -2147483648 to 2147483647. The unsigned range is 0 to 4294967295.
+
+    TINYINT[(M)] [UNSIGNED] [ZEROFILL]
+    A very small integer. The signed range is -128 to 127. The unsigned range is 0 to 255.
+
+    BOOL, BOOLEAN
+    These types are synonyms for TINYINT(1). A value of zero is considered false. Non-zero values are considered true: [...]
+*}
+
+{$_renderMode = $_renderMode|default:'normal'}
+{$_controlValue = $_value|default:false}
+{$_res = $_resource|default:'component'}
+    
+<div class="MPWSBlock MPWSBlockControl MPWSRenderMode{$_renderMode|capitalize}">
+
+{capture name="control"}
+    {if $_type eq 'text' or $_type eq 'textarea' }
+        {$_standartControlType = 'TextArea'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea _name=$_name _renderMode=$_renderMode _value=$_controlValue}
+    {elseif startsWith($_type, 'varchar') or $_type eq 'textbox' }
+        {$_standartControlType = 'TextBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode _value=$_controlValue}
+    {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean' or $_type eq 'checkbox'}
+        {$_standartControlType = 'CheckBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlCheckBox _name=$_name _renderMode=$_renderMode _value=$_controlValue}
+    {elseif startsWith($_type, 'int')}
+        {$_standartControlType = 'TextBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+    {elseif $_type eq 'datetime'}
+        {$_standartControlType = 'DateTime'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+    {elseif $_type eq 'password'}
+        {$_standartControlType = 'Password'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlPassword _name=$_name _renderMode=$_renderMode _value=$_controlValue}
+    {elseif startsWith($_type, 'enum') or $_type eq 'select'}
+        {$_standartControlType = 'DropDown'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode _value=$_controlValue}
+    {/if}
+{/capture}
+
+{include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _controlOwner=$_name+$_standartControlType}
+{$smarty.capture.control}
+
+</div>

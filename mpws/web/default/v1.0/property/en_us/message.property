@@ -1,1 +1,5 @@
 helloWorld = 'Hello World!!!!!';
+
+
+validationErrorInFieldName = "Check entered value in the field Name";
+validationErrorInFieldPassword = "Check entered value in the field Name";

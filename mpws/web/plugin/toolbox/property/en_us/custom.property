@@ -1,3 +1,0 @@
-validatorErrorAtDataEditorSystemUsersName = "Error occurred in the user name";
-validatorErrorAtDataEditorSystemUsersPassword = "Wrong user name password";
-validatorErrorAtDataEditorSystemUsersDuplicateName = "User name already exists";

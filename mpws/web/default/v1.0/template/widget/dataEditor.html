@@ -9,14 +9,14 @@
 
     {* widget title *}
     {if $CURRENT.SOURCE.DATA.ISNEW}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_widgetSummary _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateNewPage`$_formInnerAction|upper`"}}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateNewPage`$_formInnerAction|upper`"}}
     {else}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_widgetSummary _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateExistedPage`$_formInnerAction|upper`"}}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateExistedPage`$_formInnerAction|upper`"}}
     {/if}
     
     {* error block *}
     {if not $CURRENT.SOURCE.DATA.VALID}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_errorFieldsList _fields=$CURRENT.SOURCE.DATA.ERRORS _ownerName=$_widgetCustomName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$CURRENT.SOURCE.DATA.ERRORS _ownerName="`$_widgetName`Validator"}
     {/if}
     
     {* editor form *}
@@ -30,7 +30,7 @@
         {* create new form page *}
         {* completely new record without any initial data *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _resource='custom'}
         {/foreach}
 
     
@@ -45,10 +45,10 @@
             {/if}
         
             {if $CURRENT.SOURCE.DATA.ISNEW}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode _resource='custom'}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode _resource='custom'}
             {else}
                 {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode _resource='custom'}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode _resource='custom'}
             {/if}
             
             
@@ -60,39 +60,39 @@
     
         {* preview page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _readonly=true _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _readonly=true _resource='custom'}
         {/foreach}
         
     {elseif $_formInnerAction eq "save"}
     
         {* saved page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='SaveMain'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='SaveSubText'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='SaveMain'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='SaveSubText'}
         
     {elseif $_formInnerAction eq "cancel"}
     
         {* canceled page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='CancelMain'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleTextLabel _resource='widget' _ownerName=$_widgetName _key='CancelSubText'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='CancelMain'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='CancelSubText'}
         
     {/if}
     
     {* custom fields *}
     {foreach $DTV_CFG.form.$_formInnerAction.customFileds as $fieldName => $fieldType}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_controlFieldSwitcher _type=$fieldType _name=$fieldName _ownerName=$_widgetCustomName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldType _name=$fieldName _ownerName=$_widgetCustomName}
     {/foreach}
         </div>
     
         <div class="MPWSFormFooter">
     {* form controls *}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _resource='custom' _page=$_formInnerAction _buttons=$DTV_CFG.form.$_formInnerAction.controls}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _resource='custom' _ownerName=$_widgetName _buttons=$DTV_CFG.form.$_formInnerAction.controls}
         </div>
     
     </form>
 
     {* additional links *}
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _href=$CURRENT.SOURCE.DATA.REFERER _title=$CURRENT.OBJECT->objectProperty_component_formControlLinkReturn}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link _href=$CURRENT.SOURCE.DATA.REFERER _title=$CURRENT.OBJECT->objectProperty_component_formControlLinkReturn}
     </div>
 
 </div>

@@ -17,6 +17,20 @@ menuTextDescriptionMessages='Web Messages';
 
 
 
-; ============================
+
 ; text labels
 ; ============================
+labelMpwsAuthBoxFieldLogin = "Your Login";
+labelMpwsAuthBoxFieldPassword = "Password";
+
+
+; headers
+; ============================
+headerMessageListSystem = "Global System Messages:";
+headerMpwsAuthBox = "MPWS Toolbox Login";
+headerWidgetUserInfo = "Your Account Information";
+headerSystemPluginList = "All Installed Plugins";
+headerSearchBox = "Searchbox";
+headerQuickFiltering = "Quick Filtering";
+headerDataTable = "Matched Records";
+headerMessageListDataEditorValidator = "We have encountered the following issue(s):";

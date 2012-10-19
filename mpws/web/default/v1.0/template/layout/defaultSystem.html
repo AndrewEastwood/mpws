@@ -25,13 +25,11 @@
 <body>
 
 <div class="MPWSLayout MPWSLayoutDefaultSystem">
-
     {if $INFO.USER.ACTIVE}
-        {include file=$CURRENT.OBJECT->{"objectTemplatePath_component_pageDispatcher"}}
+        {include file=$CURRENT.OBJECT->{"objectTemplatePath_trigger_page"}}
     {else}
         {include file=$CURRENT.OBJECT->objectTemplatePath_page_login}
     {/if}
-    
 </div>
 
 </body>

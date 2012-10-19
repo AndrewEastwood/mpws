@@ -53,43 +53,43 @@
 
 {if isset($_action)}
 
-	{* standart property key *}
-	{assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
+    {* standart property key *}
+    {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
 
-        {if isset($_useCustomLink)}
-            {assign var="_linkText" value=$CURRENT.OBJECT->{"`$__prop__`ActionLink`$_action|capitalize:0:1`"}}
-        {else}
-            {assign var="_linkText" value=$CURRENT.OBJECT->{"objectProperty_component_actionLink`$_realm``$_action|upper`"}}
-        {/if}
+    {if isset($_useCustomLink)}
+        {assign var="_linkText" value=$CURRENT.OBJECT->{"`$__prop__`ActionLink`$_action|capitalize:0:1`"}}
+    {else}
+        {assign var="_linkText" value=$CURRENT.OBJECT->{"objectProperty_component_actionLink`$_realm``$_action|upper`"}}
+    {/if}
 
 
-	{* add standart *}
-	{$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
-	{$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
-	{$_linkActions[]="action=`$_action|lower`"}
+    {* add standart *}
+    {$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
+    {$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
+    {$_linkActions[]="action=`$_action|lower`"}
 
-	{* add oid *}
-	{if isset($_oid)}
-            {$_linkActions[]="oid=`$_oid`"}
-	{/if}
+    {* add oid *}
+    {if isset($_oid)}
+        {$_linkActions[]="oid=`$_oid`"}
+    {/if}
 
-	{* get action link *}
-	{$_linkAction=implode('&amp;', $_linkActions)}
-        
-        {* link attributes *}
-        {$_attributes[]="title=\"`$_linkText`\""}
-        {$_attributes[]="mpws-action=\"`$_action`\""}
-        {$_attributes[]="mpws-realm=\"`$_realm|lower`\""}
-        {if isset($_target) }
-            {$_attributes[]="target=\"`$_target`\""}
-        {/if}
-        
-	{* get action link attributes *}
-	{$_linkAttr=implode(' ', $_attributes)}
+    {* get action link *}
+    {$_linkAction=implode('&amp;', $_linkActions)}
 
-	<a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr} title="{$_linkText}">
-            {$_linkText}
-        </a>
+    {* link attributes *}
+    {$_attributes[]="title=\"`$_linkText`\""}
+    {$_attributes[]="mpws-action=\"`$_action`\""}
+    {$_attributes[]="mpws-realm=\"`$_realm|lower`\""}
+    {if isset($_target) }
+        {$_attributes[]="target=\"`$_target`\""}
+    {/if}
+
+    {* get action link attributes *}
+    {$_linkAttr=implode(' ', $_attributes)}
+
+    <a href="{$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath}?{$_linkAction}" class="MPWSLink" {$_linkAttr} title="{$_linkText}">
+        {$_linkText}
+    </a>
 
 {else}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Action name is empty or not provided" _tpl=$smarty.template}

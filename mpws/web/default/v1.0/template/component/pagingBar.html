@@ -1,14 +1,14 @@
 <div id="MPWSComponenPagingBarID" class="MPWSComponent MPWSComponenPagingBar">
     
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryFilteredRecords _value=$_data.AVAILABLE}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryFilteredRecords _value=$_data.AVAILABLE}
     
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryTotalRecords _value=$_data.TOTAL}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryTotalRecords _value=$_data.TOTAL}
 
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageSize _value=$_data.LIMIT}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageSize _value=$_data.LIMIT}
     
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageCount _value=$_data.PAGES}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryPageCount _value=$_data.PAGES}
     
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryCurrentPage _value=$_data.CURRENT}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_component_pagingBarSummaryCurrentPage _value=$_data.CURRENT}
 
     <div class="MPWSWrapper">
         

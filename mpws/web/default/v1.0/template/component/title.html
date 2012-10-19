@@ -1,0 +1,60 @@
+{* Component: widgetSummary  
+
+    !!!PLEASE COPY THIS MESSAGE TO NEW COMPONENT FILE!!!
+
+    Component Required Arguments: none
+
+    Optional Arguments: none
+    
+    !!!DO NOT MODIFY STANDART SECTION!!!
+
+    Standart Required Arguments:
+    _resource: 'widget', 'component', etc. Property text will be given from the file according to this value
+    _ownerType: Each property key must start with this name.
+    _ownerName: influences on property keys
+
+
+    proeprty file: %locale%/%_resource%.proeprty@%_ownerType%+'someText'+%_ownerName%
+
+    Ex.:
+
+    file: en_us/widget.property
+           .      .
+          /|\    /|\
+           |      |
+           |      |_ value of $_resource
+           |_ current locale
+
+
+    entry:  
+        dataTableView ActiveUsers Caption Name
+           .              .         .      .
+          /|\            /|\       /|\    /|\
+           |              |         |      |
+           |              |         |      |_ column key (depends on data)
+           |              |         |_ specifyc property key
+           |              |_ it's $_ownerName value
+           |_ value of $_ownerType
+
+
+   To Populate Standart Arguments Use This Line:
+   _ownerType=$_ownerType _ownerName=$_ownerName _resource=$_resource
+
+   standart property key
+   {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
+
+*}
+
+
+{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($CURRENT.OBJECT, $OBJECT.SITE)}
+
+{* standart property key *}
+{assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
+
+<div class="MPWSComponent MPWSComponentTitle">
+    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`TitleText"}}</span>
+    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`TitleDescription"}}</span>
+    {if isset($_customText)}
+    <span class="MPWSText MPWSTextCustom">{$_customText}</span>
+    {/if}
+</div>

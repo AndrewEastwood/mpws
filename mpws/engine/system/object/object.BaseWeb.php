@@ -17,11 +17,11 @@ class objectBaseWeb extends objectBase {
 
         // setup meta object
         // non "en_us" locale attribute must be changed at this point
-        $this->setMeta('PATH_WEB', DR . '/web/customer/' . MPWS_CUSTOMER);
-        $this->setMeta('PATH_DEF', DR . '/web/default/' . $this->getObjectVersion());
+        $this->setMeta('PATH_WEB', DR . 'web/customer/' . MPWS_CUSTOMER);
+        $this->setMeta('PATH_DEF', DR . 'web/default/' . $this->getObjectVersion());
         // do not use identical paths for WEB and OWN
         //if ($this->getObjectType() !== OBJECT_T_CUSTOMER)
-        $this->setMeta('PATH_OWN', DR . '/web/' . $this->getObjectType() . DS . $this->getMeta('NAME'));
+        $this->setMeta('PATH_OWN', DR . 'web/' . $this->getObjectType() . DS . $this->getMeta('NAME'));
         
         // use storage to store
         // templates, config and properties

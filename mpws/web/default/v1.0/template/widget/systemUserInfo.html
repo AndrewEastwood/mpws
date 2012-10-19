@@ -1,14 +1,21 @@
 <div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
     <form action="" method="POST" class="MPWSForm">
+        <div class="MPWSFormHeader">
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key='WidgetUserInfo'}
+        </div>
+        <div class="MPWSFormBody">
         {* user name row *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoWelcomeMessage _value=$INFO.USER.NAME}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoWelcomeMessage _value=$INFO.USER.NAME}
         {* last access row *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoLastAccess _value=$INFO.USER.SINCE}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoLastAccess _value=$INFO.USER.SINCE}
         {* home page link *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHyperlink _href=$CURRENT.OBJECT->objectConfiguration_customer_homepage _title=$smarty.const.MPWS_CUSTOMER assign=simpleHyperlinkHomepage}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link _href=$CURRENT.OBJECT->objectConfiguration_customer_homepage _title=$smarty.const.MPWS_CUSTOMER assign=simpleHyperlinkHomepage}
         {* home page row *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_divRowLabelValue _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoHomePageLinkPrefix _value=$simpleHyperlinkHomepage}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_widget_systemUserInfoHomePageLinkPrefix _value=$simpleHyperlinkHomepage}
         
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleFormButtons _buttons=['SignOut'] _page='UserInfo'}
+        </div>
+        <div class="MPWSFormFooter">
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['SignOut'] _ownerName='WidgetUserInfo'}
+        </div>
     </form>
 </div>

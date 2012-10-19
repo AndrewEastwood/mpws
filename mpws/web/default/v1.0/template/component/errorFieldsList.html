@@ -1,8 +1,0 @@
-<div class="MPWSComponent MPWSComponentErrorFieldsList">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_simpleHeader _title=$CURRENT.OBJECT->objectProperty_component_validatorHeader}
-    <ul class="MPWSList">
-    {foreach $_fields as $_errorFieldName}
-        <li class="MPWSListItem">{$CURRENT.OBJECT->{"objectProperty_custom_validatorErrorAt`$_ownerName|capitalize``$_errorFieldName`"}}</li>
-    {/foreach}
-    </ul>
-</div>

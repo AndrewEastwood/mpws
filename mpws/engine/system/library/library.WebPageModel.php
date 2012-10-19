@@ -149,9 +149,10 @@ class libraryWebPageModel {
         //debug($model);
         // fetch page
         debug('Fetching page: ' . $this->_page['TEMPLATE']);
-        $ret = $this->fetchTemplate($this->_page, $model);
+        $html = $this->fetchTemplate($this->_page, $model);
         //echo mktime() . '<br>';
-        return $ret;
+        return $html;
+        //return libraryMinifyHTML::minify($html);
     }
     
     public function fetchTemplate ($wgt, $model) {

@@ -1,0 +1,17 @@
+{* SIMPLE: label *}
+{* 
+    @required:
+    _key
+    
+    @optional:
+    _linked
+    
+*}
+
+{if isset($_controlOwner)}
+<label for="MPWSControl{$_controlOwner}ID">
+{else}
+<label class="MPWSLabel">
+{/if}
+    <span class="MPWSText">{$CURRENT.OBJECT->{"objectProperty_`$_resource|default:display`_label`$_key|capitalize`"}}</span>
+</label>

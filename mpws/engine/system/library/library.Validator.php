@@ -13,11 +13,11 @@ class libraryValidator {
                 if (!isset($value)) {
                     //echo '   ........<= has errro!!!';
                     $messages[] = 'Error is occured in the field "' . $key .'"';
-                    $_errorsAt[] = $key;
+                    $_errorsAt[] = 'validationErrorInField' . $key;
                 } elseif (!empty($rules[$key]) && !self::validateString($value, $rules[$key])) {
                     //echo '   ........<= has errro!!!';
                     $messages[] = 'Error is occured in the field "' . $key .'"';
-                    $_errorsAt[] = $key;
+                    $_errorsAt[] = 'validationErrorInField' . $key;
                 }
             }
         }

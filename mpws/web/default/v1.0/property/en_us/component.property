@@ -61,8 +61,7 @@ formPageCancelButtonNew = "Add One More Record";
 formControlLinkReturn = "Back To List";
 formPageSearchBoxButtonSearch = "Search";
 formPageSearchBoxButtonDiscard = "Reset Search";
-formPageLoginButtonSignIn = "Enter Toolbox";
-formPageUserInfoButtonSignOut='Logout';
+
 
 ; ============================
 ; validator header
@@ -71,6 +70,13 @@ validatorHeader = "Some errors were occurred in the fields below:";
 
 
 
+controlButtonMpwsAuthBoxSignIn = "Enter";
+controlButtonWidgetUserInfoSignOut = "Logout";
 
-authBoxFieldLogin = "User Login";
-authBoxFieldPassword = "Password";
+
+controlButtonSearchBoxSearch = "Search";
+controlButtonSearchBoxDiscard = "Clear";
+
+controlButtonDataEditorSave = "Save";
+controlButtonDataEditorPreview = "Preview";
+controlButtonDataEditorCancel = "Cancel";

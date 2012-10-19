@@ -47,6 +47,7 @@
 *}
 
 <div id="MPWSComponentDataTable{$_ownerName|capitalize}ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable{$_ownerName|capitalize}">
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key="dataTable"}
 
 {* standart property key *}
 {assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
@@ -59,6 +60,15 @@
     </div>
 
 {elseif count($_data) gt 0}
+
+    <div class="MPWSBlock MPWSBlockTopActions">
+    {* render table top captions *}
+    {if isset($_confing.datatable.tableTopActions)}
+        {foreach $_confing.datatable.tableTopActions as $_actionName}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_component_actionLink _ownerName=$_ownerName _action=$_actionName _realm="TopAction"}
+        {/foreach}
+    {/if}
+    </div>
 
 
     <div class="MPWSDataTableRows">
