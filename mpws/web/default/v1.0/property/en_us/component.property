@@ -19,6 +19,8 @@ quickFilteringFieldPrefix = "Show ";
 quickFilteringFieldSuffix = " from ";
 quickFilteringActionASC = "lower to higher";
 quickFilteringActionDESC = "higher to lower";
+controlActionLinkQuickFilteringASC = "lower to higher";
+controlActionLinkQuickFilteringDESC = "higher to lower";
 
 
 ; ============================
@@ -80,3 +82,9 @@ controlButtonSearchBoxDiscard = "Clear";
 controlButtonDataEditorSave = "Save";
 controlButtonDataEditorPreview = "Preview";
 controlButtonDataEditorCancel = "Cancel";
+
+
+controlActionLinkDataTableTopActionsNEW = "New Record";
+controlActionLinkDataTableRowActionsEDIT = 'edit';
+controlActionLinkDataTableRowActionsVIEW = 'view';
+controlActionLinkDataTableRowActionsDELETE = 'delete';

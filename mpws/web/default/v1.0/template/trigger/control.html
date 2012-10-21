@@ -12,7 +12,7 @@
 
 {$_renderMode = $_renderMode|default:'normal'}
 {$_controlValue = $_value|default:false}
-{$_res = $_resource|default:'component'}
+{$_resource = $_resource|default:'component'}
     
 <div class="MPWSBlock MPWSBlockControl MPWSRenderMode{$_renderMode|capitalize}">
 
@@ -50,6 +50,7 @@
      {elseif $_type eq 'mpwsLinkAction'}
         
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsLinkAction
+            _name=$_name
             _ownerName=$_ownerName
             _renderMode=$_renderMode 
             _action=$_action
@@ -62,11 +63,15 @@
     {/if}
 {/capture}
 
-{if empty($_standartControlType)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _resource=$_resource|default:'display'}
-{else}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _controlOwner=$_name+$_standartControlType _resource=$_resource|default:'display'}
+{if not isset($_single) or not $_single }
+    {if empty($_standartControlType)}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _resource=$_resource|default:'display'}
+    {else}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_ownerName`Field`$_name`" _controlOwner=$_name+$_standartControlType _resource=$_resource|default:'display'}
+    {/if}
 {/if}
+
+
 {$smarty.capture.control}
 
 </div>
