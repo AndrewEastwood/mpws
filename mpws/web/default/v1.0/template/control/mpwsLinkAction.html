@@ -13,8 +13,6 @@
     
 *}
 
-
-
 {$controlLinkHref = $_href|default:''}
 {$controlLinkTarget = $_target|default:''}
 {if $_customControlOnly}
@@ -24,56 +22,57 @@
 {/if}
 {$controlLinkAttr = []}
 
+{if empty($controlLinkHref)}
+    {if not isset($_mode) or $_mode eq 'normal'}
 
-{if not isset($_mode) or $_mode eq 'normal'}
+        {$_linkActions=[]}
+        {$_attributes=[]}
+        {if empty($controlLinkHref)}
+            {$controlLinkHref = '#'}
+        {/if}
 
-    {$_linkActions=[]}
-    {$_attributes=[]}
-    {if empty($controlLinkHref)}
-        {$controlLinkHref = '#'}
-    {/if}
-    
-    {if isset($_action)}
+        {if isset($_action)}
+            {$_linkActions[]="action=`$_action|lower`"}
+            {$_attributes[]="mpws-action=\"`$_action`\""}
+        {/if}
+        {if not empty($_oid)}
+            {$_linkActions[]="oid=`$_oid`"}
+            {$_attributes[]="mpws-oid=\"`$_oid`\""}
+        {/if}
+
+        {$controlLinkAttr=implode(' ', $_attributes)}
+        {$_linkAction=implode('&amp;', $_linkActions)}
+        {$controlLinkHref="`$controlLinkHref`?`$_linkAction`"}
+
+    {elseif $_mode eq 'system'}
+
+        {* add standart *}
+        {$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
+        {$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
         {$_linkActions[]="action=`$_action|lower`"}
+
+        {* add oid *}
+        {if not empty($_oid)}
+            {$_linkActions[]="oid=`$_oid`"}
+            {$_attributes[]="mpws-oid=\"`$_oid`\""}
+        {/if}
+
+        {* get action link *}
+        {$_linkAction=implode('&amp;', $_linkActions)}
+
+        {* link attributes *}
         {$_attributes[]="mpws-action=\"`$_action`\""}
+        {if not empty($controlLinkTarget) }
+            {$_attributes[]="target=\"`$controlLinkTarget`\""}
+        {/if}
+
+        {* get action link attributes *}
+        {$controlLinkAttr=implode(' ', $_attributes)}
+        {$controlLinkHref="`$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath`?`$_linkAction`"}
+
+    {else}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong action link mode" _tpl=$smarty.template}
     {/if}
-    {if isset($_oid)}
-        {$_linkActions[]="oid=`$_oid`"}
-        {$_attributes[]="mpws-oid=\"`$_oid`\""}
-    {/if}
-    
-    {$controlLinkAttr=implode(' ', $_attributes)}
-    {$_linkAction=implode('&amp;', $_linkActions)}
-    {$controlLinkHref="`$controlLinkHref`?`$_linkAction`"}
-
-{elseif $_mode eq 'system'}
-
-    {* add standart *}
-    {$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
-    {$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
-    {$_linkActions[]="action=`$_action|lower`"}
-
-    {* add oid *}
-    {if isset($_oid)}
-        {$_linkActions[]="oid=`$_oid`"}
-        {$_attributes[]="mpws-oid=\"`$_oid`\""}
-    {/if}
-
-    {* get action link *}
-    {$_linkAction=implode('&amp;', $_linkActions)}
-
-    {* link attributes *}
-    {$_attributes[]="mpws-action=\"`$_action`\""}
-    {if not empty($controlLinkTarget) }
-        {$_attributes[]="target=\"`$controlLinkTarget`\""}
-    {/if}
-
-    {* get action link attributes *}
-    {$controlLinkAttr=implode(' ', $_attributes)}
-    {$controlLinkHref="`$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath`?`$_linkAction`"}
-
-{else}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong action link mode" _tpl=$smarty.template}
 {/if}
 
 

@@ -1,28 +1,20 @@
-messagesListHeader = "System messages:";
-
-; ============================
 ; search box
 ; ============================
-searchBoxHeader = "Simple Search Box";
 searchBoxResultMessage = "Your search request is:";
 searchBoxResultFilterTextPrefix = "The ";
 searchBoxResultFilterTextFieldPrefix = "field ";
 searchBoxResultFilterTextValuePrefix = " contains value ";
 searchBoxResultFilterTextFieldValueSplitter = ", and the ";
 controlButtonSearchBoxSearch = "Search";
-controlButtonSearchBoxDiscard = "Clear";
+controlButtonSearchBoxDiscard = "Reset Search";
 
-; ============================
 ; quick filtering
 ; ============================
-quickFilteringHeader = "Quick Data Filtering";
 quickFilteringFieldPrefix = "Show ";
 quickFilteringFieldSuffix = " from ";
 controlActionLinkTitleQuickFilteringASC = "lower to higher";
-controlActionLinkTitleQuickFilteringDESC = "lower to higher";
+controlActionLinkTitleQuickFilteringDESC = "higher to lower";
 
-
-; ============================
 ; paging bar
 ; ============================
 pagingBarSummaryFilteredRecords = "Filtered Records:";
@@ -35,41 +27,9 @@ pagingBarEdgeLinkLAST = "Last";
 pagingBarEdgeLinkNEXT = ">>";
 pagingBarEdgeLinkPREV = "<<";
 
-
-; ============================
-; action links
-; ============================
-actionLinkTopActionNEW = 'Add New Record';
-actionLinkRowActionEDIT = 'Edit';
-actionLinkRowActionDELETE = 'Remove';
-actionLinkRowActionVIEW = 'View';
-
-
-; ============================
-; common form buttons
-; ============================
-formPageNewButtonSave = "Save";
-formPageNewButtonPreview = "Preview";
-formPageNewButtonCancel = "Cancel";
-formPageEditButtonSave = "Save";
-formPageEditButtonPreview = "Preview";
-formPageEditButtonCancel = "Cancel";
-formPagePreviewButtonSave = "Save";
-formPagePreviewButtonEdit = "Edit";
-formPagePreviewButtonCancel = "Cancel";
-formPageSaveButtonNew = "Add One More Record";
-formPageCancelButtonNew = "Add One More Record";
-formControlLinkReturn = "Back To List";
-formPageSearchBoxButtonSearch = "Search";
-formPageSearchBoxButtonDiscard = "Reset Search";
-
-
-; ============================
 ; validator header
 ; ============================
 validatorHeader = "Some errors were occurred in the fields below:";
-
-
 
 ; data table component
 ; ============================
@@ -81,8 +41,11 @@ controlButtonDataEditorSave = "Save";
 controlButtonDataEditorPreview = "Preview";
 controlButtonDataEditorCancel = "Cancel";
 
+; data editor components
+; ============================
+controlActionLinkTitleDataEditorFormActionBackToRecords = "Back To Records";
 
-
-
+; auth form
+; ============================
 controlButtonMpwsAuthBoxSignIn = "Enter";
 controlButtonWidgetUserInfoSignOut = "Logout";

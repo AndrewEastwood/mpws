@@ -1,19 +1,33 @@
 {extends file=$CURRENT.OBJECT->{"objectTemplatePath_component_breadcrumb:default"}}
 
+{$INFO.GET.PAGE}\
+{$INFO.GET.PLUGIN}\
+{$INFO.GET.DISPLAY}
+
 {block name="root"}
     {if not empty($INFO.GET.PAGE)}
-        {$INFO.GET.PAGE}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link
+            _href=$OBJECT.SITE->objectConfiguration_object_menuExecObjectPath
+            _title=$OBJECT.SITE->objectProperty_site_title}
     {/if}
 {/block}
 
 {block name="child"}
     {if not empty($INFO.GET.PLUGIN)}
-        \ {$INFO.GET.PLUGIN}
+        {$_action = libraryRequest::getNewUrl('plugin', $INFO.GET.PLUGIN, 1, ['plugin'])}
+        {include file=$OBJECT.WOB[$INFO.GET.PLUGIN|upper]->objectTemplatePath_simple_text _key='BreadcrumbSeparator'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link
+            _href="?`$_action`"
+            _title=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectProperty_widget_systemPluginListTitle}
     {/if}
 {/block}
 
-{if not empty($INFO.GET.DISPLAY)}
-    {block name="other"}
-        \ {$INFO.GET.DISPLAY}
-    {/block}
-{/if}
+{block name="other"}
+    {if not empty($INFO.GET.DISPLAY)}
+        {$_action = libraryRequest::getNewUrl('display', $INFO.GET.DISPLAY, 1, ['plugin', 'display'])}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _key='BreadcrumbSeparator'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link
+            _href="?`$_action`"
+            _title=$CURRENT.OBJECT->{"objectProperty_display_menuText`$INFO.GET.DISPLAY|capitalize`"}}
+    {/if}
+{/block}

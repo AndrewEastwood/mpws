@@ -423,7 +423,7 @@ class libraryComponents
         // get oid
         $oid = libraryRequest::getOID();
         // adjust states
-        if (isset($oid) && $com['EDIT_PAGE'] == "new") {
+        if (empty($editPage) && isset($oid) && $com['EDIT_PAGE'] == "new") {
             $editPage = "edit";
             $com['ISNEW'] = false;
         }
@@ -439,10 +439,12 @@ class libraryComponents
         // set fields
         $com['FIELDS'] = $_fieldsCOM;
         //var_dump($com['FIELDS']);
+        echo 'PAGE IS: ' . $editPage;
         // do common work on save or preview actions
         if ($editPage == 'save' || $editPage == 'preview') {
             $validatorRezult = libraryValidator::validateStandartMpwsFields($config['fields']['editable'], $config['validators']);
             $com['ERRORS'] = $validatorRezult['ERRORS'];
+            //var_dump($validatorRezult);
             // check unique fields
             if (empty($com["ERRORS"]) && isset($config['fields']['unique']) && !empty($config['fields']['unique'])) {
                 //var_dump($config['fields']['unique']);
@@ -459,7 +461,7 @@ class libraryComponents
             }
             // set editor state on error
             if (!empty($com["ERRORS"])) {
-                var_dump($com['ERRORS']);
+                //var_dump($com['ERRORS']);
                 $editPage = 'edit';
                 $com['VALID'] = false;
             }
@@ -506,7 +508,7 @@ class libraryComponents
                 foreach ($removeFields as $removeFieldName)
                     unset ($_data[$removeFieldName]);
                 // save
-                var_dump($_data);
+                //var_dump($_data);
                 /*$dbLink
                     ->reset()
                     ->insertInto($config['source'])

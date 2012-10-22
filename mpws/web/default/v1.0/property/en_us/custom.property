@@ -22,14 +22,8 @@ dataTableViewSystemUsersCaptionDateLastAccess = 'Last Time Visit';
 dataTableViewSystemUsersCaptionIsOnline = "Online State";
 
 labelTextBoxForSearchBoxOfDataTableViewSystemUsersForFieldName = "User Name";
-
-
 labelLinkActionForQuickFilteringOfDataTableViewSystemUsersForFieldName = "User Name";
 labelLinkActionForQuickFilteringOfDataTableViewSystemUsersForFieldDateLastAccess = "Last Access";
-
-
-жlabelLinkActionOfDataTableViewSystemUsersForQuickFilteringASCField
-
 
 
 ; ============================
@@ -38,11 +32,11 @@ labelLinkActionForQuickFilteringOfDataTableViewSystemUsersForFieldDateLastAccess
 dataEditorSystemUsersTitleText = 'User Editor';
 dataEditorSystemUsersTitleDescription = "You can edit user settings";
 
-labelDataEditorSystemUsersFieldName = "User Name";
-labelDataEditorSystemUsersFieldPassword = "User Password";
-labelDataEditorSystemUsersFieldActive = "Check if user is enabled";
-labelDataEditorSystemUsersFieldPermisions = "Access Level";
-labelDataEditorSystemUsersFieldRole = "User Role";
+labelTextBoxForDataEditorSystemUsersForFieldName = "User Name";
+labelTextBoxForDataEditorSystemUsersForFieldPassword = "User Password";
+labelCheckBoxForDataEditorSystemUsersForFieldActive = "Check if user is enabled";
+labelTextAreaForDataEditorSystemUsersForFieldPermisions = "Access Level";
+labelDropDownForDataEditorSystemUsersForFieldRole = "User Role";
 
 
 dataEditorSystemUsersDropDownRoleSUPERADMIN = "Administrator";

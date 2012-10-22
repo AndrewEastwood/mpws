@@ -67,8 +67,8 @@
             _name="`$componentName|capitalize``$_linkTextKey`"
             _ownerName="`$componentName|capitalize`Of`$_ownerName|capitalize`"
             _href="?`$_filterAction`#MPWSComponenQuickFilteringID"
-            _replaceControlNameInLabelBy = "`$qfEntry``$_linkTextKey`"
-            _action=$_linkTextKey
+            _replaceControlNameInLabelBy = $qfEntry
+            _action=$_filterAction
             _mode='system'}
 
     {/foreach}

@@ -136,15 +136,15 @@ class libraryRequest {
         }
     }
 
-    static function getNewUrl($key = '', $value = '', $remove = array('page', 'action')) {
+    static function getNewUrl($key = '', $value = '', $remove = array('page', 'action'), $keep = array()) {
+        //echo 'GETTING NEW URL WITH KEY: ' . $key;
         $_data = array();
         parse_str($_SERVER['QUERY_STRING'], $_data);
-        
         if (!empty($key))
             $_data[$key] = $value;
-
+        if ($remove == 1)
+            $remove = array('page', 'action');
         // remove hidden keys
-
         if(is_array($remove))
             foreach ($remove as $keyToRemove)
                 unset($_data[$keyToRemove]);
@@ -153,7 +153,18 @@ class libraryRequest {
         //unset($_data['action']);
         //$str = http_build_query($_data);
         //var_dump($str);
-
+        //filter by keep value
+        if (!empty($keep)){
+            $_newData = array();
+            foreach ($_data as $_key => $_val) {
+                if (in_array($_key, $keep))
+                    $_newData[$_key] = $_val;
+            }
+            $_data = $_newData;
+        }
+        //$str = http_build_query($_data);
+        //var_dump($str);
+        //var_dump($keep);
         return http_build_query($_data);
     }
 

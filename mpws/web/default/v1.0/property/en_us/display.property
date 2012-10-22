@@ -1,7 +1,3 @@
-; page
-title='property title';
-pageDescription='myPhpWebSite builder.';
-
 ; text labels
 ; ============================
 ; menus
@@ -23,13 +19,15 @@ labelTextBoxForMpwsAuthBoxForFieldLogin = "Your Login";
 labelPasswordForMpwsAuthBoxForFieldPassword = "Password";
 
 
+textBreadcrumbSeparator = " \ "
+
 ; headers
 ; ============================
 headerMessageListSystem = "Global System Messages:";
 headerMpwsAuthBox = "MPWS Toolbox Login";
 headerWidgetUserInfo = "Your Account Information";
 headerSystemPluginList = "All Installed Plugins";
-headerSearchBox = "Searchbox";
-headerQuickFiltering = "Quick Filtering";
+headerSearchBox = "Simple Search Box";
+headerQuickFiltering = "Quick Data Filtering";
 headerDataTable = "Matched Records";
 headerMessageListDataEditorValidator = "We have encountered the following issue(s):";
