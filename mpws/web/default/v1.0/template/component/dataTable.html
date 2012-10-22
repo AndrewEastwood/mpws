@@ -69,7 +69,7 @@
         {foreach $_confing.datatable.tableTopActions as $_actionName}
             {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
                 _type='mpwsLinkAction'
-                _name="`$componentName|capitalize`TopActions`$_actionName|upper`"
+                _name="`$componentName|capitalize`TopAction`$_actionName|upper`"
                 _ownerName=$componentName|capitalize
                 _action=$_actionName
                 _single=true
@@ -86,7 +86,9 @@
 
 
         {if not empty($_confing.datatable.actions)}
-            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">{$CURRENT.OBJECT->{"`$__prop__`CaptionActions"}}</div>
+            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
+                {$CURRENT.OBJECT->{"`$__prop__`CaptionActions"}}
+            </div>
         {/if}
 
         {if isset($_confing.datatable.fields)}
@@ -114,7 +116,7 @@
                 <span class="MPWSDataTableCellAction MPWSDataTableCellAction{$actionName|capitalize:0:1}">
                 {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
                     _type='mpwsLinkAction'
-                    _name="`$componentName|capitalize`RowActions`$actionName|upper`"
+                    _name="`$componentName|capitalize`RowAction`$actionName|upper`"
                     _ownerName=$componentName
                     _action=$actionName
                     _single=true

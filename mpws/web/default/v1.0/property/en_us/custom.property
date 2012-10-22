@@ -20,15 +20,17 @@ dataTableViewSystemUsersCaptionName = 'User Name';
 dataTableViewSystemUsersCaptionActive = 'Active';
 dataTableViewSystemUsersCaptionDateLastAccess = 'Last Time Visit';
 dataTableViewSystemUsersCaptionIsOnline = "Online State";
-dataTableViewSystemUsersQuickFilteringFieldName = 'User Names';
-dataTableViewSystemUsersQuickFilteringFieldDateLastAccess = 'Last Visit';
 
-labelDataTableViewSystemUsersFieldQuickFilteringASC = "sort ASC";
-labelDataTableViewSystemUsersFieldLinkActionTableNEW = "Add User";
+labelTextBoxForSearchBoxOfDataTableViewSystemUsersForFieldName = "User Name";
 
 
-labelDataTableViewSystemUsersSearchBoxFieldName = "User Name";
-labelDataTableFieldDataTableTopActionsNEW = "ololo";
+labelLinkActionForQuickFilteringOfDataTableViewSystemUsersForFieldName = "User Name";
+labelLinkActionForQuickFilteringOfDataTableViewSystemUsersForFieldDateLastAccess = "Last Access";
+
+
+жlabelLinkActionOfDataTableViewSystemUsersForQuickFilteringASCField
+
+
 
 ; ============================
 ; widget dataEditor SystemUsers
@@ -41,6 +43,8 @@ labelDataEditorSystemUsersFieldPassword = "User Password";
 labelDataEditorSystemUsersFieldActive = "Check if user is enabled";
 labelDataEditorSystemUsersFieldPermisions = "Access Level";
 labelDataEditorSystemUsersFieldRole = "User Role";
+
+
 dataEditorSystemUsersDropDownRoleSUPERADMIN = "Administrator";
 dataEditorSystemUsersDropDownRoleREADER = "Standart User";
 dataEditorSystemUsersDropDownRoleREPORTER = "Report User";

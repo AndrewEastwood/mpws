@@ -1,33 +1,27 @@
+; page
 title='property title';
 pageDescription='myPhpWebSite builder.';
 
-menuTextIndex='Home Page';
-menuTextDashboard='Dashboard';
-menuTextTools='Tools';
-menuTextUsers='Users';
-menuTextHelp='Help';
-menuTextMessages='Web Messages';
-
-menuTextDescriptionIndex='Home Page';
-menuTextDescriptionDashboard='Dashboard';
-menuTextDescriptionTools='Tools';
-menuTextDescriptionUsers='Users';
-menuTextDescriptionHelp='Help';
-menuTextDescriptionMessages='Web Messages';
-
-
-
-
 ; text labels
 ; ============================
-labelMpwsAuthBoxFieldLogin = "Your Login";
-labelMpwsAuthBoxFieldPassword = "Password";
+; menus
+menuTextIndex='Home Page';
+menuTextDescriptionIndex='Home Page';
+menuTextDashboard='Dashboard';
+menuTextDescriptionDashboard='Dashboard';
+menuTextTools='Tools';
+menuTextDescriptionTools='Tools';
+menuTextUsers='Users';
+menuTextDescriptionUsers='Users';
+menuTextHelp='Help';
+menuTextDescriptionHelp='Help';
+menuTextMessages='Web Messages';
+menuTextDescriptionMessages='Web Messages';
 
+; mpws auth box
+labelTextBoxForMpwsAuthBoxForFieldLogin = "Your Login";
+labelPasswordForMpwsAuthBoxForFieldPassword = "Password";
 
-labelDataTableFieldLinkActionTableNEW = "Add New Record";
-labelDataTableFieldLinkActionRecordEDIT = "Edit";
-labelDataTableFieldLinkActionRecordVIEW = "View";
-labelDataTableFieldLinkActionRecordDELETE = "Remove";
 
 ; headers
 ; ============================
@@ -39,5 +33,3 @@ headerSearchBox = "Searchbox";
 headerQuickFiltering = "Quick Filtering";
 headerDataTable = "Matched Records";
 headerMessageListDataEditorValidator = "We have encountered the following issue(s):";
-
-

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-19 17:02:15
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 13:32:34
          compiled from "/var/www/mpws/web/default/v1.0/template/component/searchBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:209792406050815b570f5db0-39300637%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '11949475bf39a92dd41d7b3b130e15a87110c9cd' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/searchBox.html',
-      1 => 1350655329,
+      1 => 1350901944,
       2 => 'file',
     ),
   ),
@@ -32,7 +32,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50815b57234a28_21967267')) {function content_50815b57234a28_21967267($_smarty_tpl) {?><div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
+<?php if ($_valid && !is_callable('content_50815b57234a28_21967267')) {function content_50815b57234a28_21967267($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+?><div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_key'=>"searchBox"), 0);?>
 
     <form action="<?php echo $_smarty_tpl->tpl_vars['_confing']->value['searchbox']['formAction'];?>
@@ -53,7 +54,7 @@ $_smarty_tpl->tpl_vars['field']->_loop = true;
             <?php }else{ ?>
                 <?php $_smarty_tpl->tpl_vars["_fieldValue"] = new Smarty_variable(false, null, 0);?>
             <?php }?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>$_smarty_tpl->tpl_vars['field']->value,'_value'=>$_smarty_tpl->tpl_vars['_fieldValue']->value,'_ownerName'=>((string)$_smarty_tpl->tpl_vars['_ownerName']->value)."SearchBox",'_resource'=>'custom'), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>$_smarty_tpl->tpl_vars['field']->value,'_value'=>$_smarty_tpl->tpl_vars['_fieldValue']->value,'_ownerName'=>"SearchBoxOf".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value)),'_resource'=>'custom'), 0);?>
 
         <?php } ?>
         </div>

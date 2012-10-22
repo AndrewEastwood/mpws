@@ -44,7 +44,10 @@
     {assign var="__prop__" value="objectProperty_`$_resource`_`$_ownerType``$_ownerName`"}
 
 *}
-
+{*
+    id:    840 811 451
+    pwd:   ce73h6
+*}
 
 {$componentName = "quickFiltering"}
 
@@ -62,8 +65,9 @@
             _type='mpwsLinkAction'
             _resource='custom'
             _name="`$componentName|capitalize``$_linkTextKey`"
-            _ownerName=$_ownerName|capitalize
+            _ownerName="`$componentName|capitalize`Of`$_ownerName|capitalize`"
             _href="?`$_filterAction`#MPWSComponenQuickFilteringID"
+            _replaceControlNameInLabelBy = "`$qfEntry``$_linkTextKey`"
             _action=$_linkTextKey
             _mode='system'}
 

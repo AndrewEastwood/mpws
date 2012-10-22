@@ -17,7 +17,11 @@
 
 {$controlLinkHref = $_href|default:''}
 {$controlLinkTarget = $_target|default:''}
-{$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_component_controlActionLink`$_name|default:'Default'`"}}
+{if $_customControlOnly}
+    {$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_custom_controlActionLinkTitle`$_name|default:'Default'`"}}
+{else}
+    {$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_component_controlActionLinkTitle`$_name|default:'Default'`"}}
+{/if}
 {$controlLinkAttr = []}
 
 

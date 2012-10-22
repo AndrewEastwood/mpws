@@ -9,7 +9,8 @@ searchBoxResultFilterTextPrefix = "The ";
 searchBoxResultFilterTextFieldPrefix = "field ";
 searchBoxResultFilterTextValuePrefix = " contains value ";
 searchBoxResultFilterTextFieldValueSplitter = ", and the ";
-
+controlButtonSearchBoxSearch = "Search";
+controlButtonSearchBoxDiscard = "Clear";
 
 ; ============================
 ; quick filtering
@@ -17,10 +18,8 @@ searchBoxResultFilterTextFieldValueSplitter = ", and the ";
 quickFilteringHeader = "Quick Data Filtering";
 quickFilteringFieldPrefix = "Show ";
 quickFilteringFieldSuffix = " from ";
-quickFilteringActionASC = "lower to higher";
-quickFilteringActionDESC = "higher to lower";
-controlActionLinkQuickFilteringASC = "lower to higher";
-controlActionLinkQuickFilteringDESC = "higher to lower";
+controlActionLinkTitleQuickFilteringASC = "lower to higher";
+controlActionLinkTitleQuickFilteringDESC = "lower to higher";
 
 
 ; ============================
@@ -72,19 +71,18 @@ validatorHeader = "Some errors were occurred in the fields below:";
 
 
 
-controlButtonMpwsAuthBoxSignIn = "Enter";
-controlButtonWidgetUserInfoSignOut = "Logout";
-
-
-controlButtonSearchBoxSearch = "Search";
-controlButtonSearchBoxDiscard = "Clear";
-
+; data table component
+; ============================
+controlActionLinkTitleDataTableTopActionNEW = "New Record";
+controlActionLinkTitleDataTableRowActionEDIT = 'edit';
+controlActionLinkTitleDataTableRowActionVIEW = 'view';
+controlActionLinkTitleDataTableRowActionDELETE = 'delete';
 controlButtonDataEditorSave = "Save";
 controlButtonDataEditorPreview = "Preview";
 controlButtonDataEditorCancel = "Cancel";
 
 
-controlActionLinkDataTableTopActionsNEW = "New Record";
-controlActionLinkDataTableRowActionsEDIT = 'edit';
-controlActionLinkDataTableRowActionsVIEW = 'view';
-controlActionLinkDataTableRowActionsDELETE = 'delete';
+
+
+controlButtonMpwsAuthBoxSignIn = "Enter";
+controlButtonWidgetUserInfoSignOut = "Logout";

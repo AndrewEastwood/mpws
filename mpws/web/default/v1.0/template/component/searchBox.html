@@ -13,7 +13,7 @@
             {else}
                 {assign var="_fieldValue" value=false}
             {/if}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='textbox' _name=$field _value=$_fieldValue _ownerName="`$_ownerName`SearchBox" _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='textbox' _name=$field _value=$_fieldValue _ownerName="SearchBoxOf`$_ownerName|capitalize`" _resource='custom'}
         {/foreach}
         </div>
         

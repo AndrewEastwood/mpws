@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-19 17:03:51
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 13:40:11
          compiled from "/var/www/mpws/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:91769009550815dc7375904-06521165%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6999ca4e59688c03dcb6f324646871f1d215ed21' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/dataTable.html',
-      1 => 1350655383,
+      1 => 1350902409,
       2 => 'file',
     ),
   ),
@@ -15,12 +15,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50815dc7475a15_42052937',
   'variables' => 
   array (
     '_ownerName' => 0,
     'CURRENT' => 0,
     '_data' => 0,
     '_confing' => 0,
+    'componentName' => 0,
     '_actionName' => 0,
     '__prop__' => 0,
     'fieldKey' => 0,
@@ -30,11 +33,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cellEntry' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50815dc7475a15_42052937',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50815dc7475a15_42052937')) {function content_50815dc7475a15_42052937($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
+
+<?php $_smarty_tpl->tpl_vars['componentName'] = new Smarty_variable("dataTable", null, 0);?>
 
 <div id="MPWSComponentDataTable<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
 ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
@@ -63,7 +66,7 @@ ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable<?php echo
 foreach ($_from as $_smarty_tpl->tpl_vars['_actionName']->key => $_smarty_tpl->tpl_vars['_actionName']->value){
 $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
 ?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_actionLink, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_ownerName'=>$_smarty_tpl->tpl_vars['_ownerName']->value,'_action'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_realm'=>"TopAction"), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsLinkAction','_name'=>((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['componentName']->value))."TopAction".((string)mb_strtoupper($_smarty_tpl->tpl_vars['_actionName']->value, 'UTF-8')),'_ownerName'=>smarty_modifier_capitalize($_smarty_tpl->tpl_vars['componentName']->value),'_action'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_single'=>true,'_mode'=>'system'), 0);?>
 
         <?php } ?>
     <?php }?>
@@ -77,8 +80,10 @@ $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
 
 
         <?php if (!empty($_smarty_tpl->tpl_vars['_confing']->value['datatable']['actions'])){?>
-            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."CaptionActions"};?>
-</div>
+            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
+                <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."CaptionActions"};?>
+
+            </div>
         <?php }?>
 
         <?php if (isset($_smarty_tpl->tpl_vars['_confing']->value['datatable']['fields'])){?>
@@ -128,7 +133,7 @@ $_smarty_tpl->tpl_vars['actionName']->_loop = true;
 ?>
                 <span class="MPWSDataTableCellAction MPWSDataTableCellAction<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['actionName']->value,0,1);?>
 ">
-                <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_actionLink, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_ownerName'=>$_smarty_tpl->tpl_vars['_ownerName']->value,'_action'=>$_smarty_tpl->tpl_vars['actionName']->value,'_oid'=>$_smarty_tpl->tpl_vars['rowEntry']->value['ID'],'_realm'=>"RowAction"), 0);?>
+                <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsLinkAction','_name'=>((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['componentName']->value))."RowAction".((string)mb_strtoupper($_smarty_tpl->tpl_vars['actionName']->value, 'UTF-8')),'_ownerName'=>$_smarty_tpl->tpl_vars['componentName']->value,'_action'=>$_smarty_tpl->tpl_vars['actionName']->value,'_single'=>true,'_oid'=>$_smarty_tpl->tpl_vars['rowEntry']->value['ID'],'_mode'=>'system'), 0);?>
 
                 </span>
             <?php } ?>
