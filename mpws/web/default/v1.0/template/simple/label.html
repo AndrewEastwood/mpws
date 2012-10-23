@@ -8,10 +8,10 @@
     
 *}
 
-{if isset($_controlOwner)}
-<label for="MPWSControl{$_controlOwner}ID">
+{if isset($_for)}
+<label for="MPWSControl{$_for}ID">
 {else}
 <label class="MPWSLabel">
 {/if}
-    <span class="MPWSText">{$CURRENT.OBJECT->{"objectProperty_`$_resource|default:display`_label`$_key|capitalize`"}}</span>
+    <span class="MPWSText">{$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_labelFor`$_key|capitalize`"}}</span>
 </label>

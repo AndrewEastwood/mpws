@@ -49,11 +49,11 @@
 {assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($CURRENT.OBJECT, $OBJECT.SITE)}
 
 {* standart property key *}
-{assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
+{assign var="__prop__" value="objectProperty_`$_resourceOwner|default:component`_"}
 
 <div class="MPWSComponent MPWSComponentTitle">
-    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`TitleText"}}</span>
-    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`TitleDescription"}}</span>
+    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`Title"}}</span>
+    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`Description"}}</span>
     {if isset($_customText)}
     <span class="MPWSText MPWSTextCustom">{$_customText}</span>
     {/if}

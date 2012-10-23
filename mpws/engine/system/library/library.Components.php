@@ -399,7 +399,6 @@ class libraryComponents
     
     
     public static function getDataEditor ($config, $dbLink, $actionHooks = false) {
-        
 
         if (empty($dbLink))
             throw new Exception('libraryComponents: getDataEditor => dbLink is empty');
@@ -423,10 +422,10 @@ class libraryComponents
         // get oid
         $oid = libraryRequest::getOID();
         // adjust states
-        if (empty($editPage) && isset($oid) && $com['EDIT_PAGE'] == "new") {
-            $editPage = "edit";
+        if (isset($oid) && !empty($oid))
             $com['ISNEW'] = false;
-        }
+        if (empty($editPage) && $com['EDIT_PAGE'] == "new")
+            $editPage = "edit";
         // get fields
         $_fieldsDB = $dbLink->getFields($config['source']);
         $_fieldsCOM = array();
@@ -439,7 +438,7 @@ class libraryComponents
         // set fields
         $com['FIELDS'] = $_fieldsCOM;
         //var_dump($com['FIELDS']);
-        echo 'PAGE IS: ' . $editPage;
+        //echo 'PAGE IS: ' . $editPage;
         // do common work on save or preview actions
         if ($editPage == 'save' || $editPage == 'preview') {
             $validatorRezult = libraryValidator::validateStandartMpwsFields($config['fields']['editable'], $config['validators']);
@@ -459,6 +458,14 @@ class libraryComponents
                         $com['ERRORS'][] = 'validationErrorDuplicateValueInField' . $_fieldThatMustBeUnique;
                 }
             }
+            // do not modify pwd
+            // truncate error
+            if (!$com['ISNEW'] && !empty($config['fields']['skipIfEditExisted']) && !empty($com["ERRORS"])) {
+                //var_dump($com["ERRORS"]);
+                foreach ($config['fields']['skipIfEditExisted'] as $skipExistedField)
+                    if (isset ($com["ERRORS"][$skipExistedField]))
+                        unset($com["ERRORS"][$skipExistedField]);
+            }
             // set editor state on error
             if (!empty($com["ERRORS"])) {
                 //var_dump($com['ERRORS']);
@@ -476,6 +483,12 @@ class libraryComponents
                 if (isset($actionHooks['ON_BEFORE_SAVE'])) {
                     $__action = $actionHooks['ON_BEFORE_SAVE'];
                     $__action($config, $_data);
+                }
+                // skip fields for existed recird
+                if (!$com['ISNEW'] && !empty($config['fields']['skipIfEditExisted'])) {
+                    foreach ($config['fields']['skipIfEditExisted'] as $skipExistedField)
+                        if (isset($_data[$skipExistedField]))
+                            unset($_data[$skipExistedField]);
                 }
                 // standart actions
                 // obfuscate passwords

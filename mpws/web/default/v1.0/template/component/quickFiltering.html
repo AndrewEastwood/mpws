@@ -49,26 +49,26 @@
     pwd:   ce73h6
 *}
 
-{$componentName = "quickFiltering"}
+{$_controlOwner = "QuickFiltering"}
+{$_resourceOwner = $_resourceOwner|default:'control'}
 
 <div id="MPWSComponenQuickFilteringID" class="MPWSComponent MPWSComponenQuickFiltering">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$componentName}
-    {foreach $_confing.filtering.fields as $qfEntry}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$_controlOwner}
+    {foreach $_confing.filtering.fields as $fieldFilterName}
 
-        {$_keyAsc = "`$qfEntry`.asc"}
-        {$_keyDesc = "`$qfEntry`.desc"}
+        {$_keyAsc = "`$fieldFilterName`.asc"}
+        {$_keyDesc = "`$fieldFilterName`.desc"}
         {$_requestKey = libraryRequest::getValue($_confing.filtering.sortKey)}
         {$_filterAction = libraryRequest::getNewUrl('sort', libraryUtils::valueSelect($_requestKey, $_keyAsc, $_keyDesc, $_keyAsc))}
-        {$_linkTextKey = libraryUtils::valueSelect($_requestKey, $_keyAsc, "DESC", "ASC")}
+        {$_filterType = libraryUtils::valueSelect($_requestKey, $_keyAsc, "DESC", "ASC")}
         {* block control *}
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
             _type='mpwsLinkAction'
-            _resource='custom'
-            _name="`$componentName|capitalize``$_linkTextKey`"
-            _ownerName="`$componentName|capitalize`Of`$_ownerName|capitalize`"
+            _name=$fieldFilterName
+            _controlOwner=$_controlOwner
+            _action=$_filterType
+            _resourceOwner=$_resourceOwner
             _href="?`$_filterAction`#MPWSComponenQuickFilteringID"
-            _replaceControlNameInLabelBy = $qfEntry
-            _action=$_filterAction
             _mode='system'}
 
     {/foreach}

@@ -2,7 +2,7 @@
 {$_controlName = "mpws_field_`$_name|lower`"}
 {$_controlCssName = 'TextBox'}
 {$_controlCssNameCustom = "`$_controlCssName``$_name`"}
-{$_controlValue = $_value|default:libraryRequest::getPostFormField($_name)}
+{$_controlValue = $_value|default:libraryRequest::getPostFormField($_name|lower)}
 {$_controlSize = $_size|default:25}
 {$_controlLimit = ''}
 {$_controlRenderMode = $_renderMode|default:'normal'}
@@ -11,7 +11,6 @@
 {if isset($_limit)}
     {$_controlLimit = " maxlength=\"`$_limit`\""}
 {/if}
-
 
 {* control implemetation *}
 <div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">

@@ -15,11 +15,10 @@
 
 {$controlLinkHref = $_href|default:''}
 {$controlLinkTarget = $_target|default:''}
-{if $_customControlOnly}
-    {$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_custom_controlActionLinkTitle`$_name|default:'Default'`"}}
-{else}
-    {$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_component_controlActionLinkTitle`$_name|default:'Default'`"}}
-{/if}
+{$_resourceOwner=$_resourceOwner|default:'control'}
+
+{$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action`"}}
+
 {$controlLinkAttr = []}
 
 {if empty($controlLinkHref)}

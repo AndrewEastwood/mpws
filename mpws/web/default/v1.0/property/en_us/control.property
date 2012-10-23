@@ -1,0 +1,10 @@
+; search box
+controlFormButtonsSearchBoxButtonSearch = "Search";
+controlFormButtonsSearchBoxButtonDiscard = "Clear Search":
+
+; user information
+controlFormButtonsButtonSignOut = "Signout";
+
+; quick filtering
+controlActionLinkTitleQuickFilteringASC = "lower to higher";
+controlActionLinkTitleQuickFilteringDESC = "higher to lower";

@@ -10,8 +10,11 @@
     These types are synonyms for TINYINT(1). A value of zero is considered false. Non-zero values are considered true: [...]
 *}
 
+{$_resourceOwner=$_resourceOwner|default:'control'}
 {$_renderMode = $_renderMode|default:'normal'}
-{$_controlValue = $_value|default:false}
+{$_controlOwner = $_controlOwner|default:'Default'}
+{$_controlValue = $_value|default:null}
+{$_linkLabelWithControl = true}
     
 <div class="MPWSBlock MPWSBlockControl MPWSRenderMode{$_renderMode|capitalize}">
 
@@ -49,28 +52,27 @@
      {elseif $_type eq 'mpwsLinkAction'}
         
         {$_standartControlType = 'LinkAction'}
+        {$_linkLabelWithControl = false}
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsLinkAction
             _name=$_name
-            _ownerName=$_ownerName
+            _controlOwner=$_controlOwner
+            _resourceOwner='control'
             _renderMode=$_renderMode 
             _action=$_action
             _mode=$_mode|default:'normal'
             _target=$_target|default:''
             _oid=$_oid|default:''
-            _href=$_href|default:''
-            _customControlOnly=$_customControlOnly|default:false}
+            _href=$_href|default:''}
 
     {/if}
 {/capture}
 
-{if not empty($_replaceControlNameInLabelBy)}
-    {$_controlLabelKey = "`$_standartControlType`For`$_ownerName|capitalize`ForField`$_replaceControlNameInLabelBy`"}
-{else}
-    {$_controlLabelKey = "`$_standartControlType`For`$_ownerName|capitalize`ForField`$_name`"}
-{/if}
-
 {if not isset($_single) or not $_single }
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key=$_controlLabelKey _controlOwner="`$_standartControlType``$_name`" _resource=$_resource|default:'display'}
+    {if $_linkLabelWithControl}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_standartControlType``$_controlOwner``$_name`" _for="`$_standartControlType``$_name`" _resourceOwner=$_resourceOwner}
+    {else}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_standartControlType``$_controlOwner``$_name`" _resourceOwner=$_resourceOwner}
+    {/if}
 {/if}
 {$smarty.capture.control}
 

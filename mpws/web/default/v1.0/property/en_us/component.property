@@ -5,8 +5,6 @@ searchBoxResultFilterTextPrefix = "The ";
 searchBoxResultFilterTextFieldPrefix = "field ";
 searchBoxResultFilterTextValuePrefix = " contains value ";
 searchBoxResultFilterTextFieldValueSplitter = ", and the ";
-controlButtonSearchBoxSearch = "Search";
-controlButtonSearchBoxDiscard = "Reset Search";
 
 ; quick filtering
 ; ============================
@@ -40,6 +38,8 @@ controlActionLinkTitleDataTableRowActionDELETE = 'delete';
 controlButtonDataEditorSave = "Save";
 controlButtonDataEditorPreview = "Preview";
 controlButtonDataEditorCancel = "Cancel";
+controlButtonDataEditorEdit = "Edit";
+controlButtonDataEditorNew = "New Record";
 
 ; data editor components
 ; ============================

@@ -1,0 +1,14 @@
+Title = "Active Users";
+Description = 'List of all active users';
+
+; searchbox
+labelForTextBoxSearchBoxName = "User Name";
+
+labelForLinkActionQuickFilteringName = "User Name";
+labelForLinkActionQuickFilteringDateLastAccess = "Last Access":
+
+dataTableViewSystemUsersCaptionActions = 'Actions';
+dataTableViewSystemUsersCaptionName = 'User Name';
+dataTableViewSystemUsersCaptionActive = 'Active';
+dataTableViewSystemUsersCaptionDateLastAccess = 'Last Time Visit';
+dataTableViewSystemUsersCaptionIsOnline = "Online State";

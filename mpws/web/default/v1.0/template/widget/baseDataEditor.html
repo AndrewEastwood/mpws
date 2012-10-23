@@ -47,8 +47,11 @@
             {if $CURRENT.SOURCE.DATA.ISNEW}
                 {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode _resource='custom'}
             {else}
-                {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode _resource='custom'}
+                {* skip field if editing existed recoed *}
+                {if not in_array($fieldEntry.Field, $DTV_CFG.fields.skipIfEditExisted)}
+                    {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
+                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode _resource='custom'}
+                {/if}
             {/if}
             
             
@@ -60,20 +63,20 @@
     
         {* preview page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _readonly=true _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _renderMode='hidden' _resource='custom'}
         {/foreach}
         
     {elseif $_formInnerAction eq "save"}
     
         {* saved page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='SaveMain'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='SaveSubText'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`SaveMain"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`SaveSubText"}
         
     {elseif $_formInnerAction eq "cancel"}
     
         {* canceled page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='CancelMain'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_text _resource='widget' _ownerName=$_widgetName _key='CancelSubText'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`CancelMain"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`CancelSubText"}
         
     {/if}
     

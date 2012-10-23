@@ -31,3 +31,12 @@ headerSearchBox = "Simple Search Box";
 headerQuickFiltering = "Quick Data Filtering";
 headerDataTable = "Matched Records";
 headerMessageListDataEditorValidator = "We have encountered the following issue(s):";
+
+
+labelCheckBoxForDataEditorSystemUsersForFieldSendEmail = "Notify by email about new changes";
+
+
+textDataEditorCancelMain = "Canceled";
+textDataEditorCancelSubText = "Use buttons below:";
+textDataEditorSaveMain = "Saved";
+textDataEditorSaveSubText = "Use the buttons below:";

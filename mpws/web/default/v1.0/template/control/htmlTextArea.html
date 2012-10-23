@@ -2,23 +2,11 @@
 {$_controlName = "mpws_field_`$_name|lower`"}
 {$_controlCssName = 'TextArea'}
 {$_controlCssNameCustom = "`$_controlCssName``$_name`"}
-{$_controlValue = libraryRequest::getPostValue($_controlName, false)}
-{$_controlColSize = 45}
-{$_controlRowSize = 6}
-{$_controlRenderMode = 'normal'}
-{* init control with passed arguments *}
-{if isset($_renderMode)}
-    {$_controlRenderMode = $_renderMode}
-{/if}
-{if empty($_controlValue) and isset($_value)}
-    {$_controlValue = $_value}
-{/if}
-{if isset($_cols)}
-    {$_controlColSize = $_cols}
-{/if}
-{if isset($_rows)}
-    {$_controlRowSize = $_rows}
-{/if}
+{$_controlValue = $_value|default:libraryRequest::getPostFormField($_name|lower)}
+{$_controlColSize = $_cols|default:45}
+{$_controlRowSize = $_rows|default:6}
+{$_controlRenderMode = $_renderMode|default:'normal'}
+
 {* control implemetation *}
 <div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">
 {if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}

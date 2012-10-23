@@ -32,15 +32,19 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     public function addWidgetDataTableView ($widgetName) {
         $ctx = contextMPWS::instance();
+        $wnC = "objectConfiguration_widget_dataTableView" . $widgetName;
+        $wnT = "objectTemplatePath_widget_dataTableView" . $widgetName;
         //echo "Getting Widget Configurtion: objectConfiguration_widget_dataTableView" . $widgetName;
-        $wgtData = libraryComponents::getDataTableView($this->{"objectConfiguration_widget_dataTableView" . $widgetName}, $ctx->contextCustomer->getDBO());
-        $ctx->pageModel->addWidget($this, $widgetName, $this->objectTemplatePath_widget_dataTableView, $wgtData);
+        $wgtData = libraryComponents::getDataTableView($this->$wnC, $ctx->contextCustomer->getDBO());
+        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
     }
     
     public function addWidgetDataEditor ($widgetName, $events = array()) {
         $ctx = contextMPWS::instance();
-        $wgtData = libraryComponents::getDataEditor($this->{"objectConfiguration_widget_dataEditor" . $widgetName}, $ctx->contextCustomer->getDBO(), $events);
-        $ctx->pageModel->addWidget($this, $widgetName, $this->objectTemplatePath_widget_dataEditor, $wgtData);
+        $wnC = "objectConfiguration_widget_dataTableView" . $widgetName;
+        $wnT = "objectTemplatePath_widget_dataTableView" . $widgetName;
+        $wgtData = libraryComponents::getDataEditor($this->$wnC, $ctx->contextCustomer->getDBO(), $events);
+        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
         
     }
 

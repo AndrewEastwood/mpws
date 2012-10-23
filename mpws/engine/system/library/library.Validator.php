@@ -12,12 +12,12 @@ class libraryValidator {
                
                 if (!isset($value)) {
                     //echo '   ........<= has errro!!!';
-                    $messages[] = 'Error is occured in the field "' . $key .'"';
-                    $_errorsAt[] = 'validationErrorInField' . $key;
+                    $messages[$key] = 'Error is occured in the field "' . $key .'"';
+                    $_errorsAt[$key] = 'validationErrorInField' . $key;
                 } elseif (!empty($rules[$key]) && !self::validateString($value, $rules[$key])) {
                     //echo '   ........<= has errro!!!';
-                    $messages[] = 'Error is occured in the field "' . $key .'"';
-                    $_errorsAt[] = 'validationErrorInField' . $key;
+                    $messages[$key] = 'Error is occured in the field "' . $key .'"';
+                    $_errorsAt[$key] = 'validationErrorInField' . $key;
                 }
             }
         }
@@ -98,7 +98,7 @@ class libraryValidator {
         $_data = libraryRequest::getPostMapContainer($_fields);
         //var_dump($_fields);
         // validate data
-        var_dump($_data);
+        //var_dump($_data);
         $rez['DATA'] = $_data;
         $rez['ERRORS'] = self::validateData($_data, $rules);
         return $rez;
