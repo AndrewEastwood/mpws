@@ -1,4 +1,8 @@
 {* Get Configuration For The Widget *}
+
+{$_controlOwner = 'DataEditor'}
+{$_resourceOwner = $_resourceOwner|default:$_widgetName}
+
 {$_widgetName = "dataEditor"}
 {$_widgetCustomName = "`$_widgetName``$CURRENT.SOURCE.NAME`"}
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataEditor`$CURRENT.SOURCE.NAME`"}}

@@ -1,7 +1,8 @@
+{$_widgetName = "SystemUserInfo"}
 <div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
     <form action="" method="POST" class="MPWSForm">
         <div class="MPWSFormHeader">
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key='WidgetUserInfo'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$_widgetName}
         </div>
         <div class="MPWSFormBody">
         {* user name row *}
@@ -15,7 +16,7 @@
         
         </div>
         <div class="MPWSFormFooter">
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['SignOut'] _ownerName='WidgetUserInfo'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['SignOut'] _controlOwner=$_widgetName}
         </div>
     </form>
 </div>

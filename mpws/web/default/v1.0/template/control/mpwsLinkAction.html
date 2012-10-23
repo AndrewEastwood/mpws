@@ -17,7 +17,7 @@
 {$controlLinkTarget = $_target|default:''}
 {$_resourceOwner=$_resourceOwner|default:'control'}
 
-{$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action`"}}
+{$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action|upper`"}}
 
 {$controlLinkAttr = []}
 

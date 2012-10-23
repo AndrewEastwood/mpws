@@ -15,9 +15,8 @@ menuTextMessages='Web Messages';
 menuTextDescriptionMessages='Web Messages';
 
 ; mpws auth box
-labelTextBoxForMpwsAuthBoxForFieldLogin = "Your Login";
-labelPasswordForMpwsAuthBoxForFieldPassword = "Password";
-
+labelForTextBoxMpwsAuthBoxLogin = "Your Login";
+labelForPasswordMpwsAuthBoxPassword  = "Password";
 
 textBreadcrumbSeparator = " \ "
 
@@ -25,7 +24,7 @@ textBreadcrumbSeparator = " \ "
 ; ============================
 headerMessageListSystem = "Global System Messages:";
 headerMpwsAuthBox = "MPWS Toolbox Login";
-headerWidgetUserInfo = "Your Account Information";
+headerSystemUserInfo = "Your Account Information";
 headerSystemPluginList = "All Installed Plugins";
 headerSearchBox = "Simple Search Box";
 headerQuickFiltering = "Quick Data Filtering";

@@ -1,0 +1,13 @@
+title="System User Editor";
+description="You can edit user settings";
+
+labelForTextBoxDataEditorName = "User Name";
+labelForTextBoxDataEditorPassword = "Password";
+labelForCheckBoxDataEditorActive = "Check if user is enabled";
+labelForTextAreaDataEditorPermisions="Access Level";
+labelForDropDownDataEditorRole="User Role";
+controlFormButtonsDataEditorButtonSave ="save";
+controlFormButtonsDataEditorButtonPreview="preview";
+controlFormButtonsDataEditorButtonCancel="cancel";
+
+controlActionLinkTitleDataEditorBACKTORECORDS="back"

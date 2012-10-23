@@ -1,15 +1,16 @@
+{$_controlOwner = "MpwsAuthBox"}
 <div class="MPWSControl MPWSControlMpws MPWSControlMpwsAuth">
 {$_formAction = $_action|default:$MODEL.CUSTOM.LOGIN_URL}
 <form action="?{$_formAction}" method="POST" class="MPWSForm">
     <div class="MPWSFormHeader">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key='mpwsAuthBox'}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$_controlOwner}
     </div>
     <div class="MPWSFormBody">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='textbox' _name='Login' _ownerName="mpwsAuthBox"}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='password' _name='Password' _value='' _ownerName="mpwsAuthBox"}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='textbox' _name='Login' _controlOwner=$_controlOwner}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='password' _name='Password' _value='' _controlOwner=$_controlOwner}
     </div>
     <div class="MPWSFormFooter">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['SignIn'] _ownerName='mpwsAuthBox'}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['SignIn'] _controlOwner=$_controlOwner}
     </div>
 </form>
 </div>

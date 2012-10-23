@@ -46,13 +46,10 @@
 
 *}
 
-{$componentName = "dataTable"}
+{$_controlOwner = 'DataTable'}
 
 <div id="MPWSComponentDataTable{$_ownerName|capitalize}ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable{$_ownerName|capitalize}">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key="dataTable"}
-
-{* standart property key *}
-{assign var="__prop__" value="objectProperty_custom_`$_ownerName`"}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$_controlOwner}
 
 {* data table content *}
 {if count($_data) eq 0}
@@ -69,9 +66,10 @@
         {foreach $_confing.datatable.tableTopActions as $_actionName}
             {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
                 _type='mpwsLinkAction'
-                _name="`$componentName|capitalize`TopAction`$_actionName|upper`"
-                _ownerName=$componentName|capitalize
+                _name=$_actionName
+                _controlOwner="`$_controlOwner`TopAction"
                 _action=$_actionName
+                _resourceOwner=$_resourceOwner
                 _single=true
                 _mode='system'}
         {/foreach}
@@ -87,20 +85,20 @@
 
         {if not empty($_confing.datatable.actions)}
             <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
-                {$CURRENT.OBJECT->{"`$__prop__`CaptionActions"}}
+                {$CURRENT.OBJECT->objectProperty_widget_dataTableViewCaptionActions}
             </div>
         {/if}
 
         {if isset($_confing.datatable.fields)}
             {foreach $_confing.datatable.fields as $fieldKey}
                 <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$fieldKey|capitalize}">
-                    {$CURRENT.OBJECT->{"`$__prop__`Caption`$fieldKey`"}}
+                    {$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_caption`$fieldKey`"}}
                 </div>
             {/foreach}
         {else}
             {foreach $_data.0 as $cellEntry}
                 <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCell{$cellEntry@key|capitalize}">
-                    {$CURRENT.OBJECT->{"`$__prop__`Caption`$cellEntry@key`"}}
+                    {$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_caption`$cellEntry@key`"}}
                 </div>
             {/foreach}
         {/if}
@@ -112,15 +110,15 @@
 
         {if not empty($_confing.datatable.perRecrodActions)}
             <div class="MPWSDataTableCell MPWSDataTableCellActions">
-            {foreach $_confing.datatable.perRecrodActions as $actionName}
+            {foreach $_confing.datatable.perRecrodActions as $_actionName}
                 <span class="MPWSDataTableCellAction MPWSDataTableCellAction{$actionName|capitalize:0:1}">
                 {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
                     _type='mpwsLinkAction'
-                    _name="`$componentName|capitalize`RowAction`$actionName|upper`"
-                    _ownerName=$componentName
-                    _action=$actionName
+                    _name=$_actionName
+                    _controlOwner="`$_controlOwner`RowAction"
+                    _action=$_actionName
+                    _resourceOwner=$_resourceOwner
                     _single=true
-                    _oid=$rowEntry['ID']
                     _mode='system'}
                 </span>
             {/foreach}

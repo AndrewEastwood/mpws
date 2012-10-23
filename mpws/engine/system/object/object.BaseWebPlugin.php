@@ -41,8 +41,8 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     public function addWidgetDataEditor ($widgetName, $events = array()) {
         $ctx = contextMPWS::instance();
-        $wnC = "objectConfiguration_widget_dataTableView" . $widgetName;
-        $wnT = "objectTemplatePath_widget_dataTableView" . $widgetName;
+        $wnC = "objectConfiguration_widget_dataEditor" . $widgetName;
+        $wnT = "objectTemplatePath_widget_dataEditor" . $widgetName;
         $wgtData = libraryComponents::getDataEditor($this->$wnC, $ctx->contextCustomer->getDBO(), $events);
         $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
         

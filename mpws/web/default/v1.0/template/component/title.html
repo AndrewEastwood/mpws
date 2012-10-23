@@ -52,8 +52,8 @@
 {assign var="__prop__" value="objectProperty_`$_resourceOwner|default:component`_"}
 
 <div class="MPWSComponent MPWSComponentTitle">
-    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`Title"}}</span>
-    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`Description"}}</span>
+    <span class="MPWSText MPWSTextTitle">{$DISPLAY_OBJECT->{"`$__prop__`title"}}</span>
+    <span class="MPWSText MPWSTextDetails">{$DISPLAY_OBJECT->{"`$__prop__`description"}}</span>
     {if isset($_customText)}
     <span class="MPWSText MPWSTextCustom">{$_customText}</span>
     {/if}

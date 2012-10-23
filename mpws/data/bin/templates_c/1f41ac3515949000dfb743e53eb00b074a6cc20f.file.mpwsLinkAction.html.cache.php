@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 21:51:28
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 23:27:54
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsLinkAction.html" */ ?>
 <?php /*%%SmartyHeaderCode:19152304395081a14daa68a7-90403107%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1f41ac3515949000dfb743e53eb00b074a6cc20f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsLinkAction.html',
-      1 => 1350931862,
+      1 => 1351024072,
       2 => 'file',
     ),
   ),
@@ -21,12 +21,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     '_href' => 0,
     '_target' => 0,
-    '_customControlOnly' => 0,
-    '_name' => 0,
+    '_resourceOwner' => 0,
+    '_controlOwner' => 0,
+    '_action' => 0,
     'CURRENT' => 0,
     'controlLinkHref' => 0,
     '_mode' => 0,
-    '_action' => 0,
     '_oid' => 0,
     '_attributes' => 0,
     '_linkActions' => 0,
@@ -43,11 +43,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <?php $_smarty_tpl->tpl_vars['controlLinkHref'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_href']->value)===null||$tmp==='' ? '' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['controlLinkTarget'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_target']->value)===null||$tmp==='' ? '' : $tmp), null, 0);?>
-<?php if ($_smarty_tpl->tpl_vars['_customControlOnly']->value){?>
-    <?php $_smarty_tpl->tpl_vars['controlLinkTitle'] = new Smarty_variable($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_custom_controlActionLinkTitle".((string)(($tmp = @$_smarty_tpl->tpl_vars['_name']->value)===null||$tmp==='' ? 'Default' : $tmp))}, null, 0);?>
-<?php }else{ ?>
-    <?php $_smarty_tpl->tpl_vars['controlLinkTitle'] = new Smarty_variable($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_component_controlActionLinkTitle".((string)(($tmp = @$_smarty_tpl->tpl_vars['_name']->value)===null||$tmp==='' ? 'Default' : $tmp))}, null, 0);?>
-<?php }?>
+<?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'control' : $tmp), null, 0);?>
+
+<?php $_smarty_tpl->tpl_vars['controlLinkTitle'] = new Smarty_variable($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)$_smarty_tpl->tpl_vars['_resourceOwner']->value)."_controlActionLinkTitle".((string)$_smarty_tpl->tpl_vars['_controlOwner']->value).((string)mb_strtoupper($_smarty_tpl->tpl_vars['_action']->value, 'UTF-8'))}, null, 0);?>
+
 <?php $_smarty_tpl->tpl_vars['controlLinkAttr'] = new Smarty_variable(array(), null, 0);?>
 
 <?php if (empty($_smarty_tpl->tpl_vars['controlLinkHref']->value)){?>

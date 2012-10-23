@@ -7,13 +7,12 @@
 *}
 
 {* Get Configuration For The Widget *}
-{$_widgetName = "dataTableView"}
+{$_widgetName = "DataTableView"}
 {$_resourceOwner = $_resourceOwner|default:$_widgetName}
-{*$_widgetNameCustom = "`$_widgetName``$CURRENT.SOURCE.NAME`"*}
 
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_`$_resourceOwner`"}}
 
-<div id="MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName|capitalize} MPWSWidget{$_resourceOwner|capitalize}">
+<div id="MPWSWidget{$_widgetName}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
     
 {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _resourceOwner=$_resourceOwner}
 
@@ -25,12 +24,12 @@
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_quickFiltering _confing=$DTV_CFG _resourceOwner=$_resourceOwner}
 {/if}
 
-{*if not empty($DTV_CFG.datatable)}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _ownerName=$_widgetNameCustom}
+{if not empty($DTV_CFG.datatable)}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SOURCE.RECORDS _resourceOwner=$_resourceOwner}
 {/if}
 
 {if not empty($DTV_CFG.pagination) and $DTV_CFG.pagination.enabled}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_pagingBar _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.PAGING}
-{/if*}
+{/if}
 
 </div>

@@ -8,3 +8,15 @@ controlFormButtonsButtonSignOut = "Signout";
 ; quick filtering
 controlActionLinkTitleQuickFilteringASC = "lower to higher";
 controlActionLinkTitleQuickFilteringDESC = "higher to lower";
+
+; mpws auth
+controlFormButtonsMpwsAuthBoxButtonSignIn = "Login";
+controlFormButtonsSystemUserInfoButtonSignOut = "Exit":
+
+; data table common controls
+controlActionLinkTitleDataTableTopActionNEW = "New Record";
+controlActionLinkTitleDataTableRowActionEDIT = "edit";
+controlActionLinkTitleDataTableRowActionVIEW = "view";
+controlActionLinkTitleDataTableRowActionDELETE  = "remove";
+
+controlActionLinkTitleDataEditorBACKTORECORDS = "Back To Records";
