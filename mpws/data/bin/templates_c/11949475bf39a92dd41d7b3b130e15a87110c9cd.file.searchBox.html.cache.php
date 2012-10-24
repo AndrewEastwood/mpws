@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 20:52:55
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 10:13:38
          compiled from "/var/www/mpws/web/default/v1.0/template/component/searchBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:209792406050815b570f5db0-39300637%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '11949475bf39a92dd41d7b3b130e15a87110c9cd' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/searchBox.html',
-      1 => 1351014602,
+      1 => 1351062799,
       2 => 'file',
     ),
   ),
@@ -35,7 +35,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50815b57234a28_21967267')) {function content_50815b57234a28_21967267($_smarty_tpl) {?><?php $_smarty_tpl->tpl_vars['_controlOwner'] = new Smarty_variable('SearchBox', null, 0);?>
 <div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
-    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_key'=>"searchBox"), 0);?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>"searchBox"), 0);?>
 
     <form action="<?php echo $_smarty_tpl->tpl_vars['_confing']->value['searchbox']['formAction'];?>
 " class="MPWSForm MPWSFormSearchBox" method="POST">

@@ -1,6 +1,6 @@
 {$_controlOwner = 'SearchBox'}
 <div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key="searchBox"}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key="searchBox"}
     <form action="{$_confing.searchbox.formAction}" class="MPWSForm MPWSFormSearchBox" method="POST">
         <div class="MPWSFormBody">
         {* search fields *}

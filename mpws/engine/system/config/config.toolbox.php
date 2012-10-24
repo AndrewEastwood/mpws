@@ -16,7 +16,8 @@
         'toolbox' => true,
         'shop' => false,
         'writer' => false,
-        'editor' => false
+        'editor' => false,
+        'reporting' => true
     );
     
     

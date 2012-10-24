@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 21:09:59
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 09:47:28
          compiled from "/var/www/mpws/web/default/v1.0/template/trigger/control.html" */ ?>
 <?php /*%%SmartyHeaderCode:438248167508152b8ceeb48-32731021%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a291fbfdf58a8c4b968a9b89fa85536efefe03b7' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/trigger/control.html',
-      1 => 1351015797,
+      1 => 1351061160,
       2 => 'file',
     ),
   ),
@@ -27,7 +27,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
     '_name' => 0,
     '_controlValue' => 0,
-    '_ownerName' => 0,
     '_action' => 0,
     '_mode' => 0,
     '_target' => 0,
@@ -42,7 +41,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php if ($_valid && !is_callable('content_508152b8e58160_63912644')) {function content_508152b8e58160_63912644($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 
-<?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'control' : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'display' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_renderMode'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_renderMode']->value)===null||$tmp==='' ? 'normal' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_controlOwner']->value)===null||$tmp==='' ? 'Default' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? null : $tmp), null, 0);?>
@@ -78,7 +77,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     <?php }elseif(startsWith($_smarty_tpl->tpl_vars['_type']->value,'enum')||$_smarty_tpl->tpl_vars['_type']->value=='select'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('DropDown', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlDropDown, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_items'=>libraryDataBaseChainQueryBuilder::parseEnum($_smarty_tpl->tpl_vars['_type']->value),'_resource'=>'custom','_ownerName'=>$_smarty_tpl->tpl_vars['_ownerName']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlDropDown, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_items'=>libraryDataBaseChainQueryBuilder::parseEnum($_smarty_tpl->tpl_vars['_type']->value),'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
 
         
      

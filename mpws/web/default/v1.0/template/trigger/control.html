@@ -39,7 +39,7 @@
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlPassword _name=$_name _renderMode=$_renderMode _value=$_controlValue}
     {elseif startsWith($_type, 'enum') or $_type eq 'select'}
         {$_standartControlType = 'DropDown'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resource='custom' _ownerName=$_ownerName _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resourceOwner=$_resourceOwner _controlOwner=$_controlOwner _renderMode=$_renderMode _value=$_controlValue}
         
      {* MPWS CONTROLS *}
      {* Contains special arguments than standart html controls *}

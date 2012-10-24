@@ -1,0 +1,6 @@
+title = "Users";
+description = "View brief user information";
+
+captionName = "Name";
+captionIsOnline = "Is Online";
+captionDateLastAccess = "Last Access";

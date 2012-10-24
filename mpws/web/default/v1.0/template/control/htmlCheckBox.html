@@ -3,12 +3,9 @@
 {$_controlCssName = 'CheckBox'}
 {$_controlCssNameCustom = "`$_controlCssName``$_name`"}
 {$_controlValue = libraryRequest::getPostValue($_controlName)|default:"unchecked"}
-{$_controlRenderMode = 'normal'}
+{$_controlRenderMode = $_renderMode|default:'normal'}
 
 {* init control with passed arguments *}
-{if isset($_renderMode)}
-    {$_controlRenderMode = $_renderMode}
-{/if}
 {if (empty($_controlValue) and not empty($_value)) or $_controlValue eq "on" or $_controlValue eq "1"}
     {$_controlValue = "checked"}
 {/if}

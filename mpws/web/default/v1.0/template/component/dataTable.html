@@ -49,7 +49,7 @@
 {$_controlOwner = 'DataTable'}
 
 <div id="MPWSComponentDataTable{$_ownerName|capitalize}ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable{$_ownerName|capitalize}">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$_controlOwner}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key=$_controlOwner}
 
 {* data table content *}
 {if count($_data) eq 0}
@@ -119,6 +119,7 @@
                     _action=$_actionName
                     _resourceOwner=$_resourceOwner
                     _single=true
+                    _oid=$rowEntry['ID']
                     _mode='system'}
                 </span>
             {/foreach}

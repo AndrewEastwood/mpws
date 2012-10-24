@@ -89,7 +89,7 @@ class customer_toolbox extends objectBaseWebCustomer {
     // IMPLEMENT (SHOW) STANDART DASHBOART WIDGETS
     protected function _displayPage_Dashboard () {
         $ctx = contextMPWS::instance();
-        $ctx->directProcess('main:dashboard', 'Toolbox');
+        $ctx->directProcess('*@main:dashboard', 'Toolbox');
         return true;
     }
     

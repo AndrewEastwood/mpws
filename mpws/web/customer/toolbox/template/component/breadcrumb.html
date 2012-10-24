@@ -26,8 +26,8 @@
     {if not empty($INFO.GET.DISPLAY)}
         {$_action = libraryRequest::getNewUrl('display', $INFO.GET.DISPLAY, 1, ['plugin', 'display'])}
         {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _key='BreadcrumbSeparator'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link
+        {include file=$OBJECT.WOB[$INFO.GET.PLUGIN|upper]->objectTemplatePath_simple_link
             _href="?`$_action`"
-            _title=$CURRENT.OBJECT->{"objectProperty_display_menuText`$INFO.GET.DISPLAY|capitalize`"}}
+            _title=$OBJECT.WOB[$INFO.GET.PLUGIN|upper]->{"objectProperty_display_menuText`$INFO.GET.DISPLAY|capitalize`"}}
     {/if}
 {/block}

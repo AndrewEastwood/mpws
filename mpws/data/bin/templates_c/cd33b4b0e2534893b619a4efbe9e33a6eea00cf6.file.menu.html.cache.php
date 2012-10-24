@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-19 16:34:09
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 19:18:15
          compiled from "/var/www/mpws/web/default/v1.0/template/component/menu.html" */ ?>
 <?php /*%%SmartyHeaderCode:1648254578508156d1d269d6-39203101%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cd33b4b0e2534893b619a4efbe9e33a6eea00cf6' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/menu.html',
-      1 => 1350541718,
+      1 => 1351095494,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_508156d1e15d95_48376693',
   'variables' => 
   array (
     '_OBJ' => 0,
@@ -34,8 +36,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'submenu' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_508156d1e15d95_48376693',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_508156d1e15d95_48376693')) {function content_508156d1e15d95_48376693($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/mydata/GitHub/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array(), null, 0);?>

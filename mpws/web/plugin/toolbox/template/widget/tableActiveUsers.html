@@ -1,9 +1,0 @@
-<div class="MPWSWidget MPWSWidgetActiveUsers">
-{if isset($CURRENT.SOURCE.DATA)}
-	{include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _data=$SELF.DATA}
-{elseif isset($_data)}
-	{include file=$CURRENT.OBJECT->objectTemplatePath_component_dataTable _data=$_data}
-{else}
-	{include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="No data provided" _tpl=$smarty.template}
-{/if}
-</div>

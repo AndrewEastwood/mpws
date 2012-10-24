@@ -1,13 +1,18 @@
 title="System User Editor";
 description="You can edit user settings";
 
+messageValidationErrorInFieldName = "Check entered value in the field Name";
+messageValidationErrorInFieldPassword = "Check entered value in the field Password";
+messageValidationErrorDuplicateValueInFieldName = "Duplicate user name";
+
 labelForTextBoxDataEditorName = "User Name";
 labelForTextBoxDataEditorPassword = "Password";
 labelForCheckBoxDataEditorActive = "Check if user is enabled";
 labelForTextAreaDataEditorPermisions="Access Level";
 labelForDropDownDataEditorRole="User Role";
-controlFormButtonsDataEditorButtonSave ="save";
-controlFormButtonsDataEditorButtonPreview="preview";
-controlFormButtonsDataEditorButtonCancel="cancel";
 
-controlActionLinkTitleDataEditorBACKTORECORDS="back"
+optionDataEditorDropDownRoleSUPERADMIN = "Super Admin";
+optionDataEditorDropDownRoleREADER = "Read Only";
+optionDataEditorDropDownRoleREPORTER = "Reporting";
+
+labelForCheckBoxDataEditorSendEmail = "Notify user with email about these updates.";

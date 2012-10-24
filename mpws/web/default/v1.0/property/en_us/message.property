@@ -1,6 +1,1 @@
-helloWorld = 'Hello World!!!!!';
-
-
-validationErrorInFieldName = "Check entered value in the field Name";
-validationErrorInFieldPassword = "Check entered value in the field Password";
-validationErrorDuplicateValueInFieldName = "Duplicate user name";
+messageHelloWorld = 'Hello World!!!!!';

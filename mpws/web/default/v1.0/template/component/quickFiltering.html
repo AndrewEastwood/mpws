@@ -53,7 +53,7 @@
 {$_resourceOwner = $_resourceOwner|default:'control'}
 
 <div id="MPWSComponenQuickFilteringID" class="MPWSComponent MPWSComponenQuickFiltering">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _key=$_controlOwner}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key=$_controlOwner}
     {foreach $_confing.filtering.fields as $fieldFilterName}
 
         {$_keyAsc = "`$fieldFilterName`.asc"}

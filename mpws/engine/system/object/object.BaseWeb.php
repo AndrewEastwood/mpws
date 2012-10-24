@@ -141,12 +141,14 @@ class objectBaseWeb extends objectBase {
     }
     protected function _displayTriggerAsCustomer () {
         debug('objectBaseWeb => _displayTriggerAsCustomer');
-        $_SESSION['MPWS_'.  makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
+        $_SESSION['MPWS_'.makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
+        // reset active plugin
+        $_SESSION['MPWS_'.makeKey(OBJECT_T_PLUGIN).'_ACTIVE'] = false;
         return false;
     }
     protected function _displayTriggerAsPlugin () {
         debug('objectBaseWeb => _displayTriggerAsPlugin');
-        $_SESSION['MPWS_'.  makeKey($this->getObjectType()).'_ACTIVE'] = $this->getObjectName();
+        $_SESSION['MPWS_'.makeKey($this->getObjectType()).'_ACTIVE'] = libraryRequest::getPlugin(false);
         return false;
     }
     protected function _displayTriggerOnCommonEnd () {

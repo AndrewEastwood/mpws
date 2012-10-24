@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 20:33:07
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 08:42:55
          compiled from "/var/www/mpws/web/default/v1.0/template/component/title.html" */ ?>
 <?php /*%%SmartyHeaderCode:134981273750816ed39aac74-00346822%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a0ddab4075dc8e4fdcb58fc91caa9a6edf3b90dc' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/title.html',
-      1 => 1351013580,
+      1 => 1351057045,
       2 => 'file',
     ),
   ),
@@ -37,9 +37,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars["__prop__"] = new Smarty_variable("objectProperty_".((string)(($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'component' : $tmp))."_", null, 0);?>
 
 <div class="MPWSComponent MPWSComponentTitle">
-    <span class="MPWSText MPWSTextTitle"><?php echo $_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."Title"};?>
+    <span class="MPWSText MPWSTextTitle"><?php echo $_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."title"};?>
 </span>
-    <span class="MPWSText MPWSTextDetails"><?php echo $_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."Description"};?>
+    <span class="MPWSText MPWSTextDetails"><?php echo $_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{((string)$_smarty_tpl->tpl_vars['__prop__']->value)."description"};?>
 </span>
     <?php if (isset($_smarty_tpl->tpl_vars['_customText']->value)){?>
     <span class="MPWSText MPWSTextCustom"><?php echo $_smarty_tpl->tpl_vars['_customText']->value;?>

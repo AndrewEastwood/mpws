@@ -7,7 +7,7 @@
 
 {* add system messages *}
 {if isset($MODEL.MESSAGE.COMMON)}
-    {include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$MODEL.MESSAGE.COMMON _ownerName='System'}
+    {include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$MODEL.MESSAGE.COMMON _controlOwner='System'}
     {$_contents[]=$msg_common}
 {/if}
 

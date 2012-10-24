@@ -3,17 +3,11 @@
 {$_controlCssName = 'DropDown'}
 {$_controlCssNameCustom = "`$_controlCssName``$_name`"}
 {$_controlItems = ''}
-{$_controlValue = libraryRequest::getPostValue($_controlName, false)}
-{$_controlRenderMode = 'normal'}
+{$_controlValue = $_value|default:libraryRequest::getPostFormField($_name|lower)}
+{$_controlRenderMode = $_renderMode|default:'normal'}
 {* init control with passed arguments *}
-{if isset($_renderMode)}
-    {$_controlRenderMode = $_renderMode}
-{/if}
 {if isset($_items)}
     {$_controlItems = $_items}
-{/if}
-{if (empty($_controlValue) and not empty($_value))}
-    {$_controlValue = $_value}
 {/if}
 {* control implemetation *}
 <div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom} MPWSControlRenderMode{$_controlRenderMode|capitalize}">
@@ -29,7 +23,7 @@
             {else}
             <option value="{$_item}">
             {/if}
-                {$CURRENT.OBJECT->{"objectProperty_`$_resource`_`$_ownerName``$_controlCssNameCustom``$_item`"}}
+                {$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_option`$_controlOwner``$_controlCssNameCustom``$_item`"}}
             </option>
         {/foreach}
     </select>
@@ -37,7 +31,7 @@
 {elseif $_controlRenderMode eq 'hidden'}
     
     {* display hidden control*}
-    <span class="MPWSControlReadOnlyValue">{$CURRENT.OBJECT->{"objectProperty_`$_resource`_`$_ownerName``$_controlCssNameCustom``$_controlValue`"}}</span>
+    <span class="MPWSControlReadOnlyValue">{$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_option`$_controlOwner``$_controlCssNameCustom``$_controlValue`"}}</span>
     <input type="hidden" name="{$_controlName}" value="{$_controlValue}">
 
 {else}

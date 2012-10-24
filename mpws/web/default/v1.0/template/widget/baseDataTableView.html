@@ -9,7 +9,6 @@
 {* Get Configuration For The Widget *}
 {$_widgetName = "DataTableView"}
 {$_resourceOwner = $_resourceOwner|default:$_widgetName}
-
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_`$_resourceOwner`"}}
 
 <div id="MPWSWidget{$_widgetName}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 09:14:07
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 11:56:54
          compiled from "/var/www/mpws/web/default/v1.0/template/control/htmlPassword.html" */ ?>
 <?php /*%%SmartyHeaderCode:608596592508152e8d11093-32794589%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '3741eb577bfeee9cda205d8c00cafa41941f5032' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/control/htmlPassword.html',
-      1 => 1350886442,
+      1 => 1351067406,
       2 => 'file',
     ),
   ),
@@ -21,14 +21,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     '_name' => 0,
     '_controlCssName' => 0,
-    '_controlName' => 0,
-    '_renderMode' => 0,
-    '_controlValue' => 0,
     '_value' => 0,
     '_size' => 0,
+    '_renderMode' => 0,
     '_limit' => 0,
     '_controlCssNameCustom' => 0,
     '_controlRenderMode' => 0,
+    '_controlName' => 0,
+    '_controlValue' => 0,
     '_controlSize' => 0,
     '_controlLimit' => 0,
     'CURRENT' => 0,
@@ -40,21 +40,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars['_controlName'] = new Smarty_variable("mpws_field_".((string)mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('Password', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable(libraryRequest::getPostValue($_smarty_tpl->tpl_vars['_controlName']->value,false), null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlSize'] = new Smarty_variable(25, null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? libraryRequest::getPostFormField(mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')) : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlSize'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_size']->value)===null||$tmp==='' ? 25 : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlLimit'] = new Smarty_variable('', null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable('normal', null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_renderMode']->value)===null||$tmp==='' ? 'normal' : $tmp), null, 0);?>
 
 
-<?php if (isset($_smarty_tpl->tpl_vars['_renderMode']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable($_smarty_tpl->tpl_vars['_renderMode']->value, null, 0);?>
-<?php }?>
-<?php if (empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&isset($_smarty_tpl->tpl_vars['_value']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable($_smarty_tpl->tpl_vars['_value']->value, null, 0);?>
-<?php }?>
-<?php if (isset($_smarty_tpl->tpl_vars['_size']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_controlSize'] = new Smarty_variable($_smarty_tpl->tpl_vars['_size']->value, null, 0);?>
-<?php }?>
 <?php if (isset($_smarty_tpl->tpl_vars['_limit']->value)){?>
     <?php $_smarty_tpl->tpl_vars['_controlLimit'] = new Smarty_variable(" maxlength=\"".((string)$_smarty_tpl->tpl_vars['_limit']->value)."\"", null, 0);?>
 <?php }?>

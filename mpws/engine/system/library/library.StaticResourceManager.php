@@ -87,6 +87,8 @@ class libraryStaticResourceManager {
         // get build mode (for CSS only)
         if ($_GET['type'] == 'css') {
             $buildMode = $customer->objectConfiguration_resources_buildMode;
+            if (isset($_SESSION['MPWS_PLUGIN_ACTIVE']))
+                echo 'ACTIVE PLUGIN IS = ' . $_SESSION['MPWS_PLUGIN_ACTIVE'];
             switch ($buildMode) {
                 case "CSS" : {
                     break;
@@ -248,7 +250,9 @@ class libraryStaticResourceManager {
         var_dump($_web);
         var_dump($_default);
         
-        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property does not exsist: ' . $resourceName);
+        $_pathTrace = array($_owner, $_web, $_default);
+        
+        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property file does not exsist: <pre>' . print_r($_pathTrace, true).'</pre>');
     }
     
     public static function getTemplateValue ($templateFilePath, $propKey) {

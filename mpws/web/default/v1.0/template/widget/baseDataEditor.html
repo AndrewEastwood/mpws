@@ -1,30 +1,28 @@
 {* Get Configuration For The Widget *}
 
-{$_controlOwner = 'DataEditor'}
+{$_widgetName = "DataEditor"}
 {$_resourceOwner = $_resourceOwner|default:$_widgetName}
 
-{$_widgetName = "dataEditor"}
-{$_widgetCustomName = "`$_widgetName``$CURRENT.SOURCE.NAME`"}
-{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataEditor`$CURRENT.SOURCE.NAME`"}}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_`$_resourceOwner`"}}
 
-<div id="MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName|capitalize} MPWSWidget{$_widgetName|capitalize}{$CURRENT.SOURCE.NAME}">
+<div id="MPWSWidget{$_resourceOwner}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner}">
     
     {$_formInnerAction = $CURRENT.SOURCE.DATA.EDIT_PAGE}
 
     {* widget title *}
     {if $CURRENT.SOURCE.DATA.ISNEW}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateNewPage`$_formInnerAction|upper`"}}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _resourceOwner=$_resourceOwner _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateNewPage`$_formInnerAction|upper`"}}
     {else}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _ownerName=$_widgetCustomName _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateExistedPage`$_formInnerAction|upper`"}}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _resourceOwner=$_resourceOwner _customText=$CURRENT.OBJECT->{"objectProperty_widget_dataEditorStateExistedPage`$_formInnerAction|upper`"}}
     {/if}
     
     {* error block *}
     {if not $CURRENT.SOURCE.DATA.VALID}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$CURRENT.SOURCE.DATA.ERRORS _ownerName="`$_widgetName`Validator"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$CURRENT.SOURCE.DATA.ERRORS _resourceOwner=$_resourceOwner _controlOwner="`$_widgetName`Validator"}
     {/if}
     
     {* editor form *}
-    <form action="{$DTV_CFG.form.$_formInnerAction.action}" name="data_edit_{$CURRENT.SOURCE.NAME|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
+    <form action="{$DTV_CFG.form.$_formInnerAction.action}" name="data_edit_{$_resourceOwner|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
         <div class="MPWSFormBody">
 
     {* page content *}
@@ -34,10 +32,9 @@
         {* create new form page *}
         {* completely new record without any initial data *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
         {/foreach}
 
-    
     {elseif $_formInnerAction eq "edit"}
     
         {* edit form page *}
@@ -49,16 +46,15 @@
             {/if}
         
             {if $CURRENT.SOURCE.DATA.ISNEW}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _render=$_editFieldRenderMode _resource='custom'}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _render=$_editFieldRenderMode}
             {else}
                 {* skip field if editing existed recoed *}
                 {if not in_array($fieldEntry.Field, $DTV_CFG.fields.skipIfEditExisted)}
                     {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
-                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _value=$_controlValue _render=$_editFieldRenderMode _resource='custom'}
+                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=$_controlValue _render=$_editFieldRenderMode}
                 {/if}
             {/if}
-            
-            
+
         {/foreach}
 
     {/if}
@@ -67,32 +63,32 @@
     
         {* preview page *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _ownerName=$_widgetCustomName _renderMode='hidden' _resource='custom'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _renderMode='hidden'}
         {/foreach}
         
     {elseif $_formInnerAction eq "save"}
     
         {* saved page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`SaveMain"}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`SaveSubText"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`SaveMain"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`SaveSubText"}
         
     {elseif $_formInnerAction eq "cancel"}
     
         {* canceled page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`CancelMain"}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resource='widget' _key="`$_widgetName`CancelSubText"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelMain"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelSubText"}
         
     {/if}
     
     {* custom fields *}
     {foreach $DTV_CFG.form.$_formInnerAction.customFileds as $fieldName => $fieldType}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldType _name=$fieldName _ownerName=$_widgetCustomName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldType _name=$fieldName _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
     {/foreach}
         </div>
     
         <div class="MPWSFormFooter">
     {* form controls *}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _resource='custom' _ownerName=$_widgetName _buttons=$DTV_CFG.form.$_formInnerAction.controls}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.form.$_formInnerAction.controls _controlOwner=$_widgetName _resourceOwner='control'}
         </div>
     
     </form>
@@ -101,13 +97,14 @@
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
          
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
-                _type='mpwsLinkAction'
-                _name="`$_widgetName|capitalize`FormActionBackToRecords"
-                _ownerName=$_widgetName|capitalize
-                _action='BackToRecords'
-                _href=$CURRENT.SOURCE.DATA.REFERER
-                _single=true
-                _mode='system'}
+            _type='mpwsLinkAction'
+            _name='BackToRecords'
+            _controlOwner=$_widgetName
+            _action='BackToRecords'
+            _resourceOwner=$_resourceOwner
+            _href=$CURRENT.SOURCE.DATA.REFERER
+            _single=true
+            _mode='system'}
     </div>
 
 </div>
