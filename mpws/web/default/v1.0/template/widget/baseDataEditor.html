@@ -21,8 +21,10 @@
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$CURRENT.SOURCE.DATA.ERRORS _resourceOwner=$_resourceOwner _controlOwner="`$_widgetName`Validator"}
     {/if}
     
+    {$_formAction = $DTV_CFG.form.$_formInnerAction.action|default:$CURRENT.SOURCE.DATA.FORM_ACTION}
+    
     {* editor form *}
-    <form action="{$DTV_CFG.form.$_formInnerAction.action}" name="data_edit_{$_resourceOwner|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
+    <form action="?{$_formAction}" name="data_edit_{$_resourceOwner|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
         <div class="MPWSFormBody">
 
     {* page content *}

@@ -1,0 +1,11 @@
+title="Report List";
+description="Manage all reports";
+; searchbox
+labelForTextBoxSearchBoxName = "Report Name";
+labelForLinkActionQuickFilteringName = "Report Name";
+labelForLinkActionQuickFilteringDateCreated = "Date Time Created";
+; captions
+captionName = "Report Name";
+captionExternalKey = "External Key";
+captionDateCreated = "Created";
+captionDateUpdated = "Updated";

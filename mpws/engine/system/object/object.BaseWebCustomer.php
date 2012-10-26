@@ -35,6 +35,8 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         //echo 'active page is ' . libraryRequest::getPage();
         $ret = false;
         
+        //echo '_displayTriggerAsCustomer';
+        
         if ($ctx->pageModel->allowToProcessPages()) {
             switch(libraryRequest::getPage()) {
                 case 'index':

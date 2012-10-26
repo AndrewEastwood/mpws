@@ -5,13 +5,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'efc1e02c78037dbcc25f33e7fc223814325526c0' => 
     array (
       0 => '/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html',
-      1 => 1350552296,
+      1 => 1351147688,
       2 => 'file',
     ),
     'f169ec851061427f63366f55936d49966dc76cb1' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1350641120,
+      1 => 1351147653,
       2 => 'file',
     ),
     '329ed68706f44dda6c04b3f64f2d466a0a547868' => 
@@ -20,10 +20,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       1 => 1350627484,
       2 => 'file',
     ),
-    'd77c563dd822314e09f2c99ec43b19f724595732' => 
+    '5f4bd6ce7e249c98908a9aa0a02239951c907430' => 
     array (
-      0 => '/var/www/mpws/web/customer/toolbox/template/page/dashboard.html',
-      1 => 1351096773,
+      0 => '/var/www/mpws/web/customer/toolbox/template/page/tools.html',
+      1 => 1350654047,
       2 => 'file',
     ),
     '1122dd0251109bf43aab7e925ecd1cfcf82b8eed' => 
@@ -98,6 +98,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       1 => 1350563538,
       2 => 'file',
     ),
+    '45d5c5a0e0df4a959ac5bb1504842e87b284cc0b' => 
+    array (
+      0 => '/var/www/mpws/web/default/v1.0/template/simple/text.html',
+      1 => 1351013530,
+      2 => 'file',
+    ),
     'd0b85a9247966b25bd2cb88ee9ba5b7a90faed9b' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/page/standartPublicPageStyle1.html',
@@ -137,24 +143,27 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'nocache_hash' => '5376389855081257ebaaaf7-99117552',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50881ca4285333_12218990',
+  'unifunc' => 'content_508a9c51ef2fc8_73100761',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50881ca4285333_12218990')) {function content_50881ca4285333_12218990($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_508a9c51ef2fc8_73100761')) {function content_508a9c51ef2fc8_73100761($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>
     MPWS
      - 
-    Dashboard
+    Tools
 </title>
+    
+    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
+    
+    <link rel="stylesheet" type="text/css" href="/static/mpwsCustomer.css">
+
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <link rel="stylesheet" type="text/css" href="/static/mpwsCustomer.css">
 
-    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
     <script type="text/javascript" src="/static/mpwsDefault.js"></script>
     
     
@@ -162,13 +171,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         // Load the Visualization API and the piechart package.
         google.load('visualization', '1.0', {'packages':['corechart']});
         // security token
-        mpws.token = 'dc7161be3dbf2250c8954e560cc35060';
+        mpws.token = '4a931512ce65bdc9ca6808adf92d8783';
         // page
-        mpws.page = 'dashboard';
+        mpws.page = 'tools';
         // display
-        mpws.display = '';
+        mpws.display = 'allreports';
         // action
-        mpws.action = 'default';
+        mpws.action = 'edit';
     </script>
     
     <meta name="locale" content="en_us">
@@ -184,7 +193,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     
     
-
+            
+            
 
     
 
@@ -193,7 +203,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
  
 
-<div id="MPWSPageStandartPublicDashboardID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPageDisplay MPWSPageDashboard">
+<div id="MPWSPageStandartPublicToolsAllreportsID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPageDisplayAllreports MPWSPageTools">
     <div class="MPWSComponent MPWSComponenHeader">
 
 	<div class="MPWSComponent MPWSComponentLogo">
@@ -220,7 +230,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <div class="MPWSBlockDataRow">
     <span class="MPWSText">Last access:</span>
-    <span class="MPWSValue">2012-10-24 15:26:57</span>
+    <span class="MPWSValue">2012-10-26 14:49:29</span>
 </div>
         
         
@@ -269,27 +279,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                             </a>
                         <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub1">
                                     <li class="MPWSListItem">
-                        <a href="/page/tools.html?plugin=toolbox" class="MPWSLink" title="Toolbox">
-                            <span class="MPWSText">Toolbox</span>
-                        </a>
-                                                                                
-
-
-
-
-        
-            <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub2">
-            
-            <li class="MPWSListItem">
-                        <a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="User Manager">
-                <span class="MPWSText MPWSTextTitle">User Manager</span>
-                                            </a>
-                    </li>
-        </ul>
-        
-
-                                            </li>
-                                    <li class="MPWSListItem">
                         <a href="/page/tools.html?plugin=reporting" class="MPWSLink" title="Reporting">
                             <span class="MPWSText">Reporting</span>
                         </a>
@@ -304,6 +293,27 @@ $_valid = $_smarty_tpl->decodeProperties(array (
             <li class="MPWSListItem">
                         <a href="/page/tools.html?plugin=reporting&display=allreports" target="_self" class="MPWSLink" title="Reports">
                 <span class="MPWSText MPWSTextTitle">Reports</span>
+                                            </a>
+                    </li>
+        </ul>
+        
+
+                                            </li>
+                                    <li class="MPWSListItem">
+                        <a href="/page/tools.html?plugin=toolbox" class="MPWSLink" title="Toolbox">
+                            <span class="MPWSText">Toolbox</span>
+                        </a>
+                                                                                
+
+
+
+
+        
+            <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub2">
+            
+            <li class="MPWSListItem">
+                        <a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="User Manager">
+                <span class="MPWSText MPWSTextTitle">User Manager</span>
                                             </a>
                     </li>
         </ul>
@@ -332,8 +342,20 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <a href="/page/index.html" target="" class="MPWSLink" title="MPWS" >MPWS</a>
     
     
+                    <span class="MPWSText">
+     \     
+</span>
+
+        
+<a href="?plugin=reporting" target="" class="MPWSLink" title="Reporting" >Reporting</a>
     
     
+                    <span class="MPWSText">
+     \     
+</span>
+
+        
+<a href="?plugin=reporting&display=allreports" target="" class="MPWSLink" title="Reports" >Reports</a>
     
 </div>
             </div>
@@ -362,75 +384,86 @@ Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin
     <div class="MPWSSpacer MPWSSpacerWidget MPWSSpacerBefore"></div>
     
 
-
-<div id="MPWSWidgetDataTableViewDashboardActiveUsersID" class="MPWSWidget MPWSWidgetDataTableView MPWSWidgetDataTableViewDashboardActiveUsers">
+<div id="MPWSWidgetdataEditorReportManagerID" class="MPWSWidget MPWSWidgetDataEditor MPWSWidgetdataEditorReportManager">
     
-
+    
+    
+            
 
 
 
 
 <div class="MPWSComponent MPWSComponentTitle">
-    <span class="MPWSText MPWSTextTitle">Users</span>
-    <span class="MPWSText MPWSTextDetails">View brief user information</span>
+    <span class="MPWSText MPWSTextTitle">Report Manager</span>
+    <span class="MPWSText MPWSTextDetails">-</span>
+        <span class="MPWSText MPWSTextCustom">Record Saved</span>
+    </div>
+        
+    
+        
+        
+    
+    <form action="?action=new&plugin=reporting&display=allreports" name="data_edit_dataeditorreportmanager" method="POST" class="MPWSForm MPWSFormEditor MPWSFormEditorPageSave">
+        <div class="MPWSFormBody">
+
+    
+    
+            
+        
+        
+        <span class="MPWSText">
+    Saved    
+</span>
+
+        <span class="MPWSText">
+    Use the buttons below:    
+</span>
+
+        
+        
+    
+            </div>
+    
+        <div class="MPWSFormFooter">
+    
+    
+
+<div class="MPWSControlField MPWSControlFieldFormButtons">
+            <button id="MPWSControlFormButtonsNewID" type="submit" name="do" value="New" class="MPWSControl MPWSControlButtonNew">
+            New
+        </button>
+    </div>
+        </div>
+    
+    </form>
+
+    
+    <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
+         
+        
+    
+<div class="MPWSBlock MPWSBlockControl MPWSRenderModeNormal">
+
+
+            
+                        
+
+
+
+
+
+
+
+<a href="/page/tools.html?plugin=reporting&display=allreports" target="" class="MPWSLink" title="Back To Records" Array>Back To Records</a>
+
+    
+
+</div>
     </div>
 
-
-
-    
-
-<div id="MPWSComponentDataTable
-Notice: Undefined index: _ownerName in /mydata/GitHub/web/mpws/data/bin/templates_c/6999ca4e59688c03dcb6f324646871f1d215ed21.file.dataTable.html.cache.php on line 42
-
-Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin/templates_c/6999ca4e59688c03dcb6f324646871f1d215ed21.file.dataTable.html.cache.php on line 42
-ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable
-Notice: Undefined index: _ownerName in /mydata/GitHub/web/mpws/data/bin/templates_c/6999ca4e59688c03dcb6f324646871f1d215ed21.file.dataTable.html.cache.php on line 43
-
-Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin/templates_c/6999ca4e59688c03dcb6f324646871f1d215ed21.file.dataTable.html.cache.php on line 43
-">
-    <div class="MPWSHeader">
-    <h3>Matched Records</h3>
 </div>
 
 
-
-    <div class="MPWSBlock MPWSBlockTopActions">
-    
-                    </div>
-
-
-    <div class="MPWSDataTableRows">
-    
-            <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
-
-
-        
-                                    <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellName">
-                    Name
-                </div>
-                            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellIsOnline">
-                    Is Online
-                </div>
-                            <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellDateLastAccess">
-                    Last Access
-                </div>
-                            </div>
-    
-            <div class="MPWSDataTableRow MPWSDataTableRow0">
-
-        
-                    
-                            <div class="MPWSDataTableCell MPWSDataTableCellName">test3</div>
-                            <div class="MPWSDataTableCell MPWSDataTableCellIsOnline">1</div>
-                            <div class="MPWSDataTableCell MPWSDataTableCellDateLastAccess">2012-10-24 19:04:34</div>
-                            </div>
-        
-    </div>
-
-</div>
-
-
-</div>
     <div class="MPWSSpacer MPWSSpacerWidget MPWSSpacerAfter"></div>
 </div>
             </div>
@@ -444,6 +477,8 @@ Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin
 
 </div>
 </div>
+
+
     </div>
 
 </body>

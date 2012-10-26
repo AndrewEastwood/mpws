@@ -647,20 +647,31 @@ class libraryFileManager
             unlink($fileContainer);
     }
     
-    public static function rrmdir($dir) {
-        // from: http://www.php.net/manual/en/function.rmdir.php#98622
-        if (is_dir($dir)) { 
-            $objects = scandir($dir); 
-            foreach ($objects as $object) { 
-                if ($object != "." && $object != "..") { 
-                    if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
-                } 
-            } 
-            reset($objects); 
-            rmdir($dir); 
-        } 
-    } 
-    
+    /**
+     * Recursively deletes a directory
+     *
+     * @param  string  path to a directory
+     * @return void
+     * source: http://davgothic.com/2011/01/recursively-delete-directories-using-php/
+     */
+    public static function removeDirectiryRecursive($path) {
+        // also see previous version at: http://www.php.net/manual/en/function.rmdir.php#98622
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator($path),
+		RecursiveIteratorIterator::CHILD_FIRST
+	);
+	foreach ($iterator as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getPathname());
+            }
+            elseif ($file->isFile() || $file->isLink()) {
+                unlink($file->getPathname());
+            }
+	}
+ 
+	rmdir($path);
+    }
+
     public static function getUploadLinks ($dbLinks) {
         $map = array();
         $fileKeyPattern = DS.'storage'.DS.'%1$s-%3$s'.DS.'%2$s';
@@ -675,92 +686,38 @@ class libraryFileManager
         
         return array('MAP' => $map, 'JSON' => libraryUtils::getJSON($map), 'SRC' => $dbLinks);
     }
+    
+    public static function newDirectory ($path) {
+        if (!file_exists($path)) {
+            mkdir($path, 0666, true);
+            return true;
+        }
+        return false;
+    }
+    
+    public static function transferDirectoryData ($currentLocation, $newLocation, $isRecursive = true) {
+        if ($currentLocation == $newLocation)
+            return;
+        if (!file_exists($newLocation))
+            mkdir($newLocation, 0666, true);
+        if ($isRecursive) {
+            foreach ($iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($currentLocation, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST) as $item)
+            {
+                if ($item->isDir()) {
+                    mkdir($newLocation . DS . $iterator->getSubPathName());
+                } else {
+                    copy($item, $newLocation . DS . $iterator->getSubPathName());
+                }
+            }
+        } else
+            rename($currentLocation, $newLocation);
+        // remove prevoius directory
+        self::removeDirectiryRecursive($currentLocation);
+    }
         
-    
-    public static function evalFileContents (/* files to eval */) {
-        /*$arg_list = func_get_args();
-        $result = null;
-        foreach ($arg_list as $filePath) {
-            if (!file_exists($filePath))
-                continue;
-            eval(file_get_contents($filePath));
-            
-            $path_parts = pathinfo($filePath);
-            
-            if ($result === null)
-                $result = basename($path_parts['filename']);
-            
-            
-        }*/
-            
-    }
-    
-    
-    function parse_ini_advanced($array) {
-        $returnArray = array();
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
-                $e = explode(':', $key);
-                if (!empty($e[1])) {
-                    $x = array();
-                    foreach ($e as $tk => $tv) {
-                        $x[$tk] = trim($tv);
-                    }
-                    $x = array_reverse($x, true);
-                    foreach ($x as $k => $v) {
-                        $c = $x[0];
-                        if (empty($returnArray[$c])) {
-                            $returnArray[$c] = array();
-                        }
-                        if (isset($returnArray[$x[1]])) {
-                            $returnArray[$c] = array_merge($returnArray[$c], $returnArray[$x[1]]);
-                        }
-                        if ($k === 0) {
-                            $returnArray[$c] = array_merge($returnArray[$c], $array[$key]);
-                        }
-                    }
-                } else {
-                    $returnArray[$key] = $array[$key];
-                }
-            }
-        }
-        return $returnArray;
-    }
-    function recursive_parse($array)
-    {
-        $returnArray = array();
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
-                if (is_array($value)) {
-                    $array[$key] = recursive_parse($value);
-                }
-                $x = explode('.', $key);
-                if (!empty($x[1])) {
-                    $x = array_reverse($x, true);
-                    if (isset($returnArray[$key])) {
-                        unset($returnArray[$key]);
-                    }
-                    if (!isset($returnArray[$x[0]])) {
-                        $returnArray[$x[0]] = array();
-                    }
-                    $first = true;
-                    foreach ($x as $k => $v) {
-                        if ($first === true) {
-                            $b = $array[$key];
-                            $first = false;
-                        }
-                        $b = array($v => $b);
-                    }
-                    $returnArray[$x[0]] = array_merge_recursive($returnArray[$x[0]], $b[$x[0]]);
-                } else {
-                    $returnArray[$key] = $array[$key];
-                }
-            }
-        }
-        return $returnArray;
-    }
-    
-    
+        
     
 }
 

@@ -140,10 +140,24 @@ class libraryRequest {
         //echo 'GETTING NEW URL WITH KEY: ' . $key;
         $_data = array();
         parse_str($_SERVER['QUERY_STRING'], $_data);
-        if (!empty($key))
-            $_data[$key] = $value;
         if ($remove == 1)
             $remove = array('page', 'action');
+        // array arguments
+        if (!empty($key)) {
+            if (is_array($key)) {
+                foreach ($key as $idx => $k) {
+                    if (empty($value) || $value[$idx] == null)
+                        $remove[] = $k;
+                    else
+                        $_data[$k] = $value[$idx];
+                }
+            } else {
+                if ($value == null)
+                    $remove[] = $key;
+                else
+                    $_data[$key] = $value;
+            }
+        }
         // remove hidden keys
         if(is_array($remove))
             foreach ($remove as $keyToRemove)

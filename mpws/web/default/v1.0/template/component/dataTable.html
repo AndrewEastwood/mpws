@@ -52,6 +52,23 @@
     {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key=$_controlOwner}
 
 {* data table content *}
+
+<div class="MPWSBlock MPWSBlockTopActions">
+{* render table top captions *}
+{if isset($_confing.datatable.tableTopActions)}
+    {foreach $_confing.datatable.tableTopActions as $_actionName}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+            _type='mpwsLinkAction'
+            _name=$_actionName
+            _controlOwner="`$_controlOwner`TopAction"
+            _action=$_actionName
+            _resourceOwner=$_resourceOwner
+            _single=true
+            _mode='system'}
+    {/foreach}
+{/if}
+</div>
+
 {if count($_data) eq 0}
 
     <div class="MPWSBlock MPWSRenderModeError">
@@ -59,22 +76,6 @@
     </div>
 
 {elseif count($_data) gt 0}
-
-    <div class="MPWSBlock MPWSBlockTopActions">
-    {* render table top captions *}
-    {if isset($_confing.datatable.tableTopActions)}
-        {foreach $_confing.datatable.tableTopActions as $_actionName}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
-                _type='mpwsLinkAction'
-                _name=$_actionName
-                _controlOwner="`$_controlOwner`TopAction"
-                _action=$_actionName
-                _resourceOwner=$_resourceOwner
-                _single=true
-                _mode='system'}
-        {/foreach}
-    {/if}
-    </div>
 
 
     <div class="MPWSDataTableRows">

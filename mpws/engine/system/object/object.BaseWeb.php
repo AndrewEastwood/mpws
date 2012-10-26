@@ -101,6 +101,11 @@ class objectBaseWeb extends objectBase {
     /* public api */
     public function run ($command) { 
         debug($command, 'objectBaseWeb: run function:');
+        //echo "<br> Running: " . $this->getObjectName();
+        //echo "<br> With command: " . $command;
+        //$ctx = contextMPWS::instance();
+        //echo "<br> Last commmad: " . $ctx->getLastCommand();
+        //echo "<br>";
         $ret = false;
         switch ($command->getMethod()) {
             case 'main':

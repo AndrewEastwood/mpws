@@ -2,8 +2,10 @@
 <html>
 <head>
     <title>{block name="layoutTitle"}MPWS Default - {$INFO.GET.PAGE}{/block}</title>
-    {block name="layoutResources"}
+    {block name="layoutResourcesCSS"}
     <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
+    {/block}
+    {block name="layoutResourcesJS"}
     <script type="text/javascript" src="/static/mpwsDefault.js"></script>
     {/block}
     {literal}

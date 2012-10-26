@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 12:00:02
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-26 16:21:14
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html" */ ?>
 <?php /*%%SmartyHeaderCode:83151832150877fe3db6d92-06185155%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a9e95e057f99621ee7164be23b6fedf8bc2d1fb7' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html',
-      1 => 1351069198,
+      1 => 1351257666,
       2 => 'file',
     ),
   ),
@@ -24,6 +24,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
     '_formInnerAction' => 0,
     'DTV_CFG' => 0,
+    '_formAction' => 0,
     'fieldEntry' => 0,
     '_editFieldRenderMode' => 0,
     '_controlValue' => 0,
@@ -62,8 +63,10 @@ ID" class="MPWSWidget MPWSWidget<?php echo $_smarty_tpl->tpl_vars['_widgetName']
 
     <?php }?>
     
+    <?php $_smarty_tpl->tpl_vars['_formAction'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['DTV_CFG']->value['form'][$_smarty_tpl->tpl_vars['_formInnerAction']->value]['action'])===null||$tmp==='' ? $_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']['FORM_ACTION'] : $tmp), null, 0);?>
     
-    <form action="<?php echo $_smarty_tpl->tpl_vars['DTV_CFG']->value['form'][$_smarty_tpl->tpl_vars['_formInnerAction']->value]['action'];?>
+    
+    <form action="?<?php echo $_smarty_tpl->tpl_vars['_formAction']->value;?>
 " name="data_edit_<?php echo mb_strtolower($_smarty_tpl->tpl_vars['_resourceOwner']->value, 'UTF-8');?>
 " method="<?php echo $_smarty_tpl->tpl_vars['DTV_CFG']->value['form'][$_smarty_tpl->tpl_vars['_formInnerAction']->value]['method'];?>
 " class="MPWSForm MPWSFormEditor MPWSFormEditorPage<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_formInnerAction']->value,0,1);?>

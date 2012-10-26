@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-24 11:58:27
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-26 10:43:07
          compiled from "/var/www/mpws/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:91769009550815dc7375904-06521165%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6999ca4e59688c03dcb6f324646871f1d215ed21' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/dataTable.html',
-      1 => 1351069096,
+      1 => 1351237385,
       2 => 'file',
     ),
   ),
@@ -22,10 +22,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_ownerName' => 0,
     'CURRENT' => 0,
     '_controlOwner' => 0,
-    '_data' => 0,
     '_confing' => 0,
     '_actionName' => 0,
     '_resourceOwner' => 0,
+    '_data' => 0,
     'fieldKey' => 0,
     'rowIndex' => 0,
     'actionName' => 0,
@@ -46,6 +46,21 @@ ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable<?php echo
 
 
 
+
+<div class="MPWSBlock MPWSBlockTopActions">
+
+<?php if (isset($_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions'])){?>
+    <?php  $_smarty_tpl->tpl_vars['_actionName'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['_actionName']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['_actionName']->key => $_smarty_tpl->tpl_vars['_actionName']->value){
+$_smarty_tpl->tpl_vars['_actionName']->_loop = true;
+?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsLinkAction','_name'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_controlOwner'=>((string)$_smarty_tpl->tpl_vars['_controlOwner']->value)."TopAction",'_action'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_mode'=>'system'), 0);?>
+
+    <?php } ?>
+<?php }?>
+</div>
+
 <?php if (count($_smarty_tpl->tpl_vars['_data']->value)==0){?>
 
     <div class="MPWSBlock MPWSRenderModeError">
@@ -54,20 +69,6 @@ ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable<?php echo
     </div>
 
 <?php }elseif(count($_smarty_tpl->tpl_vars['_data']->value)>0){?>
-
-    <div class="MPWSBlock MPWSBlockTopActions">
-    
-    <?php if (isset($_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions'])){?>
-        <?php  $_smarty_tpl->tpl_vars['_actionName'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['_actionName']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
-foreach ($_from as $_smarty_tpl->tpl_vars['_actionName']->key => $_smarty_tpl->tpl_vars['_actionName']->value){
-$_smarty_tpl->tpl_vars['_actionName']->_loop = true;
-?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsLinkAction','_name'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_controlOwner'=>((string)$_smarty_tpl->tpl_vars['_controlOwner']->value)."TopAction",'_action'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_mode'=>'system'), 0);?>
-
-        <?php } ?>
-    <?php }?>
-    </div>
 
 
     <div class="MPWSDataTableRows">

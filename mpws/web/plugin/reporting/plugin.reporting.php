@@ -5,9 +5,9 @@ class pluginReporting extends objectBaseWebPlugin {
     protected function _displayTriggerAsPlugin () {
         parent::_displayTriggerAsPlugin();
         $ctx = contextMPWS::instance();
-
-        $rez = false;
-        switch($ctx->getLastCommand()->getInnerMethod()) {
+        //echo '111OLOLO';
+        //echo "<br><br>getInnerMethod = " . $ctx->getLastCommand()->getInnerMethod();
+        switch($ctx->getLastCommand(false)->getInnerMethod()) {
             case 'dashboard' : 
                 $rez = $this->_commandDashboard();
                 break;
@@ -21,14 +21,27 @@ class pluginReporting extends objectBaseWebPlugin {
     }
     
     private function _commandDashboard () {
-        echo "OLOLO";
+        //echo "OLOLO";
     }
     
     private function _commandDefault () {
         //echo 'DEFAULT TRIGGER';
         switch (libraryRequest::getDisplay()) {
-            case "list" : {
+            case "allreports" : {
+                /* standart data edit and view component complex */
+                $this->actionHandlerAsDataViewEdit('ReportManager');
+                //$wgtData = libraryComponents::getDataTableView($this->$wnC, $ctx->contextCustomer->getDBO());
+                //echo "allreports";
                 
+                // fetch all reports
+                
+                //$this->addWidgetSimple('customAllReports');
+            }
+            case "category" : {
+                break;
+            }
+            case "view" : {
+                break;
             }
         }
     }

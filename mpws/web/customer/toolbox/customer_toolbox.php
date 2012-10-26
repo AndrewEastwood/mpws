@@ -52,7 +52,7 @@ class customer_toolbox extends objectBaseWebCustomer {
         
         // run all enabled plugins
         $ctx = contextMPWS::instance();
-        $mpws_user = $ctx->pageModel->getInfo('USER');
+        //$mpws_user = $ctx->pageModel->getInfo('USER');
         
         $ret = parent::_displayTriggerAsCustomer();
         // custom customer pages
@@ -89,7 +89,8 @@ class customer_toolbox extends objectBaseWebCustomer {
     // IMPLEMENT (SHOW) STANDART DASHBOART WIDGETS
     protected function _displayPage_Dashboard () {
         $ctx = contextMPWS::instance();
-        $ctx->directProcess('*@main:dashboard', 'Toolbox');
+        //echo "<br><br>Customer sends direct command: ('main:dashboard', 'Toolbox')";
+        $ctx->directProcess('main:dashboard', 'Toolbox');
         return true;
     }
     

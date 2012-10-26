@@ -30,6 +30,13 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         }
     }
     
+    public function addWidgetSimple ($widgetName, $wgtData = false) {
+        $ctx = contextMPWS::instance();
+        $wnC = "objectConfiguration_widget_" . $widgetName;
+        $wnT = "objectTemplatePath_widget_" . $widgetName;
+        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+    }
+    
     public function addWidgetDataTableView ($widgetName) {
         $ctx = contextMPWS::instance();
         $wnC = "objectConfiguration_widget_dataTableView" . $widgetName;

@@ -399,6 +399,17 @@ class libraryComponents
     
     
     public static function getDataEditor ($config, $dbLink, $actionHooks = false) {
+        /* DB Table Standart Filed Names:
+         *
+         *  ID
+         *  Name
+         *  Password
+         *  ExternalKey
+         *  DataPath
+         *  DateUpdated
+         *  DateLastAccess
+         *  
+         */
 
         if (empty($dbLink))
             throw new Exception('libraryComponents: getDataEditor => dbLink is empty');
@@ -415,17 +426,22 @@ class libraryComponents
             "ERRORS" => false,
             "VALID" => true
         );
+        // states
+        $isNew = true;
         // get edit page name
         $editPage = strtolower(libraryRequest::getPostFormAction());
+        $doNotFetchData = $editPage == "edit";
         // normalize page name
         $editPage = strtolower(trim($editPage));
         // get oid
         $oid = libraryRequest::getOID();
         // adjust states
         if (isset($oid) && !empty($oid))
-            $com['ISNEW'] = false;
+            $isNew = false;
         if (empty($editPage) && $com['EDIT_PAGE'] == "new")
             $editPage = "edit";
+        if ($editPage == "new")
+            $isNew = true;
         // get fields
         $_fieldsDB = $dbLink->getFields($config['source']);
         $_fieldsCOM = array();
@@ -460,7 +476,7 @@ class libraryComponents
             }
             // do not modify pwd
             // truncate error
-            if (!$com['ISNEW'] && !empty($config['fields']['skipIfEditExisted']) && !empty($com["ERRORS"])) {
+            if (!$isNew && !empty($config['fields']['skipIfEditExisted']) && !empty($com["ERRORS"])) {
                 //var_dump($com["ERRORS"]);
                 foreach ($config['fields']['skipIfEditExisted'] as $skipExistedField)
                     if (isset ($com["ERRORS"][$skipExistedField]))
@@ -474,7 +490,18 @@ class libraryComponents
             }
             // save
             if ($editPage == 'save' && $com['VALID']) {
+                // edited data
                 $_data = $validatorRezult['DATA'];
+                $_existedRow = false;
+                // existed data
+                if (!$isNew && !empty($oid)) {
+                    $_existedRow = $dbLink
+                        ->reset()
+                        ->select('*')
+                        ->from($config['source'])
+                        ->where('ID', '=', $oid)
+                        ->fetchRow();
+                }
                 // prepend fields
                 $appendFields = getNonEmptyValue($config['fields']['appendBeforeSave'], array());
                 foreach ($appendFields as $appendFieldName)
@@ -484,8 +511,8 @@ class libraryComponents
                     $__action = $actionHooks['ON_BEFORE_SAVE'];
                     $__action($config, $_data);
                 }
-                // skip fields for existed recird
-                if (!$com['ISNEW'] && !empty($config['fields']['skipIfEditExisted'])) {
+                // skip fields for existed record
+                if (!$isNew && !empty($config['fields']['skipIfEditExisted'])) {
                     foreach ($config['fields']['skipIfEditExisted'] as $skipExistedField)
                         if (isset($_data[$skipExistedField]))
                             unset($_data[$skipExistedField]);
@@ -495,11 +522,31 @@ class libraryComponents
                 if (isset($_data['Password']))
                     $_data['Password'] = md5($_data['Password']);
                 // init empty fields
-                if ($com['ISNEW']) {
+                if ($isNew) {
                     if(isset($_data['DateCreated']))
                         $_data['DateCreated'] = date('Y-m-d H:i:s');
                     if(isset($_data['DateLastAccess']))
                         $_data['DateLastAccess'] = date('Y-m-d H:i:s');
+                }
+                // set external key
+                if (isset($_data['ExternalKey'])) {
+                    $_data['ExternalKey'] = libraryURLify::mpwsExternalKey($_data['Name']);
+                }
+                // manage binded data
+                if (isset($_data['DataPath'])) {
+                    $_owner = explode(BS, $config['source']);
+                    $_dataPath = libraryPath::getPathDataObject ($_owner[0].DS.$_data['ExternalKey']);
+                    //var_dump($_existedRow);
+                    if ($isNew) {
+                        libraryFileManager::newDirectory($_dataPath);
+                    } else {
+                        // move all data from previous to new location
+                        // if they are different
+                        //echo "<br>Current: " . $_existedRow['DataPath'];
+                        //echo "<br>New: " . $_dataPath;
+                        libraryFileManager::transferDirectoryData($_existedRow['DataPath'], $_dataPath);
+                    }
+                    $_data['DataPath'] = $_dataPath;
                 }
                 // adjust field values
                 foreach($com['FIELDS'] as $fieldEntry) {
@@ -522,12 +569,21 @@ class libraryComponents
                     unset ($_data[$removeFieldName]);
                 // save
                 //var_dump($_data);
-                /*$dbLink
-                    ->reset()
-                    ->insertInto($config['source'])
-                    ->fields(array_keys($_data))
-                    ->values(array_values($_data))
-                    ->query();*/
+                $dbLink->reset();
+                
+                // update existed record
+                if ($editPage == 'save' && isset($oid) && !$isNew) {
+                    $dbLink
+                        ->update($config['source'])
+                        ->set($_data)
+                        ->where('ID', '=', $oid);
+                } else {
+                    $dbLink
+                        ->insertInto($config['source'])
+                        ->fields(array_keys($_data))
+                        ->values(array_values($_data));
+                }
+                $dbLink->query();
                 // after save hook
                 if (isset($actionHooks['ON_AFTER_SAVE'])) {
                     $__action = $actionHooks['ON_AFTER_SAVE'];
@@ -537,7 +593,7 @@ class libraryComponents
             }
         }
         // get data
-        if ($editPage == 'edit' && !$com['ISNEW']) {
+        if ($editPage == 'edit' && !$isNew && !$doNotFetchData) {
             $com['SOURCE'] = $dbLink
                 ->reset()
                 ->select('*')
@@ -551,6 +607,11 @@ class libraryComponents
             //var_dump($com['SOURCE']);
         }
 
+        $com['ISNEW'] = $isNew;
+        if ($editPage == "save" || $editPage == "cancel" || $isNew)
+            $com['FORM_ACTION'] = libraryRequest::getNewUrl(array('oid', 'action'), array(null, 'new'), array('page'));
+        else
+            $com['FORM_ACTION'] = libraryRequest::getNewUrl(false, false, array('page'));
         $com['EDIT_PAGE'] = getNonEmptyValue($editPage, "new");
         //echo "EDIT PAGE IS:  " . $com['EDIT_PAGE'];
         return $com;

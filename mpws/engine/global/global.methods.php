@@ -209,4 +209,9 @@
         return $_num;
     }
     
+    function glClearName ($fileName) {
+        $fparts = explode(DOT, $fileName);
+        return $fparts[0];
+    }
+    
 ?>

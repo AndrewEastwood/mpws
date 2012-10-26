@@ -211,13 +211,14 @@ class contextMPWS {
     }
     
     public function directProcess ($command, $context, $override = false) {
+        //echo "MPWS Context directProcess " . $command . '<br>';
         // prepare command
         $cmd = $this->getCommand($command);
         // use provided context
         $runningContextName = $context;
         // get command context name
         $commandContextName = $cmd->getContext();
-        if (!empty($commandContextName) && !$override)
+        if (!empty($commandContextName) && $override)
             $runningContextName = $cmd->getContext();
         // preload context
         $ctx = $this->getContext($runningContextName);
@@ -226,6 +227,7 @@ class contextMPWS {
         // save command
         $this->_callStack[] = $cmd;
         // run commad
+        //echo "MPWS Context running command <pre>" . print_r($cmd, true) . '</pre>';
         $rez = $ctx->call($cmd);
         // restore previus context
         $this->setCurrentContext($prevoiusContextName);
@@ -242,9 +244,13 @@ class contextMPWS {
         $this->_processData = $data;
         return $this;
     }
-    public function getLastCommand ($returnEmpty = true) {
-        if (count($this->_callStack) > 0)
-            return array_pop($this->_callStack);
+    public function getLastCommand ($pop = true, $returnEmpty = true) {
+        if (count($this->_callStack) > 0) {
+            if ($pop)
+                return array_pop($this->_callStack);
+            else
+                return end($this->_callStack);
+        }
         if($returnEmpty)
             return $this->makeCommand('empty');
         throw new Exception ('contextMPWS: command stack is empty.');

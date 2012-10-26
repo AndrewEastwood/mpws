@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-19 16:04:23
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-25 09:48:10
          compiled from "/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:5376389855081257ebaaaf7-99117552%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'efc1e02c78037dbcc25f33e7fc223814325526c0' => 
     array (
       0 => '/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html',
-      1 => 1350552296,
+      1 => 1351147688,
       2 => 'file',
     ),
     'f169ec851061427f63366f55936d49966dc76cb1' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1350641120,
+      1 => 1351147653,
       2 => 'file',
     ),
   ),
@@ -44,11 +44,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 </title>
     
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
+    
     <link rel="stylesheet" type="text/css" href="/static/mpwsCustomer.css">
 
-    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
+    
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
     <script type="text/javascript" src="/static/mpwsDefault.js"></script>
     
     
