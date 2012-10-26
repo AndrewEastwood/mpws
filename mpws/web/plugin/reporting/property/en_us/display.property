@@ -1,2 +1,4 @@
 menuTextAllreports = "Reports";
 menuTextDescriptionAllreports = "List of all reports";
+menuTextMonitor = "View Reports";
+menuTextDescriptionMonitor = "View And Analyze Reports";

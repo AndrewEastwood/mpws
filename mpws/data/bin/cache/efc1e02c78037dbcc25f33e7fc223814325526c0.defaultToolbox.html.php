@@ -143,11 +143,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'nocache_hash' => '5376389855081257ebaaaf7-99117552',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_508a9c51ef2fc8_73100761',
+  'unifunc' => 'content_508ad3c52c8452_63506755',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_508a9c51ef2fc8_73100761')) {function content_508a9c51ef2fc8_73100761($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_508ad3c52c8452_63506755')) {function content_508ad3c52c8452_63506755($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>
@@ -175,9 +175,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         // page
         mpws.page = 'tools';
         // display
-        mpws.display = 'allreports';
+        mpws.display = 'monitor';
         // action
-        mpws.action = 'edit';
+        mpws.action = 'default';
     </script>
     
     <meta name="locale" content="en_us">
@@ -203,7 +203,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
  
 
-<div id="MPWSPageStandartPublicToolsAllreportsID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPageDisplayAllreports MPWSPageTools">
+<div id="MPWSPageStandartPublicToolsMonitorID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPageDisplayMonitor MPWSPageTools">
     <div class="MPWSComponent MPWSComponenHeader">
 
 	<div class="MPWSComponent MPWSComponentLogo">
@@ -230,7 +230,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <div class="MPWSBlockDataRow">
     <span class="MPWSText">Last access:</span>
-    <span class="MPWSValue">2012-10-26 14:49:29</span>
+    <span class="MPWSValue">2012-10-26 15:34:26</span>
 </div>
         
         
@@ -279,6 +279,27 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                             </a>
                         <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub1">
                                     <li class="MPWSListItem">
+                        <a href="/page/tools.html?plugin=toolbox" class="MPWSLink" title="Toolbox">
+                            <span class="MPWSText">Toolbox</span>
+                        </a>
+                                                                                
+
+
+
+
+        
+            <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub2">
+            
+            <li class="MPWSListItem">
+                        <a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="User Manager">
+                <span class="MPWSText MPWSTextTitle">User Manager</span>
+                                            </a>
+                    </li>
+        </ul>
+        
+
+                                            </li>
+                                    <li class="MPWSListItem">
                         <a href="/page/tools.html?plugin=reporting" class="MPWSLink" title="Reporting">
                             <span class="MPWSText">Reporting</span>
                         </a>
@@ -295,25 +316,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                 <span class="MPWSText MPWSTextTitle">Reports</span>
                                             </a>
                     </li>
-        </ul>
-        
-
-                                            </li>
-                                    <li class="MPWSListItem">
-                        <a href="/page/tools.html?plugin=toolbox" class="MPWSLink" title="Toolbox">
-                            <span class="MPWSText">Toolbox</span>
-                        </a>
-                                                                                
-
-
-
-
-        
-            <ul class="MPWSList MPWSListMenuSub MPWSListMenuSub2">
-            
             <li class="MPWSListItem">
-                        <a href="/page/tools.html?plugin=toolbox&display=users" target="_self" class="MPWSLink" title="User Manager">
-                <span class="MPWSText MPWSTextTitle">User Manager</span>
+                        <a href="/page/tools.html?plugin=reporting&display=monitor" target="_self" class="MPWSLink" title="View Reports">
+                <span class="MPWSText MPWSTextTitle">View Reports</span>
                                             </a>
                     </li>
         </ul>
@@ -355,7 +360,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </span>
 
         
-<a href="?plugin=reporting&display=allreports" target="" class="MPWSLink" title="Reports" >Reports</a>
+<a href="?plugin=reporting&display=monitor" target="" class="MPWSLink" title="View Reports" >View Reports</a>
     
 </div>
             </div>
@@ -381,90 +386,6 @@ Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin
 
 
 <div class="MPWSComponent MPWSComponentWidgetGrabber">
-    <div class="MPWSSpacer MPWSSpacerWidget MPWSSpacerBefore"></div>
-    
-
-<div id="MPWSWidgetdataEditorReportManagerID" class="MPWSWidget MPWSWidgetDataEditor MPWSWidgetdataEditorReportManager">
-    
-    
-    
-            
-
-
-
-
-<div class="MPWSComponent MPWSComponentTitle">
-    <span class="MPWSText MPWSTextTitle">Report Manager</span>
-    <span class="MPWSText MPWSTextDetails">-</span>
-        <span class="MPWSText MPWSTextCustom">Record Saved</span>
-    </div>
-        
-    
-        
-        
-    
-    <form action="?action=new&plugin=reporting&display=allreports" name="data_edit_dataeditorreportmanager" method="POST" class="MPWSForm MPWSFormEditor MPWSFormEditorPageSave">
-        <div class="MPWSFormBody">
-
-    
-    
-            
-        
-        
-        <span class="MPWSText">
-    Saved    
-</span>
-
-        <span class="MPWSText">
-    Use the buttons below:    
-</span>
-
-        
-        
-    
-            </div>
-    
-        <div class="MPWSFormFooter">
-    
-    
-
-<div class="MPWSControlField MPWSControlFieldFormButtons">
-            <button id="MPWSControlFormButtonsNewID" type="submit" name="do" value="New" class="MPWSControl MPWSControlButtonNew">
-            New
-        </button>
-    </div>
-        </div>
-    
-    </form>
-
-    
-    <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
-         
-        
-    
-<div class="MPWSBlock MPWSBlockControl MPWSRenderModeNormal">
-
-
-            
-                        
-
-
-
-
-
-
-
-<a href="/page/tools.html?plugin=reporting&display=allreports" target="" class="MPWSLink" title="Back To Records" Array>Back To Records</a>
-
-    
-
-</div>
-    </div>
-
-</div>
-
-
-    <div class="MPWSSpacer MPWSSpacerWidget MPWSSpacerAfter"></div>
 </div>
             </div>
 
