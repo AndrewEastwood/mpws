@@ -21,7 +21,7 @@ RewriteRule static/(mpws|toolbox)([A-Za-z0-9]+).(css|js)?(.*) /engine/dispatcher
 # -- 
 RewriteRule static/([A-Za-z0-9_-]+).(gif|png|jpeg|jpg)   /engine/dispatcher/dispatcher.Static.php?request=image&action=default&realm=common&name=$1&type=$2 [QSA]
 # -- Common Api Requests
-RewriteRule api/(\w+).js?(.*)   /engine/dispatcher/dispatcher.Api.php?page=$1&action=api$2 [QSA]
+RewriteRule api.js?(.*)   /engine/dispatcher/dispatcher.Api.php?action=api$2 [QSA]
 
 
 

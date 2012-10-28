@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 23:09:01
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:04:49
          compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/component/breadcrumb.html" */ ?>
 <?php /*%%SmartyHeaderCode:54440418750805fadea6c16-75253972%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '5aca444bcbbdb34f3c38126e88ce3ee9d25c36b6' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/component/breadcrumb.html',
-      1 => 1350936538,
+      1 => 1351275592,
       2 => 'file',
     ),
     'ff723190029025c7eca9b1a09f9c94bdce3626f6' => 
@@ -51,7 +51,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <?php $_smarty_tpl->tpl_vars['_action'] = new Smarty_variable(libraryRequest::getNewUrl('display',$_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'],1,array('plugin','display')), null, 0);?>
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_key'=>'BreadcrumbSeparator'), 0);?>
 
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_link, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_href'=>"?".((string)$_smarty_tpl->tpl_vars['_action']->value),'_title'=>$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_display_menuText".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY']))}), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][mb_strtoupper($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'], 'UTF-8')]->objectTemplatePath_simple_link, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_href'=>"?".((string)$_smarty_tpl->tpl_vars['_action']->value),'_title'=>$_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][mb_strtoupper($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'], 'UTF-8')]->{"objectProperty_display_menuText".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY']))}), 0);?>
 
     <?php }?>
 

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 23:20:33
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:07:43
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html" */ ?>
 <?php /*%%SmartyHeaderCode:72725688850804394721cd8-48623128%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cbb4b263bc8184a28cbef90069561b5b13fa096e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/quickFiltering.html',
-      1 => 1351018931,
+      1 => 1351275592,
       2 => 'file',
     ),
   ),
@@ -39,7 +39,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'control' : $tmp), null, 0);?>
 
 <div id="MPWSComponenQuickFilteringID" class="MPWSComponent MPWSComponenQuickFiltering">
-    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_key'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
 
     <?php  $_smarty_tpl->tpl_vars['fieldFilterName'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['fieldFilterName']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['_confing']->value['filtering']['fields']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}

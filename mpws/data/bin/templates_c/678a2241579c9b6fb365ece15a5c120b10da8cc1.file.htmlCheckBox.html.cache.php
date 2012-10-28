@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 22:07:46
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 16:48:21
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/htmlCheckBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:170579327150859982c82028-45774535%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '678a2241579c9b6fb365ece15a5c120b10da8cc1' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/control/htmlCheckBox.html',
-      1 => 1350663924,
+      1 => 1351275592,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_50859982d6b806_24851621',
   'variables' => 
   array (
     '_name' => 0,
@@ -28,8 +30,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50859982d6b806_24851621',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50859982d6b806_24851621')) {function content_50859982d6b806_24851621($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
@@ -37,12 +37,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('CheckBox', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @libraryRequest::getPostValue($_smarty_tpl->tpl_vars['_controlName']->value))===null||$tmp==='' ? "unchecked" : $tmp), null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable('normal', null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_renderMode']->value)===null||$tmp==='' ? 'normal' : $tmp), null, 0);?>
 
 
-<?php if (isset($_smarty_tpl->tpl_vars['_renderMode']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable($_smarty_tpl->tpl_vars['_renderMode']->value, null, 0);?>
-<?php }?>
 <?php if ((empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&!empty($_smarty_tpl->tpl_vars['_value']->value))||$_smarty_tpl->tpl_vars['_controlValue']->value=="on"||$_smarty_tpl->tpl_vars['_controlValue']->value=="1"){?>
     <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable("checked", null, 0);?>
 <?php }?>

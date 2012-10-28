@@ -1,4 +1,7 @@
-menuTextAllreports = "Reports";
-menuTextDescriptionAllreports = "List of all reports";
-menuTextMonitor = "View Reports";
+menuTextManager = "Manager";
+menuTextDescriptionManager = "Customize reports";
+menuTextEditor="ll";
+menuTextScript-Editor = "Report Editor";
+menuTextDescriptionScript-Editor = "Edit Report Scripts";
+menuTextMonitor = "Monitor";
 menuTextDescriptionMonitor = "View And Analyze Reports";

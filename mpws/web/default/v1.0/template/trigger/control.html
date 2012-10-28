@@ -53,15 +53,20 @@
         
         {$_standartControlType = 'LinkAction'}
         {$_linkLabelWithControl = false}
+        {$_controlResourceOwner = 'control'}
+        {if not empty($_isCustom) }
+            {$_controlResourceOwner = $_resourceOwner}
+        {/if}
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsLinkAction
             _name=$_name
             _controlOwner=$_controlOwner
-            _resourceOwner='control'
+            _resourceOwner=$_controlResourceOwner
             _renderMode=$_renderMode 
             _action=$_action
             _mode=$_mode|default:'normal'
             _target=$_target|default:''
             _oid=$_oid|default:''
+            _useValueAsTitle=$_useValueAsTitle|default:null
             _href=$_href|default:''}
 
     {/if}

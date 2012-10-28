@@ -138,6 +138,20 @@ class objectBaseWeb extends objectBase {
     }
     private function _run_jsapi() {
         debug('objectBaseWeb => _run_jsapi');
+        $ret = false;
+        // run common hook on startup
+        $this->_jsapiTriggerOnCommonStart();
+        // validate access key with plugin name to run in normal mode
+        // or run customer
+        //if (libraryRequest::getPage() === $this->getObjectName() || 
+        if ($this->getObjectType() === OBJECT_T_CUSTOMER)
+            $ret = $this->_jsapiTriggerAsCustomer(); // run on active
+        //else
+        if ($this->getObjectType() === OBJECT_T_PLUGIN)
+            $ret = $this->_jsapiTriggerAsPlugin(); // run in background
+        // run common hook in end up
+        $this->_jsapiTriggerOnCommonEnd();
+        return $ret;
     }
 
     /* display triggers */
@@ -159,6 +173,31 @@ class objectBaseWeb extends objectBase {
     protected function _displayTriggerOnCommonEnd () {
         debug('objectBaseWeb => _displayTriggerOnCommonEnd');
     }
+
+    /* js api triggers */
+    protected function _jsapiTriggerOnCommonStart () {
+        debug('objectBaseWeb => _jsapiTriggerOnCommonStart');
+    }
+    protected function _jsapiTriggerAsCustomer () {
+        debug('objectBaseWeb => _jsapiTriggerAsCustomer');
+        $ctx = contextMPWS::instance();
+        $plugin = libraryRequest::getPlugin('*');
+        //echo '['.$plugin.'] === ' . $this->objectConfiguration_customer_allowWideJsApi;
+        // check if wide js api is allowed
+        if (empty($plugin) || $plugin == '*' && !$this->objectConfiguration_customer_allowWideJsApi)
+            return false;
+        $ctx->directProcess($plugin . DOG . 'jsapi:default', 'Toolbox');
+        return false;
+    }
+    protected function _jsapiTriggerAsPlugin () {
+        debug('objectBaseWeb => _jsapiTriggerAsPlugin');
+        return false;
+    }
+    protected function _jsapiTriggerOnCommonEnd () {
+        debug('objectBaseWeb => _jsapiTriggerOnCommonEnd');
+    }
+
+    
 }
 
 ?>

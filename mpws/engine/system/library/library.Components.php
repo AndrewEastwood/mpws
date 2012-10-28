@@ -410,14 +410,22 @@ class libraryComponents
          *  DateLastAccess
          *  
          */
+        
+        $sessionKeyName = 'MPWS_DATAEDITOR_SESSION';
 
         if (empty($dbLink))
             throw new Exception('libraryComponents: getDataEditor => dbLink is empty');
         
+        // session key
+        if (empty($_SESSION[$sessionKeyName]))
+            $_SESSION[$sessionKeyName] = md5(time() . mt_rand(1, 1000));
+        $_sessionKey = md5(mt_rand(1, 1000));
+        
         // component structure
         $com = array(
             // append form configuration
-            "FORM" => $config['form'], 
+            "FORM" => $config['form'],
+            "SESSION" => $_sessionKey,
             "SOURCE" => false,
             "FIELDS" => false,
             "ISNEW" => true,
@@ -442,6 +450,18 @@ class libraryComponents
             $editPage = "edit";
         if ($editPage == "new")
             $isNew = true;
+        // validate session key
+        if($_SESSION[$sessionKeyName] != libraryRequest::getPostFormField('session')) {
+            // iside this condition we handle refresh action 
+            // to prevet multiple savings for the same record
+            if ($isNew)
+                $editPage = 'new';
+            else
+                $editPage = 'edit';
+        }
+        // set new session key
+        $_SESSION[$sessionKeyName] = $_sessionKey;
+        
         // get fields
         $_fieldsDB = $dbLink->getFields($config['source']);
         $_fieldsCOM = array();
@@ -464,12 +484,14 @@ class libraryComponents
             if (empty($com["ERRORS"]) && isset($config['fields']['unique']) && !empty($config['fields']['unique'])) {
                 //var_dump($config['fields']['unique']);
                 foreach ($config['fields']['unique'] as $_fieldThatMustBeUnique) {
-                    $_existedRow = $dbLink
+                    $dbLink
                         ->reset()
                         ->select('*')
                         ->from($config['source'])
-                        ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique])
-                        ->fetchRow();
+                        ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique]);
+                    if (!$isNew)
+                        $dbLink->andWhere('ID', '<>', $oid);
+                    $_existedRow = $dbLink->fetchRow();
                     if (!empty($_existedRow))
                         $com['ERRORS'][] = 'validationErrorDuplicateValueInField' . $_fieldThatMustBeUnique;
                 }

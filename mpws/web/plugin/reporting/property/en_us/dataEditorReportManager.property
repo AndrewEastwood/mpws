@@ -1,7 +1,8 @@
 title = "Report Manager";
 description = "-";
 ; fields
-labelForTextBoxDataEditorName = "Report Name";
+labelForTextBoxDataEditorName = "Category Name";
+labelForTextAreaDataEditorReports = "Report Names";
 ; validation messages
 messageValidationErrorInFieldName = "Please provide valid report name";
 messageValidationErrorDuplicateValueInFieldName = "There is report with the same name. Try to use another one.";

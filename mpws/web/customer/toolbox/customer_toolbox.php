@@ -49,11 +49,7 @@ class customer_toolbox extends objectBaseWebCustomer {
     }
     
     protected function _displayTriggerAsCustomer () {
-        
-        // run all enabled plugins
         $ctx = contextMPWS::instance();
-        //$mpws_user = $ctx->pageModel->getInfo('USER');
-        
         $ret = parent::_displayTriggerAsCustomer();
         // custom customer pages
         if ($ctx->pageModel->allowToProcessPages()) {
@@ -71,13 +67,12 @@ class customer_toolbox extends objectBaseWebCustomer {
                 }
             }
         }
-        
         $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_defaultToolbox);
-
         return $ret;
     }
-
+    
+    /* disp;ay pages */
     protected function _displayPage_Index () {
         debug('customer_toolbox => _displayPage_Home');
         //$ctx = contextMPWS::instance();
@@ -110,6 +105,7 @@ class customer_toolbox extends objectBaseWebCustomer {
         //echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo11;
         //echo $this->objectTemplatePath_widget_demo2;
     }*/
+    
     
 }
 

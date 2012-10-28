@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-22 22:08:02
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 16:48:21
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/htmlDropDown.html" */ ?>
 <?php /*%%SmartyHeaderCode:133083085450859992f0ff07-87532318%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '139ad89f33c61fbb4479f7ad4755b741d4601107' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/control/htmlDropDown.html',
-      1 => 1350663924,
+      1 => 1351275592,
       2 => 'file',
     ),
   ),
@@ -15,26 +15,26 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_508599930dc246_19272586',
   'variables' => 
   array (
     '_name' => 0,
     '_controlCssName' => 0,
-    '_controlName' => 0,
+    '_value' => 0,
     '_renderMode' => 0,
     '_items' => 0,
-    '_controlValue' => 0,
-    '_value' => 0,
     '_controlCssNameCustom' => 0,
     '_controlRenderMode' => 0,
+    '_controlName' => 0,
     '_controlItems' => 0,
+    '_controlValue' => 0,
     '_item' => 0,
-    '_resource' => 0,
-    '_ownerName' => 0,
+    '_resourceOwner' => 0,
+    '_controlOwner' => 0,
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_508599930dc246_19272586',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_508599930dc246_19272586')) {function content_508599930dc246_19272586($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
@@ -42,17 +42,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('DropDown', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlCssNameCustom'] = new Smarty_variable(((string)$_smarty_tpl->tpl_vars['_controlCssName']->value).((string)$_smarty_tpl->tpl_vars['_name']->value), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlItems'] = new Smarty_variable('', null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable(libraryRequest::getPostValue($_smarty_tpl->tpl_vars['_controlName']->value,false), null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable('normal', null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? libraryRequest::getPostFormField(mb_strtolower($_smarty_tpl->tpl_vars['_name']->value, 'UTF-8')) : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_renderMode']->value)===null||$tmp==='' ? 'normal' : $tmp), null, 0);?>
 
-<?php if (isset($_smarty_tpl->tpl_vars['_renderMode']->value)){?>
-    <?php $_smarty_tpl->tpl_vars['_controlRenderMode'] = new Smarty_variable($_smarty_tpl->tpl_vars['_renderMode']->value, null, 0);?>
-<?php }?>
 <?php if (isset($_smarty_tpl->tpl_vars['_items']->value)){?>
     <?php $_smarty_tpl->tpl_vars['_controlItems'] = new Smarty_variable($_smarty_tpl->tpl_vars['_items']->value, null, 0);?>
-<?php }?>
-<?php if ((empty($_smarty_tpl->tpl_vars['_controlValue']->value)&&!empty($_smarty_tpl->tpl_vars['_value']->value))){?>
-    <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable($_smarty_tpl->tpl_vars['_value']->value, null, 0);?>
 <?php }?>
 
 <div class="MPWSControlField MPWSControlField<?php echo $_smarty_tpl->tpl_vars['_controlCssName']->value;?>
@@ -81,7 +75,7 @@ $_smarty_tpl->tpl_vars['_item']->_loop = true;
             <option value="<?php echo $_smarty_tpl->tpl_vars['_item']->value;?>
 ">
             <?php }?>
-                <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value).((string)$_smarty_tpl->tpl_vars['_controlCssNameCustom']->value).((string)$_smarty_tpl->tpl_vars['_item']->value)};?>
+                <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)$_smarty_tpl->tpl_vars['_resourceOwner']->value)."_option".((string)$_smarty_tpl->tpl_vars['_controlOwner']->value).((string)$_smarty_tpl->tpl_vars['_controlCssNameCustom']->value).((string)$_smarty_tpl->tpl_vars['_item']->value)};?>
 
             </option>
         <?php } ?>
@@ -90,7 +84,7 @@ $_smarty_tpl->tpl_vars['_item']->_loop = true;
 <?php }elseif($_smarty_tpl->tpl_vars['_controlRenderMode']->value=='hidden'){?>
     
     
-    <span class="MPWSControlReadOnlyValue"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)$_smarty_tpl->tpl_vars['_resource']->value)."_".((string)$_smarty_tpl->tpl_vars['_ownerName']->value).((string)$_smarty_tpl->tpl_vars['_controlCssNameCustom']->value).((string)$_smarty_tpl->tpl_vars['_controlValue']->value)};?>
+    <span class="MPWSControlReadOnlyValue"><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)$_smarty_tpl->tpl_vars['_resourceOwner']->value)."_option".((string)$_smarty_tpl->tpl_vars['_controlOwner']->value).((string)$_smarty_tpl->tpl_vars['_controlCssNameCustom']->value).((string)$_smarty_tpl->tpl_vars['_controlValue']->value)};?>
 </span>
     <input type="hidden" name="<?php echo $_smarty_tpl->tpl_vars['_controlName']->value;?>
 " value="<?php echo $_smarty_tpl->tpl_vars['_controlValue']->value;?>

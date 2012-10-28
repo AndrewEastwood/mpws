@@ -9,22 +9,28 @@ class pluginToolbox extends objectBaseWebPlugin {
         //echo "qwer = " . $ctx->getLastCommand(false);
         switch($ctx->getLastCommand(false)->getInnerMethod()) {
             case 'dashboard' : 
-                $rez = $this->_commandDashboard();
+                $rez = $this->_displayPage_Dashboard();
                 break;
             case 'default' : 
             default :
-                $rez = $this->_commandDefault();
+                $rez = $this->_displayPage_Default();
                 break;
         }
 
         return $rez;
     }
     
-    private function _commandDashboard () {
+    protected function _jsapiTriggerAsPlugin() {
+        parent::_jsapiTriggerAsPlugin();
+        
+        echo 'TOOLBOX JS API ENABLED';
+    }
+    
+    private function _displayPage_Dashboard () {
         $this->addWidgetDataTableView('DashboardActiveUsers');
     }
     
-    private function _commandDefault () {
+    private function _displayPage_Default () {
         //echo 'DEFAULT TRIGGER';
         switch (libraryRequest::getDisplay()) {
             case "users" : {

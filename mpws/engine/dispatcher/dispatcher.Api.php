@@ -30,19 +30,7 @@
     date_default_timezone_set($config['WEB']['TIMEZONE']);
 
     /* controller */
-
-    //$SESSION['MPWS-REALM'] = MPWS_REQUEST;
-    //echo $_GET['page'];
-    switch(strtolower($_GET['page'])) {
-        case 'public': 
-            $controller = new controllerPublic();
-            break;
-        default:
-            $controller = new controllerToolbox();
-            break;
-    }
-
-    // get results
+    $controller = new controllerJsApi();
     $controller->processRequests();
 
 ?>

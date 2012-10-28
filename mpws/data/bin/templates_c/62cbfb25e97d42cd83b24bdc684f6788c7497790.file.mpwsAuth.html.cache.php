@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 23:16:59
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:04:45
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsAuth.html" */ ?>
 <?php /*%%SmartyHeaderCode:130302746050817f1004b753-66731490%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '62cbfb25e97d42cd83b24bdc684f6788c7497790' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsAuth.html',
-      1 => 1351023417,
+      1 => 1351275592,
       2 => 'file',
     ),
   ),
@@ -39,7 +39,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <div class="MPWSFormBody">
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>'Login','_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
 
-    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'password','_name'=>'Password','_value'=>'','_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'password','_name'=>'Password','_value'=>false,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
 
     </div>
     <div class="MPWSFormFooter">

@@ -16,10 +16,9 @@
 {$controlLinkHref = $_href|default:''}
 {$controlLinkTarget = $_target|default:''}
 {$_resourceOwner=$_resourceOwner|default:'control'}
+{$controlLinkTitle = $_useValueAsTitle|default:$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action|upper`"}}
 
-{$controlLinkTitle = $CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action|upper`"}}
-
-{$controlLinkAttr = []}
+{$controlLinkAttr = ["id=\"MPWSActionLink_`$_action`ID\""]}
 
 {if empty($controlLinkHref)}
     {if not isset($_mode) or $_mode eq 'normal'}

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-19 19:25:59
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:04:49
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html" */ ?>
 <?php /*%%SmartyHeaderCode:1292425495080427be46391-33041584%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd6d46df5db445da56cb54532472df58a57c03f2a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html',
-      1 => 1350663924,
+      1 => 1351275592,
       2 => 'file',
     ),
   ),
@@ -46,7 +46,7 @@ $_smarty_tpl->tpl_vars['_headers']->value[] = $_smarty_tpl->tpl_vars['wgt_sysUsr
 
 
 <?php if (isset($_smarty_tpl->tpl_vars['MODEL']->value['MESSAGE']['COMMON'])){?>
-    <?php $_smarty_tpl->tpl_vars["msg_common"] = new Smarty_variable($_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_messageList, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_messages'=>$_smarty_tpl->tpl_vars['MODEL']->value['MESSAGE']['COMMON'],'_ownerName'=>'System'), 0));?>
+    <?php $_smarty_tpl->tpl_vars["msg_common"] = new Smarty_variable($_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_messageList, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_messages'=>$_smarty_tpl->tpl_vars['MODEL']->value['MESSAGE']['COMMON'],'_controlOwner'=>'System'), 0));?>
 
     <?php $_smarty_tpl->createLocalArrayVariable('_contents', null, 0);
 $_smarty_tpl->tpl_vars['_contents']->value[] = $_smarty_tpl->tpl_vars['msg_common']->value;?>

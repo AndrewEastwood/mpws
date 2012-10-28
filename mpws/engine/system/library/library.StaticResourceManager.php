@@ -87,8 +87,8 @@ class libraryStaticResourceManager {
         // get build mode (for CSS only)
         if ($_GET['type'] == 'css') {
             $buildMode = $customer->objectConfiguration_resources_buildMode;
-            if (isset($_SESSION['MPWS_PLUGIN_ACTIVE']))
-                echo 'ACTIVE PLUGIN IS = ' . $_SESSION['MPWS_PLUGIN_ACTIVE'];
+            //if (isset($_SESSION['MPWS_PLUGIN_ACTIVE']))
+            //    echo 'ACTIVE PLUGIN IS = ' . $_SESSION['MPWS_PLUGIN_ACTIVE'];
             switch ($buildMode) {
                 case "CSS" : {
                     break;

@@ -14,6 +14,7 @@ class libraryWebPageModel {
     private $_page;
     private $_messages;
     private $_customs;
+    private $_staticData;
     private $_templateProviders;
     private static $_instance;
     
@@ -113,6 +114,13 @@ class libraryWebPageModel {
         return $this;
     }
     
+    public function addStaticData($data) {
+        $this->_staticData .= $data;
+    }
+    
+    public function fetchStaticData () {
+        return $this->_staticData;
+    }
     public function fetchHtmlPage () {
         //echo mktime() . '<br>';
         // get context

@@ -1,0 +1,28 @@
+{$_widgetName = "CustomMonitor"}
+{$_resourceOwner = "customMonitor"}
+
+<div id="MPWSWidget{$_resourceOwner}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner}">
+    
+    {* list of all reports *}
+    <div class="MPWSBlock MPWSBlockAllReportLinks">
+        {foreach $CURRENT.SOURCE.DATA as $idx => $entry}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+            _type='mpwsLinkAction'
+            _name=$entry.ExternalKey
+            _controlOwner=$_widgetName
+            _action="ShowReport_`$entry.ID`"
+            _resourceOwner=$_resourceOwner
+            _href="javascript://"
+            _single=true
+            _isCustom=true
+            _useValueAsTitle=$entry.Name
+            _mode='system'}
+        {/foreach}
+    </div>
+    
+    {* injection placeholder *}
+    <div class="MPWSBlock MPWSBockReportInjectionArea">
+        
+    </div>
+    
+</div>

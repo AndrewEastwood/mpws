@@ -5,7 +5,8 @@ labelForTextBoxSearchBoxName = "Report Name";
 labelForLinkActionQuickFilteringName = "Report Name";
 labelForLinkActionQuickFilteringDateCreated = "Date Time Created";
 ; captions
-captionName = "Report Name";
+captionName = "Category Name";
 captionExternalKey = "External Key";
 captionDateCreated = "Created";
 captionDateUpdated = "Updated";
+captionReports = "Reports";
