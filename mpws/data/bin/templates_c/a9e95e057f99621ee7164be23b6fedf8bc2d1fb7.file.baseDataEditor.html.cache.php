@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-26 16:21:14
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 09:21:04
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html" */ ?>
 <?php /*%%SmartyHeaderCode:83151832150877fe3db6d92-06185155%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a9e95e057f99621ee7164be23b6fedf8bc2d1fb7' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html',
-      1 => 1351257666,
+      1 => 1351493136,
       2 => 'file',
     ),
   ),
@@ -73,6 +73,8 @@ ID" class="MPWSWidget MPWSWidget<?php echo $_smarty_tpl->tpl_vars['_widgetName']
 ">
         <div class="MPWSFormBody">
 
+        <input type="hidden" name="mpws_field_session" value="<?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']['SESSION'];?>
+"/>
     
     
     <?php if ($_smarty_tpl->tpl_vars['_formInnerAction']->value=="new"){?>
@@ -86,7 +88,7 @@ foreach ($_from as $_smarty_tpl->tpl_vars['fieldEntry']->key => $_smarty_tpl->tp
 $_smarty_tpl->tpl_vars['fieldEntry']->_loop = true;
  $_smarty_tpl->tpl_vars['fieldIndex']->value = $_smarty_tpl->tpl_vars['fieldEntry']->key;
 ?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>$_smarty_tpl->tpl_vars['fieldEntry']->value['Type'],'_name'=>$_smarty_tpl->tpl_vars['fieldEntry']->value['Field'],'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>$_smarty_tpl->tpl_vars['fieldEntry']->value['Type'],'_name'=>$_smarty_tpl->tpl_vars['fieldEntry']->value['Field'],'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_value'=>false), 0);?>
 
         <?php } ?>
 

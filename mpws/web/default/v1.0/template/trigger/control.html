@@ -49,6 +49,16 @@
      {elseif $_type eq 'mpwscaptcha'}
      {elseif $_type eq 'mpwsemailer'}
      {elseif $_type eq 'mpwsebuttons'}
+     {elseif $_type eq 'mpwsLabelValue'}
+     
+        {$_standartControlType = 'LabelValue'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsLabelValue
+            _name=$_name
+            _controlOwner=$_controlOwner
+            _resourceOwner=$_resourceOwner
+            _renderMode=$_renderMode 
+            _value=$_controlValue}
+            
      {elseif $_type eq 'mpwsLinkAction'}
         
         {$_standartControlType = 'LinkAction'}

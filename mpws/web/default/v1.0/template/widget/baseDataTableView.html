@@ -15,6 +15,7 @@
     
 {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _resourceOwner=$_resourceOwner}
 
+{* data table view *}
 {if not empty($DTV_CFG.searchbox) and $DTV_CFG.searchbox.enabled}
     {include file=$CURRENT.OBJECT->objectTemplatePath_component_searchBox _confing=$DTV_CFG _data=$CURRENT.SOURCE.DATA.SEARCH _resourceOwner=$_resourceOwner}
 {/if}

@@ -172,161 +172,203 @@ class libraryComponents
         return $com;
     }
 
+    
+    public static function getDataRecordViewer ($config, $dbLink) {
+        
+        // adjust settings
+        if ($viewMode == 'view' && libraryRequest::getOID(false))
+            $condition = 'ID = ' . libraryRequest::getOID();
+        
+        // validate configuration for requested mode
+        if ($viewMode == 'view' && empty($config['standalone']))
+            throw new Exception('libraryComponents => getDataTableView: can not find configuration for standalone view for source: ' . $config['source']);
+        
+        if ($viewMode == 'view') {
+            $dtv["SOURCE"] = $com['DATA'];
+            $dtv["REFERER"] = libraryRequest::storeOrGetRefererUrl(false);
+         else ;
+    }
+    
+    public static function getDataRecordRemoval ($config, $dbLink) {
+        $sessionKeyName = 'MPWS_DATATABLEVIEW_SESSION';
+        // session key
+        if (empty($_SESSION[$sessionKeyName]))
+            $_SESSION[$sessionKeyName] = md5(time() . mt_rand(1, 1000));
+        $_sessionKey = md5(mt_rand(1, 1000));
+        $isSessionValid = $_SESSION[$sessionKeyName] != libraryRequest::getPostFormField('session');
+        // set new session key
+        $_SESSION[$sessionKeyName] = $_sessionKey;
+        
+    }
     public static function getDataTableView ($config, $dbLink) {
         // get params
-        
-        
-        
+        $viewMode = libraryRequest::getAction('default');
+        //echo 'DTV VIEW MODE = ' . $viewMode;
+        $isTableMode = $viewMode == 'default' || empty($viewMode);
         $condition = $config['datatable']['condition'];
         $beforeConditionHook = $config['datatable']['conditionHook'];
-        
-        $com = array();
-        
         $pageName = strtoupper(libraryRequest::getPage('Default'));
         $sessionSearchKey =  'MPWS_SEARCH_OF_' . $config['source'] . '_' . $pageName;
         
-        $com['SEARCHBOX'] = array(
-            'FIELDS' => array(),
-            'ACTIVE' => false,
-            'FILTER' => array(),
-            'WORDS' => array()
-        );
-        // add search fields
-        $com['SEARCHBOX']['FIELDS'] = $config['searchbox']['fields'];
-        /*
-        foreach ( as $searchFieldName) {
-            [$searchFieldName] = strtolower($searchFieldName);
-        }*/
-        // detect search request
-        if (libraryRequest::isPostFormAction('search')) {
-            //echo 'SEARCHING';
-            $searchbox = array();
-            $_emptyFieldsCount = 0;
-            foreach ($com['SEARCHBOX']['FIELDS'] as $_searchFieldName) {
-                $_fieldValue = libraryRequest::getPostFormField($_searchFieldName, true, '%');
-                if ($_fieldValue == "%%")
-                    $_emptyFieldsCount++;
-                else
-                    $searchbox[$_searchFieldName] = $_fieldValue;
-            }
-            //echo 'EMPTY COUNT: ' . $_emptyFieldsCount;
-            //var_dump($searchbox);
-            // check if there is even one non-empty value
-            if ($_emptyFieldsCount != count($com['SEARCHBOX']['FIELDS'])) {
-                $com['SEARCHBOX']['ACTIVE'] = true;
-                $_SESSION[$sessionSearchKey] = $searchbox;
-            } else {
-                //var_dump($searchbox);
-                //echo 'EMPTY ALL SEARCH FIELDS';
-                $com['SEARCHBOX']['ACTIVE'] = false;
-                $_SESSION[$sessionSearchKey] = array();
-            }
-
-        }
-        if (libraryRequest::isPostFormAction('discard')) {
-            //echo 'DISCARD';
-            $_SESSION[$sessionSearchKey] = false;
-            $com['SEARCHBOX']['ACTIVE'] = false;
-        }
-
-        $com['RECORDS_ALL'] = $dbLink->getCount($config['source'], $condition, $beforeConditionHook);
-
-        if (empty($_SESSION[$sessionSearchKey])) {
-            //echo 'IS IN ACTIVE';
-            $com['SEARCHBOX']['ACTIVE'] = false;
-            $com['SEARCHBOX']['FILTER'] = false;
-            $com['RECORDS'] = $com['RECORDS_ALL'];
-        } else {
-            //echo 'IS ACTIVE';
-            $com['SEARCHBOX']['ACTIVE'] = true;
-            $com['SEARCHBOX']['FILTER'] = $_SESSION[$sessionSearchKey];
-            //var_dump($com['SEARCHBOX']['FILTER']);
-            $_searchBoxFilterString = array();
-            if (!empty($condition))
-                $_searchBoxFilterString[] = $condition . ' ';
-            foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
-                $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
-                $com['SEARCHBOX']['WORDS'][$sbKey] = trim($sbVal, '%');
-            }
-            //echo implode('AND', $_searchBoxFilterString);
-            $com['RECORDS'] = $dbLink->getCount($config['source'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
-        }
-
-        //$com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE']);
-
-        //var_dump($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']]);
         
-        $com['CURRENT'] = libraryRequest::getValue($config['pagination']['pageKey'], 1);
-        $com['LIMIT'] = $config['datatable']['limit'];
-        $com['PAGES'] = round($com['RECORDS'] / $com['LIMIT'] + 0.4);
-        
-        // cleanup junk page values
-        $com['CURRENT'] = mysql_escape_string($com['CURRENT']);
-        if (!is_numeric($com['CURRENT']) || 
-            $com['CURRENT'] < 1 || 
-            $com['CURRENT'] > $com['PAGES'])
-            $com['CURRENT'] = 1;
-        
-        $com['OFFSET'] = ($com['CURRENT'] - 1) * $com['LIMIT'];
-        //var_dump($config);
-        // fill pages
-        $com['PAGELINKS'] = array();
-        $com['EDGELINKS'] = array();
-        // get pages offset
-        $_edgeLeft = $com['CURRENT'] - $config['pagination']['size'];
-        $_edgeRight = $com['CURRENT'] + $config['pagination']['size'];
-        // validate edges
-        if ($com['PAGES'] < ($config['pagination']['size'] * 2 + 1)) {
-            $_edgeLeft = 1;
-            $_edgeRight = $com['PAGES'];
-        } elseif ($_edgeLeft < 1) {
-            $_edgeLeft = 1;
-            $_edgeRight = $config['pagination']['size'] * 2 + 1;
-            if ($_edgeRight > $com['PAGES'])
-                $_edgeRight = $com['PAGES'];
-        }elseif ($_edgeRight > $com['PAGES']) {
-            $_edgeRight = $com['PAGES'];
-            $_edgeLeft = $_edgeRight - $config['pagination']['size'] * 2;
-            if ($_edgeLeft < 1)
-                $_edgeLeft = 1;
-        }
-
-        // set left custom edges
-        if (!empty($config['pagination']['edges']) && $com['PAGES'] > 2) {
-            $_customEdges = explode('-', $config['pagination']['edges']);
-            foreach ($_customEdges as $_customEdgeKey)
-                switch ($_customEdgeKey) {
-                    case 'FIRST':
-                        $com['EDGELINKS']['FIRST'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], 1);
-                        break;
-                    case 'PREV':
-                        if ($com['CURRENT'] > 1)
-                            $com['EDGELINKS']['PREV'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $com['CURRENT'] - 1);
-                        break;
-                    case 'NEXT':
-                        if ($com['CURRENT'] < $com['PAGES'])
-                            $com['EDGELINKS']['NEXT'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $com['CURRENT'] + 1);
-                        break;
-                    case 'LAST':
-                        $com['EDGELINKS']['LAST'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $com['PAGES']);
-                        break;
+        // table mode view
+        if ($isTableMode) {
+            // component structure
+            $com = array();
+            $com['SEARCHBOX'] = array(
+                'FIELDS' => array(),
+                'ACTIVE' => false,
+                'FILTER' => array(),
+                'WORDS' => array()
+            );
+            // add search fields
+            $com['SEARCHBOX']['FIELDS'] = $config['searchbox']['fields'];
+            /*
+            foreach ( as $searchFieldName) {
+                [$searchFieldName] = strtolower($searchFieldName);
+            }*/
+            // detect search request
+            if (libraryRequest::isPostFormAction('search')) {
+                //echo 'SEARCHING';
+                $searchbox = array();
+                $_emptyFieldsCount = 0;
+                foreach ($com['SEARCHBOX']['FIELDS'] as $_searchFieldName) {
+                    $_fieldValue = libraryRequest::getPostFormField($_searchFieldName, true, '%');
+                    if ($_fieldValue == "%%")
+                        $_emptyFieldsCount++;
+                    else
+                        $searchbox[$_searchFieldName] = $_fieldValue;
                 }
+                //echo 'EMPTY COUNT: ' . $_emptyFieldsCount;
+                //var_dump($searchbox);
+                // check if there is even one non-empty value
+                if ($_emptyFieldsCount != count($com['SEARCHBOX']['FIELDS'])) {
+                    $com['SEARCHBOX']['ACTIVE'] = true;
+                    $_SESSION[$sessionSearchKey] = $searchbox;
+                } else {
+                    //var_dump($searchbox);
+                    //echo 'EMPTY ALL SEARCH FIELDS';
+                    $com['SEARCHBOX']['ACTIVE'] = false;
+                    $_SESSION[$sessionSearchKey] = array();
+                }
+
+            }
+            if (libraryRequest::isPostFormAction('discard')) {
+                //echo 'DISCARD';
+                $_SESSION[$sessionSearchKey] = false;
+                $com['SEARCHBOX']['ACTIVE'] = false;
+            }
+            // get actual record count with all applied conditions
+            $com['RECORDS_ALL'] = $dbLink->getCount($config['source'], $condition, $beforeConditionHook);
+            
+            // search mode
+            // -----------
+            if (empty($_SESSION[$sessionSearchKey])) {
+                //echo 'IS IN ACTIVE';
+                $com['SEARCHBOX']['ACTIVE'] = false;
+                $com['SEARCHBOX']['FILTER'] = false;
+                $com['RECORDS'] = $com['RECORDS_ALL'];
+            } else {
+                //echo 'IS ACTIVE';
+                $com['SEARCHBOX']['ACTIVE'] = true;
+                $com['SEARCHBOX']['FILTER'] = $_SESSION[$sessionSearchKey];
+                //var_dump($com['SEARCHBOX']['FILTER']);
+                $_searchBoxFilterString = array();
+                if (!empty($condition))
+                    $_searchBoxFilterString[] = $condition . ' ';
+                foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
+                    $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
+                    $com['SEARCHBOX']['WORDS'][$sbKey] = trim($sbVal, '%');
+                }
+                //echo implode('AND', $_searchBoxFilterString);
+                $com['RECORDS'] = $dbLink->getCount($config['source'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
+            }
+        
+            // pagination
+            // -----------
+            // 
+            //$com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE']);
+            //var_dump($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']]);
+            // page state
+            $com['CURRENT'] = libraryRequest::getValue($config['pagination']['pageKey'], 1);
+            $com['LIMIT'] = $config['datatable']['limit'];
+            $com['PAGES'] = round($com['RECORDS'] / $com['LIMIT'] + 0.4);
+            // cleanup junk page values
+            $com['CURRENT'] = mysql_escape_string($com['CURRENT']);
+            if (!is_numeric($com['CURRENT']) || 
+                $com['CURRENT'] < 1 || 
+                $com['CURRENT'] > $com['PAGES'])
+                $com['CURRENT'] = 1;
+            $com['OFFSET'] = ($com['CURRENT'] - 1) * $com['LIMIT'];
+            //var_dump($config);
+            // fill pages
+            $com['PAGELINKS'] = array();
+            $com['EDGELINKS'] = array();
+            
+            // edges
+            $_edgeLeft = $com['CURRENT'] - $config['pagination']['size'];
+            $_edgeRight = $com['CURRENT'] + $config['pagination']['size'];
+            // validate edges
+            if ($com['PAGES'] < ($config['pagination']['size'] * 2 + 1)) {
+                $_edgeLeft = 1;
+                $_edgeRight = $com['PAGES'];
+            } elseif ($_edgeLeft < 1) {
+                $_edgeLeft = 1;
+                $_edgeRight = $config['pagination']['size'] * 2 + 1;
+                if ($_edgeRight > $com['PAGES'])
+                    $_edgeRight = $com['PAGES'];
+            }elseif ($_edgeRight > $com['PAGES']) {
+                $_edgeRight = $com['PAGES'];
+                $_edgeLeft = $_edgeRight - $config['pagination']['size'] * 2;
+                if ($_edgeLeft < 1)
+                    $_edgeLeft = 1;
+            }
+            // set left custom edges
+            if (!empty($config['pagination']['edges']) && $com['PAGES'] > 2) {
+                $_customEdges = explode('-', $config['pagination']['edges']);
+                foreach ($_customEdges as $_customEdgeKey)
+                    switch ($_customEdgeKey) {
+                        case 'FIRST':
+                            $com['EDGELINKS']['FIRST'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], 1);
+                            break;
+                        case 'PREV':
+                            if ($com['CURRENT'] > 1)
+                                $com['EDGELINKS']['PREV'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $com['CURRENT'] - 1);
+                            break;
+                        case 'NEXT':
+                            if ($com['CURRENT'] < $com['PAGES'])
+                                $com['EDGELINKS']['NEXT'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $com['CURRENT'] + 1);
+                            break;
+                        case 'LAST':
+                            $com['EDGELINKS']['LAST'] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $com['PAGES']);
+                            break;
+                    }
+            }
+            // setup pagelinks
+            for ($i = $_edgeLeft; $i <= $_edgeRight; $i++)
+                $com['PAGELINKS'][$i] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $i);
         }
-
-        for ($i = $_edgeLeft; $i <= $_edgeRight; $i++)
-            $com['PAGELINKS'][$i] = libraryRequest::getNewUrl($config['pagination']['pageKey'], $i);
-
+        //var_dump($config);
+        // database connection
         if (!empty($dbLink)) {
-            $dbLink
-                ->reset()
-                ->select('*')
-                ->from($config['source'])
-                ->offset($com['OFFSET'])
-                ->limit($com['LIMIT']);
+            $dbLink->reset();
+            
+            if ($viewMode == 'view') {
+                if ($config['standalone']['fields'] == '*')
+                    $dbLink->select($config['standalone']['fields']);
+                else
+                    $dbLink->select('ID', implode(', ', $config['standalone']['fields']));
+                $dbLink->from($config['source']);
+            } else {
+                $dbLink->select('ID', implode(', ', $config['datatable']['fields']))
+                    ->from($config['source'])
+                    ->offset($com['OFFSET'])
+                    ->limit($com['LIMIT']);;
+            }
 
             $_conditionasAdded = 0;
             // searchbox
-            if($com['SEARCHBOX']['ACTIVE']) {
+            if($isTableMode && $com['SEARCHBOX']['ACTIVE']) {
                 $_firstConditionWasAdded = false;
                 foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
                     if ($_firstConditionWasAdded)
@@ -338,7 +380,7 @@ class libraryComponents
                     $_conditionasAdded++;
                 }
             }
-            
+            // conditional select
             if (!empty($condition)) {
                 //echo 'adding condition';
                 $_cnd = explode(' ', $condition, 3);
@@ -348,53 +390,47 @@ class libraryComponents
                 else
                     $dbLink->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
             }
-
             // sorting
-            $sort = libraryRequest::getValue($config['filtering']['sortKey'], 'ID.asc');
-            
-            if (!empty($sort)) {
-                $sort = explode('.', trim($sort));
-                if (count($sort) == 2 && !empty($sort[0]) && !empty($sort[1])) {
-                    $_direction = trim(strtolower($sort[1]));
-                    //echo '#####' . $config['source'].'.'.$sort[0] . '####';
-                    if ($_direction == 'asc' || $_direction == 'desc') {
-                        $dbLink
-                            ->orderBy($config['source'].'.'.$sort[0])
-                            ->order($_direction);
+            if ($isTableMode) {
+                $sort = libraryRequest::getValue($config['filtering']['sortKey'], 'ID.asc');
+                if (!empty($sort)) {
+                    $sort = explode('.', trim($sort));
+                    if (count($sort) == 2 && !empty($sort[0]) && !empty($sort[1])) {
+                        $_direction = trim(strtolower($sort[1]));
+                        //echo '#####' . $config['source'].'.'.$sort[0] . '####';
+                        if ($_direction == 'asc' || $_direction == 'desc') {
+                            $dbLink
+                                ->orderBy($config['source'].'.'.$sort[0])
+                                ->order($_direction);
+                        }
                     }
-                    
                 }
             }
            
-
+            // get data
             $com['DATA'] = $dbLink->fetchData();
         }
         
-        
-        // dtv obj
-        $dtv = array(
-            "SOURCE" => array(
-                "RECORDS" => $com['DATA'],
-                "LIMIT" => $com['LIMIT'],
-                "TOTAL" => $com['RECORDS_ALL']
-            ),
-            "PAGING" => array(
-                "LINKS" => $com['PAGELINKS'],
-                "EDGES" => $com['EDGELINKS'],
-                "CURRENT" => $com['CURRENT'],
-                "LIMIT" => $com['LIMIT'],
-                "OFFSET" => $com['OFFSET'],
-                "PAGES" => $com['PAGES'],
-                "TOTAL" => $com['RECORDS_ALL'],
-                "AVAILABLE" => $com['RECORDS']
-            ),
-            "SEARCH" => $com['SEARCHBOX']
+        // init component
+        $dtv = array("MODE" => makeKey($viewMode));
+        $dtv["SOURCE"] = array(
+            "RECORDS" => $com['DATA'],
+            "LIMIT" => $com['LIMIT'],
+            "TOTAL" => $com['RECORDS_ALL']
         );
+        $dtv["PAGING"] = array(
+            "LINKS" => $com['PAGELINKS'],
+            "EDGES" => $com['EDGELINKS'],
+            "CURRENT" => $com['CURRENT'],
+            "LIMIT" => $com['LIMIT'],
+            "OFFSET" => $com['OFFSET'],
+            "PAGES" => $com['PAGES'],
+            "TOTAL" => $com['RECORDS_ALL'],
+            "AVAILABLE" => $com['RECORDS']
+        );
+        $dtv["SEARCH"] = $com['SEARCHBOX'];
         
-        //var_dump($com);
-
         return $dtv;
-        
     }
     
     

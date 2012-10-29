@@ -48,7 +48,7 @@
 
 {$_controlOwner = 'DataTable'}
 
-<div id="MPWSComponentDataTable{$_ownerName|capitalize}ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable{$_ownerName|capitalize}">
+<div id="MPWSComponent{$_resourceOwner|capitalize}ID" class="MPWSComponent MPWSComponent{$_controlOwner} MPWSComponent{$_resourceOwner|capitalize}">
     {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key=$_controlOwner}
 
 {* data table content *}

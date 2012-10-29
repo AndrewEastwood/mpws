@@ -19,6 +19,8 @@ controlActionLinkTitleDataTableRowActionEDIT = "edit";
 controlActionLinkTitleDataTableRowActionVIEW = "view";
 controlActionLinkTitleDataTableRowActionDELETE  = "remove";
 controlActionLinkTitleDataEditorBACKTORECORDS = "Back To Records";
+controlActionLinkTitleStandaloneRecordViewBACKTORECORDS = "Back To Records";
+
 
 ; data editor buttons
 controlFormButtonsDataEditorButtonSave ="Save";
@@ -26,3 +28,5 @@ controlFormButtonsDataEditorButtonPreview="Preview";
 controlFormButtonsDataEditorButtonCancel="Cancel";
 controlFormButtonsDataEditorButtonEdit = "Edit";
 controlFormButtonsDataEditorButtonNew = "New";
+controlFormButtonsStandaloneRecordViewButtonRemove = "Remove";
+controlFormButtonsStandaloneRecordViewButtonCancel = "Cancel";

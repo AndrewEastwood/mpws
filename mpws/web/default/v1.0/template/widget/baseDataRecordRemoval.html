@@ -1,0 +1,36 @@
+{$_controlOwner = 'StandaloneRecordView'} {* we use same labels as for view component *}
+
+<div id="MPWSComponent{$_resourceOwner|capitalize}ID" class="MPWSComponent MPWSComponent{$_controlOwner} MPWSComponentDataTable{$_resourceOwner|capitalize}">
+    
+    <form action="{$CURRENT.SOURCE.DATA.REFERER}" method="POST" class="MPWSForm">
+        <div class="MPWSFormHeader">
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _title=$_data[$_confing.standalone.caption]}
+        </div>
+        <div class="MPWSFormBody">
+            <input type="hidden" name="mpws_field_session" value="{$CURRENT.SOURCE.DATA.SESSION}"/>
+            <input type="hidden" name="action" value="remove"/>
+            <input type="hidden" name="oid" value="{$CURRENT.SOURCE.DATA.OID}"/>
+            {foreach $_data as $fieldName => $fieldValue}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _controlOwner=$_controlOwner _resourceOwner=$_resourceOwner _value=$fieldValue}
+            {/foreach}
+        </div>
+        <div class="MPWSFormFooter">
+            {* form controls *}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_controlOwner _resourceOwner='control'}
+        </div>
+    </form>
+    
+    {* additional links *}
+    <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
+         
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+            _type='mpwsLinkAction'
+            _name='BackToRecords'
+            _controlOwner=$_controlOwner
+            _action='BackToRecords'
+            _resourceOwner=$_resourceOwner
+            _href=$CURRENT.SOURCE.DATA.REFERER
+            _single=true
+            _mode='system'}
+    </div>
+</div>

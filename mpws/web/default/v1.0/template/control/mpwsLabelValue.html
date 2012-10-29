@@ -1,0 +1,10 @@
+{* default control attribute values *}
+{$_controlCssName = 'LabelValue'}
+{$_controlCssNameCustom = "`$_controlCssName``$_name`"}
+{$_controlValue = $_value}
+
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName} MPWSControlField{$_controlCssNameCustom}">
+    {* display hidden control*}
+    <span class="MPWSControlReadOnlyValue">{$_controlValue}</span>
+</div>
