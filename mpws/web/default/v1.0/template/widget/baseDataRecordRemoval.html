@@ -1,24 +1,48 @@
-{$_controlOwner = 'StandaloneRecordView'} {* we use same labels as for view component *}
+{$_widgetName = "StandaloneRecordView"}
+{$_resourceOwner = $_resourceOwner|default:$_widgetName}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataRecordRemoval`$CURRENT.SOURCE.NAME`"}}
 
-<div id="MPWSComponent{$_resourceOwner|capitalize}ID" class="MPWSComponent MPWSComponent{$_controlOwner} MPWSComponentDataTable{$_resourceOwner|capitalize}">
+<div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
     
-    <form action="{$CURRENT.SOURCE.DATA.REFERER}" method="POST" class="MPWSForm">
+    {if $CURRENT.SOURCE.DATA.PAGE eq 'VIEW'}
+    
+    <form action="" method="POST" class="MPWSForm">
         <div class="MPWSFormHeader">
-            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _title=$_data[$_confing.standalone.caption]}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _title=$CURRENT.SOURCE.DATA.RECORD[$DTV_CFG.caption]}
         </div>
         <div class="MPWSFormBody">
             <input type="hidden" name="mpws_field_session" value="{$CURRENT.SOURCE.DATA.SESSION}"/>
-            <input type="hidden" name="action" value="remove"/>
-            <input type="hidden" name="oid" value="{$CURRENT.SOURCE.DATA.OID}"/>
-            {foreach $_data as $fieldName => $fieldValue}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _controlOwner=$_controlOwner _resourceOwner=$_resourceOwner _value=$fieldValue}
+            {foreach $CURRENT.SOURCE.DATA.RECORD as $fieldName => $fieldValue}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=$fieldValue}
             {/foreach}
         </div>
         <div class="MPWSFormFooter">
             {* form controls *}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_controlOwner _resourceOwner='control'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_widgetName _resourceOwner='control'}
         </div>
     </form>
+    
+    {elseif $CURRENT.SOURCE.DATA.PAGE eq 'REMOVED'}
+
+        {if $DTV_CFG.redirectOnRemove}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
+        {else}
+            {* canceled page *}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`RemovedMain"}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`RemovedSubText"}
+        {/if}
+    
+    {elseif $CURRENT.SOURCE.DATA.PAGE eq 'CANCELED'}
+
+        {if $DTV_CFG.redirectOnCancel}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
+        {else}
+            {* canceled page *}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelMain"}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelSubText"}
+        {/if}
+        
+    {/if}
     
     {* additional links *}
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
@@ -26,7 +50,7 @@
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
             _type='mpwsLinkAction'
             _name='BackToRecords'
-            _controlOwner=$_controlOwner
+            _controlOwner=$_widgetName
             _action='BackToRecords'
             _resourceOwner=$_resourceOwner
             _href=$CURRENT.SOURCE.DATA.REFERER

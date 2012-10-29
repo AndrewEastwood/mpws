@@ -11,14 +11,3 @@ captionName = 'User Name';
 captionActive = 'Active';
 captionDateLastAccess = 'Last Time Visit';
 captionIsOnline = "Online State";
-; standalone page
-labelForLabelValueStandaloneRecordViewID = "User ID: ";
-labelForLabelValueStandaloneRecordViewName = "User Name: ";
-labelForLabelValueStandaloneRecordViewPassword = "Password: ";
-labelForLabelValueStandaloneRecordViewActive = "Is Active: ";
-labelForLabelValueStandaloneRecordViewIsOnline = "Online Status: ";
-labelForLabelValueStandaloneRecordViewPermisions = "Permissions: ";
-labelForLabelValueStandaloneRecordViewRole = "System Role: ";
-labelForLabelValueStandaloneRecordViewDateLastAccess = "Las Access: ";
-labelForLabelValueStandaloneRecordViewDateCreated = "Date Created: ";
-labelForLabelValueStandaloneRecordViewDateUpdated = "Date Updated: ";

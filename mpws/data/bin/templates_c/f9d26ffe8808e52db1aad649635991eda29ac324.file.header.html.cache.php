@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:04:45
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 21:36:58
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/simple/header.html" */ ?>
 <?php /*%%SmartyHeaderCode:69573182150817f100c2ab3-24979185%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f9d26ffe8808e52db1aad649635991eda29ac324' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/simple/header.html',
-      1 => 1351275592,
+      1 => 1351538379,
       2 => 'file',
     ),
   ),
@@ -19,6 +19,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_50817f100cebc8_77583734',
   'variables' => 
   array (
+    '_title' => 0,
     '_resourceOwner' => 0,
     '_key' => 0,
     'CURRENT' => 0,
@@ -27,6 +28,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50817f100cebc8_77583734')) {function content_50817f100cebc8_77583734($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><div class="MPWSHeader">
-    <h3><?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)(($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'display' : $tmp))."_header".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_key']->value))};?>
+    <h3><?php echo (($tmp = @$_smarty_tpl->tpl_vars['_title']->value)===null||$tmp==='' ? $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectProperty_".((string)(($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'display' : $tmp))."_header".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_key']->value))} : $tmp);?>
 </h3>
 </div><?php }} ?>

@@ -3,14 +3,14 @@
 // dependencies
 // library.Request.php
 
-class libraryComponents
-{
-    public static function comDataTable ($config, $dbLink, $condition = '', $beforeConditionHook = '') {
+class libraryComponents {
+
+    public static function comDataTable($config, $dbLink, $condition = '', $beforeConditionHook = '') {
         $com = array();
-        
+
         $pageName = strtoupper(libraryRequest::getPage('Default'));
-        $sessionSearchKey =  'MPWS_SEARCH_OF_' . $config['TABLE'] . '_' . $pageName;
-        
+        $sessionSearchKey = 'MPWS_SEARCH_OF_' . $config['TABLE'] . '_' . $pageName;
+
         $com['SEARCHBOX'] = array();
         // detect search request
         if (libraryRequest::isPostFormAction('search')) {
@@ -22,11 +22,10 @@ class libraryComponents
                 //echo 'post key = ' . $_pkey .'<br>';
                 //echo 'result is = ' . $returnValue .'-----<br>';
                 if ($returnValue === 0 && !empty($_pval))
-                    $searchbox[str_replace($config['SEARCH_KEY_PREFIX'], '', $_pkey)] = '%'.mysql_escape_string($_pval).'%';
+                    $searchbox[str_replace($config['SEARCH_KEY_PREFIX'], '', $_pkey)] = '%' . mysql_escape_string($_pval) . '%';
             }
             $_SESSION[$sessionSearchKey] = $searchbox;
             $com['SEARCHBOX']['ACTIVE'] = true;
-
         }
         if (libraryRequest::isPostFormAction('discard')) {
             $_SESSION[$sessionSearchKey] = false;
@@ -38,9 +37,9 @@ class libraryComponents
             $com['SEARCHBOX']['ACTIVE'] = false;
             $com['RECORDS'] = $com['RECORDS_ALL'];
         } else {
-        
+
             //echo 'IS ACTIVE';
-        
+
             $com['SEARCHBOX']['ACTIVE'] = true;
             $com['SEARCHBOX']['FILTER'] = $_SESSION[$sessionSearchKey];
             $_searchBoxFilterString = array();
@@ -50,25 +49,24 @@ class libraryComponents
                 $_searchBoxFilterString[] = ' ' . $sbKey . ' LIKE \'' . $sbVal . '\' ';
 
             //echo implode('AND', $_searchBoxFilterString);
-                
+
             $com['RECORDS'] = $dbLink->getCount($config['TABLE'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
         }
 
         //$com['RECORDS_ALL'] = $dbLink->getCount($config['TABLE']);
-
         //var_dump($_SESSION['MPWS_SEARCH_OF_' . $config['TABLE']]);
 
         $com['CURRENT'] = libraryRequest::getValue($config['PAGEKEY'], 1);
         $com['LIMIT'] = $config['LIMIT'];
         $com['PAGES'] = round($com['RECORDS'] / $com['LIMIT'] + 0.4);
-        
+
         // cleanup junk page values
         $com['CURRENT'] = mysql_escape_string($com['CURRENT']);
-        if (!is_numeric($com['CURRENT']) || 
-            $com['CURRENT'] < 1 || 
-            $com['CURRENT'] > $com['PAGES'])
+        if (!is_numeric($com['CURRENT']) ||
+                $com['CURRENT'] < 1 ||
+                $com['CURRENT'] > $com['PAGES'])
             $com['CURRENT'] = 1;
-        
+
         $com['OFFSET'] = ($com['CURRENT'] - 1) * $com['LIMIT'];
 
         // fill pages
@@ -119,15 +117,15 @@ class libraryComponents
 
         if (!empty($dbLink)) {
             $dbLink
-                ->reset()
-                ->select('*')
-                ->from($config['TABLE'])
-                ->offset($com['OFFSET'])
-                ->limit($com['LIMIT']);
+                    ->reset()
+                    ->select('*')
+                    ->from($config['TABLE'])
+                    ->offset($com['OFFSET'])
+                    ->limit($com['LIMIT']);
 
             $_conditionasAdded = 0;
             // searchbox
-            if($com['SEARCHBOX']['ACTIVE']) {
+            if ($com['SEARCHBOX']['ACTIVE']) {
                 $_firstConditionWasAdded = false;
                 foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
                     if ($_firstConditionWasAdded)
@@ -139,7 +137,7 @@ class libraryComponents
                     $_conditionasAdded++;
                 }
             }
-            
+
             if (!empty($condition)) {
                 //echo 'adding condition';
                 $_cnd = explode(' ', $condition, 3);
@@ -158,13 +156,12 @@ class libraryComponents
                     $_direction = trim(strtolower($sort[1]));
                     if ($_direction == 'asc' || $_direction == 'desc') {
                         $dbLink
-                            ->orderBy($config['TABLE'].'.'.$sort[0])
-                            ->order($_direction);
+                                ->orderBy($config['TABLE'] . '.' . $sort[0])
+                                ->order($_direction);
                     }
-                    
                 }
             }
-           
+
 
             $com['DATA'] = $dbLink->fetchData();
         }
@@ -172,35 +169,76 @@ class libraryComponents
         return $com;
     }
 
-    
-    public static function getDataRecordViewer ($config, $dbLink) {
-        
-        // adjust settings
-        if ($viewMode == 'view' && libraryRequest::getOID(false))
-            $condition = 'ID = ' . libraryRequest::getOID();
-        
+    public static function getDataRecordViewer($config, $dbLink) {
+
+        $oid = libraryRequest::getOID();
+        if (empty($oid) && !is_numeric($oid))
+            throw new Exception('libraryComponents => getDataRecordViewer: wrong OID value');
+
         // validate configuration for requested mode
-        if ($viewMode == 'view' && empty($config['standalone']))
-            throw new Exception('libraryComponents => getDataTableView: can not find configuration for standalone view for source: ' . $config['source']);
-        
-        if ($viewMode == 'view') {
-            $dtv["SOURCE"] = $com['DATA'];
-            $dtv["REFERER"] = libraryRequest::storeOrGetRefererUrl(false);
-         else ;
+        if (empty($config))
+            throw new Exception('libraryComponents => getDataRecordViewer: can not find configuration for standalone view');
+
+        $dbLink->reset();
+        if ($config['fields'] == '*')
+            $dbLink->select($config['fields']);
+        else
+            $dbLink->select('ID', implode(', ', $config['fields']));
+        $dbLink->from($config['source'])->where('ID', '=', $oid);
+
+        $dtv = array();
+        $dtv["RECORD"] = $dbLink->fetchRow();
+        $dtv["REFERER"] = libraryRequest::storeOrGetRefererUrl(false);
+
+        return $dtv;
     }
-    
-    public static function getDataRecordRemoval ($config, $dbLink) {
-        $sessionKeyName = 'MPWS_DATATABLEVIEW_SESSION';
+
+    public static function getDataRecordRemoval($config, $dbLink) {
+        $oid = libraryRequest::getOID();
+        if (empty($oid) && !is_numeric($oid))
+            throw new Exception('libraryComponents => getDataRecordRemoval: wrong OID value');
+
+        // validate configuration for requested mode
+        if (empty($config))
+            throw new Exception('libraryComponents => getDataRecordRemoval: can not find configuration for standalone view');
+
+        $dbLink->reset();
+        if ($config['fields'] == '*')
+            $dbLink->select('*');
+        else
+            $dbLink->select('ID', implode(', ', $config['fields']));
+        $dbLink->from($config['source'])->where('ID', '=', $oid);
+        $state = 'VIEW';
+        $sessionKeyName = 'MPWS_DATARECORDREMOVAL_SESSION';
         // session key
-        if (empty($_SESSION[$sessionKeyName]))
-            $_SESSION[$sessionKeyName] = md5(time() . mt_rand(1, 1000));
         $_sessionKey = md5(mt_rand(1, 1000));
-        $isSessionValid = $_SESSION[$sessionKeyName] != libraryRequest::getPostFormField('session');
+        $isSessionValid = isset($_SESSION[$sessionKeyName]) && $_SESSION[$sessionKeyName] == libraryRequest::getPostFormField('session');
         // set new session key
         $_SESSION[$sessionKeyName] = $_sessionKey;
-        
+        // chack and remove on action
+        if ($isSessionValid) {
+            if(libraryRequest::isPostFormAction('remove')) {
+                $dbLink
+                    ->deleteFrom($config['source'])
+                    ->where('ID', '=', $oid)
+                    ->query();
+                $state = 'REMOVED';
+            }
+            if(libraryRequest::isPostFormAction('cancel'))
+                $state = 'CANCELED';
+        }
+        // control object
+        $dtv = array();
+        $dtv["PAGE"] = $state;
+        $dtv["RECORD"] = $dbLink->fetchRow();
+        $dtv["SESSION"] = $_sessionKey;
+        $dtv["REFERER"] = libraryRequest::storeOrGetRefererUrl(false);
+        $dtv["OID"] = $oid;
+
+        return $dtv;
     }
-    public static function getDataTableView ($config, $dbLink) {
+
+    public static function getDataTableView($config, $dbLink) {
         // get params
         $viewMode = libraryRequest::getAction('default');
         //echo 'DTV VIEW MODE = ' . $viewMode;
@@ -208,9 +246,8 @@ class libraryComponents
         $condition = $config['datatable']['condition'];
         $beforeConditionHook = $config['datatable']['conditionHook'];
         $pageName = strtoupper(libraryRequest::getPage('Default'));
-        $sessionSearchKey =  'MPWS_SEARCH_OF_' . $config['source'] . '_' . $pageName;
-        
-        
+        $sessionSearchKey = 'MPWS_SEARCH_OF_' . $config['source'] . '_' . $pageName;
+
         // table mode view
         if ($isTableMode) {
             // component structure
@@ -224,9 +261,9 @@ class libraryComponents
             // add search fields
             $com['SEARCHBOX']['FIELDS'] = $config['searchbox']['fields'];
             /*
-            foreach ( as $searchFieldName) {
-                [$searchFieldName] = strtolower($searchFieldName);
-            }*/
+              foreach ( as $searchFieldName) {
+              [$searchFieldName] = strtolower($searchFieldName);
+              } */
             // detect search request
             if (libraryRequest::isPostFormAction('search')) {
                 //echo 'SEARCHING';
@@ -251,7 +288,6 @@ class libraryComponents
                     $com['SEARCHBOX']['ACTIVE'] = false;
                     $_SESSION[$sessionSearchKey] = array();
                 }
-
             }
             if (libraryRequest::isPostFormAction('discard')) {
                 //echo 'DISCARD';
@@ -260,7 +296,7 @@ class libraryComponents
             }
             // get actual record count with all applied conditions
             $com['RECORDS_ALL'] = $dbLink->getCount($config['source'], $condition, $beforeConditionHook);
-            
+
             // search mode
             // -----------
             if (empty($_SESSION[$sessionSearchKey])) {
@@ -283,7 +319,7 @@ class libraryComponents
                 //echo implode('AND', $_searchBoxFilterString);
                 $com['RECORDS'] = $dbLink->getCount($config['source'], implode('AND', $_searchBoxFilterString), $beforeConditionHook);
             }
-        
+
             // pagination
             // -----------
             // 
@@ -295,16 +331,16 @@ class libraryComponents
             $com['PAGES'] = round($com['RECORDS'] / $com['LIMIT'] + 0.4);
             // cleanup junk page values
             $com['CURRENT'] = mysql_escape_string($com['CURRENT']);
-            if (!is_numeric($com['CURRENT']) || 
-                $com['CURRENT'] < 1 || 
-                $com['CURRENT'] > $com['PAGES'])
+            if (!is_numeric($com['CURRENT']) ||
+                    $com['CURRENT'] < 1 ||
+                    $com['CURRENT'] > $com['PAGES'])
                 $com['CURRENT'] = 1;
             $com['OFFSET'] = ($com['CURRENT'] - 1) * $com['LIMIT'];
             //var_dump($config);
             // fill pages
             $com['PAGELINKS'] = array();
             $com['EDGELINKS'] = array();
-            
+
             // edges
             $_edgeLeft = $com['CURRENT'] - $config['pagination']['size'];
             $_edgeRight = $com['CURRENT'] + $config['pagination']['size'];
@@ -351,24 +387,14 @@ class libraryComponents
         //var_dump($config);
         // database connection
         if (!empty($dbLink)) {
-            $dbLink->reset();
-            
-            if ($viewMode == 'view') {
-                if ($config['standalone']['fields'] == '*')
-                    $dbLink->select($config['standalone']['fields']);
-                else
-                    $dbLink->select('ID', implode(', ', $config['standalone']['fields']));
-                $dbLink->from($config['source']);
-            } else {
-                $dbLink->select('ID', implode(', ', $config['datatable']['fields']))
+            $dbLink->reset()
+                    ->select('ID', implode(', ', $config['datatable']['fields']))
                     ->from($config['source'])
                     ->offset($com['OFFSET'])
-                    ->limit($com['LIMIT']);;
-            }
-
+                    ->limit($com['LIMIT']);
             $_conditionasAdded = 0;
             // searchbox
-            if($isTableMode && $com['SEARCHBOX']['ACTIVE']) {
+            if ($isTableMode && $com['SEARCHBOX']['ACTIVE']) {
                 $_firstConditionWasAdded = false;
                 foreach ($_SESSION[$sessionSearchKey] as $sbKey => $sbVal) {
                     if ($_firstConditionWasAdded)
@@ -400,17 +426,17 @@ class libraryComponents
                         //echo '#####' . $config['source'].'.'.$sort[0] . '####';
                         if ($_direction == 'asc' || $_direction == 'desc') {
                             $dbLink
-                                ->orderBy($config['source'].'.'.$sort[0])
-                                ->order($_direction);
+                                    ->orderBy($config['source'] . '.' . $sort[0])
+                                    ->order($_direction);
                         }
                     }
                 }
             }
-           
+
             // get data
             $com['DATA'] = $dbLink->fetchData();
         }
-        
+
         // init component
         $dtv = array("MODE" => makeKey($viewMode));
         $dtv["SOURCE"] = array(
@@ -429,12 +455,11 @@ class libraryComponents
             "AVAILABLE" => $com['RECORDS']
         );
         $dtv["SEARCH"] = $com['SEARCHBOX'];
-        
+
         return $dtv;
     }
-    
-    
-    public static function getDataEditor ($config, $dbLink, $actionHooks = false) {
+
+    public static function getDataEditor($config, $dbLink, $actionHooks = false) {
         /* DB Table Standart Filed Names:
          *
          *  ID
@@ -446,17 +471,17 @@ class libraryComponents
          *  DateLastAccess
          *  
          */
-        
+
         $sessionKeyName = 'MPWS_DATAEDITOR_SESSION';
 
         if (empty($dbLink))
             throw new Exception('libraryComponents: getDataEditor => dbLink is empty');
-        
+
         // session key
         if (empty($_SESSION[$sessionKeyName]))
             $_SESSION[$sessionKeyName] = md5(time() . mt_rand(1, 1000));
         $_sessionKey = md5(mt_rand(1, 1000));
-        
+
         // component structure
         $com = array(
             // append form configuration
@@ -465,7 +490,7 @@ class libraryComponents
             "SOURCE" => false,
             "FIELDS" => false,
             "ISNEW" => true,
-            "EDIT_PAGE"  => "new",
+            "EDIT_PAGE" => "new",
             "REFERER" => libraryRequest::storeOrGetRefererUrl(false),
             "ERRORS" => false,
             "VALID" => true
@@ -487,7 +512,7 @@ class libraryComponents
         if ($editPage == "new")
             $isNew = true;
         // validate session key
-        if($_SESSION[$sessionKeyName] != libraryRequest::getPostFormField('session')) {
+        if ($_SESSION[$sessionKeyName] != libraryRequest::getPostFormField('session')) {
             // iside this condition we handle refresh action 
             // to prevet multiple savings for the same record
             if ($isNew)
@@ -497,13 +522,13 @@ class libraryComponents
         }
         // set new session key
         $_SESSION[$sessionKeyName] = $_sessionKey;
-        
+
         // get fields
         $_fieldsDB = $dbLink->getFields($config['source']);
         $_fieldsCOM = array();
         if (!empty($config['fields']['editable'])) {
             foreach ($_fieldsDB as $fieldEntry)
-                if (in_array ($fieldEntry['Field'], $config['fields']['editable']))
+                if (in_array($fieldEntry['Field'], $config['fields']['editable']))
                     $_fieldsCOM[] = $fieldEntry;
         } else
             $_fieldsCOM = $_fieldsDB;
@@ -521,10 +546,10 @@ class libraryComponents
                 //var_dump($config['fields']['unique']);
                 foreach ($config['fields']['unique'] as $_fieldThatMustBeUnique) {
                     $dbLink
-                        ->reset()
-                        ->select('*')
-                        ->from($config['source'])
-                        ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique]);
+                            ->reset()
+                            ->select('*')
+                            ->from($config['source'])
+                            ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique]);
                     if (!$isNew)
                         $dbLink->andWhere('ID', '<>', $oid);
                     $_existedRow = $dbLink->fetchRow();
@@ -537,7 +562,7 @@ class libraryComponents
             if (!$isNew && !empty($config['fields']['skipIfEditExisted']) && !empty($com["ERRORS"])) {
                 //var_dump($com["ERRORS"]);
                 foreach ($config['fields']['skipIfEditExisted'] as $skipExistedField)
-                    if (isset ($com["ERRORS"][$skipExistedField]))
+                    if (isset($com["ERRORS"][$skipExistedField]))
                         unset($com["ERRORS"][$skipExistedField]);
             }
             // set editor state on error
@@ -554,11 +579,11 @@ class libraryComponents
                 // existed data
                 if (!$isNew && !empty($oid)) {
                     $_existedRow = $dbLink
-                        ->reset()
-                        ->select('*')
-                        ->from($config['source'])
-                        ->where('ID', '=', $oid)
-                        ->fetchRow();
+                            ->reset()
+                            ->select('*')
+                            ->from($config['source'])
+                            ->where('ID', '=', $oid)
+                            ->fetchRow();
                 }
                 // prepend fields
                 $appendFields = getNonEmptyValue($config['fields']['appendBeforeSave'], array());
@@ -581,9 +606,9 @@ class libraryComponents
                     $_data['Password'] = md5($_data['Password']);
                 // init empty fields
                 if ($isNew) {
-                    if(isset($_data['DateCreated']))
+                    if (isset($_data['DateCreated']))
                         $_data['DateCreated'] = date('Y-m-d H:i:s');
-                    if(isset($_data['DateLastAccess']))
+                    if (isset($_data['DateLastAccess']))
                         $_data['DateLastAccess'] = date('Y-m-d H:i:s');
                 }
                 // set external key
@@ -593,7 +618,7 @@ class libraryComponents
                 // manage binded data
                 if (isset($_data['DataPath'])) {
                     $_owner = explode(BS, $config['source']);
-                    $_dataPath = libraryPath::getPathDataObject ($_owner[0].DS.$_data['ExternalKey']);
+                    $_dataPath = libraryPath::getPathDataObject($_owner[0] . DS . $_data['ExternalKey']);
                     //var_dump($_existedRow);
                     if ($isNew) {
                         libraryFileManager::newDirectory($_dataPath);
@@ -607,11 +632,11 @@ class libraryComponents
                     $_data['DataPath'] = $_dataPath;
                 }
                 // adjust field values
-                foreach($com['FIELDS'] as $fieldEntry) {
+                foreach ($com['FIELDS'] as $fieldEntry) {
                     // checkbox
                     $_type = strtolower($fieldEntry['Type']);
                     if ($_type == 'boolean' || $_type == 'bool' || $_type == 'tinyint(1)') {
-                       /* adjust data */
+                        /* adjust data */
                         if (empty($_data['Active']))
                             $_data['Active'] = 0;
                         else
@@ -624,22 +649,22 @@ class libraryComponents
                 // remove fields
                 $removeFields = getNonEmptyValue($config['fields']['removeBeforeSave'], array());
                 foreach ($removeFields as $removeFieldName)
-                    unset ($_data[$removeFieldName]);
+                    unset($_data[$removeFieldName]);
                 // save
                 //var_dump($_data);
                 $dbLink->reset();
-                
+
                 // update existed record
                 if ($editPage == 'save' && isset($oid) && !$isNew) {
                     $dbLink
-                        ->update($config['source'])
-                        ->set($_data)
-                        ->where('ID', '=', $oid);
+                            ->update($config['source'])
+                            ->set($_data)
+                            ->where('ID', '=', $oid);
                 } else {
                     $dbLink
-                        ->insertInto($config['source'])
-                        ->fields(array_keys($_data))
-                        ->values(array_values($_data));
+                            ->insertInto($config['source'])
+                            ->fields(array_keys($_data))
+                            ->values(array_values($_data));
                 }
                 $dbLink->query();
                 // after save hook
@@ -653,11 +678,11 @@ class libraryComponents
         // get data
         if ($editPage == 'edit' && !$isNew && !$doNotFetchData) {
             $com['SOURCE'] = $dbLink
-                ->reset()
-                ->select('*')
-                ->from($config['source'])
-                ->where('ID', '=', $oid)
-                ->fetchRow();
+                    ->reset()
+                    ->select('*')
+                    ->from($config['source'])
+                    ->where('ID', '=', $oid)
+                    ->fetchRow();
             // truncate on load
             $fieldsToTruncate = $config['form']['edit']['truncateOnLoad'];
             foreach ($fieldsToTruncate as $_fldName)
@@ -674,6 +699,7 @@ class libraryComponents
         //echo "EDIT PAGE IS:  " . $com['EDIT_PAGE'];
         return $com;
     }
+
 }
 
 ?>

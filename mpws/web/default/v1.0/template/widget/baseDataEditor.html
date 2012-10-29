@@ -71,16 +71,23 @@
         
     {elseif $_formInnerAction eq "save"}
     
-        {* saved page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`SaveMain"}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`SaveSubText"}
+        {if $DTV_CFG.form.save.redirect}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
+        {else}
+            {* saved page *}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`SaveMain"}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`SaveSubText"}
+        {/if}
         
     {elseif $_formInnerAction eq "cancel"}
     
-        {* canceled page *}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelMain"}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelSubText"}
-        
+        {if $DTV_CFG.form.cancel.redirect}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
+        {else}
+            {* canceled page *}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelMain"}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelSubText"}
+        {/if}
     {/if}
     
     {* custom fields *}

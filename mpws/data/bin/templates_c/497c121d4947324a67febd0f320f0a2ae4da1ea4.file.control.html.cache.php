@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:55:11
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 21:36:58
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html" */ ?>
 <?php /*%%SmartyHeaderCode:35550345350817f100dc035-90748925%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '497c121d4947324a67febd0f320f0a2ae4da1ea4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html',
-      1 => 1351288426,
+      1 => 1351538379,
       2 => 'file',
     ),
   ),
@@ -91,6 +91,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwscaptcha'){?>
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsemailer'){?>
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsebuttons'){?>
+     <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsLabelValue'){?>
+     
+        <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('LabelValue', null, 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsLabelValue, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+
+            
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsLinkAction'){?>
         
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('LinkAction', null, 0);?>

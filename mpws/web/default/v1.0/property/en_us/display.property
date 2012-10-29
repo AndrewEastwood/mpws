@@ -39,3 +39,8 @@ textDataEditorCancelMain = "Canceled";
 textDataEditorCancelSubText = "Use buttons below:";
 textDataEditorSaveMain = "Saved";
 textDataEditorSaveSubText = "Use the buttons below:";
+
+textStandaloneRecordViewRemovedMain = "Removed.";
+textStandaloneRecordViewRemovedSubText  = "You have removed the record.";
+textStandaloneRecordViewCancelMain = "Canceled.";
+textStandaloneRecordViewCancelSubText  = "You have canceled remove action for the record.";

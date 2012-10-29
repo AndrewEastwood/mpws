@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:07:43
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 21:37:08
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:948606458508043948b0255-15565380%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html',
-      1 => 1351275592,
+      1 => 1351538379,
       2 => 'file',
     ),
   ),
@@ -19,12 +19,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_508043949680a6_67180479',
   'variables' => 
   array (
-    '_ownerName' => 0,
-    'CURRENT' => 0,
+    '_resourceOwner' => 0,
     '_controlOwner' => 0,
+    'CURRENT' => 0,
     '_confing' => 0,
     '_actionName' => 0,
-    '_resourceOwner' => 0,
     '_data' => 0,
     'fieldKey' => 0,
     'rowIndex' => 0,
@@ -39,8 +38,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <?php $_smarty_tpl->tpl_vars['_controlOwner'] = new Smarty_variable('DataTable', null, 0);?>
 
-<div id="MPWSComponentDataTable<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
-ID" class="MPWSComponent MPWSComponentDataTable MPWSComponentDataTable<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
+<div id="MPWSComponent<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_resourceOwner']->value);?>
+ID" class="MPWSComponent MPWSComponent<?php echo $_smarty_tpl->tpl_vars['_controlOwner']->value;?>
+ MPWSComponent<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_resourceOwner']->value);?>
 ">
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
 

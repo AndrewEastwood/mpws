@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:07:43
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 21:37:08
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/baseDataTableView.html" */ ?>
 <?php /*%%SmartyHeaderCode:10408342675086fc118b2138-36715098%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'bd9c9e235f405ef1791991f3856c367b06882d5e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/baseDataTableView.html',
-      1 => 1351275592,
+      1 => 1351538379,
       2 => 'file',
     ),
   ),
@@ -42,6 +42,7 @@ ID" class="MPWSWidget MPWSWidget<?php echo $_smarty_tpl->tpl_vars['_widgetName']
 ">
     
 <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_title, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value), 0);?>
+
 
 
 <?php if (!empty($_smarty_tpl->tpl_vars['DTV_CFG']->value['searchbox'])&&$_smarty_tpl->tpl_vars['DTV_CFG']->value['searchbox']['enabled']){?>
