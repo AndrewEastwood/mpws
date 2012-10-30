@@ -9,3 +9,7 @@ labelForLabelValueStandaloneRecordViewRole = "System Role: ";
 labelForLabelValueStandaloneRecordViewDateLastAccess = "Las Access: ";
 labelForLabelValueStandaloneRecordViewDateCreated = "Date Created: ";
 labelForLabelValueStandaloneRecordViewDateUpdated = "Date Updated: ";
+
+; validation errors
+messageEmptyData = "There is no any record matched with requested OID";
+messageWrongOID = "Empty or non-numeric value in OID parameter occurred";

@@ -38,12 +38,12 @@ class pluginReporting extends objectBaseWebPlugin {
                 $this->actionHandlerAsDataViewEdit('ReportManager');
                 break;
             }
-            case "editor" : {
-                $this->actionReportScriptEditor();
+            case "script-editor" : {
+                $this->actionHandlerCustomReportScriptEditor();
                 break;
             }
             case "monitor" : {
-                $this->actionCustomMonitor();
+                $this->actionHandlerCustomMonitor();
                 break;
             }
             case "view" : {
@@ -54,28 +54,33 @@ class pluginReporting extends objectBaseWebPlugin {
     
     /* custom handlers */
     
-    private function actionReportScriptEditor () {
+    private function actionHandlerCustomReportScriptEditor () {
         $ctx = contextMPWS::instance();
         
-        switch (libraryRequest::getAction()) {
-            case "edit" : {
-                
+        $data = array();
+        $data['ACTION'] = libraryRequest::getAction();
+        
+        switch ($data['ACTION']) {
+            case "editreport" : {
+                // todo
+                // get script path
+                // get data content
             }
             default: {
                 $cfg = $this->objectConfiguration_widget_customReportScriptEditor;
-                $data = $ctx->contextCustomer->getDBO()
+                // get all reports
+                $data['REPORTS'] = $ctx->contextCustomer->getDBO()
                         ->reset()
                         ->select($cfg['fields'])
                         ->from($cfg['source'])
                         ->fetchData();
-                // get all reports
-                $this->addWidgetSimple('customReportScriptEditor', $data);
                 break;
             }
         }
+        $this->addWidgetSimple('customReportScriptEditor', $data);
     }
     
-    private function actionCustomMonitor () {
+    private function actionHandlerCustomMonitor () {
         $ctx = contextMPWS::instance();
         $cfg = $this->objectConfiguration_widget_customMonitor;
         $data = $ctx->contextCustomer->getDBO()

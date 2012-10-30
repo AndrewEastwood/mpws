@@ -11,39 +11,35 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     /* Plugin Specific Methods */
     
-    public function actionHandlerAsDataViewEdit ($widgetName, $events = array()/*, $innerAction = false*/) {
-        
-        /*$action = $innerAction ? $innerAction : libraryRequest::getAction();
-        $innerAction = false;*/
-
-        switch (/*$action*/libraryRequest::getAction()) {
+    
+    /* Standart Handlers */
+    public function actionHandlerAsDataViewEdit ($widgetName, $events = array()) {
+        switch (libraryRequest::getAction()) {
             case "new" :
             case "edit" : {
                 $e = array();
                 if (isset($events['EDIT']))
                     $e = $events['EDIT'];
-                /*$innerAction = */$this->addWidgetDataEditor($widgetName, $e);
+                $this->addWidgetDataEditor($widgetName, $e);
                 break;
             }
             case "delete" : {
-                /*$innerAction = */$this->addWidgetDataRecordRemoval($widgetName);
+                $this->addWidgetDataRecordRemoval($widgetName);
                 break;
             }
             case "view" : {
                 $this->addWidgetDataRecordViewer($widgetName);
                 break;
             }
-            case "home" :
             default : {
                 libraryRequest::storeOrGetRefererUrl();
                 $this->addWidgetDataTableView($widgetName);
                 break;
             }
         }
-
-        /*if (!empty($innerAction))
-            $this->actionHandlerAsDataViewEdit($widgetName, $events, $innerAction);*/
     }
+    
+    /* Standart Widget Integration Methods */
     
     public function addWidgetSimple ($widgetName, $wgtData = false) {
         $ctx = contextMPWS::instance();

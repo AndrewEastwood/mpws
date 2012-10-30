@@ -17,6 +17,7 @@
 {$controlLinkTarget = $_target|default:''}
 {$_resourceOwner=$_resourceOwner|default:'control'}
 {$controlLinkTitle = $_useValueAsTitle|default:$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action|upper`"}}
+{$customParams = $_customParams|default:false}
 
 {$controlLinkAttr = ["id=\"MPWSActionLink_`$_action`ID\""]}
 
@@ -55,6 +56,13 @@
             {$_attributes[]="mpws-oid=\"`$_oid`\""}
         {/if}
 
+        {* custom params *}
+        {if not empty($customParams)}
+            {foreach $customParams as $_p => $pk}
+                {$_linkActions[]="`$_p`=`$_pk`"}
+            {/foreach}
+        {/if}
+            
         {* get action link *}
         {$_linkAction=implode('&amp;', $_linkActions)}
 

@@ -194,31 +194,28 @@ class libraryComponents {
     }
 
     public static function getDataRecordRemoval($config, $dbLink) {
-        $oid = libraryRequest::getOID();
-        if (empty($oid) && !is_numeric($oid))
-            throw new Exception('libraryComponents => getDataRecordRemoval: wrong OID value');
-
         // validate configuration for requested mode
         if (empty($config))
             throw new Exception('libraryComponents => getDataRecordRemoval: can not find configuration for standalone view');
 
-        $dbLink->reset();
-        if ($config['fields'] == '*')
-            $dbLink->select('*');
-        else
-            $dbLink->select('ID', implode(', ', $config['fields']));
-        $dbLink->from($config['source'])->where('ID', '=', $oid);
         $state = 'VIEW';
+        $errors = array();
+        $data = false;
         $sessionKeyName = 'MPWS_DATARECORDREMOVAL_SESSION';
         // session key
         $_sessionKey = md5(mt_rand(1, 1000));
         $isSessionValid = isset($_SESSION[$sessionKeyName]) && $_SESSION[$sessionKeyName] == libraryRequest::getPostFormField('session');
         // set new session key
         $_SESSION[$sessionKeyName] = $_sessionKey;
+        
+        $oid = libraryRequest::getOID();
+        if (empty($oid) || !is_numeric($oid))
+            $errors['OID'] = 'wrongOID';
+
         // chack and remove on action
         if ($isSessionValid) {
             if(libraryRequest::isPostFormAction('remove')) {
-                $dbLink
+                $dbLink->reset()
                     ->deleteFrom($config['source'])
                     ->where('ID', '=', $oid)
                     ->query();
@@ -227,10 +224,26 @@ class libraryComponents {
             if(libraryRequest::isPostFormAction('cancel'))
                 $state = 'CANCELED';
         }
+        // retreive data
+        if ($state == 'VIEW') {
+            $dbLink->reset();
+            if ($config['fields'] == '*')
+                $dbLink->select('*');
+            else
+                $dbLink->select('ID', implode(', ', $config['fields']));
+            $data = $dbLink->from($config['source'])
+                ->where('ID', '=', $oid)
+                ->fetchRow();
+            if (empty($data))
+            $errors['DATA'] = 'emptyData';
+        }
+        
         // control object
         $dtv = array();
         $dtv["PAGE"] = $state;
-        $dtv["RECORD"] = $dbLink->fetchRow();
+        $dtv["ERRORS"] = $errors;
+        $dtv["VALID"] = empty($errors);
+        $dtv["RECORD"] = $data;
         $dtv["SESSION"] = $_sessionKey;
         $dtv["REFERER"] = libraryRequest::storeOrGetRefererUrl(false);
         $dtv["OID"] = $oid;

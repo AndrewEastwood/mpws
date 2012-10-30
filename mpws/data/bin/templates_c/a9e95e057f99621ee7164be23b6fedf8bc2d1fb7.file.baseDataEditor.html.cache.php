@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 09:21:04
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-30 13:46:22
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html" */ ?>
 <?php /*%%SmartyHeaderCode:83151832150877fe3db6d92-06185155%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a9e95e057f99621ee7164be23b6fedf8bc2d1fb7' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html',
-      1 => 1351493136,
+      1 => 1351579652,
       2 => 'file',
     ),
   ),
@@ -140,20 +140,29 @@ $_smarty_tpl->tpl_vars['fieldEntry']->_loop = true;
         
     <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=="save"){?>
     
-        
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."SaveMain"), 0);?>
+        <?php if ($_smarty_tpl->tpl_vars['DTV_CFG']->value['form']['save']['redirect']){?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_redirect, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_location'=>$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']['REFERER']), 0);?>
 
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."SaveSubText"), 0);?>
+        <?php }else{ ?>
+            
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."SaveMain"), 0);?>
 
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."SaveSubText"), 0);?>
+
+        <?php }?>
         
     <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=="cancel"){?>
     
-        
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."CancelMain"), 0);?>
+        <?php if ($_smarty_tpl->tpl_vars['DTV_CFG']->value['form']['cancel']['redirect']){?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_redirect, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_location'=>$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']['REFERER']), 0);?>
 
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."CancelSubText"), 0);?>
+        <?php }else{ ?>
+            
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."CancelMain"), 0);?>
 
-        
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_text, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>((string)$_smarty_tpl->tpl_vars['_widgetName']->value)."CancelSubText"), 0);?>
+
+        <?php }?>
     <?php }?>
     
     

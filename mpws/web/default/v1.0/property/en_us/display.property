@@ -30,7 +30,7 @@ headerSearchBox = "Simple Search Box";
 headerQuickFiltering = "Quick Data Filtering";
 headerDataTable = "Matched Records";
 headerMessageListDataEditorValidator = "We have encountered the following issue(s):";
-
+headerMessageListStandaloneRecordViewValidator = "Record Removal Errors:";
 
 labelCheckBoxForDataEditorSystemUsersForFieldSendEmail = "Notify by email about new changes";
 

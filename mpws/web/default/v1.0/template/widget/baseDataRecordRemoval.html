@@ -4,44 +4,57 @@
 
 <div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
     
-    {if $CURRENT.SOURCE.DATA.PAGE eq 'VIEW'}
     
-    <form action="" method="POST" class="MPWSForm">
-        <div class="MPWSFormHeader">
-            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _title=$CURRENT.SOURCE.DATA.RECORD[$DTV_CFG.caption]}
-        </div>
-        <div class="MPWSFormBody">
-            <input type="hidden" name="mpws_field_session" value="{$CURRENT.SOURCE.DATA.SESSION}"/>
-            {foreach $CURRENT.SOURCE.DATA.RECORD as $fieldName => $fieldValue}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=$fieldValue}
-            {/foreach}
-        </div>
-        <div class="MPWSFormFooter">
-            {* form controls *}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_widgetName _resourceOwner='control'}
-        </div>
-    </form>
+    {if not $CURRENT.SOURCE.DATA.VALID}
     
-    {elseif $CURRENT.SOURCE.DATA.PAGE eq 'REMOVED'}
+        {* show error messages *}
+    
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$CURRENT.SOURCE.DATA.ERRORS _resourceOwner=$_resourceOwner _controlOwner="`$_widgetName`Validator"}
+    
+    {else}
+    
+        {* show content if no errors *}
+    
+        {if $CURRENT.SOURCE.DATA.PAGE eq 'VIEW'}
 
-        {if $DTV_CFG.redirectOnRemove}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
-        {else}
-            {* canceled page *}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`RemovedMain"}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`RemovedSubText"}
+        <form action="" method="POST" class="MPWSForm">
+            <div class="MPWSFormHeader">
+                {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _title=$CURRENT.SOURCE.DATA.RECORD[$DTV_CFG.caption]}
+            </div>
+            <div class="MPWSFormBody">
+                <input type="hidden" name="mpws_field_session" value="{$CURRENT.SOURCE.DATA.SESSION}"/>
+                {foreach $CURRENT.SOURCE.DATA.RECORD as $fieldName => $fieldValue}
+                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=$fieldValue}
+                {/foreach}
+            </div>
+            <div class="MPWSFormFooter">
+                {* form controls *}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_widgetName _resourceOwner='control'}
+            </div>
+        </form>
+
+        {elseif $CURRENT.SOURCE.DATA.PAGE eq 'REMOVED'}
+
+            {if $DTV_CFG.redirectOnRemove}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
+            {else}
+                {* canceled page *}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`RemovedMain"}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`RemovedSubText"}
+            {/if}
+
+        {elseif $CURRENT.SOURCE.DATA.PAGE eq 'CANCELED'}
+
+            {if $DTV_CFG.redirectOnCancel}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
+            {else}
+                {* canceled page *}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelMain"}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelSubText"}
+            {/if}
+
         {/if}
     
-    {elseif $CURRENT.SOURCE.DATA.PAGE eq 'CANCELED'}
-
-        {if $DTV_CFG.redirectOnCancel}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_redirect _location=$CURRENT.SOURCE.DATA.REFERER}
-        {else}
-            {* canceled page *}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelMain"}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_simple_text _resourceOwner='display' _key="`$_widgetName`CancelSubText"}
-        {/if}
-        
     {/if}
     
     {* additional links *}
