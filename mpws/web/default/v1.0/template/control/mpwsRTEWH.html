@@ -1,0 +1,12 @@
+{include file=$CURRENT.OBJECT->objectTemplatePath_simple_script
+    _link=$_jslib}
+{if $_useDivWrapper }
+    <div id="MPWSWrapperRTEWH_{$_name|lower}_ID" class="MPWSWrapper MPWSWrapperRTEWH">{$_value}</div>
+{else}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea 
+        _name=$_name
+        _cols=$_cols|default:null
+        _rows=$_rows|default:null
+        _renderMode=$_renderMode|default:'normal'
+        _value=$_value}
+{/if}

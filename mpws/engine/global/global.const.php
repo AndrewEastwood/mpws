@@ -51,5 +51,6 @@
     
     define("EXT_SCRIPT", DOT."php");
     define("EXT_TEMPLATE", DOT."html");
+    define("EXT_JS", DOT."js");
 
 ?>

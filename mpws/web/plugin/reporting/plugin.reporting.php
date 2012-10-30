@@ -2,6 +2,9 @@
 
 class pluginReporting extends objectBaseWebPlugin {
 
+    
+    private $_dirWithReportScripts = 'scripts';
+    
     protected function _displayTriggerAsPlugin () {
         parent::_displayTriggerAsPlugin();
         $ctx = contextMPWS::instance();
@@ -56,18 +59,35 @@ class pluginReporting extends objectBaseWebPlugin {
     
     private function actionHandlerCustomReportScriptEditor () {
         $ctx = contextMPWS::instance();
+        $cfg = $this->objectConfiguration_widget_customReportScriptEditor;
         
         $data = array();
+        $errors = array();
         $data['ACTION'] = libraryRequest::getAction();
         
         switch ($data['ACTION']) {
             case "editreport" : {
-                // todo
+                // check owner existance
+                $ownerOID = libraryRequest::getOID();
+                $scriptName = libraryRequest::getValue('script');
+                if (empty($ownerOID) || !is_numeric($ownerOID))
+                    $errors['owneroid'] = 'wrongOwnerOID';
+                // fetch owner record
+                $ownerData = $ctx->contextCustomer->getDBO()
+                        ->reset()
+                        ->select('*')
+                        ->from($cfg['source'])
+                        ->where('ID', '=', $ownerOID)
+                        ->fetchRow();
+                // check owner data for existance
+                if (empty($ownerData))
+                    $errors['ownerdata'] = 'emptyOwnerRecord';
                 // get script path
+                $scriptFilepath = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts.DS.$scriptName.EXT_JS);
                 // get data content
+                $data['SCRIPT'] = file_get_contents($scriptFilepath);
             }
             default: {
-                $cfg = $this->objectConfiguration_widget_customReportScriptEditor;
                 // get all reports
                 $data['REPORTS'] = $ctx->contextCustomer->getDBO()
                         ->reset()

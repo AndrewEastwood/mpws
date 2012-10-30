@@ -17,13 +17,12 @@
                 _resourceOwner=$_resourceOwner
                 _href="javascript://"
                 _single=true
-                _isCustom=true
                 _useValueAsTitle=$entry.Name
                 _mode='system'}
             {* show report scripts *}
             {if not empty($entry.Reports)}
                 <ul class="MPWSList MPWSListSub">
-                {$_scriptList = explode(';', $entry.Reports)}
+                {$_scriptList = explode(';', trim($entry.Reports, ';'))}
                 {foreach $_scriptList as $scriptName}
                     <li class="MPWSListItem">
                     {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
@@ -34,8 +33,8 @@
                         _oid=$entry.ID
                         _resourceOwner=$_resourceOwner
                         _single=true
-                        _isCustom=true
                         _useValueAsTitle=$scriptName
+                        _customParams=['script'=>$scriptName]
                         _mode='system'}
                     </li>
                 {/foreach}
@@ -49,7 +48,28 @@
     {* workplace *}
     <div class="MPWSBlock MPWSBockReportScriptEditArea">
         {if $CURRENT.SOURCE.DATA.ACTION eq 'editreport'}
-            EDITING REPORT SCRIPT 
+        <form method="POST" action="">
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsRTEWH
+                _name='editreport'
+                _value=$CURRENT.SOURCE.DATA.SCRIPT
+                _useDivWrapper=true
+                _jslib="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"}
+                <input type="submit" name="do" value="Save"/>
+        </form>
+            <style type="text/css" media="screen">
+                .MPWSBockReportScriptEditArea .MPWSWrapperRTEWH { 
+                    position: relative;
+                    width: 100%;
+                    height: 400px;
+                    font-size: 16px;
+                }
+            </style>
+            <script>
+                var editor = ace.edit("MPWSWrapperRTEWH_editreport_ID");
+                editor.setTheme("ace/theme/monokai");
+                editor.getSession().setMode("ace/mode/javascript");
+                editor.getSession().setUseWrapMode(true);
+            </script>
         {/if}
     </div>
     

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-27 00:04:49
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-30 23:38:25
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/messageList.html" */ ?>
 <?php /*%%SmartyHeaderCode:1332716550817f171be698-71063015%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1d9bc5d7a3d04d87c716664e439f92529a65f6f2' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/messageList.html',
-      1 => 1351275592,
+      1 => 1351633103,
       2 => 'file',
     ),
   ),
@@ -19,9 +19,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_50817f17208002_03294396',
   'variables' => 
   array (
-    '_ownerName' => 0,
-    'CURRENT' => 0,
     '_controlOwner' => 0,
+    'CURRENT' => 0,
     '_messages' => 0,
     '_resourceOwner' => 0,
     'itemvar' => 0,
@@ -29,7 +28,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50817f17208002_03294396')) {function content_50817f17208002_03294396($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
-?><div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_ownerName']->value);?>
+?><div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_controlOwner']->value);?>
 ">
 <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>"MessageList".((string)(($tmp = @$_smarty_tpl->tpl_vars['_controlOwner']->value)===null||$tmp==='' ? '' : $tmp))), 0);?>
 

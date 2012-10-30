@@ -7,6 +7,10 @@ class libraryStaticResourceManager {
 
         $c = MPWS_CUSTOMER;
         $v = MPWS_VERSION;
+        $p = libraryRequest::getPlugin(false);
+        
+        // request type
+        $isPLugin = !empty($p);
         
         // requested file name
         $name = $_GET['name'] . DOT . $_GET['type'];
@@ -21,12 +25,18 @@ class libraryStaticResourceManager {
         elseif (file_exists($resourceFilePath) && !(isset($_GET['force']) || MPWS_ENV === 'DEV'))
             return file_get_contents($resourceFilePath);
         
-        // get configurtion
+        // get context
         $ctx = contextMPWS::instance();
-        $customer = $ctx->contextCustomer->getObject();
-        $resourceNamesMap = $customer->objectConfiguration_resources_staticResources;
-        //var_dump($resourceNamesMap);
+        $resourceEntry = array();
+        $requestObjectOwner = false;
+        if ($isPLugin)
+            $requestObjectOwner = $ctx->contextToolbox->getObject($p);
+        else 
+            $requestObjectOwner = $ctx->contextCustomer->getObject();
         
+
+        $resourceNamesMap = $requestObjectOwner->objectConfiguration_resources_staticResources;
+        //var_dump($resourceNamesMap);
         $resourceEntry = $resourceNamesMap[$name];
         if (empty($resourceEntry))
             return false;
@@ -45,13 +55,20 @@ class libraryStaticResourceManager {
                             $filesToLoad[] = DR . 'web/default/'.$v.'/resource/'.$filePath;
                     break;
                 case 'OWNER':
-                    foreach ($resFiles as $filePath)
-                        if (file_exists(DR . 'web/customer/'.$c.'/resource/'.$filePath))
-                            $filesToLoad[] = DR . 'web/customer/'.$c.'/resource/'.$filePath;
+                    if ($isPLugin)
+                        foreach ($resFiles as $filePath)
+                            if (file_exists(DR . '/web/plugin/'.$p.'/resource/'.$filePath))
+                                $filesToLoad[] = DR . '/web/plugin/'.$p.'/resource/'.$filePath;
+                    else 
+                        foreach ($resFiles as $filePath)
+                            if (file_exists(DR . 'web/customer/'.$c.'/resource/'.$filePath))
+                                $filesToLoad[] = DR . 'web/customer/'.$c.'/resource/'.$filePath;
                     break;
                 case 'AUTO':
                     foreach ($resFiles as $filePath) {
-                        if (file_exists(DR . 'web/customer/'.$c.'/resource/'.$filePath))
+                        if ($isPLugin && file_exists(DR . 'web/plugin/'.$p.'/resource/'.$filePath))
+                            $filesToLoad[] = DR . 'web/plugin/'.$p.'/resource/'.$filePath;
+                        elseif (file_exists(DR . 'web/customer/'.$c.'/resource/'.$filePath))
                             $filesToLoad[] = DR . 'web/customer/'.$c.'/resource/'.$filePath;
                         elseif (file_exists(DR . 'web/default/'.$v.'/resource/'.$filePath))
                             $filesToLoad[] = DR . 'web/default/'.$v.'/resource/'.$filePath;
@@ -86,7 +103,7 @@ class libraryStaticResourceManager {
         
         // get build mode (for CSS only)
         if ($_GET['type'] == 'css') {
-            $buildMode = $customer->objectConfiguration_resources_buildMode;
+            $buildMode = $requestObjectOwner->objectConfiguration_resources_buildMode;
             //if (isset($_SESSION['MPWS_PLUGIN_ACTIVE']))
             //    echo 'ACTIVE PLUGIN IS = ' . $_SESSION['MPWS_PLUGIN_ACTIVE'];
             switch ($buildMode) {

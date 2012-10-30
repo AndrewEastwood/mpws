@@ -1,4 +1,4 @@
-<div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList{$_ownerName|capitalize}">
+<div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList{$_controlOwner|capitalize}">
 {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key="MessageList`$_controlOwner|default:''`"}
 {if isset($_messages) }
     <ul class="MPWSList">
