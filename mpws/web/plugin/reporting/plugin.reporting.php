@@ -26,27 +26,27 @@ class pluginReporting extends objectBaseWebPlugin {
     
     protected function _jsapiTriggerAsPlugin() {
         parent::_jsapiTriggerAsPlugin();
-        
-        
-        
         $p = libraryRequest::getApiParam();
-        
-        
-        
-        
         $rez = false;
         // detect action
         switch(libraryRequest::getApiFn()) {
             // request url: 
             // api.js?caller=reporting&fn=fetchdata&p=token%3DXXXXX%26oid%3D1%26type%3Dreleases%26startdate%3D2012-10-23%26enddate%3D2012-10-30%26realm%3Dplugin
-            // token=XXXXX&oid=1&type=releases&startdate=2012-10-23&enddate=2012-10-30&realm=plugin
+            // token=XXXXX&oid=1&type=releases&startdate=2012-10-23&enddate=2012-10-30&realm=plugin&script=%scriptNameToRender%
             case "fetchdata" : {
-                echo 'fetching data';
+                //echo 'fetching data';
                 $rez = $this->customGetReportData($p['oid'], $p['type'], $p['startdate'], $p['enddate']);
                 break;
             }
+            case "sf-import" : {
+            }
+            case "outbox-proc" : {
+                
+            }
         }
-        return $this->customJsRenderData($rez);
+        // put data
+        $ctx = contextMPWS::instance();
+        $ctx->pageModel->addStaticData($this->customJsRenderData($rez));
     }
     
     private function _displayPage_Dashboard () {
@@ -146,13 +146,13 @@ class pluginReporting extends objectBaseWebPlugin {
 
     /* all custom methods are below */
 
-    private function customGetReportData ($oid, $script, $type, $start, $end) {
+    private function customGetReportData ($oid, $type, $start, $end) {
         $data = false;
         
         if (empty($oid) || !is_numeric($oid))
             throw new Exception('ReportData: wrong request');
-        if (empty($script))
-            throw new Exception('ReportData: wrong script name');
+        //if (empty($script))
+        //    throw new Exception('ReportData: wrong script name');
         $ctx = contextMPWS::instance();
         $cfg = $this->objectConfiguration_widget_customMonitor;
         // fetch owner record
@@ -214,11 +214,11 @@ class pluginReporting extends objectBaseWebPlugin {
         $data['s'] = $this->customCommonGetData($reportPath['s']);
         $data['e'] = $this->customCommonGetData($reportPath['e']);
 
-        $metadata['s'] = $this->customCommonGetMetadata($report, $reportMetadataPath['s']);
-        $metadata['e'] = $this->customCommonGetMetadata($report, $reportMetadataPath['e']);
+        $metadata['s'] = $this->customCommonGetMetadata($reportMetadataPath['s']);
+        $metadata['e'] = $this->customCommonGetMetadata($reportMetadataPath['e']);
 
-        //debugData('<hr size="1"/>$data<hr size="1"/>');
-        //debugData('<pre>' . print_r($data, true) . '</pre>');
+        //echo('<hr size="1"/>$data<hr size="1"/>');
+        //echo('<pre>' . print_r($data, true) . '</pre>');
 
         $transformedData = false;
         // filter data by --status
@@ -260,15 +260,36 @@ class pluginReporting extends objectBaseWebPlugin {
             */
 
         }
+        
+        //echo('<pre>' . print_r($transformedData['c'], true) . '</pre>');
+        
 
         // substract previous values
         foreach ($transformedData['c'] as $key => $entry) {
 
             $NEW = $entry['CURR'];
-            //
+            
+            
+            if (!isset($NEW['Time Spent - Communication'])) 
+                $NEW['Time Spent - Communication'] = 0;
+            if (!isset($entry['PREV']['Time Spent - Communication'])) 
+                $entry['PREV']['Time Spent - Communication'] = 0;
+            if (!isset($entry['CURR']['Time Spent - Communication'])) 
+                $entry['CURR']['Time Spent - Communication'] = 0;
+            
+            if (!isset($NEW['Time Spent - Engineering'])) 
+                $NEW['Time Spent - Engineering'] = 0;
+            if (!isset($entry['PREV']['Time Spent - Engineering'])) 
+                $entry['PREV']['Time Spent - Engineering'] = 0;
+            if (!isset($entry['CURR']['Time Spent - Engineering'])) 
+                $entry['CURR']['Time Spent - Engineering'] = 0;
+            
+            
+            //echo $NEW["Case Number"] . '|' . $NEW["Case Record Type"] . '|' . $NEW['Time Spent - Communication'] . '<br>';
+
+            // existed fields
             $NEW['Time Spent - Communication'] -= $entry['PREV']['Time Spent - Communication'];
             $NEW['Time Spent - Engineering'] -= $entry['PREV']['Time Spent - Engineering'];
-
             // custom fields
             $NEW['Previous Time Spent - Communication'] = $entry['PREV']['Time Spent - Communication'];
             $NEW['Previous Time Spent - Engineering'] = $entry['PREV']['Time Spent - Engineering'];
@@ -282,6 +303,8 @@ class pluginReporting extends objectBaseWebPlugin {
             //$NEW['CF_AtWork'] = 0;
             //$NEW['CF_ReleaseName'] = 0;
 
+            //echo '-------------<br>';
+            
             $transformedData['c'][$key]['NEW'] = $NEW;
         }
 

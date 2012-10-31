@@ -81,8 +81,8 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
             if ($p['realm'] == '*' && !$this->objectConfiguration_customer_allowWideJsApi)
                 throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wide api js request is not allowed');
             // perform request with plugins
-            // echo 'OLOLOLOLO';
-            return $ctx->directProcess($p['realm'] . DOG . 'jsapi:default', 'Toolbox');
+            //echo 'OLOLOLOLO = ' . $caller . DOG . 'jsapi:default', 'Toolbox';
+            return $ctx->directProcess($caller . DOG . 'jsapi:default', 'Toolbox');
         } else {
             // echo 'ASDF';
             // otherwise proceed with customer
