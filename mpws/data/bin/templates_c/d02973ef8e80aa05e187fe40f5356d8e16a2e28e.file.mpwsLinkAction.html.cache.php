@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-30 19:04:43
+<?php /* Smarty version Smarty-3.1.11, created on 2012-10-31 08:45:53
          compiled from "/var/www/mpws/web/default/v1.0/template/control/mpwsLinkAction.html" */ ?>
 <?php /*%%SmartyHeaderCode:12523122855084e5c8ac8b05-55185386%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd02973ef8e80aa05e187fe40f5356d8e16a2e28e' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/control/mpwsLinkAction.html',
-      1 => 1351616577,
+      1 => 1351665939,
       2 => 'file',
     ),
   ),
@@ -100,12 +100,12 @@ $_smarty_tpl->tpl_vars['_attributes']->value[] = "mpws-oid=\"".((string)$_smarty
 
         
         <?php if (!empty($_smarty_tpl->tpl_vars['customParams']->value)){?>
-            <?php  $_smarty_tpl->tpl_vars['pk'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['pk']->_loop = false;
+            <?php  $_smarty_tpl->tpl_vars['_pk'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['_pk']->_loop = false;
  $_smarty_tpl->tpl_vars['_p'] = new Smarty_Variable;
  $_from = $_smarty_tpl->tpl_vars['customParams']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
-foreach ($_from as $_smarty_tpl->tpl_vars['pk']->key => $_smarty_tpl->tpl_vars['pk']->value){
-$_smarty_tpl->tpl_vars['pk']->_loop = true;
- $_smarty_tpl->tpl_vars['_p']->value = $_smarty_tpl->tpl_vars['pk']->key;
+foreach ($_from as $_smarty_tpl->tpl_vars['_pk']->key => $_smarty_tpl->tpl_vars['_pk']->value){
+$_smarty_tpl->tpl_vars['_pk']->_loop = true;
+ $_smarty_tpl->tpl_vars['_p']->value = $_smarty_tpl->tpl_vars['_pk']->key;
 ?>
                 <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
 $_smarty_tpl->tpl_vars['_linkActions']->value[] = ((string)$_smarty_tpl->tpl_vars['_p']->value)."=".((string)$_smarty_tpl->tpl_vars['_pk']->value);?>

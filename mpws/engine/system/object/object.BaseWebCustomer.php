@@ -24,6 +24,14 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         }
     }
 
+    /* common run triggers  */
+    protected function _commonRunOnStart () {
+        parent::_commonRunOnStart();
+        $ctx = contextMPWS::instance();
+        // connect to db
+        $ctx->contextCustomer->getDBO();
+    }
+
     /* display triggers */
     protected function _displayTriggerAsCustomer () {
         parent::_displayTriggerAsCustomer();
@@ -59,6 +67,29 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         return $ret;
     }
     
+    protected function _jsapiTriggerAsCustomer () {
+        parent::_jsapiTriggerAsCustomer();
+        $ctx = contextMPWS::instance();
+        $p = libraryRequest::getApiParam();
+        $caller = libraryRequest::getApiCaller();
+        //echo 'Caller is ' . $caller;
+        if (empty($caller))
+            throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value');
+        // perform request with plugins
+        if (!empty($p['realm']) && $p['realm'] == OBJECT_T_PLUGIN) {
+            // check if wide js api is allowed
+            if ($p['realm'] == '*' && !$this->objectConfiguration_customer_allowWideJsApi)
+                throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wide api js request is not allowed');
+            // perform request with plugins
+            // echo 'OLOLOLOLO';
+            return $ctx->directProcess($p['realm'] . DOG . 'jsapi:default', 'Toolbox');
+        } else {
+            // echo 'ASDF';
+            // otherwise proceed with customer
+        }
+        return false;
+    }
+
     /* display pages */
     protected function _displayPage_Index () {
         debug('objectBaseWebCustomer => _displayPage_Home');

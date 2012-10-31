@@ -19,6 +19,9 @@ class libraryRequest {
     static function getAction ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('action', $defaultValue, $switch, $valueOnSwitch);
     }
+    static function getApiCaller ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
+        return self::getValue('caller', $defaultValue, $switch, $valueOnSwitch);
+    }
     static function getApiFn ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('fn', $defaultValue, $switch, $valueOnSwitch);
     }

@@ -20,7 +20,7 @@ class libraryPath {
         return self::getPathData() . DS . 'custom' . DS . $owner;
     }
     
-    public static function getStandartDataPathWithDBR ($dataBaseRecord, $pathAppend = false) {
+    public static function getStandartDataPathWithDBR ($dataBaseRecord, $pathAppend = false, $mkdir = false) {
         // $dataBaseRecord - it is dataBase record that:
         // - contains DataPath field
         // - contains ExternalKey field
@@ -34,6 +34,15 @@ class libraryPath {
         if (!empty($path) && file_exists($path))
             return $path;
         
+        // create file if it does not exists
+        if ($mkdir) {
+            $dir = dirname($path);
+            if(!file_exists($dir))
+                mkdir ($dir, 0777, true);
+            file_put_contents($path, '/* mpws autocreated empty file*/');
+            return $path;
+        }
+        
         // try to resolve path with ExternalKey
         if (empty($dataBaseRecord['ExternalKey']))
             throw new Exception('libraryPath => getStandartDataPathWithDBR: Can not resolve standart data path with DataPath nor ExternalKey');
@@ -42,6 +51,7 @@ class libraryPath {
 
         if (!empty($path) && file_exists($path))
             return $path;
+
         
         throw new Exception('libraryPath => getStandartDataPathWithDBR: Wrong dataBaseRecord value passed');
     }

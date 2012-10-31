@@ -1,5 +1,6 @@
 {$_widgetName = "CustomReportScriptEditor"}
 {$_resourceOwner = "customReportScriptEditor"}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_`$_resourceOwner`"}}
 
 <div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidgetCustom MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
     
@@ -46,30 +47,15 @@
     </div>
     
     {* workplace *}
+    {* TODO: move the section below as standalone control *}
     <div class="MPWSBlock MPWSBockReportScriptEditArea">
         {if $CURRENT.SOURCE.DATA.ACTION eq 'editreport'}
-        <form method="POST" action="">
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsRTEWH
-                _name='editreport'
-                _value=$CURRENT.SOURCE.DATA.SCRIPT
-                _useDivWrapper=true
-                _jslib="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"}
-                <input type="submit" name="do" value="Save"/>
-        </form>
-            <style type="text/css" media="screen">
-                .MPWSBockReportScriptEditArea .MPWSWrapperRTEWH { 
-                    position: relative;
-                    width: 100%;
-                    height: 400px;
-                    font-size: 16px;
-                }
-            </style>
-            <script>
-                var editor = ace.edit("MPWSWrapperRTEWH_editreport_ID");
-                editor.setTheme("ace/theme/monokai");
-                editor.getSession().setMode("ace/mode/javascript");
-                editor.getSession().setUseWrapMode(true);
-            </script>
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsRTEWH
+            _type=$DTV_CFG.editor.type
+            _name=$DTV_CFG.editor.name
+            _value=$CURRENT.SOURCE.DATA.SCRIPT
+            _useDivWrapper=$DTV_CFG.editor.divmode
+            _jslib=$DTV_CFG.editor.jslib}
         {/if}
     </div>
     

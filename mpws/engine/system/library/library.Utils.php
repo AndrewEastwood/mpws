@@ -87,6 +87,68 @@ class libraryUtils {
         return $seen;
     }
 
+    static public function createDateRangeArray($strDateFrom, $strDateTo) {
+        // takes two dates formatted as YYYY-MM-DD and creates an
+        // inclusive array of the dates between the from and to dates.
+        // could test validity of dates here but I'm already doing
+        // that in the main script
+        $aryRange = array();
+        $iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
+        $iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
+
+        if ($iDateTo >= $iDateFrom) {
+            array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
+            while ($iDateFrom < $iDateTo) {
+                $iDateFrom += 86400; // add 24 hours
+                array_push($aryRange, date('Y-m-d', $iDateFrom));
+            }
+        }
+        return $aryRange;
+    }
+    
+    /**
+     * Get value an array by using "root.branch.leaf" notation
+     *
+     * @param string $value  Array value
+     * @param string $path   Path to a specific option to extract
+     * @param mixed $default Value to use if the path was not found
+     * @return mixed
+     */
+    static public function getPathValue($value, $path, $default = null) {
+        // from http://codeaid.net/php/get-values-of-multi-dimensional-arrays-using-xpath-notation
+        // modified: replaced "$this->_pathDelimiter" with "."
+
+
+        // fail if the path is empty
+        if (empty($path) || empty($value)) {
+            throw new Exception('Path or value cannot be empty');
+        }
+
+        // remove all leading and trailing slashes
+        $path = trim($path, '.');
+
+        // extract parts of the path
+        $parts = explode('.', $path);
+
+        // loop through each part and extract its value
+        foreach ($parts as $part) {
+            if (isset($value[$part])) {
+                // replace current value with the child
+                $value = $value[$part];
+            } else {
+                // key doesn't exist, fail
+                return $default;
+            }
+        }
+
+        return $value;
+
+    }
+    
+    static public function getWithEOL ($text) {
+        return str_replace(array('\r\n', '\n', '\r'), PHP_EOL, $text);
+    }
+
     static public function  valueSelect ($value, $match, $valueOnMatch, $valueOnUnmatch) {
         if ($value == $match)
             return $valueOnMatch;

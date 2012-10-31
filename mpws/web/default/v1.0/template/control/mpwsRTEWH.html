@@ -1,12 +1,53 @@
+{$_controlOwner = 'RTEWH'}
+
+{if not empty($_jslib)}
 {include file=$CURRENT.OBJECT->objectTemplatePath_simple_script
     _link=$_jslib}
-{if $_useDivWrapper }
-    <div id="MPWSWrapperRTEWH_{$_name|lower}_ID" class="MPWSWrapper MPWSWrapperRTEWH">{$_value}</div>
-{else}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea 
-        _name=$_name
-        _cols=$_cols|default:null
-        _rows=$_rows|default:null
-        _renderMode=$_renderMode|default:'normal'
-        _value=$_value}
 {/if}
+
+{* display requested WYSIWYG *}
+{if $_type eq 'ACE'}
+    {$uuid = md5(time())}
+    {$controlID = "MPWSControlUUID_`$uuid`_ID"}
+    {$formID = "MPWSFromUUID_`$uuid`_ID"}
+    <form action="" method="POST" id="{$formID}" class="MPWSForm">
+        <div class="MPWSFormBody">
+            <input type="hidden" id="{$controlID}" name="mpws_field_data" value="{$_value}"/>
+        {if $_useDivWrapper }
+            <div id="MPWSWrapperRTEWH_{$_name|lower}_ID" class="MPWSWrapper MPWSWrapperRTEWH">{$_value}</div>
+            {* TODO: move into default *}
+            <style type="text/css" media="screen">
+                .MPWSBockReportScriptEditArea .MPWSWrapperRTEWH { 
+                    position: relative;
+                    width: 100%;
+                    height: 400px;
+                    font-size: 16px;
+                }
+            </style>
+            {$jsControlName = "\"MPWSWrapperRTEWH_`$_name|lower`_ID\""}
+            <script>
+                /* standart setup */
+                var editor = ace.edit({$jsControlName});
+                editor.setTheme("ace/theme/monokai");
+                editor.getSession().setMode("ace/mode/javascript");
+                editor.getSession().setUseWrapMode(true);
+                /* custom handler */
+                editor.getSession().on('change', function(e) {
+                    $('#{$controlID}').val(editor.getSession().getValue());
+                });
+            </script>
+        {else}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea 
+                _name=$_name
+                _cols=$_cols|default:null
+                _rows=$_rows|default:null
+                _renderMode=$_renderMode|default:'normal'
+                _value=$_value}
+        {/if}
+        </div>
+        <div class="MPWSFormFooter">
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_controlOwner _resourceOwner='control'}
+        </div>
+    </form>
+{/if}
+

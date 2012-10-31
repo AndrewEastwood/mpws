@@ -619,9 +619,9 @@ class libraryComponents {
                     $_data['Password'] = md5($_data['Password']);
                 // init empty fields
                 if ($isNew) {
-                    if (isset($_data['DateCreated']))
+                    if (empty($_data['DateCreated']))
                         $_data['DateCreated'] = date('Y-m-d H:i:s');
-                    if (isset($_data['DateLastAccess']))
+                    if (empty($_data['DateLastAccess']))
                         $_data['DateLastAccess'] = date('Y-m-d H:i:s');
                 }
                 // set external key

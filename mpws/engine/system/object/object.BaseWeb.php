@@ -106,6 +106,7 @@ class objectBaseWeb extends objectBase {
         //$ctx = contextMPWS::instance();
         //echo "<br> Last commmad: " . $ctx->getLastCommand();
         //echo "<br>";
+        $this->_commonRunOnStart();
         $ret = false;
         switch ($command->getMethod()) {
             case 'main':
@@ -115,6 +116,7 @@ class objectBaseWeb extends objectBase {
                 $ret = $this->_run_jsapi();
                 break;
         }
+        $this->_commonRunOnEnd();
         return $ret;
     }
     
@@ -180,24 +182,21 @@ class objectBaseWeb extends objectBase {
     }
     protected function _jsapiTriggerAsCustomer () {
         debug('objectBaseWeb => _jsapiTriggerAsCustomer');
-        $ctx = contextMPWS::instance();
-        $plugin = libraryRequest::getPlugin('*');
-        //echo '['.$plugin.'] === ' . $this->objectConfiguration_customer_allowWideJsApi;
-        // check if wide js api is allowed
-        if (empty($plugin) || $plugin == '*' && !$this->objectConfiguration_customer_allowWideJsApi)
-            return false;
-        $ctx->directProcess($plugin . DOG . 'jsapi:default', 'Toolbox');
-        return false;
     }
     protected function _jsapiTriggerAsPlugin () {
         debug('objectBaseWeb => _jsapiTriggerAsPlugin');
-        return false;
     }
     protected function _jsapiTriggerOnCommonEnd () {
         debug('objectBaseWeb => _jsapiTriggerOnCommonEnd');
     }
 
-    
+    /* running top common triggers */
+    protected function _commonRunOnStart () {
+        debug('objectBaseWeb => _commonRunOnStart');
+    }
+    protected function _commonRunOnEnd () {
+        debug('objectBaseWeb => _commonRunOnEnd');
+    }
 }
 
 ?>
