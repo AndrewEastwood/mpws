@@ -8,10 +8,10 @@
 
 {* Get Configuration For The Widget *}
 {$_widgetName = "DataTableView"}
-{$_resourceOwner = $_resourceOwner|default:$_widgetName}
+{$_resourceOwner = $_resourceOwner|default:($CURRENT.SOURCE.RESOURCE|default:$_widgetName)}
 {assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_`$_resourceOwner`"}}
 
-<div id="MPWSWidget{$_widgetName}{$CURRENT.SOURCE.NAME}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
+<div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
     
 {include file=$CURRENT.OBJECT->objectTemplatePath_component_title _resourceOwner=$_resourceOwner}
 

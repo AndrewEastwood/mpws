@@ -58,33 +58,25 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     public function addWidgetDataRecordRemoval ($widgetName) {
         $ctx = contextMPWS::instance();
-        $wnC = "objectConfiguration_widget_dataRecordRemoval" . $widgetName;
+        $wgtConfig = "objectConfiguration_widget_dataRecordRemoval" . $widgetName;
         $wnT = "objectTemplatePath_widget_dataRecordRemoval" . $widgetName;
         //echo "Getting Widget Configurtion: objectConfiguration_widget_dataTableView" . $widgetName;
         $wgtData = libraryComponents::getDataRecordRemoval($this->$wnC, $ctx->contextCustomer->getDBO());
-        /*if (!empty($wgtData['INNER_RETURN']))
-            return $wgtData['INNER_RETURN'];*/
-        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordRemoval');
     }
     
     public function addWidgetDataTableView ($widgetName) {
         $ctx = contextMPWS::instance();
-        $wnC = "objectConfiguration_widget_dataTableView" . $widgetName;
-        $wnT = "objectTemplatePath_widget_dataTableView" . $widgetName;
-        //echo "Getting Widget Configurtion: objectConfiguration_widget_dataTableView" . $widgetName;
-        $wgtData = libraryComponents::getDataTableView($this->$wnC, $ctx->contextCustomer->getDBO());
-        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+        $wgtConfig = $this->{"objectConfiguration_widget_dataTableView" . $widgetName};
+        $wgtData = libraryComponents::getDataTableView($wgtConfig, $ctx->contextCustomer->getDBO());
+        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataTableView');
     }
     
     public function addWidgetDataEditor ($widgetName, $events = array()) {
         $ctx = contextMPWS::instance();
-        $wnC = "objectConfiguration_widget_dataEditor" . $widgetName;
-        $wnT = "objectTemplatePath_widget_dataEditor" . $widgetName;
-        $wgtData = libraryComponents::getDataEditor($this->$wnC, $ctx->contextCustomer->getDBO(), $events);
-        /*if (!empty($wgtData['INNER_RETURN']))
-            return $wgtData['INNER_RETURN'];*/
-        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
-        
+        $wgtConfig = $this->{"objectConfiguration_widget_dataEditor" . $widgetName};
+        $wgtData = libraryComponents::getDataEditor($wgtConfig, $ctx->contextCustomer->getDBO(), $events);
+        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataEditor');
     }
 
 }

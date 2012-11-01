@@ -101,8 +101,15 @@ class libraryWebPageModel {
     }
     
     public function addWidget($owner, $name, $template, $data = array()) {
+        // check for extended resource
+        $tplResMode = explode(DOG, $name);
+        $name = $tplResMode[0];
+        $resource = $tplResMode[0];
+        if (!empty($tplResMode[1]))
+            $resource = $name.$tplResMode[1];
         $this->_widgets[makeKey($name, true)] = array (
             'NAME' => $name,
+            'RESOURCE' => $resource,
             'WOB_NAME' => $owner->getObjectName(),
             'DATA' => $data,
             'TEMPLATE' => $template,

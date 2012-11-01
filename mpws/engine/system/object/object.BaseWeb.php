@@ -197,6 +197,21 @@ class objectBaseWeb extends objectBase {
     protected function _commonRunOnEnd () {
         debug('objectBaseWeb => _commonRunOnEnd');
     }
+    
+    /* web methods */
+    protected function addWidget ($widgetName, $wgtConfig, $wgtData, $widgetParent = '') {
+        $ctx = contextMPWS::instance();
+        $wnT = "objectTemplatePath_widget_";
+        // check if we use default template
+        if (empty($wgtConfig['useCustomTemplate']))
+            $wnT .= "base" . ucfirst($widgetParent);
+        else
+            $wnT .= $widgetParent . $widgetName;
+        echo $wnT;
+        //var_dump($wgtConfig);
+        $ctx->pageModel->addWidget($this, $widgetParent.DOG.$widgetName, $this->$wnT, $wgtData);
+    }
+    
 }
 
 ?>

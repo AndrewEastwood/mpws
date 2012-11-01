@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-29 12:18:33
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-01 18:28:46
          compiled from "/var/www/mpws/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:91769009550815dc7375904-06521165%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6999ca4e59688c03dcb6f324646871f1d215ed21' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/dataTable.html',
-      1 => 1351501887,
+      1 => 1351787317,
       2 => 'file',
     ),
   ),
@@ -19,11 +19,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_50815dc7475a15_42052937',
   'variables' => 
   array (
-    '_resourceOwner' => 0,
-    '_controlOwner' => 0,
     'CURRENT' => 0,
+    '_controlOwner' => 0,
     '_confing' => 0,
     '_actionName' => 0,
+    '_resourceOwner' => 0,
     '_data' => 0,
     'fieldKey' => 0,
     'rowIndex' => 0,
@@ -38,10 +38,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <?php $_smarty_tpl->tpl_vars['_controlOwner'] = new Smarty_variable('DataTable', null, 0);?>
 
-<div id="MPWSComponent<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_resourceOwner']->value);?>
-ID" class="MPWSComponent MPWSComponent<?php echo $_smarty_tpl->tpl_vars['_controlOwner']->value;?>
- MPWSComponent<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_resourceOwner']->value);?>
-">
+<div id="MPWSComponentDataTableID" class="MPWSComponent MPWSComponentDataTable">
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_header, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_resourceOwner'=>'display','_key'=>$_smarty_tpl->tpl_vars['_controlOwner']->value), 0);?>
 
 

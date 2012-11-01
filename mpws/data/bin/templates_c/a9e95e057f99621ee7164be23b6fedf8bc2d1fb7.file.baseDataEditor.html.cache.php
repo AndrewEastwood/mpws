@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-30 13:46:22
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-01 18:49:55
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html" */ ?>
 <?php /*%%SmartyHeaderCode:83151832150877fe3db6d92-06185155%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a9e95e057f99621ee7164be23b6fedf8bc2d1fb7' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/baseDataEditor.html',
-      1 => 1351579652,
+      1 => 1351788536,
       2 => 'file',
     ),
   ),
@@ -20,8 +20,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'variables' => 
   array (
     '_resourceOwner' => 0,
-    '_widgetName' => 0,
     'CURRENT' => 0,
+    '_widgetName' => 0,
     '_formInnerAction' => 0,
     'DTV_CFG' => 0,
     '_formAction' => 0,
@@ -37,13 +37,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ?>
 
 <?php $_smarty_tpl->tpl_vars['_widgetName'] = new Smarty_variable("DataEditor", null, 0);?>
-<?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? $_smarty_tpl->tpl_vars['_widgetName']->value : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? ((($tmp = @$_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['RESOURCE'])===null||$tmp==='' ? $_smarty_tpl->tpl_vars['_widgetName']->value : $tmp)) : $tmp), null, 0);?>
 
 <?php $_smarty_tpl->tpl_vars["DTV_CFG"] = new Smarty_variable($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectConfiguration_widget_".((string)$_smarty_tpl->tpl_vars['_resourceOwner']->value)}, null, 0);?>
 
-<div id="MPWSWidget<?php echo $_smarty_tpl->tpl_vars['_resourceOwner']->value;?>
+<div id="MPWSWidget<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_resourceOwner']->value);?>
 ID" class="MPWSWidget MPWSWidget<?php echo $_smarty_tpl->tpl_vars['_widgetName']->value;?>
- MPWSWidget<?php echo $_smarty_tpl->tpl_vars['_resourceOwner']->value;?>
+ MPWSWidget<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_resourceOwner']->value);?>
 ">
     
     <?php $_smarty_tpl->tpl_vars['_formInnerAction'] = new Smarty_variable($_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']['EDIT_PAGE'], null, 0);?>
