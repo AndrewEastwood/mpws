@@ -1,14 +1,14 @@
 ; standalone page
-labelForLabelValueStandaloneRecordViewID = "User ID: ";
-labelForLabelValueStandaloneRecordViewName = "User Name: ";
-labelForLabelValueStandaloneRecordViewPassword = "Password: ";
-labelForLabelValueStandaloneRecordViewActive = "Is Active: ";
-labelForLabelValueStandaloneRecordViewIsOnline = "Online Status: ";
-labelForLabelValueStandaloneRecordViewPermisions = "Permissions: ";
-labelForLabelValueStandaloneRecordViewRole = "System Role: ";
-labelForLabelValueStandaloneRecordViewDateLastAccess = "Las Access: ";
-labelForLabelValueStandaloneRecordViewDateCreated = "Date Created: ";
-labelForLabelValueStandaloneRecordViewDateUpdated = "Date Updated: ";
+labelForLabelValueDefaultID = "User ID: ";
+labelForLabelValueDefaultName = "User Name: ";
+labelForLabelValueDefaultPassword = "Password: ";
+labelForLabelValueDefaultActive = "Is Active: ";
+labelForLabelValueDefaultIsOnline = "Online Status: ";
+labelForLabelValueDefaultPermisions = "Permissions: ";
+labelForLabelValueDefaultRole = "System Role: ";
+labelForLabelValueDefaultDateLastAccess = "Las Access: ";
+labelForLabelValueDefaultDateCreated = "Date Created: ";
+labelForLabelValueDefaultDateUpdated = "Date Updated: ";
 
 ; validation errors
 messageEmptyData = "There is no any record matched with requested OID";

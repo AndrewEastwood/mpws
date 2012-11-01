@@ -30,7 +30,7 @@ headerSearchBox = "Simple Search Box";
 headerQuickFiltering = "Quick Data Filtering";
 headerDataTable = "Matched Records";
 headerMessageListDataEditorValidator = "We have encountered the following issue(s):";
-headerMessageListStandaloneRecordViewValidator = "Record Removal Errors:";
+headerMessageListDataRecordRemovalValidator = "Record Removal Errors:";
 
 labelCheckBoxForDataEditorSystemUsersForFieldSendEmail = "Notify by email about new changes";
 
@@ -40,7 +40,7 @@ textDataEditorCancelSubText = "Use buttons below:";
 textDataEditorSaveMain = "Saved";
 textDataEditorSaveSubText = "Use the buttons below:";
 
-textStandaloneRecordViewRemovedMain = "Removed.";
-textStandaloneRecordViewRemovedSubText  = "You have removed the record.";
-textStandaloneRecordViewCancelMain = "Canceled.";
-textStandaloneRecordViewCancelSubText  = "You have canceled remove action for the record.";
+textDataRecordRemovalRemovedMain = "Removed.";
+textDataRecordRemovalRemovedSubText  = "You have removed the record.";
+textDataRecordRemovalCancelMain = "Canceled.";
+textDataRecordRemovalCancelSubText  = "You have canceled remove action for the record.";

@@ -19,12 +19,12 @@
     
     function _pageRequest (fn, callback) {
         
-        var _pageName = location.pathname.replace('.', '/').split('/').slice(-2, -1);
+        //var _pageName = location.pathname.replace('.', '/').split('/').slice(-2, -1);
         
-        if (!_pageName && !fn)
+        if (/*!_pageName && */!fn)
             return false;
         
-        var _url = '/api/' + _pageName + '.js?fn=' + fn + '&p=' + encodeURIComponent('token=' + mpws.token || '');
+        var _url = '/api.js?caller=fn=' + fn + '&p=' + encodeURIComponent('token=' + mpws.token || '');
         
         _sendRequest(_url, false, callback);
         return true;
@@ -38,16 +38,18 @@
     
     function _getObjectJSON (sender) {
         /*mpws.tools.log('_objectRequest');*/
+        var _caller = $(sender).attr('mpws-caller');
         var _realm = $(sender).attr('mpws-realm');
         var _fn = $(sender).attr('mpws-action');
 
-        if (typeof(_realm) === 'undefined' || typeof(_fn) === 'undefined') {
-            mpws.tools.log('_objectRequest: empty realm or method name');
+        if (typeof(_caller) === 'undefined' || typeof(_fn) === 'undefined') {
+            mpws.tools.log('_objectRequest: caller or method name is empty');
             return false;
         }
-    
+
         return {
-            'realm': _realm,
+            'caller': _caller || '*',
+            'realm': _realm || 'none',
             'fn': _fn,
             'oid': $(sender).attr('mpws-oid'),
             'custom': $(sender).attr('mpws-custom'),
@@ -61,11 +63,12 @@
                 _params += '&value=' + this.value;
                 _params += '&checked=' + this.checked;
                 _params += '&token=' + mpws.token || '';
+                _params += '&realm=' + this.realm;
                 if (typeof(this.oid) !== 'undefined')
                     _params += '&oid=' + this.oid;
                 if (typeof(this.custom) !== 'undefined')
                     _params += '&' + this.custom;
-                return '/api/' + this.realm + '.js?fn=' + this.fn + '&p=' + encodeURIComponent(_params);
+                return '/api.js?caller='+this.caller+'&fn=' + this.fn + '&p=' + encodeURIComponent(_params);
             }
         }
     }

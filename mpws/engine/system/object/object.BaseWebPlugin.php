@@ -7,11 +7,9 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         parent::__construct($name, OBJECT_T_PLUGIN);
         debug('objectBaseWebPlugin: __construct => ' . $name);
     }
-    
-    
+
     /* Plugin Specific Methods */
-    
-    
+
     /* Standart Handlers */
     public function actionHandlerAsDataViewEdit ($widgetName, $events = array()) {
         switch (libraryRequest::getAction()) {
@@ -49,19 +47,16 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     
     public function addWidgetDataRecordViewer ($widgetName) {
         $ctx = contextMPWS::instance();
-        $wnC = "objectConfiguration_widget_dataRecordViewer" . $widgetName;
-        $wnT = "objectTemplatePath_widget_dataRecordViewer" . $widgetName;
-        //echo "Getting Widget Configurtion: objectConfiguration_widget_dataTableView" . $widgetName;
-        $wgtData = libraryComponents::getDataRecordViewer($this->$wnC, $ctx->contextCustomer->getDBO());
-        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordViewer" . $widgetName};
+        $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
+        var_dump($wgtData);
+        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordViewer');
     }
     
     public function addWidgetDataRecordRemoval ($widgetName) {
         $ctx = contextMPWS::instance();
-        $wgtConfig = "objectConfiguration_widget_dataRecordRemoval" . $widgetName;
-        $wnT = "objectTemplatePath_widget_dataRecordRemoval" . $widgetName;
-        //echo "Getting Widget Configurtion: objectConfiguration_widget_dataTableView" . $widgetName;
-        $wgtData = libraryComponents::getDataRecordRemoval($this->$wnC, $ctx->contextCustomer->getDBO());
+        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordRemoval" . $widgetName};
+        $wgtData = libraryComponents::getDataRecordRemoval($wgtConfig, $ctx->contextCustomer->getDBO());
         $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordRemoval');
     }
     

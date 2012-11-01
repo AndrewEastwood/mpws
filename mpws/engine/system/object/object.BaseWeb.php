@@ -203,13 +203,15 @@ class objectBaseWeb extends objectBase {
         $ctx = contextMPWS::instance();
         $wnT = "objectTemplatePath_widget_";
         // check if we use default template
-        if (empty($wgtConfig['useCustomTemplate']))
+        if (empty($wgtConfig['useCustomTemplate'])) {
             $wnT .= "base" . ucfirst($widgetParent);
-        else
+            $widgetName = $widgetParent.DOG.$widgetName;
+        } else 
             $wnT .= $widgetParent . $widgetName;
-        echo $wnT;
         //var_dump($wgtConfig);
-        $ctx->pageModel->addWidget($this, $widgetParent.DOG.$widgetName, $this->$wnT, $wgtData);
+        //echo '<br>addWidget: '.$widgetName;
+        //echo '<br>Template to be used: '.$wnT;
+        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
     }
     
 }

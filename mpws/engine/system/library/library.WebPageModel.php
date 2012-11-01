@@ -116,6 +116,7 @@ class libraryWebPageModel {
             'TYPE' => 'WIDGET',
             'HTML' => ''
         );
+        //echo '<br> addWidget => {name:"'.$name.'", resource:"'.$resource.'"}'; 
         // add wob
         $this->addWebObject($owner);
         return $this;
@@ -134,7 +135,7 @@ class libraryWebPageModel {
         $ctx = contextMPWS::instance();
         // fetch wigets
         debug('Fetching wigets: ' . count($this->_widgets));
-        
+
         // set root block
         $model = array(
             'OBJECT' => array(

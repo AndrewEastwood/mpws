@@ -36,7 +36,7 @@ class libraryConfigurationManager {
         if (file_exists($_default))
             $chains[] = $_default;
         if (count($chains) == 0)
-            throw new Exception('libraryConfigurationManager: getConfigurationChain: requrested configuration does not exsist: ' . $resourceName);
+            throw new Exception('libraryConfigurationManager: getConfigurationChain: requrested configuration file does not exsist: ' . $resourceName);
         return $chains;
     }
     
@@ -56,7 +56,9 @@ class libraryConfigurationManager {
             
         }
         
-        throw new Exception('libraryConfigurationManager: getConfigurationValue: Requested property key does not exist: ' . $configKey);
+        //echo 'olololol';
+        
+        throw new Exception('libraryConfigurationManager: getConfigurationValue: Requested property key does not exist: ' . $configKey . '. Used configuration files: <pre>' . print_r($chains, true) . '</pre>');
     }
     
     

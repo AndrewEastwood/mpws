@@ -119,73 +119,81 @@
     margin: 10px -30px;
     background-color: @colorBg;
     box-shadow: 0px 0px 10px @colorBg;
-    .MPWSListMenu, .MPWSListMenuSub {
+    .MPWSListMenu {
         zoom: 1;
         .mp;
         z-index: 999;
         height: 40px;
         .MPWSListItem {
             .mp;
-            float: left;
-            list-style: none;
+            clear: both;
+            display: inline-block;
             position: relative;
-            a.MPWSLink {
-                color: @colorComponent;
-                text-decoration: none;
-                font-size: 14px;
-                float: left;
-                padding: 10px;
-                height: 20px;
-                .MPWSText {float: left;}
-                .MPWSIconArrow {
-                    float: left;
-                    width: 10px;
-                    height: 10px;
-                    text-indent: -999em;
-                    overflow: hidden;
-                    background: url("arrows-ffffff.png") no-repeat 0px -100px;
-                    margin-left: 5px;
-                    margin-top: 5px;
-                }
-                &:hover .MPWSIconArrow {
-                    background-position: -10px -100px;
-                }
-            }
+            line-height: 40px;
+            list-style: none;
+            padding: 0px 10px;
             &:hover {
-                background-color: @colorError;
-                color: @colorComponent;
-                .MPWSIconArrow {
-                    background-position: -10px -100px;
+                background-color: @colorComponent;
+                .MPWSLink {
+                    color: @colorBg;
                 }
+                .MPWSListMenuSub {display: block;}
             }
-            /* show only next nested menu */
-            &:hover > ul.MPWSListMenuSub {display:block;}
         }
-        /* hide inner menus */
-        .MPWSListMenuSub {
-            display: none;
-            position: absolute;
-            height: auto;
-            background-color: @colorError;
-            .MPWSListItem {
-                width: 130px;
-                border-color: @colorBg;
-                .mp(0px, 5px);
-                a.MPWSLink {
-                    width: 110px;
-                    &:hover {
-                        background-color: @colorBg;
-                        color: @colorComponent;
-                    }
-                }
-            }
-            
+        .MPWSLink {
+            color: @colorComponent;
+            text-decoration: none;
+            display: inline-block;
         }
-        /* sub menus */
-        .MPWSListMenuSub1 {top: 38px;}
-        .MPWSListMenuSub2 {left: 140px; top: 20px;}
+        .MPWSList {
+            .mp;
+        }
     }
 
+    /* hide inner menus */
+    .MPWSListMenuSub {
+        display: none;
+        position: absolute;
+        background-color: @colorComponent;
+        .MPWSListItem {
+            display: block;
+            clear: both;
+            .mp;
+        }
+        .MPWSLink {
+            padding: 0 20px;
+            clear: both;
+            display: inline-block;
+            &:hover {
+                background-color: desaturate(@colorComponent, 50%);
+            }
+            width: 160px;
+        }
+    }
+
+    /* sub menus */
+    .MPWSListMenuSub1 {
+        top: 38px;
+        left: -2px;
+        width: 200px;
+        border-color: @colorBg;
+        border-style: none solid solid;
+        border-width: 0px 2px 2px;
+        .MPWSLink {font-size: 14px; font-weight: bold;}
+    }
+    .MPWSListMenuSub2 {
+        display: block;
+        top: auto;
+        position: relative;
+        background-color: transparent;
+        box-shadow: none;
+        .MPWSLink {
+            font-size: 12px;
+            font-weight: normal;
+            .MPWSText {padding-left: 20px;}
+        }
+    }
+   
 }
 
 /* DOCUMENT ELEMENTS */

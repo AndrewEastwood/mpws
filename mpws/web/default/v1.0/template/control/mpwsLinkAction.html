@@ -20,26 +20,36 @@
 {$customParams = $_customParams|default:false}
 
 {$controlLinkAttr = ["id=\"MPWSActionLink_`$_action`ID\""]}
-
+{if not empty($_action)}
+    {$controlLinkAttr[]="mpws-action=\"`$_action`\""}
+{/if}
+{if not empty($_oid)}
+    {$controlLinkAttr[]="mpws-oid=\"`$_oid`\""}
+{/if}
+{if not empty($controlLinkTarget) }
+    {$controlLinkAttr[]="target=\"`$controlLinkTarget`\""}
+{/if}
+{* custom attributes from params *}
+{if not empty($customParams)}
+    {foreach $customParams as $_p => $_pk}
+        {$controlLinkAttr[]="mpws-`$_p`=\"`$_pk`\""}
+    {/foreach}
+{/if}
+        
 {if empty($controlLinkHref)}
     {if not isset($_mode) or $_mode eq 'normal'}
 
         {$_linkActions=[]}
-        {$_attributes=[]}
         {if empty($controlLinkHref)}
             {$controlLinkHref = '#'}
         {/if}
-
         {if isset($_action)}
             {$_linkActions[]="action=`$_action|lower`"}
-            {$_attributes[]="mpws-action=\"`$_action`\""}
         {/if}
         {if not empty($_oid)}
             {$_linkActions[]="oid=`$_oid`"}
-            {$_attributes[]="mpws-oid=\"`$_oid`\""}
         {/if}
 
-        {$controlLinkAttr=implode(' ', $_attributes)}
         {$_linkAction=implode('&amp;', $_linkActions)}
         {$controlLinkHref="`$controlLinkHref`?`$_linkAction`"}
 
@@ -53,7 +63,6 @@
         {* add oid *}
         {if not empty($_oid)}
             {$_linkActions[]="oid=`$_oid`"}
-            {$_attributes[]="mpws-oid=\"`$_oid`\""}
         {/if}
 
         {* custom params *}
@@ -65,21 +74,11 @@
             
         {* get action link *}
         {$_linkAction=implode('&amp;', $_linkActions)}
-
-        {* link attributes *}
-        {$_attributes[]="mpws-action=\"`$_action`\""}
-        {if not empty($controlLinkTarget) }
-            {$_attributes[]="target=\"`$controlLinkTarget`\""}
-        {/if}
-
-        {* get action link attributes *}
-        {$controlLinkAttr=implode(' ', $_attributes)}
         {$controlLinkHref="`$CURRENT.OBJECT->objectConfiguration_object_menuExecObjectPath`?`$_linkAction`"}
 
     {else}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_exception _message="Wrong action link mode" _tpl=$smarty.template}
     {/if}
 {/if}
-
 
 {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link _href=$controlLinkHref _target=$controlLinkTarget _attr=$controlLinkAttr _title=$controlLinkTitle}
