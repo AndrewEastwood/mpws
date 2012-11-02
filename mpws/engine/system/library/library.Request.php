@@ -26,20 +26,26 @@ class libraryRequest {
         return self::getValue('fn', $defaultValue, $switch, $valueOnSwitch);
     }
     static function getApiParam ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        $param = urldecode(self::getValue('p', $defaultValue, $switch, $valueOnSwitch));
+        $param = self::getValue('p', $defaultValue, $switch, $valueOnSwitch);
         //var_dump($param);
         parse_str($param, $param);
         if (empty($param))
             return $defaultValue;
-
         $param = libraryUtils::cleanQueryArray($param);
-        
         // if single parameter
         // p=sometext
         // return 'sometext'
         $c = current($param);
         if (count($param) == 1 && empty($c))
             return $c;
+        // explode custom params
+        if (isset($param['custom'])) {
+            //echo 'LOL';
+            //echo $param['custom'];
+            $output = false;
+            parse_str(urldecode($param['custom']), $output);
+            $param['custom'] = $output;
+        }
         return $param;
     }
     static function getOID ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
@@ -75,6 +81,10 @@ class libraryRequest {
         if (!empty($wrap))
             $_value = $wrap . $_value . $wrap;
         return $_value;
+    }
+    static function isJsApiRequest () {
+        //echo 'RequestAction is ' . self::getAction();
+        return self::getAction() === 'api';
     }
     static function isPostFormAction ($equalsToThisValue) { 
         $do = self::value($_POST, 'do');
@@ -198,13 +208,24 @@ class libraryRequest {
     }
     
     public static function getOrValidatePageSecurityToken($keyToValidate = '') {
-        if (!empty($keyToValidate))
+        if (!empty($keyToValidate)) {
+            if (!empty($_SESSION['MPWS_SESSION_TOKEN']))
+                return $_SESSION['MPWS_SESSION_TOKEN'] === $keyToValidate;
             return $keyToValidate === self::getOrValidatePageSecurityToken();
+        }
         
-        // make token
-        $p = libraryRequest::getPage('undefined');
-        $phash = md5($p);
-        return $phash;
+        if (!self::isJsApiRequest()) {
+            //echo 'generating security token';
+            // make token
+            $p = libraryRequest::getPage('undefined');
+            $g = libraryRequest::getPlugin('undefined');
+            $d = libraryRequest::getDisplay('undefined');
+            $a = libraryRequest::getAction('undefined');
+            $phash = md5($p.$g.$d.$a.date('Y-m-d'));
+            $_SESSION['MPWS_SESSION_TOKEN'] = $phash;
+        }
+
+        return $_SESSION['MPWS_SESSION_TOKEN'];
     }
 
     

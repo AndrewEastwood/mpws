@@ -55,6 +55,25 @@
             s.src = _libUrl;
             $("head").append(s);
         },
+        getRandom: function () {
+            return Math.floor(Math.random()*Math.pow(2,56)).toString(36);
+        },
+        roundNumber: function (num, dec) {
+            var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+            return result;
+        },
+        arraySumm: function (arr, startIdx, endIdx) {
+            var s = 0;
+            var ii = 0;
+            if (typeof(endIdx) === 'undefined')
+                endIdx = arr.length;
+            for (var i in arr) {
+                if (startIdx <= ii && ii <=endIdx)
+                    s += arr[i];
+                ii++;
+            }
+            return s;
+        },
         onload: $(document).ready
     };
     

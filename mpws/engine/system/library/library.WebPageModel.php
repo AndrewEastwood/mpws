@@ -225,9 +225,11 @@ class libraryWebPageModel {
 
         // common info
         // page token
+        //echo 'WebPageModel';
         $info[makeKey('TOKEN')] = libraryRequest::getOrValidatePageSecurityToken();
         $info[makeKey('DEBUG')] = libraryUtils::getDebugInfo();
         $info[makeKey('USER')] = libraryUtils::getDebugInfo();
+        $info[makeKey('CUSTOMER')] = MPWS_CUSTOMER;
 
         // GET parameters
 

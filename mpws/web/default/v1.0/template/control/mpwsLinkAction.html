@@ -17,11 +17,12 @@
 {$controlLinkTarget = $_target|default:''}
 {$_resourceOwner=$_resourceOwner|default:'control'}
 {$controlLinkTitle = $_useValueAsTitle|default:$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner`_controlActionLinkTitle`$_controlOwner``$_action|upper`"}}
+{$mpwsParams = $_mpwsParams|default:false}
 {$customParams = $_customParams|default:false}
 
 {$controlLinkAttr = ["id=\"MPWSActionLink_`$_action`ID\""]}
 {if not empty($_action)}
-    {$controlLinkAttr[]="mpws-action=\"`$_action`\""}
+    {$controlLinkAttr[]="mpws-fn=\"`$_action`\""}
 {/if}
 {if not empty($_oid)}
     {$controlLinkAttr[]="mpws-oid=\"`$_oid`\""}
@@ -29,11 +30,19 @@
 {if not empty($controlLinkTarget) }
     {$controlLinkAttr[]="target=\"`$controlLinkTarget`\""}
 {/if}
-{* custom attributes from params *}
-{if not empty($customParams)}
-    {foreach $customParams as $_p => $_pk}
+{* mpws attributes *}
+{if not empty($mpwsParams)}
+    {foreach $mpwsParams as $_p => $_pk}
         {$controlLinkAttr[]="mpws-`$_p`=\"`$_pk`\""}
     {/foreach}
+{/if}
+{* custom attributes *}
+{if not empty($customParams)}
+    {$_customLinkAttrString=[]}
+    {foreach $customParams as $_p => $_pk}
+        {$_customLinkAttrString[]="`$_p`=`$_pk`"}
+    {/foreach}
+    {$controlLinkAttr[]="mpws-custom=\"{urlencode(implode('&',$_customLinkAttrString))}\""}
 {/if}
         
 {if empty($controlLinkHref)}

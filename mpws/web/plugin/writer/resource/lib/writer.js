@@ -109,8 +109,6 @@ mpws.module.define('writer', (function(window, document, $){
         // init base url
         if(window.tinyMCE)
             tinyMCE.baseURL = "/static/wysiwyg/tiny_mce";
-        
-        
     });
 
     return {

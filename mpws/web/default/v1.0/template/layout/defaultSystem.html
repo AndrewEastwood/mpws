@@ -14,8 +14,8 @@
     {/if}
     {literal}
     <script type="text/javascript">
-        // Load the Visualization API and the piechart package.
-        google.load('visualization', '1.0', {'packages':['corechart']});
+        // security token
+        mpws.customer = '{/literal}{$INFO.CUSTOMER}{literal}';
         // security token
         mpws.token = '{/literal}{$INFO.TOKEN}{literal}';
         // page

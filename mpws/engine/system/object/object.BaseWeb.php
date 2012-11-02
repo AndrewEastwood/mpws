@@ -1,4 +1,3 @@
-
 <?php
 
 /* Web Object Has The Following Features:

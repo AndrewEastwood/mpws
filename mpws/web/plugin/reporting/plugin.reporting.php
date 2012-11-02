@@ -2,9 +2,9 @@
 
 class pluginReporting extends objectBaseWebPlugin {
 
-    
     private $_dirWithReportScripts = 'scripts';
     private $_dirWithReportData = 'data';
+    private $_dirWithReportUI = 'ui';
     
     protected function _displayTriggerAsPlugin () {
         parent::_displayTriggerAsPlugin();
@@ -29,19 +29,48 @@ class pluginReporting extends objectBaseWebPlugin {
         $p = libraryRequest::getApiParam();
         $rez = false;
         // detect action
+        //var_dump($p['custom']);
         switch(libraryRequest::getApiFn()) {
             // request url: 
             // api.js?caller=reporting&fn=fetchdata&p=token%3DXXXXX%26oid%3D1%26type%3Dreleases%26startdate%3D2012-10-23%26enddate%3D2012-10-30%26realm%3Dplugin
             // token=XXXXX&oid=1&type=releases&startdate=2012-10-23&enddate=2012-10-30&realm=plugin&script=%scriptNameToRender%
             case "fetchdata" : {
                 //echo 'fetching data';
-                $rez = $this->customGetReportData($p['oid'], $p['type'], $p['startdate'], $p['enddate']);
+                $rez = $this->customGetReportData($p['oid'], $p['custom']['type'], $p['custom']['startdate'], $p['custom']['enddate']);
                 break;
             }
             case "sf-import" : {
+                break;
             }
             case "outbox-proc" : {
-                
+                break;
+            }
+            case "render" : {
+                //echo "RENDER OK";
+                // TODO
+                // get report widget        
+                if (empty($p['oid']) || !is_numeric($p['oid']))
+                    throw new Exception('ReportData: wrong request');
+                //if (empty($script))
+                //    throw new Exception('ReportData: wrong script name');
+                $ctx = contextMPWS::instance();
+                $cfg = $this->objectConfiguration_widget_customMonitor;
+                // fetch owner record
+                $report = $ctx->contextCustomer->getDBO()
+                        ->reset()
+                        ->select('*')
+                        ->from($cfg['source'])
+                        ->where('ID', '=', $p['oid'])
+                        ->fetchRow();
+                // fetch report script ui
+                $uiFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportUI.DS.$p['custom']['script'].EXT_TEMPLATE);
+                $scriptFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportScripts.DS.$p['custom']['script'].EXT_JS);
+                $rez = libraryUtils::getJSON(array(
+                    "KEY" => $p['custom']['script'],
+                    "UI" => file_get_contents($uiFilepath),
+                    "SCRIPT" => file_get_contents($scriptFilepath)
+                ));
+                break;
             }
         }
         // put data
@@ -730,4 +759,3 @@ class pluginReporting extends objectBaseWebPlugin {
 
 
 ?>
-

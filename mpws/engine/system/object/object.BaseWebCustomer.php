@@ -75,6 +75,9 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         //echo 'Caller is ' . $caller;
         if (empty($caller))
             throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value');
+        if (empty($p['token']) || !libraryRequest::getOrValidatePageSecurityToken($p['token']))
+            return;
+        //echo print_r($p, true);
         // perform request with plugins
         if (!empty($p['realm']) && $p['realm'] == OBJECT_T_PLUGIN) {
             // check if wide js api is allowed

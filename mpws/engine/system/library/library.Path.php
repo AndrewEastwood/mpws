@@ -53,7 +53,8 @@ class libraryPath {
             return $path;
 
         
-        throw new Exception('libraryPath => getStandartDataPathWithDBR: Wrong dataBaseRecord value passed');
+        
+        throw new Exception('libraryPath => getStandartDataPathWithDBR: Wrong dataBaseRecord value passed. Expected path is: ' . $path);
     }
 }
 

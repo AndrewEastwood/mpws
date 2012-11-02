@@ -1,10 +1,8 @@
 <?php
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 class customer_toolbox extends objectBaseWebCustomer {
 
     protected function _displayTriggerOnCommonStart () {

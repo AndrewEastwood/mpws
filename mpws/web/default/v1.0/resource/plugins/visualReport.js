@@ -1,98 +1,253 @@
-var visualReport = {};
+/* MPWS visual report engine
+ * --------
+ */
+mpws.module.define('visualReport', (function(window, document, $){
 
+    if (mpws.module.get('visualReport'))
+        return;
 
-function log(text) {
-
-    console.log(text);
-
-}
-
-(function(visualReport, $, undefined){
+    // main object
+    var visualReport = {};
+    // report contexts
+    var _contexts = {}
 
     // general container
+    visualReport.reportTypes = {
+        DASHBOARD: {
+            name: 'dashboard',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('DASHBOARD RENDERING');
+                if (!google.visualization.Dashboard)
+                    return;
+                //log(d);
+                //log(c);
+                //log(o);
+                var _reportData = o.report.getReportData(d);
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                var charObjects = $(o.renderObject).toArray();
+                mpws.tools.log(charObjects);
+                for (var cObj in charObjects) {
+                    var _dBoard = charObjects[cObj];
+                    var dItems = o.report.getReportCharts(_reportData, data, o.report.owner);
+                    var dashboard  = new google.visualization.Dashboard(_dBoard);
+                    // setup dashboard's internal containers
+                    $(_dBoard).find('div').each(
+                        function(){
+                            $(this).attr('id', $(this).attr('id') + '_' + o.report.owner + '_ID');
+                        }
+                    );
+                    mpws.tools.log('DASHBOARD: binding charts:');
+                    mpws.tools.log(dItems);
+                    dashboard.bind(dItems.controls, dItems.charts);
+                    mpws.tools.log('DASHBOARD draw with data:');
+                    mpws.tools.log(data);
+                    dashboard.draw(data);
+                }
+            }
+        },
+        BAR: {
+            name: 'bar',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('BAR RENDERING');
+                //log(d);
+                //log(c);
+                //log(o);
+                if (!google.visualization.BarChart)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                var data = new google.visualization.arrayToDataTable(_reportData, false);
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    //log ('[' + cObj + ']-------- loop for: ' + o.renderObject);
+                    //log (charObjects);
+                    //log (charObjects[cObj]);
+                    var chart = new google.visualization.BarChart(charObjects[cObj]);
+                    chart.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(chart, eventName, function () {o.report.events[eventName](chart, data);});
+                }
+            }
+        },
+        PIE: {
+            name: 'pie',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('PIE RENDERING');
+                if (!google.visualization.PieChart)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                // Create and populate the data table.
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                // Create and draw the visualization.
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    var chart = new google.visualization.PieChart(charObjects[cObj]);
+                    chart.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(chart, eventName, function () {o.report.events[eventName](chart, data);});
+                }
+            }
+        },
+        TABLE: {
+            name: 'activity',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('ACTIVITY RENDERING');
+                if (!google.visualization.Table)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                // Create and populate the data table.
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                // Create and draw the visualization.
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    var table = new google.visualization.Table(charObjects[cObj]);
+                    table.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(table, eventName, function () {o.report.events[eventName](table, data);});
+                }
+            }
+        },
+        HISTOGRAM: {
+            name: 'histogram',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('HISTOGRAM RENDERING');
+                if (!google.visualization.ColumnChart)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                // Create and populate the data table.
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                // Create and draw the visualization.
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    var chart = new google.visualization.ColumnChart(charObjects[cObj]);
+                    chart.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(chart, eventName, function () {o.report.events[eventName](chart, data);});
+                }
+            }
+        },
+        AREA: {
+            name: 'line',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('LINEAR RENDERING');
+                if (!google.visualization.AreaChart)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                // Create and populate the data table.
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                // Create and draw the visualization.
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    var chart = new google.visualization.AreaChart(charObjects[cObj]);
+                    chart.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(chart, eventName, function () {o.report.events[eventName](chart, data);});
+                }
+            }
+        },
+        LINE: {
+            name: 'line',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('LINEAR RENDERING');
+                if (!google.visualization.AreaChart)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                // Create and populate the data table.
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                // Create and draw the visualization.
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    var chart = new google.visualization.LineChart(charObjects[cObj]);
+                    chart.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(chart, eventName, function () {o.report.events[eventName](chart, data);});
+                }
+            }
+        },
+        COMBO: {
+            name: 'line',
+            colors: [],
+            fonts: [],
+            render: function (d, c, o) {
+                mpws.tools.log('COMBO RENDERING');
+                if (!google.visualization.ComboChart)
+                    return;
+                var _reportData = o.report.getReportData(d);
+                // Create and populate the data table.
+                var data = new google.visualization.arrayToDataTable(_reportData);
+                // Create and draw the visualization.
+                var charObjects = $(o.renderObject).toArray();
+                for (var cObj in charObjects) {
+                    var chart = new google.visualization.ComboChart(charObjects[cObj]);
+                    chart.draw(data, o.report.options);
+                    if (o.report.events && Object.keys(o.report.events).length)
+                        for (var eventName in o.report.events)
+                            google.visualization.events.addListener(chart, eventName, function () {o.report.events[eventName](chart, data);});
+                }
+            }
+        }
+    };
     //visualReport.pageID = 'defaultPageID';
     // user defined reports
     visualReport.userReports = {};
-    // report displays
-    visualReport.reportTypes = {};
     // options
     visualReport.opts = {};
-
-    //
-    var _contexts = {}
+    // data storage
     visualReport.dataStorage = {}
 
-    // constructor
-    function _init(callback) {
-        // set report collection
-
-        //get a reference to the canvas 
-        //console.log('#' + this.pageID + ' canvas');
-        /*
-        $('#' + this.pageID + ' canvas').each(function(){
-            
-            //console.log($(this).attr('rel'));
-            visualReport.contexts[$(this).attr('rel')] = $(this)[0].getContext("2d");
-        });*/
-        
-        log('getting available types');
-        $.ajax({
-            url: "/libs/tools/reporting/si/reports/types.js?sid=" + getRandom(),
-            context: this,
-            dataType: 'text',
-            success: function(data){
-                // load base object
-                visualReport.reportTypes = eval('(' + data + ')');
-                // get custom reports
-                // temporary injected
-                log('getting custom reports');
-                log("reports/custom" + (visualReport.opts.app ? ('_' + visualReport.opts.app) : '') + ".js?sid=" + getRandom());
-                $.ajax({
-                    url: "/libs/tools/reporting/si/reports/custom" + (visualReport.opts.app ? ('_' + visualReport.opts.app) : '') + ".js?sid=" + getRandom(),
-                    context: this,
-                    dataType: 'text',
-                    success: function(data){
-                        visualReport.userReports = eval('(' + data + ')');
-                        log("init complited");
-                        callback();
-                    }
-                });
-            }
-        });
-        
-
-    }; // init
-
-    visualReport.addData = function (keyName, dataObject) {
-        log("adding data: " + keyName + " : " + dataObject);
-        //log("adding data: " + dataObject);
-        this.dataStorage[keyName] = dataObject;
-    }; // add data
-
-    visualReport.addUserReport = function (name, reportObject) {
-        this.userReports[name] = reportObject;
+    visualReport.getType = function (name) {
+        return this.reportTypes[name];
     };
 
-    visualReport.getUserReport = function (name) {
-        return this.userReports[name];
+    visualReport.addData = function (realm, dataObject) {
+        mpws.tools.log("adding data: " + realm + " : " + dataObject);
+        //log("adding data: " + dataObject);
+        this.dataStorage[realm] = dataObject;
+    }; // add data
+
+    visualReport.addUserReport = function (reportObject) {
+        this.userReports[reportObject.Setup.app] = reportObject;
+    };
+
+    visualReport.getUserReport = function (reportName) {
+        return this.userReports[reportName];
     };
     
     // render report
-    visualReport.renderSingleReport = function (reportScript) {
+    visualReport.renderSingleReport = function (reportScript, realm) {
         // report type
         // data key name
         // axis Y - fieldName
         // axis X - fieldName
         // group filed names 
         // 
-        if (typeof(reportScript) === "string")
-            reportScript = visualReport.userReports[reportScript];
-        log("rendering single report: " + reportScript.name);
+        if (typeof(reportScript) === "string" && realm)
+            reportScript = visualReport.userReports[realm].Scripts[reportScript];
+        mpws.tools.log("rendering single report: " + reportScript.name);
         var _reportData = false;
-        if (reportScript.useData == '__ALL__')
+        if (reportScript.useData === '__ALL__')
             _reportData = visualReport.dataStorage;
         else
-            _reportData = visualReport.dataStorage[reportScript.useData];
+            _reportData = visualReport.dataStorage[reportScript.useData || realm];
         var _c = visualReport.getRenderObject(reportScript);
         reportScript.base.render(_reportData, _c, reportScript);
     }; // show
@@ -101,13 +256,14 @@ function log(text) {
         //log("do autoproceed all reports: forceRendering is " + forceRendering);
         //this = visualReport;
         // run over user reports
-        log(visualReport.userReports);
-        for (var ri in visualReport.userReports) {
-            var _reportScript = visualReport.userReports[ri];
+        // get report script
+        var _vScript = visualReport.getUserReport(renderOpts.app);
+        mpws.tools.log(_vScript.Scripts);
+        for (var ri in _vScript.Scripts) {
+            var _reportScript = _vScript.Scripts[ri];
             if (_reportScript && renderOpts && renderOpts.isAutoload && _reportScript.autoshow)
-                visualReport.renderSingleReport(_reportScript);
+                visualReport.renderSingleReport(_reportScript, _vScript.Setup.app);
         }
-        visualReport.onLoaded();
     }
     
     visualReport.getRenderObject = function (reportScript) {
@@ -127,11 +283,10 @@ function log(text) {
     }
     
     visualReport.asyncFnController = function (wObj, callback, param) {
-        log("asyncFnController: " + wObj);
+        mpws.tools.log("asyncFnController: " + wObj);
         if (!!callback & wObj == 0)
             callback(param);
     }
-    
 
     visualReport.getTransformedData = function (data, config/* visible fields */){
         var useHeaders = typeof(config.useHeaders) === "boolean" ? config.useHeaders : true;
@@ -285,7 +440,7 @@ function log(text) {
                                 delete(_retData[dataIdx][rmI]);
                             }
                         else
-                            log('FAILED: can not remove data field by header key because data row deoes not match to header (different size)');
+                            mpws.tools.log('FAILED: can not remove data field by header key because data row deoes not match to header (different size)');
                     }
                     //log('--------------------------------------');
                 }
@@ -331,57 +486,68 @@ function log(text) {
         var wObj = arguments.length;
         var dataPackages = arguments;
         // do main init
-        log(dataPackages);
-        _init(function(){
-            for (var di in dataPackages) {
-                //log('key = ' + di);
-                var dataPackage = dataPackages[di];
-                log("loading data: " + dataPackage.name);
-                //log("from package: ");
-                log(dataPackage);
-                $.ajax({
-                    url: dataPackages[di].fullurl ? dataPackages[di].fullurl : "data.php?" + dataPackages[di].url + "&dw=true",
-                    dataType: 'text',
-                    success: function (data) {
-                        var _dObj = data.split('\n^^^^^^^^^^^^^^^^^\n');
-                        //console.log(_dObj.length);
-                        if (_dObj.length > 1) {
-                            // add multiple data objects
-                            // with 
-                            var releases = [];
-                            for (var rIdx in _dObj) {
-                                //console.log(JSON.stringify(c["5.7.0"]));
-                                releases[rIdx] = csvjson.csv2json(_dObj[rIdx], {delim: ",",textdelim: "\""});
-                                //console.log(c);
-                                visualReport.addData(dataPackage.name + '_' + rIdx, releases[rIdx]);
-                            }
-                        } else {
-                            // single data objects
-                            // using additional library
-                            var csvObj = csvjson.csv2json(data, {delim: ",",textdelim: "\""});
-                            //
-                            //log(dataPackageName);
-                            visualReport.addData(dataPackage.name, csvObj);
-                            // if there are defined user reports
-                            // proceed them
-                            // with wObj
+        mpws.tools.log(dataPackages);
+        // download report script
+        
+        for (var di in dataPackages) {
+            //log('key = ' + di);
+            var dataPackage = dataPackages[di];
+            mpws.tools.log("loading data: " + dataPackage.app);
+            //log("from package: ");
+            mpws.tools.log(dataPackage);
+            $.ajax({
+                url: dataPackage.url,
+                dataType: 'text',
+                success: function (data) {
+                    var _dObj = data.split('\n^^^^^^^^^^^^^^^^^\n');
+                    //console.log(_dObj.length);
+                    mpws.tools.log('DOWNLOADED DATA LENGTH ' + data.length);
+                    if (_dObj.length > 1) {
+                        mpws.tools.log('MULTI DATA OBJECT');
+                        // add multiple data objects
+                        // with 
+                        var releases = [];
+                        for (var rIdx in _dObj) {
+                            //console.log(JSON.stringify(c["5.7.0"]));
+                            releases[rIdx] = visualReport.dataWrapper(_dObj[rIdx], {delim: ",",textdelim: "\""});
+                            //console.log(c);
+                            visualReport.addData(dataPackage.app + '_' + rIdx, releases[rIdx]);
                         }
-                        // process reports
-                        visualReport.asyncFnController(--wObj, visualReport.renderAllReports, {isAutoload: dataPackage.autoload || true});
+                    } else {
+                        mpws.tools.log('SINGLE DATA OBJECT');
+                        // single data objects
+                        // using additional library
+                        var _rawData = visualReport.dataWrapper(data, {delim: ",",textdelim: "\""});
+                        //
+                        //log(dataPackageName);
+                        mpws.tools.log(_rawData);
+                        visualReport.addData(dataPackage.app, _rawData);
+                        // if there are defined user reports
+                        // proceed them
+                        // with wObj
                     }
-                });
-            }
-        });
+                    // process reports
+                    visualReport.asyncFnController(--wObj, visualReport.renderAllReports, {app: dataPackage.app, isAutoload: dataPackage.autoload || true});
+                }
+            });
+        }
+
         
     }; // load
-
-    visualReport.create = function (opts, pkgs) {
-        /* visualReport.create */
-        var _reportObj = /*{}*/ visualReport;
+    
+    // report data wrapper
+    visualReport.dataWrapper = function (reportData, opts) {
+        // uses csvjson module
+        return mpws.module.get('csvjson').csvjson.csv2json(reportData, opts);
+    }
+    
+    /*visualReport.create = function (opts, pkgs) {
+        /* visualReport.create * /
+        var _reportObj = /*{}* / visualReport;
         /*
         for (var vrp in visualReport)
             _reportObj[vrp] = visualReport[vrp];
-        */
+        * /
         _reportObj.opts = opts;
 
         if (pkgs) {
@@ -389,7 +555,7 @@ function log(text) {
         }
 
         return _reportObj;
-    }
+    }*/
 
     visualReport.extend = function(reportName, customReport, _extendedReport) {
         if (reportName)
@@ -406,5 +572,25 @@ function log(text) {
                 _extendedReport[prop] = customReport[prop];
         }
         return _extendedReport;
-    }
-})(window.visualReport = window.visualReport || {}, jQuery);
+    };
+
+    visualReport.setup = function(targetUIID, targetScriptID , ui, script, callback) {
+        // get container
+        var contUI = document.getElementById(targetUIID);
+        var contSCRIPT = document.getElementById(targetScriptID);
+        // setup script
+        var reportScript = eval('('+script+')');
+        // add script
+        visualReport.addUserReport(reportScript);
+        // inject ui
+        contUI.innerHTML = $(ui).filter('div').html();
+        // inject script
+        contSCRIPT.innerHTML = $(ui).filter('script').text();
+        // callback
+        if($.isFunction(callback))
+            callback(reportScript.Setup);
+    };
+
+    return visualReport;
+
+})(window, document, jQuery));

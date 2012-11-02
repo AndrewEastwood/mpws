@@ -29,13 +29,14 @@
                         _type='mpwsLinkAction'
                         _name=$scriptName
                         _controlOwner=$_widgetName
-                        _action="EditReport`$scriptName|capitalize`"
+                        _action="render"
                         _oid=$entry.ID
                         _resourceOwner=$_resourceOwner
                         _single=true
                         _href='javascript://'
                         _useValueAsTitle=$scriptName
-                        _customParams=['custom'=>$scriptName,'caller'=>'reporting','realm'=>'plugin']
+                        _customParams=['script'=>$scriptName]
+                        _mpwsParams=['caller'=>'reporting','realm'=>'plugin']
                         _mode='system'}
                     </li>
                 {/foreach}
@@ -46,15 +47,43 @@
         {/foreach}
     </div>
 
+    {* injection placeholder *}
+    <div id="MPWSBlockReportInjectionAreaUIID"></div>
+    
+    {* setup script holder *}
+    <script id="MPWSBlockReportInjectionAreaScriptID"></script>
+
     <script>
-        $('.MPWSBlockAllReportLinks .MPWSListSub a').click(function(){
-            mpws.api.objectRequest(this);
+        $('.MPWSBlockAllReportLinks .MPWSListSub a').click(function() {
+            
+            var _mpws_caller = $(this).attr('mpws-caller');
+            var _mpws_oid = $(this).attr('mpws-oid');
+            var _mpws_realm = $(this).attr('mpws-realm');
+            
+            mpws.api.objectRequest(this, function(data) {
+                //mpws.tools.log(data);
+                // inject report
+                mpws.module.get('visualReport').setup(
+                    'MPWSBlockReportInjectionAreaUIID',
+                    'MPWSBlockReportInjectionAreaScriptID',
+                    data.UI,
+                    data.SCRIPT,
+                    callbackSetup
+                );
+                // do setup callback
+                function callbackSetup(init) {
+                    customReportScriptSetup(
+                        init, 
+                        {
+                            caller: _mpws_caller,
+                            fn: 'fetchdata',
+                            oid: _mpws_oid,
+                            realm: _mpws_realm
+                        }
+                    );
+                }
+            }, true);
         });
     </script>
-    
-    {* injection placeholder *}
-    <div class="MPWSBlock MPWSBockReportInjectionArea">
-        
-    </div>
-    
+
 </div>
