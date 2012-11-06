@@ -45,6 +45,17 @@
      {* Contains special arguments than standart html controls *}
      
      
+     {elseif $_type eq 'mpwsListBox'}
+
+        {$_standartControlType = 'ListBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsListBox
+            _name=$_name
+            _resourceOwner=$_resourceOwner
+            _renderMode=$_renderMode 
+            _items=$_items|default:[]
+            _checkboxes=$_checkboxes|default:false
+            _numLines=$_numLines|default:false}
+
      {elseif $_type eq 'mpwsauth'}
      {elseif $_type eq 'mpwscaptcha'}
      {elseif $_type eq 'mpwsemailer'}

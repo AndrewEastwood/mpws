@@ -1,0 +1,34 @@
+{* default control attribute values *}
+{$_controlName = "mpws_field_`$_name|lower`"}
+{$_controlCssName = 'ListBox'}
+{$_resourceOwner = $_resourceOwner|default:'control'}
+{$_numerateLines = $_numLines|default:false}
+{$_useCheckbox = $_checkboxes|default:false}
+{$_useSingleEdit = $_singleEdit|default:true}
+{$_lineNumber = 1}
+
+{* control implemetation *}
+<div class="MPWSControlField MPWSControlField{$_controlCssName}">
+    <ul class="MPWSList [MPWSListSub]">
+    {foreach $_items as $_itemKey => $_itemEntry}
+        <li class="MPWSListItem">
+            {if $_numerateLines}
+            <span class="MPWSText MPWSLineNumer">{$_lineNumber++}</span>
+            {/if}
+            {if $_useCheckbox}
+                {if $_useSingleEdit}
+                <input type="radio" name="{"`$_controlName`_edit"}" value="{$_itemKey}"/>
+                <input type="checkbox" name="{"`$_controlName`_remove"}" value="{$_itemKey}"/>
+                {else}
+                <input type="checkbox" name="{"`$_controlName`_use"}" value="{$_itemKey}"/>
+                {/if}
+            {/if}
+        {if $_renderMode eq 'KEYS'}
+            {$_itemKey}
+        {else}
+            {$_itemEntry}
+        {/if}
+        </li>
+    {/foreach}
+    </ul>
+</div>

@@ -52,5 +52,11 @@
     define("EXT_SCRIPT", DOT."php");
     define("EXT_TEMPLATE", DOT."html");
     define("EXT_JS", DOT."js");
+    
+    // GLOB SELECTORS
+    
+    define("gEXT_ALL_SCRIPT", DS.'*'.DOT."php");
+    define("gEXT_ALL_TEMPLATE", DS.'*'.DOT."html");
+    define("gEXT_ALL_JS", DS.'*'.DOT."js");
 
 ?>

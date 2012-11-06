@@ -203,10 +203,13 @@ class objectBaseWeb extends objectBase {
         $wnT = "objectTemplatePath_widget_";
         // check if we use default template
         if (empty($wgtConfig['useCustomTemplate'])) {
+            // default widget name and resource to be used
             $wnT .= "base" . ucfirst($widgetParent);
-            $widgetName = $widgetParent.DOG.$widgetName;
-        } else 
+            //$widgetName = $widgetParent.DOG.$widgetName;
+        } else {
             $wnT .= $widgetParent . $widgetName;
+        }
+        $widgetName = $widgetParent.DOG.$widgetName;
         //var_dump($wgtConfig);
         //echo '<br>addWidget: '.$widgetName;
         //echo '<br>Template to be used: '.$wnT;

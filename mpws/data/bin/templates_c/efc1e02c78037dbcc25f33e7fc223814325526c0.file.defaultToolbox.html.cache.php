@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-02 15:30:03
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-06 10:07:54
          compiled from "/var/www/mpws/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:5376389855081257ebaaaf7-99117552%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f169ec851061427f63366f55936d49966dc76cb1' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1351862985,
+      1 => 1352188053,
       2 => 'file',
     ),
   ),
@@ -57,6 +57,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <?php if (!empty($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])){?>
         
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])]->objectTemplatePath_component_pageOnLoadJavascript, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+
+        
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])]->objectTemplatePath_component_pageOnLoadStylesheet, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
     <?php }?>
     

@@ -18,7 +18,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('DASHBOARD RENDERING');
+                //mpws.tools.log('DASHBOARD RENDERING');
                 if (!google.visualization.Dashboard)
                     return;
                 //log(d);
@@ -27,7 +27,7 @@ mpws.module.define('visualReport', (function(window, document, $){
                 var _reportData = o.report.getReportData(d);
                 var data = new google.visualization.arrayToDataTable(_reportData);
                 var charObjects = $(o.renderObject).toArray();
-                mpws.tools.log(charObjects);
+                //mpws.tools.log(charObjects);
                 for (var cObj in charObjects) {
                     var _dBoard = charObjects[cObj];
                     var dItems = o.report.getReportCharts(_reportData, data, o.report.owner);
@@ -38,11 +38,11 @@ mpws.module.define('visualReport', (function(window, document, $){
                             $(this).attr('id', $(this).attr('id') + '_' + o.report.owner + '_ID');
                         }
                     );
-                    mpws.tools.log('DASHBOARD: binding charts:');
-                    mpws.tools.log(dItems);
+                    //mpws.tools.log('DASHBOARD: binding charts:');
+                    //mpws.tools.log(dItems);
                     dashboard.bind(dItems.controls, dItems.charts);
-                    mpws.tools.log('DASHBOARD draw with data:');
-                    mpws.tools.log(data);
+                    //mpws.tools.log('DASHBOARD draw with data:');
+                    //mpws.tools.log(data);
                     dashboard.draw(data);
                 }
             }
@@ -52,7 +52,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('BAR RENDERING');
+                //mpws.tools.log('BAR RENDERING');
                 //log(d);
                 //log(c);
                 //log(o);
@@ -78,7 +78,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('PIE RENDERING');
+                //mpws.tools.log('PIE RENDERING');
                 if (!google.visualization.PieChart)
                     return;
                 var _reportData = o.report.getReportData(d);
@@ -100,7 +100,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('ACTIVITY RENDERING');
+                //mpws.tools.log('ACTIVITY RENDERING');
                 if (!google.visualization.Table)
                     return;
                 var _reportData = o.report.getReportData(d);
@@ -122,7 +122,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('HISTOGRAM RENDERING');
+                //mpws.tools.log('HISTOGRAM RENDERING');
                 if (!google.visualization.ColumnChart)
                     return;
                 var _reportData = o.report.getReportData(d);
@@ -144,7 +144,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('LINEAR RENDERING');
+                //mpws.tools.log('LINEAR RENDERING');
                 if (!google.visualization.AreaChart)
                     return;
                 var _reportData = o.report.getReportData(d);
@@ -166,7 +166,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('LINEAR RENDERING');
+                //mpws.tools.log('LINEAR RENDERING');
                 if (!google.visualization.AreaChart)
                     return;
                 var _reportData = o.report.getReportData(d);
@@ -188,7 +188,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             colors: [],
             fonts: [],
             render: function (d, c, o) {
-                mpws.tools.log('COMBO RENDERING');
+                //mpws.tools.log('COMBO RENDERING');
                 if (!google.visualization.ComboChart)
                     return;
                 var _reportData = o.report.getReportData(d);
@@ -219,7 +219,7 @@ mpws.module.define('visualReport', (function(window, document, $){
     };
 
     visualReport.addData = function (realm, dataObject) {
-        mpws.tools.log("adding data: " + realm + " : " + dataObject);
+        //mpws.tools.log("adding data: " + realm + " : " + dataObject);
         //log("adding data: " + dataObject);
         this.dataStorage[realm] = dataObject;
     }; // add data
@@ -242,7 +242,7 @@ mpws.module.define('visualReport', (function(window, document, $){
         // 
         if (typeof(reportScript) === "string" && realm)
             reportScript = visualReport.userReports[realm].Scripts[reportScript];
-        mpws.tools.log("rendering single report: " + reportScript.name);
+        //mpws.tools.log("rendering single report: " + reportScript.name);
         var _reportData = false;
         if (reportScript.useData === '__ALL__')
             _reportData = visualReport.dataStorage;
@@ -258,7 +258,7 @@ mpws.module.define('visualReport', (function(window, document, $){
         // run over user reports
         // get report script
         var _vScript = visualReport.getUserReport(renderOpts.app);
-        mpws.tools.log(_vScript.Scripts);
+        //mpws.tools.log(_vScript.Scripts);
         for (var ri in _vScript.Scripts) {
             var _reportScript = _vScript.Scripts[ri];
             if (_reportScript && renderOpts && renderOpts.isAutoload && _reportScript.autoshow)
@@ -283,7 +283,7 @@ mpws.module.define('visualReport', (function(window, document, $){
     }
     
     visualReport.asyncFnController = function (wObj, callback, param) {
-        mpws.tools.log("asyncFnController: " + wObj);
+        //mpws.tools.log("asyncFnController: " + wObj);
         if (!!callback & wObj == 0)
             callback(param);
     }
@@ -486,24 +486,24 @@ mpws.module.define('visualReport', (function(window, document, $){
         var wObj = arguments.length;
         var dataPackages = arguments;
         // do main init
-        mpws.tools.log(dataPackages);
+        //mpws.tools.log(dataPackages);
         // download report script
         
         for (var di in dataPackages) {
             //log('key = ' + di);
             var dataPackage = dataPackages[di];
-            mpws.tools.log("loading data: " + dataPackage.app);
+            //mpws.tools.log("loading data: " + dataPackage.app);
             //log("from package: ");
-            mpws.tools.log(dataPackage);
+            //mpws.tools.log(dataPackage);
             $.ajax({
                 url: dataPackage.url,
                 dataType: 'text',
                 success: function (data) {
                     var _dObj = data.split('\n^^^^^^^^^^^^^^^^^\n');
                     //console.log(_dObj.length);
-                    mpws.tools.log('DOWNLOADED DATA LENGTH ' + data.length);
+                    //mpws.tools.log('DOWNLOADED DATA LENGTH ' + data.length);
                     if (_dObj.length > 1) {
-                        mpws.tools.log('MULTI DATA OBJECT');
+                        //mpws.tools.log('MULTI DATA OBJECT');
                         // add multiple data objects
                         // with 
                         var releases = [];
@@ -514,13 +514,13 @@ mpws.module.define('visualReport', (function(window, document, $){
                             visualReport.addData(dataPackage.app + '_' + rIdx, releases[rIdx]);
                         }
                     } else {
-                        mpws.tools.log('SINGLE DATA OBJECT');
+                        //mpws.tools.log('SINGLE DATA OBJECT');
                         // single data objects
                         // using additional library
                         var _rawData = visualReport.dataWrapper(data, {delim: ",",textdelim: "\""});
                         //
                         //log(dataPackageName);
-                        mpws.tools.log(_rawData);
+                        //mpws.tools.log(_rawData);
                         visualReport.addData(dataPackage.app, _rawData);
                         // if there are defined user reports
                         // proceed them
@@ -539,7 +539,7 @@ mpws.module.define('visualReport', (function(window, document, $){
     visualReport.dataWrapper = function (reportData, opts) {
         // uses csvjson module
         return mpws.module.get('csvjson').csvjson.csv2json(reportData, opts);
-    }
+    };
     
     /*visualReport.create = function (opts, pkgs) {
         /* visualReport.create * /
@@ -566,7 +566,7 @@ mpws.module.define('visualReport', (function(window, document, $){
             //log(prop);
             //log(customReport[prop]);
             //log(_extendedReport[prop]);
-            if (typeof(customReport[prop]) == "object" && typeof(_extendedReport[prop]) == "object")
+            if (typeof(customReport[prop]) === "object" && typeof(_extendedReport[prop]) === "object")
                 _extendedReport[prop] = visualReport.extend(false, _extendedReport[prop], customReport[prop]);
             else
                 _extendedReport[prop] = customReport[prop];

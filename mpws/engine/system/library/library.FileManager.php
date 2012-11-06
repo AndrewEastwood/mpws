@@ -24,6 +24,14 @@ class libraryFileManager
     // _����������
     function __destruct() { }
 
+    public static function getGlobMap($pathToDirectory, $extensionToRemove = false) {
+        $files = glob($pathToDirectory);
+        $fList = array();
+        foreach ($files as $fPath)
+            $fList[basename($fPath, $extensionToRemove)] = $fPath;
+        return $fList;
+    }
+    
     public static function getAllFilesFromDirectoryAsMap($pathToDirectory, $removeSuffix) {
         $files = self::getAllFilesFromDirectory($pathToDirectory);
         

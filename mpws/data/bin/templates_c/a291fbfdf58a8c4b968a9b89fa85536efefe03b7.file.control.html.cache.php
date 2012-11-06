@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-02 12:11:49
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-06 19:09:03
          compiled from "/var/www/mpws/web/default/v1.0/template/trigger/control.html" */ ?>
 <?php /*%%SmartyHeaderCode:438248167508152b8ceeb48-32731021%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a291fbfdf58a8c4b968a9b89fa85536efefe03b7' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/trigger/control.html',
-      1 => 1351850927,
+      1 => 1352221699,
       2 => 'file',
     ),
   ),
@@ -27,6 +27,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
     '_name' => 0,
     '_controlValue' => 0,
+    '_items' => 0,
+    '_checkboxes' => 0,
+    '_numLines' => 0,
     '_isCustom' => 0,
     '_controlResourceOwner' => 0,
     '_action' => 0,
@@ -89,6 +92,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      
      
      
+     <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsListBox'){?>
+
+        <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('ListBox', null, 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsListBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_items'=>(($tmp = @$_smarty_tpl->tpl_vars['_items']->value)===null||$tmp==='' ? array() : $tmp),'_checkboxes'=>(($tmp = @$_smarty_tpl->tpl_vars['_checkboxes']->value)===null||$tmp==='' ? false : $tmp),'_numLines'=>(($tmp = @$_smarty_tpl->tpl_vars['_numLines']->value)===null||$tmp==='' ? false : $tmp)), 0);?>
+
+
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsauth'){?>
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwscaptcha'){?>
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsemailer'){?>

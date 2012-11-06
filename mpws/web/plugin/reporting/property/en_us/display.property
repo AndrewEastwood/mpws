@@ -5,3 +5,5 @@ menuTextScript-Editor = "Report Editor";
 menuTextDescriptionScript-Editor = "Edit Report Scripts";
 menuTextMonitor = "Monitor";
 menuTextDescriptionMonitor = "View And Analyze Reports";
+menuTextApi = "API Settings";
+menuTextDescriptionApi = "Get API Settings";

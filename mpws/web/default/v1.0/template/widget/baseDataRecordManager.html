@@ -1,0 +1,26 @@
+{$_widgetName = "DataRecordManager"}
+{$_resourceOwner = $_resourceOwner|default:($CURRENT.SOURCE.RESOURCE|default:$_widgetName)}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataRecordManager`$CURRENT.SOURCE.NAME`"}}
+
+<div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _title=$CURRENT.SOURCE.DATA.RECORD[$DTV_CFG.caption]}
+    {foreach $CURRENT.SOURCE.DATA.RECORD as $fieldName => $fieldValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _resourceOwner=$_resourceOwner _value=$fieldValue}
+    {/foreach}
+        
+    {* customization area *}
+    {block name="customArea"}{/block}
+
+    {* additional links *}
+    <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">
+        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+            _type='mpwsLinkAction'
+            _name='BackToRecords'
+            _controlOwner=$_widgetName
+            _action='BackToRecords'
+            _resourceOwner=$_resourceOwner
+            _href=$CURRENT.SOURCE.DATA.REFERER
+            _single=true
+            _mode='system'}
+    </div>
+</div>

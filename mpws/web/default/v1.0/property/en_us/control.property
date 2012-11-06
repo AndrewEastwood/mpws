@@ -18,9 +18,11 @@ controlActionLinkTitleDataTableTopActionNEW = "New Record";
 controlActionLinkTitleDataTableRowActionEDIT = "edit";
 controlActionLinkTitleDataTableRowActionVIEW = "view";
 controlActionLinkTitleDataTableRowActionDELETE  = "remove";
+controlActionLinkTitleDataTableRowActionMANAGE = "manage";
 controlActionLinkTitleDataEditorBACKTORECORDS = "Back To Records";
 controlActionLinkTitleDataRecordRemovalBACKTORECORDS = "Back To Records";
 controlActionLinkTitleDataRecordViewerBACKTORECORDS = "Back To Records";
+controlActionLinkTitleDataRecordManagerBACKTORECORDS = "Back To Records";
 
 ; data editor buttons
 controlFormButtonsDataEditorButtonSave ="Save";

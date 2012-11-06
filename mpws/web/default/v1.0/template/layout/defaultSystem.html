@@ -11,6 +11,8 @@
     {if not empty($INFO.GET.PLUGIN) }
         {* include plugin js resources *}
         {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadJavascript}
+        {* include plugin css resources *}
+        {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadStylesheet}
     {/if}
     {literal}
     <script type="text/javascript">

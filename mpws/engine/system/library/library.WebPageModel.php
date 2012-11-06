@@ -103,10 +103,18 @@ class libraryWebPageModel {
     public function addWidget($owner, $name, $template, $data = array()) {
         // check for extended resource
         $tplResMode = explode(DOG, $name);
+        //echo '<br>================================<br>';
+        //echo 'ADDING WGT<br>RAW NAME: ' . $name;
         $name = $tplResMode[0];
         $resource = $tplResMode[0];
-        if (!empty($tplResMode[1]))
-            $resource = $name.$tplResMode[1];
+        // name has PARENT@WIDGETNAME
+        if (!empty($tplResMode[1])) {
+            $name = $tplResMode[1];
+            $resource = $tplResMode[0] . $tplResMode[1];
+        }
+        //echo '<br>NAME: ' . $name;
+        //echo '<br>RESOURCE: ' . $resource;
+        //echo '<br>================================<br>';
         $this->_widgets[makeKey($name, true)] = array (
             'NAME' => $name,
             'RESOURCE' => $resource,

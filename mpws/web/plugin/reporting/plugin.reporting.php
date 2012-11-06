@@ -40,6 +40,11 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             case "sf-import" : {
+                echo 'SF import';
+                
+                // get SF account
+                $sfAccount = $this->objectConfiguration_accounts_salesForceAI;
+                $this->customSalesForceImport($sfAccount);
                 break;
             }
             case "outbox-proc" : {
@@ -65,6 +70,8 @@ class pluginReporting extends objectBaseWebPlugin {
                 // fetch report script ui
                 $uiFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportUI.DS.$p['custom']['script'].EXT_TEMPLATE);
                 $scriptFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportScripts.DS.$p['custom']['script'].EXT_JS);
+                //echo $scriptFilepath;
+                //echo file_get_contents($scriptFilepath);
                 $rez = libraryUtils::getJSON(array(
                     "KEY" => $p['custom']['script'],
                     "UI" => file_get_contents($uiFilepath),
@@ -101,7 +108,69 @@ class pluginReporting extends objectBaseWebPlugin {
             case "view" : {
                 break;
             }
+            case "api" : {
+                $this->addWidgetSimple('customApiSettings');
+                break;
+            }
         }
+    }
+    
+    /* action hooks */
+    final protected function hookBeforeAddWidgetDataRecordManager ($widgetName, &$wgtData) {
+        parent::hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData);
+        $ext = array();
+        switch ($widgetName) {
+            case "ReportManager" : {
+                
+                // handle manager
+                // requred fields
+                // LIST
+                // EDITING
+
+                $ownerData = $wgtData['RECORD'];
+                $mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts);
+                
+                $ppAction = libraryRequest::getPostAction();
+                
+                switch ($ppAction) {
+                    case "AddNewReport" : {
+                        break;
+                    }
+                    case "RemoveSelected" : {
+                        break;
+                    }
+                    default: {
+                        // just get all existed report scripts
+                        //var_dump($ownerData);
+                        //echo $mangerSource;
+                        //var_dump(  ($mangerSource . gEXT_ALL_JS)  );
+                        //var_dump($scripts);
+                    }
+                }
+
+                $ext['LIST'] = libraryFileManager::getGlobMap($mangerSource . gEXT_ALL_JS, EXT_JS);
+
+                /*
+                // get script path
+                $scriptFilepath = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts.DS.$scriptName.EXT_JS, true);
+                
+                // fetch data
+                if (libraryRequest::isPostFormAction('save')) {
+                    // save data
+                    $scriptData = libraryUtils::getWithEOL(libraryRequest::getPostFormField('data'));
+                    file_put_contents($scriptFilepath, $scriptData);
+                } else {
+                    // get data content
+                    $scriptData = file_get_contents($scriptFilepath);
+                }
+                $data['SCRIPT'] = $scriptData;*/
+                
+                
+                break;
+            }
+        }
+
+        $wgtData['MANAGER'] = $ext;
     }
     
     /* custom action handlers */
@@ -116,6 +185,10 @@ class pluginReporting extends objectBaseWebPlugin {
         
         switch ($data['ACTION']) {
             case "editreport" : {
+                
+                
+                
+                
                 // check owner existance
                 $ownerOID = libraryRequest::getOID();
                 $scriptName = libraryRequest::getValue('script');
@@ -172,7 +245,7 @@ class pluginReporting extends objectBaseWebPlugin {
         // get all reports
         $this->addWidgetSimple('customMonitor', $data);
     }
-
+    
     /* all custom methods are below */
 
     private function customGetReportData ($oid, $type, $start, $end) {
@@ -639,22 +712,6 @@ class pluginReporting extends objectBaseWebPlugin {
         return $dataLines;
     }
 
-    /*private function customCommonExtractMetdataInfo ($mDataObj, $alg = false) {
-
-        $data = null;
-        // 
-        if (isset($alg['path']))
-            $data = libraryUtils::getPathValue($mDataObj, $alg['path']);
-
-        if (isset($alg['valueKey']))
-            $data = array($alg['valueKey'] => $data);
-
-        if (isset($alg['mergeWith']))
-            $data = array_merge($alg['mergeWith'], $data);
-
-        return $data;
-    }*/
-
     // custom function over getMetadata with default arguments
     private function customCommonGetMetadataOfDate($report, $dt) {
         $dataPath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportData, true);
@@ -712,6 +769,51 @@ class pluginReporting extends objectBaseWebPlugin {
         return $dataTable;
     }
 
+    // sales force import
+    private function customSalesForceImport ($account) {
+
+        define("USERNAME", $account['user']);
+        define("PASSWORD", $account['pwd']);
+        define("SECURITY_TOKEN", $account['key']);
+
+        $mySforceConnection = new extensionSalesForceClient();
+        //var_dump($mySforceConnection);
+        $mySforceConnection->createConnection("partner.wsdl.xml");
+        //var_dump($mySforceConnection);
+        $client = $mySforceConnection->login(USERNAME, PASSWORD.SECURITY_TOKEN);
+        // report configuration 00O50000003ASUG
+        $reportUrl = $account['url'];
+        
+        
+        $logInfo = 'Starting data import at : ' . date('Y-m-d H:i:s') . ' from ' . $reportUrl . PHP_EOL;
+        $logInfo .= '--------------------------------------------------------------' . PHP_EOL;
+        $logInfo .= '[' . date('Y-m-d H:i:s') . '] curl_init' . PHP_EOL;
+        // init cURL section
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $reportUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // Not doing any verification of SSL certificates
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_COOKIE, 'sid='.$client->sessionId);
+        setcookie("sid", $client->sessionId, 0, "/", ".salesforce.com", 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 100);
+        $logInfo .= '[' . date('Y-m-d H:i:s') . '] curl_exec' . PHP_EOL;
+        $result = curl_exec ($ch);
+        $logInfo .= '[' . date('Y-m-d H:i:s') . '] Received ' . strlen($result) . ' bytes ' . PHP_EOL;
+        curl_close ($ch);
+        $logInfo .= '[' . date('Y-m-d H:i:s') . '] curl_close' . PHP_EOL;
+        $logInfo .= '[' . date('Y-m-d H:i:s') . '] Saving into a file' . PHP_EOL;
+        file_put_contents('../outbox/' . date('Y-m-d') . '.csv'  , $result);
+        $logInfo .= '[' . date('Y-m-d H:i:s') . '] closing connection in SF client' . PHP_EOL;
+        try {
+            $mySforceConnection->logout();
+        } catch (Exception $e) {
+            $logInfo .= '[' . date('Y-m-d H:i:s') . '] ERROR -> Caught exception: '.  $e->getMessage(). ' | ' . PHP_EOL;
+        }
+        $logInfo .= PHP_EOL . '--------------------------------------------------------------' . PHP_EOL;
+    }
+    
     function ___executeImport () {
 
         echo 'AUTOPROCESS' . PHP_EOL;

@@ -2,7 +2,7 @@
 
 {$_widgetName = "DataEditor"}
 {$_resourceOwner = $_resourceOwner|default:($CURRENT.SOURCE.RESOURCE|default:$_widgetName)}
-{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_`$_resourceOwner`"}}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataEditor`$CURRENT.SOURCE.NAME`"}}
 
 <div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
     

@@ -1,0 +1,15 @@
+{$_widgetName = "CustomApiSettings"}
+{$_resourceOwner = "customApiSettings"}
+
+<div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidgetCustom MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
+    
+    {$__key = md5($CURRENT.OBJECT->objectConfiguration_customer_masterJsApiKey)}
+    {$__token = "token=`$__key`"}
+    {$__apiParams = "`$__token`&realm=plugin"}
+    
+    {* sales force import action security key *}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_widget_customApiSettingsSForceImportAction _value=$__key}
+    {* sales force transfer action link *}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->objectProperty_widget_customApiSettingsSForceImportAction _value="http://{$smarty.server.HTTP_HOST}/api.js?caller=reporting&fn=sf-import&p={urlencode($__apiParams)}"}
+
+</div>

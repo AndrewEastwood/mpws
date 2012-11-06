@@ -29,6 +29,11 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
                 $this->addWidgetDataRecordViewer($widgetName);
                 break;
             }
+            case "manage" : {
+                //$managerFnName = 'customWidgetDataRecordManager'.$widgetName;
+                $this->addWidgetDataRecordManager($widgetName);
+                break;
+            }
             default : {
                 libraryRequest::storeOrGetRefererUrl();
                 $this->addWidgetDataTableView($widgetName);
@@ -49,7 +54,7 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_dataRecordViewer" . $widgetName};
         $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
-        var_dump($wgtData);
+        //var_dump($wgtData);
         $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordViewer');
     }
     
@@ -74,6 +79,18 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataEditor');
     }
 
+    public function addWidgetDataRecordManager ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordManager" . $widgetName};
+        $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
+        $this->hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData);
+        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordManager');
+    }
+    
+    /* hooks */
+    protected function hookBeforeAddWidgetDataRecordManager($widgetName, &$wgtData = false) {
+        debug('objectBaseWebPlugin: hookBeforeAddWidgetDataRecordManager => ' . $widgetName);
+    }
 }
 
 ?>

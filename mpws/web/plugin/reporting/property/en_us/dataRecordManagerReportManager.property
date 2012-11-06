@@ -1,0 +1,15 @@
+header = "Report Record Manager";
+
+labelForLabelValueDefaultID = "ID";
+labelForLabelValueDefaultName = "Report Name";
+labelForLabelValueDefaultExternalKey = "External Key";
+labelForLabelValueDefaultDataPath = "Remote Data Path";
+labelForLabelValueDefaultReports  = "Report Scripts"
+labelForLabelValueDefaultDateCreated = "Created";
+labelForLabelValueDefaultDateUpdated = "Updated";
+
+
+controlFormButtonsDataRecordManagerButtonAddNewReport = "Add New Report Script";
+controlFormButtonsDataRecordManagerButtonRemoveSelected = "Remove Selected Report(s)";
+
+labelForListBoxDataRecordManagerReportScriptListBox = "All Available Report Scripts";
