@@ -116,8 +116,8 @@ class pluginReporting extends objectBaseWebPlugin {
     }
     
     /* action hooks */
-    final protected function hookBeforeAddWidgetDataRecordManager ($widgetName, &$wgtData) {
-        parent::hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData);
+    final protected function hookBeforeAddWidgetDataRecordManager ($widgetName, &$wgtData, $wgtConfig) {
+        parent::hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData, $wgtConfig);
         $ext = array();
         switch ($widgetName) {
             case "ReportManager" : {
@@ -126,17 +126,42 @@ class pluginReporting extends objectBaseWebPlugin {
                 // requred fields
                 // LIST
                 // EDITING
-
+                $page = 'LIST';
+                $listBoxControlName = $wgtConfig['useListBoxControlName'];
                 $ownerData = $wgtData['RECORD'];
                 $mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts);
                 
-                $ppAction = libraryRequest::getPostAction();
+                $ppAction = libraryRequest::getPostFormAction();
                 
                 switch ($ppAction) {
+                    case "EditSelected" : {
+                        $page = 'EDIT';
+                        // get resource name to edit
+                        $en = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
+                        
+                        var_dump($en);
+                        
+                        $ext['EDITING'] = array(
+                            'NAME' => basename($en, EXT_JS),
+                            'CONTENT' => file_get_contents($en)
+                        );
+
+                        //echo "11111111 EditSelected";
+                        break;
+                    }
                     case "AddNewReport" : {
+                        
+                        $page = 'NEW';
+                        //echo "11111111 AddNewReport";
                         break;
                     }
                     case "RemoveSelected" : {
+                        $page = 'REMOVE';
+                        // get resource name to edit
+                        $en = libraryRequest::getPostFormField($listBoxControlName.BS.'remove');
+
+                        var_dump($en);
+                        //echo "11111111 RemoveSelected";
                         break;
                     }
                     default: {
@@ -148,6 +173,7 @@ class pluginReporting extends objectBaseWebPlugin {
                     }
                 }
 
+                $ext['PAGE'] = $page;
                 $ext['LIST'] = libraryFileManager::getGlobMap($mangerSource . gEXT_ALL_JS, EXT_JS);
 
                 /*

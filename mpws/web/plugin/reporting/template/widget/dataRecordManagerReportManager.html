@@ -1,10 +1,10 @@
 {extends file=$CURRENT.OBJECT->objectTemplatePath_widget_baseDataRecordManager}
 {* customise manager *}
-{block name="customArea" append}
+{block name="generalBlock" append}
 
     {* TODO:
         - handle button actions
-        - form based
+        + form based
         - list support
         - edit mode
         - define source structure:
@@ -13,20 +13,45 @@
                 2a. SOURCE NAME
                 2b. SOURCE CONTENT
     *}
-        
+
+    {if not empty($DTV_CFG.buttons.top)}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.buttons.top _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
+    {/if}
+
     {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
         _type='mpwsListBox'
-        _name='ReportScriptListBox'
+        _name=$DTV_CFG.useListBoxControlName
         _controlOwner=$_widgetName
         _resourceOwner=$_resourceOwner
         _items=$CURRENT.SOURCE.DATA.MANAGER.LIST
-        _renderMode='KEYS'
+        _renderMode=$DTV_CFG.displayMode
         _checkboxes=true
         _numLines=true}
-        
 
-    {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['AddNewReport', 'RemoveSelected'] _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
-        
-        
+    {if not empty($DTV_CFG.buttons.bottom)}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.buttons.bottom _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
+    {/if}
+
+{/block}
+
+{block name="bottomBlock" append}
+
+    <div class="MPWSBlock MPWSBockReportScriptEditArea">
+    {if $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'EDIT'}
+    
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsRTEWH
+            _type=$DTV_CFG.editor.type
+            _name=$DTV_CFG.editor.name
+            _value=$CURRENT.SOURCE.DATA.MANAGER.EDITING.CONTENT
+            _useDivWrapper=$DTV_CFG.editor.divmode
+            _jslib=$DTV_CFG.editor.jslib}
+    
+    {elseif $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'NEW'}
+        <form action="" method="POST">
+            <input type="text" name="mpws_field_{$DTV_CFG.useListBoxControlName|lower}_new" value="">
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save'] _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
+        </form>
+    {/if}
+    </div>
 
 {/block}

@@ -9,7 +9,11 @@
     {/foreach}
         
     {* customization area *}
-    {block name="customArea"}{/block}
+    {block name="topBlock"}{/block}
+    <form action="" method="POST">
+    {block name="generalBlock"}{/block}
+    </form>
+    {block name="bottomBlock"}{/block}
 
     {* additional links *}
     <div class="MPWSBlock MPWSBlockDataEditorBottomLinks">

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-02 00:01:11
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-06 20:01:02
          compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:7814884605080405b233f60-61888913%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '13fc0739f57dedff11a7d9378923d6d565f25193' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1351807268,
+      1 => 1352224607,
       2 => 'file',
     ),
   ),
@@ -58,11 +58,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])]->objectTemplatePath_component_pageOnLoadJavascript, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
+        
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])]->objectTemplatePath_component_pageOnLoadStylesheet, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+
     <?php }?>
     
     <script type="text/javascript">
-        // Load the Visualization API and the piechart package.
-        google.load('visualization', '1.0', {'packages':['corechart']});
+        // security token
+        mpws.customer = '<?php echo $_smarty_tpl->tpl_vars['INFO']->value['CUSTOMER'];?>
+';
         // security token
         mpws.token = '<?php echo $_smarty_tpl->tpl_vars['INFO']->value['TOKEN'];?>
 ';

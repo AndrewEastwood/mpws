@@ -5,29 +5,36 @@
 {$_numerateLines = $_numLines|default:false}
 {$_useCheckbox = $_checkboxes|default:false}
 {$_useSingleEdit = $_singleEdit|default:true}
+{$_listCaptions = $_captions|default:[]}
 {$_lineNumber = 1}
 
 {* control implemetation *}
 <div class="MPWSControlField MPWSControlField{$_controlCssName}">
+    <input type="hidden" name="mpws_field_owner" value="{$_name}">
     <ul class="MPWSList [MPWSListSub]">
     {foreach $_items as $_itemKey => $_itemEntry}
+    
+        {if $_renderMode eq 'KEYS'}
+            {$_display = $_itemKey}
+            {$_val = $_itemEntry}
+        {else}
+            {$_display = $_itemEntry}
+            {$_val = $_itemKey}
+        {/if}
+    
         <li class="MPWSListItem">
             {if $_numerateLines}
             <span class="MPWSText MPWSLineNumer">{$_lineNumber++}</span>
             {/if}
             {if $_useCheckbox}
                 {if $_useSingleEdit}
-                <input type="radio" name="{"`$_controlName`_edit"}" value="{$_itemKey}"/>
-                <input type="checkbox" name="{"`$_controlName`_remove"}" value="{$_itemKey}"/>
+                <input type="radio" name="{"`$_controlName`_edit"}" value="{$_val}"/>
+                <input type="checkbox" name="{"`$_controlName`_remove[]"}" value="{$_val}"/>
                 {else}
-                <input type="checkbox" name="{"`$_controlName`_use"}" value="{$_itemKey}"/>
+                <input type="checkbox" name="{"`$_controlName`_edit[]"}" value="{$_val}"/>
                 {/if}
             {/if}
-        {if $_renderMode eq 'KEYS'}
-            {$_itemKey}
-        {else}
-            {$_itemEntry}
-        {/if}
+            <span class="MPWSText MPWSLineValue">{$_display}</span>
         </li>
     {/foreach}
     </ul>

@@ -4,3 +4,4 @@ pageTools = "Tools";
 pageDashboard = "Dashboard";
 pageMessages = "Messages";
 pageUsers = "Users";
+pageJobs = "Jobs";

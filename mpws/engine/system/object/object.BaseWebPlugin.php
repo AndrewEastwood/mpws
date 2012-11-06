@@ -83,12 +83,12 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_dataRecordManager" . $widgetName};
         $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
-        $this->hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData);
+        $this->hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData, $wgtConfig);
         $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordManager');
     }
     
     /* hooks */
-    protected function hookBeforeAddWidgetDataRecordManager($widgetName, &$wgtData = false) {
+    protected function hookBeforeAddWidgetDataRecordManager($widgetName, &$wgtData = false, $wgtConfig = false) {
         debug('objectBaseWebPlugin: hookBeforeAddWidgetDataRecordManager => ' . $widgetName);
     }
 }

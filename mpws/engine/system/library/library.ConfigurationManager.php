@@ -49,8 +49,12 @@ class libraryConfigurationManager {
             //debug('libraryConfigurationManager: getConfigurationValue: ' . $configFilePath);
             $props = parse_ini_file($configFilePath);
             //debug($props);
-            if (isset($props[$configKey]))
+            if (isset($props[$configKey])) {
+                //var_dump($props)
+                //$mergeItems = explode('+++', $props[$configKey]);
+                //var_dump($mergeItems);
                 return libraryUtils::convValue($props[$configKey]);
+            }
             
             // will return top-level configuration key value
             

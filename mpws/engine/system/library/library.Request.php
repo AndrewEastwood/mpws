@@ -76,10 +76,21 @@ class libraryRequest {
     }
     static function getPostFormField ($key, $doEscape = true, $wrap = '') {
         $_value = self::value($_POST, 'mpws_field_' . strtolower($key));
-        if ($doEscape)
-            $_value = mysql_escape_string($_value);
-        if (!empty($wrap))
-            $_value = $wrap . $_value . $wrap;
+        
+        if ($doEscape) {
+            if (is_array($_value))
+                foreach ($_value as $k => $v)
+                    $_value[$k] = mysql_escape_string($v);
+            if (is_string($_value))
+                $_value = mysql_escape_string($_value);
+        }
+        if (!empty($wrap)) {
+            if (is_array($_value))
+                foreach ($_value as $k => $v)
+                    $_value[$k] = $wrap . $v . $wrap;
+            if (is_string($_value))
+                $_value = $wrap . $_value . $wrap;
+        }
         return $_value;
     }
     static function isJsApiRequest () {

@@ -11,5 +11,6 @@ labelForLabelValueDefaultDateUpdated = "Updated";
 
 controlFormButtonsDataRecordManagerButtonAddNewReport = "Add New Report Script";
 controlFormButtonsDataRecordManagerButtonRemoveSelected = "Remove Selected Report(s)";
-
+controlFormButtonsDataRecordManagerButtonEditSelected = "Edit Selected";
 labelForListBoxDataRecordManagerReportScriptListBox = "All Available Report Scripts";
+controlFormButtonsDataRecordManagerButtonSave = "Save";
