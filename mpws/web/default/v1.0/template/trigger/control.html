@@ -16,7 +16,7 @@
 {$_controlValue = $_value|default:null}
 {$_linkLabelWithControl = true}
     
-<div class="MPWSBlock MPWSBlockControl MPWSRenderMode{$_renderMode|capitalize}">
+<div class="MPWSBlock MPWSBlockControl MPWSBlockControl_{$_type} MPWSRenderMode{$_renderMode|capitalize}">
 
 {capture name="control"}
     {if $_type eq 'text' or $_type eq 'textarea' }
@@ -56,7 +56,9 @@
             _items=$_items|default:[]
             _checkboxes=$_checkboxes|default:false
             _numLines=$_numLines|default:false
-            _captions=$_captions|default:[]}
+            _captions=$_captions|default:[]
+            _initValues=$_initValues|default:false
+            _customValueHolder=$_customValueHolder|default:'use'}
 
      {elseif $_type eq 'mpwsauth'}
      {elseif $_type eq 'mpwscaptcha'}
@@ -65,6 +67,7 @@
      {elseif $_type eq 'mpwsLabelValue'}
      
         {$_standartControlType = 'LabelValue'}
+        {$_linkLabelWithControl = false}
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsLabelValue
             _name=$_name
             _controlOwner=$_controlOwner

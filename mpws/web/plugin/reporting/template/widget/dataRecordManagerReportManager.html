@@ -14,10 +14,12 @@
             2. PAGE
     *}
 
-    {if $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'LIST'}
+    <input type="hidden" name="mpws_field_{$DTV_CFG.useControlName|lower}_sender" value="{$_formInnerAction}">
+        
+    {if $_formInnerAction eq 'list'}
 
         {if not empty($DTV_CFG.buttons.top)}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.buttons.top _controlOwner=$_widgetName _resourceOwner=''}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.buttons.top _controlOwner=$_widgetName _resourceOwner='control'}
         {/if}
 
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
@@ -25,46 +27,46 @@
             _name=$DTV_CFG.useControlName
             _controlOwner=$_widgetName
             _resourceOwner=$_resourceOwner
-            _items=$CURRENT.SOURCE.DATA.MANAGER.LIST
+            _items=$CURRENT.SOURCE.DATA.MANAGER.SOURCE
             _renderMode=$DTV_CFG.listbox.displayMode
             _checkboxes=true
             _numLines=true
             _captions=$DTV_CFG.listbox.captions}
 
         {if not empty($DTV_CFG.buttons.bottom)}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.buttons.bottom _controlOwner=$_widgetName _resourceOwner=''}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=$DTV_CFG.buttons.bottom _controlOwner=$_widgetName _resourceOwner='control'}
         {/if}
         
-    {elseif $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'NEW'}
+    {elseif $_formInnerAction eq 'new'}
 
-        <input type="text" name="mpws_field_{$DTV_CFG.useControlName|lower}_new" value="">
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
+        <input type="text" name="mpws_field_{$DTV_CFG.useControlName|lower}_newentry" value="">
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_widgetName _resourceOwner='control'}
         
-    {elseif $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'EDIT'}
+    {elseif $_formInnerAction eq 'edit'}
         
         <div class="MPWSBlock MPWSBockReportScriptEditArea">
             {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsRTEWH
                 _type=$DTV_CFG.editor.type
                 _name=$DTV_CFG.editor.name
-                _value=$CURRENT.SOURCE.DATA.MANAGER.CONTENT
+                _value=$CURRENT.SOURCE.DATA.MANAGER.SOURCE
                 _useDivWrapper=$DTV_CFG.editor.divmode
                 _jslib=$DTV_CFG.editor.jslib}
         </div>
 
-    {elseif $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'REMOVE'}
+    {elseif $_formInnerAction eq 'remove'}
         
         {* display all items to be removed  *}
-        {foreach $CURRENT.SOURCE.DATA.MANAGER.CONTENT as $_key => $_value}{/foreach}
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
             _type='mpwsListBox'
             _name=$DTV_CFG.useControlName
             _controlOwner=$_widgetName
             _resourceOwner=$_resourceOwner
-            _items=$CURRENT.SOURCE.DATA.MANAGER.CONTENT
+            _items=$CURRENT.SOURCE.DATA.MANAGER.SOURCE
             _renderMode=$DTV_CFG.listbox.displayMode
+            _initValues=true
             _single=true}
 
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_widgetName _resourceOwner='control'}
         
     {/if}
         

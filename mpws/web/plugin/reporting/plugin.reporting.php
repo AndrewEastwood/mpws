@@ -126,23 +126,100 @@ class pluginReporting extends objectBaseWebPlugin {
                 // requred fields
                 // LIST
                 // EDITING
-
+                $listBoxControlName = $wgtConfig['useControlName'];
                 $ownerData = $wgtData['RECORD'];
                 $mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts);
-                $content = false;
-                $list = false;
-                $page = 'LIST';
-                $listBoxControlName = $wgtConfig['useControlName'];
+                $source = false;
+                $editPage = strtolower(libraryRequest::getPostFormAction());
+                $senderPage = strtolower(libraryRequest::getPostFormField($listBoxControlName.BS.'sender'));
+                if (empty($editPage))
+                    $editPage = "list";
+
+                // handle action using sender page
+                switch ($senderPage) {
+                    case 'new':
+
+                        // save action 
+                        if ($editPage == 'save') {
+                            $_itemNew = libraryRequest::getPostFormField($listBoxControlName.BS.'newentry');
+                            if (!empty($_itemNew)) {
+                                echo '<br> NEW ITEM DETECTED = ' . $_itemNew;
+                            }
+                            // back to manager
+                            $editPage = 'list';
+                        }
+
+                        break;
+
+                    case 'edit':
+                        
+                        if ($editPage == 'save') {
+                            
+                            // back to manager
+                            $editPage = 'list';
+                        } else ;
+                        
+                        break;
+                    case 'remove':
+                        
+                        // remove items
+                        if ($editPage == 'save') {
+                            
+                            // back to manager
+                            $editPage = 'list';
+                        } else {
+                            // get all items to remove
+                            $items = libraryRequest::getPostFormField($listBoxControlName.BS.'remove');
+                            $source = libraryFileManager::getMapByFileList($items);
+                            var_dump($source);
+                        }
+                        
+                        break;
+                    default:
+                        break;
+                }
+
+                if ($editPage === 'edit') {
+                    $items = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
+                    if (empty($items))
+                        $editPage = 'list';
+                    else
+                        $source = file_get_contents($items);
+                }
+                
+                // get all data to display
+                if ($editPage == 'list' || libraryRequest::isPostFormActionMatchAny('list', 'cancel')) {
+                    // set default page to display
+                    $editPage = "list";
+                    //$scriptData = file_get_contents($scriptFilepath);
+                    // get all available files
+                    $source = libraryFileManager::getGlobMap($mangerSource . gEXT_ALL_JS, EXT_JS);
+                }
+                
+                $ext['SOURCE'] = $source;
+                $wgtData['EDIT_PAGE'] = $editPage;
+                
+                
+                //$ownerData = $wgtData['RECORD'];
+                //$mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts);
+                //$content = false;
+                //$list = false;
+                //$page = 'LIST';
+                //$listBoxControlName = $wgtConfig['useControlName'];
                 //$page = libraryRequest::getPostFormField($listBoxControlName.BS.'page');
                 //if (empty($page))
                 //    $page = 'LIST';
-                $ppAction = libraryRequest::getPostFormAction();
+                //$ppAction = libraryRequest::getPostFormAction();
 
+        
+                
+                //echo      '<br> ====' .  $editPage;
+                
                 //echo '<br>PAGE SENDER IS = ' . $page;
-                echo '<br>PAGE ACTION IS = ' . $ppAction;
+                //echo '<br>PAGE ACTION IS = ' . $ppAction;
 
                 // handle buttons
-                switch ($ppAction) {
+                /*switch ($ppAction) {
                     case "Edit":
                         //$page = 'EDIT';
                         $items = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
@@ -162,7 +239,7 @@ class pluginReporting extends objectBaseWebPlugin {
                     default:
                         $list = libraryFileManager::getGlobMap($mangerSource . gEXT_ALL_JS, EXT_JS);
                         break;
-                }
+                }*/
                 
 
                 /*switch ($ppAction) {
@@ -201,10 +278,10 @@ class pluginReporting extends objectBaseWebPlugin {
                     }
                 }*/
                 
-                $ext['CONTENT'] = $content;
-                $ext['LIST'] = $list;
+                //$ext['CONTENT'] = $content;
+                //$ext['LIST'] = $list;
 
-                $wgtData['EDIT_PAGE'] = $page;
+                //$wgtData['EDIT_PAGE'] = $page;
                 
                 /*
                 // get script path

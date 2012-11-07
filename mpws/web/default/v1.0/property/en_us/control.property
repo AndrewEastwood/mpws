@@ -37,3 +37,9 @@ controlFormButtonsDataRecordRemovalButtonCancel = "Cancel";
 ; Rich Text Editor With Highlight
 controlFormButtonsRTEWHButtonSave = 'Save Data';
 controlFormButtonsRTEWHButtonCancel = 'Skip';
+
+controlFormButtonsDataRecordManagerButtonNew = "New Record";
+controlFormButtonsDataRecordManagerButtonEdit = "Edit";
+controlFormButtonsDataRecordManagerButtonRemove = "Remove";
+controlFormButtonsDataRecordManagerButtonSave = "Save Changes";
+controlFormButtonsDataRecordManagerButtonCancel = "Cancel";
