@@ -230,7 +230,7 @@ class libraryStaticResourceManager {
         var_dump($_web);
         var_dump($_default);
         
-        throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: ' . $resourceName);
+        throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: <b>' . $resourceName.'</b>');
     }
     public static function getPropertyPath ($owner, $name, $resourceName, $locale = 'en_us', $preDefinedPaths = array()) {
         debug('libraryStaticResourceManager', 'getPropertyPath', true);
@@ -275,7 +275,7 @@ class libraryStaticResourceManager {
     public static function getTemplateValue ($templateFilePath, $propKey) {
         debug('libraryStaticResourceManager', 'getTemplateValue', true);
         if (!file_exists($templateFilePath))
-            throw new Exception('libraryStaticResourceManager: getTemplateValue: Template file does not exsist: ' . $templateFilePath);
+            throw new Exception('libraryStaticResourceManager: getTemplateValue: Template file does not exsist: <b>' . $templateFilePath.'</b>');
         return file_get_contents($templateFilePath);
     }
 
@@ -288,21 +288,21 @@ class libraryStaticResourceManager {
                  if ($propertyValue != null)
                      return $propertyValue;
             }
-            throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey . ' in <pre>' . print_r($propertyFilePath, true) . '</pre>');
+            throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
         }
         elseif (is_string($propertyFilePath)) {
             if (!file_exists($propertyFilePath))
-                throw new Exception('libraryStaticResourceManager: getPropertyValue: Property file does not exsist: ' . $propertyFilePath);
+                throw new Exception('libraryStaticResourceManager: getPropertyValue: Property file does not exsist: <b>' . $propertyFilePath . '</b>');
             $props = parse_ini_file($propertyFilePath);
             //debug($props);
             //echo '<br> Reading property file: ' . $propertyFilePath;
             if (isset($props[$propKey]))
                 return $props[$propKey];
             if (!$fromArray)
-                throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: ' . $propKey . '; filepath: ' . $propertyFilePath);
+                throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: <b>' . $propKey . '</b>; filepath: ' . $propertyFilePath);
             return null;
         } else
-            throw new Exception('libraryStaticResourceManager: getPropertyValue: Wrong property file path.');
+            throw new Exception('libraryStaticResourceManager: getPropertyValue: Wrong property file path: <b>'.$propertyFilePath.'</b>');
         
     }
     

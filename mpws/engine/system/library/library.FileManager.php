@@ -23,6 +23,13 @@ class libraryFileManager
 
     // _����������
     function __destruct() { }
+    
+    public static function getMapByFileList ($fileList, $extensionToRemove = false) {
+        $fList = array();
+        foreach ($fileList as $fPath)
+            $fList[basename($fPath, $extensionToRemove)] = $fPath;
+        return $fList;
+    }
 
     public static function getGlobMap($pathToDirectory, $extensionToRemove = false) {
         $files = glob($pathToDirectory);

@@ -1,16 +1,16 @@
 {$_controlOwner = 'RTEWH'}
+{$_controlUseForm = $_useForm|default:false}
 
 {if not empty($_jslib)}
 {include file=$CURRENT.OBJECT->objectTemplatePath_simple_script
     _link=$_jslib}
 {/if}
 
-{* display requested WYSIWYG *}
-{if $_type eq 'ACE'}
-    {$uuid = md5(time())}
-    {$controlID = "MPWSControlUUID_`$uuid`_ID"}
-    {$formID = "MPWSFromUUID_`$uuid`_ID"}
-    <form action="" method="POST" id="{$formID}" class="MPWSForm">
+{* setup requested WYSIWYG *}
+{capture name="controlWYSIWYG"}
+    {if $_type eq 'ACE'}
+        {$uuid = md5(time())}
+        {$controlID = "MPWSControlUUID_`$uuid`_ID"}
         <div class="MPWSFormBody">
             <input type="hidden" id="{$controlID}" name="mpws_field_data" value="{htmlentities($_value)}"/>
         {if $_useDivWrapper }
@@ -48,6 +48,16 @@
         <div class="MPWSFormFooter">
             {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_controlOwner _resourceOwner='control'}
         </div>
-    </form>
-{/if}
+    {/if}
+{/capture}
 
+{* render control *}
+
+{if $_controlUseForm }
+    {$formID = "MPWSFromUUID_`$uuid`_ID"}
+    <form action="" method="POST" id="{$formID}" class="MPWSForm">
+        {$smarty.capture.controlWYSIWYG}
+    </form>
+{else}
+    {$smarty.capture.controlWYSIWYG}
+{/if}

@@ -7,11 +7,15 @@
     {foreach $CURRENT.SOURCE.DATA.RECORD as $fieldName => $fieldValue}
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type='mpwsLabelValue' _name=$fieldName _resourceOwner=$_resourceOwner _value=$fieldValue}
     {/foreach}
+
+    {$_formInnerAction = $CURRENT.SOURCE.DATA.EDIT_PAGE}
         
     {* customization area *}
     {block name="topBlock"}{/block}
     <form action="" method="POST">
-    {block name="generalBlock"}{/block}
+        <div class="MPWSFormHeader">{block name="generalBlockFormHeader"}{/block}</div>
+        <div class="MPWSFormBody">{block name="generalBlockFormBody"}{/block}</div>
+        <div class="MPWSFormFooter">{block name="generalBlockFormFooter"}{/block}</div>
     </form>
     {block name="bottomBlock"}{/block}
 
