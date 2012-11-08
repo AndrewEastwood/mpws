@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-06 21:28:25
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-08 00:41:15
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html" */ ?>
 <?php /*%%SmartyHeaderCode:35550345350817f100dc035-90748925%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '497c121d4947324a67febd0f320f0a2ae4da1ea4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html',
-      1 => 1352230063,
+      1 => 1352328069,
       2 => 'file',
     ),
   ),
@@ -30,6 +30,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_items' => 0,
     '_checkboxes' => 0,
     '_numLines' => 0,
+    '_captions' => 0,
+    '_initValues' => 0,
+    '_customValueHolder' => 0,
     '_isCustom' => 0,
     '_controlResourceOwner' => 0,
     '_action' => 0,
@@ -55,7 +58,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? null : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_linkLabelWithControl'] = new Smarty_variable(true, null, 0);?>
     
-<div class="MPWSBlock MPWSBlockControl MPWSRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_renderMode']->value);?>
+<div class="MPWSBlock MPWSBlockControl MPWSBlockControl_<?php echo $_smarty_tpl->tpl_vars['_type']->value;?>
+ MPWSRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_renderMode']->value);?>
 ">
 
 <?php $_smarty_tpl->_capture_stack[0][] = array("control", null, null); ob_start(); ?>
@@ -95,7 +99,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsListBox'){?>
 
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('ListBox', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsListBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_items'=>(($tmp = @$_smarty_tpl->tpl_vars['_items']->value)===null||$tmp==='' ? array() : $tmp),'_checkboxes'=>(($tmp = @$_smarty_tpl->tpl_vars['_checkboxes']->value)===null||$tmp==='' ? false : $tmp),'_numLines'=>(($tmp = @$_smarty_tpl->tpl_vars['_numLines']->value)===null||$tmp==='' ? false : $tmp)), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsListBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_items'=>(($tmp = @$_smarty_tpl->tpl_vars['_items']->value)===null||$tmp==='' ? array() : $tmp),'_checkboxes'=>(($tmp = @$_smarty_tpl->tpl_vars['_checkboxes']->value)===null||$tmp==='' ? false : $tmp),'_numLines'=>(($tmp = @$_smarty_tpl->tpl_vars['_numLines']->value)===null||$tmp==='' ? false : $tmp),'_captions'=>(($tmp = @$_smarty_tpl->tpl_vars['_captions']->value)===null||$tmp==='' ? array() : $tmp),'_initValues'=>(($tmp = @$_smarty_tpl->tpl_vars['_initValues']->value)===null||$tmp==='' ? false : $tmp),'_customValueHolder'=>(($tmp = @$_smarty_tpl->tpl_vars['_customValueHolder']->value)===null||$tmp==='' ? 'use' : $tmp)), 0);?>
 
 
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsauth'){?>
@@ -105,6 +109,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsLabelValue'){?>
      
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('LabelValue', null, 0);?>
+        <?php $_smarty_tpl->tpl_vars['_linkLabelWithControl'] = new Smarty_variable(false, null, 0);?>
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsLabelValue, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
 
             

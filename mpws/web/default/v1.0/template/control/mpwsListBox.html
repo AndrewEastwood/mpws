@@ -10,6 +10,7 @@
 {$_lineNumber = 1}
 {$_innerCaptions = []}
 {$_initValues = $_initValues|default:false}
+{$_controlCustomValueHolder = $_customValueHolder|default:'use'}
 
 {* setup inner captions *}
 {if $_numerateLines }
@@ -62,10 +63,12 @@
         {if $_useCheckbox}
             {if $_useSingleEdit}
             <input type="radio" name="{"`$_controlName`_edit"}" value="{$_val}"/>
-            <input type="checkbox" name="{"`$_controlName`_remove[]"}" value="{$_val}"/>
+            <input type="checkbox" name="{"`$_controlName`_remove"}[]" value="{$_val}"/>
             {else}
-            <input type="checkbox" name="{"`$_controlName`_edit[]"}" value="{$_val}"/>
+            <input type="checkbox" name="{"`$_controlName`_edit"}[]" value="{$_val}"/>
             {/if}
+        {elseif $_initValues }
+            <input type="hidden" name="{"`$_controlName`_`$_controlCustomValueHolder`"}[]" value="{$_val}"/>
         {/if}
             <span class="MPWSText MPWSLineValue">{$_display}</span>
         </li>
