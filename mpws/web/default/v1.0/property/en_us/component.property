@@ -29,18 +29,6 @@ pagingBarEdgeLinkPREV = "<<";
 ; ============================
 validatorHeader = "Some errors were occurred in the fields below:";
 
-; data table component
-; ============================
-controlActionLinkTitleDataTableTopActionNEW = "New Record";
-controlActionLinkTitleDataTableRowActionEDIT = 'edit';
-controlActionLinkTitleDataTableRowActionVIEW = 'view';
-controlActionLinkTitleDataTableRowActionDELETE = 'delete';
-controlButtonDataEditorSave = "Save";
-controlButtonDataEditorPreview = "Preview";
-controlButtonDataEditorCancel = "Cancel";
-controlButtonDataEditorEdit = "Edit";
-controlButtonDataEditorNew = "New Record";
-
 ; data editor components
 ; ============================
 controlActionLinkTitleDataEditorFormActionBackToRecords = "Back To Records";

@@ -24,9 +24,17 @@ mpws.module.define('reporting', (function(window, document, $){
         });
     };
     
+    // init
+    $(document).ready(function(){
+        if (mpws.display === 'manager') {
+            $('.MPWSRenderModeTabs').tabs();
+        }
+    });
+    
     return {
         initUserPaging: _initUserPaging
     };
          
     
 })(window, document, jQuery));
+

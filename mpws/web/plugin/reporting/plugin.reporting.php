@@ -116,110 +116,11 @@ class pluginReporting extends objectBaseWebPlugin {
     }
     
     /* action hooks */
-    final protected function hookBeforeAddWidgetDataRecordManager ($widgetName, &$wgtData, $wgtConfig) {
+    /*final protected function hookBeforeAddWidgetDataRecordManager ($widgetName, &$wgtData, $wgtConfig) {
         parent::hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData, $wgtConfig);
         $ext = array();
         switch ($widgetName) {
             case "ReportManager" : {
-
-                // handle manager
-                // requred fields
-                // LIST
-                // EDITING
-
-                $ownerData = $wgtData['RECORD'];
-                $mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts);
-                $content = false;
-                $list = false;
-                $page = 'LIST';
-                $listBoxControlName = $wgtConfig['useControlName'];
-                //$page = libraryRequest::getPostFormField($listBoxControlName.BS.'page');
-                //if (empty($page))
-                //    $page = 'LIST';
-                $ppAction = libraryRequest::getPostFormAction();
-
-                //echo '<br>PAGE SENDER IS = ' . $page;
-                echo '<br>PAGE ACTION IS = ' . $ppAction;
-
-                // handle buttons
-                switch ($ppAction) {
-                    case "Edit":
-                        //$page = 'EDIT';
-                        $items = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
-                        if (empty($items))
-                            $page = 'LIST';
-                        else
-                            $content = file_get_contents($items);
-                        break;
-                    case "AddNew":
-                        //$page = 'NEW';
-
-                        break;
-                    case "Remove":
-                        //$page = 'REMOVE';
-                        
-                        break;
-                    default:
-                        $list = libraryFileManager::getGlobMap($mangerSource . gEXT_ALL_JS, EXT_JS);
-                        break;
-                }
-                
-
-                /*switch ($ppAction) {
-                    case "EditSelected" : {
-                        $page = 'EDIT';
-                        // get resource name to edit
-                        $items = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
-                        //var_dump($items);
-                        if (empty($items))
-                            $page = 'LIST';
-                        else
-                            $content = file_get_contents($items);
-                        //echo "11111111 EditSelected";
-                        break;
-                    }
-                    case "AddNewReport" : {
-                        $page = 'NEW';
-                        //echo "11111111 AddNewReport";
-                        break;
-                    }
-                    case "RemoveSelected" : {
-                        $page = 'REMOVE';
-                        // get resource name to edit
-                        $items = libraryRequest::getPostFormField($listBoxControlName.BS.'remove');
-                        //var_dump($items);
-                        $content = libraryFileManager::getMapByFileList($items);
-                        //echo "11111111 RemoveSelected";
-                        break;
-                    }
-                    default: {
-                        // just get all existed report scripts
-                        //var_dump($ownerData);
-                        //echo $mangerSource;
-                        //var_dump(  ($mangerSource . gEXT_ALL_JS)  );
-                        //var_dump($scripts);
-                    }
-                }*/
-                
-                $ext['CONTENT'] = $content;
-                $ext['LIST'] = $list;
-
-                $wgtData['EDIT_PAGE'] = $page;
-                
-                /*
-                // get script path
-                $scriptFilepath = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts.DS.$scriptName.EXT_JS, true);
-                
-                // fetch data
-                if (libraryRequest::isPostFormAction('save')) {
-                    // save data
-                    $scriptData = libraryUtils::getWithEOL(libraryRequest::getPostFormField('data'));
-                    file_put_contents($scriptFilepath, $scriptData);
-                } else {
-                    // get data content
-                    $scriptData = file_get_contents($scriptFilepath);
-                }
-                $data['SCRIPT'] = $scriptData;*/
                 
                 
                 break;
@@ -227,7 +128,7 @@ class pluginReporting extends objectBaseWebPlugin {
         }
 
         $wgtData['MANAGER'] = $ext;
-    }
+    }*/
     
     /* custom action handlers */
     

@@ -30,7 +30,6 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
                 break;
             }
             case "manage" : {
-                //$managerFnName = 'customWidgetDataRecordManager'.$widgetName;
                 $this->addWidgetDataRecordManager($widgetName);
                 break;
             }
@@ -82,9 +81,14 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
     public function addWidgetDataRecordManager ($widgetName) {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_dataRecordManager" . $widgetName};
-        $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
-        $this->hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData, $wgtConfig);
-        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordManager');
+        // get all managers
+        //$managers = $wgtConfig['managers'];
+        // setup
+        //foreach ($managers as $mgr) {
+            $wgtData = libraryComponents::getDataRecordManager($wgtConfig, $ctx->contextCustomer->getDBO());
+            $this->hookBeforeAddWidgetDataRecordManager($widgetName, $wgtData, $wgtConfig);
+            $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordManager');
+        //}
     }
     
     /* hooks */

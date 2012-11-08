@@ -201,15 +201,19 @@ class objectBaseWeb extends objectBase {
     protected function addWidget ($widgetName, $wgtConfig, $wgtData, $widgetParent = '') {
         $ctx = contextMPWS::instance();
         $wnT = "objectTemplatePath_widget_";
+        
+        $wnTbase = $wnT . "base" . ucfirst($widgetParent);
+        $wnTowner = $wnT .$widgetParent . $widgetName;
+
         // check if we use default template
-        if (empty($wgtConfig['useCustomTemplate'])) {
-            // default widget name and resource to be used
-            $wnT .= "base" . ucfirst($widgetParent);
-            //$widgetName = $widgetParent.DOG.$widgetName;
-        } else {
-            $wnT .= $widgetParent . $widgetName;
+        try {
+            if ($this->$wnTowner)
+                $wnT = $wnTowner;
+        } catch (Exception $exc) {
+            $wnT = $wnTbase; // default widget name and resource to be used
         }
         $widgetName = $widgetParent.DOG.$widgetName;
+
         //var_dump($wgtConfig);
         //echo '<br>addWidget: '.$widgetName;
         //echo '<br>Template to be used: '.$wnT;

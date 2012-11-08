@@ -10,6 +10,7 @@ labelForLabelValueDefaultDateUpdated = "Updated";
 
 
 labelForListBoxDataRecordManagerReportScriptListBox = "All Available Report Scripts";
+labelForListBoxDataRecordManagerReportUIListBox = "All UI Containers";
 
 captionListBoxRowNumber = "#";
 captionListBoxActionEdit = "Edit";

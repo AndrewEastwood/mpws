@@ -1,18 +1,4 @@
-{extends file=$CURRENT.OBJECT->objectTemplatePath_widget_baseDataRecordManager}
-
-{* customise manager *}
-{block name="generalBlockFormBody" append}
-
-    {* TODO:
-        - handle button actions
-        + form based
-        - list support
-        - edit mode
-        - define source structure:
-            1. LIST
-            2. CONTENT
-            2. PAGE
-    *}
+{* TEMPORARY DISABLE
 
     {if $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'LIST'}
 
@@ -53,7 +39,7 @@
 
     {elseif $CURRENT.SOURCE.DATA.MANAGER.PAGE eq 'REMOVE'}
         
-        {* display all items to be removed  *}
+        { display all items to be removed  }
         {foreach $CURRENT.SOURCE.DATA.MANAGER.CONTENT as $_key => $_value}{/foreach}
         {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
             _type='mpwsListBox'
@@ -67,6 +53,9 @@
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Remove', 'Cancel'] _controlOwner=$_widgetName _resourceOwner=$_resourceOwner}
         
     {/if}
-        
 
-{/block}
+
+
+
+
+*}

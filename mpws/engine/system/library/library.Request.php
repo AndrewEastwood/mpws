@@ -71,7 +71,9 @@ class libraryRequest {
     static function getPostValue($key, $defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::value($_POST, $key, $defaultValue, $switch, $valueOnSwitch);
     }
-    static function getPostFormAction () {
+    static function getPostFormAction ($lower = true) {
+        if ($lower)
+            return strtolower(self::value($_POST, 'do'));
         return self::value($_POST, 'do');
     }
     static function getPostFormField ($key, $doEscape = true, $wrap = '') {

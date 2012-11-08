@@ -25,15 +25,23 @@ controlActionLinkTitleDataRecordViewerBACKTORECORDS = "Back To Records";
 controlActionLinkTitleDataRecordManagerBACKTORECORDS = "Back To Records";
 
 ; data editor buttons
-controlFormButtonsDataEditorButtonSave ="Save";
-controlFormButtonsDataEditorButtonPreview="Preview";
-controlFormButtonsDataEditorButtonCancel="Cancel";
-controlFormButtonsDataEditorButtonEdit = "Edit";
+controlFormButtonsDataEditorButtonSave = "Save";
+controlFormButtonsDataEditorButtonPreview = "Preview";
+controlFormButtonsDataEditorButtonCancel = "Cancel";
 controlFormButtonsDataEditorButtonNew = "New";
+
+; data record manager buttons
+controlFormButtonsDataRecordManagerButtonNew = "New";
+controlFormButtonsDataRecordManagerButtonEdit = "Edit";
+controlFormButtonsDataRecordManagerButtonRemove = "Remove";
+controlFormButtonsDataRecordManagerButtonCancel = "Cancel";
+controlFormButtonsDataRecordManagerButtonSave = "Save";
+
+; data record viewer
 controlFormButtonsDataRecordRemovalButtonRemove = "Remove";
 controlFormButtonsDataRecordRemovalButtonCancel = "Cancel";
 
 
 ; Rich Text Editor With Highlight
-controlFormButtonsRTEWHButtonSave = 'Save Data';
-controlFormButtonsRTEWHButtonCancel = 'Skip';
+controlFormButtonsRTEWHButtonSave = 'Save';
+controlFormButtonsRTEWHButtonCancel = 'Cancel';

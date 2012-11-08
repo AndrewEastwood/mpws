@@ -169,6 +169,228 @@ class libraryComponents {
         return $com;
     }
 
+    public static function getDataRecordManager($config, $dbLink) {
+        
+        // get owner record information
+        $wgtData = self::getDataRecordViewer($config, $dbLink);
+        // get all managers
+        $managers = $config['managers'];
+        // specific variables
+        $ownerData = $wgtData['RECORD'];
+        // get requested action
+        $ppAction = libraryRequest::getPostFormAction();
+        // determinate request origin
+        $rOrigin = libraryRequest::getPostFormField('manager'.BS.'request'.BS.'origin');
+        // manager index
+        $managerIndex = 0;
+        // active manager index
+        $managerActiveIndex = 0;
+        
+        echo '<br> ACTIVE MANAGER IS = ' . $rOrigin;
+
+        foreach ($managers as $managerID => $currentManager) {
+            // manager object
+            $mgr = array();
+            // manager type
+            $mgrType = strtolower($currentManager['type']);
+            // manager content
+            $mgrContent = false;
+            // for non-active widget fetch startup data
+            $isActive = (strcasecmp($rOrigin, $managerID) === 0);
+            // editopr page
+            $editPage = 'LIST';
+            // resource to manage
+            $mangerSource = false;
+            // get resource to manage
+            switch ($mgrType) {
+                case "file" : {
+                    $mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $currentManager['manageSource']);
+                    break;
+                }
+            }
+            
+            // handle manager actions such as: save, remove, etc.
+            if ($isActive) {
+                
+
+                echo '<br> ACTIVE MANAGER IS = ' . $managerID;
+                echo '<br> ACTIVE ACTION IS = ' . $managerID;
+                
+                // cancel action
+                if (libraryRequest::isPostFormAction('cancel')) {
+                    // simply set LIST mode to get data
+                    $editPage = 'LIST';
+                } // end of cancel handler
+                
+                // edit and remove modes
+                if (libraryRequest::isPostFormActionMatchAny('edit', 'remove')) {
+                    // get selected items to edit
+                    $items = libraryRequest::getPostFormField($managerID.BS.strtolower($ppAction));
+                    // verify edit action or return to list page
+                    if (empty($items)) {
+                        $editPage = 'LIST';
+                    } else {
+                        if ($ppAction == 'edit')
+                            $mgrContent = file_get_contents($items);
+                        if ($ppAction == 'remove')
+                            $mgrContent = libraryFileManager::getMapByFileList($items);
+                        $editPage = strtoupper($ppAction);
+                    }
+                } // end of [edit, remove] handler
+
+                // set active index
+                $managerActiveIndex = $managerIndex;
+            }
+            
+            // for non-active managers get startup information
+            // for cancel action
+            // for default request or at first opening
+            if (!$isActive || $editPage == 'LIST' || $editPage == 'CANCEL') {
+                echo 'OLOLOLOLOLOLOLOLOLO';
+                // get source using source type
+                switch ($mgrType) {
+                    case "file" : {
+                        $mgrContent = libraryFileManager::getGlobMap($mangerSource . DS . '*');
+                        break;
+                    }
+                }
+            }
+            
+            // setup manager object
+            $mgr['INDEX'] = $managerIndex;
+            $mgr['IS_ACTIVE'] = $isActive;
+            $mgr['EDIT_PAGE'] = $editPage;
+            $mgr['CONTENT'] = $mgrContent;
+            
+            // add manager data
+            $wgtData['MANAGER'][$managerID] = $mgr;
+            
+            // set next manager index
+            $managerIndex++;
+        }
+
+        
+        $wgtData['MANAGER']['COMMON'] = array(
+            'ACTIVE_INDEX' => $managerActiveIndex
+        );
+        
+        echo '<pre>' . print_r($wgtData,true) . '</pre>';
+        
+        return $wgtData;
+        
+        // handle requests
+        
+
+        // get edit page name
+        //$editPage = strtolower(libraryRequest::getPostFormAction());
+        //$doNotFetchData = $editPage == "edit";
+        // normalize page name
+        //$editPage = strtolower(trim($editPage));
+        
+        // manager
+        
+        
+        
+        
+                // handle manager
+                // requred fields
+                // LIST
+                // EDITING
+
+                /*$content = false;
+                $list = false;
+                $page = 'LIST';
+                //$page = libraryRequest::getPostFormField($listBoxControlName.BS.'page');
+                //if (empty($page))
+                //    $page = 'LIST';
+                $ppAction = libraryRequest::getPostFormAction();
+
+                //echo '<br>PAGE SENDER IS = ' . $page;
+                echo '<br>PAGE ACTION IS = ' . $ppAction;
+
+                // handle buttons
+                switch ($ppAction) {
+                    case "Edit":
+                        //$page = 'EDIT';
+                        $items = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
+                        if (empty($items))
+                            $page = 'LIST';
+                        else
+                            $content = file_get_contents($items);
+                        break;
+                    case "AddNew":
+                        //$page = 'NEW';
+
+                        break;
+                    case "Remove":
+                        //$page = 'REMOVE';
+                        
+                        break;
+                    default:
+                        $list = libraryFileManager::getGlobMap($mangerSource . gEXT_ALL_JS, EXT_JS);
+                        break;
+                }*/
+                
+
+                /*switch ($ppAction) {
+                    case "EditSelected" : {
+                        $page = 'EDIT';
+                        // get resource name to edit
+                        $items = libraryRequest::getPostFormField($listBoxControlName.BS.'edit');
+                        //var_dump($items);
+                        if (empty($items))
+                            $page = 'LIST';
+                        else
+                            $content = file_get_contents($items);
+                        //echo "11111111 EditSelected";
+                        break;
+                    }
+                    case "AddNewReport" : {
+                        $page = 'NEW';
+                        //echo "11111111 AddNewReport";
+                        break;
+                    }
+                    case "RemoveSelected" : {
+                        $page = 'REMOVE';
+                        // get resource name to edit
+                        $items = libraryRequest::getPostFormField($listBoxControlName.BS.'remove');
+                        //var_dump($items);
+                        $content = libraryFileManager::getMapByFileList($items);
+                        //echo "11111111 RemoveSelected";
+                        break;
+                    }
+                    default: {
+                        // just get all existed report scripts
+                        //var_dump($ownerData);
+                        //echo $mangerSource;
+                        //var_dump(  ($mangerSource . gEXT_ALL_JS)  );
+                        //var_dump($scripts);
+                    }
+                }*/
+                
+                //$ext['CONTENT'] = $content;
+                //$ext['LIST'] = $list;
+
+                //$wgtData['EDIT_PAGE'] = $page;
+                
+                /*
+                // get script path
+                $scriptFilepath = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts.DS.$scriptName.EXT_JS, true);
+                
+                // fetch data
+                if (libraryRequest::isPostFormAction('save')) {
+                    // save data
+                    $scriptData = libraryUtils::getWithEOL(libraryRequest::getPostFormField('data'));
+                    file_put_contents($scriptFilepath, $scriptData);
+                } else {
+                    // get data content
+                    $scriptData = file_get_contents($scriptFilepath);
+                }
+                $data['SCRIPT'] = $scriptData;*/
+        
+        
+    }
+    
     public static function getDataRecordViewer($config, $dbLink) {
 
         $oid = libraryRequest::getOID();

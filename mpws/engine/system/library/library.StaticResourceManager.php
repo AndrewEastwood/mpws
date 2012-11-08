@@ -226,11 +226,13 @@ class libraryStaticResourceManager {
         }
         
         
-        var_dump($_owner);
-        var_dump($_web);
-        var_dump($_default);
+        //var_dump($_owner);
+        //var_dump($_web);
+        //var_dump($_default);
         
-        throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: <b>' . $resourceName.'</b>');
+        $_pathTrace = array($_owner, $_web, $_default);
+        
+        throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: <pre>' . print_r($_pathTrace, true).'</pre>');
     }
     public static function getPropertyPath ($owner, $name, $resourceName, $locale = 'en_us', $preDefinedPaths = array()) {
         debug('libraryStaticResourceManager', 'getPropertyPath', true);
@@ -263,9 +265,9 @@ class libraryStaticResourceManager {
         if (count($propFiles) > 0)
             return $propFiles;
         
-        var_dump($_owner);
-        var_dump($_web);
-        var_dump($_default);
+        //var_dump($_owner);
+        //var_dump($_web);
+        //var_dump($_default);
         
         $_pathTrace = array($_owner, $_web, $_default);
         
