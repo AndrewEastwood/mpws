@@ -32,8 +32,3 @@ validatorHeader = "Some errors were occurred in the fields below:";
 ; data editor components
 ; ============================
 controlActionLinkTitleDataEditorFormActionBackToRecords = "Back To Records";
-
-; auth form
-; ============================
-controlButtonMpwsAuthBoxSignIn = "Enter";
-controlButtonWidgetUserInfoSignOut = "Logout";

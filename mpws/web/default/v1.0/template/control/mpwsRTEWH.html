@@ -1,5 +1,8 @@
 {$_controlOwner = 'RTEWH'}
 {$_controlUseForm = $_useForm|default:false}
+{$_controlSources = $_sources|default:[]}
+{$_controlNameData = "mpws_field_`$_name|lower`_data"}
+{$_controlNameSource = "mpws_field_`$_name|lower`_source"}
 
 {if not empty($_jslib)}
 {include file=$CURRENT.OBJECT->objectTemplatePath_simple_script
@@ -12,7 +15,10 @@
         {$uuid = md5(time())}
         {$controlID = "MPWSControlUUID_`$uuid`_ID"}
         <div class="MPWSFormBody">
-            <input type="hidden" id="{$controlID}" name="mpws_field_data" value="{htmlentities($_value)}"/>
+            <input type="hidden" id="{$controlID}" name="{$_controlNameData}" value="{htmlentities($_value)}"/>
+            {if not empty($_controlSources)}
+                <input type="hidden" name="{$_controlNameSource}" value="{$_controlSources}"/>
+            {/if}
         {if $_useDivWrapper }
             <div id="MPWSWrapperRTEWH_{$_name|lower}_ID" class="MPWSWrapper MPWSWrapperRTEWH">{$_value}</div>
             {* TODO: move into default *}
