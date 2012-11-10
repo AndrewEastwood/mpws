@@ -1,0 +1,718 @@
+/*
+    GENERAL ELEMENTS
+        LINKS
+        CONTROLS
+        ELEMENTS
+        
+    WRAPPERS
+    COMPONENTS
+    PAGE STRUCTURE
+        HEADER
+            LOGO
+            MAIN TEXT
+            SUBTEXT
+            SHORT MENU V1
+            SEARCH
+        RIBBON
+            OFFERS PRODUCTS
+        MAIN CONTENT
+            LEFT SIDE
+                FULL MENU V2
+            CENETR
+                
+            RIGHT SIDE
+                
+        FOOTER
+            COPYRIGHT TEXT
+            COUNTERS
+            SHORT MENU V3
+*/
+
+
+/* GENERAL ELEMENTS */
+.MPWSPage {font: 12px ForalProBold,Georgia,serif; color: #333; margin-top: 0px; padding-top: 0px; background: url("%SITEPATH%mainbg_3.jpg") fixed #00AB8E;}
+
+    /* GENERIC PAGES */
+    .MPWSPageIndex {}
+    .MPWSPageShop {}
+    .MPWSPageCategory {}
+    .MPWSPageProduct {}
+    .MPWSPageHowto {}
+    .MPWSPageSearch {}
+
+    /* LINKS */
+    .MPWSPage a, .MPWSPage a:visited {color: #fff; text-decoration: none;}
+    .MPWSPage a:hover {color: #fff; text-decoration: none; /* #E88021; */}
+
+    /* CONTROLS */
+    .MPWSCLabel {}
+    .MPWSCInput {font-family: ForalProBold,Georgia,serif; border: 1px solid #00AB8E; color: #003D4C; padding: 3px 10px;}
+    .MPWSCButton {text-transform: uppercase; display: block; width: 155px; font-size: 14px; padding: 10px; text-align: center; text-decoration: none; color: #fff; background: url("%SITEPATH%icon_arrow_right_white.png") #00AB8E no-repeat center right; float: left; margin-right: 0px; cursor: pointer; border: 1px solid #00AB8E;}
+    .MPWSCInputText {}
+    .MPWSCInputRichText {font-family: ForalProBold,Georgia,serif; border: 1px solid #00AB8E; color: #003D4C; padding: 3px 10px;}
+    .MPWSCInputImage {}
+    .MPWSCInputButton {}
+
+    /* CONTROLS STATES */
+    .MPWSCButton:hover {color: #00AB8E; background: url("%SITEPATH%icon_arrow_right_green.png") #fff no-repeat center right; border: 1px solid #00AB8E;}
+
+    /* ELEMENTS */
+    .MPWSSeparator {}
+    .MPWSLink {}
+    .MPWSValue {font-weight: bold;}
+    .MPWSNumber {}
+    .MPWSLabel {}
+    .MPWSText {}
+    .MPWSPrefix {}
+    .MPWSSuffix {}
+    .MPWSWidget {}
+    .MPWSFlashObject {}
+    .MPWSImage {}
+    .MPWSList {}
+    .MPWSVideo {}
+
+    /* MESSAGES */
+    .MPWSMessage {font-style: italic; color: #12205D; font-weight: bold; display: block;}
+        .MPWSMessageError {color: #c00;}
+        .MPWSMessageWarning {}
+
+    /* ICONS */
+    .MPWSIcon {}
+        .MPWSIconError {}
+        .MPWSIconWarning {}
+        
+    /* TAGS */
+    .MPWSTag {}
+
+    /* APPEARANCE */
+    .MPWSHidden {display: none;}
+    .MPWSCurrent {border: 1px solid #12205D; background-color: #fff; padding: 2px 5px;}
+    .MPWSLoading {background: url('%SITEPATH%/loading.gif') no-repeat center center;}
+        .MPWSLoading .MPWSContentPlaceholder {visibility: hidden;}
+
+    /* PLACEHOLDERS */
+    .MPWSContentPlaceholder {}
+        
+    /* HEADER */
+    .MPWSHeader {}
+        .MPWSHeader .MPWSHeaderIcon {}
+        .MPWSHeader .MPWSHeaderTitle {}
+
+/* WRAPPERS */
+.MPWSWrapper {}
+    .MPWSSectionWrapper {}
+    .MPWSContentWrapper {}
+    .MPWSWidgetWrapper {}
+    .MPWSErrorWrapper {}
+    .MPWSWrapperProductItem {/*background: url('%SITEPATH%/productreflection.png') no-repeat 0 bottom;*/ float: left; width: 310px;}
+        .MPWSWrapperProductItem.Even {margin-right: 30px;}
+        .MPWSWrapperProductItem.Odd {margin-right: 0px;}
+    
+
+/* SECTIONS AND MINIBLOCKS */
+.MPWSSection {}
+    .MPWSSection .MPWSHeader {}
+        .MPWSSection .MPWSHeaderTitle {font-size: 15px; font-weight: bold;}
+    .MPWSSectionFooter {}
+    .MPWSSectionContent {background: url('%SITEPATH%/bg_grid_17.gif') no-repeat 0 bottom;}
+        .MPWSSectionContent .MPWSItem {}
+    /* SECTION VARIANTS */
+    .MPWSSectionError {}
+    .MPWSSectionContent {}
+    .MPWSSectionSideLeft {}
+    .MPWSSectionSideRight {}
+    .MPWSSectionSideMiddle {}
+    .MPWSSectionProduct {}
+    .MPWSSectionImage {}
+    .MPWSSectionStaticPage {padding: 20px;}
+
+    /* MINIBLOCK (inside section or components) */
+    .MPWSMiniBlock {}
+        .MPWSMiniBlock .MPWSHeader {background: transparent;}
+            .MPWSMiniBlock .MPWSHeaderTitle {}
+        .MPWSMiniBlockContent {}
+            .MPWSMiniBlockContent .MPWSItem {}
+        .MPWSMiniBlockFooter {}
+
+    /* WIDGET */
+    .MPWSWidget {padding: 5px 10px; margin: 0px 0px 20px;}
+        .MPWSWidget .MPWSHeader {}
+            .MPWSWidget .MPWSHeaderTitle {}
+        .MPWSWidget .MPWSWidgetContent {}
+            .MPWSWidget .MPWSWidgetContent .MPWSList {}
+            .MPWSWidget .MPWSWidgetContent .MPWSItem {}
+        .MPWSWidget .MPWSWidgetFooter {}
+
+
+
+
+/* COMPONENTS */
+    .MPWSComponent {}
+    
+    /* [COMPONENTS] MENU */
+    .MPWSSectionMenu {background-color: transparent;}
+        .MPWSSectionMenu .MPWSHeader {margin-bottom: 0px;}
+        .MPWSSectionMenu .MPWSMenuItem {}
+        .MPWSSectionMenu .MPWSMenuItem li {}
+            .MPWSSectionMenu .MPWSLink {font: 11px 'GibsonRegular',Arial,sans-serif; text-decoration: none; text-transform: uppercase;white-space: nowrap; color: #fff; clear: none; display: block; padding: 10px;}
+            .MPWSSectionMenu .MPWSLinkWithSubmenu {}
+            .MPWSSectionMenu .MPWSLinkWithSubmenu {overflow: hidden; zoom: 1;}
+                .MPWSSectionMenu .MPWSLinkWithSubmenu .MPWSText, .MPWSSectionMenu .MPWSLinkWithSubmenu .MPWSSubMenuArrow {float: left;}
+            .MPWSSectionMenu .MPWSLink:hover {}
+            .MPWSSectionMenu .MPWSLink:visited {}
+            .MPWSSectionMenu .MPWSItem {position: relative;}
+            .MPWSSectionMenu .MPWSItem:hover {background-color: #fff;}
+            .MPWSSectionMenu .MPWSItem:hover .MPWSLink {color: #003D4C;}
+            .MPWSSectionMenu .MPWSItem:hover .MPWSSectionWrapperSubMenu {display: block;}
+            .MPWSSectionMenu .MPWSList {list-style: none; zoom: 1; margin: 0px; padding: 0px;}
+        .MPWSSectionMenu .MPWSSectionContent {background-color: transparent;}
+        .MPWSSectionMenu .MPWSItem .MPWSSubMenuArrow {width: 10px; height: 10px; text-indent: -999em; overflow: hidden; background: url("%SITEPATH%arrows-ffffff.png") no-repeat 0px -100px; margin-left: 5px;}
+        .MPWSSectionMenu .MPWSItem:hover .MPWSSubMenuArrow {background-position: -10px -100px;}
+        .MPWSSectionMenu .MPWSSectionWrapperSubMenu {clear: both; margin-top: 0px; display: none; background-color: #fff; border: 1px solid #fff; padding: 15px 10px; width: 180px; margin-left: 0px; position: absolute; z-index: 9999; border-top: 1px solid #003D4C;}
+            .MPWSSectionMenu .MPWSSectionWrapperSubMenu .MPWSItem {background: url("%SITEPATH%icon_arrow_right_green.png") #fff no-repeat right center;}
+            .MPWSSectionMenu .MPWSSectionWrapperSubMenu .MPWSItem:hover {background-color: #003D4C;}
+            .MPWSSectionMenu .MPWSSectionWrapperSubMenu .MPWSItem:hover .MPWSLink {color: #fff;}
+        
+    /* [COMPONENTS] SHOP PATH */
+    .MPWSWidgetShopPath {}
+        .MPWSWidgetShopPath .MPWSHeader {}
+            .MPWSWidgetShopPath .MPWSHeader .MPWSHeaderTitle {}
+        .MPWSWidgetShopPath .MPWSLink {}
+        .MPWSWidgetShopPath .MPWSItem {}
+        .MPWSWidgetShopPath .MPWSShopPathItemDelimiter {}
+        
+    /* [COMPONENTS] SHOP STRUCTURE */
+    .MPWSSectionContentShopStructure {overflow: hidden; padding: 20px; background-color: #fff;}
+    .MPWSMiniBlockStructureUnit {float: left; width: 45%; margin-bottom: 20px;}
+        .MPWSMiniBlockStructureUnit .MPWSHeader {}
+            .MPWSMiniBlockStructureUnit .MPWSHeader .MPWSHeaderTitle {font-size: 18px;}
+            .MPWSMiniBlockStructureUnit .MPWSHeader .MPWSHeaderTitle .MPWSLink {padding: 0px 5px;}
+            .MPWSMiniBlockStructureUnit .MPWSHeader .MPWSHeaderTitle .MPWSLink:hover {color: #fff; background: #12205d;}
+            .MPWSMiniBlockStructureUnit .MPWSHeader .MPWSTextCategoryDesc {display: block; color: #12205d; font-style: italic;}
+        .MPWSMiniBlockStructureUnit .MPWSMiniBlockContent {padding: 4px 0px 10px;}
+            .MPWSMiniBlockStructureUnit .MPWSItem {padding-right: 10px;}
+            .MPWSMiniBlockStructureUnit .MPWSLink {}
+            .MPWSMiniBlockStructureUnit .MPWSSuffix {font-size: 10px; font-weight: bold;}
+
+    /* [COMPONENTS] RATING WIDGET */
+    .MPWSWidgetRatingStar {}
+        .MPWSWidgetRatingStarFull {margin: 0px; padding: 0px; background: none;}
+        .MPWSWidgetRatingStarEmbedded {background: none;}
+        /* MESSAGES */
+        .MPWSWidgetRatingStar .MPWSLabelRatingStartTitle {line-height: 19px;}
+        .MPWSWidgetRatingStar .MPWSDuplicateRatingMessage {color: #c00;}
+        /* QUICK RATING */
+        .MPWSStaticRatingImage .MPWSMiniBlockEmbeddedRating {display: none;}
+        .MPWSStaticRatingImage:hover {background: none;}
+        .MPWSStaticRatingImage:hover .MPWSLabelRatingStartTitle {display: none;}
+        .MPWSStaticRatingImage:hover .MPWSMiniBlockEmbeddedRating {display: block;}
+        .MPWSStaticRatingImage:hover .MPWSMiniBlockEmbeddedRating .MPWSLabelRatingStartTitle {display: block; float: left; width: 100px;}
+        /* STATIC IMAGE */
+        .MPWSStaticRatingImage {background: url('%SITEPATH%/stargrid.png') no-repeat; height: 23px;}
+        .MPWSStaticRatingImage_0 {background-position: 100px -230px;}
+        .MPWSStaticRatingImage_0Point5 {background-position: 100px -207px;}
+        .MPWSStaticRatingImage_1 {background-position: 100px -184px;}
+        .MPWSStaticRatingImage_1Point5 {background-position: 100px -161px;}
+        .MPWSStaticRatingImage_2 {background-position: 100px -138px;}
+        .MPWSStaticRatingImage_2Point5 {background-position: 100px -115px;}
+        .MPWSStaticRatingImage_3 {background-position: 100px -92px;}
+        .MPWSStaticRatingImage_3Point5 {background-position: 100px -69px;}
+        .MPWSStaticRatingImage_4 {background-position: 100px -46px;}
+        .MPWSStaticRatingImage_4Point5 {background-position: 100px -23px;}
+        .MPWSStaticRatingImage_5 {background-position: 100px  0;}
+        /* EMBEDDED */
+        /* FULL */
+        .MPWSWidgetRatingStarFull .MPWSMessage {text-align: right; font-size: 10px;}
+        .MPWSWidgetRatingStarFull .MPWSWidgetOverallInfo {text-align: right; padding-right: 15px; border-right: 10px solid #12205d;}
+            .MPWSWidgetRatingStarFull .MPWSWidgetOverallInfo .MPWSLabel {color: #333; display: block;}
+            .MPWSWidgetRatingStarFull .MPWSWidgetOverallInfo .MPWSNumber {font-weight: bold;}
+                .MPWSWidgetRatingStarFull .MPWSWidgetOverallInfo .MPWSOverallRatingInfoLabel {}
+                .MPWSWidgetRatingStarFull .MPWSWidgetOverallInfo .MPWSOverallVotesInfoLabel {}
+                .MPWSWidgetRatingStarFull .MPWSWidgetOverallInfo .MPWSPopularInfoLabel {}
+        .MPWSWidgetRatingStarFull .MPWSContentPlaceholder {text-align: right; overflow: hidden; padding: 10px; zoom: 1;}
+            .MPWSWidgetRatingStarFull .MPWSContentPlaceholder .MPWSLabel {padding-right: 10px; font-weight: bold;}
+            .MPWSWidgetRatingStarFull .MPWSContentPlaceholder .MPWSMiniBlock {float: right;}
+            .MPWSWidgetRatingStarFull .MPWSContentPlaceholder .MPWSMessage {text-align: right;}
+    
+    /* [COMPONENTS] COMMENT WIDGET */
+    .MPWSWidgetComment {}
+        .MPWSWidgetCommentFull {}
+        .MPWSWidgetCommentEmbedded {}
+    .MPWSWidgetCommentErrors {}
+        .MPWSWidgetCommentErrors .MPWSMessage {}
+    .MPWSWidgetCommentForm {}
+        .MPWSWidgetCommentForm .MPWSCInput {}
+        .MPWSWidgetCommentForm .MPWSCButton {}
+        .MPWSWidgetCommentForm .MPWSCTextInput {}
+        .MPWSWidgetCommentForm .MPWSCommentTitle {}
+        .MPWSWidgetCommentForm .MPWSCommentNickname {}
+        .MPWSWidgetCommentForm .MPWSCommentEmail {}
+        .MPWSWidgetCommentForm .MPWSCommentText {}
+    .MPWSWidgetCommentItems {}
+        .MPWSWidgetCommentItem {}
+        .MPWSWidgetCommentItem .MPWSTitle {}
+        .MPWSWidgetCommentItem .MPWSCommentNickname {}
+        .MPWSWidgetCommentItem .MPWSDateTime {}
+        .MPWSWidgetCommentItem .MPWSCommentText {}
+    
+    /* [COMPONENTS] TABBED BLOCK */
+    .MPWSTabs {clear: both; margin: 50px 10px 30px;}
+        .MPWSTabSwitchers {top: -35px; position: relative;}
+            .MPWSTabSwitchers ul {border: 0px none; background: none;}
+            .MPWSTabSwitchers .MPWSTabSwitcher {}
+        .MPWSContainerTab {}
+            .MPWSContainerTab .MPWSTab {margin-top: -35px;}
+        .MPWSSeparatorTabs {clear: both; height: 5px;}
+    
+    /* [COMPONENTS] GOOGLE MEDIA */
+    .MPWSWidgetGMedia {background: none;}
+        .MPWSMiniBlockVideo {}
+        .MPWSMiniBlockImage {}
+        /* COMMON */
+        .MPWSWidgetGMedia .MPWSMiniBlockContent {overflow: hidden;}
+        .MPWSWidgetGMedia .MPWSList {list-style: none;}
+        .MPWSWidgetGMedia .MPWSItem {float: left; margin: 10px 20px 10px 0px; list-style: none;}
+        .MPWSWidgetGMedia .MPWSText {display: none;}
+        .MPWSWidgetGMedia .MPWSLink {float: left;}
+        .MPWSWidgetGMedia .MPWSImage {overflow: hidden; display: block; width: 100px; height: 100px;}
+            .MPWSWidgetGMedia .MPWSImage img {height: 100px; width: auto;}
+    
+
+    
+    /* [COMPONENTS] PRODUCT ITEM */
+    .MPWSProductItem {border: 5px solid #b4b4b4; background-color: #fff; padding: 5px; width: 290px; margin-bottom: 30px;}
+        .MPWSProductItem .MPWSHeader {background: none;}
+        /* PRODUCT MESSAGES */
+        .MPWSMessageProductInTransit {padding: 7px 0px 4px; font-size: 15px; font-style: italic; font-weight: bold; color: #12205d; display: block; text-align: center;}
+        /* PRODUCT TITLE */
+        .MPWSProductItem .MPWSProductTitle {font-size: 16px; padding-bottom: 10px;}
+        .MPWSProductItem .MPWSMiniBlockProductFullTitle {padding: 0px; margin: 1em 1.6em;}
+        .MPWSProductItem .MPWSMiniBlockProductFullTitle h2 {margin: 0;}
+            .MPWSProductItem .MPWSProductCategory {}
+            .MPWSProductItem .MPWSProductBrand {}
+            .MPWSProductItem .MPWSProductName {}
+            .MPWSProductItem .MPWSProductID {display: none;}
+        /* PRODUCT CONTENT */
+        .MPWSProductItem .MPWSSectionProductContent {background-color: #fff;}
+            /* PRODUCT IMAGE AND BADGING */
+            .MPWSProductItem  .MPWSMiniBlockProductImage {}
+                /* PRODUCT BAGE */
+                .MPWSProductItem  .MPWSProductBadgeIcon {}
+                .MPWSProductItem  .MPWSProductImage {text-align: center;}
+                    .MPWSProductItem  .MPWSProductImage .MPWSLink {text-decoration: none;}
+                    .MPWSProductItem  .MPWSProductImage img {}
+                .MPWSProductItem  .MPWSProductImageGallery {}
+                .MPWSProductItem  .MPWSProductAdditionalImage {}
+                    .MPWSProductItem  .MPWSProductAdditionalImage img {}
+                .MPWSProductItem  .MPWSProductImageError {background: no-repeat center center; width: 120px; height: 120px; margin: 0px auto;}
+            /* PRODUCT DATA */
+            .MPWSProductItem  .MPWSMiniBlockProductData {}
+                /* PRODUCT DESCRIPTION */
+                .MPWSProductItem  .MPWSProductDescription {}
+                    .MPWSProductItem  .MPWSProductDescription table {}
+                    .MPWSProductItem  .MPWSProductDescription td {}
+                    .MPWSProductItem  .MPWSProductDescription p {}
+                    .MPWSProductItem  .MPWSProductDescription br {}
+                /* PRODUCT PRICE */
+                .MPWSProductItem  .MPWSMiniBlockProductPrice {}
+                    .MPWSProductItem  .MPWSMiniBlockProductPrice .MPWSPrice {font-size: 140%;}
+                        .MPWSProductItem  .MPWSMiniBlockProductPrice  .MPWSPriceBuyer {text-align: right;}
+                        .MPWSProductItem  .MPWSMiniBlockProductPrice  .MPWSPriceActual {text-align: right;}
+                    .MPWSProductItem  .MPWSMiniBlockProductPrice .MPWSDiscount {}
+                    .MPWSProductItem  .MPWSMiniBlockProductPrice .MPWSPrefix {}
+                    .MPWSProductItem  .MPWSMiniBlockProductPrice .MPWSValue {color: #12205d; font-size: 16px; font-weight: bold;}
+                    .MPWSProductItem  .MPWSMiniBlockProductPrice .MPWSSuffix {}
+                /* PRODUCT WIDGETS */
+                .MPWSProductItem  .MPWSProductWidgets {}
+            /* PRODUCT ACTIONS */
+            .MPWSProductItem .MPWSMiniBlockProductActions {}
+                .MPWSProductItem .MPWSMiniBlockProductActions .MPWSExistance {display: block; padding: 6px 20px 5px;}
+                .MPWSProductItem .MPWSMiniBlockProductActions .MPWSExistanceIn {background: no-repeat 0 center;}
+                .MPWSProductItem .MPWSMiniBlockProductActions .MPWSExistanceOut {background: no-repeat 0 center;}
+                /* PRODUCT OPERATIONS */
+                .MPWSProductItem  .MPWSProductOperations {padding: 0px 10px; text-align: center;}
+                    .MPWSProductItem  .MPWSProductOperations .MPWSBuy {font-size: 14px;}
+                    .MPWSProductItem  .MPWSProductOperations .MPWSSeparator {padding: 0px 4px;}
+                    .MPWSProductItem  .MPWSProductOperations .MPWSDetails {font-size: 14px;}
+    
+    
+    
+    /* [COMPONENTS] PRODUCT ITEM FULL */
+    .MPWSProductItemDisplayFull {width: auto; float: none; border: 0px none; background-color: transparent; padding: 0px;}
+    .MPWSProductItemDisplayFull .MPWSMessage {text-align: left;}
+    .MPWSWrapperProductItemFull {width: auto; float: none;}
+        .MPWSProductItemDisplayFull .MPWSHeader {border-bottom: 1px dashed #12205D; margin-bottom: 10px;}
+        .MPWSProductItemDisplayFull .MPWSProductTitle {font-size: 12px; background: #eee; padding: 10px;}
+            .MPWSProductItemDisplayFull .MPWSProductTitle .MPWSProductCategory {display: block;}
+            .MPWSProductItemDisplayFull .MPWSProductTitle .MPWSProductBrand {display: block;}
+            .MPWSProductItemDisplayFull .MPWSProductTitle .MPWSProductName {display: block;}
+        .MPWSProductItemDisplayFull .MPWSSectionProductContent {overflow: hidden; zoom: 1;}
+            .MPWSProductItemDisplayFull .MPWSMiniBlockProductImage {width: 180px; float: left; padding: 10px;}
+            .MPWSProductItemDisplayFull .MPWSMiniBlockProductData {float: left; width: 440px;}
+                .MPWSProductItemDisplayFull .MPWSProductDescription {font-weight: bold;}
+                .MPWSProductItemDisplayFull .MPWSMiniBlockProductPrice {}
+                .MPWSProductItemDisplayFull .MPWSMiniBlockProductActions {text-align: right;}
+                .MPWSProductItemDisplayFull .MPWSMiniBlockProductActions .MPWSExistance {text-align: left;background-color: #EEE;background-position: 10px 5px;padding-left: 40px;padding-bottom: 10px;border-right: 10px solid #BABABA;}
+                .MPWSProductItemDisplayFull .MPWSProductOperations {text-align: right; margin-top: 10px;}
+                .MPWSProductItemDisplayFull .MPWSMiniBlockProductData .MPWSPrice {text-align: left; padding: 10px; background: #EEE; border-right: 10px solid #a1a1a1;}
+    .MPWSProductItemDisplayFull .MPWSProductWidgets {}
+    .MPWSProductItemDisplayFull .MPWSProductWidgetsLeftSide {margin-top: 10px;}
+    .MPWSProductItemDisplayFull .MPWSProductWidgetsRightSide {}
+
+    /* [COMPONENTS] BANNER */
+    .MPWSSectionOfferSiteBanner {background-color: transparent;}
+        .MPWSSectionOfferSiteBanner .MPWSOfferBannerItem {position: relative; width: 630px; margin: 0px auto;}
+        .MPWSSectionOfferSiteBanner .MPWSOfferBannerItemTitle {position: absolute; font-size: 20px; margin: 10px 15px;}
+        .MPWSSectionOfferSiteBanner .MPWSOfferBanner {/* border: 1px dashed #12205D; */}
+            .MPWSSectionOfferSiteBanner .MPWSOfferBanner .MPWSImage {}
+        /* BANNERS */
+        .MPWSSectionOfferSiteBannerUnrated {}
+        .MPWSSectionOfferSiteBannerRating {}
+        .MPWSSectionOfferSiteBannerRating .MPWSOfferBannerItemTitle {width: 380px; margin: 30px;}
+        
+
+    
+    /* [COMPONENTS] LAST ADDED WIDGET */
+    .MPWSSectionLastAddedProducts {}
+        .MPWSSectionLastAddedProducts .MPWSItem {overflow: hidden; zoom: 1;}
+        .MPWSSectionLastAddedProducts .MPWSLabel {font-weight: bold;}
+        .MPWSSectionLastAddedProducts .MPWSProductImage {height: auto; width: 80px; padding-top: 10px;}
+        .MPWSSectionLastAddedProducts .MPWSWrapperProductImage {width: 80px; height: 80px; overflow: hidden; float: left; margin-right: 10px;}
+            .MPWSSectionLastAddedProducts .MPWSWrapperProductImage .MPWSProductImageError {background: no-repeat center center; width: 100px; height: 80px;}
+        .MPWSSectionLastAddedProducts .MPWSMiniBlockProductData {padding-top: 15px;}
+    
+    /* [COMPONENTS] TOP10 WIDGET */
+    .MPWSSectionTop10Products {}
+        .MPWSSectionTop10Products .MPWSItem {overflow: hidden; zoom: 1;}
+        .MPWSSectionTop10Products .MPWSLabel {font-weight: bold;}
+        .MPWSSectionTop10Products .MPWSProductImage {height: auto; width: 80px; padding-top: 10px;}
+        .MPWSSectionTop10Products .MPWSWrapperProductImage {width: 80px; height: 80px; overflow: hidden; float: left; margin-right: 10px;}
+            .MPWSSectionTop10Products .MPWSWrapperProductImage .MPWSProductImageError {background: no-repeat center center; width: 100px; height: 80px;}
+        .MPWSSectionTop10Products .MPWSMiniBlockProductData {padding-top: 15px;}
+        
+    /* [COMPONENTS] HOT OFFERS */
+    .MPWSSectionHotOffersProducts {width: 765px !important; height: auto !important; margin: 20px auto;}
+        .MPWSSectionHotOffersProducts .MPWSItem {height: 100px; width: 200px; overflow: hidden; zoom: 1;}
+        .MPWSSectionHotOffersProducts .MPWSLabel {font-weight: bold;}
+        .MPWSSectionHotOffersProducts .MPWSValue {font-weight: bold; font-size: 14px; color: #12205D;}
+        .MPWSSectionHotOffersProducts .MPWSPrice {margin-top: 5px;}
+            .MPWSSectionHotOffersProducts .MPWSPrice .MPWSPrefix {display: block;}
+            .MPWSSectionHotOffersProducts .MPWSPrice .MPWSValue {margin-left: 10px;}
+        .MPWSSectionHotOffersProducts .MPWSProductImage {height: auto; width: 80px; padding-top: 10px;}
+        .MPWSSectionHotOffersProducts .MPWSWrapperProductImage {width: 80px; height: 80px; overflow: hidden; float: left; margin-right: 10px;}
+            .MPWSSectionHotOffersProducts .MPWSWrapperProductImage .MPWSProductImageError {background: no-repeat center center; width: 100px; height: 80px;}
+        .MPWSSectionHotOffersProducts .MPWSMiniBlockProductData {padding-top: 15px;}
+
+    /* [COMPONENTS] BASKET */
+    .MPWSSectionBasket {}
+        .MPWSMiniBlockBasketEmbedded {padding: 10px 10px 5px;}
+        .MPWSSectionBasketPopin {}
+        .MPWSSectionBasketPopin .MPWSHeader {display: none;}
+        .MPWSSectionBasketPopin .MPWSSection {background: none; border: none;}
+            .MPWSSectionBasketPopin .MPWSSectionContent {background: none; border: none;}
+                .MPWSSectionBasketPopin .MPWSSectionContentBasketPopin .MPWSMiniBlockBasketRow {border-bottom: 1px dashed #eee;}
+                .MPWSSectionBasketPopin .MPWSSectionContentBasketPopin .MPWSMiniBlockBasketRowGeneralInfoSuma {padding: 10px; font-size: 16px; background-color: #eee; border: none;}
+        .MPWSSectionBasketPopin .MPWSSectionBasketOrder {padding: 10px;}
+            .MPWSSectionBasketPopin .MPWSSectionBasketOrder .MPWSMiniBlock {border-bottom: 1px dashed #eee; overflow: hidden; padding: 5px 0px;}
+            .MPWSSectionBasketPopin .MPWSSectionBasketOrder .MPWSMiniBlock .MPWSLabel {float: left; width: 180px;}
+            .MPWSSectionBasketPopin .MPWSSectionBasketOrder .MPWSMiniBlock .MPWSCInput {width: 150px;}
+            .MPWSSectionBasketPopin .MPWSSectionBasketOrder .MPWSMiniBlock .MPWSCInputTextArea {width: 150px; height: 80px;}
+
+
+    /* [COMPONENTS] PAGINATION */
+    .MPWSWidgetPagination {background: #eee; border: 1px dashed #333;}
+        .MPWSWidgetPagination .MPWSHeader {}
+        .MPWSWidgetPagination .MPWSHeaderTitle {color: #12205d;}
+        .MPWSWidgetPagination .MPWSLink {}
+        .MPWSWidgetPagination .MPWSItem {float: left; padding: 2px 5px; margin: 0px 3px;}
+        .MPWSWidgetPagination .MPWSItem:hover {background-color: #12205d;}
+        .MPWSWidgetPagination .MPWSItem:hover * {color: #eee;}
+        .MPWSWidgetPagination .MPWSItem.MPWSCurrent {color: #eee; background-color: #12205d;}
+        .MPWSWidgetPagination .MPWSList {list-style: none; overflow: hidden; zoom: 1; margin: 0px; padding: 0px; text-align: center;}
+        
+    /* [COMPONENTS] FILTERING */
+    .MPWSWidgetFiltering {}
+        .MPWSWidgetFiltering .MPWSHeader {border-bottom: 1px dashed #333;}
+        .MPWSWidgetFiltering .MPWSHeaderTitle {color: #12205d;}
+        .MPWSWidgetFiltering .MPWSLabel {}
+        .MPWSWidgetFiltering .MPWSLink {}
+        .MPWSWidgetFiltering .MPWSLink:hover {color: #eee; background-color: #12205d;}
+        .MPWSWidgetFiltering .MPWSItem {padding: 10px 5px 0px; margin: 0px 3px; text-align: left;}
+        .MPWSWidgetFiltering .MPWSItem.MPWSCurrent {color: #eee; background-color: #12205d;}
+        .MPWSWidgetFiltering .MPWSList {list-style: none; margin: 10px 0px; padding: 0px; text-align: center;}
+        
+    /* [COMPONENTS] ORIGINS */
+    .MPWSWidgetOrigins {}
+        .MPWSWidgetOrigins .MPWSHeader {border-bottom: 1px dashed #333;}
+        .MPWSWidgetOrigins .MPWSHeaderTitle {color: #12205d;}
+        .MPWSWidgetOrigins .MPWSWidgetContent {overflow: hidden; zoom: 1; padding: 10px 0px;}
+        .MPWSWidgetOrigins .MPWSLabel {}
+        .MPWSWidgetOrigins .MPWSLink {}
+        .MPWSWidgetOrigins .MPWSLink:hover {color: #eee; background-color: #12205d;}
+        .MPWSWidgetOrigins .MPWSItem {padding: 2px 5px; margin: 0px 3px; float: left;}
+        .MPWSWidgetOrigins .MPWSItem.MPWSCurrent {color: #eee; background-color: #12205d;}
+        .MPWSWidgetOrigins .MPWSList {list-style: none; margin: 0px; padding: 0px; text-align: center;}
+        
+    /* [COMPONENTS] CATEGORIES EMBEDDED */
+    .MPWSSectionCategoriesEmbedded {background-color: transparent;}
+        .MPWSSectionCategoriesEmbedded .MPWSLabel {}
+        .MPWSSectionCategoriesEmbedded .MPWSSectionContent {background: transparent repeat-x top center; border: 0px none;}
+        .MPWSSectionCategoriesEmbedded .MPWSLink {padding: 2px 5px;}
+        .MPWSSectionCategoriesEmbedded .MPWSLink:hover {color: #eee; background-color: #12205d;}
+        .MPWSSectionCategoriesEmbedded .MPWSItem {padding: 2px 5px; margin: 0px 3px; text-align: left; display: block;}
+        .MPWSSectionCategoriesEmbedded .MPWSItem.MPWSCurrent {color: #eee; background-color: #12205d;}
+        .MPWSSectionCategoriesEmbedded .MPWSList {list-style: none; margin: 0px; padding: 0px; text-align: center;}
+
+    /* [COMPONENTS] CATEGORY PRODUCTS */
+    .MPWSSectionCategories {background: none;}
+        .MPWSSectionCategories .MPWSHeaderSectionCategories {display: none;}
+        .MPWSSectionCategories .MPWSSectionContent {padding: 0px; background: none; border: 0px none;}
+        .MPWSSectionCategories .MPWSMiniBlockOrigins {}
+        .MPWSSectionCategories .MPWSMiniBlockFiltering {}
+        .MPWSSectionCategories .MPWSMiniBlockPagination {}
+        .MPWSSectionCategories .MPWSMiniBlockProducts {overflow: hidden;}
+        /* view types */
+            /* grid */
+            .MPWSSectionCategories .MPWSMiniBlockProductsGrid {}
+            /* list */
+            .MPWSSectionCategories .MPWSMiniBlockProductsList {}
+            .MPWSSectionCategories .MPWSMiniBlockProductsList .MPWSWrapperProductItem {float: none; width: auto; margin: 0px;}
+            .MPWSSectionCategories .MPWSMiniBlockProductsList .MPWSProductItem {float: none; width: auto; height: auto !important;}
+            .MPWSSectionCategories .MPWSMiniBlockProductsList .MPWSProductItem .MPWSSectionProductContent {overflow: hidden; zoom: 1;}
+            .MPWSSectionCategories .MPWSMiniBlockProductsList .MPWSProductItem .MPWSMiniBlockProductImage {float: left; width: 200px;}
+            .MPWSSectionCategories .MPWSMiniBlockProductsList .MPWSProductItem .MPWSMiniBlockProductData {margin-left: 220px;}
+
+    /* [COMPONENTS] ADVERTISEMENT used */
+    .MPWSWidgetAdvertisement {background: none; width: 765px !important; height: auto !important; margin: 20px auto; padding: 0px;}
+        .MPWSWidgetAdvertisement .MPWSMiniBlock {}
+
+    .MPWSWidgetAdvertisementLeft {width: auto !important;;}
+
+    /* [COMPONENTS] ERROR SECTION not used */
+    .MPWSError {}
+        .MPWSError  {}
+        .MPWSError .MPWSMessage {}
+            .MPWSError .MPWSMessage ul {}
+                .MPWSError .MPWSMessage ul li {}
+    
+    /* [COMPONENTS] SEARCHER */
+    .MPWSWidgetSearch {background: #eee;}
+        .MPWSWidgetSearch .MPWSHeader {font-size: 14px; padding-bottom: 10px;}
+        .MPWSWidgetSearch .MPWSCInputText {width: 220px; border: 2px solid #12205d;}
+        .MPWSWidgetSearch .MPWSCButton {}
+        .MPWSWidgetSearch .MPWSLabel {float: left; width: 140px; line-height: 28px;}
+        .MPWSWidgetSearch .MPWSMiniBlock {padding: 3px 10px;}
+        
+    /* [COMPONENTS] SEARCH RESULTS */
+    .MPWSWidgetSearchResults {background: none; overflow: hidden; zoom: 1; padding: 0px;}
+    .MPWSWidgetSearchResults .MPWSMessage {padding: 0px; font-weight: bold; color: #fff; font-size: 14px; background: none; margin-bottom: 15px; display: block;}
+    .MPWSWidgetSearchResults .MPWSSectionContentSearchResultItems {background: none; overflow: hidden; zoom: 1;}
+    .MPWSWidgetSearchResults .MPWSSectionContentSearchResultItems .MPWSMiniBlockSearchViewInfo {background-color: #12205D; padding: 10px; color: #fff; margin: 0px; font-size: 14px;}
+    .MPWSWidgetSearchResults .MPWSSectionContentSearchResultItems .MPWSMiniBlockItems {overflow: hidden; zoom: 1;}
+    .MPWSWidgetSearchResults .MPWSSectionContentSearchResultItems .MPWSMiniBlockPagination {margin: 25px 0px 5px;}
+    
+    /* [COMPONENTS] QUICK SEARCH */
+    .MPWSWidgetQuickSearch {background: #ddd; width: 765px !important; height: auto !important; margin: 20px auto; padding: 0px;}
+    .MPWSWidgetQuickSearch .MPWSHeader {padding: 10px 10px 0; font-size: 14px; font-weight: bold;}
+    .MPWSWidgetQuickSearch .MPWSMiniBlock  {padding: 5px 10px 10px;}
+    .MPWSWidgetQuickSearch .MPWSCInputText {display: block; width: 98%; font-size: 16px; padding: 3px 5px;}
+    .MPWSWidgetQuickSearch .MPWSLabel {font-style: italic;}
+    
+    /* [WIDGET] SOCIAL */
+    .MPWSWidgetSocial  {background: #ddd; margin-bottom: 10px; padding-bottom: 10px;}
+    .MPWSWidgetSocial .MPWSHeader {padding: 5px 0px; border: 0px; margin: 0px;}
+    .MPWSWidgetSocial .MPWSHeaderTitle {color: #333; font-size: 10px; font-weight: bold;}
+    .MPWSWidgetSocial .MPWSLink {float: left; margin-right: 10px;}
+    .MPWSWidgetSocial .MPWSIconSocial {float: left; width: 32px; height: 32px; background: transparent  no-repeat center center; opacity:.5;}
+    .MPWSWidgetSocial .MPWSIconSocial:hover {opacity:1;}
+    .MPWSWidgetSocial .MPWSWidgetContent {}
+    .MPWSWidgetSocial .MPWSMiniBlockSocialButtons {overflow: hidden; zoom: 1;}
+    .MPWSWidgetSocial .MPWSMiniBlockSocialInformers {padding: 15px 0px 0px;}
+    .MPWSWidgetSocial .MPWSMiniBlockSocialInformers .MPWSItem {display: inline;}
+        /* Social Icons */
+        .MPWSWidgetSocial .MPWSIconSocial_Blogger {background-position: 0 -32px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Compact {background-position: 0 -64px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Delicious {background-position: 0 -64px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Digg {background-position:0 -128px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Email {background-position:0 -160px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Expanded {background-position:0 -192px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Facebook {background-position: 0 -224px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Twitter {background-position:0 -640px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Myspace {background-position:0 -480px;}
+        .MPWSWidgetSocial .MPWSIconSocial_GoogleBuzz {background-position:0 -352px;}
+        .MPWSWidgetSocial .MPWSIconSocial_GoogleBookmark {background-position:0 -320px;}
+        .MPWSWidgetSocial .MPWSIconSocial_MyMailRu {background-position:0 -448px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Reddit {background-position:0 -576px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Orkut {background-position:0 -512px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Print {background-position:0 -544px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Stumbleupon {background-position:0 -608px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Vk {background-position:0 -672px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Yahoomail {background-position:0 -704px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Gmail {background-position:0 -288px;}
+        .MPWSWidgetSocial .MPWSIconSocial_LinkedIn {background-position:0 -384px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Live {background-position:0 -416px;}
+        .MPWSWidgetSocial .MPWSIconSocial_Favourites {background-position:0 -256px;}
+        /* social */
+        .MPWSWidgetSocialProduct {}
+        .MPWSWidgetSocialPage {}
+        .MPWSWidgetSocialCategory {}
+    
+    /* [COMPONENTS] PICTURE BOX not used */
+    .MPWSProductPictureBlock {}
+        .MPWSProductMainPicture {}
+            .MPWSProductMainPicture img {}
+        .MPWSProductAdditionalPictures {}
+            .MPWSProductAdditionalPictures img {}
+
+    /* [COMPONENTS] USER ADVANTAGES not used */
+    .MPWSUserAdvantages {}
+    
+    /* [COMPONENTS] BADGET PRODUCT not used */
+    .MPWSProductItemBadget {}
+        .MPWSProductItemOffer {}
+        .MPWSProductItemSale {}
+        .MPWSProductItemBigSale {}
+        .MPWSProductItemOff20 {}
+        .MPWSProductItemOff40 {}
+        .MPWSProductItemHot {}
+        .MPWSProductItemFreeDelivery {}
+        .MPWSProductItemTop10 {}
+        
+    /* [COMPONENTS] MINI GALLERY */
+    .MPWSWidgetProductGallery {border: 1px dotted #aaa; margin: 0px; padding: 0px; width: 180px; background: #ddd;}
+        .MPWSWidgetProductGallery .MPWSHeader {background: #eee; border: 0px none; margin: 0px; padding: 2px;}
+        .MPWSWidgetProductGallery .MPWSHeaderTitle {font-size: 10px; color: #12205D;}
+        .MPWSWidgetProductGallery .MPWSCustomScrollBar {margin: 10px; height: 60px; float: left;}
+        .MPWSWidgetProductGallery .MPWSWidgetContent {overflow: hidden; height: 80px;}
+        .MPWSWidgetProductGallery .MPWSCustomContentMovable {overflow: hidden; height: auto;}
+        .MPWSWidgetProductGallery .MPWSMiniBlockProductImage {float: left; width: auto; padding: 5px;}
+    
+    /* [COMPONENTS] LOGIN WIDGET not used */
+    .MPWSSectionLoginForm {}
+    
+    /* [COMPONENTS] MESSAGES used */
+    .MPWSWidgetMessages {background: url('%SITEPATH%/icon_chat.png') #ddd no-repeat 20px 10px; width: 765px !important; height: auto !important; margin: 20px auto; padding: 0px; border: 1px solid #eee;}
+    .MPWSWidgetMessages .MPWSMiniBlock {padding: 10px 20px 15px 80px;}
+    
+    /* [WIDGET] LAST VIEWED */
+    .MPWSWidgetLastViewedUser {background: none #fff; padding: 0px;}
+        .MPWSWidgetLastViewedUser .MPWSHeader {padding: 8px 4px 6px 20px; background: #12205D;}
+        .MPWSWidgetLastViewedUser .MPWSHeaderTitle {color: #eee; font-size: 15px;}
+        .MPWSWidgetLastViewedUser .MPWSContent {background: white repeat-x left top;padding: 10px;border-width: 0px 1px 1px;border-style: none dashed dashed;border-color: #12205D;overflow: hidden; zoom: 1; }
+        .MPWSWidgetLastViewedUser .MPWSItem {float: left; width: 47%;}
+        .MPWSWidgetLastViewedUser .MPWSLabel {font-weight: bold;}
+        .MPWSWidgetLastViewedUser .MPWSProductImage {height: auto; width: 80px; padding-top: 10px;}
+        .MPWSWidgetLastViewedUser .MPWSWrapperProductImage {width: 80px; height: 80px; overflow: hidden; float: left; margin-right: 10px;}
+            .MPWSWidgetLastViewedUser .MPWSWrapperProductImage .MPWSProductImageError {background: no-repeat center center; width: 100px; height: 80px;}
+        .MPWSWidgetLastViewedUser .MPWSMiniBlockProductData {padding-top: 15px;}
+
+        /* [WIDGET] POLLS */
+        .MPWSWidgetPoll {background: #fff; padding: 0px;}
+        .MPWSWidgetPoll .MPWSWidgetHeader {display: block; margin-left: 50px;}
+        .MPWSWidgetPoll .MPWSWidgetContent {padding: 0px 50px 50px;}
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons {}
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons .MPWSWrapper {}
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons .MPWSHeaderTitle {display: none;}
+            /* fixed state */
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed {position: fixed; position: fixed; top: 34px; background: white; width: 100%; left: 0px; padding: 10px 0px; -webkit-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); -moz-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); z-index: 99999;}
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSWrapper {width: 860px; margin: 0px auto;}
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSHeaderTitle {display: block; float: left; margin-top: 12px;}
+            .MPWSWidgetPoll .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSHeaderTitle h1 {font-size: 14px; line-height: normal; margin: 0px; padding: 0px;}
+
+        /* [WIDGET] COUNTER */
+        .MPWSWidgetCounter {overflow: hidden; zoom: 1;}
+            .MPWSWidgetCounter .MPWSMiniBlock {float: left; margin-right: 10px;}
+            /* sides */
+            .MPWSWidgetCounterBottom {clear: both; background: none; width: 750px; height: auto; margin: 20px auto; padding: 0px;}
+            .MPWSWidgetCounterLeft {}
+            .MPWSWidgetCounterTop {}
+            .MPWSWidgetCounterRight {}
+
+        /* [WIDGET] LOGIN */
+        .MPWSWidgetLogin {background-color: #003D4C; background-color: rgba(0, 61, 76, 0.95); background-image: url("%SITEPATH%bvlogo.png"); background-repeat: no-repeat; background-position: 50px center; padding: 0 0 20px 250px; -webkit-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); -moz-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); width: 500px; margin: 0px auto;}
+            .MPWSWidgetLogin .MPWSWidgetContent {padding-left: 70px;}
+            .MPWSWidgetLogin .MPWSMiniBlock {clear: both; padding: 10px; margin: 10px 0px; width: 306px;}
+                .MPWSWidgetLogin .MPWSLabel {display: block; color: #fff; font-size: 12px; padding-bottom: 5px; text-transform: uppercase; font-weight: bold;}
+                .MPWSWidgetLogin .MPWSCInputText {font-size: 24px;}
+            .MPWSWidgetLogin .MPWSMiniBlockButtons {margin-top: -10px; padding-left: 12px; padding-bottom: 0px; margin-bottom: 0px; border: 0px none;}
+            .MPWSWidgetLogin .MPWSMiniBlockForm {}
+
+/* PAGE STRUCTURE */
+    .MPWSWrapperPage {}
+    .MPWSPageHeader {width: 100%; min-width: 1024px; position: fixed; left: 0; top: 0; z-index: 900; height: 75px; background: #003D4C; background: rgba(0, 61, 76, 1); -webkit-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); -moz-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4);}
+        /* LOGO */
+        .MPWSLogo {width: 100px; float: left; margin-left: 20px;}
+            .MPWSLogo img {height: 65px; width: auto; padding: 5px;}
+        /* MAIN TEXT */
+        .MPWSPageHeaderText {font-size: 20px; font-weight: bold; padding: 10px 30px; color: #fff; border-left: 1px dotted white; margin-top: 17px; float: left;}
+        /* SUBTEXT */
+        .MPWSPageHeaderSubText {font-style: italic;}
+        /* BOTTOM SEPARATOR */
+        .MPWSSeparatorPageHeaderBottom {background: transparent no-repeat top center; height: 40px; width: 774px; margin: 0px auto;}
+
+/* RIBBON */
+.MPWSPageRibbon {}
+    /* OFFERS PRODUCTS */
+
+
+/* MAIN CONTENT */
+.MPWSPageMainContent {width: 1000px; margin: 100px auto; /* overflow: hidden; */}
+    /* LEFT SIDE */
+    .MPWSPageLeftSide {float: left; width: 300px; margin-right: 20px; padding-top: 80px; display: none;}
+        /* FULL MENU V2 */
+        .MPWSPageLeftSide .MPWSMenu {background-color: transparent;}
+        .MPWSPageLeftSide .MPWSMenuList {list-style: none; padding: 0px; margin: 0px;}
+        .MPWSPageLeftSide .MPWSMenuItem {padding: 3px 5px;}
+        .MPWSPageLeftSide .MPWSMenuItem:hover {background-color: #bbb;}
+        .MPWSPageLeftSide .MPWSLink {display: block;}
+
+    /* CENETR */
+    .MPWSPageCenterSide {width: 1000px; float: none;}
+        
+        .MPWSSectionContentProductsRecent {padding: 0px; background: none;}
+
+    /* RIGHT SIDE */
+    .MPWSPageRightSide {}
+
+
+/* FOOTER */
+.MPWSPageFooter {}
+    .MPWSSeparatorPageFooterTop {}
+    /* COPYRIGHT TEXT */
+    .MPWSCopyright {}
+        .MPWSCopyright .MPWSCopytext {}
+    /* COUNTERS */
+    .MPWSCounters {}
+        .MPWSCounters .MPWSCounter {}
+    /* SHORT MENU V3 */
+    .MPWSPageFooter .MPWSMenu {}
+
+.MPWSPageReports .MPWSPageMainContent, .MPWSPageReports .MPWSPageCenterSide {width: 1350px;}
+    .MPWSPageReports .MPWSWidgetReports {width: 1100px;}
+
+/******* VARIANTS *********/
+
+    /* MENU HEADER */
+    .MPWSSectionMenu.MPWSSectionMenuHeader {float: left; margin-top: 20px;}
+        .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSHeader {display: none;}
+            .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSHeaderIcon {}
+            .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSHeaderTitle {}
+        .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSSectionContent {background: none;}
+        .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSList {list-style: none;}
+        .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSItem {}
+        .MPWSSectionMenu.MPWSSectionMenuHeader .MPWSLink {}
+        
+    /* MENU RSS */
+    .MPWSSectionMenu.MPWSSectionMenuRss {position: relative;}
+        .MPWSSectionMenu.MPWSSectionMenuRss .MPWSHeaderIcon {width: 48px; height: 48px; background: transparent no-repeat center left; position: absolute; left: -20px; top: -13px;}
+        .MPWSSectionMenu.MPWSSectionMenuRss .MPWSHeaderTitle {padding-left: 12px;}
+
+    /* MENU MAIN */
+    .MPWSSectionMenu.MPWSSectionMenuMain {}
+        .MPWSSectionMenu.MPWSSectionMenuMain .MPWSItem {padding-right: 0px; margin-right: 0px; width: 155px;}
+        
+    /* PRODUCT TABS */
+    #MPWSTabSwitcherForCommentsID {}
+
+    
+    

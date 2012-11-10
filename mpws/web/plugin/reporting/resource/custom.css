@@ -1,0 +1,88 @@
+#PlaceHolderID {	background: #FFFFFF;
+	position: relative;
+	width: 960px;
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	padding-top: 0px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 10px;
+    overflow: hidden;
+    zoom: 1;}
+    
+    
+    .MPWSWidgetHeader {display: block; overflow: hidden; zoom: 1;}
+    
+    .MPWSHeaderTitle h1 {width: auto;}
+    
+    .MPWSMiniBlockPoll {padding: 20px; font-size: 18px;}
+    
+    .MPWSQuestionLabel {float: left; width: 200px;}
+    
+    .MPWSGroup {border-bottom: 1px dashed #ddd; padding: 10px;}
+        .MPWSGroup .MPWSGroupTitle {background: url("%SITEPATH%icon_arrow_right_green.png") no-repeat 5px center; border: 0px none !important; padding: 10px 10px 10px 30px; font-size: 16px; color: #003D4C; border-radius: 0px !important;}
+        .MPWSGroup .MPWSGroupTitle:hover {border: 1px dotted #ccc !important; padding: 9px 9px 9px 29px;}
+        .MPWSGroup .MPWSGroupTitle.ui-state-active {background: url("%SITEPATH%icon_arrow_down_green.png") transparent no-repeat -10px 10px;}
+        .MPWSGroup .MPWWSGroupQuestions {background-color: #fff !important; background: none !important; border: 0px none !important; padding-left: 260px !important;}
+        .MPWSGroup .MPWWSQuestion {padding: 10px; overflow: hidden; margin-bottom: 10px;}
+        .MPWSGroup .MPWWSQuestion:hover  {border: 1px dotted #ccc; padding: 9px;}
+        .MPWSGroup .MPWWSQuestion.MPWSRequired {/*background-color: #fcf4ff;*/}
+        .MPWSGroup .MPWWSQuestion.MPWSRequired label {font-weight: bold;}
+        .MPWSGroup .MPWWSQuestion.MPWSError label {font-weight: bold; color: #c00;}
+        .MPWSGroup .MPWWSQuestion.MPWSError {border: 1px dotted #c00;}
+        .MPWSGroup .MPWWSQuestion.MPWSError:hover {border: 1px dotted #ccc; padding: 10px;}
+        .MPWSGroup .ui-icon {background: none !important;}
+    
+    
+    .MPWSWidget input, .MPWSWidget textarea {font-size: 14px; padding: 2px; width: 300px; }
+    .MPWSWidget textarea {height: 80px;}
+    
+    .MPWSHidden {display: none;}
+    
+    .MPWSTextLegend {padding-left: 20px;font-style: italic;font-weight: bold;}
+    
+    
+    .MPWSMiniBlockButtons {margin-top: 40px; margin-bottom: 20px; text-align: right; overflow: hidden; zoom: 1; border-top: 1px solid #00AB8E; padding-top: 15px;}
+        .MPWSMiniBlockButtons .MPWSCButton {width: 230px; float: right; margin-left: 50px;}
+    
+    .MPWSRequiredIndicator {font-size: 12px; font-weight: bold; color: #333; padding-left: 3px;}
+    
+    
+    .MPWSMiniBlockErrors {font-size: 16px; color: #c00; font-weight: bold;}
+    
+    
+    /*h3.MPWSCompleted {color: #38F !important; font-style: italic; text-decoration: line-through;}*/
+    
+    .MPWSWidgetHeader h1 {float: none;}
+    
+    
+    
+    
+    /* menu */
+    li.MPWSItemMenuHeader {float: left;}
+    
+    /* widget tools */
+    .MPWSWidgetTools {}
+        .MPWSWidgetTools .MPWSHeader {padding-bottom: 10px; margin-bottom: 50px; border-bottom: 2px dashed #fff;}
+            .MPWSWidgetTools .MPWSHeaderTitle {color: #0C2B41; outline: none; text-decoration: none; font-family: ForalProBold,Georgia,serif; font-size: 200%; text-transform: uppercase; text-shadow: 1px 1px 5px #0C2B41;}
+        .MPWSWidgetTools .MPWSWidgetContent {padding: 0px 40px; margin-left: -60px;}
+        .MPWSWidgetTools .MPWSMiniBlock {width: 200px; height: 200px; -webkit-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); -moz-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); filter:alpha(opacity=30); -moz-opacity: 0.3; -khtml-opacity: 0.3; opacity: 0.3; position: relative; float: left; margin-left: 60px;}
+            .MPWSWidgetTools .MPWSMiniBlock a {text-decoration: none;}
+            .MPWSWidgetTools .MPWSMiniBlock a:visited {text-decoration: none;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper {background: #003D4C; background: rgba(0, 61, 76, 0.95); color: #fff; padding: 5px 0px 10px 12px; position: absolute; bottom: 0px; width: 188px; height: 20px; overflow: hidden;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSText {text-decoration: none;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextTitle {font-size: 120%; font-weight: bold; display: block;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextAction {font-size: 90%; font-weight: normal; font-style: italic; display: block; width: 150px; margin-left: -300px;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextLink {font-size: 120%; font-weight: bold; display: block; background: url("%SITEPATH%icon_arrow_right_orange.png") no-repeat right -9px; text-align: right; padding-right: 40px; margin-right: -300px; color: #E88021; margin-top: 7px;}
+        /* hover state */
+        .MPWSWidgetTools .MPWSMiniBlock:hover {filter:alpha(opacity=1); -moz-opacity: 1; -khtml-opacity: 1; opacity: 1; cursor: pointer;}
+            .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextTitle {}
+            .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextAction {}
+            .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextLink {}
+            
+            
+    /* item tools */
+    .MPWSWidgetTools .MPWSMiniBlockSurveys {background: url("%SITEPATH%bv_pageicons_surveys_tool.png") transparent no-repeat center center;}
+    .MPWSWidgetTools .MPWSMiniBlockReports {background: url("%SITEPATH%bv_pageicons_reports_tool.png") transparent no-repeat center center;}
