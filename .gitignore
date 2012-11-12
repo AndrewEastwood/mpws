@@ -1,3 +1,5 @@
 /DemoNB/nbproject/private/
 /mpws/nbproject/private/
 /mpws/data/bin/
+/data/*.csv
+/data/*.dat
