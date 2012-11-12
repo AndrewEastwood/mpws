@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-02 20:45:55
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-12 19:28:10
          compiled from "/var/www/mpws/web/plugin/reporting/template/widget/customMonitor.html" */ ?>
 <?php /*%%SmartyHeaderCode:1855146331508fc2a84b44a9-03459475%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '9567bf3c9e884fe25b2b2ffddf42e4b10a2cb452' => 
     array (
       0 => '/var/www/mpws/web/plugin/reporting/template/widget/customMonitor.html',
-      1 => 1351881542,
+      1 => 1352741283,
       2 => 'file',
     ),
   ),
@@ -41,7 +41,7 @@ ID" class="MPWSWidget MPWSWidgetCustom MPWSWidget<?php echo $_smarty_tpl->tpl_va
     <div class="MPWSBlock MPWSBlockAllReportLinks">
         <?php  $_smarty_tpl->tpl_vars['entry'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['entry']->_loop = false;
  $_smarty_tpl->tpl_vars['idx'] = new Smarty_Variable;
- $_from = $_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_from = $_smarty_tpl->tpl_vars['CURRENT']->value['SOURCE']['DATA']['RECORD']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['entry']->key => $_smarty_tpl->tpl_vars['entry']->value){
 $_smarty_tpl->tpl_vars['entry']->_loop = true;
  $_smarty_tpl->tpl_vars['idx']->value = $_smarty_tpl->tpl_vars['entry']->key;

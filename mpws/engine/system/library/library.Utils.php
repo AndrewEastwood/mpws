@@ -145,7 +145,9 @@ class libraryUtils {
 
     }
     
-    static public function getWithEOL ($text) {
+    static public function getWithEOL ($text, $unstrip = false) {
+        if ($unstrip)
+            return stripcslashes(self::getWithEOL($text));
         return str_replace(array('\r\n', '\n', '\r'), PHP_EOL, $text);
     }
 

@@ -135,28 +135,28 @@ class libraryStaticResourceManager {
         return $metainfo . $data;
     }
 
-    public function GetContent ($name, $realm, $owner = '') {
+    public function GetContent () {
 
         $c = MPWS_CUSTOMER;
         $v = MPWS_VERSION;
+        $p = libraryRequest::getPlugin(false);
+        
+        // requested file name
+        $name = $_GET['name'] . DOT . $_GET['type'];
         
         //$owner = empty($owner)? MPWS_CUSTOMER : $owner;
         
         // default files
-        $default = DR . 'web/default/'.$v.'/resource/' . $name;
-        //if ($realm === 'toolbox') 
-        //    $realmSource = DR . '/web/plugin/'.$owner.'/resources/' . $name;
-        //if ($realm === 'mpws')
-            $realmSource = DR . 'web/customer/'.$c.'/resource/' . $name;
+        $chains[] = DR . 'web/default/'.$v.'/resource/' . $name;
+        $chains[] = DR . 'web/customer/'.$c.'/resource/' . $name;
+        if (!empty($p))
+            $chains[] = DR . 'web/plugin/'.$p.'/resource/' . $name;
 
-        //echo $realm;
-        //echo $realmSource;
-        // echo $default;
-        
-        if (file_exists($realmSource))
-            return $realmSource;
-        if (file_exists($default))
-            return $default;
+        // return first existed file
+        foreach ($chains as $resourceFile)
+            if (file_exists($resourceFile))
+                return $resourceFile;
+
         return null;
     }
     
@@ -295,7 +295,7 @@ class libraryStaticResourceManager {
                      return $propertyValue;
             }
             //echo $propertyValue;
-            //throw new Exception('libraryStaticResourceManager: getPropertyValue(array): Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
+            throw new Exception('libraryStaticResourceManager: getPropertyValue(array): Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
         }
         elseif (is_string($propertyFilePath)) {
             if (!file_exists($propertyFilePath))

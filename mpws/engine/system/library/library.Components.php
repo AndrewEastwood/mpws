@@ -270,7 +270,8 @@ class libraryComponents {
                             if (empty($__edit_source))
                                 $editPage = 'EDIT';
                             else {
-                                file_put_contents($mangerSource.DS.$__edit_source, libraryUtils::getWithEOL($__edit_data));
+                                //echo '<pre>' .  $__edit_data  . '</pre>';
+                                file_put_contents($mangerSource.DS.$__edit_source, libraryUtils::getWithEOL($__edit_data, true));
                                 $editPage = 'LIST';
                             }
                             break;

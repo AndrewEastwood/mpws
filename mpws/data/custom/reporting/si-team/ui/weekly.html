@@ -1,0 +1,151 @@
+<script type="text/javascript" language="javascript">
+    function customReportScriptSetup (init, extendedConfiguration) {
+        $(".MPWSCInputTextStartDate, .MPWSCInputTextEndDate").datepicker({ dateFormat: "yy-mm-dd" });
+        // report object
+        var visR = mpws.module.get('visualReport');
+        // load report on click
+        $("#MPWSCButtonRenderWeeklyID").click(function(){
+            if (google && $("#MPWSCInputTextStartDateWID").val() && $("#MPWSCInputTextEndDateWID").val()) {
+                function _onLoading (dataPackage, sender) {
+                    $('.pageAllReports div').html('');
+                    $('.page').addClass('MPWSHidden');
+                    $('#userPageID[dashboard]').remove();
+                    sender.dataStorage = {};
+                    if (!$.isEmptyObject(dataPackage.opts.container)) {
+                        mpws.tools.log('- empty divs');
+                        $(dataPackage.opts.container + ' div').html('');
+                        mpws.tools.log('set loading state');
+                        $(dataPackage.opts.container + ' .reportContainer').addClass('MPWSLoading');
+                        mpws.tools.log('show container element');
+                        $(dataPackage.opts.container).removeClass('MPWSHidden');
+                    }
+                    mpws.tools.log('---------------loading-----------------');
+                    mpws.tools.log(dataPackage);
+                };
+                function _onLoaded (dataPackage) {
+                    $(dataPackage.opts.container + ' .reportContainer').removeClass('MPWSLoading');
+                    mpws.tools.log('---------------loaded-----------------');
+                    mpws.tools.log(dataPackage);
+                };
+                visR.load({
+                    app : init.app,
+                    opts : {
+                        container: '#defaultPageID',
+                        onLoading: _onLoading,
+                        onLoaded: _onLoaded
+                    },
+                    url : mpws.api.getObjectJSONByKeyValue(
+                            $.extend(
+                                extendedConfiguration, 
+                                {custom: {
+                                    type: 'combined',
+                                    startdate : $("#MPWSCInputTextStartDateWID").val(),
+                                    enddate : $("#MPWSCInputTextEndDateWID").val()
+                                }}
+                            )
+                        ).getUrl()
+                });
+            }
+            
+        });
+
+    }
+    
+/*visualReport.onLoading = function () {\n            $('.pageAllReports div').html('');\n            $('.page').addClass('hidden');\n            $('#userPageID[dashboard]').remove();\n            visualReport.dataStorage = {};*/
+    /*$(function() {2012-10-16
+
+        $("#MPWSCButtonRenderWeeklyID").click(function(){
+            if (google && visualReport && $("#MPWSCInputTextStartDateWID").val() && $("#MPWSCInputTextEndDateWID").val())
+                visualReport.create(
+                    {
+                        app: 'weekly',
+                        container: '#defaultPageID'
+                    },
+                    {fullurl: '/libs/tools/reporting/si/data-stg.php?u=libtools&p=q1w2e3r4t5y6&startdate=' + $("#MPWSCInputTextStartDateWID").val() + '&enddate='+$("#MPWSCInputTextEndDateWID").val() + '&return=releases-si', name: 'worklog'}
+                );
+        });
+    });*/
+
+    //setTimeout(loadData, 2000);
+</script>
+
+
+
+<div class="MPWSContent MPWSWidgetContent">
+    <!-- controls -->
+    <div class="MPWSMiniBlock MPWSMiniBlockButtons">
+        <div class="MPWSWrapper MPWSWrapperWeekly">
+            <div class="MPWSMiniBlockIcon"></div>
+            <span class="MPWSHeaderTitle"><h1>Weekly</h1></span>
+            <input type="text" class="MPWSCInputText MPWSCInputTextStartDate" id="MPWSCInputTextStartDateWID" name="startdate" placeholder="Click here to set start date" value=""/>
+            <input type="text" class="MPWSCInputText MPWSCInputTextEndDate" id="MPWSCInputTextEndDateWID" name="enddate" placeholder="Click here to set end date" value=""/>
+            <button type="button" class="MPWSCButton MPWSCButtonRenderWeekly" id="MPWSCButtonRenderWeeklyID">Weekly Reports</button>
+        </div>
+    </div>
+
+    <!-- all reports page  -->
+    <div class="page pageAllReports pageWeekly MPWSHidden" id="defaultPageID">
+            <div title="Team Report" id="reportContainerTeamReportID" class="reportContainer reportContainerTeamReport"></div>
+            <div title="General Time" id="reportContainerTeamGeneralTimeID" class="reportContainer reportContainerTeamGeneralTime"></div>
+            <div title="Time On Each Task" id="reportContainerTypeAndTypesID" class="reportContainer reportContainerTypeAndTypes"></div>
+            <span class="reportBlock1">
+                <div title="Handled Tasks (by items count)" id="reportContainerTaskTypesID" class="reportContainer reportContainerTaskTypes"></div>
+                <div title="FA vs. SI with Product matching (by items count)
+    " id="reportContainerSIvsFAID" class="reportContainer reportContainerSIvsFA"></div>
+                <div title="Complexity Cause (SE) (by items count)
+" id="reportContainerComplexityCauseID" class="reportContainer reportContainerComplexityCause"></div>
+            </span>
+            <span class="reportBlock2">
+                <div title="Handled Tasks (by hours)" id="reportContainerTaskTypesByHoursID" class="reportContainer reportContainerTaskTypesByHours"></div>
+                <div title="FA vs. SI with Product matching (by hours)" id="reportContainerSIvsFAByHoursID" class="reportContainer reportContainerSIvsFAByHours"></div>
+                <div title="Complexity Cause (SE) (by hours)" id="reportContainerComplexityCauseByHoursID" class="reportContainer reportContainerComplexityCauseByHours"></div>
+            </span>
+            
+            <div title="Total Tasks" id="reportContainerTaskTotalID" class="reportContainer reportContainerTaskTotal"></div>
+    </div>
+    <!--
+        TODO:
+            + personal pages
+            + tabbed view
+            - make some charts
+    -->
+    <div class="page MPWSHidden" id="userPageID">
+        <div class="pageHader">
+            <span class="pageTitle"></span>
+            <a href="#userPageClose" class="button MPWSCButton buttonClose">Close</a>
+        </div>
+        <div class="pageContent">
+            <div class="reportWrapper">
+                <div class="reportContainer active" id="tabPage1ID">
+                    <div title="Handled Cases" id="reportContainerUserHandledCasesID" class="reportContainerUserHandledCases"></div>
+                </div>
+                <div class="reportContainer active" id="tabPage2ID">
+                    <div title="General Time" id="reportContainerUserTaskTotalID" class="reportContainerUserTaskTotal"></div>
+                    <div title="General Time On Each Task" id="reportContainerUserTypeAndTypesID" class="reportContainerUserTypeAndTypes"></div>
+                </div>
+                <div class="reportContainer normal" id="tabPage3ID">
+                    <div title="User Time Overview" id="reportContainerUserOverviewID" class="reportContainerUserOverview"></div>
+                    <div title="User Handled Tasks" id="reportContainerUserHandledTasksID" class="reportContainerUserHandledTasks"></div>
+                </div>
+                <div class="reportContainer normal" id="tabPage4ID">
+                    <div title="User In Team By Time" id="reportContainerUserInTeamByTimeID" class="reportContainerUserInTeamOfTime"></div>
+                    <div title="User In Team By Tasks" id="reportContainerUserInTeamByTasksID" class="reportContainerUserInTeamOfTasks"></div>
+                </div>
+                <div title="User Dashboard" id="dashboardContainerUserStatisticID" class="dashboardContainer dashboardContainerUserStatistic normal">
+                    <!--Divs that will hold each control and chart-->
+                    <!--id will be changed to be separated for all dashboards-->
+                    <div class="dashboardInternalChart" id="Filter"></div>
+                    <div class="dashboardInternalChart" id="Chart"></div>
+                </div>
+            </div>
+            <div class="pageNavigator">
+                <a href="#p1" class="activePage" reference="tabPage1ID">1</a>
+                <a href="#p2" class="" reference="tabPage2ID">2</a>
+                <a href="#p3" class="" reference="tabPage3ID">3</a>
+                <a href="#p4" class="" reference="tabPage4ID">4</a>
+                <!-- <a href="#p2" class="activePage" reference="dashboardContainerUserStatisticID">2</a> -->
+                <!-- <a href="#p3" class="" reference="tabPage3ID">3</a> -->
+            </div>
+        </div>
+    </div>
+</div>

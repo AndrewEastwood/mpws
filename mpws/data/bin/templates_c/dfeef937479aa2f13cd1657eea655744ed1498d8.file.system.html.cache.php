@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-09 16:58:13
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-12 15:03:28
          compiled from "/var/www/mpws/web/default/v1.0/template/page/system.html" */ ?>
 <?php /*%%SmartyHeaderCode:691869205508154ef17d7c0-68456110%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'dfeef937479aa2f13cd1657eea655744ed1498d8' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/page/system.html',
-      1 => 1352473067,
+      1 => 1352725406,
       2 => 'file',
     ),
   ),
@@ -65,7 +65,7 @@ $_smarty_tpl->tpl_vars['messageItems']->_loop = true;
  $_smarty_tpl->tpl_vars['wobOwner']->value = $_smarty_tpl->tpl_vars['messageItems']->key;
 ?>
         <?php if (!($_smarty_tpl->tpl_vars['wobOwner']->value=='COMMON')){?>
-            <?php $_smarty_tpl->tpl_vars["msg_common"] = new Smarty_variable($_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['wobOwner']->value)]->objectTemplatePath_component_messageList, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_messages'=>$_smarty_tpl->tpl_vars['messageItems']->value,'_OBJ'=>$_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['wobOwner']->value)]), 0));?>
+            <?php $_smarty_tpl->tpl_vars["msg_common"] = new Smarty_variable($_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['wobOwner']->value)]->objectTemplatePath_component_messageList, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_messages'=>$_smarty_tpl->tpl_vars['messageItems']->value,'_OBJ'=>$_smarty_tpl->tpl_vars['OBJECT']->value['WOB'][makeKey($_smarty_tpl->tpl_vars['wobOwner']->value)],'_controlOwner'=>$_smarty_tpl->tpl_vars['wobOwner']->value), 0));?>
 
         <?php $_smarty_tpl->createLocalArrayVariable('_contents', null, 0);
 $_smarty_tpl->tpl_vars['_contents']->value[] = $_smarty_tpl->tpl_vars['msg_common']->value;?>

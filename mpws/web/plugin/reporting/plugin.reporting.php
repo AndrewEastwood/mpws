@@ -2,7 +2,7 @@
 
 class pluginReporting extends objectBaseWebPlugin {
 
-    private $_dirWithReportScripts = 'scripts';
+    private $_dirWithReportScripts = 'script';
     private $_dirWithReportData = 'data';
     private $_dirWithReportUI = 'ui';
     
@@ -40,15 +40,35 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             case "sf-import" : {
-                echo 'SF import';
-                
-                
-                // use report ID to fetch report data url
-                // use accout config to download report data
-                
-                // get SF account
-                $sfAccount = $this->objectConfiguration_accounts_salesForceAI;
-                $this->customSalesForceImport($sfAccount);
+                //echo 'SF import';
+                // verify OID
+                if (empty($p['oid']) || !is_numeric($p['oid']))
+                    throw new Exception('SalesForce import: Bad request');
+                // get context
+                $ctx = contextMPWS::instance();
+                // config
+                $wgtCfg = $this->objectConfiguration_widget_customImport;
+                // use report OID to fetch report data url
+                $report = $ctx->contextCustomer->getDBO()
+                        ->reset()
+                        ->select($wgtCfg['dataUrlFieldName'])
+                        ->from($wgtCfg['source'])
+                        ->where('ID', '=', $p['oid'])
+                        ->fetchRow();
+                // exit if empty report
+                if (empty($report))
+                    throw new Exception('SalesForce import: Bad request');
+                // use SF accout config to download report data
+                if (is_string($wgtCfg['accountReference']))
+                    $sfAccount = $this->{"objectConfiguration_accounts_" . $wgtCfg['accountReference']};
+                if (is_array($wgtCfg['accountReference']))
+                    $sfAccount = $wgtCfg['accountReference'];
+                // verify account info
+                if (empty($sfAccount))
+                    throw new Exception('SalesForce import: check account');
+                // fetch data
+                //$this->customSalesForceImport($sfAccount, $report[$wgtCfg['dataUrlFieldName']]);
+                echo 'FETCHING DATA';
                 break;
             }
             case "outbox-proc" : {
@@ -56,26 +76,27 @@ class pluginReporting extends objectBaseWebPlugin {
             }
             case "render" : {
                 //echo "RENDER OK";
-                // TODO
-                // get report widget        
+
+                // verify OID
                 if (empty($p['oid']) || !is_numeric($p['oid']))
-                    throw new Exception('ReportData: wrong request');
-                //if (empty($script))
-                //    throw new Exception('ReportData: wrong script name');
-                
-                
-                
-                
+                    throw new Exception('ReportData: Bad request');
+                // get context
                 $ctx = contextMPWS::instance();
-                $cfg = $this->objectConfiguration_widget_customMonitor;
-                // fetch owner record
+                // config
+                $wgtCfg = $this->objectConfiguration_widget_customMonitor;
+                // use report OID to fetch report data url
                 $report = $ctx->contextCustomer->getDBO()
                         ->reset()
                         ->select('*')
-                        ->from($cfg['source'])
+                        ->from($wgtCfg['source'])
                         ->where('ID', '=', $p['oid'])
                         ->fetchRow();
-                var_dump($report);
+
+                // exit if empty report
+                if (empty($report))
+                    throw new Exception('ReportData: Bad request');
+
+                //var_dump($report);
                 // fetch report script ui
                 $uiFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportUI.DS.$p['custom']['script'].EXT_TEMPLATE);
                 $scriptFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportScripts.DS.$p['custom']['script'].EXT_JS);
@@ -111,7 +132,7 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             case "api" : {
-                $this->addWidgetSimple('customApiSettings');
+                $this->actionHandlerCustomApi();
                 break;
             }
         }
@@ -122,16 +143,29 @@ class pluginReporting extends objectBaseWebPlugin {
     private function actionHandlerCustomMonitor () {
         $ctx = contextMPWS::instance();
         $cfg = $this->objectConfiguration_widget_customMonitor;
-        $data = $ctx->contextCustomer->getDBO()
+        $reports = $ctx->contextCustomer->getDBO()
                 ->reset()
                 ->select($cfg['fields'])
                 ->from($cfg['source'])
                 ->fetchData();
-        //$sf = new extensionSalesForceClient();
-        //var_dump($sf);
+        $data = array();
+
         
+        // get all report scripts
+        foreach ($reports as $idx => $report) {
+            $data[$idx] = array(
+                'RECORD' => $report,
+                'SCRIPTS' => ''
+            );
+        }
         // get all reports
         $this->addWidgetSimple('customMonitor', $data);
+    }
+    
+    private function actionHandlerCustomApi () {
+        // get all reports
+        
+        $this->addWidgetSimple('customApiSettings');
     }
     
     /* all custom methods are below */
@@ -161,7 +195,7 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             // custom implementation
-            case 'releases' : {
+            case 'combined' : {
                 $data = $this->customGetWorklogByReleasesSF_rt1($report, $start, $end, false);
                 //debugData('<pre>' . print_r($data, true) . '</pre>');
                 //combine all releases into one JSON object
@@ -332,6 +366,8 @@ class pluginReporting extends objectBaseWebPlugin {
             // get date range
             $dateRanges = libraryUtils::createDateRangeArray($sDt, $eDt);
 
+            //var_dump($dateRanges);
+            
             // get metadata files
             $metaDataFiels = false;
             foreach($dateRanges as $dt) {

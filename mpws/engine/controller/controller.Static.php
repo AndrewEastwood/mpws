@@ -64,7 +64,7 @@ class controllerStatic {
     }
     private function _ieImage() {
         $staticResMgr = new libraryStaticResourceManager();
-        $filePath = $staticResMgr->GetContent(urldecode($_GET['name']).'.'.strtolower($_GET['type']), $_GET['realm']);
+        $filePath = $staticResMgr->GetContent();
         if (empty($filePath))
             return false;
             //$im = imagecreatefromjpeg($filePath);

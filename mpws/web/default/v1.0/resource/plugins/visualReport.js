@@ -495,6 +495,12 @@ mpws.module.define('visualReport', (function(window, document, $){
             //mpws.tools.log("loading data: " + dataPackage.app);
             //log("from package: ");
             //mpws.tools.log(dataPackage);
+            if (!!dataPackage.opts.onLoading)
+                dataPackage.opts.onLoading(dataPackage, this);
+            
+            //mpws.tools.log(dataPackage);
+            
+                    
             $.ajax({
                 url: dataPackage.url,
                 dataType: 'text',
@@ -528,6 +534,13 @@ mpws.module.define('visualReport', (function(window, document, $){
                     }
                     // process reports
                     visualReport.asyncFnController(--wObj, visualReport.renderAllReports, {app: dataPackage.app, isAutoload: dataPackage.autoload || true});
+                    // add options
+                    //mpws.tools.log(visualReport.opts);
+                    visualReport.opts[dataPackage.app] = dataPackage.opts;
+                    // on load event
+                    if (!!dataPackage.opts.onLoaded)
+                        dataPackage.opts.onLoaded(dataPackage, this);
+                    visualReport.onLoaded();
                 }
             });
         }

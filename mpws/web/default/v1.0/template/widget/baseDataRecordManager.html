@@ -27,7 +27,7 @@
             <ul class="MPWSList MPWSListManagerTabs" mpws-activetab="{$CURRENT.SOURCE.DATA.COMMON.ACTIVE_INDEX}">
                 {foreach $DTV_CFG.managers as $managerEntry}
                 <li class="MPWSListItem">
-                    <a href="#MPWSBlockManager_{$managerEntry@key|lower}_ID">{$managerEntry@key}</a>
+                    <a href="#MPWSBlockManager_{$managerEntry@key}_ID">{$managerEntry@key}</a>
                 </li>
                 {/foreach}
             </ul>

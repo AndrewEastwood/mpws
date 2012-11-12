@@ -15,7 +15,7 @@
 {if $MODEL.MESSAGE|@count gt 1}
     {foreach $MODEL.MESSAGE as $wobOwner => $messageItems}
         {if not ($wobOwner eq 'COMMON')}
-            {include assign="msg_common" file=$OBJECT.WOB[makeKey($wobOwner)]->objectTemplatePath_component_messageList _messages=$messageItems _OBJ=$OBJECT.WOB[makeKey($wobOwner)]}
+            {include assign="msg_common" file=$OBJECT.WOB[makeKey($wobOwner)]->objectTemplatePath_component_messageList _messages=$messageItems _OBJ=$OBJECT.WOB[makeKey($wobOwner)] _controlOwner=$wobOwner}
         {$_contents[]=$msg_common}
         {/if}
     {/foreach}

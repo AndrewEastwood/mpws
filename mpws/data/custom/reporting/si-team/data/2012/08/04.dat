@@ -1,0 +1,27 @@
+{
+    "CUSTOM_FIELDS": {
+        "CF_ReleaseName": "6.3.0",
+        "CF_AtWork": "0"
+    },
+    "CONDITIONS": {
+        "Implementer": {
+            "Andriy Feshchyn":           {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Andriy Ivaskevych":         {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Anna Hordiyenko":           {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Anton Starykov":            {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Dmytro Gunko":              {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Igor Gubernat":             {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Iryna Zavalyshyna":         {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Ivan Solomichev":           {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Pavlo Bilyk":               {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Petro Drogomyretskyi":      {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Roman Melnyk":              {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Veronika Derkach":          {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Volodymyr Tretiak":         {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Yurii Vykaliuk":            {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Zoreslav Goral":            {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Viktoriya Volochay":        {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="},
+            "Oleksa Mahula":             {"_fields": [{"CF_AtWork": "0"}], "_condition": "=="}
+        }
+    }
+}

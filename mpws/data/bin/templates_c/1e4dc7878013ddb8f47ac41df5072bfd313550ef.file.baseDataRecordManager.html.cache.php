@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-09 14:31:21
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-12 14:08:51
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/baseDataRecordManager.html" */ ?>
 <?php /*%%SmartyHeaderCode:17615430075098ef3032ce77-25780393%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1e4dc7878013ddb8f47ac41df5072bfd313550ef' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/baseDataRecordManager.html',
-      1 => 1352464271,
+      1 => 1352722125,
       2 => 'file',
     ),
   ),
@@ -79,7 +79,7 @@ foreach ($_from as $_smarty_tpl->tpl_vars['managerEntry']->key => $_smarty_tpl->
 $_smarty_tpl->tpl_vars['managerEntry']->_loop = true;
 ?>
                 <li class="MPWSListItem">
-                    <a href="#MPWSBlockManager_<?php echo mb_strtolower($_smarty_tpl->tpl_vars['managerEntry']->key, 'UTF-8');?>
+                    <a href="#MPWSBlockManager_<?php echo $_smarty_tpl->tpl_vars['managerEntry']->key;?>
 _ID"><?php echo $_smarty_tpl->tpl_vars['managerEntry']->key;?>
 </a>
                 </li>

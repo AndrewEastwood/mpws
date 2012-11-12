@@ -3,6 +3,8 @@ description = "-";
 ; fields
 labelForTextBoxDataEditorName = "Category Name";
 labelForTextAreaDataEditorReports = "Report Names";
+labelForTextBoxDataEditorReportDataUrl = "Report Data URL";
 ; validation messages
 messageValidationErrorInFieldName = "Please provide valid report name";
 messageValidationErrorDuplicateValueInFieldName = "There is report with the same name. Try to use another one.";
+messageValidationErrorInFieldReportDataUrl = "Please check report data url value.";

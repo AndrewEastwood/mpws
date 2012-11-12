@@ -15,7 +15,7 @@
 }
 
 .loading {
-    background: url('loading.gif') no-repeat center center;
+    background: url('loading.gif?plugin=reporting') no-repeat center center;
 }
 
 .buttonWrapper {
@@ -131,7 +131,7 @@
     width: 12px;
     height: 11px;
     margin: 0 0 0 7px;
-    background: url('icon_cycle_dot_navigation.png') no-repeat 0 0;
+    background: url('icon_cycle_dot_navigation.png?plugin=reporting') no-repeat 0 0;
 }
 #userPageID .pageNavigator a:hover {
     background-position: -19px 0;
@@ -158,7 +158,7 @@
 
 
 .MPWSWrapperComingSoon {position: relative; display: none;}
-    .MPWSWrapperComingSoon .MPWSMiniBlockIcon {background: url('%SITEPATH%cs_sm.png') no-repeat 0 0; width: 122px; height: 122px; position: absolute; right: 206px; top: 92px;}
+    .MPWSWrapperComingSoon .MPWSMiniBlockIcon {background: url('cs_sm.png?plugin=reporting') no-repeat 0 0; width: 122px; height: 122px; position: absolute; right: 206px; top: 92px;}
 
     
     
@@ -185,7 +185,7 @@
     .MPWSWidgetSurveys {padding: 5px 10px; margin: 0px 0px 20px; float: right; width: 750px;}
     .MPWSWidgetSurveys .MPWSHeader {color: #fff; font: 376.9% 'ForalProBold',Georgia,serif; font-weight: bold; display: block; padding-bottom: 5px;}
         .MPWSWidgetSurveys .MPWSHeaderTitle {color: #0C2B41; text-shadow: 1px 1px 5px #0C2B41;}
-    .MPWSWidgetSurveys .MPWSWidgetContent {background: url('%SITEPATH%/bg_grid_17.gif') repeat center top; padding: 40px 20px;}
+    .MPWSWidgetSurveys .MPWSWidgetContent {background: url('/bg_grid_17.gif?plugin=reporting') repeat center top; padding: 40px 20px;}
         .MPWSWidgetSurveys .MPWSWidgetContent .MPWSList {list-style: none; margin: 0px; padding: 0px;}
         .MPWSWidgetSurveys .MPWSWidgetContent .MPWSItem {color: #0C2B41; text-transform: uppercase; padding: 10px;}
         .MPWSWidgetSurveys .MPWSWidgetContent .MPWSLink {color: #0C2B41; text-transform: uppercase;}
@@ -200,7 +200,7 @@
     .MPWSWidgetReports {padding: 5px 10px; margin: 0px 0px 20px; float: right; width: 750px;}
     .MPWSWidgetReports .MPWSHeader {color: #fff; font: 376.9% 'ForalProBold',Georgia,serif; font-weight: bold; display: block; padding-bottom: 5px;}
         .MPWSWidgetReports .MPWSHeaderTitle {color: #0C2B41; text-shadow: 1px 1px 5px #0C2B41;}
-    .MPWSWidgetReports .MPWSWidgetContent {background: url('%SITEPATH%/bg_grid_17.gif') repeat center top; padding: 40px 20px;}
+    .MPWSWidgetReports .MPWSWidgetContent {background: url('/bg_grid_17.gif?plugin=reporting') repeat center top; padding: 40px 20px;}
         .MPWSWidgetReports .MPWSWidgetContent .MPWSList {list-style: none; margin: 0px; padding: 0px;}
         .MPWSWidgetReports .MPWSWidgetContent .MPWSItem {color: #0C2B41; text-transform: uppercase; padding: 10px;}
         .MPWSWidgetReports .MPWSWidgetContent .MPWSLink {color: #0C2B41; text-transform: uppercase;}
@@ -226,8 +226,8 @@
     .MPWSWidgetPageIcon  {float: left; width: 200px; height: 200px; padding: 0px; margin: 11px 0 0 10px;}
         .MPWSWidgetPageIcon .MPWSHeader {display: none;}
     .MPWSWidgetPageIcon .MPWSWidgetContent  {display: none;}
-    .MPWSWidgetPageIconSurveys {background: url("%SITEPATH%bv_pageicons_surveys.png") transparent no-repeat left top;}
-    .MPWSWidgetPageIconReports {background: url("%SITEPATH%bv_pageicons_reports.png") transparent no-repeat left top;}
+    .MPWSWidgetPageIconSurveys {background: url("bv_pageicons_surveys.png?plugin=reporting") transparent no-repeat left top;}
+    .MPWSWidgetPageIconReports {background: url("bv_pageicons_reports.png?plugin=reporting") transparent no-repeat left top;}
     
     
     
@@ -259,9 +259,9 @@
     .MPWSQuestionLabel {float: left; width: 200px;}
     
     .MPWSGroup {border-bottom: 1px dashed #ddd; padding: 10px;}
-        .MPWSGroup .MPWSGroupTitle {background: url("%SITEPATH%icon_arrow_right_green.png") no-repeat 5px center; border: 0px none !important; padding: 10px 10px 10px 30px; font-size: 16px; color: #003D4C; border-radius: 0px !important;}
+        .MPWSGroup .MPWSGroupTitle {background: url("icon_arrow_right_green.png?plugin=reporting") no-repeat 5px center; border: 0px none !important; padding: 10px 10px 10px 30px; font-size: 16px; color: #003D4C; border-radius: 0px !important;}
         .MPWSGroup .MPWSGroupTitle:hover {border: 1px dotted #ccc !important; padding: 9px 9px 9px 29px;}
-        .MPWSGroup .MPWSGroupTitle.ui-state-active {background: url("%SITEPATH%icon_arrow_down_green.png") transparent no-repeat -10px 10px;}
+        .MPWSGroup .MPWSGroupTitle.ui-state-active {background: url("icon_arrow_down_green.png?plugin=reporting") transparent no-repeat -10px 10px;}
         .MPWSGroup .MPWWSGroupQuestions {background-color: #fff !important; background: none !important; border: 0px none !important; padding-left: 260px !important;}
         .MPWSGroup .MPWWSQuestion {padding: 10px; overflow: hidden; margin-bottom: 10px;}
         .MPWSGroup .MPWWSQuestion:hover  {border: 1px dotted #ccc; padding: 9px;}
@@ -312,7 +312,7 @@
             .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSText {text-decoration: none;}
             .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextTitle {font-size: 120%; font-weight: bold; display: block;}
             .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextAction {font-size: 90%; font-weight: normal; font-style: italic; display: block; width: 150px; margin-left: -300px;}
-            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextLink {font-size: 120%; font-weight: bold; display: block; background: url("%SITEPATH%icon_arrow_right_orange.png") no-repeat right -9px; text-align: right; padding-right: 40px; margin-right: -300px; color: #E88021; margin-top: 7px;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextLink {font-size: 120%; font-weight: bold; display: block; background: url("icon_arrow_right_orange.png?plugin=reporting") no-repeat right -9px; text-align: right; padding-right: 40px; margin-right: -300px; color: #E88021; margin-top: 7px;}
         /* hover state */
         .MPWSWidgetTools .MPWSMiniBlock:hover {filter:alpha(opacity=1); -moz-opacity: 1; -khtml-opacity: 1; opacity: 1; cursor: pointer;}
             .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextTitle {}
@@ -321,5 +321,5 @@
             
             
     /* item tools */
-    .MPWSWidgetTools .MPWSMiniBlockSurveys {background: url("%SITEPATH%bv_pageicons_surveys_tool.png") transparent no-repeat center center;}
-    .MPWSWidgetTools .MPWSMiniBlockReports {background: url("%SITEPATH%bv_pageicons_reports_tool.png") transparent no-repeat center center;}
+    .MPWSWidgetTools .MPWSMiniBlockSurveys {background: url("bv_pageicons_surveys_tool.png?plugin=reporting") transparent no-repeat center center;}
+    .MPWSWidgetTools .MPWSMiniBlockReports {background: url("bv_pageicons_reports_tool.png?plugin=reporting") transparent no-repeat center center;}

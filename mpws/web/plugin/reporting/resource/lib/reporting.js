@@ -1,4 +1,4 @@
-mpws.module.define('reporting', (function(window, document, $){
+mpws.module.define('web:plugin:reporting', (function(window, document, $){
          
     // configure visual report
     function _initUserPaging (owner) {

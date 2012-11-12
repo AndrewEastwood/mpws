@@ -59,7 +59,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'dfeef937479aa2f13cd1657eea655744ed1498d8' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/page/system.html',
-      1 => 1352473067,
+      1 => 1352725406,
       2 => 'file',
     ),
     '929cbd1ddf297f9edb80d79f7d4b55ebae01ad54' => 
@@ -167,11 +167,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'nocache_hash' => '5376389855081257ebaaaf7-99117552',
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50a0a5088cc649_05147644',
+  'unifunc' => 'content_50a131aaac8722_20167357',
   'has_nocache_code' => false,
   'cache_lifetime' => 3600,
 ),true); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50a0a5088cc649_05147644')) {function content_50a0a5088cc649_05147644($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_50a131aaac8722_20167357')) {function content_50a131aaac8722_20167357($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
     <title>
@@ -272,7 +272,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         <div class="MPWSBlockDataRow">
     <span class="MPWSText">Last access:</span>
-    <span class="MPWSValue">2012-11-09 16:36:28</span>
+    <span class="MPWSValue">2012-11-12 18:22:24</span>
 </div>
         
         
@@ -436,11 +436,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         </ul>
 </div>
                         
-<div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList
-Notice: Undefined index: _controlOwner in /mydata/GitHub/web/mpws/data/bin/templates_c/47b44db1435148cce8713f2c95e42d447e21da60.file.messageList.html.cache.php on line 46
-
-Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin/templates_c/47b44db1435148cce8713f2c95e42d447e21da60.file.messageList.html.cache.php on line 46
-">
+<div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageListReporting">
     <ul class="MPWSList">
             <li class="MPWSListItem">View and analyze reports</li>
         </ul>
@@ -454,79 +450,9 @@ Notice: Trying to get property of non-object in /mydata/GitHub/web/mpws/data/bin
 
     
     <div class="MPWSBlock MPWSBlockAllReportLinks">
-                    
-        <ul class="MPWSList">
-            <li class="MPWSListItem">
-            
-    
-<div class="MPWSBlock MPWSBlockControl MPWSBlockControl_mpwsLinkAction MPWSRenderModeNormal">
-
-
-            
-                                        
-
-
-    
-
         
-
-
-
-<a href="javascript://" title="SI Team"  class="MPWSLink" id="MPWSActionLink_ShowReport_15ID" mpws-fn="ShowReport_15">SI Team</a>
-
-    
-
-</div>
-            
-                            <ul class="MPWSList MPWSListSub">
-                                                    <li class="MPWSListItem">
-                    
-    
-<div class="MPWSBlock MPWSBlockControl MPWSBlockControl_mpwsLinkAction MPWSRenderModeNormal">
-
-
-            
-                                        
-
-
-        
-                            
-                                
-
-
-
-<a href="javascript://" title="weekly"  class="MPWSLink" id="MPWSActionLink_renderID" mpws-fn="render" mpws-oid="15" mpws-caller="reporting" mpws-realm="plugin" mpws-custom="script%3Dweekly">weekly</a>
-
-    
-
-</div>
-                    </li>
-                                    <li class="MPWSListItem">
-                    
-    
-<div class="MPWSBlock MPWSBlockControl MPWSBlockControl_mpwsLinkAction MPWSRenderModeNormal">
-
-
-            
-                                        
-
-
-        
-                            
-                                
-
-
-
-<a href="javascript://" title="release"  class="MPWSLink" id="MPWSActionLink_renderID" mpws-fn="render" mpws-oid="15" mpws-caller="reporting" mpws-realm="plugin" mpws-custom="script%3Drelease">release</a>
-
-    
-
-</div>
-                    </li>
-                                </li>
-                        </li>
-        </ul>
-            </div>
+Notice: Undefined index: RECORD in /mydata/GitHub/web/mpws/data/bin/templates_c/9567bf3c9e884fe25b2b2ffddf42e4b10a2cb452.file.customMonitor.html.cache.php on line 44
+    </div>
 
     
     <div id="MPWSBlockReportInjectionAreaUIID"></div>
