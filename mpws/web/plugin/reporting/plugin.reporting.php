@@ -62,6 +62,10 @@ class pluginReporting extends objectBaseWebPlugin {
                     throw new Exception('ReportData: wrong request');
                 //if (empty($script))
                 //    throw new Exception('ReportData: wrong script name');
+                
+                
+                
+                
                 $ctx = contextMPWS::instance();
                 $cfg = $this->objectConfiguration_widget_customMonitor;
                 // fetch owner record
@@ -71,6 +75,7 @@ class pluginReporting extends objectBaseWebPlugin {
                         ->from($cfg['source'])
                         ->where('ID', '=', $p['oid'])
                         ->fetchRow();
+                var_dump($report);
                 // fetch report script ui
                 $uiFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportUI.DS.$p['custom']['script'].EXT_TEMPLATE);
                 $scriptFilepath = libraryPath::getStandartDataPathWithDBR($report, $this->_dirWithReportScripts.DS.$p['custom']['script'].EXT_JS);

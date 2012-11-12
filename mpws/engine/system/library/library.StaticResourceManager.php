@@ -285,27 +285,32 @@ class libraryStaticResourceManager {
         debug('libraryStaticResourceManager', 'getPropertyValue', true);
         //echo print_r($propertyFilePath, true);
         // chain props
+        
+        //var_dump($propertyFilePath);
         if (is_array($propertyFilePath)) {
             foreach ($propertyFilePath as $propertySingleFilePath) {
+                //echo $propertySingleFilePath;
                  $propertyValue = self::getPropertyValue($propertySingleFilePath, $propKey, true);
                  if ($propertyValue != null)
                      return $propertyValue;
             }
-            throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
+            //echo $propertyValue;
+            //throw new Exception('libraryStaticResourceManager: getPropertyValue(array): Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
         }
         elseif (is_string($propertyFilePath)) {
             if (!file_exists($propertyFilePath))
-                throw new Exception('libraryStaticResourceManager: getPropertyValue: Property file does not exsist: <b>' . $propertyFilePath . '</b>');
+                throw new Exception('libraryStaticResourceManager: getPropertyValue(string): Property file does not exsist: <b>' . $propertyFilePath . '</b>');
             $props = parse_ini_file($propertyFilePath);
             //debug($props);
-            //echo '<br> Reading property file: ' . $propertyFilePath;
+            //var_dump($props);
+            //echo '<br> Reading property file: ' . $propertyFilePath . ' to get the key: ' . $propKey;
             if (isset($props[$propKey]))
                 return $props[$propKey];
             if (!$fromArray)
-                throw new Exception('libraryStaticResourceManager: getPropertyValue: Requested property key does not exist: <b>' . $propKey . '</b>; filepath: ' . $propertyFilePath);
+                throw new Exception('libraryStaticResourceManager: getPropertyValue(string): Requested property key does not exist: <b>' . $propKey . '</b>; filepath: ' . $propertyFilePath);
             return null;
         } else
-            throw new Exception('libraryStaticResourceManager: getPropertyValue: Wrong property file path: <b>'.$propertyFilePath.'</b>');
+            throw new Exception('libraryStaticResourceManager: getPropertyValue(undefined): Wrong property file path: <b>'.$propertyFilePath.'</b>');
         
     }
     
