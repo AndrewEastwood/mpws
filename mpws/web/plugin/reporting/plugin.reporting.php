@@ -3,7 +3,7 @@
 class pluginReporting extends objectBaseWebPlugin {
 
     private $_dirWithReportScripts = 'script';
-    private $_dirWithReportData = 'data';
+    private $_dirWithReportData = 'secure';
     private $_dirWithReportUI = 'ui';
     
     protected function _displayTriggerAsPlugin () {
