@@ -7,7 +7,7 @@ labelForLabelValueDefaultDataPath = "Remote Data Path";
 labelForLabelValueDefaultReports  = "Report Scripts"
 labelForLabelValueDefaultDateCreated = "Created";
 labelForLabelValueDefaultDateUpdated = "Updated";
-
+labelForLabelValueDefaultReportDataUrl = "Report Data URL";
 
 labelForListBoxDataRecordManagerReportScriptListBox = "All Available Report Scripts";
 labelForListBoxDataRecordManagerReportUIListBox = "All UI Containers";

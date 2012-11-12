@@ -214,12 +214,14 @@ class libraryComponents {
                     $mangerSource = libraryPath::getStandartDataPathWithDBR($ownerData, $currentManager['manageSource']);
                     break;
                 }
+                case "record" : {
+                    break;
+                }
             }
             
             // handle manager actions such as: save, remove, etc.
             if ($isActive) {
                 
-
                 //echo '<br> ACTIVE MANAGER IS = ' . $managerID;
                 //echo '<br> ACTIVE ACTION IS = ' . $managerID;
                 
@@ -308,6 +310,9 @@ class libraryComponents {
                 switch ($mgrType) {
                     case "file" : {
                         $mgrContent['SOURCE'] = libraryFileManager::getGlobMap($mangerSource . DS . '*', false, true);
+                        break;
+                    }
+                    case "record" : {
                         break;
                     }
                 }

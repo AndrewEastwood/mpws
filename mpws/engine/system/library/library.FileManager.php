@@ -46,11 +46,19 @@ class libraryFileManager
     public static function getGlobMap($pathToDirectory, $extensionToRemove = false, $useBaseNamesAll = false) {
         $files = glob($pathToDirectory);
         $fList = array();
-        foreach ($files as $fPath)
+        foreach ($files as $fPath) {
+            // fetch key
+            $key = $fPath;
+            if (is_string($extensionToRemove))
+                $key = basename($fPath, $extensionToRemove);
+            if (is_bool($extensionToRemove) && $extensionToRemove)
+                $key = self::getFileNameWithoutExtension (basename($fPath));
+            // set value
             if ($useBaseNamesAll)
-                $fList[basename($fPath, $extensionToRemove)] = basename($fPath);
+                $fList[$key] = basename($fPath);
             else
-                $fList[basename($fPath, $extensionToRemove)] = $fPath;
+                $fList[$key] = $fPath;
+        }
         return $fList;
     }
     
@@ -215,13 +223,15 @@ class libraryFileManager
     // ³����� ��� ����� ��� ���������� � ���� �����.
     // $filePath - ���� ��� ��� �����.
     // ������� ��� ����� ��� ���������� ��� false.
-    public function GetFileNameWithoutExtension($filePath)
+    public static function getFileNameWithoutExtension($filePath)
     {
         if (empty($filePath))
             return false;
-        $filePath = strtolower($filePath);
+        $extDotPos = strrpos($filePath, '.');
+        return substr($filePath, 0, $extDotPos);
+        /*$filePath = strtolower($filePath);
         $p = pathinfo($filePath);
-        return basename($filePath, DOT.$p['extension']);
+        return basename($filePath, DOT.$p['extension']);*/
     }
 
     // ����� ��� ����� �� ������� ���� ����������.
@@ -514,7 +524,7 @@ class libraryFileManager
             //var_dump($_FILES['_aupimg']['tmp_name'][$i]);
             //var_dump($img_lib);
             // ������� ��� �����
-            $fNewName = $this->GetFileNameWithoutExtension($fName);
+            $fNewName = self::getFileNameWithoutExtension($fName);
             $fNewName_sm = $this->ChangeFileName($fName, $fNewName.'_sm');
             $fNewName_30 = $this->ChangeFileName($fName, $fNewName.'_sm30');
             // �������� �������� ����������

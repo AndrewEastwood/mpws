@@ -4,6 +4,7 @@
 {$_controlSources = $_sources|default:[]}
 {$_controlNameData = "mpws_field_`$_name|lower`_data"}
 {$_controlNameSource = "mpws_field_`$_name|lower`_source"}
+{$_controlEditLang = $_editLang|default:'text'}
 
 {if not empty($_jslib)}
 {include file=$CURRENT.OBJECT->objectTemplatePath_simple_script
@@ -34,14 +35,16 @@
             {$jsControlName = "\"MPWSWrapperRTEWH_`$_name|lower`_ID\""}
             <script>
                 /* standart setup */
-                var editor = ace.edit({$jsControlName});
-                editor.setTheme("ace/theme/monokai");
-                editor.getSession().setMode("ace/mode/javascript");
-                editor.getSession().setUseWrapMode(true);
-                /* custom handler */
-                editor.getSession().on('change', function(e) {
-                    $('#{$controlID}').val(editor.getSession().getValue());
-                });
+                (function _editSetup(){
+                    var editor = ace.edit({$jsControlName});
+                    editor.setTheme("ace/theme/monokai");
+                    editor.getSession().setMode("ace/mode/{$_controlEditLang}");
+                    editor.getSession().setUseWrapMode(true);
+                    /* custom handler */
+                    editor.getSession().on('change', function(e) {
+                        $('#{$controlID}').val(editor.getSession().getValue());
+                    });
+                })();
             </script>
         {else}
             {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea 

@@ -7,7 +7,7 @@ labelForLinkActionQuickFilteringDateCreated = "Date Time Created";
 ; captions
 captionName = "Category Name";
 captionExternalKey = "External Key";
-captionReportDataUrl = "Data URL";
+captionReportDataUrl = "Report Data URL";
 captionDateCreated = "Created";
 captionDateUpdated = "Updated";
 captionReports = "Reports";

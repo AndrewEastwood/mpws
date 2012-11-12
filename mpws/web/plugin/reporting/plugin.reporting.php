@@ -68,6 +68,8 @@ class pluginReporting extends objectBaseWebPlugin {
                     throw new Exception('SalesForce import: check account');
                 // fetch data
                 //$this->customSalesForceImport($sfAccount, $report[$wgtCfg['dataUrlFieldName']]);
+                
+                //var_dump($sfAccount);
                 echo 'FETCHING DATA';
                 break;
             }
@@ -149,13 +151,15 @@ class pluginReporting extends objectBaseWebPlugin {
                 ->from($cfg['source'])
                 ->fetchData();
         $data = array();
-
-        
         // get all report scripts
         foreach ($reports as $idx => $report) {
+            
+            $mangerSource = libraryPath::getStandartDataPathWithDBR($report, $cfg['monitorScriptsFolder']);
+            $flist = libraryFileManager::getGlobMap($mangerSource . DS . '*', true, true);
+            //var_dump($flist);
             $data[$idx] = array(
                 'RECORD' => $report,
-                'SCRIPTS' => ''
+                'SCRIPTS' => $flist
             );
         }
         // get all reports
@@ -163,9 +167,27 @@ class pluginReporting extends objectBaseWebPlugin {
     }
     
     private function actionHandlerCustomApi () {
-        // get all reports
-        
-        $this->addWidgetSimple('customApiSettings');
+        $ctx = contextMPWS::instance();
+        $cfg = $this->objectConfiguration_widget_customApiResources;
+        $reports = $ctx->contextCustomer->getDBO()
+                ->reset()
+                ->select($cfg['fields'])
+                ->from($cfg['source'])
+                ->fetchData();
+        $data = array();
+        // get all report scripts
+        foreach ($reports as $idx => $report) {
+            
+            $mangerSource = libraryPath::getStandartDataPathWithDBR($report, $cfg['monitorScriptsFolder']);
+            $flist = libraryFileManager::getGlobMap($mangerSource . DS . '*', true, true);
+            //var_dump($flist);
+            $data[$idx] = array(
+                'RECORD' => $report,
+                'SCRIPTS' => $flist
+            );
+        }
+        // show API
+        $this->addWidgetSimple('customApiSettings', $data);
     }
     
     /* all custom methods are below */

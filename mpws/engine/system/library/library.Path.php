@@ -30,7 +30,10 @@ class libraryPath {
         $path = false;
         if (!empty($dataBaseRecord['DataPath']))
             $path = $dataBaseRecord['DataPath'] . DS . $pathAppend;
-        
+
+        //var_dump($dataBaseRecord);
+        //echo 'CHECK IS = ' . $path;
+
         if (!empty($path) && file_exists($path))
             return $path;
         
@@ -52,8 +55,6 @@ class libraryPath {
         if (!empty($path) && file_exists($path))
             return $path;
 
-        
-        
         throw new Exception('libraryPath => getStandartDataPathWithDBR: Wrong dataBaseRecord value passed. Expected path is: ' . $path);
     }
 }
