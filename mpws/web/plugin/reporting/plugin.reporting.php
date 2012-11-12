@@ -42,6 +42,10 @@ class pluginReporting extends objectBaseWebPlugin {
             case "sf-import" : {
                 echo 'SF import';
                 
+                
+                // use report ID to fetch report data url
+                // use accout config to download report data
+                
                 // get SF account
                 $sfAccount = $this->objectConfiguration_accounts_salesForceAI;
                 $this->customSalesForceImport($sfAccount);
@@ -649,7 +653,7 @@ class pluginReporting extends objectBaseWebPlugin {
     }
 
     // sales force import
-    private function customSalesForceImport ($account) {
+    private function customSalesForceImport ($account, $reportUrl) {
 
         define("USERNAME", $account['user']);
         define("PASSWORD", $account['pwd']);
@@ -661,7 +665,7 @@ class pluginReporting extends objectBaseWebPlugin {
         //var_dump($mySforceConnection);
         $client = $mySforceConnection->login(USERNAME, PASSWORD.SECURITY_TOKEN);
         // report configuration 00O50000003ASUG
-        $reportUrl = $account['url'];
+        //$reportUrl = $account['url'];
         
         
         $logInfo = 'Starting data import at : ' . date('Y-m-d H:i:s') . ' from ' . $reportUrl . PHP_EOL;

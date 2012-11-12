@@ -100,6 +100,13 @@ class SforceBaseClient {
 	 * @param string $wsdl   Salesforce.com Partner WSDL
 	 */
 	public function createConnection($wsdl, $proxy=null) {
+            
+                // MPWS PATCH
+                // SET PULL PATH TO WSDL FILE
+                $wsdl = SFORCE_DIR . DS . $wsdl;
+                // MPWS PATCH END
+            
+            
 		$phpversion = substr(phpversion(), 0, strpos(phpversion(), '-'));
 		
 		$soapClientArray = array (

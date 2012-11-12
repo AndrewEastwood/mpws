@@ -1,3 +1,325 @@
 .reportContainer {width: 100%; min-height: 400px;}
 
 /* 2012-10-23 */
+
+
+
+.reportContainer {
+    height: 500px;
+    border-bottom: 1px dashed #00AB8E;
+    margin: 0px 5px;
+}
+
+.reportContainerTypeAndTypes {
+    height: 900px;
+}
+
+.loading {
+    background: url('loading.gif') no-repeat center center;
+}
+
+.buttonWrapper {
+    position: relative;
+}
+
+.customListBox {
+    position: absolute;
+    border: 1px solid #00AB8E;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    top: 40px;
+}
+
+.customListBox li:hover {
+    background-color: #00AB8E;
+    color: #fff;
+    cursor: pointer;
+}
+
+.customListBox li {
+    font-family: ForalProBold,Georgia,serif !important;
+    text-transform: uppercase;
+    display: block;
+    width: 153px;
+    height: 26px;
+    line-height: 14px;
+    font-size: 14px;
+    padding-top: 12px;
+    text-align: left;
+    padding-left: 9px;
+    padding-right: 9px;
+    text-decoration: none;
+    background-color: #fff;
+    color: #00AB8E;
+}
+
+.hidden {display: none;}
+
+.controlBox .buttonWrapper {float: left;}
+
+.buttonWrapperLoader {display: none;}
+
+.reportContainerTeamReport {height: auto;}
+
+/* general hours */
+.reportContainerTeamReport tr td:nth-child(14) {font-size: 18px; border-right: 3px solid #333; border-left: 3px solid #333; text-align: left; padding-left: 5px;}
+
+/* implementer */
+.reportContainerTeamReport tr td:nth-child(1) {border-right: 1px solid #333;}
+/* hour values */
+.reportContainerTeamReport tr td:nth-child(3),
+.reportContainerTeamReport tr td:nth-child(5),
+.reportContainerTeamReport tr td:nth-child(7),
+.reportContainerTeamReport tr td:nth-child(9),
+.reportContainerTeamReport tr td:nth-child(11) {border-right: 1px solid #333; font-size: 13px; font-weight: bold;}
+
+/* count values */
+.reportContainerTeamReport tr td:nth-child(2),
+.reportContainerTeamReport tr td:nth-child(4),
+.reportContainerTeamReport tr td:nth-child(6),
+.reportContainerTeamReport tr td:nth-child(8),
+.reportContainerTeamReport tr td:nth-child(10),
+.reportContainerTeamReport tr td:nth-child(12) {font-size: 10px;}
+
+.reportContainerTeamReport tr:last-child td {border-top: 2px solid #333; padding-top: 5px; font-size: 15px;}
+
+#userPageID {
+    padding: 0px;
+    position: absolute;
+    border: 2px solid #00AB8E;
+    top: 500px;
+    left: 50%;
+    width: 900px;
+    height: 600px;
+    margin-left: -450px;
+    background: #fff;
+    -webkit-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4);
+    box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4);
+}
+
+#userPageID .pageContent .dashboardContainer, #userPageID .pageContent .reportContainer {float: left; width: 840px; margin: 0px 30px 0px 0px; height: 450px; border-bottom: 1px dashed #00AB8E;}
+
+#userPageID .pageContent {
+    padding: 30px;
+    overflow: hidden;
+}
+#userPageID .pageContent .reportWrapper {
+    width: 9000px;
+}
+
+#userPageID .pageHader {
+    background: #003D4C;
+    overflow: hidden; 
+    zoom: 1;
+    padding: 10px 30px;
+}
+
+#userPageID .pageTitle {
+    font-family: ForalProBold,Georgia,serif;
+    color: #fff;
+    font-size: 20px;
+    line-height: 40px;
+}
+
+#userPageID .buttonClose {float: right;}
+#userPageID .pageNavigator {margin: 0 auto; padding: 10px; overflow: hidden; text-align: center;}
+#userPageID .pageNavigator a {display: block;
+    float: left;
+    text-indent: -9999px;
+    width: 12px;
+    height: 11px;
+    margin: 0 0 0 7px;
+    background: url('icon_cycle_dot_navigation.png') no-repeat 0 0;
+}
+#userPageID .pageNavigator a:hover {
+    background-position: -19px 0;
+}
+
+#userPageID .pageNavigator a.activePage {
+    background-position: -19px 0;
+}
+
+#userPageID .reportContainerUserHandledCases {overflow: scroll; height: 450px;}
+
+
+.reportBlock1, .reportBlock2 {float: left; width: 49%; overflow; hidden;}
+.reportBlock1 .reportContainer, .reportBlock2 .reportContainer {z-index: 1;}
+.reportBlock1 {}
+.reportBlock2 {}
+
+#userPageID .reportContainerUserHandledCases {overflow: scroll;}
+#userPageID .pageNavigator a, .button {outline: none;}
+#defaultPageID .reportContainer {clear: both;}
+#defaultPageID .reportContainerTaskTypes, #defaultPageID .reportContainerSIvsFA, #defaultPageID .reportContainerComplexityCause {/* float: left; width: 32%; */ clear: none; margin: 0px;}
+#defaultPageID .reportContainerTaskTypes {margin-left: 20px;}
+
+
+
+.MPWSWrapperComingSoon {position: relative; display: none;}
+    .MPWSWrapperComingSoon .MPWSMiniBlockIcon {background: url('%SITEPATH%cs_sm.png') no-repeat 0 0; width: 122px; height: 122px; position: absolute; right: 206px; top: 92px;}
+
+    
+    
+.reportContainerUsersActivityLinear {height: 1900px;}
+
+
+
+.MPWSPage a.button, .MPWSPage a.button:visted {color: #fff; text-decoration: none;}
+.MPWSPage a.button:hover {color: #00AB8E;}
+
+.MPWSPage .ui-widget a, .MPWSPage .ui-widget a:visited {color: #333;}
+.MPWSPage .ui-widget a:hover {color: #777;}
+
+.ui-datepicker td.ui-datepicker-today {border: 1px solid #333;}
+
+
+/***************************/
+
+
+    .MPWSWidgetUser {padding: 6px 15px; float: left; margin: 17px 20px 20px 10px; border-left: 1px dotted #AAA; background: none; color: white;}
+    .MPWSWidgetUser .MPWSHeader {font-weight: bold; font-size: 15px;}
+
+    
+    .MPWSWidgetSurveys {padding: 5px 10px; margin: 0px 0px 20px; float: right; width: 750px;}
+    .MPWSWidgetSurveys .MPWSHeader {color: #fff; font: 376.9% 'ForalProBold',Georgia,serif; font-weight: bold; display: block; padding-bottom: 5px;}
+        .MPWSWidgetSurveys .MPWSHeaderTitle {color: #0C2B41; text-shadow: 1px 1px 5px #0C2B41;}
+    .MPWSWidgetSurveys .MPWSWidgetContent {background: url('%SITEPATH%/bg_grid_17.gif') repeat center top; padding: 40px 20px;}
+        .MPWSWidgetSurveys .MPWSWidgetContent .MPWSList {list-style: none; margin: 0px; padding: 0px;}
+        .MPWSWidgetSurveys .MPWSWidgetContent .MPWSItem {color: #0C2B41; text-transform: uppercase; padding: 10px;}
+        .MPWSWidgetSurveys .MPWSWidgetContent .MPWSLink {color: #0C2B41; text-transform: uppercase;}
+    .MPWSWidgetSurveys .MPWSWidgetFooter {}
+    
+    
+    .MPWSWidgetSurveyForm {clear: both;}
+        .MPWSWidgetSurveyForm .MPWSContentPlaceholder{}
+        .MPWSWidgetSurveyForm .MPWSContentPlaceholder.MPWSLoading {background-color: #fff; height: 300px;}
+            .MPWSWidgetSurveyForm .MPWSContentPlaceholder .MPWSWidgetPoll {padding: 0px 10px; position: relative; overflow: hidden; zoom: 1;}
+    
+    .MPWSWidgetReports {padding: 5px 10px; margin: 0px 0px 20px; float: right; width: 750px;}
+    .MPWSWidgetReports .MPWSHeader {color: #fff; font: 376.9% 'ForalProBold',Georgia,serif; font-weight: bold; display: block; padding-bottom: 5px;}
+        .MPWSWidgetReports .MPWSHeaderTitle {color: #0C2B41; text-shadow: 1px 1px 5px #0C2B41;}
+    .MPWSWidgetReports .MPWSWidgetContent {background: url('%SITEPATH%/bg_grid_17.gif') repeat center top; padding: 40px 20px;}
+        .MPWSWidgetReports .MPWSWidgetContent .MPWSList {list-style: none; margin: 0px; padding: 0px;}
+        .MPWSWidgetReports .MPWSWidgetContent .MPWSItem {color: #0C2B41; text-transform: uppercase; padding: 10px;}
+        .MPWSWidgetReports .MPWSWidgetContent .MPWSLink {color: #0C2B41; text-transform: uppercase;}
+    .MPWSWidgetReports .MPWSWidgetFooter {}
+    
+    
+    .MPWSWidgetReportForm {clear: both;}
+        .MPWSWidgetReportForm .MPWSContentPlaceholder{}
+        .MPWSWidgetReportForm .MPWSContentPlaceholder.MPWSLoading {background-color: #fff; height: 300px;}
+            .MPWSWidgetReportForm .MPWSContentPlaceholder .MPWSWidgetContent {background-color: #fff; overflow: hidden; zoom: 1; margin-top: 30px;}
+            .MPWSWidgetReportForm .MPWSContentPlaceholder .MPWSMiniBlockButtons {padding: 0px 50px 0px 0px;}
+            .MPWSWidgetReportForm .MPWSContentPlaceholder .MPWSMiniBlockButtons .MPWSCInputText {margin-top: 10px; width: 250px; margin-right: 50px;}
+            .MPWSWidgetReportForm .MPWSContentPlaceholder .MPWSMiniBlockButtons .MPWSCButtonRender {width: 210px;}
+    
+    /* fixed state */
+    .MPWSWidgetReportForm .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed {position: fixed; position: fixed; top: 34px; background: white; width: 100%; left: 0px; padding: 10px 0px; -webkit-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); -moz-box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); box-shadow: 0px 6px 6px 1px rgba(0,0,0,0.4); z-index: 99999;}
+    .MPWSWidgetReportForm .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSWrapper {width: 1000px; margin: 0px auto; overflow: hidden; position: relative; left: -50px;}
+    .MPWSWidgetReportForm .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSHeaderTitle {display: block; float: left; margin-top: 12px;}
+    .MPWSWidgetReportForm .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSHeaderTitle h1 {font-size: 14px; line-height: normal; margin: 0px; padding: 0px;}
+    .MPWSWidgetReportForm .MPWSWidgetContent .MPWSMiniBlockButtons.MPWSRibbonFixed .MPWSWrapperRelease {display: block;}
+    
+    
+    .MPWSWidgetPageIcon  {float: left; width: 200px; height: 200px; padding: 0px; margin: 11px 0 0 10px;}
+        .MPWSWidgetPageIcon .MPWSHeader {display: none;}
+    .MPWSWidgetPageIcon .MPWSWidgetContent  {display: none;}
+    .MPWSWidgetPageIconSurveys {background: url("%SITEPATH%bv_pageicons_surveys.png") transparent no-repeat left top;}
+    .MPWSWidgetPageIconReports {background: url("%SITEPATH%bv_pageicons_reports.png") transparent no-repeat left top;}
+    
+    
+    
+/***************************/
+
+
+
+#PlaceHolderID {	background: #FFFFFF;
+	position: relative;
+	width: 960px;
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	padding-top: 0px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 10px;
+    overflow: hidden;
+    zoom: 1;}
+    
+    
+    .MPWSWidgetHeader {display: block; overflow: hidden; zoom: 1;}
+    
+    .MPWSHeaderTitle h1 {width: auto;}
+    
+    .MPWSMiniBlockPoll {padding: 20px; font-size: 18px;}
+    
+    .MPWSQuestionLabel {float: left; width: 200px;}
+    
+    .MPWSGroup {border-bottom: 1px dashed #ddd; padding: 10px;}
+        .MPWSGroup .MPWSGroupTitle {background: url("%SITEPATH%icon_arrow_right_green.png") no-repeat 5px center; border: 0px none !important; padding: 10px 10px 10px 30px; font-size: 16px; color: #003D4C; border-radius: 0px !important;}
+        .MPWSGroup .MPWSGroupTitle:hover {border: 1px dotted #ccc !important; padding: 9px 9px 9px 29px;}
+        .MPWSGroup .MPWSGroupTitle.ui-state-active {background: url("%SITEPATH%icon_arrow_down_green.png") transparent no-repeat -10px 10px;}
+        .MPWSGroup .MPWWSGroupQuestions {background-color: #fff !important; background: none !important; border: 0px none !important; padding-left: 260px !important;}
+        .MPWSGroup .MPWWSQuestion {padding: 10px; overflow: hidden; margin-bottom: 10px;}
+        .MPWSGroup .MPWWSQuestion:hover  {border: 1px dotted #ccc; padding: 9px;}
+        .MPWSGroup .MPWWSQuestion.MPWSRequired {/*background-color: #fcf4ff;*/}
+        .MPWSGroup .MPWWSQuestion.MPWSRequired label {font-weight: bold;}
+        .MPWSGroup .MPWWSQuestion.MPWSError label {font-weight: bold; color: #c00;}
+        .MPWSGroup .MPWWSQuestion.MPWSError {border: 1px dotted #c00;}
+        .MPWSGroup .MPWWSQuestion.MPWSError:hover {border: 1px dotted #ccc; padding: 10px;}
+        .MPWSGroup .ui-icon {background: none !important;}
+    
+    
+    .MPWSWidget input, .MPWSWidget textarea {font-size: 14px; padding: 2px; width: 300px; }
+    .MPWSWidget textarea {height: 80px;}
+    
+    .MPWSHidden {display: none;}
+    
+    .MPWSTextLegend {padding-left: 20px;font-style: italic;font-weight: bold;}
+    
+    
+    .MPWSMiniBlockButtons {margin-top: 40px; margin-bottom: 20px; text-align: right; overflow: hidden; zoom: 1; border-top: 1px solid #00AB8E; padding-top: 15px;}
+        .MPWSMiniBlockButtons .MPWSCButton {width: 230px; float: right; margin-left: 50px;}
+    
+    .MPWSRequiredIndicator {font-size: 12px; font-weight: bold; color: #333; padding-left: 3px;}
+    
+    
+    .MPWSMiniBlockErrors {font-size: 16px; color: #c00; font-weight: bold;}
+    
+    
+    /*h3.MPWSCompleted {color: #38F !important; font-style: italic; text-decoration: line-through;}*/
+    
+    .MPWSWidgetHeader h1 {float: none;}
+    
+    
+    
+    
+    /* menu */
+    li.MPWSItemMenuHeader {float: left;}
+    
+    /* widget tools */
+    .MPWSWidgetTools {}
+        .MPWSWidgetTools .MPWSHeader {padding-bottom: 10px; margin-bottom: 50px; border-bottom: 2px dashed #fff;}
+            .MPWSWidgetTools .MPWSHeaderTitle {color: #0C2B41; outline: none; text-decoration: none; font-family: ForalProBold,Georgia,serif; font-size: 200%; text-transform: uppercase; text-shadow: 1px 1px 5px #0C2B41;}
+        .MPWSWidgetTools .MPWSWidgetContent {padding: 0px 40px; margin-left: -60px;}
+        .MPWSWidgetTools .MPWSMiniBlock {width: 200px; height: 200px; -webkit-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); -moz-box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); box-shadow: 0px 0px 0px 17px rgba(0,0,0,0.2); filter:alpha(opacity=30); -moz-opacity: 0.3; -khtml-opacity: 0.3; opacity: 0.3; position: relative; float: left; margin-left: 60px;}
+            .MPWSWidgetTools .MPWSMiniBlock a {text-decoration: none;}
+            .MPWSWidgetTools .MPWSMiniBlock a:visited {text-decoration: none;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper {background: #003D4C; background: rgba(0, 61, 76, 0.95); color: #fff; padding: 5px 0px 10px 12px; position: absolute; bottom: 0px; width: 188px; height: 20px; overflow: hidden;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSText {text-decoration: none;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextTitle {font-size: 120%; font-weight: bold; display: block;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextAction {font-size: 90%; font-weight: normal; font-style: italic; display: block; width: 150px; margin-left: -300px;}
+            .MPWSWidgetTools .MPWSMiniBlock .MPWSWrapper .MPWSTextLink {font-size: 120%; font-weight: bold; display: block; background: url("%SITEPATH%icon_arrow_right_orange.png") no-repeat right -9px; text-align: right; padding-right: 40px; margin-right: -300px; color: #E88021; margin-top: 7px;}
+        /* hover state */
+        .MPWSWidgetTools .MPWSMiniBlock:hover {filter:alpha(opacity=1); -moz-opacity: 1; -khtml-opacity: 1; opacity: 1; cursor: pointer;}
+            .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextTitle {}
+            .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextAction {}
+            .MPWSWidgetTools .MPWSMiniBlock:hover  .MPWSWrapper .MPWSTextLink {}
+            
+            
+    /* item tools */
+    .MPWSWidgetTools .MPWSMiniBlockSurveys {background: url("%SITEPATH%bv_pageicons_surveys_tool.png") transparent no-repeat center center;}
+    .MPWSWidgetTools .MPWSMiniBlockReports {background: url("%SITEPATH%bv_pageicons_reports_tool.png") transparent no-repeat center center;}
