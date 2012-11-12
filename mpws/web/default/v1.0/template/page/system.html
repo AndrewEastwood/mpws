@@ -7,9 +7,20 @@
 
 {* add system messages *}
 {if isset($MODEL.MESSAGE.COMMON)}
-    {include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$MODEL.MESSAGE.COMMON _controlOwner='System'}
+    {include assign="msg_common" file=$CURRENT.OBJECT->objectTemplatePath_component_messageList _messages=$MODEL.MESSAGE.COMMON _controlOwner='System' _useHeader=true}
     {$_contents[]=$msg_common}
 {/if}
+
+{* add widget messages *}
+{if $MODEL.MESSAGE|@count gt 1}
+    {foreach $MODEL.MESSAGE as $wobOwner => $messageItems}
+        {if not ($wobOwner eq 'COMMON')}
+            {include assign="msg_common" file=$OBJECT.WOB[makeKey($wobOwner)]->objectTemplatePath_component_messageList _messages=$messageItems _OBJ=$OBJECT.WOB[makeKey($wobOwner)]}
+        {$_contents[]=$msg_common}
+        {/if}
+    {/foreach}
+{/if}
+
 
 {if $INFO.GET.PAGE == $CURRENT.OBJECT->objectConfiguration_object_menuKeyToShowToolsList}
     {if empty($INFO.GET.PLUGIN) }

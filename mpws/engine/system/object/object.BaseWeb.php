@@ -204,12 +204,15 @@ class objectBaseWeb extends objectBase {
         
         $wnTbase = $wnT . "base" . ucfirst($widgetParent);
         $wnTowner = $wnT .$widgetParent . $widgetName;
+        
+        $widgetOriginalName = $widgetName;
 
         // check if we use default template
         try {
             if ($this->$wnTowner)
                 $wnT = $wnTowner;
         } catch (Exception $exc) {
+            debug('Exception at: ' . $exc->getMessage());
             $wnT = $wnTbase; // default widget name and resource to be used
         }
         $widgetName = $widgetParent.DOG.$widgetName;
@@ -218,6 +221,8 @@ class objectBaseWeb extends objectBase {
         //echo '<br>addWidget: '.$widgetName;
         //echo '<br>Template to be used: '.$wnT;
         $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+        // add widget message
+        $ctx->pageModel->addMessage($widgetOriginalName.'StartupMessage', $this->getObjectName());
     }
     
 }

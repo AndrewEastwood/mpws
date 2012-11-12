@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-01 18:28:46
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-09 15:00:53
          compiled from "/var/www/mpws/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:91769009550815dc7375904-06521165%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6999ca4e59688c03dcb6f324646871f1d215ed21' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/component/dataTable.html',
-      1 => 1351787317,
+      1 => 1352466051,
       2 => 'file',
     ),
   ),
@@ -74,7 +74,7 @@ $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
         <div class="MPWSDataTableRow MPWSDataTableRowCaptions">
 
 
-        <?php if (!empty($_smarty_tpl->tpl_vars['_confing']->value['datatable']['actions'])){?>
+        <?php if (!empty($_smarty_tpl->tpl_vars['_confing']->value['datatable']['perRecrodActions'])){?>
             <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
                 <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_widget_dataTableViewCaptionActions;?>
 

@@ -47,6 +47,7 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         $ctx = contextMPWS::instance();
         $wnT = "objectTemplatePath_widget_" . $widgetName;
         $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+        $this->addWidget($widgetName, $wgtConfig, $wgtData, 'dataRecordViewer');
     }
     
     public function addWidgetDataRecordViewer ($widgetName) {

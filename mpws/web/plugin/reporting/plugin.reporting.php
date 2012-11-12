@@ -97,15 +97,8 @@ class pluginReporting extends objectBaseWebPlugin {
                 $this->actionHandlerAsDataViewEdit('ReportManager');
                 break;
             }
-            case "script-editor" : {
-                $this->actionHandlerCustomReportScriptEditor();
-                break;
-            }
             case "monitor" : {
                 $this->actionHandlerCustomMonitor();
-                break;
-            }
-            case "view" : {
                 break;
             }
             case "api" : {
@@ -116,59 +109,7 @@ class pluginReporting extends objectBaseWebPlugin {
     }
         
     /* custom action handlers */
-    
-    private function actionHandlerCustomReportScriptEditor () {
-        $ctx = contextMPWS::instance();
-        $cfg = $this->objectConfiguration_widget_customReportScriptEditor;
-        
-        $data = array();
-        $errors = array();
-        $data['ACTION'] = libraryRequest::getAction();
-        
-        switch ($data['ACTION']) {
-            case "editreport" : {
-                // check owner existance
-                $ownerOID = libraryRequest::getOID();
-                $scriptName = libraryRequest::getValue('script');
-                if (empty($ownerOID) || !is_numeric($ownerOID))
-                    $errors['owneroid'] = 'wrongOwnerOID';
-                // fetch owner record
-                $ownerData = $ctx->contextCustomer->getDBO()
-                        ->reset()
-                        ->select('*')
-                        ->from($cfg['source'])
-                        ->where('ID', '=', $ownerOID)
-                        ->fetchRow();
-                // check owner data for existance
-                if (empty($ownerData))
-                    $errors['ownerdata'] = 'emptyOwnerRecord';
-                // get script path
-                $scriptFilepath = libraryPath::getStandartDataPathWithDBR($ownerData, $this->_dirWithReportScripts.DS.$scriptName.EXT_JS, true);
-                
-                // fetch data
-                if (libraryRequest::isPostFormAction('save')) {
-                    // save data
-                    $scriptData = libraryUtils::getWithEOL(libraryRequest::getPostFormField('data'));
-                    file_put_contents($scriptFilepath, $scriptData);
-                } else {
-                    // get data content
-                    $scriptData = file_get_contents($scriptFilepath);
-                }
-                $data['SCRIPT'] = $scriptData;
-            }
-            default: {
-                // get all reports
-                $data['REPORTS'] = $ctx->contextCustomer->getDBO()
-                        ->reset()
-                        ->select($cfg['fields'])
-                        ->from($cfg['source'])
-                        ->fetchData();
-                break;
-            }
-        }
-        $this->addWidgetSimple('customReportScriptEditor', $data);
-    }
-    
+
     private function actionHandlerCustomMonitor () {
         $ctx = contextMPWS::instance();
         $cfg = $this->objectConfiguration_widget_customMonitor;

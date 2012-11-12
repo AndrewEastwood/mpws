@@ -24,15 +24,11 @@
     {* put all managers into TABs | opening TAB area *}
     {if $_managerCount > 1}
         <div class="MPWSBlock MPWSRenderModeTabs MPWSBlockManagers">
-            <ul class="MPWSList">
+            <ul class="MPWSList MPWSListManagerTabs" mpws-activetab="{$CURRENT.SOURCE.DATA.COMMON.ACTIVE_INDEX}">
                 {foreach $DTV_CFG.managers as $managerEntry}
                 <li class="MPWSListItem">
-                    {if $managerEntry@key eq $CURRENT.SOURCE.DATA.COMMON.ACTIVE_ID}
-                        <a href="#MPWSBlockManager_{$managerEntry@key|lower}_ID" mpws-mode="active" mpws-value="{$CURRENT.SOURCE.DATA.COMMON.ACTIVE_INDEX}">{$managerEntry@key}</a>
-                    {else}
-                        <a href="#MPWSBlockManager_{$managerEntry@key|lower}_ID">{$managerEntry@key}</a>
-                    {/if}
-                    </li>
+                    <a href="#MPWSBlockManager_{$managerEntry@key|lower}_ID">{$managerEntry@key}</a>
+                </li>
                 {/foreach}
             </ul>
     {/if}
@@ -81,8 +77,10 @@
                         _name=$managerID
                         _controlOwner=$_widgetName
                         _resourceOwner=$_resourceOwner
-                        _items=$managerEntry.CONTENT
+                        _items=$managerEntry.CONTENT.SOURCE
                         _renderMode=$_managerConfig.listbox.displayMode
+                        _initValues=true
+                        _customValueHolder='removeable'
                         _single=true}
 
                     {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_widgetName _resourceOwner='control'}
@@ -98,7 +96,7 @@
                         _name=$managerID
                         _controlOwner=$_widgetName
                         _resourceOwner=$_resourceOwner
-                        _items=$managerEntry.CONTENT
+                        _items=$managerEntry.CONTENT.SOURCE
                         _renderMode=$_managerConfig.listbox.displayMode
                         _checkboxes=true
                         _numLines=true

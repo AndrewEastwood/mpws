@@ -77,7 +77,7 @@
             background-color: @colorBorder;
             color: @colorComponent;
             margin-bottom: 10px;
-            padding: 5px 0px 5px 140px;
+            padding: 5px 0px 5px 0px;
             a.MPWSLink {
                 &:hover {text-decoration: none;}
             }
@@ -86,14 +86,17 @@
         .MPWSDataTableRow {
             border-bottom: 1px solid @colorBorder;
             overflow: hidden;
+            position: relative;
+            padding-bottom: 5px;
+            margin-bottom: 2px;
             .MPWSDataTableCell {
                 float: left;
                 padding: 5px 5px 2px;
-                width: 100px;
+                width: 120px;
             }
             .MPWSDataTableCellActions {
-                width: 130px;
-                span.MPWSDataTableCellAction {padding-right: 5px;}
+                width: 160px;
+                .MPWSBlockControl.MPWSBlockControl_mpwsLinkAction {float: left; padding: 0px 5px 0px 0px;}
             }
             &:hover {
                 color: @colorComponent;

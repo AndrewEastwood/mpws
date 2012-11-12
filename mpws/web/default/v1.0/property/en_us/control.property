@@ -29,6 +29,7 @@ controlFormButtonsDataEditorButtonSave = "Save";
 controlFormButtonsDataEditorButtonPreview = "Preview";
 controlFormButtonsDataEditorButtonCancel = "Cancel";
 controlFormButtonsDataEditorButtonNew = "New";
+controlFormButtonsDataEditorButtonEdit = "Edit";
 
 ; data record manager buttons
 controlFormButtonsDataRecordManagerButtonNew = "New";

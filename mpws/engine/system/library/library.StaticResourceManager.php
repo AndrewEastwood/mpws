@@ -283,6 +283,7 @@ class libraryStaticResourceManager {
 
     public static function getPropertyValue ($propertyFilePath, $propKey, $fromArray = false) {
         debug('libraryStaticResourceManager', 'getPropertyValue', true);
+        //echo print_r($propertyFilePath, true);
         // chain props
         if (is_array($propertyFilePath)) {
             foreach ($propertyFilePath as $propertySingleFilePath) {

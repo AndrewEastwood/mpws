@@ -27,9 +27,8 @@ mpws.module.define('reporting', (function(window, document, $){
     // init
     $(document).ready(function(){
         if (mpws.display === 'manager') {
-            
-            var $_activeIndex = $('.MPWSRenderModeTabs ul li a[mpws-mode="active"]').attr('mpws-value') | 0;
-            //$('.MPWSRenderModeTabs').tabs({active: $_activeIndex});
+            var $_activeIndex = $('.MPWSRenderModeTabs ul.MPWSListManagerTabs').attr('mpws-activetab') | 0;
+            $('.MPWSRenderModeTabs').tabs({active: $_activeIndex});
         }
     });
     

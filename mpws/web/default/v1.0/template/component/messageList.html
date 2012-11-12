@@ -1,9 +1,19 @@
+{assign var="DOs" value=[]}
+{if (isset($_OBJ))}
+    {assign var="DOs" value=[$_OBJ]}
+{/if}
+{$DOs[] = $CURRENT.OBJECT}
+{$DOs[] = $OBJECT.SITE}
+{assign var="DISPLAY_OBJECT" value=glGetFirstNonEmptyValue($DOs)}
+
 <div class="MPWSComponent MPWSComponentMessageList MPWSComponentMessageList{$_controlOwner|capitalize}">
-{include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key="MessageList`$_controlOwner|default:''`"}
+{if $_useHeader|default:false}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_header _resourceOwner='display' _key="MessageList`$_controlOwner|default:''`"}
+{/if}
 {if isset($_messages) }
     <ul class="MPWSList">
     {foreach $_messages as $keyvar=>$itemvar}
-        <li class="MPWSListItem">{$CURRENT.OBJECT->{"objectProperty_`$_resourceOwner|default:'message'`_message`$itemvar|capitalize`"}}</li>
+        <li class="MPWSListItem">{$DISPLAY_OBJECT->{"objectProperty_`$_resourceOwner|default:'message'`_message`$itemvar|capitalize`"}}</li>
     {/foreach}
     </ul>
 {/if}

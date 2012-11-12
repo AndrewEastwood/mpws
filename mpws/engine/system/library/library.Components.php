@@ -198,7 +198,10 @@ class libraryComponents {
             // manager type
             $mgrType = strtolower($currentManager['type']);
             // manager content
-            $mgrContent = false;
+            $mgrContent = array(
+                'DATA' => false,
+                'SOURCE' => false
+            );
             // for non-active widget fetch startup data
             $isActive = (strcasecmp($rOrigin, $managerID) === 0);
             // editopr page
@@ -235,26 +238,25 @@ class libraryComponents {
                 // edit and remove modes
                 if (libraryRequest::isPostFormActionMatchAny('edit', 'remove')) {
                     // get selected items to edit
-                    $items = libraryRequest::getPostFormField($managerID.BS.strtolower($ppAction));
-                    $__data = false;
+                    $__edit_source = libraryRequest::getPostFormField($managerID.BS.strtolower($ppAction));
+                    $__edit_data = false;
                     // verify edit action or return to list page
-                    if (empty($items)) {
+                    if (empty($__edit_source)) {
                         $editPage = 'LIST';
                     } else {
                         if ($ppAction == 'edit')
-                            $__data = file_get_contents($items);
+                            $__edit_data = file_get_contents($mangerSource.DS.$__edit_source);
                         if ($ppAction == 'remove')
-                            $__data = libraryFileManager::getMapByFileList($items);
+                            $__edit_data = libraryFileManager::getMapByFileList($__edit_source, false, true);
                         $editPage = strtoupper($ppAction);
                         
                         // add data
-                        $mgrContent = array('DATA' => $__data);
+                        $mgrContent['DATA'] = $__edit_data;
                         // add source
-                        if (is_array($items))
-                            foreach ($items as $_itemSource)
-                                $mgrContent['SOURCE'][basename($_itemSource)] = $_itemSource;
-                        if (is_string($items))
-                            $mgrContent['SOURCE'] = $items;
+                        if (is_array($__edit_source))
+                            $mgrContent['SOURCE'] = libraryFileManager::getMapByFileList($__edit_source, false, true);
+                        if (is_string($__edit_source))
+                            $mgrContent['SOURCE'] = $__edit_source;
                     }
                 } // end of [edit, remove] handler
 
@@ -282,10 +284,10 @@ class libraryComponents {
                             }
                             break;
                         case 'remove':
-                            
-                            
-                            
-                            
+                            // get confirmed items to remove
+                            $__edit_source = libraryRequest::getPostFormField($managerID.BS.strtolower('removeable'));
+                            libraryFileManager::removeFileListFromDirectory($mangerSource, $__edit_source);
+                            $editPage = 'LIST';
                             break;
                     }
                 }
@@ -304,7 +306,7 @@ class libraryComponents {
                 // get source using source type
                 switch ($mgrType) {
                     case "file" : {
-                        $mgrContent = libraryFileManager::getGlobMap($mangerSource . DS . '*');
+                        $mgrContent['SOURCE'] = libraryFileManager::getGlobMap($mangerSource . DS . '*', false, true);
                         break;
                     }
                 }

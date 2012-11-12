@@ -1,4 +1,5 @@
 {$_controlOwner = 'RTEWH'}
+{$_controlCssName = 'RichTextEditWithHightlight'}
 {$_controlUseForm = $_useForm|default:false}
 {$_controlSources = $_sources|default:[]}
 {$_controlNameData = "mpws_field_`$_name|lower`_data"}
@@ -10,15 +11,15 @@
 {/if}
 
 {* setup requested WYSIWYG *}
-{capture name="controlWYSIWYG"}
-    {if $_type eq 'ACE'}
+{if $_type eq 'ACE'}
+    {* control content *}
+    {capture name="controlBody"}
         {$uuid = md5(time())}
         {$controlID = "MPWSControlUUID_`$uuid`_ID"}
-        <div class="MPWSFormBody">
-            <input type="hidden" id="{$controlID}" name="{$_controlNameData}" value="{htmlentities($_value)}"/>
-            {if not empty($_controlSources)}
-                <input type="hidden" name="{$_controlNameSource}" value="{$_controlSources}"/>
-            {/if}
+        <input type="hidden" id="{$controlID}" name="{$_controlNameData}" value="{htmlentities($_value)}"/>
+        {if not empty($_controlSources)}
+            <input type="hidden" name="{$_controlNameSource}" value="{$_controlSources}"/>
+        {/if}
         {if $_useDivWrapper }
             <div id="MPWSWrapperRTEWH_{$_name|lower}_ID" class="MPWSWrapper MPWSWrapperRTEWH">{$_value}</div>
             {* TODO: move into default *}
@@ -50,20 +51,27 @@
                 _renderMode=$_renderMode|default:'normal'
                 _value=$_value}
         {/if}
-        </div>
-        <div class="MPWSFormFooter">
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_controlOwner _resourceOwner='control'}
-        </div>
-    {/if}
-{/capture}
+    {/capture}
+    {* buttons *}
+    {capture name="controlButtons"}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Save', 'Cancel'] _controlOwner=$_controlOwner _resourceOwner='control'}
+    {/capture}
+
+{/if}
 
 {* render control *}
 
+<div class="MPWSControlField MPWSControlField{$_controlCssName}">
 {if $_controlUseForm }
     {$formID = "MPWSFromUUID_`$uuid`_ID"}
     <form action="" method="POST" id="{$formID}" class="MPWSForm">
-        {$smarty.capture.controlWYSIWYG}
+        <div class="MPWSFormHeader">{$smarty.capture.controlButtons}</div>
+        <div class="MPWSFormBody">{$smarty.capture.controlBody}</div>
+        <div class="MPWSFormFooter">{$smarty.capture.controlButtons}</div>
     </form>
 {else}
-    {$smarty.capture.controlWYSIWYG}
+    {$smarty.capture.controlButtons}
+    {$smarty.capture.controlBody}
+    {$smarty.capture.controlButtons}
 {/if}
+</div>

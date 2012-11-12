@@ -36,7 +36,7 @@ class libraryWebPageModel {
 
 
     public function addMessage ($messageKey, $realm = 'COMMON') {
-        $this->_messages[$realm] = $messageKey;
+        $this->_messages[$realm][] = $messageKey;
     }
     
     public function setInfo ($key, $info = false) {

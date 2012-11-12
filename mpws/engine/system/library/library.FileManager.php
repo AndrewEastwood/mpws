@@ -24,18 +24,33 @@ class libraryFileManager
     // _����������
     function __destruct() { }
     
-    public static function getMapByFileList ($fileList, $extensionToRemove = false) {
+    
+    
+    public static function removeFileListFromDirectory ($directoryPath, $fileList) {
+        if (!file_exists($directoryPath))
+            return false;
+        foreach ($fileList as $fileName)
+            if (file_exists($directoryPath.DS.$fileName))
+                unlink($directoryPath.DS.$fileName);
+    }
+    public static function getMapByFileList ($fileList, $extensionToRemove = false, $useBaseNamesAll = false) {
         $fList = array();
         foreach ($fileList as $fPath)
-            $fList[basename($fPath, $extensionToRemove)] = $fPath;
+            if ($useBaseNamesAll)
+                $fList[basename($fPath, $extensionToRemove)] = basename($fPath);
+            else
+                $fList[basename($fPath, $extensionToRemove)] = $fPath;
         return $fList;
     }
 
-    public static function getGlobMap($pathToDirectory, $extensionToRemove = false) {
+    public static function getGlobMap($pathToDirectory, $extensionToRemove = false, $useBaseNamesAll = false) {
         $files = glob($pathToDirectory);
         $fList = array();
         foreach ($files as $fPath)
-            $fList[basename($fPath, $extensionToRemove)] = $fPath;
+            if ($useBaseNamesAll)
+                $fList[basename($fPath, $extensionToRemove)] = basename($fPath);
+            else
+                $fList[basename($fPath, $extensionToRemove)] = $fPath;
         return $fList;
     }
     
