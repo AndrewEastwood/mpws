@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-12 21:16:01
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-13 21:01:07
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html" */ ?>
 <?php /*%%SmartyHeaderCode:1292425495080427be46391-33041584%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd6d46df5db445da56cb54532472df58a57c03f2a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html',
-      1 => 1352747736,
+      1 => 1352832496,
       2 => 'file',
     ),
   ),
@@ -72,7 +72,6 @@ $_smarty_tpl->tpl_vars['_contents']->value[] = $_smarty_tpl->tpl_vars['msg_commo
         <?php }?>
     <?php } ?>
 <?php }?>
-
 
 <?php if ($_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE']==$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectConfiguration_object_menuKeyToShowToolsList){?>
     <?php if (empty($_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])){?>

@@ -2,5 +2,6 @@ systemPluginListTitle = 'Reporting';
 systemPluginListDescription = 'View and analyze performance';
 
 reportingApiSettingsKey = "Security Key: ";
-reportingApiSettingsImportLink = "Report Data Import Action: ";
-reportingApiSettingsRenderLink = "Report Render: ";
+reportingApiSettingsImportLink-strategic-integration-team = "SI Team Feed Import";
+reportingApiSettingsRenderLink-weekly = "SI Team Weekly Report Render";
+reportingApiSettingsRenderLink-release = "SI Team Release Report Render";

@@ -1,0 +1,65 @@
+{$_widgetName = "DataApiViewer"}
+{$_resourceOwner = $_resourceOwner|default:($CURRENT.SOURCE.RESOURCE|default:$_widgetName)}
+{assign var="DTV_CFG" value=$CURRENT.OBJECT->{"objectConfiguration_widget_dataApiViewer`$CURRENT.SOURCE.NAME`"}}
+
+<div id="MPWSWidget{$_resourceOwner|capitalize}ID" class="MPWSWidget MPWSWidget{$_widgetName} MPWSWidget{$_resourceOwner|capitalize}">
+    
+    {$__key = md5($CURRENT.OBJECT->objectConfiguration_customer_masterJsApiKey)}
+    {$__token = "token=`$__key`"}
+    {$__qCmnParams = "`$__token`&realm=`$CURRENT.OBJECT->getObjectType()`"}
+    {$__qCaller = "caller=`$CURRENT.OBJECT->getObjectName()`"}
+    {$__apiChannel = $CURRENT.OBJECT->objectConfiguration_intercom_apiChannel}
+    {$__apiSchema = $CURRENT.OBJECT->objectConfiguration_intercom_apiSchema}
+    {$__apiLinkBase = "`$__apiSchema`://{$smarty.server.HTTP_HOST}/`$__apiChannel`?`$__qCaller`"}
+    {$__prop__ = "objectProperty_`$_resourceOwner`_"}
+    {$__propEntry = "`$__prop__`entryLinkFor-"}
+    {$__propAuxiliary = "`$__prop__`auxiliaryLinkFor-"}
+    
+    {* sales force import action security key *}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$CURRENT.OBJECT->{"`$__prop__`securityKey"} _value=$__key}
+    
+    
+    {block name="apiLinksContentBefore"}{/block}
+    
+    
+    {foreach $CURRENT.SOURCE.DATA.RECORDS as $idx => $entry}
+    
+        {* sales force transfer action link *}
+        {$__entryTitle = $CURRENT.OBJECT->{"`$__propEntry``$entry.ExternalKey`"}}
+        {$__qEntryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__entryTitle`"}
+
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__entryTitle _value="`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.entry`&p={urlencode($__qEntryParams)}"}
+
+        {* add setup link *}
+        {if $CURRENT.OBJECT->objectConfiguration_customer_allowJobInstallerLink}
+            >>>> [ add to job ] <<<<
+        {/if}
+
+        {* show report scripts *}
+        {if not empty($CURRENT.SOURCE.DATA.ADDITIONAL.$idx)}
+
+            {foreach $CURRENT.SOURCE.DATA.ADDITIONAL.$idx as $scriptKey => $scriptName}
+
+                {$__auxilaryTitle = $CURRENT.OBJECT->{"`$__propAuxiliary``$scriptKey`"}}
+                {$__qAuxilaryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__auxilaryTitle`&custom={urlencode("script=`$scriptKey`")}"}
+
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__auxilaryTitle _value="`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.additional`&p={urlencode($__qAuxilaryParams)}"}
+
+                {* add setup link *}
+                {if $CURRENT.OBJECT->objectConfiguration_customer_allowJobInstallerLink}
+                [ add to job ]
+                {/if}
+
+            {/foreach}
+
+        {/if}
+        
+        
+        <hr size="2">
+    
+    {/foreach}
+    
+    
+    {block name="apiLinksContentAfter"}{/block}
+
+</div>

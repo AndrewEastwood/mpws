@@ -11,13 +11,11 @@
 
 echo 'TEST 1';
 
-
-
 $user = $_GET['u'];
 $password = $_GET['p'];
-$host = 'test';
-$domain = 'com';
-$basedn = 'dc=test,dc=com';
+$host = 'lab-ldap01';
+$domain = 'lab';
+$basedn = 'ou=People,dc=bazaarvoice,dc=com';
 $group = 'test';
 
 echo 'TEST 2';

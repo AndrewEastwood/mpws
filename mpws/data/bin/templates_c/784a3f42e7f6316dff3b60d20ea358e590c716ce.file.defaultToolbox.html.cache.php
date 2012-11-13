@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-06 20:01:02
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-13 21:01:05
          compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:7814884605080405b233f60-61888913%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '784a3f42e7f6316dff3b60d20ea358e590c716ce' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html',
-      1 => 1351275592,
+      1 => 1352832496,
       2 => 'file',
     ),
     '13fc0739f57dedff11a7d9378923d6d565f25193' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1352224607,
+      1 => 1352832496,
       2 => 'file',
     ),
   ),
@@ -88,11 +88,17 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <div class="MPWSLayout MPWSLayoutDefaultSystem">
     <?php if ($_smarty_tpl->tpl_vars['INFO']->value['USER']['ACTIVE']){?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectTemplatePath_trigger_page"}, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+        
+    <?php $_smarty_tpl->tpl_vars["allWidgets"] = new Smarty_variable($_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_macro_widgetGrabber, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_widgets'=>$_smarty_tpl->tpl_vars['MODEL']->value['WIDGET']), 0));?>
+
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->{"objectTemplatePath_page_system:default"}, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_content'=>array($_smarty_tpl->tpl_vars['allWidgets']->value)), 0);?>
+
 
     <?php }else{ ?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_page_login, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
+        
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_page_login, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0);?>
 
+        
     <?php }?>
 </div>
 

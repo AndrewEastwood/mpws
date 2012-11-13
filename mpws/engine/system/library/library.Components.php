@@ -169,6 +169,46 @@ class libraryComponents {
         return $com;
     }
 
+    public static function getApiViewer ($config, $dbLink) {
+        
+        // validate configuration for requested mode
+        if (empty($config))
+            throw new Exception('libraryComponents => getDataRecordViewer: can not find configuration for standalone view');
+        
+        $dbLink->reset();
+        if ($config['fields'] == '*')
+            $dbLink->select($config['fields']);
+        else
+            $dbLink->select('ID', implode(', ', $config['fields']));
+        $dbLink->from($config['source']);
+        
+        $records = $dbLink->fetchData();
+        $additional = array();
+
+        // use additional sources
+        if (!empty($config['additionalResourcePerRecord'])) {
+            $addResCfg = $config['additionalResourcePerRecord'];
+            switch ($addResCfg['type']) {
+                case 'file':
+                    foreach ($records as $idx => $report) {
+
+                        $mangerSource = libraryPath::getStandartDataPathWithDBR($report, $addResCfg['manageSource']);
+                        $additional[$idx] = libraryFileManager::getGlobMap($mangerSource . DS . '*', true, true);
+                    }
+                    break;
+                case 'record':
+                    break;
+            }
+        }
+        
+        $dtv = array();
+        
+        $dtv['RECORDS'] = $records;
+        $dtv['ADDITIONAL'] = $additional;
+        
+        return $dtv;
+    }
+    
     public static function getDataRecordManager($config, $dbLink) {
         
         // get owner record information

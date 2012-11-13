@@ -139,7 +139,7 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             case "api" : {
-                $this->actionHandlerCustomApi();
+                $this->widgetAddDataApiViewer();
                 break;
             }
         }

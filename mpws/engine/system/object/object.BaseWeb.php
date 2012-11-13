@@ -241,6 +241,14 @@ class objectBaseWeb extends objectBase {
         $this->widgetAdd($widgetName, false, $wgtData);
     }
     
+    public function widgetAddDataApiViewer ($widgetName = 'General') {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataApiViewer" . $widgetName};
+        $wgtData = libraryComponents::getApiViewer($wgtConfig, $ctx->contextCustomer->getDBO());
+        //var_dump($wgtData);
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataApiViewer');
+    }
+    
     public function widgetAddDataRecordViewer ($widgetName) {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_dataRecordViewer" . $widgetName};
