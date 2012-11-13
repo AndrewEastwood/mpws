@@ -3,7 +3,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-class customer_toolbox extends objectBaseWebCustomer {
+class customerToolbox extends objectBaseWebCustomer {
 
     protected function _displayTriggerOnCommonStart () {
         parent::_displayTriggerOnCommonStart();
@@ -59,12 +59,18 @@ class customer_toolbox extends objectBaseWebCustomer {
                     break;
                 }
                 case 'tools' : {
-                    //
+                    // display all tools (plugins)
                     $this->_displayPage_Tools();
+                    break;
+                }
+                case 'jobs' : {
+                    // system scheduler
+                    $this->actionHandlerStandartDataTableManager('Jobs');
                     break;
                 }
             }
         }
+        
         $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_defaultToolbox);
         return $ret;
@@ -92,19 +98,7 @@ class customer_toolbox extends objectBaseWebCustomer {
         $ctx->directProcess('main:default', 'Toolbox');
         return true;
     }
-    
-    /*public function run_5 ($command) { 
-        parent::run($command);
-        //$ctx->contextCustomer->getDBO();
-        // get plugin
-        //echo '<br>|' . $this->objectTemplatePath_layout_page;
-        //echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo23;
-        //echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo2;
-        //echo '<br>|' . $plgToolbox->objectTemplatePath_widget_demo11;
-        //echo $this->objectTemplatePath_widget_demo2;
-    }*/
-    
-    
+
 }
 
 ?>

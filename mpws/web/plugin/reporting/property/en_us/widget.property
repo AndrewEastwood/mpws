@@ -1,7 +1,6 @@
 systemPluginListTitle = 'Reporting';
 systemPluginListDescription = 'View and analyze performance';
 
-
 reportingApiSettingsKey = "Security Key: ";
 reportingApiSettingsImportLink = "Report Data Import Action: ";
 reportingApiSettingsRenderLink = "Report Render: ";

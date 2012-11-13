@@ -119,7 +119,7 @@ class objectBaseWeb extends objectBase {
         return $ret;
     }
     
-    /* running bridges */
+    /* execute modes */
     private function _run_main() {
         debug('objectBaseWeb => _run_main');
         $ret = false;
@@ -196,9 +196,96 @@ class objectBaseWeb extends objectBase {
     protected function _commonRunOnEnd () {
         debug('objectBaseWeb => _commonRunOnEnd');
     }
+
+    /*
+     *  Web UI Methods
+     */
     
-    /* web methods */
-    protected function addWidget ($widgetName, $wgtConfig, $wgtData, $widgetParent = '') {
+    /* standart actions handlers */
+    public function actionHandlerStandartDataTableManager ($widgetName, $events = array()) {
+        switch (libraryRequest::getAction()) {
+            case "new" :
+            case "edit" : {
+                $e = array();
+                if (isset($events['EDIT']))
+                    $e = $events['EDIT'];
+                $this->widgetAddDataEditor($widgetName, $e);
+                break;
+            }
+            case "delete" : {
+                $this->widgetAddDataRecordRemoval($widgetName);
+                break;
+            }
+            case "view" : {
+                $this->widgetAddDataRecordViewer($widgetName);
+                break;
+            }
+            case "manage" : {
+                $this->widgetAddDataRecordManager($widgetName);
+                break;
+            }
+            default : {
+                libraryRequest::storeOrGetRefererUrl();
+                $this->widgetAddDataTableView($widgetName);
+                break;
+            }
+        }
+    }
+    
+    /* Standart Widget Integration Methods */
+    
+    public function widgetAddSimple ($widgetName, $wgtData = false) {
+       // $ctx = contextMPWS::instance();
+        //$wnT = "objectTemplatePath_widget_" . $widgetName;
+        //$ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
+        $this->widgetAdd($widgetName, false, $wgtData);
+    }
+    
+    public function widgetAddDataRecordViewer ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordViewer" . $widgetName};
+        $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
+        //var_dump($wgtData);
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataRecordViewer');
+    }
+    
+    public function widgetAddDataRecordRemoval ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordRemoval" . $widgetName};
+        $wgtData = libraryComponents::getDataRecordRemoval($wgtConfig, $ctx->contextCustomer->getDBO());
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataRecordRemoval');
+    }
+    
+    public function widgetAddDataTableView ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataTableView" . $widgetName};
+        $wgtData = libraryComponents::getDataTableView($wgtConfig, $ctx->contextCustomer->getDBO());
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataTableView');
+    }
+    
+    public function widgetAddDataEditor ($widgetName, $events = array()) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataEditor" . $widgetName};
+        $wgtData = libraryComponents::getDataEditor($wgtConfig, $ctx->contextCustomer->getDBO(), $events);
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataEditor');
+    }
+
+    public function widgetAddDataRecordManager ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordManager" . $widgetName};
+        $wgtData = libraryComponents::getDataRecordManager($wgtConfig, $ctx->contextCustomer->getDBO());
+        $this->widgetHookDataRecordManager($widgetName, $wgtData, $wgtConfig);
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataRecordManager');
+    }
+
+    /* hooks */
+    protected function widgetHookDataRecordManager($widgetName, &$wgtData = false, $wgtConfig = false) {
+        debug('objectBaseWebPlugin: hookBeforeAddWidgetDataRecordManager => ' . $widgetName);
+    }
+    
+    /* internal methods */
+    
+    private function widgetAdd ($widgetName, $wgtConfig, $wgtData, $widgetParent = '') {
         $ctx = contextMPWS::instance();
         $wnT = "objectTemplatePath_widget_";
         
@@ -222,9 +309,11 @@ class objectBaseWeb extends objectBase {
         //echo '<br>Template to be used: '.$wnT;
         $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
         // add widget message
-        $ctx->pageModel->addMessage($widgetOriginalName.'StartupMessage', $this->getObjectName());
+        if ($this->isObjectTypeEquals(OBJECT_T_PLUGIN))
+            $ctx->pageModel->addMessage($widgetOriginalName.'StartupMessage', $this->getObjectName());
+        else
+            $ctx->pageModel->addMessage($widgetOriginalName.'StartupMessage');
     }
-    
 }
 
 ?>

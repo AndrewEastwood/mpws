@@ -62,7 +62,8 @@ class libraryConfigurationManager {
         
         //echo 'olololol';
         
-        throw new Exception('libraryConfigurationManager: getConfigurationValue: Requested property key does not exist: ' . $configKey . '. Used configuration files: <pre>' . print_r($chains, true) . '</pre>');
+        echo '%'.$configKey.'%';
+        throw new Exception('libraryConfigurationManager: getConfigurationValue: Requested configuration key does not exist: ' . $configKey . '. Used configuration files: <pre>' . print_r($chains, true) . '</pre>');
     }
     
     

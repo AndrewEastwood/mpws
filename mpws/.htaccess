@@ -32,7 +32,7 @@ RewriteRule api.js?(.*)   /engine/dispatcher/dispatcher.Api.php?action=api$2 [QS
 
 
 ############# ADMIN #############
-RewriteRule mpws/(\w+).html?(.*) /engine/dispatcher/dispatcher.Toolbox.php?page=$1&action=default$2 [QSA]
+#RewriteRule mpws/(\w+).html?(.*) /engine/dispatcher/dispatcher.Toolbox.php?page=$1&action=default$2 [QSA]
 
 
 
@@ -43,7 +43,7 @@ DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=index&action=defaul
 # -- public pages
 RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?page=$1&action=default$2 [QSA]
 # -- custom pages
-RewriteRule page/purchase.php?(.*) /engine/dispatcher/dispatcher.Public.php?page=purchase&action=default$2 [QSA]
+#RewriteRule page/purchase.php?(.*) /engine/dispatcher/dispatcher.Public.php?page=purchase&action=default$2 [QSA]
 
 
 

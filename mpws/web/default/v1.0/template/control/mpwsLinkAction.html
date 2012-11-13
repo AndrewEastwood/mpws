@@ -65,8 +65,12 @@
     {elseif $_mode eq 'system'}
 
         {* add standart *}
-        {$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
-        {$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
+        {if $CURRENT.OBJECT->isObjectTypeEquals(OBJECT_T_PLUGIN)}
+            {$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
+        {/if}
+        {if not empty($INFO.GET.DISPLAY)}
+            {$_linkActions[]="display=`$INFO.GET.DISPLAY|lower`"}
+        {/if}
         {$_linkActions[]="action=`$_action|lower`"}
 
         {* add oid *}

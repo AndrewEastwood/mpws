@@ -1,6 +1,6 @@
 <?php
 
-class pluginToolbox extends objectBaseWebPlugin {
+class pluginSystem extends objectBaseWebPlugin {
 
     protected function _displayTriggerAsPlugin () {
         parent::_displayTriggerAsPlugin();
@@ -27,7 +27,7 @@ class pluginToolbox extends objectBaseWebPlugin {
     }
     
     private function _displayPage_Dashboard () {
-        $this->addWidgetDataTableView('DashboardActiveUsers');
+        $this->widgetAddDataTableView('DashboardActiveUsers');
     }
     
     private function _displayPage_Default () {
@@ -35,7 +35,7 @@ class pluginToolbox extends objectBaseWebPlugin {
         switch (libraryRequest::getDisplay()) {
             case "users" : {
                 /* standart data edit and view component complex */
-                $this->actionHandlerAsDataViewEdit('SystemUsers');
+                $this->actionHandlerStandartDataTableManager('SystemUsers');
                 break;
             }
         }

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-02 19:06:25
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-13 16:08:24
          compiled from "/var/www/mpws/web/default/v1.0/template/control/mpwsLinkAction.html" */ ?>
 <?php /*%%SmartyHeaderCode:12523122855084e5c8ac8b05-55185386%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd02973ef8e80aa05e187fe40f5356d8e16a2e28e' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/control/mpwsLinkAction.html',
-      1 => 1351875980,
+      1 => 1352815696,
       2 => 'file',
     ),
   ),
@@ -121,10 +121,14 @@ $_smarty_tpl->tpl_vars['_linkActions']->value[] = "oid=".((string)$_smarty_tpl->
     <?php }elseif($_smarty_tpl->tpl_vars['_mode']->value=='system'){?>
 
         
-        <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
+        <?php if ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->isObjectTypeEquals('OBJECT_T_PLUGIN')){?>
+            <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
 $_smarty_tpl->tpl_vars['_linkActions']->value[] = "plugin=".((string)mb_strtolower($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->getObjectName(), 'UTF-8'));?>
-        <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
+        <?php }?>
+        <?php if (!empty($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'])){?>
+            <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
 $_smarty_tpl->tpl_vars['_linkActions']->value[] = "display=".((string)mb_strtolower($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'], 'UTF-8'));?>
+        <?php }?>
         <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
 $_smarty_tpl->tpl_vars['_linkActions']->value[] = "action=".((string)mb_strtolower($_smarty_tpl->tpl_vars['_action']->value, 'UTF-8'));?>
 

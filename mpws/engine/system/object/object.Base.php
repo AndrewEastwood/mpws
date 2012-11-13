@@ -100,6 +100,11 @@ class objectBase {
         }
     }
     
+    /* comparers */
+    public function isObjectTypeEquals($typeToCompare) {
+        return ($this->getObjectType() === $typeToCompare);
+    }
+    
     /* methods */
     protected function objectCustomSetup() { /* customize base object */ }
     protected function objectCustomProperty($name) { /* customize base object */ }

@@ -793,7 +793,7 @@ class libraryComponents {
                 if ($isNew) {
                     if (empty($_data['DateCreated']))
                         $_data['DateCreated'] = date('Y-m-d H:i:s');
-                    if (empty($_data['DateLastAccess']))
+                    if (isset($_data['DateLastAccess']))
                         $_data['DateLastAccess'] = date('Y-m-d H:i:s');
                 }
                 // set external key
@@ -838,7 +838,7 @@ class libraryComponents {
                 // save
                 //var_dump($_data);
                 $dbLink->reset();
-
+                //var_dump($_data);
                 // update existed record
                 if ($editPage == 'save' && isset($oid) && !$isNew) {
                     $dbLink

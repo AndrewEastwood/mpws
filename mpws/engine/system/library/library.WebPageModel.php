@@ -95,6 +95,7 @@ class libraryWebPageModel {
             'DATA' => $data,
             'TEMPLATE' => $template,
             'TYPE' => 'PAGE',
+            'OWNER_TYPE' => OBJECT_T_CUSTOMER,
             'HTML' => ''
         );
         return $this;
@@ -122,11 +123,13 @@ class libraryWebPageModel {
             'DATA' => $data,
             'TEMPLATE' => $template,
             'TYPE' => 'WIDGET',
+            'OWNER_TYPE' => $owner->getObjectType(),
             'HTML' => ''
         );
         //echo '<br> addWidget => {name:"'.$name.'", resource:"'.$resource.'"}'; 
         // add wob
-        $this->addWebObject($owner);
+        if ($owner->isObjectTypeEquals(OBJECT_T_PLUGIN))
+            $this->addWebObject($owner);
         return $this;
     }
     
@@ -170,11 +173,13 @@ class libraryWebPageModel {
             debug('fetchHtmlPage: building widget ' . $key);
             $this->_widgets[$key]['HTML'] = $this->fetchTemplate($value, $model);
         }
+        //echo '<br>++++++++++++++++ END WIDGETS +++++++++++++++++++<br>';
         //debug($model);
         // fetch page
         debug('Fetching page: ' . $this->_page['TEMPLATE']);
         $html = $this->fetchTemplate($this->_page, $model);
         //echo mktime() . '<br>';
+        //echo '<br>++++++++++++++++++ END PAGE +++++++++++++++++<br>';
         return $html;
         //return libraryMinifyHTML::minify($html);
     }
@@ -191,16 +196,33 @@ class libraryWebPageModel {
         //if (!empty($model)) {
         $tp->assign($model);
 
+        
+        //echo '<pre>';
         //var_dump($this->_wobs);
+        //var_dump($wgt);
+        //echo '</pre>---------------------------------------------------------';
 
         // set current object
+        
+        
         $current = array(
-            'OBJECT' => (($wgt['TYPE'] == 'PAGE')?$this->_site:$this->_wobs[makeKey($wgt['WOB_NAME'])]),
+            'OBJECT' => (($wgt['TYPE'] == 'PAGE' || $wgt['OWNER_TYPE'] == 'customer')?$this->_site:$this->_wobs[makeKey($wgt['WOB_NAME'])]),
             'SOURCE' => $wgt
         );
+        
+        /*if ($wgt['OWNER_TYPE'] == 'customer') {
+            var_dump($current);
+            var_dump($wgt);
+        }*/
 
         $tp->assign('CURRENT', $current);
 
+        
+        //echo '<pre>';
+        //var_dump($this->_wobs);
+        //var_dump($current);
+        //echo '</pre>---------------------------------------------------------';
+        
         //}
         // get running object
         /*$currVar = array(
@@ -210,6 +232,9 @@ class libraryWebPageModel {
         //$currVar['CURRENT']['CONTEXT'] = $ctx->getContext($wgt['CONTEXT']);
         // set data
         //$tp->assign($currVar);
+        
+        //echo '<br>RENDERING: ' . $wgt['TEMPLATE'];
+
         return $tp->fetch($wgt['TEMPLATE']);
     }
     

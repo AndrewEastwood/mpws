@@ -34,9 +34,13 @@
 
 <div class="MPWSLayout MPWSLayoutDefaultSystem">
     {if $INFO.USER.ACTIVE}
-        {include file=$CURRENT.OBJECT->{"objectTemplatePath_trigger_page"}}
+        {block name="layoutContentActive"}
+            {include file=$CURRENT.OBJECT->{"objectTemplatePath_trigger_page"}}
+        {/block}
     {else}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_page_login}
+        {block name="layoutContentLogin"}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_page_login}
+        {/block}
     {/if}
 </div>
 

@@ -1,0 +1,10 @@
+title = "Job Editor";
+description = " - Modify Job Entry";
+
+labelForTextBoxDataEditorName = "Job Name";
+labelForTextAreaDataEditorAction = "Action";
+labelForDateTimeDataEditorSchedule = "Date Time";
+labelForTextBoxDataEditorDescription = "Job Description";
+
+messageValidationErrorInFieldName = "Wrong Name value";
+messageValidationErrorInFieldSchedule = "Schedule date time format: Y-m-d H:i:s";

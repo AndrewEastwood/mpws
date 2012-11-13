@@ -71,6 +71,11 @@ class pluginReporting extends objectBaseWebPlugin {
                 
                 //var_dump($sfAccount);
                 echo 'FETCHING DATA';
+                
+                
+                
+                sleep(5);
+                echo '5';
                 break;
             }
             case "outbox-proc" : {
@@ -126,7 +131,7 @@ class pluginReporting extends objectBaseWebPlugin {
         switch (libraryRequest::getDisplay()) {
             case "manager" : {
                 /* standart data edit and view component complex */
-                $this->actionHandlerAsDataViewEdit('ReportManager');
+                $this->actionHandlerStandartDataTableManager('ReportManager');
                 break;
             }
             case "monitor" : {
@@ -163,7 +168,7 @@ class pluginReporting extends objectBaseWebPlugin {
             );
         }
         // get all reports
-        $this->addWidgetSimple('customMonitor', $data);
+        $this->widgetAddSimple('customMonitor', $data);
     }
     
     private function actionHandlerCustomApi () {
@@ -187,7 +192,7 @@ class pluginReporting extends objectBaseWebPlugin {
             );
         }
         // show API
-        $this->addWidgetSimple('customApiSettings', $data);
+        $this->widgetAddSimple('customApiSettings', $data);
     }
     
     /* all custom methods are below */

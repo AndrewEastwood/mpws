@@ -33,7 +33,8 @@ class libraryCustomerManager {
             return $this->_s_customers[makeKey($name, true)];
         }
         
-        $customerFileName = OBJECT_T_CUSTOMER . BS . str_replace(array('.', '-'), '_', $name) . EXT_SCRIPT;
+        $customerObjectName = OBJECT_T_CUSTOMER . ucfirst(str_replace(array('.', '-'), '', $name));
+        $customerFileName = OBJECT_T_CUSTOMER . DOT . str_replace(array('.', '-'), DOT, $name) . EXT_SCRIPT;
         $customerFilePath = $this->_customerPath . DS . $name . DS . $customerFileName;
        
         debug('libraryCustomerManager: getCustomer path: ' . $customerFilePath);
@@ -43,7 +44,6 @@ class libraryCustomerManager {
 
         // load customer
         include $customerFilePath;
-        $customerObjectName = basename($customerFileName, EXT_SCRIPT);
         debug('libraryCustomerManager: getCustomer plugin name: ' . $customerObjectName);
 
         // store customer

@@ -156,7 +156,7 @@ class libraryRequest {
         } else {
             if (isset($_SESSION['MPWS_STORED_URL'.$scope])) {
                 $_data = parse_url($_SESSION['MPWS_STORED_URL'.$scope]);
-                return $_data['path'] . '?' . $_data['query'];
+                return $_data['path'] . (!empty($_data['query'])? ('?' . $_data['query']) : '');
             }
             return false;
         }

@@ -294,8 +294,9 @@ class libraryStaticResourceManager {
                  if ($propertyValue != null)
                      return $propertyValue;
             }
+            echo '%'.$propKey.'%';
             //echo $propertyValue;
-            throw new Exception('libraryStaticResourceManager: getPropertyValue(array): Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
+            //throw new Exception('libraryStaticResourceManager: getPropertyValue(array): Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
         }
         elseif (is_string($propertyFilePath)) {
             if (!file_exists($propertyFilePath))

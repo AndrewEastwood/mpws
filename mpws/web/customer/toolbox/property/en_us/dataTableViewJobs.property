@@ -1,0 +1,19 @@
+title = "Common Job List";
+description = " - Scheduler";
+
+labelForTextBoxSearchBoxName = "Job Name:";
+labelForTextBoxSearchBoxAction = "Action:";
+labelForTextBoxSearchBoxSchedule = "Date Time:";
+labelForTextBoxSearchBoxLastError = "Error Message";
+
+labelForLinkActionQuickFilteringName = "Name";
+labelForLinkActionQuickFilteringAction = "Action";
+labelForLinkActionQuickFilteringSchedule = "Schedule";
+labelForLinkActionQuickFilteringLastError = "Error Message";
+
+captionName = "Job Name";
+captionAction = "Action";
+captionSchedule = "Schedule";
+captionLastError = "Last Error";
+captionDateCreated = "Date Created";
+captionDateUpdated = "Date Updated";

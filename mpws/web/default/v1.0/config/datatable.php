@@ -1,2 +1,0 @@
-
-    $default['DATATABLE'] = array();
