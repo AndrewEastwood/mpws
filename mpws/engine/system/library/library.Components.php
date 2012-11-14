@@ -169,6 +169,11 @@ class libraryComponents {
         return $com;
     }
 
+    public static function getSingleQueryCapture ($config, $dbLink) {
+        
+    }
+
+
     public static function getApiViewer ($config, $dbLink) {
         
         // validate configuration for requested mode

@@ -21,33 +21,52 @@
     
     {block name="apiLinksContentBefore"}{/block}
     
-    
+    {* display all main actions *}
     {foreach $CURRENT.SOURCE.DATA.RECORDS as $idx => $entry}
     
-        {* sales force transfer action link *}
+        {* action link params *}
         {$__entryTitle = $CURRENT.OBJECT->{"`$__propEntry``$entry.ExternalKey`"}}
         {$__qEntryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__entryTitle`"}
-
-        {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__entryTitle _value="`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.entry`&p={urlencode($__qEntryParams)}"}
+        {$_apiLink = "`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.entry`&p={urlencode($__qEntryParams)}"}
+        
+        {* display api action link *}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__entryTitle _value=$_apiLink}
 
         {* add setup link *}
         {if $CURRENT.OBJECT->objectConfiguration_customer_allowJobInstallerLink}
-            >>>> [ add to job ] <<<<
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                _type='mpwsLinkAction'
+                _name=$entry.ExternalKey
+                _controlOwner=$_widgetName
+                _action="addjob"
+                _single=true
+                _href="`$CURRENT.OBJECT->objectConfiguration_intercom_jobInstallerUrlChannel`{urlencode($_apiLink)}"
+                _mode='system'}
         {/if}
 
-        {* show report scripts *}
+        {* display additional actions *}
         {if not empty($CURRENT.SOURCE.DATA.ADDITIONAL.$idx)}
 
             {foreach $CURRENT.SOURCE.DATA.ADDITIONAL.$idx as $scriptKey => $scriptName}
 
+                {* action link params *}
                 {$__auxilaryTitle = $CURRENT.OBJECT->{"`$__propAuxiliary``$scriptKey`"}}
                 {$__qAuxilaryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__auxilaryTitle`&custom={urlencode("script=`$scriptKey`")}"}
+                {$_apiLink = "`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.additional`&p={urlencode($__qAuxilaryParams)}"}
 
-                {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__auxilaryTitle _value="`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.additional`&p={urlencode($__qAuxilaryParams)}"}
+                {* display api action link *}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__auxilaryTitle _value=$_apiLink}
 
                 {* add setup link *}
                 {if $CURRENT.OBJECT->objectConfiguration_customer_allowJobInstallerLink}
-                [ add to job ]
+                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                        _type='mpwsLinkAction'
+                        _name=$entry.ExternalKey
+                        _controlOwner=$_widgetName
+                        _action="addjob"
+                        _single=true
+                        _href="`$CURRENT.OBJECT->objectConfiguration_intercom_jobInstallerUrlChannel`{urlencode($_apiLink)}"
+                        _mode='system'}
                 {/if}
 
             {/foreach}

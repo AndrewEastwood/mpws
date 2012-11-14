@@ -241,6 +241,13 @@ class objectBaseWeb extends objectBase {
         $this->widgetAdd($widgetName, false, $wgtData);
     }
     
+    public function widgetAddSingleQueryCapture ($widgetName) {
+        $ctx = contextMPWS::instance();
+        $wgtConfig = $this->{"objectConfiguration_widget_singleQueryCapture" . $widgetName};
+        $wgtData = libraryComponents::getSingleQueryCapture($wgtConfig, $ctx->contextCustomer->getDBO());
+        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'singleQueryCapture');
+    }
+    
     public function widgetAddDataApiViewer ($widgetName = 'General') {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_dataApiViewer" . $widgetName};

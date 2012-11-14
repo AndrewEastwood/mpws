@@ -1,5 +1,6 @@
 securityKey = "Your Security Key";
 entryLinkFor-strategic-integration-team = "SI Team Report Import";
+entryLinkFor-si-team = "SI Team Report Import";
 
 auxiliaryLinkFor-weekly = 'SI Team Render Weekly Report';
 auxiliaryLinkFor-release = 'SI Team Render Release Report';

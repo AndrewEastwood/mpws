@@ -509,6 +509,17 @@ class libraryRequest {
         return ((float) $usec + (float) $sec);
     }
     
+    public static function explodeUrl ($url) {
+        $_url = parse_url($url);
+        //var_dump($_url);
+        //var_dump($_url['query']);
+        //var_dump(parse_str($_url['query']));
+        if (!empty($_url['query'])) {
+            parse_str($_url['query'], $_url['query']);
+        }
+        return $_url;
+    }
+    
 }
 
 

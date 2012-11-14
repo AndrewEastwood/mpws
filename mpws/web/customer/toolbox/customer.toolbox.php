@@ -65,7 +65,7 @@ class customerToolbox extends objectBaseWebCustomer {
                 }
                 case 'jobs' : {
                     // system scheduler
-                    $this->widgetAddSimple('customJobLinkInstaller');
+                    $this->widgetAddSingleQueryCapture('JobInstaller');
                     $this->actionHandlerStandartDataTableManager('Jobs');
                     break;
                 }

@@ -23,6 +23,7 @@ controlActionLinkTitleDataEditorBACKTORECORDS = "Back To Records";
 controlActionLinkTitleDataRecordRemovalBACKTORECORDS = "Back To Records";
 controlActionLinkTitleDataRecordViewerBACKTORECORDS = "Back To Records";
 controlActionLinkTitleDataRecordManagerBACKTORECORDS = "Back To Records";
+controlActionLinkTitleDataApiViewerADDJOB = "[ add job ]";
 
 ; data editor buttons
 controlFormButtonsDataEditorButtonSave = "Save";
