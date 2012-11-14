@@ -8,4 +8,4 @@ Disallow: /web
 Disallow: /service
 Disallow: /mpws
 
-Sitemap: http://www.essay-about.com/sitemap.xml
+Sitemap: http://localhost/sitemap.xml

@@ -1,0 +1,45 @@
+Clone Project into /var/www/ directory
+
+Configure apache site /etc/apache2/sites-available/default:
+
+ServerName toolbox.mpws.com
+Options FollowSymLinks
+
+<VirtualHost *:81>
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/web/mpws/
+	ServerName toolbox.mpws.com
+	Options +FollowSymLinks
+	<Directory />
+		RewriteEngine On
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+	<Directory /var/www/web/mpws/>
+		RewriteEngine On
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
+</VirtualHost>
+
+Updated /etc/hosts/
+
+127.0.0.1   toolbox.mpws.com
+
+Then open a terminal and type the following command: sudo a2enmod rewrite
+This will enable rewrite module for apache
+
+
+Change resource owner:
+sudo chown -R www-data *
+
+
+
+Add Demo User:
+
+Login: testuser
+Pwd: 1234
+
+INSERT INTO `mpws_light`.`mpws_users` (`Name`, `Password`, `Active`, `IsOnline`, `Permisions`, `Role`, `DateLastAccess`, `DateCreated`, `DateUpdated`) VALUES ('testuser', '5cf52c7d3cd918c35b2326a3ab702cf4', '1', '0', '*.*', 'SUPERADMIN', '2012-11-14 00:00:00', '2012-11-14 00:00:00', '2012-11-14 00:00:00');

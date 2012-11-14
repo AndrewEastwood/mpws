@@ -65,12 +65,20 @@
         }
 
         public function connect($config) {
+
+            //var_dump($config);
+
+
             $this->_db_server = $config['DB_HOST'];
             $this->_db_user = $config['DB_USERNAME'];
             $this->_db_pass = $config['DB_PASSWORD'];
             $this->_db_database = $config['DB_NAME'];
             $this->_db_charset = $config['DB_CHARSET'];
-            $this->_db_link_id = @mysql_connect($this->_db_server, $this->_db_user, $this->_db_pass);
+            $this->_db_link_id = mysql_connect($this->_db_server, $this->_db_user, $this->_db_pass);
+
+            //var_dump($this->_db_link_id);
+
+
             @mysql_query("set names cp1251", $this->_db_link_id);
             if (!$this->_db_link_id) {//open failed
                 $this->oops("Could not connect to server: <b>$this->_db_server</b>.");
