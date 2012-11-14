@@ -202,7 +202,7 @@ class libraryComponents {
             // make data object
             $_data = array();
             foreach ($config['map'] as $dbField => $valuePath) {
-                echo '<br>Looking For: ' . $valuePath;
+                //echo '<br>Looking For: ' . $valuePath;
                 $_data[$dbField] = libraryUtils::getArrayValueByPath($valuePath, $wgt);
             }
             if (empty($_data['DateCreated']))
@@ -219,7 +219,7 @@ class libraryComponents {
             $isCaptured = false;
         }
         // state
-        $wgt['CAPTURE'] = $isCaptured;
+        $wgt['IS_CAPTURED'] = $isCaptured;
         // page
         $wgt['EDIT_PAGE'] = $edit_page;
         return $wgt;

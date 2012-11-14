@@ -55,14 +55,15 @@ class libraryStaticResourceManager {
                             $filesToLoad[] = DR . 'web/default/'.$v.'/resource/'.$filePath;
                     break;
                 case 'OWNER':
-                    if ($isPLugin)
+                    if ($isPLugin) {
                         foreach ($resFiles as $filePath)
                             if (file_exists(DR . '/web/plugin/'.$p.'/resource/'.$filePath))
                                 $filesToLoad[] = DR . '/web/plugin/'.$p.'/resource/'.$filePath;
-                    else 
+                    } else {
                         foreach ($resFiles as $filePath)
                             if (file_exists(DR . 'web/customer/'.$c.'/resource/'.$filePath))
                                 $filesToLoad[] = DR . 'web/customer/'.$c.'/resource/'.$filePath;
+                    }
                     break;
                 case 'AUTO':
                     foreach ($resFiles as $filePath) {

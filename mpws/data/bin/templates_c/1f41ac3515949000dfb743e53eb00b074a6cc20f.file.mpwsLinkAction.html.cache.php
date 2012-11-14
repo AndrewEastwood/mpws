@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-13 21:01:09
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-14 21:30:09
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsLinkAction.html" */ ?>
 <?php /*%%SmartyHeaderCode:19152304395081a14daa68a7-90403107%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1f41ac3515949000dfb743e53eb00b074a6cc20f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsLinkAction.html',
-      1 => 1352832496,
+      1 => 1352921283,
       2 => 'file',
     ),
   ),
@@ -121,7 +121,7 @@ $_smarty_tpl->tpl_vars['_linkActions']->value[] = "oid=".((string)$_smarty_tpl->
     <?php }elseif($_smarty_tpl->tpl_vars['_mode']->value=='system'){?>
 
         
-        <?php if ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->isObjectTypeEquals('OBJECT_T_PLUGIN')){?>
+        <?php if ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->isObjectTypeEquals(@OBJECT_T_PLUGIN)){?>
             <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
 $_smarty_tpl->tpl_vars['_linkActions']->value[] = "plugin=".((string)mb_strtolower($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->getObjectName(), 'UTF-8'));?>
         <?php }?>

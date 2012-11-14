@@ -1,4 +1,3 @@
 messageReportManagerStartupMessage = "You're currently using report manager tool. Please be careful with removing and modification reports and related script files";
 messageCustomMonitorStartupMessage = 'View and analyze reports';
-messageCustomApiSettingsStartupMessage = "";
-messageGeneralStartupMessage = "All API links are collected here.";
+messageReportingMainApiStartupMessage = "All API links are collected here.";

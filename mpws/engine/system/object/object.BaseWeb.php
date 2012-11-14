@@ -247,7 +247,7 @@ class objectBaseWeb extends objectBase {
         $wgtData = libraryComponents::getSingleQueryCapture($wgtConfig, $ctx->contextCustomer->getDBO());
         //var_dump($wgtData);
         // do not render widget
-        if ($wgtConfig['form']['hideOnSave'] && $wgtData['EDIT_PAGE'] == 'save')
+        if (!$wgtData['IS_CAPTURED'] || ($wgtConfig['form']['hideOnSave'] && $wgtData['EDIT_PAGE'] == 'save'))
             return false;
         // add widget
         $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'singleQueryCapture');
@@ -255,7 +255,7 @@ class objectBaseWeb extends objectBase {
         return $wgtData['IS_CAPTURED']; 
     }
     
-    public function widgetAddDataApiViewer ($widgetName = 'General') {
+    public function widgetAddDataApiViewer ($widgetName) {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_dataApiViewer" . $widgetName};
         $wgtData = libraryComponents::getApiViewer($wgtConfig, $ctx->contextCustomer->getDBO());
