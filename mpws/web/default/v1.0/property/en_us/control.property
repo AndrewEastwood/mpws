@@ -47,3 +47,7 @@ controlFormButtonsDataRecordRemovalButtonCancel = "Cancel";
 controlFormButtonsRTEWHButtonSave = 'Save';
 controlFormButtonsRTEWHButtonCancel = 'Cancel';
 
+
+
+controlFormButtonsSingleQueryCaptureButtonCancel = "Cancel";
+controlFormButtonsSingleQueryCaptureButtonSave = "Install";

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `mpws_jobs` (
   `Name` varchar(100) NOT NULL,
   `Description` varchar(250) DEFAULT NULL,
   `Action` text NOT NULL,
-  `Schedule` datetime NOT NULL,
+  `Schedule` text NOT NULL,
   `LastError` text,
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,

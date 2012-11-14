@@ -1,2 +1,3 @@
 messageHelloWorld = 'Hello World!!!!!';
 messageDashboardActiveUsersStartupMessage = "All important activities you can find here.";
+messageJobInstallerStartupMessage = "Use Job Installer Links from API Settings menu to install new job";

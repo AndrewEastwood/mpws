@@ -65,7 +65,7 @@
     {elseif $_mode eq 'system'}
 
         {* add standart *}
-        {if $CURRENT.OBJECT->isObjectTypeEquals(OBJECT_T_PLUGIN)}
+        {if $CURRENT.OBJECT->isObjectTypeEquals($smarty.const.OBJECT_T_PLUGIN)}
             {$_linkActions[]="plugin=`$CURRENT.OBJECT->getObjectName()|lower`"}
         {/if}
         {if not empty($INFO.GET.DISPLAY)}

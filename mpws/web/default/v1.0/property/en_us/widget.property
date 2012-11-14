@@ -22,3 +22,7 @@ dataEditorStateExistedPageEDIT = "Editing record";
 dataEditorStateExistedPagePREVIEW = "Preview Data";
 dataEditorStateExistedPageSAVE = "Record Saved";
 dataEditorStateExistedPageCANCEL = "Canceled";
+
+
+singleQueryCaptureMainText = "Captured Action Name: ";
+singleQueryCaptureAdditionalText = "Captured Action Details: ";

@@ -27,8 +27,11 @@
         {* action link params *}
         {$__entryTitle = $CURRENT.OBJECT->{"`$__propEntry``$entry.ExternalKey`"}}
         {$__qEntryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__entryTitle`"}
+        {if not empty($DTV_CFG.schedule.general)}
+            {$__qEntryParams = "`$__qEntryParams`&custom={urlencode("schedule=`$DTV_CFG.schedule.general`")}"}
+        {/if}
         {$_apiLink = "`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.entry`&p={urlencode($__qEntryParams)}"}
-        
+
         {* display api action link *}
         {include file=$CURRENT.OBJECT->objectTemplatePath_component_dataRow _label=$__entryTitle _value=$_apiLink}
 
@@ -51,7 +54,11 @@
 
                 {* action link params *}
                 {$__auxilaryTitle = $CURRENT.OBJECT->{"`$__propAuxiliary``$scriptKey`"}}
-                {$__qAuxilaryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__auxilaryTitle`&custom={urlencode("script=`$scriptKey`")}"}
+                {if not empty($DTV_CFG.schedule.additional)}
+                    {$__qAuxilaryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__auxilaryTitle`&custom={urlencode("script=`$scriptKey`&schedule=`$DTV_CFG.schedule.additional`")}"}
+                {else}
+                    {$__qAuxilaryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__auxilaryTitle`&custom={urlencode("script=`$scriptKey`")}"}
+                {/if}
                 {$_apiLink = "`$__apiLinkBase`&fn=`$DTV_CFG.apiActions.additional`&p={urlencode($__qAuxilaryParams)}"}
 
                 {* display api action link *}

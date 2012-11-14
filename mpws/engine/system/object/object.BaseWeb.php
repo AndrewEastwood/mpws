@@ -245,7 +245,14 @@ class objectBaseWeb extends objectBase {
         $ctx = contextMPWS::instance();
         $wgtConfig = $this->{"objectConfiguration_widget_singleQueryCapture" . $widgetName};
         $wgtData = libraryComponents::getSingleQueryCapture($wgtConfig, $ctx->contextCustomer->getDBO());
+        //var_dump($wgtData);
+        // do not render widget
+        if ($wgtConfig['form']['hideOnSave'] && $wgtData['EDIT_PAGE'] == 'save')
+            return false;
+        // add widget
         $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'singleQueryCapture');
+        // return state
+        return $wgtData['IS_CAPTURED']; 
     }
     
     public function widgetAddDataApiViewer ($widgetName = 'General') {

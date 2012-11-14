@@ -170,7 +170,59 @@ class libraryComponents {
     }
 
     public static function getSingleQueryCapture ($config, $dbLink) {
+        // validate configuration for requested mode
+        if (empty($config))
+            throw new Exception('libraryComponents => getSingleQueryCapture: can not find configuration');
         
+        
+        $capturedValue = libraryRequest::getValue($config['capture']['keyToCapture']);
+        if ($config['capture']['decode'])
+            $capturedValue = urldecode ($capturedValue);
+        $capturedEntry = libraryRequest::explodeUrl(urldecode($capturedValue));
+        $isCaptured = !empty($capturedValue);
+        $edit_page = 'edit';
+        $wgt = array(
+            'TITLE' => '',
+            'SUBTITLE' => '',
+            'ACTION' => $capturedValue,
+            'ENTRY' => $capturedEntry,
+            'IS_CAPTURED' => false,
+            'PAGE' => $edit_page,
+        );
+        
+        // set title
+        if (!empty($capturedEntry['query'][$config['capture']['keyToTitle']]))
+            $wgt['TITLE'] = $capturedEntry['query'][$config['capture']['keyToTitle']];
+        // set subtitle
+        if (!empty($capturedEntry['query'][$config['capture']['keyToSubTitle']]))
+            $wgt['SUBTITLE'] = $capturedEntry['query'][$config['capture']['keyToSubTitle']];
+
+        // save action link
+        if (libraryRequest::isPostFormAction('save')) {
+            // make data object
+            $_data = array();
+            foreach ($config['map'] as $dbField => $valuePath) {
+                echo '<br>Looking For: ' . $valuePath;
+                $_data[$dbField] = libraryUtils::getArrayValueByPath($valuePath, $wgt);
+            }
+            if (empty($_data['DateCreated']))
+                $_data['DateCreated'] = date('Y-m-d H:i:s');
+            if (isset($_data['DateLastAccess']))
+                $_data['DateLastAccess'] = date('Y-m-d H:i:s');
+            //var_dump($_data);
+            $dbLink->reset()
+                ->insertInto($config['source'])
+                ->fields(array_keys($_data))
+                ->values(array_values($_data))
+                ->query();
+            $edit_page = 'save';
+            $isCaptured = false;
+        }
+        // state
+        $wgt['CAPTURE'] = $isCaptured;
+        // page
+        $wgt['EDIT_PAGE'] = $edit_page;
+        return $wgt;
     }
 
 

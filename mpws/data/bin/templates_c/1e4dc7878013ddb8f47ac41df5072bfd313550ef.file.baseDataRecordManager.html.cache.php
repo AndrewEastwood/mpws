@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-12 14:08:51
+<?php /* Smarty version Smarty-3.1.11, created on 2012-11-14 17:07:45
          compiled from "/var/www/mpws/web/default/v1.0/template/widget/baseDataRecordManager.html" */ ?>
 <?php /*%%SmartyHeaderCode:17615430075098ef3032ce77-25780393%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1e4dc7878013ddb8f47ac41df5072bfd313550ef' => 
     array (
       0 => '/var/www/mpws/web/default/v1.0/template/widget/baseDataRecordManager.html',
-      1 => 1352722125,
+      1 => 1352796441,
       2 => 'file',
     ),
   ),
@@ -60,12 +60,6 @@ $_smarty_tpl->tpl_vars['fieldValue']->_loop = true;
     <?php } ?>
     </div>
 
-    
-        
-    
-    
-    
-    
     <?php $_smarty_tpl->tpl_vars['_managerCount'] = new Smarty_variable(count($_smarty_tpl->tpl_vars['DTV_CFG']->value['managers']), null, 0);?>
 
     
@@ -97,6 +91,7 @@ $_smarty_tpl->tpl_vars['managerEntry']->_loop = true;
 ?>
         <?php $_smarty_tpl->tpl_vars['_formInnerAction'] = new Smarty_variable($_smarty_tpl->tpl_vars['managerEntry']->value['EDIT_PAGE'], null, 0);?>
         <?php $_smarty_tpl->tpl_vars['_managerConfig'] = new Smarty_variable($_smarty_tpl->tpl_vars['DTV_CFG']->value['managers'][$_smarty_tpl->tpl_vars['managerID']->value], null, 0);?>
+
         <div id="MPWSBlockManager_<?php echo $_smarty_tpl->tpl_vars['managerID']->value;?>
 _ID" class="MPWSBlock MPWSBlockManager">
         
@@ -109,55 +104,68 @@ _ID" class="MPWSBlock MPWSBlockManager">
 ">
                 
                 
-                
-                <?php if ($_smarty_tpl->tpl_vars['_formInnerAction']->value=='NEW'){?>
-                
-                    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>((string)$_smarty_tpl->tpl_vars['managerID']->value)."_newitem",'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true), 0);?>
+
+                <?php if ($_smarty_tpl->tpl_vars['_managerConfig']->value['type']=='file'){?>
+
+                    
+
+                    <?php if ($_smarty_tpl->tpl_vars['_formInnerAction']->value=='NEW'){?>
+
+                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'textbox','_name'=>((string)$_smarty_tpl->tpl_vars['managerID']->value)."_newitem",'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true), 0);?>
 
 
-                    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Save','Cancel'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
+                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Save','Cancel'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
 
 
-                <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=='EDIT'){?>
-                
-                    <div class="MPWSBlock MPWSBockReportScriptEditArea">
-                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsRTEWH, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['managerID']->value,'_type'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['type'],'_value'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['DATA'],'_sources'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['SOURCE'],'_useDivWrapper'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['divmode'],'_jslib'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['jslib']), 0);?>
+                    <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=='EDIT'){?>
 
-                    </div>
-                
-                <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=='REMOVE'){?>
-                
-                    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsListBox','_name'=>$_smarty_tpl->tpl_vars['managerID']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_items'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['SOURCE'],'_renderMode'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['listbox']['displayMode'],'_initValues'=>true,'_customValueHolder'=>'removeable','_single'=>true), 0);?>
+                        <div class="MPWSBlock MPWSBockReportScriptEditArea">
+                            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsRTEWH, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['managerID']->value,'_type'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['type'],'_value'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['DATA'],'_sources'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['SOURCE'],'_useDivWrapper'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['divmode'],'_editLang'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['language'],'_jslib'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['editor']['jslib']), 0);?>
+
+                        </div>
+
+                    <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=='REMOVE'){?>
+
+                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsListBox','_name'=>$_smarty_tpl->tpl_vars['managerID']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_items'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['SOURCE'],'_renderMode'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['listbox']['displayMode'],'_initValues'=>true,'_customValueHolder'=>'removeable','_single'=>true), 0);?>
 
 
-                    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Save','Cancel'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
+                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Save','Cancel'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
 
-                
-                <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=='LIST'){?>
-                
-                    <?php if (!empty($_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['top'])){?>
-                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['top'],'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
+
+                    <?php }elseif($_smarty_tpl->tpl_vars['_formInnerAction']->value=='LIST'){?>
+
+                        <?php if (!empty($_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['top'])){?>
+                            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['top'],'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
+
+                        <?php }?>
+
+                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsListBox','_name'=>$_smarty_tpl->tpl_vars['managerID']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_items'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['SOURCE'],'_renderMode'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['listbox']['displayMode'],'_checkboxes'=>true,'_numLines'=>true,'_captions'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['listbox']['captions']), 0);?>
+
+
+                        <?php if (!empty($_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['bottom'])){?>
+                            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['bottom'],'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
+
+                        <?php }?>
 
                     <?php }?>
-
-                    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsListBox','_name'=>$_smarty_tpl->tpl_vars['managerID']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_items'=>$_smarty_tpl->tpl_vars['managerEntry']->value['CONTENT']['SOURCE'],'_renderMode'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['listbox']['displayMode'],'_checkboxes'=>true,'_numLines'=>true,'_captions'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['listbox']['captions']), 0);?>
-
-
-                    <?php if (!empty($_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['bottom'])){?>
-                        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>$_smarty_tpl->tpl_vars['_managerConfig']->value['buttons']['bottom'],'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_resourceOwner'=>'control'), 0);?>
-
-                    <?php }?>
+                    
+                <?php }elseif($_smarty_tpl->tpl_vars['_managerConfig']->value['type']=='record'){?>
+                    
+                    
+                    RECORD MANAGER IS NOT IMPLEMENTED FOR TYPE: DB RECORD
                 
                 <?php }?>
-                
-                
+
                 
             </div>
             <div class="MPWSFormFooter"></div>
         </form>
         
         </div>
+        
+        
     <?php } ?>
+    
     
     
     <?php if ($_smarty_tpl->tpl_vars['_managerCount']->value>1){?>
