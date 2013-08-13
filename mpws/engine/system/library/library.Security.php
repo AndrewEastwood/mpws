@@ -10,8 +10,7 @@ class librarySecurity {
             setcookie('MPWS_CA', 
                     $_POST['user'].','.md5($_POST['user'].$secret_word),
                     time()+600, // 10 minute session
-                    '/service/',
-                    MPWS_CUSTOMER);
+                    '/service/');
             $username = $_POST['user'];
         }
         // validate user
@@ -23,8 +22,7 @@ class librarySecurity {
                 setcookie('MPWS_CA', 
                         $c_username.','.md5($c_username.$secret_word),
                         time()+300,
-                        '/service/',
-                        MPWS_CUSTOMER);
+                        '/service/');
             } else {
                 return false;//print "You have sent a bad cookie.";
             }

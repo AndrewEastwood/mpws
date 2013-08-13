@@ -5,7 +5,7 @@ class controllerPublic {
     public function processRequests() {
         debug('controllerPublic => processRequests');
         $mpwsCtx = contextMPWS::instance();
-        debug('controllerPublic => processRequests: adding command');
+        debug('controllerPublic => processRequests: adding command >> ' . MPWS_CUSTOMER.DOG.'main');
         $mpwsCtx->addCommand(array(MPWS_CUSTOMER.DOG.'main'));
         debug('controllerPublic => processRequests: process commands with Customer');
         $mpwsCtx->processAll('Customer');

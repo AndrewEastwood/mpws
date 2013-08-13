@@ -43,7 +43,7 @@ class customerToolbox extends objectBaseWebCustomer {
         //var_dump($mpws_user);
         
         $ctx->pageModel->setInfo('USER', $mpws_user);
-        $ctx->pageModel->addMessage('helloWorld');
+        // $ctx->pageModel->addMessage('helloWorld');
     }
     
     protected function _displayTriggerAsCustomer () {
@@ -65,9 +65,10 @@ class customerToolbox extends objectBaseWebCustomer {
                 }
                 case 'jobs' : {
                     // system scheduler
-                    $captured = $this->widgetAddSingleQueryCapture('JobInstaller');
+                    // $captured = $this->widgetAddSingleQueryCapture('JobInstaller');
+                    $captured = $this->getWidget('AddSingleQueryCapture', 'JobInstaller');
                     if (!$captured)
-                        $this->actionHandlerStandartDataTableManager('Jobs');
+                        $this->getWidget('ActionHandlerStandartDataTableManager', 'Jobs'); // $this->actionHandlerStandartDataTableManager('Jobs');
                     break;
                 }
             }

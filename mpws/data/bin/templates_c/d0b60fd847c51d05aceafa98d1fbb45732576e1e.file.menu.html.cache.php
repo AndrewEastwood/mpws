@@ -1,20 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:55:08
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-14 02:17:50
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html" */ ?>
-<?php /*%%SmartyHeaderCode:8331749085080427c0d6896-04157898%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:149036013520634148e01a4-53112138%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'd0b60fd847c51d05aceafa98d1fbb45732576e1e' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/menu.html',
-      1 => 1350579434,
+      1 => 1376435866,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '8331749085080427c0d6896-04157898',
+  'nocache_hash' => '149036013520634148e01a4-53112138',
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5206341499e119_01872461',
   'variables' => 
   array (
     '_OBJ' => 0,
@@ -34,10 +36,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'submenu' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5080427c1927d0_26786560',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5080427c1927d0_26786560')) {function content_5080427c1927d0_26786560($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5206341499e119_01872461')) {function content_5206341499e119_01872461($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/devdata/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array(), null, 0);?>
 <?php if ((isset($_smarty_tpl->tpl_vars['_OBJ']->value))){?>
     <?php $_smarty_tpl->tpl_vars["DOs"] = new Smarty_variable(array($_smarty_tpl->tpl_vars['_OBJ']->value), null, 0);?>
@@ -75,7 +75,7 @@ $_smarty_tpl->tpl_vars['itemvar']->_loop = true;
 ?>
         <li class="MPWSListItem">
             <?php $_smarty_tpl->tpl_vars['_linkText'] = new Smarty_variable($_smarty_tpl->tpl_vars['DISPLAY_OBJECT']->value->{"objectProperty_display_menuText".((string)smarty_modifier_capitalize($_smarty_tpl->tpl_vars['keyvar']->value,0,1))}, null, 0);?>
-            <a href="<?php echo $_smarty_tpl->tpl_vars['itemvar']->value['link'];?>
+            <a href="<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsAutoLinkHref, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('link'=>$_smarty_tpl->tpl_vars['itemvar']->value['link'],'display'=>$_smarty_tpl->tpl_vars['keyvar']->value), 0);?>
 " target="<?php echo $_smarty_tpl->tpl_vars['itemvar']->value['target'];?>
 " class="MPWSLink" title="<?php echo $_smarty_tpl->tpl_vars['_linkText']->value;?>
 ">

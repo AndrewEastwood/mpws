@@ -113,6 +113,8 @@ class libraryWebPageModel {
             $name = $tplResMode[1];
             $resource = $tplResMode[0] . $tplResMode[1];
         }
+        //echo '<br>OWNER: ' . $owner;
+        //echo '<br>WOB NAME: ' . $owner->getObjectName();
         //echo '<br>NAME: ' . $name;
         //echo '<br>RESOURCE: ' . $resource;
         //echo '<br>================================<br>';
@@ -169,14 +171,19 @@ class libraryWebPageModel {
             $model['INFO'] = $this->_info;
 
         // fetch widgets
+        //echo '<p>fetching widgets >>>>></p>';
         foreach ($this->_widgets as $key => $value) {
             debug('fetchHtmlPage: building widget ' . $key);
+            //echo print_r($value, true);
+            //echo '<br>keeeeeeeeeeeeeeeeeey: ' . $key;
             $this->_widgets[$key]['HTML'] = $this->fetchTemplate($value, $model);
         }
+        //var_dump($this->_info);
         //echo '<br>++++++++++++++++ END WIDGETS +++++++++++++++++++<br>';
         //debug($model);
         // fetch page
         debug('Fetching page: ' . $this->_page['TEMPLATE']);
+        //echo 'Fetching page: ' . $this->_page['TEMPLATE'];
         $html = $this->fetchTemplate($this->_page, $model);
         //echo mktime() . '<br>';
         //echo '<br>++++++++++++++++++ END PAGE +++++++++++++++++<br>';
@@ -218,9 +225,10 @@ class libraryWebPageModel {
         $tp->assign('CURRENT', $current);
 
         
-        //echo '<pre>';
+        //echo '<br><br>LOL <pre>';
         //var_dump($this->_wobs);
         //var_dump($current);
+        //echo print_r($wgt);
         //echo '</pre>---------------------------------------------------------';
         
         //}
@@ -235,7 +243,12 @@ class libraryWebPageModel {
         
         //echo '<br>RENDERING: ' . $wgt['TEMPLATE'];
 
-        return $tp->fetch($wgt['TEMPLATE']);
+        $html =  $tp->fetch($wgt['TEMPLATE']);
+        
+        
+        //echo $html;
+        
+        return $html;
     }
     
     private function getTemplateProvider ($name) {

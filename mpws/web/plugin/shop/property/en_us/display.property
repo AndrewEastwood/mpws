@@ -1,7 +1,16 @@
 menuTextProducts = 'Products';
+menuTextDescriptionProducts = '- manage your products';
 menuTextCategories = 'Categories';
+menuTextDescriptionCategories = '- organize products';
 menuTextOrigins = 'Origins';
+menuTextDescriptionOrigins = '- provide more details';
 menuTextPromo = 'Promo';
+menuTextDescriptionPromo = '- involve more buyers';
 menuTextBuyers = 'Buyers';
+menuTextDescriptionBuyers = '- view shop accounts';
+menuTextSubscribers = 'Subscribers';
+menuTextDescriptionSubscribers = '- inform subscribers with the latest news';
 menuTextOrders = 'Orders';
+menuTextDescriptionOrders = '- make your money';
 menuTextCurrency = 'Currency';
+menuTextDescriptionCurrency = '- setup exchange rates';

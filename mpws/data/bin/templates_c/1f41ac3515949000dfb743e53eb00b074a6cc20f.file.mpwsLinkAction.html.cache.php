@@ -1,22 +1,20 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-14 21:30:09
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:39:11
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsLinkAction.html" */ ?>
-<?php /*%%SmartyHeaderCode:19152304395081a14daa68a7-90403107%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:14351358725206346fdb3e30-59521022%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '1f41ac3515949000dfb743e53eb00b074a6cc20f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsLinkAction.html',
-      1 => 1352921283,
+      1 => 1372623473,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '19152304395081a14daa68a7-90403107',
+  'nocache_hash' => '14351358725206346fdb3e30-59521022',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5081a14dbb9a35_87469309',
   'variables' => 
   array (
     '_href' => 0,
@@ -40,12 +38,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_linkActions' => 0,
     '_linkAction' => 0,
     'INFO' => 0,
+    '_name' => 0,
     'controlLinkAttr' => 0,
     'controlLinkTitle' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_520634700007d3_13528849',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5081a14dbb9a35_87469309')) {function content_5081a14dbb9a35_87469309($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_520634700007d3_13528849')) {function content_520634700007d3_13528849($_smarty_tpl) {?>
 
 
 <?php $_smarty_tpl->tpl_vars['controlLinkHref'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_href']->value)===null||$tmp==='' ? '' : $tmp), null, 0);?>
@@ -134,7 +135,7 @@ $_smarty_tpl->tpl_vars['_linkActions']->value[] = "action=".((string)mb_strtolow
 
         
         <?php if (!empty($_smarty_tpl->tpl_vars['_oid']->value)){?>
-            <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
+             <?php $_smarty_tpl->createLocalArrayVariable('_linkActions', null, 0);
 $_smarty_tpl->tpl_vars['_linkActions']->value[] = "oid=".((string)$_smarty_tpl->tpl_vars['_oid']->value);?>
         <?php }?>
 
@@ -162,5 +163,10 @@ $_smarty_tpl->tpl_vars['_linkActions']->value[] = ((string)$_smarty_tpl->tpl_var
     <?php }?>
 <?php }?>
 
-<?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_link, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_href'=>$_smarty_tpl->tpl_vars['controlLinkHref']->value,'_target'=>$_smarty_tpl->tpl_vars['controlLinkTarget']->value,'_attr'=>$_smarty_tpl->tpl_vars['controlLinkAttr']->value,'_title'=>$_smarty_tpl->tpl_vars['controlLinkTitle']->value), 0);?>
-<?php }} ?>
+<?php if ($_smarty_tpl->tpl_vars['_action']->value=='checkbox'){?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlCheckBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value), 0);?>
+
+<?php }else{ ?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_link, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_href'=>$_smarty_tpl->tpl_vars['controlLinkHref']->value,'_target'=>$_smarty_tpl->tpl_vars['controlLinkTarget']->value,'_attr'=>$_smarty_tpl->tpl_vars['controlLinkAttr']->value,'_title'=>$_smarty_tpl->tpl_vars['controlLinkTitle']->value), 0);?>
+
+<?php }?><?php }} ?>

@@ -27,7 +27,7 @@ class pluginSystem extends objectBaseWebPlugin {
     }
     
     private function _displayPage_Dashboard () {
-        $this->widgetAddDataTableView('DashboardActiveUsers');
+        $this->getWidget('AddDataTableView', 'DashboardActiveUsers');
     }
     
     private function _displayPage_Default () {
@@ -35,7 +35,8 @@ class pluginSystem extends objectBaseWebPlugin {
         switch (libraryRequest::getDisplay()) {
             case "users" : {
                 /* standart data edit and view component complex */
-                $this->actionHandlerStandartDataTableManager('SystemUsers');
+                $this->getWidget('ActionHandlerStandartDataTableManager', 'SystemUsers');
+                // $this->actionHandlerStandartDataTableManager('SystemUsers');
                 break;
             }
         }

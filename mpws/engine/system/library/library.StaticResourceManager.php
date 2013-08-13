@@ -290,9 +290,9 @@ class libraryStaticResourceManager {
         //var_dump($propertyFilePath);
         if (is_array($propertyFilePath)) {
             foreach ($propertyFilePath as $propertySingleFilePath) {
-                //echo $propertySingleFilePath;
+                 // echo $propertySingleFilePath;
                  $propertyValue = self::getPropertyValue($propertySingleFilePath, $propKey, true);
-                 if ($propertyValue != null)
+                 if (isset($propertyValue))
                      return $propertyValue;
             }
             //echo '%'.$propKey.'%';
@@ -302,10 +302,11 @@ class libraryStaticResourceManager {
         elseif (is_string($propertyFilePath)) {
             if (!file_exists($propertyFilePath))
                 throw new Exception('libraryStaticResourceManager: getPropertyValue(string): Property file does not exsist: <b>' . $propertyFilePath . '</b>');
+            // echo "xxxx>" . $propertyFilePath;
             $props = parse_ini_file($propertyFilePath);
-            //debug($props);
-            //var_dump($props);
-            //echo '<br> Reading property file: ' . $propertyFilePath . ' to get the key: ' . $propKey;
+            // debug($props, 'parse_ini_file');
+            // var_dump($props);
+            // echo '<br> Reading property file: ' . $propertyFilePath . ' to get the key: ' . $propKey;
             if (isset($props[$propKey]))
                 return $props[$propKey];
             if (!$fromArray)

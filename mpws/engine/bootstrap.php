@@ -24,7 +24,7 @@
 
     //error_reporting(E_ERROR | E_WARNING | E_PARSE);
     error_reporting(E_ALL);
-    ini_set("display_errors", 2);
+    ini_set("display_errors", getDebugLevel());
     
     function getDocumentRoot () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);
@@ -48,5 +48,8 @@
         return $h;
     }
     
-
+    function getDebugLevel (){
+        return MPWS_LOG_LEVEL;
+    }
+    
 ?>

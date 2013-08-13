@@ -86,6 +86,17 @@
 
         {if not empty($_confing.datatable.perRecrodActions)}
             <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
+                {foreach $_confing.datatable.perRecrodActions as $_actionName}
+                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                        _type='mpwsLinkAction'
+                        _name=$_actionName
+                        _controlOwner="`$_controlOwner`RowAction"
+                        _action=$_actionName
+                        _resourceOwner=$_resourceOwner
+                        _single=true
+                        _oid="-1"
+                        _mode='system'}
+                {/foreach}
                 {$CURRENT.OBJECT->objectProperty_widget_dataTableViewCaptionActions}
             </div>
         {/if}

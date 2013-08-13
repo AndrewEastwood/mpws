@@ -27,6 +27,7 @@ class objectBaseWeb extends objectBase {
         $this->setExtender('objectExtWithStorage', '_ex_store');
         $this->setExtender('objectExtWithResource', '_ex_resource');
         $this->setExtender('objectExtWithConfiguration', '_ex_config');
+        $this->setExtender('objectExtWithUIWidgets', '_ex_uiwidgets');
 
         //var_dump($this->getMeta());
         $locale = libraryRequest::getLocale($this->objectConfiguration_customer_locale);
@@ -43,6 +44,14 @@ class objectBaseWeb extends objectBase {
             $this->updateExtenders();
         }
         
+        // apply system settings
+        $pgH = $this->objectConfiguration_system_pageHeaders;
+        debug($pgH, 'objectBaseWeb: >> Applying system settings: headers');
+        foreach ($pgH as $pageHeader)
+            header($pageHeader);
+        debug($this->objectConfiguration_system_pageTimeZone, 'objectBaseWeb: >> Applying system settings: time zone');
+        date_default_timezone_set($this->objectConfiguration_system_pageTimeZone);
+        
        
     }
     protected function objectCustomProperty($name) {
@@ -52,6 +61,8 @@ class objectBaseWeb extends objectBase {
             return $this->getTemplatePath(str_replace(array('objectTemplatePath_', '_'), array('', '.'), $name));
         if (startsWith($name, 'objectProperty'))
             return $this->getProperty(str_replace(array('objectProperty_', '_'), array('', '.'), $name));
+        if (startsWith($name, 'objectWidget'))
+            return $this->getWidget(str_replace(array('objectWidget', '_'), array('', '.'), $name));
 
         return parent::objectCustomProperty($name);
     }
@@ -95,6 +106,14 @@ class objectBaseWeb extends objectBase {
         debug('objectBaseWeb: getProperty: Read Property: ' . $resValue . ' from ' . $metapath);
         $this->_ex_store__storeSet($_kp, $resValue);
         return $resValue;
+    }
+    protected function getWidget ($widgetName, $params) {
+        debug('objectBaseWeb: getWidget: ' . $widgetName);
+        return $this->_ex_uiwidgets__getWidget($this, $widgetName, $params);
+    }
+    protected function addMessage ($messageKey) {
+        $ctx = contextMPWS::instance();
+        $ctx->pageModel->addMessage($messageKey, $this->getObjectName());
     }
     
     /* public api */
@@ -195,146 +214,6 @@ class objectBaseWeb extends objectBase {
     }
     protected function _commonRunOnEnd () {
         debug('objectBaseWeb => _commonRunOnEnd');
-    }
-
-    /*
-     *  Web UI Methods
-     */
-    
-    /* standart actions handlers */
-    public function actionHandlerStandartDataTableManager ($widgetName, $events = array()) {
-        switch (libraryRequest::getAction()) {
-            case "new" :
-            case "edit" : {
-                $e = array();
-                if (isset($events['EDIT']))
-                    $e = $events['EDIT'];
-                $this->widgetAddDataEditor($widgetName, $e);
-                break;
-            }
-            case "delete" : {
-                $this->widgetAddDataRecordRemoval($widgetName);
-                break;
-            }
-            case "view" : {
-                $this->widgetAddDataRecordViewer($widgetName);
-                break;
-            }
-            case "manage" : {
-                $this->widgetAddDataRecordManager($widgetName);
-                break;
-            }
-            default : {
-                libraryRequest::storeOrGetRefererUrl();
-                $this->widgetAddDataTableView($widgetName);
-                break;
-            }
-        }
-    }
-    
-    /* Standart Widget Integration Methods */
-    
-    public function widgetAddSimple ($widgetName, $wgtData = false) {
-       // $ctx = contextMPWS::instance();
-        //$wnT = "objectTemplatePath_widget_" . $widgetName;
-        //$ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
-        $this->widgetAdd($widgetName, false, $wgtData);
-    }
-    
-    public function widgetAddSingleQueryCapture ($widgetName) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_singleQueryCapture" . $widgetName};
-        $wgtData = libraryComponents::getSingleQueryCapture($wgtConfig, $ctx->contextCustomer->getDBO());
-        //var_dump($wgtData);
-        // do not render widget
-        if (!$wgtData['IS_CAPTURED'] || ($wgtConfig['form']['hideOnSave'] && $wgtData['EDIT_PAGE'] == 'save'))
-            return false;
-        // add widget
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'singleQueryCapture');
-        // return state
-        return $wgtData['IS_CAPTURED']; 
-    }
-    
-    public function widgetAddDataApiViewer ($widgetName) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_dataApiViewer" . $widgetName};
-        $wgtData = libraryComponents::getApiViewer($wgtConfig, $ctx->contextCustomer->getDBO());
-        //var_dump($wgtData);
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataApiViewer');
-    }
-    
-    public function widgetAddDataRecordViewer ($widgetName) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordViewer" . $widgetName};
-        $wgtData = libraryComponents::getDataRecordViewer($wgtConfig, $ctx->contextCustomer->getDBO());
-        //var_dump($wgtData);
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataRecordViewer');
-    }
-    
-    public function widgetAddDataRecordRemoval ($widgetName) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordRemoval" . $widgetName};
-        $wgtData = libraryComponents::getDataRecordRemoval($wgtConfig, $ctx->contextCustomer->getDBO());
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataRecordRemoval');
-    }
-    
-    public function widgetAddDataTableView ($widgetName) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_dataTableView" . $widgetName};
-        $wgtData = libraryComponents::getDataTableView($wgtConfig, $ctx->contextCustomer->getDBO());
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataTableView');
-    }
-    
-    public function widgetAddDataEditor ($widgetName, $events = array()) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_dataEditor" . $widgetName};
-        $wgtData = libraryComponents::getDataEditor($wgtConfig, $ctx->contextCustomer->getDBO(), $events);
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataEditor');
-    }
-
-    public function widgetAddDataRecordManager ($widgetName) {
-        $ctx = contextMPWS::instance();
-        $wgtConfig = $this->{"objectConfiguration_widget_dataRecordManager" . $widgetName};
-        $wgtData = libraryComponents::getDataRecordManager($wgtConfig, $ctx->contextCustomer->getDBO());
-        $this->widgetHookDataRecordManager($widgetName, $wgtData, $wgtConfig);
-        $this->widgetAdd($widgetName, $wgtConfig, $wgtData, 'dataRecordManager');
-    }
-
-    /* hooks */
-    protected function widgetHookDataRecordManager($widgetName, &$wgtData = false, $wgtConfig = false) {
-        debug('objectBaseWebPlugin: hookBeforeAddWidgetDataRecordManager => ' . $widgetName);
-    }
-    
-    /* internal methods */
-    
-    private function widgetAdd ($widgetName, $wgtConfig, $wgtData, $widgetParent = '') {
-        $ctx = contextMPWS::instance();
-        $wnT = "objectTemplatePath_widget_";
-        
-        $wnTbase = $wnT . "base" . ucfirst($widgetParent);
-        $wnTowner = $wnT .$widgetParent . $widgetName;
-        
-        $widgetOriginalName = $widgetName;
-
-        // check if we use default template
-        try {
-            if ($this->$wnTowner)
-                $wnT = $wnTowner;
-        } catch (Exception $exc) {
-            debug('Exception at: ' . $exc->getMessage());
-            $wnT = $wnTbase; // default widget name and resource to be used
-        }
-        $widgetName = $widgetParent.DOG.$widgetName;
-
-        //var_dump($wgtConfig);
-        //echo '<br>addWidget: '.$widgetName;
-        //echo '<br>Template to be used: '.$wnT;
-        $ctx->pageModel->addWidget($this, $widgetName, $this->$wnT, $wgtData);
-        // add widget message
-        if ($this->isObjectTypeEquals(OBJECT_T_PLUGIN))
-            $ctx->pageModel->addMessage($widgetOriginalName.'StartupMessage', $this->getObjectName());
-        else
-            $ctx->pageModel->addMessage($widgetOriginalName.'StartupMessage');
     }
 }
 

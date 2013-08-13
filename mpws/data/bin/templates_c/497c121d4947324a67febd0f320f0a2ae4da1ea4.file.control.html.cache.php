@@ -1,28 +1,27 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-08 00:41:15
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:37:33
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html" */ ?>
-<?php /*%%SmartyHeaderCode:35550345350817f100dc035-90748925%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:10781041265206340d179e12-75619947%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '497c121d4947324a67febd0f320f0a2ae4da1ea4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html',
-      1 => 1352328069,
+      1 => 1372598199,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '35550345350817f100dc035-90748925',
+  'nocache_hash' => '10781041265206340d179e12-75619947',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50817f101e3ff2_31980979',
   'variables' => 
   array (
     '_resourceOwner' => 0,
     '_renderMode' => 0,
     '_controlOwner' => 0,
     '_value' => 0,
+    '_showHelper' => 0,
     '_type' => 0,
     'CURRENT' => 0,
     '_name' => 0,
@@ -48,14 +47,17 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_standartControlType' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5206340d3103e4_78181083',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50817f101e3ff2_31980979')) {function content_50817f101e3ff2_31980979($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5206340d3103e4_78181083')) {function content_5206340d3103e4_78181083($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/devdata/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 
 <?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'display' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_renderMode'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_renderMode']->value)===null||$tmp==='' ? 'normal' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_controlOwner']->value)===null||$tmp==='' ? 'Default' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? null : $tmp), null, 0);?>
+<?php $_smarty_tpl->tpl_vars['_showHelper'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_showHelper']->value)===null||$tmp==='' ? false : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_linkLabelWithControl'] = new Smarty_variable(true, null, 0);?>
     
 <div class="MPWSBlock MPWSBlockControl MPWSBlockControl_<?php echo $_smarty_tpl->tpl_vars['_type']->value;?>
@@ -132,6 +134,7 @@ if (!empty($_capture_buffer)) {
  Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
 } else $_smarty_tpl->capture_error();?>
 
+
 <?php if (!isset($_smarty_tpl->tpl_vars['_single']->value)||!$_smarty_tpl->tpl_vars['_single']->value){?>
     <?php if ($_smarty_tpl->tpl_vars['_linkLabelWithControl']->value){?>
         <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_label, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_key'=>((string)$_smarty_tpl->tpl_vars['_standartControlType']->value).((string)$_smarty_tpl->tpl_vars['_controlOwner']->value).((string)$_smarty_tpl->tpl_vars['_name']->value),'_for'=>((string)$_smarty_tpl->tpl_vars['_standartControlType']->value).((string)$_smarty_tpl->tpl_vars['_name']->value),'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value), 0);?>
@@ -141,7 +144,13 @@ if (!empty($_capture_buffer)) {
 
     <?php }?>
 <?php }?>
+
 <?php echo Smarty::$_smarty_vars['capture']['control'];?>
 
+
+<?php if ($_smarty_tpl->tpl_vars['_showHelper']->value){?>
+    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_simple_label, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_key'=>((string)$_smarty_tpl->tpl_vars['_standartControlType']->value).((string)$_smarty_tpl->tpl_vars['_controlOwner']->value).((string)$_smarty_tpl->tpl_vars['_name']->value)."Helper",'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value), 0);?>
+
+<?php }?>
 
 </div><?php }} ?>

@@ -12,6 +12,8 @@ class objectContext {
         throw new Exception('MPWS Base Context Object: you must implmenet call method');
     }
     
+    public function getObject ($name) {}
+    
 }
 
 ?>

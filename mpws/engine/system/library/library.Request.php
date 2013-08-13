@@ -77,7 +77,7 @@ class libraryRequest {
         return self::value($_POST, 'do');
     }
     static function getPostFormField ($key, $doEscape = true, $wrap = '') {
-        $_value = self::value($_POST, 'mpws_field_' . strtolower($key));
+        $_value = self::value($_POST, renderFLD_NAME . strtolower($key));
         
         if ($doEscape) {
             if (is_array($_value))

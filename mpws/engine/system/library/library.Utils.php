@@ -598,7 +598,11 @@ class libraryUtils {
         if (strcasecmp($value, 'false') === 0)
             return false;
 
-        // array
+        // array/object
+        if (startsWith($value, '[') && endsWith($value, ']')) {
+            return str_getcsv(substr($value, 1, strlen($value) - 2));
+        }
+
         if (startsWith($value, '{') && endsWith($value, '}')) {
             return json_decode($value, true);
         }

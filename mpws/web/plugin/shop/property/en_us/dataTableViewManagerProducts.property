@@ -1,0 +1,16 @@
+title="Products";
+description="Manage your products";
+; searchbox
+labelForTextBoxSearchBoxName = "Product Name";
+labelForLinkActionQuickFilteringName = "Product Name";
+labelForLinkActionQuickFilteringPrice = "Product Price";
+labelForLinkActionQuickFilteringImages = "Product Images";
+labelForLinkActionQuickFilteringBoughts = "Product Boughts";
+labelForLinkActionQuickFilteringDateCreated = "Date Time Created";
+; captions
+captionName = "Name";
+captionExternalKey = "External Key";
+captionReportDataUrl = "Report Data URL";
+captionDateCreated = "Created";
+captionDateUpdated = "Updated";
+captionReports = "Reports";

@@ -1,20 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-18 20:55:08
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-13 22:58:19
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartPublicPageStyle1.html" */ ?>
-<?php /*%%SmartyHeaderCode:17806681335080427c1b9ce3-86114878%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:30309976052063414ad1df6-06263032%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'fd493ce1d9a8de3661d7b6fa94771c833d559aee' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartPublicPageStyle1.html',
-      1 => 1350327225,
+      1 => 1376423882,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '17806681335080427c1b9ce3-86114878',
+  'nocache_hash' => '30309976052063414ad1df6-06263032',
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_52063414b0d4f1_88550194',
   'variables' => 
   array (
     'INFO' => 0,
@@ -24,10 +26,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_footer' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5080427c1f6a48_62375533',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5080427c1f6a48_62375533')) {function content_5080427c1f6a48_62375533($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_52063414b0d4f1_88550194')) {function content_52063414b0d4f1_88550194($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/devdata/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
 <div id="MPWSPageStandartPublic<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE'],0,1);?>
 <?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'],0,1);?>

@@ -1,4 +1,4 @@
-{* SIMPLE: label *}
+{* CONTROL: mpwsLinkAction *}
 {* 
     @required:
     _action
@@ -75,7 +75,7 @@
 
         {* add oid *}
         {if not empty($_oid)}
-            {$_linkActions[]="oid=`$_oid`"}
+             {$_linkActions[]="oid=`$_oid`"}
         {/if}
 
         {* custom params *}
@@ -94,4 +94,8 @@
     {/if}
 {/if}
 
-{include file=$CURRENT.OBJECT->objectTemplatePath_simple_link _href=$controlLinkHref _target=$controlLinkTarget _attr=$controlLinkAttr _title=$controlLinkTitle}
+{if $_action eq 'checkbox' }
+    {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlCheckBox _name=$_name}
+{else}
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link _href=$controlLinkHref _target=$controlLinkTarget _attr=$controlLinkAttr _title=$controlLinkTitle}
+{/if}

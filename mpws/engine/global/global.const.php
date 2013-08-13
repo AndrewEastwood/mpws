@@ -58,5 +58,9 @@
     define("gEXT_ALL_SCRIPT", DS.'*'.DOT."php");
     define("gEXT_ALL_TEMPLATE", DS.'*'.DOT."html");
     define("gEXT_ALL_JS", DS.'*'.DOT."js");
+    
+    // render components
+    
+    define ("renderFLD_NAME", 'mpws'.BS.'field'.BS);
 
 ?>

@@ -14,6 +14,7 @@
 {$_renderMode = $_renderMode|default:'normal'}
 {$_controlOwner = $_controlOwner|default:'Default'}
 {$_controlValue = $_value|default:null}
+{$_showHelper = $_showHelper|default:false}
 {$_linkLabelWithControl = true}
     
 <div class="MPWSBlock MPWSBlockControl MPWSBlockControl_{$_type} MPWSRenderMode{$_renderMode|capitalize}">
@@ -100,6 +101,7 @@
     {/if}
 {/capture}
 
+{* render control label *}
 {if not isset($_single) or not $_single }
     {if $_linkLabelWithControl}
         {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_standartControlType``$_controlOwner``$_name`" _for="`$_standartControlType``$_name`" _resourceOwner=$_resourceOwner}
@@ -107,6 +109,11 @@
         {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_standartControlType``$_controlOwner``$_name`" _resourceOwner=$_resourceOwner}
     {/if}
 {/if}
+{* render control *}
 {$smarty.capture.control}
+{* render control helper label *}
+{if $_showHelper }
+    {include file=$CURRENT.OBJECT->objectTemplatePath_simple_label _key="`$_standartControlType``$_controlOwner``$_name`Helper" _resourceOwner=$_resourceOwner}
+{/if}
 
 </div>

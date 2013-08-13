@@ -140,6 +140,11 @@ class contextMPWS {
         return $this->getContext($this->_runningContextName);
     }
     
+    /**
+     * Adds command into the command stack
+     * Accepts commands in the array: array('main', 'test')
+     * @throws Exception 
+     */
     public function addCommand ( /* commands */ ) {
         $fn_args = getArguments(func_get_args());
         if (is_string($fn_args)) {
@@ -194,6 +199,7 @@ class contextMPWS {
             if (!empty($commandContextName) && !$override)
                 $runningContextName = $cmd->getContext();
             // preload context
+            debug('context.MPWS > processAll goes with context name >>> ' . $runningContextName);
             $ctx = $this->getContext($runningContextName);
             // set current context name
             $prevoiusContextName = $this->setCurrentContext($runningContextName);
@@ -210,6 +216,14 @@ class contextMPWS {
         $this->_commands = array();
     }
     
+    /**
+     * Run commant within the provided context
+     * 
+     * @param string $command
+     * @param objectContext $context
+     * @param bool $override
+     * @return type 
+     */
     public function directProcess ($command, $context, $override = false) {
         //echo "MPWS Context directProcess " . $command . '<br>';
         // prepare command

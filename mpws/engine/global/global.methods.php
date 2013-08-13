@@ -29,7 +29,13 @@
         return $default;
     }
     
-    
+    function glGetFullFilePath () {
+        return DR . call_user_func_array('glGetFilePath', func_get_args());
+    }
+    function glGetFilePath () {
+        debug (func_get_args());
+        return join(DS, func_get_args()) . DS;
+    }
 
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
         // NOTE: preg_match is temporary disabled

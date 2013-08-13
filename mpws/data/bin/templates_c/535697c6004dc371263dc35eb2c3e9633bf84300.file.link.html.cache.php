@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-08 23:23:18
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:37:40
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/simple/link.html" */ ?>
-<?php /*%%SmartyHeaderCode:162925418050817f1718e098-99730260%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1699126677520634147c10f5-56704885%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '162925418050817f1718e098-99730260',
+  'nocache_hash' => '1699126677520634147c10f5-56704885',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50817f171acaa1_40077741',
   'variables' => 
   array (
     '_target' => 0,
@@ -28,8 +26,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_link_attributes' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_520634147f7423_96792233',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50817f171acaa1_40077741')) {function content_50817f171acaa1_40077741($_smarty_tpl) {?><?php $_smarty_tpl->tpl_vars['_link_target'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_target']->value)===null||$tmp==='' ? '' : $tmp), null, 0);?>
+<?php if ($_valid && !is_callable('content_520634147f7423_96792233')) {function content_520634147f7423_96792233($_smarty_tpl) {?><?php $_smarty_tpl->tpl_vars['_link_target'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_target']->value)===null||$tmp==='' ? '' : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_link_attributes'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_attr']->value)===null||$tmp==='' ? array() : $tmp), null, 0);?>
 
 <?php $_smarty_tpl->tpl_vars['attr'] = new Smarty_variable(array("href=\"".((string)$_smarty_tpl->tpl_vars['_href']->value)."\"","title=\"".((string)$_smarty_tpl->tpl_vars['_title']->value)."\""), null, 0);?>

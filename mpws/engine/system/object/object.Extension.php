@@ -13,6 +13,7 @@ class objectExtension {
         debug($baseMetaInit, 'objectExtension => updateExtension');
         $this->_baseMeta = $baseMetaInit[0];
     }
+    
 }
 
 ?>

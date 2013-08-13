@@ -1,40 +1,34 @@
 <?php
-    
-  
+
 class pluginShop extends objectBaseWebPlugin {  
 
-    public function __construct ($context = false) {
-        parent::__construct($context, 'shop');
-        echo 'pluginShop CONSTRUCT';
+    protected function _displayTriggerAsPlugin () {
+        parent::_displayTriggerAsPlugin();
+        $ctx = contextMPWS::instance();
+        //echo '111OLOLO';
+        // echo "<br><br>getInnerMethod = " . $ctx->getLastCommand()->getInnerMethod();
+        switch($ctx->getLastCommand(false)->getInnerMethod()) {
+            case 'default' : 
+            default :
+                $rez = $this->_displayPage_Default();
+                break;
+        }
+
+        // $ctx->pageModel->addMessage('1234');
+        return $rez;
+
     }
-    
-    final protected function displayTriggerOnCommonStart () {
-        echo 'SHOP displayTriggerOnCommonStart';
-        //echo $this->dump();
-        
-        
-        
-    }
-    final protected function displayTriggerOnActive () {
-        echo '<br> IS ACTIVE <br>';
-        parent::displayTriggerOnActive();
-        switch (libraryRequest::getDisplay('home')) {
-            case 'home' :
-            default : {
-                $this->_displayQueue();
+
+    private function _displayPage_Default () {
+        switch (libraryRequest::getDisplay()) {
+            case "products" : {
+                $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerProducts');
                 break;
             }
         }
-    }
-    
-    /* PLUGIN SPEC METHODS */
-    
-    private function _displayQueue () {
+ 
         /*echo '_displayQueue';
-        
-        
-        
-        
+
         $this->store_storeSet('TEMPLATE.PATH', $this->res_getResource('page.queue.datatable'));
         $this->store_storeSet('TEMPLATE.NAME', 'page.queue.datatable');
         //$pModel = &$this->getModel();
@@ -50,6 +44,21 @@ class pluginShop extends objectBaseWebPlugin {
         
         $this->addComponent('MENU', $menu, 'menu_list');*/
         
+    }
+
+        
+    /* PLUGIN SPEC METHODS */
+    
+    private function _displayProducts () {
+        
+    }
+
+
+
+    /* PLUGIN API METHODS */
+
+    private function _api_getProducts () {
+
     }
     
     

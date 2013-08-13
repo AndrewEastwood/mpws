@@ -4,234 +4,166 @@
 		"selected_items":
 		[
 			[
-				"f",
-				"fun: function …"
+				"mod",
+				"moduleObj"
 			],
 			[
-				"sta",
-				"static"
+				"cell",
+				"cellB"
 			],
 			[
-				"func",
-				"func_get_arg"
+				"tr",
+				"true"
 			],
 			[
-				"emp",
-				"empty"
+				"mo",
+				"moduleInstance"
 			],
 			[
-				"fore",
-				"foreach: foreach …"
-			],
-			[
-				"pad",
-				"padding: padding-right: length"
-			],
-			[
-				"dis",
-				"display: display: inline"
-			],
-			[
-				"fon",
-				"font: font-size: size"
-			],
-			[
-				"text",
-				"text"
-			],
-			[
-				"h",
-				"hidden"
-			],
-			[
-				"line",
-				"line"
+				"Ch",
+				"child"
 			],
 			[
 				"bac",
-				"background: background-image: none"
+				"background-color"
 			],
 			[
-				"padd",
-				"padding: padding-top: length"
+				"wi",
+				"width"
 			],
 			[
-				"i",
-				"if"
+				"in",
+				"inline-block"
 			],
 			[
-				"if",
-				"#if: if (#if)"
+				"pr",
+				"processClick"
 			],
 			[
-				"m",
-				"#m: macro (#m)"
+				"_",
+				"_wobs"
 			],
 			[
-				"RR",
-				"RRFooter"
-			],
-			[
-				"ma",
-				"macro"
+				"th",
+				"this"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
+			"file": "web/plugin/system/property/en_us/dataEditorSystemUsers.property",
 			"settings":
 			{
-				"buffer_size": 4320,
-				"line_ending": "Windows"
+				"buffer_size": 1209,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/actionLink.html",
+			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 2432,
-				"line_ending": "Windows"
+				"buffer_size": 1318,
+				"line_ending": "Unix",
+				"name": "index.html"
 			}
 		},
 		{
-			"file": "/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
+			"file": "widget.table.js",
 			"settings":
 			{
-				"buffer_size": 228,
-				"line_ending": "Windows"
+				"buffer_size": 10579,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/D/GitHub/web/mpws/web/plugin/writer/config/datatable.php",
+			"file": "googleJS.js",
 			"settings":
 			{
-				"buffer_size": 2839,
-				"line_ending": "Windows"
+				"buffer_size": 11059,
+				"line_ending": "Unix",
+				"name": "googleJS.js"
+			}
+		},
+		{
+			"file": "users.json",
+			"settings":
+			{
+				"buffer_size": 164,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "style.css",
+			"settings":
+			{
+				"buffer_size": 598,
+				"line_ending": "Unix",
+				"name": "style.css"
 			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392,
+		"height": 0.0,
 		"selected_items":
 		[
 		],
-		"width": 392
+		"width": 0.0
 	},
 	"console":
 	{
-		"height": 0
+		"height": 139.0
 	},
 	"distraction_free":
 	{
 		"menu_visible": true,
 		"show_minimap": false,
-		"show_open_files": true,
+		"show_open_files": false,
 		"show_tabs": false,
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
 	"file_history":
 	[
-		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/dataTableView.html",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/config/object.ini",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/config/display.ini",
-		"/D/GitHub/web/mpws/web/default/v1.0/config/object.ini",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkList.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/config/display.ini",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/property/en_us/component.property",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/dataElements.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/objectSummary.html",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/template/widget/tableActiveUsers.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/message.html",
-		"/D/GitHub/web/mpws/engine/system/library/library.DataBaseChainQueryBuilder.php",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/exception.html",
-		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/tools.html",
-		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/index.html",
-		"/D/GitHub/web/mpws/web/customer/toolbox/template/page/dashboard.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/menu.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/widget/systemPluginLinkMenu.html",
-		"/D/GitHub/web/mpws/engine/system/library/library.WebPageModel.php",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/standartPublicPageStyle1.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/standartSystemPageStyle1.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/system.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/terms.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/contacts.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/index.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/aboutUs.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/page/404.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/layout/defaultSystem.html",
-		"/D/GitHub/web/mpws/engine/system/library/library.Utils.php",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/plugin.toolbox.php",
-		"/D/GitHub/web/mpws/web/default/v1.0/config/widget.ini",
-		"/D/GitHub/web/mpws/web/customer/toolbox/customer_toolbox.php",
-		"/D/GitHub/web/mpws/web/plugin/toolbox/template/page/404.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/config/format.ini",
-		"/D/GitHub/web/mpws/web/default/v1.0/config/mdbc.ini",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/menuPlugins.html",
-		"/D/GitHub/web/mpws/engine/global/global.methods.php",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageContent.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageHeader.html",
-		"/D/GitHub/web/mpws/web/default/v1.0/template/component/pageFooter.html",
-		"/D/GitHub/web/mpws/engine/system/library/library.Request.php",
-		"/D/home/bazaarvoice/defaultui/4.9/default/displays/0000bvps_t2/prr-static-resources/bazaarvoiceUI.less",
-		"/D/BvWork/SublimeProjects/Bazaarvoice-Default-Project.sublime-project",
-		"/C/Windows/System32/drivers/etc/hosts",
-		"/D/svnwork/customers/trunk/working-fm-blindsnet-78844/blindsnet/displays/0328/prr-static-resources/bazaarvoice.css",
-		"/D/svnwork/customers/trunk/working-fm-llbean-97022/llbean/displays/1138/prr-static-resources/bazaarvoiceUI.css",
-		"/D/svnwork/customers/trunk/working-fm-llbean-97022/llbean/displays/1138/prr-templates/termsandconditionsStandalone.properties",
-		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/Default/Global.sublime-settings",
-		"/D/svnwork/customers/trunk/working-fm-blindsnet-78844/blindsnet/displays/0328/prr-static-resources/bazaarvoiceUI.css",
-		"/D/svnwork/customers/trunk/working-fm-northface-103749/northface/displays/7134/prr-static-resources/bazaarvoice.css",
-		"/D/svnwork/customers/trunk/working-fm-northface-103749/northface/displays/7134/profiles-static-resources/bazaarvoiceCP.css",
-		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/User/Global.sublime-settings",
-		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/Default/Default (Windows).sublime-keymap",
-		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/Default/Base File.sublime-settings",
-		"/D/Storages/portable/Sublime Text 2 Build 2111 x64/Data/Packages/User/Base File.sublime-settings",
-		"/D/svnwork/customers/trunk/working-fm-proactiv-102367/proactiv/displays/5177/prr-templates/lib/reviewDisplayStyle2.ftl",
-		"/D/svnwork/customers/trunk/working-fm-proactiv-102367/proactiv/displays/5177/prr-templates/lib/ratingComponents.ftl",
-		"/D/svnwork/customers/trunk/working/lego/displays/1360/prr-static-resources/bazaarvoice.css",
-		"/D/svnwork/customers/trunk/working/lego/displays/1360/config/displayConfiguration.xml",
-		"/D/svnwork/customers/trunk/working/lego-fr/displays/1360-fr/prr-static-resources/bazaarvoice.css",
-		"/D/svnwork/customers/trunk/working/lego-de/displays/1360-de/prr-static-resources/bazaarvoiceUI.css",
-		"/D/svnwork/customers/trunk/working/lego-fr/displays/1360-fr/config/displayConfiguration.xml",
-		"/D/svnwork/customers/trunk/working/lego/displays/1360/prr-static-resources/bazaarvoiceUI.css",
-		"/D/home/bazaarvoice/logs/diagnostic/bv.log",
-		"/D/svnwork/customers/trunk/working/lego/displays/1360/prr-templates/editReviewEmbedded.ftl",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/ratingComponents.ftl",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/ratingSummary.ftl",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/config/prrFreeMarkerStaticResourceConfiguration.xml",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-static-resources/bazaarvoice.css",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/reviewDisplayStyle2.ftl",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-static-resources/bazaarvoiceRR_SVP.css",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/shared-static-resources/bvProfile.css",
-		"/D/svnwork/customers/trunk/working/proactiv/displays/5177/prr-templates/lib/feedbackComponents.properties",
-		"/D/svnwork/defaultui/branch/clean/4.7/default/displays/0000/prr-templates/lib/reviewDisplayStyle2.ftl",
-		"/D/svnwork/defaultui/branch/clean/4.7/default/displays/0000/prr-templates/lib/displayComponents.ftl",
-		"/D/svnwork/customers/trunk/switch_to_working-fm-proactiv-102367_prod_c4.bat",
-		"/D/test.ftl",
-		"/D/svnwork/customers/trunk/working/thomascook/displays/7403/prr-static-resources/bazaarvoice.css",
-		"/D/svnwork/customers/trunk/working/thomascook/displays/7403/prr-templates/lib/reviewDisplayStyle3.ftl",
-		"/D/svnwork/customers/trunk/working/thomascook/displays/7403/prr-static-resources/background_BVLogo.jpg",
-		"/D/svnwork/customers/trunk/working/thomascook/config/bundleConfiguration.xml",
-		"/D/svnwork/customers/trunk/working-tomain-thomascook-00000/thomascook/displays/7403/prr-templates/submittedReviewEmbedded.ftl"
+		"/media/sda3/Develop/github/web/mpws/loader.js",
+		"/media/sda3/Develop/github/web/mpws/engine/bootstrap.php",
+		"/media/sda3/Develop/github/web/mpws/backbone-min.js",
+		"/media/sda3/Develop/github/web/mpws/bb.test.js",
+		"/media/sda3/Develop/github/web/mpws/users.json",
+		"/media/sda3/Develop/github/web/mpws/underscore-min.js",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/system/config/widget.ini",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/property/en_us/widget.property",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/property/en_us/control.property",
+		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.StaticResourceManager.php",
+		"/etc/tomcat7/tomcat-users.xml",
+		"/etc/tomcat7/logging.properties",
+		"/home/admin1/.m2/settings.xml",
+		"/media/sda3/Develop/github/java/training/db/Hello.java",
+		"/media/sda3/Develop/github/java/training/Hello.java",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/plugin.toolbox.php",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/resource/plugins/theme/jquery-ui-1.9.1.custom.css",
+		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.Components.php",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/config/widget.ini",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/template/component/dataTable.html",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/property/en_us/widget.property",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/template/widget/dataTableView.html",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/template/component/actionLink.html",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/template/component/objectSummary.html",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/property/en_us/component.property",
+		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.WebPageModel.php",
+		"/media/sda3/Develop/github/web/mpws/data/bin/templates_c/67ea9f35dff21e59593cdbd7ee49a730e06da33f.file.dataTable.html.cache.php",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/config/display.ini"
 	],
 	"find":
 	{
-		"height": 32
+		"height": 35.0
 	},
 	"find_in_files":
 	{
-		"height": 85,
-		"include_history":
-		[
-		],
-		"location_history":
+		"height": 0.0,
+		"where_history":
 		[
 		]
 	},
@@ -240,134 +172,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"TermsAndConditions",
-			"BVTermsAndConditions",
-			"BVRRTermsAndConditions",
-			"BVTermsAndConditions",
-			"videotip",
-			"photo",
-			"#BVRRPhotoTipBox",
-			"#BVRRPhotoTipBoxID",
-			"VRRTipContainer #BVRRPhotoTipBoxID",
-			"VRRTipContainer *, #BVRRPhotoTipBoxID *",
-			"BVRRPhotoSectionContent",
-			"BVProfileReadAllReviewsLink",
-			"UserStatistic",
-			"VRRUserStatistic",
-			"BVRRSExternalSubjectDetailsButton",
-			".BVRRRatingsHistogramButtonPopin, #BVRRRatingsHistogramButtonIEControlsFrame",
-			"BVRRSReviewsSummar",
-			"VRRSReviewsSummar",
-			"VRRRatingsOnlySummaryHead",
-			"RRRatingsOnlySummar",
-			"RRRatingSummaryLinkWriteFirs",
-			">",
-			"VRRSelectedPageNumbe",
-			"alt+d",
-			"Ctrl+d",
-			"feedb",
-			"BVRRReviewFeedbackSummary",
-			"feedback",
-			".BVRRReviewTitle",
-			"review",
-			"ERROR",
-			"09",
-			"less_box_colorPrimaryFader",
-			"less_rounded_radius",
-			"<#escape x as x?html>\n\n<#-- [mvasyliev] added AdditionalFieldsContainer at the bottom of the macro. -->\n<#macro RRReviewDisplayStyle3Summary review preview>\n    <@RRReviewDisplayStyle3SummaryDiv review=review preview=preview>\n\n        <@RRReviewRatingsContainer review=review />\n\n        <@RRUserNicknameContainer review=review />\n\n        <@RRUserLocationContainer review=review />\n\n        <@RRContextDataContainer review=review />\n\n        <@RRAdditionalFieldsContainer review=review />\n\n    </@RRReviewDisplayStyle3SummaryDiv>\n</#macro>\n\n<#-- [mvasyliev] moved RRReviewFeedbackContainer; removed AdditionalFieldsContainer; -->\n<#macro RRReviewDisplayStyle3Main review preview trackerSubject bvtrackingscope>\n\n    <@RRReviewDisplayStyle3MainDiv review=review preview=preview>\n\n        <@RRReviewBadgesContainer review=review />\n\n        <@RRReviewTitleContainer review=review />\n\n        <@RRReviewDateContainer review=review />\n\n        <@RRReviewDisplayStyle3ContentDiv review=review preview=preview>\n\n            <@RRReviewPhotoSection review=review centeringElementID=\"BVRRDisplayContentReviewID${getIDScope()}_${review.id!'preview'}\" trackerSubject=trackerSubject />\n\n            <@RRReviewProsConsContainer review=review />\n\n            <@RRReviewTagsContainer review=review />\n\n            <@RRReviewTextContainer review=review />\n\n            <#if !preview ><@RRReviewFeedbackContainer review=review bvtrackingscope=bvtrackingscope/></#if>\n\n            <@RRReviewVideoContainer review=review centeringElementID=\"BVRRDisplayContentReviewID${getIDScope()}_${review.id!'preview'}\" />\n\n            <@RRReviewProductReferencesContainer review=review />\n\n        </@RRReviewDisplayStyle3ContentDiv>\n\n        <#if !preview >\n\n            <@SpacerDiv cssClass=\"RRBeforeFeedbackContainerSpacer\"/>\n\n            <@RRRecommendedContainer review=review />\n\n            <@SpacerDiv cssClass=\"RRBeforeClientResponseContainerSpacer\"/>\n\n            <@RRReviewClientResponseContainer review=review />\n\n            <@SpacerDiv cssClass=\"RRBeforeSocialLinksContainerSpacer\"/>\n\n            <@RRReviewSocialLinksContainer review=review bvtrackingscope=bvtrackingscope/>\n\n            <@RRSocialBookmarkingReviewFacebookLikeButtonHook>\n                <@RRSocialBookmarkingReviewFacebookLikeButton review=review trackingScope=bvtrackingscope/>\n            </@RRSocialBookmarkingReviewFacebookLikeButtonHook>\n        </#if>\n\n    </@RRReviewDisplayStyle3MainDiv>\n</#macro>\n\n</#escape>\n",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review",
-			"review",
-			"Review"
+			"div",
+			"dome",
+			"images",
+			"REMOVE"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -378,121 +186,184 @@
 		],
 		"reverse": false,
 		"show_context": true,
-		"use_buffer": true,
+		"use_buffer2": true,
 		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/dataTable.html",
+					"file": "web/plugin/system/property/en_us/dataEditorSystemUsers.property",
 					"settings":
 					{
-						"buffer_size": 4320,
+						"buffer_size": 1209,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1926,
-								1926
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0,
-						"translation.y": 1104,
-						"zoom_level": 1
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/D/GitHub/web/mpws/web/default/v1.0/template/component/actionLink.html",
-					"settings":
-					{
-						"buffer_size": 2432,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2432,
-								2432
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0,
-						"translation.y": 192,
-						"zoom_level": 1
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/D/GitHub/web/mpws/web/plugin/toolbox/config/widget.ini",
-					"settings":
-					{
-						"buffer_size": 228,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								564,
+								564
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
-						"translation.x": 0,
-						"translation.y": 0,
-						"zoom_level": 1
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "/D/GitHub/web/mpws/web/plugin/writer/config/datatable.php",
+					"buffer": 1,
+					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 2839,
+						"buffer_size": 1318,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								462,
+								462
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"auto_name": "index.html",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 102.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "widget.table.js",
+					"settings":
+					{
+						"buffer_size": 10579,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								622,
+								622
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0,
-						"translation.y": 0,
-						"zoom_level": 1
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "googleJS.js",
+					"settings":
+					{
+						"buffer_size": 11059,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9312,
+								9312
+							]
+						],
+						"settings":
+						{
+							"auto_name": "googleJS.js",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5185.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "users.json",
+					"settings":
+					{
+						"buffer_size": 164,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								134,
+								134
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 5,
+					"file": "style.css",
+					"settings":
+					{
+						"buffer_size": 598,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								336,
+								324
+							]
+						],
+						"settings":
+						{
+							"auto_name": "style.css",
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
 					},
 					"type": "text"
 				}
@@ -501,11 +372,11 @@
 	],
 	"incremental_find":
 	{
-		"height": 0
+		"height": 0.0
 	},
 	"input":
 	{
-		"height": 29
+		"height": 33.0
 	},
 	"layout":
 	{
@@ -516,49 +387,52 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
-			0,
-			1
+			0.0,
+			0.465303089473,
+			1.0
 		],
 		"rows":
 		[
-			0,
-			1
+			0.0,
+			1.0
 		]
 	},
 	"menu_visible": true,
 	"replace":
 	{
-		"height": 0
+		"height": 0.0
 	},
 	"save_all_on_build": true,
 	"select_file":
 	{
-		"height": 0,
+		"height": 0.0,
 		"selected_items":
 		[
 		],
-		"width": 0
+		"width": 0.0
 	},
 	"select_project":
 	{
-		"height": 500,
+		"height": 0.0,
 		"selected_items":
 		[
-			[
-				"",
-				"/D/BvWork/SublimeProjects/Bazaarvoice-Default-Project.sublime-project"
-			]
 		],
-		"width": 380
+		"width": 0.0
 	},
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 342,
+	"side_bar_width": 399.0,
 	"status_bar_visible": true
 }

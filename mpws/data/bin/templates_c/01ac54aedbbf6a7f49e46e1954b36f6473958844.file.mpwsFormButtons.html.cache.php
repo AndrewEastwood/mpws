@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-10-23 23:17:34
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:37:33
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/control/mpwsFormButtons.html" */ ?>
-<?php /*%%SmartyHeaderCode:187118244650817f1038f489-04895111%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:3710681145206340d4a9134-85330943%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,12 +11,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '187118244650817f1038f489-04895111',
+  'nocache_hash' => '3710681145206340d4a9134-85330943',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_50817f1040d9b8_36806024',
   'variables' => 
   array (
     '_resourceOwner' => 0,
@@ -27,8 +25,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'CURRENT' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5206340d4ef785_94695500',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50817f1040d9b8_36806024')) {function content_50817f1040d9b8_36806024($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_5206340d4ef785_94695500')) {function content_5206340d4ef785_94695500($_smarty_tpl) {?>
 <?php $_smarty_tpl->tpl_vars['_controlCssName'] = new Smarty_variable('FormButtons', null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_resourceOwner'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_resourceOwner']->value)===null||$tmp==='' ? 'control' : $tmp), null, 0);?>
 

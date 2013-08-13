@@ -1,28 +1,28 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-13 21:01:05
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-13 22:55:36
          compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
-<?php /*%%SmartyHeaderCode:7814884605080405b233f60-61888913%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:14769319735206340ce1e7e4-84126817%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '784a3f42e7f6316dff3b60d20ea358e590c716ce' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html',
-      1 => 1352832496,
+      1 => 1376423696,
       2 => 'file',
     ),
     '13fc0739f57dedff11a7d9378923d6d565f25193' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1352832496,
+      1 => 1376227244,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '7814884605080405b233f60-61888913',
+  'nocache_hash' => '14769319735206340ce1e7e4-84126817',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5080405b2d24d6_35319370',
+  'unifunc' => 'content_5206340d0303d6_45843972',
   'variables' => 
   array (
     'OBJECT' => 0,
@@ -31,7 +31,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5080405b2d24d6_35319370')) {function content_5080405b2d24d6_35319370($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/media/sda3/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
+<?php if ($_valid && !is_callable('content_5206340d0303d6_45843972')) {function content_5206340d0303d6_45843972($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/devdata/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><!DOCTYPE html>
 <html>
 <head>

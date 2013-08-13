@@ -1,9 +1,5 @@
 {extends file=$CURRENT.OBJECT->{"objectTemplatePath_component_breadcrumb:default"}}
 
-{$INFO.GET.PAGE}\
-{$INFO.GET.PLUGIN}\
-{$INFO.GET.DISPLAY}
-
 {block name="root"}
     {if not empty($INFO.GET.PAGE)}
         {include file=$CURRENT.OBJECT->objectTemplatePath_simple_link

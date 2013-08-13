@@ -1,22 +1,22 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2012-11-13 21:01:07
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-13 23:00:23
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html" */ ?>
-<?php /*%%SmartyHeaderCode:1292425495080427be46391-33041584%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:534062508520634145b7125-67112902%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'd6d46df5db445da56cb54532472df58a57c03f2a' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/system.html',
-      1 => 1352832496,
+      1 => 1376424021,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1292425495080427be46391-33041584',
+  'nocache_hash' => '534062508520634145b7125-67112902',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5080427bec8114_74910100',
+  'unifunc' => 'content_520634146eba30_39610331',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -38,13 +38,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_5080427bec8114_74910100')) {function content_5080427bec8114_74910100($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_520634146eba30_39610331')) {function content_520634146eba30_39610331($_smarty_tpl) {?>
 
 <?php $_smarty_tpl->tpl_vars["wgt_sysUsrInfo"] = new Smarty_variable($_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_widget_systemUserInfo, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array(), 0));?>
 
 
 <?php $_smarty_tpl->createLocalArrayVariable('_headers', null, 0);
 $_smarty_tpl->tpl_vars['_headers']->value[] = $_smarty_tpl->tpl_vars['wgt_sysUsrInfo']->value;?>
+<?php $_smarty_tpl->tpl_vars['_contents'] = new Smarty_variable(Array(), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_footers'] = new Smarty_variable(Array(), null, 0);?>
 
 

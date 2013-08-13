@@ -1,3 +1,5 @@
+header = "Remove Job";
+
 labelForLabelValueDefaultID = "Job ID";
 labelForLabelValueDefaultName = "Job Name";
 labelForLabelValueDefaultDescription = "Description";

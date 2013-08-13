@@ -1,3 +1,5 @@
+systemPluginListTitle = 'Plugin Menu';
+systemPluginListDescription = 'Your description goes here';
 systemPluginLinkListStartText = 'Start here';
 
 ; systemUserInfo
@@ -7,7 +9,7 @@ systemUserInfoHomePageLinkPrefix = 'Your home page link is:';
 
 
 ; dataTableView
-dataTableViewCaptionActions = "Actions";
+dataTableViewCaptionActions = "";
 dataTableViewDataEmpty= "There are no records to display.";
 
 ; ============================

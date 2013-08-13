@@ -174,10 +174,13 @@ class libraryComponents {
         if (empty($config))
             throw new Exception('libraryComponents => getSingleQueryCapture: can not find configuration');
         
-        
+        // get job command
         $capturedValue = libraryRequest::getValue($config['capture']['keyToCapture']);
         if ($config['capture']['decode'])
             $capturedValue = urldecode ($capturedValue);
+        if (empty($capturedValue) && libraryRequest::isPostFormAction('save'))
+            $capturedValue = libraryRequest::getPostFormField($config['name']);
+        
         $capturedEntry = libraryRequest::explodeUrl(urldecode($capturedValue));
         $isCaptured = !empty($capturedValue);
         $edit_page = 'edit';
@@ -187,7 +190,7 @@ class libraryComponents {
             'ACTION' => $capturedValue,
             'ENTRY' => $capturedEntry,
             'IS_CAPTURED' => false,
-            'PAGE' => $edit_page,
+            'PAGE' => $edit_page
         );
         
         // set title
@@ -199,6 +202,7 @@ class libraryComponents {
 
         // save action link
         if (libraryRequest::isPostFormAction('save')) {
+            
             // make data object
             $_data = array();
             foreach ($config['map'] as $dbField => $valuePath) {
@@ -209,7 +213,6 @@ class libraryComponents {
                 $_data['DateCreated'] = date('Y-m-d H:i:s');
             if (isset($_data['DateLastAccess']))
                 $_data['DateLastAccess'] = date('Y-m-d H:i:s');
-            //var_dump($_data);
             $dbLink->reset()
                 ->insertInto($config['source'])
                 ->fields(array_keys($_data))
@@ -222,6 +225,7 @@ class libraryComponents {
         $wgt['IS_CAPTURED'] = $isCaptured;
         // page
         $wgt['EDIT_PAGE'] = $edit_page;
+
         return $wgt;
     }
 
@@ -768,13 +772,21 @@ class libraryComponents {
         $com = array(
             // append form configuration
             "FORM" => $config['form'],
+            //it is obvious
             "SESSION" => $_sessionKey,
+            // db table target name
             "SOURCE" => false,
+            // fields to render
             "FIELDS" => false,
+            // determines whether record is new
             "ISNEW" => true,
+            // page name which is being renderd
             "EDIT_PAGE" => "new",
+            // sender url
             "REFERER" => libraryRequest::storeOrGetRefererUrl(false),
+            // list of error message keys
             "ERRORS" => false,
+            // contains true value when errors occured
             "VALID" => true
         );
         // states
@@ -849,7 +861,7 @@ class libraryComponents {
             }
             // set editor state on error
             if (!empty($com["ERRORS"])) {
-                //var_dump($com['ERRORS']);
+                // var_dump($com['ERRORS']);
                 $editPage = 'edit';
                 $com['VALID'] = false;
             }

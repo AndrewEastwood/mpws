@@ -24,6 +24,7 @@
     
     {* editor form *}
     <form action="?{$_formAction}" name="data_edit_{$_resourceOwner|lower}" method="{$DTV_CFG.form.$_formInnerAction.method}" class="MPWSForm MPWSFormEditor MPWSFormEditorPage{$_formInnerAction|capitalize:0:1}">
+        <div class="MPWSFormHeader"></div>
         <div class="MPWSFormBody">
 
         <input type="hidden" name="mpws_field_session" value="{$CURRENT.SOURCE.DATA.SESSION}"/>
@@ -34,7 +35,7 @@
         {* create new form page *}
         {* completely new record without any initial data *}
         {foreach $CURRENT.SOURCE.DATA.FIELDS as $fieldIndex => $fieldEntry}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=false}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=false _showHelper=true}
         {/foreach}
 
     {elseif $_formInnerAction eq "edit"}
@@ -48,15 +49,15 @@
             {/if}
         
             {if $CURRENT.SOURCE.DATA.ISNEW}
-                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _render=$_editFieldRenderMode}
+                {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _render=$_editFieldRenderMode _showHelper=true}
             {else}
                 {* skip field if editing existed record *}
                 {if not in_array($fieldEntry.Field, $DTV_CFG.fields.skipIfEditExisted)}
                     {if not $CURRENT.SOURCE.DATA.VALID}
-                        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _render=$_editFieldRenderMode}
+                        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _render=$_editFieldRenderMode _showHelper=true}
                     {else}
                         {$_controlValue = $CURRENT.SOURCE.DATA.SOURCE[$fieldEntry.Field]}
-                        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=$_controlValue _render=$_editFieldRenderMode}
+                        {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control _type=$fieldEntry.Type _name=$fieldEntry.Field _controlOwner=$_widgetName _resourceOwner=$_resourceOwner _value=$_controlValue _render=$_editFieldRenderMode _showHelper=true}
                     {/if}
                 {/if}
             {/if}

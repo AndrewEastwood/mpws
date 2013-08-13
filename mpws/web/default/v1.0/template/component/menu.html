@@ -26,7 +26,7 @@
     {foreach $_items as $keyvar=>$itemvar}
         <li class="MPWSListItem">
             {$_linkText = $DISPLAY_OBJECT->{"objectProperty_display_menuText`$keyvar|capitalize:0:1`"}}
-            <a href="{$itemvar.link}" target="{$itemvar.target}" class="MPWSLink" title="{$_linkText}">
+            <a href="{include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsAutoLinkHref link=$itemvar.link display=$keyvar}" target="{$itemvar.target}" class="MPWSLink" title="{$_linkText}">
                 <span class="MPWSText MPWSTextTitle">{$_linkText}</span>
                 {if $showDescription}
                 <span class="MPWSText MPWSTextDescription">{$DISPLAY_OBJECT->{"objectProperty_display_menuTextDescription`$keyvar|capitalize:0:1`"}}</span>

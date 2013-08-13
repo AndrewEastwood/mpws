@@ -123,7 +123,7 @@ class pluginReporting extends objectBaseWebPlugin {
     }
     
     private function _displayPage_Dashboard () {
-        //echo "OLOLO";
+        // echo "OLOLO";
     }
     
     private function _displayPage_Default () {
@@ -131,7 +131,8 @@ class pluginReporting extends objectBaseWebPlugin {
         switch (libraryRequest::getDisplay()) {
             case "manager" : {
                 /* standart data edit and view component complex */
-                $this->actionHandlerStandartDataTableManager('ReportManager');
+                $this->getWidget('ActionHandlerStandartDataTableManager', 'ReportManager');
+                // $this->actionHandlerStandartDataTableManager('ReportManager');
                 break;
             }
             case "monitor" : {
@@ -139,7 +140,8 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             case "api" : {
-                $this->widgetAddDataApiViewer('ReportingMainApi');
+                $this->getWidget('AddDataApiViewer', 'ReportingMainApi');
+                // $this->widgetAddDataApiViewer('ReportingMainApi');
                 break;
             }
         }
@@ -168,7 +170,8 @@ class pluginReporting extends objectBaseWebPlugin {
             );
         }
         // get all reports
-        $this->widgetAddSimple('customMonitor', $data);
+        // $this->widgetAddSimple('customMonitor', $data);
+        $this->getWidget('AddSimple', array('customMonitor', $data));
     }
     
     private function actionHandlerCustomApi () {

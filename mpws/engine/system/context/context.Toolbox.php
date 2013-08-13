@@ -25,7 +25,8 @@ class contextToolbox extends objectContext  {
     }
     
     final public function getAllObjects () {
-        $names = $this->_pluginManager->getAllEnabledPluginNames();
+        $names = $this->_pluginManager->getAvailablePluginNames();
+        debug($names, 'context.toolbox.php getAllObject');
         $objects = array();
         foreach ($names as $name)
             $objects[$name] = $this->getObject($name);
