@@ -24,9 +24,11 @@ See: https://kuler.adobe.com/#themeID/1994456
 /* Page Layout Theme 1 */
 body {background: url("tut_metalpattern.jpg") @colorBg; margin: 0; padding: 10px; .fontPage;}
 .MPWSLayout {
+    margin-top: 20px;
     /* MPWS PAGE */
     .MPWSPage {
-        width: auto;
+        width: 1000px;
+        min-width: 700px;
         margin: 0px auto;
         background: url("mpws_bg.png") @colorComponent repeat-x 0 -85px;
         padding: 20px 30px;
@@ -44,14 +46,33 @@ body {background: url("tut_metalpattern.jpg") @colorBg; margin: 0; padding: 10px
             .MPWSComponentDataElements {
                 .MPWSWidgetSystemUserInfo {
                     float: right;
-                    margin: -10px 0 -20px;
+                    margin: -10px -30px -45px 0;
+                    border: 0px;
+                    box-shadow: none;
+                    background: transparent;
+                    .MPWSText {width: 140px;}
+                    h3 {margin: 0px;}
+                    .MPWSFormBody {padding-bottom: 40px;}
                 }
                 .MPWSComponenMenu {.componenMenuHorizontal;}
+            }
+            .MPWSComponentBreadcrumb {
+                line-height: 40px;
+                .MPWSLink {font-weight: bold; padding: 0px 5px;}
             }
         }
         .MPWSComponenContent {
         }
         .MPWSComponenFooter {
+        }
+    }
+    .MPWSPageLogin {
+        background: none;
+        width: 400px;
+        min-width: 400px;
+        .MPWSFormHeader {color: #eee; text-shadow: -1px 2px 7px #222;}
+        .MPWSControlMpwsAuth {
+            .MPWSForm {margin-left: 40px; margin-top: -20px;}
         }
     }
 }

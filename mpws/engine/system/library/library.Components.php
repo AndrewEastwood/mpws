@@ -841,14 +841,28 @@ class libraryComponents {
                 foreach ($config['fields']['unique'] as $_fieldThatMustBeUnique) {
                     $dbLink
                             ->reset()
-                            ->select('*')
+                            ->select($_fieldThatMustBeUnique)
                             ->from($config['source'])
                             ->where($_fieldThatMustBeUnique, '=', $validatorRezult['DATA'][$_fieldThatMustBeUnique]);
                     if (!$isNew)
                         $dbLink->andWhere('ID', '<>', $oid);
                     $_existedRow = $dbLink->fetchRow();
-                    if (!empty($_existedRow))
-                        $com['ERRORS'][] = 'validationErrorDuplicateValueInField' . $_fieldThatMustBeUnique;
+                    if (!empty($_existedRow)) {
+                        $_existedRowIsNotUnique = true;
+
+                        // if we have lit of ignored values we need to veridy wheter
+                        // existed row do not have those values
+                        // matched value with ignored list of values prevent error message for current field
+                        if (!empty($config['fields']['ignoreValuesOnUniqueVerification'][$_fieldThatMustBeUnique])) {
+                            //var_dump($_existedRow[$_fieldThatMustBeUnique]);
+                            //var_dump($validatorRezult['DATA'][$_fieldThatMustBeUnique], $config['fields']['ignoreValuesOnUniqueVerification'][$_fieldThatMustBeUnique]);
+                            if (in_array($_existedRow[$_fieldThatMustBeUnique], $config['fields']['ignoreValuesOnUniqueVerification'][$_fieldThatMustBeUnique]))
+                                $_existedRowIsNotUnique = false;
+                        }
+
+                        if ($_existedRowIsNotUnique)
+                            $com['ERRORS'][] = 'validationErrorDuplicateValueInField' . $_fieldThatMustBeUnique;
+                    }
                 }
             }
             // do not modify pwd
@@ -927,14 +941,21 @@ class libraryComponents {
                 }
                 // adjust field values
                 foreach ($com['FIELDS'] as $fieldEntry) {
+                    // var_dump($fieldEntry);
                     // checkbox
+                    $_key = $fieldEntry['Field'];
                     $_type = strtolower($fieldEntry['Type']);
                     if ($_type == 'boolean' || $_type == 'bool' || $_type == 'tinyint(1)') {
+                        // echo '<p>Adjusting data for ' . $_key . '(' . $_type . ')';
                         /* adjust data */
-                        if (empty($_data['Active']))
-                            $_data['Active'] = 0;
+                        // if (empty($_data['Active']))
+                        //     $_data['Active'] = 0;
+                        // else
+                        //     $_data['Active'] = 1;
+                        if (empty($_data[$_key]))
+                            $_data[$_key] = 0;
                         else
-                            $_data['Active'] = 1;
+                            $_data[$_key] = 1;
                     }
                 }
                 // update date
@@ -945,7 +966,7 @@ class libraryComponents {
                 foreach ($removeFields as $removeFieldName)
                     unset($_data[$removeFieldName]);
                 // save
-                //var_dump($_data);
+                // var_dump($_data);
                 $dbLink->reset();
                 //var_dump($_data);
                 // update existed record

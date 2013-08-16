@@ -1,0 +1,15 @@
+title="Currency Rates";
+description="Configure price conversion";
+; searchbox
+labelForTextBoxSearchBoxCurrency = "Currency";
+; quick filtering
+labelForLinkActionQuickFilteringEnabled = "Is Enabled";
+labelForLinkActionQuickFilteringCurrency = "Currency";
+labelForLinkActionQuickFilteringRate = "By Rate";
+labelForLinkActionQuickFilteringDateUpdated = "Date Time Updated";
+; captions
+captionIsMain = "Is Main";
+captionEnabled = "Enabled";
+captionCurrency = "Currency";
+captionRate = "Rate";
+captionDateUpdated = "Date Time Updated";

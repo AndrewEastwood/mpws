@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:39:04
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-14 23:03:18
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginList.html" */ ?>
 <?php /*%%SmartyHeaderCode:144377668752063468f04482-89181670%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'c04927cecebe8ade47c54256c5471962aff6234b' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemPluginList.html',
-      1 => 1350663924,
+      1 => 1376434062,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5206346902af39_63135719',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -22,8 +24,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'webObj' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5206346902af39_63135719',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5206346902af39_63135719')) {function content_5206346902af39_63135719($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/devdata/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?><div id="MPWSWidgetSystemPluginListID" class="MPWSWidget MPWSWidgetSystemPluginList">

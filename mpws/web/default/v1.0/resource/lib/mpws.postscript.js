@@ -10,6 +10,14 @@
         $('body').addClass('MPWSBrowser' + _agentName);
         // configure require js
         
+
+        $('input:checkbox').on('change', function(){
+        	$(this).val($(this).is(':checked') ? 1 : 0);
+        });
+        $('input:checkbox').each(function(){
+        	$(this).val($(this).is(':checked') ? 1 : 0);
+        });
+
         // process custom scripts
         mpws.loader.processAll();
     });

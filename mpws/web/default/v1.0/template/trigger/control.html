@@ -32,6 +32,9 @@
     {elseif startsWith($_type, 'int')}
         {$_standartControlType = 'TextBox'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+    {elseif startsWith($_type, 'decimal')}
+        {$_standartControlType = 'TextBox'}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
     {elseif $_type eq 'datetime'}
         {$_standartControlType = 'DateTime'}
         {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}

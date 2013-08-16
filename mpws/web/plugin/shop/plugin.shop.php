@@ -25,6 +25,18 @@ class pluginShop extends objectBaseWebPlugin {
                 $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerProducts');
                 break;
             }
+            case "currency" : {
+                $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerCurrency');
+                break;
+            }
+            case "commands" : {
+                $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerCommands');
+                break;
+            }
+            case "api" : {
+                if ($this->isActive())
+                    $this->getWidget('AddDataApiViewer', 'ApiShop');
+            }
         }
  
         /*echo '_displayQueue';
@@ -61,6 +73,16 @@ class pluginShop extends objectBaseWebPlugin {
 
     }
     
+    private function _api_getCurrency () {
+        $ctx = contextMPWS::instance();
+        $cfg = $this->objectConfiguration_widget_customMonitor;
+        $reports = $ctx->contextCustomer->getDBO()
+                ->reset()
+                ->select($cfg['fields'])
+                ->from($cfg['source'])
+                ->fetchData();
+
+    }
     
 }
     

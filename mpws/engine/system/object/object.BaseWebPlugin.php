@@ -7,6 +7,7 @@ class objectBaseWebPlugin extends objectBaseWeb /*implements iPlugin*/ {
         parent::__construct($name, OBJECT_T_PLUGIN);
         debug('objectBaseWebPlugin: __construct => ' . $name);
     }
+
 }
 
 ?>

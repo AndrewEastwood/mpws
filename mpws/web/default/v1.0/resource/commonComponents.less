@@ -357,6 +357,7 @@ a.MPWSLink {.linkText}
 .MPWSWrapper {overflow: hidden; zoom: 1;}
 .MPWSBlock {padding: 5px;}
 .MPWSSpacer {clear: both; height: 10px;}
+.MPWSValue {font-weight: bold;}
 
 /* CONTROLS */
 .MPWSControlField {
@@ -366,6 +367,7 @@ a.MPWSLink {.linkText}
         border-color: #aaa;
     }
     /* specific controls */
+    .MPWSControlPassword,
     .MPWSControlTextBox {
         width: 300px;
         padding: 5px;
@@ -412,3 +414,11 @@ a.MPWSLink {.linkText}
     .MPWSLabel {font-weight: bold; float: left; padding-right: 20px;}
     .MPWSControlField {float: left;}
 }
+
+.MPWSBlockDataRow {
+    padding: 2px 0px;
+    .MPWSText {display: inline-block;}
+    .MPWSValue {display: inline-block;}
+}
+
+.MPWSWidgetDataApiViewer .MPWSValue {display: inline;word-break: break-all;}

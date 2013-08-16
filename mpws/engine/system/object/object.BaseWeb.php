@@ -215,6 +215,15 @@ class objectBaseWeb extends objectBase {
     protected function _commonRunOnEnd () {
         debug('objectBaseWeb => _commonRunOnEnd');
     }
+
+    /* object states */
+    public function isActive () {
+        if ($this->getObjectType() === OBJECT_T_CUSTOMER)
+            return strcasecmp(MPWS_CUSTOMER, $this->getObjectName())=== 0;
+
+        if ($this->getObjectType() === OBJECT_T_PLUGIN)
+            return strcasecmp(libraryRequest::getPlugin(), $this->getObjectName()) === 0;
+    }
 }
 
 ?>

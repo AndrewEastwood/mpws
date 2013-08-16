@@ -140,7 +140,8 @@ class pluginReporting extends objectBaseWebPlugin {
                 break;
             }
             case "api" : {
-                $this->getWidget('AddDataApiViewer', 'ReportingMainApi');
+                if ($this->isActive())
+                    $this->getWidget('AddDataApiViewer', 'ReportingMainApi');
                 // $this->widgetAddDataApiViewer('ReportingMainApi');
                 break;
             }

@@ -1,0 +1,17 @@
+title='Currency Editor';
+description = " - Setup international currency";
+
+labelForTextBoxDataEditorCurrency = "Currency";
+labelForTextBoxDataEditorCurrencyHelper = "";
+
+labelForCheckBoxDataEditorEnabled = "Is Enabled";
+labelForCheckBoxDataEditorEnabledHelper = "";
+
+labelForCheckBoxDataEditorIsMain = "Set As Main";
+labelForCheckBoxDataEditorIsMainHelper = "";
+
+labelForTextBoxDataEditorRate = "Rate";
+labelForTextBoxDataEditorRateHelper = "";
+
+messageValidationErrorDuplicateValueInFieldIsMain = "The main currency is already defined. You can not have two or more main currencies.";
+messageValidationErrorDuplicateValueInFieldCurrency = "The currency with provided name already exists.";
