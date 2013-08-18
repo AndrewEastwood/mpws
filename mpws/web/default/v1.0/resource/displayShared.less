@@ -72,6 +72,18 @@
 /* COMPONENT: data table */
 .MPWSComponentDataTable {
     .standaloneComponent;
+    .MPWSBlockTopActions {
+        margin-bottom: 10px;
+        .MPWSBlockControl {display: inline-block; margin-right: 10px;}
+    }
+    .MPWSDataTableRow {
+        .MPWSDataTableCellAction {
+            display: inline-block;
+        }
+        .MPWSDataTableCellActionBunch {
+            float: right;
+        }
+    }
     .MPWSDataTableRows {
         .MPWSDataTableRowCaptions {
             background-color: @colorBorder;

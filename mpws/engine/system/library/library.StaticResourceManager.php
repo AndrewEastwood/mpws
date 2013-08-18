@@ -235,44 +235,54 @@ class libraryStaticResourceManager {
         
         throw new Exception('libraryStaticResourceManager: getTemplatePath: requrested template does not exsist: <pre>' . print_r($_pathTrace, true).'</pre>');
     }
-    public static function getPropertyPath ($owner, $name, $resourceName, $locale = 'en_us', $preDefinedPaths = array()) {
+    public static function getPropertyPath ($owner, $name, $resources, $locale = 'en_us', $preDefinedPaths = array()) {
         debug('libraryStaticResourceManager', 'getPropertyPath', true);
-        $resPath = 'property' . DS . $locale . DS . str_replace(DOT, DS, $resourceName) . '.property';
-        $_default  = DR . 'web/default/' . MPWS_VERSION . DS . $resPath;
-        if (isset($preDefinedPaths['PATH_DEF']))
-            $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
-        $_owner = DR . 'web/' . $owner . DS . $name . DS . $resPath;
-        if (isset($preDefinedPaths['PATH_OWN']))
-            $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
-        $_web = false;
-        if (isset($preDefinedPaths['PATH_WEB']))
-            $_web = $preDefinedPaths['PATH_WEB'] . DS . $resPath;
-        
-        
+
         $propFiles = array();
-        
-        //echo $_owner;
-        if (file_exists($_owner))
-            $propFiles[] = $_owner;
-        
-        //echo $_web;
-        if (file_exists($_web))
-            $propFiles[] =  $_web;
-        
-        //echo $_default;
-        if (file_exists($_default))
-            $propFiles[] = $_default;
+
+        $resourceNames = libraryUtils::convValue($resources);
+
+        if (!is_array($resourceNames))
+            $resourceNames = array($resourceNames);
+
+        foreach ($resourceNames as $resourceSingleName) {
+            $resPath = 'property' . DS . $locale . DS . str_replace(DOT, DS, $resourceSingleName) . '.property';
+            $_default  = DR . 'web/default/' . MPWS_VERSION . DS . $resPath;
+            if (isset($preDefinedPaths['PATH_DEF']))
+                $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
+            $_owner = DR . 'web/' . $owner . DS . $name . DS . $resPath;
+            if (isset($preDefinedPaths['PATH_OWN']))
+                $_owner = $preDefinedPaths['PATH_OWN'] . DS . $resPath;
+            $_web = false;
+            if (isset($preDefinedPaths['PATH_WEB']))
+                $_web = $preDefinedPaths['PATH_WEB'] . DS . $resPath;
+
+            //echo $_owner;
+            if (file_exists($_owner))
+                $propFiles[] = $_owner;
+            
+            //echo $_web;
+            if (file_exists($_web))
+                $propFiles[] =  $_web;
+            
+            //echo $_default;
+            if (file_exists($_default))
+                $propFiles[] = $_default;
+
+        }
+
+        // var_dump($propFiles);
 
         if (count($propFiles) > 0)
             return $propFiles;
-        
+
         //var_dump($_owner);
         //var_dump($_web);
         //var_dump($_default);
         
-        $_pathTrace = array($_owner, $_web, $_default);
+        // $_pathTrace = array($_owner, $_web, $_default);
         
-        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property file does not exsist: <pre>' . print_r($_pathTrace, true).'</pre>');
+        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property file does not exsist: <pre>' . print_r($propFiles, true).'</pre>');
     }
     
     public static function getTemplateValue ($templateFilePath, $propKey) {

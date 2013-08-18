@@ -9,7 +9,7 @@ systemUserInfoHomePageLinkPrefix = 'Your home page link is:';
 
 
 ; dataTableView
-dataTableViewCaptionActions = "";
+dataTableViewCaptionActions = "Actions";
 dataTableViewDataEmpty= "There are no records to display.";
 
 ; ============================

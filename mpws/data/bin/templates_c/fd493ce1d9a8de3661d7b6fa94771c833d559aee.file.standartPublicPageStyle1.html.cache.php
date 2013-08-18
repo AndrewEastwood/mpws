@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-13 22:58:19
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-18 22:12:28
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartPublicPageStyle1.html" */ ?>
 <?php /*%%SmartyHeaderCode:30309976052063414ad1df6-06263032%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'fd493ce1d9a8de3661d7b6fa94771c833d559aee' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/page/standartPublicPageStyle1.html',
-      1 => 1376423882,
+      1 => 1376853146,
       2 => 'file',
     ),
   ),
@@ -31,7 +31,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ?>
 <div id="MPWSPageStandartPublic<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE'],0,1);?>
 <?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'],0,1);?>
-ID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPageDisplay<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'],0,1);?>
+ID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPagePlugin<?php echo smarty_modifier_capitalize((($tmp = @$_smarty_tpl->tpl_vars['INFO']->value['GET']['PLUGIN'])===null||$tmp==='' ? 'None' : $tmp),0,1);?>
+ MPWSPageDisplay<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['DISPLAY'],0,1);?>
  MPWSPage<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['INFO']->value['GET']['PAGE'],0,1);?>
 ">
     <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_component_pageHeader, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_data'=>$_smarty_tpl->tpl_vars['_header']->value), 0);?>

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:38:58
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-18 22:21:33
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:144146947952063462e8a987-03971636%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html',
-      1 => 1372625544,
+      1 => 1376853690,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_52063463050908_83616469',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -30,8 +32,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cellEntry' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_52063463050908_83616469',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_52063463050908_83616469')) {function content_52063463050908_83616469($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_capitalize')) include '/devdata/Develop/github/web/mpws/engine/system/extension/Smarty-3.1.11/libs/plugins/modifier.capitalize.php';
 ?>
@@ -66,7 +66,29 @@ $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
     </div>
 
 <?php }elseif(count($_smarty_tpl->tpl_vars['_data']->value)>0){?>
+    
+    <?php $_smarty_tpl->_capture_stack[0][] = array("bunch_actions", null, null); ob_start(); ?>
 
+        <span class="MPWSDataTableCellAction MPWSDataTableCellActionBunch MPWSDataTableCellActionBunchEdit">
+        <?php if (in_array("bunch-edit",$_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions'])){?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'checkbox','_name'=>'BunchEdit','_action'=>'bunch-edit','_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_mode'=>'system'), 0);?>
+
+        <?php }?>
+        </span>
+
+        <span class="MPWSDataTableCellAction MPWSDataTableCellActionBunch MPWSDataTableCellActionBunchDelete">
+        <?php if (in_array("bunch-edit",$_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions'])){?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'checkbox','_name'=>'BunchDelete','_action'=>'bunch-delete','_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_mode'=>'system'), 0);?>
+
+        <?php }?>
+        </span>
+
+    <?php list($_capture_buffer, $_capture_assign, $_capture_append) = array_pop($_smarty_tpl->_capture_stack[0]);
+if (!empty($_capture_buffer)) {
+ if (isset($_capture_assign)) $_smarty_tpl->assign($_capture_assign, ob_get_contents());
+ if (isset( $_capture_append)) $_smarty_tpl->append( $_capture_append, ob_get_contents());
+ Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
+} else $_smarty_tpl->capture_error();?>
 
     <div class="MPWSDataTableRows">
     
@@ -76,15 +98,9 @@ $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
 
         <?php if (!empty($_smarty_tpl->tpl_vars['_confing']->value['datatable']['perRecrodActions'])){?>
             <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
-                <?php  $_smarty_tpl->tpl_vars['_actionName'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['_actionName']->_loop = false;
- $_from = $_smarty_tpl->tpl_vars['_confing']->value['datatable']['perRecrodActions']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
-foreach ($_from as $_smarty_tpl->tpl_vars['_actionName']->key => $_smarty_tpl->tpl_vars['_actionName']->value){
-$_smarty_tpl->tpl_vars['_actionName']->_loop = true;
-?>
-                    <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'mpwsLinkAction','_name'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_controlOwner'=>((string)$_smarty_tpl->tpl_vars['_controlOwner']->value)."RowAction",'_action'=>$_smarty_tpl->tpl_vars['_actionName']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_oid'=>"-1",'_mode'=>'system'), 0);?>
-
-                <?php } ?>
                 <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_widget_dataTableViewCaptionActions;?>
+
+                <?php echo Smarty::$_smarty_vars['capture']['bunch_actions'];?>
 
             </div>
         <?php }?>
@@ -140,6 +156,8 @@ $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
 
                 </span>
             <?php } ?>
+            <?php echo Smarty::$_smarty_vars['capture']['bunch_actions'];?>
+
             </div>
         <?php }?>
 

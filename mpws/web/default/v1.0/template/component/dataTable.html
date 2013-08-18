@@ -76,7 +76,34 @@
     </div>
 
 {elseif count($_data) gt 0}
+    
+    {capture name="bunch_actions"}
 
+        <span class="MPWSDataTableCellAction MPWSDataTableCellActionBunch MPWSDataTableCellActionBunchEdit">
+        {if in_array("bunch-edit", $_confing.datatable.tableTopActions)}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                _type='checkbox'
+                _name='BunchEdit'
+                _action='bunch-edit'
+                _resourceOwner=$_resourceOwner
+                _single=true
+                _mode='system'}
+        {/if}
+        </span>
+
+        <span class="MPWSDataTableCellAction MPWSDataTableCellActionBunch MPWSDataTableCellActionBunchDelete">
+        {if in_array("bunch-edit", $_confing.datatable.tableTopActions)}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
+                _type='checkbox'
+                _name='BunchDelete'
+                _action='bunch-delete'
+                _resourceOwner=$_resourceOwner
+                _single=true
+                _mode='system'}
+        {/if}
+        </span>
+
+    {/capture}
 
     <div class="MPWSDataTableRows">
     {* render table captions *}
@@ -86,18 +113,8 @@
 
         {if not empty($_confing.datatable.perRecrodActions)}
             <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
-                {foreach $_confing.datatable.perRecrodActions as $_actionName}
-                    {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
-                        _type='mpwsLinkAction'
-                        _name=$_actionName
-                        _controlOwner="`$_controlOwner`RowAction"
-                        _action=$_actionName
-                        _resourceOwner=$_resourceOwner
-                        _single=true
-                        _oid="-1"
-                        _mode='system'}
-                {/foreach}
                 {$CURRENT.OBJECT->objectProperty_widget_dataTableViewCaptionActions}
+                {$smarty.capture.bunch_actions}
             </div>
         {/if}
 
@@ -135,6 +152,7 @@
                     _mode='system'}
                 </span>
             {/foreach}
+            {$smarty.capture.bunch_actions}
             </div>
         {/if}
 

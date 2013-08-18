@@ -111,7 +111,9 @@ class libraryWebPageModel {
         // name has PARENT@WIDGETNAME
         if (!empty($tplResMode[1])) {
             $name = $tplResMode[1];
-            $resource = $tplResMode[0] . $tplResMode[1];
+            $resourceMap[] = $tplResMode[0];
+            $resourceMap[] = $tplResMode[0] . $tplResMode[1];
+            $resource = '[' . join(',', $resourceMap) . ']';
         }
         //echo '<br>OWNER: ' . $owner;
         //echo '<br>WOB NAME: ' . $owner->getObjectName();

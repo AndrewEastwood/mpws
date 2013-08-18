@@ -25,7 +25,15 @@
     {foreach $CURRENT.SOURCE.DATA.RECORDS as $idx => $entry}
     
         {* action link params *}
-        {$__entryTitle = $CURRENT.OBJECT->{"`$__propEntry``$entry.ExternalKey`"}}
+        {if not empty($entry.Action) }
+            {$__entryTitle = $entry.Action|compress}
+        {elseif not empty($entry.Command) }
+            {$__entryTitle = $entry.Command|compress}
+        {elseif not empty($entry.Name) }
+            {$__entryTitle = $entry.Name|compress}
+        {else}
+            {$__entryTitle = $entry.ExternalKey|compress}
+        {/if}
         {$__qEntryParams = "`$__qCmnParams`&oid=`$entry.ID`&name=`$__entryTitle`"}
         {if not empty($DTV_CFG.schedule.general)}
             {$__qEntryParams = "`$__qEntryParams`&custom={urlencode("schedule=`$DTV_CFG.schedule.general`")}"}

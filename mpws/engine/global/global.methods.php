@@ -219,5 +219,10 @@
         $fparts = explode(DOT, $fileName);
         return $fparts[0];
     }
+
+    function glCompressStr ($str) {
+        $str = ucwords($str);
+        return str_replace(' ', '', $str);
+    }
     
 ?>
