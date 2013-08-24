@@ -4,16 +4,22 @@ class controllerStatic {
 
     public function processRequests() {
 
+        // echo $_GET['type'];
+
         $content = '';
-        switch (strtolower($_GET['request'])) {
-            case 'text' : {
+        switch (strtolower($_GET['type'])) {
+            case 'js':
+            case 'css':
                 $content = $this->_ieText();
                 break;
-            }
-            case 'image' : {
+            case 'jpg':
+                header('Content-type: image/jpg');
+            case 'gif':
+                header('Content-type: image/gif');
+            case 'png':
+                header('Content-type: image/png');
                 $content = $this->_ieImage();
-                return;
-            }
+                break;
             case 'wysiwyg' : {
                 $content = $this->_ieWYSIWYG();
                 return;
@@ -67,9 +73,9 @@ class controllerStatic {
         $filePath = $staticResMgr->GetContent();
         if (empty($filePath))
             return false;
-            //$im = imagecreatefromjpeg($filePath);
-        header('Content-type: image/jpg');
-        header('Content-Length: ' . filesize($filePath));
+        //     //$im = imagecreatefromjpeg($filePath);
+        // header('Content-type: image/jpg');
+        // header('Content-Length: ' . filesize($filePath));
         return readfile($filePath);
         //echo 'ololo' . urldecode($_GET['name']);
         //imagejpeg($im);

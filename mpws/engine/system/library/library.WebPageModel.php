@@ -301,6 +301,16 @@ class libraryWebPageModel {
         // plugin
         $info['POST'][makeKey('PLUGIN')] = libraryRequest::getPostPlugin();
 
+
+        $info['URL'][makeKey('STATIC_INTERNAL')] = '/static/i/';
+        $info['URL'][makeKey('STATIC_PUBLIC')] = '/static/p/';
+
+
+        $info['URL'][makeKey('STATIC_INTERNAL_C')] = '/static/i/customer/'.MPWS_CUSTOMER.'/';
+        $info['URL'][makeKey('STATIC_INTERNAL_P')] = '/static/i/plugin/'.libraryRequest::getPlugin().'/';
+        $info['URL'][makeKey('STATIC_PUBLIC_C')] = '/static/p/customer/'.MPWS_CUSTOMER.'/';
+        $info['URL'][makeKey('STATIC_PUBLIC_P')] = '/static/p/plugin/'.libraryRequest::getPlugin().'/';
+
         return $info;
     }
 

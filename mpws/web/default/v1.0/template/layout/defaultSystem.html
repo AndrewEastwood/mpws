@@ -3,31 +3,13 @@
 <head>
     <title>{block name="layoutTitle"}MPWS Default - {$INFO.GET.PAGE}{/block}</title>
     {block name="layoutResourcesCSS"}
-    <link rel="stylesheet" type="text/css" href="/static/mpwsDefault.css">
-    {/block}
-    {block name="layoutResourcesJS"}
-    <script type="text/javascript" src="/static/mpwsDefault.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/i/customer/{$INFO.CUSTOMER}/default.css">
     {/block}
     {if not empty($INFO.GET.PLUGIN) }
-        {* include plugin js resources *}
-        {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadJavascript}
+    <link rel="stylesheet" type="text/css" href="/static/i/plugin/{$INFO.GET.PLUGIN}/default.css">
         {* include plugin css resources *}
         {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadStylesheet}
     {/if}
-    {literal}
-    <script type="text/javascript">
-        // security token
-        mpws.customer = '{/literal}{$INFO.CUSTOMER}{literal}';
-        // security token
-        mpws.token = '{/literal}{$INFO.TOKEN}{literal}';
-        // page
-        mpws.page = '{/literal}{$INFO.GET.PAGE}{literal}';
-        // display
-        mpws.display = '{/literal}{$INFO.GET.DISPLAY}{literal}';
-        // action
-        mpws.action = '{/literal}{$INFO.GET.ACTION}{literal}';
-    </script>
-    {/literal}
     <meta name="locale" content="{$CURRENT.OBJECT->getObjectLocale()}">
 </head>
 <body>
@@ -42,6 +24,40 @@
             {include file=$CURRENT.OBJECT->objectTemplatePath_page_login}
         {/block}
     {/if}
+</div>
+
+<div class="static-content-wrapper render-hidden" title="page basic javascript container">
+    {block name="layoutResourcesJS"}
+    <script type="text/javascript" src="/static/i/customer/{$INFO.CUSTOMER}/default.js"></script>
+    {/block}
+    {if not empty($INFO.GET.PLUGIN) }
+    <script type="text/javascript" src="/static/i/plugin/{$INFO.GET.PLUGIN}/default.js"></script>
+        {* include plugin js additional resources *}
+        {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadJavascript}
+    {/if}
+    {literal}
+    <script type="text/javascript" class="temporary">
+        mpws.Internal.configureAppLoader({
+            VERSION: null,
+            // security token
+            CUSTOMER: '{/literal}{$INFO.CUSTOMER}{literal}',
+            // security token
+            TOKEN: '{/literal}{$INFO.TOKEN}{literal}',
+            // page
+            PAGE: '{/literal}{$INFO.GET.PAGE}{literal}',
+            // display
+            DISPLAY: '{/literal}{$INFO.GET.DISPLAY}{literal}',
+            // action
+            ACTION: '{/literal}{$INFO.GET.ACTION}{literal}',
+            URL: {
+                staticUrl: '/static/i/'
+            },
+            STATES: {
+                pageDebug: true
+            }
+        });
+    </script>
+    {/literal}
 </div>
 
 </body>

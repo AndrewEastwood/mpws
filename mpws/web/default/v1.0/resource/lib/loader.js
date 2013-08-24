@@ -12,7 +12,7 @@ window.mpws || (function(window, document){
 
     var
         // create the main public object
-        _qB = {},
+        _app = {},
         _self = this,
         // indicates wheter page is in the ready state
         _docIsReady = false,
@@ -73,7 +73,7 @@ window.mpws || (function(window, document){
             if (!this._events[eventID])
                 this._events[eventID] = [];
 
-            var listenerHash = _qB.Utils.hashCode(listener);
+            var listenerHash = _app.Utils.hashCode(listener);
             var alreadyAdded = false;
             // avoid duplicates
             for (var i = 0, len = this._events[eventID].length; i < len && !alreadyAdded; i++)
@@ -95,7 +95,7 @@ window.mpws || (function(window, document){
         eventUnsubscribe : function (eventID, listener) {
             if (!this._events[eventID])
                 return false;
-            var listenerHash = _qB.Utils.hashCode(listener);
+            var listenerHash = _app.Utils.hashCode(listener);
             var unsubcribeCount = 0;
             for (var i = 0, len = this._events[eventID].length; i < len; i++)
                 if (this._events[eventID][i].id === listenerHash) {
@@ -135,7 +135,7 @@ window.mpws || (function(window, document){
             qB.log(true, 'doing register >>>>> ', id, ' with >>>>>> ', deps);
             define(id, filterDownloadedPackages(deps), function () {
                 qB.log(true, '::: DEFINE CALLBACK: ', id);
-                var fn = _qB.Utils.lockOnFn(callback, globals.concat(_qB, _Sandbox));
+                var fn = _app.Utils.lockOnFn(callback, globals.concat(_app, _Sandbox));
                 return fn.apply(null, [].slice.call(arguments));
             });
         },
@@ -165,7 +165,7 @@ window.mpws || (function(window, document){
 
         // configure requirejs
         var _rConfig = {
-            baseUrl: _configuration.URL.staticUrl + (_qB.Page.isDebugEnabled() ? 'js' : 'build'),
+            baseUrl: _configuration.URL.staticUrl + (_app.Page.isDebugEnabled() ? 'js' : 'build'),
             paths: {
                 // general paths
                 lib: 'libs',
@@ -176,7 +176,7 @@ window.mpws || (function(window, document){
             }
         };
 
-        if (_qB.Page.isDebugEnabled())
+        if (_app.Page.isDebugEnabled())
             _rConfig.urlArgs = "bust=" + (new Date()).getTime();
 
         _rConfig.paths["lib/jquery"] = 'libs/jquery-1.9.1';
@@ -192,7 +192,7 @@ window.mpws || (function(window, document){
     }
 
     // Page object
-    _qB.Page = {
+    _app.Page = {
         getConfiguration: function () {
             return _configuration;
         },
@@ -225,7 +225,7 @@ window.mpws || (function(window, document){
         }
     };
 
-    _qB.Utils = {
+    _app.Utils = {
         hashCode : function(obj){
             var string  = obj.toString();
             var hash = 0, i, char;
@@ -264,13 +264,13 @@ window.mpws || (function(window, document){
     };
 
     // obfuscate private object variables
-    // _qB.S = _Sandbox;
-    _qB.Modules = _qB.Utils.exposeToPublic(_Modules)
-    _qB.Sandbox = _qB.Utils.exposeToPublic(_Sandbox);
-    _qB.Internal = Internal;
+    // _app.S = _Sandbox;
+    _app.Modules = _app.Utils.exposeToPublic(_Modules)
+    _app.Sandbox = _app.Utils.exposeToPublic(_Sandbox);
+    _app.Internal = Internal;
 
     function filterDownloadedPackages (modules) {
-        qB.log(true, 'filterDownloadedPackages', modules);
+        _app.log(true, 'filterDownloadedPackages', modules);
         // var specified = require.s.contexts._.specified;
         return modules;
     }
@@ -280,7 +280,7 @@ window.mpws || (function(window, document){
         var args = [].slice.call(arguments);
         var isDebugMsg = (args.length >= 2 && typeof args[0] === 'boolean');
 
-        if (isDebugMsg && !_qB.Page.isDebugEnabled())
+        if (isDebugMsg && !_app.Page.isDebugEnabled())
             return;
 
         if (isDebugMsg)
@@ -309,9 +309,9 @@ window.mpws || (function(window, document){
     }
 
     // append logger fn
-    _qB.log = log;
+    _app.log = log;
 
     // expose into global scope
-    window.qB = _qB;
+    window.mpws = _app;
 
 })(window, document)

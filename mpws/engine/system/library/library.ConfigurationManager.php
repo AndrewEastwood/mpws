@@ -43,6 +43,19 @@ class libraryConfigurationManager {
     public static function getConfigurationValue ($chains, $configKey) {
         debug('libraryConfigurationManager', 'getConfigurationValue', true);
         
+        $modifier = false;
+        if (strstr($configKey, COLON))
+            list($configKey, $modifier) = explode(COLON, $configKey);
+
+        switch ($modifier) {
+            case 'merge':
+                $chains = libraryUtils::array_shift_circular($chains, 1);
+                break;
+            case 'default':
+                $chains = libraryUtils::array_shift_circular($chains, 1);
+                break;
+        }
+
         foreach ($chains as $configFilePath) {
             if (!file_exists($configFilePath))
                 throw new Exception('libraryConfigurationManager: getConfigurationValue: Config file does not exsist: ' . $configFilePath);
@@ -50,6 +63,7 @@ class libraryConfigurationManager {
             $props = parse_ini_file($configFilePath);
             //debug($props);
             if (isset($props[$configKey])) {
+                // echo '<br>get config by key', $configKey, '(using modifier: ',$modifier,')</br>';
                 //var_dump($props)
                 //$mergeItems = explode('+++', $props[$configKey]);
                 //var_dump($mergeItems);

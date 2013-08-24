@@ -652,6 +652,40 @@ class libraryUtils {
         return null;
     }
     
+    /**
+     * source: http://www.ermshaus.org/2011/04/php-circular-shift-array
+     * Circularly shifts an array
+     *
+     * Shifts to right for $steps > 0. Shifts to left for $steps < 0. Keys are
+     * preserved.
+     *
+     * @param  array $array Array to shift
+     * @param  int   $steps Steps to shift array by
+     * @return array Resulting array
+     */
+    static public function array_shift_circular(array $array, $steps = 1)
+    {
+        if (!is_int($steps)) {
+            throw new InvalidArgumentException(
+                    'steps has to be an (int)');
+        }
+
+        if ($steps === 0) {
+            return $array;
+        }
+
+        $l = count($array);
+
+        if ($l === 0) {
+            return $array;
+        }
+        
+        $steps = $steps % $l;
+        $steps *= -1;
+
+        return array_merge(array_slice($array, $steps),
+                           array_slice($array, 0, $steps));
+    }
     
 }
 
