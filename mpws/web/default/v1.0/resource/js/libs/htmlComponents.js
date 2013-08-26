@@ -2,7 +2,7 @@
  * Library: Html Components Generator
 */
 
-qB.Modules.register("lib/htmlComponents", [
+APP.Modules.register("lib/htmlComponents", [
     /* import globals */
     window
 ], [
@@ -12,7 +12,7 @@ qB.Modules.register("lib/htmlComponents", [
     'lib/jquery_ui',
     'lib/daterangepicker'
     /* component implementation */
-], function(window, qB, Sandbox, $, _, moment) {
+], function(window, app, Sandbox, $, _, moment) {
 
     function HtmlComponents () {}
 

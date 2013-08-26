@@ -1,11 +1,11 @@
-qB.Modules.register("lib/utils", [
+APP.Modules.register("lib/utils", [
     /* import globals */
     window
 ], [
-    'lib/jquery',
+    'lib/zepto',
     'lib/underscore'
     /* component implementation */
-], function(window, qB, Sandbox, $, _) {
+], function(window, app, Sandbox, $, _) {
 
     function Utils () {}
 

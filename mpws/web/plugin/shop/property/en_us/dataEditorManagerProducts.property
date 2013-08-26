@@ -1,0 +1,20 @@
+title='Product Editor';
+description=''
+
+labelForTextBoxDataEditorID='#'
+labelForTextBoxDataEditorIDHelper='';
+
+labelForTextBoxDataEditorCategoryID='Category ID';
+labelForTextBoxDataEditorCategoryIDHelper='Category ID';
+labelForTextBoxDataEditorOriginID='Origin ID';
+labelForTextBoxDataEditorOriginIDHelper='Origin ID';
+labelForTextBoxDataEditorName='Name';
+labelForTextBoxDataEditorNameHelper='Name';
+labelForTextAreaDataEditorDescription='Description';
+labelForTextAreaDataEditorDescriptionHelper='Description';
+labelForTextAreaDataEditorSpecifications='Specifications';
+labelForTextAreaDataEditorSpecificationsHelper='Specifications';
+labelForTextAreaDataEditorModel='Model';
+labelForTextAreaDataEditorModelHelper='Model';
+labelForTextAreaDataEditorSKU='SKU';
+labelForTextAreaDataEditorSKUHelper='SKU';

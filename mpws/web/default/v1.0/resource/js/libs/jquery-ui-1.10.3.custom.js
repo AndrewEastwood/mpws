@@ -1,11 +1,11 @@
-qB.Modules.register("lib/jquery_ui", [
+APP.Modules.register("lib/jquery_ui", [
     /* import globals */
     window
 ], [
     /* import dep packages */
     'lib/jquery',
     /* component implementation */
-], function(window, qB, Sandbox, jQuery) {
+], function(window, app, Sandbox, jQuery) {
 
 
 /*! jQuery UI - v1.10.3 - 2013-07-24

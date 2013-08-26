@@ -20,23 +20,19 @@ class pluginShop extends objectBaseWebPlugin {
     }
 
     private function _displayPage_Default () {
-        switch (libraryRequest::getDisplay()) {
-            case "products" : {
-                $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerProducts');
+        $display = libraryRequest::getDisplay();
+        switch ($display) {
+            case "products" :
+            case "categories" :
+            case "origins" :
+            case "currency" :
+            case "commands" :
+                $managerName = 'Manager' . ucfirst($display);
+                $this->getWidget('ActionHandlerStandartDataTableManager', $managerName);
                 break;
-            }
-            case "currency" : {
-                $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerCurrency');
-                break;
-            }
-            case "commands" : {
-                $this->getWidget('ActionHandlerStandartDataTableManager', 'ManagerCommands');
-                break;
-            }
-            case "api" : {
+            case "api" :
                 if ($this->isActive())
                     $this->getWidget('AddDataApiViewer', 'ApiShop');
-            }
         }
  
         /*echo '_displayQueue';

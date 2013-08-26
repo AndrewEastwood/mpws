@@ -1,12 +1,2 @@
 title="Shop Commands";
 description="Configure additional commands to get extra data";
-; searchbox
-labelForTextBoxSearchBoxName = "Command Name";
-; quick filtering
-labelForLinkActionQuickFilteringName = "Command Name";
-labelForLinkActionQuickFilteringDateCreated = "Date Time Updated";
-; captions
-captionName = "Name";
-captionDescription = "Description";
-captionAction = "Action";
-captionDateCreated = "DateCreated";

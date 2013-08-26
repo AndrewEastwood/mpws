@@ -1,10 +1,10 @@
-qB.Modules.register("lib/backbone", [
+APP.Modules.register("lib/backbone", [
     /* import globals */
     window
 ], [
   'lib/underscore'
     /* component implementation */
-], function(window, qB, Sandbox, _) {
+], function(window, app, Sandbox, _) {
 
 
 //     Backbone.js 0.9.10

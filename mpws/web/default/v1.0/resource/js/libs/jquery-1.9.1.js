@@ -1,9 +1,9 @@
-qB.Modules.register("lib/jquery", [
+APP.Modules.register("lib/jquery", [
     /* import globals */
     window
 ], [
     /* component implementation */
-], function(window, qB, Sandbox) {
+], function(window, app, Sandbox) {
 
 	/*!
 	 * jQuery JavaScript Library v1.9.1

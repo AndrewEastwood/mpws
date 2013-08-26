@@ -19,7 +19,7 @@ RewriteRule storage/(....)-(..)-(..)-(.*)/(.*)? /data/uploads/$1-$2-$3/$4/$5 [QS
 ## # -- 
 
 
-RewriteRule static/(i|p)/(customer|plugin)/([A-Za-z0-9_-]+)/([A-Za-z0-9_-]+)\.(gif|png|jpeg|jpg|css|js)?(.*) /engine/dispatcher/dispatcher.Static.php?request=image&action=default&access=$1&object=$2&name=$3&resource=$4&type=$5$6 [QSA]
+RewriteRule static/(i|p|_)/(customer|plugin)/([A-Za-z0-9_-]+)/([\.\\/A-Za-z0-9_-]+)\.(gif|png|jpeg|jpg|css|js)?(.*) /engine/dispatcher/dispatcher.Static.php?request=image&action=default&access=$1&object=$2&name=$3&resource=$4&type=$5$6 [QSA]
 
 
 

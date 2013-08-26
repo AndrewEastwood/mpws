@@ -1,0 +1,9 @@
+title='Record Editor';
+description='';
+
+labelForTextBoxDataEditorName = 'Name'
+labelForTextBoxDataEditorNameHelper = '... provide name value';
+labelForTextAreaDataEditorDescription = 'Description'
+labelForTextAreaDataEditorDescriptionHelper = '... item description';
+labelForCheckBoxDataEditorEnabled = 'Enabled'
+labelForCheckBoxDataEditorEnabledHelper = '... set item actibity'

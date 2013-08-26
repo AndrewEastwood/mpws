@@ -28,16 +28,16 @@
 
 <div class="static-content-wrapper render-hidden" title="page basic javascript container">
     {block name="layoutResourcesJS"}
-    <script type="text/javascript" src="/static/i/customer/{$INFO.CUSTOMER}/default.js"></script>
+    <script type="text/javascript" src="/static/i/customer/{$INFO.CUSTOMER}/starter.js"></script>
     {/block}
     {if not empty($INFO.GET.PLUGIN) }
-    <script type="text/javascript" src="/static/i/plugin/{$INFO.GET.PLUGIN}/default.js"></script>
+    <script type="text/javascript" src="/static/i/plugin/{$INFO.GET.PLUGIN}/starter.js"></script>
         {* include plugin js additional resources *}
         {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadJavascript}
     {/if}
     {literal}
     <script type="text/javascript" class="temporary">
-        mpws.Internal.configureAppLoader({
+        APP.Internal.configureAppLoader({
             VERSION: null,
             // security token
             CUSTOMER: '{/literal}{$INFO.CUSTOMER}{literal}',
@@ -49,11 +49,45 @@
             DISPLAY: '{/literal}{$INFO.GET.DISPLAY}{literal}',
             // action
             ACTION: '{/literal}{$INFO.GET.ACTION}{literal}',
+            // action
+            PLUGIN: '{/literal}{$INFO.GET.PLUGIN}{literal}',
+            // ROUTER: 'router/customer.base',
             URL: {
-                staticUrl: '/static/i/'
+                // available static urls
+                staticUrlBase: '{/literal}{$INFO.URL.STATIC_BASE}{literal}',
+                staticUrlCustomer: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}',
+                staticUrlPlugin: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}'
             },
             STATES: {
                 pageDebug: true
+            },
+            REQUIREJS: {
+                router: {
+                    modulePageMap: [{
+                        match: [".*"],
+                        deps: ["router/customer", "p_router/plugin"]
+                    }]
+                },
+                app: {
+                    baseUrl: false,
+                    paths: {
+                        // general paths
+                        lib: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs',
+                        router: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}routers',
+                        widget: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}widgets',
+                        model: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}models',
+                        view: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}views',
+                        // plugins paths
+                        p_lib: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}libs',
+                        p_router: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}routers',
+                        p_widget: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}widgets',
+                        p_model: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}models',
+                        p_view: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}views',
+                        // version suppress
+                        "lib/jquery": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs/jquery-1.9.1',
+                        "lib/jquery_ui": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs/jquery-ui-1.10.3.custom'
+                    }
+                }
             }
         });
     </script>

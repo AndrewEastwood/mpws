@@ -29,7 +29,7 @@ class libraryStaticResourceManager {
         $isCustomer = $objectType === 'customer';
 
         // requested file name
-        $fileNameToRespond = $requestedResourceName . DOT . $access . DOT . $_GET['type'];
+        $fileNameToRespond = $requestedResourceName  . DOT . $_GET['type'];
 
         // echo 'looking for file name:' . $fileNameToRespond;
 
@@ -43,44 +43,56 @@ class libraryStaticResourceManager {
         elseif (file_exists($resourceFilePath) && !(isset($_GET['force']) || MPWS_ENV === 'DEV'))
             return file_get_contents($resourceFilePath);
         
-        // get context
+        // use overriden file insted of requests file
+        // get context and objectaccording to request
         $ctx = contextMPWS::instance();
         $resourceEntry = array();
         $requestObjectOwner = false;
-
         if ($isPLugin)
             $requestObjectOwner = $ctx->contextToolbox->getObject($objectName);
-
         if ($isCustomer)
             $requestObjectOwner = $ctx->contextCustomer->getObject($objectName);
-        
+        // set overriden files
+        if (!empty($requestObjectOwner)) {
+            $resourceNamesMap = $requestObjectOwner->objectConfiguration_resources_staticResourceOverrides;
+            // var_dump($resourceNamesMap);
+            $resourceEntry = $resourceNamesMap[$fileNameToRespond];
+        }
 
-        if (empty($requestObjectOwner))
-            return false;
-
-        $resourceNamesMap = $requestObjectOwner->objectConfiguration_resources_staticResources;
-
-        // var_dump($resourceNamesMap);
-        $resourceEntry = $resourceNamesMap[$fileNameToRespond];
-
+        // or just use requsted file
         if (empty($resourceEntry))
-            return false;
-        
+            $resourceEntry = array($fileNameToRespond);
+
         //echo DR;
+        // echo 'is plugin:' . ($isPLugin ? 'yes' : 'no' ). '<br>';
+        // echo 'is customer:' .( $isCustomer ? 'yes' : 'no') . '<br>';
+        // var_dump($requestObjectOwner);
+        // var_dump($requestObjectOwner->objectConfiguration_resources_staticResourceOverrides);
+        // var_dump($resourceEntry);
         
         $filesToLoad = array();
-        $filesToImport = array();
-        
+        // $filesToImport = array();
+
         // walk by resource
-        foreach ($resourceEntry as $filePath)
+        foreach ($resourceEntry as $filePath) {
+            // set parent dir
+            if ($_GET['type'] == 'js')
+                $filePath = 'js' . DS . $filePath;
+            if ($_GET['type'] == 'css')
+                $filePath = 'style' . DS . $filePath;
+            // include existed file
             if ($isPLugin && file_exists(DR . 'web/plugin/'.$objectName.'/resource/'.$filePath))
                 $filesToLoad[] = DR . 'web/plugin/'.$objectName.'/resource/'.$filePath;
             elseif ($isCustomer && file_exists(DR . 'web/customer/'.$objectName.'/resource/'.$filePath))
                 $filesToLoad[] = DR . 'web/customer/'.$objectName.'/resource/'.$filePath;
             elseif (file_exists(DR . 'web/default/'.MPWS_VERSION.'/resource/'.$filePath))
                 $filesToLoad[] = DR . 'web/default/'.MPWS_VERSION.'/resource/'.$filePath;
+        }
 
         // var_dump($filesToLoad);
+
+        if (count($filesToLoad) === 0)
+            return false;
         
         // set metainfo
         $metainfo = '/* ['.date('Y-m-d H:i:s').'] MPWS Packages: ' . PHP_EOL . ' * ' . 
@@ -96,9 +108,9 @@ class libraryStaticResourceManager {
         }
         
         // add import files (CSS only !!!!)
-        if (!empty($filesToImport))
-            foreach ($filesToImport as $item)
-                $metainfo .= PHP_EOL . '@import url(\'' . $item . '\');';
+        // if (!empty($filesToImport))
+        //     foreach ($filesToImport as $item)
+        //         $metainfo .= PHP_EOL . '@import url(\'' . $item . '\');';
         
         
         // get build mode (for CSS only)
@@ -159,12 +171,12 @@ class libraryStaticResourceManager {
         //$owner = empty($owner)? MPWS_CUSTOMER : $owner;
         
         // default files
-        $chains[] = DR . 'web/default/'.MPWS_VERSION.'/resource/' . $fileNameToRespond;
+        $chains[] = DR . 'web/default/' . MPWS_VERSION . '/resource/img/' . $fileNameToRespond;
 
         if ($isCustomer)
-            $chains[] = DR . 'web/customer/'.$objectName.'/resource/' . $fileNameToRespond;
+            $chains[] = DR . 'web/customer/' . $objectName . '/resource/img/' . $fileNameToRespond;
         if ($isPLugin)
-            $chains[] = DR . 'web/plugin/'.$objectName.'/resource/' . $fileNameToRespond;
+            $chains[] = DR . 'web/plugin/' . $objectName . '/resource/img/' . $fileNameToRespond;
 
         // return first existed file
         foreach ($chains as $resourceFile)
@@ -258,8 +270,13 @@ class libraryStaticResourceManager {
         if (!is_array($resourceNames))
             $resourceNames = array($resourceNames);
 
+        $lookupFiles = array();
+
         foreach ($resourceNames as $resourceSingleName) {
+
             $resPath = 'property' . DS . $locale . DS . str_replace(DOT, DS, $resourceSingleName) . '.property';
+            // $resPathDef= 'property' . DS . $locale . DS . str_replace(DOT, DS, $resourceNames[0]) . '.property';
+
             $_default  = DR . 'web/default/' . MPWS_VERSION . DS . $resPath;
             if (isset($preDefinedPaths['PATH_DEF']))
                 $_default = $preDefinedPaths['PATH_DEF'] . DS . $resPath;
@@ -282,12 +299,18 @@ class libraryStaticResourceManager {
             if (file_exists($_default))
                 $propFiles[] = $_default;
 
+            $lookupFiles[] = $_owner;
+            $lookupFiles[] = $_web;
+            $lookupFiles[] = $_default;
+
         }
 
         // var_dump($propFiles);
 
-        if (count($propFiles) > 0)
-            return $propFiles;
+        // $propFiles = array_unique($propFiles);
+
+        // if (count($propFiles) > 0)
+            return $lookupFiles;
 
         //var_dump($_owner);
         //var_dump($_web);
@@ -295,7 +318,7 @@ class libraryStaticResourceManager {
         
         // $_pathTrace = array($_owner, $_web, $_default);
         
-        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property file does not exsist: <pre>' . print_r($propFiles, true).'</pre>');
+        throw new Exception('libraryStaticResourceManager: getPropertyPath: requrested property file does not exists. <br>Make sure that you have even one of the following files:<pre>'.print_r($lookupFiles, true).'</pre>');
     }
     
     public static function getTemplateValue ($templateFilePath, $propKey) {
@@ -323,7 +346,7 @@ class libraryStaticResourceManager {
             throw new Exception('libraryStaticResourceManager: getPropertyValue(array): Requested property key does not exist: <b>' . $propKey . '</b> in <pre>' . print_r($propertyFilePath, true) . '</pre>');
         }
         elseif (is_string($propertyFilePath)) {
-            if (!file_exists($propertyFilePath))
+            if (!file_exists($propertyFilePath) && !$fromArray)
                 throw new Exception('libraryStaticResourceManager: getPropertyValue(string): Property file does not exsist: <b>' . $propertyFilePath . '</b>');
             // echo "xxxx>" . $propertyFilePath;
             $props = parse_ini_file($propertyFilePath);

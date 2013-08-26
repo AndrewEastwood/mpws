@@ -15,7 +15,8 @@ controlFormButtonsSystemUserInfoButtonSignOut = "Exit";
 
 ; data table common controls
 controlActionLinkTitleDataTableTopActionNEW = "New Record";
-controlActionLinkTitleDataTableTopActionBUNCH-EDIT = "Bunch Edit";
+controlActionLinkTitleDataTableTopActionEDIT = "Edit";
+controlActionLinkTitleDataTableTopActionDELETE = "Delete";
 controlActionLinkTitleDataTableRowActionEDIT = "edit";
 controlActionLinkTitleDataTableRowActionVIEW = "view";
 controlActionLinkTitleDataTableRowActionDELETE  = "remove";

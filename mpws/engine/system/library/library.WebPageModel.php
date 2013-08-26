@@ -113,7 +113,7 @@ class libraryWebPageModel {
             $name = $tplResMode[1];
             $resourceMap[] = $tplResMode[0];
             $resourceMap[] = $tplResMode[0] . $tplResMode[1];
-            $resource = '[' . join(',', $resourceMap) . ']';
+            $resource = libraryUtils::arrayToString($resourceMap);
         }
         //echo '<br>OWNER: ' . $owner;
         //echo '<br>WOB NAME: ' . $owner->getObjectName();
@@ -301,15 +301,9 @@ class libraryWebPageModel {
         // plugin
         $info['POST'][makeKey('PLUGIN')] = libraryRequest::getPostPlugin();
 
-
-        $info['URL'][makeKey('STATIC_INTERNAL')] = '/static/i/';
-        $info['URL'][makeKey('STATIC_PUBLIC')] = '/static/p/';
-
-
-        $info['URL'][makeKey('STATIC_INTERNAL_C')] = '/static/i/customer/'.MPWS_CUSTOMER.'/';
-        $info['URL'][makeKey('STATIC_INTERNAL_P')] = '/static/i/plugin/'.libraryRequest::getPlugin().'/';
-        $info['URL'][makeKey('STATIC_PUBLIC_C')] = '/static/p/customer/'.MPWS_CUSTOMER.'/';
-        $info['URL'][makeKey('STATIC_PUBLIC_P')] = '/static/p/plugin/'.libraryRequest::getPlugin().'/';
+        $info['URL'][makeKey('STATIC_BASE')] = '/static/_/';
+        $info['URL'][makeKey('STATIC_CUSTOMER')] = '/static/_/customer/'.MPWS_CUSTOMER.'/';
+        $info['URL'][makeKey('STATIC_PLUGIN')] = '/static/_/plugin/'.libraryRequest::getPlugin().'/';
 
         return $info;
     }

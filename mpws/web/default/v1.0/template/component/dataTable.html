@@ -77,33 +77,22 @@
 
 {elseif count($_data) gt 0}
     
-    {capture name="bunch_actions"}
 
-        <span class="MPWSDataTableCellAction MPWSDataTableCellActionBunch MPWSDataTableCellActionBunchEdit">
-        {if in_array("bunch-edit", $_confing.datatable.tableTopActions)}
+    {capture bunchactions}
+        {if count(array_intersect(array("edit", "delete"), $_confing.datatable.tableTopActions)) gt 0}
+            <span class="MPWSDataTableCellAction MPWSDataTableCellActionSelectRedcord">
             {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
                 _type='checkbox'
-                _name='BunchEdit'
-                _action='bunch-edit'
+                _name='SelectRedcord'
+                _controlOwner="`$_controlOwner`RowAction"
+                _action='SelectRedcord'
                 _resourceOwner=$_resourceOwner
                 _single=true
                 _mode='system'}
+            </span>
         {/if}
-        </span>
-
-        <span class="MPWSDataTableCellAction MPWSDataTableCellActionBunch MPWSDataTableCellActionBunchDelete">
-        {if in_array("bunch-edit", $_confing.datatable.tableTopActions)}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
-                _type='checkbox'
-                _name='BunchDelete'
-                _action='bunch-delete'
-                _resourceOwner=$_resourceOwner
-                _single=true
-                _mode='system'}
-        {/if}
-        </span>
-
     {/capture}
+
 
     <div class="MPWSDataTableRows">
     {* render table captions *}
@@ -113,8 +102,8 @@
 
         {if not empty($_confing.datatable.perRecrodActions)}
             <div class="MPWSDataTableCell MPWSDataTableCellCaption MPWSDataTableCellActions">
+                {$smarty.capture.bunchactions}
                 {$CURRENT.OBJECT->objectProperty_widget_dataTableViewCaptionActions}
-                {$smarty.capture.bunch_actions}
             </div>
         {/if}
 
@@ -134,11 +123,13 @@
         </div>
     {/if}
 
+    <div class="MPWSDataTableRowGroup">
     {foreach $_data as $rowIndex => $rowEntry}
         <div class="MPWSDataTableRow MPWSDataTableRow{$rowIndex}">
 
         {if not empty($_confing.datatable.perRecrodActions)}
             <div class="MPWSDataTableCell MPWSDataTableCellActions">
+            {$smarty.capture.bunchactions}
             {foreach $_confing.datatable.perRecrodActions as $_actionName}
                 <span class="MPWSDataTableCellAction MPWSDataTableCellAction{$actionName|capitalize:0:1}">
                 {include file=$CURRENT.OBJECT->objectTemplatePath_trigger_control
@@ -152,7 +143,6 @@
                     _mode='system'}
                 </span>
             {/foreach}
-            {$smarty.capture.bunch_actions}
             </div>
         {/if}
 
@@ -169,6 +159,7 @@
         {/if}
         </div>
     {/foreach}
+    </div>
     
     </div>
 

@@ -1,4 +1,4 @@
-qB.Modules.register("lib/sprintf", [window], [], function(window, qB, Sandbox) {
+APP.Modules.register("lib/sprintf", [window], [], function(window, app, Sandbox) {
 
 	var exports = function () {};
 

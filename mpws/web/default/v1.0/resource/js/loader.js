@@ -5,10 +5,10 @@
 
 
 /*
-    mpws loader module
+    APP loader module
 */
 
-window.mpws || (function(window, document){
+window.APP || (function(window, document){
 
     var
         // create the main public object
@@ -22,6 +22,7 @@ window.mpws || (function(window, document){
         // onDocReady function
         _onDocReadyFns = [],
         _configuration = null;
+
 
     function _initializeLoader () {
 
@@ -42,7 +43,7 @@ window.mpws || (function(window, document){
 
         // notify all subscribers
         // _Sandbox.eventNotify("page-loaded");
-        qB.log(true, 'page is loaded fn');
+        _app.log(true, 'page is loaded fn');
     }
 
     // Sandbox
@@ -81,14 +82,14 @@ window.mpws || (function(window, document){
 
             // add another listener
             if (!alreadyAdded) {
-                qB.log(true, 'adding subscriber on ', eventID);
+                _app.log(true, 'adding subscriber on ', eventID);
                 this._events[eventID].push({
                     id : listenerHash,
                     fn : listener
                 });
                 return true;
             } else 
-                qB.log(true, 'this subscriber is already added on ', eventID);
+                _app.log(true, 'this subscriber is already added on ', eventID);
             return false;
         },
         // remove callback subscription to eventID 
@@ -110,9 +111,9 @@ window.mpws || (function(window, document){
                 return;
             var results = [];
             var rez = null;
-            qB.log(true, 'eventNotify: >>>>>>>>>>>>> ', eventID, ' >>>>>>>>> ');
-            qB.log(true, listeners);
-            qB.log(true, 'eventNotify: <<<<<<<<<<<<< ', eventID, ' <<<<<<<<< ');
+            _app.log(true, 'eventNotify: >>>>>>>>>>>>> ', eventID, ' >>>>>>>>> ');
+            _app.log(true, listeners);
+            _app.log(true, 'eventNotify: <<<<<<<<<<<<< ', eventID, ' <<<<<<<<< ');
             // loop through listeners
             for (var i = 0, len = this._events[eventID].length; i < len; i++)
                 results.push(listeners[i].fn(data));
@@ -121,7 +122,7 @@ window.mpws || (function(window, document){
                 rez = results.pop();
             else
                 rez = results;
-            qB.log(true, 'eventNotify: has result', rez, results);
+            _app.log(true, 'eventNotify: has result', rez, results);
             // perform callback with results
             if (typeof callback === "function")
                 callback(null, rez);
@@ -132,9 +133,9 @@ window.mpws || (function(window, document){
     // Module
     var _Modules = {
         register : function (id, globals, deps, callback) {
-            qB.log(true, 'doing register >>>>> ', id, ' with >>>>>> ', deps);
+            _app.log(true, 'doing register >>>>> ', id, ' with >>>>>> ', deps);
             define(id, filterDownloadedPackages(deps), function () {
-                qB.log(true, '::: DEFINE CALLBACK: ', id);
+                _app.log(true, '::: DEFINE CALLBACK: ', id);
                 var fn = _app.Utils.lockOnFn(callback, globals.concat(_app, _Sandbox));
                 return fn.apply(null, [].slice.call(arguments));
             });
@@ -142,7 +143,7 @@ window.mpws || (function(window, document){
         require : function (packages, callback) {
             if (callback)
                 require(filterDownloadedPackages(packages), function () {
-                    qB.log(true ,'::: REQUIRE CALLBACK: ', packages);
+                    _app.log(true ,'::: REQUIRE CALLBACK: ', packages);
                     return callback.apply(null, [].slice.call(arguments));
                 });
             else
@@ -158,37 +159,55 @@ window.mpws || (function(window, document){
     function Internal () {}
 
     Internal.configureAppLoader = function (appConfig) {
-        // qB.log(appConfig);
+        _app.log(true, appConfig);
 
         // deep copy into qB scope 
         _configuration = appConfig;
 
         // configure requirejs
-        var _rConfig = {
-            baseUrl: _configuration.URL.staticUrl + (_app.Page.isDebugEnabled() ? 'js' : 'build'),
-            paths: {
-                // general paths
-                lib: 'libs',
-                router: 'routers',
-                widget: 'widgets',
-                model: 'models',
-                view: 'views'
-            }
-        };
+        var _rConfig = _configuration.REQUIREJS.app;
+        //     baseUrl: _configuration.REQUIREJS.baseUrl,
+        //     paths: {
+        //         // general paths
+        //         lib: 'libs',
+        //         router: 'routers',
+        //         widget: 'widgets',
+        //         model: 'models',
+        //         view: 'views'
+        //     }
+        // };
 
         if (_app.Page.isDebugEnabled())
             _rConfig.urlArgs = "bust=" + (new Date()).getTime();
 
-        _rConfig.paths["lib/jquery"] = 'libs/jquery-1.9.1';
-        _rConfig.paths["lib/jquery_ui"] = 'libs/jquery-ui-1.10.3.custom';
+        // _rConfig.paths["lib/jquery"] = 'libs/jquery-1.9.1';
+        // _rConfig.paths["lib/jquery_ui"] = 'libs/jquery-ui-1.10.3.custom';
         
-        require.config(_rConfig);
+        requirejs.config(_rConfig);
 
-        _Modules.require(['router/base'], function(pageRouter) {
+        // var _pageOnReadySetupFn = function () {
+        //     $(document).ready(function () {
+        //         _Sandbox.eventNotify("page-loaded");
+        //         app.log(true ,'page loaded');
+        //     });
+        // }
+
+        // include required routers
+        // if (_configuration.REQUIREJS.startupModules)
+        //     _Modules.require(_configuration.REQUIREJS.startupModules, _pageOnReadySetupFn);
+        // else
+        //     _pageOnReadySetupFn();
+
+
+        // // request base router from main context
+        _Modules.require(['router/base'], function(BaseRouter) {
             // start page routing
-            pageRouter.start(appConfig);
-            pageRouter.onPageLoaded(_self, _initializeLoader);
+            var router = new BaseRouter(_configuration.REQUIREJS.router);
+            router.start();
+            router.onPageLoaded(_self, _initializeLoader);
         });
+            // notify all subscribers that page is ready
+
     }
 
     // Page object
@@ -260,6 +279,124 @@ window.mpws || (function(window, document){
             return function () {
                 return fn.apply(null, args.concat([].slice.call(arguments, 0)));
             }
+        },
+        isFunction: function( obj ) {
+            return _app.Utils.type(obj) === "function";
+        },
+        isArray: Array.isArray || function( obj ) {
+            return _app.Utils.type(obj) === "array";
+        },
+        isWindow: function( obj ) {
+            return obj != null && obj == obj.window;
+        },
+        isNumeric: function( obj ) {
+            return !isNaN( parseFloat(obj) ) && isFinite( obj );
+        },
+        type: function( obj ) {
+            if ( obj == null ) {
+                return String( obj );
+            }
+            return typeof obj === "object" || typeof obj === "function" ?
+                class2type[ core_toString.call(obj) ] || "object" :
+                typeof obj;
+        },
+        isPlainObject: function( obj ) {
+            // Must be an Object.
+            // Because of IE, we also have to check the presence of the constructor property.
+            // Make sure that DOM nodes and window objects don't pass through, as well
+            if ( !obj || _app.Utils.type(obj) !== "object" || obj.nodeType || _app.Utils.isWindow( obj ) ) {
+                return false;
+            }
+
+            try {
+                // Not own constructor property must be Object
+                if ( obj.constructor &&
+                    !core_hasOwn.call(obj, "constructor") &&
+                    !core_hasOwn.call(obj.constructor.prototype, "isPrototypeOf") ) {
+                    return false;
+                }
+            } catch ( e ) {
+                // IE8,9 Will throw exceptions on certain host objects #9897
+                return false;
+            }
+
+            // Own properties are enumerated firstly, so to speed up,
+            // if last one is own, then all properties are own.
+
+            var key;
+            for ( key in obj ) {}
+
+            return key === undefined || core_hasOwn.call( obj, key );
+        },
+
+        isEmptyObject: function( obj ) {
+            var name;
+            for ( name in obj ) {
+                return false;
+            }
+            return true;
+        },
+        extend: function () {
+            var src, copyIsArray, copy, name, options, clone,
+                target = arguments[0] || {},
+                i = 1,
+                length = arguments.length,
+                deep = false;
+
+            // Handle a deep copy situation
+            if ( typeof target === "boolean" ) {
+                deep = target;
+                target = arguments[1] || {};
+                // skip the boolean and the target
+                i = 2;
+            }
+
+            // Handle case when target is a string or something (possible in deep copy)
+            if ( typeof target !== "object" && !_app.Utils.isFunction(target) ) {
+                target = {};
+            }
+
+            // extend jQuery itself if only one argument is passed
+            if ( length === i ) {
+                target = this;
+                --i;
+            }
+
+            for ( ; i < length; i++ ) {
+                // Only deal with non-null/undefined values
+                if ( (options = arguments[ i ]) != null ) {
+                    // Extend the base object
+                    for ( name in options ) {
+                        src = target[ name ];
+                        copy = options[ name ];
+
+                        // Prevent never-ending loop
+                        if ( target === copy ) {
+                            continue;
+                        }
+
+                        // Recurse if we're merging plain objects or arrays
+                        if ( deep && copy && ( _app.Utils.isPlainObject(copy) || (copyIsArray = _app.Utils.isArray(copy)) ) ) {
+                            if ( copyIsArray ) {
+                                copyIsArray = false;
+                                clone = src && _app.Utils.isArray(src) ? src : [];
+
+                            } else {
+                                clone = src && _app.Utils.isPlainObject(src) ? src : {};
+                            }
+
+                            // Never move original objects, clone them
+                            target[ name ] = _app.Utils.extend( deep, clone, copy );
+
+                        // Don't bring in undefined values
+                        } else if ( copy !== undefined ) {
+                            target[ name ] = copy;
+                        }
+                    }
+                }
+            }
+            // Return the modified object
+            return target;
         }
     };
 
@@ -271,7 +408,6 @@ window.mpws || (function(window, document){
 
     function filterDownloadedPackages (modules) {
         _app.log(true, 'filterDownloadedPackages', modules);
-        // var specified = require.s.contexts._.specified;
         return modules;
     }
 
@@ -312,6 +448,6 @@ window.mpws || (function(window, document){
     _app.log = log;
 
     // expose into global scope
-    window.mpws = _app;
+    window.APP = _app;
 
 })(window, document)

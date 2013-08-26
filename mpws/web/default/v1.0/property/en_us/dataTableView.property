@@ -1,0 +1,35 @@
+title = 'Data Record Viewer';
+description = ' - here you can find and manage your data'
+
+; searchbox
+labelForTextBoxSearchBoxID='By ID';
+labelForTextBoxSearchBoxName='By Name';
+labelForTextBoxSearchBoxEnabled='By Involvement';
+labelForTextBoxSearchBoxDescription='By Description';
+labelForTextBoxSearchBoxAction='By Action';
+labelForTextBoxSearchBoxExternalKey='By External Key';
+labelForTextBoxSearchBoxDateCreated='By Date Created';
+labelForTextBoxSearchBoxDateUpdated='By Date Updated';
+labelForTextBoxSearchBoxDateLastAccess='By Last Access';
+
+; quick filtering
+labelForLinkActionQuickFilteringID='ID';
+labelForLinkActionQuickFilteringName='Name';
+labelForLinkActionQuickFilteringEnabled='Enabled';
+labelForLinkActionQuickFilteringDescription='Description';
+labelForLinkActionQuickFilteringAction='Action';
+labelForLinkActionQuickFilteringExternalKey='External Key';
+labelForLinkActionQuickFilteringDateCreated='Date Created';
+labelForLinkActionQuickFilteringDateUpdated='Date Updated';
+labelForLinkActionQuickFilteringDateLastAccess='Last Access';
+
+; captions
+captionID = "ID";
+captionName = "Name";
+captionEnabled = "Enabled";
+captionDescription = "Description";
+captionAction = "Action";
+captionExternalKey = "External Key";
+captionDateCreated = "Date Created";
+captionDateUpdated = "Date Updated";
+captionDateLastAccess= "Last Access";

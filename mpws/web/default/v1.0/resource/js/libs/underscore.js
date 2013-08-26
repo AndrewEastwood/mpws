@@ -1,9 +1,9 @@
-qB.Modules.register("lib/underscore", [
+APP.Modules.register("lib/underscore", [
     /* import globals */
     window
 ], [
     /* component implementation */
-], function(window, qB, Sandbox) {
+], function(window, app, Sandbox) {
 
 //     Underscore.js 1.5.1
 //     http://underscorejs.org

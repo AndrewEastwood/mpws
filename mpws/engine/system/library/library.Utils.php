@@ -611,6 +611,10 @@ class libraryUtils {
         return $value;
     }
 
+    static public function arrayToString ($array) {
+        return '[' . join(',', $array) . ']';
+    }
+
     static public function getDebugInfo () {
         return isset($GLOBALS['MPWS_DEBUG'])?$GLOBALS['MPWS_DEBUG']:false;
     }

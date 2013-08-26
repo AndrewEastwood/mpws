@@ -1,1 +1,0 @@
-alert('plugin shop internal js');
