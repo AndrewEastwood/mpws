@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:39:11
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-27 02:34:25
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html" */ ?>
 <?php /*%%SmartyHeaderCode:20628907785206346fbb3de7-25492788%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '8353ed817f3a10aa18cb6a40909f78201e516c64' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/searchBox.html',
-      1 => 1351275592,
+      1 => 1377560064,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_5206346fcb4bc0_35855080',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -30,8 +32,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'srchl' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_5206346fcb4bc0_35855080',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_5206346fcb4bc0_35855080')) {function content_5206346fcb4bc0_35855080($_smarty_tpl) {?><?php $_smarty_tpl->tpl_vars['_controlOwner'] = new Smarty_variable('SearchBox', null, 0);?>
 <div id="MPWSComponentSearchBoxID" class="MPWSComponent MPWSComponentSearchBox">
@@ -63,10 +63,10 @@ $_smarty_tpl->tpl_vars['field']->_loop = true;
         <div class="MPWSFormFooter">
         
         <?php if ($_smarty_tpl->tpl_vars['_data']->value['ACTIVE']){?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Search','Discard'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>'control'), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Search','Discard'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>'control','_customCssClassNames'=>'btn'), 0);?>
 
         <?php }else{ ?>
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Search'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>'control'), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('Search'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>'control','_customCssClassNames'=>'btn'), 0);?>
 
         <?php }?>
         </div>
@@ -84,7 +84,7 @@ $_smarty_tpl->tpl_vars['sbVal']->_loop = true;
  $_smarty_tpl->tpl_vars['sbKey']->value = $_smarty_tpl->tpl_vars['sbVal']->key;
 ?>
                 <?php $_smarty_tpl->createLocalArrayVariable('_filterString', null, 0);
-$_smarty_tpl->tpl_vars['_filterString']->value[] = ((string)$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxResultFilterTextFieldPrefix)." ".((string)$_smarty_tpl->tpl_vars['sbKey']->value)." ".((string)$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxResultFilterTextValuePrefix)." ".((string)$_smarty_tpl->tpl_vars['sbVal']->value);?>
+$_smarty_tpl->tpl_vars['_filterString']->value[] = ((string)$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxResultFilterTextFieldPrefix)." <span class=\"label\">".((string)$_smarty_tpl->tpl_vars['sbKey']->value)."</span> ".((string)$_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxResultFilterTextValuePrefix)." <span class=\"label label-info\">".((string)$_smarty_tpl->tpl_vars['sbVal']->value)."</span>";?>
             <?php } ?>
             <?php $_smarty_tpl->tpl_vars['srchl'] = new Smarty_variable(implode($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxResultFilterTextFieldValueSplitter,$_smarty_tpl->tpl_vars['_filterString']->value), null, 0);?>
             <?php echo $_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectProperty_component_searchBoxResultFilterTextPrefix;?>

@@ -6,6 +6,7 @@
 {$_controlSize = $_size|default:25}
 {$_controlLimit = ''}
 {$_controlRenderMode = $_renderMode|default:'normal'}
+{$_customCssClassNames = $_customCssClassNames|default:''}
 
 {* init control with passed arguments *}
 {if isset($_limit)}
@@ -18,7 +19,7 @@
 {if $_controlRenderMode eq 'normal' or $_controlRenderMode eq 'error'}
     
     {* editable control *}
-    <input id="MPWSControl{$_controlCssNameCustom}ID" type="text" name="{$_controlName}" value="{$_controlValue}" size="{$_controlSize}"{$_controlLimit} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom}">
+    <input id="MPWSControl{$_controlCssNameCustom}ID" type="text" name="{$_controlName}" value="{$_controlValue}" size="{$_controlSize}"{$_controlLimit} class="MPWSControl MPWSControl{$_controlCssName} MPWSControl{$_controlCssNameCustom} {$_customCssClassNames}">
     {if $_controlRenderMode eq 'error'}
         <span class="MPWSText MPWSTextAsterix">*</span>
     {/if}

@@ -25,6 +25,7 @@ class pluginShop extends objectBaseWebPlugin {
             case "products" :
             case "categories" :
             case "origins" :
+            case "specifications" :
             case "currency" :
             case "commands" :
                 $managerName = 'Manager' . ucfirst($display);

@@ -7,3 +7,5 @@ labelForLinkActionQuickFilteringBoughts = "Product Boughts";
 ; captions
 captionExternalKey = "External Key";
 captionReportDataUrl = "Report Data URL";
+captionModel = "Model";
+captionSKU = "SKU";

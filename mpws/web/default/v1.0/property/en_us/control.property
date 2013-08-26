@@ -1,6 +1,6 @@
 ; search box
 controlFormButtonsSearchBoxButtonSearch = "Search";
-controlFormButtonsSearchBoxButtonDiscard = "Clear Search":
+controlFormButtonsSearchBoxButtonDiscard = "Clear Search";
 
 ; user information
 controlFormButtonsButtonSignOut = "Signout";

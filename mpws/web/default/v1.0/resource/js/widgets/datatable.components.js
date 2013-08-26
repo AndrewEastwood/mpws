@@ -13,65 +13,64 @@ APP.Modules.register("widget/datatable.components", [], [
 
         app.log(true, 'DataTableComponents.activateTableBunchActions', dataTable)
 
-        var tableRowHeader = $(dataTable).find('.MPWSDataTableRowCaptions');
-        var tableRowRecord = $(dataTable).find('.MPWSDataTableRowGroup .MPWSDataTableRow');
+        var tableRowHeader = '.MPWSDataTableRowCaptions';
+        var tableRowGroup = '.MPWSDataTableRowGroup';
+        var tableRowRecord = '.MPWSDataTableRow';
 
-        // APP.log('bunch controls', $(tableBunchCheckboxCmn), $(tableBunchCheckboxRow));
-
-
-
-        var _checkAllRowsSelected = function () {
-            var _rowsCount = $(tableRowRecord).length;
-            var _rowsSelectedCount = $(tableRowRecord).find('.selected').length;
-            if (_rowsCount === _rowsSelectedCount)
-                _selectAllRows(null, true, true);
-            if (_rowsSelectedCount === 0)
-                _selectAllRows(null, true, null);
+        var _setCheckboxStateFn = function (checkboxes, state) {
+            $(checkboxes).each(function(){
+                if (state)
+                    this.setAttribute("checked", "checked");
+                else
+                    this.removeAttribute("checked", "checked");
+            });
         }
 
-        var _selectRowFn = function (row) {
-            $(row).addClass('selected');
-            $(row).find('input[type="checkbox"]').attr('unchecked', null);
-            $(row).find('input[type="checkbox"]').attr('checked', true);
-            _checkAllRowsSelected();
-        }
+        var _setRowStateFn = function (rows, state, isTopRow) {
 
-        var _unselectRowFn = function (row) {
-            $(row).removeClass('selected');
-            $(row).find('input[type="checkbox"]').attr('unchecked', null);
-            $(row).find('input[type="checkbox"]').attr('checked', null);
-            _checkAllRowsSelected();
-        }
+            var $checkbox = $(this);
+            var checkboxName = $checkbox.attr('name');
+            var checkBoxSelector = 'input[type="checkbox"][name="' + checkboxName + '"]';
 
-        var _selectAllRows = function (events, justSetCheckbox, state) {
+            var _checkboxes = null;
 
-            var _senderName = $(this).attr('name');
-            var _checkbox = $(tableRowRecord).find('[name="' + _senderName + '"]');
-
-            if (justSetCheckbox)
-                $(_checkbox).attr('checked', state);
-            else {
-                var _state = $(this).is(':checked') ? true : null;
+            if (isTopRow) {
+                 // set state 'checked' for all data rows
+                _checkboxes = $(rows).find(checkBoxSelector);
+                app.log(rows, checkBoxSelector, _checkboxes);
+                _setCheckboxStateFn(_checkboxes, state);
+            } else {
+                // find top row checkbox
+                var _cbtop = $(dataTable).find(tableRowHeader + ' ' + checkBoxSelector);
+                var _totalCB = $(dataTable).find(tableRowGroup + ' ' + checkBoxSelector);
+                var _checkedCB = $(dataTable).find(tableRowGroup + ' ' + checkBoxSelector + ':checked');
+                var _topCBState = _totalCB.length == _checkedCB.length;
+                app.log(_totalCB.length , _checkedCB.length, _topCBState);
+                _setCheckboxStateFn(_cbtop, _topCBState);
             }
-        }
 
-        var _onRowDataSelected = function () {
-
-            $(this).toggleClass('selected');
-
-            if($(this).hasClass('selected'))
-                _selectRowFn($(this));
+            if (state)
+                $(rows).addClass('selected');
             else
-                _unselectRowFn($(this));
-        }
-        var _onRowTopSelected = function () {
-            _selectAllRows($(this))
+                $(rows).removeClass('selected');
         }
 
+        var _checkboxStateFn = function (checkbox) {
+            return $(checkbox).is(':checked') ? true : null;
+        }
 
-        $(tableRowHeader).find('input[type="checkbox"]').on('click', _onRowTopSelected);
-        $(tableRowRecord).find('input[type="checkbox"]').on('click', _onRowDataSelected);
-        $(tableRowRecord).on('click', _onRowDataSelected)
+        app.log(dataTable.selector + ' input[type="checkbox"]')
+        $(dataTable.selector + ' input[type="checkbox"]').on('click', function () {
+            var _isTopRow = $(this).parents(tableRowHeader).length > 0;
+            // app.log('------>>>> ', this, $(this), $(this).parents('.MPWSDataTableRowGroup'))
+            var rows = null;
+            if (_isTopRow)
+                rows = $(dataTable).find(tableRowGroup + ' ' + tableRowRecord);
+            else
+                rows = $(this).parents(tableRowRecord)
+            _setRowStateFn.call(this, rows, _checkboxStateFn(this), _isTopRow);
+        });
+
     }
 
     return DataTableComponents;

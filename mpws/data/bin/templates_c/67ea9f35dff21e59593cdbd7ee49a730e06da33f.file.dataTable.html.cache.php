@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-26 15:23:01
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-27 01:53:15
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html" */ ?>
 <?php /*%%SmartyHeaderCode:144146947952063462e8a987-03971636%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '67ea9f35dff21e59593cdbd7ee49a730e06da33f' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/component/dataTable.html',
-      1 => 1377519778,
+      1 => 1377557320,
       2 => 'file',
     ),
   ),
@@ -71,7 +71,7 @@ $_smarty_tpl->tpl_vars['_actionName']->_loop = true;
     <?php $_smarty_tpl->_capture_stack[0][] = array('bunchactions', null, null); ob_start(); ?>
         <?php if (count(array_intersect(array("edit","delete"),$_smarty_tpl->tpl_vars['_confing']->value['datatable']['tableTopActions']))>0){?>
             <span class="MPWSDataTableCellAction MPWSDataTableCellActionSelectRedcord">
-            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'checkbox','_name'=>'SelectRedcord','_controlOwner'=>((string)$_smarty_tpl->tpl_vars['_controlOwner']->value)."RowAction",'_action'=>'SelectRedcord','_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_mode'=>'system'), 0);?>
+            <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_trigger_control, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_type'=>'checkbox','_name'=>'SelectRecord','_controlOwner'=>((string)$_smarty_tpl->tpl_vars['_controlOwner']->value)."RowAction",'_action'=>'SelectRedcord','_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_single'=>true,'_mode'=>'system'), 0);?>
 
             </span>
         <?php }?>

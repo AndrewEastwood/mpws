@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-24 15:06:29
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-27 02:03:37
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html" */ ?>
 <?php /*%%SmartyHeaderCode:10781041265206340d179e12-75619947%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '497c121d4947324a67febd0f320f0a2ae4da1ea4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/trigger/control.html',
-      1 => 1377345922,
+      1 => 1377558167,
       2 => 'file',
     ),
   ),
@@ -24,6 +24,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '_controlOwner' => 0,
     '_value' => 0,
     '_showHelper' => 0,
+    '_customCssClassNames' => 0,
     '_type' => 0,
     'CURRENT' => 0,
     '_name' => 0,
@@ -59,7 +60,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->tpl_vars['_controlValue'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_value']->value)===null||$tmp==='' ? null : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_showHelper'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_showHelper']->value)===null||$tmp==='' ? false : $tmp), null, 0);?>
 <?php $_smarty_tpl->tpl_vars['_linkLabelWithControl'] = new Smarty_variable(true, null, 0);?>
-    
+<?php $_smarty_tpl->tpl_vars['_customCssClassNames'] = new Smarty_variable((($tmp = @$_smarty_tpl->tpl_vars['_customCssClassNames']->value)===null||$tmp==='' ? '' : $tmp), null, 0);?>
+
 <div class="MPWSBlock MPWSBlockControl MPWSBlockControl_<?php echo $_smarty_tpl->tpl_vars['_type']->value;?>
  MPWSRenderMode<?php echo smarty_modifier_capitalize($_smarty_tpl->tpl_vars['_renderMode']->value);?>
 ">
@@ -67,35 +69,35 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php $_smarty_tpl->_capture_stack[0][] = array("control", null, null); ob_start(); ?>
     <?php if ($_smarty_tpl->tpl_vars['_type']->value=='text'||$_smarty_tpl->tpl_vars['_type']->value=='textarea'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('TextArea', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextArea, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextArea, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif(startsWith($_smarty_tpl->tpl_vars['_type']->value,'varchar')||$_smarty_tpl->tpl_vars['_type']->value=='textbox'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('TextBox', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>glGetOnlyNums($_smarty_tpl->tpl_vars['_type']->value),'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>glGetOnlyNums($_smarty_tpl->tpl_vars['_type']->value),'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='tinyint(1)'||$_smarty_tpl->tpl_vars['_type']->value=='bool'||$_smarty_tpl->tpl_vars['_type']->value=='boolean'||$_smarty_tpl->tpl_vars['_type']->value=='checkbox'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('CheckBox', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlCheckBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlCheckBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif(startsWith($_smarty_tpl->tpl_vars['_type']->value,'int')){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('TextBox', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif(startsWith($_smarty_tpl->tpl_vars['_type']->value,'decimal')){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('TextBox', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlTextBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='datetime'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('DateTime', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlDateTime, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlDateTime, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_limit'=>10,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='password'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('Password', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlPassword, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlPassword, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
     <?php }elseif(startsWith($_smarty_tpl->tpl_vars['_type']->value,'enum')||$_smarty_tpl->tpl_vars['_type']->value=='select'){?>
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('DropDown', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlDropDown, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_items'=>libraryDataBaseChainQueryBuilder::parseEnum($_smarty_tpl->tpl_vars['_type']->value),'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_htmlDropDown, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_items'=>libraryDataBaseChainQueryBuilder::parseEnum($_smarty_tpl->tpl_vars['_type']->value),'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value), 0);?>
 
         
      
@@ -105,7 +107,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsListBox'){?>
 
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('ListBox', null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsListBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_items'=>(($tmp = @$_smarty_tpl->tpl_vars['_items']->value)===null||$tmp==='' ? array() : $tmp),'_checkboxes'=>(($tmp = @$_smarty_tpl->tpl_vars['_checkboxes']->value)===null||$tmp==='' ? false : $tmp),'_numLines'=>(($tmp = @$_smarty_tpl->tpl_vars['_numLines']->value)===null||$tmp==='' ? false : $tmp),'_captions'=>(($tmp = @$_smarty_tpl->tpl_vars['_captions']->value)===null||$tmp==='' ? array() : $tmp),'_initValues'=>(($tmp = @$_smarty_tpl->tpl_vars['_initValues']->value)===null||$tmp==='' ? false : $tmp),'_customValueHolder'=>(($tmp = @$_smarty_tpl->tpl_vars['_customValueHolder']->value)===null||$tmp==='' ? 'use' : $tmp)), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsListBox, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_items'=>(($tmp = @$_smarty_tpl->tpl_vars['_items']->value)===null||$tmp==='' ? array() : $tmp),'_checkboxes'=>(($tmp = @$_smarty_tpl->tpl_vars['_checkboxes']->value)===null||$tmp==='' ? false : $tmp),'_numLines'=>(($tmp = @$_smarty_tpl->tpl_vars['_numLines']->value)===null||$tmp==='' ? false : $tmp),'_captions'=>(($tmp = @$_smarty_tpl->tpl_vars['_captions']->value)===null||$tmp==='' ? array() : $tmp),'_initValues'=>(($tmp = @$_smarty_tpl->tpl_vars['_initValues']->value)===null||$tmp==='' ? false : $tmp),'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value,'_customValueHolder'=>(($tmp = @$_smarty_tpl->tpl_vars['_customValueHolder']->value)===null||$tmp==='' ? 'use' : $tmp)), 0);?>
 
 
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsauth'){?>
@@ -116,7 +118,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      
         <?php $_smarty_tpl->tpl_vars['_standartControlType'] = new Smarty_variable('LabelValue', null, 0);?>
         <?php $_smarty_tpl->tpl_vars['_linkLabelWithControl'] = new Smarty_variable(false, null, 0);?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsLabelValue, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsLabelValue, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_resourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value,'_value'=>$_smarty_tpl->tpl_vars['_controlValue']->value), 0);?>
 
             
      <?php }elseif($_smarty_tpl->tpl_vars['_type']->value=='mpwsLinkAction'){?>
@@ -127,7 +129,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <?php if (!empty($_smarty_tpl->tpl_vars['_isCustom']->value)){?>
             <?php $_smarty_tpl->tpl_vars['_controlResourceOwner'] = new Smarty_variable($_smarty_tpl->tpl_vars['_resourceOwner']->value, null, 0);?>
         <?php }?>
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsLinkAction, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_controlResourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_action'=>$_smarty_tpl->tpl_vars['_action']->value,'_mode'=>(($tmp = @$_smarty_tpl->tpl_vars['_mode']->value)===null||$tmp==='' ? 'normal' : $tmp),'_target'=>(($tmp = @$_smarty_tpl->tpl_vars['_target']->value)===null||$tmp==='' ? '' : $tmp),'_oid'=>(($tmp = @$_smarty_tpl->tpl_vars['_oid']->value)===null||$tmp==='' ? '' : $tmp),'_mpwsParams'=>(($tmp = @$_smarty_tpl->tpl_vars['_mpwsParams']->value)===null||$tmp==='' ? false : $tmp),'_customParams'=>(($tmp = @$_smarty_tpl->tpl_vars['_customParams']->value)===null||$tmp==='' ? false : $tmp),'_useValueAsTitle'=>(($tmp = @$_smarty_tpl->tpl_vars['_useValueAsTitle']->value)===null||$tmp==='' ? null : $tmp),'_href'=>(($tmp = @$_smarty_tpl->tpl_vars['_href']->value)===null||$tmp==='' ? '' : $tmp)), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsLinkAction, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_name'=>$_smarty_tpl->tpl_vars['_name']->value,'_controlOwner'=>$_smarty_tpl->tpl_vars['_controlOwner']->value,'_resourceOwner'=>$_smarty_tpl->tpl_vars['_controlResourceOwner']->value,'_renderMode'=>$_smarty_tpl->tpl_vars['_renderMode']->value,'_action'=>$_smarty_tpl->tpl_vars['_action']->value,'_mode'=>(($tmp = @$_smarty_tpl->tpl_vars['_mode']->value)===null||$tmp==='' ? 'normal' : $tmp),'_target'=>(($tmp = @$_smarty_tpl->tpl_vars['_target']->value)===null||$tmp==='' ? '' : $tmp),'_oid'=>(($tmp = @$_smarty_tpl->tpl_vars['_oid']->value)===null||$tmp==='' ? '' : $tmp),'_mpwsParams'=>(($tmp = @$_smarty_tpl->tpl_vars['_mpwsParams']->value)===null||$tmp==='' ? false : $tmp),'_customParams'=>(($tmp = @$_smarty_tpl->tpl_vars['_customParams']->value)===null||$tmp==='' ? false : $tmp),'_useValueAsTitle'=>(($tmp = @$_smarty_tpl->tpl_vars['_useValueAsTitle']->value)===null||$tmp==='' ? null : $tmp),'_customCssClassNames'=>$_smarty_tpl->tpl_vars['_customCssClassNames']->value,'_href'=>(($tmp = @$_smarty_tpl->tpl_vars['_href']->value)===null||$tmp==='' ? '' : $tmp)), 0);?>
 
 
     <?php }?>

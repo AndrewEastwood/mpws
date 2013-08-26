@@ -16,34 +16,35 @@
 {$_controlValue = $_value|default:null}
 {$_showHelper = $_showHelper|default:false}
 {$_linkLabelWithControl = true}
-    
+{$_customCssClassNames = $_customCssClassNames|default:''}
+
 <div class="MPWSBlock MPWSBlockControl MPWSBlockControl_{$_type} MPWSRenderMode{$_renderMode|capitalize}">
 
 {capture name="control"}
     {if $_type eq 'text' or $_type eq 'textarea' }
         {$_standartControlType = 'TextArea'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea _name=$_name _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextArea _name=$_name _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif startsWith($_type, 'varchar') or $_type eq 'textbox' }
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=glGetOnlyNums($_type) _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif $_type eq 'tinyint(1)' or $_type eq 'bool' or $_type eq 'boolean' or $_type eq 'checkbox'}
         {$_standartControlType = 'CheckBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlCheckBox _name=$_name _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlCheckBox _name=$_name _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif startsWith($_type, 'int')}
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif startsWith($_type, 'decimal')}
         {$_standartControlType = 'TextBox'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlTextBox _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif $_type eq 'datetime'}
         {$_standartControlType = 'DateTime'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDateTime _name=$_name _limit=10 _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif $_type eq 'password'}
         {$_standartControlType = 'Password'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlPassword _name=$_name _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlPassword _name=$_name _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
     {elseif startsWith($_type, 'enum') or $_type eq 'select'}
         {$_standartControlType = 'DropDown'}
-        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resourceOwner=$_resourceOwner _controlOwner=$_controlOwner _renderMode=$_renderMode _value=$_controlValue}
+        {include file=$CURRENT.OBJECT->objectTemplatePath_control_htmlDropDown _name=$_name _items=libraryDataBaseChainQueryBuilder::parseEnum($_type) _resourceOwner=$_resourceOwner _controlOwner=$_controlOwner _renderMode=$_renderMode _value=$_controlValue _customCssClassNames=$_customCssClassNames}
         
      {* MPWS CONTROLS *}
      {* Contains special arguments than standart html controls *}
@@ -62,6 +63,7 @@
             _numLines=$_numLines|default:false
             _captions=$_captions|default:[]
             _initValues=$_initValues|default:false
+            _customCssClassNames=$_customCssClassNames
             _customValueHolder=$_customValueHolder|default:'use'}
 
      {elseif $_type eq 'mpwsauth'}
@@ -76,7 +78,8 @@
             _name=$_name
             _controlOwner=$_controlOwner
             _resourceOwner=$_resourceOwner
-            _renderMode=$_renderMode 
+            _renderMode=$_renderMode
+            _customCssClassNames=$_customCssClassNames
             _value=$_controlValue}
             
      {elseif $_type eq 'mpwsLinkAction'}
@@ -99,6 +102,7 @@
             _mpwsParams=$_mpwsParams|default:false
             _customParams=$_customParams|default:false
             _useValueAsTitle=$_useValueAsTitle|default:null
+            _customCssClassNames=$_customCssClassNames
             _href=$_href|default:''}
 
     {/if}

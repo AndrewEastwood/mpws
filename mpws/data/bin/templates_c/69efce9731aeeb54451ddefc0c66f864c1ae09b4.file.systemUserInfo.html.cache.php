@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-08-10 15:37:40
+<?php /* Smarty version Smarty-3.1.11, created on 2013-08-27 02:03:38
          compiled from "/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemUserInfo.html" */ ?>
 <?php /*%%SmartyHeaderCode:887917011520634146fcad7-42172658%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '69efce9731aeeb54451ddefc0c66f864c1ae09b4' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/widget/systemUserInfo.html',
-      1 => 1351023584,
+      1 => 1377558176,
       2 => 'file',
     ),
   ),
@@ -15,6 +15,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.11',
+  'unifunc' => 'content_52063414770980_36098464',
   'variables' => 
   array (
     'CURRENT' => 0,
@@ -23,8 +25,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'simpleHyperlinkHomepage' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.11',
-  'unifunc' => 'content_52063414770980_36098464',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_52063414770980_36098464')) {function content_52063414770980_36098464($_smarty_tpl) {?><?php $_smarty_tpl->tpl_vars['_widgetName'] = new Smarty_variable("SystemUserInfo", null, 0);?>
 <div id="MPWSWidgetSystemUserInfoID" class="MPWSWidget MPWSWidgetSystemUserInfo">
@@ -49,7 +49,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         
         </div>
         <div class="MPWSFormFooter">
-        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('SignOut'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value), 0);?>
+        <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['CURRENT']->value['OBJECT']->objectTemplatePath_control_mpwsFormButtons, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 9999, null, array('_buttons'=>array('SignOut'),'_controlOwner'=>$_smarty_tpl->tpl_vars['_widgetName']->value,'_customCssClassNames'=>'btn-danger'), 0);?>
 
         </div>
     </form>

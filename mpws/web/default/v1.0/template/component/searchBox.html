@@ -21,9 +21,9 @@
         <div class="MPWSFormFooter">
         {* form buttons *}
         {if $_data.ACTIVE }
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Search', 'Discard'] _controlOwner=$_controlOwner _resourceOwner='control'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Search', 'Discard'] _controlOwner=$_controlOwner _resourceOwner='control' _customCssClassNames='btn'}
         {else}
-            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Search'] _controlOwner=$_controlOwner _resourceOwner='control'}
+            {include file=$CURRENT.OBJECT->objectTemplatePath_control_mpwsFormButtons _buttons=['Search'] _controlOwner=$_controlOwner _resourceOwner='control' _customCssClassNames='btn'}
         {/if}
         </div>
     </form>
@@ -33,7 +33,7 @@
     
         {capture name="searchBoxResultText"}
             {foreach $_data.WORDS as $sbKey => $sbVal}
-                {$_filterString[]= "`$CURRENT.OBJECT->objectProperty_component_searchBoxResultFilterTextFieldPrefix` `$sbKey` `$CURRENT.OBJECT->objectProperty_component_searchBoxResultFilterTextValuePrefix` `$sbVal`"}
+                {$_filterString[]= "`$CURRENT.OBJECT->objectProperty_component_searchBoxResultFilterTextFieldPrefix` <span class=\"label\">`$sbKey`</span> `$CURRENT.OBJECT->objectProperty_component_searchBoxResultFilterTextValuePrefix` <span class=\"label label-info\">`$sbVal`</span>"}
             {/foreach}
             {$srchl = implode($CURRENT.OBJECT->objectProperty_component_searchBoxResultFilterTextFieldValueSplitter, $_filterString)}
             {$CURRENT.OBJECT->objectProperty_component_searchBoxResultFilterTextPrefix} {$srchl}
