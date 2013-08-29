@@ -15,12 +15,28 @@ class customerToolbox extends objectBaseWebCustomer {
         $events['ON_VALIDATE'] = function($login, $pwd, $ctx) {
         //$events['ON_START'] = function($login, $pwd, $ctx) {
             //echo 'ATTEMPT TO LOGIN AS ' . $login . DOG . $pwd;
-            return $ctx->contextCustomer->getDBO()
+            $user = $ctx->contextCustomer->getDBO()
                 ->select('*')
                 ->from('mpws_users')
                 ->where('Name', '=', $login)
                 ->andWhere('Password', '=', md5($pwd))
                 ->fetchRow();
+
+            // check customer
+            if (empty($user['CustomerID']) && glIsToolbox())
+                return $user;
+            // else find customer and make sure it is active
+            $customer = $ctx->contextCustomer->getDBO()
+                ->select('*')
+                ->from('mpws_customer')
+                ->where('ID', '=', $user['CustomerID'])
+                ->fetchRow();
+
+            // and also compare their names
+            if (isset($customer) && $customer['Enabled'] && glIsCustomer($customer['Name']))
+                return $user;
+
+            return null;
         };
         $events['ON_SUCCESS'] = function($user, $ctx) {
             //echo 'SET LAST ACCES ' . $login . DOG . $pwd;
@@ -40,7 +56,7 @@ class customerToolbox extends objectBaseWebCustomer {
         if (!$mpws_user['ACTIVE'])
             $ctx->pageModel->setCustom('LOGIN_URL', (empty($_SERVER['QUERY_STRING'])?$this->objectConfiguration_customer_defaultDisplay:libraryRequest::getNewUrl()));
             
-        //var_dump($mpws_user);
+        // var_dump($mpws_user);
         
         $ctx->pageModel->setInfo('USER', $mpws_user);
         // $ctx->pageModel->addMessage('helloWorld');
@@ -74,6 +90,8 @@ class customerToolbox extends objectBaseWebCustomer {
             }
         }
         
+        // $pluginFilter = $this->getActivePlugins();
+
         $ctx->pageModel->addWebObject($ctx->contextToolbox->getAllObjects());
         $ctx->pageModel->setPageView($this->objectTemplatePath_layout_defaultToolbox);
         return $ret;
@@ -98,7 +116,13 @@ class customerToolbox extends objectBaseWebCustomer {
     
     protected function _displayPage_Tools () {
         $ctx = contextMPWS::instance();
-        $ctx->directProcess('main:default', 'Toolbox');
+        // echo 'test before adding plg';
+        $activePlugins = $this->getActivePlugins();
+        if (is_string($activePlugins))
+            $ctx->directProcess($activePlugins . DOG . 'main:default', 'Toolbox');
+        else
+            foreach ($activePlugins as $pluginName)
+                $ctx->directProcess($pluginName . DOG . 'main:default', 'Toolbox');
         return true;
     }
 

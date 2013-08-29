@@ -57,7 +57,7 @@ class contextMPWS {
     }
     
     private function makeCommand ($stringFn, $custom_args = array()) {
-        //echo 'Making command of ' . $stringFn;
+        // echo 'Making command of ' . $stringFn;
         $ctxcmd = new mpwsCommand();
         $rawCommand = explode(DOG, $stringFn);
         

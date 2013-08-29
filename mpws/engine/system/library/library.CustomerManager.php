@@ -33,7 +33,11 @@ class libraryCustomerManager {
             return $this->_s_customers[makeKey($name, true)];
         }
         
-        $customerObjectName = OBJECT_T_CUSTOMER . ucfirst(str_replace(array('.', '-'), '', $name));
+
+        $objName = ucwords(str_replace(array('.', '-'), ' ', $name));
+
+
+        $customerObjectName = OBJECT_T_CUSTOMER . (str_replace(' ', '', $objName));
         $customerFileName = OBJECT_T_CUSTOMER . DOT . str_replace(array('.', '-'), DOT, $name) . EXT_SCRIPT;
         $customerFilePath = $this->_customerPath . DS . $name . DS . $customerFileName;
        

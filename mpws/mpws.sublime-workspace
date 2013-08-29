@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"cus",
+				"customerName"
+			],
+			[
 				"mod",
 				"moduleObj"
 			],
@@ -52,54 +56,43 @@
 	"buffers":
 	[
 		{
-			"file": "web/plugin/system/property/en_us/dataEditorSystemUsers.property",
+			"file": "web/customer/toolbox/customer.toolbox.php",
 			"settings":
 			{
-				"buffer_size": 1209,
+				"buffer_size": 4632,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "index.html",
+			"file": "web/plugin/system/plugin.system.php",
 			"settings":
 			{
-				"buffer_size": 1318,
-				"line_ending": "Unix",
-				"name": "index.html"
-			}
-		},
-		{
-			"file": "widget.table.js",
-			"settings":
-			{
-				"buffer_size": 10579,
+				"buffer_size": 1352,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "googleJS.js",
+			"file": "web/plugin/system/config/widget.ini",
 			"settings":
 			{
-				"buffer_size": 11059,
-				"line_ending": "Unix",
-				"name": "googleJS.js"
-			}
-		},
-		{
-			"file": "users.json",
-			"settings":
-			{
-				"buffer_size": 164,
+				"buffer_size": 4400,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "style.css",
+			"file": "engine/system/library/library.Security.php",
 			"settings":
 			{
-				"buffer_size": 598,
-				"line_ending": "Unix",
-				"name": "style.css"
+				"buffer_size": 7537,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "engine/bootstrap.php",
+			"settings":
+			{
+				"buffer_size": 1491,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -127,6 +120,16 @@
 	},
 	"file_history":
 	[
+		"/etc/hosts",
+		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/widget.ini",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Security.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataEditorSystemUsers.property",
+		"/devdata/Develop/github/web/mpws/users.json",
+		"/devdata/Develop/github/web/mpws/googleJS.js",
+		"/devdata/Develop/github/web/mpws/widget.table.js",
+		"/devdata/Develop/github/web/mpws/index.html",
+		"/devdata/Develop/github/web/mpws/style.css",
 		"/media/sda3/Develop/github/web/mpws/loader.js",
 		"/media/sda3/Develop/github/web/mpws/engine/bootstrap.php",
 		"/media/sda3/Develop/github/web/mpws/backbone-min.js",
@@ -193,28 +196,28 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "web/plugin/system/property/en_us/dataEditorSystemUsers.property",
+					"file": "web/customer/toolbox/customer.toolbox.php",
 					"settings":
 					{
-						"buffer_size": 1209,
+						"buffer_size": 4632,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								564,
-								564
+								8,
+								8
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -224,112 +227,104 @@
 				},
 				{
 					"buffer": 1,
-					"file": "index.html",
+					"file": "web/plugin/system/plugin.system.php",
 					"settings":
 					{
-						"buffer_size": 1318,
+						"buffer_size": 1352,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								462,
-								462
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"auto_name": "index.html",
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 102.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "widget.table.js",
+					"file": "web/plugin/system/config/widget.ini",
 					"settings":
 					{
-						"buffer_size": 10579,
+						"buffer_size": 4400,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								622,
-								622
+								927,
+								927
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1271.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "googleJS.js",
+					"file": "engine/system/library/library.Security.php",
 					"settings":
 					{
-						"buffer_size": 11059,
+						"buffer_size": 7537,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9312,
-								9312
+								5923,
+								5923
 							]
 						],
 						"settings":
 						{
-							"auto_name": "googleJS.js",
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 5185.0,
+						"translation.y": 33.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "users.json",
+					"file": "engine/bootstrap.php",
 					"settings":
 					{
-						"buffer_size": 164,
+						"buffer_size": 1491,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								134,
-								134
+								1476,
+								1476
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 102.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -337,36 +332,8 @@
 			]
 		},
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 5,
-					"file": "style.css",
-					"settings":
-					{
-						"buffer_size": 598,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								336,
-								324
-							]
-						],
-						"settings":
-						{
-							"auto_name": "style.css",
-							"syntax": "Packages/CSS/CSS.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -398,7 +365,7 @@
 		"cols":
 		[
 			0.0,
-			0.465303089473,
+			0.775085698169,
 			1.0
 		],
 		"rows":
@@ -418,6 +385,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"boots",
+				"engine/bootstrap.php"
+			]
 		],
 		"width": 0.0
 	},
@@ -433,6 +404,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 399.0,
+	"side_bar_width": 441.0,
 	"status_bar_visible": true
 }

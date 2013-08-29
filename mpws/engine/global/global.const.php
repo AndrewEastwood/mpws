@@ -25,6 +25,8 @@
     define ("DOG", "@");
     
     define ("SHARP", "#");
+    
+    define ("STAR", "*");
 
     define ("DS", "/");
 

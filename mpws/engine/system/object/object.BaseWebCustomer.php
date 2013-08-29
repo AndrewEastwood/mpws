@@ -24,6 +24,10 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         }
     }
 
+    public function getActivePlugins () {
+        return $this->objectConfiguration_customer_plugins;
+    }
+
     /* common run triggers  */
     protected function _commonRunOnStart () {
         parent::_commonRunOnStart();

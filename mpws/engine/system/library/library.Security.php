@@ -174,6 +174,7 @@ class librarySecurity {
                         'ID' => $user['ID'],
                         'NAME' => $user['Name'],
                         'SINCE' => $user['DateLastAccess'],
+                        'CUSTOMER' => $user['CustomerID'],
                         'LAST_ACCESS' => mktime()
                     );
 

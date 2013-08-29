@@ -14,10 +14,16 @@ class libraryPluginManager
     private $_s_plugins;
 
     public function __construct ($doInit = true) {
+        $ctx = contextMPWS::instance();
+        $customer = $ctx->contextCustomer->getObject();
+        $activePluginItems = $customer->getActivePlugins();
+        if (is_array($activePluginItems))
+            $activePluginItems = '{' . join(',', $activePluginItems) . '}';
+
         //echo '__construct';
         $this->_pluginPath = glGetFullFilePath('web', 'plugin');
         $this->_defaultPath = glGetFullFilePath('web', 'default', MPWS_VERSION);
-        $this->_activePluginPattern = $this->_pluginPath . glGetFilePath('*', 'config', 'object.ini');
+        $this->_activePluginPattern = $this->_pluginPath . glGetFilePath($activePluginItems, 'config', 'object.ini');
         $this->_activePluginNameRegex = '/(\\w+).config.object\.ini$/';
 
         if ($doInit)
@@ -33,7 +39,9 @@ class libraryPluginManager
     }
     
     public function getAvailablePluginNames () {
-        $enabledPluginList = glob($this->_activePluginPattern);
+        debug($enabledPluginList, 'getAvailablePluginNames >>> customer active plugins');
+        // echo $this->_activePluginPattern;
+        $enabledPluginList = glob($this->_activePluginPattern, GLOB_BRACE);
         debug($enabledPluginList, 'getAvailablePluginNames');
         $plugins = array();
         for ($i = 0, $len = count($enabledPluginList); $i < $len; $i++) {
@@ -86,9 +94,10 @@ class libraryPluginManager
         //list($caller, $fn) = explode('@', $action);
         $pluginNames = $this->getAvailablePluginNames();
         // wide command
+        // var_dump($command);
         if ($command->getCaller() == '*') {
             // send broadcast message
-            //echo 'BROADCAST RUN';
+            // echo 'BROADCAST RUN';
             foreach ($pluginNames as $name) {
                 // get plugin object
                 debug('libraryPluginManager: runPluginAsync => running plugin ' . $name);
@@ -98,7 +107,7 @@ class libraryPluginManager
                 $feedbacks[] = $plugin->run($command);
             }
         } else {
-            //echo 'SINGLE RUN';
+            // echo 'SINGLE RUN';
             $_caller = $command->getCaller();
             // get specific caller (plugin)
             // skip if inactive

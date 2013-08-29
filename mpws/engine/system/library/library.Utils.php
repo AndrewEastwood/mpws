@@ -603,6 +603,10 @@ class libraryUtils {
             return str_getcsv(substr($value, 1, strlen($value) - 2));
         }
 
+        if (startsWith($value, '\\{') && endsWith($value, '\\}')) {
+            return substr($value, 1, strlen($value) - 3) . '}';
+        }
+
         if (startsWith($value, '{') && endsWith($value, '}')) {
             return json_decode($value, true);
         }

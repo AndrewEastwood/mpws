@@ -51,5 +51,13 @@
     function getDebugLevel (){
         return MPWS_LOG_LEVEL;
     }
+
+    function glIsToolbox () {
+        return MPWS_CUSTOMER === 'toolbox';
+    }
+
+    function glIsCustomer ($customerName) {
+        return strcasecmp(MPWS_CUSTOMER, $customerName) === 0;
+    }
     
 ?>
