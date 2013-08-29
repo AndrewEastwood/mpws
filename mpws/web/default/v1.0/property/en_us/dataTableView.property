@@ -24,6 +24,7 @@ labelForLinkActionQuickFilteringDateUpdated='Date Updated';
 labelForLinkActionQuickFilteringDateLastAccess='Last Access';
 
 ; captions
+captionActions = "Actions";
 captionID = "ID";
 captionName = "Name";
 captionEnabled = "Enabled";

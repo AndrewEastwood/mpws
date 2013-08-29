@@ -673,8 +673,15 @@ class libraryComponents {
         //var_dump($config);
         // database connection
         if (!empty($dbLink)) {
+
+            $fieldsToSelectFromDB = $config['datatable']['fields'];
+            if (isset($config['datatable']['fieldsToSelect']))
+                $fieldsToSelectFromDB = $config['datatable']['fieldsToSelect'];
+
+            var_dump($fieldsToSelectFromDB);
+
             $dbLink->reset()
-                    ->select('ID', implode(', ', $config['datatable']['fields']))
+                    ->select('ID', implode(', ', $fieldsToSelectFromDB))
                     ->from($config['source'])
                     ->offset($com['OFFSET'])
                     ->limit($com['LIMIT']);

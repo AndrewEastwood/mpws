@@ -6,8 +6,6 @@ labelForTextBoxSearchBoxName = "User Name";
 labelForLinkActionQuickFilteringName = "User Name";
 labelForLinkActionQuickFilteringDateLastAccess = "Last Access":
 ; table
-captionActions = 'Actions';
-captionName = 'User Name';
-captionActive = 'Active';
-captionDateLastAccess = 'Last Time Visit';
+captionCustomer = "Customer";
 captionIsOnline = "Online State";
+captionActive = "Active";
