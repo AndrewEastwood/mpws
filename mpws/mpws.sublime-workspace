@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"for",
+				"foreach	foreach …"
+			],
+			[
+				"ac",
+				"activePluginItems"
+			],
+			[
+				"is_a",
+				"is_array"
+			],
+			[
+				"pl",
+				"pluginName"
+			],
+			[
+				"co",
+				"command"
+			],
+			[
+				"is_s",
+				"is_string"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
 				"cus",
 				"customerName"
 			],
@@ -59,7 +87,7 @@
 			"file": "web/customer/toolbox/customer.toolbox.php",
 			"settings":
 			{
-				"buffer_size": 4632,
+				"buffer_size": 4999,
 				"line_ending": "Unix"
 			}
 		},
@@ -75,15 +103,31 @@
 			"file": "web/plugin/system/config/widget.ini",
 			"settings":
 			{
-				"buffer_size": 4400,
+				"buffer_size": 4667,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "engine/system/library/library.Security.php",
+			"file": "engine/system/object/object.BaseWebCustomer.php",
 			"settings":
 			{
-				"buffer_size": 7537,
+				"buffer_size": 4926,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "engine/system/library/library.Components.php",
+			"settings":
+			{
+				"buffer_size": 44073,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
+			"settings":
+			{
+				"buffer_size": 347,
 				"line_ending": "Unix"
 			}
 		},
@@ -120,10 +164,22 @@
 	},
 	"file_history":
 	[
-		"/etc/hosts",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/property/en_us/dataTableView.property",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.PluginManager.php",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Utils.php",
 		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
-		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/widget.ini",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.MPWS.php",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.Toolbox.php",
+		"/devdata/Develop/github/web/mpws/engine/global/global.const.php",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.Security.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.WebPageModel.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.CustomerManager.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/customer.pb.com.ua.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/template/layout/defaultLayout.html",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/widget.ini",
 		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataEditorSystemUsers.property",
 		"/devdata/Develop/github/web/mpws/users.json",
 		"/devdata/Develop/github/web/mpws/googleJS.js",
@@ -196,7 +252,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -204,15 +260,15 @@
 					"file": "web/customer/toolbox/customer.toolbox.php",
 					"settings":
 					{
-						"buffer_size": 4632,
+						"buffer_size": 4999,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8,
-								8
+								4694,
+								4694
 							]
 						],
 						"settings":
@@ -220,7 +276,7 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1651.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -256,15 +312,15 @@
 					"file": "web/plugin/system/config/widget.ini",
 					"settings":
 					{
-						"buffer_size": 4400,
+						"buffer_size": 4667,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								927,
-								927
+								2080,
+								2080
 							]
 						],
 						"settings":
@@ -272,25 +328,25 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1271.0,
+						"translation.y": 1008.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "engine/system/library/library.Security.php",
+					"file": "engine/system/object/object.BaseWebCustomer.php",
 					"settings":
 					{
-						"buffer_size": 7537,
+						"buffer_size": 4926,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5923,
-								5923
+								559,
+								559
 							]
 						],
 						"settings":
@@ -298,13 +354,65 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 33.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
+					"file": "engine/system/library/library.Components.php",
+					"settings":
+					{
+						"buffer_size": 44073,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28892,
+								28892
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 3007.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
+					"settings":
+					{
+						"buffer_size": 347,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								345,
+								345
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "engine/bootstrap.php",
 					"settings":
 					{
@@ -315,8 +423,8 @@
 						"selection":
 						[
 							[
-								1476,
-								1476
+								446,
+								446
 							]
 						],
 						"settings":
@@ -324,7 +432,7 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 102.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -386,6 +494,26 @@
 		"selected_items":
 		[
 			[
+				"boo",
+				"engine/bootstrap.php"
+			],
+			[
+				"boot",
+				"engine/bootstrap.php"
+			],
+			[
+				"conte",
+				"engine/system/context/context.MPWS.php"
+			],
+			[
+				"context",
+				"engine/system/context/context.Toolbox.php"
+			],
+			[
+				"library.webpagemodel.php",
+				"engine/system/library/library.WebPageModel.php"
+			],
+			[
 				"boots",
 				"engine/bootstrap.php"
 			]
@@ -404,6 +532,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 441.0,
+	"side_bar_width": 430.0,
 	"status_bar_visible": true
 }

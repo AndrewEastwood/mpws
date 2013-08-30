@@ -221,6 +221,11 @@ class librarySecurity {
         return $user;
     } 
     
+    public static function getUserInfo () {
+        if (isset($_SESSION['USER']))
+            return $_SESSION['USER'];
+        return null;
+    }
 }
 
 

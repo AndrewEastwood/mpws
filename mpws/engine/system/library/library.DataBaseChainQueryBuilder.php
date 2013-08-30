@@ -63,6 +63,8 @@
             if (is_array($config))
                 $this->connect($config);
         }
+        // customer realm detection
+        private $_mpwsCustomerRealmUsed = false;
 
         public function connect($config) {
 
@@ -196,6 +198,7 @@
             $this->_groupBy = array();
 
             $this->_useSanitize = true;
+            $this->_mpwsCustomerRealmUsed = false;
             
             return $this;
         }
@@ -319,7 +322,13 @@
         }
 
         private function _addWhereOn($cond1, $operand, $cond2, $type, $property) {
+
+            /* start mpws patch: customer realm detection */
+            $this->_mpwsCustomerRealmUsed = ($cond1 === 'CustomerID');
+            /* end mpws patch: customer realm detection */
+
             $operand = strtoupper($operand);
+
             if (!in_array($operand, array('=', '>', '<', '<>', '!=', '<=', '>=', 'LIKE', 'IN'))) {
                 throw new Exception('Unsupported operand:' . $operand);
             }
@@ -447,6 +456,19 @@
         }
 
         public function build($reset = false) {
+
+            /* start mpws patch: customer realm detection */
+            if (!$this->_mpwsCustomerRealmUsed && !glIsToolbox()) {
+                $ctx = contextMPWS::instance();
+                $customerID = $ctx->contextCustomer->getCustomerID();
+                if ($customerID)
+                    $this->andWhere('CustomerID', '=', $customerID);
+                else
+                    throw new Exception("Error Processing Request: Customer ID is not specified");
+                    
+            }
+            /* end mpws patch: customer realm detection */
+
             $statement = array();
             $this->_buildOperator($statement);
             $op = '_build' . $this->_operation;

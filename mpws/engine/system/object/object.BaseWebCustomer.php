@@ -28,6 +28,13 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         return $this->objectConfiguration_customer_plugins;
     }
 
+    public function getCustomerID () {
+        $userInfo = librarySecurity::getUserInfo();
+        if (isset($userInfo['CUSTOMER']))
+            return $userInfo['CUSTOMER'];
+        return null;
+    }
+
     /* common run triggers  */
     protected function _commonRunOnStart () {
         parent::_commonRunOnStart();

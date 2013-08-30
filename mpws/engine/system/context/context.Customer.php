@@ -34,6 +34,13 @@ class contextCustomer extends objectContext {
         return $this->_databaseManagers[$customerName];
     }
 
+    final public function getCustomerID () {
+        $userInfo = librarySecurity::getUserInfo();
+        if (isset($userInfo['CUSTOMER']))
+            return $userInfo['CUSTOMER'];
+        return null;
+    }
+
 }
 
 

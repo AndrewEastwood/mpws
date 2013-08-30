@@ -678,13 +678,15 @@ class libraryComponents {
             if (isset($config['datatable']['fieldsToSelect']))
                 $fieldsToSelectFromDB = $config['datatable']['fieldsToSelect'];
 
-            var_dump($fieldsToSelectFromDB);
-
             $dbLink->reset()
-                    ->select('ID', implode(', ', $fieldsToSelectFromDB))
+                    ->select('ID', implode(', ', $fieldsToSelectFromDB));
+
+
+            $dbLink
                     ->from($config['source'])
                     ->offset($com['OFFSET'])
                     ->limit($com['LIMIT']);
+                    
             $_conditionasAdded = 0;
             // searchbox
             if ($isTableMode && $com['SEARCHBOX']['ACTIVE']) {
