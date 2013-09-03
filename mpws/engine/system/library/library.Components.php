@@ -675,17 +675,52 @@ class libraryComponents {
         if (!empty($dbLink)) {
 
             $fieldsToSelectFromDB = $config['datatable']['fields'];
-            if (isset($config['datatable']['fieldsToSelect']))
-                $fieldsToSelectFromDB = $config['datatable']['fieldsToSelect'];
 
-            $dbLink->reset()
-                    ->select('ID', implode(', ', $fieldsToSelectFromDB));
+            // prepend ID column
+            array_unshift($fieldsToSelectFromDB, 'ID');
 
+            // just to avoid mysql error: XXXX in field list is ambiguous
+            foreach ($fieldsToSelectFromDB as $key => $value) {
+                if (!strstr($value, '.'))
+                    $fieldsToSelectFromDB[$key] = sprintf("%s.%s", $config['source'], $value);
+            }
 
-            $dbLink
-                    ->from($config['source'])
-                    ->offset($com['OFFSET'])
-                    ->limit($com['LIMIT']);
+            $dbLink->reset();
+
+            // add custom fields
+            if (isset($config['valuesOverride'])) {
+                foreach ($config['valuesOverride'] as $customFieldName => $joinCondition) {
+                    if (!empty($joinCondition['source']) && 
+                        !empty($joinCondition['linkBy']) &&
+                        !empty($joinCondition['valueToDisplay'])) {
+
+                        // explode join statements
+                        // source2.KEY = sourceThis.KEY
+                        $joinOnStatementArr = explode(' ', $joinCondition['linkBy']);
+
+                        if (count($joinOnStatementArr) !== 3)
+                            continue;
+
+                        $dbLink
+                            ->leftJoin($joinCondition['source'])
+                            ->on($joinOnStatementArr[0], $joinOnStatementArr[1], $joinOnStatementArr[2]);
+
+                        // add into field list to select
+                        $fieldsToSelectFromDB[] = sprintf("%s.%s as `%s`",
+                            $joinCondition['source'], $joinCondition['valueToDisplay'], $customFieldName);
+
+                        // remove custom filed name from regular fields
+                        $filedToRemoveAsCustom = sprintf("%s.%s", $config['source'], $customFieldName);
+                        if(($key = array_search($filedToRemoveAsCustom, $fieldsToSelectFromDB)) !== false)
+                            unset($fieldsToSelectFromDB[$key]);
+                    }
+                }
+            }
+
+            $dbLink->select(implode(', ', $fieldsToSelectFromDB))
+                ->from($config['source'])
+                ->offset($com['OFFSET'])
+                ->limit($com['LIMIT']);
                     
             $_conditionasAdded = 0;
             // searchbox
@@ -999,6 +1034,57 @@ class libraryComponents {
                 // send email
             }
         }
+
+
+            // $fieldsToSelectFromDB = $config['datatable']['fields'];
+
+            // // prepend ID column
+            // array_unshift($fieldsToSelectFromDB, 'ID');
+
+            // // just to avoid mysql error: XXXX in field list is ambiguous
+            // foreach ($fieldsToSelectFromDB as $key => $value) {
+            //     if (!strstr($value, '.'))
+            //         $fieldsToSelectFromDB[$key] = sprintf("%s.%s", $config['source'], $value);
+            // }
+
+            // $dbLink->reset();
+
+            // // add custom fields
+            // if (isset($config['valuesOverride'])) {
+            //     foreach ($config['valuesOverride'] as $customFieldName => $joinCondition) {
+            //         if (!empty($joinCondition['source']) && 
+            //             !empty($joinCondition['linkBy']) &&
+            //             !empty($joinCondition['valueToDisplay'])) {
+
+            //             // explode join statements
+            //             // source2.KEY = sourceThis.KEY
+            //             $joinOnStatementArr = explode(' ', $joinCondition['linkBy']);
+
+            //             if (count($joinOnStatementArr) !== 3)
+            //                 continue;
+
+            //             $dbLink
+            //                 ->leftJoin($joinCondition['source'])
+            //                 ->on($joinOnStatementArr[0], $joinOnStatementArr[1], $joinOnStatementArr[2]);
+
+            //             // add into field list to select
+            //             $fieldsToSelectFromDB[] = sprintf("%s.%s as `%s`",
+            //                 $joinCondition['source'], $joinCondition['valueToDisplay'], $customFieldName);
+
+            //             // remove custom filed name from regular fields
+            //             $filedToRemoveAsCustom = sprintf("%s.%s", $config['source'], $customFieldName);
+            //             if(($key = array_search($filedToRemoveAsCustom, $fieldsToSelectFromDB)) !== false)
+            //                 unset($fieldsToSelectFromDB[$key]);
+            //         }
+            //     }
+            // }
+
+            // $dbLink->select(implode(', ', $fieldsToSelectFromDB))
+            //     ->from($config['source'])
+            //     ->offset($com['OFFSET'])
+            //     ->limit($com['LIMIT']);
+
+        
         // get data
         if ($editPage == 'edit' && !$isNew && !$doNotFetchData) {
             $com['SOURCE'] = $dbLink

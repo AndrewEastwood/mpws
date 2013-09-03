@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"cu",
+				"customerID"
+			],
+			[
+				"cus",
+				"CustomerID"
+			],
+			[
+				"and",
+				"andWhere"
+			],
+			[
+				"co",
+				"cond1"
+			],
+			[
+				"us",
+				"userInfo"
+			],
+			[
 				"for",
 				"foreach	foreach …"
 			],
@@ -20,20 +40,12 @@
 				"pluginName"
 			],
 			[
-				"co",
-				"command"
-			],
-			[
 				"is_s",
 				"is_string"
 			],
 			[
 				"fun",
 				"function"
-			],
-			[
-				"cus",
-				"customerName"
 			],
 			[
 				"mod",
@@ -111,7 +123,7 @@
 			"file": "engine/system/object/object.BaseWebCustomer.php",
 			"settings":
 			{
-				"buffer_size": 4926,
+				"buffer_size": 5129,
 				"line_ending": "Unix"
 			}
 		},
@@ -119,15 +131,7 @@
 			"file": "engine/system/library/library.Components.php",
 			"settings":
 			{
-				"buffer_size": 44073,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
-			"settings":
-			{
-				"buffer_size": 347,
+				"buffer_size": 44071,
 				"line_ending": "Unix"
 			}
 		},
@@ -136,6 +140,22 @@
 			"settings":
 			{
 				"buffer_size": 1491,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "engine/system/library/library.DataBaseChainQueryBuilder.php",
+			"settings":
+			{
+				"buffer_size": 22410,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "engine/system/context/context.Customer.php",
+			"settings":
+			{
+				"buffer_size": 1512,
 				"line_ending": "Unix"
 			}
 		}
@@ -164,6 +184,9 @@
 	},
 	"file_history":
 	[
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Security.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.Customer.php",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/property/en_us/dataTableView.property",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.PluginManager.php",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/customer.ini",
@@ -172,7 +195,6 @@
 		"/devdata/Develop/github/web/mpws/engine/system/context/context.MPWS.php",
 		"/devdata/Develop/github/web/mpws/engine/system/context/context.Toolbox.php",
 		"/devdata/Develop/github/web/mpws/engine/global/global.const.php",
-		"/devdata/Develop/github/web/mpws/engine/system/library/library.Security.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/customer.ini",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/customer.ini",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.WebPageModel.php",
@@ -252,7 +274,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -267,8 +289,8 @@
 						"selection":
 						[
 							[
-								4694,
-								4694
+								964,
+								964
 							]
 						],
 						"settings":
@@ -276,7 +298,7 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1651.0,
+						"translation.y": 84.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -293,8 +315,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								191,
+								191
 							]
 						],
 						"settings":
@@ -319,8 +341,8 @@
 						"selection":
 						[
 							[
-								2080,
-								2080
+								2473,
+								2473
 							]
 						],
 						"settings":
@@ -328,7 +350,7 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1008.0,
+						"translation.y": 1042.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -338,15 +360,15 @@
 					"file": "engine/system/object/object.BaseWebCustomer.php",
 					"settings":
 					{
-						"buffer_size": 4926,
+						"buffer_size": 5129,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								559,
-								559
+								1098,
+								1098
 							]
 						],
 						"settings":
@@ -364,15 +386,15 @@
 					"file": "engine/system/library/library.Components.php",
 					"settings":
 					{
-						"buffer_size": 44073,
+						"buffer_size": 44071,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								28892,
-								28892
+								29107,
+								29107
 							]
 						],
 						"settings":
@@ -380,39 +402,13 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3007.0,
+						"translation.y": 1179.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
-					"settings":
-					{
-						"buffer_size": 347,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								345,
-								345
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
 					"file": "engine/bootstrap.php",
 					"settings":
 					{
@@ -425,6 +421,58 @@
 							[
 								446,
 								446
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "engine/system/library/library.DataBaseChainQueryBuilder.php",
+					"settings":
+					{
+						"buffer_size": 22410,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15990,
+								15990
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 7387.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "engine/system/context/context.Customer.php",
+					"settings":
+					{
+						"buffer_size": 1512,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1340,
+								1340
 							]
 						],
 						"settings":
@@ -493,6 +541,14 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"secur",
+				"engine/system/library/library.Security.php"
+			],
+			[
+				"secu",
+				"engine/system/library/library.Security.php"
+			],
 			[
 				"boo",
 				"engine/bootstrap.php"
