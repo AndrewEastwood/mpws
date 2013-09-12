@@ -56,6 +56,7 @@
         private $_db_selectCount = 0;
         private $_useSanitize = true;
         private $_stopResetTillQuery = false;
+        private $_mpwsCustomDataOutputFormat = 0;
         
         // MPWS Patch
         // Init connection in the constructor
@@ -126,6 +127,9 @@
             $this->freeResult($this->_db_query_id);//var_dump($out);
             //foreach ($out as &$item)
             //    $item = htmlentities($item, ENT_QUOTES);
+            // >>>> MPWS CUSTOMIZATION
+            $out = $this->_convertDataToFormat($out);
+            // <<<< END OF MPWS CUSTOMIZATION
             return $out;
         }
 
@@ -154,6 +158,13 @@
                 $out[] = $row;
             }
             $this->freeResult($this->_db_query_id);//var_dump($out);
+
+
+            // >>>> MPWS CUSTOMIZATION
+            $out = $this->_convertDataToFormat($out);
+            // <<<< END OF MPWS CUSTOMIZATION
+
+
             return $out;
         }
 
@@ -199,6 +210,7 @@
 
             $this->_useSanitize = true;
             $this->_mpwsCustomerRealmUsed = false;
+            $this->_mpwsCustomDataOutputFormat = 0;
             
             return $this;
         }
@@ -647,6 +659,43 @@
             
             return $matches[1];
         }
+
+        // <<<<<< MPWS PATCH:
+
+        public function setDataOutFormat ($fmt) {
+
+            if (is_numeric($fmt)) {
+                $this->_mpwsCustomDataOutputFormat = $fmt;
+                // echo 'new format is ', $fmt;
+                return $this;
+            }
+            throw new Exception("Error Processing Request: libraryDataBaseChainQueryBuilder: at setFormat. Format value must be number 1 ... 5", 1);
+        }
+
+        private function _convertDataToFormat ($data) {
+            // convert data into user's selected format
+            // available data formats
+            // "fmtDEFAULT"
+            // "fmtJSON"
+            // "fmtARRAY"
+            // "fmtHASH"
+            // "fmtSTRING"
+            if (!empty($this->_mpwsCustomDataOutputFormat)) {
+                echo '_convertDataToFormat', $this->_mpwsCustomDataOutputFormat;
+                switch ($this->_mpwsCustomDataOutputFormat) {
+                    case fmtJSON:
+                        return libraryUtils::getJSON($data);
+                        break;
+                    default:
+                        throw new Exception("Error Processing Request: libraryDataBaseChainQueryBuilder: at fetchData. Wrong format selected", 1);
+                        break;
+                }
+            }
+
+            return $data;
+        }
+
+        // <<<<<< MPWS PATCH
     }
     
 ?>

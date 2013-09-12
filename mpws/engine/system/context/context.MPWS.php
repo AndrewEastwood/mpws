@@ -56,6 +56,11 @@ class contextMPWS {
         return $this->makeCommand($command, $custom_args);
     }
     
+    // make command:
+    // caller@functionName@context <--- run functionName 
+    // *@functionName@context      <--- broadcast command; will run 
+    // or   functionName@context        functionName over available
+    //                                  plugins within context
     private function makeCommand ($stringFn, $custom_args = array()) {
         // echo 'Making command of ' . $stringFn;
         $ctxcmd = new mpwsCommand();
@@ -241,7 +246,8 @@ class contextMPWS {
         // save command
         $this->_callStack[] = $cmd;
         // run commad
-        //echo "MPWS Context running command <pre>" . print_r($cmd, true) . '</pre>';
+        // echo "MPWS Context running command <pre>" . print_r($cmd, true) . '</pre>';
+        // var_dump($ctx);
         $rez = $ctx->call($cmd);
         // restore previus context
         $this->setCurrentContext($prevoiusContextName);

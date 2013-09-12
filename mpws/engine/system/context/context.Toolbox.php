@@ -14,7 +14,7 @@ class contextToolbox extends objectContext  {
     
     final public function call ($command) {
         debug('contextToolbox => Running command: ' . $command->getMethod());
-        //echo 'contextToolbox => Running command: ' . $command;
+        // echo 'contextToolbox => Running command: ' . $command;
         return $this->_pluginManager->runPluginAsync($command);
     }
     

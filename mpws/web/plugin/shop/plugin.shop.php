@@ -81,6 +81,32 @@ class pluginShop extends objectBaseWebPlugin {
 
     }
     
+    protected function _jsapiTriggerAsPlugin() {
+        // echo "QQQTEST";
+        parent::_jsapiTriggerAsPlugin();
+        $p = libraryRequest::getApiParam();
+        $rez = false;
+        // token=656c88543646e400eb581f6921b83238
+        $ctx = contextMPWS::instance();
+        switch(libraryRequest::getApiFn()) {
+            case "products" : {
+                // echo "LOL";
+                // echo 'with fmt = ',  fmtJSON;
+                $cfg = $this->objectConfiguration_data_jsapiProducts;
+                $products = $ctx->contextCustomer->getDBO()
+                        ->reset()
+                        ->select($cfg['fields'])
+                        ->from($cfg['source'])
+                        ->fetchData();
+                // var_dump($products);
+                $p = libraryUtils::getJSON($products);
+                $ctx->pageModel->addStaticData($p);
+                break;
+            }
+        }
+        // put data
+        // $ctx->pageModel->addStaticData("HELLO WORLD!");
+    }
 }
     
 ?>

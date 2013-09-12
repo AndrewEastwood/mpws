@@ -119,7 +119,7 @@ class objectBaseWeb extends objectBase {
     /* public api */
     public function run ($command) { 
         debug($command, 'objectBaseWeb: run function:');
-        //echo "<br> Running: " . $this->getObjectName();
+        // echo "<br> Running: " . $this->getObjectName(); 
         //echo "<br> With command: " . $command;
         //$ctx = contextMPWS::instance();
         //echo "<br> Last commmad: " . $ctx->getLastCommand();
@@ -158,6 +158,7 @@ class objectBaseWeb extends objectBase {
     }
     private function _run_jsapi() {
         debug('objectBaseWeb => _run_jsapi');
+        // echo "LLLLLL", $this->getObjectType();
         $ret = false;
         // run common hook on startup
         $this->_jsapiTriggerOnCommonStart();

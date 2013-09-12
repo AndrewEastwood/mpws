@@ -83,7 +83,7 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         $ctx = contextMPWS::instance();
         $p = libraryRequest::getApiParam();
         $caller = libraryRequest::getApiCaller();
-        //echo 'Caller is ' . $caller;
+
         if (empty($caller))
             throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value');
         
@@ -101,6 +101,7 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
                 return;
         }
 
+        // echo '2 Caller is ' . $caller, $p['realm'];
         //echo print_r($p, true);
         // perform request with plugins
         if (!empty($p['realm']) && $p['realm'] == OBJECT_T_PLUGIN) {
@@ -108,7 +109,7 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
             if ($p['realm'] == '*' && !$this->objectConfiguration_customer_allowWideJsApi)
                 throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wide api js request is not allowed');
             // perform request with plugins
-            //echo 'OLOLOLOLO = ' . $caller . DOG . 'jsapi:default', 'Toolbox';
+            // echo 'OLOLOLOLO = ' . $caller . DOG . 'jsapi:default', 'Toolbox';
             return $ctx->directProcess($caller . DOG . 'jsapi:default', 'Toolbox');
         } else {
             // echo 'ASDF';

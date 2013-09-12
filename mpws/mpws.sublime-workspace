@@ -4,8 +4,76 @@
 		"selected_items":
 		[
 			[
+				"cl",
+				"sourceClearInfo"
+			],
+			[
+				"onS",
+				"onSourceReset"
+			],
+			[
+				"wid",
+				"widgetPageEvents"
+			],
+			[
+				"ge",
+				"getConfig"
+			],
+			[
+				"sou",
+				"sourceDisplayInfo"
+			],
+			[
+				"info",
+				"infoBlock"
+			],
+			[
+				"ini",
+				"initConfig"
+			],
+			[
+				"butto",
+				"buttonCancel"
+			],
+			[
+				"wi",
+				"widgetPageEvents"
+			],
+			[
+				"eve",
+				"events"
+			],
+			[
+				"but",
+				"buttonCancel"
+			],
+			[
+				"_",
+				"_elementToggleVisibility"
+			],
+			[
+				"key",
+				"keydown"
+			],
+			[
+				"pa",
+				"pageCreate"
+			],
+			[
+				"fiel",
+				"fieldsToSelectFromDB"
+			],
+			[
+				"fie",
+				"fieldsToSelectFromDB"
+			],
+			[
 				"cu",
-				"customerID"
+				"customFieldName"
+			],
+			[
+				"jo",
+				"joinOnStatementArr"
 			],
 			[
 				"cus",
@@ -72,20 +140,12 @@
 				"background-color"
 			],
 			[
-				"wi",
-				"width"
-			],
-			[
 				"in",
 				"inline-block"
 			],
 			[
 				"pr",
 				"processClick"
-			],
-			[
-				"_",
-				"_wobs"
 			],
 			[
 				"th",
@@ -95,6 +155,38 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "engine/system/library/library.Components.php",
+			"settings":
+			{
+				"buffer_size": 48076,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/admin1/Dropbox/externalSource.js",
+			"settings":
+			{
+				"buffer_size": 16031,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/admin1/Dropbox/3rdSources.js",
+			"settings":
+			{
+				"buffer_size": 6651,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/system/config/widget.ini",
+			"settings":
+			{
+				"buffer_size": 4836,
+				"line_ending": "Unix"
+			}
+		},
 		{
 			"file": "web/customer/toolbox/customer.toolbox.php",
 			"settings":
@@ -112,26 +204,10 @@
 			}
 		},
 		{
-			"file": "web/plugin/system/config/widget.ini",
-			"settings":
-			{
-				"buffer_size": 4667,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "engine/system/object/object.BaseWebCustomer.php",
 			"settings":
 			{
 				"buffer_size": 5129,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "engine/system/library/library.Components.php",
-			"settings":
-			{
-				"buffer_size": 44071,
 				"line_ending": "Unix"
 			}
 		},
@@ -148,14 +224,6 @@
 			"settings":
 			{
 				"buffer_size": 22410,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "engine/system/context/context.Customer.php",
-			"settings":
-			{
-				"buffer_size": 1512,
 				"line_ending": "Unix"
 			}
 		}
@@ -184,11 +252,13 @@
 	},
 	"file_history":
 	[
+		"/home/admin1/Dropbox/externalSource.js",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.PluginManager.php",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.Customer.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataBaseChainQueryBuilder.php",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.Security.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
-		"/devdata/Develop/github/web/mpws/engine/system/context/context.Customer.php",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/property/en_us/dataTableView.property",
-		"/devdata/Develop/github/web/mpws/engine/system/library/library.PluginManager.php",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/customer.ini",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.Utils.php",
 		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
@@ -253,6 +323,38 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"onInputSourceChanged",
+			"onButtonSourceValidationStart",
+			"onSourceValidationStarted",
+			"onSourceUrlChanged",
+			"onSourceReset",
+			"_lastValidData",
+			"infoV",
+			"_moduleConfig",
+			"_modu",
+			"befire",
+			"_triggerCustomCallback",
+			"this",
+			"_sourceDisplayInfo",
+			"_elementToggleVisibility",
+			" o",
+			"on",
+			"s.on",
+			"onSourceUrlChanged",
+			"onSourceValidationComplete",
+			"_moduleConfig.elements",
+			"disable",
+			"function () { return $(_moduleConfig.container).find(",
+			"getV",
+			"function () { return $(_moduleConfig.container).find(",
+			"get",
+			"return",
+			"self",
+			"lock",
+			"button",
+			"        \n",
+			" o",
+			"on",
 			"div",
 			"dome",
 			"images",
@@ -274,11 +376,115 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
+					"file": "engine/system/library/library.Components.php",
+					"settings":
+					{
+						"buffer_size": 48076,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12073,
+								12073
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4609.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/admin1/Dropbox/externalSource.js",
+					"settings":
+					{
+						"buffer_size": 16031,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13711,
+								13711
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 6276.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/admin1/Dropbox/3rdSources.js",
+					"settings":
+					{
+						"buffer_size": 6651,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3897,
+								3897
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1933.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "web/plugin/system/config/widget.ini",
+					"settings":
+					{
+						"buffer_size": 4836,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2696,
+								2696
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1523.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "web/customer/toolbox/customer.toolbox.php",
 					"settings":
 					{
@@ -289,8 +495,8 @@
 						"selection":
 						[
 							[
-								964,
-								964
+								1672,
+								1672
 							]
 						],
 						"settings":
@@ -298,13 +504,13 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 84.0,
+						"translation.y": 101.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 5,
 					"file": "web/plugin/system/plugin.system.php",
 					"settings":
 					{
@@ -330,33 +536,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "web/plugin/system/config/widget.ini",
-					"settings":
-					{
-						"buffer_size": 4667,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2473,
-								2473
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1042.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
+					"buffer": 6,
 					"file": "engine/system/object/object.BaseWebCustomer.php",
 					"settings":
 					{
@@ -382,33 +562,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "engine/system/library/library.Components.php",
-					"settings":
-					{
-						"buffer_size": 44071,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								29107,
-								29107
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1179.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
+					"buffer": 7,
 					"file": "engine/bootstrap.php",
 					"settings":
 					{
@@ -434,7 +588,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 8,
 					"file": "engine/system/library/library.DataBaseChainQueryBuilder.php",
 					"settings":
 					{
@@ -445,8 +599,8 @@
 						"selection":
 						[
 							[
-								15990,
-								15990
+								10971,
+								10971
 							]
 						],
 						"settings":
@@ -454,42 +608,11 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 7387.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "engine/system/context/context.Customer.php",
-					"settings":
-					{
-						"buffer_size": 1512,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1340,
-								1340
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 5116.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				}
-			]
-		},
-		{
-			"sheets":
-			[
 			]
 		}
 	],
@@ -510,18 +633,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.775085698169,
 			1.0
 		],
 		"rows":
@@ -588,6 +704,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 430.0,
+	"side_bar_width": 62.0,
 	"status_bar_visible": true
 }

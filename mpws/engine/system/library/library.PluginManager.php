@@ -93,6 +93,7 @@ class libraryPluginManager
         // get requested plugin name
         //list($caller, $fn) = explode('@', $action);
         $pluginNames = $this->getAvailablePluginNames();
+        // var_dump($pluginNames);
         // wide command
         // var_dump($command);
         if ($command->getCaller() == '*') {
@@ -111,9 +112,10 @@ class libraryPluginManager
             $_caller = $command->getCaller();
             // get specific caller (plugin)
             // skip if inactive
-            if (isset($pluginNames[$_caller])) {
+            if (in_array($_caller, $pluginNames)) { // isset($pluginNames[$_caller])
                 // get plugin object
                 debug('libraryPluginManager: runPluginAsync => running plugin ' . $_caller);
+                // echo 'libraryPluginManager: runPluginAsync => running plugin ' . $_caller;
                 $plugin = $this->getPluginWithContext($_caller);
                 // send message
                 $feedbacks[] = $plugin->run($command);
