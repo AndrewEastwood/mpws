@@ -1,3 +1,5 @@
+menuTextSimplemanager = 'Simple Manager';
+menuTextDescriptionSimplemanager = '- easy access to shop features';
 menuTextProducts = 'Products';
 menuTextDescriptionProducts = '- manage your products';
 menuTextCategories = 'Categories';

@@ -7,3 +7,8 @@ labelForTextAreaDataEditorDescription = 'Description'
 labelForTextAreaDataEditorDescriptionHelper = '... item description';
 labelForCheckBoxDataEditorEnabled = 'Enabled'
 labelForCheckBoxDataEditorEnabledHelper = '... set item actibity'
+labelForDropDownDataEditorStatus = 'Record Status'
+labelForDropDownDataEditorStatusHelper = '... apply record status'
+
+optionDataEditorDropDownStatusACTIVE = 'Is Active';
+optionDataEditorDropDownStatusREMOVED = 'Is Removed';

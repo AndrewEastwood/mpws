@@ -84,22 +84,52 @@ class pluginShop extends objectBaseWebPlugin {
     protected function _jsapiTriggerAsPlugin() {
         // echo "QQQTEST";
         parent::_jsapiTriggerAsPlugin();
-        $p = libraryRequest::getApiParam();
+        $param = libraryRequest::getApiParam();
         $rez = false;
         // token=656c88543646e400eb581f6921b83238
         $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
-            case "products" : {
+            case "product_list" : {
                 // echo "LOL";
                 // echo 'with fmt = ',  fmtJSON;
+                $cfg = $this->objectConfiguration_data_jsapiProductList;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchDataByConfig($cfg);
+                $ctx->pageModel->addStaticData($p);
+                break;
+            }
+            case "category_list" : {
+                // echo "LOL";
+                // echo 'with fmt = ',  fmtJSON;
+                $cfg = $this->objectConfiguration_data_jsapiCategoryList;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchDataByConfig($cfg);
+                $ctx->pageModel->addStaticData($p);
+                break;
+            }
+            case "origin_list" : {
+                // echo "LOL";
+                // echo 'with fmt = ',  fmtJSON;
+                $cfg = $this->objectConfiguration_data_jsapiOriginList;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchDataByConfig($cfg);
+                $ctx->pageModel->addStaticData($p);
+                break;
+            }
+            case "products" : {
                 $cfg = $this->objectConfiguration_data_jsapiProducts;
-                $products = $ctx->contextCustomer->getDBO()
-                        ->reset()
-                        ->select($cfg['fields'])
-                        ->from($cfg['source'])
-                        ->fetchData();
+                // echo "LOL";
+                $p = $ctx->contextCustomer->getDBO()->mpwsGetData($cfg['data']);
+                
+                // $dbo = $ctx->contextCustomer->getDBO();
+                // SELECT p.*, c.*, o.* FROM shop_products as `p` LEFT JOIN shop_categories as `c` ON p.CategoryID = c.ID LEFT JOIN shop_origins as `o` ON p.OriginID = o.ID LIMIT 100
+                // $products = $dbo
+                //         ->reset()
+                //         ->select($cfg['fields'])
+                //         ->from($cfg['source'])
+                //         // TODO: create regular config for conditions !!!!!
+                //         // ->leftJoin($joinCondition['source'])
+                //         // ->on($joinOnStatementArr[0], $joinOnStatementArr[1], $joinOnStatementArr[2]);
+                //         ->fetchData();
                 // var_dump($products);
-                $p = libraryUtils::getJSON($products);
+                // $p = libraryUtils::getJSON($products);
                 $ctx->pageModel->addStaticData($p);
                 break;
             }

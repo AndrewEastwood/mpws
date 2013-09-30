@@ -690,20 +690,28 @@ class libraryComponents {
             // add custom fields
             if (isset($config['valuesOverride'])) {
                 foreach ($config['valuesOverride'] as $customFieldName => $joinCondition) {
+
+
                     if (!empty($joinCondition['source']) && 
-                        !empty($joinCondition['linkBy']) &&
+                        !empty($joinCondition['linker']) &&
                         !empty($joinCondition['valueToDisplay'])) {
 
                         // explode join statements
                         // source2.KEY = sourceThis.KEY
-                        $joinOnStatementArr = explode(' ', $joinCondition['linkBy']);
+                        $linker = $joinCondition['linker'];
 
-                        if (count($joinOnStatementArr) !== 3)
-                            continue;
+                        // check wheter linker is valid
+                        if (empty($linker['link']) ||
+                            empty($linker['with']) ||
+                            empty($linker['type']))
+                            continue; // <--- linker is not valid
+
+                        $fieldOfSource = sprintf("%s.%s", $joinCondition['source'], $linker['link']);
+                        $fieldOfDest = sprintf("%s.%s", $config['source'], $linker['with']);
 
                         $dbLink
                             ->leftJoin($joinCondition['source'])
-                            ->on($joinOnStatementArr[0], $joinOnStatementArr[1], $joinOnStatementArr[2]);
+                            ->on($fieldOfSource, $linker['type'], $fieldOfDest);
 
                         // add into field list to select
                         $fieldsToSelectFromDB[] = sprintf("%s.%s as `%s`",
@@ -714,6 +722,8 @@ class libraryComponents {
                         if(($key = array_search($filedToRemoveAsCustom, $fieldsToSelectFromDB)) !== false)
                             unset($fieldsToSelectFromDB[$key]);
                     }
+
+
                 }
             }
 

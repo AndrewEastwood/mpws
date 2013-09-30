@@ -56,7 +56,6 @@
         private $_db_selectCount = 0;
         private $_useSanitize = true;
         private $_stopResetTillQuery = false;
-        private $_mpwsCustomDataOutputFormat = 0;
         
         // MPWS Patch
         // Init connection in the constructor
@@ -127,10 +126,7 @@
             $this->freeResult($this->_db_query_id);//var_dump($out);
             //foreach ($out as &$item)
             //    $item = htmlentities($item, ENT_QUOTES);
-            // >>>> MPWS CUSTOMIZATION
-            $out = $this->_convertDataToFormat($out);
-            // <<<< END OF MPWS CUSTOMIZATION
-            return $out;
+            return new mpwsData($out);
         }
 
         public function getCount($table, $filter = '', $beforeConditionHook = '') {
@@ -159,13 +155,7 @@
             }
             $this->freeResult($this->_db_query_id);//var_dump($out);
 
-
-            // >>>> MPWS CUSTOMIZATION
-            $out = $this->_convertDataToFormat($out);
-            // <<<< END OF MPWS CUSTOMIZATION
-
-
-            return $out;
+            return new mpwsData($out);
         }
 
         function freeResult($query_id=-1) {
@@ -210,7 +200,6 @@
 
             $this->_useSanitize = true;
             $this->_mpwsCustomerRealmUsed = false;
-            $this->_mpwsCustomDataOutputFormat = 0;
             
             return $this;
         }
@@ -662,36 +651,101 @@
 
         // <<<<<< MPWS PATCH:
 
-        public function setDataOutFormat ($fmt) {
+        public function mpwsGetData ($dataConfig) {
 
-            if (is_numeric($fmt)) {
-                $this->_mpwsCustomDataOutputFormat = $fmt;
-                // echo 'new format is ', $fmt;
-                return $this;
-            }
-            throw new Exception("Error Processing Request: libraryDataBaseChainQueryBuilder: at setFormat. Format value must be number 1 ... 5", 1);
+            $sourceMain = $dataConfig['source'];
+            $aliasMain = $dataConfig['alias'];
+            $fields = $dataConfig['fields'];
+
+            // $customFields = [];
+
+            $this->select($fields);
+
+            if (!$dataConfig['alias'])
+                $this->from(sprintf("%s as `%s`", $sourceMain, $aliasMain));
+            else
+                $this->from($sourceMain);
+
+            if (!empty($dataConfig['offset']))
+                $this->offset($dataConfig['offset']);
+
+            if (!empty($dataConfig['limit']))
+                $this->limit($dataConfig['limit']);
+            // $sourceMainStr = $dataConfig['source'];
+
+            $data = $this->fetchData();
+
+            if (isset($dataConfig['output']))
+                return $data->to($dataConfig['output']);
+
+            return $data;
         }
 
-        private function _convertDataToFormat ($data) {
-            // convert data into user's selected format
-            // available data formats
-            // "fmtDEFAULT"
-            // "fmtJSON"
-            // "fmtARRAY"
-            // "fmtHASH"
-            // "fmtSTRING"
-            if (!empty($this->_mpwsCustomDataOutputFormat)) {
-                echo '_convertDataToFormat', $this->_mpwsCustomDataOutputFormat;
-                switch ($this->_mpwsCustomDataOutputFormat) {
-                    case fmtJSON:
-                        return libraryUtils::getJSON($data);
-                        break;
-                    default:
-                        throw new Exception("Error Processing Request: libraryDataBaseChainQueryBuilder: at fetchData. Wrong format selected", 1);
-                        break;
+        public function mpwsFetchDataByConfig ($config) {
+
+            $fieldsToSelectFromDB = $config['fields'];
+
+            // prepend ID column
+            array_unshift($fieldsToSelectFromDB, 'ID');
+
+            // just to avoid mysql error: XXXX in field list is ambiguous
+            foreach ($fieldsToSelectFromDB as $key => $value) {
+                if (!strstr($value, '.'))
+                    $fieldsToSelectFromDB[$key] = sprintf("%s.%s", $config['source'], $value);
+            }
+
+            $this->reset();
+
+            // join another data
+            if (isset($config['valuesOverride'])) {
+
+                $joinCounter = 0;
+
+                foreach ($config['valuesOverride'] as $customFieldName => $joinCondition) {
+
+                    if (!empty($joinCondition['source']) && 
+                        !empty($joinCondition['linker']) &&
+                        !empty($joinCondition['valueToDisplay'])) {
+
+                        $linker = $joinCondition['linker'];
+
+                        // check wheter linker is valid
+                        if (empty($linker['link']) ||
+                            empty($linker['with']) ||
+                            empty($linker['type']))
+                            continue; // <--- linker is not valid
+
+                        $fieldOfSource = sprintf("%s.%s", $joinCondition['source'], $linker['link']);
+                        $fieldOfDest = sprintf("%s.%s", $config['source'], $linker['with']);
+
+                        // if ($joinCounter === 0) {
+                            $this
+                                ->join($joinCondition['source'])
+                                ->on($fieldOfSource, $linker['type'], $fieldOfDest);
+                            // $joinCounter++;
+                        // } else
+                            // $this->andOn($fieldOfSource, $linker['type'], $fieldOfDest);
+
+                        // add into field list to select
+                        $fieldsToSelectFromDB[] = sprintf("%s.%s as `%s`",
+                            $joinCondition['source'], $joinCondition['valueToDisplay'], $customFieldName);
+
+                        // remove custom filed name from regular fields
+                        $filedToRemoveAsCustom = sprintf("%s.%s", $config['source'], $customFieldName);
+                        if(($key = array_search($filedToRemoveAsCustom, $fieldsToSelectFromDB)) !== false)
+                            unset($fieldsToSelectFromDB[$key]);
+                    }
                 }
             }
 
+            $this->select(implode(', ', $fieldsToSelectFromDB))->from($config['source']);
+
+            $data = $this->fetchData();
+            // var_dump($data);
+
+            if (isset($config['output']))
+                return $data->to($config['output']);
+            
             return $data;
         }
 

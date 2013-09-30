@@ -34,3 +34,4 @@ captionExternalKey = "External Key";
 captionDateCreated = "Date Created";
 captionDateUpdated = "Date Updated";
 captionDateLastAccess= "Last Access";
+captionStatus = 'Status';

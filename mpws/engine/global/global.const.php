@@ -67,10 +67,10 @@
 
     // data formats
     
-    define("fmtDEFAULT", 0);
-    define("fmtJSON", 2);
-    define("fmtARRAY", 3);
-    define("fmtHASH", 4);
-    define("fmtSTRING", 5);
+    define("fmtDEFAULT", "DEFAULT");
+    define("fmtJSON", "JSON");
+    define("fmtARRAY", "ARRAY");
+    define("fmtHASH", "HASH");
+    define("fmtSTRING", "STRING");
 
 ?>
