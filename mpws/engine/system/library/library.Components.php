@@ -755,6 +755,7 @@ class libraryComponents {
                     $dbLink->where(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
                 else
                     $dbLink->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
+                $_conditionasAdded++;
             }
             // sorting
             if ($isTableMode) {

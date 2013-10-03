@@ -115,8 +115,35 @@ class pluginShop extends objectBaseWebPlugin {
             }
             case "products" : {
                 $cfg = $this->objectConfiguration_data_jsapiProducts;
+
+
+                $customer = $ctx->contextCustomer->getObject();
+                $dbConnectConfig = $customer->getDBConnection();
+
                 // echo "LOL";
-                $p = $ctx->contextCustomer->getDBO()->mpwsGetData($cfg['data']);
+                libraryORM::configure("connection_string", $dbConnectConfig['DB_CONNECTION_STRING']);
+                libraryORM::configure("id_column", "ID");
+                libraryORM::configure("username", $dbConnectConfig['DB_USERNAME']);
+                libraryORM::configure("password", $dbConnectConfig['DB_PASSWORD']);
+
+
+
+                $p = libraryORM::for_table('shop_products')
+                    ->select('shop_products.ID', 'ID')
+                    ->select('shop_products.Name', 'pName')
+                    ->select('shop_origins.Name', 'oName')
+                    ->select('shop_categories.Name', 'cName')
+                    ->join('shop_origins', array(
+                        'shop_origins.ID', '=', 'shop_products.OriginID'
+                    ))
+                    ->join('shop_categories', array(
+                        'shop_categories.ID', '=', 'shop_products.CategoryID'
+                    ))
+                    ->mpwsFetchData();
+
+
+                    // var_dump($p);
+                // $p = $ctx->contextCustomer->getDBO()->mpwsGetData($cfg['data']);
                 
                 // $dbo = $ctx->contextCustomer->getDBO();
                 // SELECT p.*, c.*, o.* FROM shop_products as `p` LEFT JOIN shop_categories as `c` ON p.CategoryID = c.ID LEFT JOIN shop_origins as `o` ON p.OriginID = o.ID LIMIT 100
@@ -130,7 +157,7 @@ class pluginShop extends objectBaseWebPlugin {
                 //         ->fetchData();
                 // var_dump($products);
                 // $p = libraryUtils::getJSON($products);
-                $ctx->pageModel->addStaticData($p);
+                $ctx->pageModel->addStaticData($p->to('JSON'));
                 break;
             }
         }

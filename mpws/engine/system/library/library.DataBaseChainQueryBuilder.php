@@ -654,24 +654,41 @@
         public function mpwsGetData ($dataConfig) {
 
             $sourceMain = $dataConfig['source'];
-            $aliasMain = $dataConfig['alias'];
             $fields = $dataConfig['fields'];
 
             // $customFields = [];
 
+            $this->reset();
+
             $this->select($fields);
 
-            if (!$dataConfig['alias'])
-                $this->from(sprintf("%s as `%s`", $sourceMain, $aliasMain));
-            else
-                $this->from($sourceMain);
+            // if (!$dataConfig['alias'])
+            //     $this->from(sprintf("%s as `%s`", $sourceMain, $aliasMain));
+            // else
+            $this->from($sourceMain);
+
+            // join additional data
+            // if (!empty($dataConfig['additional'])) {
+            // }
+
+            // conditional select
+            $_conditionasAdded = 0;
+            if (!empty($dataConfig['condition'])) {
+                //echo 'adding condition';
+                $_cnd = explode(' ', $dataConfig['condition'], 3);
+                //var_dump($_cnd);
+                if ($_conditionasAdded == 0)
+                    $this->where(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
+                else
+                    $this->andWhere(trim($_cnd[0], ' \'`"'), trim($_cnd[1]), trim($_cnd[2], ' \'"') . ' ');
+                $_conditionasAdded++;
+            }
 
             if (!empty($dataConfig['offset']))
                 $this->offset($dataConfig['offset']);
 
             if (!empty($dataConfig['limit']))
                 $this->limit($dataConfig['limit']);
-            // $sourceMainStr = $dataConfig['source'];
 
             $data = $this->fetchData();
 
