@@ -29,7 +29,9 @@ class contextCustomer extends objectContext {
         // get customer
         $customer = $this->getObject($customerName);
         // make connect config
-        $this->_databaseManagers[$customerName] = new libraryDataBaseChainQueryBuilder($customer->getDBConnection());
+        $dbo = new libraryDataBase($customer->getDBConnection(T_CONNECT_ORM));
+        // set dbo
+        $this->_databaseManagers[$customerName] = $dbo->getDBO();
         // return dbo
         return $this->_databaseManagers[$customerName];
     }

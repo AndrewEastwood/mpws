@@ -1921,8 +1921,76 @@
 
         /******** MPWS PATCH START *************/
 
-        public function mpwsFetchData ($dataConfig) {
-            return new mpwsData($this->find_array());
+        public function table ($table_name) {
+            $this->_table_name = $table_name;
+            return $this;
+        }
+
+        public function mpwsFetchData ($config) {
+
+            $source = $config['source'];
+            $fieldsToSelectFromDB = $config['fields'];
+
+            // prepend ID column
+            if (!in_array("ID", $fieldsToSelectFromDB))
+                array_unshift($fieldsToSelectFromDB, 'ID');
+
+            // just to avoid mysql error: XXXX in field list is ambiguous
+            foreach ($fieldsToSelectFromDB as $key => $value) {
+                if (!strstr($value, '.'))
+                    $fieldsToSelectFromDB[$key] = sprintf("%s.%s", $source, $value);
+            }
+
+            $this->table($source);
+            $this->select_many($fieldsToSelectFromDB);
+
+            if ($config['additional'])
+                foreach ($config['additional'] as $addSource => $addConfig) {
+                    if (empty($addConfig['fields']))
+                        continue;
+                    $this->join($addSource, $addConfig['constraint']);
+
+                    $fieldsToSelect = $addConfig['fields'];
+
+                    foreach ($fieldsToSelect as $key => $value) {
+                        if (!strstr($value, '.'))
+                            $fieldsToSelect[$key] = sprintf("%s.%s", $addSource, $value);
+                    }
+
+                    $this->select_many($fieldsToSelect);
+                }
+
+            if (!empty($config['group']))
+                $this->group_by($config['group']);
+
+            if (!empty($config['offset']))
+                $this->offset($config['offset']);
+
+            if (!empty($config['limit']))
+                $this->limit($config['limit']);
+
+            $data = new mpwsData($this->find_array());
+
+            if (isset($config['output']))
+                return $data->to($config['output']);
+            // $this->table('shop_products')
+            //     ->select('shop_products.ID', 'ID')
+            //     ->select('shop_products.Name', 'pName')
+            //     ->select('shop_origins.Name', 'oName')
+            //     ->select('shop_categories.Name', 'cName')
+            //     ->join('shop_origins', array(
+            //         'shop_origins.ID', '=', 'shop_products.OriginID'
+            //     ))
+            //     ->join('shop_categories', array(
+            //         'shop_categories.ID', '=', 'shop_products.CategoryID'
+            //     ));
+
+            return $data;
+        }
+
+        public static function mpwsInstance ($connection_name = self::DEFAULT_CONNECTION) {
+            self::_setup_db($connection_name);
+            return new self(null, array(), $connection_name);
         }
     }
 

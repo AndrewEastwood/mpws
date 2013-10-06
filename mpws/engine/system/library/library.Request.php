@@ -31,7 +31,7 @@ class libraryRequest {
         parse_str($param, $param);
         if (empty($param))
             return $defaultValue;
-        $param = libraryUtils::cleanQueryArray($param);
+        // $param = libraryUtils::cleanQueryArray($param);
         // if single parameter
         // p=sometext
         // return 'sometext'

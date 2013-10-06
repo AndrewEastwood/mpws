@@ -93,7 +93,7 @@ class pluginShop extends objectBaseWebPlugin {
                 // echo "LOL";
                 // echo 'with fmt = ',  fmtJSON;
                 $cfg = $this->objectConfiguration_data_jsapiProductList;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchDataByConfig($cfg);
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
                 $ctx->pageModel->addStaticData($p);
                 break;
             }
@@ -101,7 +101,7 @@ class pluginShop extends objectBaseWebPlugin {
                 // echo "LOL";
                 // echo 'with fmt = ',  fmtJSON;
                 $cfg = $this->objectConfiguration_data_jsapiCategoryList;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchDataByConfig($cfg);
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
                 $ctx->pageModel->addStaticData($p);
                 break;
             }
@@ -109,55 +109,84 @@ class pluginShop extends objectBaseWebPlugin {
                 // echo "LOL";
                 // echo 'with fmt = ',  fmtJSON;
                 $cfg = $this->objectConfiguration_data_jsapiOriginList;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchDataByConfig($cfg);
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
                 $ctx->pageModel->addStaticData($p);
                 break;
             }
             case "products" : {
                 $cfg = $this->objectConfiguration_data_jsapiProducts;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
+                $ctx->pageModel->addStaticData($p);
+                break;
+            }
+            case "products_sale_short" : {
+                $cfg = $this->objectConfiguration_data_jsapiProductsSaleShort;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
+                $ctx->pageModel->addStaticData($p);
+                break;
+            }
+            case "products_price_stats" : {
+                $cfg = $this->objectConfiguration_data_jsapiProductsPriceStats;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
 
 
-                $customer = $ctx->contextCustomer->getObject();
-                $dbConnectConfig = $customer->getDBConnection();
+                $ctx->pageModel->addStaticData($p->toJSON());
+                break;
+            }
+            case "products_price_stats2" : {
 
-                // echo "LOL";
-                libraryORM::configure("connection_string", $dbConnectConfig['DB_CONNECTION_STRING']);
-                libraryORM::configure("id_column", "ID");
-                libraryORM::configure("username", $dbConnectConfig['DB_USERNAME']);
-                libraryORM::configure("password", $dbConnectConfig['DB_PASSWORD']);
+            }
+            case "shop_map" : {
+
+            }
+            case "products_most_popular" : {
+
+            }
+            case "products_sale_full" : {
+                $cfg = $this->objectConfiguration_data_jsapiProductsSaleFull;
+                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
+
+                $_tmp = array();
+                $_dt = $p->getData();
+                // merge
+
+                $mergeKey = 'ID';
+                $mergePropNameAsKey = 'ProductAttribute';
+                $mergePropNameAsValue = 'ProductValue';
+                $mergeDestKey = 'ProductAttributes';
+
+                foreach ($_dt as $value) {
+                    if (empty($_tmp[$value['ID']]))
+                        $_tmp[$value['ID']] = $value;
+                    else {
+                        $keys = $_tmp[$value['ID']][$mergePropNameAsKey];
+                        $values = $_tmp[$value['ID']][$mergePropNameAsValue];
+
+                        if (!is_array($keys))
+                            $keys = array($keys, $value[$mergePropNameAsKey]);
+
+                        if (!is_array($values))
+                            $values = array($values, $value[$mergePropNameAsValue]);
+
+                        $_tmp[$value['ID']][$mergeDestKey] = array_combine($keys, $values);
+
+                        unset($_tmp[$value['ID']][$mergePropNameAsKey]);
+                        unset($_tmp[$value['ID']][$mergePropNameAsValue]);
+                        // $_tmp[$value['ID']] = array_merge_recursive($_tmp[$value['ID']], $value);
+                    }
+                }
+
+                // $_clean = array();
+                // foreach ($_tmp as $key => $value) {
+                //     $value[$mergeDestKey] = array_combine($value[$mergePropNameAsKey], $value[$mergePropNameAsValue]);
+                //     $_clean[] = $value;
+                // }
 
 
 
-                $p = libraryORM::for_table('shop_products')
-                    ->select('shop_products.ID', 'ID')
-                    ->select('shop_products.Name', 'pName')
-                    ->select('shop_origins.Name', 'oName')
-                    ->select('shop_categories.Name', 'cName')
-                    ->join('shop_origins', array(
-                        'shop_origins.ID', '=', 'shop_products.OriginID'
-                    ))
-                    ->join('shop_categories', array(
-                        'shop_categories.ID', '=', 'shop_products.CategoryID'
-                    ))
-                    ->mpwsFetchData();
 
 
-                    // var_dump($p);
-                // $p = $ctx->contextCustomer->getDBO()->mpwsGetData($cfg['data']);
-                
-                // $dbo = $ctx->contextCustomer->getDBO();
-                // SELECT p.*, c.*, o.* FROM shop_products as `p` LEFT JOIN shop_categories as `c` ON p.CategoryID = c.ID LEFT JOIN shop_origins as `o` ON p.OriginID = o.ID LIMIT 100
-                // $products = $dbo
-                //         ->reset()
-                //         ->select($cfg['fields'])
-                //         ->from($cfg['source'])
-                //         // TODO: create regular config for conditions !!!!!
-                //         // ->leftJoin($joinCondition['source'])
-                //         // ->on($joinOnStatementArr[0], $joinOnStatementArr[1], $joinOnStatementArr[2]);
-                //         ->fetchData();
-                // var_dump($products);
-                // $p = libraryUtils::getJSON($products);
-                $ctx->pageModel->addStaticData($p->to('JSON'));
+                $ctx->pageModel->addStaticData(libraryUtils::getJSON($_tmp));
                 break;
             }
         }

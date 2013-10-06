@@ -6,10 +6,6 @@ class mpwsData {
     function __construct($data) {
         $this->_data = $data;
     }
-
-    function __destruct() {
-        unlink($this->_data);
-    }
     
     public function setData($val) { $this->_data = $val; }
     

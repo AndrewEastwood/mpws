@@ -48,6 +48,7 @@
     // Connection Type
     
     define ("T_CONNECT_DB", 'database', true);
+    define ("T_CONNECT_ORM", 'orm', true);
     
     // Scripts
     

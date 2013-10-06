@@ -20,6 +20,13 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
                     'DB_CHARSET' => $this->objectConfiguration_mdbc_charset,
                     'DB_CONNECTION_STRING' => sprintf("mysql:dbname=%s;host=%s", $this->objectConfiguration_mdbc_name, $this->objectConfiguration_mdbc_host)
                 );
+            case T_CONNECT_ORM:
+                return array(
+                    "connection_string" => sprintf("mysql:dbname=%s;host=%s", $this->objectConfiguration_mdbc_name, $this->objectConfiguration_mdbc_host),
+                    "id_column" => 'ID',
+                    "username" => $this->objectConfiguration_mdbc_username,
+                    "password" => $this->objectConfiguration_mdbc_password
+                );
             default:
                 break;
         }
