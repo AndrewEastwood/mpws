@@ -86,7 +86,18 @@ class pluginShop extends objectBaseWebPlugin {
         parent::_jsapiTriggerAsPlugin();
         $param = libraryRequest::getApiParam();
         $rez = false;
+
+        // extract params
+        // some functions require particular parameters to be not empty
+        // otherwise you will get error message
+        $pProductID = !empty($param['pid']) ? $param['pid'] : false;
+        $pCategoryID = !empty($param['cid']) ? $param['cid'] : false;
+        $pOriginID = !empty($param['oid']) ? $param['oid'] : false;
+        $pLimit = !empty($param['limit']) ? $param['limmit'] : false;
+        $pOffset = !empty($param['offset']) ? $param['offset'] : false;
+
         // token=656c88543646e400eb581f6921b83238
+        // var_dump($param);
         $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
             case "product_list" : {
@@ -129,12 +140,48 @@ class pluginShop extends objectBaseWebPlugin {
                 $cfg = $this->objectConfiguration_data_jsapiProductsPriceStats;
                 $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
 
+                $_dt = $p->getData();
+                $_tmp = array();
+                foreach ($_dt as $key => $value) {
+                    $value['Prices'] = explode(EXPLODE, $value['Prices']);
+                    $_tmp[$key] = $value;
+                }
+
+                // $ctx->pageModel->addStaticData($p->toJSON());
+                $ctx->pageModel->addStaticData(libraryUtils::getJSON($_tmp));
+                break;
+            }
+            case "category_single_short" : {
+                break;
+            }
+            case "category_single_full" : {
+                break;
+            }
+            case "origin_single_short" : {
+                break;
+            }
+            case "origin_single_full" : {
+                break;
+            }
+            case "product_single_short" : {
+                break;
+            }
+            case "product_single_full" : {
+                // $p = false;
+                // if (empty($pProductID))
+                //     $data['error'] = libraryUtils::getJSON('Empty product ID parameter');
+                // else {
+
+
+                    $cfg = $this->objectConfiguration_data_jsapiProductSingleFull;
+                    $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
+
+
+                // }
+
 
                 $ctx->pageModel->addStaticData($p->toJSON());
                 break;
-            }
-            case "products_price_stats2" : {
-
             }
             case "shop_map" : {
 

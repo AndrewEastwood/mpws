@@ -1368,7 +1368,7 @@
 
             // Build and return the full SELECT statement by concatenating
             // the results of calling each separate builder method.
-            return $this->_join_if_not_empty(" ", array(
+            $sqlSelectCmd =  $this->_join_if_not_empty(" ", array(
                 $this->_build_select_start(),
                 $this->_build_join(),
                 $this->_build_where(),
@@ -1378,6 +1378,10 @@
                 $this->_build_limit(),
                 $this->_build_offset(),
             ));
+
+            // var_dump($sqlSelectCmd);
+
+            return $sqlSelectCmd;
         }
 
         /**
@@ -1935,14 +1939,17 @@
             if (!in_array("ID", $fieldsToSelectFromDB))
                 array_unshift($fieldsToSelectFromDB, 'ID');
 
+            $fieldsToSelectFromDBClear = array();
             // just to avoid mysql error: XXXX in field list is ambiguous
             foreach ($fieldsToSelectFromDB as $key => $value) {
-                if (!strstr($value, '.'))
-                    $fieldsToSelectFromDB[$key] = sprintf("%s.%s", $source, $value);
+                if ($value[0] === '@')
+                    $this->select_expr(substr($value, 1));
+                elseif (!strstr($value, '.'))
+                    $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
             }
 
             $this->table($source);
-            $this->select_many($fieldsToSelectFromDB);
+            $this->select_many($fieldsToSelectFromDBClear);
 
             if ($config['additional'])
                 foreach ($config['additional'] as $addSource => $addConfig) {
@@ -1951,13 +1958,17 @@
                     $this->join($addSource, $addConfig['constraint']);
 
                     $fieldsToSelect = $addConfig['fields'];
+                    $fieldsToSelectClear = array();
 
                     foreach ($fieldsToSelect as $key => $value) {
-                        if (!strstr($value, '.'))
-                            $fieldsToSelect[$key] = sprintf("%s.%s", $addSource, $value);
+                        if ($value[0] === '@')
+                            $this->select_expr(substr($value, 1));
+                            // $fieldsToSelect[$key] = substr($value, 1);
+                        elseif (!strstr($value, '.'))
+                            $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
                     }
 
-                    $this->select_many($fieldsToSelect);
+                    $this->select_many($fieldsToSelectClear);
                 }
 
             if (!empty($config['group']))
@@ -1968,6 +1979,15 @@
 
             if (!empty($config['limit']))
                 $this->limit($config['limit']);
+
+            if (!empty($config['order']) && !empty($config['order']['field'])) {
+
+                if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
+                    $this->order_by_desc($config['order']['field']);
+                else
+                    $this->order_by_asc($config['order']['field']);
+            }
+
 
             $data = new mpwsData($this->find_array());
 

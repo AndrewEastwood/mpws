@@ -8,6 +8,7 @@ class libraryStaticResourceManager {
         // $c = MPWS_CUSTOMER;
         // $v = MPWS_VERSION;
         // $p = $_GET['object'] === 'plugin' ? $_GET['name'] : false;
+        // echo "TEST";
 
 
         $objectType = $_GET['object']; // plugin OR customer
@@ -45,6 +46,7 @@ class libraryStaticResourceManager {
         
         // use overriden file insted of requests file
         // get context and objectaccording to request
+        // echo "dsfsdfsdf" . $isCustomer. '----'. $objectName;
         $ctx = contextMPWS::instance();
         $resourceEntry = array();
         $requestObjectOwner = false;
@@ -52,6 +54,11 @@ class libraryStaticResourceManager {
             $requestObjectOwner = $ctx->contextToolbox->getObject($objectName);
         if ($isCustomer)
             $requestObjectOwner = $ctx->contextCustomer->getObject($objectName);
+
+
+        // var_dump($requestObjectOwner);
+
+
         // set overriden files
         if (!empty($requestObjectOwner)) {
             $resourceNamesMap = $requestObjectOwner->objectConfiguration_resources_staticResourceOverrides;

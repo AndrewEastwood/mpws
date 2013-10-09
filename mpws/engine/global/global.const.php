@@ -37,6 +37,8 @@
     define ("US", "..", true);
     
     define ("COLON", ":", true);
+    
+    define ("EXPLODE", "#EXPLODE#", true);
 
     // Object Types
     
