@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{block name="layoutTitle"}MPWS Default - {$INFO.GET.PAGE}{/block}</title>
+    {block name="layoutResourcesCSS"}
+    <link rel="stylesheet" type="text/css" href="/static/p/customer/{$INFO.CUSTOMER}/default.css">
+    {/block}
+    {if not empty($INFO.GET.PLUGIN) }
+    <link rel="stylesheet" type="text/css" href="/static/p/plugin/{$INFO.GET.PLUGIN}/default.css">
+        {* include plugin css resources *}
+        {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadStylesheet}
+    {/if}
+    <meta name="locale" content="{$CURRENT.OBJECT->getObjectLocale()}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+
+<div class="MPWSLayout MPWSLayoutDefaultPublic">
+
+    <div class="MPWSPageHeader">{block name="pageHeader"}{/block}</div>
+    <div class="MPWSPageBody">{block name="pageBody"}{/block}</div>
+    <div class="MPWSPageFooter">{block name="pageFooter"}{/block}</div>
+
+</div>
+
+<div class="static-content-wrapper render-hidden" title="page basic javascript container">
+    {block name="layoutResourcesJS"}
+    <script type="text/javascript" src="/static/p/customer/{$INFO.CUSTOMER}/starter.js"></script>
+    {/block}
+    {if not empty($INFO.GET.PLUGIN) }
+    <script type="text/javascript" src="/static/p/plugin/{$INFO.GET.PLUGIN}/starter.js"></script>
+        {* include plugin js additional resources *}
+        {include file=$OBJECT.WOB[makeKey($INFO.GET.PLUGIN)]->objectTemplatePath_component_pageOnLoadJavascript}
+    {/if}
+    {literal}
+    <script type="text/javascript" class="temporary">
+        APP.Internal.configureAppLoader({
+            VERSION: null,
+            // security token
+            CUSTOMER: '{/literal}{$INFO.CUSTOMER}{literal}',
+            // security token
+            TOKEN: '{/literal}{$INFO.TOKEN}{literal}',
+            // page
+            PAGE: '{/literal}{$INFO.GET.PAGE}{literal}',
+            // display
+            DISPLAY: '{/literal}{$INFO.GET.DISPLAY}{literal}',
+            // action
+            ACTION: '{/literal}{$INFO.GET.ACTION}{literal}',
+            // action
+            PLUGIN: 'shop',
+            // ROUTER: 'router/customer.base',
+            URL: {
+                // available static urls
+                staticUrlBase: '{/literal}{$INFO.URL.STATIC_BASE}{literal}',
+                staticUrlCustomer: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}',
+                staticUrlPlugin: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}'
+            },
+            STATES: {
+                pageDebug: true
+            },
+            REQUIREJS: {
+                router: {
+                    modulePageMap: [{
+                        match: [".*"],
+                        deps: ["router/customer", "p_router/plugin"]
+                    }]
+                },
+                app: {
+                    baseUrl: false,
+                    paths: {
+                        // general paths
+                        lib: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs',
+                        router: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}routers',
+                        widget: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}widgets',
+                        model: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}models',
+                        view: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}views',
+                        // plugins paths
+                        p_lib: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}libs',
+                        p_router: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}routers',
+                        p_widget: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}widgets',
+                        p_model: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}models',
+                        p_view: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}views',
+                        // version suppress
+                        "lib/jquery": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs/jquery-1.9.1',
+                        "lib/jquery_ui": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs/jquery-ui-1.10.3.custom'
+                    }
+                }
+            }
+        });
+    </script>
+    {/literal}
+</div>
+
+</body>
+</html>
