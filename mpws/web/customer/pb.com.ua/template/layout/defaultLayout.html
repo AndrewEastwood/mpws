@@ -53,26 +53,18 @@
 </div>
 <!--/.navbar -->
 
-<script>
-$(document).ready(function()
-{
-  //Handles menu drop down
-  $('.dropdown-menu').find('form').click(function (e) {
-        e.stopPropagation();
-        });
-  });
-</script>
 {/block}
-
 
 
 {block name="pageBody"}
 
+    <div id="data-holder-ID">empty</div>
+    <div id="data-ID">empty</div>
 
-    <div id="data-holder">empty</div>
-
-    <button id="button1id" name="button1id" class="btn btn-success">Hello World! Get Products!</button>
-
+    <a id="button1id" name="button1id" class="btn btn-success" href="#" >Take me home!</a>
+    <a id="button1id" name="button1id" class="btn btn-success" href="#shop/catalog" >Hello World! Get Catalog!</a>
+    <a id="button1id" name="button1id" class="btn btn-success" href="#shop/product/45" >Hello World! Get 45 Product!</a>
+    <a id="button1id" name="button1id" class="btn btn-danger" href="#shop/product/" >Hello World! Get 404!</a>
 
 {/block}
 

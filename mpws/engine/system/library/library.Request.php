@@ -19,35 +19,6 @@ class libraryRequest {
     static function getAction ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('action', $defaultValue, $switch, $valueOnSwitch);
     }
-    static function getApiCaller ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('caller', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getApiFn ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('fn', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getApiParam ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        $param = self::getValue('p', $defaultValue, $switch, $valueOnSwitch);
-        //var_dump($param);
-        parse_str($param, $param);
-        if (empty($param))
-            return $defaultValue;
-        // $param = libraryUtils::cleanQueryArray($param);
-        // if single parameter
-        // p=sometext
-        // return 'sometext'
-        $c = current($param);
-        if (count($param) == 1 && empty($c))
-            return $c;
-        // explode custom params
-        if (isset($param['custom'])) {
-            //echo 'LOL';
-            //echo $param['custom'];
-            $output = false;
-            parse_str(urldecode($param['custom']), $output);
-            $param['custom'] = $output;
-        }
-        return $param;
-    }
     static function getOID ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         return self::getValue('oid', $defaultValue, $switch, $valueOnSwitch);
     }
@@ -95,6 +66,39 @@ class libraryRequest {
         }
         return $_value;
     }
+
+    /* api */
+    static function getApiCaller ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
+        return self::getPostValue('caller', $defaultValue, $switch, $valueOnSwitch);
+    }
+    static function getApiFn ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
+        return self::getPostValue('fn', $defaultValue, $switch, $valueOnSwitch);
+    }
+    static function getApiParam ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
+        $param = self::getPostValue('p', $defaultValue, $switch, $valueOnSwitch);
+        //var_dump($param);
+        parse_str($param, $param);
+        if (empty($param))
+            return $defaultValue;
+        // $param = libraryUtils::cleanQueryArray($param);
+        // if single parameter
+        // p=sometext
+        // return 'sometext'
+        $c = current($param);
+        if (count($param) == 1 && empty($c))
+            return $c;
+        // explode custom params
+        if (isset($param['custom'])) {
+            //echo 'LOL';
+            //echo $param['custom'];
+            $output = false;
+            parse_str(urldecode($param['custom']), $output);
+            $param['custom'] = $output;
+        }
+        return $param;
+    }
+
+    /* state grabbers */
     static function isJsApiRequest () {
         //echo 'RequestAction is ' . self::getAction();
         return self::getAction() === 'api';

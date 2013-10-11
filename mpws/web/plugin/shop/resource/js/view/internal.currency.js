@@ -1,5 +1,5 @@
 APP.Modules.register("p_view/internal.currency", [], [
-    'lib/zepto'
+    'lib/jquery'
 ], function (app, Sandbox, $) {
 
 

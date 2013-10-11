@@ -32,7 +32,8 @@ RewriteRule static/(i|p|_)/(customer|plugin)/([\.A-Za-z0-9_-]+)/([\.\\/A-Za-z0-9
 
 
 # -- Common Api Requests
-RewriteRule api.js?(.*)   /engine/dispatcher/dispatcher.Api.php?action=api$2 [QSA]
+#RewriteRule /api.js?(.*)   /engine/dispatcher/dispatcher.Api.php?action=api$2 [QSA]
+RewriteRule ^api\.js   /engine/dispatcher/dispatcher.Api.php?action=api [L]
 
 
 

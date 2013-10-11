@@ -36,7 +36,7 @@ class libraryStaticResourceManager {
 
         // saved resource path
         $resourceFileDir = DR . '/data/bin';
-        $resourceFilePath = $resourceFileDir . '/_'.$fileName;
+        $resourceFilePath = $resourceFileDir . '/_'.$fileNameToRespond;
         
         // get already saved file
         if (!file_exists($resourceFileDir))
@@ -75,7 +75,7 @@ class libraryStaticResourceManager {
         // echo 'is customer:' .( $isCustomer ? 'yes' : 'no') . '<br>';
         // var_dump($requestObjectOwner);
         // var_dump($requestObjectOwner->objectConfiguration_resources_staticResourceOverrides);
-        // var_dump($resourceEntry);
+        // var_dump('resourceEntry =====> '. $resourceEntry);
         
         $filesToLoad = array();
         // $filesToImport = array();

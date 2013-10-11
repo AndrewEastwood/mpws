@@ -280,6 +280,7 @@ class libraryWebPageModel {
         $info[makeKey('CUSTOMER')] = MPWS_CUSTOMER;
 
         // GET parameters
+        $pluginName = libraryRequest::getPlugin();
 
         // page
         $info['GET'][makeKey('PAGE')] = libraryRequest::getPage();
@@ -288,7 +289,7 @@ class libraryWebPageModel {
         // action
         $info['GET'][makeKey('ACTION')] = libraryRequest::getAction();
         // plugin
-        $info['GET'][makeKey('PLUGIN')] = libraryRequest::getPlugin();
+        $info['GET'][makeKey('PLUGIN')] = $pluginName;
 
         // the same things but for post
 
@@ -302,8 +303,10 @@ class libraryWebPageModel {
         $info['POST'][makeKey('PLUGIN')] = libraryRequest::getPostPlugin();
 
         $info['URL'][makeKey('STATIC_BASE')] = '/static/_/';
-        $info['URL'][makeKey('STATIC_CUSTOMER')] = '/static/_/customer/'.MPWS_CUSTOMER.'/';
-        $info['URL'][makeKey('STATIC_PLUGIN')] = '/static/_/plugin/'.libraryRequest::getPlugin().'/';
+        $info['URL'][makeKey('STATIC_CUSTOMER')] = '/static/_/customer/' . MPWS_CUSTOMER . '/';
+
+
+        $info['URL'][makeKey('STATIC_PLUGIN')] = '/static/_/plugin/' . ($pluginName? $pluginName . '/' : '');
 
         return $info;
     }

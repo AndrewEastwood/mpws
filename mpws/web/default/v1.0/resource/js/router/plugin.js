@@ -1,4 +1,4 @@
-APP.Modules.register("p_router/plugin", [], [
+APP.Modules.register("router/plugin", [], [
     "lib/app.router"
 ], function (app, Sandbox, Router) {
 

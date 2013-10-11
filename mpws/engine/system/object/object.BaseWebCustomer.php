@@ -93,7 +93,7 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         $caller = libraryRequest::getApiCaller();
 
         if (empty($caller))
-            throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value');
+            throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value', $caller);
         
         // check page token
         if (empty($p['token']))
@@ -102,7 +102,7 @@ class objectBaseWebCustomer extends objectBaseWeb /*implements iPlugin*/ {
         if (!libraryRequest::getOrValidatePageSecurityToken($p['token'])) {
             // page token is wrong
             // try to verify master key
-            //echo 'try to verify master key: ' . $this->objectConfiguration_customer_masterJsApiKey;
+            // echo 'try to verify master key: ' . $this->objectConfiguration_customer_masterJsApiKey;
             //echo '<br> ' . md5($this->objectConfiguration_customer_masterJsApiKey);
             //echo '<br>token: ' . $p['token'];
             if (md5($this->objectConfiguration_customer_masterJsApiKey) !== $p['token'])

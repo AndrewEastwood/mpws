@@ -1,6 +1,6 @@
 APP.Modules.register("widget/datatable.components", [], [
 
-    'lib/zepto'
+    'lib/jquery'
 
 ], function (app, Sandbox, $){
 

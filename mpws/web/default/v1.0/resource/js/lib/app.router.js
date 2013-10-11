@@ -7,7 +7,7 @@ APP.Modules.register("lib/app.router", [
 ], [
 
     /* import dep packages */
-    'lib/zepto',
+    'lib/jquery',
     'lib/underscore',
     'lib/backbone',
     // 'lib/jquery_ui',

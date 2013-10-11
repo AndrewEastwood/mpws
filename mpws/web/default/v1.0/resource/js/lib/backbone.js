@@ -2,6 +2,7 @@ APP.Modules.register("lib/backbone", [
     /* import globals */
     window
 ], [
+  'lib/jquery',
   'lib/underscore'
     /* component implementation */
 ], function(window, app, Sandbox, _) {

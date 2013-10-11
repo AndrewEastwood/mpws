@@ -47,7 +47,7 @@
             // action
             ACTION: '{/literal}{$INFO.GET.ACTION}{literal}',
             // action
-            PLUGIN: 'shop',
+            // PLUGIN: 'shop',
             // ROUTER: 'router/customer.base',
             URL: {
                 // available static urls
@@ -62,27 +62,22 @@
                 router: {
                     modulePageMap: [{
                         match: [".*"],
-                        deps: ["router/customer", "p_router/plugin"]
+                        deps: ["router/customer", "router/plugin"]
                     }]
                 },
                 app: {
                     baseUrl: false,
                     paths: {
                         // general paths
-                        lib: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs',
-                        router: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}routers',
-                        widget: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}widgets',
-                        model: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}models',
-                        view: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}views',
-                        // plugins paths
-                        p_lib: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}libs',
-                        p_router: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}routers',
-                        p_widget: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}widgets',
-                        p_model: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}models',
-                        p_view: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}views',
+                        lib: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}lib',
+                        router: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}router',
+                        widget: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}widget',
+                        model: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}model',
+                        view: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}view',
+                        plugin: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}',
                         // version suppress
-                        "lib/jquery": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs/jquery-1.9.1',
-                        "lib/jquery_ui": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}libs/jquery-ui-1.10.3.custom'
+                        "lib/jquery": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}lib/jquery-1.9.1',
+                        "lib/jquery_ui": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}lib/jquery-ui-1.10.3.custom'
                     }
                 }
             }
