@@ -1,139 +1,147 @@
 {extends file=$OBJECT.SITE->objectTemplatePath_layout_defaultPublic}
 
+{block name="pageCommonBefore"}
+<div class="row">
+    <div class="col-xs-0 col-sm-0 col-md-2"></div>
+    <div class="col-xs-12 col-sm-12 col-md-8">
+{/block}
+
+{block name="pageCommonAfter"}
+    </div>
+    <div class="col-xs-0 col-sm-0 col-md-2"></div>
+</div>
+{/block}
+
 
 {block name="pageHeader"}
-    <img class="image image-logo image-logo-website" src="{$INFO.URL.STATIC_CUSTOMER}logo.jpg"/>
-<div class="navbar">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="#" name="top">Brand Name</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li><a href="#"><i class="icon-home"></i> Home</a></li>
-                    <li class="divider-vertical"></li>
-                    <li class="active"><a href="#"><i class="icon-file"></i> Pages</a></li>
-                    <li class="divider-vertical"></li>
-                    <li><a href="#"><i class="icon-envelope"></i> Messages</a></li>
-                    <li class="divider-vertical"></li>
-                    <li><a href="#"><i class="icon-signal"></i> Stats</a></li>
-                    <li class="divider-vertical"></li>
-                    <li><a href="#"><i class="icon-lock"></i> Permissions</a></li>
-                    <li class="divider-vertical"></li>
-                </ul>
-                <ul class="nav pull-right">
-                    <li><a href="/signup">Sign Up</a></li>
-                    <li class="divider-vertical"></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
-                        <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                            <form method="post" action="login" accept-charset="UTF-8">
-                                <input style="margin-bottom: 15px;" type="text" placeholder="Username" id="username" name="username">
-                                <input style="margin-bottom: 15px;" type="password" placeholder="Password" id="password" name="password">
-                                <input style="float: left; margin-right: 10px;" type="checkbox" name="remember-me" id="remember-me" value="1">
-                                <label class="string optional" for="user_remember_me"> Remember me</label>
-                                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
-                                <label style="text-align:center;margin-top:5px">or</label>
-                                <input class="btn btn-primary btn-block" type="button" id="sign-in-google" value="Sign In with Google">
-                                <input class="btn btn-primary btn-block" type="button" id="sign-in-twitter" value="Sign In with Twitter">
-                            </form>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
-        </div>
-        <!--/.container-fluid -->
-    </div>
-    <!--/.navbar-inner -->
-</div>
-<!--/.navbar -->
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#"><!-- <img class="image image-logo image-logo-website" src="{$INFO.URL.STATIC_CUSTOMER}logo.png"/> -->MIKSER</a>
+  </div>
 
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li><a href="#">Separated link</a></li>
+          <li><a href="#">One more separated link</a></li>
+        </ul>
+      </li>
+    </ul>
+    <form class="navbar-form navbar-left" role="search">
+      <div class="form-group">
+        <input id="inputSearch" type="text" class="form-control" placeholder="Search">
+      </div>
+      <button id="buttonSearch" type="submit" class="btn btn-default">Submit</button>
+      <button id="button1id" type="button" class="btn btn-default">TEST!</button>
+    </form>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#shop/cart">Cart<span class="badge">14</span></a></li>
+      <li><a href="#site/payment">Payment</a></li>
+      <li><a href="#site/shipping">Shipping</a></li>
+      <li><a href="#site/help">Help</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Edit orofile</a></li>
+          <li><a href="#">Subscriptions</a></li>
+          <li><a href="#">Wish list</a></li>
+          <li><a href="#">Orders</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
 {/block}
 
 
 {block name="pageBody"}
 
-    <div id="data-holder-ID">empty</div>
-    <div id="data-ID">empty</div>
+<!--     Product ID <input type="text" id="product-ID" data-key="id" data-target=".btn-product-details" size="4">
 
     <a id="button1id" name="button1id" class="btn btn-success" href="#" >Take me home!</a>
     <a id="button1id" name="button1id" class="btn btn-success" href="#shop/catalog" >Hello World! Get Catalog!</a>
-    <a id="button1id" name="button1id" class="btn btn-success" href="#shop/product/45" >Hello World! Get 45 Product!</a>
+    <a id="button1id" name="button1id" class="btn btn-success btn-product-details" href="javascript://" data-href="#shop/product/:id" >Hello World! Get  Product!</a>
     <a id="button1id" name="button1id" class="btn btn-danger" href="#shop/product/" >Hello World! Get 404!</a>
+    <div id="data-holder-ID">empty</div>
+    <div id="data-ID">empty</div> -->
+
+
+
 
 {/block}
 
 
-  {block name="pageFooter"}
-<div class="container"> 
-<div class="row-fluid">
-                <div class="span12">
-                    <div class="span2" style="width: 15%;">
-                        <ul class="unstyled">
-                            <li>GitHub</li>
-                            <li><a href="#">About us</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Contact & support</a></li>
-                            <li><a href="#">Enterprise</a></li>
-                            <li><a href="#">Site status</a></li>
-                        </ul>
-                    </div>
-                    <div class="span2" style="width: 15%;">
-                        <ul class="unstyled">
-                            <li>Applications</li>
-                            <li><a href="#">Product for Mac</a></li>
-                            <li><a href="#">Product for Windows</a></li>
-                            <li><a href="#">Product for Eclipse</a></li>
-                            <li><a href="#">Product mobile apps</a></li>                            
-                        </ul>
-                    </div>
-                    <div class="span2" style="width: 15%;">
-                        <ul class="unstyled">
-                            <li>Services</li>
-                            <li><a href="#">Web analytics</a></li>
-                            <li><a href="#">Presentations</a></li>
-                            <li><a href="#">Code snippets</a></li>
-                            <li><a href="#">Job board</a></li>                          
-                        </ul>
-                    </div>
-                    <div class="span2" style="width: 15%;">
-                        <ul class="unstyled">
-                            <li>Documentation</li>
-                            <li><a href="#">Product Help</a></li>
-                            <li><a href="#">Developer API</a></li>
-                            <li><a href="#">Product Markdown</a></li>
-                            <li><a href="#">Product Pages</a></li>                          
-                        </ul>
-                    </div>  
-                    <div class="span2" style="width: 15%;">
-                        <ul class="unstyled">
-                            <li>More</li>
-                            <li><a href="#">Training</a></li>
-                            <li><a href="#">Students & teachers</a></li>
-                            <li><a href="#">The Shop</a></li>
-                            <li><a href="#">Plans & pricing</a></li>
-                            <li><a href="#">Contact us</a></li>
-                        </ul>
-                    </div>                  
-                </div>
-            </div>
-            <hr>
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="span8">
-                        <a href="#">Terms of Service</a>    
-                        <a href="#">Privacy</a>    
-                        <a href="#">Security</a>
-                    </div>
-                    <div class="span4">
-                        <p class="muted pull-right">© 2013 Company Name. All rights reserved</p>
-                    </div>
-                </div>
-            </div>
-  </div>
+
+{block name="pageFooter"}
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <ul class="unstyled">
+                <li>GitHub</li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact & support</a></li>
+                <li><a href="#">Enterprise</a></li>
+                <li><a href="#">Site status</a></li>
+            </ul>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <ul class="unstyled">
+                <li>GitHub</li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact & support</a></li>
+                <li><a href="#">Enterprise</a></li>
+                <li><a href="#">Site status</a></li>
+            </ul>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <ul class="unstyled">
+                <li>GitHub</li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact & support</a></li>
+                <li><a href="#">Enterprise</a></li>
+                <li><a href="#">Site status</a></li>
+            </ul>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <ul class="unstyled">
+                <li>GitHub</li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact & support</a></li>
+                <li><a href="#">Enterprise</a></li>
+                <li><a href="#">Site status</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <hr size="1">
+
+    <div class="row">
+        <div class="col-md-12">
+            <p class="muted pull-right">© 2013 Company Name. All rights reserved</p>
+        </div>
+    </div>
+
 {/block}

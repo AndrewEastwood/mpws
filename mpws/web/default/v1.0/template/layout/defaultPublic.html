@@ -13,13 +13,33 @@
     <meta name="locale" content="{$CURRENT.OBJECT->getObjectLocale()}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
-<body>
+<body class="MPWSPage">
 
 <div class="MPWSLayout MPWSLayoutDefaultPublic">
 
-    <div class="MPWSPageHeader">{block name="pageHeader"}{/block}</div>
-    <div class="MPWSPageBody">{block name="pageBody"}{/block}</div>
-    <div class="MPWSPageFooter">{block name="pageFooter"}{/block}</div>
+        {block name="pageCommonBefore"}{/block}
+        {block name="pageHeaderBefore"}{/block}
+    <div class="MPWSPageHeader">
+        {block name="pageHeader"}{/block}
+    </div>
+        {block name="pageHeaderAfter"}{/block}
+        {block name="pageCommonAfter"}{/block}
+        
+        {block name="pageCommonBefore"}{/block}
+        {block name="pageBodyBefore"}{/block}
+    <div class="MPWSPageBody">
+        {block name="pageBody"}{/block}
+    </div>
+        {block name="pageBodyAfter"}{/block}
+        {block name="pageCommonAfter"}{/block}
+        
+        {block name="pageCommonBefore"}{/block}
+        {block name="pageFooterBefore"}{/block}
+    <div class="MPWSPageFooter">
+        {block name="pageFooter"}{/block}
+    </div>
+        {block name="pageFooterAfter"}{/block}
+        {block name="pageCommonAfter"}{/block}
 
 </div>
 

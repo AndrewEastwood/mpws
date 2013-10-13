@@ -4,42 +4,57 @@ APP.Modules.register("router/customer", [], [
     'lib/underscore',
     'lib/backbone',
     'lib/mpws.page',
-    'plugin/shop/lib/products',
+    'plugin/shop/view/render',
+    'lib/bootstrap',
 
-], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopProducts){
+], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRender){
 
-    app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     var mpwsPageLib = new mpwsPage();
-    var pluginShopProductsLib = new pluginShopProducts();
-    var $dataHolder = $('#data-holder-ID');
-    var $dataView = $('#data-ID');
+    var pluginShopLib = new pluginShopRender();
 
     var Controller = Backbone.Router.extend({
         routes: {
             "": "site_home",
             "site/login": "site_login",
             "site/logout": "site_logout",
+            "site/payment": "site_payment",
+            "site/shipping": "site_shipping",
+            "site/help": "site_help",
+            "site/search/:value": "site_search",
             "user/account": "user_account",
             "shop/catalog": "shop_catalog",
             "shop/product/:id": "shop_product",
-            "shop/cart": "shop_product",
+            "shop/cart": "shop_cart",
             "*whatever": "site_error"
         },
 
         // we display startup products
         site_home: function (route, name, callback) {
-            _pageHome(route, name, callback);
+            app.log(true, 'site_home page with arguments', route, name, callback);
+            _pageHome();
         },
         // display error page
-        site_error: function (  ) {
-            $dataHolder.text(mpwsPageLib.getPageError());
+        site_error: function () {
         },
         site_login: function () {
 
         },
         site_logout: function () {
 
+        },
+        site_payment: function () {
+
+        },
+        site_shipping: function () {
+
+        },
+        site_help: function () {
+
+        },
+        site_search: function (searchText) {
+            _pageProduct(searchText);
         },
         // display catalog
         shop_catalog: function (route, name, callback) {
@@ -53,7 +68,8 @@ APP.Modules.register("router/customer", [], [
             // 
         },
         shop_cart: function () {
-
+            mpwsPageLib.pageName('cart');
+            mpwsPageLib.getPageBody('fdfsdfdsf', true);
         },
         // display particular product
         shop_product: function (productId, name, callback) {
@@ -72,26 +88,26 @@ APP.Modules.register("router/customer", [], [
 
     // page handlers
     function _pageHome () {
-        app.log(arguments);
-        $dataHolder.text('HOME');
-        $dataView.html('');
+        mpwsPageLib.pageName('home');
+        pluginShopLib.getProductListLatest();
     }
 
     function _pageShop () {
-        app.log(arguments);
-        $dataHolder.text('SHOP');
-        $dataView.html('');
     }
 
     function _pageProduct (productId) {
-        app.log(arguments);
-        $dataHolder.text('PRODUCT');
-        pluginShopProductsLib.getProductByID(productId, function (product) {
-            var _productJSON = JSON.parse(product);
-
-            $dataView.html($('<pre>').text(JSON.stringify(_productJSON, null, 4)));
-        });
+        mpwsPageLib.pageName('product');
+        pluginShopLib.getProductItemByID(productId);
     }
+
+
+    $('#button1id').on('click', function(){
+        _pageHome();
+    })
+
+    $('#buttonSearch').on('click', function(){
+        controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
+    })
 
     var controller = new Controller(); // Создаём контроллер
 

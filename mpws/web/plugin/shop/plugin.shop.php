@@ -58,34 +58,164 @@ class pluginShop extends objectBaseWebPlugin {
         
     /* PLUGIN SPEC METHODS */
     
-    private function _displayProducts () {
+    // private function _displayProducts () {
         
-    }
+    // }
 
 
 
     /* PLUGIN API METHODS */
 
-    private function _api_getProducts () {
+    // private function _api_getProducts () {
 
-    }
+    // }
     
-    private function _api_getCurrency () {
+    // private function _api_getCurrency () {
+    //     $ctx = contextMPWS::instance();
+    //     $cfg = $this->objectConfiguration_widget_customMonitor;
+    //     $reports = $ctx->contextCustomer->getDBO()
+    //             ->reset()
+    //             ->select($cfg['fields'])
+    //             ->from($cfg['source'])
+    //             ->fetchData();
+
+    // }
+
+    // categories
+    private function _custom_api_getOrigin ($params) {
         $ctx = contextMPWS::instance();
-        $cfg = $this->objectConfiguration_widget_customMonitor;
-        $reports = $ctx->contextCustomer->getDBO()
-                ->reset()
-                ->select($cfg['fields'])
-                ->from($cfg['source'])
-                ->fetchData();
-
+        $cfg = $this->objectConfiguration_data_jsapiProductsPriceStats;
+        $dataConfig = array_merge_recursive($cfg['data'], $params ?: array());
+        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
     }
-    
+
+    // ------------------
+
+    // origins
+    private function _custom_api_getCategory ($params) {
+        $ctx = contextMPWS::instance();
+        $cfg = $this->objectConfiguration_data_jsapiProductsPriceStats;
+        $dataConfig = array_merge_recursive($cfg['data'], $params ?: array());
+        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+    }
+
+    // ------------------
+
+    // product list
+    private function _custom_api_getProductList_Latest ($params) {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductListLatest['data']);
+        // var_dump($dataObj);
+        // var_dump($params);
+        return $dataObj->fetchData($params);
+    }
+    private function _custom_api_getProductList_ByCategory () {}
+    private function _custom_api_getProductList_ByCategoryAndOrigin () {}
+    // product list additional data
+    private function _custom_api_getProductListAttributes ($params) {
+        $ctx = contextMPWS::instance();
+        $cfg = $this->objectConfiguration_data_jsapiProductAttributes;
+        $dataConfig = array_merge_recursive($cfg['data'], $params ?: array());
+        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+    }
+
+    // ------------------
+
+    // product item
+    private function _custom_api_getProductItem ($pProductID, $type) {
+        // what is not included in comparison to product_single_full
+        // this goes without PriceArchive property
+
+        $data = new mpwsData();
+
+        if (empty($pProductID) || !is_numeric($pProductID))
+            $data->setDataError('wrongProductID');
+        else {
+
+            $dataConfig = $this->objectConfiguration_data_jsapiProductItem['data'];
+            // $dataConfig = array_merge_recursive($cfg['data'], $params ?: array());
+
+            // add filter values
+            array_push($dataConfig['condition']['values'], intval($pProductID));
+
+            // fetch product data and related attributes
+            $ctx = contextMPWS::instance();
+            $dataProduct = $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+            $dataProductAttr = $this->_custom_api_getProductItemAttributes(array(
+                "condition" => array(
+                    "filter" => "ProductID = ?",
+                    "values" => array($pProductID)
+                )
+            ));
+            // print_r($dataProduct);
+
+
+            $_prod = $dataProduct->getData();
+            $_attr = $ctx->contextCustomer->getDBO()->mpwsCombineDataByKeys(
+                $dataProductAttr->getData(),
+                // this will cretae new key with combined data
+                // where keys will be values from Attributes
+                // and values will be Values :)
+                array(
+                    'ProductAttributes' => array(
+                        'keys' => 'Attributes',
+                        'values' => 'Values'
+                    )
+                )
+            );
+            $_prod['ProductAttributes'] = $_attr['ProductAttributes'] ?: array();
+
+
+            // additional data
+            switch ($type) {
+                case 'full':
+                    $dataProductPrices = $this->_custom_api_getProductItemPriceArchive(array(
+                        "condition" => array(
+                            "filter" => "ProductID = ?",
+                            "values" => array($pProductID)
+                        )
+                    ));
+                    $_prices = $dataProductPrices->getData();
+                    $_prod['PriceArchive'] = $_prices['PriceArchive'] ?: array();
+
+                    break;
+                case 'short':
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+
+
+            $data->setData($_prod);
+        }
+
+        return $data;
+    }
+    // product item additional data
+    private function _custom_api_getProductItemAttributes ($params) {
+        $ctx = contextMPWS::instance();
+        $dataConfig = $this->objectConfiguration_data_jsapiProductAttributes['data'];
+        $dataConfig = array_merge($dataConfig, $params ?: array());
+        // print_r($dataConfig);
+        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+    }
+    private function _custom_api_getProductItemPriceArchive ($params) {
+        $ctx = contextMPWS::instance();
+        $dataConfig = $this->objectConfiguration_data_jsapiProductsPriceStats['data'];
+        $dataConfig = array_merge($dataConfig, $params ?: array());
+        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+    }
+
+    // ------------------
+
+
+
+
     protected function _jsapiTriggerAsPlugin() {
         // echo "QQQTEST";
         parent::_jsapiTriggerAsPlugin();
         $param = libraryRequest::getApiParam();
-        $rez = false;
 
         // extract params
         // some functions require particular parameters to be not empty
@@ -93,62 +223,18 @@ class pluginShop extends objectBaseWebPlugin {
         $pProductID = !empty($param['pid']) ? $param['pid'] : false;
         $pCategoryID = !empty($param['cid']) ? $param['cid'] : false;
         $pOriginID = !empty($param['oid']) ? $param['oid'] : false;
-        $pLimit = !empty($param['limit']) ? $param['limmit'] : false;
+        $pLimit = !empty($param['limit']) ? $param['limit'] : false;
         $pOffset = !empty($param['offset']) ? $param['offset'] : false;
 
         // token=656c88543646e400eb581f6921b83238
         // var_dump($param);
         $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
-            case "product_list" : {
-                // echo "LOL";
-                // echo 'with fmt = ',  fmtJSON;
-                $cfg = $this->objectConfiguration_data_jsapiProductList;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-                $ctx->pageModel->addStaticData($p);
-                break;
-            }
-            case "category_list" : {
-                // echo "LOL";
-                // echo 'with fmt = ',  fmtJSON;
-                $cfg = $this->objectConfiguration_data_jsapiCategoryList;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-                $ctx->pageModel->addStaticData($p);
-                break;
-            }
-            case "origin_list" : {
-                // echo "LOL";
-                // echo 'with fmt = ',  fmtJSON;
-                $cfg = $this->objectConfiguration_data_jsapiOriginList;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-                $ctx->pageModel->addStaticData($p);
-                break;
-            }
-            case "products" : {
-                $cfg = $this->objectConfiguration_data_jsapiProducts;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-                $ctx->pageModel->addStaticData($p);
-                break;
-            }
-            case "products_sale_short" : {
-                $cfg = $this->objectConfiguration_data_jsapiProductsSaleShort;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-                $ctx->pageModel->addStaticData($p);
-                break;
-            }
-            case "products_price_stats" : {
-                $cfg = $this->objectConfiguration_data_jsapiProductsPriceStats;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-
-                $_dt = $p->getData();
-                $_tmp = array();
-                foreach ($_dt as $key => $value) {
-                    $value['Prices'] = explode(EXPLODE, $value['Prices']);
-                    $_tmp[$key] = $value;
-                }
-
-                // $ctx->pageModel->addStaticData($p->toJSON());
-                $ctx->pageModel->addStaticData(libraryUtils::getJSON($_tmp));
+            // products
+            case "product_list_latest": {
+                $data = $this->_custom_api_getProductList_Latest(array(
+                    "limit" => $pLimit
+                ));
                 break;
             }
             case "category_single_short" : {
@@ -163,24 +249,12 @@ class pluginShop extends objectBaseWebPlugin {
             case "origin_single_full" : {
                 break;
             }
-            case "product_single_short" : {
+            case "product_item_short" : {
+                $data = $this->_custom_api_getProductItem($pProductID, 'short');
                 break;
             }
-            case "product_single_full" : {
-                // $p = false;
-                // if (empty($pProductID))
-                //     $data['error'] = libraryUtils::getJSON('Empty product ID parameter');
-                // else {
-
-
-                    $cfg = $this->objectConfiguration_data_jsapiProductSingleFull;
-                    $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-
-
-                // }
-
-
-                $ctx->pageModel->addStaticData($p->toJSON());
+            case "product_item_full" : {
+                $data = $this->_custom_api_getProductItem($pProductID, 'full');
                 break;
             }
             case "shop_map" : {
@@ -189,57 +263,12 @@ class pluginShop extends objectBaseWebPlugin {
             case "products_most_popular" : {
 
             }
-            case "products_sale_full" : {
-                $cfg = $this->objectConfiguration_data_jsapiProductsSaleFull;
-                $p = $ctx->contextCustomer->getDBO()->mpwsFetchData($cfg['data']);
-
-                $_tmp = array();
-                $_dt = $p->getData();
-                // merge
-
-                $mergeKey = 'ID';
-                $mergePropNameAsKey = 'ProductAttribute';
-                $mergePropNameAsValue = 'ProductValue';
-                $mergeDestKey = 'ProductAttributes';
-
-                foreach ($_dt as $value) {
-                    if (empty($_tmp[$value['ID']]))
-                        $_tmp[$value['ID']] = $value;
-                    else {
-                        $keys = $_tmp[$value['ID']][$mergePropNameAsKey];
-                        $values = $_tmp[$value['ID']][$mergePropNameAsValue];
-
-                        if (!is_array($keys))
-                            $keys = array($keys, $value[$mergePropNameAsKey]);
-
-                        if (!is_array($values))
-                            $values = array($values, $value[$mergePropNameAsValue]);
-
-                        $_tmp[$value['ID']][$mergeDestKey] = array_combine($keys, $values);
-
-                        unset($_tmp[$value['ID']][$mergePropNameAsKey]);
-                        unset($_tmp[$value['ID']][$mergePropNameAsValue]);
-                        // $_tmp[$value['ID']] = array_merge_recursive($_tmp[$value['ID']], $value);
-                    }
-                }
-
-                // $_clean = array();
-                // foreach ($_tmp as $key => $value) {
-                //     $value[$mergeDestKey] = array_combine($value[$mergePropNameAsKey], $value[$mergePropNameAsValue]);
-                //     $_clean[] = $value;
-                // }
-
-
-
-
-
-                $ctx->pageModel->addStaticData(libraryUtils::getJSON($_tmp));
-                break;
-            }
         }
-        // put data
-        // $ctx->pageModel->addStaticData("HELLO WORLD!");
+        // attach to output
+        $ctx->pageModel->addStaticData($data->toJSON());
     }
+
+
 }
     
 ?>

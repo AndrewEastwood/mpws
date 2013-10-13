@@ -43,7 +43,7 @@ window.APP || (function(window, document){
 
         // notify all subscribers
         // _Sandbox.eventNotify("page-loaded");
-        _app.log(true, 'page is loaded fn');
+        // _app.log(true, 'page is loaded fn');
     }
 
     // Sandbox
@@ -82,14 +82,14 @@ window.APP || (function(window, document){
 
             // add another listener
             if (!alreadyAdded) {
-                _app.log(true, 'adding subscriber on ', eventID);
+                // _app.log(true, 'adding subscriber on ', eventID);
                 this._events[eventID].push({
                     id : listenerHash,
                     fn : listener
                 });
                 return true;
             } else 
-                _app.log(true, 'this subscriber is already added on ', eventID);
+                ;//_app.log(true, 'this subscriber is already added on ', eventID);
             return false;
         },
         // remove callback subscription to eventID 
@@ -111,9 +111,9 @@ window.APP || (function(window, document){
                 return;
             var results = [];
             var rez = null;
-            _app.log(true, 'eventNotify: >>>>>>>>>>>>> ', eventID, ' >>>>>>>>> ');
-            _app.log(true, listeners);
-            _app.log(true, 'eventNotify: <<<<<<<<<<<<< ', eventID, ' <<<<<<<<< ');
+            // _app.log(true, 'eventNotify: >>>>>>>>>>>>> ', eventID, ' >>>>>>>>> ');
+            // _app.log(true, listeners);
+            // _app.log(true, 'eventNotify: <<<<<<<<<<<<< ', eventID, ' <<<<<<<<< ');
             // loop through listeners
             for (var i = 0, len = this._events[eventID].length; i < len; i++)
                 results.push(listeners[i].fn(data));
@@ -122,7 +122,7 @@ window.APP || (function(window, document){
                 rez = results.pop();
             else
                 rez = results;
-            _app.log(true, 'eventNotify: has result', rez, results);
+            // _app.log(true, 'eventNotify: has result', rez, results);
             // perform callback with results
             if (typeof callback === "function")
                 callback(null, rez);
@@ -133,9 +133,9 @@ window.APP || (function(window, document){
     // Module
     var _Modules = {
         register : function (id, globals, deps, callback) {
-            _app.log(true, 'doing register >>>>> ', id, ' with >>>>>> ', deps);
+            // _app.log(true, 'doing register >>>>> ', id, ' with >>>>>> ', deps);
             define(id, filterDownloadedPackages(deps), function () {
-                _app.log(true, '::: DEFINE CALLBACK: ', id);
+                // _app.log(true, '::: DEFINE CALLBACK: ', id);
                 var fn = _app.Utils.lockOnFn(callback, globals.concat(_app, _Sandbox));
                 return fn.apply(null, [].slice.call(arguments));
             });
@@ -143,7 +143,7 @@ window.APP || (function(window, document){
         require : function (packages, callback) {
             if (callback)
                 require(filterDownloadedPackages(packages), function () {
-                    _app.log(true ,'::: REQUIRE CALLBACK: ', packages);
+                    // _app.log(true ,'::: REQUIRE CALLBACK: ', packages);
                     return callback.apply(null, [].slice.call(arguments));
                 });
             else
@@ -407,7 +407,7 @@ window.APP || (function(window, document){
     _app.Internal = Internal;
 
     function filterDownloadedPackages (modules) {
-        _app.log(true, 'filterDownloadedPackages', modules);
+        // _app.log(true, 'filterDownloadedPackages', modules);
         return modules;
     }
 

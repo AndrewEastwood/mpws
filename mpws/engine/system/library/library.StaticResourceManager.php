@@ -79,21 +79,30 @@ class libraryStaticResourceManager {
         
         $filesToLoad = array();
         // $filesToImport = array();
+        $includeMetaInfo = true;
+        $metaCommentStart = '/*';
+        $metaCommentEnd = ' */';
 
         // walk by resource
         foreach ($resourceEntry as $filePath) {
-            // set parent dir
+            // set resource dir
             if ($_GET['type'] == 'js')
-                $filePath = 'js' . DS . $filePath;
+                $filePath = 'resource' . DS . 'js' . DS . $filePath;
             if ($_GET['type'] == 'css')
-                $filePath = 'style' . DS . $filePath;
+                $filePath = 'resource' . DS . 'style' . DS . $filePath;
+            if ($_GET['type'] == 'hbs') {
+                $filePath = 'template' . DS . $filePath;
+                $metaCommentStart = '<!--';
+                $metaCommentEnd = ' -->';
+            }
+
             // include existed file
-            if ($isPLugin && file_exists(DR . 'web/plugin/'.$objectName.'/resource/'.$filePath))
-                $filesToLoad[] = DR . 'web/plugin/'.$objectName.'/resource/'.$filePath;
-            elseif ($isCustomer && file_exists(DR . 'web/customer/'.$objectName.'/resource/'.$filePath))
-                $filesToLoad[] = DR . 'web/customer/'.$objectName.'/resource/'.$filePath;
-            elseif (file_exists(DR . 'web/default/'.MPWS_VERSION.'/resource/'.$filePath))
-                $filesToLoad[] = DR . 'web/default/'.MPWS_VERSION.'/resource/'.$filePath;
+            if ($isPLugin && file_exists(DR . 'web/plugin/' . $objectName . DS . $filePath))
+                $filesToLoad[] = DR . 'web/plugin/' . $objectName . DS . $filePath;
+            elseif ($isCustomer && file_exists(DR . 'web/customer/' . $objectName . DS . $filePath))
+                $filesToLoad[] = DR . 'web/customer/' . $objectName . DS . $filePath;
+            elseif (file_exists(DR . 'web/default/' . MPWS_VERSION . DS . $filePath))
+                $filesToLoad[] = DR . 'web/default/' . MPWS_VERSION . DS . $filePath;
         }
 
         // var_dump($filesToLoad);
@@ -102,16 +111,20 @@ class libraryStaticResourceManager {
             return false;
         
         // set metainfo
-        $metainfo = '/* ['.date('Y-m-d H:i:s').'] MPWS Packages: ' . PHP_EOL . ' * ' . 
-                ((MPWS_ENV === 'DEV')?implode(';' . PHP_EOL . ' * ', $filesToLoad):'') . PHP_EOL . ' */' . 
+        $metainfo = $metaCommentStart . '['.date('Y-m-d H:i:s').'] MPWS Packages: ' . PHP_EOL . ' * ' . 
+                ((MPWS_ENV === 'DEV')?implode(';' . PHP_EOL . ' * ', $filesToLoad):'') . PHP_EOL . $metaCommentEnd . 
                 PHP_EOL . PHP_EOL . PHP_EOL;
-        $lineBreak = PHP_EOL.'/*'.str_pad('', 25, '*').' line break '.str_pad('', 25, '*').'*/'.PHP_EOL;
+        $lineBreak = PHP_EOL.$metaCommentStart.str_pad('', 25, '*').' line break '.str_pad('', 25, '*').$metaCommentEnd.PHP_EOL;
         
         // read all files
         $data = '';
+        $filesToLoadCount = count($filesToLoad);
         foreach ($filesToLoad as $item) {
             //echo '/*' . $item . '*/';
-            $data .= (file_get_contents($item) . $lineBreak);
+            if ($filesToLoadCount === 1)
+                $data .= file_get_contents($item);
+            else
+                $data .= (file_get_contents($item) . $lineBreak);
         }
         
         // add import files (CSS only !!!!)
@@ -142,49 +155,67 @@ class libraryStaticResourceManager {
         if (MPWS_ENV === 'PROD') {
             if ($_GET['type'] == 'js') {
                 $data = libraryMinifyJSCompressor::minify($data);
-                
                 file_put_contents($resourceFilePath, $metainfo  . $data);
             }
             if ($_GET['type'] == 'css') {
                 $data = libraryMinifyCSSCompressor::process($data);
                 file_put_contents($resourceFilePath, $metainfo  . $data);
             }
+            if ($_GET['type'] == 'hbs') {
+                file_put_contents($resourceFilePath, $data);
+            }
         }
 
-        return $metainfo . $data;
+        return ($includeMetaInfo ? $metainfo : '') . $data;
     }
 
     public function GetContent () {
 
-        $c = MPWS_CUSTOMER;
-        $v = MPWS_VERSION;
-        // $p = libraryRequest::getPlugin(false);
-        // $p = $_GET['object'] === 'plugin' ? $_GET['resource'] : false;
-
         $objectType = $_GET['object']; // plugin OR customer
         $objectName = $_GET['name']; // plugin OR customer
         $requestedResourceName = $_GET['resource'];
+        $access = 'restricted';
+
+        switch ($_GET['access']) {
+            case "i":
+                $access = 'internal';
+                break;
+            case "p":
+                $access = "public";
+                break;
+        }
 
         // request type
         $isPLugin = $objectType === 'plugin';
         $isCustomer = $objectType === 'customer';
 
         // requested file name
-        $fileNameToRespond = $requestedResourceName . DOT . $_GET['type'];
+        $fileNameToRespond = $requestedResourceName  . DOT . $_GET['type'];
 
-        // requested file name
-        // $name = $_GET['resource'] . DOT . $_GET['type'];
-        // echo $fileNameToRespond;
-        //$owner = empty($owner)? MPWS_CUSTOMER : $owner;
-        
+        // set resource dir
+        $resourceDir = false;
+        switch ($_GET['type']) {
+            case 'jpg':
+            case 'png':
+            case 'gif':
+                $resourceDir = 'resource' . DS . 'img';
+                break;
+            case 'woff':
+            case 'svg':
+            case 'eot':
+            case 'ttf':
+                $resourceDir = 'resource' . DS . 'font';
+                break;
+        }
+
         // default files
-        $chains[] = DR . 'web/default/' . MPWS_VERSION . '/resource/img/' . $fileNameToRespond;
+        $chains[] = DR . 'web/default/' . MPWS_VERSION . DS . $resourceDir . DS . $fileNameToRespond;
 
         if ($isCustomer)
-            $chains[] = DR . 'web/customer/' . $objectName . '/resource/img/' . $fileNameToRespond;
+            $chains[] = DR . 'web/customer/' . $objectName. DS . $resourceDir . DS . $fileNameToRespond;
         if ($isPLugin)
-            $chains[] = DR . 'web/plugin/' . $objectName . '/resource/img/' . $fileNameToRespond;
-
+            $chains[] = DR . 'web/plugin/' . $objectName. DS . $resourceDir . DS . $fileNameToRespond;
+        // var_dump($chains);
         // return first existed file
         foreach ($chains as $resourceFile)
             if (file_exists($resourceFile))

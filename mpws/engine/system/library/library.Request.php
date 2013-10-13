@@ -77,7 +77,7 @@ class libraryRequest {
     static function getApiParam ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
         $param = self::getPostValue('p', $defaultValue, $switch, $valueOnSwitch);
         //var_dump($param);
-        parse_str($param, $param);
+        // parse_str($param, $param);
         if (empty($param))
             return $defaultValue;
         // $param = libraryUtils::cleanQueryArray($param);

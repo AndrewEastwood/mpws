@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-10-10 22:51:39
+<?php /* Smarty version Smarty-3.1.11, created on 2013-10-14 01:59:06
          compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:14769319735206340ce1e7e4-84126817%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '13fc0739f57dedff11a7d9378923d6d565f25193' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1381434696,
+      1 => 1381437109,
       2 => 'file',
     ),
   ),
@@ -159,9 +159,9 @@ models',
 views',
                         // version suppress
                         "lib/jquery": '<?php echo $_smarty_tpl->tpl_vars['INFO']->value['URL']['STATIC_CUSTOMER'];?>
-libs/jquery-1.9.1',
+lib/jquery-1.9.1',
                         "lib/jquery_ui": '<?php echo $_smarty_tpl->tpl_vars['INFO']->value['URL']['STATIC_CUSTOMER'];?>
-libs/jquery-ui-1.10.3.custom'
+lib/jquery-ui-1.10.3.custom'
                     }
                 }
             }

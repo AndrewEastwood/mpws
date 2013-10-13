@@ -5,7 +5,7 @@ APP.Modules.register("lib/backbone", [
   'lib/jquery',
   'lib/underscore'
     /* component implementation */
-], function(window, app, Sandbox, _) {
+], function(window, app, Sandbox, jQuery, _) {
 
 
 //     Backbone.js 0.9.10

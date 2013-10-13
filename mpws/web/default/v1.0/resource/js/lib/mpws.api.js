@@ -12,16 +12,18 @@ APP.Modules.register("lib/mpws.api", [
 ], function (wnd, app, Sandbox, $, _) {
 
     var apiService = '/api.js';
+    var _config = app.Page.getConfiguration();
 
-    app.log('lib/mpws.api ================> ', $, _);
+    // app.log('lib/mpws.api ================> ', $, _);
 
     function _requestRaw (data, callback) {
         //app.log('trololo');
         app.log('requestRaw', data);
         return $.post(apiService, data).success(function(receivedData) {
             /*console.log(data);*/
-            if (typeof(callback) === 'function')
-                callback(receivedData);
+            app.log(true, 'Received data', receivedData);
+            if (typeof callback === 'function')
+                callback.call(null, null, receivedData);
         });
     }
     
@@ -44,7 +46,7 @@ APP.Modules.register("lib/mpws.api", [
     // mostly used to get plugin data
     function requestJSON (params, callback) {
         var requester = _getObjectJSON(params);
-        app.log(requester);
+        // app.log(requester);
         _requestRaw(requester, callback);
         return true;
     }
@@ -143,13 +145,14 @@ APP.Modules.register("lib/mpws.api", [
         return _getObjectJSON(_l);
     }
 
+    function requestTemplate (templatePath, callback) {
+        templatePath = templatePath.replace(/\./g, '//').replace('@', '.');
+        $.get(_config.URL.staticUrlBase + templatePath).success(callback);
+    }
+
     return {
-        requestRaw: _requestRaw,
-        request: requestJSON,
-        objectRequest: requestJSON,
-        pageRequest: _pageRequest,
-        getObjectJSON: _getObjectJSON,
-        getObjectJSONByKeyValue: _getObjectJSONByKeyValue
+        requestData: requestJSON,
+        requestTemplate: requestTemplate
     };
 
 });

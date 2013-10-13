@@ -407,10 +407,14 @@
         protected static function _execute($query, $parameters = array(), $connection_name = self::DEFAULT_CONNECTION) {
             self::_log_query($query, $parameters, $connection_name);
             $statement = self::$_db[$connection_name]->prepare($query);
-
+            // var_dump($query);
+            // var_dump($parameters);
             self::$_last_statement = $statement;
-
-            return $statement->execute($parameters);
+            // var_dump($statement);
+            $rez = $statement->execute($parameters);
+            // var_dump($statement->debugDumpParams());
+            // var_dump($rez);
+            return $rez;
         }
 
         /**
@@ -1595,6 +1599,7 @@
          */
         protected function _run() {
             $query = $this->_build_select();
+            // echo $query;
             $caching_enabled = self::$_config[$this->_connection_name]['caching'];
 
             if ($caching_enabled) {
@@ -1920,7 +1925,7 @@
         {
             $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
 
-            return call_user_func_array(array('ORM', $method), $arguments);
+            return call_user_func_array(array('libraryORM', $method), $arguments);
         }
 
         /******** MPWS PATCH START *************/
@@ -1930,14 +1935,85 @@
             return $this;
         }
 
+        public function mpwsReset () {
+
+            // The name of the table the current ORM instance is associated with
+            $this->_table_name = null;
+
+            // Alias for the table to be used in SELECT queries
+            $this->_table_alias = null;
+
+            // Values to be bound to the query
+            $this->_values = array();
+
+            // Columns to select in the result
+            $this->_result_columns = array('*');
+
+            // Are we using the default result column or have these been manually changed?
+            $this->_using_default_result_columns = true;
+
+            // Join sources
+            $this->_join_sources = array();
+
+            // Should the query include a DISTINCT keyword?
+            $this->_distinct = false;
+
+            // Is this a raw query?
+            $this->_is_raw_query = false;
+
+            // The raw query
+            $this->_raw_query = '';
+
+            // The raw query parameters
+            $this->_raw_parameters = array();
+
+            // Array of WHERE clauses
+            $this->_where_conditions = array();
+
+            // LIMIT
+            $this->_limit = null;
+
+            // OFFSET
+            $this->_offset = null;
+
+            // ORDER BY
+            $this->_order_by = array();
+
+            // GROUP BY
+            $this->_group_by = array();
+
+            // HAVING
+            $this->_having_conditions = array();
+
+            // The data for a hydrated instance of the class
+            $this->_data = array();
+
+            // Fields that have been modified during the
+            // lifetime of the object
+            $this->_dirty_fields = array();
+
+            // Fields that are to be inserted in the DB raw
+            $this->_expr_fields = array();
+
+            // Is this a new object (has create() been called)?
+            // $this->$_is_new = false;
+
+            // // Name of the column to use as the primary key for
+            // // this instance only. Overrides the config settings.
+            // $this->$_instance_id_column = null;
+            // echo 'MPWS RESET!!!!';
+        }
+
         public function mpwsFetchData ($config) {
+
+            $this->mpwsReset();
 
             $source = $config['source'];
             $fieldsToSelectFromDB = $config['fields'];
 
             // prepend ID column
-            if (!in_array("ID", $fieldsToSelectFromDB))
-                array_unshift($fieldsToSelectFromDB, 'ID');
+            // if (!in_array("ID", $fieldsToSelectFromDB))
+            //     array_unshift($fieldsToSelectFromDB, 'ID');
 
             $fieldsToSelectFromDBClear = array();
             // just to avoid mysql error: XXXX in field list is ambiguous
@@ -1951,7 +2027,7 @@
             $this->table($source);
             $this->select_many($fieldsToSelectFromDBClear);
 
-            if ($config['additional'])
+            if (!empty($config['additional']))
                 foreach ($config['additional'] as $addSource => $addConfig) {
                     if (empty($addConfig['fields']))
                         continue;
@@ -1971,6 +2047,14 @@
                     $this->select_many($fieldsToSelectClear);
                 }
 
+
+            // condition
+            if (!empty($config['condition']['filter'])) {
+                // var_dump('LOLOLOL');
+                $values = $config['condition']['values'];
+                $this->where_raw($config['condition']['filter'], $values ?: array());
+            }
+
             if (!empty($config['group']))
                 $this->group_by($config['group']);
 
@@ -1988,11 +2072,21 @@
                     $this->order_by_asc($config['order']['field']);
             }
 
+            // fetch data
+            $dbData = $this->find_array();
+            // optimize values
+            $dbData = $this->mpwsOptimizeDataValues($dbData, $config['transformToArray'] ?: array());
+            // create mpwsData object
+            $data = null;
+            if (count($dbData) === 1)
+                $data = $dbData[0];
+            if (count($dbData) > 1)
+                $data = $dbData;
 
-            $data = new mpwsData($this->find_array());
+            $mpwsDataObj = new mpwsData($data);
 
-            if (isset($config['output']))
-                return $data->to($config['output']);
+            // if (isset($config['output']))
+            //     return $mpwsDataObj->to($config['output']);
             // $this->table('shop_products')
             //     ->select('shop_products.ID', 'ID')
             //     ->select('shop_products.Name', 'pName')
@@ -2004,13 +2098,56 @@
             //     ->join('shop_categories', array(
             //         'shop_categories.ID', '=', 'shop_products.CategoryID'
             //     ));
-
-            return $data;
+            return $mpwsDataObj;
         }
 
         public static function mpwsInstance ($connection_name = self::DEFAULT_CONNECTION) {
             self::_setup_db($connection_name);
             return new self(null, array(), $connection_name);
+        }
+
+        public function mpwsOptimizeDataValues ($dataArray, $keysToForceTransformToArray) {
+            $keysToForceTransformToArray = is_array($keysToForceTransformToArray) ? $keysToForceTransformToArray : array();
+            // optimize values:
+            // 1. values like: 1#EXPLODE#2#EXPLODE#....
+            //    will be converted to array [1, 2, n]
+            foreach ($dataArray as $key => $value) {
+                if (is_array($value))
+                    $dataArray[$key] = $this->mpwsOptimizeDataValues($value, $keysToForceTransformToArray);
+                else if (strstr($value, EXPLODE) || in_array($key, $keysToForceTransformToArray))
+                    $dataArray[$key] = explode(EXPLODE, $value);
+            }
+            return $dataArray;
+
+        }
+        public function mpwsCombineDataByKeys ($dataArray, $mapKeysToCombine, $doOptimization, $keysToForceTransformToArray) {
+            // $newArray = array();
+
+            if ($doOptimization)
+                $dataArray = $this->mpwsOptimizeDataValues($dataArray, $keysToForceTransformToArray);
+
+            // values will be combinet into 
+            foreach ($mapKeysToCombine as $destKey => $keyMap) {
+                if (!isset($dataArray[$keyMap['keys']]) || !isset($dataArray[$keyMap['values']]))
+                    continue;
+
+                $_keys = $dataArray[$keyMap['keys']];
+                $_values = $dataArray[$keyMap['values']];
+
+                if (!is_array($_keys) || !is_array($_values))
+                    continue;
+
+                $dataArray[$destKey] = array_combine($_keys, $_values);
+
+                if ($keyMap['keepOriginal'])
+                    continue;
+
+                // remove orignial sources
+                unset($dataArray[$keyMap['keys']]);
+                unset($dataArray[$keyMap['values']]);
+
+            }
+            return $dataArray;
         }
     }
 
