@@ -1,29 +1,167 @@
 APP.Modules.register("plugin/shop/view/render", [], [
     'lib/jquery',
+    'lib/underscore',
+    'lib/backbone',
     'lib/mpws.api',
     'lib/mpws.page',
     'plugin/shop/lib/driver',
-], function (app, Sandbox, $, mpwsAPI, mpwsPage, pluginShopDriver) {
+], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopDriver) {
 
-    var pluginShopLib = new pluginShopDriver();
+    var pluginShopDataLib = new pluginShopDriver();
     var mpwsPageLib = new mpwsPage();
 
     var _logPrefix = '[plugin/shop/view/render] : ';
 
+    // mpwsPageLib.setupDependencies({
+    //     productListItem: "plugin.shop.component.productListItem@hbs"
+    // });
+
     // app.log('HI FROM SHOP RENDER :) I AM SHOP RENDER LIBRARY YO')
 
-    function pluginShopRender () {}
+    var _templatePartials = {
+        productList: {
+            url: "plugin.shop.component.productList@hbs",
+            type: mpwsPage.TYPE.PARTIAL
+        },
+        productListItem: {
+            url: "plugin.shop.component.productListItem@hbs",
+            type: mpwsPage.TYPE.PARTIAL
+        },
+        shopSideBar: {
+            url: "plugin.shop.component.pageSidebar@hbs",
+            type: mpwsPage.TYPE.PARTIAL
+        },
+        productItem: {
+            url: "plugin.shop.component.productItem@hbs",
+            type: mpwsPage.TYPE.PARTIAL
+        },
+    }
 
-    pluginShopRender.prototype.getProductListLatest = function () {
-        mpwsPageLib.setPageContentByTemplate("plugin.shop.component.productList@hbs", function (onDataReceived) {
-            pluginShopLib.getProductListLatest(onDataReceived);
+
+    // shop start page
+    function _pageShopHome () {
+        _pageShopProductListLatest();
+        // overwrite page name
+        mpwsPageLib.pageName('shop-home');
+        mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartials, function (onDataReceived) {
+            pluginShopDataLib.getProductListLatest(onDataReceived);
         });
     }
 
-    pluginShopRender.prototype.getProductItemByID = function (productId) {
-        mpwsPageLib.setPageContentByTemplate("plugin.shop.component.productItem@hbs", function (onDataReceived) {
-            pluginShopLib.getProductItemByID(productId, onDataReceived);
+    // shop products lists
+    function _pageShopProductListLatest () {
+        mpwsPageLib.pageName('shop-list-latest');
+        mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartials, function (onDataReceived) {
+            pluginShopDataLib.getProductListLatest(onDataReceived);
         });
+    }
+
+    // shop catalog options
+    function _pageShopCatalog () {
+        mpwsPageLib.pageName('shop-catalog');
+        mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartials, function (onDataReceived) {
+            pluginShopDataLib.getProductListLatest(onDataReceived);
+        });
+    }
+
+    function _pageShopCatalogByCategory (categoryId) {
+        mpwsPageLib.pageName('shop-category');
+        mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartials, function (onDataReceived) {
+            pluginShopDataLib.getProductListLatest(onDataReceived);
+        });
+
+    }
+
+    function _pageShopCatalogByCategoryAndBrand (categoryId, brandId) {
+        mpwsPageLib.pageName('shop-category-brand');
+        mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartials, function (onDataReceived) {
+            pluginShopDataLib.getProductListLatest(categoryId, onDataReceived);
+        });
+    }
+
+    // shop product item
+    function _pageShopProductItemByID (productId) {
+        mpwsPageLib.pageName('shop-product');
+        mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartials, function (onDataReceived) {
+            pluginShopDataLib.getProductItemByID(productId, onDataReceived);
+        });
+    }
+
+    // shop cart
+    function _pageShopCart () {
+        mpwsPageLib.pageName('shop-cart');
+        mpwsPageLib.getPageBody('fdfsdfdsf', true);
+    }
+
+    // start site routing
+    var Controller = Backbone.Router.extend({
+        routes: {
+            "shop/": "shop_home",
+            "shop/latest": "shop_latest",
+            "shop/catalog": "shop_catalog",
+            "shop/catalog/:category": "shop_category",
+            "shop/catalog/:category/:brand": "shop_category_brand",
+            "shop/product/:product": "shop_product",
+            "shop/cart": "shop_cart"
+        },
+        // shop default page
+        shop_home: function () {
+            _pageShopHome();
+        },
+        // display shop latest stuff
+        shop_latest: function (route, name, callback) {
+            _pageShopProductListLatest(route, name, callback);
+        },
+        // display catalog
+        shop_catalog: function (route, name, callback) {
+            _pageShopCatalog(route, name, callback);
+        },
+        // display category
+        shop_category: function () {
+            // here we handle different stuff:
+            // sorting by [name, date, price, popularity, etc]
+            // pagination
+            // 
+            _pageShopCatalogByCategory(route, name, callback);
+        },
+        // display category
+        shop_category_brand: function () {
+            // here we handle different stuff:
+            // sorting by [name, date, price, popularity, etc]
+            // pagination
+            // 
+            _pageShopCatalogByCategoryAndBrand(route, name, callback);
+        },
+        shop_cart: function () {
+            _pageShopCart();
+        },
+        // display particular product
+        shop_product: function (productId, name, callback) {
+            app.log(true, 'shop_product')
+            _pageShopProductItemByID(productId);
+        },
+
+    });
+
+    // public class
+    function pluginShopRender () {}
+
+    pluginShopRender.prototype.pageShopHome = function () {
+        _pageShopHome();
+    }
+    pluginShopRender.prototype.pageShopCatalog = function () {
+        _pageShopCatalog();
+    }
+    pluginShopRender.prototype.pageProductListLatest = function () {
+        _pageShopProductListLatest();
+    }
+    pluginShopRender.prototype.pageProductItem = function (productId) {
+        _pageShopProductItemByID(productId);
+    }
+    pluginShopRender.prototype.start = function (startHistory) {
+        var controller = new Controller(); // Создаём контроллер
+        if (startHistory)
+            Backbone.history.start();  // Запускаем HTML5 History push    
     }
 
     return pluginShopRender;

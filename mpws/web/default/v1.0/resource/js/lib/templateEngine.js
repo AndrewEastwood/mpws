@@ -8,8 +8,27 @@ APP.Modules.register("lib/templateEngine", [
 
 ], [
     'lib/handlebars',
-], function (wnd, app, Sandbox, tplEngine) {
+    'lib/mpws.api',
+], function (wnd, app, Sandbox, Handlebars, mpwsAPI) {
 
-	return tplEngine;
+    var _templateCache = {};
+
+    Handlebars.getTemplate = function (templateUrl) {
+        return _templateCache[templateUrl] || null;
+    }
+
+    Handlebars.hasTemplate = function (templateUrl) {
+        return !!_templateCache[templateUrl];
+    }
+
+    Handlebars.setTemplate = function (templateUrl, templateHtml) {
+        _templateCache[templateUrl] = templateHtml;
+    }
+
+    Handlebars.clearCache = function () {
+        _templateCache = {};
+    }
+
+    return Handlebars;
 
 });

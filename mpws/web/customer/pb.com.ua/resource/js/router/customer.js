@@ -12,7 +12,7 @@ APP.Modules.register("router/customer", [], [
     // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     var mpwsPageLib = new mpwsPage();
-    var pluginShopLib = new pluginShopRender();
+    var pluginShopRenderLib = new pluginShopRender();
 
     var Controller = Backbone.Router.extend({
         routes: {
@@ -24,16 +24,17 @@ APP.Modules.register("router/customer", [], [
             "site/help": "site_help",
             "site/search/:value": "site_search",
             "user/account": "user_account",
-            "shop/catalog": "shop_catalog",
-            "shop/product/:id": "shop_product",
-            "shop/cart": "shop_cart",
+            // "shop/catalog": "shop_catalog",
+            // "shop/product/:id": "shop_product",
+            // "shop/cart": "shop_cart",
             "*whatever": "site_error"
         },
 
         // we display startup products
         site_home: function (route, name, callback) {
-            app.log(true, 'site_home page with arguments', route, name, callback);
-            _pageHome();
+            // app.log(true, 'site_home page with arguments', route, name, callback);
+            // _pageHome();
+            pluginShopRenderLib.pageShopHome();
         },
         // display error page
         site_error: function () {
@@ -54,26 +55,8 @@ APP.Modules.register("router/customer", [], [
 
         },
         site_search: function (searchText) {
-            _pageProduct(searchText);
-        },
-        // display catalog
-        shop_catalog: function (route, name, callback) {
-            _pageShop(route, name, callback);
-        },
-        // display category
-        shop_category: function () {
-            // here we handle different stuff:
-            // sorting by [name, date, price, popularity, etc]
-            // pagination
-            // 
-        },
-        shop_cart: function () {
-            mpwsPageLib.pageName('cart');
-            mpwsPageLib.getPageBody('fdfsdfdsf', true);
-        },
-        // display particular product
-        shop_product: function (productId, name, callback) {
-            _pageProduct(productId, name, callback);
+            // _pageProduct(searchText);
+            pluginShopRenderLib.pageProductItem(searchText);
         },
         // accounting
         user_account: function () {
@@ -86,30 +69,33 @@ APP.Modules.register("router/customer", [], [
 
     });
 
-    // page handlers
-    function _pageHome () {
-        mpwsPageLib.pageName('home');
-        pluginShopLib.getProductListLatest();
-    }
+    // // page handlers
+    // function _pageHome () {
+    //     pluginShopRenderLib.getProductListLatest();
+    //     mpwsPageLib.pageName('home');
+    // }
 
-    function _pageShop () {
-    }
+    // function _pageShop () {
+    // }
 
-    function _pageProduct (productId) {
-        mpwsPageLib.pageName('product');
-        pluginShopLib.getProductItemByID(productId);
-    }
+    // function _pageProduct (productId) {
+    //     pluginShopRenderLib.getProductItemByID(productId);
+    // }
 
 
-    $('#button1id').on('click', function(){
-        _pageHome();
-    })
+    // $('#button1id').on('click', function(){
+    //     _pageHome();
+    // })
 
     $('#buttonSearch').on('click', function(){
         controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
     })
 
+    // start native site page monitoring
     var controller = new Controller(); // Создаём контроллер
+
+    // start shop page monitoring
+    pluginShopRenderLib.start(false);
 
     Backbone.history.start();  // Запускаем HTML5 History push    
 

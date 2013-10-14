@@ -16,9 +16,18 @@ APP.Modules.register("lib/mpws.page", [
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function (wnd, app, Sandbox, $, _, Backbone, mpwsAPI, tplEngine, async) {
+], function (wnd, app, Sandbox, $, _, Backbone, mpwsAPI, tplEngine, AsyncLib) {
 
     function mpwsPage () {}
+
+    mpwsPage.TYPE = {
+        PARTIAL: 'partial',
+        HELPER: 'helper',
+    }
+
+    mpwsPage.STATE = {
+        LOADING: 'loading'
+    }
 
     mpwsPage.prototype.getPageError = function() {
         this.getPageBody('Woohoo!!! Error 404');
@@ -38,7 +47,7 @@ APP.Modules.register("lib/mpws.page", [
             $(_body).html('');
         if (content) {
             // stop loading animation
-            this.pageLoading(false);
+            this.pageSetState(mpwsPage.STATE.LOADING, false);
             // append content
             $(_body).append(content);
         }
@@ -53,11 +62,13 @@ APP.Modules.register("lib/mpws.page", [
         return this.getPagePlaceholders().footer;
     }
 
-    mpwsPage.prototype.pageLoading = function (showOrHide) {
-        if (showOrHide)
-            this.getPagePlaceholders().body.html('').addClass('render-loading');
-        else
-            this.getPagePlaceholders().body.removeClass('render-loading');
+    mpwsPage.prototype.pageSetState = function (state, showOrHide) {
+        if (state === mpwsPage.STATE.LOADING) {
+            if (showOrHide)
+                this.getPagePlaceholders().body.html('').addClass('render-loading');
+            else
+                this.getPagePlaceholders().body.removeClass('render-loading');
+        }
     }
 
     mpwsPage.prototype.pageName = function (name) {
@@ -73,36 +84,116 @@ APP.Modules.register("lib/mpws.page", [
 
         $('body').addClass('MPWSPage_' + name || 'default');
     }
-    // TODO: multiple templating support
-    // mpwsPage.prototype.setPageContentByTemplate = function (templateMap, templateDataReceiver) {
 
-    // }
+    // register partial reusable object 
+    mpwsPage.prototype.registerPartial = function(key, partial) {
+        tplEngine.registerPartial(key, partial);
+        return this;
+    }
 
-    mpwsPage.prototype.setPageContentByTemplate = function (templatePath, templateDataReceiver) {
+    // register template helpers
+    mpwsPage.prototype.registerHelper = function(key, helper) {
+        tplEngine.registerHelper(key, helper);
+        return this;
+    }
+
+    mpwsPage.prototype.getTemplate = function(templateUrl, callback) {
+        // just fire callback
+        if (!templateUrl && _.isFunction(callback))
+            return callback(null, null);
+
+        if (tplEngine.hasTemplate(templateUrl))
+            callback(null, tplEngine.getTemplate(templateUrl));
+        else
+            mpwsAPI.requestTemplate(templateUrl, function (templateHtml) {
+                tplEngine.setTemplate(templateUrl, templateHtml);
+                callback(null, templateHtml);
+            });
+    }
+
+    // will setup / fetch and store page components
+    // @deps - json opject where each item must contain the 
+    //         following fields:
+    //              url
+    //              type: [partial|helper]
+    //              fn: (when type is helper)
+    mpwsPage.prototype.setupDependencies = function(deps, callback) {
+        var _dataMap = {};
+        var _self = this;
+
+        if (!deps)
+            return callback(null);
+
+        for (var templateAccessKey in deps)
+            (function (key, depItem) {
+                _dataMap[key] = function (callback) {
+                    _self.getTemplate(depItem.url, function (err, templateHtml) {
+                        callback(err, _.extend({}, depItem, {
+                            template: templateHtml
+                        }));
+                    });
+                }
+            })(templateAccessKey, deps[templateAccessKey]);
+
+        AsyncLib.parallel(_dataMap, function(err, results) {
+
+            app.log(true, "mpwsPage.setupDependencies", err, results);
+
+            _(results).each(function(depItem, key) {
+                if (depItem.type === 'partial')
+                    _self.registerPartial(key, depItem.template);
+                if (depItem.type === 'helper' && _.isFunction(depItem.fn))
+                    _self.registerHelper(key, depItem.fn);
+            });
+
+            callback(err, results);
+        });
+    }
+
+    mpwsPage.prototype.render = function (templatePath, deps, templateDataReceiverFn, options) {
         var self = this;
         // start loadng animation
-        this.pageLoading(true);
-        // start fetching and rendering data
-        templateDataReceiver(function (error, data) {
-            var _injectionFn = function (template) {
-                // this is when we want to render data with template
+        this.pageSetState(mpwsPage.STATE.LOADING, true);
+
+        // adjust arguments
+        if (_.isFunction(deps)) {
+            options = templateDataReceiverFn;
+            templateDataReceiverFn = deps;
+            deps = null;
+        }
+
+        //  && !_.isFunction(templateDataReceiverFn) && _.isUndefined(options)
+
+        // [1] load deps
+        self.setupDependencies(deps, function (err) {
+
+            var _injectionFn = function (template, data) {
+                var html = false;
+                // [4] combine everything together
                 if (template) {
-                    // compile teplate
-                    templateFn = tplEngine.compile(template);
-                    app.log(tplEngine, data, templateFn);
-                    // combine compiled template with data and inject into page body
-                    self.getPageBody(templateFn(data), true);
-                } else {
-                    // otherwise just overwrite page body content
-                    self.getPageBody($('<pre>').text(JSON.stringify(data, null, 4)), true);
+                    var templateFn = tplEngine.compile(template);
+                    html = templateFn(data);
                 }
+                if (options && options.el)
+                    $(options.el).html(html);
+                else
+                    self.getPageBody(html, true);
             }
-            // get template and render data
-            if (templatePath)
-                mpwsAPI.requestTemplate(templatePath, _injectionFn);
-            else
-                _injectionFn();
-        });
+
+            var _templateReceiverFn = function (error, template) {
+                // [3] call data receiver
+                if (_.isFunction(templateDataReceiverFn))
+                    templateDataReceiverFn(function (error, data) {
+                        _injectionFn(template, data);
+                    });
+                else
+                    _injectionFn(template);
+            }
+
+            // [2] load main template and finally/or just call _templateReceiverFn
+            self.getTemplate(templatePath, _templateReceiverFn);
+
+        })
     }
 
 

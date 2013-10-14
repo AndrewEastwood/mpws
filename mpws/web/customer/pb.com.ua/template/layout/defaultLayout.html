@@ -2,13 +2,13 @@
 
 {block name="pageCommonBefore"}
 <div class="row">
-    <div class="col-xs-0 col-sm-0 col-md-2"></div>
-    <div class="col-xs-12 col-sm-12 col-md-8">
+    <!-- <div class="col-xs-0 col-sm-0 col-md-2"></div> -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
 {/block}
 
 {block name="pageCommonAfter"}
     </div>
-    <div class="col-xs-0 col-sm-0 col-md-2"></div>
+    <!-- <div class="col-xs-0 col-sm-0 col-md-2"></div> -->
 </div>
 {/block}
 
@@ -23,13 +23,14 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#"><!-- <img class="image image-logo image-logo-website" src="{$INFO.URL.STATIC_CUSTOMER}logo.png"/> -->MIKSER</a>
+    <a class="navbar-brand" href="#/shop"><!-- <img class="image image-logo image-logo-website" src="{$INFO.URL.STATIC_CUSTOMER}logo.png"/> -->MIKSER</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
+      <li class="active"><a href="#/shop">Home</a></li>
+      <li><a href="#/shop/catalog">Catalog</a></li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<b class="caret"></b></a>
         <ul class="dropdown-menu">
@@ -70,6 +71,8 @@
 {/block}
 
 
+
+
 {block name="pageBody"}
 
 <!--     Product ID <input type="text" id="product-ID" data-key="id" data-target=".btn-product-details" size="4">
@@ -85,6 +88,7 @@
 
 
 {/block}
+
 
 
 
