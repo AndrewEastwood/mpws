@@ -33,11 +33,28 @@ class mpwsData {
     }
 
     // configuration
-    public function extendConfig($config) {
+    public function extendConfig($config, $useRecursiveMerge = false) {
         if (!is_array($config))
             return $this;
 
-        $this->_config = array_merge($this->_config, $config);
+        foreach ($config as $key => $value) {
+            
+            if (!isset($this->_config[$key])) {
+                $this->_config[$key] = $value;
+                continue;
+            }
+
+            $classConigValue = $this->_config[$key];
+
+            if (is_array($classConigValue)) {
+                if ($useRecursiveMerge)
+                    $this->_config[$key] = array_merge_recursive($classConigValue, is_array($value) ? $value : array($value));
+                else
+                    $this->_config[$key] = array_merge($classConigValue, is_array($value) ? $value : array($value));
+            }
+            else
+                $this->_config[$key] = $value;
+        }
 
         // if (!empty($this->_config['condition']) && $this->_config['condition']['values'])
 
@@ -86,12 +103,30 @@ class mpwsData {
             "order" => array(
                 // "field" => "shop_productPrices.DateCreated",
                 // "ordering" => "DESC"
+            ),
+            "options" => array(
+                // This goes by default.
+                // You can baypass any filed names to force make value as array of each
+                "transformToArray" => array()
+                // required fields:
+                // "combineDataByKeys" => array(
+                //    "mapKeysToCombine" => array(
+                //        'ProductAttributes' => array(
+                //            'keys' => 'Attributes',
+                //            'values' => 'Values',
+                //            'keepOriginal' => true|false (optional) if true then Attributes and Values fields will be removed from this example
+                //        )
+                //    ),
+                // optional:
+                //    "doOptimization" => true,
+                //    "keysToForceTransformToArray" = array("FieldName")
+                // )
             )
         );
     }
 
     // database fetch data
-    public function fetchData($params) {
+    public function fetchData($params = false) {
         $this->extendConfig($params);
         $ctx = contextMPWS::instance();
         // var_dump($this->getConfig());

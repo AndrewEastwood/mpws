@@ -50,6 +50,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             fn: 'product_attributes',
             params: {
                 realm: 'plugin',
+                // pid: _.isArray(productId) ? productId.join(',') : productId
                 pid: productId
             }
         }, function (error, data) {

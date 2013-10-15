@@ -91,6 +91,17 @@ APP.Modules.register("router/customer", [], [
         controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
     })
 
+    $('#buttonAttr').on('click', function(){
+        // controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
+        pluginShopRenderLib._test_getProductAttributes($('#inputSearch').val().split(','));
+
+    })
+    $('#buttonPriceArch').on('click', function(){
+        // controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
+        pluginShopRenderLib._test_getProductPriceArchive($('#inputSearch').val().split(','));
+
+    })
+
     // start native site page monitoring
     var controller = new Controller(); // Создаём контроллер
 

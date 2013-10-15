@@ -1140,6 +1140,7 @@
         public function where_in($column_name, $values) {
             $column_name = $this->_quote_identifier($column_name);
             $placeholders = $this->_create_placeholders($values);
+            // var_dump($values)
             return $this->_add_where("{$column_name} IN ({$placeholders})", $values);
         }
 
@@ -2049,10 +2050,75 @@
 
 
             // condition
+            // var_dump($config);
             if (!empty($config['condition']['filter'])) {
                 // var_dump('LOLOLOL');
+                // translate condition filter string
                 $values = $config['condition']['values'];
-                $this->where_raw($config['condition']['filter'], $values ?: array());
+
+                // ProductID (LIKE) (?) + Name (=) ?
+                $filterElements = explode (' + ', $config['condition']['filter']);
+                // $addedCount = 0;
+                for ($i = 0, $len = count($filterElements); $i < $len; $i++) {
+                    $matches = null;
+                    $returnValue = preg_match('/(.*)(\\s)\\((.*)\\)(\\s)(.*)/', $filterElements[$i], $matches);
+                    // check for valid condition:
+                    // array (
+                    //   0 => 'ProductID (LIKE) ?',
+                    //   1 => 'ProductID',
+                    //   2 => ' ',
+                    //   3 => 'LIKE',
+                    //   4 => ' ',
+                    //   5 => '?',
+                    // )
+                    // var_dump($matches);
+                    // var_dump($returnValue);
+                    if (is_array($matches) && count($matches) === 6) {
+                        switch (strtolower($matches[3])) {
+                            case '>':
+                                $this->where_gt($matches[1], $values[$i]);
+                                break;
+                            case '>=':
+                                $this->where_gte($matches[1], $values[$i]);
+                                break;
+                            case '<':
+                                $this->where_lt($matches[1], $values[$i]);
+                                break;
+                            case '<':
+                                $this->where_lte($matches[1], $values[$i]);
+                                break;
+                            case 'is null':
+                                $this->where_null($matches[1], $values[$i]);
+                                break;
+                            case 'is not null':
+                                $this->where_not_null($matches[1], $values[$i]);
+                                break;
+                            case '=':
+                                $this->where_equal($matches[1], $values[$i]);
+                                break;
+                            case '!=':
+                                $this->where_not_equal($matches[1], $values[$i]);
+                                break;
+                            case 'like':
+                                $this->where_like($matches[1], $values[$i]);
+                                break;
+                            case 'not like':
+                                $this->where_not_like($matches[1], $values[$i]);
+                                break;
+                            case 'in':
+                                // var_dump('using WHERE_IN', $values[$i]);
+                                $this->where_in($matches[1], $values[$i]);
+                                break;
+                            case 'not in':
+                                $this->where_not_in($matches[1], $values[$i]);
+                                break;
+                            default:
+                                var_dump('Unknown condition statement occured');
+                                break;
+                        }
+                    }
+                }
+                // $this->where_raw($config['condition']['filter'], $values ?: array());
             }
 
             if (!empty($config['group']))
@@ -2074,8 +2140,25 @@
 
             // fetch data
             $dbData = $this->find_array();
-            // optimize values
-            $dbData = $this->mpwsOptimizeDataValues($dbData, $config['transformToArray'] ?: array());
+
+            // apply data transformation options
+            if (!empty($config['options']))
+                foreach ($config['options'] as $key => $value)
+                    switch ($key) {
+                        case 'transformToArray':
+                            // optimize values
+                            $dbData = $this->mpwsOptimizeDataValues($dbData, $value ?: array());
+                            break;
+                        case 'combineDataByKeys':
+                            // var_dump($value);
+                            $dbData = $this->mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], $value['doOptimization'] ?: true, $value['keysToForceTransformToArray'] ?: array());
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
+
+
             // create mpwsData object
             $data = null;
             if (count($dbData) === 1)
@@ -2126,16 +2209,25 @@
             if ($doOptimization)
                 $dataArray = $this->mpwsOptimizeDataValues($dataArray, $keysToForceTransformToArray);
 
+            // var_dump($mapKeysToCombine);
             // values will be combinet into 
             foreach ($mapKeysToCombine as $destKey => $keyMap) {
-                if (!isset($dataArray[$keyMap['keys']]) || !isset($dataArray[$keyMap['values']]))
+
+                if (!isset($dataArray[$keyMap['keys']]) || !isset($dataArray[$keyMap['values']])) {
+                    foreach ($dataArray as $key => $value)
+                        if (is_array($value))
+                            $dataArray[$key] = $this->mpwsCombineDataByKeys($dataArray[$key], $mapKeysToCombine, $doOptimization, $keysToForceTransformToArray);
                     continue;
+                }
 
                 $_keys = $dataArray[$keyMap['keys']];
                 $_values = $dataArray[$keyMap['values']];
 
                 if (!is_array($_keys) || !is_array($_values))
                     continue;
+
+                // var_dump($_keys);
+                // var_dump($_values);
 
                 $dataArray[$destKey] = array_combine($_keys, $_values);
 

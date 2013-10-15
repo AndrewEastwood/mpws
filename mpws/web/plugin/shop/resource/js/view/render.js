@@ -157,6 +157,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
     }
     pluginShopRender.prototype.pageProductItem = function (productId) {
         _pageShopProductItemByID(productId);
+    }   
+    pluginShopRender.prototype._test_getProductAttributes = function (productId) {
+        pluginShopDataLib.getProductAttributes(productId);
+    }
+    pluginShopRender.prototype._test_getProductPriceArchive = function (productId) {
+        pluginShopDataLib.getProductPriceArchive(productId);
     }
     pluginShopRender.prototype.start = function (startHistory) {
         var controller = new Controller(); // Создаём контроллер

@@ -110,13 +110,6 @@ class pluginShop extends objectBaseWebPlugin {
     }
     private function _custom_api_getProductList_ByCategory () {}
     private function _custom_api_getProductList_ByCategoryAndOrigin () {}
-    // product list additional data
-    private function _custom_api_getProductListAttributes ($params) {
-        $ctx = contextMPWS::instance();
-        $cfg = $this->objectConfiguration_data_jsapiProductAttributes;
-        $dataConfig = array_merge_recursive($cfg['data'], $params ?: array());
-        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
-    }
 
     // ------------------
 
@@ -125,58 +118,43 @@ class pluginShop extends objectBaseWebPlugin {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
 
-        $data = new mpwsData();
+        $dataObj = new mpwsData();
 
         if (empty($pProductID) || !is_numeric($pProductID))
-            $data->setDataError('wrongProductID');
+            $dataObj->setDataError('wrongProductID');
         else {
 
-            $dataConfig = $this->objectConfiguration_data_jsapiProductItem['data'];
-            // $dataConfig = array_merge_recursive($cfg['data'], $params ?: array());
+            // set config
+            $dataObj->setConfig($this->objectConfiguration_data_jsapiProductItem['data']);
 
+            // fetch attributes
+            $dataProductAttrObj = $this->_custom_api_getProductAttributes($pProductID);
+
+            // replace condition values
             // add filter values
-            array_push($dataConfig['condition']['values'], intval($pProductID));
+            $dataObj->extendConfig(array(
+                "condition" => array(
+                    "values" => intval($pProductID)
+                )
+            ), true);
+            $dataObj->fetchData();
+
 
             // fetch product data and related attributes
-            $ctx = contextMPWS::instance();
-            $dataProduct = $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
-            $dataProductAttr = $this->_custom_api_getProductItemAttributes(array(
-                "condition" => array(
-                    "filter" => "ProductID = ?",
-                    "values" => array($pProductID)
-                )
-            ));
+            // $ctx = contextMPWS::instance();
+
+            // $dataProduct = $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
             // print_r($dataProduct);
-
-
-            $_prod = $dataProduct->getData();
-            $_attr = $ctx->contextCustomer->getDBO()->mpwsCombineDataByKeys(
-                $dataProductAttr->getData(),
-                // this will cretae new key with combined data
-                // where keys will be values from Attributes
-                // and values will be Values :)
-                array(
-                    'ProductAttributes' => array(
-                        'keys' => 'Attributes',
-                        'values' => 'Values'
-                    )
-                )
-            );
+            $_prod = $dataObj->getData();
             $_prod['ProductAttributes'] = $_attr['ProductAttributes'] ?: array();
 
 
             // additional data
             switch ($type) {
                 case 'full':
-                    $dataProductPrices = $this->_custom_api_getProductItemPriceArchive(array(
-                        "condition" => array(
-                            "filter" => "ProductID = ?",
-                            "values" => array($pProductID)
-                        )
-                    ));
-                    $_prices = $dataProductPrices->getData();
+                    $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($pProductID);
+                    $_prices = $dataProductPricesObj->getData();
                     $_prod['PriceArchive'] = $_prices['PriceArchive'] ?: array();
-
                     break;
                 case 'short':
                     break;
@@ -187,34 +165,34 @@ class pluginShop extends objectBaseWebPlugin {
             }
 
 
-            $data->setData($_prod);
+            $dataObj->setData($_prod);
         }
 
-        return $data;
+        return $dataObj;
     }
-    // product item additional data
+    // product additional data
     // @productIds - array of product ids
-    private function _custom_api_getProductItemAttributes ($productIds) {
+    private function _custom_api_getProductAttributes ($productIds) {
+        // var_dump(array(array($productIds)));
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
         // replace condition values
         $dataObj->extendConfig(array(
             "condition" => array(
-                "values" => array($productIds)
+                "values" => array(is_array($productIds) ? $productIds : array($productIds))
             )
         ));
-        return $dataObj->fetchData($params);
-
-        // $ctx = contextMPWS::instance();
-        // $dataConfig = $this->objectConfiguration_data_jsapiProductAttributes['data'];
-        // $dataConfig = array_merge($dataConfig, $params ?: array());
-        // // print_r($dataConfig);
-        // return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+        return $dataObj->fetchData();
     }
-    private function _custom_api_getProductItemPriceArchive ($params) {
-        $ctx = contextMPWS::instance();
-        $dataConfig = $this->objectConfiguration_data_jsapiProductsPriceStats['data'];
-        $dataConfig = array_merge($dataConfig, $params ?: array());
-        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+    private function _custom_api_getProductPriceArchive ($productIds) {
+        // var_dump($productIds);
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsPriceStats['data']);
+        // replace condition values
+        $dataObj->extendConfig(array(
+            "condition" => array(
+                "values" => array(is_array($productIds) ? $productIds : array($productIds))
+            )
+        ));
+        return $dataObj->fetchData();
     }
 
     // ------------------
@@ -268,14 +246,20 @@ class pluginShop extends objectBaseWebPlugin {
                 break;
             }
             case "shop_map" : {
-
+                break;
             }
             case "products_most_popular" : {
-
+                break;
+            }
+            case "product_price_archive" : {
+                // pProductID must be an array value even with 1 element
+                // var_dump($pProductID);
+                $data = $this->_custom_api_getProductPriceArchive($pProductID);
+                break;
             }
             case "product_attributes" : {
                 // pProductID must be an array value even with 1 element
-                $data = $this->_custom_api_getProductItemAttributes(explode(',', $pProductID));
+                $data = $this->_custom_api_getProductAttributes($pProductID);
                 break;
             }
         }
