@@ -193,10 +193,15 @@ class pluginShop extends objectBaseWebPlugin {
         return $data;
     }
     // product item additional data
+    // @productIds - array of product ids
     private function _custom_api_getProductItemAttributes ($productIds) {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
-        // var_dump($dataObj);
-        // var_dump($params);
+        // replace condition values
+        $dataObj->extendConfig(array(
+            "condition" => array(
+                "values" => array($productIds)
+            )
+        ));
         return $dataObj->fetchData($params);
 
         // $ctx = contextMPWS::instance();
