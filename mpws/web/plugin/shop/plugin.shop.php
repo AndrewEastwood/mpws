@@ -193,12 +193,17 @@ class pluginShop extends objectBaseWebPlugin {
         return $data;
     }
     // product item additional data
-    private function _custom_api_getProductItemAttributes ($params) {
-        $ctx = contextMPWS::instance();
-        $dataConfig = $this->objectConfiguration_data_jsapiProductAttributes['data'];
-        $dataConfig = array_merge($dataConfig, $params ?: array());
-        // print_r($dataConfig);
-        return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
+    private function _custom_api_getProductItemAttributes ($productIds) {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
+        // var_dump($dataObj);
+        // var_dump($params);
+        return $dataObj->fetchData($params);
+
+        // $ctx = contextMPWS::instance();
+        // $dataConfig = $this->objectConfiguration_data_jsapiProductAttributes['data'];
+        // $dataConfig = array_merge($dataConfig, $params ?: array());
+        // // print_r($dataConfig);
+        // return $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
     }
     private function _custom_api_getProductItemPriceArchive ($params) {
         $ctx = contextMPWS::instance();
@@ -262,6 +267,11 @@ class pluginShop extends objectBaseWebPlugin {
             }
             case "products_most_popular" : {
 
+            }
+            case "product_attributes" : {
+                // pProductID must be an array value even with 1 element
+                $data = $this->_custom_api_getProductItemAttributes(explode(',', $pProductID));
+                break;
             }
         }
         // attach to output

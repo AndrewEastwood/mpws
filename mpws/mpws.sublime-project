@@ -1,8 +1,12 @@
 {
+    "translate_tabs_to_spaces": true,
+    "draw_white_space": "all",
 	"folders":
 	[
 		{
-			"path": "/devdata/Develop/github/web/mpws"
+            "path": "/devdata/Develop/github/web/mpws",
+			"follow_symlinks": true,
+			"path": "/home/andrew/mpws/web/mpws"
 		}
 	]
 }
