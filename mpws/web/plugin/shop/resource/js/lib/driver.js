@@ -43,6 +43,40 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
+    pluginShopDriver.prototype.getProductAttributes = function (productId, callback) {
+        app.log(_logPrefix, 'getProductAttributes', mpwsAPI)
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'product_attributes',
+            params: {
+                realm: 'plugin',
+                pid: productId
+            }
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function")
+                callback.call(null, error, data);
+        })
+    }
+
+    pluginShopDriver.prototype.getProductPriceArchive = function (productId, callback) {
+        app.log(_logPrefix, 'getProductAttributes', mpwsAPI)
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'product_price_archive',
+            params: {
+                realm: 'plugin',
+                pid: productId
+            }
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function")
+                callback.call(null, error, data);
+        })
+    }
+
     return pluginShopDriver;
 
 
