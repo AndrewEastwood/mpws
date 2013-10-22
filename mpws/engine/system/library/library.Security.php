@@ -114,7 +114,7 @@ class librarySecurity {
     // * ON_VALIDATE
     // * ON_SUCCESS
     // * ON_TIMEOUT
-    public static function mpws_session ($events, $lifetime, $ctx) {
+    public static function mpws_session ($events, $lifetime, $ctx, $sender) {
         //global $config;
         //debug('_userVerifySession');
 
@@ -125,13 +125,13 @@ class librarySecurity {
         // reinit default values
         if (isset($events['ON_INIT'])) {
             $event = $events['ON_INIT'];
-            list($login, $pwd) = $event($ctx);
+            list($login, $pwd) = $event($ctx, $sender);
         }
         
         // do smth on startup
         if (isset($events['ON_START'])) {
             $event = $events['ON_START'];
-            $event($login, $pwd, $ctx);
+            $event($login, $pwd, $ctx, $sender);
         }
         
         //echo 'login=' . $login . '; pwd=' . $pwd;
@@ -144,7 +144,7 @@ class librarySecurity {
                 // put user offline
                 if (!empty($_SESSION['USER']['ID']) && isset($events['ON_LOGOUT'])) {
                     $event = $events['ON_LOGOUT'];
-                    $event($login, $pwd, $ctx);
+                    $event($_SESSION['USER'], $ctx, $sender);
                 }
                 $_SESSION['USER'] = false;
                 return 'USER_FORCE_LOGOUT';
@@ -163,7 +163,7 @@ class librarySecurity {
                 $user = false;
                 if (isset($events['ON_VALIDATE'])) {
                     $event = $events['ON_VALIDATE'];
-                    $user = $event($login, $pwd, $ctx);
+                    $user = $event($login, $pwd, $ctx, $sender);
                 }
                     
                 
@@ -181,7 +181,7 @@ class librarySecurity {
                     // set last access
                     if (isset($events['ON_SUCCESS'])) {
                         $event = $events['ON_SUCCESS'];
-                        $event($user, $ctx);
+                        $event($user, $ctx, $sender);
                     }
   
                     return 'USER_AUTHORIZED';
@@ -199,7 +199,7 @@ class librarySecurity {
             // put user offline
             if (isset($events['ON_TIMEOUT'])) {
                 $event = $events['ON_TIMEOUT'];
-                $event($login, $pwd, $ctx);
+                $event($_SESSION['USER'], $ctx, $sender);
             }
             $_SESSION['USER'] = false;
             return 'USER_TIMEOUT';

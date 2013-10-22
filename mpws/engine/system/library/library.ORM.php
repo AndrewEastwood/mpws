@@ -1018,6 +1018,8 @@
                 self::CONDITION_FRAGMENT => $fragment,
                 self::CONDITION_VALUES => $values,
             ));
+            // echo '$this->$conditions_class_property_name';
+            // var_dump($this->$conditions_class_property_name);
             return $this;
         }
 
@@ -1075,6 +1077,7 @@
          * Can be used if preferred.
          */
         public function where_equal($column_name, $value) {
+            // echo '<br>where_equal', $column_name, $value;
             return $this->_add_simple_where($column_name, '=', $value);
         }
 
@@ -1466,6 +1469,9 @@
                 $this->_values = array_merge($this->_values, $condition[self::CONDITION_VALUES]);
             }
 
+            // echo '_build_conditions values';
+            // print_r($this->_values);
+
             return strtoupper($type) . " " . join(" AND ", $conditions);
         }
 
@@ -1748,15 +1754,33 @@
             $values = array_values(array_diff_key($this->_dirty_fields, $this->_expr_fields));
 
             if (!$this->_is_new) { // UPDATE
+                // echo 'ORM UPDATE';
                 // If there are no dirty values, do nothing
                 if (empty($values) && empty($this->_expr_fields)) {
                     return true;
                 }
                 $query = $this->_build_update();
-                $values[] = $this->id();
+                // echo 'after _build_update:';
+                // var_dump($query);
+                // echo '';
+
+                // mpws patch >>>>
+                // $values[] = $this->id();
+                // <<<<< mpws patch
+
             } else { // INSERT
                 $query = $this->_build_insert();
             }
+
+            // mpws patch >>>>
+            // var_dump($values);
+            // var_dump($this->_dirty_fields);
+            // var_dump($values);
+            foreach ($this->_values as $conditionValue)
+                $values[] = $conditionValue;
+            // <<<<< mpws patch
+            // var_dump($values);
+            // var_dump($query);
 
             $success = self::_execute($query, $values, $this->_connection_name);
 
@@ -1791,9 +1815,15 @@
                 $field_list[] = "{$this->_quote_identifier($key)} = $value";
             }
             $query[] = join(", ", $field_list);
-            $query[] = "WHERE";
-            $query[] = $this->_quote_identifier($this->_get_id_column_name());
-            $query[] = "= ?";
+            $query[] = $this->_build_where();
+            // $query[] = "WHERE";
+            // $query[] = $this->_quote_identifier($this->_get_id_column_name());
+            // $query[] = "= ?";
+
+            // echo '_build_update',
+            // print_r($this->_dirty_fields);
+            // print_r($query);
+
             return join(" ", $query);
         }
 
@@ -1931,7 +1961,7 @@
 
         /******** MPWS PATCH START *************/
 
-        public function table ($table_name) {
+        public function mpwsTable ($table_name) {
             $this->_table_name = $table_name;
             return $this;
         }
@@ -2005,243 +2035,13 @@
             // echo 'MPWS RESET!!!!';
         }
 
-        public function mpwsFetchData ($config) {
-
-            $this->mpwsReset();
-
-            $source = $config['source'];
-            $fieldsToSelectFromDB = $config['fields'];
-
-            // prepend ID column
-            // if (!in_array("ID", $fieldsToSelectFromDB))
-            //     array_unshift($fieldsToSelectFromDB, 'ID');
-
-            $fieldsToSelectFromDBClear = array();
-            // just to avoid mysql error: XXXX in field list is ambiguous
-            foreach ($fieldsToSelectFromDB as $key => $value) {
-                if ($value[0] === '@')
-                    $this->select_expr(substr($value, 1));
-                elseif (!strstr($value, '.'))
-                    $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
-            }
-
-            $this->table($source);
-            $this->select_many($fieldsToSelectFromDBClear);
-
-            if (!empty($config['additional']))
-                foreach ($config['additional'] as $addSource => $addConfig) {
-                    if (empty($addConfig['fields']))
-                        continue;
-                    $this->join($addSource, $addConfig['constraint']);
-
-                    $fieldsToSelect = $addConfig['fields'];
-                    $fieldsToSelectClear = array();
-
-                    foreach ($fieldsToSelect as $key => $value) {
-                        if ($value[0] === '@')
-                            $this->select_expr(substr($value, 1));
-                            // $fieldsToSelect[$key] = substr($value, 1);
-                        elseif (!strstr($value, '.'))
-                            $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
-                    }
-
-                    $this->select_many($fieldsToSelectClear);
-                }
-
-
-            // condition
-            // var_dump($config);
-            if (!empty($config['condition']['filter'])) {
-                // var_dump('LOLOLOL');
-                // translate condition filter string
-                $values = $config['condition']['values'];
-
-                // ProductID (LIKE) (?) + Name (=) ?
-                $filterElements = explode (' + ', $config['condition']['filter']);
-                // $addedCount = 0;
-                for ($i = 0, $len = count($filterElements); $i < $len; $i++) {
-                    $matches = null;
-                    $returnValue = preg_match('/(.*)(\\s)\\((.*)\\)(\\s)(.*)/', $filterElements[$i], $matches);
-                    // check for valid condition:
-                    // array (
-                    //   0 => 'ProductID (LIKE) ?',
-                    //   1 => 'ProductID',
-                    //   2 => ' ',
-                    //   3 => 'LIKE',
-                    //   4 => ' ',
-                    //   5 => '?',
-                    // )
-                    // var_dump($matches);
-                    // var_dump($returnValue);
-                    if (is_array($matches) && count($matches) === 6) {
-                        switch (strtolower($matches[3])) {
-                            case '>':
-                                $this->where_gt($matches[1], $values[$i]);
-                                break;
-                            case '>=':
-                                $this->where_gte($matches[1], $values[$i]);
-                                break;
-                            case '<':
-                                $this->where_lt($matches[1], $values[$i]);
-                                break;
-                            case '<':
-                                $this->where_lte($matches[1], $values[$i]);
-                                break;
-                            case 'is null':
-                                $this->where_null($matches[1], $values[$i]);
-                                break;
-                            case 'is not null':
-                                $this->where_not_null($matches[1], $values[$i]);
-                                break;
-                            case '=':
-                                $this->where_equal($matches[1], $values[$i]);
-                                break;
-                            case '!=':
-                                $this->where_not_equal($matches[1], $values[$i]);
-                                break;
-                            case 'like':
-                                $this->where_like($matches[1], $values[$i]);
-                                break;
-                            case 'not like':
-                                $this->where_not_like($matches[1], $values[$i]);
-                                break;
-                            case 'in':
-                                // var_dump('using WHERE_IN', $values[$i]);
-                                $this->where_in($matches[1], $values[$i]);
-                                break;
-                            case 'not in':
-                                $this->where_not_in($matches[1], $values[$i]);
-                                break;
-                            default:
-                                var_dump('Unknown condition statement occured');
-                                break;
-                        }
-                    }
-                }
-                // $this->where_raw($config['condition']['filter'], $values ?: array());
-            }
-
-            if (!empty($config['group']))
-                $this->group_by($config['group']);
-
-            if (!empty($config['offset']))
-                $this->offset($config['offset']);
-
-            if (!empty($config['limit']))
-                $this->limit($config['limit']);
-
-            if (!empty($config['order']) && !empty($config['order']['field'])) {
-
-                if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
-                    $this->order_by_desc($config['order']['field']);
-                else
-                    $this->order_by_asc($config['order']['field']);
-            }
-
-            // fetch data
-            $dbData = $this->find_array();
-
-            // apply data transformation options
-            if (!empty($config['options']))
-                foreach ($config['options'] as $key => $value)
-                    switch ($key) {
-                        case 'transformToArray':
-                            // optimize values
-                            $dbData = $this->mpwsOptimizeDataValues($dbData, $value ?: array());
-                            break;
-                        case 'combineDataByKeys':
-                            // var_dump($value);
-                            $dbData = $this->mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], $value['doOptimization'] ?: true, $value['keysToForceTransformToArray'] ?: array());
-                            break;
-                        default:
-                            # code...
-                            break;
-                    }
-
-
-            // create mpwsData object
-            $data = null;
-            if (count($dbData) === 1)
-                $data = $dbData[0];
-            if (count($dbData) > 1)
-                $data = $dbData;
-
-            $mpwsDataObj = new mpwsData($data);
-
-            // if (isset($config['output']))
-            //     return $mpwsDataObj->to($config['output']);
-            // $this->table('shop_products')
-            //     ->select('shop_products.ID', 'ID')
-            //     ->select('shop_products.Name', 'pName')
-            //     ->select('shop_origins.Name', 'oName')
-            //     ->select('shop_categories.Name', 'cName')
-            //     ->join('shop_origins', array(
-            //         'shop_origins.ID', '=', 'shop_products.OriginID'
-            //     ))
-            //     ->join('shop_categories', array(
-            //         'shop_categories.ID', '=', 'shop_products.CategoryID'
-            //     ));
-            return $mpwsDataObj;
-        }
-
         public static function mpwsInstance ($connection_name = self::DEFAULT_CONNECTION) {
             self::_setup_db($connection_name);
             return new self(null, array(), $connection_name);
         }
 
-        public function mpwsOptimizeDataValues ($dataArray, $keysToForceTransformToArray) {
-            $keysToForceTransformToArray = is_array($keysToForceTransformToArray) ? $keysToForceTransformToArray : array();
-            // optimize values:
-            // 1. values like: 1#EXPLODE#2#EXPLODE#....
-            //    will be converted to array [1, 2, n]
-            foreach ($dataArray as $key => $value) {
-                if (is_array($value))
-                    $dataArray[$key] = $this->mpwsOptimizeDataValues($value, $keysToForceTransformToArray);
-                else if (strstr($value, EXPLODE) || in_array($key, $keysToForceTransformToArray))
-                    $dataArray[$key] = explode(EXPLODE, $value);
-            }
-            return $dataArray;
-
-        }
-        public function mpwsCombineDataByKeys ($dataArray, $mapKeysToCombine, $doOptimization, $keysToForceTransformToArray) {
-            // $newArray = array();
-
-            if ($doOptimization)
-                $dataArray = $this->mpwsOptimizeDataValues($dataArray, $keysToForceTransformToArray);
-
-            // var_dump($mapKeysToCombine);
-            // values will be combinet into 
-            foreach ($mapKeysToCombine as $destKey => $keyMap) {
-
-                if (!isset($dataArray[$keyMap['keys']]) || !isset($dataArray[$keyMap['values']])) {
-                    foreach ($dataArray as $key => $value)
-                        if (is_array($value))
-                            $dataArray[$key] = $this->mpwsCombineDataByKeys($dataArray[$key], $mapKeysToCombine, $doOptimization, $keysToForceTransformToArray);
-                    continue;
-                }
-
-                $_keys = $dataArray[$keyMap['keys']];
-                $_values = $dataArray[$keyMap['values']];
-
-                if (!is_array($_keys) || !is_array($_values))
-                    continue;
-
-                // var_dump($_keys);
-                // var_dump($_values);
-
-                $dataArray[$destKey] = array_combine($_keys, $_values);
-
-                if ($keyMap['keepOriginal'])
-                    continue;
-
-                // remove orignial sources
-                unset($dataArray[$keyMap['keys']]);
-                unset($dataArray[$keyMap['values']]);
-
-            }
-            return $dataArray;
-        }
     }
+
 
     /**
      * A class to handle str_replace operations that involve quoted strings
