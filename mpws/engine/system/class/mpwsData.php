@@ -64,6 +64,9 @@ class mpwsData {
         return $this;
     }
     public function setConfig($config) {
+        // echo 'setConfig >>>>>>>>>>>>>>>>>';
+        // var_dump($config);
+        // echo '<<<<<<<<<<<<<<<<<< setConfig';
         $this->_config = $config;
         return $this;
     }
@@ -113,7 +116,7 @@ class mpwsData {
             "options" => array(
                 // This goes by default.
                 // You can baypass any filed names to force make value as array of each
-                "transformToArray" => array()
+                "transformToArray" => array(),
                 // required fields:
                 // "combineDataByKeys" => array(
                 //    "mapKeysToCombine" => array(
@@ -127,34 +130,40 @@ class mpwsData {
                 //    "doOptimization" => true,
                 //    "keysToForceTransformToArray" = array("FieldName")
                 // )
+                "expandSingleRecord" => true
             )
         );
     }
 
     // configuration helpers
-    public function setValuesDbCondition ($values, $mode = 0) {
-        if (!is_array($values)){
-            $values = func_get_args();
-            $mode = 0;
-        }
+    public function setValuesDbCondition ($values, $mode = MERGE_MODE_REPLACE) {
+        if (!is_array($values))
+            $values = array($values);
 
         // echo '<br>setValuesDbCondition >>>>>>>>><br>';
         // var_dump($values);
+        // echo '>>>>>>>. mode';
+        // var_dump($mode);
         // echo '<br><-------------------------';
 
         // prepend values
-        if ($mode === -1) {
+        if ($mode === MERGE_MODE_PREPEND) {
+            // echo '... prepending to existedValues';
             $cfg = $this->getConfig();
-            $existedValues = $cfg['data']['values'] ?: array();
+            $existedValues = $cfg['condition']['values'] ?: array();
+            // var_dump($cfg);
             foreach ($values as $value)
                 array_unshift($existedValues, $value);
             $values = $existedValues;
         }
 
         // append values
-        if ($mode === 1) {
-            $this->getConfig();
-            $existedValues = $cfg['data']['values'] ?: array();
+        if ($mode === MERGE_MODE_APPEND) {
+            // echo '... appending to existedValues';
+            $cfg = $this->getConfig();
+            $existedValues = $cfg['condition']['values'] ?: array();
+            // var_dump($cfg);
+            // var_dump($existedValues);
             foreach ($values as $value)
                 array_push($existedValues, $value);
             $values = $existedValues;
@@ -168,20 +177,21 @@ class mpwsData {
                 "values" => $values
             )
         ));
+
+        // var_dump($this->getConfig());
+
         return $this;
     }
-    public function setValuesDbData ($values, $mode = 0) {
-        if (!is_array($values)){
-            $values = func_get_args();
-            $mode = 0;
-        }
+    public function setValuesDbData ($values, $mode = MERGE_MODE_REPLACE) {
+        if (!is_array($values))
+            $values = array($values);
 
         // echo '<br>setValuesDbData >>>>>>>>><br>';
         // var_dump($values);
         // echo '<br><-------------------------';
 
         // prepend values
-        if ($mode === -1) {
+        if ($mode === MERGE_MODE_PREPEND) {
             $cfg = $this->getConfig();
             $existedValues = $cfg['data']['values'] ?: array();
             foreach ($values as $value)
@@ -190,8 +200,8 @@ class mpwsData {
         }
 
         // append values
-        if ($mode === 1) {
-            $this->getConfig();
+        if ($mode === MERGE_MODE_APPEND) {
+            $cfg = $this->getConfig();
             $existedValues = $cfg['data']['values'] ?: array();
             foreach ($values as $value)
                 $existedValues[] =  $value;
@@ -325,10 +335,10 @@ class mpwsData {
                             break;
                         case 'in':
                             // var_dump('using WHERE_IN', $values[$i]);
-                            $dbo->where_in($matches[1], $values[$i]);
+                            $dbo->where_in($matches[1], is_array($values[$i]) ? $values[$i] : array($values[$i]));
                             break;
                         case 'not in':
-                            $dbo->where_not_in($matches[1], $values[$i]);
+                            $dbo->where_not_in($matches[1], is_array($values[$i]) ? $values[$i] : array($values[$i]));
                             break;
                         default:
                             var_dump('Unknown condition statement occured');
@@ -356,6 +366,7 @@ class mpwsData {
                 $dbo->order_by_asc($config['order']['field']);
         }
 
+        // var_dump($config);
         switch ($action) {
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
@@ -367,7 +378,7 @@ class mpwsData {
                 $dbo->delete_many();
                 break;
             case 'insert':
-                $dbo->create($config['data']);
+                $dbo->create(array_combine($config['data']['fields'], $config['data']['values']));
                 $dbo->save();
                 break;
             case 'select':
@@ -376,6 +387,8 @@ class mpwsData {
                 $dbData = $dbo->find_array();
                 break;
         }
+
+        $_opt_expandSingleRecord = true;
 
         // apply data transformation options
         if (!empty($config['options']))
@@ -389,18 +402,29 @@ class mpwsData {
                         // var_dump($value);
                         $dbData = $this->mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], $value['doOptimization'] ?: true, $value['keysToForceTransformToArray'] ?: array());
                         break;
+                    case 'expandSingleRecord':
+                        if (is_bool($value))
+                            $_opt_expandSingleRecord = $value;
+                        break;
                     default:
                         # code...
                         break;
                 }
 
+        // var_dump($dbData);
+        // echo "do expand single record ? " . ($_opt_expandSingleRecord ? 'true' : 'false');
 
         // create mpwsData object
         $data = null;
-        if (count($dbData) === 1)
-            $data = $dbData[0];
+        if (count($dbData) === 1) {
+            if ($_opt_expandSingleRecord)
+                $data = $dbData[0];
+            else
+                $data = $dbData;
+        }
         if (count($dbData) > 1)
             $data = $dbData;
+
 
         $this->setData($data);
         // $mpwsDataObj = new mpwsData($data);
@@ -430,207 +454,6 @@ class mpwsData {
 
 
         // return $this->setData($_db_dataObj);
-    }
-
-
-    private function x_mpwsFetchData ($config) {
-
-        $this->mpwsReset();
-
-        $action = $config['action'];
-        $source = $config['source'];
-        $fieldsToSelectFromDB = $config['fields'];
-
-        // prepend ID column
-        // if (!in_array("ID", $fieldsToSelectFromDB))
-        //     array_unshift($fieldsToSelectFromDB, 'ID');
-
-        $fieldsToSelectFromDBClear = array();
-        // just to avoid mysql error: XXXX in field list is ambiguous
-        foreach ($fieldsToSelectFromDB as $key => $value) {
-            if ($value[0] === '@')
-                $this->select_expr(substr($value, 1));
-            elseif (!strstr($value, '.'))
-                $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
-        }
-
-        $this->table($source);
-
-        if (!empty($fieldsToSelectFromDBClear))
-            $this->select_many($fieldsToSelectFromDBClear);
-
-        if (!empty($config['additional']))
-            foreach ($config['additional'] as $addSource => $addConfig) {
-                if (empty($addConfig['fields']))
-                    continue;
-                $this->join($addSource, $addConfig['constraint']);
-
-                $fieldsToSelect = $addConfig['fields'];
-                $fieldsToSelectClear = array();
-
-                foreach ($fieldsToSelect as $key => $value) {
-                    if ($value[0] === '@')
-                        $this->select_expr(substr($value, 1));
-                        // $fieldsToSelect[$key] = substr($value, 1);
-                    elseif (!strstr($value, '.'))
-                        $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
-                }
-
-                $this->select_many($fieldsToSelectClear);
-            }
-
-
-        // condition
-        // var_dump($config);
-        if (!empty($config['condition']['filter'])) {
-            // var_dump('LOLOLOL');
-            // translate condition filter string
-            $values = $config['condition']['values'];
-
-            // ProductID (LIKE) (?) + Name (=) ?
-            $filterElements = explode (' + ', $config['condition']['filter']);
-            // $addedCount = 0;
-            for ($i = 0, $len = count($filterElements); $i < $len; $i++) {
-                $matches = null;
-                $returnValue = preg_match('/(.*)(\\s)\\((.*)\\)(\\s)(.*)/', $filterElements[$i], $matches);
-                // check for valid condition:
-                // array (
-                //   0 => 'ProductID (LIKE) ?',
-                //   1 => 'ProductID',
-                //   2 => ' ',
-                //   3 => 'LIKE',
-                //   4 => ' ',
-                //   5 => '?',
-                // )
-                // var_dump($matches);
-                // var_dump($returnValue);
-                if (is_array($matches) && count($matches) === 6) {
-                    switch (strtolower($matches[3])) {
-                        case '>':
-                            $this->where_gt($matches[1], $values[$i]);
-                            break;
-                        case '>=':
-                            $this->where_gte($matches[1], $values[$i]);
-                            break;
-                        case '<':
-                            $this->where_lt($matches[1], $values[$i]);
-                            break;
-                        case '<':
-                            $this->where_lte($matches[1], $values[$i]);
-                            break;
-                        case 'is null':
-                            $this->where_null($matches[1], $values[$i]);
-                            break;
-                        case 'is not null':
-                            $this->where_not_null($matches[1], $values[$i]);
-                            break;
-                        case '=':
-                            $this->where_equal($matches[1], $values[$i]);
-                            break;
-                        case '!=':
-                            $this->where_not_equal($matches[1], $values[$i]);
-                            break;
-                        case 'like':
-                            $this->where_like($matches[1], $values[$i]);
-                            break;
-                        case 'not like':
-                            $this->where_not_like($matches[1], $values[$i]);
-                            break;
-                        case 'in':
-                            // var_dump('using WHERE_IN', $values[$i]);
-                            $this->where_in($matches[1], $values[$i]);
-                            break;
-                        case 'not in':
-                            $this->where_not_in($matches[1], $values[$i]);
-                            break;
-                        default:
-                            var_dump('Unknown condition statement occured');
-                            break;
-                    }
-                }
-            }
-            // $this->where_raw($config['condition']['filter'], $values ?: array());
-        }
-
-        if (!empty($config['group']))
-            $this->group_by($config['group']);
-
-        if (!empty($config['offset']))
-            $this->offset($config['offset']);
-
-        if (!empty($config['limit']))
-            $this->limit($config['limit']);
-
-        if (!empty($config['order']) && !empty($config['order']['field'])) {
-
-            if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
-                $this->order_by_desc($config['order']['field']);
-            else
-                $this->order_by_asc($config['order']['field']);
-        }
-
-        switch ($action) {
-            case 'push':
-                # code...
-                $this->is_new();
-                $this->save();
-                break;
-            case 'delete':
-                $dbData = $this->delete_many();
-                break;
-            case 'create':
-                $this->is_new();
-                $this->save();
-                break;
-            case 'fetch':
-            default:                
-                # code...
-                // fetch data
-                $dbData = $this->find_array();
-                break;
-        }
-
-        // apply data transformation options
-        if (!empty($config['options']))
-            foreach ($config['options'] as $key => $value)
-                switch ($key) {
-                    case 'transformToArray':
-                        // optimize values
-                        $dbData = $this->mpwsOptimizeDataValues($dbData, $value ?: array());
-                        break;
-                    case 'combineDataByKeys':
-                        // var_dump($value);
-                        $dbData = $this->mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], $value['doOptimization'] ?: true, $value['keysToForceTransformToArray'] ?: array());
-                        break;
-                    default:
-                        # code...
-                        break;
-                }
-
-
-        // create mpwsData object
-        $data = null;
-        if (count($dbData) === 1)
-            $data = $dbData[0];
-        if (count($dbData) > 1)
-            $data = $dbData;
-
-        $mpwsDataObj = new mpwsData($data);
-
-        // if (isset($config['output']))
-        //     return $mpwsDataObj->to($config['output']);
-        // $this->table('shop_products')
-        //     ->select('shop_products.ID', 'ID')
-        //     ->select('shop_products.Name', 'pName')
-        //     ->select('shop_origins.Name', 'oName')
-        //     ->select('shop_categories.Name', 'cName')
-        //     ->join('shop_origins', array(
-        //         'shop_origins.ID', '=', 'shop_products.OriginID'
-        //     ))
-        //     ->join('shop_categories', array(
-        //         'shop_categories.ID', '=', 'shop_products.CategoryID'
-        //     ));
-        return $mpwsDataObj;
     }
 
     public function mpwsOptimizeDataValues ($dataArray, $keysToForceTransformToArray) {

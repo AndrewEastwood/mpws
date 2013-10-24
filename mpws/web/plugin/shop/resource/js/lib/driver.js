@@ -38,6 +38,15 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);
+
+            // map all by product id
+            if (data.attributes && data.products) {
+                for (var pid in data.products)
+                    data.products[pid]['ProductAttributes'] = data.attributes[pid] || {};
+            }
+
+            // app.log(data);
+
             if (typeof callback === "function")
                 callback.call(null, error, data);
         })

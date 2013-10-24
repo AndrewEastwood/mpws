@@ -76,4 +76,10 @@
     define("fmtHASH", "HASH");
     define("fmtSTRING", "STRING");
 
+    define("MERGE_MODE_REPLACE", 0);
+    define("MERGE_MODE_APPEND", 1);
+    define("MERGE_MODE_PREPEND", -1);
+
+
+
 ?>
