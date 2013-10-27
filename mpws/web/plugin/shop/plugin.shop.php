@@ -148,7 +148,13 @@ class pluginShop extends objectBaseWebPlugin {
 
     // }
 
-    // categories
+    // catalog
+    private function _custom_api_getCatalog () {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
+        return $dataObj->process($params);
+    }
+
+    // origins
     private function _custom_api_getOrigin () {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiOriginList['data']);
         return $dataObj->process($params);
@@ -156,7 +162,7 @@ class pluginShop extends objectBaseWebPlugin {
 
     // ------------------
 
-    // origins
+    // categories
     private function _custom_api_getCategory () {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
         return $dataObj->process($params);

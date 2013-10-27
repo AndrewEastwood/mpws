@@ -29,6 +29,17 @@ APP.Modules.register("lib/mpws.page", [
         LOADING: 'loading'
     }
 
+    mpwsPage.RegisterPartial = function(key, partial) {
+        tplEngine.registerPartial(key, partial);
+        return this;
+    }
+
+    // register template helpers
+    mpwsPage.RegisterHelper = function(key, helper) {
+        tplEngine.registerHelper(key, helper);
+        return this;
+    }
+
     mpwsPage.prototype.getPageError = function() {
         this.getPageBody('Woohoo!!! Error 404');
     }
@@ -87,13 +98,13 @@ APP.Modules.register("lib/mpws.page", [
 
     // register partial reusable object 
     mpwsPage.prototype.registerPartial = function(key, partial) {
-        tplEngine.registerPartial(key, partial);
+        mpwsPage.RegisterPartial(key, partial);
         return this;
     }
 
     // register template helpers
     mpwsPage.prototype.registerHelper = function(key, helper) {
-        tplEngine.registerHelper(key, helper);
+        mpwsPage.RegisterHelper(key, helper);
         return this;
     }
 
@@ -172,7 +183,14 @@ APP.Modules.register("lib/mpws.page", [
                 // [4] combine everything together
                 if (template) {
                     var templateFn = tplEngine.compile(template);
-                    html = templateFn(data);
+                    // compose template data
+                    var _tplData = {
+                        app: {
+                            config: app.Page.getConfiguration()
+                        },
+                        source: data
+                    }
+                    html = templateFn(_tplData);
                 }
                 if (options && options.el)
                     $(options.el).html(html);

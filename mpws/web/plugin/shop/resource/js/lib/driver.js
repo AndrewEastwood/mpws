@@ -22,7 +22,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (data)
                 data = JSON.parse(data);
             if (typeof callback === "function")
-                callback.call(null, error, data);
+                callback.call(null, error, {type: "item", data: data});
         })
     }
 
@@ -48,7 +48,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             // app.log(data);
 
             if (typeof callback === "function")
-                callback.call(null, error, data);
+                callback.call(null, error, {type: "list", data: data});
         })
     }
 

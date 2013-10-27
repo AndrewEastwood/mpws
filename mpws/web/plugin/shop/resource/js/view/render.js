@@ -18,7 +18,11 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
     // app.log('HI FROM SHOP RENDER :) I AM SHOP RENDER LIBRARY YO')
 
-    var _templatePartials = {
+    var _templatePartialsBase = {
+        renderDataTrigger: {
+            url: "plugin.shop.component.renderDataTrigger@hbs",
+            type: mpwsPage.TYPE.PARTIAL
+        },
         productList: {
             url: "plugin.shop.component.productList@hbs",
             type: mpwsPage.TYPE.PARTIAL
@@ -37,13 +41,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
         },
     }
 
-
     // shop start page
     function _pageShopHome () {
         _pageShopProductListLatest();
         // overwrite page name
         mpwsPageLib.pageName('shop-home');
-        mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartials, function (onDataReceived) {
+        mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
             pluginShopDataLib.getProductListLatest(onDataReceived);
         });
     }
@@ -51,7 +54,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     // shop products lists
     function _pageShopProductListLatest () {
         mpwsPageLib.pageName('shop-list-latest');
-        mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartials, function (onDataReceived) {
+        mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartialsBase, function (onDataReceived) {
             pluginShopDataLib.getProductListLatest(onDataReceived);
         });
     }
@@ -59,14 +62,14 @@ APP.Modules.register("plugin/shop/view/render", [], [
     // shop catalog options
     function _pageShopCatalog () {
         mpwsPageLib.pageName('shop-catalog');
-        mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartials, function (onDataReceived) {
+        mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartialsBase, function (onDataReceived) {
             pluginShopDataLib.getProductListLatest(onDataReceived);
         });
     }
 
     function _pageShopCatalogByCategory (categoryId) {
         mpwsPageLib.pageName('shop-category');
-        mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartials, function (onDataReceived) {
+        mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartialsBase, function (onDataReceived) {
             pluginShopDataLib.getProductListLatest(onDataReceived);
         });
 
@@ -74,7 +77,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
     function _pageShopCatalogByCategoryAndBrand (categoryId, brandId) {
         mpwsPageLib.pageName('shop-category-brand');
-        mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartials, function (onDataReceived) {
+        mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartialsBase, function (onDataReceived) {
             pluginShopDataLib.getProductListLatest(categoryId, onDataReceived);
         });
     }
@@ -82,7 +85,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     // shop product item
     function _pageShopProductItemByID (productId) {
         mpwsPageLib.pageName('shop-product');
-        mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartials, function (onDataReceived) {
+        mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartialsBase, function (onDataReceived) {
             pluginShopDataLib.getProductItemByID(productId, onDataReceived);
         });
     }
@@ -93,55 +96,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
         mpwsPageLib.getPageBody('fdfsdfdsf', true);
     }
 
-    // start site routing
-    var Controller = Backbone.Router.extend({
-        routes: {
-            "shop/": "shop_home",
-            "shop/latest": "shop_latest",
-            "shop/catalog": "shop_catalog",
-            "shop/catalog/:category": "shop_category",
-            "shop/catalog/:category/:brand": "shop_category_brand",
-            "shop/product/:product": "shop_product",
-            "shop/cart": "shop_cart"
-        },
-        // shop default page
-        shop_home: function () {
-            _pageShopHome();
-        },
-        // display shop latest stuff
-        shop_latest: function (route, name, callback) {
-            _pageShopProductListLatest(route, name, callback);
-        },
-        // display catalog
-        shop_catalog: function (route, name, callback) {
-            _pageShopCatalog(route, name, callback);
-        },
-        // display category
-        shop_category: function () {
-            // here we handle different stuff:
-            // sorting by [name, date, price, popularity, etc]
-            // pagination
-            // 
-            _pageShopCatalogByCategory(route, name, callback);
-        },
-        // display category
-        shop_category_brand: function () {
-            // here we handle different stuff:
-            // sorting by [name, date, price, popularity, etc]
-            // pagination
-            // 
-            _pageShopCatalogByCategoryAndBrand(route, name, callback);
-        },
-        shop_cart: function () {
-            _pageShopCart();
-        },
-        // display particular product
-        shop_product: function (productId, name, callback) {
-            app.log(true, 'shop_product')
-            _pageShopProductItemByID(productId);
-        },
-
-    });
 
     // public class
     function pluginShopRender () {}
@@ -155,7 +109,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     pluginShopRender.prototype.pageProductListLatest = function () {
         _pageShopProductListLatest();
     }
-    pluginShopRender.prototype.pageProductItem = function (productId) {
+    pluginShopRender.prototype.pageShopProductItemByID = function (productId) {
         _pageShopProductItemByID(productId);
     }   
     pluginShopRender.prototype._test_getProductAttributes = function (productId) {

@@ -4,15 +4,15 @@ APP.Modules.register("router/customer", [], [
     'lib/underscore',
     'lib/backbone',
     'lib/mpws.page',
-    'plugin/shop/view/render',
+    'plugin/shop/router/shop',
     'lib/bootstrap',
 
-], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRender){
+], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
 
     // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     var mpwsPageLib = new mpwsPage();
-    var pluginShopRenderLib = new pluginShopRender();
+    var pluginShopRouterLib = new pluginShopRouter();
 
     var Controller = Backbone.Router.extend({
         routes: {
@@ -32,9 +32,10 @@ APP.Modules.register("router/customer", [], [
 
         // we display startup products
         site_home: function (route, name, callback) {
-            // app.log(true, 'site_home page with arguments', route, name, callback);
+            app.log(true, 'pluginShopRouterLib', pluginShopRouterLib);
+            app.log(true, 'site_home page with arguments', route, name, callback);
             // _pageHome();
-            pluginShopRenderLib.pageShopHome();
+            pluginShopRouterLib.shopHome();
         },
         // display error page
         site_error: function () {
@@ -56,7 +57,7 @@ APP.Modules.register("router/customer", [], [
         },
         site_search: function (searchText) {
             // _pageProduct(searchText);
-            pluginShopRenderLib.pageProductItem(searchText);
+            pluginShopRouterLib.pageProductItem(searchText);
         },
         // accounting
         user_account: function () {
@@ -71,7 +72,7 @@ APP.Modules.register("router/customer", [], [
 
     // // page handlers
     // function _pageHome () {
-    //     pluginShopRenderLib.getProductListLatest();
+    //     pluginShopRouterLib.getProductListLatest();
     //     mpwsPageLib.pageName('home');
     // }
 
@@ -79,7 +80,7 @@ APP.Modules.register("router/customer", [], [
     // }
 
     // function _pageProduct (productId) {
-    //     pluginShopRenderLib.getProductItemByID(productId);
+    //     pluginShopRouterLib.getProductItemByID(productId);
     // }
 
 
@@ -93,20 +94,22 @@ APP.Modules.register("router/customer", [], [
 
     $('#buttonAttr').on('click', function(){
         // controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
-        pluginShopRenderLib._test_getProductAttributes($('#inputSearch').val().split(','));
+        pluginShopRouterLib._test_getProductAttributes($('#inputSearch').val().split(','));
 
     })
     $('#buttonPriceArch').on('click', function(){
         // controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
-        pluginShopRenderLib._test_getProductPriceArchive($('#inputSearch').val().split(','));
+        pluginShopRouterLib._test_getProductPriceArchive($('#inputSearch').val().split(','));
 
     })
 
     // start native site page monitoring
     var controller = new Controller(); // Создаём контроллер
 
-    // start shop page monitoring
-    pluginShopRenderLib.start(false);
+    pluginShopRouterLib.init();
+    // start additional routers
+    // // start shop page monitoring
+    // pluginShopRouterLib.start(false);
 
     Backbone.history.start();  // Запускаем HTML5 History push    
 

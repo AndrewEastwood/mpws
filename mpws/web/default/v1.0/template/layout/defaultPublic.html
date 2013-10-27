@@ -4,6 +4,7 @@
     <title>{block name="layoutTitle"}MPWS Default - {$INFO.GET.PAGE}{/block}</title>
     {block name="layoutResourcesCSS"}
     <link rel="stylesheet" type="text/css" href="/static/p/customer/{$INFO.CUSTOMER}/default.css">
+    <link rel="stylesheet" type="text/css" href="/static/p/customer/{$INFO.CUSTOMER}/theme.css">
     {/block}
     {if not empty($INFO.GET.PLUGIN) }
     <link rel="stylesheet" type="text/css" href="/static/p/plugin/{$INFO.GET.PLUGIN}/default.css">
@@ -81,8 +82,8 @@
             REQUIREJS: {
                 router: {
                     modulePageMap: [{
-                        match: [".*"],
-                        deps: ["router/customer", "router/plugin"]
+                        match: ["{/literal}{$INFO.CUSTOMER}{literal}/*"],
+                        deps: ["router/customer"]
                     }]
                 },
                 app: {

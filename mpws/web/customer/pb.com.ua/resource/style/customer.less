@@ -2,7 +2,7 @@ body {
     background: #eee;
 }
 
-.MPWSPageHeader {
+.xMPWSPageHeader {
     box-shadow: 0px -3px 10px 5px #999;
     border-bottom: 1px solid #bbb;
     .image-logo-website {
@@ -11,7 +11,11 @@ body {
     }
 }
 
-.MPWSPageBody {
+.MPWSPage {
+    background: url('bg.png');
+}
+
+.xMPWSPageBody {
     margin-top: 20px;
     .hProductItems {
         /* img */
@@ -28,7 +32,8 @@ body {
             border: 1px solid #aaa;
         }
         .thumbnail img {
-            min-width: 100%;
+            min-width: 150px;
+            max-height: 150px;
         }
         /* thumbSetting */
         .thumbSetting {
@@ -95,3 +100,30 @@ body {
     }
 
 }
+
+.image.image-empty {max-width: 150px; max-height: 150px;}
+
+
+.MPWSLayout {
+    width:1024px;
+    margin:0 auto;
+    background:#fff;
+    -webkit-box-shadow:0 0 4px 0 rgba(0,0,0,0.2);
+    -moz-box-shadow:0 0 4px 0 rgba(0,0,0,0.2);
+    box-shadow:0 0 4px 0 rgba(0,0,0,0.2);
+}
+
+/*========================================================================
+======================== Begain the media query ==========================
+========================================================================*/
+@media (max-width: 979px) { .MPWSLayout { width:100%;} }
+@media (min-width: 768px) and (max-width: 979px) { .MPWSLayout { width:100%; } }
+@media (max-width: 767px) { .MPWSLayout { width:100%; } }
+@media (max-width: 480px) { .MPWSLayout { width:100%;} }
+
+/* mainNav */
+    .mainNav {
+        background:#e7e7e7;
+        border-top: 1px solid #d7d7d7;
+        border-bottom: 1px solid #d7d7d7;
+    }

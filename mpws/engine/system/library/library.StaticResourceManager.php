@@ -75,7 +75,8 @@ class libraryStaticResourceManager {
         // echo 'is customer:' .( $isCustomer ? 'yes' : 'no') . '<br>';
         // var_dump($requestObjectOwner);
         // var_dump($requestObjectOwner->objectConfiguration_resources_staticResourceOverrides);
-        // var_dump('resourceEntry =====> '. $resourceEntry);
+        // var_dump('resourceEntry =====>');
+        // var_dump($resourceEntry);
         
         $filesToLoad = array();
         // $filesToImport = array();
@@ -95,6 +96,8 @@ class libraryStaticResourceManager {
                 $metaCommentStart = '<!--';
                 $metaCommentEnd = ' -->';
             }
+
+            // echo DR . 'web/customer/' . $objectName . DS . $filePath;
 
             // include existed file
             if ($isPLugin && file_exists(DR . 'web/plugin/' . $objectName . DS . $filePath))
