@@ -160,5 +160,53 @@ APP.Modules.register("lib/utils", [
 
     }
 
+    // source: http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
+    Utils.getTreeByJson = function (nodes, idKey, parentKey) {
+        app.log(true, 'Utils.getTreeByJson', nodes, idKey, parentKey); // <-- there's your tree
+        var map = {}, node, roots = {};
+        // for (var i = 0; i < nodes.length; i += 1) {
+        for (var i in nodes) {
+            node = nodes[i];
+            node.children = {};
+            map[node[idKey]] = node[idKey]; // use map to look-up the parents
+            app.log(true, '--- current node = ', node);
+            app.log(true, '--- current map = ', map);
+            app.log(true, '--- current node[parentKey] = ', node[parentKey]);
+            if (!!parseInt(node[parentKey], 10)) {
+                if (!nodes[map[node[parentKey]]].children)
+                    nodes[map[node[parentKey]]].children = {};
+                app.log(true, '--- adding node into child branch', node, nodes[map[node[parentKey]]]);
+                nodes[map[node[parentKey]]].children[node[idKey]] = node;
+            } else {
+                roots[node[idKey]] = node;
+            }
+        }
+        app.log(true, 'Utils.getTreeByJson', roots); // <-- there's your tree
+        return roots;
+    }
+
+    Utils.getTreeByArray = function (nodes, idKey, parentKey) {
+        app.log(true, 'Utils.getTreeByArray', nodes, idKey, parentKey); // <-- there's your tree
+        var map = {}, node, roots = [];
+        for (var i = 0; i < nodes.length; i += 1) {
+        // for (var i in nodes) {
+            node = nodes[i];
+            node.children = [];
+            map[node[idKey]] = i;//node[idKey]; // use map to look-up the parents
+            app.log(true, '--- current node = ', node);
+            app.log(true, '--- current map = ', map);
+            app.log(true, '--- current node[parentKey] = ', node[parentKey]);
+            if (!!parseInt(node[parentKey] !== "0", 10)) {
+                if (!nodes[map[node[parentKey]]].children)
+                    nodes[map[node[parentKey]]].children = [];
+                nodes[map[node[parentKey]]].children.push(node);
+            } else {
+                roots.push(node);
+            }
+        }
+        app.log(true, 'Utils.getTreeByArray', roots); // <-- there's your tree
+        return roots;
+    }
+
     return Utils;
 });

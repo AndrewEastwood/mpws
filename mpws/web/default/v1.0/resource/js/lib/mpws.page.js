@@ -162,6 +162,7 @@ APP.Modules.register("lib/mpws.page", [
     }
 
     mpwsPage.prototype.render = function (templatePath, deps, templateDataReceiverFn, options) {
+        app.log(true, 'mpwsPage.prototype.render'/*, arguments.callee.caller*/);
         var self = this;
         // start loadng animation
         this.pageSetState(mpwsPage.STATE.LOADING, true);

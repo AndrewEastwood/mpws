@@ -43,7 +43,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
     // shop start page
     function _pageShopHome () {
-        _pageShopProductListLatest();
+        // _pageShopProductListLatest();
         // overwrite page name
         mpwsPageLib.pageName('shop-home');
         mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
@@ -123,6 +123,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
         if (startHistory)
             Backbone.history.start();  // Запускаем HTML5 History push    
     }
+
+    $('.icon-home').on('click', function(){
+        pluginShopDataLib.getShopCatalogStructure(function(data){
+            app.log('TEST getShopCatalogStructure', data);
+        });
+    })
 
     return pluginShopRender;
 

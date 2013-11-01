@@ -1,7 +1,8 @@
 APP.Modules.register("plugin/shop/lib/driver", [], [
     'lib/jquery',
-    'lib/mpws.api'
-], function (app, Sandbox, $, mpwsAPI) {
+    'lib/mpws.api',
+    'lib/utils'
+], function (app, Sandbox, $, mpwsAPI, Utils) {
 
     var _logPrefix = '[plugin/shop/lib/driver] : ';
 
@@ -10,7 +11,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
     function pluginShopDriver () {}
 
     pluginShopDriver.prototype.getProductItemByID = function (productId, callback) {
-        app.log(_logPrefix, 'getProductItemByID', mpwsAPI)
+        app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
             fn: 'product_item_full',
@@ -27,7 +28,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
     }
 
     pluginShopDriver.prototype.getProductListLatest = function (callback) {
-        app.log(_logPrefix, 'getProductListLatest', mpwsAPI)
+        app.log(_logPrefix, 'getProductListLatest', mpwsAPI/*, arguments.callee.caller.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
             fn: 'product_list_latest',
@@ -84,6 +85,25 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
                 data = JSON.parse(data);
             if (typeof callback === "function")
                 callback.call(null, error, data);
+        })
+    }
+
+    pluginShopDriver.prototype.getShopCatalogStructure = function (callback) {
+        app.log(_logPrefix, 'getShopCatalogStructure', mpwsAPI)
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'shop_catalog_structure',
+            params: {
+                realm: 'plugin'
+            }
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function") {
+                app.log(true, 'Utils.getTreeByJson', data);
+                data = Utils.getTreeByJson(data, 'ID', 'ParentID');
+                callback.call(null, error, data);
+            }
         })
     }
 

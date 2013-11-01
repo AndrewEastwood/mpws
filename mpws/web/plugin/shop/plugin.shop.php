@@ -81,6 +81,10 @@ class pluginShop extends objectBaseWebPlugin {
                 $data = $this->_custom_api_getProductAttributes($pProductID);
                 break;
             }
+            case "shop_catalog_structure": {
+                $data = $this->_custom_api_getCatalogStructure();
+                break;
+            }
         }
         // attach to output
         $ctx->pageModel->addStaticData($data->toJSON());
@@ -149,9 +153,20 @@ class pluginShop extends objectBaseWebPlugin {
     // }
 
     // catalog
-    private function _custom_api_getCatalog () {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
-        return $dataObj->process($params);
+    private function _custom_api_getCatalogStructure ($params) {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
+        $categories = $dataObj->process($params)->getData();
+
+        // var_dump($categories);
+        $idToCategoryItemMap = array();
+
+        foreach ($categories as $key => $value) {
+          $idToCategoryItemMap[$value['ID']] = $value;  
+        }
+
+        $dataObj->setData($idToCategoryItemMap);
+
+        return $dataObj;
     }
 
     // origins

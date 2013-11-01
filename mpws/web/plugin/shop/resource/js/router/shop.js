@@ -13,10 +13,12 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 	function Router () { }
 
     Router.prototype.shopHome = function() {
+    	app.log(true, 'Router.prototype.shopHome');
         pluginShopRenderObj.pageShopHome();
     };
 
     Router.prototype.shopProductsLatest = function(route, name, callback) {
+    	app.log(true, 'Router.prototype.shopProductsLatest');
         pluginShopRenderObj.pageShopProductListLatest(route, name, callback);
     };
 
@@ -112,7 +114,6 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 		// app.log(true, 'Router.controller', this.Controller);
 
 	}
-
 
 	return Router;
 
