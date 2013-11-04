@@ -5,7 +5,8 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/mpws.api',
     'lib/mpws.page',
     'plugin/shop/lib/driver',
-], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopDriver) {
+    'lib/async'
+], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopDriver, AsyncLib) {
 
     var pluginShopDataLib = new pluginShopDriver();
     var mpwsPageLib = new mpwsPage();
@@ -46,8 +47,20 @@ APP.Modules.register("plugin/shop/view/render", [], [
         // _pageShopProductListLatest();
         // overwrite page name
         mpwsPageLib.pageName('shop-home');
+
         mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
-            pluginShopDataLib.getProductListLatest(onDataReceived);
+            var _pageElements = {
+                categoryStructure: function (callback) {
+                    pluginShopDataLib.getShopCatalogStructure(callback);
+                },
+                productListLatest: function (callback) {
+                    pluginShopDataLib.getProductListLatest(callback);
+                }
+            };
+            AsyncLib.parallel(_pageElements, onDataReceived);
+            // pluginShopDataLib.getProductListLatest(function (error, data) {
+            //     onDataReceived(error, data);
+            // });
         });
     }
 
