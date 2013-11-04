@@ -42,6 +42,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
         },
     }
 
+    var _pageElemenatsBase = {
+        categoryStructure: function (callback) {
+            pluginShopDataLib.getShopCatalogStructure(callback);
+        },
+    }
+
     // shop start page
     function _pageShopHome () {
         // _pageShopProductListLatest();
@@ -49,15 +55,15 @@ APP.Modules.register("plugin/shop/view/render", [], [
         mpwsPageLib.pageName('shop-home');
 
         mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
-            var _pageElements = {
-                categoryStructure: function (callback) {
-                    pluginShopDataLib.getShopCatalogStructure(callback);
-                },
+            var _pageElements = _.extend(_pageElemenatsBase, {
                 productListLatest: function (callback) {
                     pluginShopDataLib.getProductListLatest(callback);
                 }
-            };
-            AsyncLib.parallel(_pageElements, onDataReceived);
+            });
+            AsyncLib.parallel(_pageElements, function(e,d){
+                app.log(true, 'dddddddddddddddddddddddd=>>>>', d);
+                onDataReceived(e,d);
+            });
             // pluginShopDataLib.getProductListLatest(function (error, data) {
             //     onDataReceived(error, data);
             // });
