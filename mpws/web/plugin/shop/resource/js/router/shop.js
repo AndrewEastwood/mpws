@@ -8,9 +8,11 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 ], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopRender) {
 
     // start site routing
-    var pluginShopRenderObj = new pluginShopRender();
+    var pluginShopRenderObj = null;
 
-	function Router () { }
+	function Router (options) {
+		pluginShopRenderObj = new pluginShopRender(options);
+	}
 
     Router.prototype.shopHome = function() {
     	app.log(true, 'Router.prototype.shopHome');

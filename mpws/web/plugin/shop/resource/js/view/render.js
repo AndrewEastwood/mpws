@@ -54,59 +54,101 @@ APP.Modules.register("plugin/shop/view/render", [], [
         // overwrite page name
         mpwsPageLib.pageName('shop-home');
 
-        mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
-            var _pageElements = _.extend(_pageElemenatsBase, {
-                productListLatest: function (callback) {
-                    pluginShopDataLib.getProductListLatest(callback);
-                }
-            });
-            AsyncLib.parallel(_pageElements, function(e,d){
-                app.log(true, 'dddddddddddddddddddddddd=>>>>', d);
-                onDataReceived(e,d);
-            });
-            // pluginShopDataLib.getProductListLatest(function (error, data) {
-            //     onDataReceived(error, data);
-            // });
-        });
+        // here we have to render all essential elements rele=atetd to this scope
+        // 
+        var _opts = this.getPlacehoders();
+        var _renderConfiguration = {
+            categoryStructure: {
+                data: {
+                    source: pluginShopDataLib.getShopCatalogStructure
+                },
+                template: "plugin.shop.component.catalogStructure@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _opts.menu
+            },
+            productsLatest: {
+                data: {
+                    source: pluginShopDataLib.getProductListLatest
+                },
+                template: "plugin.shop.component.productList@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _opts.productsLatest
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(_renderConfiguration);
+            //  function (callback) {
+
+
+            //     pluginShopDataLib.getShopCatalogStructure(onDataReceived);
+
+
+            //     mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
+            //         pluginShopDataLib.getShopCatalogStructure(onDataReceived);
+            //     }, false, function (error, html) {
+            //         callback(error, html);
+            //     });
+            // },
+            // productsLatest: function (callback) {
+            //     pluginShopDataLib.getProductListLatest(callback);
+            // },
+
+    //     AsyncLib.parallel(_renderComponents);
+
+
+    //     mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
+    //         var _pageElements = _.extend(_pageElemenatsBase, {
+    //             productListLatest: function (callback) {
+    //                 pluginShopDataLib.getProductListLatest(callback);
+    //             }
+    //         });
+    //         AsyncLib.parallel(_pageElements, function(e,d){
+    //             // app.log(true, 'dddddddddddddddddddddddd=>>>>', d);
+    //             onDataReceived(e,d);
+    //         });
+    //         // pluginShopDataLib.getProductListLatest(function (error, data) {
+    //         //     onDataReceived(error, data);
+    //         // });
+    //     });
     }
 
     // shop products lists
     function _pageShopProductListLatest () {
         mpwsPageLib.pageName('shop-list-latest');
-        mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartialsBase, function (onDataReceived) {
-            pluginShopDataLib.getProductListLatest(onDataReceived);
-        });
+        // mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartialsBase, function (onDataReceived) {
+        //     pluginShopDataLib.getProductListLatest(onDataReceived);
+        // });
     }
 
     // shop catalog options
     function _pageShopCatalog () {
         mpwsPageLib.pageName('shop-catalog');
-        mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartialsBase, function (onDataReceived) {
-            pluginShopDataLib.getProductListLatest(onDataReceived);
-        });
+        // mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartialsBase, function (onDataReceived) {
+        //     pluginShopDataLib.getProductListLatest(onDataReceived);
+        // });
     }
 
     function _pageShopCatalogByCategory (categoryId) {
         mpwsPageLib.pageName('shop-category');
-        mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartialsBase, function (onDataReceived) {
-            pluginShopDataLib.getProductListLatest(onDataReceived);
-        });
+        // mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartialsBase, function (onDataReceived) {
+        //     pluginShopDataLib.getProductListLatest(onDataReceived);
+        // });
 
     }
 
     function _pageShopCatalogByCategoryAndBrand (categoryId, brandId) {
         mpwsPageLib.pageName('shop-category-brand');
-        mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartialsBase, function (onDataReceived) {
-            pluginShopDataLib.getProductListLatest(categoryId, onDataReceived);
-        });
+        // mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartialsBase, function (onDataReceived) {
+        //     pluginShopDataLib.getProductListLatest(categoryId, onDataReceived);
+        // });
     }
 
     // shop product item
     function _pageShopProductItemByID (productId) {
         mpwsPageLib.pageName('shop-product');
-        mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartialsBase, function (onDataReceived) {
-            pluginShopDataLib.getProductItemByID(productId, onDataReceived);
-        });
+        // mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartialsBase, function (onDataReceived) {
+        //     pluginShopDataLib.getProductItemByID(productId, onDataReceived);
+        // });
     }
 
     // shop cart
@@ -117,25 +159,29 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
 
     // public class
-    function pluginShopRender () {}
+    function pluginShopRender (options) {
+        var _options = options || {};
+        this.getOptions = function () { return _options; }
+        this.getPlacehoders = function () { return _options.placeholders || {}; }
+    }
 
     pluginShopRender.prototype.pageShopHome = function () {
-        _pageShopHome();
+        _pageShopHome.call(this);
     }
     pluginShopRender.prototype.pageShopCatalog = function () {
-        _pageShopCatalog();
+        _pageShopCatalog.call(this);
     }
     pluginShopRender.prototype.pageProductListLatest = function () {
-        _pageShopProductListLatest();
+        _pageShopProductListLatest.call(this);
     }
     pluginShopRender.prototype.pageShopProductItemByID = function (productId) {
-        _pageShopProductItemByID(productId);
+        _pageShopProductItemByID.call(this, productId);
     }   
     pluginShopRender.prototype._test_getProductAttributes = function (productId) {
-        pluginShopDataLib.getProductAttributes(productId);
+        pluginShopDataLib.getProductAttributes.call(this, productId);
     }
     pluginShopRender.prototype._test_getProductPriceArchive = function (productId) {
-        pluginShopDataLib.getProductPriceArchive(productId);
+        pluginShopDataLib.getProductPriceArchive.call(this, productId);
     }
     pluginShopRender.prototype.start = function (startHistory) {
         var controller = new Controller(); // Создаём контроллер

@@ -12,7 +12,18 @@ APP.Modules.register("router/customer", [], [
     // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     var mpwsPageLib = new mpwsPage();
-    var pluginShopRouterLib = new pluginShopRouter();
+    var pluginShopRouterLib = new pluginShopRouter({
+        placeholders: {
+            menu: {
+                target: $('.mainNav .navbar'),
+                placement: mpwsPage.PLACEMENT.APPEND
+            },
+            productsLatest: {
+                target: $('.MPWSPageBody'),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            }
+        }
+    });
 
     var Controller = Backbone.Router.extend({
         routes: {
