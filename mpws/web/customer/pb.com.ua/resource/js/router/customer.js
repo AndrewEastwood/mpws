@@ -15,10 +15,14 @@ APP.Modules.register("router/customer", [], [
     var pluginShopRouterLib = new pluginShopRouter({
         placeholders: {
             menu: {
-                target: $('.mainNav .navbar .nav'),
-                placement: mpwsPage.PLACEMENT.APPEND
+                target: $('.mainNav .navbar'),
+                placement: mpwsPage.PLACEMENT.REPLACE
             },
             productsLatest: {
+                target: $('.MPWSPageBody'),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+            shoppingChartStandalone: {
                 target: $('.MPWSPageBody'),
                 placement: mpwsPage.PLACEMENT.REPLACE
             }

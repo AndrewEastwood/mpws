@@ -67,6 +67,10 @@ class pluginShop extends objectBaseWebPlugin {
             case "shop_map" : {
                 break;
             }
+            case "shopping_chart" : {
+                $data = $this->_custom_api_getShoppingChart();
+                break;
+            }
             case "products_most_popular" : {
                 break;
             }
@@ -152,6 +156,14 @@ class pluginShop extends objectBaseWebPlugin {
 
     // }
 
+    // shopping chart
+    private function _custom_api_getShoppingChart ($param) {
+        // TODO:
+        // 1. get products by given product IDs
+        //
+
+    }
+
     // catalog
     private function _custom_api_getCatalogStructure ($params) {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
@@ -161,7 +173,7 @@ class pluginShop extends objectBaseWebPlugin {
         $idToCategoryItemMap = array();
 
         foreach ($categories as $key => $value) {
-          $idToCategoryItemMap[$value['ID']] = $value;  
+          $idToCategoryItemMap[$value['ID']] = $value;
         }
 
         $dataObj->setData($idToCategoryItemMap);

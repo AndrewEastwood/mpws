@@ -95,6 +95,22 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
+    pluginShopDriver.prototype.getShoppingChart = function (callback) {
+        app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'shopping_chart',
+            params: {
+                realm: 'plugin'
+            }
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function")
+                callback.call(null, error, _dataInterfaceFn(data));
+        })
+    }
+
     pluginShopDriver.prototype.getShopCatalogStructure = function (callback) {
         app.log(_logPrefix, 'getShopCatalogStructure', mpwsAPI)
         mpwsAPI.requestData({

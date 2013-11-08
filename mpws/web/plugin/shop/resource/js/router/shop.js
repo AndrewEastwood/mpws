@@ -98,7 +98,7 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 	        },
 	        shop_cart: function () {
 	            // pluginShopRenderObj.pageShopCart();
-	            self.shopCart(route, name, callback);
+	            self.shopCart();
 	        },
 	        // display particular product
 	        shop_product: function (productId, name, callback) {

@@ -115,7 +115,29 @@ APP.Modules.register("plugin/shop/view/render", [], [
     // shop cart
     function _pageShopCart () {
         mpwsPageLib.pageName('shop-cart');
-        mpwsPageLib.getPageBody('fdfsdfdsf', true);
+
+        var _opts = this.getPlacehoders();
+        var _renderConfiguration = {
+            categoryStructure: {
+                data: {
+                    source: pluginShopDataLib.getShopCatalogStructure
+                },
+                template: "plugin.shop.component.catalogStructure@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _opts.menu
+            },
+            shoppingChartStandalone: {
+                data: {
+                    source: pluginShopDataLib.getShoppingChart
+                },
+                template: "plugin.shop.component.shoppingChartStandalone@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _opts.shoppingChartStandalone
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(_renderConfiguration);
+        mpwsPageLib.getPageBody('I AM CHART', true);
     }
 
 
@@ -131,6 +153,9 @@ APP.Modules.register("plugin/shop/view/render", [], [
     }
     pluginShopRender.prototype.pageShopCatalog = function () {
         _pageShopCatalog.call(this);
+    }
+    pluginShopRender.prototype.pageShopCart = function () {
+        _pageShopCart.call(this);
     }
     pluginShopRender.prototype.pageProductListLatest = function () {
         _pageShopProductListLatest.call(this);
