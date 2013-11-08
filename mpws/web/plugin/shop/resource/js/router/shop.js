@@ -5,10 +5,12 @@ APP.Modules.register("plugin/shop/router/shop", [], [
     'lib/mpws.api',
     'lib/mpws.page',
     'plugin/shop/view/render',
-], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopRender) {
+    "lib/htmlComponents",
+], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopRender, HtmlComponents) {
 
     // start site routing
     var pluginShopRenderObj = null;
+    var _libHtml = new HtmlComponents();
 
 	function Router (options) {
 		pluginShopRenderObj = new pluginShopRender(options);
@@ -61,7 +63,8 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 	            "shop/catalog/:category": "shop_category",
 	            "shop/catalog/:category/:brand": "shop_category_brand",
 	            "shop/product/:product": "shop_product",
-	            "shop/cart": "shop_cart"
+                "shop/cart": "shop_cart",
+	            "shop/buy/:pid": "shop_buy"
 	        },
 	        // shop default page
 	        shop_home: function () {
@@ -106,6 +109,10 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 	            // pluginShopRenderObj.pageShopProductItemByID(productId);
 	            self.shopProductItem(productId, name, callback);
 	        },
+            shop_buy: function (productId) {
+                // pluginShopRenderObj.model.shopBuy(productId);
+                _libHtml.messageBox("You have bought: ", productId);
+            }
 
 	    });
 

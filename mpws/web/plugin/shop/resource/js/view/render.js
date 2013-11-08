@@ -5,8 +5,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/mpws.api',
     'lib/mpws.page',
     'plugin/shop/lib/driver',
-    'lib/async'
-], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopDriver, AsyncLib) {
+], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopDriver) {
 
     var pluginShopDataLib = new pluginShopDriver();
     var mpwsPageLib = new mpwsPage();
@@ -144,6 +143,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     // public class
     function pluginShopRender (options) {
         var _options = options || {};
+        this.model = pluginShopDataLib;
         this.getOptions = function () { return _options; }
         this.getPlacehoders = function () { return _options.placeholders || {}; }
     }
