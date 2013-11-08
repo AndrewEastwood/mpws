@@ -8,6 +8,7 @@ APP.Modules.register("lib/templateEngine", [
 
 ], [
     'lib/handlebars',
+    'lib/handlebars_helpers',
     'lib/mpws.api',
 ], function (wnd, app, Sandbox, Handlebars, mpwsAPI) {
 

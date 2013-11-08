@@ -15,7 +15,7 @@ APP.Modules.register("router/customer", [], [
     var pluginShopRouterLib = new pluginShopRouter({
         placeholders: {
             menu: {
-                target: $('.mainNav .navbar'),
+                target: $('.mainNav .navbar .nav'),
                 placement: mpwsPage.PLACEMENT.APPEND
             },
             productsLatest: {

@@ -30,9 +30,9 @@ APP.Modules.register("lib/mpws.page", [
     };
 
     mpwsPage.PLACEMENT = {
-        REPLACE: 'r',
-        PREPEND: 'p',
-        APPEND: 'a'
+        REPLACE: 'replace',
+        PREPEND: 'prepend',
+        APPEND: 'append'
     };
 
     mpwsPage.RegisterPartial = function(key, partial) {
@@ -135,8 +135,6 @@ APP.Modules.register("lib/mpws.page", [
     //              type: [partial|helper]
     //              fn: (when type is helper)
     mpwsPage.prototype.setupDependencies = function(deps, callback) {
-        // TODO: add check wheter we have already downloaded deps here
-
         var _dataMap = {};
         var _self = this;
 
@@ -169,7 +167,6 @@ APP.Modules.register("lib/mpws.page", [
         });
     }
 
-
     mpwsPage.prototype.render = function(options) {
 
         var self = this;
@@ -188,17 +185,19 @@ APP.Modules.register("lib/mpws.page", [
                         },
                         source: data || {}
                     }
+                    app.log(true, 'template data is', _tplData);
                     html = templateFn(_tplData);
                 }
                 // render into placeholder
                 if (placeholder && placeholder.target) {
                     var _injectionType = placeholder.placement || mpwsPage.PLACEMENT.REPLACE;
+                    app.log(true, 'injection time', _injectionType);
                     if (_injectionType == mpwsPage.PLACEMENT.REPLACE)
                         $(placeholder.target).html(html);
                     else if (_injectionType == mpwsPage.PLACEMENT.PREPEND)
                         $(placeholder.target).prepend(html);
                     else if (_injectionType == mpwsPage.PLACEMENT.APPEND)
-                        $(placeholder.target).prepend(html);
+                        $(placeholder.target).append(html);
                 }
                 // perform callback
                 if (_.isFunction(callback))
@@ -209,7 +208,7 @@ APP.Modules.register("lib/mpws.page", [
                 // [3] call data receiver
                 if (_.isFunction(templateDataReceiverFn))
                     templateDataReceiverFn(function (errorData, data) {
-                        app.log(true, 'data received', data);
+                        // app.log(true, 'data received', data);
                         _injectionFn(errorTpl || errorData, template, data);
                     });
                 else
@@ -261,65 +260,6 @@ APP.Modules.register("lib/mpws.page", [
 
         AsyncLib.parallel(_renderCommands);
     };
-
-    mpwsPage.prototype.renderA = function (templatePath, deps, templateDataReceiverFn, options, callback) {
-        app.log(true, 'mpwsPage.prototype.render'/*, arguments.callee.caller*/);
-        var self = this;
-        // start loadng animation
-        this.pageSetState(mpwsPage.STATE.LOADING, true);
-
-        // adjust arguments
-        if (_.isFunction(deps)) {
-            options = templateDataReceiverFn;
-            templateDataReceiverFn = deps;
-            deps = null;
-        }
-
-        //  && !_.isFunction(templateDataReceiverFn) && _.isUndefined(options)
-
-        // [1] load deps
-        self.setupDependencies(deps, function (err) {
-
-            var _injectionFn = function (template, data) {
-                var html = false;
-                // [4] combine everything together
-                if (template) {
-                    var templateFn = tplEngine.compile(template);
-                    // compose template data
-                    var _tplData = {
-                        app: {
-                            config: app.Page.getConfiguration()
-                        },
-                        source: data
-                    }
-                    html = templateFn(_tplData);
-                }
-                if (_.isFunction(callback))
-                    callback(null, html, options, (options && options.el) || self.getPageBody())
-                else {
-                    if (options && options.el)
-                        $(options.el).html(html);
-                    else
-                        self.getPageBody(html, true);
-                }
-            }
-
-            var _templateReceiverFn = function (error, template) {
-                // [3] call data receiver
-                if (_.isFunction(templateDataReceiverFn))
-                    templateDataReceiverFn(function (error, data) {
-                        _injectionFn(template, data);
-                    });
-                else
-                    _injectionFn(template);
-            }
-
-            // [2] load main template and finally/or just call _templateReceiverFn
-            self.getTemplate(templatePath, _templateReceiverFn);
-
-        })
-    }
-
 
     return mpwsPage;
 

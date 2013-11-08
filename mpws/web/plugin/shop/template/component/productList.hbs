@@ -1,23 +1,22 @@
-TEST
 <div class="span12">
-	<div id="featuredItems">
-		<!-- <div class="span12"> -->
-		<div class="titleHeader clearfix">
-			<h3>Featured Items</h3>
-			<div class="pagers">
-				<div class="btn-toolbar">
-					<button class="btn btn-mini">View All</button>
-				</div>
-			</div>
-		</div><!--end titleHeader-->
-		<!-- </div> -->
+    <div id="featuredItems">
+        <!-- <div class="span12"> -->
+        <div class="titleHeader clearfix">
+            <h3>Featured Items</h3>
+            <div class="pagers">
+                <div class="btn-toolbar">
+                    <button class="btn btn-mini">View All</button>
+                </div>
+            </div>
+        </div><!--end titleHeader-->
+        <!-- </div> -->
 
-		<div class="row">
-			<ul class="hProductItems clearfix">
-				{{#each source.productListLatest.data.products }}
-					{{>productListItem}}
-				{{/each}}
-			</ul>
-		</div><!--end row-->
-	</div><!--end featuredItems-->
+        <div class="row">
+            <ul class="hProductItems clearfix">
+                {{#each source.data.products }}
+                    {{>productListItem}}
+                {{/each}}
+            </ul>
+        </div><!--end row-->
+    </div><!--end featuredItems-->
 </div><!--end span12-->

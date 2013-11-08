@@ -8,6 +8,13 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
 
     // app.log('HI FROM SHOP DRIVER :) I AM SHOP DRIVER LIBRARY YO')
 
+    function _dataInterfaceFn (data, type) {
+        return {
+            type: type || "none",
+            data: data
+        }
+    }
+
     function pluginShopDriver () {}
 
     pluginShopDriver.prototype.getProductItemByID = function (productId, callback) {
@@ -23,7 +30,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (data)
                 data = JSON.parse(data);
             if (typeof callback === "function")
-                callback.call(null, error, {type: "item", data: data});
+                callback.call(null, error, _dataInterfaceFn(data));
         })
     }
 
@@ -49,7 +56,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             // app.log(data);
 
             if (typeof callback === "function")
-                callback.call(null, error, {type: "list", data: data});
+                callback.call(null, error, _dataInterfaceFn(data));
         })
     }
 
@@ -67,7 +74,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (data)
                 data = JSON.parse(data);
             if (typeof callback === "function")
-                callback.call(null, error, data);
+                callback.call(null, error, _dataInterfaceFn(data));
         })
     }
 
@@ -84,7 +91,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (data)
                 data = JSON.parse(data);
             if (typeof callback === "function")
-                callback.call(null, error, data);
+                callback.call(null, error, _dataInterfaceFn(data));
         })
     }
 
@@ -100,9 +107,9 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (data)
                 data = JSON.parse(data);
             if (typeof callback === "function") {
-                app.log(true, 'Utils.getTreeByJson', data);
+                // app.log(true, 'Utils.getTreeByJson', data);
                 data = Utils.getTreeByJson(data, 'ID', 'ParentID');
-                callback.call(null, error, data);
+                callback.call(null, error, _dataInterfaceFn(data));
             }
         })
     }

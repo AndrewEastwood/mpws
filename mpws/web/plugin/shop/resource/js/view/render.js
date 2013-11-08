@@ -42,12 +42,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
         },
     }
 
-    var _pageElemenatsBase = {
-        categoryStructure: function (callback) {
-            pluginShopDataLib.getShopCatalogStructure(callback);
-        },
-    }
-
     // shop start page
     function _pageShopHome () {
         // _pageShopProductListLatest();
@@ -77,39 +71,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
         };
         app.log(true, _renderConfiguration);
         mpwsPageLib.render(_renderConfiguration);
-            //  function (callback) {
-
-
-            //     pluginShopDataLib.getShopCatalogStructure(onDataReceived);
-
-
-            //     mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
-            //         pluginShopDataLib.getShopCatalogStructure(onDataReceived);
-            //     }, false, function (error, html) {
-            //         callback(error, html);
-            //     });
-            // },
-            // productsLatest: function (callback) {
-            //     pluginShopDataLib.getProductListLatest(callback);
-            // },
-
-    //     AsyncLib.parallel(_renderComponents);
-
-
-    //     mpwsPageLib.render("plugin.shop.page.publicHome@hbs", _templatePartialsBase, function (onDataReceived) {
-    //         var _pageElements = _.extend(_pageElemenatsBase, {
-    //             productListLatest: function (callback) {
-    //                 pluginShopDataLib.getProductListLatest(callback);
-    //             }
-    //         });
-    //         AsyncLib.parallel(_pageElements, function(e,d){
-    //             // app.log(true, 'dddddddddddddddddddddddd=>>>>', d);
-    //             onDataReceived(e,d);
-    //         });
-    //         // pluginShopDataLib.getProductListLatest(function (error, data) {
-    //         //     onDataReceived(error, data);
-    //         // });
-    //     });
     }
 
     // shop products lists

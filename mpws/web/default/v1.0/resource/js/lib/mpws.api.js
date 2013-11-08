@@ -18,10 +18,10 @@ APP.Modules.register("lib/mpws.api", [
 
     function _requestRaw (data, callback) {
         //app.log('trololo');
-        app.log('requestRaw', data);
+        // app.log('requestRaw', data);
         return $.post(apiService, data).success(function(receivedData) {
             /*console.log(data);*/
-            app.log(true, 'Received data', receivedData);
+            // app.log(true, 'Received data', receivedData);
             if (typeof callback === 'function')
                 callback.call(null, null, receivedData);
         });
@@ -57,7 +57,7 @@ APP.Modules.register("lib/mpws.api", [
         //mpws.tools.log('requestJSON');
 
         if (typeof(params.fn) === 'undefined') {
-            app.log('requestJSON: caller or method name is empty');
+            // app.log(true, 'requestJSON: caller or method name is empty');
             return false;
         }
 
@@ -89,7 +89,7 @@ APP.Modules.register("lib/mpws.api", [
         var _fn = sender.fn || $(sender).attr('mpws-fn');
 
         if (typeof(_caller) === 'undefined' || typeof(_fn) === 'undefined') {
-            app.log('requestJSON: caller or method name is empty');
+            // app.log(true, 'requestJSON: caller or method name is empty');
             return false;
         }
 
