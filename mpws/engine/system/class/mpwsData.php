@@ -69,9 +69,11 @@ class mpwsData {
         // echo '<<<<<<<<<<<<<<<<<< setConfig';
         $this->_config = $config;
         return $this;
+
     }
 
     // getters
+    public function hasData() { return !empty($this->_data); }
     public function getData() { return $this->_data; }
     public function getConfig() { return $this->_config; }
     public function getConfigDefault() {

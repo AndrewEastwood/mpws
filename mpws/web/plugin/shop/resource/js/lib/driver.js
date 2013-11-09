@@ -11,7 +11,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
     function _dataInterfaceFn (data, type) {
         return {
             type: type || "none",
-            data: data
+            data: data || {}
         }
     }
 
@@ -99,7 +99,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'shopping_chart',
+            fn: 'shop_chart_content',
             params: {
                 realm: 'plugin'
             }
@@ -130,23 +130,41 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
-    pluginShopDriver.prototype.shopBuy = function (productId, callback) {
+    pluginShopDriver.prototype.shoppingChartManager = function (params, callback) {
         app.log(_logPrefix, 'shopBuy', mpwsAPI)
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'shop_catalog_structure',
-            params: {
+            fn: 'shop_chart_manage',
+            params: $.extend(params, {
                 realm: 'plugin'
-            }
+            })
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);
             if (typeof callback === "function") {
-                // app.log(true, 'Utils.getTreeByJson', data);
-                data = Utils.getTreeByJson(data, 'ID', 'ParentID');
                 callback.call(null, error, _dataInterfaceFn(data));
             }
         })
+    }
+
+    pluginShopDriver.prototype.shoppingChartAdd = function (productId, callback) {
+        this.shoppingChartManager({
+            pid: productId,
+            amount: 1
+        }, callback);
+    }
+
+    pluginShopDriver.prototype.shoppingChartRemove = function (productId, callback) {
+        this.shoppingChartManager({
+            pid: productId,
+            amount: 0
+        }, callback);
+    }
+
+    pluginShopDriver.prototype.shoppingChartClear = function (callback) {
+        this.shoppingChartManager({
+            clear: true
+        }, callback);
     }
 
     return pluginShopDriver;

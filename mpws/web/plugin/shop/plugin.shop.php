@@ -21,6 +21,10 @@ class pluginShop extends objectBaseWebPlugin {
 
     protected function _jsapiTriggerAsPlugin() {
         // echo "QQQTEST";
+
+        if (!$_SESSION)
+            session_start();
+
         parent::_jsapiTriggerAsPlugin();
         $param = libraryRequest::getApiParam();
 
@@ -67,7 +71,11 @@ class pluginShop extends objectBaseWebPlugin {
             case "shop_map" : {
                 break;
             }
-            case "shopping_chart" : {
+            case "shop_chart_manage" : {
+                $data = $this->_custom_api_shoppingChartManage($pProductID, getValue($param['amount'], null), getValue($param['clear'], false));
+                break;
+            }
+            case "shop_chart_content" : {
                 $data = $this->_custom_api_getShoppingChart();
                 break;
             }
@@ -158,10 +166,89 @@ class pluginShop extends objectBaseWebPlugin {
 
     // shopping chart
     private function _custom_api_getShoppingChart ($param) {
-        // TODO:
-        // 1. get products by given product IDs
-        //
+        return new mpwsData(array(
+            "error" => false,
+            "products" => $_SESSION['shop:chart'] ?: array(),
+            "chart" => $this->_custom_chartGetInfo()
+        ));
 
+    }
+
+    private function _custom_api_shoppingChartClear ($pProductID) {
+        $_SESSION['shop:chart'] = array();
+        return $this->_custom_api_getShoppingChart();
+    }
+    
+    private function _custom_api_shoppingChartManage ($pProductID, $amount, $clear) {
+
+        $chart = $_SESSION['shop:chart'] ?: array();
+        $error = false;
+
+        if ($clear)
+            $chart = array();
+        else {
+            if (is_numeric($amount)) {
+                $amount = intval($amount);
+                // remove item completely
+                if ($amount === 0)
+                    unset($chart[$pProductID]);
+                else {
+                    // check existatce
+                    if (isset($chart[$pProductID])) {
+                        $chart[$pProductID]['Amount'] += $amount;
+                        // remove item when amount is -1 and current amount is 1
+                        if ($chart[$pProductID]['Amount'] === 0)
+                            unset($chart[$pProductID]);
+                    } else {
+                        // just get new product entry annd add it into chart
+                        $productEntry = $this->_custom_api_getProductItem($pProductID, 'short');
+                        if ($productEntry->hasData()) {
+                            $chart[$pProductID] = $productEntry->getData();
+                            $chart[$pProductID]['Amount'] = 1;
+                        } else
+                            $error = "Wrong product ID";
+                    }
+                    // update product total
+                    if (!$error)
+                        $chart[$pProductID]["Total"] = $chart[$pProductID]["Amount"] * $chart[$pProductID]["Price"];
+                }
+            }
+            else
+                $error = "Wrong amount value";
+        }
+
+        $_SESSION['shop:chart'] = $chart;
+        // $_SESSION['shop:chart_info'] = $this->_custom_chartGetInfo();
+
+        // return new mpwsData(array(
+        //     "error" => $error,
+        //     "products" => $_SESSION['shop:chart'],
+        //     "chart" => $_SESSION['shop:chart_info']
+        // ));
+        return $this->_custom_api_getShoppingChart();
+    }
+
+    private function _custom_chartGetInfo () {
+        $chart = $_SESSION['shop:chart'] ?: array();
+        $chart_info = array(
+            "productAmount" => 0,
+            "total" => 0.0,
+            "discount" => 0
+        );
+        // extract short info
+        foreach ($chart as $productEntry) {
+            // // update each product
+            // $chart[$pID] = $productEntry;
+            // $chart[$pID]["Total"] = $chart[$pID]["Amount"] * $chart[$pID]["Price"];
+
+            // update chart checkout info
+            $chart_info["productAmount"] += $productEntry["Amount"];
+            $chart_info["total"] += $productEntry["Total"];
+        }
+
+        // $_SESSION['shop:chart_info'] = $chart_info;
+
+        return $chart_info;
     }
 
     // catalog
@@ -259,8 +346,6 @@ class pluginShop extends objectBaseWebPlugin {
             // var_dump($pProductID);
             $dataObj->setValuesDbCondition($pProductID, MERGE_MODE_APPEND);
 
-
-            
             $dataObj->process();
             // var_dump($dataObj);
 

@@ -5,12 +5,10 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/mpws.api',
     'lib/mpws.page',
     'plugin/shop/lib/driver',
-], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopDriver) {
-
-    var pluginShopDataLib = new pluginShopDriver();
-    var mpwsPageLib = new mpwsPage();
+], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopModel) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
+    var mpwsPageLib = new mpwsPage();
 
     // mpwsPageLib.setupDependencies({
     //     productListItem: "plugin.shop.component.productListItem@hbs"
@@ -41,9 +39,76 @@ APP.Modules.register("plugin/shop/view/render", [], [
         },
     }
 
-    // shop start page
-    function _pageShopHome () {
-        // _pageShopProductListLatest();
+    // // shop start page
+    // // shop products lists
+    // function _pageShopProductListLatest () {
+    //     // mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartialsBase, function (onDataReceived) {
+    //     //     model.getProductListLatest(onDataReceived);
+    //     // });
+    // }
+
+    // // shop catalog options
+    // function _pageShopCatalog () {
+    //     // mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartialsBase, function (onDataReceived) {
+    //     //     model.getProductListLatest(onDataReceived);
+    //     // });
+    // }
+
+    // function _pageShopCatalogByCategory (categoryId) {
+    //     mpwsPageLib.pageName('shop-category');
+    //     // mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartialsBase, function (onDataReceived) {
+    //     //     model.getProductListLatest(onDataReceived);
+    //     // });
+
+    // }
+
+    // function _pageShopCatalogByCategoryAndBrand (categoryId, brandId) {
+    //     mpwsPageLib.pageName('shop-category-brand');
+    //     // mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartialsBase, function (onDataReceived) {
+    //     //     model.getProductListLatest(categoryId, onDataReceived);
+    //     // });
+    // }
+
+    // // shop product item
+    // function _pageShopProductItemByID (productId) {
+    //     mpwsPageLib.pageName('shop-product');
+    //     var _opts = this.getPlacehoders();
+    //     var _renderConfiguration = {
+    //         categoryStructure: {
+    //             data: {
+    //                 source: model.getShopCatalogStructure
+    //             },
+    //             template: "plugin.shop.component.catalogStructure@hbs",
+    //             dependencies: _templatePartialsBase,
+    //             placeholder: _opts.menu
+    //         },
+    //         productData: {
+    //             data: {
+    //                 source: model.getProductItemByID
+    //             },
+    //             template: "plugin.shop.component.productItem@hbs",
+    //             dependencies: _templatePartialsBase,
+    //             placeholder: _opts.productsLatest
+    //         }
+    //     };
+    //     app.log(true, _renderConfiguration);
+    //     mpwsPageLib.render(_renderConfiguration);
+    //     // mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartialsBase, function (onDataReceived) {
+    //     //     model.getProductItemByID(productId, onDataReceived);
+    //     // });
+    // }
+
+
+    // public class
+    function pluginShopRender (options) {
+        var _options = options || {};
+        this.model = new pluginShopModel();
+        this.getOptions = function () { return _options; }
+        this.getPlacehoders = function () { return _options.placeholders || {}; }
+    }
+
+    pluginShopRender.prototype.pageShopHome = function () {
+        var self = this;
         // overwrite page name
         mpwsPageLib.pageName('shop-home');
 
@@ -53,7 +118,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
         var _renderConfiguration = {
             categoryStructure: {
                 data: {
-                    source: pluginShopDataLib.getShopCatalogStructure
+                    source: self.model.getShopCatalogStructure
                 },
                 template: "plugin.shop.component.catalogStructure@hbs",
                 dependencies: _templatePartialsBase,
@@ -61,7 +126,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
             },
             productsLatest: {
                 data: {
-                    source: pluginShopDataLib.getProductListLatest
+                    source: self.model.getProductListLatest
                 },
                 template: "plugin.shop.component.productList@hbs",
                 dependencies: _templatePartialsBase,
@@ -71,55 +136,21 @@ APP.Modules.register("plugin/shop/view/render", [], [
         app.log(true, _renderConfiguration);
         mpwsPageLib.render(_renderConfiguration);
     }
-
-    // shop products lists
-    function _pageShopProductListLatest () {
-        mpwsPageLib.pageName('shop-list-latest');
-        // mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartialsBase, function (onDataReceived) {
-        //     pluginShopDataLib.getProductListLatest(onDataReceived);
-        // });
-    }
-
-    // shop catalog options
-    function _pageShopCatalog () {
+    
+    pluginShopRender.prototype.pageShopCatalog = function () {
         mpwsPageLib.pageName('shop-catalog');
-        // mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartialsBase, function (onDataReceived) {
-        //     pluginShopDataLib.getProductListLatest(onDataReceived);
-        // });
+        // _pageShopCatalog.call(this);
     }
-
-    function _pageShopCatalogByCategory (categoryId) {
-        mpwsPageLib.pageName('shop-category');
-        // mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartialsBase, function (onDataReceived) {
-        //     pluginShopDataLib.getProductListLatest(onDataReceived);
-        // });
-
-    }
-
-    function _pageShopCatalogByCategoryAndBrand (categoryId, brandId) {
-        mpwsPageLib.pageName('shop-category-brand');
-        // mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartialsBase, function (onDataReceived) {
-        //     pluginShopDataLib.getProductListLatest(categoryId, onDataReceived);
-        // });
-    }
-
-    // shop product item
-    function _pageShopProductItemByID (productId) {
-        mpwsPageLib.pageName('shop-product');
-        // mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartialsBase, function (onDataReceived) {
-        //     pluginShopDataLib.getProductItemByID(productId, onDataReceived);
-        // });
-    }
-
-    // shop cart
-    function _pageShopCart () {
+    
+    pluginShopRender.prototype.pageShopCart = function () {
+        var self = this;
         mpwsPageLib.pageName('shop-cart');
 
         var _opts = this.getPlacehoders();
         var _renderConfiguration = {
             categoryStructure: {
                 data: {
-                    source: pluginShopDataLib.getShopCatalogStructure
+                    source: self.model.getShopCatalogStructure
                 },
                 template: "plugin.shop.component.catalogStructure@hbs",
                 dependencies: _templatePartialsBase,
@@ -127,7 +158,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
             },
             shoppingChartStandalone: {
                 data: {
-                    source: pluginShopDataLib.getShoppingChart
+                    source: self.model.getShoppingChart
                 },
                 template: "plugin.shop.component.shoppingChartStandalone@hbs",
                 dependencies: _templatePartialsBase,
@@ -136,50 +167,59 @@ APP.Modules.register("plugin/shop/view/render", [], [
         };
         app.log(true, _renderConfiguration);
         mpwsPageLib.render(_renderConfiguration);
-        mpwsPageLib.getPageBody('I AM CHART', true);
+        // mpwsPageLib.getPageBody('I AM CHART', true);
     }
-
-
-    // public class
-    function pluginShopRender (options) {
-        var _options = options || {};
-        this.model = pluginShopDataLib;
-        this.getOptions = function () { return _options; }
-        this.getPlacehoders = function () { return _options.placeholders || {}; }
-    }
-
-    pluginShopRender.prototype.pageShopHome = function () {
-        _pageShopHome.call(this);
-    }
-    pluginShopRender.prototype.pageShopCatalog = function () {
-        _pageShopCatalog.call(this);
-    }
-    pluginShopRender.prototype.pageShopCart = function () {
-        _pageShopCart.call(this);
-    }
+    
     pluginShopRender.prototype.pageProductListLatest = function () {
-        _pageShopProductListLatest.call(this);
+        mpwsPageLib.pageName('shop-list-latest');
+        // _pageShopProductListLatest.call(this);
     }
+    
     pluginShopRender.prototype.pageShopProductItemByID = function (productId) {
-        _pageShopProductItemByID.call(this, productId);
+        var self = this;
+        mpwsPageLib.pageName('shop-product');
+        var _opts = this.getPlacehoders();
+        var _renderConfiguration = {
+            categoryStructure: {
+                data: {
+                    source: self.model.getShopCatalogStructure
+                },
+                template: "plugin.shop.component.catalogStructure@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _opts.menu
+            },
+            productData: {
+                data: {
+                    source: self.model.getProductItemByID
+                },
+                template: "plugin.shop.component.productItem@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _opts.productsLatest
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(_renderConfiguration);
     }   
+    
     pluginShopRender.prototype._test_getProductAttributes = function (productId) {
-        pluginShopDataLib.getProductAttributes.call(this, productId);
+        this.model.getProductAttributes.call(this, productId);
     }
+    
     pluginShopRender.prototype._test_getProductPriceArchive = function (productId) {
-        pluginShopDataLib.getProductPriceArchive.call(this, productId);
+        this.model.getProductPriceArchive.call(this, productId);
     }
+    
     pluginShopRender.prototype.start = function (startHistory) {
         var controller = new Controller(); // Создаём контроллер
         if (startHistory)
             Backbone.history.start();  // Запускаем HTML5 History push    
     }
 
-    $('.icon-home').on('click', function(){
-        pluginShopDataLib.getShopCatalogStructure(function(data){
-            app.log('TEST getShopCatalogStructure', data);
-        });
-    })
+    // $('.icon-home').on('click', function(){
+    //     model.getShopCatalogStructure(function(data){
+    //         app.log('TEST getShopCatalogStructure', data);
+    //     });
+    // })
 
     return pluginShopRender;
 

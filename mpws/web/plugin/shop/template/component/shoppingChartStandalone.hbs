@@ -1,0 +1,34 @@
+<div class="component component-shop-chart">
+    <h3 class="title">Ваш кошик</h3>
+    {{#if_eq source.data.chart.total "0" }}
+        <p class="message message-nodata">Ваш кошик порожній</p>
+    {{else}}
+        <ul class="list list-chart-products">
+        {{#each source.data.products}}
+            <li>
+                <div class="block block-chart-item">
+                    <span class="label label-product-name">
+                        <a href="/#shop/product/{{ID}}" title="Перейти до {{{Name}}}">{{Name}}</a>
+                    </span>
+                    <span class="value value-product-price">{{Price}}</span>
+                    <span class="label label-mathsign">x</span>
+                    <span class="value value-product-amount">
+                        <input type="text" value="{{Amount}}"/>
+                    </span>
+                    <span class="value value-product-total">{{Total}}</span>
+                    <i class="icon-trash" data-action="shop:chart:item-remove" data-oid="{{ID}}"></i>
+                </div>
+            </li>
+        {{/each}}
+        </ul>
+        <div class="spacer"></div>
+        <div class="component component-buttons">
+            <button type="button" class="button button-chart-clear" data-action="shop:chart:clear">
+                Очистити кошик
+            </button>
+            <button type="button" class="button button-clear" data-action="shop:chart:checkout">
+                Оформити замовлення
+            </button>
+        </div>
+    {{/if_eq}}
+</div>

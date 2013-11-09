@@ -159,8 +159,8 @@ var helpers = {
    *
    * @example: {{if_eq this compare=that}}
    */
-  if_eq: function (context, options) {
-    if (context === options.hash.compare) {
+  if_eq: function (left, right, options) {
+    if (left === right) {
       return options.fn(this);
     }
     return options.inverse(this);

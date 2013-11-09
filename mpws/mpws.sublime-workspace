@@ -4,281 +4,558 @@
 		"selected_items":
 		[
 			[
-				"se",
-				"setConfig"
+				"cha",
+				"chartManager"
 			],
 			[
-				"roll",
-				"_rolledInputs"
+				"ca",
+				"calcInfo"
 			],
 			[
-				"ini",
-				"initData"
+				"prod",
+				"productsInfo"
 			],
 			[
-				"so",
-				"sourceInput"
+				"pro",
+				"productEntry"
 			],
 			[
-				"hand",
-				"handlers"
+				"pr",
+				"productEntry"
 			],
 			[
-				"update",
-				"updateLabels"
-			],
-			[
-				"upda",
-				"updateLabels"
-			],
-			[
-				"hidd",
-				"inputHiddenLogo"
-			],
-			[
-				"inputHi",
-				"inputHiddenFavicon"
-			],
-			[
-				"in",
-				"inputHiddenLogoID"
-			],
-			[
-				"s",
-				"status"
-			],
-			[
-				"ce",
-				"cellModelStatus"
-			],
-			[
-				"a",
-				"accessKey"
-			],
-			[
-				"fa",
-				"fadeOut"
-			],
-			[
-				"b",
-				"background-color"
-			],
-			[
-				"_ne",
-				"_newValueTax"
-			],
-			[
-				"com",
-				"component"
-			],
-			[
-				"of",
-				"offset"
-			],
-			[
-				"che",
-				"checkbox"
-			],
-			[
-				"typ",
-				"typeof"
-			],
-			[
-				"get",
-				"getCompanyField"
-			],
-			[
-				"con",
-				"controlSelectbox"
-			],
-			[
-				"ot",
-				"option"
-			],
-			[
-				"mdoe",
-				"moduleOptions"
-			],
-			[
-				"co",
-				"conextMenuItemUsePublisherFavicon"
-			],
-			[
-				"im",
-				"imageType"
+				"pl",
+				"pluginShopModel"
 			],
 			[
 				"ma",
-				"margin"
+				"margin-top"
 			],
 			[
-				"bor",
-				"border-bottom"
+				"_tp",
+				"_tplData"
+			],
+			[
+				"P",
+				"PLACEMENT"
+			],
+			[
+				"_da",
+				"_dataSrc"
+			],
+			[
+				"cal",
+				"callbackData"
+			],
+			[
+				"err",
+				"errorData"
+			],
+			[
+				"_re",
+				"_renderFn"
+			],
+			[
+				"tem",
+				"template"
+			],
+			[
+				"ren",
+				"renderElementOptions"
+			],
+			[
+				"e",
+				"each"
 			],
 			[
 				"pa",
-				"padding"
+				"parallel"
 			],
 			[
-				"cur",
-				"currentLogo"
+				"_",
+				"_options"
 			],
 			[
-				"ima",
-				"imageUrl"
+				"get",
+				"getOptions"
 			],
 			[
-				"cel",
-				"cellData"
+				"plu",
+				"pluginShopDataLib"
 			],
 			[
-				"hi",
-				"inputHiddenLogo"
+				"id",
+				"idKey"
 			],
 			[
-				"ic",
-				"iconCheckmark"
+				"set",
+				"setData"
 			],
 			[
-				"def",
-				"default"
+				"fil",
+				"filePath"
 			],
 			[
-				"ex",
-				"extend"
+				"contr",
+				"controllerObj"
 			],
 			[
-				"remo",
+				"sho",
+				"shopHome"
+			],
+			[
+				"db",
+				"dbData"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"va",
+				"value"
+			],
+			[
+				"arr",
+				"array	$… = array (…)"
+			],
+			[
+				"da",
+				"dataObj"
+			],
+			[
+				"li",
+				"listIds"
+			],
+			[
+				"data",
+				"dataObj"
+			],
+			[
+				"co",
+				"config"
+			],
+			[
+				"con",
+				"condition"
+			],
+			[
+				"array_p",
+				"array_pop"
+			],
+			[
+				"condi",
+				"conditionValue"
+			],
+			[
+				"is_n",
+				"is_new"
+			],
+			[
+				"is_A",
+				"is_array"
+			],
+			[
+				"ret",
+				"returnValue"
+			],
+			[
+				"var",
+				"var_dump"
+			],
+			[
+				"cl",
+				"classConfigValue"
+			],
+			[
+				"where_n",
+				"where_not_in"
+			],
+			[
+				"strto",
+				"strtolower"
+			],
+			[
+				"st",
+				"startHistory"
+			],
+			[
+				"templ",
+				"templateDataReceiverFn"
+			],
+			[
+				"mpws",
+				"mpwsPage"
+			],
+			[
+				"te",
+				"template"
+			],
+			[
+				"is",
+				"isFunction"
+			],
+			[
+				"de",
+				"depItem"
+			],
+			[
+				"mp",
+				"mpwsPage"
+			],
+			[
+				"temp",
+				"templateAccessKey"
+			],
+			[
+				"remove",
 				"removeClass"
 			],
 			[
-				"_cont",
-				"_controlInputParent"
+				"clas",
+				"classNames"
 			],
 			[
-				"ch",
-				"checkboxBillingAddress"
+				"cls",
+				"classNames"
 			],
 			[
-				"mo",
-				"moduleOptions"
+				"su",
+				"success"
+			],
+			[
+				"re",
+				"replace"
+			],
+			[
+				"req",
+				"requestTemplate"
+			],
+			[
+				"daa",
+				"dataConfig"
+			],
+			[
+				"sou",
+				"sourceMain"
+			],
+			[
+				"field",
+				"fields"
+			],
+			[
+				"so",
+				"sourceMain"
+			],
+			[
+				"lin",
+				"linkerEntry"
+			],
+			[
+				"ver",
+				"verifyLinkerConfig"
+			],
+			[
+				"context",
+				"contextCustomer"
+			],
+			[
+				"jo",
+				"joinArray"
+			],
+			[
+				"and",
+				"andOn"
+			],
+			[
+				"fm",
+				"fmtJSON"
+			],
+			[
+				"th",
+				"throw	Throw Exception"
+			],
+			[
+				"_mp",
+				"_mpwsCustomDataOutputFormat"
+			],
+			[
+				"_data",
+				"_mpwsCustomDataOutputFormat"
+			],
+			[
+				"is_nu",
+				"is_numeric"
+			],
+			[
+				"onS",
+				"onSourceReset"
+			],
+			[
+				"wid",
+				"widgetPageEvents"
+			],
+			[
+				"ge",
+				"getConfig"
+			],
+			[
+				"info",
+				"infoBlock"
+			],
+			[
+				"ini",
+				"initConfig"
+			],
+			[
+				"butto",
+				"buttonCancel"
+			],
+			[
+				"wi",
+				"widgetPageEvents"
+			],
+			[
+				"eve",
+				"events"
+			],
+			[
+				"but",
+				"buttonCancel"
+			],
+			[
+				"key",
+				"keydown"
+			],
+			[
+				"fiel",
+				"fieldsToSelectFromDB"
+			],
+			[
+				"fie",
+				"fieldsToSelectFromDB"
+			],
+			[
+				"cu",
+				"customFieldName"
+			],
+			[
+				"cus",
+				"CustomerID"
+			],
+			[
+				"us",
+				"userInfo"
+			],
+			[
+				"for",
+				"foreach	foreach …"
+			],
+			[
+				"ac",
+				"activePluginItems"
+			],
+			[
+				"is_a",
+				"is_array"
+			],
+			[
+				"is_s",
+				"is_string"
 			],
 			[
 				"fun",
 				"function"
 			],
 			[
-				"max",
-				"max-height"
+				"mod",
+				"moduleObj"
 			],
 			[
-				"on",
-				"onBeforeSubmit"
+				"cell",
+				"cellB"
 			],
 			[
-				"input",
-				"inputFile"
+				"tr",
+				"true"
 			],
 			[
-				"for",
-				"formShow"
+				"mo",
+				"moduleInstance"
 			],
 			[
-				"_in",
-				"_inputFile"
+				"Ch",
+				"child"
 			],
 			[
-				"sel",
-				"selectedText"
+				"bac",
+				"background-color"
 			],
 			[
-				"c",
-				"checked"
-			],
-			[
-				"qb",
-				"qbimage"
-			],
-			[
-				"le",
-				"length"
-			],
-			[
-				"ge",
-				"getImageURL"
-			],
-			[
-				"siz",
-				"sizeParams"
-			],
-			[
-				"curr",
-				"currentLogo"
-			],
-			[
-				"_get",
-				"_getContainer"
-			],
-			[
-				"inputFile",
-				"inputFileFavicon"
-			],
-			[
-				"cu",
-				"currentLogo"
-			],
-			[
-				"up",
-				"updateLinkPoupText"
-			],
-			[
-				"inp",
-				"inputHidden"
-			],
-			[
-				"fo",
-				"form"
-			],
-			[
-				"fon",
-				"font-size"
-			],
-			[
-				"html",
-				"htmlComponents"
-			],
-			[
-				"app",
-				"apply"
-			],
-			[
-				"pr",
-				"prototype"
-			],
-			[
-				"Ht",
-				"HtmlComponents"
+				"in",
+				"inline-block"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "engine/bootstrap.php",
+			"settings":
+			{
+				"buffer_size": 1491,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/plugin.shop.php",
+			"settings":
+			{
+				"buffer_size": 13623,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "engine/system/class/mpwsData.php",
+			"settings":
+			{
+				"buffer_size": 19552,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/config/data.ini",
+			"settings":
+			{
+				"buffer_size": 6820,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/v1.0/resource/js/lib/mpws.page.js",
+			"settings":
+			{
+				"buffer_size": 9348,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/customer/pb.com.ua/resource/js/router/customer.js",
+			"settings":
+			{
+				"buffer_size": 3833,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/resource/js/router/shop.js",
+			"settings":
+			{
+				"buffer_size": 4861,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/resource/js/view/render.js",
+			"settings":
+			{
+				"buffer_size": 8328,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "shoppingChartStandalone",
+			"settings":
+			{
+				"buffer_size": 23,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/resource/js/lib/driver.js",
+			"settings":
+			{
+				"buffer_size": 5579,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/v1.0/resource/js/lib/mpws.api.js",
+			"settings":
+			{
+				"buffer_size": 5132,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/customer/pb.com.ua/template/layout/defaultLayout.html",
+			"settings":
+			{
+				"buffer_size": 8992,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/v1.0/resource/js/lib/templateEngine.js",
+			"settings":
+			{
+				"buffer_size": 761,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/customer/pb.com.ua/resource/style/default/default.css",
+			"settings":
+			{
+				"buffer_size": 66531,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/v1.0/resource/js/lib/htmlComponents.js",
+			"settings":
+			{
+				"buffer_size": 36442,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/v1.0/template/layout/defaultPublic.html",
+			"settings":
+			{
+				"buffer_size": 4660,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/template/component/productListItem.hbs",
+			"settings":
+			{
+				"buffer_size": 1595,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/template/component/shoppingChartStandalone.hbs",
+			"settings":
+			{
+				"buffer_size": 53,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 0.0,
 		"selected_items":
 		[
 		],
-		"width": 575.0
+		"width": 0.0
 	},
 	"console":
 	{
-		"height": 0.0,
-		"history":
-		[
-		]
+		"height": 139.0
 	},
 	"distraction_free":
 	{
@@ -291,151 +568,147 @@
 	},
 	"file_history":
 	[
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/jquery.serialize-object.js",
-		"/home/andrew/qBeats/united/projects/admintool/loader/local_settings.py",
-		"/home/andrew/qBeats/united/reports/reports/views.py",
-		"/home/andrew/qBeats/united/reports/reports/utils.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/publications_list.htm",
-		"/home/andrew/qBeats/united/projects/admintool/Makefile",
-		"/home/andrew/qBeats/united/projects/admintool/loader/settings.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.budget.stories.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.users.list.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/groups/groups_list.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/user_list_resp.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/widgets/settings.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.company.create.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.company.edit.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/widgets/favicon.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/partials/component_upload_logo_small.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/partials/component_upload_logo_large.htm",
-		"/home/andrew/qBeats/united/projects/admintool/deploy/Gruntfile.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/utils.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/widgets/same_as_handler.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/base.htm",
-		"/home/andrew/qBeats/united/qb_stories/qb_stories/models/publications.py",
-		"/home/andrew/qBeats/united/qdblayer/qdblayer/libmodels/publication.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/ittool.css",
-		"/home/andrew/qBeats/united/qdblayer/qdblayer/libmodels/mixins.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/jquery.elementStyler.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.publications.edit.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.publications.create.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/htmlComponents.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/views/BCellViewClass.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/models/BRowModelClass.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/models/BCellModelClass.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.publications.list.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/loader.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.budget.seats.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.rsses.list.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/libs/icomoon.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/views/BTableViewClass.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/tasks.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.accounting.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/jquery.maskedinput.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/libs/daterangepicker.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/libs/datetimepicker.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/common.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/budget.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/widgets/dataTable.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.budget.expirations.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/datetimepicker.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/jquery-ui-1.10.3.custom.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/widgets/form.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/libs/datetimepickermin.css",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.publications.list.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/widgets/settings.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/widgets/qbimage.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.users.managed_edit.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.users.edit.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.company.edit.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.users.create.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.users.managed_create.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/views/StoryDetailsEmbedded.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/views/BudgetPurchaseUserDetailsPopup.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/views/BudgetPurchaseStoryDetailsPopup.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.groups.edit.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/company_edit.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/company_create.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/general.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/partials/create_company_contact_table.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/partials/form_container.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.budget.subscriptions.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/budget/subscriptions.html",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/budget/expirations.html",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.budget.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/libs/dataValidator.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/partials/company_contact_table.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/rss.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/twitter.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/publications.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.users.managed_edit.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.users.edit.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/publication_create.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/publication_edit.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/view/publications.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/forms/publication.py",
-		"/home/andrew/qBeats/united/qb_stories/qb_stories/static/css/qb_stories/publication.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/view/users.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/forms/company.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.groups.status.js",
-		"/home/andrew/qBeats/united/projects/admintool/qb_core/context_processors.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.ecqtasks.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/message.js",
-		"/etc/supervisor/conf.d/mediacontent.conf",
-		"/etc/init.d/supervisor",
-		"/home/andrew/qBeats/united/qb_core/qb_core/helpers.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/tasks/tasks_base.htm",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/templates/ittool/tasks/partials/tasks_config_form.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/tasks/partials/tasks_config_form.htm",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/css/enterprise/pages/tasks.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/view/company.py",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/templates/ittool/groups/group_edit.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/managed_user_create.htm",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/templates/base.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/managed_user_edit.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/header.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/partials/component_upload.htm",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/view/users.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.groups.create.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/groups/group_edit.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/groups/group_create.htm",
-		"/home/andrew/qBeats/united/projects/admintool/qb_core/helpers.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/roles.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.groups.list.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.tweets.list.js",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/static/js/enterprise/routers/page.groups.edit.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.groups.reports.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/user_edit.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/user_create.htm",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/_setup_password_form.html",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/_reset_password_form.html",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/libs/jquery.tooltip.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/password.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/reset_password.htm",
-		"/home/andrew/qBeats/united/projects/admintool/enterprise/templates/ittool/setup_password.html",
-		"/home/andrew/qBeats/united/ittool_auth/ittool_auth/urls.py",
-		"/home/andrew/qBeats/united/ittool_auth/ittool_auth/views.py",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/users.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/css/enterprise/pages/password_reset.css",
-		"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise/routers/page.users.reset_password.js",
-		"/home/andrew/qBeats/united/enterprise/enterprise/templates/ittool/tasks/tasks_configure.htm"
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
+		"/devdata/Develop/github/web/mpws/engine/system/class/mpwsData.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/lib/driver.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productListItem.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/catalogStructure.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/utils.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingChartStandalone.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/handlebars_helpers.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/mpws.page.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/handlebars.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productList.hbs",
+		"/home/admin1/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/template/layout/defaultLayout.html",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productItem.hbs",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/default.css",
+		"/devdata/Develop/github/web/mpws/engine/controller/controller.JsApi.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/renderDataTrigger.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/categoryStructure.hbs",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.ORM.php",
+		"/devdata/Develop/github/web/mpws/engine/system/object/object.BaseWebCustomer.php",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/mdbc.ini",
+		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light.sql",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/intercom.ini",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/mdbc.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/system.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/router/base.js",
+		"/home/admin1/.cache/.fr-fxuc9S/30-10-2013.sql",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/template/layout/defaultPublic.html",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/customer.less",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/renderComponents.less",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/loader.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicHome.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicProductItem.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicProductListLatest.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicCatalogCategoryBrand.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicCatalogCategory.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicCatalog.hbs",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/resources.ini",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/customize.css",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.StaticResourceManager.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/theme_pb_default.css",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/bootstrap_2.2.2.css",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/js/router/customer.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/router/shop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/view/render.js",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/customer.toolbox.php",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/data.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/router/plugin.js",
+		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light_full.sql",
+		"/devdata/Develop/github/web/mpws/engine/global/global.const.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Security.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Utils.php",
+		"/devdata/Develop/github/web/mpws/mpws.sublime-project",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataBase.php",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.Customer.php",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/data.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/template/layout/defaultSystem.html",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/resources.ini",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/pageSidebar.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/catalog.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/mpws.api.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/templateEngine.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/fontawesome.css",
+		"/devdata/Develop/github/web/mpws/engine/controller/controller.Static.php",
+		"/devdata/Develop/github/web/mpws/.htaccess",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Request.php",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/async.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/template/component/product.item.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/plugin/hbs.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/app.router.js",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Components.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/system/config/widget.ini",
+		"/devdata/Develop/github/web/mpws/web/plugin/system/plugin.system.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/reporting/plugin.reporting.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/property/en_us/display.property",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/widget.ini",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataBaseChainQueryBuilder.php",
+		"/devdata/Develop/github/web/mpws/engine/system/object/object.BaseWeb.php",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/property/en_us/dataEditor.property",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/property/en_us/dataTableView.property",
+		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/display.ini",
+		"/home/admin1/Dropbox/Public/Apps/MyLoaderApp/index.html",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.Toolbox.php",
+		"/devdata/Develop/github/web/mpws/engine/system/context/context.MPWS.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/deprecated/library.DataBase.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.PluginManager.php",
+		"/devdata/Develop/github/web/mpws/engine/controller/controller.Public.php",
+		"/devdata/Develop/github/web/mpws/engine/dispatcher/dispatcher.Toolbox.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.CustomerManager.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.ConfigurationManager.php",
+		"/devdata/Develop/github/web/mpws/engine/system/object/object.BaseWebPlugin.php",
+		"/home/admin1/Dropbox/3rdSources.js",
+		"/home/admin1/Dropbox/externalSource.js",
+		"/devdata/Develop/libminifp6.so",
+		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.WebPageModel.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/customer.pb.com.ua.php",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/widget.ini",
+		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataEditorSystemUsers.property",
+		"/devdata/Develop/github/web/mpws/users.json",
+		"/devdata/Develop/github/web/mpws/googleJS.js",
+		"/devdata/Develop/github/web/mpws/widget.table.js",
+		"/devdata/Develop/github/web/mpws/index.html",
+		"/devdata/Develop/github/web/mpws/style.css",
+		"/media/sda3/Develop/github/web/mpws/loader.js",
+		"/media/sda3/Develop/github/web/mpws/engine/bootstrap.php",
+		"/media/sda3/Develop/github/web/mpws/backbone-min.js",
+		"/media/sda3/Develop/github/web/mpws/bb.test.js",
+		"/media/sda3/Develop/github/web/mpws/users.json",
+		"/media/sda3/Develop/github/web/mpws/underscore-min.js",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/system/config/widget.ini",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/property/en_us/widget.property",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/property/en_us/control.property",
+		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.StaticResourceManager.php",
+		"/etc/tomcat7/tomcat-users.xml",
+		"/etc/tomcat7/logging.properties",
+		"/home/admin1/.m2/settings.xml",
+		"/media/sda3/Develop/github/java/training/db/Hello.java",
+		"/media/sda3/Develop/github/java/training/Hello.java",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/plugin.toolbox.php",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/resource/plugins/theme/jquery-ui-1.9.1.custom.css",
+		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.Components.php",
+		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/config/widget.ini",
+		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/template/component/dataTable.html"
 	],
 	"find":
 	{
-		"height": 50.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
 		"height": 93.0,
 		"where_history":
 		[
-			"/home/andrew/qBeats/united,*.py",
-			"/home/andrew/qBeats/united/enterprise/enterprise/static/js/enterprise",
-			"/home/andrew/qBeats/united",
-			"/home/andrew/qBeats/united/,*.py",
-			"/home/andrew/qBeats/united/,*.htm",
-			"/home/andrew/qBeats/united/",
-			"/home/andrew/qBeats/united/enterprise/enterprise/static/js"
+			"/devdata/Develop/github/web/mpws/web",
+			"/devdata/Develop/github/web/mpws/engine",
+			"/devdata/Develop/github/web/mpws/web"
 		]
 	},
 	"find_state":
@@ -443,134 +716,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"\n                ",
-			"serialize",
-			"get_purchases_for_period_by_user",
-			"avatar_url",
-			"_sourceHandlers",
-			"_onSourceInputChanged",
-			"doSelect",
-			"scrollTop",
-			"setImage",
-			"element",
-			"element-ci",
-			"element-circ",
-			"render-nor",
-			"getLabel",
-			"rgba(0, 0, 0, 0.2)",
-			"box",
-			"rgb",
-			".qb-simple-popup",
-			"getSimpleInput",
-			"widgetHelpTooltips",
-			"_libHtml.widgetHelpTooltips",
-			"getTextIc",
-			"help",
-			"getWrapper",
-			"text",
-			"datetimerangeselectbox",
-			"trigger(\"focus",
-			"trigger('focus",
-			"focus",
-			"getModalWindow",
-			"showMode",
-			"_events",
-			"getSimpleInput",
-			"Datetimepicker",
+			"_custom_api_getShoppingChart",
+			"getShopCatalogStructure",
+			"  var_d",
+			" var_d",
+			"_custom_api_shoppingChartAdd",
+			"model",
+			"pluginShopDriver",
+			"pluginShopDataLib",
+			"pluginShopRender",
+			"pluginShopRenderObj",
+			"self.pluginShopRenderObj",
+			"pluginShopRenderObj",
+			"qB",
+			"qb",
+			"qB",
+			"qb",
+			"qB",
+			"#if",
+			"_(",
+			"_.",
+			"_",
+			"tab",
+			"all",
+			"_data",
+			"mponents",
+			"getPageBody",
+			"mysql_set_charset",
+			"getProductListLatest",
+			"product_list_latest",
+			"_custom_api_getCatalogStructure",
+			"fn:shop_catalog_structure",
+			"_templatePartials",
+			"pageShopCatalog",
+			"Logo",
+			"ottedBorder.png",
+			"mainContainer",
+			"nav",
+			"navbar",
+			"/**********************************************************************************************/",
+			"this",
+			"controller",
+			"Controller",
+			"pluginShopRenderObj",
+			"pluginShopRender",
+			"_pa",
+			"_p",
+			"_custom_api_getProductAttributes",
+			"_build_update",
+			"_build_conditions",
+			"_build_where",
+			"_build_update",
+			"_build_conditions",
+			"_build_where",
+			"_build_update",
+			"_values",
+			"_build_conditions",
+			"_build_where",
+			"_add_simple_where",
+			" var_d",
+			"_add_simple_condition",
+			"_add_simple_where",
+			"_build_where",
+			");\n",
+			"_execute",
+			"save",
+			"SignOut",
+			"=> ",
+			"_dirty_fields",
+			"save(",
+			"hydrate",
+			"fetchData",
+			"$this",
+			"for_table",
+			"with_table",
+			"_build_update",
+			"set(",
+			"іуе",
+			"_build_insert",
+			"delete",
+			"insert",
+			"save",
+			"force_all_dirty",
+			"create",
 			"update",
-			"getSimpleInput",
-			"isVisible",
-			"getSimpleInput",
-			"el",
-			"getControl",
-			"setCssScope",
-			"getSimpleInput",
-			"place",
-			"//",
-			"cale",
-			"$('.billing_state .element-asterix')",
-			"$('.container-state .element-asterix')",
-			"$('.billing_state .element-asterix')",
-			"_initBillingRequiredFileds",
-			"Sandbox.eventNotify",
-			"element-empty-circle",
-			"popupItemUsePublisherFaviconClick",
-			"setImage",
-			"_getWebsiteFaviconImageUrl",
-			"popupItemUsePublicationLogoClick",
-			"popupItemUsePublicationFaviconClick",
-			"popupItemUsePublisherClick",
-			"conextMenuItemUsePublisher",
-			"popupItemUsePublicationClick",
-			"conextMenuItemUsePublication",
-			"link-use-publication",
-			"conextMenuItemUseLogo",
-			"conextMenuItemUseCompany",
-			"publication",
-			"popupItemUseLogoClick",
-			"popupItemUseCompanyClick",
-			"publisher",
-			"favicon_url",
-			"dater",
-			".daterangepicker .ranges input",
-			"qbImage",
-			"qbImage.getResized",
-			"qbImage",
-			"qbImage.getResized",
-			"SIZES",
-			"initialHiddenValueLogo",
-			"imagelink",
-			"Settings",
-			"objectAvatar",
-			"_config.PROPS.objectLogo",
-			"aaa",
-			"conextMenuItemDefault",
-			"conextMenuItemCompany",
-			"popup",
-			"popupItemUseWebsiteIconClick",
-			"$useWebsiteFavicon",
-			"link-use-website",
-			"useWebsiteFavicon",
-			"link-use-website",
-			"triggerFileInput",
-			"setWebsiteFavicon",
-			"min",
-			"break",
-			";\n",
-			"setWebsiteFavicon",
-			"this.setImage",
-			"<span>",
-			"upload",
-			"getImage",
-			"gfgdfg",
-			"remove",
-			".qb-simple-popup-story-purchase .container-label-value-story-details .container-block",
-			"$(this).val()",
-			"height",
-			"width",
-			"params",
-			"resetFavicon",
-			"resetAvatar",
-			".src",
-			"this.getImageURL()",
-			"  '",
-			" '",
-			"',",
-			"x",
-			"':",
-			" (",
-			"#",
-			"48x48",
-			"logo",
-			"inputFile",
-			"Placeholder",
-			"triggerFileInput",
-			"logo",
-			"48",
-			"_getContainerImageCurrent",
-			"defImage",
-			"_getDefaultImage",
-			"_getDefaultImage "
+			"insert",
+			"save",
+			"update",
+			"_build_upda",
+			"hydrate",
+			"_build_conditions",
+			"_build_where",
+			"update",
+			"set(",
+			"set_orm_prop",
+			"set_property",
+			"_data",
+			"_query_cache",
+			"_run",
+			"find_array",
+			"configure",
+			"_setup_db_config",
+			"for_table",
+			"with_table",
+			"with_ta",
+			"_execute",
+			"id(",
+			"id",
+			"_get_id_column_name",
+			"_dirty_fields",
+			"_build_update",
+			"update",
+			"dataObj",
+			"mpwsCombineDataByKeys",
+			"_custom_api_getProductItemPriceArchive",
+			"_custom_api_getProductItemAttributes",
+			"$data ",
+			"$data",
+			"dataProductPrices",
+			"dataProductAttr",
+			"where_in",
+			"_create_placeholders",
+			"where_in",
+			"var_d",
+			"where_not_like",
+			"where_null",
+			"where_not_null",
+			"IS NOT NULL",
+			"where_not_null"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -588,14 +861,514 @@
 	"groups":
 	[
 		{
+			"selected": 17,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "engine/bootstrap.php",
+					"settings":
+					{
+						"buffer_size": 1491,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								446,
+								446
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 158.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "web/plugin/shop/plugin.shop.php",
+					"settings":
+					{
+						"buffer_size": 13623,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5485,
+								5485
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1036.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "engine/system/class/mpwsData.php",
+					"settings":
+					{
+						"buffer_size": 19552,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2065,
+								2065
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "web/plugin/shop/config/data.ini",
+					"settings":
+					{
+						"buffer_size": 6820,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								985,
+								985
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "web/default/v1.0/resource/js/lib/mpws.page.js",
+					"settings":
+					{
+						"buffer_size": 9348,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								161,
+								161
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3275.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "web/customer/pb.com.ua/resource/js/router/customer.js",
+					"settings":
+					{
+						"buffer_size": 3833,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2936,
+								2936
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 126.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "web/plugin/shop/resource/js/router/shop.js",
+					"settings":
+					{
+						"buffer_size": 4861,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1402,
+								1402
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 203.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "web/plugin/shop/resource/js/view/render.js",
+					"settings":
+					{
+						"buffer_size": 8328,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6082,
+								6082
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 749.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"settings":
+					{
+						"buffer_size": 23,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23,
+								23
+							]
+						],
+						"settings":
+						{
+							"default_dir": "/devdata/Develop/github/web/mpws/web/plugin/shop/template/component",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "web/plugin/shop/resource/js/lib/driver.js",
+					"settings":
+					{
+						"buffer_size": 5579,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3217,
+								3217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1220.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "web/default/v1.0/resource/js/lib/mpws.api.js",
+					"settings":
+					{
+						"buffer_size": 5132,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11,
+								11
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1846.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "web/customer/pb.com.ua/template/layout/defaultLayout.html",
+					"settings":
+					{
+						"buffer_size": 8992,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								109,
+								109
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "web/default/v1.0/resource/js/lib/templateEngine.js",
+					"settings":
+					{
+						"buffer_size": 761,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								274,
+								274
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "web/customer/pb.com.ua/resource/style/default/default.css",
+					"settings":
+					{
+						"buffer_size": 66531,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								65270,
+								65270
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 47566.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "web/default/v1.0/resource/js/lib/htmlComponents.js",
+					"settings":
+					{
+						"buffer_size": 36442,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								32854,
+								32854
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 16782.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "web/default/v1.0/template/layout/defaultPublic.html",
+					"settings":
+					{
+						"buffer_size": 4660,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								261,
+								261
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "web/plugin/shop/template/component/productListItem.hbs",
+					"settings":
+					{
+						"buffer_size": 1595,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								748,
+								748
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "web/plugin/shop/template/component/shoppingChartStandalone.hbs",
+					"settings":
+					{
+						"buffer_size": 53,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								53,
+								53
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 25.0
+		"height": 0.0
 	},
 	"input":
 	{
@@ -624,10 +1397,9 @@
 		]
 	},
 	"menu_visible": true,
-	"project": "mpws.sublime-project",
 	"replace":
 	{
-		"height": 46.0
+		"height": 0.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -636,516 +1408,124 @@
 		"selected_items":
 		[
 			[
-				"page.publi",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.publications.edit.js"
+				"mpws",
+				"mpws/engine/system/class/mpwsData.php"
 			],
 			[
-				"publica",
-				"united/enterprise/enterprise/templates/ittool/publication_edit.htm"
+				"mpwsdata",
+				"mpws/engine/system/class/mpwsData.php"
 			],
 			[
-				"jqu",
-				"united/enterprise/enterprise/static/js/enterprise/libs/jquery.serialize-object.js"
+				"api",
+				"mpws/engine/controller/controller.JsApi.php"
 			],
 			[
-				"page.user",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.users.edit.js"
+				"utils",
+				"mpws/web/default/v1.0/resource/js/lib/utils.js"
 			],
 			[
-				"page.budg",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.stories.js"
+				"glo",
+				"mpws/engine/global/global.const.php"
 			],
 			[
-				"sett",
-				"united/projects/admintool/loader/settings.py"
+				"orm",
+				"engine/system/library/library.ORM.php"
 			],
 			[
-				"reports/reports/utils.py",
-				"united/reports/reports/utils.py"
+				"secu",
+				"engine/system/library/library.Security.php"
 			],
 			[
-				"report/vi",
-				"united/reports/reports/views.py"
+				"contextcustomer",
+				"engine/system/context/context.Customer.php"
 			],
 			[
-				"local",
-				"united/projects/admintool/loader/local_settings.py"
+				"databas",
+				"engine/system/library/library.DataBase.php"
 			],
 			[
-				"make",
-				"united/projects/admintool/Makefile"
+				"hta",
+				".htaccess"
 			],
 			[
-				"jquery.se",
-				"united/enterprise/enterprise/static/js/enterprise/libs/jquery.serialize-object.js"
+				"library.request.php",
+				"engine/system/library/library.Request.php"
 			],
 			[
-				"grou",
-				"united/enterprise/enterprise/templates/ittool/groups/groups_list.htm"
+				"libraryor",
+				"engine/system/library/library.ORM.php"
 			],
 			[
-				"group_li",
-				"united/enterprise/enterprise/templates/ittool/groups/groups_list.htm"
+				"htacc",
+				".htaccess"
 			],
 			[
-				"user_lis",
-				"united/enterprise/enterprise/templates/ittool/user_list_resp.htm"
+				"mpws.page",
+				"web/default/v1.0/resource/js/lib/mpws.page.js"
 			],
 			[
-				"form.js",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/form.js"
+				"driver.js",
+				"web/plugin/shop/resource/js/lib/driver.js"
 			],
 			[
-				"user_ed",
-				"united/enterprise/enterprise/templates/ittool/user_edit.htm"
+				"custom",
+				"web/customer/pb.com.ua/resource/js/router/customer.js"
 			],
 			[
-				"itt",
-				"united/enterprise/enterprise/static/css/enterprise/ittool.css"
+				"render",
+				"web/default/v1.0/resource/style/renderComponents.less"
 			],
 			[
-				"mixin",
-				"united/qdblayer/qdblayer/libmodels/mixins.py"
+				"globa",
+				"engine/global/global.const.php"
 			],
 			[
-				"qdblayer/libmodels/publication",
-				"united/qdblayer/qdblayer/libmodels/publication.py"
+				"library.util",
+				"engine/system/library/library.Utils.php"
 			],
 			[
-				"base.h",
-				"united/enterprise/enterprise/templates/ittool/base.htm"
+				"database",
+				"engine/system/library/deprecated/library.DataBase.php"
 			],
 			[
-				"page.com",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.company.create.js"
+				"conte",
+				"engine/system/context/context.MPWS.php"
 			],
 			[
-				"ittoo",
-				"united/enterprise/enterprise/static/css/enterprise/ittool.css"
+				"basewebplu",
+				"engine/system/object/object.BaseWebPlugin.php"
 			],
 			[
-				"elements",
-				"united/enterprise/enterprise/static/js/enterprise/libs/jquery.elementStyler.js"
+				"library.req",
+				"engine/system/library/library.Request.php"
 			],
 			[
-				"utils.js",
-				"united/enterprise/enterprise/static/js/enterprise/libs/utils.js"
+				"baseweb",
+				"engine/system/object/object.BaseWeb.php"
 			],
 			[
-				"same_a",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/same_as_handler.js"
+				"secur",
+				"engine/system/library/library.Security.php"
 			],
 			[
-				"page.pub",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.publications.create.js"
+				"boo",
+				"engine/bootstrap.php"
 			],
 			[
-				"page.publica",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.publications.edit.js"
+				"boot",
+				"engine/bootstrap.php"
 			],
 			[
-				"gru",
-				"united/projects/admintool/deploy/Gruntfile.js"
+				"context",
+				"engine/system/context/context.Toolbox.php"
 			],
 			[
-				"grunt",
-				"united/projects/admintool/deploy/Gruntfile.js"
+				"library.webpagemodel.php",
+				"engine/system/library/library.WebPageModel.php"
 			],
 			[
-				"setting",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/settings.js"
-			],
-			[
-				"upload",
-				"united/enterprise/enterprise/templates/partials/component_upload_logo_small.htm"
-			],
-			[
-				"favi",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/favicon.js"
-			],
-			[
-				"loader.js",
-				"united/enterprise/enterprise/static/js/enterprise/loader.js"
-			],
-			[
-				"bcellview",
-				"united/enterprise/enterprise/static/js/enterprise/views/BCellViewClass.js"
-			],
-			[
-				"page.rss",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.rsses.list.js"
-			],
-			[
-				"page.bud",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.stories.js"
-			],
-			[
-				"base",
-				"united/enterprise/enterprise/templates/ittool/base.htm"
-			],
-			[
-				"browmo",
-				"united/enterprise/enterprise/static/js/enterprise/models/BRowModelClass.js"
-			],
-			[
-				"bcellmo",
-				"united/enterprise/enterprise/static/js/enterprise/models/BCellModelClass.js"
-			],
-			[
-				"btable",
-				"united/enterprise/enterprise/static/js/enterprise/views/BTableViewClass.js"
-			],
-			[
-				"page.bu",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.stories.js"
-			],
-			[
-				"loader",
-				"united/enterprise/enterprise/static/js/enterprise/loader.js"
-			],
-			[
-				"tasks",
-				"united/enterprise/enterprise/static/css/enterprise/pages/tasks.css"
-			],
-			[
-				"datera",
-				"united/enterprise/enterprise/static/css/enterprise/libs/daterangepicker.css"
-			],
-			[
-				"datetimepicker",
-				"united/enterprise/enterprise/static/css/enterprise/libs/datetimepicker.css"
-			],
-			[
-				"budget",
-				"united/enterprise/enterprise/static/css/enterprise/pages/budget.css"
-			],
-			[
-				"bview",
-				"united/enterprise/enterprise/static/js/enterprise/views/BTableViewClass.js"
-			],
-			[
-				"datat",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/dataTable.js"
-			],
-			[
-				"dateti",
-				"united/enterprise/enterprise/static/js/enterprise/libs/datetimepicker.js"
-			],
-			[
-				"comm",
-				"united/enterprise/enterprise/static/js/enterprise/common.js"
-			],
-			[
-				"grun",
-				"united/projects/admintool/deploy/Gruntfile.js"
-			],
-			[
-				"icom",
-				"united/enterprise/enterprise/static/css/enterprise/libs/icomoon.css"
-			],
-			[
-				"htmlc",
-				"united/enterprise/enterprise/static/js/enterprise/libs/htmlComponents.js"
-			],
-			[
-				"page.acc",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.accounting.js"
-			],
-			[
-				"",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.company.create.js"
-			],
-			[
-				"elemen",
-				"united/enterprise/enterprise/static/js/enterprise/libs/jquery.elementStyler.js"
-			],
-			[
-				"sa",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/same_as_handler.js"
-			],
-			[
-				"page.comp",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.company.create.js"
-			],
-			[
-				"htmlcom",
-				"united/enterprise/enterprise/static/js/enterprise/libs/htmlComponents.js"
-			],
-			[
-				"settin",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/settings.js"
-			],
-			[
-				"uplo",
-				"united/enterprise/enterprise/templates/partials/component_upload_logo_large.htm"
-			],
-			[
-				"compo",
-				"united/enterprise/enterprise/templates/partials/component_upload_logo_small.htm"
-			],
-			[
-				"budgetpurchaseuserdetailspopup",
-				"united/enterprise/enterprise/static/js/enterprise/views/BudgetPurchaseUserDetailsPopup.js"
-			],
-			[
-				"budgetpurchasestorydetailspopup",
-				"united/enterprise/enterprise/static/js/enterprise/views/BudgetPurchaseStoryDetailsPopup.js"
-			],
-			[
-				"page.b",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.stories.js"
-			],
-			[
-				"embedded",
-				"united/enterprise/enterprise/static/js/enterprise/views/StoryDetailsEmbedded.js"
-			],
-			[
-				"qb",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/qbimage.js"
-			],
-			[
-				"page.publications.create",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.publications.create.js"
-			],
-			[
-				"page.use",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.users.list.js"
-			],
-			[
-				"ge.accounting.js",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.accounting.js"
-			],
-			[
-				"icomoo",
-				"united/enterprise/enterprise/static/css/enterprise/libs/icomoon.css"
-			],
-			[
-				"ittool",
-				"united/enterprise/enterprise/static/css/enterprise/ittool.css"
-			],
-			[
-				"page",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.groups.edit.js"
-			],
-			[
-				"company_ed",
-				"united/enterprise/enterprise/templates/ittool/company_edit.htm"
-			],
-			[
-				"create_company_contact_table",
-				"united/enterprise/enterprise/templates/partials/create_company_contact_table.htm"
-			],
-			[
-				"company_cre",
-				"united/enterprise/enterprise/templates/ittool/company_create.htm"
-			],
-			[
-				"commo",
-				"united/enterprise/enterprise/static/js/enterprise/common.js"
-			],
-			[
-				"same_",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/same_as_handler.js"
-			],
-			[
-				"containe",
-				"united/enterprise/enterprise/templates/partials/form_container.htm"
-			],
-			[
-				"page.compa",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.company.edit.js"
-			],
-			[
-				"budget.c",
-				"united/enterprise/enterprise/static/css/enterprise/pages/budget.css"
-			],
-			[
-				"page.subs",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.subscriptions.js"
-			],
-			[
-				"subscript",
-				"united/enterprise/enterprise/templates/ittool/budget/subscriptions.html"
-			],
-			[
-				"expi",
-				"united/enterprise/enterprise/templates/ittool/budget/expirations.html"
-			],
-			[
-				"page.ex",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.expirations.js"
-			],
-			[
-				"bcell",
-				"united/enterprise/enterprise/static/js/enterprise/views/BCellViewClass.js"
-			],
-			[
-				"oage.bu",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.subscriptions.js"
-			],
-			[
-				"page.budget",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.budget.js"
-			],
-			[
-				"validator.j",
-				"united/enterprise/enterprise/static/js/enterprise/libs/dataValidator.js"
-			],
-			[
-				"page.users",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.users.list.js"
-			],
-			[
-				"compon",
-				"united/enterprise/enterprise/templates/partials/component_upload_logo_small.htm"
-			],
-			[
-				"qbima",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/qbimage.js"
-			],
-			[
-				"twitt",
-				"united/enterprise/enterprise/static/css/enterprise/pages/twitter.css"
-			],
-			[
-				"rss",
-				"united/enterprise/enterprise/static/css/enterprise/pages/rss.css"
-			],
-			[
-				"company_contact_table",
-				"united/enterprise/enterprise/templates/partials/company_contact_table.htm"
-			],
-			[
-				"eleme",
-				"united/enterprise/enterprise/static/js/enterprise/libs/jquery.elementStyler.js"
-			],
-			[
-				"gene",
-				"united/enterprise/enterprise/static/css/enterprise/pages/general.css"
-			],
-			[
-				"company_con",
-				"united/enterprise/enterprise/templates/partials/company_contact_table.htm"
-			],
-			[
-				"itto",
-				"united/enterprise/enterprise/static/css/enterprise/ittool.css"
-			],
-			[
-				"same_as",
-				"united/enterprise/enterprise/static/js/enterprise/widgets/same_as_handler.js"
-			],
-			[
-				"form_com",
-				"united/enterprise/enterprise/templates/partials/form_container.htm"
-			],
-			[
-				"common.js",
-				"united/enterprise/enterprise/static/js/enterprise/common.js"
-			],
-			[
-				"publication_ed",
-				"united/enterprise/enterprise/templates/ittool/publication_edit.htm"
-			],
-			[
-				"publicatio",
-				"united/enterprise/enterprise/templates/ittool/publications_list.htm"
-			],
-			[
-				"publication.c",
-				"united/enterprise/enterprise/static/css/enterprise/pages/publications.css"
-			],
-			[
-				"publication.css",
-				"united/qb_stories/qb_stories/static/css/qb_stories/publication.css"
-			],
-			[
-				"user.lis",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.users.list.js"
-			],
-			[
-				"user",
-				"united/enterprise/enterprise/view/users.py"
-			],
-			[
-				"users",
-				"united/enterprise/enterprise/view/users.py"
-			],
-			[
-				"page.pul",
-				"united/enterprise/enterprise/static/js/enterprise/routers/page.publications.edit.js"
-			],
-			[
-				"company",
-				"united/enterprise/enterprise/forms/company.py"
-			],
-			[
-				"component",
-				"united/enterprise/enterprise/templates/partials/component_upload_logo_small.htm"
-			],
-			[
-				"help",
-				"qb_core/qb_core/helpers.py"
-			],
-			[
-				"users.",
-				"enterprise/enterprise/view/users.py"
-			],
-			[
-				"page.groups.",
-				"enterprise/enterprise/static/js/enterprise/routers/page.groups.create.js"
-			],
-			[
-				"page.grou",
-				"enterprise/enterprise/static/js/enterprise/routers/page.groups.edit.js"
-			],
-			[
-				"component_upload",
-				"enterprise/enterprise/templates/partials/component_upload.htm"
-			],
-			[
-				"managed_us",
-				"enterprise/enterprise/templates/ittool/managed_user_edit.htm"
-			],
-			[
-				"managed",
-				"enterprise/enterprise/templates/ittool/managed_user_create.htm"
-			],
-			[
-				"mana",
-				"enterprise/enterprise/templates/ittool/managed_user_create.htm"
-			],
-			[
-				"page.gro",
-				"enterprise/enterprise/static/js/enterprise/routers/page.groups.reports.js"
-			],
-			[
-				"page.rol",
-				"enterprise/enterprise/static/js/enterprise/routers/page.groups.list.js"
-			],
-			[
-				"group_ed",
-				"enterprise/enterprise/templates/ittool/groups/group_edit.htm"
-			],
-			[
-				"group_cre",
-				"enterprise/enterprise/templates/ittool/groups/group_create.htm"
-			],
-			[
-				"_rese",
-				"enterprise/enterprise/templates/ittool/_reset_password_form.html"
-			],
-			[
-				"publication_c",
-				"enterprise/enterprise/templates/ittool/publication_create.htm"
-			],
-			[
-				"user_c",
-				"enterprise/enterprise/templates/ittool/user_create.htm"
-			],
-			[
-				"loca",
-				"projects/admintool/loader/local_settings.py"
+				"boots",
+				"engine/bootstrap.php"
 			]
 		],
 		"width": 0.0
@@ -1158,28 +1538,10 @@
 		],
 		"width": 0.0
 	},
-	"select_symbol":
-	{
-		"height": 54.0,
-		"selected_items":
-		[
-			[
-				"get_purchases_for_period_by_user",
-				"get_purchases_for_period_by_user"
-			]
-		],
-		"width": 890.0
-	},
-	"settings":
-	{
-	},
 	"show_minimap": true,
-	"show_open_files": false,
+	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 305.0,
-	"status_bar_visible": true,
-	"template_settings":
-	{
-	}
+	"side_bar_width": 463.0,
+	"status_bar_visible": true
 }
