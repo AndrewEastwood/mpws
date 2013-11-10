@@ -79,12 +79,24 @@ APP.Modules.register("lib/mpws.page", [
         return this.getPagePlaceholders().footer;
     }
 
-    mpwsPage.prototype.pageSetState = function (state, showOrHide) {
+    mpwsPage.prototype.setPageState = function (state, showOrHide) {
         if (state === mpwsPage.STATE.LOADING) {
             if (showOrHide)
                 this.getPagePlaceholders().body.html('').addClass('render-loading');
             else
                 this.getPagePlaceholders().body.removeClass('render-loading');
+        }
+    }
+
+    mpwsPage.prototype.setPlaceholderState = function (placeholder, state, showOrHide) {
+        var _injectionType = placeholder.placement || mpwsPage.PLACEMENT.REPLACE;
+        if (placeholder.placement === mpwsPage.PLACEMENT.REPLACE) {
+            if (state === mpwsPage.STATE.LOADING) {
+                if (showOrHide)
+                    placeholder.target.html('').addClass('render-loading');
+                else
+                    placeholder.target.removeClass('render-loading');
+            }
         }
     }
 
@@ -167,7 +179,64 @@ APP.Modules.register("lib/mpws.page", [
         });
     }
 
-    mpwsPage.prototype.render = function(options) {
+    mpwsPage.prototype.createRenderPlacement = function(target, placement) {
+
+        if (target.target || target.placement)
+            return this.createRenderPlacement(target.target, target.placement);
+
+        return {
+            target: target || mpwsPageLib.getPageBody(),
+            placement: placement || mpwsPage.PLACEMENT.REPLACE
+        };
+    }
+
+    mpwsPage.prototype.createRenderConfig = function(name, options, collection) {
+        var self = this;
+
+        var placeholder = null;
+        if (options.placeholder)
+            placeholder = self.createRenderPlacement(options.placeholder.target, options.placeholder.placement);
+        else
+            placeholder = self.createRenderPlacement(); // default placeholder
+
+        var _renderConfig = {
+            name: name,
+            data: options.data || {},
+            template: options.template || false,
+            dependencies: options.dependencies || [],
+            placeholder: placeholder,
+            callback: options.callback || null
+        };
+
+        if (collection)
+            collection[name] = _renderConfig;
+
+        return {
+            name: _renderConfig
+        }
+    }
+
+    mpwsPage.prototype.modifyRenderConfig = function(name, base, modified) {
+        if (name && base && !modified) {
+            modified = base;
+            base = name;
+            name = base.name || modified.name || "default";
+        }
+        return this.createRenderConfig(base.name, _.extend({}, base, modified));
+    }
+
+    mpwsPage.prototype.render = function(/* options list */) {
+// start loadng animation
+        // this.setPageState(mpwsPage.STATE.LOADING, true);
+
+        var _renderOptionsList = [].slice.apply(arguments);
+        var options = _renderOptionsList.unshift();
+        _(_renderOptionsList).each(function(optionEntry){
+            options = _.extend({}, options, optionEntry);
+        });
+
+
+        app.log(true, 'render options:', options, arguments);
 
         var self = this;
         var _renderCommands = {};
@@ -233,6 +302,8 @@ APP.Modules.register("lib/mpws.page", [
                     var _args = [].slice.apply(arguments);
                     // adjusust args
                     _args = _.isEmpty(_args) ? [null, true] : _args;
+                    // remove loading state
+                    self.setPlaceholderState(_pholder, mpwsPage.STATE.LOADING, false);
                     // tell Async lib that we've completed rendering
                     callback.apply(null, _args);
                     // call user's callback
@@ -248,6 +319,9 @@ APP.Modules.register("lib/mpws.page", [
                     else if (_.isFunction(_dataSrc))
                         _dataSrc.call(null, callbackData);
                 }
+
+                // show loading state
+                self.setPlaceholderState(_pholder, mpwsPage.STATE.LOADING, true);
 
                 if (_deps)
                     self.setupDependencies(_deps, function () {

@@ -10,12 +10,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
     var _logPrefix = '[plugin/shop/view/render] : ';
     var mpwsPageLib = new mpwsPage();
 
-    // mpwsPageLib.setupDependencies({
-    //     productListItem: "plugin.shop.component.productListItem@hbs"
-    // });
-
-    // app.log('HI FROM SHOP RENDER :) I AM SHOP RENDER LIBRARY YO')
-
     var _templatePartialsBase = {
         renderDataTrigger: {
             url: "plugin.shop.component.renderDataTrigger@hbs",
@@ -39,72 +33,36 @@ APP.Modules.register("plugin/shop/view/render", [], [
         },
     }
 
-    // // shop start page
-    // // shop products lists
-    // function _pageShopProductListLatest () {
-    //     // mpwsPageLib.render("plugin.shop.page.publicProductListLatest@hbs", _templatePartialsBase, function (onDataReceived) {
-    //     //     model.getProductListLatest(onDataReceived);
-    //     // });
-    // }
-
-    // // shop catalog options
-    // function _pageShopCatalog () {
-    //     // mpwsPageLib.render("plugin.shop.page.publicCatalog@hbs", _templatePartialsBase, function (onDataReceived) {
-    //     //     model.getProductListLatest(onDataReceived);
-    //     // });
-    // }
-
-    // function _pageShopCatalogByCategory (categoryId) {
-    //     mpwsPageLib.pageName('shop-category');
-    //     // mpwsPageLib.render("plugin.shop.page.publicCatalogCategory@hbs", _templatePartialsBase, function (onDataReceived) {
-    //     //     model.getProductListLatest(onDataReceived);
-    //     // });
-
-    // }
-
-    // function _pageShopCatalogByCategoryAndBrand (categoryId, brandId) {
-    //     mpwsPageLib.pageName('shop-category-brand');
-    //     // mpwsPageLib.render("plugin.shop.page.publicCatalogCategoryBrand@hbs", _templatePartialsBase, function (onDataReceived) {
-    //     //     model.getProductListLatest(categoryId, onDataReceived);
-    //     // });
-    // }
-
-    // // shop product item
-    // function _pageShopProductItemByID (productId) {
-    //     mpwsPageLib.pageName('shop-product');
-    //     var _opts = this.getPlacehoders();
-    //     var _renderConfiguration = {
-    //         categoryStructure: {
-    //             data: {
-    //                 source: model.getShopCatalogStructure
-    //             },
-    //             template: "plugin.shop.component.catalogStructure@hbs",
-    //             dependencies: _templatePartialsBase,
-    //             placeholder: _opts.menu
-    //         },
-    //         productData: {
-    //             data: {
-    //                 source: model.getProductItemByID
-    //             },
-    //             template: "plugin.shop.component.productItem@hbs",
-    //             dependencies: _templatePartialsBase,
-    //             placeholder: _opts.productsLatest
-    //         }
-    //     };
-    //     app.log(true, _renderConfiguration);
-    //     mpwsPageLib.render(_renderConfiguration);
-    //     // mpwsPageLib.render("plugin.shop.page.publicProductItem@hbs", _templatePartialsBase, function (onDataReceived) {
-    //     //     model.getProductItemByID(productId, onDataReceived);
-    //     // });
-    // }
 
 
     // public class
     function pluginShopRender (options) {
+        var self = this;
         var _options = options || {};
         this.model = new pluginShopModel();
         this.getOptions = function () { return _options; }
         this.getPlacehoders = function () { return _options.placeholders || {}; }
+        this.componentsCommon = {};
+
+        // setup common render components
+
+        mpwsPageLib.createRenderConfig('categoryStructure', {
+            data: {
+                source: self.model.getShopCatalogStructure
+            },
+            template: "plugin.shop.component.catalogStructure@hbs",
+            dependencies: _templatePartialsBase,
+            placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.menu)
+        }, this.componentsCommon);
+
+        mpwsPageLib.createRenderConfig('cartEmbedded', {
+            data: {
+                source: self.model.getShoppingCart
+            },
+            template: "plugin.shop.component.shoppingCartEmbedded@hbs",
+            dependencies: _templatePartialsBase,
+            placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.shoppingCartEmbedded)
+        }, this.componentsCommon);
 
         this.initialize();
     }
@@ -116,27 +74,19 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
         // here we have to render all essential elements rele=atetd to this scope
         // 
-        var _opts = this.getPlacehoders();
+        var _pholders = this.getPlacehoders();
         var _renderConfiguration = {
-            categoryStructure: {
-                data: {
-                    source: self.model.getShopCatalogStructure
-                },
-                template: "plugin.shop.component.catalogStructure@hbs",
-                dependencies: _templatePartialsBase,
-                placeholder: _opts.menu
-            },
             productsLatest: {
                 data: {
                     source: self.model.getProductListLatest
                 },
                 template: "plugin.shop.component.productList@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _opts.productsLatest
+                placeholder: _pholders.productsLatest
             }
         };
         app.log(true, _renderConfiguration);
-        mpwsPageLib.render(_renderConfiguration);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
     
     pluginShopRender.prototype.pageShopCatalog = function () {
@@ -146,31 +96,43 @@ APP.Modules.register("plugin/shop/view/render", [], [
     
     pluginShopRender.prototype.pageShopCart = function () {
         var self = this;
-        mpwsPageLib.pageName('shop-cart');
+        mpwsPageLib.pageName('shop-cart-view');
 
-        var _opts = this.getPlacehoders();
+        var _pholders = this.getPlacehoders();
         var _renderConfiguration = {
-            categoryStructure: {
+            shoppingCartStandalone: {
                 data: {
-                    source: self.model.getShopCatalogStructure
+                    source: self.model.getShoppingCart
                 },
-                template: "plugin.shop.component.catalogStructure@hbs",
+                template: "plugin.shop.component.shoppingCartStandalone@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _opts.menu
-            },
-            shoppingChartStandalone: {
-                data: {
-                    source: self.model.getShoppingChart
-                },
-                template: "plugin.shop.component.shoppingChartStandalone@hbs",
-                dependencies: _templatePartialsBase,
-                placeholder: _opts.shoppingChartStandalone
+                placeholder: _pholders.shoppingCartStandalone
             }
         };
         app.log(true, _renderConfiguration);
-        mpwsPageLib.render(_renderConfiguration);
-        // mpwsPageLib.getPageBody('I AM CHART', true);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
+        // mpwsPageLib.getPageBody('I AM CART', true);
     }
+
+    pluginShopRender.prototype.pageShopCartCheckout = function () {
+        var self = this;
+        mpwsPageLib.pageName('shop-cart-checkout');
+
+        var _pholders = this.getPlacehoders();
+        var _renderConfiguration = {
+            shoppingCartCheckout: {
+                data: {
+                    source: self.model.getShoppingCart
+                },
+                template: "plugin.shop.component.shoppingCartCheckout@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _pholders.shoppingCartCheckout
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
+    }
+
     
     pluginShopRender.prototype.pageProductListLatest = function () {
         mpwsPageLib.pageName('shop-list-latest');
@@ -180,27 +142,19 @@ APP.Modules.register("plugin/shop/view/render", [], [
     pluginShopRender.prototype.pageShopProductItemByID = function (productId) {
         var self = this;
         mpwsPageLib.pageName('shop-product');
-        var _opts = this.getPlacehoders();
+        var _pholders = this.getPlacehoders();
         var _renderConfiguration = {
-            categoryStructure: {
-                data: {
-                    source: self.model.getShopCatalogStructure
-                },
-                template: "plugin.shop.component.catalogStructure@hbs",
-                dependencies: _templatePartialsBase,
-                placeholder: _opts.menu
-            },
             productData: {
                 data: {
                     source: self.model.getProductItemByID
                 },
                 template: "plugin.shop.component.productItem@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _opts.productsLatest
+                placeholder: _pholders.productItem
             }
         };
         app.log(true, _renderConfiguration);
-        mpwsPageLib.render(_renderConfiguration);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }   
     
     pluginShopRender.prototype._test_getProductAttributes = function (productId) {
@@ -211,6 +165,16 @@ APP.Modules.register("plugin/shop/view/render", [], [
         this.model.getProductPriceArchive.call(this, productId);
     }
     
+    pluginShopRender.prototype.action_cartEmbeddedShow = function() {
+        var _pholder = this.getPlacehoders().shoppingCartEmbedded;
+        $(_pholder.target).toggleClass('open', true);
+    };
+
+    pluginShopRender.prototype.action_cartEmbeddedHide = function() {
+        var _pholder = this.getPlacehoders().shoppingCartEmbedded;
+        $(_pholder.target).toggleClass('open', false);
+    };
+
     pluginShopRender.prototype.initialize = function (startHistory) {
         var self = this;
 
@@ -221,19 +185,47 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
             switch (_action) {
                 case "shop:buy":
-                    self.model.shoppingChartAdd(_oid, function (rez) {
-                        _libHtml.messageBox('You"re going buy: ' + _oid);
+                    self.model.shoppingCartAdd(_oid, function (rez) {
+                        var _cartEmbeddedRenderConfig = mpwsPageLib.modifyRenderConfig(self.componentsCommon.cartEmbedded, {
+                            callback: function () {
+                                self.action_cartEmbeddedShow();
+                            }
+                        });
+                        mpwsPageLib.render(_cartEmbeddedRenderConfig);
+                        // _libHtml.messageBox('You"re going buy: ' + _oid);
                     });
                     break;
-                case "shop:chart:item-remove":
-                    self.model.shoppingChartRemove(_oid, function (rez) {
-                        self.pageShopCart();
+                case "shop:cart:embedded-item-remove":
+                    self.model.shoppingCartRemove(_oid, function (rez) {
+                        // self.pageShopCart();
+                        var _cartEmbeddedRenderConfig = mpwsPageLib.modifyRenderConfig(self.componentsCommon.cartEmbedded, {
+                            callback: function () {
+                                self.action_cartEmbeddedShow();
+                            }
+                        });
+                        mpwsPageLib.render(_cartEmbeddedRenderConfig);
                     });
                     break;
-                case "shop:chart:clear":
-                    self.model.shoppingChartClear(function (rez) {
-                        self.pageShopCart();
+                case "shop:cart:standalone-item-remove":
+                    self.model.shoppingCartRemove(_oid, function (rez) {
+                        // self.pageShopCart();
+                        self.router.controller.navigate(self.router.navMap.shop_cart_view, {trigger: true});
                     });
+                    break;
+                case "shop:cart:clear":
+                    self.model.shoppingCartClear(function (rez) {
+                        self.router.controller.navigate(self.router.navMap.shop_cart_view, {trigger: true});
+                    });
+                    break;
+                case "shop:cart:view": {
+                    self.router.controller.navigate(self.router.navMap.shop_cart_view, {trigger: true});
+                    break;
+                }
+                case "shop:cart:checkout":
+                    self.router.controller.navigate(self.router.navMap.shop_cart_checkout, {trigger: true});
+                    break;
+                default:
+                    self.action_cartEmbeddedHide();
                     break;
             }
         })

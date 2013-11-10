@@ -12,23 +12,6 @@ APP.Modules.register("router/customer", [], [
     // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     var mpwsPageLib = new mpwsPage();
-    var pluginShopRouterLib = new pluginShopRouter({
-        placeholders: {
-            menu: {
-                target: $('.mainNav .navbar'),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            },
-            productsLatest: {
-                target: $('.MPWSPageBody'),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            },
-            shoppingChartStandalone: {
-                target: $('.MPWSPageBody'),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            }
-        }
-    });
-
     var Controller = Backbone.Router.extend({
         routes: {
             "": "site_home",
@@ -47,10 +30,10 @@ APP.Modules.register("router/customer", [], [
 
         // we display startup products
         site_home: function (route, name, callback) {
-            app.log(true, 'pluginShopRouterLib', pluginShopRouterLib);
-            app.log(true, 'site_home page with arguments', route, name, callback);
+            // app.log(true, 'pluginShopRouterLib', pluginShopRouterLib);
+            // app.log(true, 'site_home page with arguments', route, name, callback);
             // _pageHome();
-            pluginShopRouterLib.shopHome();
+            // pluginShopRouterLib.shopHome();
         },
         // display error page
         site_error: function () {
@@ -121,11 +104,41 @@ APP.Modules.register("router/customer", [], [
     // start native site page monitoring
     var controller = new Controller(); // Создаём контроллер
 
-    pluginShopRouterLib.init();
+    // init all available plugins here
+    var pluginShopRouterLib = new pluginShopRouter({
+        placeholders: {
+            menu: {
+                target: $('.mainNav .navbar'),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+            productsLatest: {
+                target: mpwsPageLib.getPageBody(),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+            productItem: {
+                target: mpwsPageLib.getPageBody(),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+            shoppingCartStandalone: {
+                target: mpwsPageLib.getPageBody(),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+            shoppingCartEmbedded: {
+                target: $('.component-shop-cart-embedded'),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+            shoppingCartCheckout: {
+                target: mpwsPageLib.getPageBody(),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
+        }
+    });
+
+    // pluginShopRouterLib.init();
     // start additional routers
     // // start shop page monitoring
     // pluginShopRouterLib.start(false);
 
-    Backbone.history.start();  // Запускаем HTML5 History push    
+    Backbone.history.start();  // Запускаем HTML5 History push
 
 });

@@ -1,10 +1,24 @@
-{extends file=$OBJECT.SITE->objectTemplatePath_layout_defaultPublic}
-
-{block name="layoutResourcesCSS" append}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MPWS Default - index</title>
+    
+    <link rel="stylesheet" type="text/css" href="/static/p/customer/pb.com.ua/default.css">
+    <link rel="stylesheet" type="text/css" href="/static/p/customer/pb.com.ua/theme.css">
+    
     <link rel="stylesheet" type="text/css" href="//codeorigin.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-{/block}
 
-{block name="pageHeader"}
+        <meta name="locale" content="en_us">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body class="MPWSPage">
+
+<div class="MPWSLayout MPWSLayoutDefaultPublic">
+
+        
+        
+    <div class="MPWSPageHeader">
+        
 <header>
       <div class="upperHeader">
         <div class="container">
@@ -12,8 +26,6 @@
             <li><a class="invarseColor" href="#">Мій профіль</a></li>
             <li class="divider-vertical"></li>
             <li><a class="invarseColor" href="#">Мій список</a></li>
-            <li class="divider-vertical"></li>
-            <li><a class="invarseColor" href="#">Переглянуті товари</a></li>
             <li class="divider-vertical"></li>
             <li><a class="invarseColor" href="/#shop/cart">Кошик</a></li>
           </ul>
@@ -42,7 +54,60 @@
           </div>
 
           <div class="pull-right">
-            <div class="btn-group component-shop-cart-embedded">
+            <div class="btn-group cart-content-simple">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                  <i class="icon-shopping-cart"></i> 3 Items
+                  <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu cart-content pull-right">
+                <table class="table-cart">
+                  <tbody>
+                  <tr>
+                    <td class="cart-product-info">
+                      <a href="#"><img src="img/72x72.jpg" alt="product image"></a>
+                      <div class="cart-product-desc">
+                        <p><a class="invarseColor" href="#">Foliomania the designer portfolio brochure</a></p>
+                        <ul class="unstyled">
+                          <li>Available: Yes</li>
+                          <li>Color: Black</li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td class="cart-product-setting">
+                      <p><strong>1x-$500.00</strong></p>
+                      <a href="#" class="remove-pro" data-toggle="tooltip" data-title="Delete" data-original-title="" title=""><i class="icon-trash"></i></a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="cart-product-info">
+                      <a href="#"><img src="img/72x72.jpg" alt="product image"></a>
+                      <div class="cart-product-desc">
+                        <p><a class="invarseColor" href="#">Foliomania the designer portfolio brochure</a></p>
+                        <ul class="unstyled">
+                          <li>Available: Yes</li>
+                          <li>Color: Black</li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td class="cart-product-setting">
+                      <p><strong>2x-$450.00</strong></p>
+                      <a href="#" class="remove-pro" data-toggle="tooltip" data-title="Delete" data-original-title="" title=""><i class="icon-trash"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td class="cart-product-info">
+                      <a href="#" class="btn btn-small">Vew cart</a>
+                      <a href="#" class="btn btn-small btn-primary">Checkout</a>
+                    </td>
+                    <td>
+                      <h3>TOTAL<br>$1,598.30</h3>
+                    </td>
+                  </tr>
+                </tfoot>
+                </table>
+              </div>
             </div>
           </div><!--end pull-right-->
 
@@ -58,12 +123,15 @@
       </div><!--end mainNav-->
       
     </header>
-{/block}
 
-
-
-
-{block name="pageBody"}
+    </div>
+        
+        
+        
+        
+        
+    <div class="MPWSPageBody">
+        
 
 <!--     Product ID <input type="text" id="product-ID" data-key="id" data-target=".btn-product-details" size="4">
 
@@ -77,12 +145,15 @@
 
 
 
-{/block}
 
-
-
-
-{block name="pageFooter"}
+    </div>
+        
+        
+        
+        
+        
+    <div class="MPWSPageFooter">
+        
 <footer>
     <div class="footerOuter">
       <div class="container">
@@ -182,4 +253,70 @@
       </div>
     </div>
     </footer>
-{/block}
+
+    </div>
+        
+        
+
+</div>
+
+<div class="static-content-wrapper render-hidden" title="page basic javascript container">
+    
+    <script type="text/javascript" src="/static/p/customer/pb.com.ua/starter.js"></script>
+    
+        
+    <script type="text/javascript" class="temporary">
+        APP.Internal.configureAppLoader({
+            VERSION: null,
+            // security token
+            CUSTOMER: 'pb.com.ua',
+            // security token
+            TOKEN: '0fdfa57ef58cea975cc642016ead9b1f',
+            // page
+            PAGE: 'index',
+            // display
+            DISPLAY: '',
+            // action
+            ACTION: 'default',
+            // action
+            // PLUGIN: 'shop',
+            // ROUTER: 'router/customer.base',
+            URL: {
+                // available static urls
+                staticUrlBase: '/static/_/',
+                staticUrlCustomer: '/static/_/customer/pb.com.ua/',
+                staticUrlPlugin: '/static/_/plugin/'
+            },
+            STATES: {
+                pageDebug: true
+            },
+            REQUIREJS: {
+                router: {
+                    modulePageMap: [{
+                        match: ["pb.com.ua/*"],
+                        deps: ["router/customer"]
+                    }]
+                },
+                app: {
+                    baseUrl: false,
+                    paths: {
+                        // general paths
+                        lib: '/static/_/customer/pb.com.ua/lib',
+                        router: '/static/_/customer/pb.com.ua/router',
+                        widget: '/static/_/customer/pb.com.ua/widget',
+                        model: '/static/_/customer/pb.com.ua/model',
+                        view: '/static/_/customer/pb.com.ua/view',
+                        plugin: '/static/_/plugin/',
+                        // version suppress
+                        "lib/jquery": '/static/_/customer/pb.com.ua/lib/jquery-1.9.1',
+                        "lib/jquery_ui": '/static/_/customer/pb.com.ua/lib/jquery-ui-1.10.3.custom'
+                    }
+                }
+            }
+        });
+    </script>
+    
+</div>
+
+</body>
+</html>

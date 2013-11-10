@@ -89,21 +89,21 @@ class pluginShop extends objectBaseWebPlugin {
                 $data = $this->_custom_api_getCatalogStructure();
                 break;
             }
-            // shopping chart
-            case "shop_chart_save" : {
-                $data = $this->_custom_api_shoppingChartSave($param);
+            // shopping cart
+            case "shop_cart_save" : {
+                $data = $this->_custom_api_shoppingCartSave($param);
                 break;
             }
-            case "shop_chart_clear" : {
-                $data = $this->_custom_api_shoppingChartClear();
+            case "shop_cart_clear" : {
+                $data = $this->_custom_api_shoppingCartClear();
                 break;
             }
-            case "shop_chart_manage" : {
-                $data = $this->_custom_api_shoppingChartManage($pProductID, $param);
+            case "shop_cart_manage" : {
+                $data = $this->_custom_api_shoppingCartManage($pProductID, $param);
                 break;
             }
-            case "shop_chart_content" : {
-                $data = $this->_custom_api_shoppingChartContent();
+            case "shop_cart_content" : {
+                $data = $this->_custom_api_shoppingCartContent();
                 break;
             }
         }
@@ -156,108 +156,108 @@ class pluginShop extends objectBaseWebPlugin {
     private function _custom_brandEdit () {}
     private function _custom_orderList () {}
     private function _custom_orderEdit () {}
-    
+
 
 
 
     /* PLUGIN API METHODS (PUBLIC) */
 
-    // shopping chart
-    private function _custom_api_shoppingChartContent ($param) {
+    // shopping cart
+    private function _custom_api_shoppingCartContent ($param) {
         return new mpwsData(array(
             "error" => false,
-            "products" => $_SESSION['shop:chart'] ?: array(),
-            "chart" => $this->_custom_chartGetInfo()
+            "products" => $_SESSION['shop:cart'] ?: array(),
+            "cart" => $this->_custom_cartGetInfo()
         ));
     }
 
-    private function _custom_api_shoppingChartClear () {
-        $_SESSION['shop:chart'] = array();
-        return $this->_custom_api_shoppingChartContent();
+    private function _custom_api_shoppingCartClear () {
+        $_SESSION['shop:cart'] = array();
+        return $this->_custom_api_shoppingCartContent();
     }
     
-    private function _custom_api_shoppingChartManage ($pProductID, $param) {
+    private function _custom_api_shoppingCartManage ($pProductID, $param) {
 
         $amount = getValue($param['amount'], null);
         $clear = getValue($param['clear'], false);
 
-        $chart = $_SESSION['shop:chart'] ?: array();
+        $cart = $_SESSION['shop:cart'] ?: array();
         $error = false;
 
         if ($clear)
-            $chart = array();
+            $cart = array();
         else {
             if (is_numeric($amount)) {
                 $amount = intval($amount);
                 // remove item completely
                 if ($amount === 0)
-                    unset($chart[$pProductID]);
+                    unset($cart[$pProductID]);
                 else {
                     // check existatce
-                    if (isset($chart[$pProductID])) {
-                        $chart[$pProductID]['Amount'] += $amount;
+                    if (isset($cart[$pProductID])) {
+                        $cart[$pProductID]['Amount'] += $amount;
                         // remove item when amount is -1 and current amount is 1
-                        if ($chart[$pProductID]['Amount'] === 0)
-                            unset($chart[$pProductID]);
+                        if ($cart[$pProductID]['Amount'] === 0)
+                            unset($cart[$pProductID]);
                     } else {
-                        // just get new product entry annd add it into chart
+                        // just get new product entry annd add it into cart
                         $productEntry = $this->_custom_api_getProductItem($pProductID, 'short');
                         if ($productEntry->hasData()) {
-                            $chart[$pProductID] = $productEntry->getData();
-                            $chart[$pProductID]['Amount'] = 1;
+                            $cart[$pProductID] = $productEntry->getData();
+                            $cart[$pProductID]['Amount'] = 1;
                         } else
                             $error = "Wrong product ID";
                     }
                     // update product total
                     if (!$error)
-                        $chart[$pProductID]["Total"] = $chart[$pProductID]["Amount"] * $chart[$pProductID]["Price"];
+                        $cart[$pProductID]["Total"] = $cart[$pProductID]["Amount"] * $cart[$pProductID]["Price"];
                 }
             }
             else
                 $error = "Wrong amount value";
         }
 
-        $_SESSION['shop:chart'] = $chart;
-        // $_SESSION['shop:chart_info'] = $this->_custom_chartGetInfo();
+        $_SESSION['shop:cart'] = $cart;
+        // $_SESSION['shop:cart_info'] = $this->_custom_cartGetInfo();
 
         // return new mpwsData(array(
         //     "error" => $error,
-        //     "products" => $_SESSION['shop:chart'],
-        //     "chart" => $_SESSION['shop:chart_info']
+        //     "products" => $_SESSION['shop:cart'],
+        //     "cart" => $_SESSION['shop:cart_info']
         // ));
-        return $this->_custom_api_shoppingChartContent();
+        return $this->_custom_api_shoppingCartContent();
     }
 
-    private function _custom_api_shoppingChartSave () {
+    private function _custom_api_shoppingCartSave () {
 
 
 
-        $_SESSION['shop:chart'] = array();
+        $_SESSION['shop:cart'] = array();
 
-        return new mpwsData(array("status": "ok"));
+        return new mpwsData(array("status" => "ok"));
     }
 
-    private function _custom_chartGetInfo () {
-        $chart = $_SESSION['shop:chart'] ?: array();
-        $chart_info = array(
+    private function _custom_cartGetInfo () {
+        $cart = $_SESSION['shop:cart'] ?: array();
+        $cart_info = array(
             "productAmount" => 0,
             "total" => 0.0,
             "discount" => 0
         );
         // extract short info
-        foreach ($chart as $productEntry) {
+        foreach ($cart as $productEntry) {
             // // update each product
-            // $chart[$pID] = $productEntry;
-            // $chart[$pID]["Total"] = $chart[$pID]["Amount"] * $chart[$pID]["Price"];
+            // $cart[$pID] = $productEntry;
+            // $cart[$pID]["Total"] = $cart[$pID]["Amount"] * $cart[$pID]["Price"];
 
-            // update chart checkout info
-            $chart_info["productAmount"] += $productEntry["Amount"];
-            $chart_info["total"] += $productEntry["Total"];
+            // update cart checkout info
+            $cart_info["productAmount"] += $productEntry["Amount"];
+            $cart_info["total"] += $productEntry["Total"];
         }
 
-        // $_SESSION['shop:chart_info'] = $chart_info;
+        // $_SESSION['shop:cart_info'] = $cart_info;
 
-        return $chart_info;
+        return $cart_info;
     }
 
     // catalog

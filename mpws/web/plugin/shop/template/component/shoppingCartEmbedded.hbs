@@ -1,0 +1,42 @@
+<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+  <i class="icon-shopping-cart"></i> {{source.data.cart.productAmount}} Позиції(й)
+  <span class="caret"></span>
+</a>
+<div class="dropdown-menu cart-content pull-right">
+{{#if_eq source.data.cart.total "0" }}
+    <p class="message message-nodata">Ваш кошик порожній</p>
+{{else}}
+    <ul class="list list-cart-products">
+    {{#each source.data.products}}
+        <li>
+            <div class="block block-cart-item">
+                <span class="label label-product-name">
+                    <a href="/#shop/product/{{ID}}" title="Перейти до {{{Name}}}">{{Name}}</a>
+                </span>
+                <span class="value value-product-price">{{Price}}</span>
+                <span class="label label-mathsign">x</span>
+                <span class="value value-product-amount">
+                    <input type="text" value="{{Amount}}"/>
+                </span>
+                <span class="value value-product-total">{{Total}}</span>
+                <i class="icon-trash" data-action="shop:cart:embedded-item-remove" data-oid="{{ID}}"></i>
+            </div>
+        </li>
+    {{/each}}
+    </ul>
+    <div class="spacer"></div>
+    <div class="component component-cart-summary">
+        <span class="label label-cart-total">Загальна сума</span>
+        <span class="value value-cart-total">{{source.data.cart.total}}</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="component component-buttons">
+        <button type="button" class="button button-cart-clear" data-action="shop:cart:clear">
+            Очистити кошик
+        </button>
+        <button type="button" class="button button-clear" data-action="shop:cart:checkout">
+            Оформити замовлення
+        </button>
+    </div>
+{{/if_eq}}
+</div>

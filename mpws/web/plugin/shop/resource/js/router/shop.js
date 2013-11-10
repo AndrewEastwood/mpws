@@ -13,72 +13,56 @@ APP.Modules.register("plugin/shop/router/shop", [], [
     var _libHtml = new HtmlComponents();
 
     function Router (options) {
+
         this.view = new pluginShopView(options);
-    }
+        this.view.router = this;
 
-    Router.prototype.shopHome = function() {
-        app.log(true, 'Router.prototype.shopHome');
-        this.view.pageShopHome();
-    };
-
-    Router.prototype.shopProductsLatest = function(route, name, callback) {
-        app.log(true, 'Router.prototype.shopProductsLatest');
-        this.view.pageShopProductListLatest(route, name, callback);
-    };
-
-    Router.prototype.shopCatalog = function(route, name, callback) {
-        this.view.pageShopCatalog(route, name, callback);
-    };
-
-    Router.prototype.shopCatalogByCategory = function(route, name, callback) {
-        this.view.pageShopCatalogByCategory(route, name, callback);
-    };
-
-    Router.prototype.shopCatalogByCategoryAndBrand = function(route, name, callback) {
-        this.view.pageShopCatalogByCategoryAndBrand(route, name, callback);
-    };
-    
-    Router.prototype.shopCart = function(route, name, callback) {
-        this.view.pageShopCart();
-    };
-
-    Router.prototype.shopProductItem = function(productId, name, callback) {
-        app.log(true, 'shop_product')
-        this.view.pageShopProductItemByID(productId);
-    };
-
-    Router.prototype.init = function(productId, name, callback) {
-        app.log(true, 'plugin/shop/router/shop constructor');
+        app.log(true, 'plugin/shop/router/shop constructor', options);
 
         // if (this.Controller)
         //  return;
         var self = this;
 
-        app.log(true, 'plugin/shop/router/shop creating new instance');
+        this.navMap = {
+            "site_home": "",
+            "shop_home": "shop",
+            "shop_latest": "shop/latest",
+            "shop_catalog": "shop/catalog",
+            "shop_category": "shop/catalog/:category",
+            "shop_category_brand": "shop/catalog/:category/:brand",
+            "shop_product": "shop/product/:product",
+            "shop_cart_view": "shop/cart",
+            "shop_cart_checkout": "shop/cart/checkout"
+        };
+
+        app.log(true, 'plugin/shop/router/shop creating new instance', _.invert(this.navMap));
         var _Controller = Backbone.Router.extend({
-            routes: {
-                "shop": "shop_home",
-                "shop/latest": "shop_latest",
-                "shop/catalog": "shop_catalog",
-                "shop/catalog/:category": "shop_category",
-                "shop/catalog/:category/:brand": "shop_category_brand",
-                "shop/product/:product": "shop_product",
-                "shop/cart": "shop_cart"
-            },
+            routes: _.invert(this.navMap),
             // shop default page
+            site_home: function () {
+                // self.view.pageShopHome();
+                // self.shopHome();
+                app.log(true, 'Router.prototype.shopHome');
+                self.view.pageShopHome();
+            },
             shop_home: function () {
                 // self.view.pageShopHome();
-                self.shopHome();
+                // self.shopHome();
+                app.log(true, 'Router.prototype.shopHome');
+                self.view.pageShopHome();
             },
             // display shop latest stuff
             shop_latest: function (route, name, callback) {
                 // self.view.pageShopProductListLatest(route, name, callback);
-                self.shopProductsLatest(route, name, callback);
+                // self.shopProductsLatest(route, name, callback);
+                app.log(true, 'Router.prototype.shopProductsLatest');
+                self.view.pageShopProductListLatest(route, name, callback);
             },
             // display catalog
             shop_catalog: function (route, name, callback) {
                 // self.view.pageShopCatalog(route, name, callback);
-                self.shopCatalog(route, name, callback);
+                // self.shopCatalog(route, name, callback);
+                self.view.pageShopCatalog(route, name, callback);
             },
             // display category
             shop_category: function () {
@@ -87,7 +71,8 @@ APP.Modules.register("plugin/shop/router/shop", [], [
                 // pagination
                 // 
                 // self.view.pageShopCatalogByCategory(route, name, callback);
-                self.shopCatalogByCategory(route, name, callback);
+                // self.shopCatalogByCategory(route, name, callback);
+                self.view.pageShopCatalogByCategory();
             },
             // display category
             shop_category_brand: function () {
@@ -96,23 +81,31 @@ APP.Modules.register("plugin/shop/router/shop", [], [
                 // pagination
                 // 
                 // self.view.pageShopCatalogByCategoryAndBrand(route, name, callback);
-                self.shopCatalogByCategoryAndBrand(route, name, callback);
+                // self.shopCatalogByCategoryAndBrand();
+                self.view.pageShopCatalogByCategoryAndBrand();
             },
-            shop_cart: function () {
+            shop_cart_view: function () {
                 // self.view.pageShopCart();
-                self.shopCart();
+                // self.shopCart();
+                self.view.pageShopCart();
+            },
+            shop_cart_checkout: function () {
+                // self.shopCartCheckout();
+                self.view.pageShopCartCheckout();
             },
             // display particular product
             shop_product: function (productId, name, callback) {
-                app.log(true, 'shop_product', productId);
+                // app.log(true, 'shop_product', productId);
                 // self.view.pageShopProductItemByID(productId);
-                self.shopProductItem(productId, name, callback);
+                // self.shopProductItem(productId, name, callback);
+                app.log(true, 'shop_product')
+                self.view.pageShopProductItemByID(productId);
             }
 
         });
 
         this.controller = new _Controller();
-        // app.log(true, 'Router.controller', this.Controller);
+        app.log(true, 'Router.controller', this.controller);
     }
 
     return Router;

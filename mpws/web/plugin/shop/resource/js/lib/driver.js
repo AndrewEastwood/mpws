@@ -95,11 +95,11 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
-    pluginShopDriver.prototype.getShoppingChart = function (callback) {
+    pluginShopDriver.prototype.getShoppingCart = function (callback) {
         app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'shop_chart_content',
+            fn: 'shop_cart_content',
             params: {
                 realm: 'plugin'
             }
@@ -130,11 +130,11 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
-    pluginShopDriver.prototype.shoppingChartManager = function (params, callback) {
+    pluginShopDriver.prototype.shoppingCartManager = function (params, callback) {
         app.log(_logPrefix, 'shopBuy', mpwsAPI)
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'shop_chart_manage',
+            fn: 'shop_cart_manage',
             params: $.extend(params, {
                 realm: 'plugin'
             })
@@ -147,22 +147,22 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
-    pluginShopDriver.prototype.shoppingChartAdd = function (productId, callback) {
-        this.shoppingChartManager({
+    pluginShopDriver.prototype.shoppingCartAdd = function (productId, callback) {
+        this.shoppingCartManager({
             pid: productId,
             amount: 1
         }, callback);
     }
 
-    pluginShopDriver.prototype.shoppingChartRemove = function (productId, callback) {
-        this.shoppingChartManager({
+    pluginShopDriver.prototype.shoppingCartRemove = function (productId, callback) {
+        this.shoppingCartManager({
             pid: productId,
             amount: 0
         }, callback);
     }
 
-    pluginShopDriver.prototype.shoppingChartClear = function (callback) {
-        this.shoppingChartManager({
+    pluginShopDriver.prototype.shoppingCartClear = function (callback) {
+        this.shoppingCartManager({
             clear: true
         }, callback);
     }
