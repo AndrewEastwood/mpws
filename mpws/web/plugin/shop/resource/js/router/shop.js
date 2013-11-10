@@ -112,31 +112,6 @@ APP.Modules.register("plugin/shop/router/shop", [], [
         });
 
         this.controller = new _Controller();
-
-        // init actions
-        $('body').on('click', '[data-action]', function () {
-            var _action = $(this).data('action');
-            var _oid = $(this).data('oid');
-
-            switch (_action) {
-                case "shop:buy":
-                    self.view.model.shoppingChartAdd(_oid, function (rez) {
-                        _libHtml.messageBox('You"re going buy: ' + _oid);
-                    });
-                    break;
-                case "shop:chart:item-remove":
-                    self.view.model.shoppingChartRemove(_oid, function (rez) {
-                        self.shopCart();
-                    });
-                    break;
-                case "shop:chart:clear":
-                    self.view.model.shoppingChartClear(function (rez) {
-                        self.shopCart();
-                    });
-                    break;
-            }
-        })
-
         // app.log(true, 'Router.controller', this.Controller);
     }
 

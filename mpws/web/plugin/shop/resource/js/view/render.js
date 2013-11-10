@@ -105,6 +105,8 @@ APP.Modules.register("plugin/shop/view/render", [], [
         this.model = new pluginShopModel();
         this.getOptions = function () { return _options; }
         this.getPlacehoders = function () { return _options.placeholders || {}; }
+
+        this.initialize();
     }
 
     pluginShopRender.prototype.pageShopHome = function () {
@@ -209,10 +211,32 @@ APP.Modules.register("plugin/shop/view/render", [], [
         this.model.getProductPriceArchive.call(this, productId);
     }
     
-    pluginShopRender.prototype.start = function (startHistory) {
-        var controller = new Controller(); // Создаём контроллер
-        if (startHistory)
-            Backbone.history.start();  // Запускаем HTML5 History push    
+    pluginShopRender.prototype.initialize = function (startHistory) {
+        var self = this;
+
+        // init actions
+        $('body').on('click', '[data-action]', function () {
+            var _action = $(this).data('action');
+            var _oid = $(this).data('oid');
+
+            switch (_action) {
+                case "shop:buy":
+                    self.model.shoppingChartAdd(_oid, function (rez) {
+                        _libHtml.messageBox('You"re going buy: ' + _oid);
+                    });
+                    break;
+                case "shop:chart:item-remove":
+                    self.model.shoppingChartRemove(_oid, function (rez) {
+                        self.pageShopCart();
+                    });
+                    break;
+                case "shop:chart:clear":
+                    self.model.shoppingChartClear(function (rez) {
+                        self.pageShopCart();
+                    });
+                    break;
+            }
+        })
     }
 
     // $('.icon-home').on('click', function(){

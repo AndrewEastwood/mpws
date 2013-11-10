@@ -22,8 +22,8 @@ class pluginShop extends objectBaseWebPlugin {
     protected function _jsapiTriggerAsPlugin() {
         // echo "QQQTEST";
 
-        if (!$_SESSION)
-            session_start();
+        // if (!$_SESSION)
+        //     session_start();
 
         parent::_jsapiTriggerAsPlugin();
         $param = libraryRequest::getApiParam();
@@ -71,14 +71,6 @@ class pluginShop extends objectBaseWebPlugin {
             case "shop_map" : {
                 break;
             }
-            case "shop_chart_manage" : {
-                $data = $this->_custom_api_shoppingChartManage($pProductID, getValue($param['amount'], null), getValue($param['clear'], false));
-                break;
-            }
-            case "shop_chart_content" : {
-                $data = $this->_custom_api_getShoppingChart();
-                break;
-            }
             case "products_most_popular" : {
                 break;
             }
@@ -95,6 +87,23 @@ class pluginShop extends objectBaseWebPlugin {
             }
             case "shop_catalog_structure": {
                 $data = $this->_custom_api_getCatalogStructure();
+                break;
+            }
+            // shopping chart
+            case "shop_chart_save" : {
+                $data = $this->_custom_api_shoppingChartSave($param);
+                break;
+            }
+            case "shop_chart_clear" : {
+                $data = $this->_custom_api_shoppingChartClear();
+                break;
+            }
+            case "shop_chart_manage" : {
+                $data = $this->_custom_api_shoppingChartManage($pProductID, $param);
+                break;
+            }
+            case "shop_chart_content" : {
+                $data = $this->_custom_api_shoppingChartContent();
                 break;
             }
         }
@@ -138,48 +147,39 @@ class pluginShop extends objectBaseWebPlugin {
         
     }
 
-        
-    /* PLUGIN SPEC METHODS */
+    /* PLUGIN API METHODS (ADMIN) */
+    private function _custom_productList () {}
+    private function _custom_productEdit () {}
+    private function _custom_categoryList () {}
+    private function _custom_categoryEdit () {}
+    private function _custom_brandList () {}
+    private function _custom_brandEdit () {}
+    private function _custom_orderList () {}
+    private function _custom_orderEdit () {}
     
-    // private function _displayProducts () {
-        
-    // }
 
 
 
-    /* PLUGIN API METHODS */
-
-    // private function _api_getProducts () {
-
-    // }
-    
-    // private function _api_getCurrency () {
-    //     $ctx = contextMPWS::instance();
-    //     $cfg = $this->objectConfiguration_widget_customMonitor;
-    //     $reports = $ctx->contextCustomer->getDBO()
-    //             ->reset()
-    //             ->select($cfg['fields'])
-    //             ->from($cfg['source'])
-    //             ->fetchData();
-
-    // }
+    /* PLUGIN API METHODS (PUBLIC) */
 
     // shopping chart
-    private function _custom_api_getShoppingChart ($param) {
+    private function _custom_api_shoppingChartContent ($param) {
         return new mpwsData(array(
             "error" => false,
             "products" => $_SESSION['shop:chart'] ?: array(),
             "chart" => $this->_custom_chartGetInfo()
         ));
-
     }
 
-    private function _custom_api_shoppingChartClear ($pProductID) {
+    private function _custom_api_shoppingChartClear () {
         $_SESSION['shop:chart'] = array();
-        return $this->_custom_api_getShoppingChart();
+        return $this->_custom_api_shoppingChartContent();
     }
     
-    private function _custom_api_shoppingChartManage ($pProductID, $amount, $clear) {
+    private function _custom_api_shoppingChartManage ($pProductID, $param) {
+
+        $amount = getValue($param['amount'], null);
+        $clear = getValue($param['clear'], false);
 
         $chart = $_SESSION['shop:chart'] ?: array();
         $error = false;
@@ -225,7 +225,16 @@ class pluginShop extends objectBaseWebPlugin {
         //     "products" => $_SESSION['shop:chart'],
         //     "chart" => $_SESSION['shop:chart_info']
         // ));
-        return $this->_custom_api_getShoppingChart();
+        return $this->_custom_api_shoppingChartContent();
+    }
+
+    private function _custom_api_shoppingChartSave () {
+
+
+
+        $_SESSION['shop:chart'] = array();
+
+        return new mpwsData(array("status": "ok"));
     }
 
     private function _custom_chartGetInfo () {
@@ -274,15 +283,11 @@ class pluginShop extends objectBaseWebPlugin {
         return $dataObj->process($params);
     }
 
-    // ------------------
-
     // categories
     private function _custom_api_getCategory () {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
         return $dataObj->process($params);
     }
-
-    // ------------------
 
     // product list
     private function _custom_api_getProductList_Latest ($params) {
@@ -323,10 +328,10 @@ class pluginShop extends objectBaseWebPlugin {
 
         return $dataObj;
     }
-    private function _custom_api_getProductList_ByCategory () {}
-    private function _custom_api_getProductList_ByCategoryAndOrigin () {}
 
-    // ------------------
+    private function _custom_api_getProductList_ByCategory () {}
+
+    private function _custom_api_getProductList_ByCategoryAndOrigin () {}
 
     // product item
     private function _custom_api_getProductItem ($pProductID, $type) {
@@ -388,6 +393,7 @@ class pluginShop extends objectBaseWebPlugin {
 
         return $dataObj;
     }
+
     // product additional data
     // @productIds - array of product ids
     private function _custom_api_getProductAttributes ($productIds, $doNotProcessData) {
@@ -401,6 +407,7 @@ class pluginShop extends objectBaseWebPlugin {
 
         return $dataObj->process();
     }
+
     private function _custom_api_getProductPriceArchive ($productIds, $doNotProcessData) {
         // var_dump($productIds);
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsPriceStats['data']);
@@ -413,13 +420,15 @@ class pluginShop extends objectBaseWebPlugin {
         return $dataObj->process();
     }
 
-    // ------------------
-
-
-
-
-
+    // accounts
+    private function _custom_accountSignin () {}
+    private function _custom_accountProfile () {}
+    private function _custom_accountSubscriptions () {}
+    private function _custom_accountSettings () {}
+    private function _custom_accountOrdersActive () {}
+    private function _custom_accountOrdersHistory () {}
+    private function _custom_accountSignout () {}
 
 }
-    
+
 ?>
