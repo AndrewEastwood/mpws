@@ -23,7 +23,17 @@ class mpwsData {
     
     // data
     public function setDataError($errorMessage) {
-        $this->_data = array('error' => $errorMessage);
+        if ($this->hasData())
+            $this->_data['error'] = $errorMessage;
+        else
+            $this->setData(array('error' => $errorMessage));
+        return $this;
+    }
+    public function setDataStatus($status) {
+        if ($this->hasData())
+            $this->_data['status'] = $status;
+        else
+            $this->setData(array('status' => $status));
         return $this;
     }
     public function setData($val) {
@@ -390,7 +400,7 @@ class mpwsData {
                 break;
         }
 
-        $_opt_expandSingleRecord = true;
+        $_opt_expandSingleRecord = false;
 
         // apply data transformation options
         if (!empty($config['options']))

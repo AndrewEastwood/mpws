@@ -93,6 +93,31 @@ APP.Modules.register("plugin/shop/view/render", [], [
         mpwsPageLib.pageName('shop-catalog');
         // _pageShopCatalog.call(this);
     }
+
+    pluginShopRender.prototype.pageShopProductsByCategory = function (categoryId) {
+        var self = this;
+        // overwrite page name
+        mpwsPageLib.pageName('shop-catalog-cetegory');
+
+        // here we have to render all essential elements rele=atetd to this scope
+        // 
+        var _pholders = this.getPlacehoders();
+        var _renderConfiguration = {
+            productsByCategory: {
+                data: {
+                    source: self.model.getProductsByCategory,
+                    params: {
+                        categoryId: categoryId
+                    }
+                },
+                template: "plugin.shop.component.catalogByCategoryList@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _pholders.productsByCategory
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
+    }
     
     pluginShopRender.prototype.pageShopCart = function () {
         var self = this;
@@ -126,7 +151,10 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 },
                 template: "plugin.shop.component.shoppingCartCheckout@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _pholders.shoppingCartCheckout
+                placeholder: _pholders.shoppingCartCheckout,
+                callback: function () {
+                    self.action_cartEmbeddedHide();
+                }
             }
         };
         app.log(true, _renderConfiguration);
@@ -206,23 +234,39 @@ APP.Modules.register("plugin/shop/view/render", [], [
                         mpwsPageLib.render(_cartEmbeddedRenderConfig);
                     });
                     break;
+                case "shop:cart:embedded-clear":
+                    self.model.shoppingCartClear(function (rez) {
+                        // self.pageShopCart();
+                        var _cartEmbeddedRenderConfig = mpwsPageLib.modifyRenderConfig(self.componentsCommon.cartEmbedded, {
+                            callback: function () {
+                                // self.action_cartEmbeddedHide();
+                                if (self.router.isRouteActive(self.router.navMap.shop_cart_view))
+                                    self.router.refreshPage();
+                                if (self.router.isRouteActive(self.router.navMap.shop_cart_checkout))
+                                    self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_view);
+                            }
+                        });
+                        mpwsPageLib.render(_cartEmbeddedRenderConfig);
+                    });
+                    break;
                 case "shop:cart:standalone-item-remove":
                     self.model.shoppingCartRemove(_oid, function (rez) {
                         // self.pageShopCart();
-                        self.router.controller.navigate(self.router.navMap.shop_cart_view, {trigger: true});
+                        self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_view);
                     });
                     break;
-                case "shop:cart:clear":
+                case "shop:cart:standalone-clear":
                     self.model.shoppingCartClear(function (rez) {
-                        self.router.controller.navigate(self.router.navMap.shop_cart_view, {trigger: true});
+                        self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_view);
+                        // self.router.refreshPage();
                     });
                     break;
                 case "shop:cart:view": {
-                    self.router.controller.navigate(self.router.navMap.shop_cart_view, {trigger: true});
+                    self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_view);
                     break;
                 }
                 case "shop:cart:checkout":
-                    self.router.controller.navigate(self.router.navMap.shop_cart_checkout, {trigger: true});
+                    self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_checkout);
                     break;
                 default:
                     self.action_cartEmbeddedHide();

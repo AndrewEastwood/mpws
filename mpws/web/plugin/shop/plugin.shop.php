@@ -41,52 +41,49 @@ class pluginShop extends objectBaseWebPlugin {
         // var_dump($param);
         $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
-            // products
+            // shop catalog overview
+            case "shop_catalog_structure": {
+                $data = $this->_custom_api_getCatalogStructure();
+                break;
+            }
+            // products list sorted by date added
             case "product_list_latest": {
                 $data = $this->_custom_api_getProductList_Latest(array(
                     "limit" => $pLimit
                 ));
                 break;
             }
-            case "category_single_short" : {
+            // products list sorted by category
+            case "products_category": {
+                $data = $this->_custom_api_getProductsByCategory($param);
                 break;
             }
-            case "category_single_full" : {
+            // products list sorted by category and origin
+            case "products_category_origin": {
+                $data = $this->_custom_api_getProductsByCategoryAndByOrigin($param);
                 break;
             }
-            case "origin_single_short" : {
-                break;
-            }
-            case "origin_single_full" : {
-                break;
-            }
+            // product stabdalone item short
             case "product_item_short" : {
                 $data = $this->_custom_api_getProductItem($pProductID, 'short');
                 break;
             }
+            // product stabdalone item full
             case "product_item_full" : {
                 $data = $this->_custom_api_getProductItem($pProductID, 'full');
                 break;
             }
-            case "shop_map" : {
-                break;
-            }
+            // products list sorted by bought counter
             case "products_most_popular" : {
                 break;
             }
+            // additional product information
             case "product_price_archive" : {
-                // pProductID must be an array value even with 1 element
-                // var_dump($pProductID);
                 $data = $this->_custom_api_getProductPriceArchive($pProductID);
                 break;
             }
             case "product_attributes" : {
-                // pProductID must be an array value even with 1 element
                 $data = $this->_custom_api_getProductAttributes($pProductID);
-                break;
-            }
-            case "shop_catalog_structure": {
-                $data = $this->_custom_api_getCatalogStructure();
                 break;
             }
             // shopping cart
@@ -283,8 +280,14 @@ class pluginShop extends objectBaseWebPlugin {
         return $dataObj->process($params);
     }
 
-    // categories
-    private function _custom_api_getCategory () {
+    // // categories
+    // private function _custom_api_getCategory () {
+    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
+    //     return $dataObj->process($params);
+    // }
+
+    // category origins
+    private function _custom_api_getCategoryOrigins () {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
         return $dataObj->process($params);
     }
@@ -329,9 +332,59 @@ class pluginShop extends objectBaseWebPlugin {
         return $dataObj;
     }
 
-    private function _custom_api_getProductList_ByCategory () {}
+    private function _custom_api_getProductsByCategory ($params) {
 
-    private function _custom_api_getProductList_ByCategoryAndOrigin () {}
+        $categoryId = getValue($params['categoryId'], null);
+
+        $dataObj = new mpwsData();
+
+        if (!is_numeric($categoryId)) {
+            $dataObj->setDataError("Wrong category ID parameter");
+            return $dataObj;
+        }
+
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsByCategory['data']);
+
+        $dataObj->setValuesDbCondition($categoryId, MERGE_MODE_APPEND);
+
+        $products = $dataObj->process($params)->getData();
+        
+        // list of product ids to fetch related attributes
+        $productIDs = array();
+
+        // mapped data (key is record's ID)
+        $productsMap = array();
+        $attributesMap = array();
+
+        // pluck product IDs and create product map
+        foreach ($products as $value) {
+            $productIDs[] = $value['ID'];
+            $productsMap[$value['ID']] = $value;
+        }
+
+        // configure product attribute object
+        $attributesObj = $this->_custom_api_getProductAttributes($productIDs, true);
+        $attributesObj->extendConfig(array(
+            "options" => array(
+                "expandSingleRecord" => false
+            )
+        ), true);
+
+        // get product attributes and create map
+        $attributes = $attributesObj->process()->getData();
+        foreach ($attributes as $value)
+            $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
+
+        // update main data object
+        $dataObj->setData(array(
+            "products" => $productsMap,
+            "attributes" => $attributesMap
+        ));
+
+        return $dataObj;
+    }
+
+    private function _custom_api_getProductsByCategoryAndByOrigin ($params) {}
 
     // product item
     private function _custom_api_getProductItem ($pProductID, $type) {

@@ -316,8 +316,12 @@ APP.Modules.register("lib/mpws.page", [
                     var _dataParams = renderElementOptions.data.params || {};
                     if (typeof _dataSrc === "string")
                         $.post(_dataSrc, _dataParams, callbackData, "json");
-                    else if (_.isFunction(_dataSrc))
-                        _dataSrc.call(null, callbackData);
+                    else if (_.isFunction(_dataSrc)) {
+                        if (_.isEmpty(_dataParams))
+                            _dataSrc.call(null, callbackData);
+                        else
+                            _dataSrc.call(null, _dataParams, callbackData);
+                    }
                 }
 
                 // show loading state

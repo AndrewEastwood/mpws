@@ -28,8 +28,8 @@ APP.Modules.register("plugin/shop/router/shop", [], [
             "shop_home": "shop",
             "shop_latest": "shop/latest",
             "shop_catalog": "shop/catalog",
-            "shop_category": "shop/catalog/:category",
-            "shop_category_brand": "shop/catalog/:category/:brand",
+            "shop_products_category": "shop/catalog/:category",
+            "shop_products_category_brand": "shop/catalog/:category/:brand",
             "shop_product": "shop/product/:product",
             "shop_cart_view": "shop/cart",
             "shop_cart_checkout": "shop/cart/checkout"
@@ -65,17 +65,18 @@ APP.Modules.register("plugin/shop/router/shop", [], [
                 self.view.pageShopCatalog(route, name, callback);
             },
             // display category
-            shop_category: function () {
+            shop_products_category: function (categoryId) {
                 // here we handle different stuff:
                 // sorting by [name, date, price, popularity, etc]
                 // pagination
                 // 
                 // self.view.pageShopCatalogByCategory(route, name, callback);
                 // self.shopCatalogByCategory(route, name, callback);
-                self.view.pageShopCatalogByCategory();
+                app.log(true, 'shop_products_category', categoryId);
+                self.view.pageShopProductsByCategory(categoryId);
             },
             // display category
-            shop_category_brand: function () {
+            shop_products_category_brand: function () {
                 // here we handle different stuff:
                 // sorting by [name, date, price, popularity, etc]
                 // pagination
@@ -106,6 +107,23 @@ APP.Modules.register("plugin/shop/router/shop", [], [
 
         this.controller = new _Controller();
         app.log(true, 'Router.controller', this.controller);
+
+        window.shop = this;
+
+        this.refreshPage = function () {
+            Backbone.history.loadUrl();
+        }
+
+        this.isRouteActive = function (routePath) {
+            return Backbone.history.fragment === routePath;
+        }
+
+        this.redirectOrRefreshPage = function (routePath) {
+            if (Backbone.history.fragment === routePath)
+                self.refreshPage();
+            else
+                self.controller.navigate(routePath, {trigger: true});
+        }
     }
 
     return Router;

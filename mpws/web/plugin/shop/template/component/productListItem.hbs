@@ -4,7 +4,7 @@
           {{#if ProductAttributes.IMAGE}}
           <img src="{{ProductAttributes.IMAGE}}" title="{{Name}}" class="image" itemprop="image">
           {{else}}
-          <img src="noimage.png" title="{{Name}}" class="image image-empty" itemprop="image">
+          <img src="{{app}}noimage.png" title="{{Name}}" class="image image-empty" itemprop="image">
           {{/if}}
     </a>
   </div>
@@ -18,14 +18,14 @@
 
     <div class="thumbButtons">
       <button class="btn btn-primary btn-small" data-action="shop:buy" data-oid="{{ID}}" data-title="+To Cart" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-        <i class="icon-shopping-cart"></i>
+        <i class="fa fa-shopping-cart"></i>
       </button>
       <button class="btn btn-small" data-title="+To WishList" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-        <i class="icon-heart"></i>
+        <i class="fa fa-heart"></i>
       </button>
     
       <button class="btn btn-small" data-title="+To Compare" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-        <i class="icon-refresh"></i>
+        <i class="fa fa-files-o"></i>
       </button>
     </div>
 

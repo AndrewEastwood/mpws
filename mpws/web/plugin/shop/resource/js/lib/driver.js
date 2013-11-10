@@ -17,15 +17,30 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
 
     function pluginShopDriver () {}
 
-    pluginShopDriver.prototype.getProductItemByID = function (productId, callback) {
+    pluginShopDriver.prototype.getProductItemByID = function (params, callback) {
         app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
             fn: 'product_item_full',
-            params: {
-                realm: 'plugin',
-                pid: productId
-            }
+            params: _.extend(params, {
+                realm: 'plugin'
+            })
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function")
+                callback.call(null, error, _dataInterfaceFn(data));
+        })
+    }
+
+    pluginShopDriver.prototype.getProductsByCategory = function (params, callback) {
+        app.log(_logPrefix, 'getProductsByCategory', mpwsAPI/*, arguments.callee.caller*/);
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'products_category',
+            params: _.extend(params, {
+                realm: 'plugin'
+            })
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);

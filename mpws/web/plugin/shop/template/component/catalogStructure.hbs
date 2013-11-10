@@ -2,29 +2,29 @@
 {{#each source.data }}
 <li>
     {{#compare childrenCount ">" 0 }}
-    <a href="#">{{Name}}<i class="icon-caret-down"></i></a>
+    <a href="/#shop/catalog/{{ID}}">{{Name}}<i class="icon-caret-down"></i></a>
     <div>
         <ul>
         {{#each children }}
             {{#compare childrenCount ">" 0 }}
             <li>
-                <a href="#">{{Name}}<i class="icon-caret-right pull-right"></i></a>
+                <a href="/#shop/catalog/{{ID}}">{{Name}}<i class="icon-caret-right pull-right"></i></a>
                 <div>
                     <ul>
                     {{#each children }}
-                        <li><a href="#">{{Name}}</a></li>
+                        <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
                     {{/each}}
                     </ul>
                 </div>
             </li>
             {{else}}
-            <li><a href="#">{{Name}}</a></li>
+            <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
             {{/compare}}
         {{/each}}
         </ul>
     </div>
     {{else}}
-    <a href="#">{{Name}}</a>
+    <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
     {{/compare}}
 </li>
 {{/each}}

@@ -131,6 +131,10 @@ APP.Modules.register("router/customer", [], [
                 target: mpwsPageLib.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
             },
+            productsByCategory: {
+                target: mpwsPageLib.getPageBody(),
+                placement: mpwsPage.PLACEMENT.REPLACE
+            },
         }
     });
 
