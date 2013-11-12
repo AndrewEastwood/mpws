@@ -440,6 +440,10 @@ class pluginShop extends objectBaseWebPlugin {
                     break;
             }
 
+            // save product into recently viewed
+            $recentProducts = $_SESSION['shop:recentProducts'] ?: array();
+            $recentProducts[$pProductID] = $_prod;
+            $_SESSION['shop:recentProducts'] = $recentProducts;
 
             $dataObj->setData($_prod);
         }
