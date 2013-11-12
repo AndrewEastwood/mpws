@@ -31,6 +31,10 @@ APP.Modules.register("plugin/shop/view/render", [], [
             url: "plugin.shop.component.productItem@hbs",
             type: mpwsPage.TYPE.PARTIAL
         },
+        widgetCities: {
+            url: "plugin.shop.component.widgetCities@hbs",
+            type: mpwsPage.TYPE.PARTIAL
+        },
     }
 
 
@@ -206,6 +210,10 @@ APP.Modules.register("plugin/shop/view/render", [], [
     pluginShopRender.prototype.initialize = function (startHistory) {
         var self = this;
 
+        $('.component-shop-recently-viewed-embedded').on('click', function (){
+            _libHtml.messageBox('test');
+        })
+
         // init actions
         $('body').on('click', '[data-action]', function () {
             var _action = $(this).data('action');
@@ -268,6 +276,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 case "shop:cart:checkout":
                     self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_checkout);
                     break;
+                case "shop:cart:save":
+                    var _orderInfo = {};
+                    // use form serialize
+                    self.model.shoppingCartSave(_orderInfo, function(){
+
+                    });
                 default:
                     self.action_cartEmbeddedHide();
                     break;

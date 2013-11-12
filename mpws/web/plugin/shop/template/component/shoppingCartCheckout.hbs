@@ -39,6 +39,35 @@
         <span class="label">П.І.Б:</span>
         <span class="value"><input type="text"></span>
     </div>
+    <div class="block block-cart-buyer">
+        <span class="label">Тип доставки:</span>
+        <span class="value">
+            <label for="shopDeliveryCourierID">Доставка за адресою:</label>
+            <input type="radio" id="shopDeliveryCourierID" name="delivery" value="courier">
+            <label for="shopDeliverySelfServiceID">Самовивезення:</label>
+            <input type="radio" id="shopDeliverySelfServiceID" name="delivery" value="selfservice">
+        </span>
+    </div>
+    <!-- use accordion delivery/self -->
+    <h3>Доставка</h3>
+    <div class="block block-cart-buyer">
+        <span class="label">Місто:</span>
+        <span class="value">
+            {{>widgetCities}}
+        </span>
+    </div>
+    <div class="block block-cart-buyer">
+        <span class="label">Адреса:</span>
+        <span class="value">
+            <input type="text">
+        </span>
+    </div>
+    <div class="block block-cart-buyer">
+        <span class="label">Коментар:</span>
+        <span class="value">
+            <textarea id="shopCommentID" name="shop-comment"></textarea>
+        </span>
+    </div>
     <div class="spacer"></div>
     <div class="component component-buttons">
         <button type="button" class="button button-cart-clear" data-action="shop:cart:standalone-clear">

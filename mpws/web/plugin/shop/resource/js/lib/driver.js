@@ -182,6 +182,12 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, callback);
     }
 
+    pluginShopDriver.prototype.shoppingCartSave = function (data, callback) {
+        this.shoppingCartManager({
+            clear: true
+        }, callback);
+    }
+
     return pluginShopDriver;
 
 
