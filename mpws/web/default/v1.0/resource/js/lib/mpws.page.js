@@ -303,7 +303,7 @@ APP.Modules.register("lib/mpws.page", [
                 return;
             Storage.add(elementKey, true);
 
-            app.log(elementKey, Storage.getAll(), Storage.has(elementKey), renderElementOptions, renderElementOptions.isRequiredOnce);
+            app.log(true, elementKey, Storage.getAll(), Storage.has(elementKey), renderElementOptions, renderElementOptions.isRequiredOnce);
 
             _renderCommands[elementKey] = function (callback) {
                 // template (what render)
@@ -324,6 +324,10 @@ APP.Modules.register("lib/mpws.page", [
                     // call user's callback
                     if (_.isFunction(renderElementOptions.callback))
                         renderElementOptions.callback.apply(null, _args);
+                    // global notify
+                    Sandbox.eventNotify('mpws:page:render-complete', {
+                        component: elementKey
+                    });
                 };
                 // setup data
                 var _dataFn = function (callbackData) {

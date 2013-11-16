@@ -26,18 +26,9 @@
             <dd class="even">
                 <p>
                     <input type="text" disabled="disabled" id="amount" style="">
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
                 </p>
-                <div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false">
-                    <div class="ui-slider-range ui-widget-header ui-corner-all" style="left: 0%; width: 100%;"></div>
-                    <a class="ui-slider-handle ui-state-default ui-corner-all first_item" href="#" style="left: 0%;"></a>
-                    <a class="ui-slider-handle ui-state-default ui-corner-all last_item" href="#" style="left: 100%;"></a>
-                </div>
-                <div id="search" style="margin:10px 10px 0px 10px;">
-                    <input type="text" name="first_price" style="width:40px" class="form-control">--
-                    <input type="text" name="last_price" style="width:40px" class="form-control">
-                    <button class="btn btn-primary" type="button" name="search_price" id="search_price"><span><span>Search</span></span>
-                    </button>
-                </div>
+                <div id="slider-range"></div>
             </dd>
             <dt class="odd">Виробники:</dt>
             <dd class="odd">
@@ -60,9 +51,6 @@
                 </ol>
             </dd>
         </dl>
-        <script type="text/javascript">
-            decorateDataList('narrow-by-list')
-        </script>
     </div>
 </div>
 
@@ -158,10 +146,6 @@
                 </div>
             </li>
         </ul>
-        <!--  -->
-        <script type="text/javascript">
-            decorateGeneric($$('ul.products-grid'), ['odd', 'even', 'first', 'last'])
-        </script>
     </div>
     <!-- end exist product -->
 </div>

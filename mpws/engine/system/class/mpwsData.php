@@ -378,7 +378,9 @@ class mpwsData {
                 $dbo->order_by_asc($config['order']['field']);
         }
 
-        // var_dump($config);
+        // echo '>>>>>>>>>>>>>>>>>>>>>>>.dbo:';
+        // var_dump($dbo);
+        // echo '<<<<<<<<<<<<<<<<<<<<<<';
         switch ($action) {
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
@@ -411,7 +413,7 @@ class mpwsData {
                         $dbData = $this->mpwsOptimizeDataValues($dbData, $value ?: array());
                         break;
                     case 'combineDataByKeys':
-                        // var_dump($value);
+                        // var_dump($dbData);
                         $dbData = $this->mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], $value['doOptimization'] ?: true, $value['keysToForceTransformToArray'] ?: array());
                         break;
                     case 'expandSingleRecord':

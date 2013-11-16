@@ -372,6 +372,7 @@ class pluginShop extends objectBaseWebPlugin {
 
         // get product attributes and create map
         $attributes = $attributesObj->process()->getData();
+        // var_dump($attributes);
         foreach ($attributes as $value)
             $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
 

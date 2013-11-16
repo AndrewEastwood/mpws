@@ -168,6 +168,32 @@ APP.Modules.register("plugin/shop/view/render", [], [
         mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
 
+    pluginShopRender.prototype.pageShopCartCheckoutPreview = function () {
+        var self = this;
+        mpwsPageLib.pageName('shop-cart-checkout-preview');
+
+        var _pholders = this.getPlacehoders();
+        var _renderConfiguration = {
+            shoppingCartCheckout: {
+                data: {
+                    source: self.model.getShoppingCart
+                },
+                template: "plugin.shop.component.shoppingCartCheckoutPreview@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _pholders.shoppingCartCheckout,
+                callback: function () {
+                    self.action_cartEmbeddedHide();
+                }
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
+    }
+
+    pluginShopRender.prototype.pageShopCartCheckoutSave = function () {
+        var self = this;
+        mpwsPageLib.pageName('shop-cart-checkout-save');
+    }
     
     pluginShopRender.prototype.pageProductListLatest = function () {
         mpwsPageLib.pageName('shop-list-latest');
@@ -223,7 +249,18 @@ APP.Modules.register("plugin/shop/view/render", [], [
             var _oid = $(this).data('oid');
 
             switch (_action) {
-                case "shop:buy":
+                // wishlist
+                case "shop:wishlist:add":
+                    break;
+                case "shop:wishlist:remove":
+                    break;
+                // compare
+                case "shop:compare:add":
+                    break;
+                case "shop:compare:remove":
+                    break;
+                // cart
+                case "shop:cart:add":
                     self.model.shoppingCartAdd(_oid, function (rez) {
                         var _cartEmbeddedRenderConfig = mpwsPageLib.modifyRenderConfig(self.componentsCommon.cartEmbedded, {
                             callback: function () {
@@ -253,7 +290,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
                                 // self.action_cartEmbeddedHide();
                                 if (self.router.isRouteActive(self.router.navMap.shop_cart_view))
                                     self.router.refreshPage();
-                                if (self.router.isRouteActive(self.router.navMap.shop_cart_checkout))
+                                if (self.router.isRouteActive(self.router.navMap.shop_cart_checkout_view))
                                     self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_view);
                             }
                         });
@@ -272,14 +309,16 @@ APP.Modules.register("plugin/shop/view/render", [], [
                         // self.router.refreshPage();
                     });
                     break;
-                case "shop:cart:view": {
+                case "shop:cart:view":
                     self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_view);
                     break;
-                }
                 case "shop:cart:checkout":
-                    self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_checkout);
+                    self.router.redirectOrRefreshPage(self.router.navMap.shop_cart_checkout_view);
                     break;
-                case "shop:cart:save":
+                case "shop:cart:checkout:preview":
+                    self.pageShopCartCheckoutPreview();
+                    break;
+                case "shop:cart:checkout:save":
                     var _orderInfo = {};
                     // use form serialize
                     self.model.shoppingCartSave(_orderInfo, function(){
@@ -290,6 +329,11 @@ APP.Modules.register("plugin/shop/view/render", [], [
                     break;
             }
         })
+
+        Sandbox.eventSubscribe('mpws:page:render-complete', function (data) {
+            app.log(true, data);
+        });
+
     }
 
     // $('.icon-home').on('click', function(){

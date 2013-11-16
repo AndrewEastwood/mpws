@@ -4,12 +4,112 @@
 		"selected_items":
 		[
 			[
-				"cha",
-				"chartManager"
+				"pr",
+				"prototype"
+			],
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"rend",
+				"renderElementOptions"
+			],
+			[
+				"_",
+				"_"
+			],
+			[
+				"ma",
+				"margin-top"
+			],
+			[
+				"me",
+				"messageBox"
+			],
+			[
+				"rece",
+				"recentProducts"
+			],
+			[
+				"ro",
+				"routePath"
 			],
 			[
 				"ca",
-				"calcInfo"
+				"callback"
+			],
+			[
+				"is",
+				"isEmpty"
+			],
+			[
+				"cal",
+				"callbackData"
+			],
+			[
+				"err",
+				"errorMessage"
+			],
+			[
+				"cate",
+				"categoryId"
+			],
+			[
+				"cre",
+				"createRenderConfig"
+			],
+			[
+				"mpws",
+				"mpwsPageLib"
+			],
+			[
+				"pla",
+				"placement"
+			],
+			[
+				"mpw",
+				"mpwsPageLib"
+			],
+			[
+				"_re",
+				"_renderConfig"
+			],
+			[
+				"co",
+				"collection"
+			],
+			[
+				"op",
+				"options"
+			],
+			[
+				"arg",
+				"arguments"
+			],
+			[
+				"get",
+				"getPlacehoders"
+			],
+			[
+				"plu",
+				"pluginShopRender"
+			],
+			[
+				"setP",
+				"setPageState"
+			],
+			[
+				"pl",
+				"PLACEMENT"
+			],
+			[
+				"uns",
+				"unset"
+			],
+			[
+				"cha",
+				"chartManager"
 			],
 			[
 				"prod",
@@ -18,18 +118,6 @@
 			[
 				"pro",
 				"productEntry"
-			],
-			[
-				"pr",
-				"productEntry"
-			],
-			[
-				"pl",
-				"pluginShopModel"
-			],
-			[
-				"ma",
-				"margin-top"
 			],
 			[
 				"_tp",
@@ -42,18 +130,6 @@
 			[
 				"_da",
 				"_dataSrc"
-			],
-			[
-				"cal",
-				"callbackData"
-			],
-			[
-				"err",
-				"errorData"
-			],
-			[
-				"_re",
-				"_renderFn"
 			],
 			[
 				"tem",
@@ -70,18 +146,6 @@
 			[
 				"pa",
 				"parallel"
-			],
-			[
-				"_",
-				"_options"
-			],
-			[
-				"get",
-				"getOptions"
-			],
-			[
-				"plu",
-				"pluginShopDataLib"
 			],
 			[
 				"id",
@@ -132,10 +196,6 @@
 				"dataObj"
 			],
 			[
-				"co",
-				"config"
-			],
-			[
 				"con",
 				"condition"
 			],
@@ -184,16 +244,8 @@
 				"templateDataReceiverFn"
 			],
 			[
-				"mpws",
-				"mpwsPage"
-			],
-			[
 				"te",
 				"template"
-			],
-			[
-				"is",
-				"isFunction"
 			],
 			[
 				"de",
@@ -388,10 +440,6 @@
 				"child"
 			],
 			[
-				"bac",
-				"background-color"
-			],
-			[
 				"in",
 				"inline-block"
 			]
@@ -411,15 +459,7 @@
 			"file": "web/plugin/shop/plugin.shop.php",
 			"settings":
 			{
-				"buffer_size": 13623,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "engine/system/class/mpwsData.php",
-			"settings":
-			{
-				"buffer_size": 19552,
+				"buffer_size": 16933,
 				"line_ending": "Unix"
 			}
 		},
@@ -427,15 +467,7 @@
 			"file": "web/plugin/shop/config/data.ini",
 			"settings":
 			{
-				"buffer_size": 6820,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/v1.0/resource/js/lib/mpws.page.js",
-			"settings":
-			{
-				"buffer_size": 9348,
+				"buffer_size": 7127,
 				"line_ending": "Unix"
 			}
 		},
@@ -443,7 +475,15 @@
 			"file": "web/customer/pb.com.ua/resource/js/router/customer.js",
 			"settings":
 			{
-				"buffer_size": 3833,
+				"buffer_size": 4518,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/v1.0/resource/js/lib/mpws.page.js",
+			"settings":
+			{
+				"buffer_size": 12882,
 				"line_ending": "Unix"
 			}
 		},
@@ -451,7 +491,7 @@
 			"file": "web/plugin/shop/resource/js/router/shop.js",
 			"settings":
 			{
-				"buffer_size": 4861,
+				"buffer_size": 5475,
 				"line_ending": "Unix"
 			}
 		},
@@ -459,15 +499,7 @@
 			"file": "web/plugin/shop/resource/js/view/render.js",
 			"settings":
 			{
-				"buffer_size": 8328,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "shoppingChartStandalone",
-			"settings":
-			{
-				"buffer_size": 23,
+				"buffer_size": 13240,
 				"line_ending": "Unix"
 			}
 		},
@@ -475,15 +507,7 @@
 			"file": "web/plugin/shop/resource/js/lib/driver.js",
 			"settings":
 			{
-				"buffer_size": 5579,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/v1.0/resource/js/lib/mpws.api.js",
-			"settings":
-			{
-				"buffer_size": 5132,
+				"buffer_size": 6308,
 				"line_ending": "Unix"
 			}
 		},
@@ -491,55 +515,31 @@
 			"file": "web/customer/pb.com.ua/template/layout/defaultLayout.html",
 			"settings":
 			{
-				"buffer_size": 8992,
+				"buffer_size": 7600,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/v1.0/resource/js/lib/templateEngine.js",
+			"file": "engine/system/class/mpwsData.php",
 			"settings":
 			{
-				"buffer_size": 761,
+				"buffer_size": 19958,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/customer/pb.com.ua/resource/style/default/default.css",
+			"file": "web/customer/pb.com.ua/resource/style/default/new.less",
 			"settings":
 			{
-				"buffer_size": 66531,
+				"buffer_size": 112077,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/v1.0/resource/js/lib/htmlComponents.js",
+			"file": "web/plugin/shop/template/component/pageSidebar.hbs",
 			"settings":
 			{
-				"buffer_size": 36442,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/v1.0/template/layout/defaultPublic.html",
-			"settings":
-			{
-				"buffer_size": 4660,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/template/component/productListItem.hbs",
-			"settings":
-			{
-				"buffer_size": 1595,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/template/component/shoppingChartStandalone.hbs",
-			"settings":
-			{
-				"buffer_size": 53,
+				"buffer_size": 7425,
 				"line_ending": "Unix"
 			}
 		}
@@ -547,15 +547,39 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 0.0,
+		"height": 369.0,
 		"selected_items":
 		[
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"les",
+				"Set Syntax: LESS"
+			],
+			[
+				"sni",
+				"Snippet: each(handlebars)"
+			],
+			[
+				"hand",
+				"Set Syntax: Handlebars"
+			],
+			[
+				"mus",
+				"Set Syntax: HTML with mustaches"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			]
 		],
-		"width": 0.0
+		"width": 449.0
 	},
 	"console":
 	{
-		"height": 139.0
+		"height": 301.0
 	},
 	"distraction_free":
 	{
@@ -568,25 +592,58 @@
 	},
 	"file_history":
 	[
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
-		"/devdata/Develop/github/web/mpws/engine/system/class/mpwsData.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/lib/driver.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productList.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingCartCheckoutPreview.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productListItem.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingCartStandalone.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/mpws.ui.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/jquery-ui.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/template/layout/defaultPublic.html",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingCartCheckout.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingCartEmbedded.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/mpws.ui.less",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/catalogStructure.hbs",
+		"/home/admin1/.cache/.fr-H72m5Y/css/bootstrap.css",
+		"/home/admin1/.cache/.fr-fTUVoT/css/bootstrap.css",
+		"/home/admin1/.cache/.fr-52dwbk/css/bootstrap.css",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/resources.ini",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/bootstrap-combobox.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/bootstrap-combobox.css",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/widgetCities.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/bootstrap.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/zepto.js",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/utils.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingChartStandalone.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/handlebars_helpers.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/jumbotron.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/storage.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/catalogByCategoryList.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/pageSidebar.hbs",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/new.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/customer.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/default.css",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/new.css",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/fontawesome.css",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/recentlyViewedProductsEmbedded.hbs",
+		"/home/admin1/.cache/.fr-kVpHXT/font-awesome-4.0.3/css/font-awesome.css",
+		"/devdata/Develop/github/web/mpws/engine/system/class/mpwsData.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.ORM.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/template/layout/defaultLayout.html",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingChartEmbedded.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/templateEngine.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/htmlComponents.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/router/shop.js",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/customer.ini",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/shoppingChartStandalone.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/mpws.api.js",
+		"/home/admin1/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/lib/driver.js",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/mpws.page.js",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/handlebars.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productList.hbs",
-		"/home/admin1/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
-		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/template/layout/defaultLayout.html",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/productItem.hbs",
-		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/default.css",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.JsApi.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/renderDataTrigger.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/categoryStructure.hbs",
-		"/devdata/Develop/github/web/mpws/engine/system/library/library.ORM.php",
 		"/devdata/Develop/github/web/mpws/engine/system/object/object.BaseWebCustomer.php",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/mdbc.ini",
 		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light.sql",
@@ -595,8 +652,6 @@
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/system.ini",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/router/base.js",
 		"/home/admin1/.cache/.fr-fxuc9S/30-10-2013.sql",
-		"/devdata/Develop/github/web/mpws/web/default/v1.0/template/layout/defaultPublic.html",
-		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/customer.less",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/renderComponents.less",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/loader.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicHome.hbs",
@@ -605,13 +660,11 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicCatalogCategoryBrand.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicCatalogCategory.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/page/publicCatalog.hbs",
-		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/resources.ini",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/default/customize.css",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.StaticResourceManager.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/style/theme_pb_default.css",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/bootstrap_2.2.2.css",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/resource/js/router/customer.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/router/shop.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/resource/js/view/render.js",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/customer.toolbox.php",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/data.ini",
@@ -626,11 +679,7 @@
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/data.ini",
 		"/devdata/Develop/github/web/mpws/web/default/v1.0/template/layout/defaultSystem.html",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/resources.ini",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/pageSidebar.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/template/component/catalog.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/mpws.api.js",
-		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/js/lib/templateEngine.js",
-		"/devdata/Develop/github/web/mpws/web/default/v1.0/resource/style/fontawesome.css",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.Static.php",
 		"/devdata/Develop/github/web/mpws/.htaccess",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.Request.php",
@@ -666,36 +715,11 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataTableViewSystemUsers.property",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/customer.ini",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/config/customer.ini",
-		"/devdata/Develop/github/web/mpws/web/default/v1.0/config/customer.ini",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.WebPageModel.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/customer.pb.com.ua.php",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/widget.ini",
 		"/devdata/Develop/github/web/mpws/web/plugin/system/property/en_us/dataEditorSystemUsers.property",
-		"/devdata/Develop/github/web/mpws/users.json",
-		"/devdata/Develop/github/web/mpws/googleJS.js",
-		"/devdata/Develop/github/web/mpws/widget.table.js",
-		"/devdata/Develop/github/web/mpws/index.html",
-		"/devdata/Develop/github/web/mpws/style.css",
-		"/media/sda3/Develop/github/web/mpws/loader.js",
-		"/media/sda3/Develop/github/web/mpws/engine/bootstrap.php",
-		"/media/sda3/Develop/github/web/mpws/backbone-min.js",
-		"/media/sda3/Develop/github/web/mpws/bb.test.js",
-		"/media/sda3/Develop/github/web/mpws/users.json",
-		"/media/sda3/Develop/github/web/mpws/underscore-min.js",
-		"/media/sda3/Develop/github/web/mpws/web/plugin/system/config/widget.ini",
-		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/property/en_us/widget.property",
-		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/property/en_us/control.property",
-		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.StaticResourceManager.php",
-		"/etc/tomcat7/tomcat-users.xml",
-		"/etc/tomcat7/logging.properties",
-		"/home/admin1/.m2/settings.xml",
-		"/media/sda3/Develop/github/java/training/db/Hello.java",
-		"/media/sda3/Develop/github/java/training/Hello.java",
-		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/plugin.toolbox.php",
-		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/resource/plugins/theme/jquery-ui-1.9.1.custom.css",
-		"/media/sda3/Develop/github/web/mpws/engine/system/library/library.Components.php",
-		"/media/sda3/Develop/github/web/mpws/web/plugin/toolbox/config/widget.ini",
-		"/media/sda3/Develop/github/web/mpws/web/default/v1.0/template/component/dataTable.html"
+		"/devdata/Develop/github/web/mpws/users.json"
 	],
 	"find":
 	{
@@ -703,7 +727,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"/devdata/Develop/github/web/mpws/web",
@@ -716,6 +740,71 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"shop_cart_checkout_view",
+			"shop:cart:checkout",
+			"_custom_api_getProductAttributes",
+			"_custom_api_getProductsByCategory",
+			"products_category",
+			"submenu",
+			"dropdow",
+			"submenu",
+			"dropdownsubmenu",
+			"dropdown-submenu",
+			"submenu",
+			"class=\"form-control\"",
+			"total",
+			"compare",
+			"small",
+			"\">\n",
+			"00be9c",
+			"li",
+			"15987E",
+			".navbar-nav > li > a:hover",
+			"148f77",
+			"rgba(20, 143, 119",
+			"rgba(22, 157, 130",
+			"rgba(22, 157, 130, 0.71)",
+			"17a689",
+			"52d273",
+			"28e1bd",
+			"28E1BD",
+			"B27200",
+			"1abc9c",
+			"#1ABC9C",
+			"logo",
+			"{};",
+			"shop:cart:save",
+			"icon-",
+			"v=4.0.3",
+			"llipsis",
+			"fa-ellipsis-h",
+			"dot",
+			"expandSingleRecord",
+			"pageShopCatalogByCategory",
+			"AND",
+			"exec",
+			"chart",
+			"Chart",
+			"chart",
+			"Chart",
+			"chart",
+			"Chart",
+			"chart",
+			"Chart",
+			"shoppingChartRemove",
+			"getPageBody",
+			"$('.MPWSPageBody')",
+			",",
+			": ",
+			":",
+			"shoppingChartEmbedded",
+			"label",
+			"_opts",
+			"this.element",
+			"_custom_api_getShoppingChart",
+			"chartGetA",
+			"();\n",
+			"self.view",
 			"_custom_api_getShoppingChart",
 			"getShopCatalogStructure",
 			"  var_d",
@@ -778,72 +867,7 @@
 			"_add_simple_condition",
 			"_add_simple_where",
 			"_build_where",
-			");\n",
-			"_execute",
-			"save",
-			"SignOut",
-			"=> ",
-			"_dirty_fields",
-			"save(",
-			"hydrate",
-			"fetchData",
-			"$this",
-			"for_table",
-			"with_table",
-			"_build_update",
-			"set(",
-			"іуе",
-			"_build_insert",
-			"delete",
-			"insert",
-			"save",
-			"force_all_dirty",
-			"create",
-			"update",
-			"insert",
-			"save",
-			"update",
-			"_build_upda",
-			"hydrate",
-			"_build_conditions",
-			"_build_where",
-			"update",
-			"set(",
-			"set_orm_prop",
-			"set_property",
-			"_data",
-			"_query_cache",
-			"_run",
-			"find_array",
-			"configure",
-			"_setup_db_config",
-			"for_table",
-			"with_table",
-			"with_ta",
-			"_execute",
-			"id(",
-			"id",
-			"_get_id_column_name",
-			"_dirty_fields",
-			"_build_update",
-			"update",
-			"dataObj",
-			"mpwsCombineDataByKeys",
-			"_custom_api_getProductItemPriceArchive",
-			"_custom_api_getProductItemAttributes",
-			"$data ",
-			"$data",
-			"dataProductPrices",
-			"dataProductAttr",
-			"where_in",
-			"_create_placeholders",
-			"where_in",
-			"var_d",
-			"where_not_like",
-			"where_null",
-			"where_not_null",
-			"IS NOT NULL",
-			"where_not_null"
+			");\n"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -861,7 +885,7 @@
 	"groups":
 	[
 		{
-			"selected": 17,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -876,64 +900,8 @@
 						"selection":
 						[
 							[
-								446,
-								446
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 158.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "web/plugin/shop/plugin.shop.php",
-					"settings":
-					{
-						"buffer_size": 13623,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5485,
-								5485
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1036.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "engine/system/class/mpwsData.php",
-					"settings":
-					{
-						"buffer_size": 19552,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2065,
-								2065
+								5,
+								5
 							]
 						],
 						"settings":
@@ -949,24 +917,80 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "web/plugin/shop/config/data.ini",
+					"buffer": 1,
+					"file": "web/plugin/shop/plugin.shop.php",
 					"settings":
 					{
-						"buffer_size": 6820,
+						"buffer_size": 16933,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								985,
-								985
+								13015,
+								13015
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4167.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "web/plugin/shop/config/data.ini",
+					"settings":
+					{
+						"buffer_size": 7127,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5005,
+								5005
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2382.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "web/customer/pb.com.ua/resource/js/router/customer.js",
+					"settings":
+					{
+						"buffer_size": 4518,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3291,
+								3291
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -981,15 +1005,15 @@
 					"file": "web/default/v1.0/resource/js/lib/mpws.page.js",
 					"settings":
 					{
-						"buffer_size": 9348,
+						"buffer_size": 12882,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								161,
-								161
+								8586,
+								8586
 							]
 						],
 						"settings":
@@ -999,25 +1023,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3275.0,
+						"translation.y": 5118.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "web/customer/pb.com.ua/resource/js/router/customer.js",
+					"file": "web/plugin/shop/resource/js/router/shop.js",
 					"settings":
 					{
-						"buffer_size": 3833,
+						"buffer_size": 5475,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2936,
-								2936
+								71,
+								71
 							]
 						],
 						"settings":
@@ -1027,52 +1051,53 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 126.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "web/plugin/shop/resource/js/router/shop.js",
+					"file": "web/plugin/shop/resource/js/view/render.js",
 					"settings":
 					{
-						"buffer_size": 4861,
+						"buffer_size": 13240,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1402,
-								1402
+								12620,
+								12620
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 203.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 7,
-					"file": "web/plugin/shop/resource/js/view/render.js",
+					"file": "web/plugin/shop/resource/js/lib/driver.js",
 					"settings":
 					{
-						"buffer_size": 8328,
+						"buffer_size": 6308,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6082,
-								6082
+								6173,
+								6173
 							]
 						],
 						"settings":
@@ -1082,280 +1107,116 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 749.0,
+						"translation.y": 2357.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 8,
+					"file": "web/customer/pb.com.ua/template/layout/defaultLayout.html",
 					"settings":
 					{
-						"buffer_size": 23,
+						"buffer_size": 7600,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23,
-								23
+								356,
+								356
 							]
 						],
 						"settings":
 						{
-							"default_dir": "/devdata/Develop/github/web/mpws/web/plugin/shop/template/component",
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 153.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 9,
-					"file": "web/plugin/shop/resource/js/lib/driver.js",
+					"file": "engine/system/class/mpwsData.php",
 					"settings":
 					{
-						"buffer_size": 5579,
+						"buffer_size": 19958,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3217,
-								3217
+								6817,
+								6817
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/PHP/PHP.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1220.0,
+						"translation.y": 704.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 10,
-					"file": "web/default/v1.0/resource/js/lib/mpws.api.js",
+					"file": "web/customer/pb.com.ua/resource/style/default/new.less",
 					"settings":
 					{
-						"buffer_size": 5132,
+						"buffer_size": 112077,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11,
-								11
+								112071,
+								112071
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
+							"syntax": "Packages/LESS/LESS.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1846.0,
+						"translation.y": 93459.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 11,
-					"file": "web/customer/pb.com.ua/template/layout/defaultLayout.html",
+					"file": "web/plugin/shop/template/component/pageSidebar.hbs",
 					"settings":
 					{
-						"buffer_size": 8992,
+						"buffer_size": 7425,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								109,
-								109
+								1414,
+								1414
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "web/default/v1.0/resource/js/lib/templateEngine.js",
-					"settings":
-					{
-						"buffer_size": 761,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								274,
-								274
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/Handlebars/Handlebars.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "web/customer/pb.com.ua/resource/style/default/default.css",
-					"settings":
-					{
-						"buffer_size": 66531,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								65270,
-								65270
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 47566.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "web/default/v1.0/resource/js/lib/htmlComponents.js",
-					"settings":
-					{
-						"buffer_size": 36442,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								32854,
-								32854
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 16782.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "web/default/v1.0/template/layout/defaultPublic.html",
-					"settings":
-					{
-						"buffer_size": 4660,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								261,
-								261
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "web/plugin/shop/template/component/productListItem.hbs",
-					"settings":
-					{
-						"buffer_size": 1595,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								748,
-								748
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "web/plugin/shop/template/component/shoppingChartStandalone.hbs",
-					"settings":
-					{
-						"buffer_size": 53,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								53,
-								53
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1408,11 +1269,27 @@
 		"selected_items":
 		[
 			[
-				"mpws",
+				"mpwsdata",
 				"mpws/engine/system/class/mpwsData.php"
 			],
 			[
-				"mpwsdata",
+				"help",
+				"mpws/web/default/v1.0/resource/js/lib/handlebars_helpers.js"
+			],
+			[
+				"font",
+				"mpws/web/default/v1.0/resource/style/fontawesome.css"
+			],
+			[
+				"mpwsda",
+				"mpws/engine/system/class/mpwsData.php"
+			],
+			[
+				"orm",
+				"mpws/engine/system/library/library.ORM.php"
+			],
+			[
+				"mpws",
 				"mpws/engine/system/class/mpwsData.php"
 			],
 			[
@@ -1426,10 +1303,6 @@
 			[
 				"glo",
 				"mpws/engine/global/global.const.php"
-			],
-			[
-				"orm",
-				"engine/system/library/library.ORM.php"
 			],
 			[
 				"secu",
@@ -1542,6 +1415,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 463.0,
+	"side_bar_width": 333.0,
 	"status_bar_visible": true
 }

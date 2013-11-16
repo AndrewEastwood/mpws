@@ -1,5 +1,5 @@
 <div class="component component-shop-cart component-shop-cart-checkout">
-    <h4>Оформлення замовлення:</h4>
+    <h4>Перевірка замовлення:</h4>
 {{#if_eq source.data.cart.total "0" }}
     <p class="message message-nodata">У Вас немає товарів для замовлення.</p>
 {{else}}
@@ -147,9 +147,8 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-danger" data-action="shop:cart:standalone-clear">Очистити кошик</button>
-                <button type="submit" class="btn btn-default" data-action="shop:cart:view">Повернутися до кошика</button>
-                <button type="submit" class="btn btn-success" data-action="shop:cart:checkout:preview">Попередній перегляд</button>
+                <button type="submit" class="btn btn-warning" data-action="shop:cart:checkout">Змінити</button>
+                <button type="submit" class="btn btn-success" data-action="shop:cart:checkout:save">Оформити</button>
             </div>
         </div>
     </div>

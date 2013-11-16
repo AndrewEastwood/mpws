@@ -32,7 +32,9 @@ APP.Modules.register("plugin/shop/router/shop", [], [
             "shop_products_category_brand": "shop/catalog/:category/:brand",
             "shop_product": "shop/product/:product",
             "shop_cart_view": "shop/cart",
-            "shop_cart_checkout": "shop/cart/checkout"
+            "shop_cart_checkout_view": "shop/cart/checkout/&",
+            "shop_cart_checkout_preview": "shop/cart/checkout/preview/&",
+            "shop_cart_checkout_save": "shop/cart/checkout/preview/&"
         };
 
         app.log(true, 'plugin/shop/router/shop creating new instance', _.invert(this.navMap));
@@ -90,9 +92,17 @@ APP.Modules.register("plugin/shop/router/shop", [], [
                 // self.shopCart();
                 self.view.pageShopCart();
             },
-            shop_cart_checkout: function () {
+            shop_cart_checkout_view: function () {
                 // self.shopCartCheckout();
                 self.view.pageShopCartCheckout();
+            },
+            shop_cart_checkout_preview: function () {
+                // self.shopCartCheckout();
+                self.view.pageShopCartCheckoutPreview();
+            },
+            shop_cart_checkout_save: function () {
+                // self.shopCartCheckout();
+                self.view.pageShopCartCheckoutSave();
             },
             // display particular product
             shop_product: function (productId, name, callback) {
