@@ -1,8 +1,20 @@
-/* MPWS API
+/* MPWS UI
  * --------
  */
+APP.Modules.register("lib/mpws.ui", [
+    /* import globals */
+    window
+], [
+  'lib/jquery',
+  'lib/jquery_ui',
+  'lib/bootstrap-combobox',
+    /* component implementation */
+], function(window, app, Sandbox, jQuery, _) {
 
-(function (window, document, $, mpws) {
+});
+
+
+/*(function (window, document, $, mpws) {
 
 
     function mpwsTooltip (text, binder, prefix, removeAfter) {
@@ -542,3 +554,4 @@
     }
 
 })(window, document, jQuery, (window.mpws = window.mpws || {})); 
+*/

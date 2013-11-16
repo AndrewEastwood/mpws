@@ -12,11 +12,13 @@ APP.Modules.register("lib/mpws.page", [
     'lib/backbone',
     'lib/mpws.api',
     'lib/templateEngine',
-    'lib/async'
+    'lib/async',
+    'lib/storage',
+    'lib/utils',
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function (wnd, app, Sandbox, $, _, Backbone, mpwsAPI, tplEngine, AsyncLib) {
+], function (wnd, app, Sandbox, $, _, Backbone, mpwsAPI, tplEngine, AsyncLib, Storage) {
 
     function mpwsPage () {}
 
@@ -200,6 +202,7 @@ APP.Modules.register("lib/mpws.page", [
             placeholder = self.createRenderPlacement(); // default placeholder
 
         var _renderConfig = {
+            isRequiredOnce: options.isRequiredOnce || false,
             name: name,
             data: options.data || {},
             template: options.template || false,
@@ -260,7 +263,11 @@ APP.Modules.register("lib/mpws.page", [
                 // render into placeholder
                 if (placeholder && placeholder.target) {
                     var _injectionType = placeholder.placement || mpwsPage.PLACEMENT.REPLACE;
-                    app.log(true, 'injection time', _injectionType);
+                    // remove previous dom element
+                    var _elementID = $(html).filter('*').first().attr('id');
+                    if (!_.isEmpty(_elementID))
+                        $(placeholder.target).find(_elementID.asCssID()).remove();
+                    // add new element
                     if (_injectionType == mpwsPage.PLACEMENT.REPLACE)
                         $(placeholder.target).html(html);
                     else if (_injectionType == mpwsPage.PLACEMENT.PREPEND)
@@ -290,6 +297,14 @@ APP.Modules.register("lib/mpws.page", [
 
         // transform config
         _(options).each(function (renderElementOptions, elementKey) {
+
+            // avoid loading already loaded component
+            if (Storage.has(elementKey) && renderElementOptions.isRequiredOnce)
+                return;
+            Storage.add(elementKey, true);
+
+            app.log(elementKey, Storage.getAll(), Storage.has(elementKey), renderElementOptions, renderElementOptions.isRequiredOnce);
+
             _renderCommands[elementKey] = function (callback) {
                 // template (what render)
                 var _tpl = renderElementOptions.template;

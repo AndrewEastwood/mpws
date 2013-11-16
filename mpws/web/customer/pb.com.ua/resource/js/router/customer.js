@@ -108,8 +108,8 @@ APP.Modules.register("router/customer", [], [
     var pluginShopRouterLib = new pluginShopRouter({
         placeholders: {
             menu: {
-                target: $('.mainNav .navbar'),
-                placement: mpwsPage.PLACEMENT.REPLACE
+                target: $('header .navbar-nav-main'),
+                placement: mpwsPage.PLACEMENT.APPEND
             },
             productsLatest: {
                 target: mpwsPageLib.getPageBody(),
@@ -124,8 +124,8 @@ APP.Modules.register("router/customer", [], [
                 placement: mpwsPage.PLACEMENT.REPLACE
             },
             shoppingCartEmbedded: {
-                target: $('.component-shop-cart-embedded'),
-                placement: mpwsPage.PLACEMENT.REPLACE
+                target: $('header .navbar-nav-plugins'),
+                placement: mpwsPage.PLACEMENT.APPEND
             },
             shoppingCartCheckout: {
                 target: mpwsPageLib.getPageBody(),

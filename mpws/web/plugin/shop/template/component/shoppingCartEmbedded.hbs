@@ -1,13 +1,12 @@
-<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-  <i class="icon-shopping-cart"></i> {{source.data.cart.productAmount}} Позиції(й)
-  <span class="caret"></span>
-</a>
-<div class="dropdown-menu cart-content pull-right">
-{{#if_eq source.data.cart.total "0" }}
-    <p class="message message-nodata">Ваш кошик порожній</p>
-{{else}}
-    <ul class="list list-cart-products">
-    {{#each source.data.products}}
+<li class="component-shop-cart-embedded" id="component-shop-cart-embedded-id">
+    {{#if_eq source.data.cart.total "0" }}
+    <a href="#shop/cart">Кошик (0)</a>
+    {{else}}
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Кошик ({{source.data.cart.productAmount}}) <b class="caret"></b></a>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="#shop/cart">Перейти до кошика</a></li>
+        <li class="divider"></li>
+        {{#each source.data.products}}
         <li>
             <div class="block block-cart-item">
                 <span class="label label-product-name">
@@ -22,21 +21,24 @@
                 <i class="fa fa-trash-o" data-action="shop:cart:embedded-item-remove" data-oid="{{ID}}"></i>
             </div>
         </li>
-    {{/each}}
+        {{/each}}
+        <li class="divider"></li>
+        <li>
+            <div class="spacer"></div>
+            <div class="component component-cart-summary">
+                <span class="label label-cart-total">Загальна сума</span>
+                <span class="value value-cart-total">{{source.data.cart.total}}</span>
+            </div>
+            <div class="spacer"></div>
+            <div class="component component-buttons">
+                <button type="button" class="btn btn-xs button-cart-clear" data-action="shop:cart:embedded-clear">
+                    Очистити кошик
+                </button>
+                <button type="button" class="btn btn-xs btn-primary button-clear" data-action="shop:cart:checkout">
+                    Оформити замовлення
+                </button>
+            </div>
+        </li>
     </ul>
-    <div class="spacer"></div>
-    <div class="component component-cart-summary">
-        <span class="label label-cart-total">Загальна сума</span>
-        <span class="value value-cart-total">{{source.data.cart.total}}</span>
-    </div>
-    <div class="spacer"></div>
-    <div class="component component-buttons">
-        <button type="button" class="button button-cart-clear" data-action="shop:cart:embedded-clear">
-            Очистити кошик
-        </button>
-        <button type="button" class="button button-clear" data-action="shop:cart:checkout">
-            Оформити замовлення
-        </button>
-    </div>
-{{/if_eq}}
-</div>
+    {{/if_eq}}
+</li>

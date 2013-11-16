@@ -5,6 +5,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/mpws.api',
     'lib/mpws.page',
     'plugin/shop/lib/driver',
+    'lib/mpws.ui',
 ], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopModel) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
@@ -51,6 +52,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
         // setup common render components
 
         mpwsPageLib.createRenderConfig('categoryStructure', {
+            isRequiredOnce: true,
             data: {
                 source: self.model.getShopCatalogStructure
             },
@@ -60,6 +62,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
         }, this.componentsCommon);
 
         mpwsPageLib.createRenderConfig('cartEmbedded', {
+            isRequiredOnce: false,
             data: {
                 source: self.model.getShoppingCart
             },

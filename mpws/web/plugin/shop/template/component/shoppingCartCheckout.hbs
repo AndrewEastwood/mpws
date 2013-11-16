@@ -1,85 +1,161 @@
 <div class="component component-shop-cart component-shop-cart-checkout">
+    <h4>Оформлення замовлення:</h4>
 {{#if_eq source.data.cart.total "0" }}
-    <p class="message message-nodata">Ваш кошик порожній</p>
+    <p class="message message-nodata">У Вас немає товарів для замовлення.</p>
 {{else}}
-    <ul class="list list-cart-products">
+    <table class="table table-striped table-cart-products">
     {{#each source.data.products}}
-        <li>
-            <div class="block block-cart-item">
+        <tr class="block block-cart-item">
+            <td>
                 <span class="label label-product-name">
                     <a href="/#shop/product/{{ID}}" title="Перейти до {{{Name}}}">{{Name}}</a>
                 </span>
+            </td>
+            <td>
                 <span class="value value-product-price">{{Price}}</span>
                 <span class="label label-mathsign">x</span>
+            </td>
+            <td>
                 <span class="value value-product-amount">
-                    <input type="text" value="{{Amount}}"/>
-                </span>
+            </td>
+            <td>
+                <input type="text" value="{{Amount}}"/>
+            </td>
+            <td>
                 <span class="value value-product-total">{{Total}}</span>
-                <i class="icon-trash" data-action="shop:cart:item-remove" data-oid="{{ID}}"></i>
-            </div>
-        </li>
+            </td>
+            <td>
+                <i class="fa fa-trash-o" data-action="shop:cart:item-remove" data-oid="{{ID}}"></i>
+            </td>
+        </tr>
     {{/each}}
-    </ul>
+        <tr class="block block-cart-item success">
+            <td colspan="4">
+                <span class="label label-cart-total">Знижка:</span>
+            </td>
+            <td>
+                <span class="value value-cart-total">{{source.data.cart.discount}}</span>
+            </td>
+            <td></td>
+        </tr>
+        <tr class="block block-cart-item warning">
+            <td colspan="4">
+                <span class="label label-cart-total">Загальна сума:</span>
+            </td>
+            <td>
+                <span class="value value-cart-total">{{source.data.cart.total}}</span>
+            </td>
+            <td></td>
+        </tr>
+    </table>
     <div class="spacer"></div>
-    <div class="component component-cart-summary">
-        <span class="label label-cart-total">Загальна сума</span>
-        <span class="value value-cart-total">{{source.data.cart.total}}</span>
-    </div>
+    <form class="form-horizontal" role="form">
+        <!-- persoanl information  -->
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Ваше Імя:</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Телефон:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">E-mail:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Доставка:</label>
+            <div class="col-sm-10">
+                <div class="panel-group" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        <div class="radio">
+                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                          <label for="optionsRadios1">Самовивезення</label>
+                        </div>
+                      </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                      <div class="panel-body">
+
+                        <strong>Я особисто приїду за товаром</strong>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        <div class="radio">
+                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option1">
+                          <label for="optionsRadios2">Доставка за адресою</label>
+                        </div>
+                      </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                      <div class="panel-body">
+
+                        <h4>Доставка товару курєром:</h4>
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Курєр та склад:</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Місто:</label>
+                            <div class="col-sm-10">
+                                {{>widgetCities}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Адреса:</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Коментар:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="shopCommentID" name="shop-comment" rows="3"></textarea>
+            </div>
+        </div>
+        <!-- additional (Show this when user is not using account)  -->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">Створити профіль
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-danger" data-action="shop:cart:standalone-clear">Очистити кошик</button>
+                <button type="submit" class="btn btn-default" data-action="shop:cart:view">Повернутися до кошика</button>
+                <button type="submit" class="btn btn-success" data-action="shop:cart:preview">Попередній перегляд</button>
+            </div>
+        </div>
+    </form>
+
     <div class="spacer"></div>
-    <!-- persoanl information  -->
-    <div class="block block-cart-buyer">
-        <span class="label">Телефон:</span>
-        <span class="value"><input type="text"></span>
-    </div>
-    <div class="block block-cart-buyer">
-        <span class="label">E-mail:</span>
-        <span class="value"><input type="text"></span>
-    </div>
-    <div class="block block-cart-buyer">
-        <span class="label">П.І.Б:</span>
-        <span class="value"><input type="text"></span>
-    </div>
-    <div class="block block-cart-buyer">
-        <span class="label">Тип доставки:</span>
-        <span class="value">
-            <label for="shopDeliveryCourierID">Доставка за адресою:</label>
-            <input type="radio" id="shopDeliveryCourierID" name="delivery" value="courier">
-            <label for="shopDeliverySelfServiceID">Самовивезення:</label>
-            <input type="radio" id="shopDeliverySelfServiceID" name="delivery" value="selfservice">
-        </span>
-    </div>
-    <!-- use accordion delivery/self -->
-    <h3>Доставка</h3>
-    <div class="block block-cart-buyer">
-        <span class="label">Місто:</span>
-        <span class="value">
-            {{>widgetCities}}
-        </span>
-    </div>
-    <div class="block block-cart-buyer">
-        <span class="label">Адреса:</span>
-        <span class="value">
-            <input type="text">
-        </span>
-    </div>
-    <div class="block block-cart-buyer">
-        <span class="label">Коментар:</span>
-        <span class="value">
-            <textarea id="shopCommentID" name="shop-comment"></textarea>
-        </span>
-    </div>
-    <div class="spacer"></div>
-    <div class="component component-buttons">
-        <button type="button" class="button button-cart-clear" data-action="shop:cart:standalone-clear">
-            Очистити кошик
-        </button>
-        <button type="button" class="button button-cart-back" data-action="shop:cart:view">
-            Повернутися до кошика
-        </button>
-        <button type="button" class="button button-cart-checkout" data-action="shop:cart:save">
-            Зберегти
-        </button>
-    </div>
+
 {{/if_eq}}
 
 

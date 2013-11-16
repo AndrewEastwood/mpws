@@ -1,4 +1,4 @@
-APP.Modules.register("lib/zepto", [
+APP.Modules.register("lib/_xzepto", [
     /* import globals */
     window
 ], [

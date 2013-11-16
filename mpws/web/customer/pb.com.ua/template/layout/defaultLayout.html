@@ -4,65 +4,62 @@
     <link rel="stylesheet" type="text/css" href="//codeorigin.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 {/block}
 
+{block name="pageCommonBefore"}
+<!-- MAIN WRAPPER class="wrapper" max-width="1110px"-->
+<div class="wrapper">
+{/block}
+
+{block name="pageCommonAfter"}
+</div>
+{/block}
+
 {block name="pageHeader"}
 <header>
-      <div class="upperHeader">
-        <div class="container">
-          <ul class="pull-right inline">
-            <li><a class="invarseColor" href="#">Мій профіль</a></li>
-            <li class="divider-vertical"></li>
-            <li><a class="invarseColor" href="#">Мій список</a></li>
-            <li class="divider-vertical"></li>
-            <li><span class="component-shop-recently-viewed-embedded">Переглянуті товари</span></li>
-            <li class="divider-vertical"></li>
-            <li><a class="invarseColor" href="/#shop/cart">Кошик</a></li>
-          </ul>
-          <p>
-          Вітаємо, Шановний Клієнте! <a href="login.html">Увійдйіть</a> або <a href="register.html">Зареєструйтесь</a>
-          </p>
-        </div><!--end container-->
-      </div><!--end upperHeader-->
+    <!-- PAGE-HEADER-->
+  
+    <!-- NAVBAR-->
+  <nav class="navbar" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#"><img src="{$INFO.URL.STATIC_CUSTOMER}logo.png" class="logo" title="Міксер"></a>
+    </div>
 
-      <div class="middleHeader">
-        <div class="container">
-
-          <div class="middleContainer clearfix">
-
-          <div class="siteLogo pull-left">
-            <h1><a href="/#">ShopFine</a></h1>
-          </div>
-
-          <div class="pull-right">
-            <form method="get" action="page" class="siteSearch">
-              <div class="input-append">
-                <input type="text" class="span2" id="appendedInputButton" placeholder="Search...">
-                <button class="btn btn-primary" type="submit" name=""><i class="fa fa-search"></i></button>
-              </div>
-            </form>
-          </div>
-
-          <div class="pull-right">
-            <div class="btn-group component-shop-cart-embedded"></div>
-          </div><!--end pull-right-->
-
-          </div><!--end middleCoontainer-->
-
-        </div><!--end container-->
-      </div><!--end middleHeader-->
-
-      <div class="mainNav">
-        <div class="container">
-          <div class="navbar">
-        </div><!--end container-->
-      </div><!--end mainNav-->
-      
-    </header>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav navbar-nav-main">
+        <li class="active"><a href="#">Головна</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-nav-plugins"></ul>
+    <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+      <input type="text" class="form-control" placeholder="текст для пошуку">
+      </div>
+      <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+    </form>
+  </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+</header>
 {/block}
 
 
 
 
+{block name="pageBodyBefore"}
+
+{/block}
+
+
 {block name="pageBody"}
+
+
 
 <!--     Product ID <input type="text" id="product-ID" data-key="id" data-target=".btn-product-details" size="4">
 
@@ -78,107 +75,124 @@
 
 {/block}
 
-
+{block name="pageBodyAfter"}
+{/block}
 
 
 {block name="pageFooter"}
+<!-- FOOTER-->
 <footer>
-    <div class="footerOuter">
-      <div class="container">
-        <div class="row-fluid">
-
-          <div class="span6">
-            <div class="titleHeader clearfix">
-              <h3>Usefull Links</h3>
-            </div>
-
-            
-            <div class="usefullLinks">
-              <div class="row-fluid">
-                <div class="span6">
-                  <ul class="unstyled">
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> About Us</a></li>
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Delivery Information</a></li>
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Privecy Police</a></li>
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Tarms &amp; Condations</a></li>
-                  </ul>
-                </div>
-
-                <div class="span6">
-                  <ul class="unstyled">
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Surf Brands</a></li>
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Customer Support</a></li>
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Special Gifs</a></li>
-                    <li><a class="invarseColor" href="#"><i class="fa fa-caret-right"></i> Browse Site Map</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-          </div><!--end span6-->
-
-          <div class="span3">
-            <div class="titleHeader clearfix">
-              <h3>Contact Info</h3>
-            </div>
-
-            <div class="contactInfo">
-              <ul class="unstyled">
-                <li>
-                  <button class="btn btn-small">
-                    <i class="fa fa-volume-up"></i>
-                  </button>
-                  Call Us: <a class="invarseColor" href="#">5246-4697-891</a>
-                </li>
-                <li>
-                  <button class="btn btn-small">
-                    <i class="fa fa-envelope-o"></i>
-                  </button>
-                  <a class="invarseColor" href="#">shopfine@shopfine.com</a>
-                </li>
-                <li>
-                  <button class="btn btn-small">
-                    <i class="fa fa-map-marker"></i>
-                  </button>
-                  22 Avenue Park, Los Angeles
-                </li>
-              </ul>
-            </div>
-
-          </div><!--end span3-->
-
-          <div class="span3">
-            <div class="titleHeader clearfix">
-              <h3>Newslatter</h3>
-            </div>
-
-            <div class="newslatter">
-              <form method="get" action="page">
-                <input class="input-block-level" type="text" name="email" value="" placeholder="Your Name...">
-                <input class="input-block-level" type="text" name="email" value="" placeholder="Your E-Mail...">
-                <button class="btn btn-block" type="submit" name="">Join Us Now</button>
-              </form>
-            </div>
-
-          </div><!--end span3-->
-
-        </div><!--end row-fluid-->
-
-      </div><!--end container-->
-    </div><!--end footerOuter-->
-
     <div class="container">
-      <div class="row">
-        <div class="span12">
-          <ul class="payments inline pull-right">
-            <li class="visia"></li>
-            <li class="paypal"></li>
-            <li class="electron"></li>
-            <li class="discover"></li>
-          </ul>
-          <p>© Copyrights 2012 for shopfine.com</p>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-lg-3">
+                <h4 class="line3 center standart-h4title"><span>Navigation</span></h4>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a>
+                    </li>
+                    <li><a href="#">project</a>
+                    </li>
+                    <li><a href="#">Elements</a>
+                    </li>
+                    <li><a href="#">Contact</a>
+                    </li>
+                    <li><a href="#">Blog</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-lg-3">
+                <h4 class="line3 center standart-h4title"><span>Useful Links</span></h4>
+                <ul class="footer-links">
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstrap templates</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-lg-3">
+                <h4 class="line3 center standart-h4title"><span>Useful Links</span></h4>
+                <ul class="footer-links">
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstraptor.com</a>
+                    </li>
+                    <li><a href="http://www.bootstraptor.com">Bootstrap templates</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-lg-3">
+                <h4 class="line3 center standart-h4title"><span>Наші контакти:</span></h4>
+                <address>
+              <strong>bootstraptor.com, LLC.</strong><br>
+              <i class="icon-map-marker"></i> 795 Folsom Ave, Suite 600<br>
+              San Francisco, CA 94107<br>
+              <i class="icon-phone-sign"></i> + 4 (123) 456-7890
+            
+            </address>
+            </div>
         </div>
-      </div>
     </div>
-    </footer>
+    <!-- CONTAINER FOOTER-->
+    <!-- NAVBAR-->
+    <nav class="navbar navbar-inverse" style="margin-top:20px;" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Міксер</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+
+                    <li><a href="#">Link</a>
+                    </li>
+                    <li><a href="#">Link</a>
+                    </li>
+                    <li class="dropup">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropup<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a>
+                            </li>
+                            <li><a href="#">Another action</a>
+                            </li>
+                            <li><a href="#">Something else here</a>
+                            </li>
+                            <li><a href="#">Separated link</a>
+                            </li>
+                            <li><a href="#">One more separated link</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="текст для пошуку">
+                    </div>
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+</footer>
 {/block}

@@ -2,7 +2,7 @@ APP.Modules.register("lib/utils", [
     /* import globals */
     window
 ], [
-    'lib/zepto',
+    'lib/jquery',
     'lib/underscore'
     /* component implementation */
 ], function(window, app, Sandbox, $, _) {
@@ -208,6 +208,34 @@ APP.Modules.register("lib/utils", [
         }
         // app.log(true, 'Utils.getTreeByArray', roots); // <-- there's your tree
         return roots;
+    }
+
+    String.prototype.capitalize = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }
+
+    String.prototype.asCssClass = function() {
+        return "." + this;
+    }
+
+    String.prototype.asCssID = function() {
+        return "#" + this;
+    }
+    String.prototype.ucWords = function() {
+        return this.replace(/\w\S*/g, function (txt) { return txt.capitalize(); });
+    };
+    String.prototype.compact = function () {
+        return this.ucWords().replace(/[\s\\.]/gi, '');
+    }
+    String.prototype.spaceless = function () {
+        return this.replace(/(\s)+/gi, ' ').trim();
+    }
+    String.prototype.multistring = function (f) {
+         return f.toString().split('\n').slice(1, -1).join('\n');
+    }
+    String.prototype.isUrl = function () {
+        var regex = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
+         return regex.test(this);
     }
 
     return Utils;

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-    <cfglist>
-        <db>Data Base configuration file. Have some parameters for configer connection to DB.</db>
-        <path>System folder's paths. There is a lot of parameters which responsing for folder's paths in system MPWS.</path>
-        <sys>The main parameters of system MPWS.</sys>
-    </cfglist>
