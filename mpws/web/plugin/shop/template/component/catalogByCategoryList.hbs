@@ -4,8 +4,8 @@
             {{>shopSideBar}}
         </div>
         <div class="col-sm-12 col-lg-9">
-        {{#each source.data.products }}
-            {{>productListItem}}
+        {{#each source.data }}
+            {{>productEntryViewList}}
         {{/each}}
         </div>
     </div>

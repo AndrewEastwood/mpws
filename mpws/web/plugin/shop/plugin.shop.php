@@ -31,8 +31,8 @@ class pluginShop extends objectBaseWebPlugin {
         // extract params
         // some functions require particular parameters to be not empty
         // otherwise you will get error message
-        $pProductID = !empty($param['pid']) ? $param['pid'] : false;
-        $pCategoryID = !empty($param['cid']) ? $param['cid'] : false;
+        $pProductID = !empty($param['productId']) ? $param['productId'] : false;
+        $pCategoryID = !empty($param['categoryId']) ? $param['categoryId'] : false;
         $pOriginID = !empty($param['oid']) ? $param['oid'] : false;
         $pLimit = !empty($param['limit']) ? $param['limit'] : false;
         $pOffset = !empty($param['offset']) ? $param['offset'] : false;
@@ -327,11 +327,11 @@ class pluginShop extends objectBaseWebPlugin {
 
         // configure product attribute object
         $attributesObj = $this->_custom_api_getProductAttributes($productIDs, true);
-        $attributesObj->extendConfig(array(
-            "options" => array(
-                "expandSingleRecord" => false
-            )
-        ), true);
+        // $attributesObj->extendConfig(array(
+        //     "options" => array(
+        //         "expandSingleRecord" => false
+        //     )
+        // ), true);
 
         // get product attributes and create map
         $attributes = $attributesObj->process()->getData();
@@ -423,34 +423,53 @@ class pluginShop extends objectBaseWebPlugin {
             $dataObj->process();
             // var_dump($dataObj);
 
+            // echo '111111111111111111111111111' . PHP_EOL;
             // fetch attributes
-            $dataProductAttrObj = $this->_custom_api_getProductAttributes($pProductID);
+            $dataProductAttrObj = $this->_custom_api_getProductAttributes(array($pProductID), true);
             // var_dump($dataProductAttrObj);
+            // $dataProductAttrObj->extendConfig(array(
+            //     "options" => array(
+            //         "expandSingleRecord" => true
+            //     )
+            // ), true);
+            // $dataProductAttrObj->process();
 
-
+            // echo '111111111111111111111111111' . PHP_EOL;
             // fetch product data and related attributes
             // $ctx = contextMPWS::instance();
 
             // $dataProduct = $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
             // print_r($dataProduct);
-            $_prod = $dataObj->getData();
 
             // var_dump($_prod);
 
-            $_attr = $dataProductAttrObj->getData();
-            $_prod['ProductAttributes'] = $_attr['ProductAttributes'] ?: array();
+            //$_prod['ProductAttributes'] = $_attr['ProductAttributes'] ?: array();
 
-
+            $_data = array();
+            // var_dump($_attr);
             // additional data
             switch ($type) {
+                // full means that we have additional data here and them we append basic data
                 case 'full':
                     $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($pProductID);
-                    $_prices = $dataProductPricesObj->getData();
-                    $_prod['PriceArchive'] = $_prices['PriceArchive'] ?: array();
-                    break;
-                case 'short':
-                    break;
+                    $prices = $dataProductPricesObj->process()->getData();
+                    foreach ($prices as $value)
+                        $pricesMap[$value['ProductID']] = $value['PriceArchive'];
+                    $_data['prices'] = $pricesMap;
 
+                // short is like a basic product data that must be included
+                case 'short':
+                    $productsMap = array(
+                        $pProductID =>$dataObj->getData()
+                    );
+
+                    $attributes = $dataProductAttrObj->process()->getData();
+                    foreach ($attributes as $value)
+                        $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
+
+                    $_data['products'] = $productsMap;
+                    $_data['attributes'] = $attributesMap;
+                    break;
                 default:
                     # code...
                     break;
@@ -460,8 +479,10 @@ class pluginShop extends objectBaseWebPlugin {
             $recentProducts = $_SESSION['shop:recentProducts'] ?: array();
             $recentProducts[$pProductID] = $_prod;
             $_SESSION['shop:recentProducts'] = $recentProducts;
+        
+            $dataObj->setData($_data);
 
-            $dataObj->setData($_prod);
+            // $dataObj->setData($_prod);
         }
 
         return $dataObj;

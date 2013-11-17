@@ -1,8 +1,9 @@
 APP.Modules.register("plugin/shop/lib/driver", [], [
     'lib/jquery',
     'lib/mpws.api',
-    'lib/utils'
-], function (app, Sandbox, $, mpwsAPI, Utils) {
+    'lib/utils',
+    'lib/underscore',
+], function (app, Sandbox, $, mpwsAPI, Utils, _) {
 
     var _logPrefix = '[plugin/shop/lib/driver] : ';
 
@@ -13,6 +14,49 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             type: type || "none",
             data: data || {}
         }
+    }
+
+    function _adjustProductEntry (data) {
+        var _products = {};
+
+        // map all by product id
+        if (data.products && data.attributes) {
+            for (var pid in data.products) {
+                // add product into collection
+                _products[pid] = data.products[pid];
+                // get product attributes
+                var _attr = data.attributes[pid] || {};
+                // setup images
+                var _images = {
+                    'MAIN': false,
+                    'ADDITIONAL' : false
+                }
+                // adjust product images
+                if (_attr.IMAGE) {
+                    if (_.isString(_attr.IMAGE))
+                        _images.MAIN = _attr.IMAGE;
+                    if (_.isArray(_attr.IMAGE)) {
+                        _images.MAIN = _attr.IMAGE.shift();
+                        if (_attr.IMAGE.length)
+                            _images.ADDITIONAL = _attr.IMAGE;
+                    }
+                } else {
+                    _images.MAIN = app.Page.getConfiguration().URL.staticUrlCustomer + 'noimage.png';
+                }
+
+                _attr.IMAGES = _images;
+
+                _products[pid]['ProductAttributes'] = _attr;
+            }
+        }
+
+        if (data.prices)
+            for (var pid in data.products) {
+                _products[pid] = data.products[pid];
+                _products[pid]['ProductPrices'] = data.prices[pid] || {};
+            }
+
+        return _products;
     }
 
     function pluginShopDriver () {}
@@ -28,6 +72,17 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);
+
+            // adjust product data
+            data = _adjustProductEntry(data);
+
+            // get product entry
+            data = data[params.productId];
+
+            // set error message
+            if (!data)
+                error = "Product entry is empty";
+
             if (typeof callback === "function")
                 callback.call(null, error, _dataInterfaceFn(data));
         })
@@ -44,6 +99,11 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);
+
+            // adjust product data
+            data = _adjustProductEntry(data);
+            // app.log(data);
+
             if (typeof callback === "function")
                 callback.call(null, error, _dataInterfaceFn(data));
         })
@@ -62,12 +122,8 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (data)
                 data = JSON.parse(data);
 
-            // map all by product id
-            if (data.attributes && data.products) {
-                for (var pid in data.products)
-                    data.products[pid]['ProductAttributes'] = data.attributes[pid] || {};
-            }
-
+            // adjust product data
+            data = _adjustProductEntry(data);
             // app.log(data);
 
             if (typeof callback === "function")
@@ -82,8 +138,8 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             fn: 'product_attributes',
             params: {
                 realm: 'plugin',
-                // pid: _.isArray(productId) ? productId.join(',') : productId
-                pid: productId
+                // productId: _.isArray(productId) ? productId.join(',') : productId
+                productId: productId
             }
         }, function (error, data) {
             if (data)
@@ -100,7 +156,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             fn: 'product_price_archive',
             params: {
                 realm: 'plugin',
-                pid: productId
+                productId: productId
             }
         }, function (error, data) {
             if (data)
@@ -131,7 +187,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
 
     // shopping cart
     pluginShopDriver.prototype.getShoppingCart = function (callback) {
-        app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
+        app.log(_logPrefix, 'getShoppingCart'/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
             fn: 'shop_cart_content',
@@ -147,7 +203,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
     }
 
     pluginShopDriver.prototype.shoppingCartManager = function (params, callback) {
-        app.log(_logPrefix, 'shopBuy', mpwsAPI)
+        app.log(_logPrefix, 'shoppingCartManager', params)
         mpwsAPI.requestData({
             caller: 'shop',
             fn: 'shop_cart_manage',
@@ -165,14 +221,14 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
 
     pluginShopDriver.prototype.shoppingCartAdd = function (productId, callback) {
         this.shoppingCartManager({
-            pid: productId,
+            productId: productId,
             amount: 1
         }, callback);
     }
 
     pluginShopDriver.prototype.shoppingCartRemove = function (productId, callback) {
         this.shoppingCartManager({
-            pid: productId,
+            productId: productId,
             amount: 0
         }, callback);
     }

@@ -4,8 +4,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/backbone',
     'lib/mpws.api',
     'lib/mpws.page',
-    'plugin/shop/lib/driver',
-    'lib/mpws.ui',
+    'plugin/shop/lib/driver'
 ], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopModel) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
@@ -20,16 +19,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
             url: "plugin.shop.component.productList@hbs",
             type: mpwsPage.TYPE.PARTIAL
         },
-        productListItem: {
-            url: "plugin.shop.component.productListItem@hbs",
+        productEntryViewList: {
+            url: "plugin.shop.component.productEntryViewList@hbs",
             type: mpwsPage.TYPE.PARTIAL
         },
         shopSideBar: {
             url: "plugin.shop.component.pageSidebar@hbs",
-            type: mpwsPage.TYPE.PARTIAL
-        },
-        productItem: {
-            url: "plugin.shop.component.productItem@hbs",
             type: mpwsPage.TYPE.PARTIAL
         },
         widgetCities: {
@@ -37,8 +32,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
             type: mpwsPage.TYPE.PARTIAL
         },
     }
-
-
 
     // public class
     function pluginShopRender (options) {
@@ -225,9 +218,9 @@ APP.Modules.register("plugin/shop/view/render", [], [
                         productId: productId
                     }
                 },
-                template: "plugin.shop.component.productSingleItem@hbs",
+                template: "plugin.shop.component.productEntryViewStandalone@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _pholders.productSingleItem
+                placeholder: _pholders.productEntryViewStandalone
             }
         };
         app.log(true, _renderConfiguration);
@@ -252,7 +245,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
         $(_pholder.target).toggleClass('open', false);
     };
 
-    pluginShopRender.prototype.initialize = function (startHistory) {
+    pluginShopRender.prototype.initialize = function () {
         var self = this;
 
         $('.component-shop-recently-viewed-embedded').on('click', function (){
@@ -344,7 +337,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
                     self.action_cartEmbeddedHide();
                     break;
             }
-        })
+        });
 
         // subscribe on global events
         Sandbox.eventSubscribe('mpws:page:render-complete-all', function (data) {
@@ -365,6 +358,8 @@ APP.Modules.register("plugin/shop/view/render", [], [
                   " - $" + $( "#slider-range" ).slider( "values", 1 ) );
               });
 
+             // simple main image zoom
+             $('.shop-product-image-main .image').magnify();
 
         });
 

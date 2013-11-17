@@ -426,11 +426,15 @@ class mpwsData {
                 }
 
         // var_dump($dbData);
+        // var_dump($config['options']);
         // echo "do expand single record ? " . ($_opt_expandSingleRecord ? 'true' : 'false');
-
+        // echo print_r($config['options'], true) . PHP_EOL;
+        // echo 'count($dbData)'. count($dbData) . PHP_EOL;
         // create mpwsData object
         $data = null;
         if (count($dbData) === 1) {
+            // echo print_r($dbData, true) . PHP_EOL;
+            // echo '_opt_expandSingleRecord: ' . ($_opt_expandSingleRecord ? 'Y': 'N') . PHP_EOL;
             if ($_opt_expandSingleRecord)
                 $data = $dbData[0];
             else
@@ -514,10 +518,22 @@ class mpwsData {
             if (!is_array($_keys) || !is_array($_values))
                 continue;
 
+            $_combinedData = array();
+
             // var_dump($_keys);
             // var_dump($_values);
+            for ($_idx = 0, $_len = count($_keys); $_idx < $_len; $_idx++) {
+                if (isset($_combinedData[$_keys[$_idx]])) {
+                    if (is_array($_combinedData[$_keys[$_idx]]))
+                        $_combinedData[$_keys[$_idx]][] = $_values[$_idx];
+                    else
+                        $_combinedData[$_keys[$_idx]] = array($_combinedData[$_keys[$_idx]], $_values[$_idx]);
+                } else
+                    $_combinedData[$_keys[$_idx]] = $_values[$_idx];
+            }
 
-            $dataArray[$destKey] = array_combine($_keys, $_values);
+            // $dataArray[$destKey] = array_combine($_keys, $_values);
+            $dataArray[$destKey] = $_combinedData;
 
             if ($keyMap['keepOriginal'])
                 continue;

@@ -5,9 +5,12 @@ APP.Modules.register("lib/mpws.ui", [
     /* import globals */
     window
 ], [
-  'lib/jquery',
-  'lib/jquery_ui',
-  'lib/bootstrap-combobox',
+    'lib/jquery',
+    'lib/jquery_ui',
+    'lib/lightbox',
+    'lib/bootstrap',
+    'lib/bootstrap-combobox',
+    'lib/bootstrap-magnify',
     /* component implementation */
 ], function(window, app, Sandbox, jQuery, _) {
 
