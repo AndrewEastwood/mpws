@@ -51,24 +51,37 @@ APP.Modules.register("plugin/shop/view/render", [], [
 
         // setup common render components
 
+        // catefory structure (injected into main menu toolbar)
         mpwsPageLib.createRenderConfig('categoryStructure', {
             isRequiredOnce: true,
             data: {
                 source: self.model.getShopCatalogStructure
             },
             template: "plugin.shop.component.catalogStructure@hbs",
-            dependencies: _templatePartialsBase,
             placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.menu)
         }, this.componentsCommon);
 
+        // embedded car (simple cart content)
         mpwsPageLib.createRenderConfig('cartEmbedded', {
             isRequiredOnce: false,
             data: {
                 source: self.model.getShoppingCart
             },
             template: "plugin.shop.component.shoppingCartEmbedded@hbs",
-            dependencies: _templatePartialsBase,
             placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.shoppingCartEmbedded)
+        }, this.componentsCommon);
+
+        // breadcrumb
+        mpwsPageLib.createRenderConfig('shopBreadcrumb', {
+            isRequiredOnce: false,
+            data: {
+                source: self.model.getShopLocation,
+                params: {
+                    categoryId: 16
+                }
+            },
+            template: "plugin.shop.component.breadcrumb@hbs",
+            placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.breadcrumb)
         }, this.componentsCommon);
 
         this.initialize();
@@ -207,11 +220,14 @@ APP.Modules.register("plugin/shop/view/render", [], [
         var _renderConfiguration = {
             productData: {
                 data: {
-                    source: self.model.getProductItemByID
+                    source: self.model.getProductItemByID,
+                    params: {
+                        productId: productId
+                    }
                 },
-                template: "plugin.shop.component.productItem@hbs",
+                template: "plugin.shop.component.productSingleItem@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _pholders.productItem
+                placeholder: _pholders.productSingleItem
             }
         };
         app.log(true, _renderConfiguration);
@@ -330,8 +346,26 @@ APP.Modules.register("plugin/shop/view/render", [], [
             }
         })
 
-        Sandbox.eventSubscribe('mpws:page:render-complete', function (data) {
-            app.log(true, data);
+        // subscribe on global events
+        Sandbox.eventSubscribe('mpws:page:render-complete-all', function (data) {
+            app.log(true, 'on mpws:page:render-complete-all', data);
+
+            // init price filtering
+             $(function() {
+                $( "#slider-range" ).slider({
+                  range: true,
+                  min: 0,
+                  max: 500,
+                  values: [ 75, 300 ],
+                  slide: function( event, ui ) {
+                    $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+                  }
+                });
+                $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+                  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+              });
+
+
         });
 
     }

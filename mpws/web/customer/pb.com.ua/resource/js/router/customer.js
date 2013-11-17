@@ -107,6 +107,10 @@ APP.Modules.register("router/customer", [], [
     // init all available plugins here
     var pluginShopRouterLib = new pluginShopRouter({
         placeholders: {
+            breadcrumb: {
+                target: $('.breadcrumb-placeholder'),
+                placement: mpwsPage.PLACEMENT.APPEND
+            },
             menu: {
                 target: $('header .navbar-nav-main'),
                 placement: mpwsPage.PLACEMENT.APPEND
@@ -115,7 +119,7 @@ APP.Modules.register("router/customer", [], [
                 target: mpwsPageLib.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
             },
-            productItem: {
+            productSingleItem: {
                 target: mpwsPageLib.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
             },

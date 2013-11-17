@@ -491,6 +491,7 @@ class mpwsData {
             $dataArray = $this->mpwsOptimizeDataValues($dataArray, $keysToForceTransformToArray);
 
         // var_dump($mapKeysToCombine);
+        // var_dump($dataArray);
         // values will be combinet into 
         foreach ($mapKeysToCombine as $destKey => $keyMap) {
 
@@ -503,6 +504,12 @@ class mpwsData {
 
             $_keys = $dataArray[$keyMap['keys']];
             $_values = $dataArray[$keyMap['values']];
+
+            if (!empty($_keys) && !is_array($_keys))
+                $_keys = array($_keys);
+
+            if (!empty($_values) && !is_array($_values))
+                $_values = array($_values);
 
             if (!is_array($_keys) || !is_array($_values))
                 continue;

@@ -41,6 +41,16 @@ class pluginShop extends objectBaseWebPlugin {
         // var_dump($param);
         $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
+            // breadcrumb
+            case "shop_location": {
+                $data = $this->_custom_api_getCatalogStructure();
+                break;
+            }
+            // catalog filtering
+            case "shop_category_filtering": {
+                $data = $this->_custom_api_getCatalogFiltering($param);
+                break;
+            }
             // shop catalog overview
             case "shop_catalog_structure": {
                 $data = $this->_custom_api_getCatalogStructure();
@@ -257,6 +267,11 @@ class pluginShop extends objectBaseWebPlugin {
         return $cart_info;
     }
 
+    // catalog filtering
+    private function _custom_api_getCatalogFiltering () {
+
+    }
+
     // catalog
     private function _custom_api_getCatalogStructure ($params) {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
@@ -458,7 +473,9 @@ class pluginShop extends objectBaseWebPlugin {
         // var_dump(array(array($productIds)));
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
         // set condition values
-        $dataObj->setValuesDbCondition($productIds);
+        // var_dump($productIds);
+        // var_dump('trolololol');
+        $dataObj->setValuesDbCondition(array($productIds));
 
         if ($doNotProcessData)
             return $dataObj;

@@ -110,22 +110,6 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
-    pluginShopDriver.prototype.getShoppingCart = function (callback) {
-        app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
-        mpwsAPI.requestData({
-            caller: 'shop',
-            fn: 'shop_cart_content',
-            params: {
-                realm: 'plugin'
-            }
-        }, function (error, data) {
-            if (data)
-                data = JSON.parse(data);
-            if (typeof callback === "function")
-                callback.call(null, error, _dataInterfaceFn(data));
-        })
-    }
-
     pluginShopDriver.prototype.getShopCatalogStructure = function (callback) {
         app.log(_logPrefix, 'getShopCatalogStructure', mpwsAPI)
         mpwsAPI.requestData({
@@ -145,6 +129,23 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         })
     }
 
+    // shopping cart
+    pluginShopDriver.prototype.getShoppingCart = function (callback) {
+        app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'shop_cart_content',
+            params: {
+                realm: 'plugin'
+            }
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function")
+                callback.call(null, error, _dataInterfaceFn(data));
+        })
+    }
+
     pluginShopDriver.prototype.shoppingCartManager = function (params, callback) {
         app.log(_logPrefix, 'shopBuy', mpwsAPI)
         mpwsAPI.requestData({
@@ -159,7 +160,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             if (typeof callback === "function") {
                 callback.call(null, error, _dataInterfaceFn(data));
             }
-        })
+        });
     }
 
     pluginShopDriver.prototype.shoppingCartAdd = function (productId, callback) {
@@ -182,10 +183,61 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, callback);
     }
 
+    pluginShopDriver.prototype.shoppingCartPreview = function (data, callback) {
+        this.shoppingCartManager({
+            clear: true
+        }, callback);
+    }
+
     pluginShopDriver.prototype.shoppingCartSave = function (data, callback) {
         this.shoppingCartManager({
             clear: true
         }, callback);
+    }
+
+    // shop location (breadcrumb)
+    pluginShopDriver.prototype.getShopLocation = function (params, callback) {
+        app.log(_logPrefix, 'getShopLocation', mpwsAPI);
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'shop_location',
+            params: $.extend(params, {
+                realm: 'plugin'
+            })
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function") {
+                callback.call(null, error, _dataInterfaceFn(data));
+            }
+        });
+    }
+
+    pluginShopDriver.prototype.getShopCategoryFilteringData = function (params, callback) {
+        // TODO:
+        // get:
+        // 1. subcategories
+        // 2. origins
+        // 3. product count
+        // 4. page count (based on items per page "IPP")
+        // 5. price stats: [min ... max] (need for price filtering)
+        // 6. top rated proucts for current category
+        // 7. top boughts
+        // 8. on sale
+        app.log(_logPrefix, 'getShopCategoryFilteringData', mpwsAPI);
+        mpwsAPI.requestData({
+            caller: 'shop',
+            fn: 'shop_category_filtering',
+            params: $.extend(params, {
+                realm: 'plugin'
+            })
+        }, function (error, data) {
+            if (data)
+                data = JSON.parse(data);
+            if (typeof callback === "function") {
+                callback.call(null, error, _dataInterfaceFn(data));
+            }
+        });
     }
 
     return pluginShopDriver;

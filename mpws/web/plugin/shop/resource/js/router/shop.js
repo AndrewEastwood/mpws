@@ -6,6 +6,7 @@ APP.Modules.register("plugin/shop/router/shop", [], [
     'lib/mpws.page',
     'plugin/shop/view/render',
     "lib/htmlComponents",
+    "lib/purl",
 ], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopView, HtmlComponents) {
 
     // start site routing
@@ -32,9 +33,9 @@ APP.Modules.register("plugin/shop/router/shop", [], [
             "shop_products_category_brand": "shop/catalog/:category/:brand",
             "shop_product": "shop/product/:product",
             "shop_cart_view": "shop/cart",
-            "shop_cart_checkout_view": "shop/cart/checkout/&",
-            "shop_cart_checkout_preview": "shop/cart/checkout/preview/&",
-            "shop_cart_checkout_save": "shop/cart/checkout/preview/&"
+            "shop_cart_checkout_view": "shop/cart/checkout",
+            "shop_cart_checkout_preview": "shop/cart/checkout/preview",
+            "shop_cart_checkout_save": "shop/cart/checkout/preview"
         };
 
         app.log(true, 'plugin/shop/router/shop creating new instance', _.invert(this.navMap));

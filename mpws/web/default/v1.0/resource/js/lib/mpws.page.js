@@ -253,7 +253,11 @@ APP.Modules.register("lib/mpws.page", [
                     // compose template data
                     var _tplData = {
                         app: {
-                            config: app.Page.getConfiguration()
+                            test: 'test',
+                            config: app.Page.getConfiguration(),
+                            location: {
+                                fragment: Backbone.history.fragment
+                            }
                         },
                         source: data || {}
                     }
@@ -355,7 +359,10 @@ APP.Modules.register("lib/mpws.page", [
             }
         });
 
-        AsyncLib.parallel(_renderCommands);
+        AsyncLib.parallel(_renderCommands, function (error, data) {
+            // global notify
+            Sandbox.eventNotify('mpws:page:render-complete-all', data);
+        });
     };
 
     return mpwsPage;
