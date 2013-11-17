@@ -1,5 +1,5 @@
-<div class="shop-component shop-product-view-standalone">
-    <div class="comntainer">
+<div class="shop-component shop-product-view shop-product-view-standalone">
+    <div class="container">
 
         <div class="row">
             <div class="col-md-12">
@@ -39,38 +39,37 @@
                 <ul class="list-group">
 
                     <li class="list-group-item">
-                        <table class="shop-component table-responsive shop-product-attributes">
-                            <tr class="shop-product-availability shop-product-availability-in-stock">
-                                <td class="label">Цей товар:<td>
-                                <td class="value">
-                                    {{#compare source.data.Status "==" "AVAILABLE"}}
-                                    <span class="label label-success">є в наявності</span>
-                                    {{else}}
-                                    <span class="label label-warning">немає в наявності</span>
-                                    {{/compare}}
-                                <td>
-                            </tr>
-                            <tr class="shop-product-origin">
-                                <td class="label">Виробник:<td>
-                                <td class="value">{{source.data.OriginName}}<td>
-                            </tr>
-                            <tr class="shop-product-model">
-                                <td class="label">Модель:<td>
-                                <td class="value">{{source.data.Model}}<td>
-                            </tr>
-                            <tr class="shop-product-code">
-                                <td class="label">Код товару:<td>
-                                <td class="value">#{{source.data.ID}}<td>
-                            </tr>
-                            <tr class="shop-product-price">
-                                <td class="label">Ціна:<td>
-                                <td class="value">{{source.data.Price}}<td>
-                            </tr>
-                        </table>
+                        <div class="shop-component shop-product-attr shop-product-attr-availability">
+                            <div class="value-prefix">Цей товар:</div>
+                            <div class="badge">
+                                {{#compare source.data.Status "==" "AVAILABLE"}}
+                                <span class="label label-success">є в наявності</span>
+                                {{else}}
+                                <span class="label label-warning">немає в наявності</span>
+                                {{/compare}}
+                            </div>
+                        </div>
+                        <div class="shop-component shop-product-attr shop-product-attr-origin">
+                            <div class="value-prefix">Виробник:</div>
+                            <div class="badge">{{source.data.OriginName}}</div>
+                        </div>
+                        <div class="shop-component shop-product-attr shop-product-attr-model">
+                            <div class="value-prefix">Модель:</div>
+                            <div class="badge">{{source.data.Model}}</div>
+                        </div>
+                        <div class="shop-component shop-product-attr shop-product-attr-code">
+                            <div class="value-prefix">Код товару:</div>
+                            <div class="badge">#{{source.data.ID}}</div>
+                        </div>
+                        <div class="shop-component shop-product-attr shop-product-attr-price">
+                            <div class="value-prefix">Ціна:</div>
+                            <div class="badge">{{source.data.Price}}</div>
+                            <span class="value-suffix">грн.</span>
+                        </div>
                     </li>
 
                     <li class="list-group-item">
-                        <div class="shop-product-description-short">{{source.data.Description}}</div>
+                        <div class="shop-component shop-product-description shop-product-description-short">{{source.data.Description}}</div>
                     </li>
 
                     <li class="list-group-item">
@@ -90,7 +89,7 @@
                     <li class="list-group-item">
                         <div class="shop-product-social"></div>
                     </li>
-                    
+
                     <li class="list-group-item">
                         <div class="shop-component shop-product-tabs">
                             <!-- Nav tabs -->

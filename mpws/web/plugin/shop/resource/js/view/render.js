@@ -11,14 +11,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
     var mpwsPageLib = new mpwsPage();
 
     var _templatePartialsBase = {
-        renderDataTrigger: {
-            url: "plugin.shop.component.renderDataTrigger@hbs",
-            type: mpwsPage.TYPE.PARTIAL
-        },
-        productList: {
-            url: "plugin.shop.component.productList@hbs",
-            type: mpwsPage.TYPE.PARTIAL
-        },
         productEntryViewList: {
             url: "plugin.shop.component.productEntryViewList@hbs",
             type: mpwsPage.TYPE.PARTIAL
@@ -93,7 +85,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 data: {
                     source: self.model.getProductListLatest
                 },
-                template: "plugin.shop.component.productList@hbs",
+                template: "plugin.shop.component.productListOverview@hbs",
                 dependencies: _templatePartialsBase,
                 placeholder: _pholders.productsLatest
             }
@@ -220,7 +212,11 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 },
                 template: "plugin.shop.component.productEntryViewStandalone@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _pholders.productEntryViewStandalone
+                placeholder: _pholders.productEntryViewStandalone,
+                callback: function () {
+                    // simple main image zoom
+                    $('.shop-product-image-main .image').magnify();
+                }
             }
         };
         app.log(true, _renderConfiguration);
@@ -357,9 +353,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
                   " - $" + $( "#slider-range" ).slider( "values", 1 ) );
               });
-
-             // simple main image zoom
-             $('.shop-product-image-main .image').magnify();
 
         });
 

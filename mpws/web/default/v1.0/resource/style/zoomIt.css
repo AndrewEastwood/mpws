@@ -42,7 +42,7 @@ Default values in script:
 }
 /* big image loading class */
 .zoomIt_loading{
-	background:url(images/loading.gif) center center no-repeat;
+	background:url(img/loading.gif) center center no-repeat;
 }
 /* small image zoomed area overlay */
 .zoomIt_area{

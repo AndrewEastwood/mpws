@@ -197,6 +197,23 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);
+
+            // adjust shopping cart products
+            data.products = {};
+            var _tempProductEntry = false;
+            _(data.items).each(function (productEntry, productID){
+                if (!productEntry)
+                    return;
+                // get product entry
+                _tempProductEntry = _adjustProductEntry(productEntry);
+                // update collection
+                if (_tempProductEntry[productID])
+                    data.products[productID] = _tempProductEntry[productID];
+            });
+
+            // cleanup
+            delete data.items;
+
             if (typeof callback === "function")
                 callback.call(null, error, _dataInterfaceFn(data));
         })
@@ -213,8 +230,25 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         }, function (error, data) {
             if (data)
                 data = JSON.parse(data);
+
+            // adjust shopping cart products
+            data.products = {};
+            var _tempProductEntry = false;
+            _(data.items).each(function (productEntry, productID){
+                if (!productEntry)
+                    return;
+                // get product entry
+                _tempProductEntry = _adjustProductEntry(productEntry);
+                // update collection
+                if (_tempProductEntry[productID])
+                    data.products[productID] = _tempProductEntry[productID];
+            });
+
+            // cleanup
+            delete data.items;
+
             if (typeof callback === "function") {
-                callback.call(null, error, _dataInterfaceFn(data));
+                callback.call(error, _dataInterfaceFn(data));
             }
         });
     }

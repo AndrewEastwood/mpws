@@ -173,7 +173,7 @@ class pluginShop extends objectBaseWebPlugin {
     private function _custom_api_shoppingCartContent ($param) {
         return new mpwsData(array(
             "error" => false,
-            "products" => $_SESSION['shop:cart'] ?: array(),
+            "items" => $_SESSION['shop:cart'] ?: array(),
             "cart" => $this->_custom_cartGetInfo()
         ));
     }
@@ -202,22 +202,22 @@ class pluginShop extends objectBaseWebPlugin {
                 else {
                     // check existatce
                     if (isset($cart[$pProductID])) {
-                        $cart[$pProductID]['Amount'] += $amount;
+                        $cart[$pProductID]["products"][$pProductID]["CartAmount"] += $amount;
                         // remove item when amount is -1 and current amount is 1
-                        if ($cart[$pProductID]['Amount'] === 0)
+                        if ($cart[$pProductID]["products"][$pProductID]["CartAmount"] === 0)
                             unset($cart[$pProductID]);
                     } else {
                         // just get new product entry annd add it into cart
                         $productEntry = $this->_custom_api_getProductItem($pProductID, 'short');
                         if ($productEntry->hasData()) {
                             $cart[$pProductID] = $productEntry->getData();
-                            $cart[$pProductID]['Amount'] = 1;
+                            $cart[$pProductID]["products"][$pProductID]["CartAmount"] = 1;
                         } else
                             $error = "Wrong product ID";
                     }
                     // update product total
                     if (!$error)
-                        $cart[$pProductID]["Total"] = $cart[$pProductID]["Amount"] * $cart[$pProductID]["Price"];
+                        $cart[$pProductID]["products"][$pProductID]["CartTotal"] = $cart[$pProductID]["products"][$pProductID]["CartAmount"] * $cart[$pProductID]["products"][$pProductID]["Price"];
                 }
             }
             else
@@ -252,14 +252,14 @@ class pluginShop extends objectBaseWebPlugin {
             "discount" => 0
         );
         // extract short info
-        foreach ($cart as $productEntry) {
+        foreach ($cart as $pProductID => $productEntry) {
             // // update each product
             // $cart[$pID] = $productEntry;
             // $cart[$pID]["Total"] = $cart[$pID]["Amount"] * $cart[$pID]["Price"];
 
             // update cart checkout info
-            $cart_info["productAmount"] += $productEntry["Amount"];
-            $cart_info["total"] += $productEntry["Total"];
+            $cart_info["productAmount"] += $productEntry["products"][$pProductID]["CartAmount"];
+            $cart_info["total"] += $productEntry["products"][$pProductID]["CartTotal"];
         }
 
         // $_SESSION['shop:cart_info'] = $cart_info;
