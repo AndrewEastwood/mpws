@@ -11,6 +11,7 @@
 
         <div class="row">
 
+            {{#if source.data.ProductAttributes.IMAGES.HAS_MAIN}}
             <div class="col-md-5">
                 <div class="shop-component shop-product-images">
                     <div class="shop-product-image shop-product-image-main">
@@ -34,36 +35,37 @@
                     {{/if}}
                 </div>
             </div>
-
             <div class="col-md-7">
+            {{else}}
+            <div class="col-md-12">
+            {{/if}}
+
                 <ul class="list-group">
 
                     <li class="list-group-item">
                         <div class="shop-component shop-product-attr shop-product-attr-availability">
-                            <div class="value-prefix">Цей товар:</div>
-                            <div class="badge">
-                                {{#compare source.data.Status "==" "AVAILABLE"}}
-                                <span class="label label-success">є в наявності</span>
-                                {{else}}
-                                <span class="label label-warning">немає в наявності</span>
-                                {{/compare}}
-                            </div>
+                            <span class="value-prefix">Цей товар:</span>
+                            {{#compare source.data.Status "==" "AVAILABLE"}}
+                            <span class="label label-success">є в наявності</span>
+                            {{else}}
+                            <span class="label label-warning">немає в наявності</span>
+                            {{/compare}}
                         </div>
                         <div class="shop-component shop-product-attr shop-product-attr-origin">
-                            <div class="value-prefix">Виробник:</div>
-                            <div class="badge">{{source.data.OriginName}}</div>
+                            <span class="value-prefix">Виробник:</span>
+                            <span class="badge">{{source.data.OriginName}}</span>
                         </div>
                         <div class="shop-component shop-product-attr shop-product-attr-model">
-                            <div class="value-prefix">Модель:</div>
-                            <div class="badge">{{source.data.Model}}</div>
+                            <span class="value-prefix">Модель:</span>
+                            <span class="badge">{{source.data.Model}}</span>
                         </div>
                         <div class="shop-component shop-product-attr shop-product-attr-code">
-                            <div class="value-prefix">Код товару:</div>
-                            <div class="badge">#{{source.data.ID}}</div>
+                            <span class="value-prefix">Код товару:</span>
+                            <span class="badge">#{{source.data.ID}}</span>
                         </div>
                         <div class="shop-component shop-product-attr shop-product-attr-price">
-                            <div class="value-prefix">Ціна:</div>
-                            <div class="badge">{{source.data.Price}}</div>
+                            <span class="value-prefix">Ціна:</span>
+                            <span class="badge">{{source.data.Price}}</span>
                             <span class="value-suffix">грн.</span>
                         </div>
                     </li>

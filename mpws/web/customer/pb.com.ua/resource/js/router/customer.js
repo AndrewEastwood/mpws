@@ -68,39 +68,6 @@ APP.Modules.register("router/customer", [], [
 
     });
 
-    // // page handlers
-    // function _pageHome () {
-    //     pluginShopRouterLib.getProductListLatest();
-    //     mpwsPageLib.pageName('home');
-    // }
-
-    // function _pageShop () {
-    // }
-
-    // function _pageProduct (productId) {
-    //     pluginShopRouterLib.getProductItemByID(productId);
-    // }
-
-
-    // $('#button1id').on('click', function(){
-    //     _pageHome();
-    // })
-
-    $('#buttonSearch').on('click', function(){
-        controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
-    })
-
-    $('#buttonAttr').on('click', function(){
-        // controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
-        pluginShopRouterLib._test_getProductAttributes($('#inputSearch').val().split(','));
-
-    })
-    $('#buttonPriceArch').on('click', function(){
-        // controller.navigate('site/search/' + $('#inputSearch').val(), {trigger: true });
-        pluginShopRouterLib._test_getProductPriceArchive($('#inputSearch').val().split(','));
-
-    })
-
     // start native site page monitoring
     var controller = new Controller(); // Создаём контроллер
 
@@ -141,11 +108,6 @@ APP.Modules.register("router/customer", [], [
             },
         }
     });
-
-    // pluginShopRouterLib.init();
-    // start additional routers
-    // // start shop page monitoring
-    // pluginShopRouterLib.start(false);
 
     Backbone.history.start();  // Запускаем HTML5 History push
 

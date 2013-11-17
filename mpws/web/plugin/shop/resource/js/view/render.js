@@ -72,6 +72,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
         this.initialize();
     }
 
+    // products latest
     pluginShopRender.prototype.pageShopHome = function () {
         var self = this;
         // overwrite page name
@@ -94,11 +95,13 @@ APP.Modules.register("plugin/shop/view/render", [], [
         mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
     
+    // shoping catalog
     pluginShopRender.prototype.pageShopCatalog = function () {
         mpwsPageLib.pageName('shop-catalog');
         // _pageShopCatalog.call(this);
     }
 
+    // products from selected category
     pluginShopRender.prototype.pageShopProductsByCategory = function (categoryId) {
         var self = this;
         // overwrite page name
@@ -117,13 +120,19 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 },
                 template: "plugin.shop.component.catalogByCategoryList@hbs",
                 dependencies: _templatePartialsBase,
-                placeholder: _pholders.productsByCategory
+                placeholder: _pholders.productsByCategory,
+                callback: function () {
+                    // init sidebar filter components
+                    _component_initCatalogSidebar();
+                }
             }
         };
         app.log(true, _renderConfiguration);
         mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
     
+
+    // shopping cart
     pluginShopRender.prototype.pageShopCart = function () {
         var self = this;
         mpwsPageLib.pageName('shop-cart-view');
@@ -221,8 +230,9 @@ APP.Modules.register("plugin/shop/view/render", [], [
         };
         app.log(true, _renderConfiguration);
         mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
-    }   
+    }
     
+    // smth else
     pluginShopRender.prototype._test_getProductAttributes = function (productId) {
         this.model.getProductAttributes.call(this, productId);
     }
@@ -335,34 +345,29 @@ APP.Modules.register("plugin/shop/view/render", [], [
             }
         });
 
-        // subscribe on global events
-        Sandbox.eventSubscribe('mpws:page:render-complete-all', function (data) {
-            app.log(true, 'on mpws:page:render-complete-all', data);
-
-            // init price filtering
-             $(function() {
-                $( "#slider-range" ).slider({
-                  range: true,
-                  min: 0,
-                  max: 500,
-                  values: [ 75, 300 ],
-                  slide: function( event, ui ) {
-                    $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-                  }
-                });
-                $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-                  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-              });
-
-        });
-
     }
 
-    // $('.icon-home').on('click', function(){
-    //     model.getShopCatalogStructure(function(data){
-    //         app.log('TEST getShopCatalogStructure', data);
-    //     });
-    // })
+    // additional functions that init UI components
+    // according to opened page
+    // Usually they are being invoked within render callback functions
+
+    // this inits sidebar with product filtering components
+    function _component_initCatalogSidebar () {
+        // init price filtering
+         $(function() {
+            $( "#slider-range" ).slider({
+              range: true,
+              min: 0,
+              max: 500,
+              values: [ 75, 300 ],
+              slide: function( event, ui ) {
+                $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+              }
+            });
+            $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+              " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+          });
+    }
 
     return pluginShopRender;
 
