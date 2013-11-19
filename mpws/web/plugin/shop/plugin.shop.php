@@ -43,7 +43,7 @@ class pluginShop extends objectBaseWebPlugin {
         switch(libraryRequest::getApiFn()) {
             // breadcrumb
             case "shop_location": {
-                $data = $this->_custom_api_getCatalogStructure();
+                $data = $this->_custom_api_getCatalogLocation($param);
                 break;
             }
             // catalog filtering
@@ -270,6 +270,11 @@ class pluginShop extends objectBaseWebPlugin {
     // catalog filtering
     private function _custom_api_getCatalogFiltering () {
 
+    }
+
+    private function _custom_api_getCatalogLocation ($params) {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
+        return $dataObj->process($params);
     }
 
     // catalog

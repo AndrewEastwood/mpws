@@ -4,7 +4,10 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/backbone',
     'lib/mpws.api',
     'lib/mpws.page',
-    'plugin/shop/lib/driver'
+    'plugin/shop/lib/driver',
+
+    // ui elements
+    'lib/fuelux.wizard'
 ], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopModel) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
@@ -133,6 +136,30 @@ APP.Modules.register("plugin/shop/view/render", [], [
     
 
     // shopping cart
+    // shopping cart
+    pluginShopRender.prototype.pageShoppingWizard = function () {
+        var self = this;
+        mpwsPageLib.pageName('shop-wizard');
+
+        var _pholders = this.getPlacehoders();
+        var _renderConfiguration = {
+            shoppingCartStandalone: {
+                data: {
+                    source: self.model.getShoppingCart
+                },
+                template: "plugin.shop.component.shoppingWizard@hbs",
+                dependencies: _templatePartialsBase,
+                placeholder: _pholders.shoppingCartStandalone,
+                callback: function () {
+                    $('.shop-component-checkout-wizard').wizard();
+                }
+            }
+        };
+        app.log(true, _renderConfiguration);
+        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
+        // mpwsPageLib.getPageBody('I AM CART', true);
+    }
+
     pluginShopRender.prototype.pageShopCart = function () {
         var self = this;
         mpwsPageLib.pageName('shop-cart-view');
@@ -339,6 +366,18 @@ APP.Modules.register("plugin/shop/view/render", [], [
                     self.model.shoppingCartSave(_orderInfo, function(){
 
                     });
+
+                case "shop:cart:checkout-prepare":
+                    $('.shop-component-checkout-wizard .wizard').wizard('next');
+                    break;
+                case "shop:cart:checkout-delivery":
+                    $('.shop-component-checkout-wizard .wizard').wizard('next');
+                    break;
+
+                case "shop:search":
+                    self.model.getShopLocation();
+                    break;
+
                 default:
                     self.action_cartEmbeddedHide();
                     break;

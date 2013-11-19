@@ -90,6 +90,7 @@ class mpwsData {
         // see commented examples how to configure this object before fetch data
         return array(
             "source" => "",
+            "function" => "",
             "condition" => array(
                 "filter" => "", //"shop_products.Status = ? AND shop_products.Enabled = ?",
                 "values" => array(/*"ACTIVE", 1*/)
@@ -382,6 +383,9 @@ class mpwsData {
         // var_dump($dbo);
         // echo '<<<<<<<<<<<<<<<<<<<<<<';
         switch ($action) {
+            case 'call':
+                $dbData = $dbo->procedure_call($config['function'], $config['parameters']);
+                break;
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
                 $dbo->set(array_combine($config['data']['fields'], $config['data']['values']));

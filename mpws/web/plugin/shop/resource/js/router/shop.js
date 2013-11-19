@@ -32,6 +32,7 @@ APP.Modules.register("plugin/shop/router/shop", [], [
             "shop_products_category": "shop/catalog/:category",
             "shop_products_category_brand": "shop/catalog/:category/:brand",
             "shop_product": "shop/product/:product",
+            "shop_wizard": "shop/wizard",
             "shop_cart_view": "shop/cart",
             "shop_cart_checkout_view": "shop/cart/checkout",
             "shop_cart_checkout_preview": "shop/cart/checkout/preview",
@@ -112,6 +113,9 @@ APP.Modules.register("plugin/shop/router/shop", [], [
                 // self.shopProductItem(productId, name, callback);
                 app.log(true, 'shop_product')
                 self.view.pageShopProductItemByID(productId);
+            },
+            shop_wizard: function () {
+                self.view.pageShoppingWizard();
             }
 
         });

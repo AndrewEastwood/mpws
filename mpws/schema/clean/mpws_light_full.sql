@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 24, 2013 at 03:18 AM
--- Server version: 5.5.32
+-- Generation Time: Nov 19, 2013 at 02:48 AM
+-- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -19,6 +19,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `mpws_light`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryLocation`(IN catid INT)
+BEGIN
+SELECT T2.ID, T2.Name
+FROM (
+    SELECT
+        @r AS _id,
+        (SELECT @r := ParentID FROM shop_categories WHERE ID = _id) AS ParentID,
+        @l := @l + 1 AS lvl
+    FROM
+        (SELECT @r := catid, @l := 0) vars,
+        shop_categories h
+    WHERE @r <> 0) T1
+JOIN shop_categories T2
+ON T1._id = T2.ID
+ORDER BY T1.lvl DESC;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -101,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `mpws_customer` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `mpws_customer`
@@ -119,15 +142,16 @@ INSERT INTO `mpws_customer` (`ID`, `Name`, `Enabled`, `HomePage`, `DateCreated`,
 CREATE TABLE IF NOT EXISTS `mpws_jobs` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Name` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `Description` varchar(250) CHARACTER SET latin1 DEFAULT NULL,
-  `Action` text CHARACTER SET latin1 NOT NULL,
+  `Name` varchar(100) COLLATE utf8_bin NOT NULL,
+  `Description` varchar(250) COLLATE utf8_bin DEFAULT NULL,
+  `Action` text COLLATE utf8_bin NOT NULL,
   `Schedule` datetime NOT NULL,
-  `LastError` text CHARACTER SET latin1,
+  `LastError` text COLLATE utf8_bin,
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `mpws_jobs`
@@ -145,21 +169,23 @@ INSERT INTO `mpws_jobs` (`ID`, `CustomerID`, `Name`, `Description`, `Action`, `S
 
 CREATE TABLE IF NOT EXISTS `mpws_subscripers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
   `AccountID` int(11) NOT NULL,
   `ContentType` enum('NEWSLETTER','OFFERS') COLLATE utf8_bin NOT NULL,
   `Enabled` tinyint(1) NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   UNIQUE KEY `ID` (`ID`),
-  KEY `AccountID` (`AccountID`)
+  KEY `AccountID` (`AccountID`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `mpws_subscripers`
 --
 
-INSERT INTO `mpws_subscripers` (`ID`, `AccountID`, `ContentType`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(2, 2, 'OFFERS', 1, '2013-10-24 00:00:00', '2013-10-24 00:00:00');
+INSERT INTO `mpws_subscripers` (`ID`, `CustomerID`, `AccountID`, `ContentType`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
+(2, 0, 2, 'OFFERS', 1, '2013-10-24 00:00:00', '2013-10-24 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -174,7 +200,8 @@ CREATE TABLE IF NOT EXISTS `mpws_uploads` (
   `Owner` text CHARACTER SET latin1 NOT NULL,
   `Description` text CHARACTER SET latin1,
   `DateCreated` datetime NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
 
 --
@@ -202,7 +229,8 @@ CREATE TABLE IF NOT EXISTS `mpws_users` (
   `DateLastAccess` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=29 ;
 
 --
@@ -268,15 +296,33 @@ CREATE TABLE IF NOT EXISTS `reviews_reviews` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `shop_boughts`
+--
+
+CREATE TABLE IF NOT EXISTS `shop_boughts` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ProductID` int(11) NOT NULL,
+  `OrderID` int(11) NOT NULL,
+  `ProductPrice` decimal(10,0) NOT NULL,
+  `Quantity` int(11) NOT NULL,
+  UNIQUE KEY `ID` (`ID`),
+  KEY `ProductID` (`ProductID`),
+  KEY `OrderID` (`OrderID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `shop_categories`
 --
 
 CREATE TABLE IF NOT EXISTS `shop_categories` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `RootID` int(11) NOT NULL,
+  `RootID` int(11) DEFAULT NULL,
   `ParentID` int(11) DEFAULT NULL,
   `CustomerID` int(11) NOT NULL,
-  `SchemaID` int(11) NOT NULL,
+  `SchemaID` int(11) DEFAULT NULL,
+  `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Name` varchar(100) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
   `Enabled` tinyint(1) NOT NULL,
@@ -284,16 +330,40 @@ CREATE TABLE IF NOT EXISTS `shop_categories` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
+  KEY `RootID` (`RootID`),
+  KEY `ParentID` (`ParentID`),
   KEY `SchemaID` (`SchemaID`),
-  KEY `RootID` (`RootID`,`ParentID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=28 ;
 
 --
 -- Dumping data for table `shop_categories`
 --
 
-INSERT INTO `shop_categories` (`ID`, `RootID`, `ParentID`, `CustomerID`, `SchemaID`, `Name`, `Description`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(1, 0, NULL, 0, 1, 'LCD', 'LCD', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07');
+INSERT INTO `shop_categories` (`ID`, `RootID`, `ParentID`, `CustomerID`, `SchemaID`, `ExternalKey`, `Name`, `Description`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
+(1, NULL, NULL, 0, NULL, '', 'Побутова техніка', 'Побутова техніка', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(2, 1, 1, 0, NULL, '', 'Дошка прасувальні', 'Дошка прасувальні', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(3, NULL, NULL, 0, NULL, '', 'Мийка високого тиску', 'Мийка високого тиску', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(4, 1, 1, 0, NULL, '', 'Посуд', 'Посуд', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(5, NULL, NULL, 0, NULL, '', 'Професійна техніка', 'Професійна техніка', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(6, NULL, NULL, 0, 1, '', 'ТВ, відео, аудіо, фото', 'ТВ, відео, аудіо, фото', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(7, 6, 6, 0, NULL, '', 'Телевізори', 'Відео обладнання', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(12, 6, 7, 0, NULL, 'lct_televizoru', 'LCD телевізори', 'LCD телевізори', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(13, 1, 1, 0, NULL, 'kt', 'Кліматична техніка', 'Кліматична техніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(14, 1, 1, 0, NULL, 'kt', 'Крупна побутова техніка', 'Крупна побутова техніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(15, 1, 1, 0, NULL, 'kt', 'Дрібна побутова техніка', 'Дрібна побутова техніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(16, 1, 1, 0, NULL, 'kt', 'Догляд за будинком', 'Догляд за будинком', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(17, 6, 6, 0, NULL, 'kt', 'Аудіо', 'Аудіо', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(18, 6, 6, 0, NULL, 'kt', 'Відео', 'Відео', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(19, 6, 6, 0, NULL, 'kt', 'Фото', 'Фото', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(20, 6, 6, 0, NULL, 'kt', 'Ігрові приставки', 'Ігрові приставки', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(21, NULL, NULL, 0, NULL, 'kt', 'Авто товари', 'Авто товари', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(22, 21, 21, 0, NULL, 'kt', 'Автоелектроніка', 'Автоелектроніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(23, 21, 21, 0, NULL, 'kt', 'Авто звук', 'Авто звук', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(24, 21, 23, 0, NULL, 'kt', 'Автомагнітоли', 'Автомагнітоли', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(25, 21, 23, 0, NULL, '', 'Аксесуари до автозвуку', 'Аксесуари до автозвуку', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(26, 21, 21, 0, NULL, '', 'АвтоОптика (Світло)', 'АвтоОптика (Світло)', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(27, 21, 26, 0, NULL, '', 'Габаритні вогні', 'Габаритні вогні', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07');
 
 -- --------------------------------------------------------
 
@@ -312,7 +382,8 @@ CREATE TABLE IF NOT EXISTS `shop_commands` (
   `DateUpdated` datetime NOT NULL,
   `DateLastAccess` datetime NOT NULL,
   UNIQUE KEY `ID` (`ID`),
-  KEY `Name` (`Name`)
+  KEY `Name` (`Name`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
 
 --
@@ -341,7 +412,8 @@ CREATE TABLE IF NOT EXISTS `shop_currency` (
   `DateLastAccess` datetime NOT NULL,
   UNIQUE KEY `ID` (`ID`),
   KEY `ID_2` (`ID`),
-  KEY `Currency` (`Currency`)
+  KEY `Currency` (`Currency`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
 
 --
@@ -357,27 +429,75 @@ INSERT INTO `shop_currency` (`ID`, `CustomerID`, `IsMain`, `Enabled`, `Currency`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `shop_orderDetails`
+--
+
+CREATE TABLE IF NOT EXISTS `shop_orderDetails` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `BuyerName` varchar(300) NOT NULL,
+  `BuyerAddress1` varchar(200) NOT NULL,
+  `BuyerAddress2` varchar(200) NOT NULL,
+  `BuyerPhone` varchar(100) NOT NULL,
+  `BuyerEmail` varchar(100) NOT NULL,
+  `Comments` varchar(500) NOT NULL,
+  UNIQUE KEY `ID` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_orders`
+--
+
+CREATE TABLE IF NOT EXISTS `shop_orders` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `AccountID` int(11) NOT NULL,
+  `BoughtMapID` int(11) NOT NULL,
+  `OrderDetailsID` int(11) NOT NULL,
+  `Status` enum('NEW','SHOP_REVIEWING','SHOP_PACKAGE','LOGISTIC_DELIVERING','CUSTOMER_POSTPONE','CUSTOMER_CANCELED','CUSTOMER_CHANGED','SHOP_WAITING_CUSTOMER_APPROVAL','CUSTOMER_APPROVED','LOGISTIC_DELIVERED','SHOP_CLOSED','CUSTOMER_REOPENED','CUSTOMER_CLOSED','CUSTOMER_WAITNG_REFUND','SHOP_REFUNDED') COLLATE utf8_bin NOT NULL,
+  `TrackingLink` int(11) NOT NULL,
+  `DateCreate` int(11) NOT NULL,
+  `DateUpdate` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID` (`ID`),
+  KEY `AccountID` (`AccountID`,`BoughtMapID`,`OrderDetailsID`),
+  KEY `BoughtMapID` (`BoughtMapID`),
+  KEY `OrderDetailsID` (`OrderDetailsID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `shop_origins`
 --
 
 CREATE TABLE IF NOT EXISTS `shop_origins` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Name` int(11) NOT NULL,
+  `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Name` varchar(200) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
   `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
   `Enabled` tinyint(1) NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
-  UNIQUE KEY `ID` (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+  UNIQUE KEY `ID` (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `shop_origins`
 --
 
-INSERT INTO `shop_origins` (`ID`, `CustomerID`, `Name`, `Description`, `HomePage`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(1, 0, 0, 'SONY', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41');
+INSERT INTO `shop_origins` (`ID`, `CustomerID`, `ExternalKey`, `Name`, `Description`, `HomePage`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
+(1, 0, '', 'SONY', 'SONY', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(2, 0, '', 'DELL', 'DELL', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(3, 0, '', 'HP', 'HP', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(4, 0, '', 'Samsung', 'Samsung', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(5, 0, '', 'LG', 'LG', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(6, 0, '', 'Toshiba', 'Toshiba', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(7, 0, '', 'SHARP', 'SHARP', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(8, 0, '', 'Apple', 'Apple', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41');
 
 -- --------------------------------------------------------
 
@@ -392,19 +512,38 @@ CREATE TABLE IF NOT EXISTS `shop_productAttributes` (
   `Attribute` enum('IMAGE','LABEL','OTHER','ISBN','MANUFACTURER','EXPIRE','TAGS') COLLATE utf8_bin NOT NULL,
   `Value` text COLLATE utf8_bin,
   PRIMARY KEY (`ID`),
-  KEY `ProductID` (`ProductID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
+  KEY `ProductID` (`ProductID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=24 ;
 
 --
 -- Dumping data for table `shop_productAttributes`
 --
 
 INSERT INTO `shop_productAttributes` (`ID`, `CustomerID`, `ProductID`, `Attribute`, `Value`) VALUES
-(1, 1, 4, 'LABEL', 'test'),
-(2, 1, 4, 'TAGS', 'wash device'),
-(3, 1, 5, 'TAGS', 'light bulb'),
-(4, 1, 5, 'LABEL', 'smth elese'),
-(5, 1, 4, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg');
+(1, 0, 4, 'LABEL', 'test'),
+(2, 0, 4, 'TAGS', 'wash device'),
+(3, 0, 5, 'TAGS', 'light bulb'),
+(4, 0, 5, 'LABEL', 'smth elese'),
+(5, 0, 4, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(6, 0, 5, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(7, 0, 6, 'IMAGE', 'http://cmsresources.windowsphone.com/windowsphone/en-gb/Phones/Lumia820/Phone280x280.png'),
+(8, 0, 7, 'IMAGE', 'http://www.hp-laptops.org/wp-content/uploads/2011/12/HP-Probook-5330m-Images.jpg'),
+(9, 0, 8, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(10, 0, 9, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(11, 0, 10, 'IMAGE', 'http://blogs.independent.co.uk/wp-content/uploads/2013/01/ubuntu-for-phones.jpg'),
+(12, 0, 11, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(13, 0, 12, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(14, 0, 6, 'LABEL', 'smth elese'),
+(15, 0, 7, 'LABEL', 'smth elese'),
+(16, 0, 4, 'IMAGE', 'http://jomax-international.com/files/products/images/LCD-3.jpg'),
+(17, 0, 4, 'IMAGE', 'http://www2.hull.ac.uk/student/images/lcd-tv.jpg'),
+(18, 0, 4, 'IMAGE', 'http://www.magnet.ru/pictures/17-662-201306151235480.jpg'),
+(19, 0, 4, 'IMAGE', 'http://www.nine220volts.com/images/22LH20R.jpg'),
+(20, 0, 4, 'IMAGE', 'http://img.elmir.ua/img/243547/3000/2000/monitor_lcd_22_philips_224e5qsb_01.jpg'),
+(21, 0, 4, 'IMAGE', 'http://i00.i.aliimg.com/photo/v3/485808738/FHD_1080p_42_inch_lcd_tv_led.jpg'),
+(22, 0, 4, 'IMAGE', 'http://img1.elmir.ua/img/235695/1960/1280/monitor_lcd_23_samsung_s23c570hs_ls23c570hs.jpg'),
+(23, 0, 4, 'IMAGE', 'http://www.blogcdn.com/www.engadget.com/media/2010/07/acer-s1-lcd-monitor.jpg');
 
 -- --------------------------------------------------------
 
@@ -419,7 +558,8 @@ CREATE TABLE IF NOT EXISTS `shop_productPrices` (
   `Price` decimal(10,2) NOT NULL,
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY `ProductID` (`ProductID`)
+  KEY `ProductID` (`ProductID`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
 
 --
@@ -450,30 +590,52 @@ CREATE TABLE IF NOT EXISTS `shop_products` (
   `CategoryID` int(11) NOT NULL,
   `OriginID` int(11) NOT NULL,
   `Name` varchar(200) COLLATE utf8_bin NOT NULL,
-  `ExternalKey` text COLLATE utf8_bin NOT NULL,
+  `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin,
   `Specifications` text COLLATE utf8_bin,
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
   `Enabled` tinyint(1) NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL,
+  `Status` enum('AVAILABLE','REMOVED','OUTOFSTOCK') COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `OriginID` (`OriginID`),
-  KEY `CategoryID` (`CategoryID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products' AUTO_INCREMENT=7 ;
+  KEY `CategoryID` (`CategoryID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products' AUTO_INCREMENT=28 ;
 
 --
 -- Dumping data for table `shop_products`
 --
 
 INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name`, `ExternalKey`, `Description`, `Specifications`, `Model`, `SKU`, `Price`, `Enabled`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(3, 0, 1, 1, 'TES 1', '', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 113.00, 1, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(4, 0, 1, 1, 'LCD S32DV', '', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 10.00, 1, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(5, 0, 1, 1, 'LCD S48DV', '', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(6, 0, 1, 1, 'TES 1', '', 'test test', 'test test', 'test test', 'test test', 0.00, 0, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56');
+(3, 0, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 113.00, 1, 'AVAILABLE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(4, 0, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 10.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(5, 0, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(6, 0, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 0.00, 0, 'REMOVED', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(7, 0, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 56.25, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(8, 0, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(9, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(10, 0, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(11, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(12, 0, 3, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(14, 0, 1, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(15, 0, 1, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(16, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(17, 0, 1, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(18, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(19, 0, 1, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(20, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(21, 0, 1, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(22, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(23, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(24, 0, 1, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(25, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(26, 0, 1, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(27, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56');
 
 -- --------------------------------------------------------
 
@@ -489,7 +651,8 @@ CREATE TABLE IF NOT EXISTS `shop_relations` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductB_ID` (`ProductB_ID`),
-  KEY `ProductA_ID` (`ProductA_ID`)
+  KEY `ProductA_ID` (`ProductA_ID`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -505,7 +668,8 @@ CREATE TABLE IF NOT EXISTS `shop_specifications` (
   `Fields` text COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
 
 --
@@ -967,42 +1131,106 @@ ALTER TABLE `mpws_accounts`
   ADD CONSTRAINT `mpws_accounts_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `mpws_jobs`
+--
+ALTER TABLE `mpws_jobs`
+  ADD CONSTRAINT `mpws_jobs_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `mpws_subscripers`
 --
 ALTER TABLE `mpws_subscripers`
+  ADD CONSTRAINT `mpws_subscripers_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mpws_subscripers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `mpws_uploads`
+--
+ALTER TABLE `mpws_uploads`
+  ADD CONSTRAINT `mpws_uploads_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `mpws_users`
+--
+ALTER TABLE `mpws_users`
+  ADD CONSTRAINT `mpws_users_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_boughts`
+--
+ALTER TABLE `shop_boughts`
+  ADD CONSTRAINT `shop_boughts_ibfk_4` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `shop_boughts_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `shop_categories`
 --
 ALTER TABLE `shop_categories`
-  ADD CONSTRAINT `shop_categories_ibfk_1` FOREIGN KEY (`SchemaID`) REFERENCES `shop_specifications` (`ID`);
+  ADD CONSTRAINT `shop_categories_ibfk_4` FOREIGN KEY (`RootID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_categories_ibfk_5` FOREIGN KEY (`ParentID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_categories_ibfk_6` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_categories_ibfk_7` FOREIGN KEY (`SchemaID`) REFERENCES `shop_specifications` (`ID`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_commands`
+--
+ALTER TABLE `shop_commands`
+  ADD CONSTRAINT `shop_commands_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_currency`
+--
+ALTER TABLE `shop_currency`
+  ADD CONSTRAINT `shop_currency_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_orders`
+--
+ALTER TABLE `shop_orders`
+  ADD CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`OrderDetailsID`) REFERENCES `shop_orderDetails` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`BoughtMapID`) REFERENCES `shop_boughts` (`OrderID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_origins`
+--
+ALTER TABLE `shop_origins`
+  ADD CONSTRAINT `shop_origins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_productAttributes`
 --
 ALTER TABLE `shop_productAttributes`
-  ADD CONSTRAINT `shop_productAttributes_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `shop_productAttributes_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_productAttributes_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_productPrices`
 --
 ALTER TABLE `shop_productPrices`
-  ADD CONSTRAINT `shop_productPrices_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`);
+  ADD CONSTRAINT `shop_productPrices_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_products`
 --
 ALTER TABLE `shop_products`
-  ADD CONSTRAINT `shop_products_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `shop_categories` (`ID`),
-  ADD CONSTRAINT `shop_products_ibfk_2` FOREIGN KEY (`OriginID`) REFERENCES `shop_origins` (`ID`);
+  ADD CONSTRAINT `shop_products_ibfk_3` FOREIGN KEY (`CategoryID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_products_ibfk_4` FOREIGN KEY (`OriginID`) REFERENCES `shop_origins` (`ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_products_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_relations`
 --
 ALTER TABLE `shop_relations`
-  ADD CONSTRAINT `shop_relations_ibfk_1` FOREIGN KEY (`ProductA_ID`) REFERENCES `shop_products` (`ID`),
-  ADD CONSTRAINT `shop_relations_ibfk_2` FOREIGN KEY (`ProductB_ID`) REFERENCES `shop_products` (`ID`);
+  ADD CONSTRAINT `shop_relations_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_relations_ibfk_3` FOREIGN KEY (`ProductA_ID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_relations_ibfk_4` FOREIGN KEY (`ProductB_ID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_specifications`
+--
+ALTER TABLE `shop_specifications`
+  ADD CONSTRAINT `shop_specifications_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

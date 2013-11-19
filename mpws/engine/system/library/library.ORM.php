@@ -2040,6 +2040,37 @@
             return new self(null, array(), $connection_name);
         }
 
+        public function procedure_call ($name, $values) {
+            $query = 'CALL ' . $name;
+
+            // echo $query;
+            $caching_enabled = self::$_config[$this->_connection_name]['caching'];
+
+            if ($caching_enabled) {
+                $cache_key = self::_create_cache_key($query, $values);
+                $cached_result = self::_check_query_cache($cache_key, $this->_connection_name);
+
+                if ($cached_result !== false) {
+                    return $cached_result;
+                }
+            }
+
+            echo $query;
+            self::_execute($query, $values, $this->_connection_name);
+            $statement = self::get_last_statement();
+
+            $rows = array();
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $rows[] = $row;
+            }
+
+            if ($caching_enabled) {
+                self::_cache_query_result($cache_key, $rows, $this->_connection_name);
+            }
+
+            return $rows;
+        }
+
     }
 
 
