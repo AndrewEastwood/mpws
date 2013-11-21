@@ -49,7 +49,7 @@ class pluginShop extends objectBaseWebPlugin {
             }
             // products list sorted by date added
             // -----------------------------------------------
-            case "product_list_latest": {
+            case "shop_product_list_latest": {
                 $data = $this->_custom_api_getProductList_Latest(array(
                     "limit" => $pLimit
                 ));
