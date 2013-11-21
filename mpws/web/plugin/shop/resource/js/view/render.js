@@ -6,9 +6,10 @@ APP.Modules.register("plugin/shop/view/render", [], [
     'lib/mpws.page',
     'plugin/shop/lib/driver',
 
+    'plugin/shop/view/breadcrumb',
     // ui elements
     'lib/fuelux.wizard'
-], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopModel) {
+], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopModel, viewBreadcrumb) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
     var mpwsPageLib = new mpwsPage();
@@ -59,26 +60,27 @@ APP.Modules.register("plugin/shop/view/render", [], [
         }, this.componentsCommon);
 
         // breadcrumb
-        var shopBreadcrumb = mpwsPageLib.createRenderConfig('shopBreadcrumb', {
-            isRequiredOnce: false,
-            data: {
-                source: self.model.getShopLocation,
-                params: {
-                    categoryId: false
-                }
-            },
-            template: "plugin.shop.component.breadcrumb@hbs",
-            placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.breadcrumb)
-        }, this.componentsCommon);
-        //
-        Sandbox.eventSubscribe("shop:category:changed", function (data) {
-            app.log('shopBreadcrumb', shopBreadcrumb)
-            shopBreadcrumb.shopBreadcrumb.data.params.categoryId = data.categoryId;
-        });
-        Sandbox.eventSubscribe("shop:product:changed", function (data) {
-            app.log('shopBreadcrumb', shopBreadcrumb)
-            shopBreadcrumb.shopBreadcrumb.data.params.productId = data.productId;
-        });
+        // var shopBreadcrumb = mpwsPageLib.createRenderConfig('shopBreadcrumb', {
+        //     isRequiredOnce: false,
+        //     data: {
+        //         source: self.model.getShopLocation,
+        //         params: {
+        //             categoryId: false
+        //         }
+        //     },
+        //     template: "plugin.shop.component.breadcrumb@hbs",
+        //     placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.breadcrumb)
+        // }, this.componentsCommon);
+        // //
+        // Sandbox.eventSubscribe("shop:category:changed", function (data) {
+        //     app.log('shopBreadcrumb', shopBreadcrumb)
+        //     shopBreadcrumb.shopBreadcrumb.data.params.categoryId = data.categoryId;
+        // });
+        // Sandbox.eventSubscribe("shop:product:changed", function (data) {
+        //     app.log('shopBreadcrumb', shopBreadcrumb)
+        //     shopBreadcrumb.shopBreadcrumb.data.params.productId = data.productId;
+        // });
+        new viewBreadcrumb();
 
         this.initialize();
     }
@@ -368,6 +370,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
                     break;
                 case "shop:compare:remove":
                     break;
+
                 // cart
                 case "shop:cart:add":
                     self.model.shoppingCartAdd(_oid, function (rez) {
