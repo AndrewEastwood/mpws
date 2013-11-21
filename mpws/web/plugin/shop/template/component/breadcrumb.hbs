@@ -19,7 +19,7 @@
     {{/compare}}
 
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
-    <li><a href="#">Головна</a></li>
+        <li><a href="#">Головна</a></li>
         {{#foreach source.data}}
             {{#if $last}}
                 <li class="active">{{Name}}</li>
@@ -29,10 +29,14 @@
         {{/foreach}}
     {{/srtStartsWith}}
 
-    {{#srtStartsWith app.location.fragment "==" "shop/product/4" }}
-    <li><a href="#">Головна</a></li>
-    <li><a href="#shop/catalog/1">Побутова техніка</a></li>
-    <li><a href="#shop/catalog/1/1">SONY</a></li>
-    <li class="active">LCD S32DV</li>
+    {{#srtStartsWith app.location.fragment "shop/product/" }}
+        <li><a href="#">Головна</a></li>
+        {{#foreach source.data}}
+            {{#if $last}}
+                <li class="active">{{Name}}</li>
+            {{else}}
+                <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+            {{/if}}
+        {{/foreach}}
     {{/srtStartsWith}}
 </ol>

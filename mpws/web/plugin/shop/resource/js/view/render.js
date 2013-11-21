@@ -77,7 +77,7 @@ APP.Modules.register("plugin/shop/view/render", [], [
         });
         Sandbox.eventSubscribe("shop:product:changed", function (data) {
             app.log('shopBreadcrumb', shopBreadcrumb)
-            shopBreadcrumb.shopBreadcrumb.data.params.categoryId = data.categoryId;
+            shopBreadcrumb.shopBreadcrumb.data.params.productId = data.productId;
         });
 
         this.initialize();

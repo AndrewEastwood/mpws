@@ -203,8 +203,9 @@ class pluginShop extends objectBaseWebPlugin {
                 $categoryObj = $this->_custom_api_getCatalogLocation(array(
                     "categoryId" => $productDataEntry['CategoryID']
                 ));
-                var_dump($categoryObj->getData());
-                var_dump($dataObj->getData());
+                $pathData = $categoryObj->getData();
+                $pathData[] = $productDataEntry;
+                $dataObj->setData($pathData);
             } else
                 $dataObj->setDataError("Product category is missed");
 
