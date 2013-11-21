@@ -28,7 +28,6 @@ APP.Modules.register("plugin/shop/view/render", [], [
         },
     }
 
-    // public class
     function pluginShopRender (options) {
         var self = this;
         var _options = options || {};
@@ -60,20 +59,72 @@ APP.Modules.register("plugin/shop/view/render", [], [
         }, this.componentsCommon);
 
         // breadcrumb
-        mpwsPageLib.createRenderConfig('shopBreadcrumb', {
+        var shopBreadcrumb = mpwsPageLib.createRenderConfig('shopBreadcrumb', {
             isRequiredOnce: false,
             data: {
                 source: self.model.getShopLocation,
                 params: {
-                    categoryId: 16
+                    categoryId: false
                 }
             },
             template: "plugin.shop.component.breadcrumb@hbs",
             placeholder: mpwsPageLib.createRenderPlacement(_options.placeholders.breadcrumb)
         }, this.componentsCommon);
+        //
+        Sandbox.eventSubscribe("shop:category:changed", function (data) {
+            app.log('shopBreadcrumb', shopBreadcrumb)
+            shopBreadcrumb.shopBreadcrumb.data.params.categoryId = data.categoryId;
+        });
+        Sandbox.eventSubscribe("shop:product:changed", function (data) {
+            app.log('shopBreadcrumb', shopBreadcrumb)
+            shopBreadcrumb.shopBreadcrumb.data.params.categoryId = data.categoryId;
+        });
 
         this.initialize();
     }
+
+    // breadcrumb
+    // -----------------------------------------------
+
+    // products list sorted by date added
+    // -----------------------------------------------
+
+    // products list sorted by popularity
+    // -----------------------------------------------
+
+    // products list onsale
+    // -----------------------------------------------
+
+    // products list related
+    // -----------------------------------------------
+
+    // products list recently viewed
+    // -----------------------------------------------
+
+    // catalog filtering
+    // -----------------------------------------------
+
+    // shop catalog structure
+    // -----------------------------------------------
+
+    // products list sorted by category
+    // -----------------------------------------------
+
+    // products list sorted by category and origin
+    // -----------------------------------------------
+
+    // product standalone item short
+    // -----------------------------------------------
+
+    // product standalone item full
+    // -----------------------------------------------
+
+    // shopping cart
+    // -----------------------------------------------
+
+
+    // catalog filtering
+    // product lists
 
     // products latest
     pluginShopRender.prototype.pageShopHome = function () {
@@ -110,8 +161,14 @@ APP.Modules.register("plugin/shop/view/render", [], [
         // overwrite page name
         mpwsPageLib.pageName('shop-catalog-cetegory');
 
+        Sandbox.eventNotify("shop:category:changed", {
+            categoryId: categoryId
+        });
+        Sandbox.eventNotify("shop:product:changed", {
+            productId: null
+        });
+
         // here we have to render all essential elements rele=atetd to this scope
-        // 
         var _pholders = this.getPlacehoders();
         var _renderConfiguration = {
             productsByCategory: {
@@ -130,12 +187,11 @@ APP.Modules.register("plugin/shop/view/render", [], [
                 }
             }
         };
+
         app.log(true, _renderConfiguration);
         mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
-    
 
-    // shopping cart
     // shopping cart
     pluginShopRender.prototype.pageShoppingWizard = function () {
         var self = this;
@@ -237,6 +293,12 @@ APP.Modules.register("plugin/shop/view/render", [], [
     pluginShopRender.prototype.pageShopProductItemByID = function (productId) {
         var self = this;
         mpwsPageLib.pageName('shop-product');
+        Sandbox.eventNotify("shop:category:changed", {
+            categoryId: null
+        });
+        Sandbox.eventNotify("shop:product:changed", {
+            productId: productId
+        });
         var _pholders = this.getPlacehoders();
         var _renderConfiguration = {
             productData: {
@@ -259,6 +321,11 @@ APP.Modules.register("plugin/shop/view/render", [], [
         mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
     
+
+
+
+
+
     // smth else
     pluginShopRender.prototype._test_getProductAttributes = function (productId) {
         this.model.getProductAttributes.call(this, productId);

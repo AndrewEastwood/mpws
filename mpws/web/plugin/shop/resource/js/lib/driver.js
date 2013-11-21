@@ -72,7 +72,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         app.log(_logPrefix, 'getProductItemByID', mpwsAPI/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'product_item_full',
+            fn: 'shop_product_item_full',
             params: _.extend(params, {
                 realm: 'plugin'
             })
@@ -99,7 +99,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         app.log(_logPrefix, 'getProductsByCategory', mpwsAPI/*, arguments.callee.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'products_category',
+            fn: 'shop_products_category',
             params: _.extend(params, {
                 realm: 'plugin'
             })
@@ -120,7 +120,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         app.log(_logPrefix, 'getProductListLatest', mpwsAPI/*, arguments.callee.caller.caller*/);
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'product_list_latest',
+            fn: 'shop_product_list_latest',
             params: {
                 realm: 'plugin',
                 limit: 16
@@ -142,7 +142,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         app.log(_logPrefix, 'getProductAttributes', mpwsAPI)
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'product_attributes',
+            fn: 'shop_product_attributes',
             params: {
                 realm: 'plugin',
                 // productId: _.isArray(productId) ? productId.join(',') : productId
@@ -160,7 +160,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
         app.log(_logPrefix, 'getProductAttributes', mpwsAPI)
         mpwsAPI.requestData({
             caller: 'shop',
-            fn: 'product_price_archive',
+            fn: 'shop_product_price_archive',
             params: {
                 realm: 'plugin',
                 productId: productId
@@ -255,7 +255,7 @@ APP.Modules.register("plugin/shop/lib/driver", [], [
             delete data.items;
 
             if (typeof callback === "function") {
-                callback.call(error, _dataInterfaceFn(data));
+                callback.call(null, error, _dataInterfaceFn(data));
             }
         });
     }

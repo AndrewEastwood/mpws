@@ -18,21 +18,21 @@
     <li class="active">Оформлення</li>
     {{/compare}}
 
-    {{#compare app.location.fragment "==" "shop/catalog/1" }}
+    {{#srtStartsWith app.location.fragment "shop/catalog/" }}
     <li><a href="#">Головна</a></li>
-    <li class="active">Побутова техніка</li>
-    {{/compare}}
+        {{#foreach source.data}}
+            {{#if $last}}
+                <li class="active">{{Name}}</li>
+            {{else}}
+                <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+            {{/if}}
+        {{/foreach}}
+    {{/srtStartsWith}}
 
-    {{#compare app.location.fragment "==" "shop/catalog/16" }}
-    <li><a href="#">Головна</a></li>
-    <li><a href="#shop/catalog/1">Побутова техніка</a></li>
-    <li class="active">Догляд за будинком</li>
-    {{/compare}}
-
-    {{#compare app.location.fragment "==" "shop/product/4" }}
+    {{#srtStartsWith app.location.fragment "==" "shop/product/4" }}
     <li><a href="#">Головна</a></li>
     <li><a href="#shop/catalog/1">Побутова техніка</a></li>
     <li><a href="#shop/catalog/1/1">SONY</a></li>
     <li class="active">LCD S32DV</li>
-    {{/compare}}
+    {{/srtStartsWith}}
 </ol>

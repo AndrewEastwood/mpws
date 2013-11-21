@@ -214,9 +214,10 @@ APP.Modules.register("lib/mpws.page", [
         if (collection)
             collection[name] = _renderConfig;
 
-        return {
-            name: _renderConfig
-        }
+        var entry = {};
+        entry[name] = _renderConfig;
+
+        return entry;
     }
 
     mpwsPage.prototype.modifyRenderConfig = function(name, base, modified) {

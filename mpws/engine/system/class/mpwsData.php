@@ -83,6 +83,7 @@ class mpwsData {
     }
 
     // getters
+    public function isEmpty() { return empty($this->_data); }
     public function hasData() { return !empty($this->_data); }
     public function getData() { return $this->_data; }
     public function getConfig() { return $this->_config; }
@@ -90,7 +91,10 @@ class mpwsData {
         // see commented examples how to configure this object before fetch data
         return array(
             "source" => "",
-            "function" => "",
+            "procedure" => array(
+                "name" => "",
+                "parameters" => array()
+            ),
             "condition" => array(
                 "filter" => "", //"shop_products.Status = ? AND shop_products.Enabled = ?",
                 "values" => array(/*"ACTIVE", 1*/)
@@ -226,6 +230,41 @@ class mpwsData {
         $this->extendConfig(array(
             "data" => array(
                 "values" => $values
+            )
+        ));
+        return $this;
+    }
+    public function setValuesDbProcedure ($values, $mode = MERGE_MODE_REPLACE) {
+        if (!is_array($values))
+            $values = array($values);
+
+        // echo '<br>setValuesDbData >>>>>>>>><br>';
+        // var_dump($values);
+        // echo '<br><-------------------------';
+
+        // prepend values
+        if ($mode === MERGE_MODE_PREPEND) {
+            $cfg = $this->getConfig();
+            $existedValues = $cfg['procedure']['parameters'] ?: array();
+            foreach ($values as $value)
+                array_unshift($existedValues, $value);
+            $values = $existedValues;
+        }
+
+        // append values
+        if ($mode === MERGE_MODE_APPEND) {
+            $cfg = $this->getConfig();
+            $existedValues = $cfg['procedure']['parameters'] ?: array();
+            foreach ($values as $value)
+                $existedValues[] =  $value;
+            $values = $existedValues;
+        }
+
+        // var_dump($values);
+        // just set values to config
+        $this->extendConfig(array(
+            "procedure" => array(
+                "parameters" => $values
             )
         ));
         return $this;
@@ -384,7 +423,9 @@ class mpwsData {
         // echo '<<<<<<<<<<<<<<<<<<<<<<';
         switch ($action) {
             case 'call':
-                $dbData = $dbo->procedure_call($config['function'], $config['parameters']);
+                $proc = $config['procedure'];
+                if (!empty($proc))
+                    $dbData = $dbo->mpwsProcedureCall($proc['name'], $proc['parameters']);
                 break;
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));

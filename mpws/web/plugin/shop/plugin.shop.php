@@ -42,61 +42,77 @@ class pluginShop extends objectBaseWebPlugin {
         $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
             // breadcrumb
+            // -----------------------------------------------
             case "shop_location": {
                 $data = $this->_custom_api_getCatalogLocation($param);
                 break;
             }
-            // catalog filtering
-            case "shop_category_filtering": {
-                $data = $this->_custom_api_getCatalogFiltering($param);
-                break;
-            }
-            // shop catalog overview
-            case "shop_catalog_structure": {
-                $data = $this->_custom_api_getCatalogStructure();
-                break;
-            }
             // products list sorted by date added
+            // -----------------------------------------------
             case "product_list_latest": {
                 $data = $this->_custom_api_getProductList_Latest(array(
                     "limit" => $pLimit
                 ));
                 break;
             }
+            // products list sorted by popularity
+            // -----------------------------------------------
+            case "shop_product_list_popular" : {
+                break;
+            }
+            // products list onsale
+            // -----------------------------------------------
+            case "shop_product_list_onsale" : {
+                break;
+            }
+            // products list related
+            // -----------------------------------------------
+            case "shop_product_list_related" : {
+                break;
+            }
+            // products list recently viewed
+            // -----------------------------------------------
+            case "shop_product_list_recent" : {
+                break;
+            }
+            // catalog filtering
+            // -----------------------------------------------
+            case "shop_shop_category_filtering": {
+                $data = $this->_custom_api_getCatalogFiltering($param);
+                break;
+            }
+            // shop catalog structure
+            // -----------------------------------------------
+            case "shop_catalog_structure": {
+                $data = $this->_custom_api_getCatalogStructure();
+                break;
+            }
             // products list sorted by category
-            case "products_category": {
+            // -----------------------------------------------
+            case "shop_products_category": {
                 $data = $this->_custom_api_getProductsByCategory($param);
                 break;
             }
             // products list sorted by category and origin
-            case "products_category_origin": {
+            // -----------------------------------------------
+            case "shop_products_category_origin": {
                 $data = $this->_custom_api_getProductsByCategoryAndByOrigin($param);
                 break;
             }
-            // product stabdalone item short
-            case "product_item_short" : {
+            // product standalone item short
+            // -----------------------------------------------
+            case "shop_product_item_short" : {
                 $data = $this->_custom_api_getProductItem($pProductID, 'short');
                 break;
             }
-            // product stabdalone item full
-            case "product_item_full" : {
+            // product standalone item full
+            // -----------------------------------------------
+            case "shop_product_item_full" : {
                 $data = $this->_custom_api_getProductItem($pProductID, 'full');
                 break;
             }
-            // products list sorted by bought counter
-            case "products_most_popular" : {
-                break;
-            }
-            // additional product information
-            case "product_price_archive" : {
-                $data = $this->_custom_api_getProductPriceArchive($pProductID);
-                break;
-            }
-            case "product_attributes" : {
-                $data = $this->_custom_api_getProductAttributes($pProductID);
-                break;
-            }
             // shopping cart
+            // -----------------------------------------------
             case "shop_cart_save" : {
                 $data = $this->_custom_api_shoppingCartSave($param);
                 break;
@@ -165,154 +181,44 @@ class pluginShop extends objectBaseWebPlugin {
     private function _custom_orderEdit () {}
 
 
-
-
     /* PLUGIN API METHODS (PUBLIC) */
 
-    // shopping cart
-    private function _custom_api_shoppingCartContent ($param) {
-        return new mpwsData(array(
-            "error" => false,
-            "items" => $_SESSION['shop:cart'] ?: array(),
-            "cart" => $this->_custom_cartGetInfo()
-        ));
-    }
 
-    private function _custom_api_shoppingCartClear () {
-        $_SESSION['shop:cart'] = array();
-        return $this->_custom_api_shoppingCartContent();
-    }
-    
-    private function _custom_api_shoppingCartManage ($pProductID, $param) {
-
-        $amount = getValue($param['amount'], null);
-        $clear = getValue($param['clear'], false);
-
-        $cart = $_SESSION['shop:cart'] ?: array();
-        $error = false;
-
-        if ($clear)
-            $cart = array();
-        else {
-            if (is_numeric($amount)) {
-                $amount = intval($amount);
-                // remove item completely
-                if ($amount === 0)
-                    unset($cart[$pProductID]);
-                else {
-                    // check existatce
-                    if (isset($cart[$pProductID])) {
-                        $cart[$pProductID]["products"][$pProductID]["CartAmount"] += $amount;
-                        // remove item when amount is -1 and current amount is 1
-                        if ($cart[$pProductID]["products"][$pProductID]["CartAmount"] === 0)
-                            unset($cart[$pProductID]);
-                    } else {
-                        // just get new product entry annd add it into cart
-                        $productEntry = $this->_custom_api_getProductItem($pProductID, 'short');
-                        if ($productEntry->hasData()) {
-                            $cart[$pProductID] = $productEntry->getData();
-                            $cart[$pProductID]["products"][$pProductID]["CartAmount"] = 1;
-                        } else
-                            $error = "Wrong product ID";
-                    }
-                    // update product total
-                    if (!$error)
-                        $cart[$pProductID]["products"][$pProductID]["CartTotal"] = $cart[$pProductID]["products"][$pProductID]["CartAmount"] * $cart[$pProductID]["products"][$pProductID]["Price"];
-                }
-            }
-            else
-                $error = "Wrong amount value";
-        }
-
-        $_SESSION['shop:cart'] = $cart;
-        // $_SESSION['shop:cart_info'] = $this->_custom_cartGetInfo();
-
-        // return new mpwsData(array(
-        //     "error" => $error,
-        //     "products" => $_SESSION['shop:cart'],
-        //     "cart" => $_SESSION['shop:cart_info']
-        // ));
-        return $this->_custom_api_shoppingCartContent();
-    }
-
-    private function _custom_api_shoppingCartSave () {
-
-
-
-        $_SESSION['shop:cart'] = array();
-
-        return new mpwsData(array("status" => "ok"));
-    }
-
-    private function _custom_cartGetInfo () {
-        $cart = $_SESSION['shop:cart'] ?: array();
-        $cart_info = array(
-            "productAmount" => 0,
-            "total" => 0.0,
-            "discount" => 0
-        );
-        // extract short info
-        foreach ($cart as $pProductID => $productEntry) {
-            // // update each product
-            // $cart[$pID] = $productEntry;
-            // $cart[$pID]["Total"] = $cart[$pID]["Amount"] * $cart[$pID]["Price"];
-
-            // update cart checkout info
-            $cart_info["productAmount"] += $productEntry["products"][$pProductID]["CartAmount"];
-            $cart_info["total"] += $productEntry["products"][$pProductID]["CartTotal"];
-        }
-
-        // $_SESSION['shop:cart_info'] = $cart_info;
-
-        return $cart_info;
-    }
-
-    // catalog filtering
-    private function _custom_api_getCatalogFiltering () {
-
-    }
-
+    // breadcrumb
+    // -----------------------------------------------
     private function _custom_api_getCatalogLocation ($params) {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
-        return $dataObj->process($params);
-    }
+        $productId = getValue($params['productId'], null);
+        $categoryId = getValue($params['categoryId'], null);
 
-    // catalog
-    private function _custom_api_getCatalogStructure ($params) {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
-        $categories = $dataObj->process($params)->getData();
+        if ($productId) {
 
-        // var_dump($categories);
-        $idToCategoryItemMap = array();
+            // get product entry
+            $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductSingleInfo['data']);
+            $dataObj->setValuesDbCondition($productId, MERGE_MODE_APPEND);
+            $dataObj->process();
 
-        foreach ($categories as $key => $value) {
-          $idToCategoryItemMap[$value['ID']] = $value;
+            $productDataEntry = $dataObj->getData();
+
+            if (isset($productDataEntry['CategoryID'])) {
+                $categoryObj = $this->_custom_api_getCatalogLocation(array(
+                    "categoryId" => $productDataEntry['CategoryID']
+                ));
+                var_dump($categoryObj->getData());
+                var_dump($dataObj->getData());
+            } else
+                $dataObj->setDataError("Product category is missed");
+
+        } else {
+            $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
+            $dataObj->setValuesDbProcedure($categoryId);
+            $dataObj->process($params);
         }
-
-        $dataObj->setData($idToCategoryItemMap);
 
         return $dataObj;
     }
 
-    // origins
-    private function _custom_api_getOrigin () {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiOriginList['data']);
-        return $dataObj->process($params);
-    }
-
-    // // categories
-    // private function _custom_api_getCategory () {
-    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
-    //     return $dataObj->process($params);
-    // }
-
-    // category origins
-    private function _custom_api_getCategoryOrigins () {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
-        return $dataObj->process($params);
-    }
-
-    // product list
+    // products list sorted by date added
+    // -----------------------------------------------
     private function _custom_api_getProductList_Latest ($params) {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductListLatest['data']);
         $products = $dataObj->process($params)->getData();
@@ -352,6 +258,44 @@ class pluginShop extends objectBaseWebPlugin {
         return $dataObj;
     }
 
+    // products list sorted by popularity
+    // -----------------------------------------------
+
+    // products list onsale
+    // -----------------------------------------------
+
+    // products list related
+    // -----------------------------------------------
+
+    // products list recently viewed
+    // -----------------------------------------------
+
+    // catalog filtering
+    // -----------------------------------------------
+    private function _custom_api_getCatalogFiltering () {
+
+    }
+
+    // shop catalog structure
+    // -----------------------------------------------
+    private function _custom_api_getCatalogStructure ($params) {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
+        $categories = $dataObj->process($params)->getData();
+
+        // var_dump($categories);
+        $idToCategoryItemMap = array();
+
+        foreach ($categories as $key => $value) {
+          $idToCategoryItemMap[$value['ID']] = $value;
+        }
+
+        $dataObj->setData($idToCategoryItemMap);
+
+        return $dataObj;
+    }
+
+    // products list sorted by category
+    // -----------------------------------------------
     private function _custom_api_getProductsByCategory ($params) {
 
         $categoryId = getValue($params['categoryId'], null);
@@ -369,6 +313,11 @@ class pluginShop extends objectBaseWebPlugin {
 
         $products = $dataObj->process($params)->getData();
         
+        if ($dataObj->isEmpty()) {
+            $dataObj->setDataError("No products");
+            return $dataObj;
+        }
+
         // list of product ids to fetch related attributes
         $productIDs = array();
 
@@ -405,9 +354,12 @@ class pluginShop extends objectBaseWebPlugin {
         return $dataObj;
     }
 
+    // products list sorted by category and origin
+    // -----------------------------------------------
     private function _custom_api_getProductsByCategoryAndByOrigin ($params) {}
 
-    // product item
+    // product standalone item (short or full)
+    // -----------------------------------------------
     private function _custom_api_getProductItem ($pProductID, $type) {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
@@ -492,6 +444,131 @@ class pluginShop extends objectBaseWebPlugin {
 
         return $dataObj;
     }
+
+    // shopping cart
+    // -----------------------------------------------
+    private function _custom_api_shoppingCartContent ($param) {
+        return new mpwsData(array(
+            "error" => false,
+            "items" => $_SESSION['shop:cart'] ?: array(),
+            "cart" => $this->_custom_cartGetInfo()
+        ));
+    }
+    private function _custom_api_shoppingCartClear () {
+        $_SESSION['shop:cart'] = array();
+        return $this->_custom_api_shoppingCartContent();
+    }
+    private function _custom_api_shoppingCartManage ($pProductID, $param) {
+
+        $amount = getValue($param['amount'], null);
+        $clear = getValue($param['clear'], false);
+
+        $cart = $_SESSION['shop:cart'] ?: array();
+        $error = false;
+
+        if ($clear)
+            $cart = array();
+        else {
+            if (is_numeric($amount)) {
+                $amount = intval($amount);
+                // remove item completely
+                if ($amount === 0)
+                    unset($cart[$pProductID]);
+                else {
+                    // check existatce
+                    if (isset($cart[$pProductID])) {
+                        $cart[$pProductID]["products"][$pProductID]["CartAmount"] += $amount;
+                        // remove item when amount is -1 and current amount is 1
+                        if ($cart[$pProductID]["products"][$pProductID]["CartAmount"] === 0)
+                            unset($cart[$pProductID]);
+                    } else {
+                        // just get new product entry annd add it into cart
+                        $productEntry = $this->_custom_api_getProductItem($pProductID, 'short');
+                        if ($productEntry->hasData()) {
+                            $cart[$pProductID] = $productEntry->getData();
+                            $cart[$pProductID]["products"][$pProductID]["CartAmount"] = 1;
+                        } else
+                            $error = "Wrong product ID";
+                    }
+                    // update product total
+                    if (!$error)
+                        $cart[$pProductID]["products"][$pProductID]["CartTotal"] = $cart[$pProductID]["products"][$pProductID]["CartAmount"] * $cart[$pProductID]["products"][$pProductID]["Price"];
+                }
+            }
+            else
+                $error = "Wrong amount value";
+        }
+
+        $_SESSION['shop:cart'] = $cart;
+        // $_SESSION['shop:cart_info'] = $this->_custom_cartGetInfo();
+
+        // return new mpwsData(array(
+        //     "error" => $error,
+        //     "products" => $_SESSION['shop:cart'],
+        //     "cart" => $_SESSION['shop:cart_info']
+        // ));
+        return $this->_custom_api_shoppingCartContent();
+    }
+    private function _custom_api_shoppingCartSave () {
+
+
+
+        $_SESSION['shop:cart'] = array();
+
+        return new mpwsData(array("status" => "ok"));
+    }
+    private function _custom_cartGetInfo () {
+        $cart = $_SESSION['shop:cart'] ?: array();
+        $cart_info = array(
+            "productAmount" => 0,
+            "total" => 0.0,
+            "discount" => 0
+        );
+        // extract short info
+        foreach ($cart as $pProductID => $productEntry) {
+            // // update each product
+            // $cart[$pID] = $productEntry;
+            // $cart[$pID]["Total"] = $cart[$pID]["Amount"] * $cart[$pID]["Price"];
+
+            // update cart checkout info
+            $cart_info["productAmount"] += $productEntry["products"][$pProductID]["CartAmount"];
+            $cart_info["total"] += $productEntry["products"][$pProductID]["CartTotal"];
+        }
+
+        // $_SESSION['shop:cart_info'] = $cart_info;
+
+        return $cart_info;
+    }
+
+
+
+    // catalog filtering
+
+
+    // catalog
+
+    // origins
+    private function _custom_api_getOrigin () {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiOriginList['data']);
+        return $dataObj->process($params);
+    }
+
+    // // categories
+    // private function _custom_api_getCategory () {
+    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
+    //     return $dataObj->process($params);
+    // }
+
+    // category origins
+    private function _custom_api_getCategoryOrigins () {
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
+        return $dataObj->process($params);
+    }
+
+    // product list
+
+
+    // product item
 
     // product additional data
     // @productIds - array of product ids

@@ -362,6 +362,24 @@ var helpers = {
     helpers.ifLtEq     = helpers.if_lteq;
     helpers.unlessLtEq = helpers.unless_lteq;
 
+    helpers.srtStartsWith = function (text, startPart, options) {
+      if (text.substr(0, startPart.length) === startPart)
+        return options.fn(this);
+      return options.inverse(this);
+    }
+
+    // from: http://stackoverflow.com/a/12002281
+    helpers.foreach = function(arr, options) {
+        if(options.inverse && !arr.length)
+            return options.inverse(this);
+
+        return arr.map(function(item,index) {
+            item.$index = index;
+            item.$first = index === 0;
+            item.$last  = index === arr.length-1;
+            return options.fn(item);
+        }).join('');
+    };
 
     // Export helpers
     for (var helper in helpers)

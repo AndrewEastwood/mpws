@@ -2040,8 +2040,15 @@
             return new self(null, array(), $connection_name);
         }
 
-        public function procedure_call ($name, $values) {
-            $query = 'CALL ' . $name;
+        public function mpwsProcedureCall ($name, $values) {
+            $query = 'CALL ' . $name . '(';
+
+            foreach ($values as $value)
+                $query .= '?,';
+
+            $query = trim($query, ",");
+
+            $query .= ');';
 
             // echo $query;
             $caching_enabled = self::$_config[$this->_connection_name]['caching'];
@@ -2055,7 +2062,6 @@
                 }
             }
 
-            echo $query;
             self::_execute($query, $values, $this->_connection_name);
             $statement = self::get_last_statement();
 
