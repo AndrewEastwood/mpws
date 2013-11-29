@@ -1,4 +1,4 @@
-qB.Modules.register("model/BRowModelClass", [], [
+APP.Modules.register("model/BRowModelClass", [], [
 
     'lib/jquery',
     'lib/underscore',
@@ -6,7 +6,7 @@ qB.Modules.register("model/BRowModelClass", [], [
     'collection/BCellCollectionClass',
     'model/BCellModelClass',
 
-], function(qB, Sandbox, $, _, Backbone, BCellCollectionClass, BCellModelClass){
+], function (app, Sandbox, $, _, Backbone, BCellCollectionClass, BCellModelClass){
 
     var BRowModelClass = Backbone.Model.extend({
         events: {
@@ -23,8 +23,8 @@ qB.Modules.register("model/BRowModelClass", [], [
             uiState: 'normal'
         },
         initialize : function (data) {
-            // qB.log('-- BRowModelClass', 'initialize', data.rawData);
-            // qB.log(this);
+            // app.log('-- BRowModelClass', 'initialize', data.rawData);
+            // app.log(this);
             var config = data.modelTable.getConfig();
             var cc = new BCellCollectionClass();
             var self = this;
@@ -59,14 +59,14 @@ qB.Modules.register("model/BRowModelClass", [], [
                 if (config.custom && config.custom.defaultSorting && config.custom.defaultSorting.field == cellAccessKey) 
                     cellConfig.sortMode = config.custom.defaultSorting.orderASC ? "sort-asc" : "sort-desc";
                 
-                // qB.log(cellConfig);
+                // app.log(cellConfig);
                 // cellConfig.cellDisplayIndex = -cellConfig.cellDisplayIndex;
-                // qB.log(true, 'BRowModelClass >>> adding new cell ', cellConfig)
+                // app.log(true, 'BRowModelClass >>> adding new cell ', cellConfig)
                 cc.add(new BCellModelClass(cellConfig));
             }
 
             // if (data.isAttributeRow)
-            //     qB.log(true, 'rowdata:', data.rawData)
+            //     app.log(true, 'rowdata:', data.rawData)
             // loop through all data and add them into row model
             if (!data.isAttributeRow)
                 for(var cellAccessKey in data.rawData)
@@ -79,7 +79,7 @@ qB.Modules.register("model/BRowModelClass", [], [
                     return _addNewCellFn(cellAccessKey, options);
                 if (data.isAttributeRow) {
                     if (options.isAttribute || options.displayInAttributeRow) {
-                        // qB.log(true, 'adding attribute cell with options:', options)
+                        // app.log(true, 'adding attribute cell with options:', options)
                         _addNewCellFn(cellAccessKey, options);
                     }
                     return;
@@ -136,7 +136,7 @@ qB.Modules.register("model/BRowModelClass", [], [
                 return false;
 
             this.get('cellCollection').each(function(modelCell){
-                // qB.log('TROLOLO', modelCell)
+                // app.log('TROLOLO', modelCell)
                 modelCell.setState(state);
             });
             this.set('uiState', state);
@@ -160,7 +160,7 @@ qB.Modules.register("model/BRowModelClass", [], [
         },
         refresh: function () {
             this.get('cellCollection').each(function(modelCell){
-                // qB.log('TROLOLO', modelCell)
+                // app.log('TROLOLO', modelCell)
                 modelCell.trigger('refresh');
             });
             this.getTable().trigger("table:state", "refresh");

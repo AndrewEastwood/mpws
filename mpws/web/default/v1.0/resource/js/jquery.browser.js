@@ -1,10 +1,10 @@
-qB.Modules.register("lib/jquery.browser", [
+APP.Modules.register("lib/jquery.browser", [
     /* import globals */
     window
 ], [
     'lib/jquery'
     /* component implementation */
-], function(window, qB, Sandbox, jQuery) {
+], function (window, app, Sandbox, jQuery) {
 
 
 	(function( jQuery, window, undefined ) {

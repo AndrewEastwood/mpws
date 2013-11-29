@@ -1,11 +1,11 @@
-qB.Modules.register("collection/BCellCollectionClass", [], [
+APP.Modules.register("collection/BCellCollectionClass", [], [
 
     'lib/jquery',
     'lib/underscore',
     'lib/backbone',
     'model/BCellModelClass'
 
-], function(qB, Sandbox, $, _, Backbone, BCellModelClass){
+], function (app, Sandbox, $, _, Backbone, BCellModelClass){
 
     var BCellCollectionClass = Backbone.Collection.extend({
         model : BCellModelClass,

@@ -1,15 +1,15 @@
-// qBeats tabs libarary
+// tabs libarary
 // -----------------------------------
 //
-qB.Modules.register("lib/qb.tabs", [], [
+APP.Modules.register("lib/js.tabs", [], [
     /* import dep packages */
     "lib/jquery",
     'lib/htmlComponents',
-], function(qB, Sandbox, $, HtmlComponents){
+], function (app, Sandbox, $, HtmlComponents){
 
     var _libHtml = new HtmlComponents();
 
-    function qbTabs (com) {
+    function appTabs (com) {
         var _tabCom = $(com);
         var _tabButtonsCnt = _tabCom.find('.component-tab-buttons');
         var _tabPagesCnt = _tabCom.find('.component-tab-pages');
@@ -43,7 +43,7 @@ qB.Modules.register("lib/qb.tabs", [], [
             $(_tabPagesCnt).find((_tabPageNamePrefix + tabPageName).asCssClass()).removeClass(HtmlComponents.CSS_RENDER_HIDDEN);
         }
 
-        // qB.log(_tabCom);
+        // app.log(_tabCom);
         var _getTabPageName = function (tabButtonElement) {
             return _libHtml.getCssNames($(tabButtonElement))[1].replace(_tabButtonNamePrefix, '');
         }
@@ -73,9 +73,9 @@ qB.Modules.register("lib/qb.tabs", [], [
         _tabCom.removeClass(HtmlComponents.CSS_RENDER_HIDDEN);
     }
 
-    $.fn.qbTabs = function () {
+    $.fn.tabs = function () {
         return this.each(function(){
-            qbTabs($(this))
+            appTabs($(this))
         });
     }
 

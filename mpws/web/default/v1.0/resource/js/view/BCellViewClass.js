@@ -1,11 +1,11 @@
-qB.Modules.register("view/BCellViewClass", [], [
+APP.Modules.register("view/BCellViewClass", [], [
 
     'lib/jquery',
     'lib/underscore',
     'lib/backbone',
     'lib/htmlComponents'
 
-], function(qB, Sandbox, $, _, Backbone, HtmlComponents) {
+], function (app, Sandbox, $, _, Backbone, HtmlComponents) {
 
     var _libHtml = new HtmlComponents();
 
@@ -19,7 +19,7 @@ qB.Modules.register("view/BCellViewClass", [], [
             this.model.on('refresh', this.render, this);
         },
         eventToTableDispatcher: function (event) {
-            // qB.log(true, 'BCellViewClass >> eventToTableDispatcher', event, arguments);
+            // app.log(true, 'BCellViewClass >> eventToTableDispatcher', event, arguments);
             var state = 'cell';
             var self = this;
             if (this.model.get('isHeader'))
@@ -34,13 +34,13 @@ qB.Modules.register("view/BCellViewClass", [], [
             });
         },
         uiStateChanged: function () {
-            // qB.log(true, 'BCellViewClass >> uiStateChanged re-rendering beacuse state is changed');
+            // app.log(true, 'BCellViewClass >> uiStateChanged re-rendering beacuse state is changed');
             // if (this.model.isEdit()) {
                 this.render();
             // }
         },
         template: function(attr) {
-            // qB.log(true, 'BCellViewClass >> template', attr);
+            // app.log(true, 'BCellViewClass >> template', attr);
 
             if (!attr.isVisible)
                 return false;
@@ -89,7 +89,7 @@ qB.Modules.register("view/BCellViewClass", [], [
 
 
             if (_.isUndefined(cellValue) || cellValue.toString().length === 0) {
-                // qB.log(true, 'cell is empty, adding empty space')
+                // app.log(true, 'cell is empty, adding empty space')
                 cellContent.html(_libHtml.getEmptySpace());
             } else
                 cellContent.append(cellValue);
@@ -135,7 +135,7 @@ qB.Modules.register("view/BCellViewClass", [], [
 
         },
         render: function() {
-            // qB.log(true, 'BCellViewClass >> render');
+            // app.log(true, 'BCellViewClass >> render');
             if (!this.model.get('isInAttributeRow') && this.model.get('isAttribute') && !this.model.get('isHeader'))
                 return false;
 

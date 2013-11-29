@@ -1,4 +1,4 @@
-qB.Modules.register("view/BRowViewClass", [], [
+APP.Modules.register("view/BRowViewClass", [], [
 
     'lib/jquery',
     'lib/underscore',
@@ -6,7 +6,7 @@ qB.Modules.register("view/BRowViewClass", [], [
     'view/BCellViewClass',
     'lib/htmlComponents'
 
-], function(qB, Sandbox, $, _, Backbone, BCellViewClass, HtmlComponents) {
+], function (app, Sandbox, $, _, Backbone, BCellViewClass, HtmlComponents) {
 
     var _libHtml = new HtmlComponents();
 
@@ -38,7 +38,7 @@ qB.Modules.register("view/BRowViewClass", [], [
             }
         },
         eventToTableDispatcher: function (event) {
-            // qB.log(true, 'BRowViewClass >>> eventToTableDispatcher', event, arguments, this);
+            // app.log(true, 'BRowViewClass >>> eventToTableDispatcher', event, arguments, this);
             var state = 'row';
             var self = this;
             if (this.model.get('isHead'))
@@ -46,7 +46,7 @@ qB.Modules.register("view/BRowViewClass", [], [
             else
                 state += 'Data';
             state += (event && event.type.capitalize());
-            // qB.log(true, 'view/BRowViewClass eventToTableDispatcher ', state);
+            // app.log(true, 'view/BRowViewClass eventToTableDispatcher ', state);
             this.model.getTable().trigger("table:state", state, {
                 event: event,
                 viewRow: self,
@@ -58,7 +58,7 @@ qB.Modules.register("view/BRowViewClass", [], [
             this.uiStateChanged(event);
         },
         render : function (/*event*/) {
-            // qB.log(true, 'BRowViewClass >> render ', this);
+            // app.log(true, 'BRowViewClass >> render ', this);
             var _config = this.model.getConfig();
 
             function _renderRow (rowEl, cellModels, modelRow) {
@@ -68,7 +68,7 @@ qB.Modules.register("view/BRowViewClass", [], [
                 cellModels.each(function(modelCell){
 
                     // modelCell.setState(modelRow.getState());
-                    // qB.log(true, 'BRowViewClass >> render >> modelCell', modelCell, 'modelRow', modelRow);
+                    // app.log(true, 'BRowViewClass >> render >> modelCell', modelCell, 'modelRow', modelRow);
                     var view = new BCellViewClass({
                         model : modelCell
                     });

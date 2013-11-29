@@ -1,14 +1,14 @@
-qB.Modules.register("view/RssViewerPopup", [], [
+APP.Modules.register("view/RssViewerPopup", [], [
 
     'lib/jquery',
     'widget/popup',
     'lib/htmlComponents',
     'lib/jquery.zrssfeed'
 
-], function (qB, Sandbox, $, Popup, HtmlComponents) {
+], function (APP, Sandbox, $, Popup, HtmlComponents) {
 
     var _libHtml = new HtmlComponents();
-    var _config = qB.Page.getConfiguration();
+    var _config = APP.Page.getConfiguration();
 
     var RssViewerPopup = Popup.extend({
         initialize: function (options) {
@@ -34,11 +34,6 @@ qB.Modules.register("view/RssViewerPopup", [], [
             $(_wrapper).rssfeed(options.rss, {
                 header: false,
                 limit: 100
-            }, function(){
-                self.$el.html(_wrapper);
-                // disable all links
-                if (_config.STATES.is_qbcenter)
-                    _wrapper.find('a').attr('href', 'javascript://');
             });
         }
     });

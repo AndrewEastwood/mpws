@@ -2,7 +2,7 @@
  * Library: Html Components Generator
 */
 
-qB.Modules.register("lib/htmlComponents", [
+APP.Modules.register("lib/htmlComponents", [
     /* import globals */
     window
 ], [
@@ -15,7 +15,7 @@ qB.Modules.register("lib/htmlComponents", [
     'lib/bootstrap',
     'lib/jquery.maskedinput'
     /* component implementation */
-], function(window, qB, Sandbox, $, _, moment) {
+], function (window, app, Sandbox, $, _, moment) {
 
     function HtmlComponents () {}
 
@@ -125,7 +125,7 @@ qB.Modules.register("lib/htmlComponents", [
             $(this).remove();
         }
 
-        options.dialogClass = this.setCssScope("qb-simple-popup", options.dialogClass);
+        options.dialogClass = this.setCssScope("app-simple-popup", options.dialogClass);
 
         // _dialog.append(content);
         var _autoOpen = options && (options.autoOpen || typeof options.autoOpen === "undefined");
@@ -137,8 +137,6 @@ qB.Modules.register("lib/htmlComponents", [
             title.html( this.options.title );
         };
 
-        _dialogWnd.data( "qbInitial", _dialog );
-
         // custom dialog methods
         _dialogWnd.open = function (content) {
             if (content)
@@ -146,10 +144,6 @@ qB.Modules.register("lib/htmlComponents", [
             _dialogWnd.dialog("open");
             if (options.events && _.isFunction(options.events.onOpen))
                 options.events.onOpen.call(_dialog);
-            // check wheter we render it as tooltip
-            // if (options.qbShowAsTooltipFor) {
-                // qB.log(true, 'render near ', options.qbShowAsTooltipFor);
-            // }
         }
 
         _dialogWnd.setContent = function (content) {
@@ -308,7 +302,7 @@ qB.Modules.register("lib/htmlComponents", [
     }
 
     HtmlComponents.prototype.getSpinner = function (spinnerName) {
-        var _config = qB.Page.getConfiguration();
+        var _config = app.Page.getConfiguration();
         return this.getImage({src:_config.URL.staticUrlImage + spinnerName});
     }
 
@@ -542,7 +536,7 @@ qB.Modules.register("lib/htmlComponents", [
             attr: attr
         });
 
-        // qB.log('getWidget >> adding container ', container)
+        // app.log('getWidget >> adding container ', container)
 
         _widget.append(container.el);
 
@@ -602,7 +596,7 @@ qB.Modules.register("lib/htmlComponents", [
         // cleanup empty ranges
         _(_(_ranges).clone()).each(function(v, k){
             if (_.isArray(v) && v.length === 2 && !!v[0] && !!v[1] && moment.isMoment(v[0]) && moment.isMoment(v[1])) {
-                // qB.log('filtering', _ranges[k]);
+                // app.log('filtering', _ranges[k]);
                 return;
             }
             delete _ranges[k];
@@ -610,36 +604,36 @@ qB.Modules.register("lib/htmlComponents", [
 
         var _fnUpdateReportLabel = function(start, end) {
 
-            // qB.log(true, "htmlComponents >> _fnUpdateReportLabel", arguments);
+            // app.log(true, "htmlComponents >> _fnUpdateReportLabel", arguments);
             // var _label = start.format('MMM D, YYYY HH:mm:ss') + ' - ' + end.format('MMM D, YYYY HH:mm:ss');
             var _label = start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY');
             var _labelAlias = false;
             var strFnStart = start.format('MMM D, YYYY HH:mm:ss');
             var strFnEnd = end.format('MMM D, YYYY HH:mm:ss');
-            // qB.log('strFnStart  = ', strFnStart,  'strFnEnd  = ', strFnEnd);
+            // app.log('strFnStart  = ', strFnStart,  'strFnEnd  = ', strFnEnd);
             _(_ranges).each(function (dateRangeEntry, valueKey) {
                 var strValStart = dateRangeEntry[0].format('MMM D, YYYY HH:mm:ss');
                 var strValEnd = dateRangeEntry[1].format('MMM D, YYYY HH:mm:ss');
-                // qB.log('-=-=-=-=-=');
-                // qB.log('strValStart = ', strValStart, 'strValEnd = ', strValEnd);
-                // qB.log('dateRangeEntry');
-                // qB.log(dateRangeEntry[0].format('MMM D, YYYY HH:mm:ss'));
-                // qB.log(dateRangeEntry[1].format('MMM D, YYYY HH:mm:ss'));
-                // qB.log('start/end');
-                // qB.log(start.format('MMM D, YYYY HH:mm:ss'));
-                // qB.log(end.format('MMM D, YYYY HH:mm:ss'));
-                // qB.log(dateRangeEntry[0].utc(), start.utc());
-                // qB.log(dateRangeEntry[1].utc(), end.utc());
-                // qB.log('-=-=-=-=-=');
-                // qB.log('dateRangeEntry[0].isSame(start)', dateRangeEntry[0].isSame(start));
-                // qB.log('dateRangeEntry[1].isSame(start)', dateRangeEntry[1].isSame(end));
+                // app.log('-=-=-=-=-=');
+                // app.log('strValStart = ', strValStart, 'strValEnd = ', strValEnd);
+                // app.log('dateRangeEntry');
+                // app.log(dateRangeEntry[0].format('MMM D, YYYY HH:mm:ss'));
+                // app.log(dateRangeEntry[1].format('MMM D, YYYY HH:mm:ss'));
+                // app.log('start/end');
+                // app.log(start.format('MMM D, YYYY HH:mm:ss'));
+                // app.log(end.format('MMM D, YYYY HH:mm:ss'));
+                // app.log(dateRangeEntry[0].utc(), start.utc());
+                // app.log(dateRangeEntry[1].utc(), end.utc());
+                // app.log('-=-=-=-=-=');
+                // app.log('dateRangeEntry[0].isSame(start)', dateRangeEntry[0].isSame(start));
+                // app.log('dateRangeEntry[1].isSame(start)', dateRangeEntry[1].isSame(end));
                 // if (dateRangeEntry[0].isSame(start) && dateRangeEntry[1].isSame(end))
                 if (strFnStart === strValStart && strFnEnd === strValEnd)
                     _labelAlias = valueKey;
             });
             // start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY');
 
-            // qB.log(true, _labelAlias, _label);
+            // app.log(true, _labelAlias, _label);
 
             // show label alias or just label with dates
             $(_dateReport).html(_labelAlias || _label);
@@ -790,7 +784,7 @@ qB.Modules.register("lib/htmlComponents", [
             _(config.links).each(function (wgtConfig, wgtKey) {
                 
                 /* put links here */
-                // qB.log('ArrayLinks adding new link', wgtConfig);
+                // app.log('ArrayLinks adding new link', wgtConfig);
                 var _link = self.getLink(wgtConfig)
                 var _containerBlock = self.getContainerBlock('link');
 
@@ -818,7 +812,7 @@ qB.Modules.register("lib/htmlComponents", [
 
         // _container.html(_containerGroup);
         // _widget.html(_container);
-        // qB.log(true, 'ArrayLinks >>> ', _widget);
+        // app.log(true, 'ArrayLinks >>> ', _widget);
         return {
             widget: _widget,
             el: _widget.el,
@@ -892,14 +886,14 @@ qB.Modules.register("lib/htmlComponents", [
                 var _wgt = self['widget' + wgtKey].call(self, wgtConfig);
 
                 _widgets[wgtKey] =_wgt;
-                // qB.log(true, _widget.container)
+                // app.log(true, _widget.container)
                 _widget.container.el.append(_wgt.el);
                 _widget.container.el.append(self.getSpacer());
             });
 
         // render into container
         if (config.container) {
-            // qB.log('render into container', _widget.el)
+            // app.log('render into container', _widget.el)
             config.container.html('');
             config.container.append(_widget.el);
         }

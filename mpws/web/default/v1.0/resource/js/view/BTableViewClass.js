@@ -1,4 +1,4 @@
-qB.Modules.register("view/BTableViewClass", [], [
+APP.Modules.register("view/BTableViewClass", [], [
 
     'lib/jquery',
     'lib/underscore',
@@ -8,7 +8,7 @@ qB.Modules.register("view/BTableViewClass", [], [
     'lib/htmlComponents',
     'lib/sprintf',
 
-], function(qB, Sandbox, $, _, Backbone, BRowViewClass, Utils, HtmlComponents, StrFormat) {
+], function (app, Sandbox, $, _, Backbone, BRowViewClass, Utils, HtmlComponents, StrFormat) {
 
     var _libHtml = new HtmlComponents();
     var _logThisFile = false;
@@ -26,7 +26,7 @@ qB.Modules.register("view/BTableViewClass", [], [
         },
         initialize : function () {
             // var self = this;
-            // qB.log(_logThisFile, 'BTableViewClass >> initialize');
+            // app.log(_logThisFile, 'BTableViewClass >> initialize');
             this.model.on('table:state', this.customStateDispatcher, this);
         },
         render : function (extraElements) {
@@ -39,7 +39,7 @@ qB.Modules.register("view/BTableViewClass", [], [
             var rowCollection = this.model.get('rowCollection');
             var itemsToRender = [];
 
-            // qB.log(_logThisFile, 'BTableViewClass >> table rendering', this, rowCollection);
+            // app.log(_logThisFile, 'BTableViewClass >> table rendering', this, rowCollection);
 
             // render collection data
             if (rowCollection.length) {
@@ -75,7 +75,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                     var viewRowHead = null;
 
                     // if (rowHead.view) {
-                    //     qB.log('---- adding existed view of row header');
+                    //     app.log('---- adding existed view of row header');
                     //     viewRowHead = rowHead.view;
                     // } else {
                         viewRowHead = new BRowViewClass({
@@ -91,11 +91,11 @@ qB.Modules.register("view/BTableViewClass", [], [
 
                 // add table data
                 rowCollection.forEach(function(rowModel){
-                    // qB.log('before row adding', rowModel);
+                    // app.log('before row adding', rowModel);
                     var view = null;
 
                     // if (rowModel.view) {
-                        // qB.log('---- adding existed view of row data');
+                        // app.log('---- adding existed view of row data');
                         // view = rowModel.view;
                     // } else {
                         view = new BRowViewClass({
@@ -104,7 +104,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                         // rowModel.view  = view;
                         view.render();
                     // }
-                    // qB.log('before row adding');
+                    // app.log('before row adding');
                     _rowGroupRows.append(view.$el);
                 });
 
@@ -112,7 +112,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                 // add rows
                 //_rowGroupRows.append(viewRows);
 
-                // qB.log(true, '_rowGroupTitle.text()', _rowGroupTitle.text());
+                // app.log(true, '_rowGroupTitle.text()', _rowGroupTitle.text());
                 // setup group
                 _rowGroup.append(_rowGroupTitle);
                 _rowGroup.append(_rowGroupRows);
@@ -139,12 +139,12 @@ qB.Modules.register("view/BTableViewClass", [], [
             this.$el = this.template();
             this.$el.append(itemsToRender);
 
-            qB.log(_logThisFile, 'itemsToRender', itemsToRender);
-            qB.log(_logThisFile, 'this.$el', this.$el);
+            app.log(_logThisFile, 'itemsToRender', itemsToRender);
+            app.log(_logThisFile, 'this.$el', this.$el);
 
             // // this.$el.append();
             if (extraElements) {
-                // qB.log(_logThisFile, 'Extra elements to redner: ', extraElements)
+                // app.log(_logThisFile, 'Extra elements to redner: ', extraElements)
                 this.$el.append(extraElements);
             }
 
@@ -164,7 +164,7 @@ qB.Modules.register("view/BTableViewClass", [], [
 
             responce = responce || {};
 
-            qB.log(_logThisFile, 'BTableViewClass >>> customStateDispatcher: state: ', state, ' responce', responce)
+            app.log(_logThisFile, 'BTableViewClass >>> customStateDispatcher: state: ', state, ' responce', responce)
 
             this.model.set('state', state);
 
@@ -206,7 +206,7 @@ qB.Modules.register("view/BTableViewClass", [], [
             var _attachResizer = function () {
                 // attach customs
                 if (config.custom.attachToWindowResize) {
-                    qB.log(_logThisFile, '_attachResizer', config, _embeddedElement, true);
+                    app.log(_logThisFile, '_attachResizer', config, _embeddedElement, true);
                     // window.A = {};
                     // window.A.Utils = Utils;
                     // window.A.config = config;
@@ -231,7 +231,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                 // setTimeout(_attachResizer, 100);
             }
 
-            qB.log(_logThisFile, 'BTableViewClass >> customStateDispatcher state=', state);
+            app.log(_logThisFile, 'BTableViewClass >> customStateDispatcher state=', state);
 
             switch(state) {
                 case "dataParse":
@@ -259,14 +259,14 @@ qB.Modules.register("view/BTableViewClass", [], [
                     // _showUIStateLabelFn();
                     // this.$el.addClass('render-mode-edit');
                     // this.$el.removeClass('render-mode-normal');
-                    // qB.log('LOL', responce);
+                    // app.log('LOL', responce);
                     // _attachResizer();
                     _attachResizer();
                     break;
                 case "modeEditSave":
                 case "modeEditCancel":
-                    // qB.log(responce);
-                    // qB.log(_logThisFile, 'modeEditSave/modeEditCancel');
+                    // app.log(responce);
+                    // app.log(_logThisFile, 'modeEditSave/modeEditCancel');
                     this.model.setStateNormal();
                     _attachResizer();
                 // case "modeEditEnd":
@@ -286,7 +286,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                     }
                     break;
                 case "cellDataClick":
-                    qB.log(_logThisFile, 'cellDataClick');
+                    app.log(_logThisFile, 'cellDataClick');
                     if (responce.modelCell && this.model.isNormal()) {
                         // or start edit (if possible)
                         responce.modelCell.customEditStart(responce);
@@ -295,7 +295,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                     break;
                 case "rowHeaderMouseenter":
                 case "rowDataMouseenter":
-                    // qB.log(responce.viewRow);
+                    // app.log(responce.viewRow);
                     // if (this.model.isEdit())
                     //     break;
                     // if (responce.viewRow)
@@ -303,7 +303,7 @@ qB.Modules.register("view/BTableViewClass", [], [
                     break;
                 case "rowHeaderMouseleave":
                 case "rowDataMouseleave":
-                    // // qB.log(responce.viewRow);
+                    // // app.log(responce.viewRow);
                     // if (this.model.isEdit())
                     //     break;
                     // if (responce.viewRow)
@@ -335,12 +335,12 @@ qB.Modules.register("view/BTableViewClass", [], [
                 _eventData.event = responce.event || null;
                 _eventData.sender = responce.sender || this.model.getConfig().tableName
 
-                qB.log(_logThisFile, 'calling',_eventName);
+                app.log(_logThisFile, 'calling',_eventName);
 
                 config.events[_eventName].call(null, _eventData, this, this.model, callback);
             }
             else if (callback) {
-                qB.log(_logThisFile, 'BTableViewClass >>> customStateDispatcher: calling default callback');
+                app.log(_logThisFile, 'BTableViewClass >>> customStateDispatcher: calling default callback');
                 callback(null); 
             }
 

@@ -1,4 +1,4 @@
-qB.Modules.register("view/TwitterTimelinePopup", [], [
+APP.Modules.register("view/TwitterTimelinePopup", [], [
 
     'lib/jquery',
     'widget/popup',
@@ -6,10 +6,10 @@ qB.Modules.register("view/TwitterTimelinePopup", [], [
     'widget/settings',
     'lib/jquery.zrssfeed'
 
-], function (qB, Sandbox, $, Popup, HtmlComponents, Settings) {
+], function (app, Sandbox, $, Popup, HtmlComponents, Settings) {
 
     var _libHtml = new HtmlComponents();
-    var _config = qB.Page.getConfiguration();
+    var _config = app.Page.getConfiguration();
 
     var _labels = {
         popup_title: "Tweets by @",

@@ -1,11 +1,11 @@
-qB.Modules.register("collection/BRowCollectionClass", [], [
+APP.Modules.register("collection/BRowCollectionClass", [], [
 
     'lib/jquery',
     'lib/underscore',
     'lib/backbone',
     'model/BRowModelClass'
 
-], function(qB, Sandbox, $, _, Backbone, BRowModelClass){
+], function (app, Sandbox, $, _, Backbone, BRowModelClass){
 
     var BRowCollectionClass = Backbone.Collection.extend({
         customOptions: {
@@ -17,22 +17,22 @@ qB.Modules.register("collection/BRowCollectionClass", [], [
         },
         model : BRowModelClass,
         comparator: function(rowA, rowB) {
-            // qB.log('BRowCollectionClass >> comparator: ', arguments, 'by ', this.customSort.key)
+            // app.log('BRowCollectionClass >> comparator: ', arguments, 'by ', this.customSort.key)
 
             var _config = this.getConfig();
 
             var _sortLastRow = !(_config.custom && _config.custom.sortLastRow === false);
 
-            // qB.log(true, 'BRowCollectionClass >>> comparator', _sortLastRow ? "sort all rows" : " + skip last row");
-            // qB.log(true, 'BRowCollectionClass >>> comparator of ', _config.tableName);
-            // qB.log(rowA)
-            // qB.log(rowB)
+            // app.log(true, 'BRowCollectionClass >>> comparator', _sortLastRow ? "sort all rows" : " + skip last row");
+            // app.log(true, 'BRowCollectionClass >>> comparator of ', _config.tableName);
+            // app.log(rowA)
+            // app.log(rowB)
 
             if (this.customSort.key && rowA.get('allowToBeSorted') && rowB.get('allowToBeSorted')) {
                 var rowDataA = rowA.get('rawData');
                 var rowDataB = rowB.get('rawData');
 
-                // qB.log(true, 'BRowCollectionClass comparator: ', rowA, rowB);
+                // app.log(true, 'BRowCollectionClass comparator: ', rowA, rowB);
 
                 // get two values to compare
                 var _valueToCompareA = rowDataA[this.customSort.key] || null;
@@ -61,7 +61,7 @@ qB.Modules.register("collection/BRowCollectionClass", [], [
         },
         setCustomOptions: function (customOptions) {
             this.customOptions = _.extend({}, this.customOptions, customOptions);
-            // qB.log(true, 'BRowCollectionClass >>> initialize', this.customOptions);
+            // app.log(true, 'BRowCollectionClass >>> initialize', this.customOptions);
         },
         getConfig: function () {
             return this.customOptions.modelTable && this.customOptions.modelTable.get('config');

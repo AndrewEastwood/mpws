@@ -1,10 +1,10 @@
-qB.Modules.register("model/BCellModelClass", [], [
+APP.Modules.register("model/BCellModelClass", [], [
 
     'lib/jquery',
     'lib/underscore',
     'lib/backbone'
 
-], function(qB, Sandbox, $, _, Backbone){
+], function (app, Sandbox, $, _, Backbone){
 
     var _logThisFile = false;
     var BCellModelClass = Backbone.Model.extend({
@@ -88,7 +88,7 @@ qB.Modules.register("model/BCellModelClass", [], [
             });
 
             if (wrapper) {
-                // qB.log(_logThisFile, wrapper(_row))
+                // app.log(_logThisFile, wrapper(_row))
                 return wrapper(_row);
             }
 
@@ -116,7 +116,7 @@ qB.Modules.register("model/BCellModelClass", [], [
             if (_.isEmpty(dataJSON))
                 return;
             this.customWithEachCellInRowDo(function(modelCell){
-                qB.log(_logThisFile, 'modelCell', modelCell);
+                app.log(_logThisFile, 'modelCell', modelCell);
                 var newValue = dataJSON[modelCell.get('accessKey')];
                 if (typeof newValue !== "undefined")
                     modelCell.setValue(newValue);
@@ -146,7 +146,7 @@ qB.Modules.register("model/BCellModelClass", [], [
         },
         customEditStart : function (responce) {
             if (this.customAllowToEditStart()) {
-                qB.log(_logThisFile, 'customEditStart');
+                app.log(_logThisFile, 'customEditStart');
 
                 // set inner state
                 this.setInnerState('clicked');
@@ -162,7 +162,7 @@ qB.Modules.register("model/BCellModelClass", [], [
             }
         },
         customEditCancel : function (event, force) {
-            qB.log(_logThisFile, 'BCellModelClass >> customEditCancel');
+            app.log(_logThisFile, 'BCellModelClass >> customEditCancel');
             if (this.customAllowToEditStop() || force) {
                 if (event) {
                     if (event.stopPropagation)
@@ -238,7 +238,7 @@ qB.Modules.register("model/BCellModelClass", [], [
         setState: function (state) {
             if (this.getState() === state)
                 return false;
-            qB.log(_logThisFile, 'BCellModelClass setState', state);
+            app.log(_logThisFile, 'BCellModelClass setState', state);
             this.set('uiState', state);
             return true;
         },
@@ -269,7 +269,7 @@ qB.Modules.register("model/BCellModelClass", [], [
             return this.get('value');
         },
         setValue: function (value) {
-            // qB.log(_logThisFile, 'new value setted for ', this.get('accessKey'), ' ===> ', value);
+            // app.log(_logThisFile, 'new value setted for ', this.get('accessKey'), ' ===> ', value);
             this.set('value', value);
         },
         getAccessKey: function () {

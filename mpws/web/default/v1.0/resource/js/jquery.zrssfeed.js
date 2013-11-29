@@ -1,11 +1,11 @@
-qB.Modules.register("lib/jquery.zrssfeed", [
+APP.Modules.register("lib/jquery.zrssfeed", [
     /* import globals */
     window
 ], [
     'lib/jquery',
     'lib/jquery_ui'
     /* component implementation */
-], function(window, qB, Sandbox, jQuery) {
+], function (window, app, Sandbox, jQuery) {
 
 /**
  * Plugin: jquery.zRSSFeed

@@ -1,4 +1,4 @@
-qB.Modules.register("model/BTableModelClass", [], [
+APP.Modules.register("model/BTableModelClass", [], [
 
     'lib/jquery',
     'lib/underscore',
@@ -6,7 +6,7 @@ qB.Modules.register("model/BTableModelClass", [], [
     'collection/BRowCollectionClass',
     'model/BRowModelClass'
 
-], function(qB, Sandbox, $, _, Backbone, BRowCollectionClass, BRowModelClass){
+], function (app, Sandbox, $, _, Backbone, BRowCollectionClass, BRowModelClass){
 
     var _logThisFile = false;
 
@@ -20,7 +20,7 @@ qB.Modules.register("model/BTableModelClass", [], [
             config: null
         },
         initialize : function () {
-            // qB.log('BTableModelClass', 'initialize', this);
+            // app.log('BTableModelClass', 'initialize', this);
 
             var rowColl = new BRowCollectionClass();
 
@@ -39,14 +39,14 @@ qB.Modules.register("model/BTableModelClass", [], [
             // this.on('table:sort', this.customRowsSort);
         },
         parse : function (responce) {
-            // qB.log(_logThisFile, 'BTableModelClass >> data received', responce);
+            // app.log(_logThisFile, 'BTableModelClass >> data received', responce);
 
             var rowColl = this.get('rowCollection');
             rowColl.reset();
-            // qB.log(_logThisFile, 'BTableModelClass::rowCollection >> ', rowColl);
+            // app.log(_logThisFile, 'BTableModelClass::rowCollection >> ', rowColl);
 
             if (!responce || _.isEmpty(responce)) {
-                qB.log(_logThisFile, 'BTableModelClass >>> empty data occured');
+                app.log(_logThisFile, 'BTableModelClass >>> empty data occured');
                 this.trigger("table:state", "dataEmpty");
                 return false;
             }
@@ -61,20 +61,20 @@ qB.Modules.register("model/BTableModelClass", [], [
 
                 var data = newData || responce;
 
-                // qB.log(_logThisFile, 'BTableModelClass >>> parse: data:', data);
+                // app.log(_logThisFile, 'BTableModelClass >>> parse: data:', data);
 
                 var _config = self.getConfig();
 
                 var _dataRowCount = Object.getOwnPropertyNames(data).length - 1;
                 var _rowIndex = 0;
                 var _isLastRow = false;
-                // qB.log(_logThisFile, 'BTableModelClass >>> parse: data:',Object.getOwnPropertyNames(data), _dataRowCount);
+                // app.log(_logThisFile, 'BTableModelClass >>> parse: data:',Object.getOwnPropertyNames(data), _dataRowCount);
 
                 for (var key in data) {
 
                     _isLastRow = (_rowIndex + 1) == _dataRowCount;
 
-                    // qB.log(_logThisFile, 'running row index is', _rowIndex);
+                    // app.log(_logThisFile, 'running row index is', _rowIndex);
 
                     // add attribute rows
                     var _attributeRows = [];
@@ -87,7 +87,7 @@ qB.Modules.register("model/BTableModelClass", [], [
                             }));
 
                     // if (_isLastRow)
-                    //     qB.log(_logThisFile, 'Last table row:', data[key]);
+                    //     app.log(_logThisFile, 'Last table row:', data[key]);
 
                     // add data row
                     rowColl.add(new BRowModelClass({
@@ -102,7 +102,7 @@ qB.Modules.register("model/BTableModelClass", [], [
                 }
 
                 if (self.getConfig().style.showHeader) {
-                    // qB.log(_logThisFile, 'BTableModelClass >>> addding row header');
+                    // app.log(_logThisFile, 'BTableModelClass >>> addding row header');
                     var rowHead = new BRowModelClass({
                         rawData : data[0],
                         modelTable : self,
@@ -209,7 +209,7 @@ qB.Modules.register("model/BTableModelClass", [], [
             return this.get('uiState') === 'cancel';
         },
         setState: function (state) {
-            qB.log(_logThisFile, 'setState', state);
+            app.log(_logThisFile, 'setState', state);
             this.set('uiState', state);
         },
         getState: function () {
