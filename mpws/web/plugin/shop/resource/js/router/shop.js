@@ -1,17 +1,11 @@
 APP.Modules.register("plugin/shop/router/shop", [], [
-    'lib/jquery',
     'lib/underscore',
     'lib/backbone',
-    'lib/mpws.api',
-    'lib/mpws.page',
-    'plugin/shop/view/render',
-    "lib/htmlComponents",
-    "lib/purl",
-], function (app, Sandbox, $, _, Backbone, mpwsAPI, mpwsPage, pluginShopView, HtmlComponents) {
+    'plugin/shop/view/shop',
+], function (app, Sandbox, _, Backbone, pluginShopView) {
 
     // start site routing
     //var view = null;
-    var _libHtml = new HtmlComponents();
 
     function Router (options) {
 

@@ -39,20 +39,20 @@ APP.Modules.register("lib/mpws.page", [
 
     mpwsPage.RegisterPartial = function(key, partial) {
         tplEngine.registerPartial(key, partial);
-        return this;
+        return mpwsPage;
     }
 
     // register template helpers
     mpwsPage.RegisterHelper = function(key, helper) {
         tplEngine.registerHelper(key, helper);
-        return this;
+        return mpwsPage;
     }
 
-    mpwsPage.prototype.getPageError = function() {
-        this.getPageBody('Woohoo!!! Error 404');
+    mpwsPage.getPageError = function() {
+        mpwsPage.getPageBody('Woohoo!!! Error 404');
     }
 
-    mpwsPage.prototype.getPagePlaceholders = function() {
+    mpwsPage.getPagePlaceholders = function() {
         return {
             header : $('.MPWSPageHeader'),
             body : $('.MPWSPageBody'),
@@ -60,37 +60,37 @@ APP.Modules.register("lib/mpws.page", [
         };
     }
 
-    mpwsPage.prototype.getPageBody = function (content, clear) {
-        var _body = this.getPagePlaceholders().body;
+    mpwsPage.getPageBody = function (content, clear) {
+        var _body = mpwsPage.getPagePlaceholders().body;
         if (clear)
             $(_body).html('');
         if (content) {
             // stop loading animation
-            this.pageSetState(mpwsPage.STATE.LOADING, false);
+            mpwsPage.pageSetState(mpwsPage.STATE.LOADING, false);
             // append content
             $(_body).append(content);
         }
         return _body;
     }
 
-    mpwsPage.prototype.getPageHeader = function () {
-        return this.getPagePlaceholders().header;
+    mpwsPage.getPageHeader = function () {
+        return mpwsPage.getPagePlaceholders().header;
     }
 
-    mpwsPage.prototype.getPageFooter = function () {
-        return this.getPagePlaceholders().footer;
+    mpwsPage.getPageFooter = function () {
+        return mpwsPage.getPagePlaceholders().footer;
     }
 
-    mpwsPage.prototype.setPageState = function (state, showOrHide) {
+    mpwsPage.setPageState = function (state, showOrHide) {
         if (state === mpwsPage.STATE.LOADING) {
             if (showOrHide)
-                this.getPagePlaceholders().body.html('').addClass('render-loading');
+                mpwsPage.getPagePlaceholders().body.html('').addClass('render-loading');
             else
-                this.getPagePlaceholders().body.removeClass('render-loading');
+                mpwsPage.getPagePlaceholders().body.removeClass('render-loading');
         }
     }
 
-    mpwsPage.prototype.setPlaceholderState = function (placeholder, state, showOrHide) {
+    mpwsPage.setPlaceholderState = function (placeholder, state, showOrHide) {
         var _injectionType = placeholder.placement || mpwsPage.PLACEMENT.REPLACE;
         if (placeholder.placement === mpwsPage.PLACEMENT.REPLACE) {
             if (state === mpwsPage.STATE.LOADING) {
@@ -102,7 +102,7 @@ APP.Modules.register("lib/mpws.page", [
         }
     }
 
-    mpwsPage.prototype.pageName = function (name) {
+    mpwsPage.pageName = function (name) {
         var classNames = $('body').attr('class');
 
         if (classNames)
@@ -117,18 +117,18 @@ APP.Modules.register("lib/mpws.page", [
     }
 
     // register partial reusable object 
-    mpwsPage.prototype.registerPartial = function(key, partial) {
+    mpwsPage.registerPartial = function(key, partial) {
         mpwsPage.RegisterPartial(key, partial);
-        return this;
+        return mpwsPage;
     }
 
     // register template helpers
-    mpwsPage.prototype.registerHelper = function(key, helper) {
+    mpwsPage.registerHelper = function(key, helper) {
         mpwsPage.RegisterHelper(key, helper);
-        return this;
+        return mpwsPage;
     }
 
-    mpwsPage.prototype.getTemplate = function(templateUrl, callback) {
+    mpwsPage.getTemplate = function(templateUrl, callback) {
         // just fire callback
         if (!templateUrl && _.isFunction(callback))
             return callback(null, null);
@@ -142,108 +142,108 @@ APP.Modules.register("lib/mpws.page", [
             });
     }
 
-    // will setup / fetch and store page components
-    // @deps - json opject where each item must contain the 
-    //         following fields:
-    //              url
-    //              type: [partial|helper]
-    //              fn: (when type is helper)
-    mpwsPage.prototype.setupDependencies = function(deps, callback) {
-        var _dataMap = {};
-        var _self = this;
+    // mpwsPage.prototype.createRenderPlacement = function(target, placement) {
 
-        if (!deps)
-            return callback(null);
+    //     if (target.target || target.placement)
+    //         return this.createRenderPlacement(target.target, target.placement);
 
-        for (var templateAccessKey in deps)
-            (function (key, depItem) {
-                _dataMap[key] = function (callback) {
-                    _self.getTemplate(depItem.url, function (err, templateHtml) {
-                        callback(err, _.extend({}, depItem, {
-                            template: templateHtml
-                        }));
-                    });
-                }
-            })(templateAccessKey, deps[templateAccessKey]);
+    //     return {
+    //         target: target || mpwsPageLib.getPageBody(),
+    //         placement: placement || mpwsPage.PLACEMENT.REPLACE
+    //     };
+    // }
 
-        AsyncLib.parallel(_dataMap, function(err, results) {
+    // mpwsPage.prototype.createRenderConfig = function(name, options, collection) {
+    //     var self = this;
 
-            app.log(true, "mpwsPage.setupDependencies", err, results);
+    //     var placeholder = null;
+    //     if (options.placeholder)
+    //         placeholder = self.createRenderPlacement(options.placeholder.target, options.placeholder.placement);
+    //     else
+    //         placeholder = self.createRenderPlacement(); // default placeholder
 
-            _(results).each(function(depItem, key) {
-                if (depItem.type === 'partial')
-                    _self.registerPartial(key, depItem.template);
-                if (depItem.type === 'helper' && _.isFunction(depItem.fn))
-                    _self.registerHelper(key, depItem.fn);
-            });
+    //     var _renderConfig = {
+    //         isRequiredOnce: options.isRequiredOnce || false,
+    //         name: name,
+    //         data: options.data || {},
+    //         template: options.template || false,
+    //         dependencies: options.dependencies || [],
+    //         placeholder: placeholder,
+    //         callback: options.callback || null
+    //     };
 
-            callback(err, results);
-        });
-    }
+    //     if (collection)
+    //         collection[name] = _renderConfig;
 
-    mpwsPage.prototype.createRenderPlacement = function(target, placement) {
+    //     var entry = {};
+    //     entry[name] = _renderConfig;
 
-        if (target.target || target.placement)
-            return this.createRenderPlacement(target.target, target.placement);
+    //     return entry;
+    // }
 
-        return {
-            target: target || mpwsPageLib.getPageBody(),
-            placement: placement || mpwsPage.PLACEMENT.REPLACE
-        };
-    }
+    // mpwsPage.prototype.modifyRenderConfig = function(name, base, modified) {
+    //     if (name && base && !modified) {
+    //         modified = base;
+    //         base = name;
+    //         name = base.name || modified.name || "default";
+    //     }
+    //     return this.createRenderConfig(base.name, _.extend({}, base, modified));
+    // }
 
-    mpwsPage.prototype.createRenderConfig = function(name, options, collection) {
-        var self = this;
-
-        var placeholder = null;
-        if (options.placeholder)
-            placeholder = self.createRenderPlacement(options.placeholder.target, options.placeholder.placement);
-        else
-            placeholder = self.createRenderPlacement(); // default placeholder
-
-        var _renderConfig = {
-            isRequiredOnce: options.isRequiredOnce || false,
-            name: name,
-            data: options.data || {},
-            template: options.template || false,
-            dependencies: options.dependencies || [],
-            placeholder: placeholder,
-            callback: options.callback || null
-        };
-
-        if (collection)
-            collection[name] = _renderConfig;
-
-        var entry = {};
-        entry[name] = _renderConfig;
-
-        return entry;
-    }
-
-    mpwsPage.prototype.modifyRenderConfig = function(name, base, modified) {
-        if (name && base && !modified) {
-            modified = base;
-            base = name;
-            name = base.name || modified.name || "default";
-        }
-        return this.createRenderConfig(base.name, _.extend({}, base, modified));
-    }
-
-    mpwsPage.prototype.render = function(/* options list */) {
-// start loadng animation
+    mpwsPage.render = function(renderItemConfig) {
+        // start loadng animation
         // this.setPageState(mpwsPage.STATE.LOADING, true);
 
-        var _renderOptionsList = [].slice.apply(arguments);
-        var options = _renderOptionsList.unshift();
-        _(_renderOptionsList).each(function(optionEntry){
-            options = _.extend({}, options, optionEntry);
-        });
+        // var _renderOptionsList = [].slice.apply(arguments);
+        // var options = _renderOptionsList.unshift();
+        // _(_renderOptionsList).each(function(optionEntry){
+        //     renderItems = _.extend({}, renderItems, optionEntry);
+        // });
 
 
-        app.log(true, 'render options:', options, arguments);
+        // app.log(true, 'render options:', renderItemConfig, arguments);
 
-        var self = this;
+        var self = mpwsPage;
         var _renderCommands = {};
+
+        // will setup / fetch and store page components
+        // @deps - json opject where each item must contain the 
+        //         following fields:
+        //              url
+        //              type: [partial|helper]
+        //              fn: (when type is helper)
+        var _setupDependenciesFn = function(deps, callback) {
+            var _dataMap = {};
+            // var _self = this;
+
+            if (!deps)
+                return callback(null);
+
+            for (var templateAccessKey in deps)
+                (function (key, depItem) {
+                    _dataMap[key] = function (callback) {
+                        self.getTemplate(depItem.url, function (err, templateHtml) {
+                            callback(err, _.extend({}, depItem, {
+                                template: templateHtml
+                            }));
+                        });
+                    }
+                })(templateAccessKey, deps[templateAccessKey]);
+
+            AsyncLib.parallel(_dataMap, function(err, results) {
+
+                // app.log(true, "mpwsPage.setupDependencies", err, results);
+
+                _(results).each(function(depItem, key) {
+                    if (depItem.type === 'partial')
+                        self.registerPartial(key, depItem.template);
+                    if (depItem.type === 'helper' && _.isFunction(depItem.fn))
+                        self.registerHelper(key, depItem.fn);
+                });
+
+                callback(err, results);
+            });
+        }
 
         var _renderFn = function (templatePath, templateDataReceiverFn, placeholder, callback) {
             var _injectionFn = function (error, template, data) {
@@ -262,7 +262,7 @@ APP.Modules.register("lib/mpws.page", [
                         },
                         source: data || {}
                     }
-                    app.log(true, 'template data is', _tplData);
+                    // app.log(true, 'template data is', _tplData);
                     html = templateFn(_tplData);
                 }
                 // render into placeholder
@@ -289,7 +289,7 @@ APP.Modules.register("lib/mpws.page", [
                 // [3] call data receiver
                 if (_.isFunction(templateDataReceiverFn))
                     templateDataReceiverFn(function (errorData, data) {
-                        // app.log(true, 'data received', data);
+                        // // app.log(true, 'data received', data);
                         _injectionFn(errorTpl || errorData, template, data);
                     });
                 else
@@ -301,20 +301,26 @@ APP.Modules.register("lib/mpws.page", [
         }
 
         // transform config
-        _(options).each(function (renderElementOptions, elementKey) {
+        var renderElementOptions = renderItemConfig;
+        var elementKey = renderItemConfig.name;
+
+        // _(renderItems).each(function (renderElementOptions, elementKey) {
 
             // avoid loading already loaded component
             if (Storage.has(elementKey) && renderElementOptions.isRequiredOnce)
                 return;
             Storage.add(elementKey, true);
 
-            app.log(true, elementKey, Storage.getAll(), Storage.has(elementKey), renderElementOptions, renderElementOptions.isRequiredOnce);
+//             app.log(true, elementKey, Storage.getAll(), Storage.has(elementKey), renderElementOptions, renderElementOptions.isRequiredOnce);
 
             _renderCommands[elementKey] = function (callback) {
                 // template (what render)
                 var _tpl = renderElementOptions.template;
                 // get placeholder (where to show)
-                var _pholder = renderElementOptions.placeholder;
+                var _pholder = {
+                    placement: renderElementOptions.placement,
+                    target: renderElementOptions.container
+                };
                 // get deps (when our template has some deps weh ave to download them first)
                 var _deps = renderElementOptions.dependencies;
                 // setup callback
@@ -352,13 +358,13 @@ APP.Modules.register("lib/mpws.page", [
                 self.setPlaceholderState(_pholder, mpwsPage.STATE.LOADING, true);
 
                 if (_deps)
-                    self.setupDependencies(_deps, function () {
+                    _setupDependenciesFn(_deps, function () {
                         _renderFn(_tpl, _dataFn, _pholder, _cb);
                     });
                 else
                     _renderFn(_tpl, _dataFn, _pholder, _cb);
             }
-        });
+        // });
 
         AsyncLib.parallel(_renderCommands, function (error, data) {
             // global notify

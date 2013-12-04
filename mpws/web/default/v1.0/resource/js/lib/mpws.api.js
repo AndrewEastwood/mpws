@@ -151,6 +151,7 @@ APP.Modules.register("lib/mpws.api", [
     }
 
     return {
+        getApiUrl: _getObjectJSON,
         requestData: requestJSON,
         requestTemplate: requestTemplate
     };

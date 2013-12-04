@@ -11,7 +11,7 @@ APP.Modules.register("router/customer", [], [
 
     // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
-    var mpwsPageLib = new mpwsPage();
+    // var mpwsPageLib = new mpwsPage();
     var Controller = Backbone.Router.extend({
         routes: {
             "": "site_home",
@@ -73,39 +73,53 @@ APP.Modules.register("router/customer", [], [
 
     // init all available plugins here
     var pluginShopRouterLib = new pluginShopRouter({
-        placeholders: {
-            breadcrumb: {
+        breadcrumb: {
+            placeholder: {
                 target: $('.breadcrumb-placeholder'),
                 placement: mpwsPage.PLACEMENT.APPEND
-            },
-            menu: {
+            }
+        },
+        menu: {
+            placeholder: {
                 target: $('header .navbar-nav-main'),
                 placement: mpwsPage.PLACEMENT.APPEND
-            },
-            productsLatest: {
-                target: mpwsPageLib.getPageBody(),
+            }
+        },
+        productListOverview: {
+            placeholder: {
+                target: mpwsPage.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
-            },
-            productEntryViewStandalone: {
-                target: mpwsPageLib.getPageBody(),
+            }
+        },
+        productEntryViewStandalone: {
+            placeholder: {
+                target: mpwsPage.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
-            },
-            shoppingCartStandalone: {
-                target: mpwsPageLib.getPageBody(),
+            }
+        },
+        shoppingCartStandalone: {
+            placeholder: {
+                target: mpwsPage.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
-            },
-            shoppingCartEmbedded: {
+            }
+        },
+        shoppingCartEmbedded: {
+            placeholder: {
                 target: $('header .navbar-nav-plugins'),
                 placement: mpwsPage.PLACEMENT.APPEND
-            },
-            shoppingCartCheckout: {
-                target: mpwsPageLib.getPageBody(),
+            }
+        },
+        shoppingCartCheckout: {
+            placeholder: {
+                target: mpwsPage.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
-            },
-            productsByCategory: {
-                target: mpwsPageLib.getPageBody(),
+            }
+        },
+        productsByCategory: {
+            placeholder: {
+                target: mpwsPage.getPageBody(),
                 placement: mpwsPage.PLACEMENT.REPLACE
-            },
+            }
         }
     });
 
