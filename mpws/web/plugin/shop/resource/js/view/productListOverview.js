@@ -8,26 +8,33 @@ APP.Modules.register("plugin/shop/view/productListOverview", [], [
 
     var ProductListOverview = MView.extend({
 
+        model: new modelProductListOverview(),
+        
+        template: 'plugin.shop.component.shopProductListOverview@hbs',
+        // _options: {
 
-        initialize: function (viewConfig) {
+        name: "shopProductListOverview",
 
-            var _viewConfig = _.extend({}, {
-                name: "shopProductListOverview",
-                model: new modelProductListOverview(),
-                dependencies: {
-                    productEntryViewList: {
-                        url: "plugin.shop.component.productEntryViewList@hbs",
-                        type: mpwsPage.TYPE.PARTIAL
-                    }
-                },
-                template: 'plugin.shop.component.shopProductListOverview@hbs',
-            }, viewConfig);
+        dependencies: {
+            productEntryViewList: {
+                url: "plugin.shop.component.productEntryViewList@hbs",
+                type: mpwsPage.TYPE.PARTIAL
+            }
+        },
+
+        // },
+
+        initialize: function (options) {
+
+            // var _viewConfig = _.extend({}, {
+            // }, viewConfig);
 
             // var self = this;
 
-            app.log('init ProductListOverview', _viewConfig);
-
-            MView.prototype.initialize.call(this, _viewConfig);
+            // app.log('init ProductListOverview', _viewConfig);
+            // MView.prototype.initialize.call(this, _.extend({}, this._options, options));
+            MView.prototype.initialize.call(this, options);
+            app.log('view ProductListOverview initialize', this);
 
             // this.listenTo(this.model, "change", this.render);
 

@@ -2,26 +2,40 @@ APP.Modules.register("view/mview", [], [
     'lib/jquery',
     'lib/underscore',
     'lib/backbone',
-    'lib/mpws.page'
-], function (app, Sandbox, $, _, Backbone, mpwsPage) {
-    
+    'lib/mpws.page',
+    'lib/storage',
+    'lib/templateEngine',
+], function (app, Sandbox, $, _, Backbone, mpwsPage, Storage, tplEngine) {
+
+    var _config = app.Page.getConfiguration();
+
     var MView = Backbone.View.extend({
 
+        // el: mpwsPage.getPageBody(),
+
+        template: false,
+        // _options: {
+            
         name: "default",
 
         isRequiredOnce: false,
 
         dependencies: {},
 
-        template: false,
-
         placement: mpwsPage.PLACEMENT.REPLACE,
+        // },
 
-        $el: mpwsPage.getPageBody(),
-
-        initialize: function(cfg) {
-            app.log(true, 'cfg', cfg);
+        initialize: function(options) {
+            app.log('view MView initialize', this.model);
+            // this.$el = null;
+            // this.options = _.extend({}, this._options, options);
         //     this.model.on('change',this.render,this);
+            this.$el = $(options.el || this.el);
+
+            this.model.on('change:data', function (sender, data) {
+                app.log('new data is available', data);
+                _render.call(this, data);
+            }, this);
         },
         // initialize: function (viewConfig) {
         //     // var _defaultConfig = {
@@ -36,63 +50,81 @@ APP.Modules.register("view/mview", [], [
         getRenderConfig: function () {
             return {
                 isRequiredOnce: this.isRequiredOnce,
-                name: this.name,
-                data: {},
-                template: this.template ,
+                template: this.template,
                 dependencies: this.dependencies,
-                placement: this.placement,
-                container: this.$el
+                placeholder: {
+                    placement: this.placement,
+                    container: this.$el
+                }
                 // placeholder: this.placeholder,
             };
         },
 
         render: function () {
-            app.log(true, 'MView', this.model);
-            mpwsPage.render(this.getRenderConfig());
+
+            var _renderConfig = this.getRenderConfig();
+            var placeholder = _renderConfig.placeholder;
+            mpwsPage.setPlaceholderState(placeholder, mpwsPage.STATE.LOADING, true);
+
+            this.model.fetch();
+            // app.log('render config is ', _renderConfig);
+            // mpwsPage.render(this.getRenderConfig());
+
+            // this.$el.html(this.template(this.model.attributes));
             return this;
         }
     });
 
-    // function _createRenderPlacement (target, placement) {
+    function _render (data) {
+        // app.log(true, 'view MView render is called', this.$el);
+        // avoid loading already loaded component
+        if (Storage.has(this.name) && this.isRequiredOnce)
+            return;
 
-    //     if (target.target || target.placement)
-    //         return _createRenderPlacement(target.target, target.placement);
+        Storage.add(this.name, true);
 
-    //     return {
-    //         target: target || mpwsPage.getPageBody(),
-    //         placement: placement || mpwsPage.PLACEMENT.REPLACE
-    //     };
-    // }
+        var _renderConfig = this.getRenderConfig();
+        var placeholder = _renderConfig.placeholder;
 
-    // function _createRenderConfig (name, options) {
-    //     var self = this;
+        mpwsPage.getTemplate(_renderConfig.template, _renderConfig.dependencies, function (error, template) {
 
-    //     var placeholder = null;
-    //     if (options.placeholder)
-    //         placeholder = _createRenderPlacement(options.placeholder.target, options.placeholder.placement);
-    //     else
-    //         placeholder = _createRenderPlacement(); // default placeholder
-
-    //     var _renderConfig = {
-    //         isRequiredOnce: options.isRequiredOnce || false,
-    //         name: name,
-    //         data: options.data || {},
-    //         template: options.template || false,
-    //         dependencies: options.dependencies || [],
-    //         placeholder: placeholder,
-    //         callback: options.callback || null
-    //     };
-
-    //     return _renderConfig;
-
-    //     if (collection)
-    //         collection[name] = _renderConfig;
-
-    //     var entry = {};
-    //     entry[name] = _renderConfig;
-
-    //     return entry;
-    // }
+            var html = false;
+            // [4] combine everything together
+            if (template) {
+                var templateFn = tplEngine.compile(template);
+                // compose template data
+                var _tplData = {
+                    app: {
+                        test: 'test',
+                        config: _config,
+                        location: {
+                            fragment: Backbone.history.fragment
+                        }
+                    },
+                    source: data || {}
+                }
+                // app.log(true, 'template data is', _tplData);
+                html = templateFn(_tplData);
+            }
+            // stop ajax animation
+            mpwsPage.setPlaceholderState(placeholder, mpwsPage.STATE.LOADING, false);
+            // render into placeholder
+            if (placeholder && placeholder.container) {
+                var _injectionType = placeholder.placement || mpwsPage.PLACEMENT.REPLACE;
+                // remove previous dom element
+                var _elementID = $(html).filter('*').first().attr('id');
+                if (!_.isEmpty(_elementID))
+                    $(placeholder.container).find(_elementID.asCssID()).remove();
+                // add new element
+                if (_injectionType == mpwsPage.PLACEMENT.REPLACE)
+                    $(placeholder.container).html(html);
+                else if (_injectionType == mpwsPage.PLACEMENT.PREPEND)
+                    $(placeholder.container).prepend(html);
+                else if (_injectionType == mpwsPage.PLACEMENT.APPEND)
+                    $(placeholder.container).append(html);
+            }
+        });
+    }
 
     return MView;
 });

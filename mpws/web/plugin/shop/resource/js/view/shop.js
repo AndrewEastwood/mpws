@@ -146,8 +146,9 @@ APP.Modules.register("plugin/shop/view/shop", [], [
         // mpwsPageLib.pageName('shop-home');
 
         this.viewItems.productListOverview.render();
+        // this.viewItems.productListOverview.model.fetch();
 
-        app.log(this.viewItems.productListOverview);
+        app.log('this.viewItems.productListOverview.model.getUrlData', this.viewItems.productListOverview.model.getUrlData());
 
 
         // here we have to render all essential elements rele=atetd to this scope

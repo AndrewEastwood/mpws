@@ -2,21 +2,32 @@ APP.Modules.register("plugin/shop/model/productListOverview", [], [
     'lib/jquery',
     'lib/underscore',
     'model/mmodel',
-    'lib/mpws.api',
-    'lib/mpws.page',
-    'plugin/shop/lib/shop'
-], function (app, Sandbox, $, _, MModel) {
-    
+    'plugin/shop/lib/utils'
+], function (app, Sandbox, $, _, MModel, shopUtils) {
 
     var ProductListOverview = MModel.extend({
 
-        realm: 'plugin',
+        _options: {
+            realm: 'plugin',
 
-        caller: 'shop',
+            caller: 'shop',
 
-        fn: 'shop_product_list_latest',
+            fn: 'shop_product_list_latest',
+        },
+
+        initialize: function (options) {
+
+            MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
+            app.log('model ProductListOverview initialize', this);
+
+        },
 
         parse: function (data) {
+            app.log('model ProductListOverview parse', data);
+
+            data.data = shopUtils.adjustProductEntry(data.data);
+
+            return data;
         }
 
     });

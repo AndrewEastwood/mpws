@@ -74,52 +74,36 @@ APP.Modules.register("router/customer", [], [
     // init all available plugins here
     var pluginShopRouterLib = new pluginShopRouter({
         breadcrumb: {
-            placeholder: {
-                target: $('.breadcrumb-placeholder'),
-                placement: mpwsPage.PLACEMENT.APPEND
-            }
+            el: $('.breadcrumb-placeholder'),
+            placement: mpwsPage.PLACEMENT.APPEND
         },
         menu: {
-            placeholder: {
-                target: $('header .navbar-nav-main'),
-                placement: mpwsPage.PLACEMENT.APPEND
-            }
+            el: $('header .navbar-nav-main'),
+            placement: mpwsPage.PLACEMENT.APPEND
         },
         productListOverview: {
-            placeholder: {
-                target: mpwsPage.getPageBody(),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            }
+            el: mpwsPage.getPageBody(),
+            placement: mpwsPage.PLACEMENT.REPLACE
         },
         productEntryViewStandalone: {
-            placeholder: {
-                target: mpwsPage.getPageBody(),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            }
+            el: mpwsPage.getPageBody(),
+            placement: mpwsPage.PLACEMENT.REPLACE
         },
         shoppingCartStandalone: {
-            placeholder: {
-                target: mpwsPage.getPageBody(),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            }
+            el: mpwsPage.getPageBody(),
+            placement: mpwsPage.PLACEMENT.REPLACE
         },
         shoppingCartEmbedded: {
-            placeholder: {
-                target: $('header .navbar-nav-plugins'),
-                placement: mpwsPage.PLACEMENT.APPEND
-            }
+            el: $('header .navbar-nav-plugins'),
+            placement: mpwsPage.PLACEMENT.APPEND
         },
         shoppingCartCheckout: {
-            placeholder: {
-                target: mpwsPage.getPageBody(),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            }
+            el: mpwsPage.getPageBody(),
+            placement: mpwsPage.PLACEMENT.REPLACE
         },
         productsByCategory: {
-            placeholder: {
-                target: mpwsPage.getPageBody(),
-                placement: mpwsPage.PLACEMENT.REPLACE
-            }
+            el: mpwsPage.getPageBody(),
+            placement: mpwsPage.PLACEMENT.REPLACE
         }
     });
 
