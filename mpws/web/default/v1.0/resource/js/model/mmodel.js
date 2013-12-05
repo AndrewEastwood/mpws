@@ -53,6 +53,12 @@ APP.Modules.register("model/mmodel", [], [
             };
         },
 
+        // default method
+        // you can override this to modify data before pushing into template
+        parse: function (data) {
+            return data;
+        },
+
         fetch: function () {
             app.log('model MModel fetch from', _config.URL.apiJS);
 

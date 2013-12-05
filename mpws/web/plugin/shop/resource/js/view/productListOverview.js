@@ -8,12 +8,11 @@ APP.Modules.register("plugin/shop/view/productListOverview", [], [
 
     var ProductListOverview = MView.extend({
 
-        model: new modelProductListOverview(),
-        
-        template: 'plugin.shop.component.shopProductListOverview@hbs',
-        // _options: {
-
         name: "shopProductListOverview",
+
+        model: new modelProductListOverview(),
+
+        template: 'plugin.shop.component.shopProductListOverview@hbs',
 
         dependencies: {
             productEntryViewList: {
@@ -22,22 +21,12 @@ APP.Modules.register("plugin/shop/view/productListOverview", [], [
             }
         },
 
-        // },
-
         initialize: function (options) {
 
-            // var _viewConfig = _.extend({}, {
-            // }, viewConfig);
-
-            // var self = this;
-
-            // app.log('init ProductListOverview', _viewConfig);
-            // MView.prototype.initialize.call(this, _.extend({}, this._options, options));
+            // extend parent
             MView.prototype.initialize.call(this, options);
-            app.log('view ProductListOverview initialize', this);
 
-            // this.listenTo(this.model, "change", this.render);
-
+            // app.log('view ProductListOverview initialize', this);
         }
 
     });

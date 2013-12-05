@@ -10,48 +10,39 @@ APP.Modules.register("plugin/shop/model/breadcrumb", [], [
 
     var Breadcrumb = MModel.extend({
 
-        realm: 'plugin',
+        _options: {
+            realm: 'plugin',
 
-        caller: 'shop',
+            caller: 'shop',
 
-        fn: 'shop_location',
+            fn: 'shop_location',
 
-        categoryId: false,
+            categoryId: false,
 
-        productId: false,
+            productId: false,
+        },
 
-        // urlData: {
-        //     caller: 'shop',
-        //     fn: 'shop_location',
-        //     params: $.extend(params, {
-        //         realm: 'plugin'
-        //     })
-        // }
+
+//         // urlData: {
+//         //     caller: 'shop',
+//         //     fn: 'shop_location',
+//         //     params: $.extend(params, {
+//         //         realm: 'plugin'
+//         //     })
+//         // }
 
         events: {
             "change:categoryId": "fetch",
             "change:productId": "fetch"
-        }
+        },
+// ,
 
-        // fetch: function () {
-        //     app.log(_logPrefix, 'getShopLocation', mpwsAPI);
-        //     mpwsAPI.requestData({
-        //         caller: 'shop',
-        //         fn: 'shop_location',
-        //         params: $.extend(params, {
-        //             realm: 'plugin'
-        //         })
-        //     }, function (error, data) {
-        //         if (data)
-        //             data = JSON.parse(data);
-        //         if (typeof callback === "function") {
-        //             callback.call(null, error, _dataInterfaceFn(data));
-        //         }
-        //     });
-        // },
+        initialize: function (options) {
 
-        parse: function (data) {
-        }
+            MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
+            app.log('model Breadcrumb initialize', this);
+
+        },
 
     });
 

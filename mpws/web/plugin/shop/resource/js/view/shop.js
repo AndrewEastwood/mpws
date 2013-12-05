@@ -6,10 +6,10 @@ APP.Modules.register("plugin/shop/view/shop", [], [
     // 'lib/mpws.page',
     // 'plugin/shop/lib/driver',
     'plugin/shop/view/productListOverview',
-    // 'plugin/shop/view/breadcrumb',
+    'plugin/shop/view/breadcrumb',
     // ui elements
     // 'lib/fuelux.wizard'
-], function (app, Sandbox, $, _, viewProductListOverview /*, viewBreadcrumb*/) {
+], function (app, Sandbox, $, _, viewProductListOverview, viewBreadcrumb) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
 
@@ -46,8 +46,10 @@ APP.Modules.register("plugin/shop/view/shop", [], [
 
         this.viewItems = {};
 
+        this.viewItems.breadcrumb = new viewBreadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null)
         this.viewItems.productListOverview = new viewProductListOverview(_(options).has('productListOverview') ? options.productListOverview : null)
 
+        this.viewItems.breadcrumb.render();
         // // setup common render components
 
         // // catefory structure (injected into main menu toolbar)

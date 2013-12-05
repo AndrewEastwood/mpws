@@ -9,13 +9,16 @@ APP.Modules.register("plugin/shop/view/breadcrumb", [], [
 
         name: "shopBreadcrumb",
 
-        model: modelBreadcrumb,
+        model: new modelBreadcrumb(),
 
-        template: 'plugin.shop.component.shoppingCartEmbedded@hbs',
+        template: 'plugin.shop.component.breadcrumb@hbs',
 
-        initialize: function () {
+        initialize: function (options) {
 
             var self = this;
+
+            // extend parent
+            MView.prototype.initialize.call(this, options);
 
             Sandbox.eventSubscribe("shop:category:changed", function (data) {
                 self.model.set('categoryId', data.categoryId);
@@ -24,8 +27,6 @@ APP.Modules.register("plugin/shop/view/breadcrumb", [], [
             Sandbox.eventSubscribe("shop:product:changed", function (data) {
                 self.model.set('productId', data.productId);
             });
-
-            this.listenTo(this.model, "change", this.render);
 
         }
 
