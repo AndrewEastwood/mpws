@@ -16,13 +16,15 @@ APP.Modules.register("plugin/shop/view/productEntryStandalone", [], [
 
         initialize: function (options) {
 
+            var _self = this;
             // extend parent
             MView.prototype.initialize.call(this, options);
             // app.log('view ProductEntryStandalone initialize', this);
 
             // apply visual effects
-            $(options.el).on('mview:rendered', function (event) {
-                // app.log(event);
+            $(options.el).on('mview:rendered', function (event, senderName) {
+                if (!_self.options.name != senderName)
+                    return;
                 $(event.target).find('.shop-product-image-main .image').magnify();
             });
         },

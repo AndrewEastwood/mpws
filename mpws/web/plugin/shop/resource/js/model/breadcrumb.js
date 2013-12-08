@@ -20,7 +20,7 @@ APP.Modules.register("plugin/shop/model/breadcrumb", [], [
             urldata: {
                 categoryId: null,
 
-                productId: null ,
+                productId: null,
             }
         },
 

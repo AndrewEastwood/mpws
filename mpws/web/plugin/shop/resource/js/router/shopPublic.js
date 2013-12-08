@@ -1,13 +1,13 @@
-APP.Modules.register("plugin/shop/router/shopPublic", [], [
+APP.Modules.register("plugin/shop/router/shopPublic", [window], [
     'lib/underscore',
     'lib/backbone',
     'plugin/shop/view/shop',
-], function (app, Sandbox, _, Backbone, pluginShopView) {
+], function (wnd, app, Sandbox, _, Backbone, pluginShopView) {
 
     // start site routing
     //var view = null;
 
-    // var _pages = {};
+    var _pages = {};
 
     function Router (options) {
 
@@ -40,18 +40,26 @@ APP.Modules.register("plugin/shop/router/shopPublic", [], [
             routes: _.invert(this.navMap),
             // shop default page
             site_home: function () {
-                APP.Modules.require(["plugin/shop/view/pageShopHome"], function (pageShopHome){
-                    var p = new pageShopHome(options);
-                    app.log(true, 'the "plugin/shop/view/pageShopHome" is being rendered');
-                    p.render();
-                });
+                if (!_pages.site_home)
+                    APP.Modules.require(["plugin/shop/view/pageShopHome"], function (pageShopHome){
+                        var p = new pageShopHome(options);
+                        app.log(true, 'the "plugin/shop/view/pageShopHome" is being rendered');
+                        p.render();
+                        _pages.site_home = p;
+                    });
+                else
+                    _pages.site_home.render();
             },
             shop_home: function () {
-                APP.Modules.require(["plugin/shop/view/pageShopHome"], function (pageShopHome){
-                    var p = new pageShopHome(options);
-                    app.log(true, 'the "plugin/shop/view/pageShopHome" is being rendered');
-                    p.render();
-                });
+                if (!_pages.shop_home)
+                    APP.Modules.require(["plugin/shop/view/pageShopHome"], function (pageShopHome){
+                        var p = new pageShopHome(options);
+                        app.log(true, 'the "plugin/shop/view/pageShopHome" is being rendered');
+                        p.render();
+                        _pages.shop_home = p;
+                    });
+                else
+                    _pages.shop_home.render();
             },
             // display shop latest stuff
             shop_latest: function (route, name, callback) {
@@ -106,10 +114,15 @@ APP.Modules.register("plugin/shop/router/shopPublic", [], [
             },
             // display particular product
             shop_product: function (productId, name, callback) {
-                APP.Modules.require(["plugin/shop/view/pageProductEntryStandalone"], function (pageProductEntryStandalone){
-                    var p = new pageProductEntryStandalone(options);
-                    p.render(productId);
-                });
+                app.log(true, 'shop_product is active router', productId);
+                if (!_pages.shop_product)
+                    APP.Modules.require(["plugin/shop/view/pageProductEntryStandalone"], function (pageProductEntryStandalone){
+                        var p = new pageProductEntryStandalone(options);
+                        p.render(productId);
+                        _pages.shop_product = p;
+                    });
+                else
+                    _pages.shop_product.render(productId);
             },
             shop_wizard: function () {
                 self.view.pageShoppingWizard();

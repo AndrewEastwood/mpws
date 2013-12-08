@@ -29,7 +29,7 @@ APP.Modules.register("model/mmodel", [], [
             // app.log(true, 'model MModel initialize', this);
         },
 
-        getUrlData: function () {
+        prepareUrlData: function () {
             var _params = _(this.attributes).clone();
 
             delete _params.caller;
@@ -53,26 +53,36 @@ APP.Modules.register("model/mmodel", [], [
             };
         },
 
-        setUrlData: function (key, value) {
+        getUrlData: function () {
+            return this.get("urldata");
+        },
+
+        setUrlData: function (key, value, skipFetch) {
             if (!key)
                 return;
 
             var urlData = this.get("urldata");
             var urlDataOrigin = _.extend({}, urlData);
 
-            if (value)
+            if (typeof key === "object" && typeof value === "undefined")
+                urlData = _(key).clone();
+            else 
                 urlData[key] = value;
-            else if (value === null)
-                delete urlData[key];
 
             this.set("urldata", urlData);
+
             // app.log(true, 'new usrl data is ', urlData);
+
+            if (skipFetch)
+                return;
 
             // app.log(true, this.get('fn') + ' origin url data was', urlDataOrigin);
             // app.log(true, this.get('fn') + ' now it is', urlData);
             if (!_.isEqual(urlDataOrigin, urlData)) {
-                app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
+                // app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
                 this.fetch();
+            } else {
+                this.trigger('mmodel:newdata', this.get('data'));
             }
         },
 
@@ -83,16 +93,18 @@ APP.Modules.register("model/mmodel", [], [
         },
 
         fetch: function () {
-            // app.log(true, 'model MModel fetch from', _config.URL.apiJS);
+            // app.log(true, 'MModel fetch from', _config.URL.apiJS, 'with data', this.prepareUrlData());
 
             var self = this;
-            $.post(_config.URL.apiJS, this.getUrlData(), function (data) {
-                // app.log(true, 'data is received', data);
+            $.post(_config.URL.apiJS, this.prepareUrlData(), function (data) {
+                // app.log(true, 'MModel data is received', data);
                 if (data)
                     data = JSON.parse(data);
                 else
                     data = {};
-                self.set('data', self.parse(_dataInterfaceFn(data)));
+                data = self.parse(_dataInterfaceFn(data));
+                self.attributes.data = data;
+                self.trigger('mmodel:newdata', data);
             });
 
         }

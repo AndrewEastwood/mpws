@@ -32,8 +32,8 @@ APP.Modules.register("view/mview", [], [
         //     this.model.on('change',this.render,this);
             this.$el = $(options.el || this.el);
 
-            this.model.on('change:data', function (sender, data) {
-                app.log(true ,'MViedw on change:data: so new data is available', data);
+            this.model.on('mmodel:newdata', function (data) {
+                // app.log(true ,'MView on change:data: so new data is available', data);
                 _render.call(this, data);
             }, this);
         },
@@ -66,7 +66,7 @@ APP.Modules.register("view/mview", [], [
             var placeholder = _renderConfig.placeholder;
             mpwsPage.setPlaceholderState(placeholder, mpwsPage.STATE.LOADING, true);
 
-            app.log(true, 'MView called render function. The "fetch" function is being called')
+            // app.log(true, 'MView called render function. The "fetch" function is being called')
             this.model.fetch();
             // app.log('render config is ', _renderConfig);
             // mpwsPage.render(this.getRenderConfig());

@@ -30,20 +30,12 @@ APP.Modules.register("plugin/shop/view/pageProductEntryStandalone", [], [
 
         render: function (productId) {
 
-            app.log(true, 'PageProductEntryStandalone rendering');
+            app.log(true, 'PageProductEntryStandalone rendering productEntryStandalone');
 
             this.viewItems.productEntryStandalone.renderProductByID(productId);
             // just render breadcrumb
-            this.viewItems.breadcrumb.render();
-
-            // // this will not render breadcrumb again because all init values are 'false'
-            // Sandbox.eventNotify("shop:category:changed", {
-            //     categoryId: false
-            // });
-
-            Sandbox.eventNotify("shop:product:changed", {
-                productId: productId
-            });
+            app.log(true, 'PageProductEntryStandalone rendering breadcrumb');
+            this.viewItems.breadcrumb.renderLocation(productId);
         }
 
     });

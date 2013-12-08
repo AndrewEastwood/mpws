@@ -33,18 +33,10 @@ APP.Modules.register("plugin/shop/view/pageShopHome", [], [
             app.log(true, 'PageShopHome rendering: productListOverview');
 
             this.viewItems.productListOverview.render();
-            // just render breadcrumb
+            // just render default breadcrumb
             app.log(true, 'PageShopHome rendering: breadcrumb');
             this.viewItems.breadcrumb.render();
 
-            // // this will not render breadcrumb again because all init values are 'false'
-            // Sandbox.eventNotify("shop:category:changed", {
-            //     categoryId: false
-            // });
-
-            // Sandbox.eventNotify("shop:product:changed", {
-            //     productId: false
-            // });
         }
 
     });
