@@ -4,7 +4,7 @@ APP.Modules.register("router/customer", [], [
     'lib/underscore',
     'lib/backbone',
     'lib/mpws.page',
-    'plugin/shop/router/shop',
+    'plugin/shop/router/shopPublic',
     'lib/mpws.ui',
 
 ], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
@@ -85,7 +85,7 @@ APP.Modules.register("router/customer", [], [
             el: mpwsPage.getPageBody(),
             placement: mpwsPage.PLACEMENT.REPLACE
         },
-        productEntryViewStandalone: {
+        productEntryStandalone: {
             el: mpwsPage.getPageBody(),
             placement: mpwsPage.PLACEMENT.REPLACE
         },

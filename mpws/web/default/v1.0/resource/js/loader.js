@@ -142,15 +142,17 @@ window.APP || (function(window, document){
         },
         require : function (packages, callback) {
             if (callback)
-                require(filterDownloadedPackages(packages), function () {
+                require(filterDownloadedPackages(packages), function (a) {
                     // _app.log(true ,'::: REQUIRE CALLBACK: ', packages);
+                    // _app.log(true ,'::: REQUIRE CALLBACK FN: ', callback);
+                    // _app.log(true ,'::: REQUIRE CALLBACK arguments: ', a);
                     return callback.apply(null, [].slice.call(arguments));
                 });
             else
                 require(filterDownloadedPackages(packages));
         },
         downloadPackages : function (packages, callback) {
-            _Modules.require(packages, callback);
+            _Modules.require(filterDownloadedPackages(packages), callback);
         }
     };
 

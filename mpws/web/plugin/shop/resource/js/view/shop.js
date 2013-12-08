@@ -3,13 +3,13 @@ APP.Modules.register("plugin/shop/view/shop", [], [
     'lib/underscore',
     // 'lib/backbone',
     // 'lib/mpws.api',
-    // 'lib/mpws.page',
+    'lib/mpws.page',
     // 'plugin/shop/lib/driver',
-    'plugin/shop/view/productListOverview',
+    // 'plugin/shop/view/productListOverview',
     'plugin/shop/view/breadcrumb',
     // ui elements
     // 'lib/fuelux.wizard'
-], function (app, Sandbox, $, _, viewProductListOverview, viewBreadcrumb) {
+], function (app, Sandbox, $, _, mpwsPage, viewBreadcrumb) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
 
@@ -33,9 +33,9 @@ APP.Modules.register("plugin/shop/view/shop", [], [
 
     function pluginShopRender (options) {
         // var self = this;
-        // var _options = options || {};
+        var _options = options || {};
         // this.model = new pluginShopModel();
-        // this.getOptions = function () { return _options; }
+        this.getOptions = function () { return _options; }
         // this.getPlacehoders = function () { return _options.placeholders || {}; }
         // this.componentsCommon = {};
 
@@ -44,12 +44,11 @@ APP.Modules.register("plugin/shop/view/shop", [], [
         // var productListOverview = 
         // var breadcrumb = new viewBreadcrumb(_(options).pick('breadcrumb'));
 
-        this.viewItems = {};
+        // this.viewItems = {};
 
-        this.viewItems.breadcrumb = new viewBreadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null)
-        this.viewItems.productListOverview = new viewProductListOverview(_(options).has('productListOverview') ? options.productListOverview : null)
+        // this.viewItems.breadcrumb = new viewBreadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null);
 
-        this.viewItems.breadcrumb.render();
+        // this.viewItems.breadcrumb.render();
         // // setup common render components
 
         // // catefory structure (injected into main menu toolbar)
@@ -144,13 +143,24 @@ APP.Modules.register("plugin/shop/view/shop", [], [
     // products latest
     pluginShopRender.prototype.pageShopHome = function () {
         // var self = this;
-        // overwrite page name
-        // mpwsPageLib.pageName('shop-home');
+        // var _options = this.getOptions();
+        // var _self = this;
+        // // overwrite page name
+        // mpwsPage.pageName('shop-home');
 
-        this.viewItems.productListOverview.render();
-        // this.viewItems.productListOverview.model.fetch();
+        // if (!this.viewItems.productListOverview)
+        //     APP.Modules.require(["plugin/shop/view/productListOverview"], function (productListOverview){
+        //         _self.viewItems.productListOverview = new productListOverview(_(_options).has('productListOverview') ? _options.productListOverview : null);
+        //         _self.viewItems.productListOverview.render();
+        //         _notifyProductLocationChangesFn();
+        //     });
+        // else {
+        //     this.viewItems.productListOverview.render();
+        //     _notifyProductLocationChangesFn();
+        // }
 
-        app.log('this.viewItems.productListOverview.model.getUrlData', this.viewItems.productListOverview.model.getUrlData());
+
+        // app.log('this.viewItems.productListOverview.model.getUrlData', this.viewItems.productListOverview.model.getUrlData());
 
 
         // here we have to render all essential elements rele=atetd to this scope
@@ -312,34 +322,42 @@ APP.Modules.register("plugin/shop/view/shop", [], [
     }
     
     pluginShopRender.prototype.pageShopProductItemByID = function (productId) {
-        var self = this;
-        mpwsPageLib.pageName('shop-product');
-        Sandbox.eventNotify("shop:category:changed", {
-            categoryId: null
-        });
-        Sandbox.eventNotify("shop:product:changed", {
-            productId: productId
-        });
-        var _pholders = this.getPlacehoders();
-        var _renderConfiguration = {
-            productData: {
-                data: {
-                    source: self.model.getProductItemByID,
-                    params: {
-                        productId: productId
-                    }
-                },
-                template: "plugin.shop.component.productEntryViewStandalone@hbs",
-                dependencies: _templatePartialsBase,
-                placeholder: _pholders.productEntryViewStandalone,
-                callback: function () {
-                    // simple main image zoom
-                    $('.shop-product-image-main .image').magnify();
-                }
-            }
-        };
-        app.log(true, _renderConfiguration);
-        mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
+
+        // mpwsPage.pageName('shop-product');
+
+        // var _options = this.getOptions();
+        // var _self = this;
+
+        // if (!this.viewItems.productEntryStandalone)
+        //     APP.Modules.require(["plugin/shop/view/productEntryStandalone"], function (productEntryStandalone){
+        //         _self.viewItems.productEntryStandalone = new productEntryStandalone(_(_options).has('productEntryStandalone') ? _options.productEntryStandalone : null)
+        //         _self.viewItems.productEntryStandalone.renderProductByID(productId);
+        //         _notifyProductLocationChangesFn(productId);
+        //     });
+        // else {
+        //     this.viewItems.productEntryStandalone.renderProductByID(productId);
+        //     _notifyProductLocationChangesFn(productId);
+        // }
+        // var _pholders = this.getPlacehoders();
+        // var _renderConfiguration = {
+        //     productData: {
+        //         data: {
+        //             source: self.model.getProductItemByID,
+        //             params: {
+        //                 productId: productId
+        //             }
+        //         },
+        //         template: "plugin.shop.component.productEntryViewStandalone@hbs",
+        //         dependencies: _templatePartialsBase,
+        //         placeholder: _pholders.productEntryViewStandalone,
+        //         callback: function () {
+        //             // simple main image zoom
+        //             $('.shop-product-image-main .image').magnify();
+        //         }
+        //     }
+        // };
+        // app.log(true, _renderConfiguration);
+        // mpwsPageLib.render(this.componentsCommon, _renderConfiguration);
     }
     
 
@@ -475,6 +493,18 @@ APP.Modules.register("plugin/shop/view/shop", [], [
 
     }
 
+
+    var _notifyProductLocationChangesFn = function (productId, categoryId) {
+
+        Sandbox.eventNotify("shop:category:changed", {
+            categoryId: categoryId || false
+        });
+
+        Sandbox.eventNotify("shop:product:changed", {
+            productId: productId || false
+        });
+    }
+
     // additional functions that init UI components
     // according to opened page
     // Usually they are being invoked within render callback functions
@@ -497,6 +527,8 @@ APP.Modules.register("plugin/shop/view/shop", [], [
           });
     }
 
-    return pluginShopRender;
+    // return pluginShopRender;
+
+    return function () {};
 
 });

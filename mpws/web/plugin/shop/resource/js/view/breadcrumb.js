@@ -17,16 +17,19 @@ APP.Modules.register("plugin/shop/view/breadcrumb", [], [
 
             var self = this;
 
-            // extend parent
-            MView.prototype.initialize.call(this, options);
-
             Sandbox.eventSubscribe("shop:category:changed", function (data) {
-                self.model.set('categoryId', data.categoryId);
+                app.log(true, 'shop:category:changed', data);
+                self.model.setUrlData('categoryId', data.categoryId);
             });
 
             Sandbox.eventSubscribe("shop:product:changed", function (data) {
-                self.model.set('productId', data.productId);
+                app.log(true, 'shop:product:changed', data);
+                // app.log(true, 'plugin/shop/view/breadcrumb', 'finding path to product', data);
+                self.model.setUrlData('productId', data.productId);
             });
+
+            // extend parent
+            MView.prototype.initialize.call(this, options);
 
         }
 

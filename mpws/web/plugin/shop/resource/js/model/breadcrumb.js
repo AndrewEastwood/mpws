@@ -17,31 +17,16 @@ APP.Modules.register("plugin/shop/model/breadcrumb", [], [
 
             fn: 'shop_location',
 
-            categoryId: false,
+            urldata: {
+                categoryId: null,
 
-            productId: false,
+                productId: null ,
+            }
         },
-
-
-//         // urlData: {
-//         //     caller: 'shop',
-//         //     fn: 'shop_location',
-//         //     params: $.extend(params, {
-//         //         realm: 'plugin'
-//         //     })
-//         // }
-
-        events: {
-            "change:categoryId": "fetch",
-            "change:productId": "fetch"
-        },
-// ,
 
         initialize: function (options) {
-
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            app.log('model Breadcrumb initialize', this);
-
+            app.log(true, 'model Breadcrumb model initialize', this);
         },
 
     });

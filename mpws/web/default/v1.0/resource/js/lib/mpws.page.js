@@ -1,24 +1,19 @@
 // it is the base page router
 
-APP.Modules.register("lib/mpws.page", [
-    /* import globals */
-    window
-
-], [
+APP.Modules.register("lib/mpws.page", [], [
 
     /* import dep packages */
     'lib/jquery',
     'lib/underscore',
-    'lib/backbone',
     'lib/mpws.api',
     'lib/templateEngine',
     'lib/async',
-    'lib/storage',
+    // 'lib/storage',
     'lib/utils',
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function (wnd, app, Sandbox, $, _, Backbone, mpwsAPI, tplEngine, AsyncLib, Storage) {
+], function (app, Sandbox, $, _, mpwsAPI, tplEngine, AsyncLib) {
 
     function mpwsPage () {}
 

@@ -11,7 +11,7 @@ APP.Modules.register("model/mmodel", [], [
 
         defaults: {
 
-            data: {}, 
+            data: {},
 
             realm: 'none',
 
@@ -19,14 +19,14 @@ APP.Modules.register("model/mmodel", [], [
 
             fn: '',
 
-            token: _config.TOKEN
+            token: _config.TOKEN,
+
+            urldata: {}
         },
 
         initialize: function (options) {
-
             this.attributes = _.extend({}, this.attributes, options);
-            app.log('model MModel initialize', this);
-
+            // app.log(true, 'model MModel initialize', this);
         },
 
         getUrlData: function () {
@@ -38,7 +38,7 @@ APP.Modules.register("model/mmodel", [], [
             return {
                 caller: this.attributes.caller || '*',
                 fn: this.attributes.fn,
-                p: _params
+                p: $.extend({realm:_params.realm}, _params.urldata, {token:_params.token})
                 // $.extend(
                 // // default params
                 // {
@@ -53,6 +53,29 @@ APP.Modules.register("model/mmodel", [], [
             };
         },
 
+        setUrlData: function (key, value) {
+            if (!key)
+                return;
+
+            var urlData = this.get("urldata");
+            var urlDataOrigin = _.extend({}, urlData);
+
+            if (value)
+                urlData[key] = value;
+            else if (value === null)
+                delete urlData[key];
+
+            this.set("urldata", urlData);
+            // app.log(true, 'new usrl data is ', urlData);
+
+            // app.log(true, this.get('fn') + ' origin url data was', urlDataOrigin);
+            // app.log(true, this.get('fn') + ' now it is', urlData);
+            if (!_.isEqual(urlDataOrigin, urlData)) {
+                app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
+                this.fetch();
+            }
+        },
+
         // default method
         // you can override this to modify data before pushing into template
         parse: function (data) {
@@ -60,11 +83,11 @@ APP.Modules.register("model/mmodel", [], [
         },
 
         fetch: function () {
-            app.log('model MModel fetch from', _config.URL.apiJS);
+            // app.log(true, 'model MModel fetch from', _config.URL.apiJS);
 
             var self = this;
             $.post(_config.URL.apiJS, this.getUrlData(), function (data) {
-                // app.log('data is received', data);
+                // app.log(true, 'data is received', data);
                 if (data)
                     data = JSON.parse(data);
                 else

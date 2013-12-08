@@ -15,7 +15,7 @@ APP.Modules.register("view/mview", [], [
 
         template: false,
         // _options: {
-            
+
         name: "default",
 
         isRequiredOnce: false,
@@ -26,14 +26,14 @@ APP.Modules.register("view/mview", [], [
         // },
 
         initialize: function(options) {
-            app.log('view MView initialize', this.model);
+            // app.log(true ,'view MView initialize', this.model);
             // this.$el = null;
             // this.options = _.extend({}, this._options, options);
         //     this.model.on('change',this.render,this);
             this.$el = $(options.el || this.el);
 
             this.model.on('change:data', function (sender, data) {
-                app.log('new data is available', data);
+                app.log(true ,'MViedw on change:data: so new data is available', data);
                 _render.call(this, data);
             }, this);
         },
@@ -66,6 +66,7 @@ APP.Modules.register("view/mview", [], [
             var placeholder = _renderConfig.placeholder;
             mpwsPage.setPlaceholderState(placeholder, mpwsPage.STATE.LOADING, true);
 
+            app.log(true, 'MView called render function. The "fetch" function is being called')
             this.model.fetch();
             // app.log('render config is ', _renderConfig);
             // mpwsPage.render(this.getRenderConfig());
@@ -85,6 +86,7 @@ APP.Modules.register("view/mview", [], [
 
         var _renderConfig = this.getRenderConfig();
         var placeholder = _renderConfig.placeholder;
+        var _self = this;
 
         mpwsPage.getTemplate(_renderConfig.template, _renderConfig.dependencies, function (error, template) {
 
@@ -123,6 +125,7 @@ APP.Modules.register("view/mview", [], [
                 else if (_injectionType == mpwsPage.PLACEMENT.APPEND)
                     $(placeholder.container).append(html);
             }
+            $(placeholder.container).trigger('mview:rendered', [_self.name]);
         });
     }
 
