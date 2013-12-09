@@ -1,10 +1,8 @@
 APP.Modules.register("plugin/shop/view/productEntryStandalone", [], [
     'lib/jquery',
-    'lib/underscore',
     'view/mview',
-    'lib/mpws.page',
     'plugin/shop/model/productEntryStandalone',
-], function (app, Sandbox, $, _, MView, mpwsPage, modelProductEntryStandalone) {
+], function (app, Sandbox, $, MView, modelProductEntryStandalone) {
 
     var ProductEntryStandalone = MView.extend({
 

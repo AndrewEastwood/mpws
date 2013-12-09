@@ -77,7 +77,7 @@ APP.Modules.register("router/customer", [], [
             el: $('.breadcrumb-placeholder'),
             placement: mpwsPage.PLACEMENT.APPEND
         },
-        menu: {
+        catalogStructureMenu: {
             el: $('header .navbar-nav-main'),
             placement: mpwsPage.PLACEMENT.APPEND
         },

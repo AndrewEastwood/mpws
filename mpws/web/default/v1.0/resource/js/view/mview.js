@@ -30,11 +30,13 @@ APP.Modules.register("view/mview", [], [
             // this.$el = null;
             // this.options = _.extend({}, this._options, options);
         //     this.model.on('change',this.render,this);
+            var _self = this;
+
             this.$el = $(options.el || this.el);
 
-            this.model.on('mmodel:newdata', function (data) {
+            this.model.on('mmodel:newdata', function () {
                 // app.log(true ,'MView on change:data: so new data is available', data);
-                _render.call(this, data);
+                _render.call(this, _self.model.getTemplateData());
             }, this);
         },
         // initialize: function (viewConfig) {

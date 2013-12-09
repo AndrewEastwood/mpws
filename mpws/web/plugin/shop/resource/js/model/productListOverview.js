@@ -1,9 +1,8 @@
 APP.Modules.register("plugin/shop/model/productListOverview", [], [
-    'lib/jquery',
     'lib/underscore',
     'model/mmodel',
     'plugin/shop/lib/utils'
-], function (app, Sandbox, $, _, MModel, shopUtils) {
+], function (app, Sandbox, _, MModel, shopUtils) {
 
     var ProductListOverview = MModel.extend({
 
@@ -25,7 +24,7 @@ APP.Modules.register("plugin/shop/model/productListOverview", [], [
         parse: function (data) {
             app.log('model ProductListOverview parse', data);
 
-            data.data = shopUtils.adjustProductEntry(data.data);
+            data = shopUtils.adjustProductEntry(data);
 
             return data;
         }

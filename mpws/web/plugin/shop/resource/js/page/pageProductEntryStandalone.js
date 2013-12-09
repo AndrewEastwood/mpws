@@ -1,18 +1,10 @@
-APP.Modules.register("plugin/shop/view/pageProductEntryStandalone", [], [
-    'lib/jquery',
+APP.Modules.register("plugin/shop/page/pageProductEntryStandalone", [], [
     'lib/underscore',
-    // 'lib/backbone',
-    // 'lib/mpws.api',
     'view/mpage',
-    // 'lib/mpws.page',
-    // 'plugin/shop/lib/driver',
-    // 'plugin/shop/view/productListOverview',
+    'plugin/shop/view/catalogStructureMenu',
     'plugin/shop/view/breadcrumb',
     'plugin/shop/view/productEntryStandalone'
-    // ui elements
-    // 'lib/fuelux.wizard'
-], function (app, Sandbox, $, _, MPage, viewBreadcrumb, productEntryStandalone) {
-
+], function (app, Sandbox, _, MPage, catalogStructureMenu, breadcrumb, productEntryStandalone) {
 
     var PageProductEntryStandalone = MPage.extend({
 
@@ -23,12 +15,16 @@ APP.Modules.register("plugin/shop/view/pageProductEntryStandalone", [], [
             // extend parent
             MPage.prototype.initialize.call(this, options);
 
-            this.viewItems.breadcrumb = new viewBreadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null);
+            this.viewItems.catalogStructureMenu = new catalogStructureMenu(_(options).has('catalogStructureMenu') ? options.catalogStructureMenu : null);
+            this.viewItems.breadcrumb = new breadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null);
             this.viewItems.productEntryStandalone = new productEntryStandalone(_(options).has('productEntryStandalone') ? options.productEntryStandalone : null);
 
         },
 
         render: function (productId) {
+
+            // show menu items
+            this.viewItems.catalogStructureMenu.render();
 
             app.log(true, 'PageProductEntryStandalone rendering productEntryStandalone');
 

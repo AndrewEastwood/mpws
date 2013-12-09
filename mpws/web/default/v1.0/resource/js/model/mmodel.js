@@ -102,11 +102,19 @@ APP.Modules.register("model/mmodel", [], [
                     data = JSON.parse(data);
                 else
                     data = {};
-                data = self.parse(_dataInterfaceFn(data));
+                data = self.parse(data);
                 self.attributes.data = data;
                 self.trigger('mmodel:newdata', data);
             });
 
+        },
+
+        getTemplateData: function () {
+            return _dataInterfaceFn(this.get('data'));
+        },
+
+        getTemplateCompatibleData: function (data) {
+            return _dataInterfaceFn(data);
         }
 
         // fetch: function () {

@@ -1,9 +1,8 @@
 APP.Modules.register("plugin/shop/model/productEntryStandalone", [], [
-    'lib/jquery',
     'lib/underscore',
     'model/mmodel',
     'plugin/shop/lib/utils'
-], function (app, Sandbox, $, _, MModel, shopUtils) {
+], function (app, Sandbox, _, MModel, shopUtils) {
 
     var productEntryStandalone = MModel.extend({
 
@@ -30,15 +29,15 @@ APP.Modules.register("plugin/shop/model/productEntryStandalone", [], [
             app.log(true, 'model productEntryStandalone parse', data);
 
             // adjust product data
-            if (data.data)
-                data.data = shopUtils.adjustProductEntry(data.data);
+            if (data)
+                data = shopUtils.adjustProductEntry(data);
 
-            if (data.data[this.attributes.urldata.productId])
-                data.data = data.data[this.attributes.urldata.productId];
+            if (data[this.attributes.urldata.productId])
+                data = data[this.attributes.urldata.productId];
 
-            // set error message
-            if (!data.data)
-                data.error = "Product entry is empty";
+            // // set error message
+            // if (!data)
+            //     data = "Product entry is empty";
 
             return data;
         }

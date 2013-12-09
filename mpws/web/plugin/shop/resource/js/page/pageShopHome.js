@@ -1,17 +1,10 @@
-APP.Modules.register("plugin/shop/view/pageShopHome", [], [
-    'lib/jquery',
+APP.Modules.register("plugin/shop/page/pageShopHome", [], [
     'lib/underscore',
-    // 'lib/backbone',
-    // 'lib/mpws.api',
     'view/mpage',
-    // 'lib/mpws.page',
-    // 'plugin/shop/lib/driver',
-    // 'plugin/shop/view/productListOverview',
+    'plugin/shop/view/catalogStructureMenu',
     'plugin/shop/view/breadcrumb',
     'plugin/shop/view/productListOverview'
-    // ui elements
-    // 'lib/fuelux.wizard'
-], function (app, Sandbox, $, _, MPage, viewBreadcrumb, productListOverview) {
+], function (app, Sandbox, _, MPage, catalogStructureMenu, breadcrumb, productListOverview) {
 
 
     var PageShopHome = MPage.extend({
@@ -19,24 +12,22 @@ APP.Modules.register("plugin/shop/view/pageShopHome", [], [
         name: 'shop-home',
 
         initialize: function (options) {
-
             // extend parent
             MPage.prototype.initialize.call(this, options);
 
-            this.viewItems.breadcrumb = new viewBreadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null);
+            this.viewItems.catalogStructureMenu = new catalogStructureMenu(_(options).has('catalogStructureMenu') ? options.catalogStructureMenu : null);
+            this.viewItems.breadcrumb = new breadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null);
             this.viewItems.productListOverview = new productListOverview(_(options).has('productListOverview') ? options.productListOverview : null);
-
         },
 
         render: function () {
-
-            app.log(true, 'PageShopHome rendering: productListOverview');
-
+            // show menu items
+            this.viewItems.catalogStructureMenu.render();
+            // app.log(true, 'PageShopHome rendering: productListOverview');
             this.viewItems.productListOverview.render();
             // just render default breadcrumb
-            app.log(true, 'PageShopHome rendering: breadcrumb');
             this.viewItems.breadcrumb.render();
-
+            // app.log(true, 'PageShopHome rendering: breadcrumb');
         }
 
     });

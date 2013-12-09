@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-lg-3">
+            {{>shopSideBar}}
+        </div>
+        <div class="col-sm-12 col-lg-9">
+            <div class="row">
+                {{#each source.data }}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    {{>productEntryViewList}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

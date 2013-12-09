@@ -1,12 +1,7 @@
 APP.Modules.register("plugin/shop/model/breadcrumb", [], [
-    'lib/jquery',
     'lib/underscore',
-    'model/mmodel',
-    'lib/mpws.api',
-    'lib/mpws.page',
-    'plugin/shop/lib/shop'
-], function (app, Sandbox, $, _, MModel, mpwsAPI, mpwsPage, pluginShopModel) {
-    
+    'model/mmodel'
+], function (app, Sandbox, _, MModel) {
 
     var Breadcrumb = MModel.extend({
 
