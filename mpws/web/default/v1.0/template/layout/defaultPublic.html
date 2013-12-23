@@ -81,12 +81,7 @@
                 pageDebug: true
             },
             REQUIREJS: {
-                router: {
-                    modulePageMap: [{
-                        match: ["{/literal}{$INFO.CUSTOMER}{literal}/*"],
-                        deps: ["router/customer"]
-                    }]
-                },
+                router: "router/customer",
                 app: {
                     baseUrl: false,
                     paths: {
@@ -97,7 +92,7 @@
                         model: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}model',
                         view: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}view',
                         plugin: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}',
-                        page: '{/literal}{$INFO.URL.STATIC_PLUGIN}{literal}',
+                        page: '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}page',
                         // version suppress
                         "lib/jquery": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}lib/jquery-1.9.1',
                         "lib/jquery_ui": '{/literal}{$INFO.URL.STATIC_CUSTOMER}{literal}lib/jquery-ui'

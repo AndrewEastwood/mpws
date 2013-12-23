@@ -62,12 +62,7 @@
                 pageDebug: true
             },
             REQUIREJS: {
-                router: {
-                    modulePageMap: [{
-                        match: [".*"],
-                        deps: ["router/customer", "router/plugin"]
-                    }]
-                },
+                router: "router/system",
                 app: {
                     baseUrl: "{/literal}{$INFO.URL.STATIC_BASE}{literal}",
                     paths: {

@@ -14,6 +14,7 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
             fn: 'shop_catalog',
 
             urldata: {
+
                 categoryId: null,
 
                 // common
@@ -31,13 +32,14 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
                 filter_brandIds: [],
 
                 filter_specifications: {}
+
             }
         },
 
         initialize: function (options) {
 
+            app.log('model ProductListCatalog initialize', this, options);
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            app.log('model ProductListCatalog initialize', this);
 
         },
 

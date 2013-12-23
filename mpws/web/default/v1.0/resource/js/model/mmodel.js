@@ -71,15 +71,16 @@ APP.Modules.register("model/mmodel", [], [
 
             this.set("urldata", urlData);
 
-            // app.log(true, 'new usrl data is ', urlData);
 
             if (skipFetch)
                 return;
+            app.log(true, 'MModel original url data ', urlDataOrigin);
+            app.log(true, 'MModel new url data ', urlData);
 
             // app.log(true, this.get('fn') + ' origin url data was', urlDataOrigin);
             // app.log(true, this.get('fn') + ' now it is', urlData);
             if (!_.isEqual(urlDataOrigin, urlData)) {
-                // app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
+                app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
                 this.fetch();
             } else {
                 this.trigger('mmodel:newdata', this.get('data'));

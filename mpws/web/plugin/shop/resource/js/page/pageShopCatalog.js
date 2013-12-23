@@ -1,6 +1,6 @@
 APP.Modules.register("plugin/shop/page/pageShopCatalog", [], [
     'lib/underscore',
-    'view/mpage',
+    'page/mpage',
     'plugin/shop/view/catalogStructureMenu',
     'plugin/shop/view/breadcrumb',
     'plugin/shop/view/productListCatalog'
@@ -9,7 +9,7 @@ APP.Modules.register("plugin/shop/page/pageShopCatalog", [], [
 
     var PageShopCatalog = MPage.extend({
 
-        name: 'shop-home',
+        name: 'shop-catalog',
 
         initialize: function (options) {
             // extend parent
@@ -28,8 +28,10 @@ APP.Modules.register("plugin/shop/page/pageShopCatalog", [], [
             if (categoryId) {
                 // filter products by category and brand
                 
-                // app.log(true, 'PageShopCatalog rendering: productListCatalog');
-                this.viewItems.productListCatalog.render();
+                // app.log(true, 'PageShopCatalog rendering: productListCatalog, categoryId=', categoryId);
+                this.viewItems.productListCatalog.applyFiltering({
+                    categoryId: categoryId
+                });
 
                 // render breadcrumb by categoryId
                 this.viewItems.breadcrumb.renderLocation(null, categoryId);

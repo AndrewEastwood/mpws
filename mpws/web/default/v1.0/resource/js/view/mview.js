@@ -33,6 +33,7 @@ APP.Modules.register("view/mview", [], [
             var _self = this;
 
             this.$el = $(options.el || this.el);
+            this.placement = options.placement || this.placement;
 
             this.model.on('mmodel:newdata', function () {
                 // app.log(true ,'MView on change:data: so new data is available', data);
@@ -117,6 +118,8 @@ APP.Modules.register("view/mview", [], [
                 var _injectionType = placeholder.placement || mpwsPage.PLACEMENT.REPLACE;
                 // remove previous dom element
                 var _elementID = $(html).filter('*').first().attr('id');
+                app.log(true, 'component id: ', _elementID);
+                app.log(true, '_injectionType: ', _injectionType);
                 if (!_.isEmpty(_elementID))
                     $(placeholder.container).find(_elementID.asCssID()).remove();
                 // add new element

@@ -1,4 +1,4 @@
-APP.Modules.register("view/mpage", [], [
+APP.Modules.register("page/mpage", [], [
     'lib/jquery',
     'lib/backbone',
     'lib/mpws.page',
@@ -18,6 +18,7 @@ APP.Modules.register("view/mpage", [], [
 
         setPageName: function (name) {
             this.options.name = name;
+            app.log(true, 'the "plugin/shop/page/' + this.options.name + '" is being rendered');
             mpwsPage.pageName(this.name);
         }
 

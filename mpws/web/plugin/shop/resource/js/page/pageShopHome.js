@@ -1,11 +1,10 @@
 APP.Modules.register("plugin/shop/page/pageShopHome", [], [
     'lib/underscore',
-    'view/mpage',
+    'page/mpage',
     'plugin/shop/view/catalogStructureMenu',
     'plugin/shop/view/breadcrumb',
     'plugin/shop/view/productListOverview'
 ], function (app, Sandbox, _, MPage, catalogStructureMenu, breadcrumb, productListOverview) {
-
 
     var PageShopHome = MPage.extend({
 

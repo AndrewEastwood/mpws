@@ -24,8 +24,8 @@ APP.Modules.register("plugin/shop/router/shopPublic", [window], [
             "site_home": "",
             "shop_home": "shop",
             // "shop_latest": "shop/latest",
-            "shop_catalog": "shop/catalog",
             "shop_catalog_category": "shop/catalog/:category",
+            "shop_catalog": "shop/catalog/",
             // "shop_catalog_category_brand": "shop/catalog/:category/:brand",
             "shop_product": "shop/product/:product",
             "shop_wizard": "shop/wizard",
@@ -39,7 +39,6 @@ APP.Modules.register("plugin/shop/router/shopPublic", [window], [
             routes: _.invert(this.navMap)
         };
 
-
         _routeDispatchers.site_home = function () {
             _routeDispatchers.shop_home();
         };
@@ -49,7 +48,7 @@ APP.Modules.register("plugin/shop/router/shopPublic", [window], [
             if (!_pages.shop_home)
                 APP.Modules.require(["plugin/shop/page/pageShopHome"], function (pageShopHome){
                     var p = new pageShopHome(options);
-                    app.log(true, 'the "plugin/shop/page/pageShopHome" is being rendered');
+                    // app.log(true, 'the "plugin/shop/page/pageShopHome" is being rendered');
                     p.render();
                     _pages.shop_home = p;
                 });
@@ -59,15 +58,16 @@ APP.Modules.register("plugin/shop/router/shopPublic", [window], [
         _routeDispatchers.shop_catalog = function (categoryId) {
             if (!_pages.shop_catalog)
                 APP.Modules.require(["plugin/shop/page/pageShopCatalog"], function (pageShopCatalog){
-                    var p = new pageShopCatalog();
-                    app.log(true, 'the "plugin/shop/page/pageShopCatalog" is being rendered');
+                    var p = new pageShopCatalog(options);
+                    // app.log(true, 'the "plugin/shop/page/pageShopCatalog" is being rendered');
                     p.render(categoryId);
                     _pages.shop_catalog = p;
                 });
             else
-                _pages.shop_catalog.render(categoryId, brandId);
+                _pages.shop_catalog.render(categoryId);
         };
         _routeDispatchers.shop_catalog_category = function (categoryId) {
+            app.log(true, '_routeDispatchers.shop_catalog_category', categoryId);
             _routeDispatchers.shop_catalog(categoryId);
         };
         // display particular product

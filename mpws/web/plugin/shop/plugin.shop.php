@@ -1,6 +1,6 @@
 <?php
 
-class pluginShop extends objectBaseWebPlugin {  
+class pluginShop extends objectBaseWebPlugin {
 
     protected function _displayTriggerAsPlugin () {
         parent::_displayTriggerAsPlugin();
@@ -77,10 +77,10 @@ class pluginShop extends objectBaseWebPlugin {
             }
             // catalog filtering
             // -----------------------------------------------
-            case "shop_shop_category_filtering": {
-                $data = $this->_custom_api_getCatalogFiltering($param);
-                break;
-            }
+            // case "shop_shop_category_filtering": {
+            //     $data = $this->_custom_api_getCatalogFiltering($param);
+            //     break;
+            // }
             // shop catalog structure
             // -----------------------------------------------
             case "shop_catalog_structure": {
@@ -89,16 +89,16 @@ class pluginShop extends objectBaseWebPlugin {
             }
             // products list sorted by category
             // -----------------------------------------------
-            case "shop_products_category": {
-                $data = $this->_custom_api_getProductsByCategory($param);
+            case "shop_catalog": {
+                $data = $this->_custom_api_getCatalog($param);
                 break;
             }
             // products list sorted by category and origin
             // -----------------------------------------------
-            case "shop_products_category_origin": {
-                $data = $this->_custom_api_getProductsByCategoryAndByOrigin($param);
-                break;
-            }
+            // case "shop_products_category_origin": {
+            //     $data = $this->_custom_api_getProductsByCategoryAndByOrigin($param);
+            //     break;
+            // }
             // product standalone item short
             // -----------------------------------------------
             case "shop_product_item_short" : {
@@ -297,7 +297,7 @@ class pluginShop extends objectBaseWebPlugin {
 
     // products list sorted by category
     // -----------------------------------------------
-    private function _custom_api_getProductsByCategory ($params) {
+    private function _custom_api_getCatalog ($params) {
 
         $categoryId = getValue($params['categoryId'], null);
 
@@ -346,13 +346,45 @@ class pluginShop extends objectBaseWebPlugin {
         foreach ($attributes as $value)
             $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
 
+        // filtering
+        $filterOptions = $this->_custom_util_getCategoryFilterOptions();
+        // TODO:
+        // get category brands
+        // get category max and min price
+        // get category specifications
+        // get category last added products
+        // get category popular products
+        //
+        // wow, here are lots of items to be completed
+
+        // get max and min prices
+        $filterOptions['filter_priceMax'] = 200;
+        $filterOptions['filter_priceMin'] = 30;
+
         // update main data object
         $dataObj->setData(array(
             "products" => $productsMap,
-            "attributes" => $attributesMap
+            "attributes" => $attributesMap,
+            "filterOptions" => $filterOptions,
+            "viewOptions" => array(),
+            "info" => array(
+                "productsCount" => count($productsMap),
+            )
         ));
 
         return $dataObj;
+    }
+
+    private function _custom_util_getCategoryFilterOptions () {
+        return array(
+            "filter_priceMax" => null,
+            "filter_priceMin" => 0,
+            "filter_availability" => array(),
+            "filter_onSaleTypes" => array(),
+            "filter_brandIds" => array(),
+            "filter_specifications" => array()
+
+        );
     }
 
     // products list sorted by category and origin

@@ -101,7 +101,7 @@ APP.Modules.register("router/customer", [], [
             el: mpwsPage.getPageBody(),
             placement: mpwsPage.PLACEMENT.REPLACE
         },
-        productsByCategory: {
+        productListCatalog: {
             el: mpwsPage.getPageBody(),
             placement: mpwsPage.PLACEMENT.REPLACE
         }

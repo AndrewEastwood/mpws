@@ -19,7 +19,7 @@ APP.Modules.register("plugin/shop/view/breadcrumb", [], [
         },
 
         renderLocation: function (productID, categoryID) {
-            // app.log(true, 'Breadcrumb view: renderLocation', productID, categoryID);
+            app.log(true, 'Breadcrumb view: renderLocation', productID, categoryID);
             this.model.setUrlData({
                 productId: productID || null,
                 categoryId: categoryID || null

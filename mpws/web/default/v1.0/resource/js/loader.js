@@ -202,12 +202,7 @@ window.APP || (function(window, document){
 
 
         // // request base router from main context
-        _Modules.require(['router/base'], function(BaseRouter) {
-            // start page routing
-            var router = new BaseRouter(_configuration.REQUIREJS.router);
-            router.start();
-            router.onPageLoaded(_self, _initializeLoader);
-        });
+        _Modules.require([_configuration.REQUIREJS.router]);
             // notify all subscribers that page is ready
 
     }

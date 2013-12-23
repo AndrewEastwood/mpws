@@ -80,7 +80,7 @@ class libraryStaticResourceManager {
         
         $filesToLoad = array();
         // $filesToImport = array();
-        $includeMetaInfo = true;
+        $includeMetaInfo = false;
         $metaCommentStart = '/*';
         $metaCommentEnd = ' */';
 

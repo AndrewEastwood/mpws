@@ -1,6 +1,6 @@
 APP.Modules.register("plugin/shop/page/pageProductEntryStandalone", [], [
     'lib/underscore',
-    'view/mpage',
+    'page/mpage',
     'plugin/shop/view/catalogStructureMenu',
     'plugin/shop/view/breadcrumb',
     'plugin/shop/view/productEntryStandalone'

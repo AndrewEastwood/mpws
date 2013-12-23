@@ -18,6 +18,10 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
             productEntryViewList: {
                 url: "plugin.shop.component.productEntryViewList@hbs",
                 type: mpwsPage.TYPE.PARTIAL
+            },
+            pageSidebar: {
+                url: "plugin.shop.component.pageSidebar@hbs",
+                type: mpwsPage.TYPE.PARTIAL
             }
         },
 
@@ -37,6 +41,12 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
             // and then update url data to
             // get new list of products rendered
             // this.model.setUrlData();
+            var _orig = _(this.model.getUrlData()).clone();
+
+            // app.log(true, 'view shopProductListCatalog: applying new filterOptions', filterOptions);
+            // app.log(true, 'view shopProductListCatalog: oring data', _orig);
+
+            this.model.setUrlData(_.extend({}, this.model.getUrlData(), filterOptions));
 
         }
 
