@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 19, 2013 at 02:48 AM
+-- Generation Time: Dec 26, 2013 at 11:46 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
@@ -24,6 +24,16 @@ DELIMITER $$
 --
 -- Procedures
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryBrands`(IN catid INT)
+BEGIN
+SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.CategoryID = catid GROUP BY o.Name;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
+BEGIN
+SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryLocation`(IN catid INT)
 BEGIN
 SELECT T2.ID, T2.Name
@@ -622,7 +632,7 @@ INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name
 (11, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (12, 0, 3, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(14, 0, 1, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(14, 0, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (15, 0, 1, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (16, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (17, 0, 1, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
@@ -1140,8 +1150,8 @@ ALTER TABLE `mpws_jobs`
 -- Constraints for table `mpws_subscripers`
 --
 ALTER TABLE `mpws_subscripers`
-  ADD CONSTRAINT `mpws_subscripers_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `mpws_subscripers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `mpws_subscripers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mpws_subscripers_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `mpws_uploads`
@@ -1159,8 +1169,8 @@ ALTER TABLE `mpws_users`
 -- Constraints for table `shop_boughts`
 --
 ALTER TABLE `shop_boughts`
-  ADD CONSTRAINT `shop_boughts_ibfk_4` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `shop_boughts_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `shop_boughts_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `shop_boughts_ibfk_4` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `shop_categories`
@@ -1187,9 +1197,9 @@ ALTER TABLE `shop_currency`
 -- Constraints for table `shop_orders`
 --
 ALTER TABLE `shop_orders`
-  ADD CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`OrderDetailsID`) REFERENCES `shop_orderDetails` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`BoughtMapID`) REFERENCES `shop_boughts` (`OrderID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`BoughtMapID`) REFERENCES `shop_boughts` (`OrderID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`OrderDetailsID`) REFERENCES `shop_orderDetails` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_origins`
@@ -1201,8 +1211,8 @@ ALTER TABLE `shop_origins`
 -- Constraints for table `shop_productAttributes`
 --
 ALTER TABLE `shop_productAttributes`
-  ADD CONSTRAINT `shop_productAttributes_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shop_productAttributes_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `shop_productAttributes_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_productAttributes_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_productPrices`
@@ -1222,9 +1232,9 @@ ALTER TABLE `shop_products`
 -- Constraints for table `shop_relations`
 --
 ALTER TABLE `shop_relations`
-  ADD CONSTRAINT `shop_relations_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `shop_relations_ibfk_3` FOREIGN KEY (`ProductA_ID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shop_relations_ibfk_4` FOREIGN KEY (`ProductB_ID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `shop_relations_ibfk_4` FOREIGN KEY (`ProductB_ID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_relations_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_specifications`

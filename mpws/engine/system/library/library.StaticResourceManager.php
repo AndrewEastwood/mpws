@@ -148,7 +148,11 @@ class libraryStaticResourceManager {
                 }
                 case "LESS" : {
                     $libLess = new libraryLessc();
-                    $data = $libLess->compile($data);
+                    try {
+                        $data = $libLess->compile($data);
+                    } catch (exception $e) {
+                        $data = "fatal error: " . $e->getMessage();
+                    }
                     break;
                 }
             }

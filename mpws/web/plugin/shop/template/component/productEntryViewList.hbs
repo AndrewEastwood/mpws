@@ -1,43 +1,39 @@
 <div class="shop-component shop-product-view shop-product-view-embedded">
-    <div class="container">
-
-        <div class="panel">
-            <div class="panel panel-heading">
-                <h4 class="text-center">
-                    <a href="#shop/product/{{ID}}">{{OriginName}} - {{Name}}</a>
-                </h4>
-            </div>
-            <div class="panel-body">
-                <div class="shop-component shop-product-images">
-                    <div class="shop-product-image shop-product-image-main">
-                        <a href="#shop/product/{{ID}}" class="link">
-                            <img src="{{ProductAttributes.IMAGES.MAIN}}" class="image img-responsive" alt="{{source.data.Name}}" title="{{source.data.Name}}" />
-                        </a>
-                    </div>
-                </div>
-                <div class="shop-component shop-product-attr shop-product-attr-price">
-                    <div class="value-prefix">Ціна:</div>
-                    <div class="badge">{{Price}}</div>
-                    <span class="value-suffix">грн.</span>
-                </div>
-                <div class="shop-component shop-product-description shop-product-description-short">{{Description}}</div>
-                <p>
-                    <button class="btn btn-primary btn-xs" data-action="shop:cart:add" data-oid="{{ID}}" data-title="+To Cart" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                        <i class="fa fa-shopping-cart"></i>
-                    </button>
-                    <button class="btn btn-xs" data-action="shop:wishlist:add" data-oid="{{ID}}" data-title="+To WishList" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                        <i class="fa fa-heart"></i>
-                    </button>
-
-                    <button class="btn btn-xs" data-action="shop:compare:add" data-oid="{{ID}}" data-title="+To Compare" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                        <i class="fa fa-files-o"></i>
-                    </button>
-                </p>
-                <p>
-                    <a class="btn btn-primary btn-block" href="#shop/product/{{ID}}">Детальніше »</a>
-                </p>
-            </div>
+    <div class="panel">
+        <div class="panel panel-heading">
+            <h4 class="text-center">
+                <a href="#shop/product/{{ID}}">{{OriginName}} - {{Name}}</a>
+            </h4>
         </div>
+        <div class="panel-body">
+            <div class="shop-component shop-product-images">
+                <div class="shop-product-image shop-product-image-main">
+                    <a href="#shop/product/{{ID}}" class="link">
+                        <img src="{{ProductAttributes.IMAGES.MAIN}}" class="image img-responsive" alt="{{source.data.Name}}" title="{{source.data.Name}}" />
+                    </a>
+                </div>
+            </div>
+            <div class="shop-component shop-product-attr shop-product-attr-price">
+                <div class="value-prefix">Ціна:</div>
+                <div class="badge">{{Price}}</div>
+                <span class="value-suffix">грн.</span>
+            </div>
+            <div class="shop-component shop-product-description shop-product-description-short">{{Description}}</div>
+            <p>
+                <button class="btn btn-primary btn-xs" data-action="shop:cart:add" data-oid="{{ID}}" data-title="+To Cart" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                    <i class="fa fa-shopping-cart"></i>
+                </button>
+                <button class="btn btn-xs" data-action="shop:wishlist:add" data-oid="{{ID}}" data-title="+To WishList" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                    <i class="fa fa-heart"></i>
+                </button>
 
+                <button class="btn btn-xs" data-action="shop:compare:add" data-oid="{{ID}}" data-title="+To Compare" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                    <i class="fa fa-files-o"></i>
+                </button>
+            </p>
+            <p>
+                <a class="btn btn-primary btn-block" href="#shop/product/{{ID}}">Детальніше »</a>
+            </p>
+        </div>
     </div>
 </div>

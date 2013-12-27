@@ -93,12 +93,6 @@ class pluginShop extends objectBaseWebPlugin {
                 $data = $this->_custom_api_getCatalog($param);
                 break;
             }
-            // products list sorted by category and origin
-            // -----------------------------------------------
-            // case "shop_products_category_origin": {
-            //     $data = $this->_custom_api_getProductsByCategoryAndByOrigin($param);
-            //     break;
-            // }
             // product standalone item short
             // -----------------------------------------------
             case "shop_product_item_short" : {
@@ -357,6 +351,14 @@ class pluginShop extends objectBaseWebPlugin {
         //
         // wow, here are lots of items to be completed
 
+        $dataCategoryBrands = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryBrands['data']);
+        $dataCategoryBrands->setValuesDbProcedure($categoryId);
+        $dataCategoryBrands->process($params);
+
+        $dataCategoryPriceEdges = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryPriceEdges['data']);
+        $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
+        $dataCategoryPriceEdges->process($params);
+
         // get max and min prices
         $filterOptions['filter_priceMax'] = 200;
         $filterOptions['filter_priceMin'] = 30;
@@ -369,6 +371,8 @@ class pluginShop extends objectBaseWebPlugin {
             "viewOptions" => array(),
             "info" => array(
                 "productsCount" => count($productsMap),
+                "availableBrands" => $dataCategoryBrands->toJSON(),
+                "priceEdges" => $dataCategoryPriceEdges->toJSON()
             )
         ));
 
@@ -383,13 +387,8 @@ class pluginShop extends objectBaseWebPlugin {
             "filter_onSaleTypes" => array(),
             "filter_brandIds" => array(),
             "filter_specifications" => array()
-
         );
     }
-
-    // products list sorted by category and origin
-    // -----------------------------------------------
-    private function _custom_api_getProductsByCategoryAndByOrigin ($params) {}
 
     // product standalone item (short or full)
     // -----------------------------------------------

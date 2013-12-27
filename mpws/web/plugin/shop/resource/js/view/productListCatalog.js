@@ -22,6 +22,10 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
             pageSidebar: {
                 url: "plugin.shop.component.pageSidebar@hbs",
                 type: mpwsPage.TYPE.PARTIAL
+            },
+            shopProductListViewBar: {
+                url: "plugin.shop.component.shopProductListViewBar@hbs",
+                type: mpwsPage.TYPE.PARTIAL
             }
         },
 

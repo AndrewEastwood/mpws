@@ -5,48 +5,46 @@
     <link rel="stylesheet" type="text/css" href="{$INFO.URL.STATIC_CUSTOMER}extras.css">
 {/block}
 
-{block name="pageCommonBefore"}
-<!-- MAIN WRAPPER class="wrapper" max-width="1110px"-->
+{block name="pageWholeBefore"}
 <div class="wrapper">
 {/block}
 
-{block name="pageCommonAfter"}
+{block name="pageWholeAfter"}
 </div>
 {/block}
 
 {block name="pageHeader"}
 <header>
     <!-- PAGE-HEADER-->
-  
     <!-- NAVBAR-->
-  <nav class="navbar" role="navigation">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#"><img src="{$INFO.URL.STATIC_CUSTOMER}logo.png" class="logo" title="Міксер"></a>
-    </div>
+    <nav class="navbar" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><img src="{$INFO.URL.STATIC_CUSTOMER}logo.png" class="logo" title="Міксер"></a>
+            </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-    <ul class="nav navbar-nav navbar-nav-main">
-        <li class="active"><a href="#">Головна</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-nav-plugins"></ul>
-    <form class="navbar-form navbar-right" role="search">
-      <div class="form-group">
-      <input type="text" class="form-control" placeholder="текст для пошуку">
-      </div>
-      <button type="button" class="btn btn-primary" data-action="shop:search"><span class="fa fa-search"></span></button>
-    </form>
-  </div>
-  </div><!-- /.navbar-collapse -->
-</nav>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav navbar-nav-main">
+                <li class="active"><a href="#">Головна</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-nav-plugins"></ul>
+                <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                <input type="text" class="form-control" placeholder="текст для пошуку">
+                </div>
+                <button type="button" class="btn btn-primary" data-action="shop:search"><span class="fa fa-search"></span></button>
+                </form>
+            </div>
+        </div><!-- /.navbar-collapse -->
+    </nav>
 </header>
 {/block}
 
