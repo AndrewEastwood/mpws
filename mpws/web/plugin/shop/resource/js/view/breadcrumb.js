@@ -3,6 +3,7 @@ APP.Modules.register("plugin/shop/view/breadcrumb", [], [
     'lib/underscore',
     'view/mview',
     'plugin/shop/model/breadcrumb',
+    'lib/bootstrap'
 ], function (app, Sandbox, $, _, MView, modelBreadcrumb) {
 
     var Breadcrumb = MView.extend({

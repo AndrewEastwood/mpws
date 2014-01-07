@@ -1,0 +1,64 @@
+<div class="shop-component-catalog-filtering">
+    <div class="title row">
+        <strong><span>Фільтрування:</span></strong>
+    </div>
+    <div class="content row">
+
+        {{#gt source.data.filterOptionsAvailable.filter_commonPriceMax "0" }}
+        <div class="spacer"></div>
+        <div class="subtitle row">
+            Ціна: 
+            (
+                <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt source.data.filterOptionsAvailable.filter_commonPriceMin}}</span>
+                <span>-</span>
+                <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt source.data.filterOptionsAvailable.filter_commonPriceMax}}</span>
+            )
+        </div>
+        <div class="row">
+            <input type="text" class="form-control slider" value="" data-slider-min="{{mpwsToInt source.data.filterOptionsAvailable.filter_commonPriceMin}}" data-slider-max="{{mpwsToInt source.data.filterOptionsAvailable.filter_commonPriceMax}}" data-slider-step="1" data-slider-value="[{{mpwsToInt source.data.filterOptionsAvailable.filter_commonPriceMin}},{{mpwsToInt source.data.filterOptionsAvailable.filter_commonPriceMax}}]" data-slider-selection="after">
+        </div>
+        <div class="spacer"></div>
+        {{/gt}}
+
+        {{#mpwsIsNotEmpty source.data.filterOptionsAvailable.filter_categoryBrands }}
+        <div class="spacer"></div>
+        <div class="subtitle row">
+            Виробники:
+        </div>
+        <div class="row">
+            {{#each source.data.filterOptionsAvailable.filter_categoryBrands }}
+            <div>
+                <label>
+                    <input type="checkbox" value="{{ID}}" name="shopFilterBrandID_{{ID}}">
+                    {{Name}}
+                </label>
+            </div>
+            {{/each}}
+        </div>
+        <div class="spacer"></div>
+        {{/mpwsIsNotEmpty}}
+
+        {{#mpwsIsNotEmpty source.data.filterOptionsAvailable.filter_categorySpecifications }}
+        <div class="spacer"></div>
+        <div class="subtitle row">
+            Додаткові параметри:
+        </div>
+        <div class="row">
+            {{#each source.data.filterOptionsAvailable.filter_categorySpecifications }}
+            <div>
+                <label>
+                    <input type="checkbox" value="{{ID}}" name="shopFilterSpecID_{{ID}}">
+                    {{Name}}
+                </label>
+            </div>
+            {{/each}}
+        </div>
+        <div class="spacer"></div>
+        {{/mpwsIsNotEmpty}}
+
+        <div class="row">
+            <button class="btn btn-success btn-block">Фільтрувати</button>
+        </div>
+
+    </div>
+</div>

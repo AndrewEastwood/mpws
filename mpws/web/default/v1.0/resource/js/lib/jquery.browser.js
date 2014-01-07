@@ -4,7 +4,7 @@ APP.Modules.register("lib/jquery.browser", [
 ], [
     'lib/jquery'
     /* component implementation */
-], function(window, app, Sandbox, jQuery) {
+], function (window, app, Sandbox, jQuery) {
 
 
 	(function( jQuery, window, undefined ) {

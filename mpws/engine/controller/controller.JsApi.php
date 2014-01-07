@@ -3,6 +3,8 @@
 class controllerJsApi {
 
     public function processRequests() {
+        // all js api requests produce JSON data
+        header('Content-Type: application/json');
         debug('controllerPublic => processRequests');
         $mpwsCtx = contextMPWS::instance();
         debug('controllerPublic => processRequests: adding command');

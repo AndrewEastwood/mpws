@@ -405,6 +405,10 @@ window.APP || (function(window, document){
 
     function filterDownloadedPackages (modules) {
         // _app.log(true, 'filterDownloadedPackages', modules);
+
+        if (typeof modules === "string")
+            return [modules];
+
         return modules;
     }
 

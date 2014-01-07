@@ -1,8 +1,9 @@
 APP.Modules.register("plugin/shop/router/shopPublic", [window], [
     'lib/underscore',
     'lib/backbone',
+    'lib/appCachedViews'
     // 'plugin/shop/view/shop',
-], function (wnd, app, Sandbox, _, Backbone) {
+], function (wnd, app, Sandbox, _, Backbone, appCachedViews) {
 
     // start site routing
     //var view = null;
@@ -45,26 +46,38 @@ APP.Modules.register("plugin/shop/router/shopPublic", [window], [
         _routeDispatchers.shop_home = function () {
             // this is the same as shop_home
             // so that's why we're using shop_home
-            if (!_pages.shop_home)
-                APP.Modules.require(["plugin/shop/page/pageShopHome"], function (pageShopHome){
-                    var p = new pageShopHome(options);
-                    // app.log(true, 'the "plugin/shop/page/pageShopHome" is being rendered');
-                    p.render();
-                    _pages.shop_home = p;
-                });
-            else
-                _pages.shop_home.render();
+            appCachedViews.getView(
+                // path to view
+                'plugin/shop/page/pageShopHome',
+                // setup function (will be called once per requrest)
+                // the retunr value will be stored into the cache
+                function (pageShopHome) {
+                    return new pageShopHome(options);
+                },
+                // this function will be called right after setup function
+                // and every time when you reques this view
+                function (pageShopHome) {
+                    app.log('every time call')
+                    pageShopHome.render();
+                }
+            );
         };
         _routeDispatchers.shop_catalog = function (categoryId) {
-            if (!_pages.shop_catalog)
-                APP.Modules.require(["plugin/shop/page/pageShopCatalog"], function (pageShopCatalog){
-                    var p = new pageShopCatalog(options);
-                    // app.log(true, 'the "plugin/shop/page/pageShopCatalog" is being rendered');
-                    p.render(categoryId);
-                    _pages.shop_catalog = p;
-                });
-            else
-                _pages.shop_catalog.render(categoryId);
+            appCachedViews.getView(
+                // path to view
+                'plugin/shop/page/pageShopCatalog',
+                // setup function (will be called once per requrest)
+                // the retunr value will be stored into the cache
+                function (pageShopCatalog) {
+                    return new pageShopCatalog(options);
+                },
+                // this function will be called right after setup function
+                // and every time when you reques this view
+                function (pageShopCatalog) {
+                    app.log('every time call')
+                    pageShopCatalog.render(categoryId);
+                }
+            );
         };
         _routeDispatchers.shop_catalog_category = function (categoryId) {
             app.log(true, '_routeDispatchers.shop_catalog_category', categoryId);
@@ -72,15 +85,21 @@ APP.Modules.register("plugin/shop/router/shopPublic", [window], [
         };
         // display particular product
         _routeDispatchers.shop_product = function (productId) {
-            app.log(true, 'shop_product is active router', productId);
-            if (!_pages.shop_product)
-                APP.Modules.require(["plugin/shop/page/pageProductEntryStandalone"], function (pageProductEntryStandalone){
-                    var p = new pageProductEntryStandalone(options);
-                    p.render(productId);
-                    _pages.shop_product = p;
-                });
-            else
-                _pages.shop_product.render(productId);
+            appCachedViews.getView(
+                // path to view
+                'plugin/shop/page/pageProductEntryStandalone',
+                // setup function (will be called once per requrest)
+                // the retunr value will be stored into the cache
+                function (pageProductEntryStandalone) {
+                    return new pageProductEntryStandalone(options);
+                },
+                // this function will be called right after setup function
+                // and every time when you reques this view
+                function (pageProductEntryStandalone) {
+                    app.log('every time call')
+                    pageProductEntryStandalone.render(productId);
+                }
+            );
         };
         _routeDispatchers.shop_wizard = function () {};
 

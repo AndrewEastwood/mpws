@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.11, created on 2013-12-12 19:12:28
+<?php /* Smarty version Smarty-3.1.11, created on 2014-01-04 16:58:04
          compiled from "/var/www/mpws/rc_1.0/web/customer/toolbox/template/layout/defaultToolbox.html" */ ?>
 <?php /*%%SmartyHeaderCode:14769319735206340ce1e7e4-84126817%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '13fc0739f57dedff11a7d9378923d6d565f25193' => 
     array (
       0 => '/var/www/mpws/rc_1.0/web/default/v1.0/template/layout/defaultSystem.html',
-      1 => 1386545737,
+      1 => 1387749405,
       2 => 'file',
     ),
   ),
@@ -125,12 +125,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                 pageDebug: true
             },
             REQUIREJS: {
-                router: {
-                    modulePageMap: [{
-                        match: [".*"],
-                        deps: ["router/customer", "router/plugin"]
-                    }]
-                },
+                router: "router/system",
                 app: {
                     baseUrl: "<?php echo $_smarty_tpl->tpl_vars['INFO']->value['URL']['STATIC_BASE'];?>
 ",

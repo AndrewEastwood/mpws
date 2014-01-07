@@ -5,7 +5,7 @@ APP.Modules.register("router/customer", [], [
     'lib/backbone',
     'lib/mpws.page',
     'plugin/shop/router/shopPublic',
-    'lib/mpws.ui',
+    // 'lib/mpws.ui',
 
 ], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
 

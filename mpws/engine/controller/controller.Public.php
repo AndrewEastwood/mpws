@@ -3,6 +3,8 @@
 class controllerPublic {
 
     public function processRequests() {
+        // all js api requests produce HTML data
+        header('Content-Type: text/html');
         debug('controllerPublic => processRequests');
         $mpwsCtx = contextMPWS::instance();
         debug('controllerPublic => processRequests: adding command >> ' . MPWS_CUSTOMER.DOG.'main');

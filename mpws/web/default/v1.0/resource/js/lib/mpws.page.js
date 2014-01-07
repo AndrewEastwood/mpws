@@ -5,7 +5,6 @@ APP.Modules.register("lib/mpws.page", [], [
     /* import dep packages */
     'lib/jquery',
     'lib/underscore',
-    'lib/mpws.api',
     'lib/templateEngine',
     'lib/async',
     // 'lib/storage',
@@ -13,7 +12,7 @@ APP.Modules.register("lib/mpws.page", [], [
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function (app, Sandbox, $, _, mpwsAPI, tplEngine, AsyncLib) {
+], function (app, Sandbox, $, _, tplEngine, AsyncLib) {
 
     function mpwsPage () {}
 
@@ -166,7 +165,7 @@ APP.Modules.register("lib/mpws.page", [], [
             if (tplEngine.hasTemplate(templateUrl))
                 callback(err, tplEngine.getTemplate(templateUrl));
             else
-                mpwsAPI.requestTemplate(templateUrl, function (templateHtml) {
+                mpwsPage.requestTemplate(templateUrl, function (templateHtml) {
                     tplEngine.setTemplate(templateUrl, templateHtml);
                     callback(err, templateHtml);
                 });
@@ -176,6 +175,12 @@ APP.Modules.register("lib/mpws.page", [], [
             _setupDependenciesFn(deps, _fetchTemplateFn);
         else
             _fetchTemplateFn(null);
+    }
+
+    mpwsPage.requestTemplate = function (templatePath, callback) {
+        var _config = app.Page.getConfiguration();
+        templatePath = templatePath.replace(/\./g, '//').replace('@', '.');
+        $.get(_config.URL.staticUrlBase + templatePath).success(callback);
     }
 
     // mpwsPage.prototype.createRenderPlacement = function(target, placement) {

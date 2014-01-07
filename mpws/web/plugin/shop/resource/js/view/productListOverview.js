@@ -4,6 +4,8 @@ APP.Modules.register("plugin/shop/view/productListOverview", [], [
     'view/mview',
     'lib/mpws.page',
     'plugin/shop/model/productListOverview',
+    /* ui components */
+    'lib/bootstrap'
 ], function (app, Sandbox, $, _, MView, mpwsPage, modelProductListOverview) {
 
     var ProductListOverview = MView.extend({

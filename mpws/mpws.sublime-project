@@ -3,16 +3,16 @@
 	"folders":
 	[
 		{
-			"follow_symlinks": true,
 			"path": "/home/andrew/mpws/web/mpws"
 		},
 		{
-			"follow_symlinks": true,
 			"path": "/devdata/Develop/github/web/mpws"
 		},
 		{
-			"follow_symlinks": true,
 			"path": "/home/andrew/qBeats/united"
+		},
+		{
+			"path": "/devdata/Develop/pb_to_gal"
 		}
 	],
 	"translate_tabs_to_spaces": true

@@ -97,17 +97,22 @@ APP.Modules.register("model/mmodel", [], [
             // app.log(true, 'MModel fetch from', _config.URL.apiJS, 'with data', this.prepareUrlData());
 
             var self = this;
-            $.post(_config.URL.apiJS, this.prepareUrlData(), function (data) {
-                // app.log(true, 'MModel data is received', data);
-                if (data)
-                    data = JSON.parse(data);
-                else
-                    data = {};
-                data = self.parse(data);
-                self.attributes.data = data;
-                self.trigger('mmodel:newdata', data);
+            $.ajax({
+                url: _config.URL.apiJS,
+                data: this.prepareUrlData(),
+                type: 'post',
+                dataType: 'json',
+                success:function (data) {
+                    // app.log(true, 'MModel data is received', data);
+                    // if (data)
+                    //     data = JSON.parse(data);
+                    // else
+                        data = data || {};
+                    data = self.parse(data);
+                    self.attributes.data = data;
+                    self.trigger('mmodel:newdata', data);
+                }
             });
-
         },
 
         getTemplateData: function () {

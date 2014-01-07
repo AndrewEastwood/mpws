@@ -3,6 +3,8 @@ APP.Modules.register("plugin/shop/view/catalogStructureMenu", [], [
     'lib/underscore',
     'view/mview',
     'plugin/shop/model/catalogStructureMenu',
+    /* ui components */
+    'lib/bootstrap'
 ], function (app, Sandbox, $, _, MView, modelCatalogStructureMenu) {
 
     var CatalogStructureMenu = MView.extend({

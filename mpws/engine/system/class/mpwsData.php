@@ -85,7 +85,11 @@ class mpwsData {
     // getters
     public function isEmpty() { return empty($this->_data); }
     public function hasData() { return !empty($this->_data); }
-    public function getData() { return $this->_data; }
+    public function getData($key) {
+        if (!empty($key))
+            return $this->_data[$key];
+        return $this->_data;
+    }
     public function getConfig() { return $this->_config; }
     public function getConfigDefault() {
         // see commented examples how to configure this object before fetch data
@@ -593,7 +597,7 @@ class mpwsData {
 
 
     // converters
-    public function toJSON() { return libraryUtils::getJSON($this->getData()); }
+    public function toJSON() { return json_encode($this->getData());/* libraryUtils::getJSON($this->getData()); */}
     public function toDEFAULT() { return $this->getData(); }
     public function toHASH() { return $this->_inner; }
     public function to($outputType) {

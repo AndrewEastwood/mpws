@@ -341,7 +341,8 @@ class pluginShop extends objectBaseWebPlugin {
             $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
 
         // filtering
-        $filterOptions = $this->_custom_util_getCategoryFilterOptions();
+        $filterOptionsAvailable = $this->_custom_util_getCategoryFilterOptions();
+        $filterOptionsApplied = array();
         // TODO:
         // get category brands
         // get category max and min price
@@ -359,20 +360,35 @@ class pluginShop extends objectBaseWebPlugin {
         $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
         $dataCategoryPriceEdges->process($params);
 
+        $dataCategorySubCategories = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategorySubCategories['data']);
+        $dataCategorySubCategories->setValuesDbProcedure($categoryId);
+        $dataCategorySubCategories->process($params);
+
         // get max and min prices
-        $filterOptions['filter_priceMax'] = 200;
-        $filterOptions['filter_priceMin'] = 30;
+        $filterOptionsAvailable['filter_commonPriceMax'] = $dataCategoryPriceEdges->getData('PriceMax') ?: 0;
+        $filterOptionsAvailable['filter_commonPriceMin'] = $dataCategoryPriceEdges->getData('PriceMin') ?: 0;
+
+        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands->toDEFAULT();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories->toDEFAULT();
+
+        // remove empty categories
+        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $key => $value) {
+            if (empty($value['ProductCount']))
+                unset($filterOptionsAvailable['filter_categorySubCategories'][$key]);
+        }
+
+        // var_dump($dataCategoryPriceEdges->getData());
 
         // update main data object
         $dataObj->setData(array(
             "products" => $productsMap,
             "attributes" => $attributesMap,
-            "filterOptions" => $filterOptions,
+            "filterOptionsApplied" => $filterOptionsApplied,
+            "filterOptionsAvailable" => $filterOptionsAvailable,
             "viewOptions" => array(),
             "info" => array(
                 "productsCount" => count($productsMap),
-                "availableBrands" => $dataCategoryBrands->toJSON(),
-                "priceEdges" => $dataCategoryPriceEdges->toJSON()
+                "currentCategoryID" => $categoryId
             )
         ));
 
@@ -381,12 +397,16 @@ class pluginShop extends objectBaseWebPlugin {
 
     private function _custom_util_getCategoryFilterOptions () {
         return array(
-            "filter_priceMax" => null,
-            "filter_priceMin" => 0,
-            "filter_availability" => array(),
-            "filter_onSaleTypes" => array(),
-            "filter_brandIds" => array(),
-            "filter_specifications" => array()
+            /* common options */
+            "filter_commonPriceMax" => null,
+            "filter_commonPriceMin" => 0,
+            "filter_commonAvailability" => array(),
+            "filter_commonOnSaleTypes" => array(),
+
+            /* category based */
+            "filter_categoryBrands" => array(),
+            "filter_categorySubCategories" => array(),
+            "filter_categorySpecifications" => array()
         );
     }
 
@@ -571,8 +591,6 @@ class pluginShop extends objectBaseWebPlugin {
 
         return $cart_info;
     }
-
-
 
     // catalog filtering
 

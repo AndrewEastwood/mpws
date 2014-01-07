@@ -37,7 +37,7 @@ APP.Modules.register("view/mview", [], [
 
             this.model.on('mmodel:newdata', function () {
                 // app.log(true ,'MView on change:data: so new data is available', data);
-                _render.call(this, _self.model.getTemplateData());
+                _render.call(_self, _self.model.getTemplateData());
             }, this);
         },
         // initialize: function (viewConfig) {
@@ -63,7 +63,7 @@ APP.Modules.register("view/mview", [], [
             };
         },
 
-        render: function () {
+        render: function (callback) {
 
             var _renderConfig = this.getRenderConfig();
             var placeholder = _renderConfig.placeholder;
@@ -74,9 +74,13 @@ APP.Modules.register("view/mview", [], [
             // app.log('render config is ', _renderConfig);
             // mpwsPage.render(this.getRenderConfig());
 
+            if (typeof callback === 'function')
+                this.on('mview:rendered', callback);
+
             // this.$el.html(this.template(this.model.attributes));
             return this;
         }
+
     });
 
     function _render (data) {
@@ -130,7 +134,7 @@ APP.Modules.register("view/mview", [], [
                 else if (_injectionType == mpwsPage.PLACEMENT.APPEND)
                     $(placeholder.container).append(html);
             }
-            $(placeholder.container).trigger('mview:rendered', [_self.name]);
+            _self.trigger('mview:rendered', [_self.name]);
         });
     }
 

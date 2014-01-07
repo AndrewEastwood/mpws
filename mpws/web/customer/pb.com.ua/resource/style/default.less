@@ -74,6 +74,7 @@ a:hover, a:focus {color: #CFB900;}
     border-radius: 1px;
     background-color: rgba(0, 0, 0, 0.8);
 }
+select, select option {cursor: pointer;}
 
 /* components */
 .breadcrumb {
@@ -354,28 +355,36 @@ border-bottom: 1px solid #CFB900;
   background-color: #CFB900;
 }
 
-.container-filtering {
-  .title {
-    background: #FFE500;
-    padding: 8px 12px;
-    strong {
-      display:block;
-      font: normal 14px/16px Arial, Helvetica, sans-serif;
-      min-height: 16px;
-      padding: 2px 0 2px;
-      text-transform: uppercase;
-      color:#333;
+.shop-component-catalog-filtering {
+    .title {
+        background: #FFE500;
+        padding: 8px 12px;
+        strong {
+            display:block;
+            font: normal 14px/16px Arial, Helvetica, sans-serif;
+            min-height: 16px;
+            padding: 2px 0 2px;
+            text-transform: uppercase;
+            color:#333;
+        }
+        a { text-decoration:none !important; }
     }
-    a { text-decoration:none !important; }
-  }
-  .subtitle {
-    margin:0; padding:5px 9px; font-size:1em; font-weight:bold; color:#0a263c;
-  }
-  .content {
-
-  }
+    .row {
+        margin: 0;
+        padding: 5px 9px;
+        color: #eee;
+    }
+    .subtitle {
+        font-size: 1em;
+        font-weight: bold;
+    }
 }
 
 .shop-component {
     h4 {color: #eee;}
 }
+
+
+
+a.list-group-item {color: #fff;}
+a.list-group-item:hover {color: #555;}

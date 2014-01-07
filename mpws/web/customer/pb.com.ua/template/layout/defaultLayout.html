@@ -1,10 +1,5 @@
 {extends file=$OBJECT.SITE->objectTemplatePath_layout_defaultPublic}
 
-{block name="layoutResourcesCSS" append}
-    <link rel="stylesheet" type="text/css" href="//codeorigin.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="{$INFO.URL.STATIC_CUSTOMER}extras.css">
-{/block}
-
 {block name="pageWholeBefore"}
 <div class="wrapper">
 {/block}
@@ -38,7 +33,7 @@
                 <ul class="nav navbar-nav navbar-nav-plugins"></ul>
                 <form class="navbar-form navbar-right" role="search">
                 <div class="form-group">
-                <input type="text" class="form-control" placeholder="текст для пошуку">
+                <input type="text" class="form-control" placeholder="пошук">
                 </div>
                 <button type="button" class="btn btn-primary" data-action="shop:search"><span class="fa fa-search"></span></button>
                 </form>
@@ -48,34 +43,13 @@
 </header>
 {/block}
 
-
-
-
 {block name="pageBodyBefore"}
 <div class="breadcrumb-placeholder"></div>
 {/block}
 
+{block name="pageBody"}{/block}
 
-{block name="pageBody"}
-
-
-
-<!--     Product ID <input type="text" id="product-ID" data-key="id" data-target=".btn-product-details" size="4">
-
-    <a id="button1id" name="button1id" class="btn btn-success" href="#" >Take me home!</a>
-    <a id="button1id" name="button1id" class="btn btn-success" href="#shop/catalog" >Hello World! Get Catalog!</a>
-    <a id="button1id" name="button1id" class="btn btn-success btn-product-details" href="javascript://" data-href="#shop/product/:id" >Hello World! Get  Product!</a>
-    <a id="button1id" name="button1id" class="btn btn-danger" href="#shop/product/" >Hello World! Get 404!</a>
-    <div id="data-holder-ID">empty</div>
-    <div id="data-ID">empty</div> -->
-
-
-
-
-{/block}
-
-{block name="pageBodyAfter"}
-{/block}
+{block name="pageBodyAfter"}{/block}
 
 
 {block name="pageFooter"}
