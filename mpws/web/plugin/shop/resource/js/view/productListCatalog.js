@@ -42,23 +42,43 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
         initialize: function (options) {
 
             var _self = this;
+            var _filterOptions = null;
+            var _filterIsBusy = false;
 
             // extend parent
             MView.prototype.initialize.call(this, options);
 
-            var _urlData = this.model.getUrlData();
+            _self.on('mview:filter', function() {
+                // do not apply filter when previous is still running
+                if (_filterIsBusy)
+                    return;
+
+                _filterIsBusy = true;
+                _self.applyFiltering(_filterOptions);
+            })
 
             _self.on('mview:rendered', function () {
-                
-                _self.$el.find('#shopProductListFiltering_SortByID').val(_urlData.filter_viewSortBy);
-                _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val(_urlData.filter_viewItemsOnPage);
 
+                var _data = _self.model.get('data');
+
+                _filterOptions = _(_self.model.getUrlData()).clone();
+
+                // update filter options
+                _self.$el.find('#shopProductListFiltering_SortByID').val(_data.filterOptionsApplied.filter_viewSortBy);
+                _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val(_data.filterOptionsApplied.filter_viewItemsOnPage);
+
+                // filter dropdowns
                 var _filterDropdowns = _self.$el.find('.selectpicker').selectpicker();
-
                 _filterDropdowns.on('change', function () {
                     // app.log($(this).data('name'),  $(this).val());
-                    $.cookie('filter_viewSortBy', _self.$el.find('#shopProductListFiltering_SortByID').val());
-                    $.cookie('filter_viewItemsOnPage', _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val());
+                    
+                    _filterOptions['filter_viewSortBy'] = _self.$el.find('#shopProductListFiltering_SortByID').val();
+                    _filterOptions['filter_viewItemsOnPage'] = _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val();
+
+                    $.cookie('filter_viewSortBy', _filterOptions['filter_viewSortBy']);
+                    $.cookie('filter_viewItemsOnPage', _filterOptions['filter_viewItemsOnPage']);
+
+                    _self.trigger('mview:filter');
                 })
                 
                 // price range
@@ -68,6 +88,13 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
                     _self.$el.find('.shop-filter-price-start').text(_priceRange[0]);
                     _self.$el.find('.shop-filter-price-end').text(_priceRange[1]);
                 });
+
+                // filter button
+                _self.$el.find('.shop-apply-filter').on('click', function () {
+                    _self.trigger('mview:filter');
+                });
+
+                _filterIsBusy = false;
             });
         },
 

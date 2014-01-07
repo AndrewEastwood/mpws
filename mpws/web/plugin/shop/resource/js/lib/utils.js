@@ -16,7 +16,7 @@ APP.Modules.register("plugin/shop/lib/utils", [], [
             // add product into collection
             _products[pid] = data.products[pid];
             // get product attributes
-            var _attr = data.attributes && data.attributes[pid] || {};
+            var _attr = data.attributes && data.attributes[pid] ? _(data.attributes[pid]).clone() : {};
             // setup images
             var _images = {
                 HAS_MAIN: false,

@@ -302,10 +302,45 @@ class pluginShop extends objectBaseWebPlugin {
             return $dataObj;
         }
 
+        // set data source
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsByCategory['data']);
+        $dataObjConfig = $dataObj->getConfig();
 
+        // filtering
+        $filterOptionsAvailable = $this->_custom_util_getCategoryFilterOptions();
+        $filterOptionsApplied = $this->_custom_util_getCategoryFilterOptions();
+
+        $filterOptionsApplied['filter_commonPriceMax'] = getValue($params['filter_commonPriceMax'], null);
+        $filterOptionsApplied['filter_commonPriceMin'] = getValue($params['filter_commonPriceMin'], null);
+
+        $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
+        $filterOptionsApplied['filter_viewItemsOnPage'] = getValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']);
+
+        // adjust filters
+        $_filterItemsOnPage = abs(filter_var($filterOptionsApplied['filter_viewItemsOnPage'], FILTER_SANITIZE_NUMBER_INT));
+        if (!empty($_filterItemsOnPage))
+            $dataObjConfig['limit'] = $_filterItemsOnPage;
+        else
+            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataObjConfig['limit'];
+
+        $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
+        if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
+            $dataObjConfig['order'] = array('field' => $_filterSorting[0], 'ordering' => strtoupper($_filterSorting[1]));
+        else
+            $filterOptionsApplied['filter_viewItemsOnPage'] = null;
+
+
+        // update config
+        // var_dump($dataObjConfig);
+        $dataObj->setConfig($dataObjConfig);
+
+
+
+
+        // update conditions
         $dataObj->setValuesDbCondition($categoryId, MERGE_MODE_APPEND);
 
+        // get data with filter
         $products = $dataObj->process($params)->getData();
         
         if ($dataObj->isEmpty()) {
@@ -340,9 +375,7 @@ class pluginShop extends objectBaseWebPlugin {
         foreach ($attributes as $value)
             $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
 
-        // filtering
-        $filterOptionsAvailable = $this->_custom_util_getCategoryFilterOptions();
-        $filterOptionsApplied = array();
+
         // TODO:
         // get category brands
         // get category max and min price
@@ -385,7 +418,6 @@ class pluginShop extends objectBaseWebPlugin {
             "attributes" => $attributesMap,
             "filterOptionsApplied" => $filterOptionsApplied,
             "filterOptionsAvailable" => $filterOptionsAvailable,
-            "viewOptions" => array(),
             "info" => array(
                 "productsCount" => count($productsMap),
                 "currentCategoryID" => $categoryId

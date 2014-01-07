@@ -66,7 +66,7 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
             app.log('model ProductListCatalog parse', data);
 
             data.products = products;
-            delete data.attributes;
+            data.attributes;
 
             return data;
         }

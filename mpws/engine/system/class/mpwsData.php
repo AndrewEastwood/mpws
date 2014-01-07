@@ -56,13 +56,13 @@ class mpwsData {
                 continue;
             }
 
-            $classConigValue = $this->_config[$key];
+            $classConfigValue = $this->_config[$key];
 
-            if (is_array($classConigValue)) {
+            if (is_array($classConfigValue)) {
                 if ($useRecursiveMerge)
-                    $this->_config[$key] = array_merge_recursive($classConigValue, is_array($value) ? $value : array($value));
+                    $this->_config[$key] = array_merge_recursive($classConfigValue, is_array($value) ? $value : array($value));
                 else
-                    $this->_config[$key] = array_merge($classConigValue, is_array($value) ? $value : array($value));
+                    $this->_config[$key] = array_merge($classConfigValue, is_array($value) ? $value : array($value));
             }
             else
                 $this->_config[$key] = $value;

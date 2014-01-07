@@ -1,22 +1,20 @@
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-lg-3">
-            {{>shopProductListSubCategories}}
-            {{>shopProductListPresentation}}
-            {{>shopProductListFilter}}
-        </div>
-        <div class="col-sm-12 col-lg-9">
-            <div class="row">
-                {{#mpwsIsNotEmpty source.data.products }}
-                    {{#each source.data.products }}
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                        {{>productEntryViewList}}
-                    </div>
-                    {{/each}}
-                {{else}}
-                    <div class="alert alert-warning">Немає товарів в цій категорії</div>
-                {{/mpwsIsNotEmpty}}
-            </div>
+<div class="row">
+    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+        {{>shopProductListSubCategories}}
+        {{>shopProductListPresentation}}
+        {{>shopProductListFilter}}
+    </div>
+    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+        <div class="row">
+            {{#mpwsIsNotEmpty source.data.products }}
+                {{#each source.data.products }}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    {{>productEntryViewList}}
+                </div>
+                {{/each}}
+            {{else}}
+                <div class="alert alert-warning">Немає товарів в цій категорії</div>
+            {{/mpwsIsNotEmpty}}
         </div>
     </div>
 </div>
