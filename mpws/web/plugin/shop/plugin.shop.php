@@ -371,7 +371,7 @@ class pluginShop extends objectBaseWebPlugin {
         $filterOptionsApplied['filter_commonPriceMin'] = intval(getValue($params['filter_commonPriceMin'], 0));
 
         $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
-        $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']));
+        $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getNonEmptyValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']));
 
         // adjust filters
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -383,7 +383,7 @@ class pluginShop extends objectBaseWebPlugin {
         if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
             $dataObjConfig['order'] = array('field' => $dataObjConfig['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
         else
-            $filterOptionsApplied['filter_viewItemsOnPage'] = null;
+            $filterOptionsApplied['filter_viewSortBy'] = null;
 
         if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
             $dataObjConfig['condition']['filter'] .= " + Price (<) ?";

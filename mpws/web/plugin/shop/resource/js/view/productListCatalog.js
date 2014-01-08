@@ -59,17 +59,18 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
 
             _self.on('mview:rendered', function () {
 
+                _filterOptions = _(_self.model.getUrlData()).clone();
                 var _data = _self.model.get('data');
+
+                // update filter options
+                _self.$el.find('#shopProductListFiltering_SortByID').val(_data.filterOptionsApplied.filter_viewSortBy);
+                _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val(_data.filterOptionsApplied.filter_viewItemsOnPage);
 
                 // enchance ui components
                 var _filterPrice = _self.$el.find('.slider').slider();
                 var _filterDropdowns = _self.$el.find('.selectpicker').selectpicker();
 
-                _filterOptions = _(_self.model.getUrlData()).clone();
 
-                // update filter options
-                _self.$el.find('#shopProductListFiltering_SortByID').val(_data.filterOptionsApplied.filter_viewSortBy);
-                _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val(_data.filterOptionsApplied.filter_viewItemsOnPage);
 
                 // filter dropdowns
                 _filterDropdowns.on('change', function () {
