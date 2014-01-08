@@ -407,7 +407,7 @@
         protected static function _execute($query, $parameters = array(), $connection_name = self::DEFAULT_CONNECTION) {
             self::_log_query($query, $parameters, $connection_name);
             $statement = self::$_db[$connection_name]->prepare($query);
-            // var_dump($query);
+            // echo "/*" . $query . "*/" . PHP_EOL;
             // var_dump($parameters);
             self::$_last_statement = $statement;
             // var_dump($statement);

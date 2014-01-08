@@ -6,15 +6,20 @@ APP.Modules.register("plugin/shop/lib/utils", [], [
     function Utils () {};
 
     Utils.adjustProductEntry = function (data) {
-        var _products = {};
+        var _products = [];
 
         if (!data.products)
             return _products;
 
         // map all by product id
-        for (var pid in data.products) {
-            // add product into collection
-            _products[pid] = data.products[pid];
+        var _tmpProduct = null;
+
+        _(data.products).each(function(product) {
+
+            var pid = product.ID;
+            // _tmpProduct = 
+            // // add product into collection
+            // _products[pid] = data.products[pid];
             // get product attributes
             var _attr = data.attributes && data.attributes[pid] ? _(data.attributes[pid]).clone() : {};
             // setup images
@@ -44,15 +49,14 @@ APP.Modules.register("plugin/shop/lib/utils", [], [
 
             _attr.IMAGES = _images;
 
-            _products[pid]['ProductAttributes'] = _attr;
-        }
+            product['ProductAttributes'] = _attr;
 
-        // append price data
-        if (data.prices)
-            for (var pid in data.prices)
-                _products[pid]['ProductPrices'] = data.prices[pid] || {};
+            // append price data
+            if (data.prices && data.prices[pid])
+                product['ProductPrices'] = data.prices[pid];
+        });
 
-        return _products;
+        return data.products;
     }
 
     return Utils;

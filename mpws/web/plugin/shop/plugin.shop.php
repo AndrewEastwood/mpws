@@ -325,7 +325,7 @@ class pluginShop extends objectBaseWebPlugin {
 
         $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
         if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
-            $dataObjConfig['order'] = array('field' => $_filterSorting[0], 'ordering' => strtoupper($_filterSorting[1]));
+            $dataObjConfig['order'] = array('field' => $dataObjConfig['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
         else
             $filterOptionsApplied['filter_viewItemsOnPage'] = null;
 
@@ -358,7 +358,7 @@ class pluginShop extends objectBaseWebPlugin {
         // pluck product IDs and create product map
         foreach ($products as $value) {
             $productIDs[] = $value['ID'];
-            $productsMap[$value['ID']] = $value;
+            $productsMap[] = $value;
         }
 
         // configure product attribute object
