@@ -295,31 +295,87 @@ class pluginShop extends objectBaseWebPlugin {
 
         $categoryId = getValue($params['categoryId'], null);
 
+        // data
         $dataObj = new mpwsData();
-
-        if (!is_numeric($categoryId)) {
-            $dataObj->setDataError("Wrong category ID parameter");
-            return $dataObj;
-        }
-
-        // set data source
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsByCategory['data']);
-        $dataObjConfig = $dataObj->getConfig();
+        // mapped data (key is record's ID)
+        $productsMap = array();
+        $attributesMap = array();
 
         // filtering
         $filterOptionsAvailable = $this->_custom_util_getCategoryFilterOptions();
         $filterOptionsApplied = $this->_custom_util_getCategoryFilterOptions();
+        $pendingDbConditions = array();
 
-        $filterOptionsApplied['filter_commonPriceMax'] = getValue($params['filter_commonPriceMax'], null);
-        $filterOptionsApplied['filter_commonPriceMin'] = getValue($params['filter_commonPriceMin'], null);
+        $_result = array(
+            "error" => null,
+            "products" => &$productsMap,
+            "attributes" => &$attributesMap,
+            "filterOptionsApplied" => &$filterOptionsApplied,
+            "filterOptionsAvailable" => &$filterOptionsAvailable,
+            "info" => array(
+                "productsCount" => count(&$productsMap),
+                "currentCategoryID" => $categoryId
+            )
+        );
+
+        if (!is_numeric($categoryId)) {
+            $_result['error'] = "Wrong category ID parameter";
+            $dataObj->setData($_result);
+            return $dataObj;
+        }
+
+        // set data source
+        // ---
+        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsByCategory['data']);
+        $dataObjConfig = $dataObj->getConfig();
+
+        // TODO:
+        // get category brands
+        // get category max and min price
+        // get category specifications
+        // get category last added products
+        // get category popular products
+        //
+        // wow, here are lots of items to be completed
+
+        // grap all available filter options of running category
+        // ---
+        $dataCategoryBrands = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryBrands['data']);
+        $dataCategoryBrands->setValuesDbProcedure($categoryId);
+        $dataCategoryBrands->process($params);
+
+        $dataCategoryPriceEdges = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryPriceEdges['data']);
+        $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
+        $dataCategoryPriceEdges->process($params);
+
+        $dataCategorySubCategories = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategorySubCategories['data']);
+        $dataCategorySubCategories->setValuesDbProcedure($categoryId);
+        $dataCategorySubCategories->process($params);
+
+        // get max and min prices
+        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges->getData('PriceMax') ?: 0);
+        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges->getData('PriceMin') ?: 0);
+
+        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands->toDEFAULT();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories->toDEFAULT();
+
+        // remove empty categories
+        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $key => $value) {
+            if (empty($value['ProductCount']))
+                unset($filterOptionsAvailable['filter_categorySubCategories'][$key]);
+        }
+
+        // get and adjust requested filter options and apply to source
+        // ---
+        $filterOptionsApplied['filter_commonPriceMax'] = intval(getValue($params['filter_commonPriceMax'], 0));
+        $filterOptionsApplied['filter_commonPriceMin'] = intval(getValue($params['filter_commonPriceMin'], 0));
 
         $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
-        $filterOptionsApplied['filter_viewItemsOnPage'] = getValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']);
+        $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']));
 
         // adjust filters
-        $_filterItemsOnPage = abs(filter_var($filterOptionsApplied['filter_viewItemsOnPage'], FILTER_SANITIZE_NUMBER_INT));
-        if (!empty($_filterItemsOnPage))
-            $dataObjConfig['limit'] = $_filterItemsOnPage;
+        if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
+            $dataObjConfig['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
         else
             $filterOptionsApplied['filter_viewItemsOnPage'] = $dataObjConfig['limit'];
 
@@ -329,31 +385,44 @@ class pluginShop extends objectBaseWebPlugin {
         else
             $filterOptionsApplied['filter_viewItemsOnPage'] = null;
 
+        if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
+            $dataObjConfig['condition']['filter'] .= " + Price (<) ?";
+            $pendingDbConditions[] = 'filter_commonPriceMax';
+        } else
+            $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
 
-        // update config
-        // var_dump($dataObjConfig);
+        if ($filterOptionsApplied['filter_commonPriceMin'] > 0) {
+            $dataObjConfig['condition']['filter'] .= " + Price (>) ?";
+            $pendingDbConditions[] = 'filter_commonPriceMin';
+            // $dataObj->setValuesDbCondition($filterOptionsApplied['filter_commonPriceMin'], MERGE_MODE_APPEND);
+        } else
+            $filterOptionsApplied['filter_commonPriceMin'] = 0;
+
+        // update data config
+        // ---
         $dataObj->setConfig($dataObjConfig);
-
-
-
 
         // update conditions
         $dataObj->setValuesDbCondition($categoryId, MERGE_MODE_APPEND);
 
+        foreach ($pendingDbConditions as $filterKey)
+            $dataObj->setValuesDbCondition($filterOptionsApplied[$filterKey], MERGE_MODE_APPEND);
+
+        // var_dump($dataObj->getConfig($dataObjConfig));
+
         // get data with filter
+        // ---
         $products = $dataObj->process($params)->getData();
         
         if ($dataObj->isEmpty()) {
-            $dataObj->setDataError("No products");
+            $_result['error'] = "No products";
+            $dataObj->setData($_result);
+            // $dataObj->setDataError("No products");
             return $dataObj;
         }
 
         // list of product ids to fetch related attributes
         $productIDs = array();
-
-        // mapped data (key is record's ID)
-        $productsMap = array();
-        $attributesMap = array();
 
         // pluck product IDs and create product map
         foreach ($products as $value) {
@@ -371,58 +440,13 @@ class pluginShop extends objectBaseWebPlugin {
 
         // get product attributes and create map
         $attributes = $attributesObj->process()->getData();
-        // var_dump($attributes);
+
         foreach ($attributes as $value)
             $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
 
-
-        // TODO:
-        // get category brands
-        // get category max and min price
-        // get category specifications
-        // get category last added products
-        // get category popular products
-        //
-        // wow, here are lots of items to be completed
-
-        $dataCategoryBrands = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryBrands['data']);
-        $dataCategoryBrands->setValuesDbProcedure($categoryId);
-        $dataCategoryBrands->process($params);
-
-        $dataCategoryPriceEdges = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryPriceEdges['data']);
-        $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
-        $dataCategoryPriceEdges->process($params);
-
-        $dataCategorySubCategories = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategorySubCategories['data']);
-        $dataCategorySubCategories->setValuesDbProcedure($categoryId);
-        $dataCategorySubCategories->process($params);
-
-        // get max and min prices
-        $filterOptionsAvailable['filter_commonPriceMax'] = $dataCategoryPriceEdges->getData('PriceMax') ?: 0;
-        $filterOptionsAvailable['filter_commonPriceMin'] = $dataCategoryPriceEdges->getData('PriceMin') ?: 0;
-
-        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands->toDEFAULT();
-        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories->toDEFAULT();
-
-        // remove empty categories
-        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $key => $value) {
-            if (empty($value['ProductCount']))
-                unset($filterOptionsAvailable['filter_categorySubCategories'][$key]);
-        }
-
-        // var_dump($dataCategoryPriceEdges->getData());
-
         // update main data object
-        $dataObj->setData(array(
-            "products" => $productsMap,
-            "attributes" => $attributesMap,
-            "filterOptionsApplied" => $filterOptionsApplied,
-            "filterOptionsAvailable" => $filterOptionsAvailable,
-            "info" => array(
-                "productsCount" => count($productsMap),
-                "currentCategoryID" => $categoryId
-            )
-        ));
+        // ---
+        $dataObj->setData($_result);
 
         return $dataObj;
     }

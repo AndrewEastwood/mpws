@@ -30,9 +30,9 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
                 // so we just keep them here and render them at very top
                 // of the filter panel
 
-                filter_commonPriceMax: null,
+                filter_commonPriceMax: $.cookie('filter_commonPriceMax') || null,
 
-                filter_commonPriceMin: 0,
+                filter_commonPriceMin: $.cookie('filter_commonPriceMin') || null,
 
                 filter_commonAvailability: {},
 

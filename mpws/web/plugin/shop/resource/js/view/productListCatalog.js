@@ -61,6 +61,10 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
 
                 var _data = _self.model.get('data');
 
+                // enchance ui components
+                var _filterPrice = _self.$el.find('.slider').slider();
+                var _filterDropdowns = _self.$el.find('.selectpicker').selectpicker();
+
                 _filterOptions = _(_self.model.getUrlData()).clone();
 
                 // update filter options
@@ -68,25 +72,32 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
                 _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val(_data.filterOptionsApplied.filter_viewItemsOnPage);
 
                 // filter dropdowns
-                var _filterDropdowns = _self.$el.find('.selectpicker').selectpicker();
                 _filterDropdowns.on('change', function () {
                     // app.log($(this).data('name'),  $(this).val());
                     
-                    _filterOptions['filter_viewSortBy'] = _self.$el.find('#shopProductListFiltering_SortByID').val();
-                    _filterOptions['filter_viewItemsOnPage'] = _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val();
+                    _filterOptions.filter_viewSortBy = _self.$el.find('#shopProductListFiltering_SortByID').val();
+                    _filterOptions.filter_viewItemsOnPage = _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val();
 
-                    $.cookie('filter_viewSortBy', _filterOptions['filter_viewSortBy']);
-                    $.cookie('filter_viewItemsOnPage', _filterOptions['filter_viewItemsOnPage']);
+                    $.cookie('filter_viewSortBy', _filterOptions.filter_viewSortBy);
+                    $.cookie('filter_viewItemsOnPage', _filterOptions.filter_viewItemsOnPage);
 
                     _self.trigger('mview:filter');
                 })
                 
                 // price range
-                var _filterPrice = _self.$el.find('.slider').slider();
                 _filterPrice.on('slideStop', function(){
                     var _priceRange = $(this).data('value');
-                    _self.$el.find('.shop-filter-price-start').text(_priceRange[0]);
-                    _self.$el.find('.shop-filter-price-end').text(_priceRange[1]);
+                    
+                    _filterOptions.filter_commonPriceMin = _priceRange[0];
+                    _filterOptions.filter_commonPriceMax = _priceRange[1];
+
+                    $.cookie('filter_commonPriceMin', _filterOptions.filter_commonPriceMin);
+                    $.cookie('filter_commonPriceMax', _filterOptions.filter_commonPriceMax);
+
+                    _self.$el.find('.shop-filter-price-start').text(_filterOptions.filter_commonPriceMin);
+                    _self.$el.find('.shop-filter-price-end').text(_filterOptions.filter_commonPriceMax);
+
+                    _self.trigger('mview:filter');
                 });
 
                 // filter button
