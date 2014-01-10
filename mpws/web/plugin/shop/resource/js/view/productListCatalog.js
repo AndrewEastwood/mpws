@@ -66,10 +66,12 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
                 // update (restore) filter options by server applied filter
                 _self.$el.find('#shopProductListFiltering_SortByID').val(_data.filterOptionsApplied.filter_viewSortBy);
                 _self.$el.find('#shopProductListDisplayItems_DisplayCountID').val(_data.filterOptionsApplied.filter_viewItemsOnPage);
-                _(_data.filterOptionsApplied.filter_categoryBrands).each(function (brandID){
-                    var _brandItem = _self.$el.find('input[name="shopFilterBrand"][value="' + brandID + '"]');
-                    if (_brandItem.length)
-                        _brandItem.prop('checked', 'checked').attr('checked', 'checked');
+                _self.$el.find('input[name^="filter_"]').each(function(){
+                    var _targetFilterName = $(this).attr('name');
+                    var _targetFilterValue = $(this).val();
+
+                    if (_(_data.filterOptionsApplied[_targetFilterName]).indexOf(_targetFilterValue) >= 0)
+                        $(this).prop('checked', 'checked').attr('checked', 'checked');
                 });
 
                 // enhance ui components
@@ -105,14 +107,18 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
                     _self.trigger('mview:filter');
                 });
 
+                // product availability
+                // product on sale types
                 // product origins
-                _self.$el.find('input[name="shopFilterBrand"]').on('change', function () {
-                    if ($(this).is(':checked'))
-                        _filterOptions.filter_categoryBrands.push($(this).val());
-                    else
-                        _filterOptions.filter_categoryBrands = _.without(_filterOptions.filter_categoryBrands, $(this).val());
+                _self.$el.find('input[name^="filter_"]').on('change', function () {
+                    var _targetFilterName = $(this).attr('name');
 
-                    $.cookie('filter_categoryBrands', _filterOptions.filter_categoryBrands, {path: Backbone.history.fragment});
+                    if ($(this).is(':checked'))
+                        _filterOptions[_targetFilterName].push($(this).val());
+                    else
+                        _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(this).val());
+
+                    $.cookie(_targetFilterName, _filterOptions[_targetFilterName], {path: Backbone.history.fragment});
 
                     _self.trigger('mview:filter');
                 });

@@ -372,6 +372,8 @@ class pluginShop extends objectBaseWebPlugin {
         // ---
         $filterOptionsApplied['filter_commonPriceMax'] = intval(getValue($params['filter_commonPriceMax'], 0));
         $filterOptionsApplied['filter_commonPriceMin'] = intval(getValue($params['filter_commonPriceMin'], 0));
+        $filterOptionsApplied['filter_commonAvailability'] = getValue($params['filter_commonAvailability'], array());
+        $filterOptionsApplied['filter_commonOnSaleTypes'] = getValue($params['filter_commonOnSaleTypes'], array());
 
         $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
         $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getNonEmptyValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']));

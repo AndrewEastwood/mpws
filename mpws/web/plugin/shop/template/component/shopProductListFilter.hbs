@@ -13,7 +13,7 @@
             {{#each source.data.filterOptionsAvailable.filter_commonAvailability }}
             <div>
                 <label>
-                    <input type="checkbox" value="{{this}}" name="shopFilterAvailability">
+                    <input type="checkbox" value="{{this}}" name="filter_commonAvailability">
                     {{this}}
                 </label>
             </div>
@@ -31,7 +31,7 @@
             {{#each source.data.filterOptionsAvailable.filter_commonOnSaleTypes }}
             <div>
                 <label>
-                    <input type="checkbox" value="{{this}}" name="shopFilterOnSaleTypes">
+                    <input type="checkbox" value="{{this}}" name="filter_commonOnSaleTypes">
                     {{this}}
                 </label>
             </div>
@@ -69,7 +69,7 @@
             {{#each source.data.filterOptionsAvailable.filter_categoryBrands }}
             <div>
                 <label>
-                    <input type="checkbox" value="{{ID}}" name="shopFilterBrand">
+                    <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
                     {{Name}}
                 </label>
             </div>
@@ -87,7 +87,7 @@
             {{#each source.data.filterOptionsAvailable.filter_categorySpecifications }}
             <div>
                 <label>
-                    <input type="checkbox" value="{{ID}}" name="shopFilterSpecID_{{ID}}">
+                    <input type="checkbox" value="{{ID}}" name="filter_categorySpecifications">
                     {{Name}}
                 </label>
             </div>
