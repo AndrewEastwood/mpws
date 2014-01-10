@@ -158,7 +158,7 @@ class mpwsData {
 
     // configuration helpers
     public function setValuesDbCondition ($values, $mode = MERGE_MODE_REPLACE) {
-        if (!is_array($values))
+        // if (!is_array($values))
             $values = array($values);
 
         // echo '<br>setValuesDbCondition >>>>>>>>><br>';

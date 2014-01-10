@@ -107,9 +107,7 @@ APP.Modules.register("model/mmodel", [], [
                     // if (data)
                     //     data = JSON.parse(data);
                     // else
-                        data = data || {};
-                    data = self.parse(data);
-                    self.attributes.data = data;
+                    self.attributes.data = self.parse(data || {});
                     self.trigger('mmodel:newdata', data);
                 }
             });

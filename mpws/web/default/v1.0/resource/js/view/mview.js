@@ -104,7 +104,6 @@ APP.Modules.register("view/mview", [], [
                 // compose template data
                 var _tplData = {
                     app: {
-                        test: 'test',
                         config: _config,
                         location: {
                             fragment: Backbone.history.fragment

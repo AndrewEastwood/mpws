@@ -355,9 +355,12 @@ class pluginShop extends objectBaseWebPlugin {
         // get max and min prices
         $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges->getData('PriceMax') ?: 0);
         $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges->getData('PriceMin') ?: 0);
+        $filterOptionsAvailable['filter_commonAvailability'] = array("AVAILABLE", "OUTOFSTOCK", "COMINGSOON");
+        $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
 
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands->toDEFAULT();
         $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories->toDEFAULT();
+
 
         // remove empty categories
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $key => $value) {
@@ -372,6 +375,8 @@ class pluginShop extends objectBaseWebPlugin {
 
         $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
         $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getNonEmptyValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']));
+
+        $filterOptionsApplied['filter_categoryBrands'] = getValue($params['filter_categoryBrands'], array());
 
         // adjust filters
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -394,9 +399,15 @@ class pluginShop extends objectBaseWebPlugin {
         if ($filterOptionsApplied['filter_commonPriceMin'] > 0) {
             $dataObjConfig['condition']['filter'] .= " + Price (>) ?";
             $pendingDbConditions[] = 'filter_commonPriceMin';
-            // $dataObj->setValuesDbCondition($filterOptionsApplied['filter_commonPriceMin'], MERGE_MODE_APPEND);
         } else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
+
+        // var_dump($filterOptionsApplied['filter_categoryBrands']);
+
+        if (count($filterOptionsApplied['filter_categoryBrands']) > 0) {
+            $dataObjConfig['condition']['filter'] .= " + OriginID (IN) ?";
+            $pendingDbConditions[] = 'filter_categoryBrands';
+        }
 
         // update data config
         // ---

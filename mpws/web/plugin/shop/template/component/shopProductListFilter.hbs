@@ -4,15 +4,50 @@
     </div>
     <div class="content row">
 
-        {{!-- {{#gt source.data.filterOptionsAvailable.filter_commonPriceMax "1" }} --}}
+        {{#mpwsIsNotEmpty source.data.filterOptionsAvailable.filter_commonAvailability }}
         <div class="spacer"></div>
         <div class="subtitle row">
-            Ціна: 
-            (
+            Наявність:
+        </div>
+        <div class="row">
+            {{#each source.data.filterOptionsAvailable.filter_commonAvailability }}
+            <div>
+                <label>
+                    <input type="checkbox" value="{{this}}" name="shopFilterAvailability">
+                    {{this}}
+                </label>
+            </div>
+            {{/each}}
+        </div>
+        <div class="spacer"></div>
+        {{/mpwsIsNotEmpty}}
+
+        {{#mpwsIsNotEmpty source.data.filterOptionsAvailable.filter_commonOnSaleTypes }}
+        <div class="spacer"></div>
+        <div class="subtitle row">
+            Пропозиції:
+        </div>
+        <div class="row">
+            {{#each source.data.filterOptionsAvailable.filter_commonOnSaleTypes }}
+            <div>
+                <label>
+                    <input type="checkbox" value="{{this}}" name="shopFilterOnSaleTypes">
+                    {{this}}
+                </label>
+            </div>
+            {{/each}}
+        </div>
+        <div class="spacer"></div>
+        {{/mpwsIsNotEmpty}}
+
+        {{#isnt source.data.filterOptionsAvailable.filter_commonPriceMax source.data.filterOptionsAvailable.filter_commonPriceMin }}
+        <div class="spacer"></div>
+        <div class="subtitle row">
+            Ціна: (
                 <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt source.data.filterOptionsApplied.filter_commonPriceMin}}</span>
                 <span>-</span>
                 <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt source.data.filterOptionsApplied.filter_commonPriceMax}}</span>
-            )
+            ) грн.
         </div>
         <div class="row">
             <input type="text" class="form-control slider" value=""
@@ -23,7 +58,7 @@
                 data-slider-selection="after">
         </div>
         <div class="spacer"></div>
-        {{!-- {{/gt}} --}}
+        {{/isnt}}
 
         {{#mpwsIsNotEmpty source.data.filterOptionsAvailable.filter_categoryBrands }}
         <div class="spacer"></div>
@@ -34,7 +69,7 @@
             {{#each source.data.filterOptionsAvailable.filter_categoryBrands }}
             <div>
                 <label>
-                    <input type="checkbox" value="{{ID}}" name="shopFilterBrandID_{{ID}}">
+                    <input type="checkbox" value="{{ID}}" name="shopFilterBrand">
                     {{Name}}
                 </label>
             </div>

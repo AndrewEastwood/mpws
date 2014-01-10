@@ -34,17 +34,17 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
 
                 filter_commonPriceMin: $.cookie('filter_commonPriceMin') || null,
 
-                filter_commonAvailability: {},
+                filter_commonAvailability: $.cookie('filter_commonAvailability') ? $.cookie('filter_commonAvailability').split(',') : [],
 
-                filter_commonOnSaleTypes: {},
+                filter_commonOnSaleTypes: $.cookie('filter_commonOnSaleTypes') ? $.cookie('filter_commonOnSaleTypes').split(',') : [],
 
                 // category based (use specifications of current category)
                 // these options have category specific options and they are
                 // being rendered under the common options
 
-                filter_categoryBrands: [],
+                filter_categoryBrands: $.cookie('filter_categoryBrands') ? $.cookie('filter_categoryBrands').split(',') : [],
 
-                filter_categorySubCategories: [],
+                // filter_categorySubCategories: [],
 
                 filter_categorySpecifications: []
 
