@@ -1,67 +1,17 @@
 Options +FollowSymLinks
-RewriteEngine on
+RewriteEngine On
 RewriteBase /
+DirectoryIndex /engine/dispatcher/dispatcher.Index.php
 
-############# DATA ACCESS #############
-# -- session data (temp data files)
-RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]
-# -- get data file locked for owner
-RewriteRule storage/(....)-(..)-(..)-(.*)/(.*)? /data/uploads/$1-$2-$3/$4/$5 [QSA]
+# STATIC:
+RewriteRule static_dev/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
+RewriteRule static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/build/$1/$2/$3 [L]
 
-
-
-
-## ############# STATIC RESOURCES #############
-## # -- css and javascript
-## RewriteRule static/icons/([A-Za-z0-9_-]+).(gif|png|jpeg|jpg)   /engine/dispatcher/dispatcher.Static.php?request=image&action=default&realm=common&name=icons\%2F$1&type=$2$3 [QSA]
-## # -- wysiwyg integration
-## RewriteRule static/wysiwyg/([A-Za-z0-9_-]+)/(.*).(css|js|gif|png|htm)   /engine/dispatcher/dispatcher.Static.php?request=wysiwyg&action=default&realm=common&name=$1&path=$2&type=$3 [QSA]
-## # -- 
-
-
-RewriteRule static/(i|p|_)/(customer|plugin)/([\.A-Za-z0-9_-]+)/([\.\\/A-Za-z0-9_-]+)\.(gif|png|jpeg|jpg|css|js|hbs|woff|eot|ttf)?(.*) /engine/dispatcher/dispatcher.Static.php?request=image&action=default&access=$1&object=$2&name=$3&resource=$4&type=$5$6 [QSA]
-
-
-
-
-
-
-# -- 
-# RewriteRule static/([A-Za-z0-9_-]+).(gif|png|jpeg|jpg)?(.*)   /engine/dispatcher/dispatcher.Static.php?request=image&action=default&realm=common&name=$1&type=$2 [QSA]
-
-
-
-# -- Common Api Requests
-#RewriteRule /api.js?(.*)   /engine/dispatcher/dispatcher.Api.php?action=api$2 [QSA]
+# API
 RewriteRule ^api\.js   /engine/dispatcher/dispatcher.Api.php?action=api [L]
 
-
-
-
-############# COMMON #############
-
-
-
-
-############# ADMIN #############
-#RewriteRule mpws/(\w+).html?(.*) /engine/dispatcher/dispatcher.Toolbox.php?page=$1&action=default$2 [QSA]
-
-
-
-
-############# WEB #############
-# -- startup file
-DirectoryIndex /engine/dispatcher/dispatcher.Public.php?page=index&action=default
-# -- public pages
-RewriteRule page/([a-z\-_]+).html?(.*) /engine/dispatcher/dispatcher.Public.php?page=$1&action=default$2 [QSA]
-# -- custom pages
-#RewriteRule page/purchase.php?(.*) /engine/dispatcher/dispatcher.Public.php?page=purchase&action=default$2 [QSA]
-
-
-
-
-############# TOOLING #############
-# -- services
-RewriteRule service/internal/(.*).php?(.*) /tooling/$1/index.php?$2 [QSA]
-# -- public services
-RewriteRule service/public/(.*).php?(.*) /tooling/public/$1.php?$2 [QSA]
+# SERVICES:
+#RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]
+#RewriteRule storage/(....)-(..)-(..)-(.*)/(.*)? /data/uploads/$1-$2-$3/$4/$5 [QSA]
+#RewriteRule service/internal/(.*).php?(.*) /tooling/$1/index.php?$2 [QSA]
+#RewriteRule service/public/(.*).php?(.*) /tooling/public/$1.php?$2 [QSA]

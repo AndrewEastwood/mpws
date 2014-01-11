@@ -9,7 +9,7 @@
     // detect running customer name
     define('MPWS_CUSTOMER', getCustomer());
     // evironment version
-    define('MPWS_VERSION', 'v1.0');
+    define('MPWS_VERSION', 'atlantis');
     // evironment mode
     // set PROD | DEV
     define('MPWS_ENV', 'DEV');
@@ -24,7 +24,7 @@
 
     //error_reporting(E_ERROR | E_WARNING | E_PARSE);
     error_reporting(E_ALL);
-    ini_set("display_errors", getDebugLevel());
+    ini_set("display_errors", 1);
     
     function getDocumentRoot () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);

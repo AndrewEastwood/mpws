@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/css/bootstrap.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body class="MPWSPage">
+
+    <div class="MPWSLayout row">
+        <div class="MPWSPageHeader"></div>
+        <div class="MPWSPageBody"></div>
+        <div class="MPWSPageFooter"></div>
+    </div>
+
+<div class="static-content-wrapper render-hidden" title="page basic javascript container">
+    <script type="text/javascript" data-main="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/js/loader.js" src="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/js/lib/require.js"></script>
+    <script type="text/javascript" id="system">
+        window.MPWS = {{SYSTEMJS}};
+    </script>
+</div>
+
+</body>
+</html>

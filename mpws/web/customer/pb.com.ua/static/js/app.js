@@ -1,13 +1,24 @@
-APP.Modules.register("router/customer", [], [
+// APP.Modules.register("router/customer", [], [
 
-    'lib/jquery',
-    'lib/underscore',
-    'lib/backbone',
-    'lib/mpws.page',
+//     'lib/jquery',
+//     'lib/underscore',
+//     'lib/backbone',
+//     'lib/mpws.page',
+//     'plugin/shop/router/shopPublic',
+//     // 'lib/mpws.ui',
+
+// ], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
+
+define("customer/js/app", [
+
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/lib/backbone',
+    'default/js/lib/mpws.page',
     'plugin/shop/router/shopPublic',
-    // 'lib/mpws.ui',
 
-], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
+], function ($, _, Backbone, mpwsPage, pluginShopRouter) {
+
 
     // app.log('TROLOLOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 

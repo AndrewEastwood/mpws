@@ -20,8 +20,8 @@ class contextMPWS {
         // get context object
         if (startsWith($name, OBJECT_T_CONTEXT))
             return $this->getContext(str_replace(OBJECT_T_CONTEXT, '', $name));
-        if ($name === 'pageModel')
-            return $this->getPageModel();
+        // if ($name === 'pageModel')
+        //     return $this->getPageModel();
     }
     
     public static function instance () {
@@ -125,9 +125,9 @@ class contextMPWS {
         return $prev;
     }
     
-    private function getPageModel () {
-        return libraryWebPageModel::instance();
-    }
+    // private function getPageModel () {
+    //     return libraryWebPageModel::instance();
+    // }
     
     /* public */
     
