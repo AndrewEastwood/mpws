@@ -1,10 +1,7 @@
-APP.Modules.register("lib/bootstrap-slider", [
-    /* import globals */
-    window
-], [
-    'lib/jquery'
+define("default/js/lib/bootstrap-slider", [
+    'cmn_jquery'
     /* component implementation */
-], function (window, app, Sandbox, jQuery) {
+], function (jQuery) {
 
 /* =========================================================
  * bootstrap-slider.js v2.0.0

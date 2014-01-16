@@ -1,11 +1,8 @@
-APP.Modules.register("lib/utils", [
-    /* import globals */
-    window
-], [
-    'lib/jquery',
-    'lib/underscore'
+define("default/js/lib/utils", [
+    'cmn_jquery',
+    'default/js/lib/underscore'
     /* component implementation */
-], function(window, app, Sandbox, $, _) {
+], function ($, _) {
 
     function Utils () {}
 
@@ -159,6 +156,42 @@ APP.Modules.register("lib/utils", [
         });
 
     }
+
+    // cross-browser log function
+    function log (s) {
+        var args = [].slice.call(arguments);
+        var isDebugMsg = (args.length >= 2 && typeof args[0] === 'boolean');
+
+        if (isDebugMsg && !_app.Page.isDebugEnabled())
+            return;
+
+        if (isDebugMsg)
+            args.shift();
+
+        var msg = args.join(" ");
+
+        if (window.console && console.log && !console.log.isDummy) {
+            if (document.all) {
+                console.log(msg);  // Internet Explorer 8+
+            } else {
+                console.log.apply(console, args);  // Firefox, Safari, Chrome
+            }
+        } else if (window.Debug && Debug.writeln) {
+            Debug.writeln(msg);  // Internet Explorer 6, 7
+        } else if (window.opera && opera.postError) {
+            opera.postError(msg);  // Opera
+        }
+    }
+
+    // creates dummy log object to avoid execptions related to console.log access
+    if (typeof console === "undefined") {
+        console = {};
+        console.log = function() {}
+        console.log.isDummy = true;
+    }
+
+    // append logger fn
+    Utils.log = log;
 
     // source: http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
     Utils.getTreeByJson = function (nodes, idKey, parentKey) {

@@ -1,9 +1,4 @@
-APP.Modules.register("lib/jquery", [
-    /* import globals */
-    window
-], [
-    /* component implementation */
-], function(window, app, Sandbox) {
+define("cmn_jquery", function() {
 
 	/*!
 	 * jQuery JavaScript Library v1.9.1

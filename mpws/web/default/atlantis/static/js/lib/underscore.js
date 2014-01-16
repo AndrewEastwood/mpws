@@ -1,9 +1,4 @@
-APP.Modules.register("lib/underscore", [
-    /* import globals */
-    window
-], [
-    /* component implementation */
-], function(window, app, Sandbox) {
+define("default/js/lib/underscore", function() {
 
 //     Underscore.js 1.5.1
 //     http://underscorejs.org

@@ -1,10 +1,10 @@
-APP.Modules.register("plugin/shop/model/productListCatalog", [], [
-    'lib/underscore',
-    'model/mmodel',
-    'plugin/shop/lib/utils',
+define("plugin/shop/js/model/productListCatalog", [
+    'default/js/lib/underscore',
+    'default/js/model/mmodel',
+    'plugin/shop/js/lib/utils',
     /* js extensions */
-    'lib/jquery.cookie',
-], function (app, Sandbox, _, MModel, shopUtils) {
+    'default/js/lib/jquery.cookie',
+], function (_, MModel, shopUtils) {
 
     var ProductListCatalog = MModel.extend({
 
@@ -55,7 +55,7 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
 
             // TODO: update url data with cookies
 
-            app.log('model ProductListCatalog initialize', this, options);
+            // app.log('model ProductListCatalog initialize', this, options);
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
 
         },
@@ -63,7 +63,7 @@ APP.Modules.register("plugin/shop/model/productListCatalog", [], [
         parse: function (data) {
 
             var products = shopUtils.adjustProductEntry(data);
-            app.log('model ProductListCatalog parse', data);
+            // app.log('model ProductListCatalog parse', data);
 
             data.products = products;
             data.attributes;

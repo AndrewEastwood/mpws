@@ -1,11 +1,8 @@
-APP.Modules.register("lib/bootstrap-combobox", [
-    /* import globals */
-    window
-], [
-  'lib/jquery',
-  'lib/underscore'
+define("default/js/lib/bootstrap-combobox", [
+  'cmn_jquery',
+  'default/js/lib/underscore'
     /* component implementation */
-], function(window, app, Sandbox, jQuery, _) {
+], function(jQuery, _) {
 /*!
  * bootstrap-select v1.3.5
  * http://silviomoreto.github.io/bootstrap-select/

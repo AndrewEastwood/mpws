@@ -1,13 +1,10 @@
 /* Simple native bridge to 3dp template engine
  * --------
  */
-APP.Modules.register("lib/handlebars_helpers", [
-    /* import globals */
-    window
-], [
-    'lib/underscore',
-    'lib/handlebars',
-], function (wnd, app, Sandbox, _, Handlebars) {
+define("default/js/lib/handlebars_helpers", [
+    'default/js/lib/underscore',
+    'default/js/lib/handlebars',
+], function (_, Handlebars) {
     // The module to be exported
     var helpers = {
         contains: function (str, pattern, options) {

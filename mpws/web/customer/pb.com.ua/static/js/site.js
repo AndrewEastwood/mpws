@@ -9,13 +9,13 @@
 
 // ], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
 
-define("customer/js/app", [
+define("customer/js/site", [
 
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/mpws.page',
-    'plugin/shop/router/shopPublic',
+    'plugin/shop/js/site',
 
 ], function ($, _, Backbone, mpwsPage, pluginShopRouter) {
 
@@ -84,38 +84,14 @@ define("customer/js/app", [
 
     // init all available plugins here
     var pluginShopRouterLib = new pluginShopRouter({
-        breadcrumb: {
-            el: $('.breadcrumb-placeholder'),
-            placement: mpwsPage.PLACEMENT.APPEND
-        },
-        catalogStructureMenu: {
-            el: $('header .navbar-nav-main'),
-            placement: mpwsPage.PLACEMENT.APPEND
-        },
-        productListOverview: {
-            el: mpwsPage.getPageBody(),
-            placement: mpwsPage.PLACEMENT.REPLACE
-        },
-        productEntryStandalone: {
-            el: mpwsPage.getPageBody(),
-            placement: mpwsPage.PLACEMENT.REPLACE
-        },
-        shoppingCartStandalone: {
-            el: mpwsPage.getPageBody(),
-            placement: mpwsPage.PLACEMENT.REPLACE
-        },
-        shoppingCartEmbedded: {
-            el: $('header .navbar-nav-plugins'),
-            placement: mpwsPage.PLACEMENT.APPEND
-        },
-        shoppingCartCheckout: {
-            el: mpwsPage.getPageBody(),
-            placement: mpwsPage.PLACEMENT.REPLACE
-        },
-        productListCatalog: {
-            el: mpwsPage.getPageBody(),
-            placement: mpwsPage.PLACEMENT.REPLACE
-        }
+        breadcrumb: $('.breadcrumb-placeholder'),
+        catalogStructureMenu: $('header .navbar-nav-main'),
+        productListOverview: mpwsPage.getPageBody(),
+        productEntryStandalone: mpwsPage.getPageBody(),
+        shoppingCartStandalone: mpwsPage.getPageBody(),
+        shoppingCartEmbedded: $('header .navbar-nav-plugins'),
+        shoppingCartCheckout: mpwsPage.getPageBody(),
+        productListCatalog: mpwsPage.getPageBody()
     });
 
     Backbone.history.start();  // Запускаем HTML5 History push

@@ -1,11 +1,11 @@
-APP.Modules.register("plugin/shop/view/catalogStructureMenu", [], [
-    'lib/jquery',
-    'lib/underscore',
-    'view/mview',
-    'plugin/shop/model/catalogStructureMenu',
+define("plugin/shop/js/view/catalogStructureMenu", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/view/mview',
+    'plugin/shop/js/model/catalogStructureMenu',
     /* ui components */
-    'lib/bootstrap'
-], function (app, Sandbox, $, _, MView, modelCatalogStructureMenu) {
+    'default/js/lib/bootstrap'
+], function ($, _, MView, modelCatalogStructureMenu) {
 
     var CatalogStructureMenu = MView.extend({
 
@@ -13,7 +13,7 @@ APP.Modules.register("plugin/shop/view/catalogStructureMenu", [], [
 
         model: new modelCatalogStructureMenu(),
 
-        template: 'plugin.shop.component.catalogStructureMenu@hbs',
+        template: 'plugin/shop/hbs/component/catalogStructureMenu.hbs',
 
         initialize: function (options) {
             // extend parent

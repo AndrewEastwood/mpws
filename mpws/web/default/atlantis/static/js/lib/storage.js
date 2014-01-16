@@ -1,14 +1,10 @@
 // it is the base page router
 
-APP.Modules.register("lib/storage", [
-    /* import globals */
-    window
-
-], [
-  'lib/jquery',
-  'lib/underscore'
+define("default/js/lib/storage", [
+  'cmn_jquery',
+  'default/js/lib/underscore'
     /* component implementation */
-], function (window, app, Sandbox, jQuery, _) {
+], function (jQuery, _) {
 
     var _cache = {};
 

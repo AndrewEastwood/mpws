@@ -1,9 +1,9 @@
-APP.Modules.register("plugin/shop/lib/shop", [], [
-    'lib/jquery',
-    'lib/mpws.api',
-    'lib/utils',
-    'lib/underscore',
-], function (app, Sandbox, $, mpwsAPI, Utils, _) {
+define("plugin/shop/js/lib/shop", [
+    'cmn_jquery',
+    'default/js/lib/mpws.api',
+    'default/js/lib/utils',
+    'default/js/lib/underscore',
+], function ($, mpwsAPI, Utils, _) {
 
     var _logPrefix = '[plugin/shop/lib/driver] : ';
 

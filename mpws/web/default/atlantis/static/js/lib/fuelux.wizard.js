@@ -1,18 +1,13 @@
 // it is the base page router
 
-APP.Modules.register("lib/fuelux.wizard", [
-    /* import globals */
-    window
-
-], [
-
+define("default/js/lib/fuelux.wizard", [
     /* import dep packages */
-    'lib/jquery',
+    'cmn_jquery',
     // 'lib/backbone',
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function(wnd, app, Sandbox, $) {
+], function ($) {
 
 /*
  * Fuel UX Wizard

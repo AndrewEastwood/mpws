@@ -1,10 +1,7 @@
-APP.Modules.register("lib/jquery.cookie", [
-    /* import globals */
-    window
-], [
-    'lib/jquery'
+define("default/js/lib/jquery.cookie", [
+    'cmn_jquery'
     /* component implementation */
-], function (window, app, Sandbox, $) {
+], function ($) {
 
 /*!
  * jQuery Cookie Plugin v1.4.0

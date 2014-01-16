@@ -1,10 +1,10 @@
-APP.Modules.register("plugin/shop/view/breadcrumb", [], [
-    'lib/jquery',
-    'lib/underscore',
-    'view/mview',
-    'plugin/shop/model/breadcrumb',
-    'lib/bootstrap'
-], function (app, Sandbox, $, _, MView, modelBreadcrumb) {
+define("plugin/shop/js/view/breadcrumb", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/view/mview',
+    'plugin/shop/js/model/breadcrumb',
+    'default/js/lib/bootstrap'
+], function ($, _, MView, modelBreadcrumb) {
 
     var Breadcrumb = MView.extend({
 
@@ -12,7 +12,7 @@ APP.Modules.register("plugin/shop/view/breadcrumb", [], [
 
         model: new modelBreadcrumb(),
 
-        template: 'plugin.shop.component.breadcrumb@hbs',
+        template: 'plugin/shop/hbs/component/breadcrumb.hbs',
 
         initialize: function (options) {
             // extend parent

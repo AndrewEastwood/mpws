@@ -1,11 +1,8 @@
-APP.Modules.register("lib/jquery_ui", [
-    /* import globals */
-    window
-], [
+define("default/js/lib/jquery_ui", [
     /* import dep packages */
-    'lib/jquery',
+    'cmn_jquery',
     /* component implementation */
-], function(window, app, Sandbox, jQuery) {
+], function (jQuery) {
 
 /*! jQuery UI - v1.10.3 - 2013-05-03
 * http://jqueryui.com

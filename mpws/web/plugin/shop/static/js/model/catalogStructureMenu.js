@@ -1,8 +1,8 @@
-APP.Modules.register("plugin/shop/model/catalogStructureMenu", [], [
-    'lib/underscore',
-    'model/mmodel',
-    'lib/utils'
-], function (app, Sandbox, _, MModel, Utils) {
+define("plugin/shop/js/model/catalogStructureMenu", [
+    'default/js/lib/underscore',
+    'default/js/model/mmodel',
+    'default/js/lib/utils'
+], function (_, MModel, Utils) {
 
     var CatalogStructureMenu = MModel.extend({
 
@@ -16,7 +16,7 @@ APP.Modules.register("plugin/shop/model/catalogStructureMenu", [], [
 
         initialize: function (options) {
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            app.log(true, 'CatalogStructureMenu model initialize', this);
+            // app.log(true, 'CatalogStructureMenu model initialize', this);
         },
 
         parse: function (data) {

@@ -1,13 +1,13 @@
-APP.Modules.register("plugin/shop/view/productEntryStandalone", [], [
-    'lib/jquery',
-    'view/mview',
-    'plugin/shop/model/productEntryStandalone',
+define("plugin/shop/js/view/productEntryStandalone", [
+    'cmn_jquery',
+    'default/js/view/mview',
+    'plugin/shop/js/model/productEntryStandalone',
     /* ui components */
-    'lib/bootstrap',
-    'lib/bootstrap-combobox',
-    'lib/bootstrap-magnify',
-    'lib/lightbox'
-], function (app, Sandbox, $, MView, modelProductEntryStandalone) {
+    'default/js/lib/bootstrap',
+    'default/js/lib/bootstrap-combobox',
+    'default/js/lib/bootstrap-magnify',
+    'default/js/lib/lightbox'
+], function ($, MView, modelProductEntryStandalone) {
 
     var ProductEntryStandalone = MView.extend({
 

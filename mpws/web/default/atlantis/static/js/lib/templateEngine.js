@@ -2,33 +2,10 @@
  * --------
  */
 
-APP.Modules.register("lib/templateEngine", [
-    /* import globals */
-    window
-
-], [
-    'lib/handlebars',
-    'lib/handlebars_helpers',
-    'lib/mpws.api',
-], function (wnd, app, Sandbox, Handlebars, mpwsAPI) {
-
-    var _templateCache = {};
-
-    Handlebars.getTemplate = function (templateUrl) {
-        return _templateCache[templateUrl] || null;
-    }
-
-    Handlebars.hasTemplate = function (templateUrl) {
-        return !!_templateCache[templateUrl];
-    }
-
-    Handlebars.setTemplate = function (templateUrl, templateHtml) {
-        _templateCache[templateUrl] = templateHtml;
-    }
-
-    Handlebars.clearCache = function () {
-        _templateCache = {};
-    }
+define("default/js/lib/templateEngine", [
+    'default/js/lib/handlebars',
+    'default/js/lib/handlebars_helpers',
+], function (Handlebars) {
 
     return Handlebars;
 

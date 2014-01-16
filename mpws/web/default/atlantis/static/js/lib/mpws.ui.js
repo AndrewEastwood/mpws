@@ -1,18 +1,15 @@
 /* MPWS UI
  * --------
  */
-APP.Modules.register("lib/mpws.ui", [
-    /* import globals */
-    window
-], [
-    'lib/jquery',
-    'lib/jquery_ui',
-    'lib/lightbox',
-    'lib/bootstrap',
-    'lib/bootstrap-combobox',
-    'lib/bootstrap-magnify',
+define("default/js/lib/mpws.ui", [
+    'cmn_jquery',
+    'default/js/lib/jquery_ui',
+    'default/js/lib/lightbox',
+    'default/js/lib/bootstrap',
+    'default/js/lib/bootstrap-combobox',
+    'default/js/lib/bootstrap-magnify',
     /* component implementation */
-], function(window, app, Sandbox, jQuery, _) {
+], function (jQuery, _) {
 
 });
 

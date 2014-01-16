@@ -1,8 +1,8 @@
-APP.Modules.register("plugin/shop/model/productEntryStandalone", [], [
-    'lib/underscore',
-    'model/mmodel',
-    'plugin/shop/lib/utils'
-], function (app, Sandbox, _, MModel, shopUtils) {
+define("plugin/shop/js/model/productEntryStandalone",[
+    'default/js/lib/underscore',
+    'default/js/model/mmodel',
+    'plugin/shop/js/lib/utils'
+], function (_, MModel, shopUtils) {
 
     var productEntryStandalone = MModel.extend({
 
@@ -21,12 +21,12 @@ APP.Modules.register("plugin/shop/model/productEntryStandalone", [], [
         initialize: function (options) {
 
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            app.log(true, 'model productEntryStandalone initialize', this);
+            // app.log(true, 'model productEntryStandalone initialize', this);
 
         },
 
         parse: function (data) {
-            app.log(true, 'model productEntryStandalone parse', data);
+            // app.log(true, 'model productEntryStandalone parse', data);
 
             // adjust product data
             if (data)

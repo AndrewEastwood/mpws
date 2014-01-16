@@ -1,19 +1,14 @@
 // it is the base page router
 
-APP.Modules.register("lib/handlebars", [
-    /* import globals */
-    window
-
-], [
-
+define("default/js/lib/handlebars", [
     /* import dep packages */
-    'lib/jquery',
-    'lib/underscore',
+    'cmn_jquery',
+    'default/js/lib/underscore'
     // 'lib/backbone',
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function(wnd, app, Sandbox, $, _) {
+], function ($, _) {
 
 /*
 

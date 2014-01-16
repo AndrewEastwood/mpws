@@ -1,7 +1,7 @@
-APP.Modules.register("plugin/shop/lib/utils", [], [
-    'lib/jquery',
-    'lib/underscore',
-], function (app, Sandbox, $, _) {
+define("plugin/shop/js/lib/utils", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+], function ($, _) {
 
     function Utils () {};
 

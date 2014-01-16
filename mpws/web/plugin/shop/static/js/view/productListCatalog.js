@@ -1,17 +1,17 @@
-APP.Modules.register("plugin/shop/view/productListCatalog", [], [
-    'lib/jquery',
-    'lib/underscore',
-    'lib/backbone',
-    'view/mview',
-    'lib/mpws.page',
-    'plugin/shop/model/productListCatalog',
+define("plugin/shop/js/view/productListCatalog", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/lib/backbone',
+    'default/js/view/mview',
+    'default/js/lib/mpws.page',
+    'plugin/shop/js/model/productListCatalog',
     /* js extensions */
-    'lib/jquery.cookie',
+    'default/js/lib/jquery.cookie',
     /* ui components */
-    'lib/bootstrap',
-    'lib/bootstrap-combobox',
-    'lib/bootstrap-slider',
-], function (app, Sandbox, $, _, Backbone, MView, mpwsPage, modelProductListCatalog) {
+    'default/js/lib/bootstrap',
+    'default/js/lib/bootstrap-combobox',
+    'default/js/lib/bootstrap-slider',
+], function ($, _, Backbone, MView, mpwsPage, modelProductListCatalog) {
 
     var ProductListCatalog = MView.extend({
 
@@ -19,26 +19,14 @@ APP.Modules.register("plugin/shop/view/productListCatalog", [], [
 
         model: new modelProductListCatalog(),
 
-        template: 'plugin.shop.component.shopProductListCatalog@hbs',
+        template: 'plugin/shop/hbs/component/shopProductListCatalog.hbs',
 
-        dependencies: {
-            productEntryViewList: {
-                url: "plugin.shop.component.productEntryViewList@hbs",
-                type: mpwsPage.TYPE.PARTIAL
-            },
-            shopProductListFilter: {
-                url: "plugin.shop.component.shopProductListFilter@hbs",
-                type: mpwsPage.TYPE.PARTIAL
-            },
-            shopProductListPresentation: {
-                url: "plugin.shop.component.shopProductListPresentation@hbs",
-                type: mpwsPage.TYPE.PARTIAL
-            },
-            shopProductListSubCategories: {
-                url: "plugin.shop.component.shopProductListSubCategories@hbs",
-                type: mpwsPage.TYPE.PARTIAL
-            },
-        },
+        dependencies: [
+            "plugin/shop/hbs/component/productEntryViewList.hbs",
+            "plugin/shop/hbs/component/shopProductListFilter.hbs",
+            "plugin/shop/hbs/component/shopProductListPresentation.hbs",
+            "plugin/shop/hbs/component/shopProductListSubCategories.hbs"
+        ],
 
         initialize: function (options) {
 

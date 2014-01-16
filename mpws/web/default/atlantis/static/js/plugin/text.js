@@ -1,4 +1,4 @@
-APP.Modules.register("plugin/text", [], ['module'], function (app, Sandbox, module){
+define("default/js/plugin/text", ['module'], function (module){
 
 /**
  * @license RequireJS text 2.0.10 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.

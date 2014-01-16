@@ -1,10 +1,7 @@
-APP.Modules.register("lib/jquery.browser", [
-    /* import globals */
-    window
-], [
-    'lib/jquery'
+define("default/js/lib/jquery.browser", [
+    'cmn_jquery'
     /* component implementation */
-], function (window, app, Sandbox, jQuery) {
+], function (jQuery) {
 
 
 	(function( jQuery, window, undefined ) {

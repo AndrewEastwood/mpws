@@ -1,19 +1,19 @@
-APP.Modules.register("plugin/shop/page/pageShopCatalog", [], [
-    'lib/underscore',
-    'page/mpage',
-    'plugin/shop/view/catalogStructureMenu',
-    'plugin/shop/view/breadcrumb',
-    'plugin/shop/view/productListCatalog'
-], function (app, Sandbox, _, MPage, catalogStructureMenu, breadcrumb, productListCatalog) {
+define("plugin/shop/js/view/pageShopCatalog", [
+    'default/js/lib/underscore',
+    'default/js/view/mview',
+    'plugin/shop/js/view/catalogStructureMenu',
+    'plugin/shop/js/view/breadcrumb',
+    'plugin/shop/js/view/productListCatalog'
+], function (app, Sandbox, _, MView, catalogStructureMenu, breadcrumb, productListCatalog) {
 
 
-    var PageShopCatalog = MPage.extend({
+    var PageShopCatalog = MView.extend({
 
         name: 'shop-catalog',
 
         initialize: function (options) {
             // extend parent
-            MPage.prototype.initialize.call(this, options);
+            MView.prototype.initialize.call(this, options);
 
             this.viewItems.catalogStructureMenu = new catalogStructureMenu(_(options).has('catalogStructureMenu') ? options.catalogStructureMenu : null);
             this.viewItems.breadcrumb = new breadcrumb(_(options).has('breadcrumb') ? options.breadcrumb : null);

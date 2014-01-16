@@ -1,7 +1,7 @@
-APP.Modules.register("plugin/shop/model/breadcrumb", [], [
-    'lib/underscore',
-    'model/mmodel'
-], function (app, Sandbox, _, MModel) {
+define("plugin/shop/js/model/breadcrumb", [
+    'default/js/lib/underscore',
+    'default/js/model/mmodel'
+], function (_, MModel) {
 
     var Breadcrumb = MModel.extend({
 
@@ -21,7 +21,7 @@ APP.Modules.register("plugin/shop/model/breadcrumb", [], [
 
         initialize: function (options) {
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            app.log(true, 'model Breadcrumb model initialize', this);
+            // app.log(true, 'model Breadcrumb model initialize', this);
         },
 
     });

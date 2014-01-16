@@ -1,8 +1,8 @@
-APP.Modules.register("plugin/shop/model/productListOverview", [], [
-    'lib/underscore',
-    'model/mmodel',
-    'plugin/shop/lib/utils'
-], function (app, Sandbox, _, MModel, shopUtils) {
+define("plugin/shop/js/model/productListOverview", [
+    'default/js/lib/underscore',
+    'default/js/model/mmodel',
+    'plugin/shop/js/lib/utils'
+], function (_, MModel, shopUtils) {
 
     var ProductListOverview = MModel.extend({
 
@@ -17,12 +17,12 @@ APP.Modules.register("plugin/shop/model/productListOverview", [], [
         initialize: function (options) {
 
             MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            app.log('model ProductListOverview initialize', this);
+            // app.log('model ProductListOverview initialize', this);
 
         },
 
         parse: function (data) {
-            app.log('model ProductListOverview parse', data);
+            // app.log('model ProductListOverview parse', data);
 
             data = shopUtils.adjustProductEntry(data);
 

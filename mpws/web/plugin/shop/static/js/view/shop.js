@@ -1,15 +1,15 @@
-APP.Modules.register("plugin/shop/view/shop", [], [
-    'lib/jquery',
-    'lib/underscore',
+define("plugin/shop/js/view/shop", [], [
+    'cmn_jquery',
+    'default/js/lib/underscore',
     // 'lib/backbone',
     // 'lib/mpws.api',
-    'lib/mpws.page',
+    'default/js/lib/mpws.page',
     // 'plugin/shop/lib/driver',
     // 'plugin/shop/view/productListOverview',
-    'plugin/shop/view/breadcrumb',
+    'plugin/shop/js/view/breadcrumb',
     // ui elements
     // 'lib/fuelux.wizard'
-], function (app, Sandbox, $, _, mpwsPage, viewBreadcrumb) {
+], function ($, _, mpwsPage, viewBreadcrumb) {
 
     var _logPrefix = '[plugin/shop/view/render] : ';
 

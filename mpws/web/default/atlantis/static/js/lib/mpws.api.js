@@ -2,17 +2,12 @@
  * --------
  */
 
-APP.Modules.register("lib/mpws.api", [
-    /* import globals */
-    window
-
-], [
-    'lib/jquery',
-    'lib/underscore',
-], function (wnd, app, Sandbox, $, _) {
+define("default/js/lib/mpws.api", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+], function ($, _) {
 
     var apiService = '/api.js';
-    var _config = app.Page.getConfiguration();
 
     // app.log('lib/mpws.api ================> ', $, _);
 
@@ -147,6 +142,7 @@ APP.Modules.register("lib/mpws.api", [
 
     function requestTemplate (templatePath, callback) {
         templatePath = templatePath.replace(/\./g, '//').replace('@', '.');
+        debugger;
         $.get(_config.URL.staticUrlBase + templatePath).success(callback);
     }
 

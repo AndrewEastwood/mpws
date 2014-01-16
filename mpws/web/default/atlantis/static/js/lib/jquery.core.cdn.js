@@ -1,10 +1,5 @@
-qB.Modules.register("lib/jquery.core.cdn", [
-], [
-    /* component implementation */
-], function(qB, Sandbox) {
+define("default/js/lib/jquery.core.cdn", function() {
 
-    qB.Modules.register("lib/jquery", [], ['jquery'], function (qB, Sandbox, $) {
-        return $;
-    });
+
 
 });

@@ -1,12 +1,12 @@
-APP.Modules.register("plugin/shop/view/productListOverview", [], [
-    'lib/jquery',
-    'lib/underscore',
-    'view/mview',
-    'lib/mpws.page',
-    'plugin/shop/model/productListOverview',
+define("plugin/shop/js/view/productListOverview", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/view/mview',
+    'default/js/lib/mpws.page',
+    'plugin/shop/js/model/productListOverview',
     /* ui components */
-    'lib/bootstrap'
-], function (app, Sandbox, $, _, MView, mpwsPage, modelProductListOverview) {
+    'default/js/lib/bootstrap'
+], function ($, _, MView, mpwsPage, modelProductListOverview) {
 
     var ProductListOverview = MView.extend({
 
@@ -14,14 +14,11 @@ APP.Modules.register("plugin/shop/view/productListOverview", [], [
 
         model: new modelProductListOverview(),
 
-        template: 'plugin.shop.component.shopProductListOverview@hbs',
+        template: 'plugin/shop/hbs/component/shopProductListOverview.hbs',
 
-        dependencies: {
-            productEntryViewList: {
-                url: "plugin.shop.component.productEntryViewList@hbs",
-                type: mpwsPage.TYPE.PARTIAL
-            }
-        },
+        dependencies: [
+            "plugin/shop/hbs/component/productEntryViewList.hbs"
+        ],
 
         initialize: function (options) {
 

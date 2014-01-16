@@ -2,20 +2,17 @@
  * Library: Html Components Generator
 */
 
-APP.Modules.register("lib/htmlComponents", [
-    /* import globals */
-    window
-], [
-    'lib/jquery',
-    'lib/underscore',
-    'lib/moment',
-    'lib/jquery_ui',
-    'lib/daterangepicker',
-    'lib/datetimepicker',
-    'lib/bootstrap',
-    'lib/jquery.maskedinput'
+define("default/js/lib/htmlComponents", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/lib/moment',
+    'default/js/lib/jquery_ui',
+    'default/js/lib/daterangepicker',
+    'default/js/lib/datetimepicker',
+    'default/js/lib/bootstrap',
+    'default/js/lib/jquery.maskedinput'
     /* component implementation */
-], function(window, app, Sandbox, $, _, moment) {
+], function ($, _, moment) {
 
     function HtmlComponents () {}
 

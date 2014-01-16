@@ -25,6 +25,7 @@
     $initialJS = "{
         BUILD: " . (MPWS_ENV === 'DEV' ? 'null' : file_get_contents($DR . DS . 'version.txt')) . ",
         ISDEV: " . (MPWS_ENV === 'DEV' ? 'true' : 'false') . ",
+        ISTOOLBOX: " . (glIsToolbox() ? 'true' : 'false') . ",
         MPWS_VERSION: '" . MPWS_VERSION . "',
         MPWS_CUSTOMER: '" . MPWS_CUSTOMER . "',
         PATH_STATIC_BASE: '" . DS . $staticPath . DS . "',

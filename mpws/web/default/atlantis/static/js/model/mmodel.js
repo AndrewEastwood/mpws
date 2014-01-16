@@ -1,11 +1,10 @@
-APP.Modules.register("model/mmodel", [], [
-    'lib/jquery',
-    'lib/underscore',
-    'lib/backbone',
-    'lib/storage',
-], function (app, Sandbox, $, _, Backbone, Storage) {
+define("default/js/model/mmodel", [
+    'cmn_jquery',
+    'default/js/lib/underscore',
+    'default/js/lib/backbone'
+], function ($, _, Backbone) {
 
-    var _config = app.Page.getConfiguration();
+    var _config = {};//app.Page.getConfiguration();
 
     var MModel = Backbone.Model.extend({
 
@@ -69,22 +68,24 @@ APP.Modules.register("model/mmodel", [], [
             else 
                 urlData[key] = value;
 
-            this.set("urldata", urlData);
+            this.attributes.urlData = urlData;
+
+            if (!_.isEqual(urlDataOrigin, urlData))
+                this.fetch();
 
 
-            if (skipFetch)
-                return;
-            app.log(true, 'MModel original url data ', urlDataOrigin);
-            app.log(true, 'MModel new url data ', urlData);
+            // if (skipFetch)
+            //     return;
+            // app.log(true, 'MModel original url data ', urlDataOrigin);
+            // app.log(true, 'MModel new url data ', urlData);
 
             // app.log(true, this.get('fn') + ' origin url data was', urlDataOrigin);
             // app.log(true, this.get('fn') + ' now it is', urlData);
-            if (!_.isEqual(urlDataOrigin, urlData)) {
-                app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
-                this.fetch();
-            } else {
-                this.trigger('mmodel:newdata', this.get('data'));
-            }
+            // if (!_.isEqual(urlDataOrigin, urlData)) {
+                // app.log(true, this.get('fn') + ' urldata is changed, doing fetch new data');
+            // } else {
+                // this.trigger('mmodel:newdata', this.get('data'));
+            // }
         },
 
         // default method
@@ -98,7 +99,7 @@ APP.Modules.register("model/mmodel", [], [
 
             var self = this;
             $.ajax({
-                url: _config.URL.apiJS,
+                url: '/api.js',
                 data: this.prepareUrlData(),
                 type: 'post',
                 dataType: 'json',
@@ -108,7 +109,8 @@ APP.Modules.register("model/mmodel", [], [
                     //     data = JSON.parse(data);
                     // else
                     self.attributes.data = self.parse(data || {});
-                    self.trigger('mmodel:newdata', data);
+                    // self.trigger('mmodel:newdata', data);
+                    self.trigger('change', data);
                 }
             });
         },

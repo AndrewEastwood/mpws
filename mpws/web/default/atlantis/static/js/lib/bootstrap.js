@@ -1,11 +1,8 @@
-APP.Modules.register("lib/bootstrap", [
-    /* import globals */
-    window
-], [
-  'lib/jquery',
-  'lib/underscore'
+define("default/js/lib/bootstrap", [
+  'cmn_jquery',
+  'default/js/lib/underscore'
     /* component implementation */
-], function(window, app, Sandbox, jQuery, _) {
+], function (jQuery, _) {
 /* ========================================================================
  * Bootstrap: alert.js v3.0.2
  * http://getbootstrap.com/javascript/#alerts

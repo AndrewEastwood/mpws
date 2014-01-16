@@ -1,4 +1,4 @@
-APP.Modules.register("lib/sprintf", [window], [], function(window, app, Sandbox) {
+define("default/js/lib/sprintf", function() {
 
 	var exports = function () {};
 

@@ -1,0 +1,1 @@
+define("plugin/shop/js/router/toolbox", function () {});

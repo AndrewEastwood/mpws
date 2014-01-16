@@ -1,11 +1,7 @@
-APP.Modules.register("lib/backbone", [
-    /* import globals */
-    window
-], [
-  'lib/jquery',
-  'lib/underscore'
-    /* component implementation */
-], function(window, app, Sandbox, jQuery, _) {
+define("default/js/lib/backbone", [
+  'cmn_jquery',
+  'default/js/lib/underscore'
+], function (jQuery, _) {
 
 
 //     Backbone.js 0.9.10

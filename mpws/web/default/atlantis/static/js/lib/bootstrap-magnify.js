@@ -1,10 +1,7 @@
-APP.Modules.register("lib/bootstrap-magnify", [
-    /* import globals */
-    window
-], [
-    'lib/jquery'
+define("default/js/lib/bootstrap-magnify", [
+    'cmn_jquery'
     /* component implementation */
-], function(window, app, Sandbox, jQuery) {
+], function(jQuery) {
 
 !function ($) {
 

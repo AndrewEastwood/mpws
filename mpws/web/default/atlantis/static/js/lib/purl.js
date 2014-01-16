@@ -1,13 +1,10 @@
 /* MPWS UI
  * --------
  */
-APP.Modules.register("lib/purl", [
-    /* import globals */
-    window
-], [
-  'lib/jquery'
+define("default/js/lib/purl", [
+  'cmn_jquery'
     /* component implementation */
-], function(window, app, Sandbox, jQuery) {
+], function (jQuery) {
 
 
 

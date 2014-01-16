@@ -1,8 +1,8 @@
-APP.Modules.register("page/mpage", [], [
-    'lib/jquery',
-    'lib/backbone',
-    'lib/mpws.page',
-], function (app, Sandbox, $, Backbone, mpwsPage) {
+define("default/js/page/mpage", [
+    'cmn_jquery',
+    'default/js/lib/backbone',
+    'default/js/lib/mpws.page',
+], function ($, Backbone, mpwsPage) {
 
     var MPage = Backbone.View.extend({
 
@@ -11,14 +11,14 @@ APP.Modules.register("page/mpage", [], [
         viewItems: {},
 
         initialize: function(options) {
-            app.log(true ,'view MPage initialize');
+            // app.log(true ,'view MPage initialize');
             // overwrite page name
             this.setPageName(this.name);
         },
 
         setPageName: function (name) {
             this.options.name = name;
-            app.log(true, 'the "plugin/shop/page/' + this.options.name + '" is being rendered');
+            // app.log(true, 'the "plugin/shop/page/' + this.options.name + '" is being rendered');
             mpwsPage.pageName(this.name);
         }
 

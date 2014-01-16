@@ -1,10 +1,7 @@
-APP.Modules.register("lib/zoomit.jquery", [
-    /* import globals */
-    window
-], [
-    'lib/jquery'
+define("default/js/lib/zoomit.jquery", [
+    'cmn_jquery'
     /* component implementation */
-], function(window, app, Sandbox, jQuery) {
+], function (jQuery) {
 
 /**
  * Author: Constantin Boiangiu (services[at]constantinb.com)

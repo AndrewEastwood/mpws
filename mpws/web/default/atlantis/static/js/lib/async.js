@@ -939,7 +939,7 @@
 
     // AMD / RequireJS
     if (typeof define !== 'undefined' && define.amd) {
-        APP.Modules.register("lib/async", [], [], function () {
+        define("default/js/lib/async", [], function () {
             return async;
         });
     }

@@ -1,9 +1,4 @@
-APP.Modules.register("lib/_xzepto", [
-    /* import globals */
-    window
-], [
-    /* component implementation */
-], function(window, app, Sandbox) {
+define("default/js/lib/_xzepto", function() {
 
 
     /* Zepto v1.0-1-ga3cab6c - polyfill zepto detect event ajax form fx - zeptojs.com/license */
