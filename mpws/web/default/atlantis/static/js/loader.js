@@ -5,9 +5,13 @@
     if (!_globalConfig.ISDEV)
         delete window.MPWS;
 
+    window.app = {
+        config: _globalConfig
+    };
+
     require.config({
         baseUrl: _globalConfig.PATH_STATIC_BASE,
-        mpws: _globalConfig,
+        // mpws: _globalConfig,
         paths: {
             // default paths
             default: _globalConfig.URL_STATIC_DEFAULT,
@@ -21,6 +25,7 @@
         waitSeconds: 15,
         urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
     });
+
 
     // start customer application
     require(['customer/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site')]);

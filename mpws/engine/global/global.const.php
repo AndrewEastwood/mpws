@@ -46,6 +46,7 @@
     define ("OBJECT_T_PLUGIN", 'plugin', true);
     define ("OBJECT_T_CUSTOMER", "customer", true);
     define ("OBJECT_T_CONTEXT", "context", true);
+    define ("OBJECT_T_DEFAULT", "default", true);
  
     // Connection Type
     
@@ -80,6 +81,9 @@
     define("MERGE_MODE_APPEND", 1);
     define("MERGE_MODE_PREPEND", -1);
 
-
+    define("DIR_WEB", 'web');
+    define("DIR_CUSTOMER", 'customer');
+    define("DIR_DEFAULT", 'default');
+    define("DIR_PLUGIN", 'plugin');
 
 ?>

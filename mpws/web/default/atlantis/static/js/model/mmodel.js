@@ -4,6 +4,8 @@ define("default/js/model/mmodel", [
     'default/js/lib/backbone'
 ], function ($, _, Backbone) {
 
+    // debugger;
+
     var _config = {};//app.Page.getConfiguration();
 
     var MModel = Backbone.Model.extend({
@@ -18,7 +20,7 @@ define("default/js/model/mmodel", [
 
             fn: '',
 
-            token: _config.TOKEN,
+            token: app.config.TOKEN,
 
             urldata: {}
         },

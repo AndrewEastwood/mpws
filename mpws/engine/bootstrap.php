@@ -2,10 +2,8 @@
 
     // detect running customer name
 
-
     define('DR', getDocumentRoot());
-    
-    
+
     // detect running customer name
     define('MPWS_CUSTOMER', getCustomer());
     // evironment version
@@ -18,14 +16,19 @@
     //
     define('MPWS_ENABLE_REDIRECTS', false);
     //
-    define('MPWS_LOG_LEVEL', 0);
+    define('MPWS_LOG_LEVEL', 2);
 
     //var_dump(parse_url($_SERVER['HTTP_HOST']));
 
     //error_reporting(E_ERROR | E_WARNING | E_PARSE);
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
-    
+
+    // include global files
+    $globals = glob(DR . '/engine/global/global.*.php');
+    foreach ($globals as $globalFile)
+        require_once $globalFile;
+
     function getDocumentRoot () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);
         if ($_dr[strlen($_dr) - 1] != '/')

@@ -1,31 +1,11 @@
 <?php
 
-class pluginShop extends objectBaseWebPlugin {
+class pluginShop {
 
-    protected function _displayTriggerAsPlugin () {
-        parent::_displayTriggerAsPlugin();
-        $ctx = contextMPWS::instance();
-        //echo '111OLOLO';
-        // echo "<br><br>getInnerMethod = " . $ctx->getLastCommand()->getInnerMethod();
-        switch($ctx->getLastCommand(false)->getInnerMethod()) {
-            case 'default' : 
-            default :
-                $rez = $this->_displayPage_Default();
-                break;
-        }
+    public function getResponse () {
 
-        // $ctx->pageModel->addMessage('1234');
-        return $rez;
+        return 123;
 
-    }
-
-    protected function _jsapiTriggerAsPlugin() {
-        // echo "QQQTEST";
-
-        // if (!$_SESSION)
-        //     session_start();
-
-        parent::_jsapiTriggerAsPlugin();
         $param = libraryRequest::getApiParam();
 
         // extract params
@@ -39,7 +19,7 @@ class pluginShop extends objectBaseWebPlugin {
 
         // token=656c88543646e400eb581f6921b83238
         // var_dump($param);
-        $ctx = contextMPWS::instance();
+        // $ctx = contextMPWS::instance();
         switch(libraryRequest::getApiFn()) {
             // breadcrumb
             // -----------------------------------------------
@@ -124,44 +104,9 @@ class pluginShop extends objectBaseWebPlugin {
                 break;
             }
         }
+
         // attach to output
-        $ctx->pageModel->addStaticData($data->toJSON());
-    }
-
-    private function _displayPage_Default () {
-        $display = libraryRequest::getDisplay();
-        switch ($display) {
-            case "products" :
-            case "categories" :
-            case "origins" :
-            case "specifications" :
-            case "currency" :
-            case "commands" :
-                $managerName = 'Manager' . ucfirst($display);
-                $this->getWidget('ActionHandlerStandartDataTableManager', $managerName);
-                break;
-            case "api" :
-                if ($this->isActive())
-                    $this->getWidget('AddDataApiViewer', 'ApiShop');
-        }
- 
-        /*echo '_displayQueue';
-
-        $this->store_storeSet('TEMPLATE.PATH', $this->res_getResource('page.queue.datatable'));
-        $this->store_storeSet('TEMPLATE.NAME', 'page.queue.datatable');
-        //$pModel = &$this->getModel();
-        
-        //var_dump($store);
-        //$store['TEMPLATE'] = $this->getTemplate('page.queue.datatable');
-        
-        
-        // menu component
-        $menu = libraryView::getLinks($this->getConfiguration('GENERAL', 'MENU'));
-        
-        //var_dump($menu);
-        
-        $this->addComponent('MENU', $menu, 'menu_list');*/
-        
+        return $data->toJSON();
     }
 
     /* PLUGIN API METHODS (ADMIN) */
@@ -176,8 +121,6 @@ class pluginShop extends objectBaseWebPlugin {
 
 
     /* PLUGIN API METHODS (PUBLIC) */
-
-
     // breadcrumb
     // -----------------------------------------------
     private function _custom_api_getCatalogLocation ($params) {

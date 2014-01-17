@@ -1,14 +1,14 @@
 Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
-DirectoryIndex /engine/dispatcher/dispatcher.Index.php
+DirectoryIndex /engine/controller/controller.display.php
 
 # STATIC:
 RewriteRule static_dev/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
 RewriteRule static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/build/$1/$2/$3 [L]
 
 # API
-RewriteRule ^api\.js   /engine/dispatcher/dispatcher.Api.php?action=api [L]
+RewriteRule ^api\.js /engine/controller/controller.api.php [L]
 
 # SERVICES:
 #RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]

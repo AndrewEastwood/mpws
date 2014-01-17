@@ -29,12 +29,17 @@
         return $default;
     }
     
-    function glGetFullFilePath () {
-        return DR . call_user_func_array('glGetFilePath', func_get_args());
+    function glGetFullPath () {
+        return DR . call_user_func_array('glGetPath', func_get_args());
     }
-    function glGetFilePath () {
-        debug (func_get_args());
-        return join(DS, func_get_args()) . DS;
+    function glGetPath () {
+        // debug (func_get_args());
+        $numargs = func_num_args();
+        $_isFile = strrpos(func_get_arg($numargs - 1), '.') > 1;
+        if ($_isFile)
+            return join(DS, func_get_args());
+        else
+            return join(DS, func_get_args()) . DS;
     }
 
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {

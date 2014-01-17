@@ -40,6 +40,10 @@ define("default/js/view/mview", [
 
             debugger;
 
+            if (typeof this.template === "string") ;
+            // contains text!
+            // or if function
+
             var _tplToRequest = [this.template];
 
             _(this.dependencies).each(function(depItem){
