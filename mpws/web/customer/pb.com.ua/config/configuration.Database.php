@@ -5,7 +5,7 @@ class configurationCustomerDatabase extends configurationDefaultDatabase {
     static $DEV = array(
         'USER' => 'admin1',
         'PWD' => '1111',
-        'DB' => 'mpws_default'
+        'DB' => 'mpws_light'
     );
 
     static function init () {

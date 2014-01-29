@@ -29,11 +29,11 @@ class objectCustomer {
             $pluginObjectName = trim($matches[1]).trim($matches[2]);
 
             // save plugin instance
-            $this->plugins[$pluginName] = new $pluginObjectName();
+            $this->plugins[$pluginName] = new $pluginObjectName($this);
         }
     }
 
-    public function getDBO () {
+    public function getDataBase () {
         return $this->dbo;
     }
 
@@ -45,43 +45,51 @@ class objectCustomer {
 
         $response = array();
 
-        $p = libraryRequest::getApiParam();
-        $caller = libraryRequest::getApiCaller();
+        // $p = libraryRequest::getApiParam();
+        // $caller = libraryRequest::getApiCaller();
+        $token = libraryRequest::getPostValue('token');
+        $fn = libraryRequest::getPostValue('fn');
+        $delimIndex = strpos($fn, ":");
+        $target = substr($fn, 0, );
+        $fn = substr($fn, $delimIndex);
 
-        if (empty($caller))
-            throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value', $caller);
+        if (empty($target))
+            throw new Exception('objectCustomer => getResponse: wrong target value', $target);
+
+        if (!isset($this->plugins[$target]))
+            throw new Exception('objectCustomer => getResponse: target is not allowed', $target);
 
         // check page token
-        if (empty($p['token']))
+        if (empty($token))
             return $response;
 
-        // check request realm
-        if (empty($p['realm']))
-            return $response;
+        // // check request realm
+        // if (empty($p['realm']))
+        //     return $response;
 
-        if (!libraryRequest::getOrValidatePageSecurityToken($p['token'])) {
-            if (md5(configurationCustomerDatabase::$MasterJsApiKey) !== $p['token'])
+        if (!libraryRequest::getOrValidatePageSecurityToken($token)) {
+            if (md5(configurationCustomerDatabase::$MasterJsApiKey) !== $token)
                 return $response;
         }
 
         // perform request with plugins
-        if ($p['realm'] == OBJECT_T_PLUGIN) {
-            if ($caller == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
-                throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wide api js request is not allowed');
+        // if ($p['realm'] == OBJECT_T_PLUGIN) {
+            if ($target == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
+                throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
 
-            if ($caller == '*')
+            if ($target == '*')
                 foreach ($this->plugins as $key => $plugin)
                     $response[$key] = $plugin->getResponse();
-            elseif (isset($this->plugins[$caller])) {
-                $plugin = $this->plugins[$caller];
-                $response[$caller] = $plugin->getResponse();
+            elseif (isset($this->plugins[$target])) {
+                $plugin = $this->plugins[$target];
+                $response[$target] = $plugin->getResponse();
             }
-        }
+        // }
 
-        if ($p['realm'] == OBJECT_T_CUSTOMER) {
-            // otherwise proceed with customer
-            // $response[OBJECT_T_CUSTOMER] = array();
-        }
+        // if ($p['realm'] == OBJECT_T_CUSTOMER) {
+        //     // otherwise proceed with customer
+        //     // $response[OBJECT_T_CUSTOMER] = array();
+        // }
 
         return json_encode($response);
 
@@ -93,7 +101,7 @@ class objectCustomer {
         //     throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value', $caller);
         
         // // check page token
-        // if (empty($p['token']))
+        // if (empty($token))
         //     return;
         
         // if (!libraryRequest::getOrValidatePageSecurityToken($p['token'])) {

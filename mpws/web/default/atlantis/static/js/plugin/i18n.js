@@ -85,7 +85,7 @@
         }
     }
 
-    define(['module'], function (module) {
+    define('default/js/plugin/i18n', ['module'], function (module) {
         var masterConfig = module.config ? module.config() : {};
 
         return {

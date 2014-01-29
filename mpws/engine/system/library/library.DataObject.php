@@ -3,11 +3,15 @@
 class libraryDataObject {
     private $_data;
     private $_config;
+    private $_dbo;
 
-    function __construct($data = null, $config = null, $isError = false) {
+    function __construct($dbo = null, $data = null, $config = null, $isError = false) {
 
         $this->_data = array();
         $this->_config = $this->getConfigDefault();
+
+        if (!empty($dbo))
+            $this->setDBO($dbo);
 
         if (!empty($data))
             $this->setData($data);
@@ -42,6 +46,9 @@ class libraryDataObject {
         else
             $this->_data = $val;
         return $this;
+    }
+    public function setDBO($dbo) {
+        $this->_dbo = $dbo;
     }
 
     // configuration
@@ -154,6 +161,9 @@ class libraryDataObject {
                 "expandSingleRecord" => false
             )
         );
+    }
+    public function getDBO () {
+        return $this->_dbo;
     }
 
     // configuration helpers

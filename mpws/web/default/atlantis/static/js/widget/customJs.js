@@ -1,3 +1,0 @@
-/* 
- * MPWS Custom JS file
- */

@@ -24,8 +24,8 @@
     // $request = new
     // do not put $customer into global scope
     function response () {
-        $customerWrapper = new libraryCustomer();
-        return $customerWrapper->getResponse();
+        $customer = new libraryCustomer();
+        return $customer->getResponse();
     }
     
     echo response();

@@ -1,19 +1,125 @@
 define("plugin/shop/js/site", [
+    'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'default/js/lib/storage',
+    'default/js/lib/cache',
+    // views + models
+    'default/js/view/pageNavigation',
+    'default/js/view/breadcrumb',
     // pages
-    'plugin/shop/js/view/pageShopHome',
-    'plugin/shop/js/view/pageShopCatalog',
-    'plugin/shop/js/view/pageProductEntryStandalone'
-], function (_, Backbone, Storage, PageShopHome, PageShopCatalog, PageProductEntryStandalone) {
+    // 'plugin/shop/js/view/pageShopHome',
+    // 'plugin/shop/js/view/pageShopCatalog',
+    // 'plugin/shop/js/view/pageProductEntryStandalone'
+], function ($, _, Backbone, Cache, PageNavigation, ViewBreadcrumb) {
+
+    var placeholders = {
+        header: $('.MPWSPageHeader'),
+        body: $('.MPWSPageBody'),
+        footer: $('.MPWSPageFooter')
+    }
+
+    // create & configure permanent views
+    var _views = {
+        navigation: new PageNavigation({
+            el: placeholders.menu
+        }),
+        breadcrumb: new ViewBreadcrumb({
+            el: options.breadcrumb
+        })
+    }
+
+    // var _navigation = new PageNavigation({
+    //     el: placeholders.menu
+    // });
+
+    // var _breadcrumb = new ViewBreadcrumb({
+    //     el: options.breadcrumb
+    // });
+
+    _breadcrumb.model.configure({
+        source: 'shop:shop_location'
+    });
+
+    _navigation.model.configure({
+        source: 'shop:shop_location'
+    });
+
+    var Router = Backbone.Router.extend({
+        routes: {
+            "": "home",
+            "shop": "home",
+            "shop/catalog/:category": "shop_catalog_category",
+            "shop/catalog/": "shop_catalog",
+            "shop/product/:product": "shop_product",
+            "shop/wizard": "shop_wizard",
+            "shop/cart": "shop_cart_view",
+        },
+
+        initialize: function (options) {
+
+        },
+
+        home: function () {
+
+        },
+
+        shop_catalog_category: function () {
+
+        },
+
+        shop_catalog: function () {
+
+        },
+
+        shop_product: function () {
+
+        },
+
+        shop_wizard: function () {
+
+        },
+
+        shop_cart_view: function () {
+
+        }
+
+    });
+
+    return {
+        initRouter: function (customerConfig) {
+            return new Router(customerConfig);
+        }
+    }
+
 
     // start site routing
     //var view = null;
 
-    // var _pages = {};
 
     function Router (options) {
+
+        placeholders = _.extend({}, placeholders, options.placeholders);
+
+        // var _pages = {};
+
+        _navigation.render();
+        _breadcrumb.render();
+
+        // initialize: function (options) {
+        //     // extend parent
+        //     MView.prototype.initialize.call(this, options);
+        // },
+
+        // renderLocation: function (productID, categoryID) {
+        //     app.log(true, 'Breadcrumb view: renderLocation', productID, categoryID);
+        //     this.model.setUrlData({
+        //         productId: productID || null,
+        //         categoryId: categoryID || null
+        //     });
+        // }
+
+
+        // debugger;
 
         // this.view = new pluginShopView(options);
         // this.view.router = this;
@@ -47,10 +153,30 @@ define("plugin/shop/js/site", [
             _routeDispatchers.shop_home();
         };
         _routeDispatchers.shop_home = function () {
-            if (Storage.has('PageShopHome'))
-                Storage.get('PageShopHome').render();
-            else
-                Storage.add('PageShopHome', new PageShopHome(options));
+
+
+            // require(
+            //     [
+            //         'qb_center/js/views/authLogin',
+            //     ],
+            //     function (ViewAuthLogin) {
+
+                    // var viewAuthLogin = appCachedViews.getObject('ViewAuthLogin', function () {
+                    //     var _viewAuth = new ViewAuthLogin({
+                    //         el: _placeholders.contentMiddle
+                    //     });
+                    //     _viewAuth.on('auth:ok', function (){
+                    //         _self.trigger('app:isActive');
+                    //     });
+                    //     return _viewAuth;
+                    // });
+
+                    // _menu.refresh();
+                    // _self.doCleanupPlaceholders();
+                    // viewAuthLogin.render();
+                //     }
+                // );
+
 
             // appCachedViews.get('plugin/shop/js/view/pageShopHome')
             // // this is the same as shop_home

@@ -11,9 +11,10 @@ class configurationDefaultDisplay extends objectConfiguration {
 
     // localization
     static $Locale = 'en_us';
+    static $Lang = 'en';
 
     // render
-    static $DefaultDisplay = 'index';
+    static $DefaultDisplay = 'layout';
 
     // security
     static $MasterJsApiKey = 'UUUDemo1!!!MstPwd#123!@#';

@@ -1,10 +1,13 @@
 <?php
 
-class pluginShop {
+class pluginShop extends objectPlugin {
 
     public function getResponse () {
 
-        return 123;
+        // test
+        return $this->_custom_api_getProductList_Latest(array(
+            "limit" => 10
+        ));
 
         $param = libraryRequest::getApiParam();
 
@@ -106,7 +109,7 @@ class pluginShop {
         }
 
         // attach to output
-        return $data->toJSON();
+        return $data;
     }
 
     /* PLUGIN API METHODS (ADMIN) */
@@ -127,46 +130,59 @@ class pluginShop {
         $productId = getValue($params['productId'], null);
         $categoryId = getValue($params['categoryId'], null);
 
+        $location = null;
+
         if ($productId) {
 
             // get product entry
-            $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductSingleInfo['data']);
-            $dataObj->setValuesDbCondition($productId, MERGE_MODE_APPEND);
-            $dataObj->process();
+            $configProducts = configurationShopDataSource::jsapiProductSingleInfo();
+            $configProductsAttr["condition"]["values"][] = $productId;
+            $productDataEntry = $this->getDataBase()->getData($configProducts);
 
-            $productDataEntry = $dataObj->getData();
+            // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductSingleInfo['data']);
+            // $dataObj->setValuesDbCondition($productId, MERGE_MODE_APPEND);
+            // $dataObj->process();
+
+            // $productDataEntry = $dataObj->getData();
 
             if (isset($productDataEntry['CategoryID'])) {
                 $categoryObj = $this->_custom_api_getCatalogLocation(array(
                     "categoryId" => $productDataEntry['CategoryID']
                 ));
-                $pathData = $categoryObj->getData();
-                $pathData[] = $productDataEntry;
-                $dataObj->setData($pathData);
+                $location = $categoryObj['location'];
+                $location[] = $productDataEntry;
+                // $dataObj->setData($pathData);
             } else
                 $dataObj->setDataError("Product category is missed");
 
         } else {
-            $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
-            $dataObj->setValuesDbProcedure($categoryId);
-            $dataObj->process($params);
+            $configProducts = configurationShopDataSource::jsapiProductSingleInfo();
+            $configProductsAttr["procedure"]["parameters"][] = $productId;
+            $location = $this->getDataBase()->getData($configProducts);
+
+            // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
+            // $dataObj->setValuesDbProcedure($categoryId);
+            // $dataObj->process($params);
         }
 
-        return $dataObj;
+        return array(
+            "location" => $location
+        );
     }
 
     // products list sorted by date added
     // -----------------------------------------------
     private function _custom_api_getProductList_Latest ($params) {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductListLatest['data']);
-        $products = $dataObj->process($params)->getData();
-        
+
+        $configProducts = configurationShopDataSource::jsapiProductListLatest();
+
+        $products = $this->getDataBase()->getData($configProducts);
+
         // list of product ids to fetch related attributes
         $productIDs = array();
 
         // mapped data (key is record's ID)
         $productsMap = array();
-        $attributesMap = array();
 
         // pluck product IDs and create product map
         foreach ($products as $value) {
@@ -174,26 +190,21 @@ class pluginShop {
             $productsMap[$value['ID']] = $value;
         }
 
-        // configure product attribute object
-        $attributesObj = $this->_custom_api_getProductAttributes($productIDs, true);
-        // $attributesObj->extendConfig(array(
-        //     "options" => array(
-        //         "expandSingleRecord" => false
-        //     )
-        // ), true);
+        $configProductsAttr = configurationShopDataSource::jsapiProductAttributes();
+        $configProductsAttr["condition"]["values"][] = $productIDs;
+        // var_dump($configProductsAttr);
 
-        // get product attributes and create map
-        $attributes = $attributesObj->process()->getData();
-        foreach ($attributes as $value)
-            $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
+        // configure product attribute object
+        $attributes = $this->getDataBase()->getData($configProductsAttr);
+        // var_dump($attributes);
+        if (!empty($attributes))
+            foreach ($attributes as $value)
+                $productsMap[$value['ProductID']]['Attributes'] = $value['ProductAttributes'];
 
         // update main data object
-        $dataObj->setData(array(
-            "products" => $productsMap,
-            "attributes" => $attributesMap
-        ));
-
-        return $dataObj;
+        return array(
+            "products" => $productsMap
+        );
     }
 
     // products list sorted by popularity
@@ -636,11 +647,18 @@ class pluginShop {
     // @productIds - array of product ids
     private function _custom_api_getProductAttributes ($productIds, $doNotProcessData) {
         // var_dump(array(array($productIds)));
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
+        // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
         // set condition values
         // var_dump($productIds);
         // var_dump('trolololol');
-        $dataObj->setValuesDbCondition(array($productIds));
+        // $dataObj->setValuesDbCondition(array($productIds));
+
+
+        $config = configurationShopDataSource::jsapiProductAttributes();
+
+        $config["condition"]["values"][] = array($productIds);
+
+        return $this->getDataBase()->getData($config);
 
         if ($doNotProcessData)
             return $dataObj;

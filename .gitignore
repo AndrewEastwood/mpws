@@ -5,3 +5,5 @@ secure
 *.csv
 *.dat
 *.cache.php
+unused
+deprecated

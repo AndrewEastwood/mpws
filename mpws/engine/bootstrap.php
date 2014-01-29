@@ -16,13 +16,13 @@
     //
     define('MPWS_ENABLE_REDIRECTS', false);
     //
-    define('MPWS_LOG_LEVEL', 2);
+    define('MPWS_LOG_LEVEL', 0);
 
     //var_dump(parse_url($_SERVER['HTTP_HOST']));
 
     //error_reporting(E_ERROR | E_WARNING | E_PARSE);
     error_reporting(E_ALL);
-    ini_set("display_errors", 1);
+    ini_set("display_errors", 0);
 
     // include global files
     $globals = glob(DR . '/engine/global/global.*.php');

@@ -1,5 +1,3 @@
-define("default/js/plugin/text", ['module'], function (module){
-
 /**
  * @license RequireJS text 2.0.10 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -10,7 +8,7 @@ define("default/js/plugin/text", ['module'], function (module){
   define, window, process, Packages,
   java, location, Components, FileUtils */
 
-// define(['module'], function (module) {
+define('default/js/plugin/text', ['module'], function (module) {
     'use strict';
 
     var text, fs, Cc, Ci, xpcIsWindows,

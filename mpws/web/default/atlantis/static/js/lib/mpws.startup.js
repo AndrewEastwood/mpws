@@ -1,3 +1,0 @@
-/* 
- * MPWS Startup Script
- */

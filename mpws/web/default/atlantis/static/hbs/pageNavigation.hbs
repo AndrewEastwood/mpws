@@ -1,0 +1,33 @@
+<nav class="navbar" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img src="{{options.logoImageUrl}}" class="logo" title="{{options.siteTitle}}">
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+            <ul class="nav navbar-nav navbar-nav-main">
+                <li class="active"><a href="#">Головна</a></li>
+            </ul>
+
+            {{#if options.showSearch }}
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="пошук">
+                </div>
+                <button type="button" class="btn btn-primary" data-action="shop:search"><span class="fa fa-search"></span></button>
+            </form>
+            {{/if}}
+        </div>
+    </div><!-- /.navbar-collapse -->
+</nav>

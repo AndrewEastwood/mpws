@@ -4,8 +4,8 @@ RewriteBase /
 DirectoryIndex /engine/controller/controller.display.php
 
 # STATIC:
-RewriteRule static_dev/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
-RewriteRule static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/build/$1/$2/$3 [L]
+RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
+#RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/build/$1/$2/$3 [L]
 
 # API
 RewriteRule ^api\.js /engine/controller/controller.api.php [L]

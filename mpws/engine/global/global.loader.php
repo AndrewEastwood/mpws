@@ -46,12 +46,28 @@
                 }
                 case 'configuration': {
                     $libName = $pieces[2];
+                    $len = count($pieces);
+
+                    // var_dump($pieces);
+
+                    if ($len > 3)
+                        for ($i = 3; $i < $len; $i++)
+                            $libName .= $pieces[$i];
+
                     if (strcasecmp($pieces[1], OBJECT_T_CUSTOMER) === 0)
                         $libPath = '/web/customer/' . MPWS_CUSTOMER . '/config/configuration.';
                     elseif (strcasecmp($pieces[1], OBJECT_T_DEFAULT) === 0)
                         $libPath = '/web/default/' . MPWS_VERSION . '/config/configuration.';
                     else
                         $libPath = '/web/plugin/' . strtolower($pieces[1]) . '/config/configuration.';
+
+
+                    // echo PHP_EOL;
+                    // echo PHP_EOL;
+                    // echo 'LIBNAME = ' . $libName;
+                    // echo PHP_EOL;
+                    // echo 'PATH = ' . $libPath;
+
                     break;
                 }
                 // case 'extension': {
