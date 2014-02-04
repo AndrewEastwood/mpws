@@ -16,9 +16,7 @@ class objectPlugin {
         return $this->customer->getDataBase();
     }
 
-    public function getResponse () {
-        return "";
-    }
+    public function getResponse () {}
 
 }
 

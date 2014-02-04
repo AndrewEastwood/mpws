@@ -3,8 +3,8 @@
  */
 define("default/js/lib/handlebars_helpers", [
     'default/js/lib/underscore',
-    'default/js/lib/handlebars',
-], function (_, Handlebars) {
+    'default/js/lib/extend.string'
+], function (_) {
     // The module to be exported
     var helpers = {
         contains: function (str, pattern, options) {
@@ -346,13 +346,13 @@ define("default/js/lib/handlebars_helpers", [
     helpers.ifLtEq = helpers.if_lteq;
     helpers.unlessLtEq = helpers.unless_lteq;
     helpers.srtStartsWith = function (text, startPart, options) {
-        if (text.substr(0, startPart.length) === startPart)
+        if (text.startWith(startPart))
             return options.fn(this);
         return options.inverse(this);
     }
     // from: http://stackoverflow.com/a/12002281
     helpers.foreach = function (arr, options) {
-        if (options.inverse && !arr.length)
+        if (options.inverse && (!arr || !arr.length))
             return options.inverse(this);
         return arr.map(function (item, index) {
             item.$index = index;
@@ -363,20 +363,20 @@ define("default/js/lib/handlebars_helpers", [
     };
     // helpers.mpwsPartial = function (partialID, partialData) {
     // }
-    Handlebars.registerHelper('mpwsIsEmpty', function (object, options) {
+    helpers.mpwsIsEmpty = function (object, options) {
         return _.isEmpty(object) ? options.fn(this) : options.inverse(this);
-    });
-    Handlebars.registerHelper('mpwsIsNotEmpty', function (object, options) {
+    }
+    helpers.mpwsIsNotEmpty = function (object, options) {
         return !_.isEmpty(object) ? options.fn(this) : options.inverse(this);
-    });
-    Handlebars.registerHelper('mpwsPartial', function (templateName, partialData) {
-        var _partial = Handlebars.partials[templateName];
-        return new Handlebars.SafeString(Handlebars.compile(_partial)(partialData || this));
-    });
-    Handlebars.registerHelper('mpwsToInt', function (value, context) {
+    }
+    // helpers.mpwsPartial = function (templateName, partialData) {
+    //     var _partial = Handlebars.partials[templateName];
+    //     return new Handlebars.SafeString(Handlebars.compile(_partial)(partialData || this));
+    // }
+    helpers.mpwsToInt = function (value, context) {
         return parseInt(value, 10);
-    });
-    Handlebars.registerHelper("debug", function (optionalValue) {
+    }
+    helpers.debug = function (optionalValue) {
         console.log("Current Context");
         console.log("====================");
         console.log(this);
@@ -385,8 +385,8 @@ define("default/js/lib/handlebars_helpers", [
             console.log("====================");
             console.log(optionalValue);
         }
-    });
-    // Export helpers
-    for (var helper in helpers)
-        Handlebars.registerHelper(helper, helpers[helper]);
+    }
+
+    return helpers;
+
 });

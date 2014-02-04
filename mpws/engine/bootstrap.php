@@ -1,9 +1,7 @@
 <?php
 
     // detect running customer name
-
     define('DR', getDocumentRoot());
-
     // detect running customer name
     define('MPWS_CUSTOMER', getCustomer());
     // evironment version
@@ -22,7 +20,7 @@
 
     //error_reporting(E_ERROR | E_WARNING | E_PARSE);
     error_reporting(E_ALL);
-    ini_set("display_errors", 0);
+    ini_set("display_errors", 1);
 
     // include global files
     $globals = glob(DR . '/engine/global/global.*.php');
@@ -62,5 +60,5 @@
     function glIsCustomer ($customerName) {
         return strcasecmp(MPWS_CUSTOMER, $customerName) === 0;
     }
-    
+
 ?>

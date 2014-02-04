@@ -11,7 +11,7 @@
 define: false, process: false, window: false */
 define('default/js/plugin/hbs', [
 //>>excludeStart('excludeHbs', pragmas.excludeHbs)
-'Handlebars', 'underscore', 'i18nprecompile', 'json2'
+'default/js/lib/handlebars', 'default/js/lib/underscore', 'default/js/lib/i18nprecompile', 'default/js/lib/json2'
 //>>excludeEnd('excludeHbs')
 ], function (
 //>>excludeStart('excludeHbs', pragmas.excludeHbs)
@@ -19,20 +19,21 @@ define('default/js/plugin/hbs', [
 //>>excludeEnd('excludeHbs')
 ) {
 //>>excludeStart('excludeHbs', pragmas.excludeHbs)
-  var fs, getXhr,
-        progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
-        fetchText = function () {
-            throw new Error('Environment unsupported.');
-        },
-        buildMap = [],
-        filecode = "w+",
-        templateExtension = "hbs",
-        customNameExtension = "@hbs",
-        devStyleDirectory = "/styles/",
-        buildStyleDirectory = "/demo-build/styles/",
-        helperDirectory = "template/helpers/",
-        i18nDirectory = "template/i18n/",
-        buildCSSFileName = "screen.build.css";
+  var fs;
+  var getXhr;
+  var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
+  var fetchText = function () {
+      throw new Error('Environment unsupported.');
+  };
+  var buildMap = [];
+  var filecode = 'w+';
+  var templateExtension = 'hbs';
+  var customNameExtension = '@hbs';
+  var devStyleDirectory = '/styles/';
+  var buildStyleDirectory = '/demo-build/styles/';
+  var helperDirectory = 'templates/helpers/';
+  var i18nDirectory = 'templates/i18n/';
+  var buildCSSFileName = 'screen.build.css';
 
     Handlebars.registerHelper('$', function() {
         //placeholder for translation helper
@@ -308,7 +309,7 @@ define('default/js/plugin/hbs', [
                       extDeps = getExternalDeps( nodes ),
                       vars = extDeps.vars,
                       helps = extDeps.helpers || [],
-                      depStr = deps.join("', 'hbs!").replace(/_/g, '/'),
+                      depStr = deps.join("', 'default/js/plugin/hbs!").replace(/_/g, '/'),
                       helpDepStr = config.hbs && config.hbs.disableHelpers ?
                       "" : (function (){
                         var i, paths = [],
@@ -325,9 +326,9 @@ define('default/js/plugin/hbs', [
                       debugOutputEnd   = "",
                       debugProperties = "",
                       metaObj, head, linkElem;
-
+                  // debugger;
                   if ( depStr ) {
-                    depStr = ",'hbs!" + depStr + "'";
+                    depStr = ",'default/js/plugin/hbs!" + depStr + "'";
                   }
                   if ( helpDepStr ) {
                     helpDepStr = "," + helpDepStr;
@@ -396,7 +397,7 @@ define('default/js/plugin/hbs', [
                       prec = precompile( text, mapping, options);
 
                   text = "/* START_TEMPLATE */\n" +
-                         "define(['hbs','Handlebars'"+depStr+helpDepStr+"], function( hbs, Handlebars ){ \n" +
+                         "define(['default/js/plugin/hbs','default/js/lib/handlebars'"+depStr+helpDepStr+"], function( hbs, Handlebars ){ \n" +
                            "var t = Handlebars.template(" + prec + ");\n" +
                            "Handlebars.registerPartial('" + name.replace( /\//g , '_') + "', t);\n" +
                            debugProperties +
@@ -419,7 +420,7 @@ define('default/js/plugin/hbs', [
 
                   for ( var i in deps ) {
                     if ( deps.hasOwnProperty(i) ) {
-                      deps[ i ] = 'hbs!' + deps[ i ].replace(/_/g, '/');
+                      deps[ i ] = 'default/js/plugin/hbs!' + deps[ i ].replace(/_/g, '/');
                     }
                   }
 
@@ -463,23 +464,26 @@ define('default/js/plugin/hbs', [
             if (disableI18n){
                 fetchAndRegister(false);
             } else {
-            	// Workaround until jam is able to pass config info or we move i18n to a separate module.
-            	// This logs a warning and disables i18n if there's an error loading the language file
-            	var langMapPath = (config.hbs && config.hbs.i18nDirectory ? config.hbs.i18nDirectory : i18nDirectory) + (config.locale || "en_us") + '.json';
-            	try {
-					fetchOrGetCached(parentRequire.toUrl(langMapPath), function (langMap) {
-					  fetchAndRegister(JSON.parse(langMap));
-					});
+                  // debugger;
+              // Workaround until jam is able to pass config info or we move i18n to a separate module.
+              // This logs a warning and disables i18n if there's an error loading the language file
+              // if (_.isArray(i18nDirectories))
+                ;///
+              var langMapPath = (config.hbs && config.hbs.i18nDirectory ? config.hbs.i18nDirectory : i18nDirectory) + (config.locale || "en_us") + '.js';
+              try {
+                  fetchOrGetCached(parentRequire.toUrl(langMapPath), function (langMap) {
+                    fetchAndRegister(JSON.parse(langMap));
+                  });
                 } catch(er) {
-                	// if there's no configuration at all, log a warning and disable i18n for this and subsequent templates
-                	if(!config.hbs) {
-                		console.warn('hbs: Error reading ' + langMapPath + ', disabling i18n. Ignore this if you\'re using jam, otherwise check your i18n configuration.\n');
-						config.hbs = {disableI18n: true};
-                		fetchAndRegister(false);
-                	} else {
-                		throw er;
+                  // if there's no configuration at all, log a warning and disable i18n for this and subsequent templates
+                  if(!config.hbs) {
+                    console.warn('hbs: Error reading ' + langMapPath + ', disabling i18n. Ignore this if you\'re using jam, otherwise check your i18n configuration.\n');
+            config.hbs = {disableI18n: true};
+                    fetchAndRegister(false);
+                  } else {
+                    throw er;
 
-                	}
+                  }
                 }
             }
           //>>excludeEnd('excludeHbs')

@@ -356,7 +356,7 @@ var JSON = window.JSON || {};
     }
 }());
 
-define(function(){
+define('default/js/lib/json2', function(){
     return JSON;
 });
 // otherwise just leave it alone

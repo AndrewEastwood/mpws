@@ -27,6 +27,7 @@ class configurationDefaultDisplay extends objectConfiguration {
     // encoding key
     static $EncKey = 'Qqq!@SdfTo__56%$#';
 
+    // static $pageCharset = 'utf-8';
 }
 
 ?>

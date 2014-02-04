@@ -1,19 +1,8 @@
 {
-	"draw_white_space": "all",
 	"folders":
 	[
 		{
-			"path": "/home/andrew/mpws/web/mpws"
-		},
-		{
 			"path": "/devdata/Develop/github/web/mpws"
-		},
-		{
-			"path": "/home/andrew/qBeats/united"
-		},
-		{
-			"path": "/devdata/Develop/pb_to_gal"
 		}
-	],
-	"translate_tabs_to_spaces": true
+	]
 }

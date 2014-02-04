@@ -23,6 +23,9 @@
             // version suppress
             cmn_jquery: _globalConfig.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
         },
+        hbs: {
+            i18nDirectory: _globalConfig.URL_STATIC_DEFAULT + 'nls/'
+        },
         waitSeconds: 15,
         urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
     });
@@ -42,6 +45,11 @@
         if (pluginCount > 1)
             for (var i = 1; i < pluginCount; i++)
                 _args[i].initRouter(_customerJs);
+
+        window.app.customer = _customerJs;
+
+        // start/init customer
+        _customerJs.start();
 
         Backbone.history.start();  // Запускаем HTML5 History push
     });

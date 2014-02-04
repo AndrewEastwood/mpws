@@ -101,7 +101,8 @@ class libraryRequest {
     /* state grabbers */
     static function isJsApiRequest () {
         //echo 'RequestAction is ' . self::getAction();
-        return self::getAction() === 'api';
+        // return self::getAction() === 'api';
+        return MPWS_REQUEST === "API";
     }
     static function isPostFormAction ($equalsToThisValue) { 
         $do = self::value($_POST, 'do');
@@ -224,24 +225,21 @@ class libraryRequest {
         }
     }
     
-    public static function getOrValidatePageSecurityToken($keyToValidate = '') {
-        if (!empty($keyToValidate)) {
+    public static function getOrValidatePageSecurityToken($privateKey, $publicKey = '') {
+        if (!empty($publicKey)) {
+            // echo $_SESSION['MPWS_SESSION_TOKEN'];
+            // echo 'publicKey=' . $publicKey;
+            // echo 'MPWS_SESSION_TOKEN=' . $_SESSION['MPWS_SESSION_TOKEN'];
             if (!empty($_SESSION['MPWS_SESSION_TOKEN']))
-                return $_SESSION['MPWS_SESSION_TOKEN'] === $keyToValidate;
-            return $keyToValidate === self::getOrValidatePageSecurityToken();
-        }
-        
-        if (!self::isJsApiRequest()) {
-            //echo 'generating security token';
-            // make token
-            $p = libraryRequest::getPage('undefined');
-            $g = libraryRequest::getPlugin('undefined');
-            $d = libraryRequest::getDisplay('undefined');
-            $a = libraryRequest::getAction('undefined');
-            $phash = md5($p.$g.$d.$a.date('Y-m-d'));
-            $_SESSION['MPWS_SESSION_TOKEN'] = $phash;
-        }
+                return $_SESSION['MPWS_SESSION_TOKEN'] === $publicKey;
+            return $publicKey === self::getOrValidatePageSecurityToken($privateKey);
 
+        }
+        if (!self::isJsApiRequest()) {
+            // make token
+            $_SESSION['MPWS_SESSION_TOKEN'] = md5($privateKey . date('Y-m-d'));
+            // echo 'MPWS_SESSION_TOKEN=' . $_SESSION['MPWS_SESSION_TOKEN'];
+        }
         return $_SESSION['MPWS_SESSION_TOKEN'];
     }
 

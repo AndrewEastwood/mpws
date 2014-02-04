@@ -1,25 +1,18 @@
 define("default/js/model/breadcrumb", [
-    'default/js/lib/underscore',
-    'default/js/lib/backbone',
-    'default/js/lib/url'
-], function (_, Backbone, Url) {
+    'default/js/model/mModel',
+    // 'default/js/lib/underscore',
+    // 'default/js/lib/url'
+], function (MModel/*, _, JSUrl*/) {
 
-    var Breadcrumb = Backbone.Model.extend({
+    var Breadcrumb = MModel;
 
-        _options: {
-
-            fn: null
-
-            // categoryId: null,
-
-            // productId: null,
-        },
-
-        configure: function (options) {
-            this._options = _.extend({}, this._options, options);
-        }
-
-    });
+// .extend({
+//         initialize: function () {
+//             this.updateUrlOptions({
+                
+//             });
+//         }
+//     });
 
     return Breadcrumb;
 

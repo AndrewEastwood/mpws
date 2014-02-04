@@ -3,12 +3,13 @@
 define("default/js/lib/handlebars", [
     /* import dep packages */
     'cmn_jquery',
-    'default/js/lib/underscore'
+    'default/js/lib/underscore',
+    'default/js/lib/handlebars_helpers'
     // 'lib/backbone',
     // 'lib/jquery_ui',
 
     /* component implementation */
-], function ($, _) {
+], function ($, _, helpers) {
 
 /*
 
@@ -2288,6 +2289,10 @@ Handlebars.template = Handlebars.VM.template;
 // lib/handlebars/browser-suffix.js
 })(Handlebars);
 ;
+
+  // Export helpers
+  for (var helper in helpers)
+      Handlebars.registerHelper(helper, helpers[helper]);
 
   return Handlebars;
 

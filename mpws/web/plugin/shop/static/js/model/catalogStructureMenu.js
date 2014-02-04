@@ -1,28 +1,22 @@
 define("plugin/shop/js/model/catalogStructureMenu", [
-    'default/js/lib/underscore',
-    'default/js/model/mmodel',
+    'default/js/model/mModel',
     'default/js/lib/utils'
-], function (_, MModel, Utils) {
+], function (MModel) {
 
     var CatalogStructureMenu = MModel.extend({
-
-        _options: {
-            realm: 'plugin',
-
-            caller: 'shop',
-
-            fn: 'shop_catalog_structure'
+        initialize: function () {
+            // debugger;
+            this.updateUrlOptions({
+                source: 'shop',
+                fn: 'shop_catalog_structure'
+            });
+            // MModel.prototype.initialize.call(this);
+            // MModel.prototype.initialize.call(this);
         },
-
-        initialize: function (options) {
-            MModel.prototype.initialize.call(this, _.extend({}, this._options, options));
-            // app.log(true, 'CatalogStructureMenu model initialize', this);
-        },
-
         parse: function (data) {
+            debugger;
             return Utils.getTreeByJson(data, 'ID', 'ParentID');
         }
-
     });
 
     return CatalogStructureMenu;

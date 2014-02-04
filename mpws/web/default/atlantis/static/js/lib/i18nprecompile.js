@@ -1,5 +1,5 @@
 //>>excludeStart('excludeAfterBuild', pragmas.excludeAfterBuild)
-define(['Handlebars', "underscore"], function ( Handlebars, _ ) {
+define('default/js/lib/i18nprecompile', ['default/js/lib/handlebars', "default/js/lib/underscore"], function ( Handlebars, _ ) {
 
   function replaceLocaleStrings ( ast, mapping, options ) {
     options = options || {};

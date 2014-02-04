@@ -1,32 +1,21 @@
 define("plugin/shop/js/site", [
+    'customer/js/site',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
+    'plugin/shop/js/view/catalogStructureMenu'
     // views + models
-    'default/js/view/pageNavigation',
-    'default/js/view/breadcrumb',
+    // 'default/js/view/pageNavigation',
+    // 'default/js/view/breadcrumb',
     // pages
     // 'plugin/shop/js/view/pageShopHome',
     // 'plugin/shop/js/view/pageShopCatalog',
     // 'plugin/shop/js/view/pageProductEntryStandalone'
-], function ($, _, Backbone, Cache, PageNavigation, ViewBreadcrumb) {
-
-    var placeholders = {
-        header: $('.MPWSPageHeader'),
-        body: $('.MPWSPageBody'),
-        footer: $('.MPWSPageFooter')
-    }
+], function (Site, $, _, Backbone, Cache, CatalogStructureMenu /*PageNavigation, ViewBreadcrumb*/) {
 
     // create & configure permanent views
-    var _views = {
-        navigation: new PageNavigation({
-            el: placeholders.menu
-        }),
-        breadcrumb: new ViewBreadcrumb({
-            el: options.breadcrumb
-        })
-    }
+    var _views = {};
 
     // var _navigation = new PageNavigation({
     //     el: placeholders.menu
@@ -36,13 +25,6 @@ define("plugin/shop/js/site", [
     //     el: options.breadcrumb
     // });
 
-    _breadcrumb.model.configure({
-        source: 'shop:shop_location'
-    });
-
-    _navigation.model.configure({
-        source: 'shop:shop_location'
-    });
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -55,24 +37,74 @@ define("plugin/shop/js/site", [
             "shop/cart": "shop_cart_view",
         },
 
-        initialize: function (options) {
+        initialize: function (customerObj) {
+
+            // this.customer = customerObj;
+
+            // init and configure common views
+            // customerObj.views.navigation
+
+
+            // urlOptions: {
+            //     source: 'shop',
+            //     fn: 'shop_location'
+            // }
+            // 
+            // if (customerObj.views.breadcrumb)
+            //     customerObj.views.breadcrumb = new ViewBreadcrumb({
+            //     el: options.placeholders.breadcrumb,
+            //     template: 'default/js/plugin/hbs!plugin/shop/hbs/shopBreadcrumb',
+            //     urlOptions: {
+            //         source: 'shop',
+            //         fn: 'shop_location'
+            //     }
+            // });
+
+            // debugger;
+            var shopMenuItem = new CatalogStructureMenu();
+            shopMenuItem.render();
+            shopMenuItem.on('mview:render-complete', function () {
+                debugger;
+                Site.addMenuItem(shopMenuItem.$el);
+            });
+
+
 
         },
 
         home: function () {
 
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: null
+            });
+
         },
 
-        shop_catalog_category: function () {
+        shop_catalog_category: function (categoryID) {
 
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: categoryID
+            });
         },
 
         shop_catalog: function () {
 
         },
 
-        shop_product: function () {
+        shop_product: function (productID) {
 
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: productID,
+                categoryID: null
+            });
         },
 
         shop_wizard: function () {
@@ -86,8 +118,8 @@ define("plugin/shop/js/site", [
     });
 
     return {
-        initRouter: function (customerConfig) {
-            return new Router(customerConfig);
+        initRouter: function (customerObj) {
+            return new Router(customerObj);
         }
     }
 

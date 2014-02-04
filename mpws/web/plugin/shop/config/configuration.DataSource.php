@@ -84,7 +84,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "order" => array(
                 "field" => "shop_productPrices.Price",
                 "ordering" => "ASC"
-            )
+            ),
             "options" => array(
                 "transformToArray" => array("PriceArchive")
             )

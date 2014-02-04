@@ -2,7 +2,7 @@
 
 class libraryCustomer {
 
-    var $_customer;
+    private $_customer;
 
     function __construct() {
         $_customerScript = glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);

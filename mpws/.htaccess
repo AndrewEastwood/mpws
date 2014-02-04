@@ -8,7 +8,7 @@ RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/stati
 #RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/build/$1/$2/$3 [L]
 
 # API
-RewriteRule ^api\.js /engine/controller/controller.api.php [L]
+RewriteRule ^api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
 
 # SERVICES:
 #RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]

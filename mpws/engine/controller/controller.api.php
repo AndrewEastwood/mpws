@@ -28,6 +28,7 @@
         return $customer->getResponse();
     }
     
-    echo response();
+    $data = response();
+    echo $data->toJSON();
 
 ?>

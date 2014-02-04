@@ -5,36 +5,39 @@ class pluginShop extends objectPlugin {
     public function getResponse () {
 
         // test
-        return $this->_custom_api_getProductList_Latest(array(
-            "limit" => 10
-        ));
+        // return $this->_custom_api_getProductList_Latest(array(
+        //     "limit" => 10
+        // ));
 
-        $param = libraryRequest::getApiParam();
+        // $param = libraryRequest::getApiParam();
 
         // extract params
         // some functions require particular parameters to be not empty
         // otherwise you will get error message
-        $pProductID = !empty($param['productId']) ? $param['productId'] : false;
-        $pCategoryID = !empty($param['categoryId']) ? $param['categoryId'] : false;
-        $pOriginID = !empty($param['oid']) ? $param['oid'] : false;
-        $pLimit = !empty($param['limit']) ? $param['limit'] : false;
-        $pOffset = !empty($param['offset']) ? $param['offset'] : false;
+        // $productID = libraryRequest::getValue('productID', false);
+        // $categoryID = libraryRequest::getValue('categoryID', false);
+        // $originID = libraryRequest::getValue('originID', false);
+        // $limit = libraryRequest::getValue('limit', false);
+        // $offset = libraryRequest::getValue('offset', false);
 
         // token=656c88543646e400eb581f6921b83238
         // var_dump($param);
         // $ctx = contextMPWS::instance();
-        switch(libraryRequest::getApiFn()) {
+
+        switch(libraryRequest::getValue('fn')) {
             // breadcrumb
             // -----------------------------------------------
             case "shop_location": {
-                $data = $this->_custom_api_getCatalogLocation($param);
+                $productID = libraryRequest::getValue('productID');
+                $categoryID = libraryRequest::getValue('categoryID');
+                $data = $this->_custom_api_getCatalogLocation($productID, $categoryID);
                 break;
             }
             // products list sorted by date added
             // -----------------------------------------------
             case "shop_product_list_latest": {
                 $data = $this->_custom_api_getProductList_Latest(array(
-                    "limit" => $pLimit
+                    "limit" => libraryRequest::getValue('offset', false)
                 ));
                 break;
             }
@@ -79,13 +82,13 @@ class pluginShop extends objectPlugin {
             // product standalone item short
             // -----------------------------------------------
             case "shop_product_item_short" : {
-                $data = $this->_custom_api_getProductItem($pProductID, 'short');
+                $data = $this->_custom_api_getProductItem($productID, 'short');
                 break;
             }
             // product standalone item full
             // -----------------------------------------------
             case "shop_product_item_full" : {
-                $data = $this->_custom_api_getProductItem($pProductID, 'full');
+                $data = $this->_custom_api_getProductItem($productID, 'full');
                 break;
             }
             // shopping cart
@@ -99,7 +102,7 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_cart_manage" : {
-                $data = $this->_custom_api_shoppingCartManage($pProductID, $param);
+                $data = $this->_custom_api_shoppingCartManage($productID, $param);
                 break;
             }
             case "shop_cart_content" : {
@@ -126,48 +129,47 @@ class pluginShop extends objectPlugin {
     /* PLUGIN API METHODS (PUBLIC) */
     // breadcrumb
     // -----------------------------------------------
-    private function _custom_api_getCatalogLocation ($params) {
-        $productId = getValue($params['productId'], null);
-        $categoryId = getValue($params['categoryId'], null);
+    private function _custom_api_getCatalogLocation ($productID = null, $categoryID = null) {
 
-        $location = null;
+        $location = new libraryDataObject();
 
-        if ($productId) {
+        $location->setData('location', false);
+
+        if (empty($productID) && empty($categoryID))
+            return $location;
+
+        if ($productID) {
 
             // get product entry
-            $configProducts = configurationShopDataSource::jsapiProductSingleInfo();
-            $configProductsAttr["condition"]["values"][] = $productId;
-            $productDataEntry = $this->getDataBase()->getData($configProducts);
+            $configProduct = configurationShopDataSource::jsapiProductSingleInfo();
+            $configProduct["condition"]["values"][] = $productID;
+            $productDataEntry = $this->getDataBase()->getData($configProduct);
+            // var_dump($productDataEntry);
 
             // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductSingleInfo['data']);
-            // $dataObj->setValuesDbCondition($productId, MERGE_MODE_APPEND);
+            // $dataObj->setValuesDbCondition($productID, MERGE_MODE_APPEND);
             // $dataObj->process();
 
             // $productDataEntry = $dataObj->getData();
 
             if (isset($productDataEntry['CategoryID'])) {
-                $categoryObj = $this->_custom_api_getCatalogLocation(array(
-                    "categoryId" => $productDataEntry['CategoryID']
-                ));
-                $location = $categoryObj['location'];
-                $location[] = $productDataEntry;
-                // $dataObj->setData($pathData);
+                $location2 = $this->_custom_api_getCatalogLocation(null, $productDataEntry['CategoryID']);
+                $location->setData('location', $location2->getData('location'));
+                $location->setData('product', $productDataEntry);
             } else
-                $dataObj->setDataError("Product category is missed");
+                $location->setError("Product category is missing");
 
         } else {
-            $configProducts = configurationShopDataSource::jsapiProductSingleInfo();
-            $configProductsAttr["procedure"]["parameters"][] = $productId;
-            $location = $this->getDataBase()->getData($configProducts);
+            $configLocation = configurationShopDataSource::jsapiShopCategoryLocation();
+            $configLocation["procedure"]["parameters"][] = $categoryID;
+            $location->setData('location', $this->getDataBase()->getData($configLocation));
 
             // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
             // $dataObj->setValuesDbProcedure($categoryId);
             // $dataObj->process($params);
         }
 
-        return array(
-            "location" => $location
-        );
+        return $location;
     }
 
     // products list sorted by date added
@@ -199,7 +201,7 @@ class pluginShop extends objectPlugin {
         // var_dump($attributes);
         if (!empty($attributes))
             foreach ($attributes as $value)
-                $productsMap[$value['ProductID']]['Attributes'] = $value['ProductAttributes'];
+                $productsMap[$value['productID']]['Attributes'] = $value['ProductAttributes'];
 
         // update main data object
         return array(
@@ -227,7 +229,7 @@ class pluginShop extends objectPlugin {
 
     // shop catalog structure
     // -----------------------------------------------
-    private function _custom_api_getCatalogStructure ($params) {
+    private function _custom_api_getCatalogStructure () {
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
         $categories = $dataObj->process($params)->getData();
 
@@ -262,12 +264,12 @@ class pluginShop extends objectPlugin {
 
         $_result = array(
             "error" => null,
-            "products" => &$productsMap,
-            "attributes" => &$attributesMap,
-            "filterOptionsApplied" => &$filterOptionsApplied,
-            "filterOptionsAvailable" => &$filterOptionsAvailable,
+            "products" => /*&*/$productsMap,
+            "attributes" => /*&*/$attributesMap,
+            "filterOptionsApplied" => /*&*/$filterOptionsApplied,
+            "filterOptionsAvailable" => /*&*/$filterOptionsAvailable,
             "info" => array(
-                "productsCount" => count(&$productsMap),
+                "productsCount" => count(/*&*/$productsMap),
                 "currentCategoryID" => $categoryId
             )
         );
@@ -409,7 +411,7 @@ class pluginShop extends objectPlugin {
         $attributes = $attributesObj->process()->getData();
 
         foreach ($attributes as $value)
-            $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
+            $attributesMap[$value['productID']] = $value['ProductAttributes'];
 
         // update main data object
         // ---
@@ -435,29 +437,29 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _custom_api_getProductItem ($pProductID, $type) {
+    private function _custom_api_getProductItem ($productID, $type) {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
 
         $dataObj = new mpwsData();
 
-        if (empty($pProductID) || !is_numeric($pProductID))
-            $dataObj->setDataError('wrongProductID');
+        if (empty($productID) || !is_numeric($productID))
+            $dataObj->setDataError('wrongproductID');
         else {
 
             // set config
             $dataObj->setConfig($this->objectConfiguration_data_jsapiProductItem['data']);
             // replace condition values
             // add filter values
-            // var_dump($pProductID);
-            $dataObj->setValuesDbCondition($pProductID, MERGE_MODE_APPEND);
+            // var_dump($productID);
+            $dataObj->setValuesDbCondition($productID, MERGE_MODE_APPEND);
 
             $dataObj->process();
             // var_dump($dataObj);
 
             // echo '111111111111111111111111111' . PHP_EOL;
             // fetch attributes
-            $dataProductAttrObj = $this->_custom_api_getProductAttributes(array($pProductID), true);
+            $dataProductAttrObj = $this->_custom_api_getProductAttributes(array($productID), true);
             // var_dump($dataProductAttrObj);
             // $dataProductAttrObj->extendConfig(array(
             //     "options" => array(
@@ -483,21 +485,21 @@ class pluginShop extends objectPlugin {
             switch ($type) {
                 // full means that we have additional data here and them we append basic data
                 case 'full':
-                    $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($pProductID);
+                    $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($productID);
                     $prices = $dataProductPricesObj->process()->getData();
                     foreach ($prices as $value)
-                        $pricesMap[$value['ProductID']] = $value['PriceArchive'];
+                        $pricesMap[$value['productID']] = $value['PriceArchive'];
                     $_data['prices'] = $pricesMap;
 
                 // short is like a basic product data that must be included
                 case 'short':
                     $productsMap = array(
-                        $pProductID =>$dataObj->getData()
+                        $productID =>$dataObj->getData()
                     );
 
                     $attributes = $dataProductAttrObj->process()->getData();
                     foreach ($attributes as $value)
-                        $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
+                        $attributesMap[$value['productID']] = $value['ProductAttributes'];
 
                     $_data['products'] = $productsMap;
                     $_data['attributes'] = $attributesMap;
@@ -509,7 +511,7 @@ class pluginShop extends objectPlugin {
 
             // save product into recently viewed
             $recentProducts = $_SESSION['shop:recentProducts'] ?: array();
-            $recentProducts[$pProductID] = $_prod;
+            $recentProducts[$productID] = $_prod;
             $_SESSION['shop:recentProducts'] = $recentProducts;
         
             $dataObj->setData($_data);
@@ -533,7 +535,7 @@ class pluginShop extends objectPlugin {
         $_SESSION['shop:cart'] = array();
         return $this->_custom_api_shoppingCartContent();
     }
-    private function _custom_api_shoppingCartManage ($pProductID, $param) {
+    private function _custom_api_shoppingCartManage ($productID, $param) {
 
         $amount = getValue($param['amount'], null);
         $clear = getValue($param['clear'], false);
@@ -548,26 +550,26 @@ class pluginShop extends objectPlugin {
                 $amount = intval($amount);
                 // remove item completely
                 if ($amount === 0)
-                    unset($cart[$pProductID]);
+                    unset($cart[$productID]);
                 else {
                     // check existatce
-                    if (isset($cart[$pProductID])) {
-                        $cart[$pProductID]["products"][$pProductID]["CartAmount"] += $amount;
+                    if (isset($cart[$productID])) {
+                        $cart[$productID]["products"][$productID]["CartAmount"] += $amount;
                         // remove item when amount is -1 and current amount is 1
-                        if ($cart[$pProductID]["products"][$pProductID]["CartAmount"] === 0)
-                            unset($cart[$pProductID]);
+                        if ($cart[$productID]["products"][$productID]["CartAmount"] === 0)
+                            unset($cart[$productID]);
                     } else {
                         // just get new product entry annd add it into cart
-                        $productEntry = $this->_custom_api_getProductItem($pProductID, 'short');
+                        $productEntry = $this->_custom_api_getProductItem($productID, 'short');
                         if ($productEntry->hasData()) {
-                            $cart[$pProductID] = $productEntry->getData();
-                            $cart[$pProductID]["products"][$pProductID]["CartAmount"] = 1;
+                            $cart[$productID] = $productEntry->getData();
+                            $cart[$productID]["products"][$productID]["CartAmount"] = 1;
                         } else
                             $error = "Wrong product ID";
                     }
                     // update product total
                     if (!$error)
-                        $cart[$pProductID]["products"][$pProductID]["CartTotal"] = $cart[$pProductID]["products"][$pProductID]["CartAmount"] * $cart[$pProductID]["products"][$pProductID]["Price"];
+                        $cart[$productID]["products"][$productID]["CartTotal"] = $cart[$productID]["products"][$productID]["CartAmount"] * $cart[$productID]["products"][$productID]["Price"];
                 }
             }
             else
@@ -600,14 +602,14 @@ class pluginShop extends objectPlugin {
             "discount" => 0
         );
         // extract short info
-        foreach ($cart as $pProductID => $productEntry) {
+        foreach ($cart as $productID => $productEntry) {
             // // update each product
             // $cart[$pID] = $productEntry;
             // $cart[$pID]["Total"] = $cart[$pID]["Amount"] * $cart[$pID]["Price"];
 
             // update cart checkout info
-            $cart_info["productAmount"] += $productEntry["products"][$pProductID]["CartAmount"];
-            $cart_info["total"] += $productEntry["products"][$pProductID]["CartTotal"];
+            $cart_info["productAmount"] += $productEntry["products"][$productID]["CartAmount"];
+            $cart_info["total"] += $productEntry["products"][$productID]["CartTotal"];
         }
 
         // $_SESSION['shop:cart_info'] = $cart_info;
@@ -644,19 +646,19 @@ class pluginShop extends objectPlugin {
     // product item
 
     // product additional data
-    // @productIds - array of product ids
-    private function _custom_api_getProductAttributes ($productIds, $doNotProcessData) {
-        // var_dump(array(array($productIds)));
+    // @productIDs - array of product ids
+    private function _custom_api_getProductAttributes ($productIDs, $doNotProcessData) {
+        // var_dump(array(array($productIDs)));
         // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
         // set condition values
-        // var_dump($productIds);
+        // var_dump($productIDs);
         // var_dump('trolololol');
-        // $dataObj->setValuesDbCondition(array($productIds));
+        // $dataObj->setValuesDbCondition(array($productIDs));
 
 
         $config = configurationShopDataSource::jsapiProductAttributes();
 
-        $config["condition"]["values"][] = array($productIds);
+        $config["condition"]["values"][] = array($productIDs);
 
         return $this->getDataBase()->getData($config);
 
@@ -666,11 +668,11 @@ class pluginShop extends objectPlugin {
         return $dataObj->process();
     }
 
-    private function _custom_api_getProductPriceArchive ($productIds, $doNotProcessData) {
-        // var_dump($productIds);
+    private function _custom_api_getProductPriceArchive ($productIDs, $doNotProcessData) {
+        // var_dump($productIDs);
         $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsPriceStats['data']);
         // set condition values
-        $dataObj->setValuesDbCondition($productIds);
+        $dataObj->setValuesDbCondition($productIDs);
 
         if ($doNotProcessData)
             return $dataObj;

@@ -1,0 +1,53 @@
+{{!
+{
+  "name" : "template1",
+  "description" : "A nice template."
+}
+}}
+
+<ol class="breadcrumb shop-breadcrumb">
+
+{{!--     {{$ "test"}}
+
+    {{>  plugin_shop_hbs_coolPartial }} --}}
+
+    {{#compare app.location.fragment "==" "" }}
+    <li class="active">Головна</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop" }}
+    <li class="active">Головна</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop/cart" }}
+    <li><a href="#">Головна</a></li>
+    <li class="active">Кошик</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop/cart/checkout" }}
+    <li><a href="#">Головна</a></li>
+    <li class="active">Оформлення</li>
+    {{/compare}}
+
+    {{#srtStartsWith app.location.fragment "shop/catalog/" }}
+        <li><a href="#">Головна</a></li>
+        {{#foreach data.shop.location}}
+            {{#if $last}}
+                <li class="active">{{Name}}</li>
+            {{else}}
+                <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+            {{/if}}
+        {{/foreach}}
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "shop/product/" }}
+        <li><a href="#">Головна</a></li>
+        {{#foreach data.shop.location}}
+            {{#if $last}}
+                <li class="active">{{Name}}</li>
+            {{else}}
+                <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+            {{/if}}
+        {{/foreach}}
+    {{/srtStartsWith}}
+</ol>

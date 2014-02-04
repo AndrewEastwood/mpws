@@ -1,10 +1,10 @@
 <?php
 
-    header('Content-type: text/html');
+    header('Content-Type: text/html');
     // set request realm
     define ('MPWS_REQUEST', 'DISPLAY');
     // start session
-    // session_start();
+    session_start();
     // bootstrap
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
@@ -26,7 +26,7 @@
         LOCALE: '" . configurationCustomerDisplay::$Locale . "',
         BUILD: " . (MPWS_ENV === 'DEV' ? 'null' : file_get_contents($DR . DS . 'version.txt')) . ",
         ISDEV: " . (MPWS_ENV === 'DEV' ? 'true' : 'false') . ",
-        TOKEN: '" . libraryRequest::getOrValidatePageSecurityToken() . "',
+        TOKEN: '" . libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey) . "',
         ISTOOLBOX: " . (glIsToolbox() ? 'true' : 'false') . ",
         PLUGINS: ['" . implode("', '", configurationCustomerDisplay::$Plugins) . "'],
         MPWS_VERSION: '" . MPWS_VERSION . "',

@@ -43,46 +43,46 @@ class objectCustomer {
 
     public function getResponse () {
 
-        $response = array();
+        // $response = array();
+        $response = new libraryDataObject();
 
         // $p = libraryRequest::getApiParam();
         // $caller = libraryRequest::getApiCaller();
-        $token = libraryRequest::getPostValue('token');
-        $fn = libraryRequest::getPostValue('fn');
-        $delimIndex = strpos($fn, ":");
-        $target = substr($fn, 0, );
-        $fn = substr($fn, $delimIndex);
+        $publicKey = libraryRequest::getValue('token');
+        $source = libraryRequest::getValue('source');
 
-        if (empty($target))
-            throw new Exception('objectCustomer => getResponse: wrong target value', $target);
+        if (empty($source))
+            throw new Exception('objectCustomer => getResponse: wrong source value', $source);
 
-        if (!isset($this->plugins[$target]))
-            throw new Exception('objectCustomer => getResponse: target is not allowed', $target);
+        if (!isset($this->plugins[$source]))
+            throw new Exception('objectCustomer => getResponse: source is not allowed', $source);
 
         // check page token
-        if (empty($token))
+        if (empty($publicKey))
             return $response;
 
         // // check request realm
         // if (empty($p['realm']))
         //     return $response;
 
-        if (!libraryRequest::getOrValidatePageSecurityToken($token)) {
-            if (md5(configurationCustomerDatabase::$MasterJsApiKey) !== $token)
-                return $response;
+        if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
+            // if (md5(configurationCustomerDatabase::$MasterJsApiKey) !== $publicKey)
+            $response->setError('Invalid public token key');
+            return $response;
         }
+
 
         // perform request with plugins
         // if ($p['realm'] == OBJECT_T_PLUGIN) {
-            if ($target == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
+            if ($source == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
                 throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
 
-            if ($target == '*')
+            if ($source == '*')
                 foreach ($this->plugins as $key => $plugin)
-                    $response[$key] = $plugin->getResponse();
-            elseif (isset($this->plugins[$target])) {
-                $plugin = $this->plugins[$target];
-                $response[$target] = $plugin->getResponse();
+                    $response->setData($key, $plugin->getResponse()->toNative());
+            elseif (isset($this->plugins[$source])) {
+                $plugin = $this->plugins[$source];
+                $response->setData($source, $plugin->getResponse()->toNative());
             }
         // }
 
@@ -91,7 +91,7 @@ class objectCustomer {
         //     // $response[OBJECT_T_CUSTOMER] = array();
         // }
 
-        return json_encode($response);
+        return $response;
 
 
         // $p = libraryRequest::getApiParam();
@@ -101,7 +101,7 @@ class objectCustomer {
         //     throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value', $caller);
         
         // // check page token
-        // if (empty($token))
+        // if (empty($publicKey))
         //     return;
         
         // if (!libraryRequest::getOrValidatePageSecurityToken($p['token'])) {
