@@ -204,9 +204,10 @@ class pluginShop extends objectPlugin {
                 $productsMap[$value['productID']]['Attributes'] = $value['ProductAttributes'];
 
         // update main data object
-        return array(
-            "products" => $productsMap
-        );
+        $dataObj = new libraryDataObject();
+        $dataObj->setData('products', $productsMap);
+
+        return $dataObj;
     }
 
     // products list sorted by popularity
@@ -230,17 +231,21 @@ class pluginShop extends objectPlugin {
     // shop catalog structure
     // -----------------------------------------------
     private function _custom_api_getCatalogStructure () {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
-        $categories = $dataObj->process($params)->getData();
+
+        $config = configurationShopDataSource::jsapiCatalogStructure();
+        $categories = $this->getDataBase()->getData($config);
+
+        // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
+        // $categories = $dataObj->process($params)->getData();
 
         // var_dump($categories);
         $idToCategoryItemMap = array();
-
         foreach ($categories as $key => $value) {
           $idToCategoryItemMap[$value['ID']] = $value;
         }
 
-        $dataObj->setData($idToCategoryItemMap);
+        $dataObj = new libraryDataObject();
+        $dataObj->setData('categories', $idToCategoryItemMap);
 
         return $dataObj;
     }

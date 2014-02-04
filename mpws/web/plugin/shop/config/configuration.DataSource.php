@@ -119,6 +119,18 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         ));
     }
 
+    static function jsapiCatalogStructure () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_categories",
+            "condition" => array(
+                "filter" => "Enabled (=) ?",
+                "values" => array(1)
+            ),
+            "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Enabled"),
+        ));
+    }
+
 } 
 
 ?>
