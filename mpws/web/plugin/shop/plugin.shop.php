@@ -200,8 +200,10 @@ class pluginShop extends objectPlugin {
         $attributes = $this->getDataBase()->getData($configProductsAttr);
         // var_dump($attributes);
         if (!empty($attributes))
-            foreach ($attributes as $value)
-                $productsMap[$value['productID']]['Attributes'] = $value['ProductAttributes'];
+            foreach ($attributes as $value) {
+                // var_dump($value);
+                $productsMap[$value['ProductID']]['Attributes'] = $value['ProductAttributes'];
+            }
 
         // update main data object
         $dataObj = new libraryDataObject();

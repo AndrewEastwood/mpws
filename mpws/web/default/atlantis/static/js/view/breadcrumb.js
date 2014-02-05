@@ -4,8 +4,6 @@ define("default/js/view/breadcrumb", [
     'default/js/view/mView',
     /* model */
     'default/js/model/breadcrumb',
-    /* template */
-    // 'default/js/plugin/text!default/hbs/breadcrumb.hbs',
     /* ui components */
     'default/js/lib/bootstrap'
 ], function ($, _, MView, ModelBreadcrumb, tpl) {

@@ -44,9 +44,9 @@
         var pluginCount  = _args.length;
         if (pluginCount > 1)
             for (var i = 1; i < pluginCount; i++)
-                _args[i].initRouter(_customerJs);
+                new _args[i](_customerJs);
 
-        window.app.customer = _customerJs;
+        // window.app.customer = _customerJs;
 
         // start/init customer
         _customerJs.start();

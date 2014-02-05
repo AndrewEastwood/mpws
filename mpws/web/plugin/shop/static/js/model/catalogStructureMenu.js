@@ -1,7 +1,7 @@
 define("plugin/shop/js/model/catalogStructureMenu", [
     'default/js/model/mModel',
     'default/js/lib/utils'
-], function (MModel) {
+], function (MModel, Utils) {
 
     var CatalogStructureMenu = MModel.extend({
         initialize: function () {
@@ -10,12 +10,9 @@ define("plugin/shop/js/model/catalogStructureMenu", [
                 source: 'shop',
                 fn: 'shop_catalog_structure'
             });
-            // MModel.prototype.initialize.call(this);
-            // MModel.prototype.initialize.call(this);
         },
         parse: function (data) {
-            debugger;
-            return Utils.getTreeByJson(data, 'ID', 'ParentID');
+            return Utils.getTreeByJson(data && data.shop && data.shop.categories, 'ID', 'ParentID');
         }
     });
 

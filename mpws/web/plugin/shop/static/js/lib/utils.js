@@ -44,7 +44,7 @@ define("plugin/shop/js/lib/utils", [
                     }
                 }
             } else {
-                _images.MAIN = app.Page.getConfiguration().URL.staticUrlCustomer + 'noimage.png';
+                _images.MAIN = app.config.URL_STATIC_DEFAULT + 'img/noimage.png';
             }
 
             _attr.IMAGES = _images;

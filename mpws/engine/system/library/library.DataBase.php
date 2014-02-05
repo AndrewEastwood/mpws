@@ -217,7 +217,7 @@ class libraryDataBase {
                         break;
                     case 'combineDataByKeys':
                         // var_dump($dbData);
-                        $dbData = $this->_mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], isset($value['doOptimization']) ?: true, $value['keysToForceTransformToArray'] ?: array());
+                        $dbData = $this->_mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], isset($value['doOptimization']) ?: true, isset($value['keysToForceTransformToArray']) ? $value['keysToForceTransformToArray'] : array());
                         break;
                     case 'expandSingleRecord':
                         if (is_bool($value))

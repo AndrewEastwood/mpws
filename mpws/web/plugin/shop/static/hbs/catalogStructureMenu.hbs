@@ -1,41 +1,35 @@
-{{#if error }}
-    "Error"
-{{else}}
-<li class="dropdown shop-dropdown-catalog" id="shop-dropdown-catalog-ID">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог <b class="caret"></b></a>
-    <ul class="dropdown-menu">
-
-    {{#each source.data }}
-        {{#compare childrenCount ">" 0 }}
-        <li class="dropdown-submenu">
-            <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-            <ul class="dropdown-menu">
-            {{#each children }}
-                {{#compare childrenCount ">" 0 }}
-                <li class="dropdown-submenu">
-                    <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-                    <ul class="dropdown-menu">
-                    {{#each children }}
-                        <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
-                    {{/each}}
-                    </ul>
-                </li>
-                {{else}}
-                <li>
-                    <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-                </li>
-                {{/compare}}
-            {{/each}}
-            </ul>
-        </li>
-        {{else}}
-        <li>
-            <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-        </li>
-        {{/compare}}
-    {{/each}}
-
-    </ul>
-</li>
+<a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
+    Каталог <span class="caret"></span>
+</a>
+<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+{{#each data }}
+    {{#compare childrenCount ">" 0 }}
+    <li class="dropdown-submenu">
+        <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
+        <ul class="dropdown-menu">
+        {{#each children }}
+            {{#compare childrenCount ">" 0 }}
+            <li class="dropdown-submenu">
+                <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
+                <ul class="dropdown-menu">
+                {{#each children }}
+                    <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+                {{/each}}
+                </ul>
+            </li>
+            {{else}}
+            <li>
+                <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
+            </li>
+            {{/compare}}
+        {{/each}}
+        </ul>
+    </li>
+    {{else}}
+    <li>
+        <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
+    </li>
+    {{/compare}}
+{{/each}}
+</ul>
 <!--end nav-->
-{{/if}}

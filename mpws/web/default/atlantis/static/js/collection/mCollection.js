@@ -1,10 +1,10 @@
-define("default/js/model/mModel", [
+define("default/js/collection/mCollection", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/url'
 ], function (_, Backbone, JSUrl) {
 
-    var MModel = Backbone.Model.extend({
+    var MCollection = Backbone.Collection.extend({
 
         _urlOptions: {
             // required parameters
@@ -37,6 +37,6 @@ define("default/js/model/mModel", [
 
     });
 
-    return MModel;
+    return MCollection;
 
 });

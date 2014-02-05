@@ -13,59 +13,94 @@ define("default/js/view/mView", [
             if (options && options.template)
                 this.template = options.template;
         },
-        render: function (options) {
+        isCollectionView: function () {
+            return !_.isEmpty(this.collection);
+        },
+        isModelView: function () {
+            return !_.isEmpty(this.model) && !this.isCollectionView();
+        },
+        fetchAndRender: function (options) {
+            var _self = this;
+            // debugger;
+            if (this.isCollectionView())
+                this.collection.fetch({
+                    success: function () {
+                        _self.render();
+                    }
+                });
+            else if (this.isModelView()) { 
+                if (options)
+                    this.model.updateUrlOptions(options);
+
+                if (this.model.url)
+                    this.model.fetch({
+                        success: function () {
+                            _self.render();
+                        },
+                        error: function () {
+                            _self.render();
+                        }
+                    });
+                else
+                    this.render();
+            } else
+                this.render();
+        },
+        render: function () {
             var _self = this;
 
             // debugger;
-            function _innerRenderFn (error) {
-                // debugger;
-                if (typeof this.template === "function")
-                    this.$el.html(this.template({
-                        error: error,
-                        app: {
-                            config: window.app.config,
-                            location: {
-                                fragment: Backbone.history.fragment
-                            }
-                        },
-                        options: options,
-                        data: this.model && this.model.toJSON()
-                    }));
+            function _innerRenderFn () {
 
-                if (typeof this.template === "string")
-                    this.$el.html(this.template);
+                if (_self.isCollectionView() && _self.itemViewClass) {
+                    // if (_self.itemViewClass) {
+                        _self.viewItems = _self.viewItems || [];
 
-                if (typeof callback === "function")
-                    callback(this);
+                        if (_self.viewItems.length)
+                            _(this.viewItems).invoke('remove');
 
-                this.trigger('mview:render-complete', this);
+                        _self.collection.each(function(model) {
+                            var p = new _self.itemViewClass({model: model});
+                            _self.viewItems.push(p);
+                            _self.$el.append(p.render().el);
+                        });
+                    // } else
+                        // _tplData = _self.collection.toJSON();
+                } else {
+
+                    var _tplData = null;
+                    if (_self.isCollectionView())
+                        _tplData = _self.collection.toJSON();
+                    else if (_self.isModelView())
+                        _tplData = this.model.toJSON();
+
+                    // debugger;
+                    if (typeof this.template === "function")
+                        this.$el.html(this.template({
+                            app: {
+                                config: window.app.config,
+                                location: {
+                                    fragment: Backbone.history.fragment
+                                }
+                            },
+                            data: _tplData
+                        }));
+
+                    if (typeof this.template === "string")
+                        this.$el.html(this.template);
+                }
+
+                this.trigger('mview:renderComplete', this);
             }
 
-            function _doRender (error) {
-                if (typeof _self.template === "string" && _self.template.has('/hbs!')) {
-                    require([_self.template], function (tpl) {
-                        // debugger;
-                        _self.template = tpl;// Handlebars.compile(tpl);
-                        _innerRenderFn.call(_self, error);
-                    });
-                } else
-                    _innerRenderFn.call(_self, error);
-            }
-
-            if (options && this.model)
-                this.model.updateUrlOptions(options);
-
-            if (this.model && this.model.url)
-                this.model.fetch({
-                    success: function () {
-                        _doRender();
-                    },
-                    error: function (model, response) {
-                        _doRender(response.responseText);
-                    }
+            if (typeof this.template === "string" && this.template.has('/hbs!')) {
+                require([this.template], function (tpl) {
+                    // debugger;
+                    _self.template = tpl;// Handlebars.compile(tpl);
+                    _innerRenderFn.call(_self);
                 });
-            else
-                _doRender();
+            } else
+                _innerRenderFn.call(_self);
 
             return this;
         }

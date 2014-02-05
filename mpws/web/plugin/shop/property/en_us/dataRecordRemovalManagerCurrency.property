@@ -1,8 +1,0 @@
-labelForLabelValueDefaultID = 'Record ID';
-labelForLabelValueDefaultIsMain = 'Is Main';
-labelForLabelValueDefaultEnabled = 'Is Enabled';
-labelForLabelValueDefaultCurrency = 'Currency';
-labelForLabelValueDefaultRate = 'Rate';
-labelForLabelValueDefaultDateUpdated = "Date Time Updated";
-labelForLabelValueDefaultDateCreated = "Date Time Created";
-labelForLabelValueDefaultDateLastAccess = 'Last Access';

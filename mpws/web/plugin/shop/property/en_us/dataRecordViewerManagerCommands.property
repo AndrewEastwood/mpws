@@ -1,7 +1,0 @@
-labelForLabelValueDefaultID = "Command ID";
-labelForLabelValueDefaultName = "Name";
-labelForLabelValueDefaultDescription = "Description";
-labelForLabelValueDefaultAction = "Action";
-labelForLabelValueDefaultDateCreated = "Date Created";
-labelForLabelValueDefaultDateUpdated = "Date Updated";
-labelForLabelValueDefaultDateLastAccess = "Date Last Access";

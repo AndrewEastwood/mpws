@@ -5,6 +5,9 @@ define("plugin/shop/js/view/catalogStructureMenu", [
 ], function (MView, modelCatalogStructureMenu, tpl) {
 
     var CatalogStructureMenu = MView.extend({
+        tagName: 'li',
+        className: 'dropdown shop-dropdown-catalog',
+        id: 'shop-dropdown-catalog-ID',
         model: new modelCatalogStructureMenu(),
         template: tpl
     });

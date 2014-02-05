@@ -9,41 +9,49 @@ define("default/js/view/menu", [
     var Menu = MView.extend({
         template: tpl,
         menuItems: [],
+        initialize: function () {
+            MView.prototype.initialize.call(this);
+            this.on('mview:renderComplete', function () {
+                // debugger;
+                this.renderMenuItems();
+            }, this);
+            this.on('menu:itemAdded', function () {
+                // debugger;
+                this.renderMenuItems();
+            }, this);
+        },
         addMenuItem: function (item) {
-
             // debugger;
-
             if (item instanceof $) {
                 if (item.is('li'))
                     this.menuItems.push(item);
                 else
                     this.menuItems.push($('<li>').append(item));
-            } else if (typeof item === "string")
+                this.trigger('menu:itemAdded');
+            } else if (typeof item === "string") {
                 this.menuItems.push($('<li>').append(item));
-            else if (Array.isArray(item))
+                this.trigger('menu:itemAdded');
+            } else if (Array.isArray(item)) {
                 for (var key in item)
                     this.addMenuItem(item[key]);
-
-            // if (this.$el.is(":empty")) {
-                // return;
-            // }
-
+            }
         },
-        render: function (options, callback) {
+        isReady: function () {
+            return this.getMenuItemPlaceholder().length > 0;
+        },
+        renderMenuItems: function (item) {
+            if (!this.isReady())
+                return false;
+
             var _self = this;
-            // debugger;
-            MView.prototype.render.call(this, options, function() {
-
-                _(_self.menuItems).each(function (item) {
-                    _self.$el.find('.navbar-nav-main').append(item);
-                    // _self.addMenuItem(item);
-                 });
-
-                if (typeof callback === "function")
-                    callback(null, _self);
-            });
+            _(this.menuItems).each(function (item) {
+                // _self.renderMenuItem(item);
+                _self.getMenuItemPlaceholder().append(item);
+                // _self.addMenuItem(item);
+             });
         },
-        showOrHideSearch: function () {
+        getMenuItemPlaceholder: function () {
+            return this.$el.find('.navbar-nav-main');
         }
     });
 

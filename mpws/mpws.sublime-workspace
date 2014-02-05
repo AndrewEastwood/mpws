@@ -3,31 +3,71 @@
 	{
 		"selected_items":
 		[
+			[
+				"is",
+				"isReady"
+			],
+			[
+				"MV",
+				"MView"
+			],
+			[
+				"a",
+				"addMenuItem"
+			],
+			[
+				"me",
+				"menuItems"
+			],
+			[
+				"cu",
+				"customerObj"
+			],
+			[
+				"fun",
+				"function"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "web/default/atlantis/static/js/model/breadcrumb.js",
+			"file": "web/plugin/shop/static/js/collection/productListLatest.js",
 			"settings":
 			{
-				"buffer_size": 380,
+				"buffer_size": 358,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/js/view/breadcrumb.js",
+			"file": "web/plugin/shop/static/js/model/productItem.js",
 			"settings":
 			{
-				"buffer_size": 832,
+				"buffer_size": 216,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/js/view/mView.js",
+			"file": "web/customer/pb.com.ua/static/js/site.js",
 			"settings":
 			{
-				"buffer_size": 681,
+				"buffer_size": 1744,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/atlantis/static/js/site.js",
+			"settings":
+			{
+				"buffer_size": 1178,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/default/atlantis/static/js/loader.js",
+			"settings":
+			{
+				"buffer_size": 1741,
 				"line_ending": "Unix"
 			}
 		},
@@ -35,15 +75,7 @@
 			"file": "web/default/atlantis/static/js/model/mModel.js",
 			"settings":
 			{
-				"buffer_size": 974,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/js/view/shop.js",
-			"settings":
-			{
-				"buffer_size": 20371,
+				"buffer_size": 993,
 				"line_ending": "Unix"
 			}
 		},
@@ -51,15 +83,18 @@
 			"file": "web/plugin/shop/static/js/site.js",
 			"settings":
 			{
-				"buffer_size": 9029,
+				"buffer_size": 2017,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/js/lib/extend.string.js",
+			"contents": "define(\"default/js/lib/utils\", [\n    'cmn_jquery',\n    'default/js/lib/underscore'\n    /* component implementation */\n], function ($, _) {\n\n    function Utils () {}\n\n    Utils.setTableColumnsWidth = function (config) {\n\n        // container width\n        var cntWidth = config.container.width();\n\n        // get static widths\n        var staticW = 0;\n        var minWidthTotal = 0;\n        var maxWidthTotal = 0;\n        var _adjustedColumnWidths = {};\n\n        _(config.columns).each(function(columnConfig, columnName){\n\n            // dynamic width\n            if (_.isNumber(columnConfig.width))\n                _adjustedColumnWidths[columnName] = columnConfig.width;\n\n            // static width\n            if (_.isString(columnConfig.width)) {\n                staticW += parseInt(columnConfig.width, 10);\n                _adjustedColumnWidths[columnName] = columnConfig.width;\n            }\n\n            // get all min width to set container min-width\n            if (_.isString(columnConfig.minWidth))\n                minWidthTotal += parseInt(columnConfig.minWidth, 10);\n\n            // get all max width to set container min-width\n            if (_.isString(columnConfig.maxWidth))\n                maxWidthTotal += parseInt(columnConfig.maxWidth, 10);\n        });\n\n        var freeWidth = cntWidth - staticW;\n\n        // qB.log(true, 'container w: : ', cntWidth, 'min-w:', config.container.css('min-width'), 'max-w', maxWidthTotal);\n        // qB.log('static:', staticW, 'free:', freeWidth, 'max', staticW+maxWidthTotal, 'min', staticW+minWidthTotal);\n        // qB.log('111111 >>>>>> ', JSON.stringify(_adjustedColumnWidths));\n\n        // calc free space according to column min width\n        _(config.columns).each(function(columnConfig, columnName){\n\n            if (_.isString(_adjustedColumnWidths[columnName]))\n                return;\n\n            // get dynamic column width using free space\n            var dynamicW = _adjustedColumnWidths[columnName] * freeWidth / 100;\n\n            // qB.log('DDDDDynamic width for ', columnName, ' is >>>> ', dynamicW);\n\n            if (_.isString(columnConfig.minWidth)) {\n\n                var columnMinWidth = parseInt(columnConfig.minWidth, 10);\n                if (dynamicW < columnMinWidth) {\n\n                    // reduce free space\n                    freeWidth -= columnMinWidth;\n\n                    // need to move to another column\n                    var dynW = _adjustedColumnWidths[columnName];\n\n                    // and replce dynamic with min-width (static) value\n                    _adjustedColumnWidths[columnName] = columnMinWidth + 'px';\n\n                    // increase first dynamic column\n                    _(_adjustedColumnWidths).each(function(w, id){\n                        if (_.isNumber(w) && dynW) {\n                            _adjustedColumnWidths[id] += dynW;\n                            dynW = false;\n                        }\n                    });\n                }\n            }\n\n            if (_.isString(columnConfig.maxWidth)) {\n                var columnMaxWidth = parseInt(columnConfig.maxWidth, 10);\n\n                if (dynamicW >= columnMaxWidth) {\n                    // reduce free space\n                    freeWidth -= columnMaxWidth;\n                    // need to move to another column\n                    var dynW = _adjustedColumnWidths[columnName];\n\n                    // and replce dynamic with min-width (static) value\n                    _adjustedColumnWidths[columnName] = columnMaxWidth + 'px';\n\n                    // // increase first dynamic column\n                    // _(_adjustedColumnWidths).each(function(w, id){\n                    //     if (_.isNumber(w) && dynW) {\n                    //         _adjustedColumnWidths[id] += dynW;\n                    //         dynW = false;\n                    //     }\n                    // });\n\n                    // increase first dynamic column\n                    _(_adjustedColumnWidths).each(function(w, id){\n                        if (_.isNumber(w) && dynW) {\n                            _adjustedColumnWidths[id] += dynW;\n                            dynW = false;\n                        }\n                    });\n                }\n            }\n\n        });\n\n        // qB.log(true, '2222 >>>>>> ', JSON.stringify(_adjustedColumnWidths));\n\n        // set column width\n        _(_adjustedColumnWidths).each(function(columnW, columnName){\n            var $column = $('.' + config.style.cellPrefix + columnName);\n\n            if (_.isNumber(columnW))\n                columnW = columnW * freeWidth / 100;\n\n            var _mp = ($column.outerWidth() - $column.width());\n            var _nw = parseInt(columnW, 10) - parseInt(_mp, 10);\n\n            $column.width(_nw);\n        });\n\n        config.container.css('min-width', staticW + minWidthTotal);\n\n        if (maxWidthTotal)\n            config.container.css('max-width', staticW + maxWidthTotal);\n\n        if (config.custom) {\n\n            if (config.custom.attachToWindowResize) {\n                config.custom.attachToWindowResize = false;\n                // var _cloneConfig = _.extend({}, config, {custom:{attachToWindowResize:false}});\n                $(window).resize(function() {\n                    Utils.setTableColumnsWidth(config);\n                });\n            }\n\n            if (config.custom.relatedContainers) {\n                $(config.custom.relatedContainers).css('min-width', staticW + minWidthTotal);\n                if (maxWidthTotal)\n                    $(config.custom.relatedContainers).css('max-width', staticW + maxWidthTotal);\n            }\n\n        }\n\n        Sandbox.eventSubscribe(\"page-loaded\", function () {\n            // for (var i = 0; i < 101; i += 10)\n            //     setTimeout(Utils.setTableColumnsWidth(config), 20 + i);\n            Utils.setTableColumnsWidth(config);\n        });\n\n    }\n\n    // cross-browser log function\n    function log (s) {\n        var args = [].slice.call(arguments);\n        var isDebugMsg = (args.length >= 2 && typeof args[0] === 'boolean');\n\n        if (isDebugMsg && !_app.Page.isDebugEnabled())\n            return;\n\n        if (isDebugMsg)\n            args.shift();\n\n        var msg = args.join(\" \");\n\n        if (window.console && console.log && !console.log.isDummy) {\n            if (document.all) {\n                console.log(msg);  // Internet Explorer 8+\n            } else {\n                console.log.apply(console, args);  // Firefox, Safari, Chrome\n            }\n        } else if (window.Debug && Debug.writeln) {\n            Debug.writeln(msg);  // Internet Explorer 6, 7\n        } else if (window.opera && opera.postError) {\n            opera.postError(msg);  // Opera\n        }\n    }\n\n    // creates dummy log object to avoid execptions related to console.log access\n    if (typeof console === \"undefined\") {\n        console = {};\n        console.log = function() {}\n        console.log.isDummy = true;\n    }\n\n    // append logger fn\n    Utils.log = log;\n\n    // source: http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript\n    Utils.getTreeByJson = function (nodes, idKey, parentKey) {\n        // app.log(true, 'Utils.getTreeByJson', nodes, idKey, parentKey); // <-- there's your tree\n        var map = {}, node, roots = {};\n        // for (var i = 0; i < nodes.length; i += 1) {\n        for (var i in nodes) {\n            node = nodes[i];\n            node.children = {};\n            node.childrenCount =0;\n            map[node[idKey]] = node[idKey]; // use map to look-up the parents\n            // app.log(true, '--- current node = ', node);\n            // app.log(true, '--- current map = ', map);\n            // app.log(true, '--- current node[parentKey] = ', node[parentKey]);\n            if (!!parseInt(node[parentKey], 10)) {\n                if (!nodes[map[node[parentKey]]].children)\n                    nodes[map[node[parentKey]]].children = {};\n                // app.log(true, '--- adding node into child branch', node, nodes[map[node[parentKey]]]);\n                nodes[map[node[parentKey]]].children[node[idKey]] = node;\n                nodes[map[node[parentKey]]].childrenCount++;\n            } else {\n                roots[node[idKey]] = node;\n            }\n        }\n        // app.log(true, 'Utils.getTreeByJson', roots); // <-- there's your tree\n        return roots;\n    }\n\n    Utils.getTreeByArray = function (nodes, idKey, parentKey) {\n        // app.log(true, 'Utils.getTreeByArray', nodes, idKey, parentKey); // <-- there's your tree\n        var map = {}, node, roots = [];\n        for (var i = 0; i < nodes.length; i += 1) {\n        // for (var i in nodes) {\n            node = nodes[i];\n            node.children = [];\n            map[node[idKey]] = i;//node[idKey]; // use map to look-up the parents\n            // app.log(true, '--- current node = ', node);\n            // app.log(true, '--- current map = ', map);\n            // app.log(true, '--- current node[parentKey] = ', node[parentKey]);\n            if (!!parseInt(node[parentKey] !== \"0\", 10)) {\n                if (!nodes[map[node[parentKey]]].children)\n                    nodes[map[node[parentKey]]].children = [];\n                nodes[map[node[parentKey]]].children.push(node);\n            } else {\n                roots.push(node);\n            }\n        }\n        // app.log(true, 'Utils.getTreeByArray', roots); // <-- there's your tree\n        return roots;\n    }\n\n\n\n    return Utils;\n});",
+			"file": "web/default/atlantis/static/js/lib/utils.js",
+			"file_size": 10427,
+			"file_write_time": 1389526551000000,
 			"settings":
 			{
-				"buffer_size": 223,
+				"buffer_size": 9443,
 				"line_ending": "Unix"
 			}
 		}
@@ -88,8 +123,44 @@
 	},
 	"file_history":
 	[
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/core.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/htmlComponents.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/extend.string.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/cache.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/hbs/breadcrumb.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/data.ini",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/mView.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/menu.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/breadcrumb.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/catalogStructureMenu.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/catalogStructureMenu.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/catalogStructureMenu.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/dropdowns.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/less/theme.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/dropdowns-sub.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars_helpers.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/breadcrumb.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/layout.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/pageNavigation.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/shop.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/pageNavigation.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/plugin/hbs.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/shopBreadcrumb.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/nls/en_us.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/coolPartial.hbs",
+		"/devdata/Develop/github/web/mpws/engine/global/global.methods.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/i18nprecompile.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/json2.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/core.js",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.api.php",
 		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
@@ -98,7 +169,7 @@
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -112,6 +183,31 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"this",
+			"this.",
+			"HtmlComponents.prototype",
+			"',\n",
+			"configProducts",
+			"jsapiShopCategorySubCategories",
+			"_custom_api_getCatalogStructure",
+			"this.customer.views.breadcrumb.render",
+			"views.breadcrumb.showLocation",
+			"breadcrumb.showLocation",
+			"return",
+			"_views.breadcrumb",
+			"PageNavigation",
+			"navigation",
+			"customerConfig",
+			"/",
+			"debugger",
+			"fetchOrGetCached",
+			"default/js/plugin/hbs",
+			"Handlebars",
+			"unnormalized",
+			"data",
+			".'",
+			"});",
+			"Handlebars.registerHelper"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -129,23 +225,22 @@
 	"groups":
 	[
 		{
-			"selected": 6,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "web/default/atlantis/static/js/model/breadcrumb.js",
+					"file": "web/plugin/shop/static/js/collection/productListLatest.js",
 					"settings":
 					{
-						"buffer_size": 380,
+						"buffer_size": 358,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								51,
+								51
 							]
 						],
 						"settings":
@@ -160,18 +255,44 @@
 				},
 				{
 					"buffer": 1,
-					"file": "web/default/atlantis/static/js/view/breadcrumb.js",
+					"file": "web/plugin/shop/static/js/model/productItem.js",
 					"settings":
 					{
-						"buffer_size": 832,
+						"buffer_size": 216,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								521,
-								521
+								210,
+								210
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "web/customer/pb.com.ua/static/js/site.js",
+					"settings":
+					{
+						"buffer_size": 1744,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								309,
+								309
 							]
 						],
 						"settings":
@@ -187,45 +308,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "web/default/atlantis/static/js/view/mView.js",
-					"settings":
-					{
-						"buffer_size": 681,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								475,
-								475
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 3,
-					"file": "web/default/atlantis/static/js/model/mModel.js",
+					"file": "web/default/atlantis/static/js/site.js",
 					"settings":
 					{
-						"buffer_size": 974,
+						"buffer_size": 1178,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								390,
-								390
+								234,
+								234
 							]
 						],
 						"settings":
@@ -242,18 +337,18 @@
 				},
 				{
 					"buffer": 4,
-					"file": "web/plugin/shop/static/js/view/shop.js",
+					"file": "web/default/atlantis/static/js/loader.js",
 					"settings":
 					{
-						"buffer_size": 20371,
+						"buffer_size": 1741,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								805,
-								805
+								823,
+								823
 							]
 						],
 						"settings":
@@ -263,25 +358,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 279.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "web/plugin/shop/static/js/site.js",
+					"file": "web/default/atlantis/static/js/model/mModel.js",
 					"settings":
 					{
-						"buffer_size": 9029,
+						"buffer_size": 993,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2127,
-								2127
+								664,
+								664
 							]
 						],
 						"settings":
@@ -291,33 +386,63 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 748.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "web/default/atlantis/static/js/lib/extend.string.js",
+					"file": "web/plugin/shop/static/js/site.js",
 					"settings":
 					{
-						"buffer_size": 223,
+						"buffer_size": 2017,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								223,
-								223
+								1288,
+								1288
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "web/default/atlantis/static/js/lib/utils.js",
+					"settings":
+					{
+						"buffer_size": 9443,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9420,
+								9420
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1013.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -366,6 +491,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"plugin.shop.php",
+				"web/plugin/shop/plugin.shop.php"
+			]
 		],
 		"width": 0.0
 	},
@@ -381,6 +510,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 315.0,
+	"side_bar_width": 414.0,
 	"status_bar_visible": true
 }
