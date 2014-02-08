@@ -39,14 +39,18 @@
         $h = strtolower($h);
         
         $host_parts = explode ('.', $h);
+        $customerName = '';
         
         if ($host_parts[0] == 'toolbox')
-            return 'toolbox';
-        
-        if ($host_parts[0] == 'www')
-            return implode('.', array_splice($host_parts, 1));
-        
-        return $h;
+            $customerName = 'toolbox';
+        else if ($host_parts[0] == 'www')
+            $customerName = implode('.', array_splice($host_parts, 1));
+        else
+            $customerName = $h;
+
+        $customerName = str_replace('.', '_', $customerName);
+
+        return $customerName;
     }
     
     function getDebugLevel (){

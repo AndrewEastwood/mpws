@@ -81,14 +81,15 @@ class pluginShop extends objectPlugin {
             }
             // product standalone item short
             // -----------------------------------------------
-            case "shop_product_item_short" : {
-                $data = $this->_custom_api_getProductItem($productID, 'short');
-                break;
-            }
+            // case "shop_product_item_short" : {
+            //     $data = $this->_custom_api_getProductItem($productID, 'short');
+            //     break;
+            // }
             // product standalone item full
             // -----------------------------------------------
-            case "shop_product_item_full" : {
-                $data = $this->_custom_api_getProductItem($productID, 'full');
+            case "shop_product_item" : {
+                $productID = libraryRequest::getValue('productID');
+                $data = $this->_custom_api_getProductItem($productID);
                 break;
             }
             // shopping cart
@@ -180,30 +181,7 @@ class pluginShop extends objectPlugin {
 
         $products = $this->getDataBase()->getData($configProducts);
 
-        // list of product ids to fetch related attributes
-        $productIDs = array();
-
-        // mapped data (key is record's ID)
-        $productsMap = array();
-
-        // pluck product IDs and create product map
-        foreach ($products as $value) {
-            $productIDs[] = $value['ID'];
-            $productsMap[$value['ID']] = $value;
-        }
-
-        $configProductsAttr = configurationShopDataSource::jsapiProductAttributes();
-        $configProductsAttr["condition"]["values"][] = $productIDs;
-        // var_dump($configProductsAttr);
-
-        // configure product attribute object
-        $attributes = $this->getDataBase()->getData($configProductsAttr);
-        // var_dump($attributes);
-        if (!empty($attributes))
-            foreach ($attributes as $value) {
-                // var_dump($value);
-                $productsMap[$value['ProductID']]['Attributes'] = $value['ProductAttributes'];
-            }
+        $productsMap = $this->_custom_api_getProductAttributes($products);
 
         // update main data object
         $dataObj = new libraryDataObject();
@@ -444,29 +422,44 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _custom_api_getProductItem ($productID, $type) {
+    private function _custom_api_getProductItem ($productID) {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
 
-        $dataObj = new mpwsData();
+        // update main data object
+        $dataObj = new libraryDataObject();
 
         if (empty($productID) || !is_numeric($productID))
-            $dataObj->setDataError('wrongproductID');
+            $dataObj->setError('wrongProductID');
         else {
 
             // set config
-            $dataObj->setConfig($this->objectConfiguration_data_jsapiProductItem['data']);
+            $config = configurationShopDataSource::jsapiProductItem();
+            $config["condition"]["values"][] = $productID;
+            $product = $this->getDataBase()->getData($config);
+
+            $productsMap = $this->_custom_api_getProductAttributes(array($product));
+
+            $dataObj->setData('products', $productsMap);
+
+
+
+            // $configProductsAttr = configurationShopDataSource::jsapiProductAttributes();
+            // $configProductsAttr["condition"]["values"][] = array($product);
+            // $attributes = $this->getDataBase()->getData($configProductsAttr);
+
+            // $dataObj->setConfig($this->objectConfiguration_data_jsapiProductItem['data']);
             // replace condition values
             // add filter values
             // var_dump($productID);
-            $dataObj->setValuesDbCondition($productID, MERGE_MODE_APPEND);
+            // $dataObj->setValuesDbCondition($productID, MERGE_MODE_APPEND);
 
-            $dataObj->process();
+            // $dataObj->process();
             // var_dump($dataObj);
 
             // echo '111111111111111111111111111' . PHP_EOL;
             // fetch attributes
-            $dataProductAttrObj = $this->_custom_api_getProductAttributes(array($productID), true);
+            // $dataProductAttrObj = $this->_custom_api_getProductAttributes(array($productID), true);
             // var_dump($dataProductAttrObj);
             // $dataProductAttrObj->extendConfig(array(
             //     "options" => array(
@@ -486,42 +479,42 @@ class pluginShop extends objectPlugin {
 
             //$_prod['ProductAttributes'] = $_attr['ProductAttributes'] ?: array();
 
-            $_data = array();
-            // var_dump($_attr);
-            // additional data
-            switch ($type) {
-                // full means that we have additional data here and them we append basic data
-                case 'full':
-                    $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($productID);
-                    $prices = $dataProductPricesObj->process()->getData();
-                    foreach ($prices as $value)
-                        $pricesMap[$value['productID']] = $value['PriceArchive'];
-                    $_data['prices'] = $pricesMap;
+            // $_data = array();
+            // // var_dump($_attr);
+            // // additional data
+            // switch ($type) {
+            //     // full means that we have additional data here and them we append basic data
+            //     case 'full':
+            //         $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($productID);
+            //         $prices = $dataProductPricesObj->process()->getData();
+            //         foreach ($prices as $value)
+            //             $pricesMap[$value['productID']] = $value['PriceArchive'];
+            //         $_data['prices'] = $pricesMap;
 
-                // short is like a basic product data that must be included
-                case 'short':
-                    $productsMap = array(
-                        $productID =>$dataObj->getData()
-                    );
+            //     // short is like a basic product data that must be included
+            //     case 'short':
+            //         $productsMap = array(
+            //             $productID =>$dataObj->getData()
+            //         );
 
-                    $attributes = $dataProductAttrObj->process()->getData();
-                    foreach ($attributes as $value)
-                        $attributesMap[$value['productID']] = $value['ProductAttributes'];
+            //         $attributes = $dataProductAttrObj->process()->getData();
+            //         foreach ($attributes as $value)
+            //             $attributesMap[$value['productID']] = $value['ProductAttributes'];
 
-                    $_data['products'] = $productsMap;
-                    $_data['attributes'] = $attributesMap;
-                    break;
-                default:
-                    # code...
-                    break;
-            }
+            //         $_data['products'] = $productsMap;
+            //         $_data['attributes'] = $attributesMap;
+            //         break;
+            //     default:
+            //         # code...
+            //         break;
+            // }
 
             // save product into recently viewed
             $recentProducts = $_SESSION['shop:recentProducts'] ?: array();
-            $recentProducts[$productID] = $_prod;
+            $recentProducts[$productID] = $productsMap[$productID];
             $_SESSION['shop:recentProducts'] = $recentProducts;
         
-            $dataObj->setData($_data);
+            // $dataObj->setData($_data);
 
             // $dataObj->setData($_prod);
         }
@@ -654,7 +647,7 @@ class pluginShop extends objectPlugin {
 
     // product additional data
     // @productIDs - array of product ids
-    private function _custom_api_getProductAttributes ($productIDs, $doNotProcessData) {
+    private function _custom_api_getProductAttributes ($products) {
         // var_dump(array(array($productIDs)));
         // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
         // set condition values
@@ -663,16 +656,45 @@ class pluginShop extends objectPlugin {
         // $dataObj->setValuesDbCondition(array($productIDs));
 
 
-        $config = configurationShopDataSource::jsapiProductAttributes();
+        // $config = configurationShopDataSource::jsapiProductAttributes();
 
-        $config["condition"]["values"][] = array($productIDs);
+        // $config["condition"]["values"][] = array($productIDs);
 
-        return $this->getDataBase()->getData($config);
+        // return $this->getDataBase()->getData($config);
 
-        if ($doNotProcessData)
-            return $dataObj;
+        // if ($doNotProcessData)
+        //     return $dataObj;
 
-        return $dataObj->process();
+        // return $dataObj->process();
+
+        // list of product ids to fetch related attributes
+        $productIDs = array();
+
+        // mapped data (key is record's ID)
+        $productsMap = array();
+
+        // pluck product IDs and create product map
+        foreach ($products as $value) {
+            $productIDs[] = $value['ID'];
+            $productsMap[$value['ID']] = $value;
+        }
+
+        $configProductsAttr = configurationShopDataSource::jsapiProductAttributes();
+        $configProductsAttr["condition"]["values"][] = $productIDs;
+        // var_dump($configProductsAttr);
+
+        // configure product attribute object
+        $attributes = $this->getDataBase()->getData($configProductsAttr);
+
+        // var_dump($attributes);
+        if (!empty($attributes))
+            foreach ($attributes as $value) {
+                // var_dump($value);
+                $productsMap[$value['ProductID']]['Attributes'] = $value['ProductAttributes'];
+            }
+
+        // var_dump($productsMap);
+        return $productsMap;
     }
 
     private function _custom_api_getProductPriceArchive ($productIDs, $doNotProcessData) {

@@ -1,7 +1,7 @@
 define("default/js/lib/bootstrap-magnify", [
     'cmn_jquery'
     /* component implementation */
-], function(jQuery) {
+], function (jQuery) {
 
 !function ($) {
 

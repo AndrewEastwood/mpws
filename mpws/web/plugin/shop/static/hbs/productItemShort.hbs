@@ -1,14 +1,14 @@
 <div class="panel">
     <div class="panel panel-heading">
         <h4 class="text-center">
-            <a href="#shop/product/{{data.ID}}">{{data.OriginName}} - {{data.Name}}</a>
+            <a href="/#shop/product/{{data.ID}}">{{data.OriginName}} - {{data.Name}}</a>
         </h4>
     </div>
     <div class="panel-body">
         <div class="shop-component shop-product-images">
             <div class="shop-product-image shop-product-image-main">
-                <a href="#shop/product/{{data.ID}}" class="link">
-                    <img src="{{data.ProductAttributes.IMAGES.MAIN}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
+                <a href="/#shop/product/{{data.ID}}" class="link">
+                    <img src="{{data.Attributes.IMAGES.MAIN}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
                 </a>
             </div>
         </div>
@@ -31,7 +31,7 @@
             </button>
         </p>
         <p>
-            <a class="btn btn-primary btn-block" href="#shop/product/{{ID}}">Детальніше »</a>
+            <a class="btn btn-primary btn-block" href="/#shop/product/{{data.ID}}">Детальніше »</a>
         </p>
     </div>
 </div>

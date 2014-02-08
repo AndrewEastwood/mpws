@@ -43,11 +43,10 @@
     {{#srtStartsWith app.location.fragment "shop/product/" }}
         <li><a href="#">Головна</a></li>
         {{#foreach data.shop.location}}
-            {{#if $last}}
-                <li class="active">{{Name}}</li>
-            {{else}}
-                <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
-            {{/if}}
+        <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
         {{/foreach}}
+        {{#if data.shop.product}}
+        <li class="active">{{data.shop.product.Name}}</li>
+        {{/if}}
     {{/srtStartsWith}}
 </ol>

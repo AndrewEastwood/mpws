@@ -9,36 +9,42 @@
 <body class="MPWSPage">
 
     <div class="MPWSLayout row">
-        <div class="MPWSPageHeader row">
-            <div class="MPWSBlockLeft row">
-                <h2>Welcome to MPWS Framework!</h2>
-                <span>current version: <b>Atlantis</b></span>
+        <div class="container">
+            <div class="MPWSPageHeader row">
+                <div class="MPWSBlockLeft row">
+                    <h2>Welcome to MPWS Framework!</h2>
+                    <span>current version: <b>Atlantis</b></span>
+                </div>
+                <div class="MPWSBlockCenter row"></div>
+                <div class="MPWSBlockRight row"></div>
             </div>
-            <div class="MPWSBlockCenter row"></div>
-            <div class="MPWSBlockRight row"></div>
         </div>
         <div class="MPWSWidgetsTop"></div>
         <div class="MPWSBreadcrumb"></div>
-        <div class="MPWSPageBody row">
-            <div class="MPWSBlockLeft row"></div>
-            <div class="MPWSBlockCenter row"></div>
-            <div class="MPWSBlockRight row"></div>
+        <div class="container">
+            <div class="MPWSPageBody row">
+                <div class="MPWSBlockLeft row"></div>
+                <div class="MPWSBlockCenter row"></div>
+                <div class="MPWSBlockRight row"></div>
+            </div>
         </div>
         <div class="MPWSBreadcrumb"></div>
         <div class="MPWSWidgetsBottom"></div>
-        <div class="MPWSPageFooter row">
-            <div class="MPWSBlockLeft row"></div>
-            <div class="MPWSBlockCenter row"></div>
-            <div class="MPWSBlockRight row"></div>
+        <div class="container">
+            <div class="MPWSPageFooter row">
+                <div class="MPWSBlockLeft row"></div>
+                <div class="MPWSBlockCenter row"></div>
+                <div class="MPWSBlockRight row"></div>
+            </div>
         </div>
     </div>
 
-<div class="static-content-wrapper render-hidden" title="page basic javascript container">
-    <script type="text/javascript" data-main="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/js/loader.js" src="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/js/lib/require.js"></script>
-    <script type="text/javascript" id="system">
-        window.MPWS = {{SYSTEMJS}};
-    </script>
-</div>
+    <div class="static-content-wrapper render-hidden" title="page basic javascript container">
+        <script type="text/javascript" data-main="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/js/loader.js" src="/{{PATH_STATIC}}/default/{{MPWS_VERSION}}/js/lib/require.js"></script>
+        <script type="text/javascript" id="system">
+            window.MPWS = {{SYSTEMJS}};
+        </script>
+    </div>
 
 </body>
 </html>

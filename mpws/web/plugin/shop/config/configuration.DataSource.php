@@ -102,7 +102,41 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "fields" => array("CategoryID", "Name"),
             "offset" => "0",
             "limit" => "1",
-            "output" => "DEFAULT",
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiProductItem () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_products",
+            "condition" => array(
+                "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_products.ID (=) ?",
+                "values" => array("AVAILABLE", 1)
+            ),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated"),
+            "offset" => "0",
+            "limit" => "1",
+            "additional" => array(
+                "shop_categories" => array(
+                    "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
+                    "fields" => array(
+                        "CategoryName" => "Name",
+                        "CategoryDescription" => "Description",
+                        "CategoryEnable" => "Enabled"
+                    )
+                ),
+                "shop_origins" => array(
+                    "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
+                    "fields" => array(
+                        "OriginName" => "Name",
+                        "OriginDescription" => "Description",
+                        "OriginEnable" => "Enabled"
+                    )
+                )
+            ),
             "options" => array(
                 "expandSingleRecord" => true
             )

@@ -4,6 +4,7 @@ define("default/js/view/mView", [
     'default/js/lib/extend.string',
 ], function (Backbone, Handlebars) {
 
+
     var MView = Backbone.View.extend({
         initialize: function (options) {
             // debugger;
@@ -75,8 +76,10 @@ define("default/js/view/mView", [
                         _tplData = this.model.toJSON();
 
                     // debugger;
-                    if (typeof this.template === "function")
+                    if (typeof this.template === "function") {
+                        var Site = require('customer/js/site');
                         this.$el.html(this.template({
+                            options: Site.options || {},
                             app: {
                                 config: window.app.config,
                                 location: {
@@ -85,6 +88,7 @@ define("default/js/view/mView", [
                             },
                             data: _tplData
                         }));
+                    }
 
                     if (typeof this.template === "string")
                         this.$el.html(this.template);

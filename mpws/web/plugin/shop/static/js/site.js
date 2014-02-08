@@ -21,7 +21,7 @@ define("plugin/shop/js/site", [
             "shop/cart": "shop_cart_view",
         },
 
-        initialize: function (customerObj) {
+        initialize: function () {
 
             var shopMenuItem = new CatalogStructureMenu();
             shopMenuItem.on('mview:renderComplete', function () {
@@ -47,7 +47,7 @@ define("plugin/shop/js/site", [
                 listLatestProducts.on('mview:renderComplete', function() {
                     Site.setPlaceholder('productListOverview', listLatestProducts.el);
                 });
-                debugger;
+                // debugger;
                 listLatestProducts.fetchAndRender();
             });
 
@@ -74,6 +74,21 @@ define("plugin/shop/js/site", [
                 fn: 'shop_location',
                 productID: productID,
                 categoryID: null
+            });
+
+            require(['plugin/shop/js/view/productItemFull'], function (ProductItemFull) {
+                var productItemFull = Cache.getObject('ProductItemFull', function () {
+                    return new ProductItemFull();
+                });
+                productItemFull.on('mview:renderComplete', function() {
+                    Site.setPlaceholder('productEntryStandalone', productItemFull.el);
+                });
+                // debugger;
+                productItemFull.fetchAndRender({
+                    source: 'shop',
+                    fn: 'shop_product_item',
+                    productID: productID
+                });
             });
         },
 

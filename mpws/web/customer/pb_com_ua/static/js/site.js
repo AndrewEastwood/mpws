@@ -23,6 +23,12 @@ define("customer/js/site", [
 
     var _customerOptions = {};
 
+    _customerOptions.site = {
+        title: 'Test and demo site',
+        logoImageUrl: app.config.URL_STATIC_CUSTOMER + '/img/logo.png',
+        showSearch: true
+    };
+
     _customerOptions.placeholders = {
         header: $('.MPWSPageHeader'),
         body: $('.MPWSPageBody'),

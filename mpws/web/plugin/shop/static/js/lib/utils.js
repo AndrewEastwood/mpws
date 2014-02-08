@@ -16,12 +16,15 @@ define("plugin/shop/js/lib/utils", [
 
         _(data.products).each(function(product) {
 
+            // debugger;
             var pid = product.ID;
+
+            product.Attributes = product.Attributes || {};
             // _tmpProduct = 
             // // add product into collection
             // _products[pid] = data.products[pid];
             // get product attributes
-            var _attr = data.attributes && data.attributes[pid] ? _(data.attributes[pid]).clone() : {};
+            var _attr = product.Attributes;
             // setup images
             var _images = {
                 HAS_MAIN: false,
@@ -49,7 +52,7 @@ define("plugin/shop/js/lib/utils", [
 
             _attr.IMAGES = _images;
 
-            product['ProductAttributes'] = _attr;
+            // product['ProductAttributes'] = _attr;
 
             // append price data
             if (data.prices && data.prices[pid])
