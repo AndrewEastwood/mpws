@@ -2,22 +2,23 @@
 
 class configurationShopDataSource extends configurationDefaultDataSource {
 
-    static function jsapiProductListLatest () {
+    static function jsapiProductItem () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
             "condition" => array(
-                "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ?",
-                "values" => array("AVAILABLE", 1, 1, 1)
+                "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_products.ID (=) ?",
+                "values" => array("AVAILABLE", 1)
             ),
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Model", "SKU", "Description", "Price", "DateCreated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated"),
             "offset" => "0",
-            "limit" => "64",
+            "limit" => "1",
             "additional" => array(
                 "shop_categories" => array(
                     "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
                     "fields" => array(
                         "CategoryName" => "Name",
+                        "CategoryDescription" => "Description",
                         "CategoryEnable" => "Enabled"
                     )
                 ),
@@ -25,15 +26,70 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                     "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
                     "fields" => array(
                         "OriginName" => "Name",
+                        "OriginDescription" => "Description",
                         "OriginEnable" => "Enabled"
                     )
                 )
             ),
-            "order" => array(
-                "field" => "shop_products.DateCreated",
-                "ordering" => "DESC"
+            "options" => array(
+                "expandSingleRecord" => true
             )
         ));
+    }
+
+    static function jsapiProductListLatest () {
+        $config = self::jsapiProductItem();
+        unset($config['options']);
+        $config['condition'] = array(
+            "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ?",
+            "values" => array("AVAILABLE", 1, 1, 1)
+        );
+        $config['limit'] = 64;
+        $config['order'] = array(
+            "field" => "shop_products.DateCreated",
+            "ordering" => "DESC"
+        );
+        return $config;
+
+        // return self::extendConfigs();
+        // return self::jsapiGetDataSourceConfig(array(
+        //     "action" => "select",
+        //     "source" => "shop_products",
+        //     "condition" => array(
+        //         "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ?",
+        //         "values" => array("AVAILABLE", 1, 1, 1)
+        //     ),
+        //     "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Model", "SKU", "Description", "Price", "DateCreated"),
+        //     "offset" => "0",
+        //     "limit" => "64",
+        //     "additional" => array(
+        //         "shop_categories" => array(
+        //             "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
+        //             "fields" => array(
+        //                 "CategoryName" => "Name",
+        //                 "CategoryEnable" => "Enabled"
+        //             )
+        //         ),
+        //         "shop_origins" => array(
+        //             "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
+        //             "fields" => array(
+        //                 "OriginName" => "Name",
+        //                 "OriginEnable" => "Enabled"
+        //             )
+        //         )
+        //     ),
+        //     "order" => array(
+        //         "field" => "shop_products.DateCreated",
+        //         "ordering" => "DESC"
+        //     )
+        // ));
+    }
+
+    static function jsapiProductListCategory () {
+        $config = self::jsapiProductListLatest();
+        $config['condition']["filter"] = "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ? + shop_products.CategoryID (=) ?";
+        unset($config['order']);
+        return $config;
     }
 
     static function jsapiProductAttributes () {
@@ -65,7 +121,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         ));
     }
 
-    static function jsapiProductsPriceStats () {
+    static function jsapiProductPriceStats () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productPrices",
@@ -108,41 +164,6 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         ));
     }
 
-    static function jsapiProductItem () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "select",
-            "source" => "shop_products",
-            "condition" => array(
-                "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_products.ID (=) ?",
-                "values" => array("AVAILABLE", 1)
-            ),
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated"),
-            "offset" => "0",
-            "limit" => "1",
-            "additional" => array(
-                "shop_categories" => array(
-                    "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
-                    "fields" => array(
-                        "CategoryName" => "Name",
-                        "CategoryDescription" => "Description",
-                        "CategoryEnable" => "Enabled"
-                    )
-                ),
-                "shop_origins" => array(
-                    "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
-                    "fields" => array(
-                        "OriginName" => "Name",
-                        "OriginDescription" => "Description",
-                        "OriginEnable" => "Enabled"
-                    )
-                )
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
-
     static function jsapiShopCategoryLocation () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
@@ -165,6 +186,40 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         ));
     }
 
-} 
+    static function jsapiShopCategoryBrands () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getShopCategoryBrands",
+                "parameters" => array()
+            )
+        ));
+    }
+
+    static function jsapiShopCategorySubCategories () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getShopCategorySubCategories",
+                "parameters" => array()
+            )
+        ));
+    }
+
+    static function jsapiShopCategoryPriceEdges () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getShopCategoryPriceEdges",
+                "parameters" => array()
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+
+}
 
 ?>

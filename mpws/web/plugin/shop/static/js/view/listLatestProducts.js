@@ -9,7 +9,8 @@ define("plugin/shop/js/view/listLatestProducts", [
         tagName: 'div',
         className: 'shop-product-list shop-product-list-latest',
         collection: new CollListLatestProducts(),
-        itemViewClass: ProductItemShort
+        itemViewClass: ProductItemShort,
+        autoRender: true
     });
 
     return ListLatestProducts;

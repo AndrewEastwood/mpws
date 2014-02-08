@@ -76,7 +76,7 @@ class pluginShop extends objectPlugin {
             // products list sorted by category
             // -----------------------------------------------
             case "shop_catalog": {
-                $data = $this->_custom_api_getCatalog($param);
+                $data = $this->_custom_api_getCatalog();
                 break;
             }
             // product standalone item short
@@ -117,14 +117,14 @@ class pluginShop extends objectPlugin {
     }
 
     /* PLUGIN API METHODS (ADMIN) */
-    private function _custom_productList () {}
-    private function _custom_productEdit () {}
-    private function _custom_categoryList () {}
-    private function _custom_categoryEdit () {}
-    private function _custom_brandList () {}
-    private function _custom_brandEdit () {}
-    private function _custom_orderList () {}
-    private function _custom_orderEdit () {}
+    // private function _custom_productList () {}
+    // private function _custom_productEdit () {}
+    // private function _custom_categoryList () {}
+    // private function _custom_categoryEdit () {}
+    // private function _custom_brandList () {}
+    // private function _custom_brandEdit () {}
+    // private function _custom_orderList () {}
+    // private function _custom_orderEdit () {}
 
 
     /* PLUGIN API METHODS (PUBLIC) */
@@ -203,10 +203,10 @@ class pluginShop extends objectPlugin {
     // -----------------------------------------------
 
     // catalog filtering
-    // -----------------------------------------------
-    private function _custom_api_getCatalogFiltering () {
+    // // -----------------------------------------------
+    // private function _custom_api_getCatalogFiltering () {
 
-    }
+    // }
 
     // shop catalog structure
     // -----------------------------------------------
@@ -232,12 +232,21 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by category
     // -----------------------------------------------
-    private function _custom_api_getCatalog ($params) {
+    private function _custom_api_getCatalog () {
 
-        $categoryId = getValue($params['categoryId'], null);
+        $dataObj = new libraryDataObject();
+
+        $categoryID = libraryRequest::getValue('categoryID', null);
+        // $categoryId = getValue($params['categoryId'], null);
+
+        if (!is_numeric($categoryID)) {
+            $dataObj->setError("Wrong category ID parameter");
+            return $dataObj;
+        }
+
 
         // data
-        $dataObj = new mpwsData();
+        // $dataObj = new mpwsData();
         // mapped data (key is record's ID)
         $productsMap = array();
         $attributesMap = array();
@@ -255,20 +264,23 @@ class pluginShop extends objectPlugin {
             "filterOptionsAvailable" => /*&*/$filterOptionsAvailable,
             "info" => array(
                 "productsCount" => count(/*&*/$productsMap),
-                "currentCategoryID" => $categoryId
+                "currentCategoryID" => $categoryID
             )
         );
 
-        if (!is_numeric($categoryId)) {
-            $_result['error'] = "Wrong category ID parameter";
-            $dataObj->setData($_result);
-            return $dataObj;
-        }
-
         // set data source
         // ---
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsByCategory['data']);
-        $dataObjConfig = $dataObj->getConfig();
+        $dataConfigProducts = configurationShopDataSource::jsapiProductListCategory();
+        $dataConfigCategoryBrand = configurationShopDataSource::jsapiShopCategoryBrands();
+        $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdges();
+        $dataConfigCategorySubCategories = configurationShopDataSource::jsapiShopCategorySubCategories();
+
+        // update configs
+        $dataConfigProducts['condition']['values'][] = $categoryID;
+        $dataConfigCategoryBrand['procedure']['parameters'][] = $categoryID;
+        $dataConfigCategoryPriceEdges['procedure']['parameters'][] = $categoryID;
+        $dataConfigCategorySubCategories['procedure']['parameters'][] = $categoryID;
+
 
         // TODO:
         // get category brands
@@ -279,22 +291,28 @@ class pluginShop extends objectPlugin {
         //
         // wow, here are lots of items to be completed
 
+        $dataCategoryBrands = $this->getDataBase()->getData($dataConfigCategoryBrand);
+        $dataCategoryPriceEdges = $this->getDataBase()->getData($dataConfigCategoryPriceEdges);
+        $dataCategorySubCategories = $this->getDataBase()->getData($dataConfigCategorySubCategories);
+
+
+
         // grap all available filter options of running category
         // ---
-        $dataCategoryBrands = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryBrands['data']);
-        $dataCategoryBrands->setValuesDbProcedure($categoryId);
-        $dataCategoryBrands->process($params);
+        // $dataCategoryBrands = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryBrands['data']);
+        // $dataCategoryBrands->setValuesDbProcedure($categoryId);
+        // $dataCategoryBrand = configurationShopDataSource::jsapiProductListCategory();
 
-        $dataCategoryPriceEdges = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryPriceEdges['data']);
-        $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
-        $dataCategoryPriceEdges->process($params);
+        // $dataCategoryPriceEdges = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryPriceEdges['data']);
+        // $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
+        // $dataCategoryPriceEdges->process($params);
 
-        $dataCategorySubCategories = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategorySubCategories['data']);
-        $dataCategorySubCategories->setValuesDbProcedure($categoryId);
-        $dataCategorySubCategories->process($params);
+        // $dataCategorySubCategories = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategorySubCategories['data']);
+        // $dataCategorySubCategories->setValuesDbProcedure($categoryId);
+        // $dataCategorySubCategories->process($params);
 
         // get max and min prices
-        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges->getData('PriceMax') ?: 0);
+/*        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges->getData('PriceMax') ?: 0);
         $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges->getData('PriceMin') ?: 0);
         $filterOptionsAvailable['filter_commonAvailability'] = array("AVAILABLE", "OUTOFSTOCK", "COMINGSOON");
         $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
@@ -317,30 +335,30 @@ class pluginShop extends objectPlugin {
         $filterOptionsApplied['filter_commonOnSaleTypes'] = getValue($params['filter_commonOnSaleTypes'], array());
 
         $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
-        $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getNonEmptyValue($params['filter_viewItemsOnPage'], $dataObjConfig['limit']));
+        $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getNonEmptyValue($params['filter_viewItemsOnPage'], $dataConfigProducts['limit']));
 
         $filterOptionsApplied['filter_categoryBrands'] = getValue($params['filter_categoryBrands'], array());
 
         // adjust filters
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
-            $dataObjConfig['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
+            $dataConfigProducts['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
         else
-            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataObjConfig['limit'];
+            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
 
         $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
         if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
-            $dataObjConfig['order'] = array('field' => $dataObjConfig['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
+            $dataConfigProducts['order'] = array('field' => $dataConfigProducts['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
         else
             $filterOptionsApplied['filter_viewSortBy'] = null;
 
         if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
-            $dataObjConfig['condition']['filter'] .= " + Price (<) ?";
+            $dataConfigProducts['condition']['filter'] .= " + Price (<) ?";
             $pendingDbConditions[] = 'filter_commonPriceMax';
         } else
             $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
 
         if ($filterOptionsApplied['filter_commonPriceMin'] > 0) {
-            $dataObjConfig['condition']['filter'] .= " + Price (>) ?";
+            $dataConfigProducts['condition']['filter'] .= " + Price (>) ?";
             $pendingDbConditions[] = 'filter_commonPriceMin';
         } else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
@@ -348,13 +366,13 @@ class pluginShop extends objectPlugin {
         // var_dump($filterOptionsApplied['filter_categoryBrands']);
 
         if (count($filterOptionsApplied['filter_categoryBrands']) > 0) {
-            $dataObjConfig['condition']['filter'] .= " + OriginID (IN) ?";
+            $dataConfigProducts['condition']['filter'] .= " + OriginID (IN) ?";
             $pendingDbConditions[] = 'filter_categoryBrands';
         }
 
         // update data config
         // ---
-        $dataObj->setConfig($dataObjConfig);
+        $dataObj->setConfig($dataConfigProducts);
 
         // update conditions
         $dataObj->setValuesDbCondition($categoryId, MERGE_MODE_APPEND);
@@ -362,11 +380,11 @@ class pluginShop extends objectPlugin {
         foreach ($pendingDbConditions as $filterKey)
             $dataObj->setValuesDbCondition($filterOptionsApplied[$filterKey], MERGE_MODE_APPEND);
 
-        // var_dump($dataObj->getConfig($dataObjConfig));
+        // var_dump($dataObj->getConfig($dataConfigProducts));
 
         // get data with filter
         // ---
-        $products = $dataObj->process($params)->getData();
+        $products = $this->getDataBase()->getData($configLocation);
         
         if ($dataObj->isEmpty()) {
             $_result['error'] = "No products";
@@ -400,7 +418,15 @@ class pluginShop extends objectPlugin {
 
         // update main data object
         // ---
-        $dataObj->setData($_result);
+        $dataObj->setData($_result);*/
+
+        // var_dump($dataConfigProducts);
+
+        $products = $this->getDataBase()->getData($dataConfigProducts);
+
+        $productsMap = $this->_custom_api_getProductAttributes($products);
+
+        $dataObj->setData('products', $productsMap);
 
         return $dataObj;
     }
@@ -442,81 +468,10 @@ class pluginShop extends objectPlugin {
 
             $dataObj->setData('products', $productsMap);
 
-
-
-            // $configProductsAttr = configurationShopDataSource::jsapiProductAttributes();
-            // $configProductsAttr["condition"]["values"][] = array($product);
-            // $attributes = $this->getDataBase()->getData($configProductsAttr);
-
-            // $dataObj->setConfig($this->objectConfiguration_data_jsapiProductItem['data']);
-            // replace condition values
-            // add filter values
-            // var_dump($productID);
-            // $dataObj->setValuesDbCondition($productID, MERGE_MODE_APPEND);
-
-            // $dataObj->process();
-            // var_dump($dataObj);
-
-            // echo '111111111111111111111111111' . PHP_EOL;
-            // fetch attributes
-            // $dataProductAttrObj = $this->_custom_api_getProductAttributes(array($productID), true);
-            // var_dump($dataProductAttrObj);
-            // $dataProductAttrObj->extendConfig(array(
-            //     "options" => array(
-            //         "expandSingleRecord" => true
-            //     )
-            // ), true);
-            // $dataProductAttrObj->process();
-
-            // echo '111111111111111111111111111' . PHP_EOL;
-            // fetch product data and related attributes
-            // $ctx = contextMPWS::instance();
-
-            // $dataProduct = $ctx->contextCustomer->getDBO()->mpwsFetchData($dataConfig);
-            // print_r($dataProduct);
-
-            // var_dump($_prod);
-
-            //$_prod['ProductAttributes'] = $_attr['ProductAttributes'] ?: array();
-
-            // $_data = array();
-            // // var_dump($_attr);
-            // // additional data
-            // switch ($type) {
-            //     // full means that we have additional data here and them we append basic data
-            //     case 'full':
-            //         $dataProductPricesObj = $this->_custom_api_getProductPriceArchive($productID);
-            //         $prices = $dataProductPricesObj->process()->getData();
-            //         foreach ($prices as $value)
-            //             $pricesMap[$value['productID']] = $value['PriceArchive'];
-            //         $_data['prices'] = $pricesMap;
-
-            //     // short is like a basic product data that must be included
-            //     case 'short':
-            //         $productsMap = array(
-            //             $productID =>$dataObj->getData()
-            //         );
-
-            //         $attributes = $dataProductAttrObj->process()->getData();
-            //         foreach ($attributes as $value)
-            //             $attributesMap[$value['productID']] = $value['ProductAttributes'];
-
-            //         $_data['products'] = $productsMap;
-            //         $_data['attributes'] = $attributesMap;
-            //         break;
-            //     default:
-            //         # code...
-            //         break;
-            // }
-
             // save product into recently viewed
             $recentProducts = $_SESSION['shop:recentProducts'] ?: array();
             $recentProducts[$productID] = $productsMap[$productID];
             $_SESSION['shop:recentProducts'] = $recentProducts;
-        
-            // $dataObj->setData($_data);
-
-            // $dataObj->setData($_prod);
         }
 
         return $dataObj;
@@ -623,10 +578,10 @@ class pluginShop extends objectPlugin {
     // catalog
 
     // origins
-    private function _custom_api_getOrigin () {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiOriginList['data']);
-        return $dataObj->process($params);
-    }
+    // private function _custom_api_getOrigin () {
+    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiOriginList['data']);
+    //     return $dataObj->process($params);
+    // }
 
     // // categories
     // private function _custom_api_getCategory () {
@@ -635,10 +590,10 @@ class pluginShop extends objectPlugin {
     // }
 
     // category origins
-    private function _custom_api_getCategoryOrigins () {
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
-        return $dataObj->process($params);
-    }
+    // private function _custom_api_getCategoryOrigins () {
+    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
+    //     return $dataObj->process($params);
+    // }
 
     // product list
 
@@ -648,25 +603,6 @@ class pluginShop extends objectPlugin {
     // product additional data
     // @productIDs - array of product ids
     private function _custom_api_getProductAttributes ($products) {
-        // var_dump(array(array($productIDs)));
-        // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductAttributes['data']);
-        // set condition values
-        // var_dump($productIDs);
-        // var_dump('trolololol');
-        // $dataObj->setValuesDbCondition(array($productIDs));
-
-
-        // $config = configurationShopDataSource::jsapiProductAttributes();
-
-        // $config["condition"]["values"][] = array($productIDs);
-
-        // return $this->getDataBase()->getData($config);
-
-        // if ($doNotProcessData)
-        //     return $dataObj;
-
-        // return $dataObj->process();
-
         // list of product ids to fetch related attributes
         $productIDs = array();
 
@@ -683,40 +619,38 @@ class pluginShop extends objectPlugin {
         $configProductsAttr["condition"]["values"][] = $productIDs;
         // var_dump($configProductsAttr);
 
+        $configProductsPrice = configurationShopDataSource::jsapiProductPriceStats();
+        $configProductsPrice["condition"]["values"][] = $productIDs;
+
         // configure product attribute object
         $attributes = $this->getDataBase()->getData($configProductsAttr);
+        $prices = $this->getDataBase()->getData($configProductsPrice);
 
         // var_dump($attributes);
+        // var_dump($prices);
         if (!empty($attributes))
             foreach ($attributes as $value) {
                 // var_dump($value);
                 $productsMap[$value['ProductID']]['Attributes'] = $value['ProductAttributes'];
+            }
+        if (!empty($prices))
+            foreach ($prices as $value) {
+                // var_dump($value);
+                $productsMap[$value['ProductID']]['Prices'] = $value['PriceArchive'];
             }
 
         // var_dump($productsMap);
         return $productsMap;
     }
 
-    private function _custom_api_getProductPriceArchive ($productIDs, $doNotProcessData) {
-        // var_dump($productIDs);
-        $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductsPriceStats['data']);
-        // set condition values
-        $dataObj->setValuesDbCondition($productIDs);
-
-        if ($doNotProcessData)
-            return $dataObj;
-
-        return $dataObj->process();
-    }
-
     // accounts
-    private function _custom_accountSignin () {}
-    private function _custom_accountProfile () {}
-    private function _custom_accountSubscriptions () {}
-    private function _custom_accountSettings () {}
-    private function _custom_accountOrdersActive () {}
-    private function _custom_accountOrdersHistory () {}
-    private function _custom_accountSignout () {}
+    // private function _custom_accountSignin () {}
+    // private function _custom_accountProfile () {}
+    // private function _custom_accountSubscriptions () {}
+    // private function _custom_accountSettings () {}
+    // private function _custom_accountOrdersActive () {}
+    // private function _custom_accountOrdersHistory () {}
+    // private function _custom_accountSignout () {}
 
 }
 

@@ -25,7 +25,7 @@ define("customer/js/site", [
 
     _customerOptions.site = {
         title: 'Test and demo site',
-        logoImageUrl: app.config.URL_STATIC_CUSTOMER + '/img/logo.png',
+        logoImageUrl: app.config.URL_STATIC_CUSTOMER + '/img/mikserLogo.png',
         showSearch: true
     };
 

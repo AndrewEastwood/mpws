@@ -71,6 +71,10 @@ class objectCustomer {
             return $response;
         }
 
+        // if (libraryRequest::getValue('fn') === "configuration") {
+        //     return 
+        // }
+
 
         // perform request with plugins
         // if ($p['realm'] == OBJECT_T_PLUGIN) {

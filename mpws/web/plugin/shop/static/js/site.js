@@ -61,9 +61,30 @@ define("plugin/shop/js/site", [
                 productID: null,
                 categoryID: categoryID
             });
+
+            require(['plugin/shop/js/view/listProductCatalog'], function (ListProductCatalog) {
+                // debugger;
+                var listProductCatalog = Cache.getObject('ListProductCatalog', function () {
+                    return new ListProductCatalog();
+                });
+                listProductCatalog.on('mview:renderComplete', function() {
+                    Site.setPlaceholder('productListCatalog', listProductCatalog.el);
+                });
+                // debugger;
+                listProductCatalog.fetchAndRender({
+                    categoryID: categoryID
+                });
+            });
         },
 
-        shop_catalog: function () {
+        shop_catalog: function (categoryID) {
+
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: categoryID
+            });
 
         },
 

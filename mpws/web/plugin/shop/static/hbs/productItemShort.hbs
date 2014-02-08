@@ -8,7 +8,7 @@
         <div class="shop-component shop-product-images">
             <div class="shop-product-image shop-product-image-main">
                 <a href="/#shop/product/{{data.ID}}" class="link">
-                    <img src="{{data.Attributes.IMAGES.MAIN}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
+                    <img src="{{data.Attributes.IMAGES.MAIN}}" onerror="this.src='{{data.Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
                 </a>
             </div>
         </div>

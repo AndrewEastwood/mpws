@@ -30,7 +30,8 @@ define("plugin/shop/js/lib/utils", [
                 HAS_MAIN: false,
                 HAS_ADDITIONAL: false,
                 MAIN: false,
-                ADDITIONAL : false
+                ADDITIONAL : false,
+                EMPTY: app.config.URL_STATIC_DEFAULT + 'img/noimage.png'
             }
             // adjust product images
             if (_attr.IMAGE) {
@@ -47,7 +48,7 @@ define("plugin/shop/js/lib/utils", [
                     }
                 }
             } else {
-                _images.MAIN = app.config.URL_STATIC_DEFAULT + 'img/noimage.png';
+                _images.MAIN = _images.EMPTY;
             }
 
             _attr.IMAGES = _images;

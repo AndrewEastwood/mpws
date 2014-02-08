@@ -1,0 +1,191 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+
+        {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_categorySubCategories }}
+        <div class="shop-component-catalog-filtering">
+            <div class="title row">
+                <strong><span>Категорії:</span></strong>
+            </div>
+            <div class="content row">
+
+                <div class="spacer"></div>
+                <div class="row">
+                    <div class="list-group">
+                    {{#each data.filterOptionsAvailable.filter_categorySubCategories }}
+                        <a class="list-group-item" href="#/shop/catalog/{{ID}}">
+                            <span class="badge">{{ProductCount}}</span>
+                            {{Name}}
+                        </a>
+                    {{/each}}
+                    </div>
+                </div>
+                <div class="spacer"></div>
+
+            </div>
+        </div>
+        {{/mpwsIsNotEmpty}}
+
+        <div class="shop-component-catalog-filtering">
+            <div class="title row">
+                <strong><span>Перегляд:</span></strong>
+            </div>
+            <div class="content row">
+
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    Сортування:
+                </div>
+                <div class="row">
+                    <select id="shopProductListFiltering_SortByID" class="selectpicker">
+                        <option value="none">- вибрати -</option>
+                        <option value="price_asc">За ціною (спочатку дешеві)</option>
+                        <option value="price_desc">За ціною (спочатку дорогі)</option>
+                        <option value="name_asc">За назвою</option>
+                    </select>
+                </div>
+                <div class="spacer"></div>
+
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    К-сть товарів:
+                </div>
+                <div class="row">
+                    <select id="shopProductListDisplayItems_DisplayCountID" class="selectpicker">
+                        <option value="2">2</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="75">75</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="spacer"></div>
+
+            </div>
+        </div>
+
+        <div class="shop-component-catalog-filtering">
+            <div class="title row">
+                <strong><span>Фільтрування:</span></strong>
+            </div>
+            <div class="content row">
+
+                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_commonAvailability }}
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    Наявність:
+                </div>
+                <div class="row">
+                    {{#each data.filterOptionsAvailable.filter_commonAvailability }}
+                    <div>
+                        <label>
+                            <input type="checkbox" value="{{this}}" name="filter_commonAvailability">
+                            {{this}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="spacer"></div>
+                {{/mpwsIsNotEmpty}}
+
+                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_commonOnSaleTypes }}
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    Пропозиції:
+                </div>
+                <div class="row">
+                    {{#each data.filterOptionsAvailable.filter_commonOnSaleTypes }}
+                    <div>
+                        <label>
+                            <input type="checkbox" value="{{this}}" name="filter_commonOnSaleTypes">
+                            {{this}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="spacer"></div>
+                {{/mpwsIsNotEmpty}}
+
+                {{#isnt data.filterOptionsAvailable.filter_commonPriceMax data.filterOptionsAvailable.filter_commonPriceMin }}
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    Ціна: (
+                        <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMin}}</span>
+                        <span>-</span>
+                        <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMax}}</span>
+                    ) грн.
+                </div>
+                <div class="row">
+                    <input type="text" class="form-control slider" value=""
+                        data-slider-min="{{mpwsToInt data.filterOptionsAvailable.filter_commonPriceMin}}"
+                        data-slider-max="{{mpwsToInt data.filterOptionsAvailable.filter_commonPriceMax}}"
+                        data-slider-step="1"
+                        data-slider-value="[{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMax}}]"
+                        data-slider-selection="after">
+                </div>
+                <div class="spacer"></div>
+                {{/isnt}}
+
+                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_categoryBrands }}
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    Виробники:
+                </div>
+                <div class="row">
+                    {{#each data.filterOptionsAvailable.filter_categoryBrands }}
+                    <div>
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
+                            {{Name}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="spacer"></div>
+                {{/mpwsIsNotEmpty}}
+
+                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_categorySpecifications }}
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                    Додаткові параметри:
+                </div>
+                <div class="row">
+                    {{#each data.filterOptionsAvailable.filter_categorySpecifications }}
+                    <div>
+                        <label>
+                            <input type="checkbox" value="{{ID}}" name="filter_categorySpecifications">
+                            {{Name}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="spacer"></div>
+                {{/mpwsIsNotEmpty}}
+
+                <div class="row">
+                    <button class="btn btn-success btn-block shop-apply-filter">Фільтрувати</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+        <div class="row">
+
+
+            {{#mpwsIsNotEmpty displayItems }}
+                {{#each displayItems }}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    {{{ this }}}
+                </div>
+                {{/each}}
+            {{else}}
+                <div class="alert alert-warning">Немає товарів в цій категорії</div>
+            {{/mpwsIsNotEmpty}}
+
+
+        </div>
+    </div>
+</div>

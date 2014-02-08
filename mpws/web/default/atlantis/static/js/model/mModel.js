@@ -33,9 +33,13 @@ define("default/js/model/mModel", [
 
             this.url = _url.toString();
         },
-        
+
         getUrlOption: function (key) {
             return this._urlOptions[key];
+        },
+
+        getUrlOptions: function () {
+            return this._urlOptions;
         }
 
     });

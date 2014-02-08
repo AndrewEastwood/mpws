@@ -4,8 +4,48 @@
 		"selected_items":
 		[
 			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"var",
+				"var_dump"
+			],
+			[
+				"produc",
+				"productIDs"
+			],
+			[
+				"im",
+				"imgPath"
+			],
+			[
+				"cus",
+				"customerName"
+			],
+			[
+				"strr",
+				"str_replace"
+			],
+			[
+				"de",
+				"debugger"
+			],
+			[
 				"is",
-				"isReady"
+				"isModelView"
+			],
+			[
+				"co",
+				"collection"
+			],
+			[
+				"get",
+				"getPlaceholder"
+			],
+			[
+				"p",
+				"placeholders"
 			],
 			[
 				"MV",
@@ -32,69 +72,35 @@
 	"buffers":
 	[
 		{
-			"file": "web/plugin/shop/static/js/collection/productListLatest.js",
+			"file": "web/plugin/shop/static/js/view/listProductCatalog.js",
 			"settings":
 			{
-				"buffer_size": 358,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/js/model/productItem.js",
-			"settings":
-			{
-				"buffer_size": 216,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/customer/pb.com.ua/static/js/site.js",
-			"settings":
-			{
-				"buffer_size": 1744,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/atlantis/static/js/site.js",
-			"settings":
-			{
-				"buffer_size": 1178,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/atlantis/static/js/loader.js",
-			"settings":
-			{
-				"buffer_size": 1741,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/atlantis/static/js/model/mModel.js",
-			"settings":
-			{
-				"buffer_size": 993,
-				"line_ending": "Unix"
+				"buffer_size": 680,
+				"line_ending": "Unix",
+				"name": "listProductCatalog.js"
 			}
 		},
 		{
 			"file": "web/plugin/shop/static/js/site.js",
 			"settings":
 			{
-				"buffer_size": 2017,
+				"buffer_size": 3978,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "define(\"default/js/lib/utils\", [\n    'cmn_jquery',\n    'default/js/lib/underscore'\n    /* component implementation */\n], function ($, _) {\n\n    function Utils () {}\n\n    Utils.setTableColumnsWidth = function (config) {\n\n        // container width\n        var cntWidth = config.container.width();\n\n        // get static widths\n        var staticW = 0;\n        var minWidthTotal = 0;\n        var maxWidthTotal = 0;\n        var _adjustedColumnWidths = {};\n\n        _(config.columns).each(function(columnConfig, columnName){\n\n            // dynamic width\n            if (_.isNumber(columnConfig.width))\n                _adjustedColumnWidths[columnName] = columnConfig.width;\n\n            // static width\n            if (_.isString(columnConfig.width)) {\n                staticW += parseInt(columnConfig.width, 10);\n                _adjustedColumnWidths[columnName] = columnConfig.width;\n            }\n\n            // get all min width to set container min-width\n            if (_.isString(columnConfig.minWidth))\n                minWidthTotal += parseInt(columnConfig.minWidth, 10);\n\n            // get all max width to set container min-width\n            if (_.isString(columnConfig.maxWidth))\n                maxWidthTotal += parseInt(columnConfig.maxWidth, 10);\n        });\n\n        var freeWidth = cntWidth - staticW;\n\n        // qB.log(true, 'container w: : ', cntWidth, 'min-w:', config.container.css('min-width'), 'max-w', maxWidthTotal);\n        // qB.log('static:', staticW, 'free:', freeWidth, 'max', staticW+maxWidthTotal, 'min', staticW+minWidthTotal);\n        // qB.log('111111 >>>>>> ', JSON.stringify(_adjustedColumnWidths));\n\n        // calc free space according to column min width\n        _(config.columns).each(function(columnConfig, columnName){\n\n            if (_.isString(_adjustedColumnWidths[columnName]))\n                return;\n\n            // get dynamic column width using free space\n            var dynamicW = _adjustedColumnWidths[columnName] * freeWidth / 100;\n\n            // qB.log('DDDDDynamic width for ', columnName, ' is >>>> ', dynamicW);\n\n            if (_.isString(columnConfig.minWidth)) {\n\n                var columnMinWidth = parseInt(columnConfig.minWidth, 10);\n                if (dynamicW < columnMinWidth) {\n\n                    // reduce free space\n                    freeWidth -= columnMinWidth;\n\n                    // need to move to another column\n                    var dynW = _adjustedColumnWidths[columnName];\n\n                    // and replce dynamic with min-width (static) value\n                    _adjustedColumnWidths[columnName] = columnMinWidth + 'px';\n\n                    // increase first dynamic column\n                    _(_adjustedColumnWidths).each(function(w, id){\n                        if (_.isNumber(w) && dynW) {\n                            _adjustedColumnWidths[id] += dynW;\n                            dynW = false;\n                        }\n                    });\n                }\n            }\n\n            if (_.isString(columnConfig.maxWidth)) {\n                var columnMaxWidth = parseInt(columnConfig.maxWidth, 10);\n\n                if (dynamicW >= columnMaxWidth) {\n                    // reduce free space\n                    freeWidth -= columnMaxWidth;\n                    // need to move to another column\n                    var dynW = _adjustedColumnWidths[columnName];\n\n                    // and replce dynamic with min-width (static) value\n                    _adjustedColumnWidths[columnName] = columnMaxWidth + 'px';\n\n                    // // increase first dynamic column\n                    // _(_adjustedColumnWidths).each(function(w, id){\n                    //     if (_.isNumber(w) && dynW) {\n                    //         _adjustedColumnWidths[id] += dynW;\n                    //         dynW = false;\n                    //     }\n                    // });\n\n                    // increase first dynamic column\n                    _(_adjustedColumnWidths).each(function(w, id){\n                        if (_.isNumber(w) && dynW) {\n                            _adjustedColumnWidths[id] += dynW;\n                            dynW = false;\n                        }\n                    });\n                }\n            }\n\n        });\n\n        // qB.log(true, '2222 >>>>>> ', JSON.stringify(_adjustedColumnWidths));\n\n        // set column width\n        _(_adjustedColumnWidths).each(function(columnW, columnName){\n            var $column = $('.' + config.style.cellPrefix + columnName);\n\n            if (_.isNumber(columnW))\n                columnW = columnW * freeWidth / 100;\n\n            var _mp = ($column.outerWidth() - $column.width());\n            var _nw = parseInt(columnW, 10) - parseInt(_mp, 10);\n\n            $column.width(_nw);\n        });\n\n        config.container.css('min-width', staticW + minWidthTotal);\n\n        if (maxWidthTotal)\n            config.container.css('max-width', staticW + maxWidthTotal);\n\n        if (config.custom) {\n\n            if (config.custom.attachToWindowResize) {\n                config.custom.attachToWindowResize = false;\n                // var _cloneConfig = _.extend({}, config, {custom:{attachToWindowResize:false}});\n                $(window).resize(function() {\n                    Utils.setTableColumnsWidth(config);\n                });\n            }\n\n            if (config.custom.relatedContainers) {\n                $(config.custom.relatedContainers).css('min-width', staticW + minWidthTotal);\n                if (maxWidthTotal)\n                    $(config.custom.relatedContainers).css('max-width', staticW + maxWidthTotal);\n            }\n\n        }\n\n        Sandbox.eventSubscribe(\"page-loaded\", function () {\n            // for (var i = 0; i < 101; i += 10)\n            //     setTimeout(Utils.setTableColumnsWidth(config), 20 + i);\n            Utils.setTableColumnsWidth(config);\n        });\n\n    }\n\n    // cross-browser log function\n    function log (s) {\n        var args = [].slice.call(arguments);\n        var isDebugMsg = (args.length >= 2 && typeof args[0] === 'boolean');\n\n        if (isDebugMsg && !_app.Page.isDebugEnabled())\n            return;\n\n        if (isDebugMsg)\n            args.shift();\n\n        var msg = args.join(\" \");\n\n        if (window.console && console.log && !console.log.isDummy) {\n            if (document.all) {\n                console.log(msg);  // Internet Explorer 8+\n            } else {\n                console.log.apply(console, args);  // Firefox, Safari, Chrome\n            }\n        } else if (window.Debug && Debug.writeln) {\n            Debug.writeln(msg);  // Internet Explorer 6, 7\n        } else if (window.opera && opera.postError) {\n            opera.postError(msg);  // Opera\n        }\n    }\n\n    // creates dummy log object to avoid execptions related to console.log access\n    if (typeof console === \"undefined\") {\n        console = {};\n        console.log = function() {}\n        console.log.isDummy = true;\n    }\n\n    // append logger fn\n    Utils.log = log;\n\n    // source: http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript\n    Utils.getTreeByJson = function (nodes, idKey, parentKey) {\n        // app.log(true, 'Utils.getTreeByJson', nodes, idKey, parentKey); // <-- there's your tree\n        var map = {}, node, roots = {};\n        // for (var i = 0; i < nodes.length; i += 1) {\n        for (var i in nodes) {\n            node = nodes[i];\n            node.children = {};\n            node.childrenCount =0;\n            map[node[idKey]] = node[idKey]; // use map to look-up the parents\n            // app.log(true, '--- current node = ', node);\n            // app.log(true, '--- current map = ', map);\n            // app.log(true, '--- current node[parentKey] = ', node[parentKey]);\n            if (!!parseInt(node[parentKey], 10)) {\n                if (!nodes[map[node[parentKey]]].children)\n                    nodes[map[node[parentKey]]].children = {};\n                // app.log(true, '--- adding node into child branch', node, nodes[map[node[parentKey]]]);\n                nodes[map[node[parentKey]]].children[node[idKey]] = node;\n                nodes[map[node[parentKey]]].childrenCount++;\n            } else {\n                roots[node[idKey]] = node;\n            }\n        }\n        // app.log(true, 'Utils.getTreeByJson', roots); // <-- there's your tree\n        return roots;\n    }\n\n    Utils.getTreeByArray = function (nodes, idKey, parentKey) {\n        // app.log(true, 'Utils.getTreeByArray', nodes, idKey, parentKey); // <-- there's your tree\n        var map = {}, node, roots = [];\n        for (var i = 0; i < nodes.length; i += 1) {\n        // for (var i in nodes) {\n            node = nodes[i];\n            node.children = [];\n            map[node[idKey]] = i;//node[idKey]; // use map to look-up the parents\n            // app.log(true, '--- current node = ', node);\n            // app.log(true, '--- current map = ', map);\n            // app.log(true, '--- current node[parentKey] = ', node[parentKey]);\n            if (!!parseInt(node[parentKey] !== \"0\", 10)) {\n                if (!nodes[map[node[parentKey]]].children)\n                    nodes[map[node[parentKey]]].children = [];\n                nodes[map[node[parentKey]]].children.push(node);\n            } else {\n                roots.push(node);\n            }\n        }\n        // app.log(true, 'Utils.getTreeByArray', roots); // <-- there's your tree\n        return roots;\n    }\n\n\n\n    return Utils;\n});",
-			"file": "web/default/atlantis/static/js/lib/utils.js",
-			"file_size": 10427,
-			"file_write_time": 1389526551000000,
+			"file": "web/plugin/shop/plugin.shop.php",
 			"settings":
 			{
-				"buffer_size": 9443,
+				"buffer_size": 24761,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/customer/pb_com_ua/static/js/site.js",
+			"settings":
+			{
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		}
@@ -123,31 +129,75 @@
 	},
 	"file_history":
 	[
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemFull.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/data.ini",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemShort.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemFull.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/collection/mCollection.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listProductCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/catalogStructureMenu.hbs",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/less/theme.less",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/lib/utils.js",
+		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/hbs/breadcrumb.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/base.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/lightbox.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/css/theme.css",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/lightbox.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/badges.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/bootstrap-magnify.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap-magnify.less",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/productItemFull.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/mView.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/catalogStructureMenu.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/old/productListOverview.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/productItemBase.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listLatestProducts.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listCatalogProducts.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/layout.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/font-awesome.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/glyphicons.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/style/default.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/style/customer.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/less/theme.less",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/menu.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listLatestProducts.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemShort.js",
+		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
+		"/devdata/Develop/github/web/mpws/engine/global/global.methods.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Customer.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/customer.pb_com_ua.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pobutteh/customer.pobutteh.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/mpws.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/variables.less",
+		"/devdata/Develop/github/web/mpws/.gitignore",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/cView.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/productItem.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItem.js",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataBase.php",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Utils.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/appCachedViews.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/utils.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/htmlComponents.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/extend.string.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/cache.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/hbs/breadcrumb.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/data.ini",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/mView.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/menu.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/breadcrumb.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/catalogStructureMenu.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/catalogStructureMenu.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/catalogStructureMenu.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/dropdowns.less",
-		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/less/theme.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/dropdowns-sub.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars_helpers.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/breadcrumb.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/layout.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/pageNavigation.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/shop.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/pageNavigation.js",
@@ -156,14 +206,11 @@
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/nls/en_us.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/coolPartial.hbs",
-		"/devdata/Develop/github/web/mpws/engine/global/global.methods.php",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/i18nprecompile.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/json2.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/core.js",
-		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.api.php",
-		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.Display.php",
 		"/devdata/Develop/github/web/mpws/mpws.sublime-project"
 	],
@@ -183,6 +230,52 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"_custom_api_getCategoryOrigins",
+			"_custom_api_getOrigin",
+			"ListLatestProducts",
+			"ListCatalogProducts",
+			"_custom_api_getProductAttributes",
+			"configProductsAttr",
+			"_custom_api_getProductPriceArchive",
+			"jsapiProductsPriceStats",
+			"_custom_api_getProductAttributes",
+			"close.png",
+			"@{imgPath}",
+			".png",
+			"@{imgPath}",
+			"../img/",
+			"magnify",
+			"magnif",
+			"ProductAttributes",
+			"ProductItemBase",
+			"data",
+			"ProductItemBase",
+			"source.data.",
+			"ProductListLatest",
+			"ProductItem",
+			"listLatestProducts",
+			"ListLatestProducts",
+			"listLatestProducts",
+			"ListLatestProducts",
+			"_custom_api_getProductItem",
+			"_custom_api_getProductAttributes",
+			"_custom_api_getProductItem",
+			"shop_product_item_short",
+			"productItemShort",
+			"listCatalogProducts",
+			"glyphicon glyphicon",
+			"copy",
+			"files",
+			"files\\",
+			"fa fa",
+			"_self",
+			"{{",
+			"listLatestProducts",
+			" productItem",
+			";\n",
+			" listLatestProducts",
+			"listLatestProducts",
+			"MModel",
 			"this",
 			"this.",
 			"HtmlComponents.prototype",
@@ -229,22 +322,23 @@
 			[
 				{
 					"buffer": 0,
-					"file": "web/plugin/shop/static/js/collection/productListLatest.js",
+					"file": "web/plugin/shop/static/js/view/listProductCatalog.js",
 					"settings":
 					{
-						"buffer_size": 358,
+						"buffer_size": 680,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								51,
-								51
+								8,
+								8
 							]
 						],
 						"settings":
 						{
+							"auto_name": "listProductCatalog.js",
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
@@ -255,18 +349,74 @@
 				},
 				{
 					"buffer": 1,
-					"file": "web/plugin/shop/static/js/model/productItem.js",
+					"file": "web/plugin/shop/static/js/site.js",
 					"settings":
 					{
-						"buffer_size": 216,
+						"buffer_size": 3978,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								210,
-								210
+								906,
+								906
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 118.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "web/plugin/shop/plugin.shop.php",
+					"settings":
+					{
+						"buffer_size": 24761,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3126,
+								3126
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2569.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "web/customer/pb_com_ua/static/js/site.js",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -275,174 +425,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "web/customer/pb.com.ua/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 1744,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								309,
-								309
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "web/default/atlantis/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 1178,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								234,
-								234
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "web/default/atlantis/static/js/loader.js",
-					"settings":
-					{
-						"buffer_size": 1741,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								823,
-								823
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "web/default/atlantis/static/js/model/mModel.js",
-					"settings":
-					{
-						"buffer_size": 993,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								664,
-								664
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "web/plugin/shop/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 2017,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1288,
-								1288
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "web/default/atlantis/static/js/lib/utils.js",
-					"settings":
-					{
-						"buffer_size": 9443,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9420,
-								9420
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1013.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -492,6 +474,26 @@
 		"selected_items":
 		[
 			[
+				"util",
+				"web/plugin/shop/static/js/lib/utils.js"
+			],
+			[
+				"mmode",
+				"web/default/atlantis/static/js/model/mModel.js"
+			],
+			[
+				"mview",
+				"web/default/atlantis/static/js/view/mView.js"
+			],
+			[
+				"mm",
+				"web/default/atlantis/static/js/model/mModel.js"
+			],
+			[
+				"mmmod",
+				"web/default/atlantis/static/js/model/mModel.js"
+			],
+			[
 				"plugin.shop.php",
 				"web/plugin/shop/plugin.shop.php"
 			]
@@ -510,6 +512,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 414.0,
+	"side_bar_width": 492.0,
 	"status_bar_visible": true
 }
