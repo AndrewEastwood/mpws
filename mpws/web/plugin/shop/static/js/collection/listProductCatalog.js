@@ -4,7 +4,7 @@ define('plugin/shop/js/collection/listProductCatalog', [
     'plugin/shop/js/model/productItemBase',
     'default/js/lib/url',
     'plugin/shop/js/lib/utils',
-    'default/js/lib/jquery.cookie'
+    'default/js/lib/jquery.cookie',
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 
     var ListProductCatalog = MCollection.extend({
@@ -13,13 +13,9 @@ define('plugin/shop/js/collection/listProductCatalog', [
             // debugger;
             this.updateUrlOptions({
                 source: 'shop',
-                fn: 'shop_catalog'
-            });
-        },
-        fetch: function (options) {
+                fn: 'shop_catalog',
+                // restore filter
 
-            // restore page filter
-            this.updateUrlOptions({
                 filter_viewSortBy: $.cookie('filter_viewSortBy') || null,
 
                 filter_viewItemsOnPage: $.cookie('filter_viewItemsOnPage') || null,
@@ -43,9 +39,6 @@ define('plugin/shop/js/collection/listProductCatalog', [
 
                 filter_categoryBrands: $.cookie('filter_categoryBrands') ? $.cookie('filter_categoryBrands').split(',') : [],
             });
-
-            // debugger;
-            MCollection.prototype.fetch.call(this, options);
         },
         parse: function (data) {
             // debugger;

@@ -257,7 +257,7 @@ class pluginShop extends objectPlugin {
         $pendingDbConditions = array();
 
         $_result = array(
-            "error" => null,
+            // "error" => null,
             "products" => /*&*/$productsMap,
             "attributes" => /*&*/$attributesMap,
             "filterOptionsApplied" => /*&*/$filterOptionsApplied,

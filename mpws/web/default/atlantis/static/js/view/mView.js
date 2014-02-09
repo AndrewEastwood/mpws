@@ -30,7 +30,7 @@ define("default/js/view/mView", [
 
                 this.collection.fetch({
                     success: function () {
-                        _self.render();
+                        _self.render.call(_self);
                     }
                 });
             } else if (this.isModelView()) { 
@@ -40,16 +40,16 @@ define("default/js/view/mView", [
                 if (this.model.url)
                     this.model.fetch({
                         success: function () {
-                            _self.render();
+                            _self.render.call(_self);
                         },
                         error: function () {
-                            _self.render();
+                            _self.render.call(_self);
                         }
                     });
                 else
-                    this.render();
+                    this.render.call(_self);
             } else
-                this.render();
+                this.render.call(_self);
         },
         render: function () {
             var _self = this;
@@ -111,6 +111,8 @@ define("default/js/view/mView", [
                             displayItems: _self.displayItems,
                             urlOptions: _tplUrlOptions
                         }));
+                        // debugger;
+                        this.delegateEvents();
                     }
 
                     if (typeof this.template === "string")
