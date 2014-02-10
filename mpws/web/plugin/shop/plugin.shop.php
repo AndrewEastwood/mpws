@@ -244,29 +244,33 @@ class pluginShop extends objectPlugin {
             return $dataObj;
         }
 
+        $categoryID = intval($categoryID);
 
-        // data
-        // $dataObj = new mpwsData();
-        // mapped data (key is record's ID)
-        $productsMap = array();
-        $attributesMap = array();
+
+        $filterOptions = array(
+            /* common options */
+            "filter_viewSortBy" => null,
+            "filter_viewItemsOnPage" => null,
+            "filter_commonPriceMax" => null,
+            "filter_commonPriceMin" => 0,
+            "filter_commonAvailability" => array(),
+            "filter_commonOnSaleTypes" => array(),
+
+            /* category based */
+            "filter_categoryBrands" => array(),
+            "filter_categorySubCategories" => array(),
+            "filter_categorySpecifications" => array()
+        );
 
         // filtering
-        $filterOptionsAvailable = $this->_custom_util_getCategoryFilterOptions();
-        $filterOptionsApplied = $this->_custom_util_getCategoryFilterOptions();
-        $pendingDbConditions = array();
+        $filterOptionsApplied = new ArrayObject($filterOptions);
+        $filterOptionsAvailable = new ArrayObject($filterOptions);
 
-        $_result = array(
-            // "error" => null,
-            "products" => /*&*/$productsMap,
-            "attributes" => /*&*/$attributesMap,
-            "filterOptionsApplied" => /*&*/$filterOptionsApplied,
-            "filterOptionsAvailable" => /*&*/$filterOptionsAvailable,
-            "info" => array(
-                "productsCount" => count(/*&*/$productsMap),
-                "currentCategoryID" => $categoryID
-            )
-        );
+        // init filter
+        $filterOptionsAvailable['filter_commonAvailability'] = array("AVAILABLE", "OUTOFSTOCK", "COMINGSOON");
+        $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
+        foreach ($filterOptionsApplied as $key => $value)
+            $filterOptionsApplied[$key] = libraryRequest::getValue($key);
 
         // set data source
         // ---
@@ -275,27 +279,63 @@ class pluginShop extends objectPlugin {
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdges();
         $dataConfigCategorySubCategories = configurationShopDataSource::jsapiShopCategorySubCategories();
 
-        // update configs
+        // update configs using user filter
+        // ---
         $dataConfigProducts['condition']['values'][] = $categoryID;
         $dataConfigCategoryBrand['procedure']['parameters'][] = $categoryID;
         $dataConfigCategoryPriceEdges['procedure']['parameters'][] = $categoryID;
         $dataConfigCategorySubCategories['procedure']['parameters'][] = $categoryID;
 
-
-        // TODO:
-        // get category brands
-        // get category max and min price
-        // get category specifications
-        // get category last added products
-        // get category popular products
-        //
-        // wow, here are lots of items to be completed
-
-        $dataCategoryBrands = $this->getDataBase()->getData($dataConfigCategoryBrand);
+        //filter: get category price edges
         $dataCategoryPriceEdges = $this->getDataBase()->getData($dataConfigCategoryPriceEdges);
+        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges['PriceMax'] ?: 0);
+        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges['PriceMin'] ?: 0);
+
+        // filter: display intems count
+        if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
+            $dataConfigProducts['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
+        else
+            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
+
+        // filter: items sorting
+        $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
+        if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
+            $dataConfigProducts['order'] = array('field' => $dataConfigProducts['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
+        else
+            $filterOptionsApplied['filter_viewSortBy'] = null;
+
+        // filter: price 
+        if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
+            $dataConfigProducts['condition']['filter'] .= " + Price (<=) ?";
+            $dataConfigProducts['condition']['values'][] = $filterOptionsApplied['filter_commonPriceMax'];
+        } else
+            $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
+
+        if ($filterOptionsApplied['filter_commonPriceMin'] > 0) {
+            $dataConfigProducts['condition']['filter'] .= " + Price (>=) ?";
+            $dataConfigProducts['condition']['values'][] = $filterOptionsApplied['filter_commonPriceMin'];
+        } else
+            $filterOptionsApplied['filter_commonPriceMin'] = 0;
+
+        // fetch data with filter options
+        $dataProducts = $this->getDataBase()->getData($dataConfigProducts);
+        $dataCategoryBrands = $this->getDataBase()->getData($dataConfigCategoryBrand);
         $dataCategorySubCategories = $this->getDataBase()->getData($dataConfigCategorySubCategories);
 
+        // filter: update filters
+        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands;
+        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories;
 
+        // attach attributes
+        $productsMap = $this->_custom_api_getProductAttributes($dataProducts);
+        // store data
+        $dataObj->setData('products', $productsMap);
+        $dataObj->setData('filter', array(
+            'filterOptionsAvailable' => $filterOptionsAvailable,
+            'filterOptionsApplied' => $filterOptionsApplied
+        ));
+        // return data object
+        return $dataObj;
 
         // grap all available filter options of running category
         // ---
@@ -421,29 +461,6 @@ class pluginShop extends objectPlugin {
         $dataObj->setData($_result);*/
 
         // var_dump($dataConfigProducts);
-
-        $products = $this->getDataBase()->getData($dataConfigProducts);
-
-        $productsMap = $this->_custom_api_getProductAttributes($products);
-
-        $dataObj->setData('products', $productsMap);
-
-        return $dataObj;
-    }
-
-    private function _custom_util_getCategoryFilterOptions () {
-        return array(
-            /* common options */
-            "filter_commonPriceMax" => null,
-            "filter_commonPriceMin" => 0,
-            "filter_commonAvailability" => array(),
-            "filter_commonOnSaleTypes" => array(),
-
-            /* category based */
-            "filter_categoryBrands" => array(),
-            "filter_categorySubCategories" => array(),
-            "filter_categorySpecifications" => array()
-        );
     }
 
     // product standalone item (short or full)
@@ -603,6 +620,8 @@ class pluginShop extends objectPlugin {
     // product additional data
     // @productIDs - array of product ids
     private function _custom_api_getProductAttributes ($products) {
+        if (empty($products))
+            return null;
         // list of product ids to fetch related attributes
         $productIDs = array();
 

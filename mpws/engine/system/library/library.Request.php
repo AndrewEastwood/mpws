@@ -240,7 +240,7 @@ class libraryRequest {
             $_SESSION['MPWS_SESSION_TOKEN'] = md5($privateKey . date('Y-m-d'));
             // echo 'MPWS_SESSION_TOKEN=' . $_SESSION['MPWS_SESSION_TOKEN'];
         }
-        return $_SESSION['MPWS_SESSION_TOKEN'];
+        return isset($_SESSION['MPWS_SESSION_TOKEN']) ? $_SESSION['MPWS_SESSION_TOKEN'] : null;
     }
 
     

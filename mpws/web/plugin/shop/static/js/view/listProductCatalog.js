@@ -23,32 +23,46 @@ define("plugin/shop/js/view/listProductCatalog", [
         initialize: function () {
             MView.prototype.initialize.call(this);
             this.on('mview:renderComplete', function () {
-                debugger;
-                this.delegateEvents();
-                // enhance ui components
-                var _filterPrice = this.$el.find('.slider').slider();
-                var _filterDropdowns = this.$el.find('.selectpicker').selectpicker();
+
+                var _filterData = this.collection.getExtras().filter;
+
+                // update (restore) filter options by server applied filter
+                this.$('#shopProductListFiltering_SortByID').val(_filterData.filterOptionsApplied.filter_viewSortBy);
+                this.$('#shopProductListDisplayItems_DisplayCountID').val(_filterData.filterOptionsApplied.filter_viewItemsOnPage);
+                this.$('input[name^="filter_"]').each(function(){
+                    var _targetFilterName = $(this).attr('name');
+                    var _targetFilterValue = $(this).val();
+                    if (_(_filterData.filterOptionsApplied[_targetFilterName]).indexOf(_targetFilterValue) >= 0)
+                        $(this).prop('checked', 'checked').attr('checked', 'checked');
+                });
+
+                // // enhance ui components
+                var _filterPrice = this.$('.slider').slider();
+                var _filterDropdowns = this.$('.selectpicker').selectpicker();
+
             }, this);
         },
-        filterProducts_Other: function () {
+        filterProducts_Other: function (event) {
+            // console.log(event);
             // debugger;
-            var _targetFilterName = $(this).attr('name');
+            var _targetFilterName = $(event.target).attr('name');
 
             var _filterOptions = {};
 
             if ($(this).is(':checked'))
-                _filterOptions[_targetFilterName].push($(this).val());
+                _filterOptions[_targetFilterName].push($(event.target).val());
             else
-                _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(this).val());
+                _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(event.target).val());
 
             $.cookie(_targetFilterName, _filterOptions[_targetFilterName], {path: Backbone.history.fragment});
 
             this.fetchAndRender(_filterOptions);
         },
-        filterProducts_Dropdowns: function () {
+        filterProducts_Dropdowns: function (event) {
+            // console.log(event);
             // debugger;
-            var filter_viewSortBy = this.$el.find('#shopProductListFiltering_SortByID').val();
-            var filter_viewItemsOnPage = this.$el.find('#shopProductListDisplayItems_DisplayCountID').val();
+            var filter_viewSortBy = this.$('#shopProductListFiltering_SortByID').val();
+            var filter_viewItemsOnPage = this.$('#shopProductListDisplayItems_DisplayCountID').val();
 
             $.cookie('filter_viewSortBy', filter_viewSortBy, {path: Backbone.history.fragment});
             $.cookie('filter_viewItemsOnPage', filter_viewItemsOnPage, {path: Backbone.history.fragment});
@@ -58,9 +72,10 @@ define("plugin/shop/js/view/listProductCatalog", [
                 filter_viewItemsOnPage: filter_viewItemsOnPage
             });
         },
-        filterProducts_PriceChanged: function () {
+        filterProducts_PriceChanged: function (event) {
+            // console.log(event);
             // debugger;
-            var _priceRange = $(this).data('value');
+            var _priceRange = $(event.target).data('value');
 
             var filter_commonPriceMin = _priceRange[0];
             var filter_commonPriceMax = _priceRange[1];
@@ -68,8 +83,8 @@ define("plugin/shop/js/view/listProductCatalog", [
             $.cookie('filter_commonPriceMin', filter_commonPriceMin, {path: Backbone.history.fragment});
             $.cookie('filter_commonPriceMax', filter_commonPriceMax, {path: Backbone.history.fragment});
 
-            this.$el.find('.shop-filter-price-start').text(filter_commonPriceMin);
-            this.$el.find('.shop-filter-price-end').text(filter_commonPriceMax);
+            this.$('.shop-filter-price-start').text(filter_commonPriceMin);
+            this.$('.shop-filter-price-end').text(filter_commonPriceMax);
 
             this.fetchAndRender({
                 filter_commonPriceMin: filter_commonPriceMin,

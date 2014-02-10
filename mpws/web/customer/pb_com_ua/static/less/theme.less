@@ -10,6 +10,7 @@
 
 @mainColor: #CF7400;
 @textColor: #333;
+@textForegroundColor: #fff;
 @buttonTextColor: #333;
 @buttonColorHover: darken(@mainColor, 10%);
 
@@ -108,13 +109,13 @@ select, select option {cursor: pointer;}
 /* navbar */
 
 .nav > li > a:hover, .nav > li > a:focus {
-    background-color: @mainColor;
+    text-shadow: 0px 0px 3px @mainColor;
     color: #333;
 }
 
 .navbar-nav > .dropdown > a:hover .caret, .navbar-nav > .dropdown > a:focus .caret {
-    border-top-color: #333;
-    border-bottom-color: #333;
+    border-top-color: @textForegroundColor;
+    border-bottom-color: @textForegroundColor;
 }
 .navbar-nav > .dropdown > a .caret {
     border-top-color: @mainColor;
@@ -146,8 +147,9 @@ select, select option {cursor: pointer;}
     background-color: rgba(26, 188, 156, 0.07);
 }
 .navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
-    color: #333;
-    background-color: @mainColor;
+    color: @textForegroundColor;
+    text-shadow: 0px 0px 3px @mainColor;
+    background-color: transparent;
 }
 
 .nav-tabs > li > a {
@@ -157,7 +159,7 @@ select, select option {cursor: pointer;}
     border-color: none;
 }
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    background-color: @mainColor;
+    text-shadow: 0px 0px 3px @mainColor;
     border: 0px none;
 }
 
@@ -182,6 +184,8 @@ i.fa {cursor: pointer;}
 .nav-tabs {
 border-bottom: 1px solid @mainColor;
 }
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {background-color: transparent;}
 
 /************** product components ****************/
 

@@ -41,8 +41,8 @@ define('plugin/shop/js/collection/listProductCatalog', [
             });
         },
         parse: function (data) {
-            // debugger;
             var products = ShopUtils.adjustProductEntry(data && data.shop);
+            this.setExtras('filter', data.shop.filter);
             return _(products).map(function(item){ return item; });
         }
     });

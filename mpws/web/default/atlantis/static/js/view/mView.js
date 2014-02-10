@@ -73,7 +73,7 @@ define("default/js/view/mView", [
                             // debugger;
                             var p = new _self.itemViewClass({model: model});
                             _self.viewItems.push(p);
-                            _self.displayItems.push(p.render().$el.html());
+                            _self.displayItems.push(p.render().$el.get(0));
                         });
                     // } else
                         // _tplData = _self.collection.toJSON();
@@ -83,20 +83,23 @@ define("default/js/view/mView", [
 
                 if (_self.autoRender)
                     _(_self.displayItems).each(function (itemView){
+                        // debugger;
                         _self.$el.append(itemView);
                     });
                 else {
                     var _tplData = null;
                     var _tplUrlOptions = null;
+                    var _tplExtras = null;
                     if (_self.isCollectionView()) {
                         _tplData = _self.collection.toJSON();
                         _tplUrlOptions = _self.collection.getUrlOptions();
+                        _tplExtras = _self.collection.getExtras();
                     } else if (_self.isModelView()) {
                         _tplData = this.model.toJSON();
                         _tplUrlOptions = this.model.getUrlOptions();
+                        _tplExtras = _self.model.getExtras();
                     }
 
-                    // debugger;
                     if (typeof this.template === "function") {
                         var Site = require('customer/js/site');
                         this.$el.html(this.template({
@@ -108,18 +111,18 @@ define("default/js/view/mView", [
                                 }
                             },
                             data: _tplData,
+                            extras: _tplExtras,
                             displayItems: _self.displayItems,
                             urlOptions: _tplUrlOptions
                         }));
                         // debugger;
-                        this.delegateEvents();
                     }
 
                     if (typeof this.template === "string")
                         this.$el.html(this.template);
                 }
 
-                this.trigger('mview:renderComplete', this);
+                this.trigger('mview:renderComplete', _self);
             }
 
             if (typeof this.template === "string" && this.template.has('/hbs!')) {

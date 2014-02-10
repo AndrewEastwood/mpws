@@ -122,7 +122,7 @@ class libraryDataBase {
                         case '<':
                             $this->dbo->where_lt($matches[1], $values[$i]);
                             break;
-                        case '<':
+                        case '<=':
                             $this->dbo->where_lte($matches[1], $values[$i]);
                             break;
                         case 'is null':

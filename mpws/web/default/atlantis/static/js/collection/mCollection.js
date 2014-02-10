@@ -6,6 +6,7 @@ define("default/js/collection/mCollection", [
 
     var MCollection = Backbone.Collection.extend({
 
+        _extras: {},
         _urlOptions: {
             // required parameters
             token: app.config.TOKEN,
@@ -40,6 +41,14 @@ define("default/js/collection/mCollection", [
 
         getUrlOptions: function () {
             return this._urlOptions;
+        },
+
+        setExtras: function (key, val) {
+            this._extras[key] = val;
+        },
+
+        getExtras: function () {
+            return this._extras;
         }
         
 

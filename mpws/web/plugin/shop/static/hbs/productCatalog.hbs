@@ -1,7 +1,7 @@
 <div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
-        {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_categorySubCategories }}
+        {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
         <div class="shop-component-catalog-filtering">
             <div class="title row">
                 <strong><span>Категорії:</span></strong>
@@ -11,7 +11,7 @@
                 <div class="spacer"></div>
                 <div class="row">
                     <div class="list-group">
-                    {{#each data.filterOptionsAvailable.filter_categorySubCategories }}
+                    {{#each extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
                         <a class="list-group-item" href="#/shop/catalog/{{ID}}">
                             <span class="badge">{{ProductCount}}</span>
                             {{Name}}
@@ -71,13 +71,13 @@
             </div>
             <div class="content row">
 
-                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_commonAvailability }}
+                {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_commonAvailability }}
                 <div class="spacer"></div>
                 <div class="subtitle row">
                     Наявність:
                 </div>
                 <div class="row">
-                    {{#each data.filterOptionsAvailable.filter_commonAvailability }}
+                    {{#each extras.filter.filterOptionsAvailable.filter_commonAvailability }}
                     <div>
                         <label>
                             <input type="checkbox" value="{{this}}" name="filter_commonAvailability">
@@ -89,13 +89,13 @@
                 <div class="spacer"></div>
                 {{/mpwsIsNotEmpty}}
 
-                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_commonOnSaleTypes }}
+                {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_commonOnSaleTypes }}
                 <div class="spacer"></div>
                 <div class="subtitle row">
                     Пропозиції:
                 </div>
                 <div class="row">
-                    {{#each data.filterOptionsAvailable.filter_commonOnSaleTypes }}
+                    {{#each extras.filter.filterOptionsAvailable.filter_commonOnSaleTypes }}
                     <div>
                         <label>
                             <input type="checkbox" value="{{this}}" name="filter_commonOnSaleTypes">
@@ -107,33 +107,33 @@
                 <div class="spacer"></div>
                 {{/mpwsIsNotEmpty}}
 
-                {{#isnt data.filterOptionsAvailable.filter_commonPriceMax data.filterOptionsAvailable.filter_commonPriceMin }}
+                {{#isnt extras.filter.filterOptionsAvailable.filter_commonPriceMax extras.filter.filterOptionsAvailable.filter_commonPriceMin }}
                 <div class="spacer"></div>
                 <div class="subtitle row">
                     Ціна: (
-                        <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMin}}</span>
+                        <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMin}}</span>
                         <span>-</span>
-                        <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMax}}</span>
+                        <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMax}}</span>
                     ) грн.
                 </div>
                 <div class="row">
                     <input type="text" class="form-control slider" value=""
-                        data-slider-min="{{mpwsToInt data.filterOptionsAvailable.filter_commonPriceMin}}"
-                        data-slider-max="{{mpwsToInt data.filterOptionsAvailable.filter_commonPriceMax}}"
+                        data-slider-min="{{mpwsToInt extras.filter.filterOptionsAvailable.filter_commonPriceMin}}"
+                        data-slider-max="{{mpwsToInt extras.filter.filterOptionsAvailable.filter_commonPriceMax}}"
                         data-slider-step="1"
-                        data-slider-value="[{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt data.filterOptionsApplied.filter_commonPriceMax}}]"
+                        data-slider-value="[{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMax}}]"
                         data-slider-selection="after">
                 </div>
                 <div class="spacer"></div>
                 {{/isnt}}
 
-                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_categoryBrands }}
+                {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categoryBrands }}
                 <div class="spacer"></div>
                 <div class="subtitle row">
                     Виробники:
                 </div>
                 <div class="row">
-                    {{#each data.filterOptionsAvailable.filter_categoryBrands }}
+                    {{#each extras.filter.filterOptionsAvailable.filter_categoryBrands }}
                     <div>
                         <label>
                             <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
@@ -145,13 +145,13 @@
                 <div class="spacer"></div>
                 {{/mpwsIsNotEmpty}}
 
-                {{#mpwsIsNotEmpty data.filterOptionsAvailable.filter_categorySpecifications }}
+                {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySpecifications }}
                 <div class="spacer"></div>
                 <div class="subtitle row">
                     Додаткові параметри:
                 </div>
                 <div class="row">
-                    {{#each data.filterOptionsAvailable.filter_categorySpecifications }}
+                    {{#each extras.filter.filterOptionsAvailable.filter_categorySpecifications }}
                     <div>
                         <label>
                             <input type="checkbox" value="{{ID}}" name="filter_categorySpecifications">
@@ -171,21 +171,17 @@
         </div>
 
     </div>
-    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div class="row">
-
-
             {{#mpwsIsNotEmpty displayItems }}
                 {{#each displayItems }}
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    {{{ this }}}
+                <div class="shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    {{{ this.innerHTML }}}
                 </div>
                 {{/each}}
             {{else}}
                 <div class="alert alert-warning">Немає товарів в цій категорії</div>
             {{/mpwsIsNotEmpty}}
-
-
         </div>
     </div>
 </div>

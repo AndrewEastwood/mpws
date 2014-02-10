@@ -24,9 +24,9 @@ define("plugin/shop/js/site", [
         initialize: function () {
 
             var shopMenuItem = new CatalogStructureMenu();
-            shopMenuItem.on('mview:renderComplete', function () {
+            // shopMenuItem.on('mview:renderComplete', function () {
                 Site.addMenuItem(shopMenuItem.$el);
-            });
+            // });
             shopMenuItem.fetchAndRender();
 
         },
@@ -44,10 +44,9 @@ define("plugin/shop/js/site", [
                 var listLatestProducts = Cache.getObject('ListLatestProducts', function () {
                     return new ListLatestProducts();
                 });
-                listLatestProducts.on('mview:renderComplete', function() {
-                    Site.setPlaceholder('productListOverview', listLatestProducts.el);
-                });
-                // debugger;
+                // listLatestProducts.on('mview:renderComplete', function() {
+                Site.setPlaceholder('productListOverview', listLatestProducts.el);
+                // });
                 listLatestProducts.fetchAndRender();
             });
 
@@ -67,9 +66,12 @@ define("plugin/shop/js/site", [
                 var listProductCatalog = Cache.getObject('ListProductCatalog', function () {
                     return new ListProductCatalog();
                 });
-                listProductCatalog.on('mview:renderComplete', function() {
-                    Site.setPlaceholder('productListCatalog', listProductCatalog.el);
-                });
+                // listProductCatalog.on('mview:renderComplete', function(view) {
+                    // console.log('site');
+                    // debugger;
+                    // console.log('events (in site)', listProductCatalog, jQuery._data(view.$('.selectpicker').get(0), 'events'));
+                Site.setPlaceholder('productListCatalog', listProductCatalog.el);
+                // });
                 // debugger;
                 listProductCatalog.fetchAndRender({
                     categoryID: categoryID
@@ -101,9 +103,9 @@ define("plugin/shop/js/site", [
                 var productItemFull = Cache.getObject('ProductItemFull', function () {
                     return new ProductItemFull();
                 });
-                productItemFull.on('mview:renderComplete', function() {
+                // productItemFull.on('mview:renderComplete', function() {
                     Site.setPlaceholder('productEntryStandalone', productItemFull.el);
-                });
+                // });
                 // debugger;
                 productItemFull.fetchAndRender({
                     source: 'shop',
