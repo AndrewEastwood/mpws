@@ -48,14 +48,17 @@ class libraryDataBase {
         // if (!in_array("ID", $fieldsToSelectFromDB))
         //     array_unshift($fieldsToSelectFromDB, 'ID');
 
-        $fieldsToSelectFromDBClear = array();
-        // just to avoid mysql error: XXXX in field list is ambiguous
-        foreach ($fieldsToSelectFromDB as $key => $value) {
-            if ($value[0] === '@')
-                $this->dbo->select_expr(substr($value, 1));
-            elseif (!strstr($value, '.'))
-                $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
-        }
+        if ($config['useFieldPrefix']) {
+            $fieldsToSelectFromDBClear = array();
+            // just to avoid mysql error: XXXX in field list is ambiguous
+            foreach ($fieldsToSelectFromDB as $key => $value) {
+                if ($value[0] === '@')
+                    $this->dbo->select_expr(substr($value, 1));
+                elseif (!strstr($value, '.'))
+                    $fieldsToSelectFromDBClear[$key] = sprintf("%s.%s", $source, $value);
+            }
+        } else
+            $fieldsToSelectFromDBClear = $fieldsToSelectFromDB;
 
         $this->dbo->mpwsTable($source);
 

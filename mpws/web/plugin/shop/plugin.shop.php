@@ -274,6 +274,7 @@ class pluginShop extends objectPlugin {
 
         // set data source
         // ---
+        $dataConfigProductCount = configurationShopDataSource::jsapiProductListCategoryCount();
         $dataConfigProducts = configurationShopDataSource::jsapiProductListCategory();
         $dataConfigCategoryBrand = configurationShopDataSource::jsapiShopCategoryBrands();
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdges();
@@ -281,6 +282,7 @@ class pluginShop extends objectPlugin {
 
         // update configs using user filter
         // ---
+        $dataConfigProductCount['condition']['values'][] = $categoryID;
         $dataConfigProducts['condition']['values'][] = $categoryID;
         $dataConfigCategoryBrand['procedure']['parameters'][] = $categoryID;
         $dataConfigCategoryPriceEdges['procedure']['parameters'][] = $categoryID;
@@ -317,7 +319,10 @@ class pluginShop extends objectPlugin {
         } else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
 
+        // var_dump($dataConfigProductCount);
+
         // fetch data with filter options
+        $dataProductCount = $this->getDataBase()->getData($dataConfigProductCount);
         $dataProducts = $this->getDataBase()->getData($dataConfigProducts);
         $dataCategoryBrands = $this->getDataBase()->getData($dataConfigCategoryBrand);
         $dataCategorySubCategories = $this->getDataBase()->getData($dataConfigCategorySubCategories);
@@ -326,10 +331,12 @@ class pluginShop extends objectPlugin {
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands;
         $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories;
 
+        // var_dump($dataConfigProducts);
         // attach attributes
         $productsMap = $this->_custom_api_getProductAttributes($dataProducts);
         // store data
-        $dataObj->setData('products', $productsMap);
+        // $dataObj->setData('products', $productsMap);
+        $dataObj->setData('count', $dataProductCount);
         $dataObj->setData('filter', array(
             'filterOptionsAvailable' => $filterOptionsAvailable,
             'filterOptionsApplied' => $filterOptionsApplied

@@ -17,6 +17,7 @@ class configurationDefaultDataSource extends objectConfiguration {
                 "fields" => array(/*"DateLastAccess", "IsOnline"*/),
                 "values" => array()
             ),
+            "useFieldPrefix" => true,
             "fields" => array(/*"ID", "CategoryID", "OriginID", "Name", "Model", "SKU", "Description", "DateCreated"*/),
             "offset" => 0,
             "limit" => 10,
