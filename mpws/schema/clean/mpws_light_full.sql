@@ -33,39 +33,37 @@ END$$
 -- these procedures depends on category filter options
 
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryBrands`(IN catid INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN catid INT)
 BEGIN
-SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
+  SELECT o.ID,
+         o.Name
+  FROM   shop_products AS p
+         LEFT JOIN shop_origins AS o
+                ON p.OriginID = o.ID
+  WHERE  p.Enabled = 1
+         AND o.Enabled = 1
+         AND p.CategoryID = catid
+  GROUP  BY o.Name; 
+-- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
 END$$
 
 
 
 
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategorySubCategories`(IN catid INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategorySubCategories`(IN catid INT)
 BEGIN
-SELECT
-  c.ID, c.ParentID, c.Name,
-  (SELECT count(*) FROM shop_products AS `p` WHERE p.CategoryID = c.ID AND p.Enabled = 1) AS `ProductCount`
-FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
+  SELECT c.ID,
+         c.Name
+  FROM   shop_products AS p
+         LEFT JOIN shop_categories AS c
+                ON p.CategoryID = c.ID
+  WHERE  p.Enabled = 1
+         AND c.Enabled = 1
+         AND c.ParentID = catid
+  GROUP  BY c.Name; 
+-- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
 END$$
-
-
-
-
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryProductCount`(IN catid INT, IN )
-BEGIN
-
-IF param IS NULL THEN 
--- statements ;
-ELSE commands
--- statements ;
-END IF;
-
-SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS `p` WHERE p.Enabled = 1 AND p.CategoryID = catid;
-END$$
-
 
 
 

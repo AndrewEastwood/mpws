@@ -250,23 +250,22 @@ class pluginShop extends objectPlugin {
         $filterOptionsAvailable['filter_commonAvailability'] = array("AVAILABLE", "OUTOFSTOCK", "COMINGSOON");
         $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
         foreach ($filterOptionsApplied as $key => $value)
-            $filterOptionsApplied[$key] = libraryRequest::getValue($key);
+            $filterOptionsApplied[$key] = libraryRequest::getValue($key) ?: $filterOptions[$key];
 
         // set data source
         // ---
-        $dataConfigProductCount = configurationShopDataSource::jsapiProductListCategoryCount();
+        $dataConfigCategoryInfo = configurationShopDataSource::jsapiProductListCategoryInfo();
         $dataConfigProducts = configurationShopDataSource::jsapiProductListCategory();
-        $dataConfigCategoryBrand = configurationShopDataSource::jsapiShopCategoryBrands();
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdges();
-        $dataConfigCategorySubCategories = configurationShopDataSource::jsapiShopCategorySubCategories();
+        $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrands();
+        $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategories();
 
         // update configs using user filter
         // ---
-        $dataConfigProductCount['condition']['values'][] = $categoryID;
         $dataConfigProducts['condition']['values'][] = $categoryID;
-        $dataConfigCategoryBrand['procedure']['parameters'][] = $categoryID;
         $dataConfigCategoryPriceEdges['procedure']['parameters'][] = $categoryID;
-        $dataConfigCategorySubCategories['procedure']['parameters'][] = $categoryID;
+        $dataConfigCategoryAllBrands['procedure']['parameters'][] = $categoryID;
+        $dataConfigCategoryAllSubCategories['procedure']['parameters'][] = $categoryID;
 
         //filter: get category price edges
         $dataCategoryPriceEdges = $this->getDataBase()->getData($dataConfigCategoryPriceEdges);
@@ -299,24 +298,56 @@ class pluginShop extends objectPlugin {
         } else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
 
-        // var_dump($dataConfigProductCount);
 
         // fetch data with filter options
-        $dataProductCount = $this->getDataBase()->getData($dataConfigProductCount);
         $dataProducts = $this->getDataBase()->getData($dataConfigProducts);
-        $dataCategoryBrands = $this->getDataBase()->getData($dataConfigCategoryBrand);
-        $dataCategorySubCategories = $this->getDataBase()->getData($dataConfigCategorySubCategories);
+
+        $dataConfigCategoryInfo['condition'] = $dataConfigProducts['condition'];
+        $dataCategoryInfo = $this->getDataBase()->getData($dataConfigCategoryInfo);
+        $dataCategoryAllBrands = $this->getDataBase()->getData($dataConfigCategoryAllBrands);
+        $dataCategoryAllSubCategories = $this->getDataBase()->getData($dataConfigCategoryAllSubCategories);
 
         // filter: update filters
-        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands;
-        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories;
+        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
+
+        // get origins\sub-categories according to product filter
+        $uniqueBrands = array();
+        $uniqueSubCategories = array();
+        foreach ($dataCategoryInfo as $obj) {
+            if (isset($obj['OriginID']))
+                if (empty($uniqueBrands[$obj['OriginID']]))
+                    $uniqueBrands[$obj['OriginID']] = array(
+                        "ID" => $obj['OriginID'],
+                        "Name" => $obj['OriginName'],
+                        "ProductCount" => 1
+                    );
+                else
+                    $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
+
+            if (isset($obj['CategoryID']))
+                if (empty($uniqueSubCategories[$obj['CategoryID']]))
+                    $uniqueSubCategories[$obj['CategoryID']] = array(
+                        "ID" => $obj['CategoryID'],
+                        "Name" => $obj['CategoryName'],
+                        "ProductCount" => 1
+                    );
+                else
+                    $uniqueSubCategories[$obj['CategoryID']]["ProductCount"]++;
+
+        }
+        $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
+        $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
 
         // var_dump($dataConfigProducts);
         // attach attributes
         $productsMap = $this->_custom_api_getProductAttributes($dataProducts);
         // store data
         // $dataObj->setData('products', $productsMap);
-        $dataObj->setData('count', $dataProductCount);
+        $dataObj->setData('info', array(
+            "productCount" => count($dataCategoryInfo),
+            "nextPage" => 2
+        ));
         $dataObj->setData('filter', array(
             'filterOptionsAvailable' => $filterOptionsAvailable,
             'filterOptionsApplied' => $filterOptionsApplied

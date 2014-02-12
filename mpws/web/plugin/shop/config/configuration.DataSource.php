@@ -2,6 +2,7 @@
 
 class configurationShopDataSource extends configurationDefaultDataSource {
 
+    // Product base configuration >>>>>
     static function jsapiProductItem () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -11,8 +12,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                 "values" => array("AVAILABLE", 1)
             ),
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated"),
-            "offset" => "0",
-            "limit" => "1",
+            "offset" => 0,
+            "limit" => 1,
             "additional" => array(
                 "shop_categories" => array(
                     "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
@@ -36,7 +37,9 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             )
         ));
     }
+    // <<<< Product base configuration
 
+    // Product base list configuration >>>>>
     static function jsapiProductList () {
         $config = self::jsapiProductItem();
         unset($config['options']);
@@ -47,7 +50,9 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         $config['limit'] = 64;
         return $config;
     }
+    // <<<< Product base list configuration
 
+    // Product list of recently added products >>>>>
     static function jsapiProductListLatest () {
         $config = self::jsapiProductList();
         $config['order'] = array(
@@ -56,26 +61,58 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         );
         return $config;
     }
+    // <<<< Product list of recently added products
 
+    // Product category (catalog)
     static function jsapiProductListCategory () {
         $config = self::jsapiProductList();
         $config['condition']["filter"] = "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ? + shop_products.CategoryID (=) ?";
         return $config;
     }
 
-    static function jsapiProductListCategoryCount () {
+    static function jsapiProductListCategoryInfo () {
         $config = self::jsapiProductListCategory();
-        $config["useFieldPrefix"] = false;
-        $config["fields"] = array("COUNT(*) AS `ProductCount`", "SKU");
-        $config['limit'] = 1;
-        // unset($config["additional"]["shop_categories"]["fields"]);
-        // unset($config["additional"]["shop_origins"]["fields"]);
-        $config['options'] = array(
-            "expandSingleRecord" => true
-        );
+        // $config["useFieldPrefix"] = false;
+        $config["fields"] = array("ID", "CategoryID", "OriginID");
+        $config['limit'] = 0;
         return $config;
     }
 
+    static function jsapiShopCategoryAllBrands () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getAllShopCategoryBrands",
+                "parameters" => array()
+            )
+        ));
+    }
+
+    static function jsapiShopCategoryAllSubCategories () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getAllShopCategorySubCategories",
+                "parameters" => array()
+            )
+        ));
+    }
+
+    static function jsapiShopCategoryPriceEdges () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getShopCategoryPriceEdges",
+                "parameters" => array()
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+    // <<<< Product category (catalog)
+
+    // Product additional information >>>>>
     static function jsapiProductAttributes () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -104,7 +141,9 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             )
         ));
     }
+    // <<<< Product additional information
 
+    // Product price stats >>>>>
     static function jsapiProductPriceStats () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -130,7 +169,9 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             )
         ));
     }
+    // <<<< Product price stats
 
+    // Single prouct info >>>>>
     static function jsapiProductSingleInfo () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -147,7 +188,9 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             )
         ));
     }
+    // <<<< Single prouct info
 
+    // Additional: category location >>>>>
     static function jsapiShopCategoryLocation () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
@@ -157,7 +200,9 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             )
         ));
     }
+    // <<<< Additional: category location
 
+    // Shop catalog >>>>>
     static function jsapiCatalogStructure () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -169,40 +214,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Enabled"),
         ));
     }
-
-    static function jsapiShopCategoryBrands () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getShopCategoryBrands",
-                "parameters" => array()
-            )
-        ));
-    }
-
-    static function jsapiShopCategorySubCategories () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getShopCategorySubCategories",
-                "parameters" => array()
-            )
-        ));
-    }
-
-    static function jsapiShopCategoryPriceEdges () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getShopCategoryPriceEdges",
-                "parameters" => array()
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
-
+    // <<<< Shop catalog
 
 }
 
