@@ -4,26 +4,6 @@ class pluginShop extends objectPlugin {
 
     public function getResponse () {
 
-        // test
-        // return $this->_custom_api_getProductList_Latest(array(
-        //     "limit" => 10
-        // ));
-
-        // $param = libraryRequest::getApiParam();
-
-        // extract params
-        // some functions require particular parameters to be not empty
-        // otherwise you will get error message
-        // $productID = libraryRequest::getValue('productID', false);
-        // $categoryID = libraryRequest::getValue('categoryID', false);
-        // $originID = libraryRequest::getValue('originID', false);
-        // $limit = libraryRequest::getValue('limit', false);
-        // $offset = libraryRequest::getValue('offset', false);
-
-        // token=656c88543646e400eb581f6921b83238
-        // var_dump($param);
-        // $ctx = contextMPWS::instance();
-
         switch(libraryRequest::getValue('fn')) {
             // breadcrumb
             // -----------------------------------------------
