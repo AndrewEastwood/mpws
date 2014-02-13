@@ -66,7 +66,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
     // Product category (catalog)
     static function jsapiProductListCategory () {
         $config = self::jsapiProductList();
-        $config['condition']["filter"] = "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ? + shop_products.CategoryID (=) ?";
+        $config['condition']["filter"] = "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ? + shop_products.CategoryID (IN) ?";
+        // var_dump($config);
         return $config;
     }
 

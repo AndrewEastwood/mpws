@@ -15,11 +15,12 @@
                         {{#if ProductCount }}
                         <a class="list-group-item" href="#/shop/catalog/{{ID}}" title="{{Name}}">
                             {{Name}}
-                            <span class="badge">{{ProductCount}}</span>
+                            <span class="badge label-success">{{ProductCount}}</span>
                         </a>
                         {{else}}
                         <a class="list-group-item disabled" href="#/shop/catalog/{{ID}}" title="{{Name}}">
                             {{Name}}
+                            <span class="badge">{{ProductCount}}</span>
                         </a>
                         {{/if}}
                     {{/each}}

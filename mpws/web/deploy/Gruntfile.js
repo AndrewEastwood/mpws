@@ -77,7 +77,7 @@ module.exports = function(grunt) {
     // grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
 
-    grunt.registerTask('test', ['less']);
+    grunt.registerTask('style_watch', ['less:development', 'watch']);
 
     // grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 

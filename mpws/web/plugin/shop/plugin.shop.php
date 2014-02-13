@@ -262,7 +262,6 @@ class pluginShop extends objectPlugin {
 
         // update configs using user filter
         // ---
-        $dataConfigProducts['condition']['values'][] = $categoryID;
         $dataConfigCategoryPriceEdges['procedure']['parameters'][] = $categoryID;
         $dataConfigCategoryAllBrands['procedure']['parameters'][] = $categoryID;
         $dataConfigCategoryAllSubCategories['procedure']['parameters'][] = $categoryID;
@@ -285,6 +284,21 @@ class pluginShop extends objectPlugin {
         else
             $filterOptionsApplied['filter_viewSortBy'] = null;
 
+        // get category sub-categories and origins
+        $dataCategoryAllBrands = $this->getDataBase()->getData($dataConfigCategoryAllBrands);
+        $dataCategoryAllSubCategories = $this->getDataBase()->getData($dataConfigCategoryAllSubCategories);
+
+        // filter: update filters
+        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
+
+        $cetagorySubIDs = array($categoryID);
+        foreach ($dataCategoryAllSubCategories as $value)
+            $cetagorySubIDs[] = $value['ID'];
+
+        // fetch data with filter options
+        $dataConfigProducts['condition']['values'][] = $cetagorySubIDs;
+
         // filter: price 
         if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
             $dataConfigProducts['condition']['filter'] .= " + Price (<=) ?";
@@ -298,18 +312,11 @@ class pluginShop extends objectPlugin {
         } else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
 
-
-        // fetch data with filter options
         $dataProducts = $this->getDataBase()->getData($dataConfigProducts);
 
-        $dataConfigCategoryInfo['condition'] = $dataConfigProducts['condition'];
-        $dataCategoryInfo = $this->getDataBase()->getData($dataConfigCategoryInfo);
-        $dataCategoryAllBrands = $this->getDataBase()->getData($dataConfigCategoryAllBrands);
-        $dataCategoryAllSubCategories = $this->getDataBase()->getData($dataConfigCategoryAllSubCategories);
+        $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
 
-        // filter: update filters
-        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
-        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
+        $dataCategoryInfo = $this->getDataBase()->getData($dataConfigCategoryInfo);
 
         // get origins\sub-categories according to product filter
         $uniqueBrands = array();
@@ -338,6 +345,8 @@ class pluginShop extends objectPlugin {
         }
         $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
         $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
+
+
 
         // var_dump($dataConfigProducts);
         // attach attributes

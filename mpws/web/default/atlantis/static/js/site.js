@@ -20,6 +20,26 @@ define("default/js/site", [
         if (options && options.views && options.views.breadcrumb)
             _views.breadcrumb = new Breadcrumb(options.views.breadcrumb);
 
+        $.xhrPool = [];
+        $.xhrPool.abortAll = function() {
+            $(this).each(function(idx, jqXHR) {
+                jqXHR.abort();
+            });
+            $.xhrPool.length = 0
+        };
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                $.xhrPool.push(xhr);
+            },
+            complete: function(jqXHR) {
+                var index = $.xhrPool.indexOf(jqXHR);
+                if (index > -1) {
+                    $.xhrPool.splice(index, 1);
+                }
+            }
+        });
+
         return {
             config: app.config,
             options: options,

@@ -3,7 +3,7 @@
 class configurationCustomerDatabase extends configurationDefaultDatabase {
 
     static $DEV = array(
-        'USER' => 'admin1',
+        'USER' => 'root',
         'PWD' => '1111',
         'DB' => 'mpws_light'
     );

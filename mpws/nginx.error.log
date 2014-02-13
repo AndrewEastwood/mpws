@@ -1,0 +1,183 @@
+2014/02/13 16:54:43 [error] 3883#0: *114 FastCGI sent in stderr: "Unable to open primary script: /home/andrew/github/web/mpws/engine/controller/controller.display.php (No such file or directory)" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET / HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 16:54:47 [error] 3883#0: *114 FastCGI sent in stderr: "Unable to open primary script: /home/andrew/github/web/mpws/engine/controller/controller.display.php (No such file or directory)" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET / HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:03:16 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=77&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:17 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=135&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:18 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=244&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:19 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=288&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:20 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=491&filter_commonPriceMin=288&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:21 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=406&filter_commonPriceMin=288&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:22 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=366&filter_commonPriceMin=288&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:23 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=288&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:30 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=208&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:03:31 [error] 3883#0: *137 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:04:47 [error] 3883#0: *158 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(318): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:05:25 [error] 3883#0: *158 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
+2014/02/13 17:05:28 [error] 3883#0: *158 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(315): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:06:37 [error] 3883#0: *173 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(314): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:16:38 [error] 3883#0: *180 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(314): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:17:20 [error] 3883#0: *180 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(317): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:18:36 [error] 3883#0: *193 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(317): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:19:10 [error] 3883#0: *193 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(317): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:19:47 [error] 3883#0: *193 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(317): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:20:00 [error] 3883#0: *193 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens' in /home/andrew/github/web/mpws/engine/system/library/library.ORM.php:414
+Stack trace:
+#0 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(414): PDOStatement->execute(Array)
+#1 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(1621): libraryORM::_execute('SELECT `shop_pr...', Array, 'default')
+#2 /home/andrew/github/web/mpws/engine/system/library/library.ORM.php(654): libraryORM->_run()
+#3 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(207): libraryORM->find_array()
+#4 /home/andrew/github/web/mpws/engine/system/library/library.DataBase.php(25): libraryDataBase->_fetchData(Array)
+#5 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(317): libraryDataBase->getData(Array)
+#6 /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php(59): pluginShop->_custom_ap" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_catalog&filter_viewSortBy=&filter_viewItemsOnPage=&filter_commonPriceMax=554&filter_commonPriceMin=88&filter_commonAvailability=&filter_commonOnSaleTypes=&filter_categoryBrands=&categoryID=1 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001"
+2014/02/13 17:25:17 [error] 3883#0: *326 FastCGI sent in stderr: "PHP message: PHP Notice:  Undefined index: shop:recentProducts in /home/andrew/github/web/mpws/web/plugin/shop/plugin.shop.php on line 516" while reading response header from upstream, client: 127.0.0.1, server: pb.com.ua, request: "GET /api.js?token=5ea1fd0e3515dfd92756309acde9a046&source=shop&fn=shop_product_item&productID=7 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "pb.com.ua:5001", referrer: "http://pb.com.ua:5001/"
