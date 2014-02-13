@@ -41,8 +41,29 @@ define('plugin/shop/js/collection/listProductCatalog', [
             });
         },
         parse: function (data) {
+            // adjust products
             var products = ShopUtils.adjustProductEntry(data && data.shop);
-            this.setExtras('filter', data.shop.filter);
+            // adjust filtering
+            var filter = data.shop.filter;
+
+            // join category/origin info
+            _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){
+                // debugger;
+                if (filter.filterOptionsApplied.filter_categoryBrands[brand.ID])
+                    brand.ProductCount = filter.filterOptionsApplied.filter_categoryBrands[brand.ID].ProductCount;
+                else
+                    brand.ProductCount = 0;
+            });
+            _(filter.filterOptionsAvailable.filter_categorySubCategories).each(function(category){
+                if (filter.filterOptionsApplied.filter_categorySubCategories[category.ID])
+                    category.ProductCount = filter.filterOptionsApplied.filter_categorySubCategories[category.ID].ProductCount;
+                else
+                    category.ProductCount = 0;
+            });
+
+            console.log(filter);
+
+            this.setExtras('filter', filter);
             return _(products).map(function(item){ return item; });
         }
     });

@@ -12,15 +12,107 @@
                 <div class="row">
                     <div class="list-group">
                     {{#each extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
-                        <a class="list-group-item" href="#/shop/catalog/{{ID}}">
+                        {{#if ProductCount }}
+                        <a class="list-group-item" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                            {{Name}}
                             <span class="badge">{{ProductCount}}</span>
+                        </a>
+                        {{else}}
+                        <a class="list-group-item disabled" href="#/shop/catalog/{{ID}}" title="{{Name}}">
                             {{Name}}
                         </a>
+                        {{/if}}
                     {{/each}}
                     </div>
                 </div>
                 <div class="spacer"></div>
 
+            </div>
+        </div>
+        {{/mpwsIsNotEmpty}}
+
+        {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categoryBrands }}
+        <div class="shop-component-catalog-filtering">
+            <div class="title row">
+                <strong><span>Виробники:</span></strong>
+            </div>
+            <div class="content row">
+
+                <div class="spacer"></div>
+                <div class="row">
+                    <div class="list-group">
+                    {{#each extras.filter.filterOptionsAvailable.filter_categoryBrands }}
+                        {{#if ProductCount }}
+                        <a class="list-group-item" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                            <label>
+                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
+                                {{Name}}
+                            </label>
+                            <span class="badge label-success">{{ProductCount}}</span>
+                        </a>
+                        {{else}}
+                        <a class="list-group-item disabled" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                            <label>
+                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" disabled>
+                                {{Name}}
+                            </label>
+                            <span class="badge">{{ProductCount}}</span>
+                        </a>
+                        {{/if}}
+                    {{/each}}
+                    </div>
+                </div>
+                <div class="spacer"></div>
+
+            </div>
+        </div>
+        {{/mpwsIsNotEmpty}}
+
+        {{#isnt extras.filter.filterOptionsAvailable.filter_commonPriceMax extras.filter.filterOptionsAvailable.filter_commonPriceMin }}
+        <div class="shop-component-catalog-filtering">
+            <div class="title row">
+                <strong><span>Ціна:</span></strong>
+            </div>
+            <div class="content row">
+                <div class="spacer"></div>
+                <div class="subtitle row">
+                        <span>від</span>
+                        <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMin}}</span>
+                        <span>грн. </span>
+                        <span> до </span>
+                        <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMax}}</span>
+                        <span>грн. </span>
+                        <span>включно</span>
+                </div>
+                <div class="row">
+                    <input type="text" class="form-control slider" value=""
+                        data-slider-min="{{mpwsToInt extras.filter.filterOptionsAvailable.filter_commonPriceMin}}"
+                        data-slider-max="{{mpwsToInt extras.filter.filterOptionsAvailable.filter_commonPriceMax}}"
+                        data-slider-step="1"
+                        data-slider-value="[{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMax}}]"
+                        data-slider-selection="after">
+                </div>
+                <div class="spacer"></div>
+            </div>
+        </div>
+        {{/isnt}}
+
+        {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySpecifications }}
+        <div class="shop-component-catalog-filtering">
+            <div class="title row">
+                <strong><span>Характеристики:</span></strong>
+            </div>
+            <div class="content row">
+                <div class="spacer"></div>
+                {{#each extras.filter.filterOptionsAvailable.filter_categorySpecifications }}
+                <div>
+                    <label>
+                        <input type="checkbox" value="{{ID}}" name="filter_categorySpecifications">
+                        {{Name}}
+                    </label>
+                </div>
+                {{/each}}
+                <div class="spacer"></div>
             </div>
         </div>
         {{/mpwsIsNotEmpty}}
@@ -67,7 +159,7 @@
 
         <div class="shop-component-catalog-filtering">
             <div class="title row">
-                <strong><span>Фільтрування:</span></strong>
+                <strong><span>Додатково:</span></strong>
             </div>
             <div class="content row">
 
@@ -100,62 +192,6 @@
                         <label>
                             <input type="checkbox" value="{{this}}" name="filter_commonOnSaleTypes">
                             {{this}}
-                        </label>
-                    </div>
-                    {{/each}}
-                </div>
-                <div class="spacer"></div>
-                {{/mpwsIsNotEmpty}}
-
-                {{#isnt extras.filter.filterOptionsAvailable.filter_commonPriceMax extras.filter.filterOptionsAvailable.filter_commonPriceMin }}
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                    Ціна: (
-                        <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMin}}</span>
-                        <span>-</span>
-                        <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMax}}</span>
-                    ) грн.
-                </div>
-                <div class="row">
-                    <input type="text" class="form-control slider" value=""
-                        data-slider-min="{{mpwsToInt extras.filter.filterOptionsAvailable.filter_commonPriceMin}}"
-                        data-slider-max="{{mpwsToInt extras.filter.filterOptionsAvailable.filter_commonPriceMax}}"
-                        data-slider-step="1"
-                        data-slider-value="[{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt extras.filter.filterOptionsApplied.filter_commonPriceMax}}]"
-                        data-slider-selection="after">
-                </div>
-                <div class="spacer"></div>
-                {{/isnt}}
-
-                {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categoryBrands }}
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                    Виробники:
-                </div>
-                <div class="row">
-                    {{#each extras.filter.filterOptionsAvailable.filter_categoryBrands }}
-                    <div>
-                        <label>
-                            <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
-                            {{Name}}
-                        </label>
-                    </div>
-                    {{/each}}
-                </div>
-                <div class="spacer"></div>
-                {{/mpwsIsNotEmpty}}
-
-                {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySpecifications }}
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                    Додаткові параметри:
-                </div>
-                <div class="row">
-                    {{#each extras.filter.filterOptionsAvailable.filter_categorySpecifications }}
-                    <div>
-                        <label>
-                            <input type="checkbox" value="{{ID}}" name="filter_categorySpecifications">
-                            {{Name}}
                         </label>
                     </div>
                     {{/each}}

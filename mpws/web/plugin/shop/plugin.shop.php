@@ -343,7 +343,7 @@ class pluginShop extends objectPlugin {
         // attach attributes
         $productsMap = $this->_custom_api_getProductAttributes($dataProducts);
         // store data
-        // $dataObj->setData('products', $productsMap);
+        $dataObj->setData('products', $productsMap);
         $dataObj->setData('info', array(
             "productCount" => count($dataCategoryInfo),
             "nextPage" => 2

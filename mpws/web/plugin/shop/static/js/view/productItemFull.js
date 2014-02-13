@@ -14,7 +14,7 @@ define("plugin/shop/js/view/productItemFull", [
         template: tpl,
         initialize: function () {
             this.on('mview:renderComplete', function () {
-                this.$('[data-toggle="magnify"]').magnify();
+                this.$('.shop-product-image-main img').magnify();
             }, this);
         }
     });

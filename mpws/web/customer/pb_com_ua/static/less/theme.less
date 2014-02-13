@@ -165,10 +165,15 @@ select, select option {cursor: pointer;}
 
 i.fa {cursor: pointer;}
 
-.list-group-item {
+a.list-group-item {
     background-color: rgba(100, 100, 100, 0.5);
     border: 0px none;
-    color: #EEE;
+    color: #fff;
+    &:hover {color: #555;}
+    &.disabled:hover,
+    &.disabled:focus {
+      background-color: rgba(100, 100, 100, 0.5);
+    }
 }
 
 .tab-content {
@@ -186,6 +191,13 @@ border-bottom: 1px solid @mainColor;
 }
 
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {background-color: transparent;}
+
+
+.badge {
+  &.label-success {
+    background-color: @mainColor;
+  }
+}
 
 /************** product components ****************/
 
@@ -411,9 +423,6 @@ border-bottom: 1px solid @mainColor;
 .shop-component {
     h4 {color: #eee;}
 }
-
-a.list-group-item {color: #fff;}
-a.list-group-item:hover {color: #555;}
 
 .navbar-toggle {border-color: @mainColor;}
 .navbar-toggle .icon-bar {background-color: @mainColor;}
