@@ -61,7 +61,7 @@ define('plugin/shop/js/collection/listProductCatalog', [
                     category.ProductCount = 0;
             });
 
-            console.log(filter);
+            // console.log(filter);
 
             this.setExtras('filter', filter);
             return _(products).map(function(item){ return item; });

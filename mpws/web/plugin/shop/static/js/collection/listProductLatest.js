@@ -1,4 +1,4 @@
-define('plugin/shop/js/collection/listLatestProducts', [
+define('plugin/shop/js/collection/listProductLatest', [
     'default/js/lib/underscore',
     'default/js/collection/mCollection',
     'plugin/shop/js/model/productItemBase',
@@ -6,7 +6,7 @@ define('plugin/shop/js/collection/listLatestProducts', [
     'plugin/shop/js/lib/utils'
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 
-    var ListLatestProduct = MCollection.extend({
+    var ListProductLatest = MCollection.extend({
         model: ProductItemBase,
         initialize: function () {
             // debugger;
@@ -21,5 +21,5 @@ define('plugin/shop/js/collection/listLatestProducts', [
         }
     });
 
-    return ListLatestProduct;
+    return ListProductLatest;
 });

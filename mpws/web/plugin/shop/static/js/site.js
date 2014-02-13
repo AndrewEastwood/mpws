@@ -38,12 +38,12 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/listLatestProducts'], function (ListLatestProducts) {
-                var listLatestProducts = Cache.getObject('ListLatestProducts', function () {
-                    return new ListLatestProducts();
+            require(['plugin/shop/js/view/listProductLatest'], function (ListProductLatest) {
+                var listProductLatest = Cache.getObject('ListProductLatest', function () {
+                    return new ListProductLatest();
                 });
-                Site.setPlaceholder('productListOverview', listLatestProducts.el);
-                listLatestProducts.fetchAndRender();
+                Site.setPlaceholder('productListOverview', listProductLatest.el);
+                listProductLatest.fetchAndRender();
             });
 
         },
@@ -60,9 +60,10 @@ define("plugin/shop/js/site", [
             require(['plugin/shop/js/view/listProductCatalog'], function (ListProductCatalog) {
                 // debugger;
                 var listProductCatalog = Cache.getObject('ListProductCatalog', function () {
-                    return new ListProductCatalog();
+                    var _view = new ListProductCatalog();
+                    Site.setPlaceholder('productListCatalog', _view.el);
+                    return _view;
                 });
-                Site.setPlaceholder('productListCatalog', listProductCatalog.el);
                 listProductCatalog.fetchAndRender({
                     categoryID: categoryID
                 });

@@ -13,7 +13,7 @@
                     <div class="list-group">
                     {{#each extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                        <a class="list-group-item list-group-item-category" href="#/shop/catalog/{{ID}}" title="{{Name}}">
                             {{Name}}
                             <span class="badge label-success">{{ProductCount}}</span>
                         </a>
@@ -44,7 +44,7 @@
                     <div class="list-group">
                     {{#each extras.filter.filterOptionsAvailable.filter_categoryBrands }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                        <a class="list-group-item" href="javascript://" data-brand_id="{{ID}}" title="{{Name}}">
                             <label>
                                 <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
                                 {{Name}}

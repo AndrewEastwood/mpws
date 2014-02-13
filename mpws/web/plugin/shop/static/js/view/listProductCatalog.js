@@ -18,6 +18,7 @@ define("plugin/shop/js/view/listProductCatalog", [
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_Other',
+            "click a.list-group-item": 'filterProducts_ListItemClicked',
             "slideStop .slider": 'filterProducts_PriceChanged',
         },
         initialize: function () {
@@ -49,7 +50,7 @@ define("plugin/shop/js/view/listProductCatalog", [
 
             var _filterOptions = {};
 
-            if ($(this).is(':checked'))
+            if ($(event.target).is(':checked'))
                 _filterOptions[_targetFilterName].push($(event.target).val());
             else
                 _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(event.target).val());
@@ -91,6 +92,11 @@ define("plugin/shop/js/view/listProductCatalog", [
                 filter_commonPriceMax: filter_commonPriceMax
             });
         },
+        filterProducts_ListItemClicked: function () {
+            var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
+            _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
+            _innerCheckbox.trigger('change');
+        }
     });
 
     return ListProductCatalog;

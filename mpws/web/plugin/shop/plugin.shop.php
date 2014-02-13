@@ -293,8 +293,9 @@ class pluginShop extends objectPlugin {
         $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
 
         $cetagorySubIDs = array($categoryID);
-        foreach ($dataCategoryAllSubCategories as $value)
-            $cetagorySubIDs[] = $value['ID'];
+        if (!empty($dataCategoryAllSubCategories))
+            foreach ($dataCategoryAllSubCategories as $value)
+                $cetagorySubIDs[] = $value['ID'];
 
         // fetch data with filter options
         $dataConfigProducts['condition']['values'][] = $cetagorySubIDs;
@@ -321,28 +322,29 @@ class pluginShop extends objectPlugin {
         // get origins\sub-categories according to product filter
         $uniqueBrands = array();
         $uniqueSubCategories = array();
-        foreach ($dataCategoryInfo as $obj) {
-            if (isset($obj['OriginID']))
-                if (empty($uniqueBrands[$obj['OriginID']]))
-                    $uniqueBrands[$obj['OriginID']] = array(
-                        "ID" => $obj['OriginID'],
-                        "Name" => $obj['OriginName'],
-                        "ProductCount" => 1
-                    );
-                else
-                    $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
+        if ($dataCategoryInfo)
+            foreach ($dataCategoryInfo as $obj) {
+                if (isset($obj['OriginID']))
+                    if (empty($uniqueBrands[$obj['OriginID']]))
+                        $uniqueBrands[$obj['OriginID']] = array(
+                            "ID" => $obj['OriginID'],
+                            "Name" => $obj['OriginName'],
+                            "ProductCount" => 1
+                        );
+                    else
+                        $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
 
-            if (isset($obj['CategoryID']))
-                if (empty($uniqueSubCategories[$obj['CategoryID']]))
-                    $uniqueSubCategories[$obj['CategoryID']] = array(
-                        "ID" => $obj['CategoryID'],
-                        "Name" => $obj['CategoryName'],
-                        "ProductCount" => 1
-                    );
-                else
-                    $uniqueSubCategories[$obj['CategoryID']]["ProductCount"]++;
+                if (isset($obj['CategoryID']))
+                    if (empty($uniqueSubCategories[$obj['CategoryID']]))
+                        $uniqueSubCategories[$obj['CategoryID']] = array(
+                            "ID" => $obj['CategoryID'],
+                            "Name" => $obj['CategoryName'],
+                            "ProductCount" => 1
+                        );
+                    else
+                        $uniqueSubCategories[$obj['CategoryID']]["ProductCount"]++;
 
-        }
+            }
         $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
         $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
 
