@@ -231,6 +231,7 @@ class pluginShop extends objectPlugin {
             /* common options */
             "filter_viewSortBy" => null,
             "filter_viewItemsOnPage" => null,
+            "filter_viewPageNum" => null,
             "filter_commonPriceMax" => null,
             "filter_commonPriceMin" => 0,
             "filter_commonAvailability" => array(),
@@ -277,6 +278,11 @@ class pluginShop extends objectPlugin {
         else
             $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
 
+        if (!empty($filterOptionsApplied['filter_viewPageNum']))
+            $dataConfigProducts['offset'] = $dataConfigProducts['limit'] * $filterOptionsApplied['filter_viewPageNum'];
+        else
+            $filterOptionsApplied['filter_viewPageNum'] = $dataConfigProducts['offset'];
+
         // filter: items sorting
         $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
         if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
@@ -313,10 +319,22 @@ class pluginShop extends objectPlugin {
         } else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
 
+        // filter: brands
+        if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
+            $dataConfigProducts['condition']['filter'] .= " + OriginID (IN) ?";
+            if (!is_array($filterOptionsApplied['filter_categoryBrands']))
+                $filterOptionsApplied['filter_categoryBrands'] = array($filterOptionsApplied['filter_categoryBrands']);
+            $dataConfigProducts['condition']['values'][] = $filterOptionsApplied['filter_categoryBrands'];
+        } else
+            $filterOptionsApplied['filter_categoryBrands'] = array();
+
+        // var_dump($filterOptionsApplied);
+
+        // get products
         $dataProducts = $this->getDataBase()->getData($dataConfigProducts);
 
+        // get category info according to product filter
         $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-
         $dataCategoryInfo = $this->getDataBase()->getData($dataConfigCategoryInfo);
 
         // get origins\sub-categories according to product filter
@@ -324,15 +342,22 @@ class pluginShop extends objectPlugin {
         $uniqueSubCategories = array();
         if ($dataCategoryInfo)
             foreach ($dataCategoryInfo as $obj) {
-                if (isset($obj['OriginID']))
+                if (isset($obj['OriginID'])) {
                     if (empty($uniqueBrands[$obj['OriginID']]))
                         $uniqueBrands[$obj['OriginID']] = array(
                             "ID" => $obj['OriginID'],
                             "Name" => $obj['OriginName'],
-                            "ProductCount" => 1
+                            "ProductCount" => 1,
+                            "IsSelected" => false
                         );
                     else
                         $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
+
+                    if (in_array($obj['OriginID'], $filterOptionsApplied['filter_categoryBrands']))
+                        $uniqueBrands[$obj['OriginID']]["IsSelected"] = true;
+                }
+
+
 
                 if (isset($obj['CategoryID']))
                     if (empty($uniqueSubCategories[$obj['CategoryID']]))
@@ -348,16 +373,24 @@ class pluginShop extends objectPlugin {
         $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
         $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
 
-
+        // pagination
+        $_pagination = array(
+            "TotalItemsCount" => count($dataCategoryInfo),
+            "ItemsOnPage" => $filterOptionsApplied['filter_viewItemsOnPage'],
+            "PagesCount" => count($dataCategoryInfo) / $filterOptionsApplied['filter_viewItemsOnPage'],
+            "PageNext" => 2,
+            "PagePrev" => 2,
+            "Pages" => 2
+        );
 
         // var_dump($dataConfigProducts);
         // attach attributes
         $productsMap = $this->_custom_api_getProductAttributes($dataProducts);
         // store data
         $dataObj->setData('products', $productsMap);
+        $dataObj->setData('pagination', $_pagination);
         $dataObj->setData('info', array(
-            "productCount" => count($dataCategoryInfo),
-            "nextPage" => 2
+            "count" => count($dataCategoryInfo)
         ));
         $dataObj->setData('filter', array(
             'filterOptionsAvailable' => $filterOptionsAvailable,

@@ -28,16 +28,21 @@ define("default/js/view/mView", [
                 if (options)
                     this.collection.updateUrlOptions(options);
 
-                this.collection.fetch({
-                    success: function () {
-                        _self.render.call(_self);
-                    }
-                });
+                if (this.collection.url) {
+                    // $.xhrPool.abortAll();
+                    this.collection.fetch({
+                        success: function () {
+                            _self.render.call(_self);
+                        }
+                    });
+                } else
+                    this.render.call(_self);
             } else if (this.isModelView()) { 
                 if (options)
                     this.model.updateUrlOptions(options);
 
-                if (this.model.url)
+                if (this.model.url) {
+                    // $.xhrPool.abortAll();
                     this.model.fetch({
                         success: function () {
                             _self.render.call(_self);
@@ -46,7 +51,7 @@ define("default/js/view/mView", [
                             _self.render.call(_self);
                         }
                     });
-                else
+                } else
                     this.render.call(_self);
             } else
                 this.render.call(_self);

@@ -1,6 +1,12 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
+        {{#if false }}
+        <div class="row">
+            <button class="btn btn-success btn-block shop-filter-cancel">Скасувати фільтр</button>
+        </div>
+        {{/if}}
+
         {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
         <div class="shop-component-catalog-filtering">
             <div class="title row">
@@ -46,7 +52,11 @@
                         {{#if ProductCount }}
                         <a class="list-group-item" href="javascript://" data-brand_id="{{ID}}" title="{{Name}}">
                             <label>
-                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
+                                {{#if IsSelected }}
+                                    <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
+                                {{else}}
+                                    <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
+                                {{/if}}
                                 {{Name}}
                             </label>
                             <span class="badge label-success">{{ProductCount}}</span>
@@ -54,7 +64,7 @@
                         {{else}}
                         <a class="list-group-item disabled" href="#/shop/catalog/{{ID}}" title="{{Name}}">
                             <label>
-                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" disabled>
+                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" disabled="disabled">
                                 {{Name}}
                             </label>
                             <span class="badge">{{ProductCount}}</span>
@@ -200,15 +210,16 @@
                 <div class="spacer"></div>
                 {{/mpwsIsNotEmpty}}
 
-                <div class="row">
-                    <button class="btn btn-success btn-block shop-apply-filter">Фільтрувати</button>
-                </div>
-
             </div>
         </div>
 
     </div>
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+        {{#if extras.pagination }}
+        <div class="row">
+            {{> default_hbs_pagination extras.pagination }}
+        </div>
+        {{/if}}
         <div class="row">
             {{#mpwsIsNotEmpty displayItems }}
                 {{#each displayItems }}
@@ -220,5 +231,10 @@
                 <div class="alert alert-warning">Немає товарів в цій категорії</div>
             {{/mpwsIsNotEmpty}}
         </div>
+        {{#if extras.pagination }}
+        <div class="row">
+            {{> default_hbs_pagination extras.pagination }}
+        </div>
+        {{/if}}
     </div>
 </div>

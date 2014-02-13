@@ -20,6 +20,7 @@ define("plugin/shop/js/view/listProductCatalog", [
             "change input[name^='filter_']": 'filterProducts_Other',
             "click a.list-group-item": 'filterProducts_ListItemClicked',
             "slideStop .slider": 'filterProducts_PriceChanged',
+            "click .shop-filter-cancel": 'filterProducts_CancelFilter',
         },
         initialize: function () {
             MView.prototype.initialize.call(this);
@@ -49,6 +50,8 @@ define("plugin/shop/js/view/listProductCatalog", [
             var _targetFilterName = $(event.target).attr('name');
 
             var _filterOptions = {};
+
+            _filterOptions[_targetFilterName] = [];
 
             if ($(event.target).is(':checked'))
                 _filterOptions[_targetFilterName].push($(event.target).val());
@@ -91,6 +94,9 @@ define("plugin/shop/js/view/listProductCatalog", [
                 filter_commonPriceMin: filter_commonPriceMin,
                 filter_commonPriceMax: filter_commonPriceMax
             });
+        },
+        filterProducts_CancelFilter: function () {
+            this.fetchAndRender(this.collection.defaultFilter);
         },
         filterProducts_ListItemClicked: function () {
             var _innerCheckbox = $(event.target).find('input[type="checkbox"]');

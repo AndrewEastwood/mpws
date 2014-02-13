@@ -8,10 +8,36 @@ define('plugin/shop/js/collection/listProductCatalog', [
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 
     var ListProductCatalog = MCollection.extend({
+        defaultFilter: {
+
+            filter_viewSortBy: null,
+
+            filter_viewItemsOnPage: null,
+
+            filter_viewPageNum: null,
+
+            // common
+            // these options are common for all existed categories
+            // so we just keep them here and render them at very top
+            // of the filter panel
+
+            filter_commonPriceMax: null,
+
+            filter_commonPriceMin: null,
+
+            filter_commonAvailability: [],
+
+            filter_commonOnSaleTypes: [],
+
+            // category based (use specifications of current category)
+            // these options have category specific options and they are
+            // being rendered under the common options
+            filter_categoryBrands: [],
+        },
         model: ProductItemBase,
         initialize: function () {
             // debugger;
-            this.updateUrlOptions({
+            this.updateUrlOptions(_.extend({}, this.defaultFilter, {
                 source: 'shop',
                 fn: 'shop_catalog',
                 // restore filter
@@ -19,6 +45,8 @@ define('plugin/shop/js/collection/listProductCatalog', [
                 filter_viewSortBy: $.cookie('filter_viewSortBy') || null,
 
                 filter_viewItemsOnPage: $.cookie('filter_viewItemsOnPage') || null,
+
+                filter_viewPageNum: $.cookie('filter_viewPageNum') || null,
 
                 // common
                 // these options are common for all existed categories
@@ -36,9 +64,8 @@ define('plugin/shop/js/collection/listProductCatalog', [
                 // category based (use specifications of current category)
                 // these options have category specific options and they are
                 // being rendered under the common options
-
                 filter_categoryBrands: $.cookie('filter_categoryBrands') ? $.cookie('filter_categoryBrands').split(',') : [],
-            });
+            }));
         },
         parse: function (data) {
             // adjust products
@@ -50,7 +77,7 @@ define('plugin/shop/js/collection/listProductCatalog', [
             _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){
                 // debugger;
                 if (filter.filterOptionsApplied.filter_categoryBrands[brand.ID])
-                    brand.ProductCount = filter.filterOptionsApplied.filter_categoryBrands[brand.ID].ProductCount;
+                    _.extend(brand, filter.filterOptionsApplied.filter_categoryBrands[brand.ID]);
                 else
                     brand.ProductCount = 0;
             });
@@ -63,7 +90,11 @@ define('plugin/shop/js/collection/listProductCatalog', [
 
             // console.log(filter);
 
+            filter.isApplied = JSON.stringify(filter.filterOptionsAvailable) === JSON.stringify(filter.filterOptionsAvailable);
+
             this.setExtras('filter', filter);
+            this.setExtras('pagination', data.shop.pagination);
+
             return _(products).map(function(item){ return item; });
         }
     });

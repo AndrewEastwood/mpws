@@ -39,17 +39,23 @@ define("plugin/shop/js/site", [
             });
 
             require(['plugin/shop/js/view/listProductLatest'], function (ListProductLatest) {
-                var listProductLatest = Cache.getObject('ListProductLatest', function () {
-                    return new ListProductLatest();
+                // var listProductLatest = Cache.getObject('ListProductLatest', function () {
+                //     return new ListProductLatest();
+                // });
+                Cache.withObject('ListProductLatest', function (view) {
+                    view && view.destroy && view.destroy();
                 });
+                var listProductLatest = new ListProductLatest();
                 Site.setPlaceholder('productListOverview', listProductLatest.el);
                 listProductLatest.fetchAndRender();
+                Cache.setObject('ListProductLatest', listProductLatest);
             });
 
         },
 
         shop_catalog_category: function (categoryID) {
 
+            // debugger;
             Site.showBreadcrumbLocation({
                 source: 'shop',
                 fn: 'shop_location',
@@ -57,16 +63,21 @@ define("plugin/shop/js/site", [
                 categoryID: categoryID
             });
 
+            // debugger;
             require(['plugin/shop/js/view/listProductCatalog'], function (ListProductCatalog) {
                 // debugger;
-                var listProductCatalog = Cache.getObject('ListProductCatalog', function () {
-                    var _view = new ListProductCatalog();
-                    Site.setPlaceholder('productListCatalog', _view.el);
-                    return _view;
+                // var listProductCatalog = Cache.getObject('ListProductCatalog', function () {
+                //     return new ListProductCatalog();
+                // });
+                Cache.withObject('ListProductCatalog', function (view) {
+                    view && view.destroy && view.destroy();
                 });
+                var listProductCatalog = new ListProductCatalog();
+                Site.setPlaceholder('productListCatalog', listProductCatalog.el);
                 listProductCatalog.fetchAndRender({
                     categoryID: categoryID
                 });
+                Cache.setObject('ListProductCatalog', listProductCatalog);
             });
         },
 
@@ -91,15 +102,21 @@ define("plugin/shop/js/site", [
             });
 
             require(['plugin/shop/js/view/productItemFull'], function (ProductItemFull) {
-                var productItemFull = Cache.getObject('ProductItemFull', function () {
-                    return new ProductItemFull();
+
+                Cache.withObject('ProductItemFull', function (view) {
+                    view && view.destroy && view.destroy();
                 });
+                // var productItemFull = Cache.getObject('ProductItemFull', function () {
+                //     return new ProductItemFull();
+                // });
+                var productItemFull = new ProductItemFull();
                 Site.setPlaceholder('productEntryStandalone', productItemFull.el);
                 productItemFull.fetchAndRender({
                     source: 'shop',
                     fn: 'shop_product_item',
                     productID: productID
                 });
+                Cache.setObject('ProductItemFull', productItemFull);
             });
         },
 
