@@ -21,6 +21,7 @@ define("plugin/shop/js/view/listProductCatalog", [
             "click a.list-group-item": 'filterProducts_ListItemClicked',
             "slideStop .slider": 'filterProducts_PriceChanged',
             "click .shop-filter-cancel": 'filterProducts_CancelFilter',
+            "click .shop-load-more": 'filterProducts_LoadMore',
         },
         initialize: function () {
             MView.prototype.initialize.call(this);
@@ -41,7 +42,6 @@ define("plugin/shop/js/view/listProductCatalog", [
                 // // enhance ui components
                 var _filterPrice = this.$('.slider').slider();
                 var _filterDropdowns = this.$('.selectpicker').selectpicker();
-
             }, this);
         },
         filterProducts_Other: function (event) {
@@ -49,7 +49,9 @@ define("plugin/shop/js/view/listProductCatalog", [
             // debugger;
             var _targetFilterName = $(event.target).attr('name');
 
-            var _filterOptions = {};
+            var _filterOptions = {
+                filter_viewPageNum: 0
+            };
 
             _filterOptions[_targetFilterName] = [];
 
@@ -72,6 +74,7 @@ define("plugin/shop/js/view/listProductCatalog", [
             $.cookie('filter_viewItemsOnPage', filter_viewItemsOnPage, {path: Backbone.history.fragment});
             
             this.fetchAndRender({
+                filter_viewPageNum: 0,
                 filter_viewSortBy: filter_viewSortBy,
                 filter_viewItemsOnPage: filter_viewItemsOnPage
             });
@@ -91,17 +94,24 @@ define("plugin/shop/js/view/listProductCatalog", [
             this.$('.shop-filter-price-end').text(filter_commonPriceMax);
 
             this.fetchAndRender({
+                filter_viewPageNum: 0,
                 filter_commonPriceMin: filter_commonPriceMin,
                 filter_commonPriceMax: filter_commonPriceMax
             });
         },
         filterProducts_CancelFilter: function () {
-            this.fetchAndRender(this.collection.defaultFilter);
+            this.fetchAndRender(this.collection.defaultFilter, {reset: true});
         },
         filterProducts_ListItemClicked: function () {
             var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
             _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
             _innerCheckbox.trigger('change');
+        },
+        filterProducts_LoadMore: function () {
+            var _filterOptions = this.collection.getUrlOptions();
+            _filterOptions.filter_viewPageNum++;
+            // debugger;
+            this.fetchAndRender(_filterOptions, {update: true, remove: false});
         }
     });
 

@@ -8,13 +8,14 @@ define('plugin/shop/js/collection/listProductCatalog', [
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 
     var ListProductCatalog = MCollection.extend({
+        _fetchOptions: {},
         defaultFilter: {
 
             filter_viewSortBy: null,
 
-            filter_viewItemsOnPage: null,
+            filter_viewItemsOnPage: 3,
 
-            filter_viewPageNum: null,
+            filter_viewPageNum: 0,
 
             // common
             // these options are common for all existed categories
@@ -44,8 +45,6 @@ define('plugin/shop/js/collection/listProductCatalog', [
 
                 filter_viewSortBy: $.cookie('filter_viewSortBy') || null,
 
-                filter_viewItemsOnPage: $.cookie('filter_viewItemsOnPage') || null,
-
                 filter_viewPageNum: $.cookie('filter_viewPageNum') || null,
 
                 // common
@@ -72,6 +71,7 @@ define('plugin/shop/js/collection/listProductCatalog', [
             var products = ShopUtils.adjustProductEntry(data && data.shop);
             // adjust filtering
             var filter = data.shop.filter;
+            var productItems = _(products).map(function(item){ return item; });
 
             // join category/origin info
             _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){
@@ -89,13 +89,13 @@ define('plugin/shop/js/collection/listProductCatalog', [
             });
 
             // console.log(filter);
+            // console.log(data.shop.info.count, productItems.length, this.length);
 
-            filter.isApplied = JSON.stringify(filter.filterOptionsAvailable) === JSON.stringify(filter.filterOptionsAvailable);
-
+            // debugger;
             this.setExtras('filter', filter);
-            this.setExtras('pagination', data.shop.pagination);
+            this.setExtras('hasMoreProducts', data.shop.info.count > productItems.length + this.length);
 
-            return _(products).map(function(item){ return item; });
+            return productItems;
         }
     });
 

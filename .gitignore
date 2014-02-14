@@ -1,3 +1,4 @@
+*.log
 /DemoNB/nbproject/private/
 /mpws/nbproject/private/
 /mpws/data/bin/
@@ -7,4 +8,3 @@ secure
 *.cache.php
 unused
 deprecated
-*.log

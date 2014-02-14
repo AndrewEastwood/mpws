@@ -76,6 +76,7 @@ a:hover, a:focus {color: lighten(@mainColor, 20%);}
 .btn {
     border: none;
     border-radius: 0px;
+    color: @textForegroundColor;
 }
 .btn:hover, .btn:focus, .btn:active {
     background-color: @buttonColorHover;
@@ -85,7 +86,7 @@ a:hover, a:focus {color: lighten(@mainColor, 20%);}
     border-color: @buttonColorHover;
 }
 
-.label { color: lighten(@textColor, 80%); text-shadow: 1px 1px 3px #000; box-shadow: 0px 0px 2px 1px #333; }
+.label { color: lighten(@textColor, 80%); text-shadow: 1px 1px 3px #00l0; box-shadow: 0px 0px 2px 1px #333; }
 
 span { cursor: default; }
 
@@ -391,12 +392,15 @@ border-bottom: 1px solid @mainColor;
 .btn-success {
   background-color: @buttonColorHover;
   border-color: @mainColor;
+  color: @textForegroundColor;
 }
 .btn-success:hover {
-  background-color: @mainColor;
+  background-color: lighten(@buttonColorHover, 10%);
+  color: @buttonTextColor;
 }
 
 .shop-component-catalog-filtering {
+    margin-bottom: 20px;
     .title {
         background: @buttonColorHover;
         padding: 8px 12px;

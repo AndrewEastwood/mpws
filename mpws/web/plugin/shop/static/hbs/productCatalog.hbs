@@ -1,11 +1,9 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
-        {{#if false }}
-        <div class="row">
+        <div class="shop-component-catalog-filtering">
             <button class="btn btn-success btn-block shop-filter-cancel">Скасувати фільтр</button>
         </div>
-        {{/if}}
 
         {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
         <div class="shop-component-catalog-filtering">
@@ -24,7 +22,7 @@
                             <span class="badge label-success">{{ProductCount}}</span>
                         </a>
                         {{else}}
-                        <a class="list-group-item disabled" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                        <a class="list-group-item disabled" href="javascript://" title="{{Name}}">
                             {{Name}}
                             <span class="badge">{{ProductCount}}</span>
                         </a>
@@ -62,7 +60,7 @@
                             <span class="badge label-success">{{ProductCount}}</span>
                         </a>
                         {{else}}
-                        <a class="list-group-item disabled" href="#/shop/catalog/{{ID}}" title="{{Name}}">
+                        <a class="list-group-item disabled" href="javascript://" title="{{Name}}">
                             <label>
                                 <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" disabled="disabled">
                                 {{Name}}
@@ -130,46 +128,6 @@
 
         <div class="shop-component-catalog-filtering">
             <div class="title row">
-                <strong><span>Перегляд:</span></strong>
-            </div>
-            <div class="content row">
-
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                    Сортування:
-                </div>
-                <div class="row">
-                    <select id="shopProductListFiltering_SortByID" class="selectpicker">
-                        <option value="none">- вибрати -</option>
-                        <option value="price_asc">За ціною (спочатку дешеві)</option>
-                        <option value="price_desc">За ціною (спочатку дорогі)</option>
-                        <option value="name_asc">За назвою</option>
-                    </select>
-                </div>
-                <div class="spacer"></div>
-
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                    К-сть товарів:
-                </div>
-                <div class="row">
-                    <select id="shopProductListDisplayItems_DisplayCountID" class="selectpicker">
-                        <option value="2">2</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="75">75</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="spacer"></div>
-
-            </div>
-        </div>
-
-        <div class="shop-component-catalog-filtering">
-            <div class="title row">
                 <strong><span>Додатково:</span></strong>
             </div>
             <div class="content row">
@@ -215,11 +173,6 @@
 
     </div>
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-        {{#if extras.pagination }}
-        <div class="row">
-            {{> default_hbs_pagination extras.pagination }}
-        </div>
-        {{/if}}
         <div class="row">
             {{#mpwsIsNotEmpty displayItems }}
                 {{#each displayItems }}
@@ -231,9 +184,9 @@
                 <div class="alert alert-warning">Немає товарів в цій категорії</div>
             {{/mpwsIsNotEmpty}}
         </div>
-        {{#if extras.pagination }}
+        {{#if extras.hasMoreProducts }}
         <div class="row">
-            {{> default_hbs_pagination extras.pagination }}
+            <button class="btn btn-success btn-block shop-load-more">Завантажити ще</button>
         </div>
         {{/if}}
     </div>

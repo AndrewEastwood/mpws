@@ -5,7 +5,6 @@ define("default/js/collection/mCollection", [
 ], function (_, Backbone, JSUrl) {
 
     var MCollection = Backbone.Collection.extend({
-
         _extras: {},
         _urlOptions: {
             // required parameters

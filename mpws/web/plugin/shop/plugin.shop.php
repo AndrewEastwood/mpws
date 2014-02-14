@@ -230,8 +230,8 @@ class pluginShop extends objectPlugin {
         $filterOptions = array(
             /* common options */
             "filter_viewSortBy" => null,
-            "filter_viewItemsOnPage" => null,
-            "filter_viewPageNum" => null,
+            "filter_viewItemsOnPage" => 16,
+            "filter_viewPageNum" => 0,
             "filter_commonPriceMax" => null,
             "filter_commonPriceMin" => 0,
             "filter_commonAvailability" => array(),
@@ -279,7 +279,7 @@ class pluginShop extends objectPlugin {
             $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
 
         if (!empty($filterOptionsApplied['filter_viewPageNum']))
-            $dataConfigProducts['offset'] = $dataConfigProducts['limit'] * $filterOptionsApplied['filter_viewPageNum'];
+            $dataConfigProducts['offset'] = $filterOptionsApplied['filter_viewPageNum'] * $dataConfigProducts['limit'];
         else
             $filterOptionsApplied['filter_viewPageNum'] = $dataConfigProducts['offset'];
 

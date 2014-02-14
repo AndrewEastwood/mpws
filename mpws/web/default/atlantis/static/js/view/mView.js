@@ -1,8 +1,9 @@
 define("default/js/view/mView", [
+    'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/handlebars',
     'default/js/lib/extend.string',
-], function (Backbone, Handlebars) {
+], function (_, Backbone, Handlebars) {
 
 
     var MView = Backbone.View.extend({
@@ -20,7 +21,7 @@ define("default/js/view/mView", [
         isModelView: function () {
             return !_.isEmpty(this.model) && !this.isCollectionView();
         },
-        fetchAndRender: function (options) {
+        fetchAndRender: function (options, fetchOptions) {
             // debugger;
             var _self = this;
             // debugger;
@@ -30,11 +31,11 @@ define("default/js/view/mView", [
 
                 if (this.collection.url) {
                     // $.xhrPool.abortAll();
-                    this.collection.fetch({
+                    this.collection.fetch(_.extend({}, fetchOptions || {}, {
                         success: function () {
                             _self.render.call(_self);
                         }
-                    });
+                    }));
                 } else
                     this.render.call(_self);
             } else if (this.isModelView()) { 

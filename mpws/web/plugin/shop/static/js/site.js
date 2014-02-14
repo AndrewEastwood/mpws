@@ -74,6 +74,7 @@ define("plugin/shop/js/site", [
                 });
                 var listProductCatalog = new ListProductCatalog();
                 Site.setPlaceholder('productListCatalog', listProductCatalog.el);
+                // debugger;
                 listProductCatalog.fetchAndRender({
                     categoryID: categoryID
                 });
