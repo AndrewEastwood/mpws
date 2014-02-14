@@ -3,11 +3,17 @@ define("plugin/shop/js/view/listProductCatalog", [
     'default/js/view/mView',
     'plugin/shop/js/collection/listProductCatalog',
     'plugin/shop/js/view/productItemShort',
+    'default/js/lib/bootstrap-dialog',
     'default/js/plugin/hbs!plugin/shop/hbs/productCatalog',
     'default/js/lib/bootstrap',
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',
-], function (_, MView, CollListProductCatalog, ProductItemShort, tpl) {
+], function (_, MView, CollListProductCatalog, ProductItemShort, dlg, tpl) {
+
+    dlg.show({
+        title: 'Say-hello dialog',
+        message: 'Hi Apple!'
+    });
 
     var ListProductCatalog = MView.extend({
         tagName: 'div',
