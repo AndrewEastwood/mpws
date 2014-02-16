@@ -1,13 +1,13 @@
 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-shopping-cart"></i>
-        {{#if extras.info.productCount }}
-            {{extras.info.productCount}}шт. у кошику
+        {{#if data.info.productCount }}
+            {{data.info.productCount}}шт. у кошику
             <span class="caret"></span>
         {{else}}
             Ваш кошик порожній
         {{/if}}
 </button>
-{{#if extras.info.productCount }}
+{{#if data.info.productCount }}
 <ul class="dropdown-menu shop-cart-embedded-dropdown-menu" role="menu">
     <li>
         {{>plugin_shop_hbs_cartProductList data }}

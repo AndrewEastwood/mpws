@@ -1,5 +1,5 @@
 <div class="shop-cart-productlist">
-{{#each . }}
+{{#each products }}
     <div class="wrapper">
         <a href="javascript://" class="shop-product-remove" data-action="shop:cart:embedded-item-remove" data-oid="{{ID}}">
             <i class="fa fa-trash-o"></i>
@@ -11,12 +11,19 @@
         </div>
         <div class="product-row">
             <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
-            <span class="label label-warning product-price">{{Price}}</span>
+            <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
             <span class="label label-default">x</span>
             <span class="label label-warning product-quantity">{{_quantity}}</span>
             <span class="label label-default">=</span>
-            <span class="label label-success product-total">{{_total}}</span>
+            <span class="label label-success product-total">{{_total}}<span class="moneyType">грн.</span></span>
         </div>
     </div>
 {{/each}}
+</div>
+<div class="cartInfo row">
+    <div class="shopCartSubTotal col-md-12">
+        <span class="value-prefix">Сума:</span>
+        <span class="value">{{info.subTotal}}</span>
+        <span class="value-suffix moneyType">грн.</span>
+    </div>
 </div>

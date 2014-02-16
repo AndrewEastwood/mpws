@@ -16,8 +16,12 @@ define("plugin/shop/js/model/cart", [
         parse: function (data) {
             // debugger;
             var products = ShopUtils.adjustProductEntry(data && data.shop);
-            this.setExtras('info', data.shop.info);
-            return _(products).map(function(item){ return item; });
+            // this.setExtras('info', data.shop.info);
+            return {
+                info: data.shop.info,
+                products: _(products).map(function(item){ return item; })
+            };
+            // return _(products).map(function(item){ return item; });
             // return Utils.getTreeByJson(data && data.shop && data.shop, 'ID', 'ParentID');
             // return data;
         },
