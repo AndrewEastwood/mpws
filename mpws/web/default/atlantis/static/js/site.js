@@ -75,6 +75,9 @@ define("default/js/site", [
                 // debugger;
                 if (_views.menu)
                     _views.menu.render();
+
+                if (options.site && options.site.title)
+                    $('head title').text(options.site.title);
             },
             showBreadcrumbLocation: function (options) {
                 if (_views.breadcrumb)
@@ -93,6 +96,12 @@ define("default/js/site", [
                 var _ph = this.getPlaceholder(name);
                 if (_ph instanceof $ && _ph.length)
                     _ph.html(content);
+            },
+            addWidgetTop: function (content) {
+                $('.MPWSWidgetsTop').append(content);
+            },
+            addWidgetBottom: function (content) {
+                $('.MPWSWidgetsBottom').append(content);
             }
         }
     }

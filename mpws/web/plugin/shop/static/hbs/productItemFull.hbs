@@ -52,20 +52,19 @@
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-origin">
                         <span class="value-prefix">Виробник:</span>
-                        <span class="badge">{{data.OriginName}}</span>
+                        <span class="label label-default">{{data.OriginName}}</span>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-model">
                         <span class="value-prefix">Модель:</span>
-                        <span class="badge">{{data.Model}}</span>
+                        <span class="label label-default">{{data.Model}}</span>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-code">
                         <span class="value-prefix">Код товару:</span>
-                        <span class="badge">#{{data.ID}}</span>
+                        <span class="label label-default">#{{data.ID}}</span>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-price">
                         <span class="value-prefix">Ціна:</span>
-                        <span class="badge">{{data.Price}}</span>
-                        <span class="value-suffix">грн.</span>
+                        <span class="label label-default">{{data.Price}} грн.</span>
                     </div>
                 </li>
 
@@ -77,12 +76,15 @@
                     <div class="shop-component shop-product-buttons-addto">
                         <button class="btn btn-primary btn-xs" data-action="shop:cart:add" data-oid="{{data.ID}}" data-title="+To Cart" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                             <i class="fa fa-shopping-cart"></i>
+                            + в кошик
                         </button>
                         <button class="btn btn-xs" data-action="shop:wishlist:add" data-oid="{{data.ID}}" data-title="+To WishList" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                             <i class="fa fa-heart"></i>
+                            + в мій список
                         </button>
                         <button class="btn btn-xs" data-action="shop:compare:add" data-oid="{{data.ID}}" data-title="+To Compare" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                             <i class="fa fa-files-o"></i>
+                            порівняти
                         </button>
                     </div>
                 </li>

@@ -15,6 +15,9 @@ class libraryDataObject {
         $this->_data['error'] = $errorMessage;
         return $this;
     }
+    public function getError() {
+        return $this->_data['error'];
+    }
 
     public function setData($key, $val) {
         $this->_data[$key] = $val;
@@ -25,6 +28,10 @@ class libraryDataObject {
         if (isset($key))
             return $this->_data[$key];
         return $this->_data;
+    }
+
+    public function hasError() {
+        return !empty($this->_data['error']);
     }
 
     // converters

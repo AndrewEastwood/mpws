@@ -10,10 +10,10 @@ define("plugin/shop/js/view/listProductCatalog", [
     'default/js/lib/bootstrap-slider',
 ], function (_, MView, CollListProductCatalog, ProductItemShort, dlg, tpl) {
 
-    dlg.show({
-        title: 'Say-hello dialog',
-        message: 'Hi Apple!'
-    });
+    // dlg.show({
+    //     title: 'Say-hello dialog',
+    //     message: 'Hi Apple!'
+    // });
 
     var ListProductCatalog = MView.extend({
         tagName: 'div',
@@ -24,7 +24,7 @@ define("plugin/shop/js/view/listProductCatalog", [
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_Other',
-            "click a.list-group-item": 'filterProducts_ListItemClicked',
+            "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
             "slideStop .slider": 'filterProducts_PriceChanged',
             "click .shop-filter-cancel": 'filterProducts_CancelFilter',
             "click .shop-load-more": 'filterProducts_LoadMore',

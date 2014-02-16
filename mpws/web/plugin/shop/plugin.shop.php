@@ -16,9 +16,7 @@ class pluginShop extends objectPlugin {
             // products list sorted by date added
             // -----------------------------------------------
             case "shop_product_list_latest": {
-                $data = $this->_custom_api_getProductList_Latest(array(
-                    "limit" => libraryRequest::getValue('offset', false)
-                ));
+                $data = $this->_custom_api_getProductList_Latest();
                 break;
             }
             // products list sorted by popularity
@@ -90,6 +88,10 @@ class pluginShop extends objectPlugin {
                 $data = $this->_custom_api_shoppingCartContent();
                 break;
             }
+            case "shop_cart" : {
+                $data = $this->_custom_api_shoppingCart();
+                break;
+            }
         }
 
         // attach to output
@@ -155,7 +157,7 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by date added
     // -----------------------------------------------
-    private function _custom_api_getProductList_Latest ($params) {
+    private function _custom_api_getProductList_Latest () {
 
         $configProducts = configurationShopDataSource::jsapiProductListLatest();
 
@@ -398,131 +400,6 @@ class pluginShop extends objectPlugin {
         ));
         // return data object
         return $dataObj;
-
-        // grap all available filter options of running category
-        // ---
-        // $dataCategoryBrands = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryBrands['data']);
-        // $dataCategoryBrands->setValuesDbProcedure($categoryId);
-        // $dataCategoryBrand = configurationShopDataSource::jsapiProductListCategory();
-
-        // $dataCategoryPriceEdges = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryPriceEdges['data']);
-        // $dataCategoryPriceEdges->setValuesDbProcedure($categoryId);
-        // $dataCategoryPriceEdges->process($params);
-
-        // $dataCategorySubCategories = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategorySubCategories['data']);
-        // $dataCategorySubCategories->setValuesDbProcedure($categoryId);
-        // $dataCategorySubCategories->process($params);
-
-        // get max and min prices
-/*        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges->getData('PriceMax') ?: 0);
-        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges->getData('PriceMin') ?: 0);
-        $filterOptionsAvailable['filter_commonAvailability'] = array("AVAILABLE", "OUTOFSTOCK", "COMINGSOON");
-        $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
-
-        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryBrands->toDEFAULT();
-        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategorySubCategories->toDEFAULT();
-
-
-        // remove empty categories
-        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $key => $value) {
-            if (empty($value['ProductCount']))
-                unset($filterOptionsAvailable['filter_categorySubCategories'][$key]);
-        }
-
-        // get and adjust requested filter options and apply to source
-        // ---
-        $filterOptionsApplied['filter_commonPriceMax'] = intval(getValue($params['filter_commonPriceMax'], 0));
-        $filterOptionsApplied['filter_commonPriceMin'] = intval(getValue($params['filter_commonPriceMin'], 0));
-        $filterOptionsApplied['filter_commonAvailability'] = getValue($params['filter_commonAvailability'], array());
-        $filterOptionsApplied['filter_commonOnSaleTypes'] = getValue($params['filter_commonOnSaleTypes'], array());
-
-        $filterOptionsApplied['filter_viewSortBy'] = getValue($params['filter_viewSortBy'], null);
-        $filterOptionsApplied['filter_viewItemsOnPage'] = intval(getNonEmptyValue($params['filter_viewItemsOnPage'], $dataConfigProducts['limit']));
-
-        $filterOptionsApplied['filter_categoryBrands'] = getValue($params['filter_categoryBrands'], array());
-
-        // adjust filters
-        if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
-            $dataConfigProducts['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
-        else
-            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
-
-        $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
-        if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
-            $dataConfigProducts['order'] = array('field' => $dataConfigProducts['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
-        else
-            $filterOptionsApplied['filter_viewSortBy'] = null;
-
-        if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
-            $dataConfigProducts['condition']['filter'] .= " + Price (<) ?";
-            $pendingDbConditions[] = 'filter_commonPriceMax';
-        } else
-            $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
-
-        if ($filterOptionsApplied['filter_commonPriceMin'] > 0) {
-            $dataConfigProducts['condition']['filter'] .= " + Price (>) ?";
-            $pendingDbConditions[] = 'filter_commonPriceMin';
-        } else
-            $filterOptionsApplied['filter_commonPriceMin'] = 0;
-
-        // var_dump($filterOptionsApplied['filter_categoryBrands']);
-
-        if (count($filterOptionsApplied['filter_categoryBrands']) > 0) {
-            $dataConfigProducts['condition']['filter'] .= " + OriginID (IN) ?";
-            $pendingDbConditions[] = 'filter_categoryBrands';
-        }
-
-        // update data config
-        // ---
-        $dataObj->setConfig($dataConfigProducts);
-
-        // update conditions
-        $dataObj->setValuesDbCondition($categoryId, MERGE_MODE_APPEND);
-
-        foreach ($pendingDbConditions as $filterKey)
-            $dataObj->setValuesDbCondition($filterOptionsApplied[$filterKey], MERGE_MODE_APPEND);
-
-        // var_dump($dataObj->getConfig($dataConfigProducts));
-
-        // get data with filter
-        // ---
-        $products = $this->getDataBase()->getData($configLocation);
-        
-        if ($dataObj->isEmpty()) {
-            $_result['error'] = "No products";
-            $dataObj->setData($_result);
-            // $dataObj->setDataError("No products");
-            return $dataObj;
-        }
-
-        // list of product ids to fetch related attributes
-        $productIDs = array();
-
-        // pluck product IDs and create product map
-        foreach ($products as $value) {
-            $productIDs[] = $value['ID'];
-            $productsMap[] = $value;
-        }
-
-        // configure product attribute object
-        $attributesObj = $this->_custom_api_getProductAttributes($productIDs, true);
-        $attributesObj->extendConfig(array(
-            "options" => array(
-                "expandSingleRecord" => false
-            )
-        ), true);
-
-        // get product attributes and create map
-        $attributes = $attributesObj->process()->getData();
-
-        foreach ($attributes as $value)
-            $attributesMap[$value['productID']] = $value['ProductAttributes'];
-
-        // update main data object
-        // ---
-        $dataObj->setData($_result);*/
-
-        // var_dump($dataConfigProducts);
     }
 
     // product standalone item (short or full)
@@ -548,7 +425,7 @@ class pluginShop extends objectPlugin {
             $dataObj->setData('products', $productsMap);
 
             // save product into recently viewed
-            $recentProducts = $_SESSION['shop:recentProducts'] ?: array();
+            $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
             $recentProducts[$productID] = $productsMap[$productID];
             $_SESSION['shop:recentProducts'] = $recentProducts;
         }
@@ -558,129 +435,111 @@ class pluginShop extends objectPlugin {
 
     // shopping cart
     // -----------------------------------------------
-    private function _custom_api_shoppingCartContent ($param) {
-        return new mpwsData(array(
-            "error" => false,
-            "items" => $_SESSION['shop:cart'] ?: array(),
-            "cart" => $this->_custom_cartGetInfo()
-        ));
-    }
-    private function _custom_api_shoppingCartClear () {
-        $_SESSION['shop:cart'] = array();
-        return $this->_custom_api_shoppingCartContent();
-    }
-    private function _custom_api_shoppingCartManage ($productID, $param) {
 
-        $amount = getValue($param['amount'], null);
-        $clear = getValue($param['clear'], false);
+    private function _custom_api_shoppingCart () {
+        $cart = new libraryDataObject();
+        $productID = libraryRequest::getValue('productID');
+        $productQuantity = libraryRequest::getValue('productQuantity');
+        $do = libraryRequest::getValue('cartAction');
+        $actions = array('SET', 'CLEAR', 'INFO');
 
-        $cart = $_SESSION['shop:cart'] ?: array();
-        $error = false;
+        if (empty($do) || !in_array($do, $actions)) {
+            $cart->setError("Unknown action");
+            return $cart;
+        }
 
-        if ($clear)
-            $cart = array();
-        else {
-            if (is_numeric($amount)) {
-                $amount = intval($amount);
-                // remove item completely
-                if ($amount === 0)
-                    unset($cart[$productID]);
-                else {
-                    // check existatce
-                    if (isset($cart[$productID])) {
-                        $cart[$productID]["products"][$productID]["CartAmount"] += $amount;
-                        // remove item when amount is -1 and current amount is 1
-                        if ($cart[$productID]["products"][$productID]["CartAmount"] === 0)
-                            unset($cart[$productID]);
-                    } else {
-                        // just get new product entry annd add it into cart
-                        $productEntry = $this->_custom_api_getProductItem($productID, 'short');
-                        if ($productEntry->hasData()) {
-                            $cart[$productID] = $productEntry->getData();
-                            $cart[$productID]["products"][$productID]["CartAmount"] = 1;
-                        } else
-                            $error = "Wrong product ID";
-                    }
-                    // update product total
-                    if (!$error)
-                        $cart[$productID]["products"][$productID]["CartTotal"] = $cart[$productID]["products"][$productID]["CartAmount"] * $cart[$productID]["products"][$productID]["Price"];
-                }
+        // adjust product id and quantity
+        $productID = intval($productID);
+        $productQuantity = intval($productQuantity);
+
+        if (empty($productID) && $do == 'SET') {
+            $cart->setError("ProductID is empty");
+            return $cart;
+        }
+
+        $cartProducts = isset($_SESSION['shopCartProducts']) ? $_SESSION['shopCartProducts'] : array();
+
+        $_getInfoFn = function (&$_products) {
+
+            // get cartInfo
+            $cartInfo = array(
+                "subTotal" => 0.0,
+                "discount" => 0,
+                "total" => 0.0,
+                "productCount" => 0
+            );
+
+            if (empty($_products))
+                return $cartInfo;
+
+            foreach ($_products as &$_item) {
+                $_item["_total"] = $_item['Price'] * $_item['_quantity'];
+                $cartInfo["subTotal"] += $_item['_total'];
+                $cartInfo["productCount"] += $_item['_quantity'];
             }
-            else
-                $error = "Wrong amount value";
+            $cartInfo["total"] = (($cartInfo['discount'] / 100) ?: 1) *  $cartInfo['subTotal'];
+
+            // update money formats
+            $cartInfo["discount"] = money_format('%.2n%%', $cartInfo["discount"]);
+            $cartInfo["subTotal"] = money_format('%.2n', $cartInfo["subTotal"]);
+            $cartInfo["total"] = money_format('%.2n', $cartInfo["total"]);
+
+            return $cartInfo;
+        };
+
+        // remove product
+        if ($do == 'SET' && empty($productQuantity)) {
+            unset($cartProducts[$productID]);
+            $cart->setData('info', $_getInfoFn($cartProducts));
+            $cart->setData('products', $cartProducts);
+            $_SESSION['shopCartProducts'] = $cartProducts;
+            return $cart;
         }
 
-        $_SESSION['shop:cart'] = $cart;
-        // $_SESSION['shop:cart_info'] = $this->_custom_cartGetInfo();
+        // create/add
+        if ($do == 'SET' && $productQuantity) {
+            // create
+            if (!isset($cartProducts[$productID])) {
+                $productEntry = $this->_custom_api_getProductItem($productID);
+                if ($productEntry->hasError()) {
+                    $cart->setError($productEntry->getError());
+                    return $cart;
+                } else {
+                    $_tmp = $productEntry->getData();
+                    $cartProducts[$productID] = $_tmp['products'][$productID];
+                }
+                $cartProducts[$productID]['_quantity'] = 0;
+            }
+            // var_dump($cartProducts[$productID]['_quantity']);
+            $cartProducts[$productID]['_quantity'] += $productQuantity;
+            // var_dump($cartProducts[$productID]['_quantity']);
 
-        // return new mpwsData(array(
-        //     "error" => $error,
-        //     "products" => $_SESSION['shop:cart'],
-        //     "cart" => $_SESSION['shop:cart_info']
-        // ));
-        return $this->_custom_api_shoppingCartContent();
-    }
-    private function _custom_api_shoppingCartSave () {
+            if ($cartProducts[$productID]['_quantity'] <= 0)
+                unset($cartProducts[$productID]);
 
+            $cart->setData('info', $_getInfoFn($cartProducts));
+            $cart->setData('products', $cartProducts);
+            $_SESSION['shopCartProducts'] = $cartProducts;
 
-
-        $_SESSION['shop:cart'] = array();
-
-        return new mpwsData(array("status" => "ok"));
-    }
-    private function _custom_cartGetInfo () {
-        $cart = $_SESSION['shop:cart'] ?: array();
-        $cart_info = array(
-            "productAmount" => 0,
-            "total" => 0.0,
-            "discount" => 0
-        );
-        // extract short info
-        foreach ($cart as $productID => $productEntry) {
-            // // update each product
-            // $cart[$pID] = $productEntry;
-            // $cart[$pID]["Total"] = $cart[$pID]["Amount"] * $cart[$pID]["Price"];
-
-            // update cart checkout info
-            $cart_info["productAmount"] += $productEntry["products"][$productID]["CartAmount"];
-            $cart_info["total"] += $productEntry["products"][$productID]["CartTotal"];
+            return $cart;
         }
 
-        // $_SESSION['shop:cart_info'] = $cart_info;
+        if ($do == 'CLEAR' && $productQuantity) {
+            unset($_SESSION['shopCartProducts']);
+            $cart->setData('info', $_getInfoFn(null));
+            $cart->setData('products', null);
+            return $cart;
+        }
+        if ($do == 'INFO') {
+            $cart->setData('products', $cartProducts);
+            $cart->setData('info', $_getInfoFn($cartProducts));
+            return $cart;
+        }
 
-        return $cart_info;
     }
-
-    // catalog filtering
-
-
-    // catalog
-
-    // origins
-    // private function _custom_api_getOrigin () {
-    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiOriginList['data']);
-    //     return $dataObj->process($params);
-    // }
-
-    // // categories
-    // private function _custom_api_getCategory () {
-    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
-    //     return $dataObj->process($params);
-    // }
-
-    // category origins
-    // private function _custom_api_getCategoryOrigins () {
-    //     $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCategoryList['data']);
-    //     return $dataObj->process($params);
-    // }
-
-    // product list
-
-
-    // product item
 
     // product additional data
-    // @productIDs - array of product ids
+    // @products - array with product(s)
     private function _custom_api_getProductAttributes ($products) {
         if (empty($products))
             return null;

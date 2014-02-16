@@ -60,7 +60,7 @@ define("default/js/view/mView", [
         render: function () {
             var _self = this;
 
-            // debugger;
+            // debugger;s
             function _innerRenderFn () {
 
                 // if (_self.itemViewClass) {
@@ -93,6 +93,7 @@ define("default/js/view/mView", [
                         _self.$el.append(itemView);
                     });
                 else {
+                    // debugger;
                     var _tplData = null;
                     var _tplUrlOptions = null;
                     var _tplExtras = null;
@@ -121,7 +122,6 @@ define("default/js/view/mView", [
                             displayItems: _self.displayItems,
                             urlOptions: _tplUrlOptions
                         }));
-                        // debugger;
                     }
 
                     if (typeof this.template === "string")
