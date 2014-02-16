@@ -54,7 +54,7 @@ define("plugin/shop/js/site", [
                     // cart
                     case "shop:cart:add":
                         //debugger;
-                        cartEmbedded.collection.productAdd(_oid, 1);
+                        cartEmbedded.model.productAdd(_oid, 1);
                         // self.model.shoppingCartAdd(_oid, function (rez) {
                         //     var _cartEmbeddedRenderConfig = mpwsPageLib.modifyRenderConfig(self.componentsCommon.cartEmbedded, {
                         //         callback: function () {
@@ -67,7 +67,7 @@ define("plugin/shop/js/site", [
                         break;
                     case "shop:cart:embedded-item-remove":
                         // debugger;
-                        cartEmbedded.collection.productAdd(_oid, 0);
+                        cartEmbedded.model.productAdd(_oid, 0);
                         // self.model.shoppingCartRemove(_oid, function (rez) {
                         //     // self.pageShopCart();
                         //     var _cartEmbeddedRenderConfig = mpwsPageLib.modifyRenderConfig(self.componentsCommon.cartEmbedded, {
