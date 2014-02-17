@@ -1,38 +1,17 @@
-define("default/js/lib/sandbox", function(){
+define("default/js/lib/sandbox", [
+    "default/js/lib/extend.string"
+], function(){
 
-    // list of all page states
-    var _states = {
-        logged : false
-    };
     var _events = {};
-    // get state value by key
-    function stateGet (stateKey) {
-        return _states[stateKey];
-    }
-    // add/set enabled state
-    function _stateSetOn  (stateKey) {
-        _stateSet(stateKey, true);
-    }
-    // add/set disabled state
-    function _stateSetOff (stateKey) {
-        _stateSet(stateKey, false);
-    }
-    // set/add statue value
-    function _stateSet (stateKey, stateValue) {
-        _states[stateKey] = stateValue;
-    }
 
     // Sandbox
     var _Sandbox = {
-        stateGet: stateGet,
-        stateSetOn: _stateSetOn,
-        stateSetOff: _stateSetOff,
         // subscribe on eventID
         eventSubscribe : function (eventID, listener) {
             if (!_events[eventID])
                 _events[eventID] = [];
 
-            var listenerHash = _app.Utils.hashCode(listener);
+            var listenerHash = listener && listener.toString().hashCode();
             var alreadyAdded = false;
             // avoid duplicates
             for (var i = 0, len = _events[eventID].length; i < len && !alreadyAdded; i++)
@@ -54,7 +33,7 @@ define("default/js/lib/sandbox", function(){
         eventUnsubscribe : function (eventID, listener) {
             if (!_events[eventID])
                 return false;
-            var listenerHash = _app.Utils.hashCode(listener);
+            var listenerHash = listener && listener.toString().hashCode();
             var unsubcribeCount = 0;
             for (var i = 0, len = _events[eventID].length; i < len; i++)
                 if (_events[eventID][i].id === listenerHash) {

@@ -426,7 +426,6 @@ define("default/js/lib/backbone", [
       if (options.parse === void 0) options.parse = true;
       var success = options.success;
       options.success = function(model, resp, options) {
-        // debugger;
         if (!model.set(model.parse(resp, options), options)) return false;
         if (success) success(model, resp, options);
       };

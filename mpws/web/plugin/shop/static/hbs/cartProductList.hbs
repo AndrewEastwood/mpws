@@ -1,7 +1,7 @@
 <div class="shop-cart-productlist">
 {{#each products }}
     <div class="wrapper">
-        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:embedded-item-remove" data-oid="{{ID}}">
+        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:remove" data-id="{{ID}}">
             <i class="fa fa-trash-o"></i>
         </a>
         <div class="shop-product-image shop-product-image-main">
@@ -20,8 +20,8 @@
     </div>
 {{/each}}
 </div>
-<div class="cartInfo row">
-    <div class="shopCartSubTotal col-md-12">
+<div class="cartInfo">
+    <div class="shopCartSubTotal">
         <span class="value-prefix">Сума:</span>
         <span class="value">{{info.subTotal}}</span>
         <span class="value-suffix moneyType">грн.</span>

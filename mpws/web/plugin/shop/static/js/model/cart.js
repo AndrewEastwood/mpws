@@ -1,10 +1,12 @@
 define("plugin/shop/js/model/cart", [
+    'default/js/lib/sandbox',
     'default/js/model/mModel',
     'plugin/shop/js/lib/utils'
-], function (MModel, ShopUtils) {
+], function (Sandbox, MModel, ShopUtils) {
 
     var Cart = MModel.extend({
         initialize: function () {
+            var _self = this;
             // debugger;
             this.updateUrlOptions({
                 source: 'shop',
@@ -12,6 +14,26 @@ define("plugin/shop/js/model/cart", [
                 cartAction: 'INFO'
             });
             MModel.prototype.initialize.call(this);
+
+            Sandbox.eventSubscribe('shop:cart:add', function (data) {
+                // debugger;
+                if (data && data.id)
+                    _self.productAdd(data.id, 1);
+            });
+            Sandbox.eventSubscribe('shop:cart:sub', function (data) {
+                // debugger;
+                if (data && data.id)
+                    _self.productAdd(data.id, -1);
+            });
+            Sandbox.eventSubscribe('shop:cart:remove', function (data) {
+                // debugger;
+                if (data && data.id)
+                    _self.productAdd(data.id, 0);
+            });
+            Sandbox.eventSubscribe('shop:cart:clear', function () {
+                // debugger;
+                _self.clearAll();
+            });
         },
         parse: function (data) {
             // debugger;
@@ -24,6 +46,12 @@ define("plugin/shop/js/model/cart", [
             // return _(products).map(function(item){ return item; });
             // return Utils.getTreeByJson(data && data.shop && data.shop, 'ID', 'ParentID');
             // return data;
+        },
+        getInfo: function () {
+            this.updateUrlOptions({
+                cartAction: 'INFO'
+            });
+            this.fetch();
         },
         clearAll: function () {
             this.updateUrlOptions({

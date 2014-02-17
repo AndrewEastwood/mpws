@@ -1,0 +1,7 @@
+<div class="col-md-12">
+    {{#if data.info.productCount }}
+        {{>plugin_shop_hbs_cartProductList data }}
+    {{else}}
+        <div class="alert alert-warning">Ваш кошик порожній</div>
+    {{/if}}
+</div>

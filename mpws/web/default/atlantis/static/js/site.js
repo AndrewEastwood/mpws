@@ -1,4 +1,5 @@
 define("default/js/site", [
+    'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
@@ -6,7 +7,7 @@ define("default/js/site", [
     // views + models
     'default/js/view/menu',
     'default/js/view/breadcrumb'
-], function ($, _, Backbone, Cache, Menu, Breadcrumb) {
+], function (Sandbox, $, _, Backbone, Cache, Menu, Breadcrumb) {
 
     var Site = function (options) {
 
@@ -38,6 +39,12 @@ define("default/js/site", [
                     $.xhrPool.splice(index, 1);
                 }
             }
+        });
+
+        // Sandbox message handler
+        $('body').on('click', '[data-action]', function () {
+            // debugger;
+            Sandbox.eventNotify($(this).data('action'), $(this).data());
         });
 
         return {
