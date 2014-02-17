@@ -6,7 +6,7 @@ define("plugin/shop/js/view/listProductLatest", [
 ], function (_, MView, CollListProductLatest, ProductItemShort) {
 
     var ListProductLatest = MView.extend({
-        tagName: 'div',
+        // tagName: 'div',
         className: 'shop-product-list shop-product-list-latest',
         collection: new CollListProductLatest(),
         itemViewClass: ProductItemShort,

@@ -40,30 +40,6 @@ define("default/js/site", [
             }
         });
 
-        // Backbone.history.fragments = [];
-        // Backbone.history.mpwsGetPreviousFragment = function () {
-        //     var fcount = Backbone.history.fragments.length;
-        //     if (fcount >= 2)
-        //         return Backbone.history.fragments[fcount - 2];
-        //     return false;
-        // };
-        // Backbone.Router.prototype.route = function(route, name, callback) {
-        //     if (!_.isRegExp(route))
-        //         route = this._routeToRegExp(route);
-        //     if (!callback)
-        //         callback = this[name];
-        //     Backbone.history.route(route, _.bind(function(fragment) {
-        //         // debugger;
-        //         var args = this._extractParameters(route, fragment);
-        //         callback && callback.apply(this, args);
-        //         this.trigger.apply(this, ['route:' + name].concat(args));
-        //         this.trigger('route', name, args);
-        //         Backbone.history.trigger('route', this, name, args);
-        //         Backbone.history.fragments.push(fragment);
-        //     }, this));
-        //     return this;
-        // };
-
         return {
             config: app.config,
             options: options,
