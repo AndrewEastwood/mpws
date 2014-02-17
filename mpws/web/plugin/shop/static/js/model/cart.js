@@ -28,7 +28,7 @@ define("plugin/shop/js/model/cart", [
             Sandbox.eventSubscribe('shop:cart:remove', function (data) {
                 // debugger;
                 if (data && data.id)
-                    _self.productAdd(data.id, 0);
+                    _self.productRemove(data.id);
             });
             Sandbox.eventSubscribe('shop:cart:clear', function () {
                 // debugger;
@@ -64,6 +64,13 @@ define("plugin/shop/js/model/cart", [
                 cartAction: 'SET',
                 productID: productID,
                 productQuantity: productQuantity
+            });
+            this.fetch();
+        },
+        productRemove: function (productID) {
+            this.updateUrlOptions({
+                cartAction: 'REMOVE',
+                productID: productID
             });
             this.fetch();
         },

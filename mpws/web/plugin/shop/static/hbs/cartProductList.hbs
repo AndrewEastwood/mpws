@@ -13,7 +13,9 @@
             <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
             <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
             <span class="label label-default">x</span>
+            <a class="productQuantityAction productQuantityAdd" data-action="shop:cart:add" data-id="{{ID}}" href="javascript://"><i class="fa fa-plus"></i></a>
             <span class="label label-warning product-quantity">{{_quantity}}</span>
+            <a class="productQuantityAction productQuantitySub" data-action="shop:cart:sub" data-id="{{ID}}" href="javascript://"><i class="fa fa-minus"></i></a>
             <span class="label label-default">=</span>
             <span class="label label-success product-total">{{_total}}<span class="moneyType">грн.</span></span>
         </div>
@@ -24,6 +26,11 @@
     <div class="shopCartSubTotal">
         <span class="value-prefix">Сума:</span>
         <span class="value">{{info.subTotal}}</span>
+        <span class="value-suffix moneyType">грн.</span>
+    </div>
+    <div class="shopCartTotal">
+        <span class="value-prefix">До оплати:</span>
+        <span class="value">{{info.total}}</span>
         <span class="value-suffix moneyType">грн.</span>
     </div>
 </div>

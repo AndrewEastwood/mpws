@@ -156,13 +156,13 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "fields" => array(
                 "ID",
                 "ProductID",
-                "@GROUP_CONCAT(DISTINCT Price ORDER BY Price DESC SEPARATOR \"#EXPLODE#\") AS PriceArchive"
+                "@GROUP_CONCAT(DISTINCT Price ORDER BY DateCreated ASC SEPARATOR \"#EXPLODE#\") AS PriceArchive"
             ),
             "offset" => "0",
             "limit" => "10",
             "group" => "ProductID",
             "order" => array(
-                "field" => "shop_productPrices.Price",
+                "field" => "shop_productPrices.DateCreated",
                 "ordering" => "ASC"
             ),
             "options" => array(

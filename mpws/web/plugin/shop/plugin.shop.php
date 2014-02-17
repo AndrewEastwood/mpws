@@ -441,7 +441,7 @@ class pluginShop extends objectPlugin {
         $productID = libraryRequest::getValue('productID');
         $productQuantity = libraryRequest::getValue('productQuantity');
         $do = libraryRequest::getValue('cartAction');
-        $actions = array('SET', 'CLEAR', 'INFO');
+        $actions = array('SET', 'REMOVE', 'CLEAR', 'INFO');
 
         if (empty($do) || !in_array($do, $actions)) {
             $cart->setError("Unknown action");
@@ -488,15 +488,15 @@ class pluginShop extends objectPlugin {
         };
 
         // remove product
-        if ($do == 'SET' && empty($productQuantity)) {
-            unset($cartProducts[$productID]);
-            $cart->setData('info', $_getInfoFn($cartProducts));
-            $cart->setData('products', $cartProducts);
-            $_SESSION['shopCartProducts'] = $cartProducts;
-            return $cart;
-        }
+        // if ($do == 'SET' && empty($productQuantity)) {
+        //     unset($cartProducts[$productID]);
+        //     $cart->setData('info', $_getInfoFn($cartProducts));
+        //     $cart->setData('products', $cartProducts);
+        //     $_SESSION['shopCartProducts'] = $cartProducts;
+        //     return $cart;
+        // }
 
-        // create/add
+        // create/add product
         if ($do == 'SET' && $productQuantity) {
             // create
             if (!isset($cartProducts[$productID])) {
@@ -514,7 +514,20 @@ class pluginShop extends objectPlugin {
             $cartProducts[$productID]['_quantity'] += $productQuantity;
             // var_dump($cartProducts[$productID]['_quantity']);
 
+            // we keep product until REMOVE action is invoked
             if ($cartProducts[$productID]['_quantity'] <= 0)
+                $cartProducts[$productID]['_quantity'] = 1;
+
+            $cart->setData('info', $_getInfoFn($cartProducts));
+            $cart->setData('products', $cartProducts);
+            $_SESSION['shopCartProducts'] = $cartProducts;
+
+            return $cart;
+        }
+
+        // remove product
+        if ($do == 'REMOVE') {
+            if (isset($cartProducts[$productID]))
                 unset($cartProducts[$productID]);
 
             $cart->setData('info', $_getInfoFn($cartProducts));
@@ -524,12 +537,15 @@ class pluginShop extends objectPlugin {
             return $cart;
         }
 
+        // truncate shopping cart
         if ($do == 'CLEAR' && $productQuantity) {
             unset($_SESSION['shopCartProducts']);
             $cart->setData('info', $_getInfoFn(null));
             $cart->setData('products', null);
             return $cart;
         }
+
+        // get shopping cart info
         if ($do == 'INFO') {
             $cart->setData('products', $cartProducts);
             $cart->setData('info', $_getInfoFn($cartProducts));

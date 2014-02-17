@@ -4,10 +4,10 @@ define("plugin/shop/js/site", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/shop/js/view/catalogStructureMenu',
+    'plugin/shop/js/view/menuSite',
     'plugin/shop/js/model/cart',
     'plugin/shop/js/view/cartEmbedded'
-], function (Site, $, _, Backbone, Cache, CatalogStructureMenu, ModelCart, CartEmbedded) {
+], function (Site, $, _, Backbone, Cache, MenuSite, ModelCart, CartEmbedded) {
 
     var shoppingCartModel = new ModelCart();
 
@@ -24,10 +24,7 @@ define("plugin/shop/js/site", [
 
         initialize: function () {
 
-            // inject shop menu (category menu)
-            var shopMenuItem = new CatalogStructureMenu();
-            Site.addMenuItem(shopMenuItem.$el);
-            shopMenuItem.fetchAndRender();
+            MenuSite.render();
 
             // inject embedded shopping cart
             var cartEmbedded = new CartEmbedded({

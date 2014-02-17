@@ -8,12 +8,13 @@
         {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
         <div class="shop-component-catalog-filtering">
             <div class="title row">
-                <strong><span>Категорії:</span></strong>
+                <strong><span>Підкатегорії:</span></strong>
             </div>
             <div class="content row">
 
                 <div class="spacer"></div>
                 <div class="row">
+                    <span class="helptext">К-ість товарів відповідно до фільтру у підкатегоріях <i class="fa fa-level-down"></i></span>
                     <div class="list-group">
                     {{#each extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
                         {{#if ProductCount }}
@@ -45,6 +46,7 @@
 
                 <div class="spacer"></div>
                 <div class="row">
+                    <span class="helptext">К-ість товарів у цій категорії <i class="fa fa-level-down"></i></span>
                     <div class="list-group">
                     {{#each extras.filter.filterOptionsAvailable.filter_categoryBrands }}
                         {{#if ProductCount }}
