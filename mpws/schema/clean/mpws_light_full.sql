@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 26, 2013 at 11:46 PM
+-- Generation Time: Feb 18, 2014 at 02:36 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
@@ -24,11 +24,6 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
-BEGIN
-SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS `p` WHERE p.Enabled = 1 AND p.CategoryID = catid;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN catid INT)
 BEGIN
   SELECT o.ID,
@@ -40,6 +35,7 @@ BEGIN
          AND o.Enabled = 1
          AND p.CategoryID = catid
   GROUP  BY o.Name; 
+-- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategorySubCategories`(IN catid INT)
@@ -53,6 +49,12 @@ BEGIN
          AND c.Enabled = 1
          AND c.ParentID = catid
   GROUP  BY c.Name; 
+-- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryBrands`(IN catid INT)
+BEGIN
+SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.CategoryID = catid GROUP BY o.Name;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryLocation`(IN catid INT)
@@ -70,6 +72,19 @@ FROM (
 JOIN shop_categories T2
 ON T1._id = T2.ID
 ORDER BY T1.lvl DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
+BEGIN
+SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategorySubCategories`(IN catid INT)
+BEGIN
+SELECT
+  c.ID, c.ParentID, c.Name,
+  (SELECT count(*) FROM shop_products AS `p` WHERE p.CategoryID = c.ID AND p.Enabled = 1) AS `ProductCount`
+FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
 END$$
 
 DELIMITER ;
@@ -360,7 +375,6 @@ CREATE TABLE IF NOT EXISTS `shop_categories` (
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID` (`ID`),
   KEY `RootID` (`RootID`),
   KEY `ParentID` (`ParentID`),
   KEY `SchemaID` (`SchemaID`),
@@ -456,6 +470,26 @@ INSERT INTO `shop_currency` (`ID`, `CustomerID`, `IsMain`, `Enabled`, `Currency`
 (2, 0, 0, 1, 'USD', 8.10, '0000-00-00 00:00:00', '2013-08-15 00:36:53', '0000-00-00 00:00:00'),
 (3, 0, 1, 1, 'UAH', 1.00, '2013-08-15 00:37:14', '2013-08-15 00:37:14', '0000-00-00 00:00:00'),
 (4, 0, 0, 1, 'PLN', 2.52, '2013-08-17 01:30:40', '2013-08-17 01:30:40', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_offers`
+--
+
+CREATE TABLE IF NOT EXISTS `shop_offers` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ProductID` int(11) NOT NULL,
+  `Type` enum('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED') COLLATE utf8_bin NOT NULL,
+  `Enable` int(11) NOT NULL,
+  `DateActive` datetime NOT NULL,
+  `DateInactive` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID` (`ID`),
+  KEY `ProductID` (`ProductID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -591,23 +625,31 @@ CREATE TABLE IF NOT EXISTS `shop_productPrices` (
   PRIMARY KEY (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=19 ;
 
 --
 -- Dumping data for table `shop_productPrices`
 --
 
 INSERT INTO `shop_productPrices` (`ID`, `CustomerID`, `ProductID`, `Price`, `DateCreated`) VALUES
-(1, 1, 4, 10.25, '2013-10-01 00:00:00'),
+(1, 1, 4, 8.25, '2013-10-01 00:00:00'),
 (2, 1, 4, 11.25, '2013-10-02 00:00:00'),
-(3, 1, 4, 11.50, '2013-10-03 00:00:00'),
-(4, 1, 4, 12.45, '2013-10-04 00:00:00'),
-(5, 1, 4, 13.45, '2013-10-05 00:00:00'),
-(6, 1, 4, 15.45, '2013-10-06 00:00:00'),
-(7, 1, 4, 14.95, '2013-10-07 00:00:00'),
+(3, 1, 4, 5.50, '2013-10-03 00:00:00'),
+(4, 1, 4, 2.45, '2013-10-04 00:00:00'),
+(5, 1, 4, 5.45, '2013-10-05 00:00:00'),
+(6, 1, 4, 9.45, '2013-10-06 00:00:00'),
+(7, 1, 4, 10.95, '2013-10-07 00:00:00'),
 (8, 1, 4, 14.25, '2013-10-08 00:00:00'),
 (9, 1, 4, 13.25, '2013-10-09 00:00:00'),
-(10, 1, 3, 100.25, '2013-10-09 00:00:00');
+(10, 1, 3, 12.25, '2013-10-10 00:00:00'),
+(11, 1, 4, 10.25, '2013-10-11 00:00:00'),
+(12, 1, 3, 1.25, '2013-10-12 00:00:00'),
+(13, 1, 3, 19.25, '2013-10-13 00:00:00'),
+(14, 1, 4, 7.00, '2013-10-14 00:00:00'),
+(15, 1, 4, 4.00, '2013-10-15 00:00:00'),
+(16, 1, 4, 2.00, '2013-10-16 00:00:00'),
+(17, 1, 4, 1.50, '2013-10-17 00:00:00'),
+(18, 1, 4, 11.50, '2013-10-18 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -628,45 +670,46 @@ CREATE TABLE IF NOT EXISTS `shop_products` (
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
   `Enabled` tinyint(1) NOT NULL,
-  `Status` enum('AVAILABLE','REMOVED','OUTOFSTOCK') COLLATE utf8_bin NOT NULL,
+  `Status` enum('AVAILABLE','REMOVED','OUTOFSTOCK','COMINGSOON') COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `OriginID` (`OriginID`),
   KEY `CategoryID` (`CategoryID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products' AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products' AUTO_INCREMENT=29 ;
 
 --
 -- Dumping data for table `shop_products`
 --
 
 INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name`, `ExternalKey`, `Description`, `Specifications`, `Model`, `SKU`, `Price`, `Enabled`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(3, 0, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 113.00, 1, 'AVAILABLE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(4, 0, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 10.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(5, 0, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(6, 0, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 0.00, 0, 'REMOVED', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(7, 0, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 56.25, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(8, 0, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(9, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(10, 0, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(11, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(12, 0, 3, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(14, 0, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(15, 0, 1, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(16, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(17, 0, 1, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(3, 0, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 213.00, 1, 'AVAILABLE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(4, 0, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 100.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(5, 0, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(6, 0, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 36.00, 0, 'REMOVED', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(7, 0, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 46.25, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(8, 0, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 56.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(9, 0, 15, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(10, 0, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 171.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(11, 0, 23, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 37.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(12, 0, 3, 3, 'AAA S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 355.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(14, 0, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 68.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(15, 0, 1, 3, 'CCC S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 85.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(16, 0, 1, 1, 'EEE S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(17, 0, 15, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (18, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(19, 0, 1, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(20, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(21, 0, 1, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(22, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(23, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(24, 0, 1, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(25, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(26, 0, 1, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(27, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56');
+(19, 0, 16, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(20, 0, 1, 1, 'BBB S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(21, 0, 14, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 45.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(22, 0, 14, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(23, 0, 14, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 83.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(24, 0, 1, 7, 'GGG S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(25, 0, 23, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(26, 0, 21, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(27, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(28, 0, 7, 2, 'test offer linked', 'fsdfsdfs', 'test offer linked', 'test offer linked', 'test offer linked', NULL, 0.00, 0, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1213,6 +1256,12 @@ ALTER TABLE `shop_commands`
 --
 ALTER TABLE `shop_currency`
   ADD CONSTRAINT `shop_currency_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `shop_offers`
+--
+ALTER TABLE `shop_offers`
+  ADD CONSTRAINT `shop_offers_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_orders`
