@@ -8,6 +8,7 @@ define("plugin/shop/js/view/listProductCatalog", [
     'default/js/lib/bootstrap',
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',
+    "default/js/lib/jquery.cookie"
 ], function (_, MView, CollListProductCatalog, ProductItemShort, dlg, tpl) {
 
     // dlg.show({

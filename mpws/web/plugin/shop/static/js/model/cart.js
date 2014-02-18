@@ -38,14 +38,11 @@ define("plugin/shop/js/model/cart", [
         parse: function (data) {
             // debugger;
             var products = ShopUtils.adjustProductEntry(data && data.shop);
-            // this.setExtras('info', data.shop.info);
             return {
+                user: data.shop.user || {},
                 info: data.shop.info,
                 products: _(products).map(function(item){ return item; })
             };
-            // return _(products).map(function(item){ return item; });
-            // return Utils.getTreeByJson(data && data.shop && data.shop, 'ID', 'ParentID');
-            // return data;
         },
         getInfo: function () {
             this.updateUrlOptions({
@@ -74,7 +71,14 @@ define("plugin/shop/js/model/cart", [
             });
             this.fetch();
         },
-        checkout: function () {
+        checkout: function (userData) {
+            this.updateUrlOptions({
+                cartAction: 'SAVE'
+            });
+
+            $.post(this.url, userData, function(){
+                debugger;
+            });
         }
     });
 

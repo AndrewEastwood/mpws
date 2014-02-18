@@ -73,7 +73,7 @@ class pluginShop extends objectPlugin {
             // shopping cart
             // -----------------------------------------------
             case "shop_cart_save" : {
-                $data = $this->_custom_api_shoppingCartSave($param);
+                $data = $this->_custom_api_shoppingCartSave();
                 break;
             }
             case "shop_cart_clear" : {
@@ -441,7 +441,7 @@ class pluginShop extends objectPlugin {
         $productID = libraryRequest::getValue('productID');
         $productQuantity = libraryRequest::getValue('productQuantity');
         $do = libraryRequest::getValue('cartAction');
-        $actions = array('SET', 'REMOVE', 'CLEAR', 'INFO');
+        $actions = array('SET', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
 
         if (empty($do) || !in_array($do, $actions)) {
             $cart->setError("Unknown action");
@@ -458,6 +458,7 @@ class pluginShop extends objectPlugin {
         }
 
         $cartProducts = isset($_SESSION['shopCartProducts']) ? $_SESSION['shopCartProducts'] : array();
+        $cartUser = isset($_SESSION['shopCartUser']) ? $_SESSION['shopCartUser'] : array();
 
         $_getInfoFn = function (&$_products) {
 
@@ -540,6 +541,7 @@ class pluginShop extends objectPlugin {
         // truncate shopping cart
         if ($do == 'CLEAR' && $productQuantity) {
             unset($_SESSION['shopCartProducts']);
+            unset($_SESSION['shopCartUser']);
             $cart->setData('info', $_getInfoFn(null));
             $cart->setData('products', null);
             return $cart;
@@ -549,6 +551,18 @@ class pluginShop extends objectPlugin {
         if ($do == 'INFO') {
             $cart->setData('products', $cartProducts);
             $cart->setData('info', $_getInfoFn($cartProducts));
+            return $cart;
+        }
+
+        // get shopping cart info
+        if ($do == 'SAVE') {
+            // var_dump($_POST);
+            $cartUser = libraryRequest::getPostValue('user');
+            $cart->setData('user', $cartUser);
+            $cart->setData('products', $cartProducts);
+            $cart->setData('info', $_getInfoFn($cartProducts));
+
+            $_SESSION['shopCartUser'] = $cartUser;
             return $cart;
         }
 

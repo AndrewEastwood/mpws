@@ -8,9 +8,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- Checkout page title -->
-                        <h4 class="title"><i class="icon-shopping-cart"></i> Оформлення замовлення</h4>
+                        <h4 class="title"><i class="icon-shopping-cart"></i>Швидке оформлення замовлення</h4>
                         <!-- Sub title -->
-                        <h5 class="title">Деталі доставки та оплати</h5>
+                        <h5 class="title">Деталі доставки</h5>
                         <!-- Address and Shipping details form -->
                         <div class="form form-small">
                             <!-- Register form (not working)-->
@@ -19,35 +19,35 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="name1">Імя</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="name1">
+                                        <input type="text" name="shopCartUserName" class="form-control" id="name1">
                                     </div>
                                 </div>
                                 <!-- Email -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="email1">Ел.пошта</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="email1">
+                                        <input type="text" name="shopCartUserEmail" class="form-control" id="email1">
                                     </div>
                                 </div>
                                 <!-- Telephone -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="telephone">Контактний телефон</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="telephone">
+                                        <input type="text" name="shopCartUserPhone" class="form-control" id="telephone">
                                     </div>
                                 </div>
                                 <!-- Address -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="address">Адреса доставки</label>
                                     <div class="col-md-6">
-                                        <textarea class="form-control" id="address"></textarea>
+                                        <textarea name="shopCartUserDelivery" class="form-control" id="address"></textarea>
                                     </div>
                                 </div>
                                 <!-- Country -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Місто</label>
                                     <div class="col-md-6">
-                                        <select class="form-control">
+                                        <select class="form-control" name="shopCartUserCity">
                                             {{> default_hbs_selectboxCityUA }}
                                         </select>
                                     </div>
@@ -56,28 +56,28 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="city">Перевізник</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="state">
+                                        <input type="text" class="form-control" id="state" name="shopCartLogistic">
                                     </div>
                                 </div>
                                 <!-- City -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="city">Номер складу</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="city">
+                                        <input type="text" class="form-control" id="city" name="shopCartWarehouse">
                                     </div>
                                 </div>
                                 <!-- Address -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="address">Ваші побажання</label>
                                     <div class="col-md-6">
-                                        <textarea class="form-control" id="comment"></textarea>
+                                        <textarea class="form-control" id="comment" name="shopCartComment"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-offset-3 col-sm-9">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox"> Створити профіль
+                                                <input type="checkbox" name="shopCartCreateAccount"> Створити профіль
                                             </label>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                         <div class="row">
                             <div class="col-md-4 col-md-offset-8">
                                 <div class="pull-right">
-                                    <a href="checkout.html" class="btn btn-success">Підтвердити замовлення</a>
+                                    <a href="javascript://" data-action="shop:cart:save" class="btn btn-success">Підтвердити замовлення</a>
                                 </div>
                             </div>
                         </div>
