@@ -110,10 +110,10 @@ span { cursor: default; }
 .form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
-  color: @buttonColorHover;
+  color: @textColor;
   border: 1px solid @mainColor;
   border-radius: 1px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: @textForegroundColor;
 }
 select, select option {cursor: pointer;}
 
@@ -478,6 +478,13 @@ i.fa {cursor: pointer;}
 }
 
 .shop-cart-standalone {
+  .shop-cart-productlist {
+    border: 1px solid #e3e3e3;
+    .border-top-radius(5px);
+    .border-right-radius(5px);
+    .border-bottom-radius(5px);
+    .border-left-radius(5px);
+  }
   .wrapper {
     .shop-product-image-main {
       width: 40px;
@@ -497,14 +504,6 @@ i.fa {cursor: pointer;}
     .product-price {width: 60px;}
     .product-quantity {width: 30px;}
     .product-total {width: 80px;}
-  }
-  .cartInfo {
-    background-color: #f9f9f9;
-    padding: 10px;
-    .border-top-radius(5px);
-    .border-right-radius(5px);
-    .border-bottom-radius(5px);
-    .border-left-radius(5px);
   }
 }
 
