@@ -1,9 +1,11 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
+        {{#mpwsIsNotEmpty displayItems }}
         <div class="shop-component-catalog-filtering">
             <button class="btn btn-success btn-block shop-filter-cancel">Скасувати фільтр</button>
         </div>
+        {{/mpwsIsNotEmpty}}
 
         {{#mpwsIsNotEmpty extras.filter.filterOptionsAvailable.filter_categorySubCategories }}
         <div class="shop-component-catalog-filtering">
