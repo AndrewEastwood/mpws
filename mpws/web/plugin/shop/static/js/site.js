@@ -5,11 +5,13 @@ define("plugin/shop/js/site", [
     'default/js/lib/backbone',
     'default/js/lib/cache',
     'plugin/shop/js/view/menuSite',
+    'plugin/shop/js/model/wishList',
     'plugin/shop/js/model/cart',
     'plugin/shop/js/view/cartEmbedded'
-], function (Site, $, _, Backbone, Cache, MenuSite, ModelCart, CartEmbedded) {
+], function (Site, $, _, Backbone, Cache, MenuSite, ModelWishList, ModelCart, CartEmbedded) {
 
     var shoppingCartModel = new ModelCart();
+    var shoppingWishListModel = new ModelWishList();
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -20,6 +22,7 @@ define("plugin/shop/js/site", [
             "shop/product/:product": "shop_product",
             "shop/wizard": "shop_wizard",
             "shop/cart": "shop_cart",
+            "shop/wishlist": "shop_wishlist",
         },
 
         initialize: function () {
@@ -165,6 +168,33 @@ define("plugin/shop/js/site", [
 
                     // return view object to pass it into this function at next invocation
                     return cartStandalone;
+                });
+            });
+        },
+
+        shop_wishlist: function () {
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: null
+            });
+
+            require(['plugin/shop/js/view/wishListStandalone'], function (WishListStandalone) {
+                Cache.withObject('WishListStandalone', function (cachedView) {
+                    // remove previous view
+                    if (cachedView && cachedView.destroy)
+                        cachedView.destroy();
+
+                    // create new view
+                    var wishListStandalone = new WishListStandalone({
+                        model: shoppingWishListModel
+                    });
+                    Site.setPlaceholder('shoppingWishListStandalone', wishListStandalone.$el);
+                    wishListStandalone.fetchAndRender();
+
+                    // return view object to pass it into this function at next invocation
+                    return wishListStandalone;
                 });
             });
         }

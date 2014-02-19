@@ -72,20 +72,8 @@ class pluginShop extends objectPlugin {
             }
             // shopping cart
             // -----------------------------------------------
-            case "shop_cart_save" : {
-                $data = $this->_custom_api_shoppingCartSave();
-                break;
-            }
-            case "shop_cart_clear" : {
-                $data = $this->_custom_api_shoppingCartClear();
-                break;
-            }
-            case "shop_cart_manage" : {
-                $data = $this->_custom_api_shoppingCartManage($productID, $param);
-                break;
-            }
-            case "shop_cart_content" : {
-                $data = $this->_custom_api_shoppingCartContent();
+            case "shop_wishlist" : {
+                $data = $this->_custom_api_shoppingWishList();
                 break;
             }
             case "shop_cart" : {
@@ -433,6 +421,75 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
+    // shopping wishlist
+    // -----------------------------------------------
+    private function _custom_api_shoppingWishList () {
+        $cart = new libraryDataObject();
+        $productID = libraryRequest::getValue('productID');
+        $do = libraryRequest::getValue('cartAction');
+        $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
+
+        if (empty($do) || !in_array($do, $actions)) {
+            $cart->setError("Unknown action");
+            return $cart;
+        }
+
+        // adjust product id and quantity
+        $productID = intval($productID);
+
+        if (empty($productID) && $do == 'ADD') {
+            $cart->setError("ProductID is empty");
+            return $cart;
+        }
+
+        $cartProducts = isset($_SESSION['shopWishList']) ? $_SESSION['shopWishList'] : array();
+
+        // create/add product
+        if ($do == 'ADD') {
+            // create
+            if (!isset($cartProducts[$productID])) {
+                $productEntry = $this->_custom_api_getProductItem($productID);
+                if ($productEntry->hasError()) {
+                    $cart->setError($productEntry->getError());
+                    return $cart;
+                } else {
+                    $_tmp = $productEntry->getData();
+                    $cartProducts[$productID] = $_tmp['products'][$productID];
+                    $_SESSION['shopWishList'] = $cartProducts;
+                }
+            }
+
+            $cart->setData('products', $cartProducts);
+
+            return $cart;
+        }
+
+        // remove product
+        if ($do == 'REMOVE') {
+            if (isset($cartProducts[$productID]))
+                unset($cartProducts[$productID]);
+
+            $cart->setData('products', $cartProducts);
+            $_SESSION['shopWishList'] = $cartProducts;
+
+            return $cart;
+        }
+
+        // truncate shopping cart
+        if ($do == 'CLEAR' && $productQuantity) {
+            unset($_SESSION['shopWishList']);
+            $cart->setData('products', null);
+            return $cart;
+        }
+
+        // get shopping cart info
+        if ($do == 'INFO') {
+            $cart->setData('products', $cartProducts);
+            return $cart;
+        }
+
+    }
+
     // shopping cart
     // -----------------------------------------------
 
@@ -458,7 +515,6 @@ class pluginShop extends objectPlugin {
         }
 
         $cartProducts = isset($_SESSION['shopCartProducts']) ? $_SESSION['shopCartProducts'] : array();
-        $cartUser = isset($_SESSION['shopCartUser']) ? $_SESSION['shopCartUser'] : array();
 
         $_getInfoFn = function (&$_products) {
 
@@ -487,15 +543,6 @@ class pluginShop extends objectPlugin {
 
             return $cartInfo;
         };
-
-        // remove product
-        // if ($do == 'SET' && empty($productQuantity)) {
-        //     unset($cartProducts[$productID]);
-        //     $cart->setData('info', $_getInfoFn($cartProducts));
-        //     $cart->setData('products', $cartProducts);
-        //     $_SESSION['shopCartProducts'] = $cartProducts;
-        //     return $cart;
-        // }
 
         // create/add product
         if ($do == 'SET' && $productQuantity) {

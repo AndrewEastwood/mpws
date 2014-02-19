@@ -38,6 +38,7 @@ define("customer/js/site", [
         productListOverview: $('.MPWSPageBody .MPWSBlockCenter'),
         productEntryStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
         shoppingCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+        shoppingWishListStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
         shoppingCartEmbedded: $('.MPWSWidgetsTop'),
         shoppingCartCheckout: $('.MPWSPageBody .MPWSBlockCenter'),
         productListCatalog: $('.MPWSPageBody .MPWSBlockCenter')

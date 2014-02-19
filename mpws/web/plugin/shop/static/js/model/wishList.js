@@ -1,4 +1,4 @@
-define("plugin/shop/js/model/cart", [
+define("plugin/shop/js/model/wishList", [
     'default/js/lib/sandbox',
     'default/js/model/mModel',
     'plugin/shop/js/lib/utils'
@@ -15,27 +15,22 @@ define("plugin/shop/js/model/cart", [
             // debugger;
             this.updateUrlOptions({
                 source: 'shop',
-                fn: 'shop_cart',
+                fn: 'shop_wishlist',
                 cartAction: 'INFO'
             });
             MModel.prototype.initialize.call(this);
 
-            Sandbox.eventSubscribe('shop:cart:add', function (data) {
+            Sandbox.eventSubscribe('shop:wishlist:add', function (data) {
                 // debugger;
                 if (data && data.id)
-                    _self.productAdd(data.id, 1);
+                    _self.productAdd(data.id);
             });
-            Sandbox.eventSubscribe('shop:cart:sub', function (data) {
-                // debugger;
-                if (data && data.id)
-                    _self.productAdd(data.id, -1);
-            });
-            Sandbox.eventSubscribe('shop:cart:remove', function (data) {
+            Sandbox.eventSubscribe('shop:wishlist:remove', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productRemove(data.id);
             });
-            Sandbox.eventSubscribe('shop:cart:clear', function () {
+            Sandbox.eventSubscribe('shop:wishlist:clear', function () {
                 // debugger;
                 _self.clearAll();
             });
@@ -61,11 +56,10 @@ define("plugin/shop/js/model/cart", [
             });
             this.fetch();
         },
-        productAdd: function (productID, productQuantity) {
+        productAdd: function (productID) {
             this.updateUrlOptions({
-                cartAction: 'SET',
-                productID: productID,
-                productQuantity: productQuantity
+                cartAction: 'ADD',
+                productID: productID
             });
             this.fetch();
         },
@@ -75,15 +69,6 @@ define("plugin/shop/js/model/cart", [
                 productID: productID
             });
             this.fetch();
-        },
-        checkout: function (userData) {
-            this.updateUrlOptions({
-                cartAction: 'SAVE'
-            });
-
-            $.post(this.url, userData, function(){
-                debugger;
-            });
         }
     });
 

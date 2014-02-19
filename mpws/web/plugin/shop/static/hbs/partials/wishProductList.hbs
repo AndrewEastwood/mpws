@@ -1,0 +1,22 @@
+<div class="shop-wish-productlist">
+{{#each products }}
+    <div class="wrapper">
+        <a href="javascript://" class="shop-product-remove" data-action="shop:wishlist:remove" data-id="{{ID}}">
+            <i class="fa fa-trash-o"></i>
+        </a>
+        |
+        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:add" data-id="{{ID}}">
+            <i class="fa fa-shopping-cart"></i>
+        </a>
+        <div class="shop-product-image shop-product-image-main">
+            <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
+                <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
+            </a>
+        </div>
+        <div class="product-row">
+            <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
+            <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
+        </div>
+    </div>
+{{/each}}
+</div>
