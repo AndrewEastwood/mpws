@@ -428,151 +428,35 @@ class pluginShop extends objectPlugin {
     // shopping wishlist
     // -----------------------------------------------
     private function _custom_api_shoppingWishList () {
-        $cart = new libraryDataObject();
-        $productID = libraryRequest::getValue('productID');
-        $do = libraryRequest::getValue('action');
-        $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
-
-        if (empty($do) || !in_array($do, $actions)) {
-            $cart->setError("Unknown action");
-            return $cart;
-        }
-
-        // adjust product id and quantity
-        $productID = intval($productID);
-
-        if (empty($productID) && $do == 'ADD') {
-            $cart->setError("ProductID is empty");
-            return $cart;
-        }
-
-        $products = isset($_SESSION['shopWishList']) ? $_SESSION['shopWishList'] : array();
-
-        // create/add product
-        if ($do == 'ADD') {
-            // create
-            if (!isset($products[$productID])) {
-                $productEntry = $this->_custom_api_getProductItem($productID);
-                if ($productEntry->hasError()) {
-                    $cart->setError($productEntry->getError());
-                    return $cart;
-                } else {
-                    $_tmp = $productEntry->getData();
-                    $products[$productID] = $_tmp['products'][$productID];
-                    $_SESSION['shopWishList'] = $products;
-                }
-            }
-
-            $cart->setData('products', $products);
-
-            return $cart;
-        }
-
-        // remove product
-        if ($do == 'REMOVE') {
-            if (isset($products[$productID]))
-                unset($products[$productID]);
-
-            $cart->setData('products', $products);
-            $_SESSION['shopWishList'] = $products;
-
-            return $cart;
-        }
-
-        // truncate shopping cart
-        if ($do == 'CLEAR') {
-            unset($_SESSION['shopWishList']);
-            $cart->setData('products', null);
-            return $cart;
-        }
-
-        // get shopping cart info
-        if ($do == 'INFO') {
-            $cart->setData('products', $products);
-            return $cart;
-        }
-
+        return $this->_custom_util_manageStoredProducts('shopWishList', array('ADD', 'REMOVE', 'CLEAR', 'INFO'));
     }
 
     // shopping products compare
     // -----------------------------------------------
     private function _custom_api_productsCompare () {
-        $cart = new libraryDataObject();
         $productID = libraryRequest::getValue('productID');
-        $do = libraryRequest::getValue('action');
-        $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
+        $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare', array('ADD', 'REMOVE', 'CLEAR', 'INFO'));
 
-        if (empty($do) || !in_array($do, $actions)) {
-            $cart->setError("Unknown action");
-            return $cart;
+        $products = $dataObj->getData();
+
+        if (count($products['products']) > 10) {
+            unset($products['products'][$productID]);
+            $dataObj->setError("MaxProductsAdded");
+            $dataObj->setData('products', $products);
         }
 
-        // adjust product id and quantity
-        $productID = intval($productID);
-
-        if (empty($productID) && $do == 'ADD') {
-            $cart->setError("ProductID is empty");
-            return $cart;
-        }
-
-        $products = isset($_SESSION['shopProductsCompare']) ? $_SESSION['shopProductsCompare'] : array();
-
-        // create/add product
-        if ($do == 'ADD') {
-
-            if (count($products) >= 6) {
-                $cart->setData('products', $products);
-                $cart->setError("MaxProductsAdded");
-                return $cart;
-            }
-
-            // create
-            if (!isset($products[$productID])) {
-                $productEntry = $this->_custom_api_getProductItem($productID);
-                if ($productEntry->hasError()) {
-                    $cart->setError($productEntry->getError());
-                    return $cart;
-                } else {
-                    $_tmp = $productEntry->getData();
-                    $products[$productID] = $_tmp['products'][$productID];
-                    $_SESSION['shopProductsCompare'] = $products;
-                }
-            }
-
-            $cart->setData('products', $products);
-
-            return $cart;
-        }
-
-        // remove product
-        if ($do == 'REMOVE') {
-            if (isset($products[$productID]))
-                unset($products[$productID]);
-
-            $cart->setData('products', $products);
-            $_SESSION['shopProductsCompare'] = $products;
-
-            return $cart;
-        }
-
-        // truncate shopping cart
-        if ($do == 'CLEAR') {
-            unset($_SESSION['shopProductsCompare']);
-            $cart->setData('products', null);
-            return $cart;
-        }
-
-        // get shopping cart info
-        if ($do == 'INFO') {
-            $cart->setData('products', $products);
-            return $cart;
-        }
-
+        return $dataObj;
     }
 
     // shopping cart
     // -----------------------------------------------
     private function _custom_api_shoppingCart () {
+
+        // $productID = libraryRequest::getValue('productID');
+
+
+        // return $this->_custom_util_manageStoredProducts('shopWishList', array('ADD', 'REMOVE', 'CLEAR', 'INFO'));
+        
         $cart = new libraryDataObject();
         $productID = libraryRequest::getValue('productID');
         $productQuantity = libraryRequest::getValue('productQuantity');
@@ -748,6 +632,72 @@ class pluginShop extends objectPlugin {
 
         // var_dump($productsMap);
         return $productsMap;
+    }
+
+    private function _custom_util_manageStoredProducts ($sessionKey, $actions) {
+        $cart = new libraryDataObject();
+        $productID = libraryRequest::getValue('productID');
+        $do = libraryRequest::getValue('action');
+        // $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
+
+        if (empty($do) || !in_array($do, $actions)) {
+            $cart->setError("UnknownAction");
+            return $cart;
+        }
+
+        // adjust product id and quantity
+        $productID = intval($productID);
+
+        if (empty($productID) && $do == 'ADD') {
+            $cart->setError("EmptyProductID");
+            return $cart;
+        }
+
+        $products = isset($_SESSION[$sessionKey]) ? $_SESSION[$sessionKey] : array();
+
+        // create/add product
+        if ($do == 'ADD') {
+            // create
+            if (!isset($products[$productID])) {
+                $productEntry = $this->_custom_api_getProductItem($productID);
+                if ($productEntry->hasError()) {
+                    $cart->setError($productEntry->getError());
+                    return $cart;
+                } else {
+                    $_tmp = $productEntry->getData();
+                    $products[$productID] = $_tmp['products'][$productID];
+                    $_SESSION[$sessionKey] = $products;
+                }
+            }
+
+            $cart->setData('products', $products);
+
+            return $cart;
+        }
+
+        // remove product
+        if ($do == 'REMOVE') {
+            if (isset($products[$productID]))
+                unset($products[$productID]);
+
+            $cart->setData('products', $products);
+            $_SESSION[$sessionKey] = $products;
+
+            return $cart;
+        }
+
+        // truncate shopping cart
+        if ($do == 'CLEAR') {
+            unset($_SESSION[$sessionKey]);
+            $cart->setData('products', null);
+            return $cart;
+        }
+
+        // get shopping cart info
+        if ($do == 'INFO') {
+            $cart->setData('products', $products);
+            return $cart;
+        }
     }
 
     // product list base

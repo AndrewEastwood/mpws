@@ -49,7 +49,7 @@ define("plugin/shop/js/model/productsCompare", [
                     BootstrapDialog.show({
                         type: BootstrapDialog.TYPE_WARNING,
                         title: 'Помилка',
-                        message: "Ви можете порівнювати максимум 6 товарів."
+                        message: "Ви можете порівнювати максимум 10 товарів."
                     });
             }
 
