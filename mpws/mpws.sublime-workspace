@@ -4,6 +4,86 @@
 		"selected_items":
 		[
 			[
+				"min",
+				"min-height"
+			],
+			[
+				"max",
+				"max-height"
+			],
+			[
+				"js",
+				"json"
+			],
+			[
+				"gl",
+				"glRaw"
+			],
+			[
+				"car",
+				"cartAction"
+			],
+			[
+				"ma",
+				"margin-top"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"pad",
+				"padding"
+			],
+			[
+				"tex",
+				"text-decoration"
+			],
+			[
+				"it",
+				"italic"
+			],
+			[
+				"bl",
+				"block"
+			],
+			[
+				"cart",
+				"cartEmbedded"
+			],
+			[
+				"re",
+				"relative"
+			],
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"in",
+				"inline-block"
+			],
+			[
+				"w",
+				"width"
+			],
+			[
+				"te",
+				"text-align"
+			],
+			[
+				"prod",
+				"productCount"
+			],
+			[
+				"prduct",
+				"productQuantity"
+			],
+			[
+				"pr",
+				"productID"
+			],
+			[
 				"fun",
 				"fun	Function"
 			],
@@ -38,10 +118,6 @@
 			[
 				"cu",
 				"cursor"
-			],
-			[
-				"ma",
-				"margin-left"
 			],
 			[
 				"var",
@@ -100,35 +176,10 @@
 	"buffers":
 	[
 		{
-			"file": "web/plugin/shop/static/js/collection/listProductCatalog.js",
-			"settings":
-			{
-				"buffer_size": 4100,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/hbs/productCatalog.hbs",
-			"settings":
-			{
-				"buffer_size": 8524,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/js/view/listProductCatalog.js",
-			"settings":
-			{
-				"buffer_size": 5543,
-				"line_ending": "Unix",
-				"name": "listProductCatalog.js"
-			}
-		},
-		{
 			"file": "web/plugin/shop/plugin.shop.php",
 			"settings":
 			{
-				"buffer_size": 31150,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
@@ -136,23 +187,15 @@
 			"file": "web/plugin/shop/static/js/site.js",
 			"settings":
 			{
-				"buffer_size": 4482,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/plugin/shop/config/configuration.DataSource.php",
+			"file": "web/plugin/shop/static/js/model/productsCompare.js",
 			"settings":
 			{
-				"buffer_size": 7858,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/old/2/productListCatalog.js",
-			"settings":
-			{
-				"buffer_size": 6887,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
@@ -160,50 +203,47 @@
 			"file": "web/customer/pb_com_ua/static/less/theme.less",
 			"settings":
 			{
-				"buffer_size": 9526,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/js/lib/cache.js",
+			"file": "web/plugin/shop/static/js/view/productItemFull.js",
 			"settings":
 			{
-				"buffer_size": 630,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/hbs/pagination.hbs",
+			"file": "web/default/atlantis/static/js/view/mView.js",
 			"settings":
 			{
-				"buffer_size": 272,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/js/lib/require.js",
+			"file": "web/default/atlantis/static/js/lib/backbone.js",
 			"settings":
 			{
-				"buffer_size": 82719,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "(function(){\n\n    var _globalConfig = JSON.parse(JSON.stringify(window.MPWS));\n\n    if (!_globalConfig.ISDEV)\n        delete window.MPWS;\n\n    window.app = {\n        config: _globalConfig\n    };\n\n    require.config({\n        locale: _globalConfig.LOCALE,\n        baseUrl: _globalConfig.PATH_STATIC_BASE,\n        // mpws: _globalConfig,\n        paths: {\n            // default paths\n            default: _globalConfig.URL_STATIC_DEFAULT,\n            // customer paths\n            customer: _globalConfig.URL_STATIC_CUSTOMER,\n            // plugin paths\n            plugin: _globalConfig.URL_STATIC_PLUGIN,\n            // version suppress\n            cmn_jquery: _globalConfig.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'\n        },\n        hbs: {\n            i18nDirectory: _globalConfig.URL_STATIC_DEFAULT + 'nls/'\n        },\n        global: {\n\n        },\n        waitSeconds: 15,\n        urlArgs: \"v=\" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)\n    });\n\n    var _filesToRequest = ['customer/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site')];\n\n    for (var key in _globalConfig.PLUGINS)\n        _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/site');\n        // debugger;\n    // start customer application\n    require(_filesToRequest, function () {\n        var _args = [].slice.call(arguments);\n        var _customerJs = _args[0];\n\n        // setup plugin routers\n        var pluginCount  = _args.length;\n        if (pluginCount > 1)\n            for (var i = 1; i < pluginCount; i++)\n                new _args[i](_customerJs);\n\n        // window.app.customer = _customerJs;\n\n        // start/init customer\n        _customerJs.start();\n\n        Backbone.history.start();  // Запускаем HTML5 History push\n    });\n\n})();",
-			"file": "web/default/atlantis/static/js/loader.js",
-			"file_size": 1790,
-			"file_write_time": 1392466963000000,
+			"file": "web/plugin/shop/static/hbs/wishListStandalone.hbs",
 			"settings":
 			{
-				"buffer_size": 1767,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "web/default/atlantis/static/js/plugin/i18n.js",
+			"file": "web/plugin/shop/static/hbs/productsCompare.hbs",
 			"settings":
 			{
-				"buffer_size": 8002,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		}
@@ -232,36 +272,86 @@
 	},
 	"file_history":
 	[
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/pagination.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/mpws.sublime-project",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productsCompare.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productsCompare.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemShort.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemFull.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCompare.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/less/theme.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/bootstrap-dialog.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap-dialog.less",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuSite.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/wishListStandalone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartEmbedded.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/menuCompare.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/wishList.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/cart.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/hbs/breadcrumb.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCart.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/compareProducts.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/compareProducts.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/compareProducts.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuWishList.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/menuCart.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/menuWishList.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/mView.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars_helpers.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/sandbox.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backbone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartStandalone.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listProductCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/partials/cartProductList.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/wishListStandalone.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/partials/wishProductList.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/jquery.cookie.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemFull.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartProductList.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productCatalog.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/jquery.sparkline.js",
+		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light_full.sql",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/mixins.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/selectboxCityUA.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/menuCatalog.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/menuCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/catalogStructureMenu.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/cache.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartEmbedded.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemShort.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/extend.string.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listProductCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listProductLatest.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listProductLatest.js",
+		"/devdata/Develop/github/web/mpws/schema/docs/dataSetup.md",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/layout.hbs",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataObject.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/old/2/shop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/old/2/productListCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/mpws.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/pagination.hbs",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/require.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/plugin/i18n.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars_helpers.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/css/theme.css",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listLatestProducts.js",
-		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/less/theme.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap-combobox.less",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productCatalog.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/catalogStructureMenu.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/lib/utils.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemShort.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/old/productListCatalog.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/collection/mCollection.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/old/template/component/shopProductListCatalog.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/old/2/productListCatalog.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/config/configuration.Site.php",
 		"/devdata/Develop/github/web/mpws/engine/system/object/object.Customer.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemFull.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/data.ini",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemFull.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listProductCatalog.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/catalogStructureMenu.hbs",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
-		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/hbs/breadcrumb.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/base.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/lightbox.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/lightbox.js",
@@ -274,8 +364,6 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/productItemBase.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listLatestProducts.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/listCatalogProducts.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/layout.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/font-awesome.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/glyphicons.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap.less",
@@ -284,15 +372,12 @@
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/less/theme.less",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/menu.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemShort.js",
 		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
 		"/devdata/Develop/github/web/mpws/engine/global/global.methods.php",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.Customer.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/customer.pb_com_ua.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pobutteh/customer.pobutteh.php",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/mpws.less",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/variables.less",
 		"/devdata/Develop/github/web/mpws/.gitignore",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/cView.js",
@@ -303,8 +388,6 @@
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/appCachedViews.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/utils.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/htmlComponents.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/extend.string.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/cache.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb.com.ua/static/hbs/breadcrumb.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/breadcrumb.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/dropdowns.less",
@@ -316,15 +399,7 @@
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/plugin/hbs.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/shopBreadcrumb.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/nls/en_us.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/coolPartial.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/i18nprecompile.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/handlebars.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/json2.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/core.js",
-		"/devdata/Develop/github/web/mpws/engine/controller/controller.api.php",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.Display.php",
-		"/devdata/Develop/github/web/mpws/mpws.sublime-project"
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us.js"
 	],
 	"find":
 	{
@@ -335,6 +410,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less"
 		]
 	},
 	"find_state":
@@ -342,6 +418,86 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"shop:compare:clear",
+			"$cartProducts",
+			"CartProducts",
+			"cartProducts",
+			"clear",
+			"WishListStandalone",
+			"wishListStandalone",
+			"WishListStandalone",
+			"wishListStandalone",
+			"WishListStandalone",
+			"wishListStandalone",
+			"WishListStandalone",
+			"wishListStandalone",
+			"WishList",
+			"_custom_api_productsCompare",
+			"Cart",
+			"cart",
+			"Cart",
+			"cartAction",
+			"cart",
+			"Cart",
+			"cartAction",
+			"cart",
+			"Cart",
+			"shopWishList",
+			", ",
+			"shopCartProducts",
+			"lazyLayout",
+			"self.model",
+			"self.model.attributes",
+			"_custom_api_shoppingCartSave",
+			".border",
+			"border-box",
+			"product-item-full",
+			"productQuantityAction",
+			"font-weight",
+			"border-top-radius",
+			"border-radius",
+			"border-rad",
+			"MenuCatalog",
+			"Кошик",
+			"CatalogStructureMenu",
+			"shopMenuItem",
+			"menuCatalog",
+			"opacity",
+			"text-sh",
+			"calss",
+			"view",
+			"debugger",
+			"ProductID",
+			"productAdd(ProductID",
+			"function (ProductID",
+			"this",
+			"this.productID",
+			"ProductID",
+			"productID",
+			"productItemFull",
+			"ProductItemFull",
+			"productItemFull",
+			"ProductItemFull",
+			"productItemFull",
+			"ProductItemFull",
+			"collection",
+			"success",
+			"td",
+			"/",
+			"unlink",
+			"shop:cart:add",
+			"productEntry",
+			"cartProducts",
+			"_custom_api_getProductItem",
+			"_custom_cartGetInfo",
+			"())",
+			", ",
+			"CatalogStructureMenu",
+			"modelCatalogStructureMenu",
+			"CatalogStructureMenu",
+			"badge label",
+			"nav-tabs",
+			".nav-tabs",
 			"define",
 			"hasOwn",
 			"registry",
@@ -389,62 +545,7 @@
 			"@{imgPath}",
 			"../img/",
 			"magnify",
-			"magnif",
-			"ProductAttributes",
-			"ProductItemBase",
-			"data",
-			"ProductItemBase",
-			"source.data.",
-			"ProductListLatest",
-			"ProductItem",
-			"listLatestProducts",
-			"ListLatestProducts",
-			"listLatestProducts",
-			"ListLatestProducts",
-			"_custom_api_getProductItem",
-			"_custom_api_getProductAttributes",
-			"_custom_api_getProductItem",
-			"shop_product_item_short",
-			"productItemShort",
-			"listCatalogProducts",
-			"glyphicon glyphicon",
-			"copy",
-			"files",
-			"files\\",
-			"fa fa",
-			"_self",
-			"{{",
-			"listLatestProducts",
-			" productItem",
-			";\n",
-			" listLatestProducts",
-			"listLatestProducts",
-			"MModel",
-			"this",
-			"this.",
-			"HtmlComponents.prototype",
-			"',\n",
-			"configProducts",
-			"jsapiShopCategorySubCategories",
-			"_custom_api_getCatalogStructure",
-			"this.customer.views.breadcrumb.render",
-			"views.breadcrumb.showLocation",
-			"breadcrumb.showLocation",
-			"return",
-			"_views.breadcrumb",
-			"PageNavigation",
-			"navigation",
-			"customerConfig",
-			"/",
-			"debugger",
-			"fetchOrGetCached",
-			"default/js/plugin/hbs",
-			"Handlebars",
-			"unnormalized",
-			"data",
-			".'",
-			"});",
-			"Handlebars.registerHelper"
+			"magnif"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -462,15 +563,43 @@
 	"groups":
 	[
 		{
-			"selected": 10,
+			"selected": 8,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "web/plugin/shop/static/js/collection/listProductCatalog.js",
+					"file": "web/plugin/shop/plugin.shop.php",
 					"settings":
 					{
-						"buffer_size": 4100,
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "web/plugin/shop/static/js/site.js",
+					"settings":
+					{
+						"buffer_size": 0,
 						"regions":
 						{
 						},
@@ -488,45 +617,17 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 42.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "web/plugin/shop/static/hbs/productCatalog.hbs",
-					"settings":
-					{
-						"buffer_size": 8524,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Handlebars/Handlebars.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3308.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "web/plugin/shop/static/js/view/listProductCatalog.js",
+					"file": "web/plugin/shop/static/js/model/productsCompare.js",
 					"settings":
 					{
-						"buffer_size": 5543,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
@@ -539,7 +640,6 @@
 						],
 						"settings":
 						{
-							"auto_name": "listProductCatalog.js",
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -552,122 +652,10 @@
 				},
 				{
 					"buffer": 3,
-					"file": "web/plugin/shop/plugin.shop.php",
-					"settings":
-					{
-						"buffer_size": 31150,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4648.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "web/plugin/shop/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 4482,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 715.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "web/plugin/shop/config/configuration.DataSource.php",
-					"settings":
-					{
-						"buffer_size": 7858,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3010.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "web/plugin/shop/old/2/productListCatalog.js",
-					"settings":
-					{
-						"buffer_size": 6887,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4538,
-								4538
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1821.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
 					"file": "web/customer/pb_com_ua/static/less/theme.less",
 					"settings":
 					{
-						"buffer_size": 9526,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
@@ -685,25 +673,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6488.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "web/default/atlantis/static/js/lib/cache.js",
+					"buffer": 4,
+					"file": "web/plugin/shop/static/js/view/productItemFull.js",
 					"settings":
 					{
-						"buffer_size": 630,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								442,
-								442
+								0,
+								0
 							]
 						],
 						"settings":
@@ -719,19 +707,75 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "web/default/atlantis/static/hbs/pagination.hbs",
+					"buffer": 5,
+					"file": "web/default/atlantis/static/js/view/mView.js",
 					"settings":
 					{
-						"buffer_size": 272,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								270,
-								270
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "web/default/atlantis/static/js/lib/backbone.js",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "web/plugin/shop/static/hbs/wishListStandalone.hbs",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -745,85 +789,29 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "web/default/atlantis/static/js/lib/require.js",
+					"buffer": 8,
+					"file": "web/plugin/shop/static/hbs/productsCompare.hbs",
 					"settings":
 					{
-						"buffer_size": 82719,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								79793,
-								79801
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 22848.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "web/default/atlantis/static/js/loader.js",
-					"settings":
-					{
-						"buffer_size": 1767,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								381,
-								381
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/Handlebars/Handlebars.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "web/default/atlantis/static/js/plugin/i18n.js",
-					"settings":
-					{
-						"buffer_size": 8002,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3974,
-								3974
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1224.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -873,8 +861,60 @@
 		"selected_items":
 		[
 			[
+				"bac",
+				"web/default/atlantis/static/js/lib/backbone.js"
+			],
+			[
+				"mview",
+				"web/default/atlantis/static/js/view/mView.js"
+			],
+			[
+				"theme",
+				"web/customer/pb_com_ua/static/less/theme.less"
+			],
+			[
+				"bre",
+				"web/customer/pb_com_ua/static/hbs/breadcrumb.hbs"
+			],
+			[
+				"mmodel",
+				"web/default/atlantis/static/js/model/mModel.js"
+			],
+			[
+				"sandbox",
+				"web/default/atlantis/static/js/lib/sandbox.js"
+			],
+			[
+				"basck",
+				"web/default/atlantis/static/js/lib/backbone.js"
+			],
+			[
+				"mmode",
+				"web/default/atlantis/static/js/model/mModel.js"
+			],
+			[
+				"cook",
+				"web/default/atlantis/static/js/lib/jquery.cookie.js"
+			],
+			[
+				"spark",
+				"web/default/atlantis/static/js/lib/jquery.sparkline.js"
+			],
+			[
+				"mixi",
+				"web/default/atlantis/static/less/mixins.less"
+			],
+			[
 				"cache",
 				"web/default/atlantis/static/js/lib/cache.js"
+			],
+			[
+				"backbone",
+				"web/default/atlantis/static/js/lib/backbone.js"
+			],
+			[
+				"librarydataobject",
+				"engine/system/library/library.DataObject.php"
 			],
 			[
 				"site",
@@ -893,16 +933,8 @@
 				"web/customer/pb_com_ua/static/less/theme.less"
 			],
 			[
-				"theme",
-				"web/customer/pb_com_ua/static/css/theme.css"
-			],
-			[
 				"helper",
 				"web/default/atlantis/static/js/lib/handlebars_helpers.js"
-			],
-			[
-				"mview",
-				"web/default/atlantis/static/js/view/mView.js"
 			],
 			[
 				"back",
@@ -923,10 +955,6 @@
 			[
 				"util",
 				"web/plugin/shop/static/js/lib/utils.js"
-			],
-			[
-				"mmode",
-				"web/default/atlantis/static/js/model/mModel.js"
 			],
 			[
 				"mm",
@@ -955,6 +983,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 310.0,
+	"side_bar_width": 341.0,
 	"status_bar_visible": true
 }

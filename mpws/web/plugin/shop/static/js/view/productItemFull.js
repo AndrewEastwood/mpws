@@ -19,7 +19,8 @@ define("plugin/shop/js/view/productItemFull", [
                 // show lense over product
                 this.$('.shop-product-image-main img').magnify();
                 // show price chart (powered by http://omnipotent.net/jquery.sparkline)
-                var _prices = this.model.get('Prices').filter(function(p) { return parseFloat(p); });
+                // debugger;
+                var _prices = (this.model.get('Prices') || []).filter(function(p) { return parseFloat(p); });
                 if (_prices.length)
                     this.$("#sparkline").sparkline(_prices, {
                         type: 'bar',

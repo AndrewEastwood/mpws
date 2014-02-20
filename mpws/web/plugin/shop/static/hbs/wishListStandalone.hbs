@@ -1,7 +1,19 @@
 <div class="col-md-12">
-    {{#if data.info.productCount }}
+    {{#mpwsIsNotEmpty data.products }}
+    <div class="well">
+        <div class="panel">
+            <a href="javascript://" data-action="shop:wishlist:clear" data-id="{{ID}}">
+                <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+            </a>
+        </div>
         {{>plugin_shop_hbs_partials_wishProductList data }}
+        <div class="panel">
+            <a href="javascript://" data-action="shop:wishlist:clear" data-id="{{ID}}">
+                <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+            </a>
+        </div>
+    </div>
     {{else}}
-        <div class="alert alert-warning">Ваш список товарів порожній</div>
-    {{/if}}
+    <div class="alert alert-warning">Ваш список товарів порожній</div>
+    {{/mpwsIsNotEmpty}}
 </div>

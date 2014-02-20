@@ -16,7 +16,7 @@ define("plugin/shop/js/model/cart", [
             this.updateUrlOptions({
                 source: 'shop',
                 fn: 'shop_cart',
-                cartAction: 'INFO'
+                action: 'INFO'
             });
             MModel.prototype.initialize.call(this);
 
@@ -39,6 +39,11 @@ define("plugin/shop/js/model/cart", [
                 // debugger;
                 _self.clearAll();
             });
+
+            this.on('change', function () {
+                Sandbox.eventNotify('shop:cart:info', _self.toJSON());
+            });
+
         },
         parse: function (data) {
             // debugger;
@@ -51,19 +56,19 @@ define("plugin/shop/js/model/cart", [
         },
         getInfo: function () {
             this.updateUrlOptions({
-                cartAction: 'INFO'
+                action: 'INFO'
             });
             this.fetch();
         },
         clearAll: function () {
             this.updateUrlOptions({
-                cartAction: 'CLEAR'
+                action: 'CLEAR'
             });
             this.fetch();
         },
         productAdd: function (productID, productQuantity) {
             this.updateUrlOptions({
-                cartAction: 'SET',
+                action: 'SET',
                 productID: productID,
                 productQuantity: productQuantity
             });
@@ -71,14 +76,14 @@ define("plugin/shop/js/model/cart", [
         },
         productRemove: function (productID) {
             this.updateUrlOptions({
-                cartAction: 'REMOVE',
+                action: 'REMOVE',
                 productID: productID
             });
             this.fetch();
         },
         checkout: function (userData) {
             this.updateUrlOptions({
-                cartAction: 'SAVE'
+                action: 'SAVE'
             });
 
             $.post(this.url, userData, function(){

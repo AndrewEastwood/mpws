@@ -5,13 +5,15 @@ define("plugin/shop/js/site", [
     'default/js/lib/backbone',
     'default/js/lib/cache',
     'plugin/shop/js/view/menuSite',
+    'plugin/shop/js/model/productsCompare',
     'plugin/shop/js/model/wishList',
     'plugin/shop/js/model/cart',
     'plugin/shop/js/view/cartEmbedded'
-], function (Site, $, _, Backbone, Cache, MenuSite, ModelWishList, ModelCart, CartEmbedded) {
+], function (Site, $, _, Backbone, Cache, MenuSite, ModelProductsCompare, ModelWishList, ModelCart, CartEmbedded) {
 
     var shoppingCartModel = new ModelCart();
     var shoppingWishListModel = new ModelWishList();
+    var productsCompareModel = new ModelProductsCompare();
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -23,6 +25,7 @@ define("plugin/shop/js/site", [
             "shop/wizard": "shop_wizard",
             "shop/cart": "shop_cart",
             "shop/wishlist": "shop_wishlist",
+            "shop/compare": "shop_compare",
         },
 
         initialize: function () {
@@ -55,7 +58,7 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var listProductLatest = new ListProductLatest();
-                    Site.setPlaceholder('productListOverview', listProductLatest.el);
+                    Site.setPlaceholder('bodyCenter', listProductLatest.el);
                     listProductLatest.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation
@@ -85,7 +88,7 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var listProductCatalog = new ListProductCatalog();
-                    Site.setPlaceholder('productListCatalog', listProductCatalog.el);
+                    Site.setPlaceholder('bodyCenter', listProductCatalog.el);
 
                     listProductCatalog.fetchAndRender({
                         categoryID: categoryID
@@ -127,7 +130,7 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var productItemFull = new ProductItemFull();
-                    Site.setPlaceholder('productEntryStandalone', productItemFull.el);
+                    Site.setPlaceholder('bodyCenter', productItemFull.el);
 
                     productItemFull.fetchAndRender({
                         source: 'shop',
@@ -141,8 +144,31 @@ define("plugin/shop/js/site", [
             });
         },
 
-        shop_wizard: function () {
+        shop_compare: function () {
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: null
+            });
 
+            require(['plugin/shop/js/view/productsCompare'], function (ProductsCompare) {
+                Cache.withObject('ProductsCompare', function (cachedView) {
+                    // remove previous view
+                    if (cachedView && cachedView.destroy)
+                        cachedView.destroy();
+
+                    // create new view
+                    var productsCompare = new ProductsCompare({
+                        model: productsCompareModel
+                    });
+                    Site.setPlaceholder('bodyCenter', productsCompare.$el);
+                    productsCompare.fetchAndRender();
+
+                    // return view object to pass it into this function at next invocation
+                    return productsCompare;
+                });
+            });
         },
 
         shop_cart: function () {
@@ -163,7 +189,7 @@ define("plugin/shop/js/site", [
                     var cartStandalone = new CartStandalone({
                         model: shoppingCartModel
                     });
-                    Site.setPlaceholder('shoppingCartStandalone', cartStandalone.$el);
+                    Site.setPlaceholder('bodyCenter', cartStandalone.$el);
                     cartStandalone.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation
@@ -190,7 +216,7 @@ define("plugin/shop/js/site", [
                     var wishListStandalone = new WishListStandalone({
                         model: shoppingWishListModel
                     });
-                    Site.setPlaceholder('shoppingWishListStandalone', wishListStandalone.$el);
+                    Site.setPlaceholder('bodyCenter', wishListStandalone.$el);
                     wishListStandalone.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation

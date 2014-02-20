@@ -80,17 +80,14 @@
 
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
-                        <button class="btn btn-primary btn-xs" data-action="shop:cart:add" data-id="{{data.ID}}" data-title="+To Cart" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                            <i class="fa fa-shopping-cart"></i>
-                            + в кошик
+                        <button class="btn btn-success btn-xs" data-action="shop:cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-shopping-cart"></i> + в кошик
                         </button>
-                        <button class="btn btn-xs" data-action="shop:wishlist:add" data-id="{{data.ID}}" data-title="+To WishList" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                            <i class="fa fa-heart"></i>
-                            + в мій список
+                        <button class="btn btn-warning btn-xs" data-action="shop:wishlist:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-heart"></i> + в мій список
                         </button>
-                        <button class="btn btn-xs" data-id="{{data.ID}}" data-title="+To Compare" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                            <i class="fa fa-files-o"></i>
-                            порівняти
+                        <button class="btn btn-warning btn-xs" data-action="shop:compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-files-o"></i> порівняти
                         </button>
                     </div>
                 </li>

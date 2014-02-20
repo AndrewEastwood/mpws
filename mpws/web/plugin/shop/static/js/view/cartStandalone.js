@@ -11,7 +11,7 @@ define("plugin/shop/js/view/cartStandalone", [
     var CartEmbedded = MView.extend({
         // tagName: 'div',
         className: 'row shop-cart-standalone',
-        group: 'shop-cart-standalone-ID',
+        id: 'shop-cart-standalone-ID',
         template: tpl,
         initialize: function() {
             MView.prototype.initialize.call(this);

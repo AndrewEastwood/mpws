@@ -1,8 +1,9 @@
 define("default/js/model/mModel", [
+    'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/url'
-], function (_, Backbone, JSUrl) {
+], function (Sandbox, _, Backbone, JSUrl) {
 
     var MModel = Backbone.Model.extend({
 
@@ -49,7 +50,19 @@ define("default/js/model/mModel", [
 
         getExtras: function () {
             return this._extras;
-        }
+        },
+
+        // fetch: function (options) {
+        //     options = options || {};
+        //     var _success = options.success;
+        //     var _self = this;
+        //     options.success = function (model, resp, options) {
+        //         if (typeof _success === "function")
+        //             _success.call(_self, model, resp, options);
+        //         Sandbox.eventNotify('mmodel:dataReceived', {model: model, resp: resp, options: options});
+        //     }
+        //     return Backbone.Model.prototype.fetch.call(this, options);
+        // }
 
     });
 

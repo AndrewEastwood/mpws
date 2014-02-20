@@ -3,7 +3,8 @@ define("plugin/shop/js/view/menuSite", [
     'plugin/shop/js/view/menuCatalog',
     'plugin/shop/js/view/menuCart',
     'plugin/shop/js/view/menuWishList',
-], function (Site, MenuCatalog, MenuCart, MenuWishList) {
+    'plugin/shop/js/view/menuCompare',
+], function (Site, MenuCatalog, MenuCart, MenuWishList, MenuCompare) {
 
     // inject shop menu (category menu)
     var menuCatalog = new MenuCatalog();
@@ -17,11 +18,16 @@ define("plugin/shop/js/view/menuSite", [
     var menuWishList = new MenuWishList();
     menuWishList.render();
 
+    // inject shop menu (category menu)
+    var menuCompare = new MenuCompare();
+    menuCompare.render();
+
     return {
         render: function () {
             Site.addMenuItem(menuCatalog.$el);
             Site.addMenuItem(menuCart.$el);
             Site.addMenuItem(menuWishList.$el);
+            Site.addMenuItem(menuCompare.$el);
         }
     }
 

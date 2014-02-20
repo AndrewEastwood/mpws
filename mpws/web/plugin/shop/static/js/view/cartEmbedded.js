@@ -7,7 +7,7 @@ define("plugin/shop/js/view/cartEmbedded", [
     var CartEmbedded = MView.extend({
         // tagName: 'div',
         className: 'btn-group shop-cart-embedded',
-        group: 'shop-cart-embedded-ID',
+        id: 'shop-cart-embedded-ID',
         template: tpl,
         initialize: function() {
             MView.prototype.initialize.call(this);

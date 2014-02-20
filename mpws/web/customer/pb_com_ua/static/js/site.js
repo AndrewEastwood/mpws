@@ -35,6 +35,7 @@ define("customer/js/site", [
         footer: $('.MPWSPageFooter'),
         breadcrumb: $('.MPWSBreadcrumb'),
         menu: $('.MPWSPageHeader .MPWSBlockCenter'),
+        bodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
         productListOverview: $('.MPWSPageBody .MPWSBlockCenter'),
         productEntryStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
         shoppingCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),

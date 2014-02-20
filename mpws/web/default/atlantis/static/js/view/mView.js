@@ -34,6 +34,10 @@ define("default/js/view/mView", [
                     this.collection.fetch(_.extend({}, fetchOptions || {}, {
                         success: function () {
                             _self.render.call(_self);
+                        },
+                        error: function () {
+                            // _self.collection.reset();
+                            _self.render.call(_self);
                         }
                     }));
                 } else
@@ -49,6 +53,7 @@ define("default/js/view/mView", [
                             _self.render.call(_self);
                         },
                         error: function () {
+                            // _self.model.clear({silent: true});
                             _self.render.call(_self);
                         }
                     });

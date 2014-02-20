@@ -1,0 +1,106 @@
+<div class="col-md-12">
+    {{#mpwsIsNotEmpty data.products }}
+    <div class="well shop-compare-standalone">
+        <div class="panel">
+            <a href="javascript://" data-action="shop:compare:clear" data-id="{{ID}}">
+                <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+            </a>
+        </div>
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <td></td>
+                {{#each data.products }}
+                <td>
+                    <div class="panel">
+                        <a href="javascript://" class="shop-product-remove" data-action="shop:compare:remove" data-id="{{ID}}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:add" data-id="{{ID}}">
+                            <i class="fa fa-shopping-cart"></i>
+                        </a>
+                    </div>
+                </td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Фото</span></td>
+                {{#each data.products }}
+                <td>
+                    <div class="shop-component shop-product-images">
+                        <div class="shop-product-image shop-product-image-main">
+                            <a href="/#shop/product/{{ID}}" class="link">
+                                <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{Name}}" title="{{Name}}" />
+                            </a>
+                        </div>
+                    </div>
+                </td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Назва</span></td>
+                {{#each data.products }}
+                <td>{{OriginName}} - {{Name}}</td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Виробник</span></td>
+                {{#each data.products }}
+                <td>{{OriginName}}</td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Категорія</span></td>
+                {{#each data.products }}
+                <td>{{CategoryName}}</td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Ціна</span></td>
+                {{#each data.products }}
+                <td><span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span></td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Опис</span></td>
+                {{#each data.products }}
+                <td>{{Description}}</td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Характеристики</span></td>
+                {{#each data.products }}
+                <td>{{Description}}</td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td><span class="label label-default">Додаткові зображення</span></td>
+                {{#each data.products }}
+                <td>{{Description}}</td>
+                {{/each}}
+            </tr>
+            <tr>
+                <td> </td>
+                {{#each data.products }}
+                <td>
+                    <div class="panel">
+                        <a href="javascript://" class="shop-product-remove" data-action="shop:compare:remove" data-id="{{ID}}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:add" data-id="{{ID}}">
+                            <i class="fa fa-shopping-cart"></i>
+                        </a>
+                    </div>
+                </td>
+                {{/each}}
+            </tr>
+        </table>
+        <div class="panel">
+            <a href="javascript://" data-action="shop:compare:clear" data-id="{{ID}}">
+                <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+            </a>
+        </div>
+    </div>
+    {{else}}
+    <div class="alert alert-warning">Немає товарів до порівняння</div>
+    {{/mpwsIsNotEmpty}}
+</div>

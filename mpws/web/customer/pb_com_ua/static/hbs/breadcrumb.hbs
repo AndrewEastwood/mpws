@@ -34,6 +34,11 @@
     <li class="active">Оформлення</li>
     {{/compare}}
 
+    {{#compare app.location.fragment "==" "shop/compare" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Порівняння</li>
+    {{/compare}}
+
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
         {{#foreach data.shop.location}}
