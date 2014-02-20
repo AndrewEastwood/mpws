@@ -68,7 +68,7 @@ define("plugin/shop/js/model/cart", [
         },
         productAdd: function (productID, productQuantity) {
             this.updateUrlOptions({
-                action: 'SET',
+                action: 'ADD',
                 productID: productID,
                 productQuantity: productQuantity
             });

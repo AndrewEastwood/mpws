@@ -155,7 +155,7 @@ class pluginShop extends objectPlugin {
 
         $products = $this->getDataBase()->getData($configProducts);
 
-        $productsMap = $this->_custom_api_getProductAttributes($products);
+        $productsMap = $this->_custom_util_getProductAttributes($products);
 
         // update main data object
         $dataObj = new libraryDataObject();
@@ -379,7 +379,7 @@ class pluginShop extends objectPlugin {
 
         // var_dump($dataConfigProducts);
         // attach attributes
-        $productsMap = $this->_custom_api_getProductAttributes($dataProducts);
+        $productsMap = $this->_custom_util_getProductAttributes($dataProducts);
         // store data
         $dataObj->setData('products', $productsMap);
         $dataObj->setData('pagination', $_pagination);
@@ -412,7 +412,7 @@ class pluginShop extends objectPlugin {
             $config["condition"]["values"][] = $productID;
             $product = $this->getDataBase()->getData($config);
 
-            $productsMap = $this->_custom_api_getProductAttributes(array($product));
+            $productsMap = $this->_custom_util_getProductAttributes(array($product));
 
             $dataObj->setData('products', $productsMap);
 
@@ -428,14 +428,14 @@ class pluginShop extends objectPlugin {
     // shopping wishlist
     // -----------------------------------------------
     private function _custom_api_shoppingWishList () {
-        return $this->_custom_util_manageStoredProducts('shopWishList', array('ADD', 'REMOVE', 'CLEAR', 'INFO'));
+        return $this->_custom_util_manageStoredProducts('shopWishList');
     }
 
     // shopping products compare
     // -----------------------------------------------
     private function _custom_api_productsCompare () {
         $productID = libraryRequest::getValue('productID');
-        $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare', array('ADD', 'REMOVE', 'CLEAR', 'INFO'));
+        $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
 
         $products = $dataObj->getData();
 
@@ -452,32 +452,16 @@ class pluginShop extends objectPlugin {
     // -----------------------------------------------
     private function _custom_api_shoppingCart () {
 
-        // $productID = libraryRequest::getValue('productID');
-
-
-        // return $this->_custom_util_manageStoredProducts('shopWishList', array('ADD', 'REMOVE', 'CLEAR', 'INFO'));
-        
-        $cart = new libraryDataObject();
-        $productID = libraryRequest::getValue('productID');
-        $productQuantity = libraryRequest::getValue('productQuantity');
         $do = libraryRequest::getValue('action');
-        $actions = array('SET', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
+        $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts');
 
-        if (empty($do) || !in_array($do, $actions)) {
-            $cart->setError("Unknown action");
-            return $cart;
-        }
+        // var_dump($dataObj);
+
+        $productData = $dataObj->getData();
 
         // adjust product id and quantity
-        $productID = intval($productID);
-        $productQuantity = intval($productQuantity);
-
-        if (empty($productID) && $do == 'SET') {
-            $cart->setError("ProductID is empty");
-            return $cart;
-        }
-
-        $products = isset($_SESSION['shopCartProducts']) ? $_SESSION['shopCartProducts'] : array();
+        $productID = intval(libraryRequest::getValue('productID'));
+        $productQuantity = intval(libraryRequest::getValue('productQuantity'));
 
         $_getInfoFn = function (&$_products = array()) {
 
@@ -508,79 +492,38 @@ class pluginShop extends objectPlugin {
         };
 
         // create/add product
-        if ($do == 'SET' && $productQuantity) {
-            // create
-            if (!isset($products[$productID])) {
-                $productEntry = $this->_custom_api_getProductItem($productID);
-                if ($productEntry->hasError()) {
-                    $cart->setError($productEntry->getError());
-                    return $cart;
-                } else {
-                    $_tmp = $productEntry->getData();
-                    $products[$productID] = $_tmp['products'][$productID];
-                }
-                $products[$productID]['_quantity'] = 0;
-            }
-            // var_dump($products[$productID]['_quantity']);
-            $products[$productID]['_quantity'] += $productQuantity;
-            // var_dump($products[$productID]['_quantity']);
+        if ($do == 'ADD' && $productQuantity) {
+            if (empty($productData['products'][$productID]['_quantity']))
+                $productData['products'][$productID]['_quantity'] = 0;
+
+            $productData['products'][$productID]['_quantity'] += $productQuantity;
 
             // we keep product until REMOVE action is invoked
-            if ($products[$productID]['_quantity'] <= 0)
-                $products[$productID]['_quantity'] = 1;
+            if ($productData['products'][$productID]['_quantity'] <= 0)
+                $productData['products'][$productID]['_quantity'] = 1;
 
-            $cart->setData('info', $_getInfoFn($products));
-            $cart->setData('products', $products);
-            $_SESSION['shopCartProducts'] = $products;
-
-            return $cart;
-        }
-
-        // remove product
-        if ($do == 'REMOVE') {
-            if (isset($products[$productID]))
-                unset($products[$productID]);
-
-            $cart->setData('info', $_getInfoFn($products));
-            $cart->setData('products', $products);
-            $_SESSION['shopCartProducts'] = $products;
-
-            return $cart;
-        }
-
-        // truncate shopping cart
-        if ($do == 'CLEAR') {
-            unset($_SESSION['shopCartProducts']);
-            unset($_SESSION['shopCartUser']);
-            $cart->setData('info', $_getInfoFn());
-            $cart->setData('products', null);
-            return $cart;
-        }
-
-        // get shopping cart info
-        if ($do == 'INFO') {
-            $cart->setData('products', $products);
-            $cart->setData('info', $_getInfoFn($products));
-            return $cart;
+            $_SESSION['shopCartProducts'] = $productData['products'];
         }
 
         // get shopping cart info
         if ($do == 'SAVE') {
-            // var_dump($_POST);
-            $cartUser = libraryRequest::getPostValue('user');
-            $cart->setData('user', $cartUser);
-            $cart->setData('products', $products);
-            $cart->setData('info', $_getInfoFn($products));
 
-            $_SESSION['shopCartUser'] = $cartUser;
-            return $cart;
+            $cartUser = libraryRequest::getPostValue('user');
+
+            // $dataObj->setData('products', $productData['products']);
+            // $dataObj->setData('info', $_getInfoFn($productData));
+            // return $dataObj;
         }
 
+        $dataObj->setData('products', $productData['products']);
+        $dataObj->setData('info', $_getInfoFn($productData['products']));
+
+        return $dataObj;
     }
 
     // product additional data
     // @products - array with product(s)
-    private function _custom_api_getProductAttributes ($products) {
+    private function _custom_util_getProductAttributes ($products) {
         if (empty($products))
             return null;
         // list of product ids to fetch related attributes
@@ -634,23 +577,23 @@ class pluginShop extends objectPlugin {
         return $productsMap;
     }
 
-    private function _custom_util_manageStoredProducts ($sessionKey, $actions) {
-        $cart = new libraryDataObject();
+    private function _custom_util_manageStoredProducts ($sessionKey) {
+        $dataObj = new libraryDataObject();
         $productID = libraryRequest::getValue('productID');
         $do = libraryRequest::getValue('action');
-        // $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
+        $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
 
         if (empty($do) || !in_array($do, $actions)) {
-            $cart->setError("UnknownAction");
-            return $cart;
+            $dataObj->setError("UnknownAction");
+            return $dataObj;
         }
 
         // adjust product id and quantity
         $productID = intval($productID);
 
         if (empty($productID) && $do == 'ADD') {
-            $cart->setError("EmptyProductID");
-            return $cart;
+            $dataObj->setError("EmptyProductID");
+            return $dataObj;
         }
 
         $products = isset($_SESSION[$sessionKey]) ? $_SESSION[$sessionKey] : array();
@@ -661,8 +604,8 @@ class pluginShop extends objectPlugin {
             if (!isset($products[$productID])) {
                 $productEntry = $this->_custom_api_getProductItem($productID);
                 if ($productEntry->hasError()) {
-                    $cart->setError($productEntry->getError());
-                    return $cart;
+                    $dataObj->setError($productEntry->getError());
+                    return $dataObj;
                 } else {
                     $_tmp = $productEntry->getData();
                     $products[$productID] = $_tmp['products'][$productID];
@@ -670,9 +613,9 @@ class pluginShop extends objectPlugin {
                 }
             }
 
-            $cart->setData('products', $products);
+            $dataObj->setData('products', $products);
 
-            return $cart;
+            return $dataObj;
         }
 
         // remove product
@@ -680,23 +623,23 @@ class pluginShop extends objectPlugin {
             if (isset($products[$productID]))
                 unset($products[$productID]);
 
-            $cart->setData('products', $products);
+            $dataObj->setData('products', $products);
             $_SESSION[$sessionKey] = $products;
 
-            return $cart;
+            return $dataObj;
         }
 
         // truncate shopping cart
         if ($do == 'CLEAR') {
             unset($_SESSION[$sessionKey]);
-            $cart->setData('products', null);
-            return $cart;
+            $dataObj->setData('products', null);
+            return $dataObj;
         }
 
         // get shopping cart info
         if ($do == 'INFO') {
-            $cart->setData('products', $products);
-            return $cart;
+            $dataObj->setData('products', $products);
+            return $dataObj;
         }
     }
 
