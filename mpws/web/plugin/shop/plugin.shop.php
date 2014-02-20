@@ -595,7 +595,7 @@ class pluginShop extends objectPlugin {
 
         $products = isset($_SESSION['shopCartProducts']) ? $_SESSION['shopCartProducts'] : array();
 
-        $_getInfoFn = function (&$_products) {
+        $_getInfoFn = function (&$_products = array()) {
 
             // get cartInfo
             $cartInfo = array(
@@ -665,10 +665,10 @@ class pluginShop extends objectPlugin {
         }
 
         // truncate shopping cart
-        if ($do == 'CLEAR' && $productQuantity) {
+        if ($do == 'CLEAR') {
             unset($_SESSION['shopCartProducts']);
             unset($_SESSION['shopCartUser']);
-            $cart->setData('info', $_getInfoFn(null));
+            $cart->setData('info', $_getInfoFn());
             $cart->setData('products', null);
             return $cart;
         }

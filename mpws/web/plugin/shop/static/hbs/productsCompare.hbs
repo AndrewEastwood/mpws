@@ -1,11 +1,13 @@
 <div class="col-md-12">
     {{#mpwsIsNotEmpty data.products }}
-    <div class="well shop-compare-standalone">
-        <div class="panel">
+    <div class="well">
+        <div class="actions">
             <a href="javascript://" data-action="shop:compare:clear" data-id="{{ID}}">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>
         </div>
+    </div>
+    <div class="well">
         <table class="table table-condensed table-responsive">
             <tr>
                 <td></td>
@@ -94,7 +96,9 @@
                 {{/each}}
             </tr>
         </table>
-        <div class="panel">
+    </div>
+    <div class="well">
+        <div class="actions">
             <a href="javascript://" data-action="shop:compare:clear" data-id="{{ID}}">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>

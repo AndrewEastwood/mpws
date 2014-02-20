@@ -44,6 +44,7 @@ define("plugin/shop/js/model/productsCompare", [
         },
         parse: function (data) {
             if (data && data.shop && data.shop.error) {
+                debugger;
                 if (data.shop.error === "MaxProductsAdded")
                     BootstrapDialog.show({
                         type: BootstrapDialog.TYPE_WARNING,

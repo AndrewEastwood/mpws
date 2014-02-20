@@ -1,13 +1,17 @@
 <div class="col-md-12">
     {{#mpwsIsNotEmpty data.products }}
     <div class="well">
-        <div class="panel">
+        <div class="actions">
             <a href="javascript://" data-action="shop:wishlist:clear" data-id="{{ID}}">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>
         </div>
+    </div>
+    <div class="well">
         {{>plugin_shop_hbs_partials_wishProductList data }}
-        <div class="panel">
+    </div>
+    <div class="well">
+        <div class="actions">
             <a href="javascript://" data-action="shop:wishlist:clear" data-id="{{ID}}">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>

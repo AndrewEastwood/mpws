@@ -20,7 +20,7 @@ define("plugin/shop/js/view/cartStandalone", [
 
             // save user info
             var _userInfoChanged = _.debounce(function () {
-                $.cookie("shopUser", self.collectUserInfo());
+                $.cookie("shopUser", self.collectUserInfo.call(self));
             }, 100);
             this.$el.on('keypress', 'input[type="text"],textarea', _userInfoChanged);
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
@@ -49,7 +49,7 @@ define("plugin/shop/js/view/cartStandalone", [
         collectUserInfo: function () {
             // collect user info
             var _userInfo = {};
-            self.$('input,textarea,select').each(function(){
+            this.$('input,textarea,select').each(function(){
                 if (!/^shopCart/.test($(this).attr('name')))
                     return;
                 if ($(this).is(':checkbox'))

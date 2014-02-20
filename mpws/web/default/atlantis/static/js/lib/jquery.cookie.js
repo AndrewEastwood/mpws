@@ -1,8 +1,3 @@
-define("default/js/lib/jquery.cookie", [
-    'cmn_jquery'
-    /* component implementation */
-], function ($) {
-
 /*!
  * jQuery Cookie Plugin v1.4.0
  * https://github.com/carhartl/jquery-cookie
@@ -11,13 +6,13 @@ define("default/js/lib/jquery.cookie", [
  * Released under the MIT license
  */
 (function (factory) {
-	// if (typeof define === 'function' && define.amd) {
-	// 	// AMD. Register as anonymous module.
-	// 	define(['jquery'], factory);
-	// } else {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as anonymous module.
+		define("default/js/lib/jquery.cookie", ['cmn_jquery'], factory);
+	} else {
 		// Browser globals.
 		factory(jQuery);
-	// }
+	}
 }(function ($) {
 
 	var pluses = /\+/g;
@@ -117,5 +112,3 @@ define("default/js/lib/jquery.cookie", [
 	};
 
 }));
-
-});
