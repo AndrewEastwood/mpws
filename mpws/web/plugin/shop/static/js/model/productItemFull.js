@@ -3,6 +3,7 @@ define('plugin/shop/js/model/productItemFull', [
     'plugin/shop/js/lib/utils'
 ], function (ProductItemBase, Utils) {
 
+    var Model = MModel.getNew();
     var ProductItemFull = ProductItemBase.extend({
         parse: function (data) {
             var products = Utils.adjustProductEntry(data && data.shop || {});

@@ -4,22 +4,21 @@ define("plugin/shop/js/model/wishList", [
     'plugin/shop/js/lib/utils'
 ], function (Sandbox, MModel, ShopUtils) {
 
-    var WishList = MModel.extend({
+    var Model = MModel.getNew();
+
+    var WishList = Model.extend({
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
         //     'shop:WishList:add': 'productAdd'
         // },
+        source: 'shop',
+        fn: 'shop_wishlist',
         initialize: function () {
             // MModel.prototype.initialize.call(this);
 
             var _self = this;
             // debugger;
-            this.updateUrlOptions({
-                source: 'shop',
-                fn: 'shop_wishlist',
-                action: 'INFO'
-            });
             // MModel.prototype.initialize.call(this);
 
             Sandbox.eventSubscribe('shop:wishlist:add', function (data) {
@@ -39,6 +38,10 @@ define("plugin/shop/js/model/wishList", [
 
             this.on('change', function () {
                 Sandbox.eventNotify('shop:wishlist:info', _self.toJSON());
+            });
+
+            this.updateUrlOptions({
+                action: 'INFO'
             });
 
             this.fetch();

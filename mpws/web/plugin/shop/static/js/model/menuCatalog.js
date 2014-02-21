@@ -3,15 +3,11 @@ define("plugin/shop/js/model/menuCatalog", [
     'default/js/lib/utils'
 ], function (MModel, Utils) {
 
+    var Model = MModel.getNew();
     // debugger;
-    var CatalogStructure = MModel.extend({
-        initialize: function () {
-            // MModel.prototype.sinitialize.call(this);
-            this.updateUrlOptions({
-                source: 'shop',
-                fn: 'shop_catalog_structure'
-            });
-        },
+    var CatalogStructure = Model.extend({
+        source: 'shop',
+        fn: 'shop_catalog_structure',
         parse: function (data) {
             return Utils.getTreeByJson(data && data.shop && data.shop.categories, 'ID', 'ParentID');
         }

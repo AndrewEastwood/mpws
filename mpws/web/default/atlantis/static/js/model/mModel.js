@@ -6,12 +6,8 @@ define("default/js/model/mModel", [
 ], function (Sandbox, _, Backbone, JSUrl) {
 
     return {
-        extend: function (child) {
-            var MModel = Backbone.Model.extend({
-
-                getBase: function () {
-                    return MModel.prototype;
-                },
+        getNew: function () {
+            return Backbone.Model.extend({
 
                 extras: {},
                 // required parameters
@@ -90,13 +86,6 @@ define("default/js/model/mModel", [
 
             });
 
-            // debugger;
-            // var MModel = Backbone.Model.extend(_.extend({}, _mmodeObj));
-
-            if (_.isObject(child))
-                return MModel.extend(child);
-
-            return MModel;
         }
 
     }

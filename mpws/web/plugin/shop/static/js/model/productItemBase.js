@@ -3,7 +3,7 @@ define('plugin/shop/js/model/productItemBase', [
 ], function (MModel) {
 
     // debugger;
-    var ProductItemBase = MModel.extend();
+    var ProductItemBase = MModel.getNew();
 
     return ProductItemBase;
 

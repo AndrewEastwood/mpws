@@ -4,14 +4,16 @@ define("plugin/shop/js/model/cart", [
     'plugin/shop/js/lib/utils'
 ], function (Sandbox, MModel, ShopUtils) {
 
-    var Cart = MModel.extend({
+    var Model = MModel.getNewModel();
+
+    var Cart = Model.extend({
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
         //     'shop:cart:add': 'productAdd'
         // },
         initialize: function () {
-            this.getBase().initialize.call(this);
+            Model.prototype.initialize.call(this);
 
             var _self = this;
             // debugger;
