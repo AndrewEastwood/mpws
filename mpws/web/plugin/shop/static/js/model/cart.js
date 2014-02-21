@@ -11,6 +11,8 @@ define("plugin/shop/js/model/cart", [
         //     'shop:cart:add': 'productAdd'
         // },
         initialize: function () {
+            this.getBase().initialize.call(this);
+
             var _self = this;
             // debugger;
             this.updateUrlOptions({
@@ -18,7 +20,6 @@ define("plugin/shop/js/model/cart", [
                 fn: 'shop_cart',
                 action: 'INFO'
             });
-            MModel.prototype.initialize.call(this);
 
             Sandbox.eventSubscribe('shop:cart:add', function (data) {
                 // debugger;
@@ -41,6 +42,7 @@ define("plugin/shop/js/model/cart", [
             });
 
             this.on('change', function () {
+                _self.resetUrlOptions();
                 Sandbox.eventNotify('shop:cart:info', _self.toJSON());
             });
 

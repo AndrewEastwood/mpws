@@ -57,6 +57,7 @@ define("default/js/view/mView", [
                             _self.render.call(_self);
                         }
                     });
+                    this.model.resetUrlOptions();
                 } else
                     this.render.call(_self);
             } else

@@ -5,6 +5,7 @@ class configurationDefaultDataSource extends objectConfiguration {
     static function jsapiGetDataSourceConfig($configExtend = null) {
         $configDefault = array(
             "source" => "",
+            "action" => "select",
             "procedure" => array(
                 "name" => "",
                 "parameters" => array()
@@ -69,6 +70,57 @@ class configurationDefaultDataSource extends objectConfiguration {
         return self::extendConfigs($configDefault, $configExtend, true);
     }
 
+    static function jsapiGetAccount () {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "fields" => array("*"),
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiAddAccount () {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "action" => "insert"
+        ));
+    }
+
+    static function jsapiUpdateAccount () {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "action" => "update",
+            "fields" => array("*"),
+            "limit" => 1,
+            "condition" => array(
+                "filter" => "ID (=) ?",
+                "values" => array()
+            ),
+            "data" => array(
+                "fields" => array('Status'),
+                "values" => array('REMOVED')
+            )
+        ));
+    }
+
+    static function jsapiRemoveAccount () {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "action" => "update",
+            "fields" => array("*"),
+            "limit" => 1,
+            "condition" => array(
+                "filter" => "ID (=) ?",
+                "values" => array()
+            ),
+            "data" => array(
+                "fields" => array('Status'),
+                "values" => array('REMOVED')
+            )
+        ));
+    }
 
 }
 

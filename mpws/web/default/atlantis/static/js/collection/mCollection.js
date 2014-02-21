@@ -19,15 +19,19 @@ define("default/js/collection/mCollection", [
         },
 
         updateUrlOptions: function (options) {
-            this._urlOptions = _.extend({}, this._urlOptions, options);
+            var self = this;
+
+            // debugger;
+            _(this._urlOptions).each(function (defaultValue, key) {
+                self._urlOptions[key] = options[key] || defaultValue;
+            });
+
+            // debugger;
+            var _urlData = _.extend({}, this._urlOptions, options);
 
             var _url = new JSUrl(app.config.URL_API);
 
-            _(this._urlOptions).each(function (v, k) {
-                _url.query[k] = !!v ? v : "";
-            });
-
-            _(this._urlData).each(function (v, k) {
+            _(_urlData).each(function (v, k) {
                 _url.query[k] = !!v ? v : "";
             });
 

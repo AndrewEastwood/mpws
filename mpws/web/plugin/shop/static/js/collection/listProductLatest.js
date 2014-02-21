@@ -9,6 +9,7 @@ define('plugin/shop/js/collection/listProductLatest', [
     var ListProductLatest = MCollection.extend({
         model: ProductItemBase,
         initialize: function () {
+            MCollection.prototype.initialize.call(this);
             // debugger;
             this.updateUrlOptions({
                 source: 'shop',

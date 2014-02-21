@@ -8,8 +8,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "action" => "select",
             "source" => "shop_products",
             "condition" => array(
-                "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_products.ID (=) ?",
-                "values" => array("AVAILABLE", 1)
+                "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
+                "values" => array("ACTIVE")
             ),
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated"),
             "offset" => 0,
@@ -20,7 +20,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                     "fields" => array(
                         "CategoryName" => "Name",
                         "CategoryDescription" => "Description",
-                        "CategoryEnable" => "Enabled"
+                        "CategoryStatus" => "Status"
                     )
                 ),
                 "shop_origins" => array(
@@ -28,7 +28,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                     "fields" => array(
                         "OriginName" => "Name",
                         "OriginDescription" => "Description",
-                        "OriginEnable" => "Enabled"
+                        "OriginStatus" => "Status"
                     )
                 )
             ),
@@ -44,8 +44,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
         $config = self::jsapiProductItem();
         unset($config['options']);
         $config['condition'] = array(
-            "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ?",
-            "values" => array("AVAILABLE", 1, 1, 1)
+            "filter" => "shop_products.Status (=) ? + shop_categories.Status (=) ? + shop_origins.Status (=) ?",
+            "values" => array("ACTIVE", "ACTIVE", "ACTIVE")
         );
         $config['limit'] = 64;
         return $config;
@@ -66,7 +66,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
     // Product category (catalog)
     static function jsapiProductListCategory () {
         $config = self::jsapiProductList();
-        $config['condition']["filter"] = "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_categories.Enabled (=) ? + shop_origins.Enabled (=) ? + shop_products.CategoryID (IN) ?";
+        $config['condition']["filter"] = "shop_products.Status (=) ? + shop_categories.Status (=) ? + shop_origins.Status (=) ? + shop_products.CategoryID (IN) ?";
         // var_dump($config);
         return $config;
     }
@@ -127,8 +127,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                 "@GROUP_CONCAT(Attribute SEPARATOR \"#EXPLODE#\") AS `Attributes`",
                 "@GROUP_CONCAT(Value SEPARATOR \"#EXPLODE#\") AS `Values`"
             ),
-            "offset" => "0",
-            "limit" => "10",
+            "offset" => 0,
+            "limit" => 10,
             "group" => "ProductID",
             "options" => array(
                 "combineDataByKeys" => array(
@@ -158,8 +158,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                 "ProductID",
                 "@GROUP_CONCAT(DISTINCT Price ORDER BY DateCreated ASC SEPARATOR \"#EXPLODE#\") AS PriceArchive"
             ),
-            "offset" => "0",
-            "limit" => "10",
+            "offset" => 0,
+            "limit" => 10,
             "group" => "ProductID",
             "order" => array(
                 "field" => "shop_productPrices.DateCreated",
@@ -178,12 +178,12 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "action" => "select",
             "source" => "shop_products",
             "condition" => array(
-                "filter" => "shop_products.Status (=) ? + shop_products.Enabled (=) ? + shop_products.ID (=) ?",
-                "values" => array("AVAILABLE", 1)
+                "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
+                "values" => array("AVAILABLE")
             ),
             "fields" => array("CategoryID", "Name"),
-            "offset" => "0",
-            "limit" => "1",
+            "offset" => 0,
+            "limit" => 1,
             "options" => array(
                 "expandSingleRecord" => true
             )
@@ -209,10 +209,10 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(
-                "filter" => "Enabled (=) ?",
-                "values" => array(1)
+                "filter" => "Status (=) ?",
+                "values" => array("ACTIVE")
             ),
-            "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Enabled"),
+            "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
     }
     // <<<< Shop catalog

@@ -136,6 +136,28 @@ class objectCustomer {
         // return false;
     }
 
+
+    public function getAccount () {
+        $config = configurationCustomerDataSource::jsapiGetAccount();
+        $categories = $this->getDataBase()->getData($config);
+
+        var_dump($categories);
+    }
+
+    public function activateAccount () {
+        
+    }
+
+    public function verifyAccount () {
+        
+    }
+
+    public function removeAccount () {
+        
+    }
+
+
+
 }
 
 ?>

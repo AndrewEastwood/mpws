@@ -4,15 +4,8 @@ define("default/js/model/breadcrumb", [
     // 'default/js/lib/url'
 ], function (MModel/*, _, JSUrl*/) {
 
-    var Breadcrumb = MModel;
-
-// .extend({
-//         initialize: function () {
-//             this.updateUrlOptions({
-                
-//             });
-//         }
-//     });
+    // debugger;
+    var Breadcrumb = MModel.extend({});
 
     return Breadcrumb;
 

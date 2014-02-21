@@ -11,6 +11,8 @@ define("plugin/shop/js/model/wishList", [
         //     'shop:WishList:add': 'productAdd'
         // },
         initialize: function () {
+            // MModel.prototype.initialize.call(this);
+
             var _self = this;
             // debugger;
             this.updateUrlOptions({
@@ -18,7 +20,7 @@ define("plugin/shop/js/model/wishList", [
                 fn: 'shop_wishlist',
                 action: 'INFO'
             });
-            MModel.prototype.initialize.call(this);
+            // MModel.prototype.initialize.call(this);
 
             Sandbox.eventSubscribe('shop:wishlist:add', function (data) {
                 // debugger;

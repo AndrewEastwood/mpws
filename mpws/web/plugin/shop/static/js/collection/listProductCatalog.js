@@ -8,7 +8,6 @@ define('plugin/shop/js/collection/listProductCatalog', [
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 
     var ListProductCatalog = MCollection.extend({
-        _fetchOptions: {},
         defaultFilter: {
 
             filter_viewSortBy: null,
@@ -37,6 +36,7 @@ define('plugin/shop/js/collection/listProductCatalog', [
         },
         model: ProductItemBase,
         initialize: function () {
+            MCollection.prototype.initialize.call(this);
             // debugger;
             this.updateUrlOptions(_.extend({}, this.defaultFilter, {
                 source: 'shop',

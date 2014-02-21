@@ -3,9 +3,10 @@ define("plugin/shop/js/model/menuCatalog", [
     'default/js/lib/utils'
 ], function (MModel, Utils) {
 
+    // debugger;
     var CatalogStructure = MModel.extend({
         initialize: function () {
-            // debugger;
+            // MModel.prototype.sinitialize.call(this);
             this.updateUrlOptions({
                 source: 'shop',
                 fn: 'shop_catalog_structure'

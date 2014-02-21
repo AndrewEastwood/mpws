@@ -12,6 +12,8 @@ define("plugin/shop/js/model/productsCompare", [
         //     'shop:ProductsCompare:add': 'productAdd'
         // },
         initialize: function () {
+            // MModel.prototype.initialize.call(this);
+            
             var _self = this;
             // debugger;
             this.updateUrlOptions({
@@ -19,7 +21,7 @@ define("plugin/shop/js/model/productsCompare", [
                 fn: 'shop_compare',
                 action: 'INFO'
             });
-            MModel.prototype.initialize.call(this);
+            // MModel.prototype.initialize.call(this);
 
             Sandbox.eventSubscribe('shop:compare:add', function (data) {
                 // debugger;

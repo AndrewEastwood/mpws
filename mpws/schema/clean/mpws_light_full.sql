@@ -3,11 +3,14 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 18, 2014 at 02:36 AM
+-- Generation Time: Feb 20, 2014 at 11:57 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT=0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -24,6 +27,7 @@ DELIMITER $$
 --
 -- Procedures
 --
+DROP PROCEDURE IF EXISTS `getAllShopCategoryBrands`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN catid INT)
 BEGIN
   SELECT o.ID,
@@ -31,13 +35,14 @@ BEGIN
   FROM   shop_products AS p
          LEFT JOIN shop_origins AS o
                 ON p.OriginID = o.ID
-  WHERE  p.Enabled = 1
-         AND o.Enabled = 1
+  WHERE  p.Status = 'ACTIVE'
+         AND o.Status = 'ACTIVE'
          AND p.CategoryID = catid
   GROUP  BY o.Name; 
 -- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
 END$$
 
+DROP PROCEDURE IF EXISTS `getAllShopCategorySubCategories`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategorySubCategories`(IN catid INT)
 BEGIN
   SELECT c.ID,
@@ -45,18 +50,20 @@ BEGIN
   FROM   shop_products AS p
          LEFT JOIN shop_categories AS c
                 ON p.CategoryID = c.ID
-  WHERE  p.Enabled = 1
-         AND c.Enabled = 1
+  WHERE  p.Status = 'ACTIVE'
+         AND c.Status = 'ACTIVE'
          AND c.ParentID = catid
   GROUP  BY c.Name; 
 -- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
 END$$
 
+DROP PROCEDURE IF EXISTS `getShopCategoryBrands`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryBrands`(IN catid INT)
 BEGIN
 SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.CategoryID = catid GROUP BY o.Name;
 END$$
 
+DROP PROCEDURE IF EXISTS `getShopCategoryLocation`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryLocation`(IN catid INT)
 BEGIN
 SELECT T2.ID, T2.Name
@@ -74,17 +81,19 @@ ON T1._id = T2.ID
 ORDER BY T1.lvl DESC;
 END$$
 
+DROP PROCEDURE IF EXISTS `getShopCategoryPriceEdges`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
 BEGIN
 SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
 END$$
 
+DROP PROCEDURE IF EXISTS `getShopCategorySubCategories`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategorySubCategories`(IN catid INT)
 BEGIN
 SELECT
   c.ID, c.ParentID, c.Name,
-  (SELECT count(*) FROM shop_products AS `p` WHERE p.CategoryID = c.ID AND p.Enabled = 1) AS `ProductCount`
-FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
+  (SELECT count(*) FROM shop_products AS `p` WHERE p.CategoryID = c.ID AND p.Status = 'ACTIVE') AS `ProductCount`
+FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Status = 'ACTIVE' GROUP BY c.Name;
 END$$
 
 DELIMITER ;
@@ -95,6 +104,7 @@ DELIMITER ;
 -- Table structure for table `editor_content`
 --
 
+DROP TABLE IF EXISTS `editor_content`;
 CREATE TABLE IF NOT EXISTS `editor_content` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Property` varchar(100) NOT NULL,
@@ -121,25 +131,19 @@ INSERT INTO `editor_content` (`ID`, `Property`, `Value`, `PageOwner`) VALUES
 -- Table structure for table `mpws_accounts`
 --
 
+DROP TABLE IF EXISTS `mpws_accounts`;
 CREATE TABLE IF NOT EXISTS `mpws_accounts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
+  `IsTemporary` tinyint(1) NOT NULL DEFAULT '1',
   `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
   `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
   `EMail` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Telephone` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `FAX` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `IM` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `Phone` varchar(15) COLLATE utf8_bin DEFAULT NULL,
   `Password` varchar(50) COLLATE utf8_bin NOT NULL,
-  `Delivery_Address1` varchar(200) COLLATE utf8_bin NOT NULL,
-  `Delivery_Address2` varchar(200) COLLATE utf8_bin DEFAULT NULL,
-  `Delivery_City` varchar(300) COLLATE utf8_bin NOT NULL,
-  `Delivery_PostCode` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Delivery_State` varchar(200) COLLATE utf8_bin DEFAULT NULL,
-  `Delivery_Country` varchar(200) COLLATE utf8_bin NOT NULL,
-  `Delivery_Region` varchar(200) COLLATE utf8_bin NOT NULL,
-  `Delivery_Company` varchar(300) COLLATE utf8_bin DEFAULT NULL,
-  `Enabled` tinyint(1) NOT NULL,
+  `Enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -152,8 +156,8 @@ CREATE TABLE IF NOT EXISTS `mpws_accounts` (
 -- Dumping data for table `mpws_accounts`
 --
 
-INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `FirstName`, `LastName`, `EMail`, `Telephone`, `FAX`, `IM`, `Password`, `Delivery_Address1`, `Delivery_Address2`, `Delivery_City`, `Delivery_PostCode`, `Delivery_State`, `Delivery_Country`, `Delivery_Region`, `Delivery_Company`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(2, 0, 'DEMO', 'test', 'sss', '3213123', NULL, NULL, '24324', '43243243', NULL, '4324', '23432423', NULL, '4324', '4234324', NULL, 1, '2013-10-24 00:00:00', '2013-10-24 00:00:00');
+INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsTemporary`, `FirstName`, `LastName`, `EMail`, `Phone`, `Password`, `Enabled`, `ValidationString`, `Status`, `DateCreated`, `DateUpdated`) VALUES
+(2, 0, 0, 'DEMO', 'test', 'sss', '3213123', '24324', 1, '', 'ACTIVE', '2013-10-24 00:00:00', '2013-10-24 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -161,6 +165,7 @@ INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `FirstName`, `LastName`, `EMail
 -- Table structure for table `mpws_customer`
 --
 
+DROP TABLE IF EXISTS `mpws_customer`;
 CREATE TABLE IF NOT EXISTS `mpws_customer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text COLLATE utf8_bin NOT NULL,
@@ -185,6 +190,7 @@ INSERT INTO `mpws_customer` (`ID`, `Name`, `Enabled`, `HomePage`, `DateCreated`,
 -- Table structure for table `mpws_jobs`
 --
 
+DROP TABLE IF EXISTS `mpws_jobs`;
 CREATE TABLE IF NOT EXISTS `mpws_jobs` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -213,6 +219,7 @@ INSERT INTO `mpws_jobs` (`ID`, `CustomerID`, `Name`, `Description`, `Action`, `S
 -- Table structure for table `mpws_subscripers`
 --
 
+DROP TABLE IF EXISTS `mpws_subscripers`;
 CREATE TABLE IF NOT EXISTS `mpws_subscripers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -239,6 +246,7 @@ INSERT INTO `mpws_subscripers` (`ID`, `CustomerID`, `AccountID`, `ContentType`, 
 -- Table structure for table `mpws_uploads`
 --
 
+DROP TABLE IF EXISTS `mpws_uploads`;
 CREATE TABLE IF NOT EXISTS `mpws_uploads` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -263,6 +271,7 @@ INSERT INTO `mpws_uploads` (`ID`, `CustomerID`, `Path`, `Owner`, `Description`, 
 -- Table structure for table `mpws_users`
 --
 
+DROP TABLE IF EXISTS `mpws_users`;
 CREATE TABLE IF NOT EXISTS `mpws_users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -297,6 +306,7 @@ INSERT INTO `mpws_users` (`ID`, `CustomerID`, `Name`, `Password`, `Active`, `IsO
 -- Table structure for table `reporting_all`
 --
 
+DROP TABLE IF EXISTS `reporting_all`;
 CREATE TABLE IF NOT EXISTS `reporting_all` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) NOT NULL,
@@ -321,6 +331,7 @@ INSERT INTO `reporting_all` (`ID`, `Name`, `ExternalKey`, `DataPath`, `ReportDat
 -- Table structure for table `reviews_reviews`
 --
 
+DROP TABLE IF EXISTS `reviews_reviews`;
 CREATE TABLE IF NOT EXISTS `reviews_reviews` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `OriginIP` varchar(20) NOT NULL,
@@ -345,6 +356,7 @@ CREATE TABLE IF NOT EXISTS `reviews_reviews` (
 -- Table structure for table `shop_boughts`
 --
 
+DROP TABLE IF EXISTS `shop_boughts`;
 CREATE TABLE IF NOT EXISTS `shop_boughts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `ProductID` int(11) NOT NULL,
@@ -362,6 +374,7 @@ CREATE TABLE IF NOT EXISTS `shop_boughts` (
 -- Table structure for table `shop_categories`
 --
 
+DROP TABLE IF EXISTS `shop_categories`;
 CREATE TABLE IF NOT EXISTS `shop_categories` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `RootID` int(11) DEFAULT NULL,
@@ -371,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `shop_categories` (
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Name` varchar(100) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
-  `Enabled` tinyint(1) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -385,30 +398,30 @@ CREATE TABLE IF NOT EXISTS `shop_categories` (
 -- Dumping data for table `shop_categories`
 --
 
-INSERT INTO `shop_categories` (`ID`, `RootID`, `ParentID`, `CustomerID`, `SchemaID`, `ExternalKey`, `Name`, `Description`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(1, NULL, NULL, 0, NULL, '', 'Побутова техніка', 'Побутова техніка', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(2, 1, 1, 0, NULL, '', 'Дошка прасувальні', 'Дошка прасувальні', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(3, NULL, NULL, 0, NULL, '', 'Мийка високого тиску', 'Мийка високого тиску', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(4, 1, 1, 0, NULL, '', 'Посуд', 'Посуд', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(5, NULL, NULL, 0, NULL, '', 'Професійна техніка', 'Професійна техніка', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(6, NULL, NULL, 0, 1, '', 'ТВ, відео, аудіо, фото', 'ТВ, відео, аудіо, фото', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(7, 6, 6, 0, NULL, '', 'Телевізори', 'Відео обладнання', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(12, 6, 7, 0, NULL, 'lct_televizoru', 'LCD телевізори', 'LCD телевізори', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(13, 1, 1, 0, NULL, 'kt', 'Кліматична техніка', 'Кліматична техніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(14, 1, 1, 0, NULL, 'kt', 'Крупна побутова техніка', 'Крупна побутова техніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(15, 1, 1, 0, NULL, 'kt', 'Дрібна побутова техніка', 'Дрібна побутова техніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(16, 1, 1, 0, NULL, 'kt', 'Догляд за будинком', 'Догляд за будинком', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(17, 6, 6, 0, NULL, 'kt', 'Аудіо', 'Аудіо', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(18, 6, 6, 0, NULL, 'kt', 'Відео', 'Відео', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(19, 6, 6, 0, NULL, 'kt', 'Фото', 'Фото', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(20, 6, 6, 0, NULL, 'kt', 'Ігрові приставки', 'Ігрові приставки', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(21, NULL, NULL, 0, NULL, 'kt', 'Авто товари', 'Авто товари', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(22, 21, 21, 0, NULL, 'kt', 'Автоелектроніка', 'Автоелектроніка', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(23, 21, 21, 0, NULL, 'kt', 'Авто звук', 'Авто звук', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(24, 21, 23, 0, NULL, 'kt', 'Автомагнітоли', 'Автомагнітоли', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(25, 21, 23, 0, NULL, '', 'Аксесуари до автозвуку', 'Аксесуари до автозвуку', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(26, 21, 21, 0, NULL, '', 'АвтоОптика (Світло)', 'АвтоОптика (Світло)', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(27, 21, 26, 0, NULL, '', 'Габаритні вогні', 'Габаритні вогні', 1, '2013-08-27 02:26:07', '2013-08-27 02:26:07');
+INSERT INTO `shop_categories` (`ID`, `RootID`, `ParentID`, `CustomerID`, `SchemaID`, `ExternalKey`, `Name`, `Description`, `Status`, `DateCreated`, `DateUpdated`) VALUES
+(1, NULL, NULL, 0, NULL, '', 'Побутова техніка', 'Побутова техніка', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(2, 1, 1, 0, NULL, '', 'Дошка прасувальні', 'Дошка прасувальні', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(3, NULL, NULL, 0, NULL, '', 'Мийка високого тиску', 'Мийка високого тиску', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(4, 1, 1, 0, NULL, '', 'Посуд', 'Посуд', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(5, NULL, NULL, 0, NULL, '', 'Професійна техніка', 'Професійна техніка', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(6, NULL, NULL, 0, 1, '', 'ТВ, відео, аудіо, фото', 'ТВ, відео, аудіо, фото', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(7, 6, 6, 0, NULL, '', 'Телевізори', 'Відео обладнання', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(12, 6, 7, 0, NULL, 'lct_televizoru', 'LCD телевізори', 'LCD телевізори', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(13, 1, 1, 0, NULL, 'kt', 'Кліматична техніка', 'Кліматична техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(14, 1, 1, 0, NULL, 'kt', 'Крупна побутова техніка', 'Крупна побутова техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(15, 1, 1, 0, NULL, 'kt', 'Дрібна побутова техніка', 'Дрібна побутова техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(16, 1, 1, 0, NULL, 'kt', 'Догляд за будинком', 'Догляд за будинком', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(17, 6, 6, 0, NULL, 'kt', 'Аудіо', 'Аудіо', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(18, 6, 6, 0, NULL, 'kt', 'Відео', 'Відео', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(19, 6, 6, 0, NULL, 'kt', 'Фото', 'Фото', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(20, 6, 6, 0, NULL, 'kt', 'Ігрові приставки', 'Ігрові приставки', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(21, NULL, NULL, 0, NULL, 'kt', 'Авто товари', 'Авто товари', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(22, 21, 21, 0, NULL, 'kt', 'Автоелектроніка', 'Автоелектроніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(23, 21, 21, 0, NULL, 'kt', 'Авто звук', 'Авто звук', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(24, 21, 23, 0, NULL, 'kt', 'Автомагнітоли', 'Автомагнітоли', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(25, 21, 23, 0, NULL, '', 'Аксесуари до автозвуку', 'Аксесуари до автозвуку', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(26, 21, 21, 0, NULL, '', 'АвтоОптика (Світло)', 'АвтоОптика (Світло)', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(27, 21, 26, 0, NULL, '', 'Габаритні вогні', 'Габаритні вогні', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07');
 
 -- --------------------------------------------------------
 
@@ -416,6 +429,7 @@ INSERT INTO `shop_categories` (`ID`, `RootID`, `ParentID`, `CustomerID`, `Schema
 -- Table structure for table `shop_commands`
 --
 
+DROP TABLE IF EXISTS `shop_commands`;
 CREATE TABLE IF NOT EXISTS `shop_commands` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -445,11 +459,12 @@ INSERT INTO `shop_commands` (`ID`, `CustomerID`, `ExternalKey`, `Name`, `Descrip
 -- Table structure for table `shop_currency`
 --
 
+DROP TABLE IF EXISTS `shop_currency`;
 CREATE TABLE IF NOT EXISTS `shop_currency` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `IsMain` tinyint(1) NOT NULL,
-  `Enabled` tinyint(1) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `Currency` varchar(10) COLLATE utf8_bin NOT NULL,
   `Rate` decimal(10,2) NOT NULL,
   `DateCreated` datetime NOT NULL,
@@ -465,11 +480,11 @@ CREATE TABLE IF NOT EXISTS `shop_currency` (
 -- Dumping data for table `shop_currency`
 --
 
-INSERT INTO `shop_currency` (`ID`, `CustomerID`, `IsMain`, `Enabled`, `Currency`, `Rate`, `DateCreated`, `DateUpdated`, `DateLastAccess`) VALUES
-(1, 0, 0, 1, 'EUR', 10.70, '0000-00-00 00:00:00', '2013-08-15 00:36:46', '0000-00-00 00:00:00'),
-(2, 0, 0, 1, 'USD', 8.10, '0000-00-00 00:00:00', '2013-08-15 00:36:53', '0000-00-00 00:00:00'),
-(3, 0, 1, 1, 'UAH', 1.00, '2013-08-15 00:37:14', '2013-08-15 00:37:14', '0000-00-00 00:00:00'),
-(4, 0, 0, 1, 'PLN', 2.52, '2013-08-17 01:30:40', '2013-08-17 01:30:40', '0000-00-00 00:00:00');
+INSERT INTO `shop_currency` (`ID`, `CustomerID`, `IsMain`, `Status`, `Currency`, `Rate`, `DateCreated`, `DateUpdated`, `DateLastAccess`) VALUES
+(1, 0, 0, 'ACTIVE', 'EUR', 10.70, '0000-00-00 00:00:00', '2013-08-15 00:36:46', '0000-00-00 00:00:00'),
+(2, 0, 0, 'ACTIVE', 'USD', 8.10, '0000-00-00 00:00:00', '2013-08-15 00:36:53', '0000-00-00 00:00:00'),
+(3, 0, 1, 'ACTIVE', 'UAH', 1.00, '2013-08-15 00:37:14', '2013-08-15 00:37:14', '0000-00-00 00:00:00'),
+(4, 0, 0, 'ACTIVE', 'PLN', 2.52, '2013-08-17 01:30:40', '2013-08-17 01:30:40', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -477,11 +492,12 @@ INSERT INTO `shop_currency` (`ID`, `CustomerID`, `IsMain`, `Enabled`, `Currency`
 -- Table structure for table `shop_offers`
 --
 
+DROP TABLE IF EXISTS `shop_offers`;
 CREATE TABLE IF NOT EXISTS `shop_offers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `ProductID` int(11) NOT NULL,
   `Type` enum('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED') COLLATE utf8_bin NOT NULL,
-  `Enable` int(11) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateActive` datetime NOT NULL,
   `DateInactive` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
@@ -497,6 +513,7 @@ CREATE TABLE IF NOT EXISTS `shop_offers` (
 -- Table structure for table `shop_orderDetails`
 --
 
+DROP TABLE IF EXISTS `shop_orderDetails`;
 CREATE TABLE IF NOT EXISTS `shop_orderDetails` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `BuyerName` varchar(300) NOT NULL,
@@ -514,20 +531,20 @@ CREATE TABLE IF NOT EXISTS `shop_orderDetails` (
 -- Table structure for table `shop_orders`
 --
 
+DROP TABLE IF EXISTS `shop_orders`;
 CREATE TABLE IF NOT EXISTS `shop_orders` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `AccountID` int(11) NOT NULL,
-  `BoughtMapID` int(11) NOT NULL,
-  `OrderDetailsID` int(11) NOT NULL,
-  `Status` enum('NEW','SHOP_REVIEWING','SHOP_PACKAGE','LOGISTIC_DELIVERING','CUSTOMER_POSTPONE','CUSTOMER_CANCELED','CUSTOMER_CHANGED','SHOP_WAITING_CUSTOMER_APPROVAL','CUSTOMER_APPROVED','LOGISTIC_DELIVERED','SHOP_CLOSED','CUSTOMER_REOPENED','CUSTOMER_CLOSED','CUSTOMER_WAITNG_REFUND','SHOP_REFUNDED') COLLATE utf8_bin NOT NULL,
+  `Shipping` varchar(200) COLLATE utf8_bin DEFAULT NULL,
+  `Warehouse` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
+  `Status` enum('ACTIVE','SHOP_REVIEWING','SHOP_PACKAGE','LOGISTIC_DELIVERING','CUSTOMER_POSTPONE','CUSTOMER_CANCELED','CUSTOMER_CHANGED','SHOP_WAITING_CUSTOMER_APPROVAL','CUSTOMER_APPROVED','LOGISTIC_DELIVERED','SHOP_CLOSED','CUSTOMER_REOPENED','CUSTOMER_CLOSED','CUSTOMER_WAITNG_REFUND','SHOP_REFUNDED','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `TrackingLink` int(11) NOT NULL,
   `DateCreate` int(11) NOT NULL,
   `DateUpdate` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
-  KEY `AccountID` (`AccountID`,`BoughtMapID`,`OrderDetailsID`),
-  KEY `BoughtMapID` (`BoughtMapID`),
-  KEY `OrderDetailsID` (`OrderDetailsID`)
+  KEY `AccountID` (`AccountID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -536,6 +553,7 @@ CREATE TABLE IF NOT EXISTS `shop_orders` (
 -- Table structure for table `shop_origins`
 --
 
+DROP TABLE IF EXISTS `shop_origins`;
 CREATE TABLE IF NOT EXISTS `shop_origins` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -543,7 +561,7 @@ CREATE TABLE IF NOT EXISTS `shop_origins` (
   `Name` varchar(200) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
   `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
-  `Enabled` tinyint(1) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   UNIQUE KEY `ID` (`ID`),
@@ -554,15 +572,15 @@ CREATE TABLE IF NOT EXISTS `shop_origins` (
 -- Dumping data for table `shop_origins`
 --
 
-INSERT INTO `shop_origins` (`ID`, `CustomerID`, `ExternalKey`, `Name`, `Description`, `HomePage`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(1, 0, '', 'SONY', 'SONY', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(2, 0, '', 'DELL', 'DELL', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(3, 0, '', 'HP', 'HP', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(4, 0, '', 'Samsung', 'Samsung', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(5, 0, '', 'LG', 'LG', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(6, 0, '', 'Toshiba', 'Toshiba', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(7, 0, '', 'SHARP', 'SHARP', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(8, 0, '', 'Apple', 'Apple', 'http://www.sony.com', 1, '2013-08-27 02:26:41', '2013-08-27 02:26:41');
+INSERT INTO `shop_origins` (`ID`, `CustomerID`, `ExternalKey`, `Name`, `Description`, `HomePage`, `Status`, `DateCreated`, `DateUpdated`) VALUES
+(1, 0, '', 'SONY', 'SONY', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(2, 0, '', 'DELL', 'DELL', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(3, 0, '', 'HP', 'HP', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(4, 0, '', 'Samsung', 'Samsung', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(5, 0, '', 'LG', 'LG', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(6, 0, '', 'Toshiba', 'Toshiba', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(7, 0, '', 'SHARP', 'SHARP', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(8, 0, '', 'Apple', 'Apple', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41');
 
 -- --------------------------------------------------------
 
@@ -570,6 +588,7 @@ INSERT INTO `shop_origins` (`ID`, `CustomerID`, `ExternalKey`, `Name`, `Descript
 -- Table structure for table `shop_productAttributes`
 --
 
+DROP TABLE IF EXISTS `shop_productAttributes`;
 CREATE TABLE IF NOT EXISTS `shop_productAttributes` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -616,6 +635,7 @@ INSERT INTO `shop_productAttributes` (`ID`, `CustomerID`, `ProductID`, `Attribut
 -- Table structure for table `shop_productPrices`
 --
 
+DROP TABLE IF EXISTS `shop_productPrices`;
 CREATE TABLE IF NOT EXISTS `shop_productPrices` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -657,6 +677,7 @@ INSERT INTO `shop_productPrices` (`ID`, `CustomerID`, `ProductID`, `Price`, `Dat
 -- Table structure for table `shop_products`
 --
 
+DROP TABLE IF EXISTS `shop_products`;
 CREATE TABLE IF NOT EXISTS `shop_products` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -669,8 +690,7 @@ CREATE TABLE IF NOT EXISTS `shop_products` (
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
-  `Enabled` tinyint(1) NOT NULL,
-  `Status` enum('AVAILABLE','REMOVED','OUTOFSTOCK','COMINGSOON') COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','REMOVED','OUTOFSTOCK','COMINGSOON') COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -683,33 +703,33 @@ CREATE TABLE IF NOT EXISTS `shop_products` (
 -- Dumping data for table `shop_products`
 --
 
-INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name`, `ExternalKey`, `Description`, `Specifications`, `Model`, `SKU`, `Price`, `Enabled`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(3, 0, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 213.00, 1, 'AVAILABLE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(4, 0, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 100.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(5, 0, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(6, 0, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 36.00, 0, 'REMOVED', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(7, 0, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 46.25, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(8, 0, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 56.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(9, 0, 15, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(10, 0, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 171.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(11, 0, 23, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 37.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(12, 0, 3, 3, 'AAA S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 355.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(14, 0, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 68.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(15, 0, 1, 3, 'CCC S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 85.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(16, 0, 1, 1, 'EEE S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(17, 0, 15, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(18, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(19, 0, 16, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(20, 0, 1, 1, 'BBB S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(21, 0, 14, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 45.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(22, 0, 14, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(23, 0, 14, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 83.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(24, 0, 1, 7, 'GGG S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(25, 0, 23, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(26, 0, 21, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(27, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 1, 'AVAILABLE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(28, 0, 7, 2, 'test offer linked', 'fsdfsdfs', 'test offer linked', 'test offer linked', 'test offer linked', NULL, 0.00, 0, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name`, `ExternalKey`, `Description`, `Specifications`, `Model`, `SKU`, `Price`, `Status`, `DateCreated`, `DateUpdated`) VALUES
+(3, 0, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 213.00, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(4, 0, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 100.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(5, 0, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(6, 0, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 36.00, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(7, 0, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 46.25, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(8, 0, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 56.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(9, 0, 15, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(10, 0, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 171.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(11, 0, 23, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 37.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(12, 0, 3, 3, 'AAA S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 355.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(14, 0, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 68.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(15, 0, 1, 3, 'CCC S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 85.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(16, 0, 1, 1, 'EEE S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(17, 0, 15, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(18, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(19, 0, 16, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(20, 0, 1, 1, 'BBB S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(21, 0, 14, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 45.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(22, 0, 14, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(23, 0, 14, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 83.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(24, 0, 1, 7, 'GGG S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(25, 0, 23, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(26, 0, 21, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(27, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(28, 0, 7, 2, 'test offer linked', 'fsdfsdfs', 'test offer linked', 'test offer linked', 'test offer linked', NULL, 0.00, 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -717,6 +737,7 @@ INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name
 -- Table structure for table `shop_relations`
 --
 
+DROP TABLE IF EXISTS `shop_relations`;
 CREATE TABLE IF NOT EXISTS `shop_relations` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -735,6 +756,7 @@ CREATE TABLE IF NOT EXISTS `shop_relations` (
 -- Table structure for table `shop_specifications`
 --
 
+DROP TABLE IF EXISTS `shop_specifications`;
 CREATE TABLE IF NOT EXISTS `shop_specifications` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
@@ -758,6 +780,7 @@ INSERT INTO `shop_specifications` (`ID`, `CustomerID`, `Name`, `Fields`, `DateCr
 --
 -- Stand-in structure for view `test2`
 --
+DROP VIEW IF EXISTS `test2`;
 CREATE TABLE IF NOT EXISTS `test2` (
 `pNAME` varchar(200)
 ,`cName` varchar(100)
@@ -768,6 +791,7 @@ CREATE TABLE IF NOT EXISTS `test2` (
 -- Table structure for table `writer_documents`
 --
 
+DROP TABLE IF EXISTS `writer_documents`;
 CREATE TABLE IF NOT EXISTS `writer_documents` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
@@ -790,6 +814,7 @@ INSERT INTO `writer_documents` (`ID`, `Name`, `Price`, `Discount`) VALUES
 -- Table structure for table `writer_invoices`
 --
 
+DROP TABLE IF EXISTS `writer_invoices`;
 CREATE TABLE IF NOT EXISTS `writer_invoices` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `inv_type` enum('PAYMENT','REFUND') NOT NULL,
@@ -822,6 +847,7 @@ INSERT INTO `writer_invoices` (`ID`, `inv_type`, `invoice_id`, `sid`, `key`, `or
 -- Table structure for table `writer_messages`
 --
 
+DROP TABLE IF EXISTS `writer_messages`;
 CREATE TABLE IF NOT EXISTS `writer_messages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Subject` text NOT NULL,
@@ -940,6 +966,7 @@ INSERT INTO `writer_messages` (`ID`, `Subject`, `Message`, `Owner`, `StudentID`,
 -- Table structure for table `writer_orders`
 --
 
+DROP TABLE IF EXISTS `writer_orders`;
 CREATE TABLE IF NOT EXISTS `writer_orders` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Title` text NOT NULL,
@@ -982,6 +1009,7 @@ INSERT INTO `writer_orders` (`ID`, `Title`, `Description`, `ResolutionDocumentLi
 -- Table structure for table `writer_prices`
 --
 
+DROP TABLE IF EXISTS `writer_prices`;
 CREATE TABLE IF NOT EXISTS `writer_prices` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
@@ -1011,6 +1039,7 @@ INSERT INTO `writer_prices` (`ID`, `Name`, `Price`, `Hours`, `Weeks`) VALUES
 -- Table structure for table `writer_sale`
 --
 
+DROP TABLE IF EXISTS `writer_sale`;
 CREATE TABLE IF NOT EXISTS `writer_sale` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Title` text NOT NULL,
@@ -1039,6 +1068,7 @@ INSERT INTO `writer_sale` (`ID`, `Title`, `Description`, `Sample`, `Pages`, `Pri
 -- Table structure for table `writer_sales`
 --
 
+DROP TABLE IF EXISTS `writer_sales`;
 CREATE TABLE IF NOT EXISTS `writer_sales` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `SaleID` int(11) NOT NULL,
@@ -1086,6 +1116,7 @@ INSERT INTO `writer_sales` (`ID`, `SaleID`, `StudentID`, `IsActive`, `SalesToken
 -- Table structure for table `writer_sources`
 --
 
+DROP TABLE IF EXISTS `writer_sources`;
 CREATE TABLE IF NOT EXISTS `writer_sources` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `OrderToken` varchar(32) NOT NULL,
@@ -1100,6 +1131,7 @@ CREATE TABLE IF NOT EXISTS `writer_sources` (
 -- Table structure for table `writer_students`
 --
 
+DROP TABLE IF EXISTS `writer_students`;
 CREATE TABLE IF NOT EXISTS `writer_students` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
@@ -1135,6 +1167,7 @@ CREATE TABLE IF NOT EXISTS `writer_students` (
 -- Table structure for table `writer_subjects`
 --
 
+DROP TABLE IF EXISTS `writer_subjects`;
 CREATE TABLE IF NOT EXISTS `writer_subjects` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
@@ -1155,6 +1188,7 @@ INSERT INTO `writer_subjects` (`ID`, `Name`) VALUES
 -- Table structure for table `writer_writers`
 --
 
+DROP TABLE IF EXISTS `writer_writers`;
 CREATE TABLE IF NOT EXISTS `writer_writers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
@@ -1267,9 +1301,7 @@ ALTER TABLE `shop_offers`
 -- Constraints for table `shop_orders`
 --
 ALTER TABLE `shop_orders`
-  ADD CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`BoughtMapID`) REFERENCES `shop_boughts` (`OrderID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`OrderDetailsID`) REFERENCES `shop_orderDetails` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_origins`
@@ -1311,6 +1343,8 @@ ALTER TABLE `shop_relations`
 --
 ALTER TABLE `shop_specifications`
   ADD CONSTRAINT `shop_specifications_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

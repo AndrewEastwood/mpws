@@ -242,7 +242,7 @@ class pluginShop extends objectPlugin {
         $filterOptionsAvailable = new ArrayObject($filterOptions);
 
         // init filter
-        $filterOptionsAvailable['filter_commonAvailability'] = array("AVAILABLE", "OUTOFSTOCK", "COMINGSOON");
+        $filterOptionsAvailable['filter_commonAvailability'] = array("ACTIVE", "OUTOFSTOCK", "COMINGSOON");
         $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
         foreach ($filterOptionsApplied as $key => $value)
             $filterOptionsApplied[$key] = libraryRequest::getValue($key) ?: $filterOptions[$key];
@@ -351,8 +351,6 @@ class pluginShop extends objectPlugin {
                         $uniqueBrands[$obj['OriginID']]["IsSelected"] = true;
                 }
 
-
-
                 if (isset($obj['CategoryID']))
                     if (empty($uniqueSubCategories[$obj['CategoryID']]))
                         $uniqueSubCategories[$obj['CategoryID']] = array(
@@ -453,7 +451,7 @@ class pluginShop extends objectPlugin {
     private function _custom_api_shoppingCart () {
 
         $do = libraryRequest::getValue('action');
-        $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts');
+        $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE'));
 
         // var_dump($dataObj);
 
@@ -513,6 +511,15 @@ class pluginShop extends objectPlugin {
             // $dataObj->setData('products', $productData['products']);
             // $dataObj->setData('info', $_getInfoFn($productData));
             // return $dataObj;
+
+
+
+            $ac = $this->getCustomer()-> getAccount();
+
+
+
+
+            var_dump($ac);
         }
 
         $dataObj->setData('products', $productData['products']);
@@ -577,11 +584,14 @@ class pluginShop extends objectPlugin {
         return $productsMap;
     }
 
-    private function _custom_util_manageStoredProducts ($sessionKey) {
+    private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array()) {
         $dataObj = new libraryDataObject();
         $productID = libraryRequest::getValue('productID');
         $do = libraryRequest::getValue('action');
         $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
+
+        if (!empty($userActions) && is_array($userActions))
+            $actions = array_merge($actions, $userActions);
 
         if (empty($do) || !in_array($do, $actions)) {
             $dataObj->setError("UnknownAction");
@@ -641,6 +651,9 @@ class pluginShop extends objectPlugin {
             $dataObj->setData('products', $products);
             return $dataObj;
         }
+
+        $dataObj->setData('products', $products);
+        return $dataObj;
     }
 
     // product list base
