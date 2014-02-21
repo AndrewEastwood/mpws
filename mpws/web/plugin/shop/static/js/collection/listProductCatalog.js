@@ -7,64 +7,40 @@ define('plugin/shop/js/collection/listProductCatalog', [
     'default/js/lib/jquery.cookie',
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 
-    var ListProductCatalog = MCollection.extend({
+    var Collection = MCollection.getNew();
+
+    var ListProductCatalog = Collection.extend({
+        source: 'shop',
+        fn: 'shop_catalog',
         defaultFilter: {
 
-            filter_viewSortBy: null,
+            filter_viewSortBy: $.cookie('filter_viewSortBy') || null,
 
             filter_viewItemsOnPage: 3,
 
-            filter_viewPageNum: 0,
+            filter_viewPageNum: $.cookie('filter_viewPageNum') || null,
 
             // common
             // these options are common for all existed categories
             // so we just keep them here and render them at very top
             // of the filter panel
 
-            filter_commonPriceMax: null,
+            filter_commonPriceMax: $.cookie('filter_commonPriceMax') || null,
 
-            filter_commonPriceMin: null,
+            filter_commonPriceMin: $.cookie('filter_commonPriceMin') || null,
 
-            filter_commonAvailability: [],
+            filter_commonAvailability: $.cookie('filter_commonAvailability') ? $.cookie('filter_commonAvailability').split(',') : [],
 
-            filter_commonOnSaleTypes: [],
+            filter_commonOnSaleTypes: $.cookie('filter_commonOnSaleTypes') ? $.cookie('filter_commonOnSaleTypes').split(',') : [],
 
             // category based (use specifications of current category)
             // these options have category specific options and they are
             // being rendered under the common options
-            filter_categoryBrands: [],
+            filter_categoryBrands: $.cookie('filter_categoryBrands') ? $.cookie('filter_categoryBrands').split(',') : [],
         },
         model: ProductItemBase,
         initialize: function () {
-            MCollection.prototype.initialize.call(this);
-            // debugger;
-            this.updateUrlOptions(_.extend({}, this.defaultFilter, {
-                source: 'shop',
-                fn: 'shop_catalog',
-                // restore filter
-
-                filter_viewSortBy: $.cookie('filter_viewSortBy') || null,
-
-                filter_viewPageNum: $.cookie('filter_viewPageNum') || null,
-
-                // common
-                // these options are common for all existed categories
-                // so we just keep them here and render them at very top
-                // of the filter panel
-
-                filter_commonPriceMax: $.cookie('filter_commonPriceMax') || null,
-
-                filter_commonPriceMin: $.cookie('filter_commonPriceMin') || null,
-
-                filter_commonAvailability: $.cookie('filter_commonAvailability') ? $.cookie('filter_commonAvailability').split(',') : [],
-
-                filter_commonOnSaleTypes: $.cookie('filter_commonOnSaleTypes') ? $.cookie('filter_commonOnSaleTypes').split(',') : [],
-
-                // category based (use specifications of current category)
-                // these options have category specific options and they are
-                // being rendered under the common options
-                filter_categoryBrands: $.cookie('filter_categoryBrands') ? $.cookie('filter_categoryBrands').split(',') : [],
-            }));
+            this.updateUrl(this.defaultFilter);
         },
         parse: function (data) {
             // adjust products

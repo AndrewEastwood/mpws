@@ -49,9 +49,11 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
+
             require(['plugin/shop/js/view/listProductLatest'], function (ListProductLatest) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListProductLatest', function (cachedView) {
+                    // debugger;
                     // remove previous view
                     if (cachedView && cachedView.destroy)
                         cachedView.destroy();
@@ -133,8 +135,6 @@ define("plugin/shop/js/site", [
                     Site.setPlaceholder('bodyCenter', productItemFull.el);
 
                     productItemFull.fetchAndRender({
-                        source: 'shop',
-                        fn: 'shop_product_item',
                         productID: productID
                     });
 
@@ -163,7 +163,10 @@ define("plugin/shop/js/site", [
                         model: productsCompareModel
                     });
                     Site.setPlaceholder('bodyCenter', productsCompare.$el);
-                    productsCompare.fetchAndRender();
+                    // debugger;
+                    productsCompare.fetchAndRender({
+                        action: "INFO"
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return productsCompare;
@@ -190,7 +193,9 @@ define("plugin/shop/js/site", [
                         model: shoppingCartModel
                     });
                     Site.setPlaceholder('bodyCenter', cartStandalone.$el);
-                    cartStandalone.fetchAndRender();
+                    cartStandalone.fetchAndRender({
+                        action: "INFO"
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return cartStandalone;
@@ -217,7 +222,9 @@ define("plugin/shop/js/site", [
                         model: shoppingWishListModel
                     });
                     Site.setPlaceholder('bodyCenter', wishListStandalone.$el);
-                    wishListStandalone.fetchAndRender();
+                    wishListStandalone.fetchAndRender({
+                        action: "INFO"
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return wishListStandalone;

@@ -5,7 +5,7 @@ define("default/js/model/breadcrumb", [
 ], function (MModel/*, _, JSUrl*/) {
 
     // debugger;
-    var Breadcrumb = MModel.getNewModel();
+    var Breadcrumb = MModel.getNew();
 
     return Breadcrumb;
 

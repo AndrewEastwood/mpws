@@ -5,89 +5,96 @@ define("default/js/model/mModel", [
     'default/js/lib/url'
 ], function (Sandbox, _, Backbone, JSUrl) {
 
-    return {
-        getNew: function () {
-            return Backbone.Model.extend({
+    function _factory() {
+        // debugger;
+        var MModel = Backbone.Model.extend({
 
-                extras: {},
-                // required parameters
-                token: app.config.TOKEN,
-                source: '',
-                fn: '',
-                // and user custom options
-                // urlOptions: {},
+            extras: {},
+            // required parameters
+            source: '',
+            fn: '',
+            // and user custom options
+            urlOptions: {},
 
-                getSource: function () { 
-                    return this.get(this._urlOptions.source);
-                },
+            // resetUrlOptionsAfterFetch: true,
 
-                resetUrlOptions: function () {
-                    this.updateUrlOptions({});
-                },
+            getSource: function () {
+                return this.get(this._urlOptions.source);
+            },
 
-                updateUrlOptions: function (options) {
+            resetUrl: function () {
+                this.urlOptions = {};
+                this.updateUrl();
+            },
 
-                    var self = this;
-                    var _options = _(options).clone();
-                    var _url = new JSUrl(app.config.URL_API);
+            updateUrl: function (options) {
 
-                    _(['token', 'source', 'fn']).each(function(key){
-                        if (_options && typeof _options[key] !== "undefined"){
-                            self[key] = _options[key];
-                            delete _options[key];
-                        }
-                        _url.query[key] = self[key];
-                    });
+                var self = this;
+                var _options = options && _(options).clone() || {};
+                var _url = new JSUrl(app.config.URL_API);
 
+                _url.query.token = app.config.TOKEN;
 
-                    // debugger;
-                    // _(this._urlOptions).each(function (defaultValue, key) {
-                    //     self._urlOptions[key] = options[key] || defaultValue;
-                    // });
+                _(['source', 'fn']).each(function(key){
+                    if (_options && typeof _options[key] !== "undefined"){
+                        self[key] = _options[key];
+                        delete _options[key];
+                    }
+                    self.urlOptions[key] = self[key];
+                    _url.query[key] = self[key];
+                });
 
-                    // debugger;
-                    // var _urlData = _.extend({}, this._urlOptions, options);
+                this.urlOptions = _.extend({}, this.urlOptions, _options);
 
+                _(this.urlOptions).each(function (v, k) {
+                    self.urlOptions[k] = !!v ? v : "";
+                    _url.query[k] = !!v ? v : "";
+                });
 
-                    _(_options).each(function (v, k) {
-                        _url.query[k] = !!v ? v : "";
-                    });
+                this.url = _url.toString();
+            },
 
-                    this.url = _url.toString();
-                },
+            getUrlOptions: function () {
+                return this.urlOptions;
+            },
 
-                getUrlOption: function (key) {
-                    return this._urlOptions[key];
-                },
+            setExtras: function (key, val) {
+                this.extras[key] = val;
+            },
 
-                getUrlOptions: function () {
-                    return this._urlOptions;
-                },
+            getExtras: function () {
+                return this.extras;
+            },
 
-                setExtras: function (key, val) {
-                    this._extras[key] = val;
-                },
+            fetch: function (options) {
+                // debugger;
+                if (typeof this.url !== "string")
+                    this.updateUrl();
+                var rez = Backbone.Model.prototype.fetch.call(this, options);
 
-                getExtras: function () {
-                    return this._extras;
-                },
+                // if (this.resetUrlOptionsAfterFetch)
+                //     this.resetUrl();
+                return rez;
+            }
+            // fetch: function (options) {
+            //     options = options || {};
+            //     var _success = options.success;
+            //     var _self = this;
+            //     options.success = function (model, resp, options) {
+            //         if (typeof _success === "function")
+            //             _success.call(_self, model, resp, options);
+            //         Sandbox.eventNotify('mmodel:dataReceived', {model: model, resp: resp, options: options});
+            //     }
+            //     return Backbone.Model.prototype.fetch.call(this, options);
+            // }
 
-                // fetch: function (options) {
-                //     options = options || {};
-                //     var _success = options.success;
-                //     var _self = this;
-                //     options.success = function (model, resp, options) {
-                //         if (typeof _success === "function")
-                //             _success.call(_self, model, resp, options);
-                //         Sandbox.eventNotify('mmodel:dataReceived', {model: model, resp: resp, options: options});
-                //     }
-                //     return Backbone.Model.prototype.fetch.call(this, options);
-                // }
+        });
 
-            });
+        MModel.getNew = _factory;
 
-        }
-
+        return MModel;
     }
+
+    return _factory();
 
 });

@@ -40,7 +40,8 @@ define("plugin/shop/js/model/wishList", [
                 Sandbox.eventNotify('shop:wishlist:info', _self.toJSON());
             });
 
-            this.updateUrlOptions({
+            // debugger;
+            this.updateUrl({
                 action: 'INFO'
             });
 
@@ -54,26 +55,26 @@ define("plugin/shop/js/model/wishList", [
             };
         },
         getInfo: function () {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'INFO'
             });
             this.fetch();
         },
         clearAll: function () {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'CLEAR'
             });
             this.fetch();
         },
         productAdd: function (productID) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'ADD',
                 productID: productID
             });
             this.fetch();
         },
         productRemove: function (productID) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'REMOVE',
                 productID: productID
             });

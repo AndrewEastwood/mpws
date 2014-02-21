@@ -5,16 +5,18 @@ define('plugin/shop/js/collection/listProductLatest', [
     'default/js/lib/url',
     'plugin/shop/js/lib/utils'
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
+    // debugger;
 
-    var ListProductLatest = MCollection.extend({
+    var Collection = MCollection.getNew();
+
+    var ListProductLatest = Collection.extend({
+        source: 'shop',
+        fn: 'shop_product_list_latest',
         model: ProductItemBase,
         initialize: function () {
-            MCollection.prototype.initialize.call(this);
+            Collection.prototype.initialize.call(this);
             // debugger;
-            this.updateUrlOptions({
-                source: 'shop',
-                fn: 'shop_product_list_latest'
-            });
+            this.updateUrl();
         },
         parse: function (data) {
             var products = ShopUtils.adjustProductEntry(data && data.shop);

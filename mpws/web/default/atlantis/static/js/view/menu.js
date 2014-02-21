@@ -6,7 +6,9 @@ define("default/js/view/menu", [
     'default/js/plugin/hbs!default/hbs/menu'
 ], function ($, _, MView, tpl) {
 
-    var Menu = MView.extend({
+    var View = MView.getNew();
+
+    var Menu = View.extend({
         template: tpl,
         menuItems: [],
         initialize: function () {

@@ -3,11 +3,14 @@ define('plugin/shop/js/model/productItemFull', [
     'plugin/shop/js/lib/utils'
 ], function (ProductItemBase, Utils) {
 
-    var Model = MModel.getNew();
-    var ProductItemFull = ProductItemBase.extend({
+    var Model = ProductItemBase.getNew();
+    var ProductItemFull = Model.extend({
+        source: 'shop',
+        fn: 'shop_product_item',
         parse: function (data) {
+            // debugger;
             var products = Utils.adjustProductEntry(data && data.shop || {});
-            return products[this.getUrlOption('productID')] || {};
+            return products[this.urlOptions.productID] || {};
         }
     });
 

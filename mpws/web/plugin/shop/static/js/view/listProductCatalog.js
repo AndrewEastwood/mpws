@@ -17,7 +17,7 @@ define("plugin/shop/js/view/listProductCatalog", [
     // });
 
     var ListProductCatalog = MView.extend({
-        tagName: 'div',
+        // tagName: 'div',
         className: 'shop-product-list shop-product-list-catalog',
         collection: new CollListProductCatalog(),
         itemViewClass: ProductItemShort,
@@ -32,6 +32,9 @@ define("plugin/shop/js/view/listProductCatalog", [
         },
         initialize: function () {
             MView.prototype.initialize.call(this);
+
+            // return MView.prototype.fetchAndRender.call(this, _.extend({}, this.collection.defaultFilter, options), fetchOptions);
+            
             this.on('mview:renderComplete', function () {
 
                 var _filterData = this.collection.getExtras().filter;
@@ -51,6 +54,11 @@ define("plugin/shop/js/view/listProductCatalog", [
                 var _filterDropdowns = this.$('.selectpicker').selectpicker();
             }, this);
         },
+        // fetchAndRender: function (options, fetchOptions) {
+        //     // debugger;
+        //     debugger;
+        //     // return MView.prototype.fetchAndRender.call(this, _.extend({}, this.collection.defaultFilter, options), fetchOptions);
+        // },
         filterProducts_Other: function (event) {
             // console.log(event);
             // debugger;

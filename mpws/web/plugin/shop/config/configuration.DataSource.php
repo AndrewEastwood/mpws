@@ -179,7 +179,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "source" => "shop_products",
             "condition" => array(
                 "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
-                "values" => array("AVAILABLE")
+                "values" => array("ACTIVE")
             ),
             "fields" => array("CategoryID", "Name"),
             "offset" => 0,

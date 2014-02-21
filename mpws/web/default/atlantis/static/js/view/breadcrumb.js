@@ -8,7 +8,9 @@ define("default/js/view/breadcrumb", [
     'default/js/lib/bootstrap'
 ], function ($, _, MView, ModelBreadcrumb, tpl) {
 
-    var Breadcrumb = MView.extend({
+    var View = MView.getNew();
+
+    var Breadcrumb = View.extend({
         model: new ModelBreadcrumb()
     });
 

@@ -153,6 +153,8 @@ class pluginShop extends objectPlugin {
 
         $configProducts = configurationShopDataSource::jsapiProductListLatest();
 
+        // var_dump($configProducts);
+
         $products = $this->getDataBase()->getData($configProducts);
 
         $productsMap = $this->_custom_util_getProductAttributes($products);
@@ -432,12 +434,13 @@ class pluginShop extends objectPlugin {
     // shopping products compare
     // -----------------------------------------------
     private function _custom_api_productsCompare () {
+        $do = libraryRequest::getValue('action');
         $productID = libraryRequest::getValue('productID');
         $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
 
         $products = $dataObj->getData();
 
-        if (count($products['products']) > 10) {
+        if ($do == 'ADD' && count($products['products']) > 10) {
             unset($products['products'][$productID]);
             $dataObj->setError("MaxProductsAdded");
             $dataObj->setData('products', $products);

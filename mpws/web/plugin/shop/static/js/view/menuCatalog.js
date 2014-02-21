@@ -12,6 +12,8 @@ define("plugin/shop/js/view/menuCatalog", [
         template: tpl
     });
 
+    // debugger;
+
     return MenuCatalog;
 
 });

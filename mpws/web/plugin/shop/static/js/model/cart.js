@@ -4,7 +4,7 @@ define("plugin/shop/js/model/cart", [
     'plugin/shop/js/lib/utils'
 ], function (Sandbox, MModel, ShopUtils) {
 
-    var Model = MModel.getNewModel();
+    var Model = MModel.getNew();
 
     var Cart = Model.extend({
         // Consider how to inject this
@@ -12,14 +12,14 @@ define("plugin/shop/js/model/cart", [
         // globalEvents: {
         //     'shop:cart:add': 'productAdd'
         // },
+        source: 'shop',
+        fn: 'shop_cart',
         initialize: function () {
             Model.prototype.initialize.call(this);
 
             var _self = this;
             // debugger;
-            this.updateUrlOptions({
-                source: 'shop',
-                fn: 'shop_cart',
+            this.updateUrl({
                 action: 'INFO'
             });
 
@@ -44,7 +44,7 @@ define("plugin/shop/js/model/cart", [
             });
 
             this.on('change', function () {
-                _self.resetUrlOptions();
+                // _self.resetUrlOptions();
                 Sandbox.eventNotify('shop:cart:info', _self.toJSON());
             });
 
@@ -59,19 +59,19 @@ define("plugin/shop/js/model/cart", [
             };
         },
         getInfo: function () {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'INFO'
             });
             this.fetch();
         },
         clearAll: function () {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'CLEAR'
             });
             this.fetch();
         },
         productAdd: function (productID, productQuantity) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'ADD',
                 productID: productID,
                 productQuantity: productQuantity
@@ -79,14 +79,14 @@ define("plugin/shop/js/model/cart", [
             this.fetch();
         },
         productRemove: function (productID) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'REMOVE',
                 productID: productID
             });
             this.fetch();
         },
         checkout: function (userData) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'SAVE'
             });
 

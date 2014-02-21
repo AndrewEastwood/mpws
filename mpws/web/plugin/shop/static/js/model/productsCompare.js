@@ -5,6 +5,7 @@ define("plugin/shop/js/model/productsCompare", [
     'default/js/lib/bootstrap-dialog'
 ], function (Sandbox, MModel, ShopUtils, BootstrapDialog) {
 
+    // debugger;
     var Model = MModel.getNew();
 
     var ProductsCompare = Model.extend({
@@ -42,7 +43,7 @@ define("plugin/shop/js/model/productsCompare", [
                 Sandbox.eventNotify('shop:compare:info', _self.toJSON());
             });
 
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'INFO'
             });
 
@@ -66,26 +67,26 @@ define("plugin/shop/js/model/productsCompare", [
             };
         },
         getInfo: function () {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'INFO'
             });
             this.fetch();
         },
         clearAll: function () {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'CLEAR'
             });
             this.fetch();
         },
         productAdd: function (productID) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'ADD',
                 productID: productID
             });
             this.fetch();
         },
         productRemove: function (productID) {
-            this.updateUrlOptions({
+            this.updateUrl({
                 action: 'REMOVE',
                 productID: productID
             });

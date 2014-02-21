@@ -5,6 +5,8 @@ define("plugin/shop/js/view/listProductLatest", [
     'plugin/shop/js/view/productItemShort'
 ], function (_, MView, CollListProductLatest, ProductItemShort) {
 
+    // debugger;
+
     var ListProductLatest = MView.extend({
         // tagName: 'div',
         className: 'shop-product-list shop-product-list-latest',

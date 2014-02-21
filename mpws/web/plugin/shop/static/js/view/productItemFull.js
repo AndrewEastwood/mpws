@@ -7,12 +7,14 @@ define("plugin/shop/js/view/productItemFull", [
     'default/js/lib/bootstrap-magnify',
     'default/js/lib/lightbox',
     'default/js/lib/jquery.sparkline'
-], function (Sandbox, MView, ProductItemFull, tpl) {
+], function (Sandbox, MView, ModelProductItemFull, tpl) {
+
+    // var Model = ModelProductItemFull.getNew();
 
     var ProductItemFull = MView.extend({
-        tagName: 'div',
+        // tagName: 'div',
         className: 'shop-product-item shop-product-item-full',
-        model: new ProductItemFull(),
+        model: new ModelProductItemFull(),
         template: tpl,
         initialize: function () {
             this.on('mview:renderComplete', function () {
