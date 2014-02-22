@@ -70,6 +70,21 @@ class configurationDefaultDataSource extends objectConfiguration {
         return self::extendConfigs($configDefault, $configExtend, true);
     }
 
+    static function jsapiGetCustomer () {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_customer",
+            "fields" => array("*"),
+            "condition" => array(
+                "filter" => "ExternalKey (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
+                "values" => array(MPWS_CUSTOMER)
+            ),
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
     static function jsapiGetAccount () {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",

@@ -89,12 +89,11 @@ define("plugin/shop/js/site", [
                         cachedView.destroy();
 
                     // create new view
-                    var listProductCatalog = new ListProductCatalog();
-                    Site.setPlaceholder('bodyCenter', listProductCatalog.el);
-
-                    listProductCatalog.fetchAndRender({
+                    var listProductCatalog = new ListProductCatalog({
                         categoryID: categoryID
                     });
+                    Site.setPlaceholder('bodyCenter', listProductCatalog.el);
+                    listProductCatalog.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation
                     return listProductCatalog;

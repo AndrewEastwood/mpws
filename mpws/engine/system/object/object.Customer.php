@@ -4,6 +4,7 @@ class objectCustomer {
 
     private $dbo;
     private $plugins;
+    private $customerInfo;
 
     function __construct() {
 
@@ -31,6 +32,14 @@ class objectCustomer {
             // save plugin instance
             $this->plugins[$pluginName] = new $pluginObjectName($this);
         }
+    }
+
+    public function getCustomerInfo () {
+        if (empty($this->customerInfo)) {
+            $config = configurationCustomerDataSource::jsapiGetCustomer();
+            $this->customerInfo = $this->getDataBase()->getData($config);
+        }
+        return $this->customerInfo;
     }
 
     public function getDataBase () {
@@ -136,6 +145,12 @@ class objectCustomer {
         // return false;
     }
 
+    public function addAccount ($data) {
+        $config = configurationCustomerDataSource::jsapiAddAccount();
+        $config['data'] = $data;
+        $this->getDataBase()->getData($config);
+        return true;
+    }
 
     public function getAccount () {
         $config = configurationCustomerDataSource::jsapiGetAccount();

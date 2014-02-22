@@ -509,24 +509,36 @@ class pluginShop extends objectPlugin {
         // get shopping cart info
         if ($do == 'SAVE') {
 
-            $cartUser = libraryRequest::getPostValue('user');
+            // $cartUser = libraryRequest::getPostValue('user');
 
             // $dataObj->setData('products', $productData['products']);
             // $dataObj->setData('info', $_getInfoFn($productData));
             // return $dataObj;
+            $data = array();
+            $data["CustomerID"] = "1";
+            $data["FirstName"] = "TEST2";
+            $data["LastName"] = "LTEST2";
+            $data["EMail"] = "sss@mail.com";
+            $data["Phone"] = "12345677887685";
+            $data["Password"] = "566546546";
+            $data["ValidationString"] = md5(mktime());
+            $data["DateCreated"] = "2014-02-22 00:00:00";
+            $data["DateUpdated"] = "2014-02-22 00:00:00";
+
+
+            $this->getCustomer()-> addAccount(array(
+                "fields" => array_keys($data),
+                "values" => array_values($data)
+            ));
 
 
 
-            $ac = $this->getCustomer()-> getAccount();
 
-
-
-
-            var_dump($ac);
+            // var_dump($this->getCustomer()->getCustomerInfo());
         }
 
-        $dataObj->setData('products', $productData['products']);
         $dataObj->setData('info', $_getInfoFn($productData['products']));
+        $dataObj->setData('products', $productData['products']);
 
         return $dataObj;
     }

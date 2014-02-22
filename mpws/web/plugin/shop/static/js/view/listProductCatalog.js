@@ -19,9 +19,9 @@ define("plugin/shop/js/view/listProductCatalog", [
     var ListProductCatalog = MView.extend({
         // tagName: 'div',
         className: 'shop-product-list shop-product-list-catalog',
-        collection: new CollListProductCatalog(),
         itemViewClass: ProductItemShort,
         template: tpl,
+        collection: new CollListProductCatalog(),
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_Other',
@@ -30,8 +30,57 @@ define("plugin/shop/js/view/listProductCatalog", [
             "click .shop-filter-cancel": 'filterProducts_CancelFilter',
             "click .shop-load-more": 'filterProducts_LoadMore',
         },
+        getOrSetFilter: function (filterKey, value) {
+            var key = Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
+            var rez = null;
+            // $.cookie.raw = true;
+            if (_.isUndefined(value))
+                rez = $.cookie(key);
+            else
+                $.cookie(key, value);
+            // $.cookie.json = false;
+            return rez;
+        },
+        getDefaultFilter: function (restorePrevious) {
+            return {
+
+                categoryID: this.options.categoryID,
+
+                filter_viewSortBy: restorePrevious && this.getOrSetFilter('filter_viewSortBy') || null,
+
+                filter_viewItemsOnPage: 3,
+
+                filter_viewPageNum: restorePrevious && this.getOrSetFilter('filter_viewPageNum') || null,
+
+                // common
+                // these options are common for all existed categories
+                // so we just keep them here and render them at very top
+                // of the filter panel
+
+                filter_commonPriceMax: restorePrevious && this.getOrSetFilter('filter_commonPriceMax') || null,
+
+                filter_commonPriceMin: restorePrevious && this.getOrSetFilter('filter_commonPriceMin') || null,
+
+                filter_commonAvailability: restorePrevious && this.getOrSetFilter('filter_commonAvailability') ? this.getOrSetFilter('filter_commonAvailability').split(',') : [],
+
+                filter_commonOnSaleTypes: restorePrevious && this.getOrSetFilter('filter_commonOnSaleTypes') ? this.getOrSetFilter('filter_commonOnSaleTypes').split(',') : [],
+
+                // category based (use specifications of current category)
+                // these options have category specific options and they are
+                // being rendered under the common options
+                filter_categoryBrands: restorePrevious && this.getOrSetFilter('filter_categoryBrands') ? this.getOrSetFilter('filter_categoryBrands').split(',') : [],
+            };
+        },
         initialize: function () {
             MView.prototype.initialize.call(this);
+
+        // initialize: function () {
+            // options = _.extend({categoryID: null}, options);
+
+            // debugger;
+            this.defaultFilter = this.getDefaultFilter(true);
+            this.collection.updateUrl(this.defaultFilter);
+
 
             // return MView.prototype.fetchAndRender.call(this, _.extend({}, this.collection.defaultFilter, options), fetchOptions);
             
@@ -50,6 +99,7 @@ define("plugin/shop/js/view/listProductCatalog", [
                 });
 
                 // // enhance ui components
+                // debugger;
                 var _filterPrice = this.$('.slider').slider();
                 var _filterDropdowns = this.$('.selectpicker').selectpicker();
             }, this);
@@ -75,7 +125,7 @@ define("plugin/shop/js/view/listProductCatalog", [
             else
                 _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(event.target).val());
 
-            $.cookie(_targetFilterName, _filterOptions[_targetFilterName], {path: Backbone.history.fragment});
+            this.getOrSetFilter(_targetFilterName, _filterOptions[_targetFilterName]);
 
             this.fetchAndRender(_filterOptions);
         },
@@ -85,8 +135,8 @@ define("plugin/shop/js/view/listProductCatalog", [
             var filter_viewSortBy = this.$('#shopProductListFiltering_SortByID').val();
             var filter_viewItemsOnPage = this.$('#shopProductListDisplayItems_DisplayCountID').val();
 
-            $.cookie('filter_viewSortBy', filter_viewSortBy, {path: Backbone.history.fragment});
-            $.cookie('filter_viewItemsOnPage', filter_viewItemsOnPage, {path: Backbone.history.fragment});
+            this.getOrSetFilter('filter_viewSortBy', filter_viewSortBy);
+            this.getOrSetFilter('filter_viewItemsOnPage', filter_viewItemsOnPage);
             
             this.fetchAndRender({
                 filter_viewPageNum: 0,
@@ -102,8 +152,8 @@ define("plugin/shop/js/view/listProductCatalog", [
             var filter_commonPriceMin = _priceRange[0];
             var filter_commonPriceMax = _priceRange[1];
 
-            $.cookie('filter_commonPriceMin', filter_commonPriceMin, {path: Backbone.history.fragment});
-            $.cookie('filter_commonPriceMax', filter_commonPriceMax, {path: Backbone.history.fragment});
+            this.getOrSetFilter('filter_commonPriceMin', filter_commonPriceMin);
+            this.getOrSetFilter('filter_commonPriceMax', filter_commonPriceMax);
 
             this.$('.shop-filter-price-start').text(filter_commonPriceMin);
             this.$('.shop-filter-price-end').text(filter_commonPriceMax);
@@ -115,7 +165,8 @@ define("plugin/shop/js/view/listProductCatalog", [
             });
         },
         filterProducts_CancelFilter: function () {
-            this.fetchAndRender(this.collection.defaultFilter, {reset: true});
+            this.defaultFilter = this.getDefaultFilter();
+            this.fetchAndRender(this.defaultFilter, {reset: true});
         },
         filterProducts_ListItemClicked: function () {
             var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
