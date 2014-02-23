@@ -118,7 +118,7 @@ class pluginShop extends objectPlugin {
             // get product entry
             $configProduct = configurationShopDataSource::jsapiProductSingleInfo();
             $configProduct["condition"]["values"][] = $productID;
-            $productDataEntry = $this->getDataBase()->getData($configProduct);
+            $productDataEntry = $this->getCustomer()->processData($configProduct);
             // var_dump($productDataEntry);
 
             // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiProductSingleInfo['data']);
@@ -137,7 +137,7 @@ class pluginShop extends objectPlugin {
         } else {
             $configLocation = configurationShopDataSource::jsapiShopCategoryLocation();
             $configLocation["procedure"]["parameters"][] = $categoryID;
-            $location->setData('location', $this->getDataBase()->getData($configLocation));
+            $location->setData('location', $this->getCustomer()->processData($configLocation));
 
             // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocation['data']);
             // $dataObj->setValuesDbProcedure($categoryId);
@@ -155,7 +155,7 @@ class pluginShop extends objectPlugin {
 
         // var_dump($configProducts);
 
-        $products = $this->getDataBase()->getData($configProducts);
+        $products = $this->getCustomer()->processData($configProducts);
 
         $productsMap = $this->_custom_util_getProductAttributes($products);
 
@@ -189,7 +189,7 @@ class pluginShop extends objectPlugin {
     private function _custom_api_getCatalogStructure () {
 
         $config = configurationShopDataSource::jsapiCatalogStructure();
-        $categories = $this->getDataBase()->getData($config);
+        $categories = $this->getCustomer()->processData($config);
 
         // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiCatalogStructure['data']);
         // $categories = $dataObj->process($params)->getData();
@@ -264,7 +264,7 @@ class pluginShop extends objectPlugin {
         $dataConfigCategoryAllSubCategories['procedure']['parameters'][] = $categoryID;
 
         //filter: get category price edges
-        $dataCategoryPriceEdges = $this->getDataBase()->getData($dataConfigCategoryPriceEdges);
+        $dataCategoryPriceEdges = $this->getCustomer()->processData($dataConfigCategoryPriceEdges);
         $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges['PriceMax'] ?: 0);
         $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges['PriceMin'] ?: 0);
 
@@ -287,8 +287,8 @@ class pluginShop extends objectPlugin {
             $filterOptionsApplied['filter_viewSortBy'] = null;
 
         // get category sub-categories and origins
-        $dataCategoryAllBrands = $this->getDataBase()->getData($dataConfigCategoryAllBrands);
-        $dataCategoryAllSubCategories = $this->getDataBase()->getData($dataConfigCategoryAllSubCategories);
+        $dataCategoryAllBrands = $this->getCustomer()->processData($dataConfigCategoryAllBrands);
+        $dataCategoryAllSubCategories = $this->getCustomer()->processData($dataConfigCategoryAllSubCategories);
 
         // filter: update filters
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
@@ -327,11 +327,11 @@ class pluginShop extends objectPlugin {
         // var_dump($filterOptionsApplied);
 
         // get products
-        $dataProducts = $this->getDataBase()->getData($dataConfigProducts);
+        $dataProducts = $this->getCustomer()->processData($dataConfigProducts);
 
         // get category info according to product filter
         $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-        $dataCategoryInfo = $this->getDataBase()->getData($dataConfigCategoryInfo);
+        $dataCategoryInfo = $this->getCustomer()->processData($dataConfigCategoryInfo);
 
         // get origins\sub-categories according to product filter
         $uniqueBrands = array();
@@ -410,7 +410,7 @@ class pluginShop extends objectPlugin {
             // set config
             $config = configurationShopDataSource::jsapiProductItem();
             $config["condition"]["values"][] = $productID;
-            $product = $this->getDataBase()->getData($config);
+            $product = $this->getCustomer()->processData($config);
 
             $productsMap = $this->_custom_util_getProductAttributes(array($product));
 
@@ -453,8 +453,9 @@ class pluginShop extends objectPlugin {
     // -----------------------------------------------
     private function _custom_api_shoppingCart () {
 
+        $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
         $do = libraryRequest::getValue('action');
-        $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE'));
+        $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions);
 
         // var_dump($dataObj);
 
@@ -509,32 +510,118 @@ class pluginShop extends objectPlugin {
         // get shopping cart info
         if ($do == 'SAVE') {
 
-            // $cartUser = libraryRequest::getPostValue('user');
+            // cartUser data
+            // -----------------------
+            // shopCartUserName
+            // shopCartUserEmail
+            // shopCartUserPhone
+            // shopCartUserDelivery
+            // shopCartUserCity
+            // shopCartLogistic
+            // shopCartWarehouse
+            // shopCartComment
+            // shopCartCreateAccount
+            $cartUser = libraryRequest::getPostValue('user');
 
             // $dataObj->setData('products', $productData['products']);
             // $dataObj->setData('info', $_getInfoFn($productData));
             // return $dataObj;
-            $data = array();
-            $data["CustomerID"] = "1";
-            $data["FirstName"] = "TEST2";
-            $data["LastName"] = "LTEST2";
-            $data["EMail"] = "sss@mail.com";
-            $data["Phone"] = "12345677887685";
-            $data["Password"] = "566546546";
-            $data["ValidationString"] = md5(mktime());
-            $data["DateCreated"] = "2014-02-22 00:00:00";
-            $data["DateUpdated"] = "2014-02-22 00:00:00";
 
+            // var_dump($cartUser);
+
+            // TODO:
+            // add new or use active account
+            // save sold products
+            // create new order
+
+
+            // save account
+            // -----------------------
+            // AccountID
+            // Shipping
+            // Warehouse
+            // Comment
+            // Status
+            // TrackingLink
+            // DateCreate
+            // DateUpdate
+
+            $dataAccount = array();
+            $dataAccount["CustomerID"] = $this->getCustomer()->getCustomerID();
+            $dataAccount["FirstName"] = $cartUser["shopCartUserName"];
+            $dataAccount["LastName"] = "";
+            $dataAccount["EMail"] = $cartUser["shopCartUserEmail"];
+            $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
+            $dataAccount["Password"] = "1234";
+            $dataAccount["ValidationString"] = md5(mktime());
+            $dataAccount["DateCreated"] = "2014-02-22 00:00:00";
+            $dataAccount["DateUpdated"] = "2014-02-22 00:00:00";
 
             $this->getCustomer()-> addAccount(array(
-                "fields" => array_keys($data),
-                "values" => array_values($data)
+                "fields" => array_keys($dataAccount),
+                "values" => array_values($dataAccount)
             ));
 
+            $accountID = $this->getDataBase()->getLastInsertId();
 
+            // save order
+            // -----------------------
+            // AccountID
+            // Shipping
+            // Warehouse
+            // Comment
+            // Hash
+            // DateCreated
+            // DateUpdated
+            $configOrder = configurationShopDataSource::jsapiShopOrderCreate();
+            $dataOrder["AccountID"] = $accountID;
+            $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
+            $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
+            $dataOrder["Comment"] = $cartUser['shopCartComment'];
+            $dataOrder["Hash"] = md5(mktime() . md5(mktime()));
+            $dataOrder["DateCreated"] = "2014-02-22 00:00:00";
+            $dataOrder["DateUpdated"] = "2014-02-22 00:00:00";
+            $configOrder['data'] = array(
+                "fields" => array_keys($dataOrder),
+                "values" => array_values($dataOrder)
+            );
 
+            $this->getCustomer()->processData($configOrder);
 
+            $orderID = $this->getDataBase()->getLastInsertId();
+
+            // save products
+            // -----------------------
+            // ProductID
+            // OrderID
+            // ProductPrice
+            // Quantity
+            foreach ($productData['products'] as $_item) {
+                $configProduct = configurationShopDataSource::jsapiShopOrderProductsSave();
+                $dataProduct = array();
+                $dataProduct["ProductID"] = $_item["ID"];
+                $dataProduct["OrderID"] = $orderID;
+                $dataProduct["ProductPrice"] = $_item["Price"];
+                $dataProduct["Quantity"] = $_item["_quantity"];
+                $configProduct['data'] = array(
+                    "fields" => array_keys($dataProduct),
+                    "values" => array_values($dataProduct)
+                );
+                $this->getCustomer()->processData($configProduct);
+            }
+
+            // clear products
+            $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions, 'CLEAR');
+            $productData = $dataObj->getData();
+
+            // need to shop order id and status link
+            // and send email
+            $dataObj->setData('orderID', $orderID);
+            $dataObj->setData('orderHash', $dataOrder["Hash"]);
+            // $dataObj->setData('lastRecordID', );
             // var_dump($this->getCustomer()->getCustomerInfo());
+
+
         }
 
         $dataObj->setData('info', $_getInfoFn($productData['products']));
@@ -570,8 +657,8 @@ class pluginShop extends objectPlugin {
         $configProductsPrice["condition"]["values"][] = $productIDs;
 
         // configure product attribute object
-        $attributes = $this->getDataBase()->getData($configProductsAttr);
-        $prices = $this->getDataBase()->getData($configProductsPrice);
+        $attributes = $this->getCustomer()->processData($configProductsAttr);
+        $prices = $this->getCustomer()->processData($configProductsPrice);
 
         // pluck product IDs and create product map
         if (!empty($attributes))
@@ -599,10 +686,10 @@ class pluginShop extends objectPlugin {
         return $productsMap;
     }
 
-    private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array()) {
+    private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {
         $dataObj = new libraryDataObject();
         $productID = libraryRequest::getValue('productID');
-        $do = libraryRequest::getValue('action');
+        $do = empty($action) ? libraryRequest::getValue('action') : $action;
         $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
 
         if (!empty($userActions) && is_array($userActions))

@@ -21,7 +21,11 @@ class libraryDataBase {
         return json_encode($this->_fetchData($config));
     }
 
-    public function getData($config) {
+    public function getLastInsertId () {
+        return $this->dbo->mpwsGetLastInsertId();
+    }
+
+    public function getData ($config) {
         return $this->_fetchData($config);
     }
 
@@ -182,6 +186,8 @@ class libraryDataBase {
         // echo '>>>>>>>>>>>>>>>>>>>>>>>.dbo:';
         // var_dump($this->dbo);
         // echo '<<<<<<<<<<<<<<<<<<<<<<';
+        $dbData = null;
+
         switch ($action) {
             case 'call':
                 $proc = $config['procedure'];

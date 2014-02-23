@@ -99,7 +99,8 @@ class configurationDefaultDataSource extends objectConfiguration {
     static function jsapiAddAccount () {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
-            "action" => "insert"
+            "action" => "insert",
+            "options" => null
         ));
     }
 
@@ -116,7 +117,8 @@ class configurationDefaultDataSource extends objectConfiguration {
             "data" => array(
                 "fields" => array('Status'),
                 "values" => array('REMOVED')
-            )
+            ),
+            "options" => null
         ));
     }
 
@@ -133,7 +135,8 @@ class configurationDefaultDataSource extends objectConfiguration {
             "data" => array(
                 "fields" => array('Status'),
                 "values" => array('REMOVED')
-            )
+            ),
+            "options" => null
         ));
     }
 

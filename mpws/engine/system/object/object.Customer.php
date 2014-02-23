@@ -34,6 +34,11 @@ class objectCustomer {
         }
     }
 
+    public function getCustomerID () {
+        $info = $this->getCustomerInfo();
+        return isset($info['ID']) ? $info['ID'] : null;
+    }
+
     public function getCustomerInfo () {
         if (empty($this->customerInfo)) {
             $config = configurationCustomerDataSource::jsapiGetCustomer();
@@ -44,6 +49,19 @@ class objectCustomer {
 
     public function getDataBase () {
         return $this->dbo;
+    }
+
+    public function processData ($config) {
+        $customerInfo = $this->getCustomerInfo();
+        if (empty($config["condition"]["filter"])) {
+            $config["condition"]["filter"] = "CustomerID (=) ?";
+            $config["condition"]["values"] = array($customerInfo['ID']);
+        } else {
+            $config["condition"]["filter"] = "CustomerID (=) ? + " . $config["condition"]["filter"];
+            array_unshift($config["condition"]["values"], $customerInfo['ID']);
+        }
+        // var_dump($config);
+        return $this->dbo->getData($config);
     }
 
     public function getPlugins () {

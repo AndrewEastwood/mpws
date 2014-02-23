@@ -217,6 +217,25 @@ class configurationShopDataSource extends configurationDefaultDataSource {
     }
     // <<<< Shop catalog
 
+    // Shop order >>>>>
+    static function jsapiShopOrderCreate () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "insert",
+            "source" => "shop_orders",
+            "data" => array(),
+            "options" => null
+        ));
+    }
+    static function jsapiShopOrderProductsSave () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "insert",
+            "source" => "shop_boughts",
+            "data" => array(),
+            "options" => null
+        ));
+    }
+    // <<<< Shop order
+
 }
 
 ?>

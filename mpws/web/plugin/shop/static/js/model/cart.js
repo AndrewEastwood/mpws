@@ -90,8 +90,9 @@ define("plugin/shop/js/model/cart", [
                 action: 'SAVE'
             });
 
-            $.post(this.url, userData, function(){
+            $.post(this.url, {user: userData}, function(data){
                 debugger;
+                // if (data)
             });
         }
     });

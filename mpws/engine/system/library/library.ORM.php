@@ -2040,6 +2040,14 @@
             return new self(null, array(), $connection_name);
         }
 
+
+        public function mpwsGetLastInsertId () {
+            $db = self::get_db();
+            if (isset($db))
+                return $db->lastInsertId();
+            return null;
+        }
+
         public function mpwsProcedureCall ($name, $values) {
             $query = 'CALL ' . $name . '(';
 
