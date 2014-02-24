@@ -3,14 +3,11 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 20, 2014 at 11:57 PM
+-- Generation Time: Feb 24, 2014 at 03:35 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT=0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -128,6 +125,28 @@ INSERT INTO `editor_content` (`ID`, `Property`, `Value`, `PageOwner`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mpws_accountAddresses`
+--
+
+DROP TABLE IF EXISTS `mpws_accountAddresses`;
+CREATE TABLE IF NOT EXISTS `mpws_accountAddresses` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `AccountID` int(11) NOT NULL,
+  `Address1` varchar(200) NOT NULL,
+  `Address2` varchar(200) NOT NULL,
+  `POBox` varchar(50) NOT NULL,
+  `Country` varchar(300) NOT NULL,
+  `City` varchar(300) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `AccountID` (`AccountID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mpws_accounts`
 --
 
@@ -141,7 +160,6 @@ CREATE TABLE IF NOT EXISTS `mpws_accounts` (
   `EMail` varchar(100) COLLATE utf8_bin NOT NULL,
   `Phone` varchar(15) COLLATE utf8_bin DEFAULT NULL,
   `Password` varchar(50) COLLATE utf8_bin NOT NULL,
-  `Enabled` tinyint(1) NOT NULL DEFAULT '1',
   `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
@@ -150,14 +168,7 @@ CREATE TABLE IF NOT EXISTS `mpws_accounts` (
   UNIQUE KEY `ID` (`ID`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `mpws_accounts`
---
-
-INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsTemporary`, `FirstName`, `LastName`, `EMail`, `Phone`, `Password`, `Enabled`, `ValidationString`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(2, 0, 0, 'DEMO', 'test', 'sss', '3213123', '24324', 1, '', 'ACTIVE', '2013-10-24 00:00:00', '2013-10-24 00:00:00');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=63 ;
 
 -- --------------------------------------------------------
 
@@ -168,6 +179,7 @@ INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsTemporary`, `FirstName`, `La
 DROP TABLE IF EXISTS `mpws_customer`;
 CREATE TABLE IF NOT EXISTS `mpws_customer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ExternalKey` varchar(100) COLLATE utf8_bin NOT NULL,
   `Name` text COLLATE utf8_bin NOT NULL,
   `Enabled` tinyint(1) NOT NULL,
   `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
@@ -175,14 +187,15 @@ CREATE TABLE IF NOT EXISTS `mpws_customer` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `mpws_customer`
 --
 
-INSERT INTO `mpws_customer` (`ID`, `Name`, `Enabled`, `HomePage`, `DateCreated`, `DateUpdated`) VALUES
-(0, 'toolbox', 1, '', '2013-09-03 00:00:00', '2013-09-03 00:00:00');
+INSERT INTO `mpws_customer` (`ID`, `ExternalKey`, `Name`, `Enabled`, `HomePage`, `DateCreated`, `DateUpdated`) VALUES
+(0, 'toolbox', 'toolbox', 1, '', '2013-09-03 00:00:00', '2013-09-03 00:00:00'),
+(1, 'pb_com_ua', 'Pobutteh', 1, '', '2013-09-03 00:00:00', '2013-09-03 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -232,13 +245,6 @@ CREATE TABLE IF NOT EXISTS `mpws_subscripers` (
   KEY `AccountID` (`AccountID`),
   KEY `CustomerID` (`CustomerID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `mpws_subscripers`
---
-
-INSERT INTO `mpws_subscripers` (`ID`, `CustomerID`, `AccountID`, `ContentType`, `Enabled`, `DateCreated`, `DateUpdated`) VALUES
-(2, 0, 2, 'OFFERS', 1, '2013-10-24 00:00:00', '2013-10-24 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -366,7 +372,7 @@ CREATE TABLE IF NOT EXISTS `shop_boughts` (
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `OrderID` (`OrderID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
@@ -399,29 +405,29 @@ CREATE TABLE IF NOT EXISTS `shop_categories` (
 --
 
 INSERT INTO `shop_categories` (`ID`, `RootID`, `ParentID`, `CustomerID`, `SchemaID`, `ExternalKey`, `Name`, `Description`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(1, NULL, NULL, 0, NULL, '', 'Побутова техніка', 'Побутова техніка', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(2, 1, 1, 0, NULL, '', 'Дошка прасувальні', 'Дошка прасувальні', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(3, NULL, NULL, 0, NULL, '', 'Мийка високого тиску', 'Мийка високого тиску', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(4, 1, 1, 0, NULL, '', 'Посуд', 'Посуд', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(5, NULL, NULL, 0, NULL, '', 'Професійна техніка', 'Професійна техніка', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(6, NULL, NULL, 0, 1, '', 'ТВ, відео, аудіо, фото', 'ТВ, відео, аудіо, фото', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(7, 6, 6, 0, NULL, '', 'Телевізори', 'Відео обладнання', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(12, 6, 7, 0, NULL, 'lct_televizoru', 'LCD телевізори', 'LCD телевізори', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(13, 1, 1, 0, NULL, 'kt', 'Кліматична техніка', 'Кліматична техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(14, 1, 1, 0, NULL, 'kt', 'Крупна побутова техніка', 'Крупна побутова техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(15, 1, 1, 0, NULL, 'kt', 'Дрібна побутова техніка', 'Дрібна побутова техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(16, 1, 1, 0, NULL, 'kt', 'Догляд за будинком', 'Догляд за будинком', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(17, 6, 6, 0, NULL, 'kt', 'Аудіо', 'Аудіо', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(18, 6, 6, 0, NULL, 'kt', 'Відео', 'Відео', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(19, 6, 6, 0, NULL, 'kt', 'Фото', 'Фото', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(20, 6, 6, 0, NULL, 'kt', 'Ігрові приставки', 'Ігрові приставки', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(21, NULL, NULL, 0, NULL, 'kt', 'Авто товари', 'Авто товари', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(22, 21, 21, 0, NULL, 'kt', 'Автоелектроніка', 'Автоелектроніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(23, 21, 21, 0, NULL, 'kt', 'Авто звук', 'Авто звук', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(24, 21, 23, 0, NULL, 'kt', 'Автомагнітоли', 'Автомагнітоли', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(25, 21, 23, 0, NULL, '', 'Аксесуари до автозвуку', 'Аксесуари до автозвуку', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(26, 21, 21, 0, NULL, '', 'АвтоОптика (Світло)', 'АвтоОптика (Світло)', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
-(27, 21, 26, 0, NULL, '', 'Габаритні вогні', 'Габаритні вогні', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07');
+(1, NULL, NULL, 1, NULL, '', 'Побутова техніка', 'Побутова техніка', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(2, 1, 1, 1, NULL, '', 'Дошка прасувальні', 'Дошка прасувальні', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(3, NULL, NULL, 1, NULL, '', 'Мийка високого тиску', 'Мийка високого тиску', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(4, 1, 1, 1, NULL, '', 'Посуд', 'Посуд', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(5, NULL, NULL, 1, NULL, '', 'Професійна техніка', 'Професійна техніка', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(6, NULL, NULL, 1, 1, '', 'ТВ, відео, аудіо, фото', 'ТВ, відео, аудіо, фото', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(7, 6, 6, 1, NULL, '', 'Телевізори', 'Відео обладнання', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(12, 6, 7, 1, NULL, 'lct_televizoru', 'LCD телевізори', 'LCD телевізори', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(13, 1, 1, 1, NULL, 'kt', 'Кліматична техніка', 'Кліматична техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(14, 1, 1, 1, NULL, 'kt', 'Крупна побутова техніка', 'Крупна побутова техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(15, 1, 1, 1, NULL, 'kt', 'Дрібна побутова техніка', 'Дрібна побутова техніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(16, 1, 1, 1, NULL, 'kt', 'Догляд за будинком', 'Догляд за будинком', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(17, 6, 6, 1, NULL, 'kt', 'Аудіо', 'Аудіо', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(18, 6, 6, 1, NULL, 'kt', 'Відео', 'Відео', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(19, 6, 6, 1, NULL, 'kt', 'Фото', 'Фото', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(20, 6, 6, 1, NULL, 'kt', 'Ігрові приставки', 'Ігрові приставки', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(21, NULL, NULL, 1, NULL, 'kt', 'Авто товари', 'Авто товари', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(22, 21, 21, 1, NULL, 'kt', 'Автоелектроніка', 'Автоелектроніка', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(23, 21, 21, 1, NULL, 'kt', 'Авто звук', 'Авто звук', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(24, 21, 23, 1, NULL, 'kt', 'Автомагнітоли', 'Автомагнітоли', 'ACTIVE', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(25, 21, 23, 1, NULL, '', 'Аксесуари до автозвуку', 'Аксесуари до автозвуку', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(26, 21, 21, 1, NULL, '', 'АвтоОптика (Світло)', 'АвтоОптика (Світло)', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07'),
+(27, 21, 26, 1, NULL, '', 'Габаритні вогні', 'Габаритні вогні', 'ACTIVE', '2013-08-27 02:26:07', '2013-08-27 02:26:07');
 
 -- --------------------------------------------------------
 
@@ -510,24 +516,6 @@ CREATE TABLE IF NOT EXISTS `shop_offers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `shop_orderDetails`
---
-
-DROP TABLE IF EXISTS `shop_orderDetails`;
-CREATE TABLE IF NOT EXISTS `shop_orderDetails` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `BuyerName` varchar(300) NOT NULL,
-  `BuyerAddress1` varchar(200) NOT NULL,
-  `BuyerAddress2` varchar(200) NOT NULL,
-  `BuyerPhone` varchar(100) NOT NULL,
-  `BuyerEmail` varchar(100) NOT NULL,
-  `Comments` varchar(500) NOT NULL,
-  UNIQUE KEY `ID` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `shop_orders`
 --
 
@@ -539,13 +527,13 @@ CREATE TABLE IF NOT EXISTS `shop_orders` (
   `Warehouse` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
   `Status` enum('ACTIVE','SHOP_REVIEWING','SHOP_PACKAGE','LOGISTIC_DELIVERING','CUSTOMER_POSTPONE','CUSTOMER_CANCELED','CUSTOMER_CHANGED','SHOP_WAITING_CUSTOMER_APPROVAL','CUSTOMER_APPROVED','LOGISTIC_DELIVERED','SHOP_CLOSED','CUSTOMER_REOPENED','CUSTOMER_CLOSED','CUSTOMER_WAITNG_REFUND','SHOP_REFUNDED','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
-  `TrackingLink` int(11) NOT NULL,
-  `DateCreate` int(11) NOT NULL,
-  `DateUpdate` int(11) NOT NULL,
+  `Hash` varchar(100) COLLATE utf8_bin NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
   KEY `AccountID` (`AccountID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -573,14 +561,14 @@ CREATE TABLE IF NOT EXISTS `shop_origins` (
 --
 
 INSERT INTO `shop_origins` (`ID`, `CustomerID`, `ExternalKey`, `Name`, `Description`, `HomePage`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(1, 0, '', 'SONY', 'SONY', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(2, 0, '', 'DELL', 'DELL', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(3, 0, '', 'HP', 'HP', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(4, 0, '', 'Samsung', 'Samsung', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(5, 0, '', 'LG', 'LG', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(6, 0, '', 'Toshiba', 'Toshiba', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(7, 0, '', 'SHARP', 'SHARP', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
-(8, 0, '', 'Apple', 'Apple', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41');
+(1, 1, '', 'SONY', 'SONY', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(2, 1, '', 'DELL', 'DELL', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(3, 1, '', 'HP', 'HP', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(4, 1, '', 'Samsung', 'Samsung', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(5, 1, '', 'LG', 'LG', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(6, 1, '', 'Toshiba', 'Toshiba', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(7, 1, '', 'SHARP', 'SHARP', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41'),
+(8, 1, '', 'Apple', 'Apple', 'http://www.sony.com', 'ACTIVE', '2013-08-27 02:26:41', '2013-08-27 02:26:41');
 
 -- --------------------------------------------------------
 
@@ -605,29 +593,29 @@ CREATE TABLE IF NOT EXISTS `shop_productAttributes` (
 --
 
 INSERT INTO `shop_productAttributes` (`ID`, `CustomerID`, `ProductID`, `Attribute`, `Value`) VALUES
-(1, 0, 4, 'LABEL', 'test'),
-(2, 0, 4, 'TAGS', 'wash device'),
-(3, 0, 5, 'TAGS', 'light bulb'),
-(4, 0, 5, 'LABEL', 'smth elese'),
-(5, 0, 4, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(6, 0, 5, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(7, 0, 6, 'IMAGE', 'http://cmsresources.windowsphone.com/windowsphone/en-gb/Phones/Lumia820/Phone280x280.png'),
-(8, 0, 7, 'IMAGE', 'http://www.hp-laptops.org/wp-content/uploads/2011/12/HP-Probook-5330m-Images.jpg'),
-(9, 0, 8, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(10, 0, 9, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(11, 0, 10, 'IMAGE', 'http://blogs.independent.co.uk/wp-content/uploads/2013/01/ubuntu-for-phones.jpg'),
-(12, 0, 11, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(13, 0, 12, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(14, 0, 6, 'LABEL', 'smth elese'),
-(15, 0, 7, 'LABEL', 'smth elese'),
-(16, 0, 4, 'IMAGE', 'http://jomax-international.com/files/products/images/LCD-3.jpg'),
-(17, 0, 4, 'IMAGE', 'http://www2.hull.ac.uk/student/images/lcd-tv.jpg'),
-(18, 0, 4, 'IMAGE', 'http://www.magnet.ru/pictures/17-662-201306151235480.jpg'),
-(19, 0, 4, 'IMAGE', 'http://www.nine220volts.com/images/22LH20R.jpg'),
-(20, 0, 4, 'IMAGE', 'http://img.elmir.ua/img/243547/3000/2000/monitor_lcd_22_philips_224e5qsb_01.jpg'),
-(21, 0, 4, 'IMAGE', 'http://i00.i.aliimg.com/photo/v3/485808738/FHD_1080p_42_inch_lcd_tv_led.jpg'),
-(22, 0, 4, 'IMAGE', 'http://img1.elmir.ua/img/235695/1960/1280/monitor_lcd_23_samsung_s23c570hs_ls23c570hs.jpg'),
-(23, 0, 4, 'IMAGE', 'http://www.blogcdn.com/www.engadget.com/media/2010/07/acer-s1-lcd-monitor.jpg');
+(1, 1, 4, 'LABEL', 'test'),
+(2, 1, 4, 'TAGS', 'wash device'),
+(3, 1, 5, 'TAGS', 'light bulb'),
+(4, 1, 5, 'LABEL', 'smth elese'),
+(5, 1, 4, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(6, 1, 5, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(7, 1, 6, 'IMAGE', 'http://cmsresources.windowsphone.com/windowsphone/en-gb/Phones/Lumia820/Phone280x280.png'),
+(8, 1, 7, 'IMAGE', 'http://www.hp-laptops.org/wp-content/uploads/2011/12/HP-Probook-5330m-Images.jpg'),
+(9, 1, 8, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(10, 1, 9, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(11, 1, 10, 'IMAGE', 'http://blogs.independent.co.uk/wp-content/uploads/2013/01/ubuntu-for-phones.jpg'),
+(12, 1, 11, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(13, 1, 12, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
+(14, 1, 6, 'LABEL', 'smth elese'),
+(15, 1, 7, 'LABEL', 'smth elese'),
+(16, 1, 4, 'IMAGE', 'http://jomax-international.com/files/products/images/LCD-3.jpg'),
+(17, 1, 4, 'IMAGE', 'http://www2.hull.ac.uk/student/images/lcd-tv.jpg'),
+(18, 1, 4, 'IMAGE', 'http://www.magnet.ru/pictures/17-662-201306151235480.jpg'),
+(19, 1, 4, 'IMAGE', 'http://www.nine220volts.com/images/22LH20R.jpg'),
+(20, 1, 4, 'IMAGE', 'http://img.elmir.ua/img/243547/3000/2000/monitor_lcd_22_philips_224e5qsb_01.jpg'),
+(21, 1, 4, 'IMAGE', 'http://i00.i.aliimg.com/photo/v3/485808738/FHD_1080p_42_inch_lcd_tv_led.jpg'),
+(22, 1, 4, 'IMAGE', 'http://img1.elmir.ua/img/235695/1960/1280/monitor_lcd_23_samsung_s23c570hs_ls23c570hs.jpg'),
+(23, 1, 4, 'IMAGE', 'http://www.blogcdn.com/www.engadget.com/media/2010/07/acer-s1-lcd-monitor.jpg');
 
 -- --------------------------------------------------------
 
@@ -704,21 +692,21 @@ CREATE TABLE IF NOT EXISTS `shop_products` (
 --
 
 INSERT INTO `shop_products` (`ID`, `CustomerID`, `CategoryID`, `OriginID`, `Name`, `ExternalKey`, `Description`, `Specifications`, `Model`, `SKU`, `Price`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(3, 0, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 213.00, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(4, 0, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 100.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(5, 0, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(6, 0, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 36.00, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
-(7, 0, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 46.25, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(8, 0, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 56.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(9, 0, 15, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(10, 0, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 171.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(11, 0, 23, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 37.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(12, 0, 3, 3, 'AAA S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(13, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 355.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(14, 0, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 68.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(15, 0, 1, 3, 'CCC S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 85.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(16, 0, 1, 1, 'EEE S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
-(17, 0, 15, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(3, 1, 1, 1, 'TES 1', 'tes1', 'test test 33', 'test test 33', 'test test 33', 'test test 33', 213.00, 'ACTIVE', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(4, 1, 1, 5, 'LCD S32DV', 'lcds32dv', 'LCD S32DV Description', '', 'S32DV', 'S32DV11111', 100.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(5, 1, 1, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(6, 1, 1, 1, 'I AM HIDDEN PRODUCT', 'test2', 'test test', 'test test', 'test test', 'test test', 36.00, 'REMOVED', '0000-00-00 00:00:00', '2013-09-30 12:21:56'),
+(7, 1, 4, 1, 'Ложки', 'logku', 'Опис тут', '', 'L100', 'ALLL1200100', 46.25, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(8, 1, 16, 7, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 56.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(9, 1, 15, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 71.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(10, 1, 13, 8, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 171.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(11, 1, 23, 2, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 37.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(12, 1, 3, 3, 'AAA S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 17.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(13, 1, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 355.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(14, 1, 27, 3, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 68.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(15, 1, 1, 3, 'CCC S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 85.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(16, 1, 1, 1, 'EEE S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 554.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
+(17, 1, 15, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (18, 0, 1, 1, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 65.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (19, 0, 16, 6, 'LCD S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 7.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
 (20, 0, 1, 1, 'BBB S48DV', 'lcds48dv', 'LCD S48DV Description', '', 'S48DV', 'S48DV222222', 55.00, 'ACTIVE', '2013-08-27 02:28:56', '2013-08-27 02:28:56'),
@@ -1233,10 +1221,16 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 --
+-- Constraints for table `mpws_accountAddresses`
+--
+ALTER TABLE `mpws_accountAddresses`
+  ADD CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `mpws_accounts`
 --
 ALTER TABLE `mpws_accounts`
-  ADD CONSTRAINT `mpws_accounts_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `mpws_jobs`
@@ -1267,8 +1261,8 @@ ALTER TABLE `mpws_users`
 -- Constraints for table `shop_boughts`
 --
 ALTER TABLE `shop_boughts`
-  ADD CONSTRAINT `shop_boughts_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `shop_boughts_ibfk_4` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_boughts_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_categories`
@@ -1343,8 +1337,6 @@ ALTER TABLE `shop_relations`
 --
 ALTER TABLE `shop_specifications`
   ADD CONSTRAINT `shop_specifications_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
-SET FOREIGN_KEY_CHECKS=1;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
