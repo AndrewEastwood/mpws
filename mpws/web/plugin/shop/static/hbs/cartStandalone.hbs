@@ -16,41 +16,85 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- Checkout page title -->
-                        <h4 class="title"><i class="icon-shopping-cart"></i>Швидке оформлення замовлення</h4>
+                        <h4 class="title"><i class="icon-shopping-cart"></i>Оформлення замовлення</h4>
                         <!-- Sub title -->
-                        <h5 class="title">Деталі доставки</h5>
+                        <h5 class="title"></h5>
                         <!-- Address and Shipping details form -->
                         <div class="form form-small">
+
                             <!-- Register form (not working)-->
                             <form class="form-horizontal">
-                                <!-- Name -->
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="name1">Імя</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="shopCartUserName" class="form-control" id="name1">
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#quick" data-toggle="tab">Швидке замовлення</a></li>
+                                    <li><a href="#profile" data-toggle="tab">Увійти в акаунт</a></li>
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="quick">
+
+                                        <!-- Name -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="name1">Імя</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartUserName" class="form-control" id="name1">
+                                            </div>
+                                        </div>
+                                        <!-- Email -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="email1">Ел.пошта</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartUserEmail" class="form-control" id="email1">
+                                            </div>
+                                        </div>
+                                        <!-- Telephone -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="telephone">Контактний телефон</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="shopCartUserPhone" class="form-control" id="telephone">
+                                            </div>
+                                        </div>
+                                        <!-- Address -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="address">Адреса доставки</label>
+                                            <div class="col-md-6">
+                                                <textarea name="shopCartUserDelivery" class="form-control" id="address"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-3 col-sm-9">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="shopCartCreateAccount"> Створити профіль
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="profile">
+
+                                        <!-- Name -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="name1">Логін</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="userLogin" class="form-control" id="name1">
+                                            </div>
+                                        </div>
+                                        <!-- Email -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="email1">Пароль</label>
+                                            <div class="col-md-6">
+                                                <input type="text" name="userPassword" class="form-control" id="email1">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
-                                <!-- Email -->
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="email1">Ел.пошта</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="shopCartUserEmail" class="form-control" id="email1">
-                                    </div>
-                                </div>
-                                <!-- Telephone -->
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="telephone">Контактний телефон</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="shopCartUserPhone" class="form-control" id="telephone">
-                                    </div>
-                                </div>
-                                <!-- Address -->
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="address">Адреса доставки</label>
-                                    <div class="col-md-6">
-                                        <textarea name="shopCartUserDelivery" class="form-control" id="address"></textarea>
-                                    </div>
-                                </div>
+
+
+
                                 <!-- Country -->
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Місто</label>
@@ -83,15 +127,6 @@
                                         <textarea class="form-control" id="comment" name="shopCartComment"></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-3 col-sm-9">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="shopCartCreateAccount"> Створити профіль
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
                             </form>
                         </div>
                         <hr>
@@ -99,7 +134,7 @@
                         <div class="row">
                             <div class="col-md-4 col-md-offset-8">
                                 <div class="pull-right">
-                                    <a href="javascript://" data-action="shop:cart:save" class="btn btn-success">Підтвердити замовлення</a>
+                                    <a href="javascript://" data-action="shop:cart:save" class="btn btn-success">Замовити</a>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +161,23 @@
         </div>
 
     {{else}}
-        <div class="alert alert-warning">Ваш кошик порожній</div>
+
+        {{#if data.status.orderID }}
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Дякуємо за Ваше замовлення!</h3>
+                </div>
+                <!-- List group -->
+                <ul class="list-group">
+                    <li class="list-group-item">Найближчим часом в робочий час до Вас подзвонить наш працівник для уточнення замовлення.</li>
+                    <li class="list-group-item">Номер замовлення: <span class="label label-success">{{data.status.orderID}}</span></li>
+                    <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
+                    <li class="list-group-item"><a href="/#shop/tracking/{{data.status.orderHash}}">/#shop/tracking/{{data.status.orderHash}}</a></li>
+                </ul>
+            </div>
+        {{else}}
+            <div class="alert alert-warning">Ваш кошик порожній</div>
+        {{/if}}
+
     {{/if}}
 </div>

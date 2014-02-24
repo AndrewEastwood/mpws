@@ -8,7 +8,7 @@ define("plugin/shop/js/view/cartStandalone", [
 
     $.cookie.json = true;
 
-    var CartEmbedded = MView.extend({
+    var CartStandalone = MView.extend({
         // tagName: 'div',
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
@@ -40,6 +40,10 @@ define("plugin/shop/js/view/cartStandalone", [
                         else
                             _input.val(val);
                     });
+
+                // if we have saved order we clear user data
+                if (self.model.has('status') &&  self.model.get('status').orderID)
+                    self.clearUserInfo();
             });
 
             Sandbox.eventSubscribe('shop:cart:save', function () {
@@ -58,9 +62,12 @@ define("plugin/shop/js/view/cartStandalone", [
                     _userInfo[$(this).attr('name')] = $(this).val();
             });
             return _userInfo;
+        },
+        clearUserInfo: function () {
+            $.cookie("shopUser", null);
         }
     });
 
-    return CartEmbedded;
+    return CartStandalone;
 
 });

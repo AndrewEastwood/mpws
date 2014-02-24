@@ -19,7 +19,7 @@ define("customer/js/site", [
     // 'plugin/shop/js/site'
     'default/js/plugin/css!customer/css/theme.css'
 
-], function ($, Site/*, _, Backbone, mpwsPage, pluginShopRouter*/) {
+], function ($, SiteBase/*, _, Backbone, mpwsPage, pluginShopRouter*/) {
 
     var _customerOptions = {};
 
@@ -55,10 +55,38 @@ define("customer/js/site", [
         }
     }
 
-    var siteObj = new Site(_customerOptions);
+    var site = new SiteBase(_customerOptions);
+
+    var Router = Backbone.Router.extend({
+        routes: {
+            "site/account": "account",
+            "site/login": "login",
+            "site/logout": "logout",
+        },
+
+        initialize: function () {
+
+            // site.addMenuItem();
+        },
+
+        account: function () {
+
+        },
+
+        login: function () {
+
+        },
+
+
+        logout: function () {
+
+        }
+
+    });
+
 
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout
-    return siteObj;
+    return site;
 
 });

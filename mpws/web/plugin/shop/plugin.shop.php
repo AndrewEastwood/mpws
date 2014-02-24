@@ -527,7 +527,7 @@ class pluginShop extends objectPlugin {
             // $dataObj->setData('info', $_getInfoFn($productData));
             // return $dataObj;
 
-            // var_dump($cartUser);
+            // var_dump($_POST);
 
             // TODO:
             // add new or use active account
@@ -616,12 +616,12 @@ class pluginShop extends objectPlugin {
 
             // need to shop order id and status link
             // and send email
-            $dataObj->setData('orderID', $orderID);
-            $dataObj->setData('orderHash', $dataOrder["Hash"]);
+            $dataObj->setData('status', array(
+                'orderID' => $orderID,
+                'orderHash'=> $dataOrder["Hash"]
+            ));
             // $dataObj->setData('lastRecordID', );
             // var_dump($this->getCustomer()->getCustomerInfo());
-
-
         }
 
         $dataObj->setData('info', $_getInfoFn($productData['products']));

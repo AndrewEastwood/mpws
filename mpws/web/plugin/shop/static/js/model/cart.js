@@ -55,6 +55,7 @@ define("plugin/shop/js/model/cart", [
             return {
                 user: data.shop.user || {},
                 info: data.shop.info,
+                status: data.shop.status || {},
                 products: _(products).map(function(item){ return item; })
             };
         },
@@ -89,10 +90,19 @@ define("plugin/shop/js/model/cart", [
             this.updateUrl({
                 action: 'SAVE'
             });
-
+            // this.save({user: userData});
+            var self = this;
             $.post(this.url, {user: userData}, function(data){
                 debugger;
                 // if (data)
+                var _data = self.parse(data);
+
+                _(_data).each(function(val, key){
+                    self.set(key, val, {silent: true});
+                });
+
+                self.trigger('change');
+
             });
         }
     });
