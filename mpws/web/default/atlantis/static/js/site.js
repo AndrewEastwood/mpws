@@ -80,11 +80,17 @@ define("default/js/site", [
                 if (_ph instanceof $ && _ph.length)
                     _ph.html(content);
             },
-            addWidgetTop: function (content) {
-                $('.MPWSWidgetsTop').append(content);
+            addWidgetTop: function (content, prepend) {
+                if (prepend)
+                    $('.MPWSWidgetsTop').prepend(content);
+                else
+                    $('.MPWSWidgetsTop').append(content);
             },
-            addWidgetBottom: function (content) {
-                $('.MPWSWidgetsBottom').append(content);
+            addWidgetBottom: function (content, prepend) {
+                if (prepend)
+                    $('.MPWSWidgetsBottom').prepend(content);
+                else
+                    $('.MPWSWidgetsBottom').append(content);
             }
         }
     }

@@ -40,10 +40,10 @@ footer {
   margin-left: auto;
   background: rgba(0, 0, 0, 0.1);
   .MPWSWidgetsTop {
-  margin-top: -10px;
-  margin-bottom: 10px;
-  padding-right: 10px;
-  text-align: right;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding-right: 10px;
+    text-align: right;
   }
 }
 
@@ -574,4 +574,162 @@ i.fa {cursor: pointer;}
   .shopCartSubTotal {padding-left: 10px;}
   .shopCartTotal {padding-left: 10px; font-size: 1.3em;}
   .value {font-weight: bold;}
+}
+
+.shop-order-tracking-button {
+  margin-right: 10px;
+  .btn {
+    padding-left: 30px;
+  }
+  .image-package {
+    position: absolute;
+    background: url('@{imgPath}icon_pack.png') no-repeat;
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+    left: -14px;
+    top: -10px;
+  }
+}
+
+.shop-tracking-status {
+  .form-horizontal {
+    margin-bottom: 50px;
+  }
+  .order-status {
+    margin-top: 150px;
+    position: relative;
+    margin-bottom: 150px;
+  }
+  .order-status-timeline {
+    height: 12px;
+    border: 1px solid #aaa;
+    border-radius: 7px;
+    background: #eee;
+    box-shadow: 0px 0px 5px 0px #C2C2C2 inset;
+    .order-status-timeline-completion {
+      height: 8px;
+      margin: 1px;
+      border-radius: 7px;
+      background: #cf7400;
+      width: 0px;
+      &.c0 {}
+      &.c1 {width: 22%;}
+      &.c2 {width: 46%;}
+      &.c3 {width: 70%;}
+      &.c4 {width: 100%;}
+    }
+  }
+
+  .image-order-status {
+    border: 1px solid #ddd;
+    padding: 7px;
+    box-shadow: 0px 0px 10px 0px #999;
+    background-color: #fdfdfd;
+    // display: inline-block;
+    position: absolute;
+    // margin-left: 3%;
+    margin-top: -35px;
+    &.disabled {
+      filter: url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'><filter%20id='grayscale'><feColorMatrix%20type='matrix'%20values='0.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200.3333%200.3333%200.3333%200%200%200%200%200%201%200'/></filter></svg>#grayscale"); /* Firefox 3.5+ */
+      filter: grayscale(100%); /* Current draft standard */
+      -webkit-filter: grayscale(100%); /* New WebKit */
+      -moz-filter: grayscale(100%);
+      -ms-filter: grayscale(100%); 
+      -o-filter: grayscale(100%);
+      filter: gray; /* IE6+ */
+    }
+    &.active {
+      box-shadow: 0px 0px 10px 0px #cf7400;
+      .status {
+        color: #cf7400;
+        text-shadow: 0px 0px 1px #777;
+      }
+    }
+    .icon {
+      height: 40px;
+      width: 40px;
+      background-size: contain;
+      background-position: no-repeat;
+    }
+    .status {
+      position: absolute;
+      text-shadow: 1px 1px #eee;
+      color: #333;
+      transform:rotate(-30deg);
+      -webkit-transform:rotate(-30deg); /* Safari */
+      width: 180px;
+      top: -50px;
+      left: 50px;
+      &:before {
+        font-family: FontAwesome;
+        content: "\f053";
+        padding-right: 5px;
+      }
+    }
+  }
+
+  .image-order-status-new {
+    left: 0;
+    .icon {
+      background-image: url('@{imgPath}icon_pack_new.png');
+    }
+  }
+  .image-order-status-active {
+    left: 22%;
+    .icon {
+      background-image: url('@{imgPath}icon_inprogress.png');
+    }
+  }
+  .image-order-status-intransit {
+    left: 45%;
+    .icon {
+      background-image: url('@{imgPath}icon_transit.png');
+    }
+  }
+  .image-order-status-delivered {
+    left: 70%;
+    .icon {
+      background-image: url('@{imgPath}icon_pack.png');
+    }
+    .status {
+      top: 85px;
+      left: -180px;
+      transform:rotate(-30deg);
+      -webkit-transform:rotate(-30deg); /* Safari */
+      text-align: right;
+      &:before {
+        display: none;
+      }
+      &:after {
+        font-family: FontAwesome;
+        content: "\f054";
+        padding-left: 5px;
+        vertical-align: middle;
+      }
+    }
+  }
+  .image-order-status-completed {
+    right: 0px;
+    .icon {
+      background-image: url('@{imgPath}icon_complete.png');
+    }
+    .status {
+      top: 85px;
+      left: -180px;
+      transform:rotate(-30deg);
+      -webkit-transform:rotate(-30deg); /* Safari */
+      text-align: right;
+      &:before {
+        display: none;
+      }
+      &:after {
+        font-family: FontAwesome;
+        content: "\f054";
+        padding-left: 5px;
+        vertical-align: middle;
+      }
+    }
+  }
+
 }

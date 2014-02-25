@@ -84,6 +84,11 @@ class pluginShop extends objectPlugin {
                 $data = $this->_custom_api_productsCompare();
                 break;
             }
+            case "shop_order_status": {
+                $orderHash = libraryRequest::getValue('orderHash');
+                $data = $this->_custom_api_orderStatus($orderHash);
+                break;
+            }
         }
 
         // attach to output
@@ -575,6 +580,7 @@ class pluginShop extends objectPlugin {
             // DateUpdated
             $configOrder = configurationShopDataSource::jsapiShopOrderCreate();
             $dataOrder["AccountID"] = $accountID;
+            $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
             $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
             $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
             $dataOrder["Comment"] = $cartUser['shopCartComment'];
@@ -626,6 +632,19 @@ class pluginShop extends objectPlugin {
 
         $dataObj->setData('info', $_getInfoFn($productData['products']));
         $dataObj->setData('products', $productData['products']);
+
+        return $dataObj;
+    }
+
+    private function _custom_api_orderStatus ($orderHash) {
+        // $orderHash
+        $dataObj = new libraryDataObject();
+
+        $config = configurationShopDataSource::jsapiShopOrderStatus();
+        $config["condition"]["values"][] = $orderHash;
+        $orderStatus = $this->getCustomer()->processData($config);
+
+        $dataObj->setData('orderStatus', $orderStatus);
 
         return $dataObj;
     }

@@ -122,6 +122,7 @@ define("default/js/view/mView", [
                             var Site = require('customer/js/site');
                             this.$el.html(this.template({
                                 options: Site.options || {},
+                                location: Backbone.history.location,
                                 app: {
                                     config: window.app.config,
                                     location: {

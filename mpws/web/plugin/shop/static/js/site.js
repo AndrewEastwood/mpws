@@ -8,8 +8,9 @@ define("plugin/shop/js/site", [
     'plugin/shop/js/model/productsCompare',
     'plugin/shop/js/model/wishList',
     'plugin/shop/js/model/cart',
-    'plugin/shop/js/view/cartEmbedded'
-], function (Site, $, _, Backbone, Cache, MenuSite, ModelProductsCompare, ModelWishList, ModelCart, CartEmbedded) {
+    'plugin/shop/js/view/cartEmbedded',
+    'plugin/shop/js/view/orderTrackingButton'
+], function (Site, $, _, Backbone, Cache, MenuSite, ModelProductsCompare, ModelWishList, ModelCart, CartEmbedded, OrderTrackingButton) {
 
     var shoppingCartModel = new ModelCart();
     var shoppingWishListModel = new ModelWishList();
@@ -26,6 +27,7 @@ define("plugin/shop/js/site", [
             "shop/cart": "shop_cart",
             "shop/wishlist": "shop_wishlist",
             "shop/compare": "shop_compare",
+            "shop/tracking(/)(:id)": "shop_tracking"
         },
 
         initialize: function () {
@@ -38,6 +40,12 @@ define("plugin/shop/js/site", [
             });
             Site.addWidgetTop(cartEmbedded.$el);
             cartEmbedded.fetchAndRender();
+
+            // inject tracking order
+            var orderTrackingButton = new OrderTrackingButton();
+            Site.addWidgetTop(orderTrackingButton.$el, true);
+            orderTrackingButton.fetchAndRender();
+
         },
 
         home: function () {
@@ -227,6 +235,36 @@ define("plugin/shop/js/site", [
 
                     // return view object to pass it into this function at next invocation
                     return wishListStandalone;
+                });
+            });
+        },
+
+        shop_tracking: function (orderHash) {
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: null
+            });
+
+            require(['plugin/shop/js/view/trackingStatus'], function (TrackingStatus) {
+                Cache.withObject('TrackingStatus', function (cachedView) {
+                    // remove previous view
+                    if (cachedView && cachedView.destroy)
+                        cachedView.destroy();
+
+                    // create new view
+                    var trackingStatus = new TrackingStatus();
+                    Site.setPlaceholder('bodyCenter', trackingStatus.$el);
+                    if (orderHash)
+                        trackingStatus.fetchAndRender({
+                            orderHash: orderHash
+                        });
+                    else
+                        trackingStatus.fetchAndRender();
+
+                    // return view object to pass it into this function at next invocation
+                    return trackingStatus;
                 });
             });
         }

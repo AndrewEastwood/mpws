@@ -210,7 +210,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "source" => "shop_categories",
             "condition" => array(
                 "filter" => "Status (=) ?",
-                "values" => array("ACTIVE")
+                "values" => array("NEW")
             ),
             "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
@@ -234,6 +234,23 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "options" => null
         ));
     }
+    static function jsapiShopOrderStatus () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_orders",
+            "condition" => array(
+                "filter" => "Hash (=) ?",
+                "values" => array()
+            ),
+            "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
+            "offset" => 0,
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
     // <<<< Shop order
 
 }

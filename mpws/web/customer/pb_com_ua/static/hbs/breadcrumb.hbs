@@ -7,10 +7,6 @@
 
 <ol class="breadcrumb shop-breadcrumb">
 
-{{!--     {{$ "test"}}
-
-    {{>  plugin_shop_hbs_coolPartial }} --}}
-
     {{#compare app.location.fragment "==" "" }}
     <li class="active">Головна</li>
     {{/compare}}
@@ -38,6 +34,11 @@
     <li><a href="/#">Головна</a></li>
     <li class="active">Порівняння</li>
     {{/compare}}
+
+    {{#srtStartsWith app.location.fragment "shop/tracking" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Відстеження вантажу</li>
+    {{/srtStartsWith}}
 
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
