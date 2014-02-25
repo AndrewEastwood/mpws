@@ -67,7 +67,7 @@ define("default/js/site", [
                     _views.breadcrumb.fetchAndRender(options);
                 return false;
             },
-            addMenuItem: function (item) {
+            addMenuItem: function (item, prepend) {
                 if (_views.menu)
                     _views.menu.addMenuItem(item);
                 return false;

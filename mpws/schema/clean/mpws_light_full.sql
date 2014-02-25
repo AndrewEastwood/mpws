@@ -7,6 +7,10 @@
 -- Server version: 5.5.34
 -- PHP Version: 5.3.10-1ubuntu3.8
 
+DROP DATABASE IF EXISTS `mpws_light` ;
+CREATE DATABASE `mpws_light` ;
+USE `mpws_light`;
+
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT=0;

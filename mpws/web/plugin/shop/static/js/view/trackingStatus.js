@@ -7,16 +7,12 @@ define("plugin/shop/js/view/trackingStatus", [
     var TrackingStatus = MView.extend({
         className: 'row shop-tracking-status',
         id: 'shop-tracking-status-ID',
-        model: new ModelTrackingStatus(),
         template: tpl,
         events: {
             'click #shopGetOrderStatusID': 'getOrderStatus'
         },
         initialize: function () {
-            MView.prototype.initialize.call(this);
-            this.on('mview:renderComplete', function () {
-                
-            }, this);
+            this.model = new ModelTrackingStatus();
         },
         getOrderStatus: function (){
             this.fetchAndRender({

@@ -22,7 +22,7 @@ define("default/js/view/menu", [
                 this.renderMenuItems();
             }, this);
         },
-        addMenuItem: function (item) {
+        addMenuItem: function (item, prepend) {
             // debugger;
             if (item instanceof $) {
                 if (item.is('li'))

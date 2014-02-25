@@ -210,7 +210,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "source" => "shop_categories",
             "condition" => array(
                 "filter" => "Status (=) ?",
-                "values" => array("NEW")
+                "values" => array("ACTIVE")
             ),
             "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Status"),
         ));

@@ -1,9 +1,10 @@
 define("default/js/view/mView", [
+    'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/handlebars',
     'default/js/lib/extend.string',
-], function (_, Backbone, Handlebars) {
+], function (Sandbox, _, Backbone, Handlebars) {
 
     function _factory () {
         var MView = Backbone.View.extend({
@@ -139,6 +140,9 @@ define("default/js/view/mView", [
                         if (typeof this.template === "string")
                             this.$el.html(this.template);
                     }
+
+                    if (_self.viewName)
+                        Sandbox.eventNotify('view:'+_self.viewName, _self);
 
                     this.trigger('mview:renderComplete', _self);
                 }

@@ -30,19 +30,40 @@ define("customer/js/site", [
     };
 
     _customerOptions.placeholders = {
-        header: $('.MPWSPageHeader'),
-        body: $('.MPWSPageBody'),
-        footer: $('.MPWSPageFooter'),
-        breadcrumb: $('.MPWSBreadcrumb'),
-        menu: $('.MPWSPageHeader .MPWSBlockCenter'),
-        bodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
-        productListOverview: $('.MPWSPageBody .MPWSBlockCenter'),
-        productEntryStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
-        shoppingCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
-        shoppingWishListStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
-        shoppingCartEmbedded: $('.MPWSWidgetsTop'),
-        shoppingCartCheckout: $('.MPWSPageBody .MPWSBlockCenter'),
-        productListCatalog: $('.MPWSPageBody .MPWSBlockCenter')
+        common: {
+            header: $('.MPWSPageHeader'),
+            headerLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
+            headerCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
+            headerRight: $('.MPWSPageHeader .MPWSBlockRight'),
+            body: $('.MPWSPageBody'),
+            bodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
+            bodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
+            bodyRight: $('.MPWSPageBody .MPWSBlockRight'),
+            footer: $('.MPWSPageFooter'),
+            footerLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
+            footerCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
+            footerRight: $('.MPWSPageFooter .MPWSBlockRight'),
+            breadcrumb: $('.MPWSBreadcrumb'),
+            menu: $('.MPWSPageHeader .MPWSBlockCenter'),
+            widgetsTop: $('.MPWSWidgetsTop'),
+            widgetsBottom: $('.MPWSWidgetsBottom')
+        },
+        shop: {
+            productListOverview: $('.MPWSPageBody .MPWSBlockCenter'),
+            productListCatalog: $('.MPWSPageBody .MPWSBlockCenter'),
+            productItemStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+            shoppingCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+            shoppingWishListStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+            widgetShoppingCartEmbedded: $('.MPWSWidgetsTop'),
+            widgetOrderStatusButton: $('.MPWSWidgetsTop'),
+            orderStatusStandalone: $('.MPWSPageBody .MPWSBlockCenter')
+        },
+        account: {
+            widgetButtonAccount: $('.MPWSWidgetsTop'),
+            pageLogin: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageLogout: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageProfile: $('.MPWSPageBody .MPWSBlockCenter'),
+        }
     };
 
     _customerOptions.views = {
@@ -56,34 +77,6 @@ define("customer/js/site", [
     }
 
     var site = new SiteBase(_customerOptions);
-
-    var Router = Backbone.Router.extend({
-        routes: {
-            "site/account": "account",
-            "site/login": "login",
-            "site/logout": "logout",
-        },
-
-        initialize: function () {
-
-            // site.addMenuItem();
-        },
-
-        account: function () {
-
-        },
-
-        login: function () {
-
-        },
-
-
-        logout: function () {
-
-        }
-
-    });
-
 
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout

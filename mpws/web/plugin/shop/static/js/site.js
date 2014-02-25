@@ -1,4 +1,5 @@
 define("plugin/shop/js/site", [
+    'default/js/lib/sandbox',
     'customer/js/site',
     'cmn_jquery',
     'default/js/lib/underscore',
@@ -10,11 +11,15 @@ define("plugin/shop/js/site", [
     'plugin/shop/js/model/cart',
     'plugin/shop/js/view/cartEmbedded',
     'plugin/shop/js/view/orderTrackingButton'
-], function (Site, $, _, Backbone, Cache, MenuSite, ModelProductsCompare, ModelWishList, ModelCart, CartEmbedded, OrderTrackingButton) {
+], function (Sandbox, Site, $, _, Backbone, Cache, MenuSite, ModelProductsCompare, ModelWishList, ModelCart, CartEmbedded, OrderTrackingButton) {
 
     var shoppingCartModel = new ModelCart();
     var shoppingWishListModel = new ModelWishList();
     var productsCompareModel = new ModelProductsCompare();
+
+    Sandbox.eventSubscribe('view:AccountLoginPage', function (view) {
+        view.$('.panel-title').text('Welcome to our store!');
+    });
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -63,8 +68,8 @@ define("plugin/shop/js/site", [
                 Cache.withObject('ListProductLatest', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var listProductLatest = new ListProductLatest();
@@ -93,8 +98,8 @@ define("plugin/shop/js/site", [
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListProductCatalog', function (cachedView) {
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var listProductCatalog = new ListProductCatalog({
@@ -134,8 +139,8 @@ define("plugin/shop/js/site", [
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ProductItemFull', function (cachedView) {
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var productItemFull = new ProductItemFull();
@@ -162,8 +167,8 @@ define("plugin/shop/js/site", [
             require(['plugin/shop/js/view/productsCompare'], function (ProductsCompare) {
                 Cache.withObject('ProductsCompare', function (cachedView) {
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var productsCompare = new ProductsCompare({
@@ -192,8 +197,8 @@ define("plugin/shop/js/site", [
             require(['plugin/shop/js/view/cartStandalone'], function (CartStandalone) {
                 Cache.withObject('CartStandalone', function (cachedView) {
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var cartStandalone = new CartStandalone({
@@ -221,8 +226,8 @@ define("plugin/shop/js/site", [
             require(['plugin/shop/js/view/wishListStandalone'], function (WishListStandalone) {
                 Cache.withObject('WishListStandalone', function (cachedView) {
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var wishListStandalone = new WishListStandalone({
@@ -249,9 +254,10 @@ define("plugin/shop/js/site", [
 
             require(['plugin/shop/js/view/trackingStatus'], function (TrackingStatus) {
                 Cache.withObject('TrackingStatus', function (cachedView) {
+                    // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.destroy)
-                        cachedView.destroy();
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
                     // create new view
                     var trackingStatus = new TrackingStatus();
