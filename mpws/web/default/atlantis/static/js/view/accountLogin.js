@@ -10,7 +10,7 @@ define("default/js/view/accountLogin", [
 
     var AccountLogin = View.extend({
         viewName: 'AccountLoginPage',
-        className: 'well',
+        className: 'container',
         template: tpl
     });
 

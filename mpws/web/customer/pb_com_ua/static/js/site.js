@@ -52,11 +52,12 @@ define("customer/js/site", [
             productListOverview: $('.MPWSPageBody .MPWSBlockCenter'),
             productListCatalog: $('.MPWSPageBody .MPWSBlockCenter'),
             productItemStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+            productCompare: $('.MPWSPageBody .MPWSBlockCenter'),
             shoppingCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
             shoppingWishListStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
             widgetShoppingCartEmbedded: $('.MPWSWidgetsTop'),
             widgetOrderStatusButton: $('.MPWSWidgetsTop'),
-            orderStatusStandalone: $('.MPWSPageBody .MPWSBlockCenter')
+            ordertrackingStandalone: $('.MPWSPageBody .MPWSBlockCenter')
         },
         account: {
             widgetButtonAccount: $('.MPWSWidgetsTop'),
@@ -68,10 +69,10 @@ define("customer/js/site", [
 
     _customerOptions.views = {
         menu: {
-            el: _customerOptions.placeholders.menu
+            el: _customerOptions.placeholders.common.menu
         },
         breadcrumb: {
-            el: _customerOptions.placeholders.breadcrumb,
+            el: _customerOptions.placeholders.common.breadcrumb,
             template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
         }
     }

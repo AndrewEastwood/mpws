@@ -24,7 +24,8 @@
             cmn_jquery: _globalConfig.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
         },
         hbs: {
-            i18nDirectory: _globalConfig.URL_STATIC_DEFAULT + 'nls/'
+            i18nDirectory: _globalConfig.URL_STATIC_DEFAULT + 'nls/',
+            i18n: true
         },
         waitSeconds: 15,
         urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
@@ -43,8 +44,11 @@
         // setup plugin routers
         var pluginCount  = _args.length;
         if (pluginCount > 1)
-            for (var i = 1; i < pluginCount; i++)
-                new _args[i](_customerJs);
+            for (var i = 1; i < pluginCount; i++) {
+                // debugger;
+                /*var router = */new _args[i](_customerJs);
+                // router.name = _globalConfig.PLUGINS[i - 1];
+            }
 
         // window.app.customer = _customerJs;
 

@@ -6,10 +6,6 @@ define("plugin/account/js/site", [
     'default/js/lib/cache'
 ], function (Site, $, _, Backbone, Cache, AccountLogin) {
 
-    // var shoppingCartModel = new ModelCart();
-    // var shoppingWishListModel = new ModelWishList();
-    // var productsCompareModel = new ModelProductsCompare();
-
     var Router = Backbone.Router.extend({
         routes: {
             "account/login": "login",
@@ -35,7 +31,7 @@ define("plugin/account/js/site", [
 
                     // create new view
                     var accountLogin = new AccountLogin();
-                    Site.setPlaceholder('bodyCenter', accountLogin.el);
+                    Site.placeholders.account.pageLogin.html(accountLogin.el);
                     accountLogin.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation

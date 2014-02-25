@@ -48,6 +48,7 @@ define("default/js/site", [
         });
 
         return {
+            placeholders: _placeholders,
             config: app.config,
             options: options,
             views: _views,
@@ -71,26 +72,6 @@ define("default/js/site", [
                 if (_views.menu)
                     _views.menu.addMenuItem(item);
                 return false;
-            },
-            getPlaceholder: function (name) {
-                return _placeholders[name];
-            },
-            setPlaceholder: function (name, content) {
-                var _ph = this.getPlaceholder(name);
-                if (_ph instanceof $ && _ph.length)
-                    _ph.html(content);
-            },
-            addWidgetTop: function (content, prepend) {
-                if (prepend)
-                    $('.MPWSWidgetsTop').prepend(content);
-                else
-                    $('.MPWSWidgetsTop').append(content);
-            },
-            addWidgetBottom: function (content, prepend) {
-                if (prepend)
-                    $('.MPWSWidgetsBottom').prepend(content);
-                else
-                    $('.MPWSWidgetsBottom').append(content);
             }
         }
     }

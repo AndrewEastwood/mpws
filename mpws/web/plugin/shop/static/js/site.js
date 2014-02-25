@@ -39,18 +39,17 @@ define("plugin/shop/js/site", [
 
             MenuSite.render();
 
+            // inject tracking order
+            var orderTrackingButton = new OrderTrackingButton();
+            Site.placeholders.common.widgetsTop.append(orderTrackingButton.$el);
+            orderTrackingButton.fetchAndRender();
+
             // inject embedded shopping cart
             var cartEmbedded = new CartEmbedded({
                 model: shoppingCartModel
             });
-            Site.addWidgetTop(cartEmbedded.$el);
+            Site.placeholders.common.widgetsTop.append(cartEmbedded.$el);
             cartEmbedded.fetchAndRender();
-
-            // inject tracking order
-            var orderTrackingButton = new OrderTrackingButton();
-            Site.addWidgetTop(orderTrackingButton.$el, true);
-            orderTrackingButton.fetchAndRender();
-
         },
 
         home: function () {
@@ -62,7 +61,6 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-
             require(['plugin/shop/js/view/listProductLatest'], function (ListProductLatest) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListProductLatest', function (cachedView) {
@@ -73,7 +71,7 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var listProductLatest = new ListProductLatest();
-                    Site.setPlaceholder('bodyCenter', listProductLatest.el);
+                    Site.placeholders.shop.productListOverview.html(listProductLatest.el);
                     listProductLatest.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation
@@ -105,7 +103,7 @@ define("plugin/shop/js/site", [
                     var listProductCatalog = new ListProductCatalog({
                         categoryID: categoryID
                     });
-                    Site.setPlaceholder('bodyCenter', listProductCatalog.el);
+                    Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
                     listProductCatalog.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation
@@ -144,7 +142,7 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var productItemFull = new ProductItemFull();
-                    Site.setPlaceholder('bodyCenter', productItemFull.el);
+                    Site.placeholders.shop.productItemStandalone.html(productItemFull.el);
 
                     productItemFull.fetchAndRender({
                         productID: productID
@@ -174,7 +172,7 @@ define("plugin/shop/js/site", [
                     var productsCompare = new ProductsCompare({
                         model: productsCompareModel
                     });
-                    Site.setPlaceholder('bodyCenter', productsCompare.$el);
+                    Site.placeholders.shop.productCompare.html(productsCompare.$el);
                     // debugger;
                     productsCompare.fetchAndRender({
                         action: "INFO"
@@ -204,7 +202,7 @@ define("plugin/shop/js/site", [
                     var cartStandalone = new CartStandalone({
                         model: shoppingCartModel
                     });
-                    Site.setPlaceholder('bodyCenter', cartStandalone.$el);
+                    Site.placeholders.shop.shoppingCartStandalone.html(cartStandalone.$el);
                     cartStandalone.fetchAndRender({
                         action: "INFO"
                     });
@@ -233,7 +231,7 @@ define("plugin/shop/js/site", [
                     var wishListStandalone = new WishListStandalone({
                         model: shoppingWishListModel
                     });
-                    Site.setPlaceholder('bodyCenter', wishListStandalone.$el);
+                    Site.placeholders.shop.shoppingWishListStandalone.html(wishListStandalone.$el);
                     wishListStandalone.fetchAndRender({
                         action: "INFO"
                     });
@@ -261,7 +259,7 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var trackingStatus = new TrackingStatus();
-                    Site.setPlaceholder('bodyCenter', trackingStatus.$el);
+                    Site.placeholders.shop.ordertrackingStandalone.html(trackingStatus.$el);
                     if (orderHash)
                         trackingStatus.fetchAndRender({
                             orderHash: orderHash
