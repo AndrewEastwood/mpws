@@ -10,7 +10,10 @@ define("default/js/view/menu", [
 
     var Menu = View.extend({
         template: tpl,
-        menuItems: [],
+        menuItems: {
+            left: [],
+            right: []
+        },
         initialize: function () {
             MView.prototype.initialize.call(this);
             this.on('mview:renderComplete', function () {
@@ -22,16 +25,17 @@ define("default/js/view/menu", [
                 this.renderMenuItems();
             }, this);
         },
-        addMenuItem: function (item, prepend) {
+        addMenuItem: function (item, rightSide) {
+            var menuSide = rightSide ? 'right' : 'left';
             // debugger;
             if (item instanceof $) {
                 if (item.is('li'))
-                    this.menuItems.push(item);
+                    this.menuItems[menuSide].push(item);
                 else
-                    this.menuItems.push($('<li>').append(item));
+                    this.menuItems[menuSide].push($('<li>').append(item));
                 this.trigger('menu:itemAdded');
             } else if (typeof item === "string") {
-                this.menuItems.push($('<li>').append(item));
+                this.menuItems[menuSide].push($('<li>').append(item));
                 this.trigger('menu:itemAdded');
             } else if (Array.isArray(item)) {
                 for (var key in item)
@@ -46,13 +50,20 @@ define("default/js/view/menu", [
                 return false;
 
             var _self = this;
-            _(this.menuItems).each(function (item) {
+            _(this.menuItems.left).each(function (item) {
                 // _self.renderMenuItem(item);
                 _self.getMenuItemPlaceholder().append(item);
                 // _self.addMenuItem(item);
              });
+            _(this.menuItems.right).each(function (item) {
+                // _self.renderMenuItem(item);
+                _self.getMenuItemPlaceholder(true).append(item);
+                // _self.addMenuItem(item);
+             });
         },
-        getMenuItemPlaceholder: function () {
+        getMenuItemPlaceholder: function (rightSide) {
+            if (rightSide)
+                return this.$('.nav.pull-right');
             return this.$el.find('.navbar-nav-main');
         }
     });

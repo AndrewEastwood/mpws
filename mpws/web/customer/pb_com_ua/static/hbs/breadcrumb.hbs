@@ -40,6 +40,11 @@
     <li class="active">Відстеження вантажу</li>
     {{/srtStartsWith}}
 
+    {{#srtStartsWith app.location.fragment "account/login" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Вхід</li>
+    {{/srtStartsWith}}
+
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
         {{#foreach data.shop.location}}

@@ -3,8 +3,9 @@ define("plugin/account/js/site", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'plugin/account/js/view/menuSite',
     'default/js/lib/cache'
-], function (Site, $, _, Backbone, Cache, AccountLogin) {
+], function (Site, $, _, Backbone, MenuSite, Cache, AccountLogin) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -14,12 +15,13 @@ define("plugin/account/js/site", [
         },
 
         initialize: function () {
-            Site.addMenuItem($('<a>').attr({
-                href: '/#account/login'
-            }).text('Login'));
+
+            MenuSite.render();
         },
 
         login: function () {
+
+            Site.showBreadcrumbLocation();
 
             require(['default/js/view/accountLogin'], function (AccountLogin) {
                 // using this wrapper to cleanup previous view and create new one

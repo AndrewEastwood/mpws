@@ -15,17 +15,16 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
-
             <ul class="nav navbar-nav navbar-nav-main"></ul>
-
-            {{#if options.site.showSearch }}
-            <form class="navbar-form navbar-right" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="пошук">
-                </div>
-                <button type="button" class="btn btn-primary" data-action="shop:search"><span class="fa fa-search"></span></button>
-            </form>
-            {{/if}}
+            <ul class="nav navbar-nav pull-right"></ul>
         </div>
     </div><!-- /.navbar-collapse -->
 </nav>
+{{#if options.site.showSearch }}
+<form class="form-inline" role="search">
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="пошук">
+    </div>
+    <button type="button" class="btn btn-primary" data-action="site:search"><span class="fa fa-search"></span></button>
+</form>
+{{/if}}

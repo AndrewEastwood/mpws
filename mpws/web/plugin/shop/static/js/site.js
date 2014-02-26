@@ -17,9 +17,9 @@ define("plugin/shop/js/site", [
     var shoppingWishListModel = new ModelWishList();
     var productsCompareModel = new ModelProductsCompare();
 
-    Sandbox.eventSubscribe('view:AccountLoginPage', function (view) {
-        view.$('.panel-title').text('Welcome to our store!');
-    });
+    // Sandbox.eventSubscribe('view:AccountLoginPage', function (view) {
+    //     view.$('.panel-title').text('Welcome to our store!');
+    // });
 
     var Router = Backbone.Router.extend({
         routes: {

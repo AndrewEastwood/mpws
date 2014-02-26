@@ -24,10 +24,10 @@ define("plugin/shop/js/view/menuSite", [
 
     return {
         render: function () {
-            Site.addMenuItem(menuCatalog.$el);
-            Site.addMenuItem(menuCart.$el);
-            Site.addMenuItem(menuWishList.$el);
-            Site.addMenuItem(menuCompare.$el);
+            Site.addMenuItemLeft(menuCatalog.$el);
+            Site.addMenuItemLeft(menuCart.$el);
+            Site.addMenuItemLeft(menuWishList.$el);
+            Site.addMenuItemLeft(menuCompare.$el);
         }
     }
 
