@@ -23,19 +23,19 @@ class pluginAccount extends objectPlugin {
 
 
         if (empty($accountData['firstname']))
-            $errors[] = 'firstname#Empty';
+            $errors[] = 'firstname_Empty';
 
         if (empty($accountData['lastname']))
-            $errors[] = 'lastname#Empty';
+            $errors[] = 'lastname_Empty';
 
         if (empty($accountData['email']))
-            $errors[] = 'email#Empty';
+            $errors[] = 'email_Empty';
 
         if (empty($accountData['password']))
-            $errors[] = 'password#Empty';
+            $errors[] = 'password_Empty';
 
         if ($accountData['password'] != $accountData['confirm_password'])
-            $errors[] = 'confirm_password#WrongConfirmPassword';
+            $errors[] = 'confirm_password_WrongConfirmPassword';
 
         if (count($errors))
             $accountObj->setError($errors);

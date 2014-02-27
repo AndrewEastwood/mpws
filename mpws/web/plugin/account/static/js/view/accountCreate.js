@@ -5,8 +5,10 @@ define("plugin/account/js/view/accountCreate", [
     /* model */
     'plugin/account/js/model/accountCreate',
     /* template */
-    'default/js/plugin/hbs!plugin/account/hbs/accountCreate'
-], function ($, _, MView, ModelAccountCreate, tpl) {
+    'default/js/plugin/hbs!plugin/account/hbs/accountCreate',
+    /* lang */
+    'default/js/plugin/i18n!plugin/account/nls/account'
+], function ($, _, MView, ModelAccountCreate, tpl, lang) {
 
     var View = MView.getNew();
 
@@ -14,6 +16,7 @@ define("plugin/account/js/view/accountCreate", [
         viewName: 'AccountCreatePage',
         className: 'container',
         template: tpl,
+        lang: lang,
         model: new ModelAccountCreate(),
         events: {
             "submit .form": 'doRegister',
@@ -29,7 +32,9 @@ define("plugin/account/js/view/accountCreate", [
                 _account[fldName] = self.$('[name="' + fldName + '"]').val();
             });
 
-            // debugger;
+            debugger;
+
+
 
             $.post(this.model.url, {account: _account}, function(data){
                 // debugger;
@@ -45,7 +50,7 @@ define("plugin/account/js/view/accountCreate", [
                         _(data.account.error).each(function(err){
                             var _fldMsg = err.split('#');
                             if (_fldMsg.length === 2)
-                                self.$('[name="' + _fldMsg[0] + '"]').text(lang.errors[_fldMsg[1]]);
+                                self.$('[name="' + _fldMsg[0] + '"]').text(lang["register_error_" + err]);
                         });
                 }
 
