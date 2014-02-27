@@ -1,15 +1,15 @@
-define("plugin/account/js/view/menuAccount", [
+define("plugin/account/js/view/menuSignIn", [
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/account/hbs/menuAccount'
+    'default/js/plugin/hbs!plugin/account/hbs/menuSignIn'
 ], function (MView, tpl) {
 
-    var MenuAccount = MView.extend({
+    var MenuSignIn = MView.extend({
         tagName: 'li',
         className: 'dropdown account-dropdown-signin',
         id: 'account-dropdown-signin-ID',
         template: tpl
     });
 
-    return MenuAccount;
+    return MenuSignIn;
 
 });

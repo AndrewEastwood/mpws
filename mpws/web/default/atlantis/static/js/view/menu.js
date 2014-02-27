@@ -63,7 +63,7 @@ define("default/js/view/menu", [
         },
         getMenuItemPlaceholder: function (rightSide) {
             if (rightSide)
-                return this.$('.nav.pull-right');
+                return this.$('.navbar-right');
             return this.$el.find('.navbar-nav-main');
         }
     });

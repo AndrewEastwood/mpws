@@ -52,6 +52,10 @@ server {
       rewrite ^/static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
     }
 
+    location /static {
+      rewrite ^/static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
+    }
+
     location /api {
       rewrite ^/api\.js(.*) /engine/controller/controller.api.php?$1 last;
     }
