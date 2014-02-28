@@ -163,18 +163,21 @@ class objectCustomer {
         // return false;
     }
 
-    public function addAccount ($data) {
+    public function addAccount ($dataAccount) {
+        $dataAccount["CustomerID"] = $this->getCustomerID();
+        $dataAccount["ValidationString"] = md5(mktime());
         $config = configurationCustomerDataSource::jsapiAddAccount();
-        $config['data'] = $data;
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
         $this->getDataBase()->getData($config);
-        return true;
+        return $this->getDataBase()->getLastInsertId();
     }
 
-    public function getAccount () {
-        $config = configurationCustomerDataSource::jsapiGetAccount();
-        $categories = $this->getDataBase()->getData($config);
-
-        var_dump($categories);
+    public function getAccount ($login, $password) {
+        $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
+        return $this->getDataBase()->getData($config);
     }
 
     public function activateAccount () {

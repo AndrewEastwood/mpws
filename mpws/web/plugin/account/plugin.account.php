@@ -9,10 +9,30 @@ class pluginAccount extends objectPlugin {
                 $data = $this->_custom_api_createAccount();
                 break;
             }
+            case "signin": {
+                $data = $this->_custom_api_signin();
+                break;
+            }
         }
 
         // attach to output
         return $data;
+    }
+
+    private function _custom_api_signin () {
+        $accountObj = new libraryDataObject();
+
+        $credentials = libraryRequest::getPostValue('credentials');
+
+        if (empty($dataAccount['login']))
+            $errors['login'] = 'Empty';
+
+        if (empty($dataAccount['password']))
+            $errors['password'] = 'Empty';
+
+        $dataAccount = $this->getAccount();
+
+        return $accountObj;
     }
 
     private function _custom_api_createAccount () {
@@ -48,10 +68,7 @@ class pluginAccount extends objectPlugin {
         $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
         $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
 
-        $this->getCustomer()-> addAccount(array(
-            "fields" => array_keys($dataAccount),
-            "values" => array_values($dataAccount)
-        ));
+        $this->getCustomer()-> addAccount($dataAccount);
 
         $accountObj->setData("success", true);
 

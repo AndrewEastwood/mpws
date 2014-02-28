@@ -550,24 +550,20 @@ class pluginShop extends objectPlugin {
             // TrackingLink
             // DateCreate
             // DateUpdate
-
             $dataAccount = array();
-            $dataAccount["CustomerID"] = $this->getCustomer()->getCustomerID();
             $dataAccount["FirstName"] = $cartUser["shopCartUserName"];
             $dataAccount["LastName"] = "";
             $dataAccount["EMail"] = $cartUser["shopCartUserEmail"];
             $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
             $dataAccount["Password"] = "1234";
-            $dataAccount["ValidationString"] = md5(mktime());
-            $dataAccount["DateCreated"] = "2014-02-22 00:00:00";
-            $dataAccount["DateUpdated"] = "2014-02-22 00:00:00";
+            $accountID = $this->getCustomer()-> addAccount($dataAccount);
 
-            $this->getCustomer()-> addAccount(array(
-                "fields" => array_keys($dataAccount),
-                "values" => array_values($dataAccount)
-            ));
+            // $this->getCustomer()-> addAccount(array(
+            //     "fields" => array_keys($dataAccount),
+            //     "values" => array_values($dataAccount)
+            // ));
 
-            $accountID = $this->getDataBase()->getLastInsertId();
+            // $accountID = $this->getDataBase()->getLastInsertId();
 
             // save order
             // -----------------------
@@ -585,8 +581,8 @@ class pluginShop extends objectPlugin {
             $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
             $dataOrder["Comment"] = $cartUser['shopCartComment'];
             $dataOrder["Hash"] = md5(mktime() . md5(mktime()));
-            $dataOrder["DateCreated"] = "2014-02-22 00:00:00";
-            $dataOrder["DateUpdated"] = "2014-02-22 00:00:00";
+            $dataOrder['DateCreated'] = date('Y:m:d H:i:s');
+            $dataOrder['DateUpdated'] = date('Y:m:d H:i:s');
             $configOrder['data'] = array(
                 "fields" => array_keys($dataOrder),
                 "values" => array_values($dataOrder)

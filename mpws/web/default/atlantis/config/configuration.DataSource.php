@@ -85,11 +85,15 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiGetAccount () {
+    static function jsapiGetAccount ($login, $password) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "fields" => array("*"),
             "limit" => 1,
+            "condition" => array(
+                "filter" => "EMail (=) ? + Password (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
+                "values" => array($login, md5($password))
+            ),
             "options" => array(
                 "expandSingleRecord" => true
             )
