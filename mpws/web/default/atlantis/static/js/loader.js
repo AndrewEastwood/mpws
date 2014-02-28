@@ -23,10 +23,6 @@
             // version suppress
             cmn_jquery: _globalConfig.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
         },
-        hbs: {
-            i18nDirectory: _globalConfig.URL_STATIC_DEFAULT + 'nls/',
-            i18n: true
-        },
         waitSeconds: 15,
         urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
     });

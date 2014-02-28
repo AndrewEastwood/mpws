@@ -16,29 +16,44 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _custom_api_createAccount () {
-        $accountData = libraryRequest::getPostValue('account');
+        $dataAccount = libraryRequest::getPostValue('account');
 
         $accountObj = new libraryDataObject();
         $errors = array();
 
+        if (empty($dataAccount['FirstName']))
+            $errors['FirstName'] = 'Empty';
 
-        if (empty($accountData['firstname']))
-            $errors[] = 'firstname_Empty';
+        if (empty($dataAccount['LastName']))
+            $errors['LastName'] = 'Empty';
 
-        if (empty($accountData['lastname']))
-            $errors[] = 'lastname_Empty';
+        if (empty($dataAccount['EMail']))
+            $errors['EMail'] = 'Empty';
 
-        if (empty($accountData['email']))
-            $errors[] = 'email_Empty';
+        if (empty($dataAccount['Password']))
+            $errors['Password'] = 'Empty';
 
-        if (empty($accountData['password']))
-            $errors[] = 'password_Empty';
+        if ($dataAccount['Password'] != $dataAccount['ConfirmPassword'])
+            $errors['ConfirmPassword'] = 'WrongConfirmPassword';
 
-        if ($accountData['password'] != $accountData['confirm_password'])
-            $errors[] = 'confirm_password_WrongConfirmPassword';
-
-        if (count($errors))
+        if (count($errors)) {
             $accountObj->setError($errors);
+            $accountObj->setData("values", $dataAccount);
+            return $accountObj;
+        }
+
+        unset($dataAccount['ConfirmPassword']);
+
+        $dataAccount['Password'] = md5($dataAccount['Password']);
+        $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+
+        $this->getCustomer()-> addAccount(array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        ));
+
+        $accountObj->setData("success", true);
 
         return $accountObj;
     }

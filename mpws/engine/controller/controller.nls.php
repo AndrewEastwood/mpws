@@ -12,7 +12,6 @@
     else
         $layoutCustomer = glGetFullPath('web', 'build', 'customer', $customer, 'static', 'nls', $langfile);
 
-    // echo $layoutCustomer;
 
     if (file_exists($layoutCustomer))
         echo file_get_contents($layoutCustomer);

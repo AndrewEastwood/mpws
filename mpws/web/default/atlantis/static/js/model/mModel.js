@@ -18,6 +18,11 @@ define("default/js/model/mModel", [
 
             // resetUrlOptionsAfterFetch: true,
 
+            getDataSource: function () {
+                debugger;
+
+            },
+
             getSource: function () {
                 return this.get(this._urlOptions.source);
             },

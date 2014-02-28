@@ -1,24 +1,49 @@
-<div class="container user-account-create" id="wrap">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <form accept-charset="utf-8" class="form" role="form">
-                <legend>{{lang.register_title}}</legend>
-                <div class="row">
-                    <div class="col-xs-6 col-md-6">
-                        <input type="text" name="firstname" value="" class="form-control input-lg" placeholder="Імя" required />
+{{#if data.success }}
+    <div class="alert alert-success"><strong>Готово!</strong>Ваш профіль маже готовий.</div>
+{{else}}
+    <div class="container user-account-create" id="wrap">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form accept-charset="utf-8" class="form" role="form">
+                    <legend>{{lang.form_register_title}}</legend>
+                    <div class="form-group has-error">
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <input type="text" name="FirstName" value="{{data.values.FirstName}}" class="form-control input-lg" placeholder="{{lang.form_register_field_FirstName}}" required />
+                                {{#if data.error.FirstName }}
+                                <div class="error-message FirstName_Error"></div>
+                                {{/if}}
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <input type="text" name="LastName" value="{{data.values.LastName}}" class="form-control input-lg" placeholder="{{lang.form_register_field_LastName}}" required />
+                                {{#if data.error.LastName }}
+                                <div class="error-message LastName_Error"></div>
+                                {{/if}}
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-6 col-md-6">
-                        <input type="text" name="lastname" value="" class="form-control input-lg" placeholder="Прізвище" required />
+                    <div class="form-group has-error">
+                        <input type="email" name="EMail" value="{{data.values.EMail}}" class="form-control input-lg" placeholder="{{lang.form_register_field_EMail}}" required />
+                        {{#if data.error.EMail }}
+                        <div class="error-message EMail_Error"></div>
+                        {{/if}}
                     </div>
-                </div>
-                <input type="email" name="email" value="" class="form-control input-lg" placeholder="Ел. адреса" required />
-                <input type="password" name="password" value="" class="form-control input-lg" placeholder="Пароль" required />
-                <input type="password" name="confirm_password" value="" class="form-control input-lg" placeholder="Підтвердження паролю" required />
-                <span class="help-block">
-                    By clicking Create my account, you agree to our Terms and that you have read our Data Use Policy, including our Cookie Use.
-                </span>
-                <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">Сворити профіль</button>
-            </form>
+                    <div class="form-group has-error">
+                        <input type="password" name="Password" value="" class="form-control input-lg" placeholder="{{lang.form_register_field_Password}}" required />
+                        {{#if data.error.Password }}
+                        <div class="error-message Password_Error"></div>
+                        {{/if}}
+                    </div>
+                    <div class="form-group has-error">
+                        <input type="password" name="ConfirmPassword" value="" class="form-control input-lg" placeholder="{{lang.form_register_field_ConfirmPassword}}" required />
+                        {{#if data.error.ConfirmPassword }}
+                        <div class="error-message ConfirmPassword_Error"></div>
+                        {{/if}}
+                    </div>
+                    <span class="help-block">{{lang.form_register_message_bottom}}</span>
+                    <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">{{lang.form_register_button_create}}</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+{{/if}}
