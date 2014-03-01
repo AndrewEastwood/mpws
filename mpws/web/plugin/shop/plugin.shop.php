@@ -89,6 +89,11 @@ class pluginShop extends objectPlugin {
                 $data = $this->_custom_api_orderStatus($orderHash);
                 break;
             }
+            case "shop_profile_orders": {
+                $profileID = libraryRequest::getValue('profileID');
+                $data = $this->_custom_api_profileOrders($profileID);
+                break;
+            }
         }
 
         // attach to output
@@ -632,9 +637,59 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
+    private function _custom_api_profileOrders ($profileID) {
+
+        $dataObj = new libraryDataObject();
+
+        if (!isset($profileID)) {
+            $dataObj->setError('WrongProfileID');
+            return $dataObj;
+        }
+
+        if (!$this->getCustomer()->hasPlugin('account')) {
+            $dataObj->setError('WrongRequest');
+            return $dataObj;
+        }
+
+        if (!isset($_SESSION['Account:ProfileID'])) {
+            $dataObj->setError('AccessDenied');
+            return $dataObj;
+        }
+
+        // get orders
+        $configOrders = configurationShopDataSource::jsapiShopProfilesOrders($profileID);
+        $dataOrders = $this->getCustomer()->processData($configOrders);
+
+        // var_dump($dataOrders);
+
+        // // get order boughts
+        foreach ($dataOrders as $key => $order) {
+            $configBoughts = configurationShopDataSource::jsapiShopBoughts($order['ID']);
+            // var_dump($configBoughts);
+            $boughts = $this->getDataBase()->getData($configBoughts);
+
+            foreach ($boughts as $bkey => $soldItem) {
+                $product = $this->_custom_api_getProductItem($soldItem['ProductID']);
+                if ($product->hasData()) { 
+                    $productData = $product->getData();
+                    $boughts[$bkey]['Product'] = $productData['products'][$soldItem['ProductID']];
+                } else
+                    $boughts[$bkey]['Product'] = null;
+            }
+
+            $dataOrders[$key]['Boughts'] = $boughts;
+        }
+
+        // $dataObj->setData('profileOrders', $profileOrders);
+        $dataObj->setData('orders', $dataOrders);
+        // var_dump($dataOrders);
+        return $dataObj;
+    }
+
     private function _custom_api_orderStatus ($orderHash) {
         // $orderHash
         $dataObj = new libraryDataObject();
+
 
         $config = configurationShopDataSource::jsapiShopOrderStatus();
         $config["condition"]["values"][] = $orderHash;

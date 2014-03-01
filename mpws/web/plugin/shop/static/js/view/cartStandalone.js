@@ -1,10 +1,11 @@
 define("plugin/shop/js/view/cartStandalone", [
+    'customer/js/site',
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/view/mView',
     'default/js/plugin/hbs!plugin/shop/hbs/cartStandalone',
     "default/js/lib/jquery.cookie"
-], function (Sandbox, _, MView, tpl) {
+], function (Site, Sandbox, _, MView, tpl) {
 
     $.cookie.json = true;
 
@@ -49,6 +50,25 @@ define("plugin/shop/js/view/cartStandalone", [
             Sandbox.eventSubscribe('shop:cart:save', function () {
                 self.model.checkout(self.collectUserInfo());
             });
+
+            // debugger;
+            if (Site.hasPlugin('account')) {
+                Sandbox.eventNotify('account:status');
+                Sandbox.eventSubscribe('account:status:received', function (data) {
+                    // debugger;
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
+                Sandbox.eventSubscribe('account:signed:in', function (data) {
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
+                Sandbox.eventSubscribe('account:signed:out', function (data) {
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
+            }
+
         },
         collectUserInfo: function () {
             // collect user info

@@ -124,6 +124,7 @@ define("default/js/view/mView", [
                             this.$el.html(this.template({
                                 lang: _self.lang || {},
                                 options: Site.options || {},
+                                plugins: Site.plugins,
                                 location: Backbone.history.location,
                                 app: {
                                     config: window.app.config,

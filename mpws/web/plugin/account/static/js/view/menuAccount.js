@@ -17,6 +17,7 @@ define("plugin/account/js/view/menuAccount", [
         lang: lang,
         events: {
             "submit .form": 'doSignIn',
+            "click #accountProfileSignOutID": 'doSignOut',
         },
         initialize: function () {
             MView.prototype.initialize.call(this);
@@ -26,11 +27,16 @@ define("plugin/account/js/view/menuAccount", [
             this.model.doLogin(this.collectCredentials());
             return false;
         },
+        doSignOut: function () {
+            this.model.doLogout();
+            return false;
+        },
         collectCredentials: function () {
             var self = this;
             return {
                 email: self.$('#signinEmail').val(),
                 password: self.$('#signinPassword').val(),
+                remember: self.$('#signinRemember').is(':checked')
             }
         },
         addMenuItem: function (item) {

@@ -18,6 +18,10 @@ define("default/js/lib/cache", function (){
         _cache[name] = object;
     }
 
+    Cache.hasObject = function (name) {
+        return !!_cache[name];
+    }
+
     Cache.withObject = function (name, handler) {
         if (typeof handler === "function")
             _cache[name] = handler(_cache[name]);

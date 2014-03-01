@@ -55,6 +55,11 @@
     <li class="active">Мої замовлення</li>
     {{/srtStartsWith}}
 
+    {{#srtStartsWith app.location.fragment "account/profile" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Профіль</li>
+    {{/srtStartsWith}}
+
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
         {{#foreach data.shop.location}}

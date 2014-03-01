@@ -1,0 +1,51 @@
+{{#if data.orders }}
+    
+<div class="panel-group" id="accordion">
+    {{#each data.orders }}
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#collapse_{{ID}}">
+          Замовлення # {{ID}} на суму: 
+        </a>
+      </h4>
+    </div>
+    <div id="collapse_{{ID}}" class="panel-collapse collapse out">
+      <div class="panel-body">
+        <div class="shop-widget-productlist">
+        {{#each Boughts }}
+            <div class="wrapper">
+                <a href="javascript://" class="shop-product-remove" data-action="shop:cart:remove" data-id="{{ID}}">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <div class="shop-product-image shop-product-image-main">
+                    <a href="/#shop/product/{{ID}}" class="link" title="{{Product.OriginName}} - {{Product.Name}}">
+                        <img src="{{Product.Attributes.IMAGES.MAIN}}" onerror="this.src='{{Product.Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{Product.OriginName}} - {{Product.Name}}" title="{{Product.OriginName}} - {{Product.Name}}" />
+                    </a>
+                </div>
+                <div class="product-row">
+                    <span class="product-name"><a href="/#shop/product/{{Product.ID}}" title="{{Product.OriginName}} - {{Product.Name}}">{{Product.OriginName}} - {{Product.Name}}</a></span>
+                    <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
+                    <span class="label label-default">x</span>
+                    <span class="label label-warning product-quantity">{{Quantity}}</span>
+                    <span class="label label-default">=</span>
+                    <span class="label label-success product-total">{{_total}}<span class="moneyType">грн.</span></span>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    {{/each}}
+</div>
+
+
+{{else}}
+
+    <div class="alert alert-danger">У вас немає замовлень</div>
+{{/if}}

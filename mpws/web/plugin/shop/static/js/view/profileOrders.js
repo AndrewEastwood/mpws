@@ -1,12 +1,14 @@
-define("plugin/shop/js/view/productsCompare", [
+define("plugin/shop/js/view/profileOrders", [
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/shop/hbs/productsCompare',
+    'plugin/shop/js/model/profileOrders',
+    'default/js/plugin/hbs!plugin/shop/hbs/profileOrders',
     "default/js/lib/jquery.cookie"
-], function (MView, tpl) {
+], function (MView, ModelProfileOrders, tpl) {
 
-    var ProductsCompare = MView.extend({
+    var ProfileOrders = MView.extend({
         className: 'row shop-products-compare',
         id: 'shop-products-compare-ID',
+        model: new ModelProfileOrders(),
         template: tpl,
         initialize: function() {
             MView.prototype.initialize.call(this);
@@ -14,6 +16,6 @@ define("plugin/shop/js/view/productsCompare", [
         }
     });
 
-    return ProductsCompare;
+    return ProfileOrders;
 
 });

@@ -164,10 +164,10 @@ class objectCustomer {
     }
 
     public function addAccount ($dataAccount) {
-        $key = '!MPWSservice123';
+
         $dataAccount["CustomerID"] = $this->getCustomerID();
         $dataAccount["ValidationString"] = md5(mktime());
-        $dataAccount['Password'] = md5($key . $dataAccount['Password']);
+        $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
         $dataAccount['IsTemporary'] = 1;
         $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
         $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
@@ -180,9 +180,9 @@ class objectCustomer {
         return $this->getDataBase()->getLastInsertId();
     }
 
-    public function getAccount ($login, $password) {
-        $key = '!MPWSservice123';
-        $password = md5($key . $password);
+    public function getAccount ($login, $password, $encodePassword = true) {
+        if ($encodePassword)
+            $password = $this->getAccountPassword($password);
         $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
         return $this->getDataBase()->getData($config);
     }
@@ -199,7 +199,21 @@ class objectCustomer {
         
     }
 
+    public function getAccountPassword ($rawPassword) {
+        $key = '!MPWSservice123';
+        return md5($key . $rawPassword);
+    }
 
+    public function isAccountSignedIn () {
+        if (isset($_COOKIE['username']) && isset($_COOKIE['password']))
+            return $this->getAccount($_COOKIE['username'], $_COOKIE['password'], false);
+        else
+            return null;
+    }
+
+    public function hasPlugin ($pluginName) {
+        return !empty($this->plugins[$pluginName]);
+    }
 
 }
 

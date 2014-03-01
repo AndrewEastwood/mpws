@@ -52,6 +52,7 @@ define("default/js/site", [
             config: app.config,
             options: options,
             views: _views,
+            plugins: window.app.config.PLUGINS,
             setConfig: function (config) {
                 _config = config;
             },
@@ -77,6 +78,9 @@ define("default/js/site", [
                 if (_views.menu)
                     _views.menu.addMenuItem(item, true);
                 return false;
+            },
+            hasPlugin: function (pluginName) {
+                return _(window.app.config.PLUGINS).indexOf(pluginName) >= 0;
             }
         }
     }

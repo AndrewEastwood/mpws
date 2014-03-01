@@ -271,7 +271,13 @@ define("plugin/shop/js/site", [
         },
 
         //
-        shop_profile_orders: function (orderHash) {
+        shop_profile_orders: function () {
+
+            if (!Site.hasPlugin('account')) {
+                Backbone.history.havigate("", {trigger: true});
+                return;
+            }
+
             Site.showBreadcrumbLocation({
                 source: 'shop',
                 fn: 'shop_location',
@@ -279,25 +285,22 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/trackingStatus'], function (TrackingStatus) {
-                Cache.withObject('TrackingStatus', function (cachedView) {
+            require(['plugin/shop/js/view/profileOrders'], function (ProfileOrders) {
+                Cache.withObject('ProfileOrders', function (cachedView) {
                     // debugger;
                     // remove previous view
                     if (cachedView && cachedView.remove)
                         cachedView.remove();
 
                     // create new view
-                    var trackingStatus = new TrackingStatus();
-                    Site.placeholders.shop.ordertrackingStandalone.html(trackingStatus.$el);
-                    if (orderHash)
-                        trackingStatus.fetchAndRender({
-                            orderHash: orderHash
-                        });
-                    else
-                        trackingStatus.fetchAndRender();
+                    var profileOrders = new ProfileOrders();
+                    Site.placeholders.shop.ordertrackingStandalone.html(profileOrders.$el);
+                    profileOrders.fetchAndRender({
+                        profileID: Cache.getObject('AccountProfileID')
+                    });
 
                     // return view object to pass it into this function at next invocation
-                    return trackingStatus;
+                    return profileOrders;
                 });
             });
         }

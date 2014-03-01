@@ -250,6 +250,32 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             )
         ));
     }
+    static function jsapiShopBoughts ($orderID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_boughts",
+            "condition" => array(
+                "filter" => "OrderID (=) ?",
+                "values" => array($orderID)
+            ),
+            "fields" => array("ID", "ProductID", "ProductPrice", "Quantity"),
+            "offset" => 0,
+            "limit" => 0
+        ));
+    }
+    static function jsapiShopProfilesOrders ($profileID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_orders",
+            "condition" => array(
+                "filter" => "AccountID (=) ? + Status (!=) ?",
+                "values" => array($profileID, 'SHOP_CLOSED')
+            ),
+            "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
+            "offset" => 0,
+            "limit" => 0,
+        ));
+    }
 
     // <<<< Shop order
 

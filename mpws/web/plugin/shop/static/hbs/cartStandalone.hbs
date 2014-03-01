@@ -26,10 +26,12 @@
                             <form class="form-horizontal">
 
                                 <!-- Nav tabs -->
+                                {{#unless extras.account.profile }}
                                 <ul class="nav nav-tabs">
                                     <li class="active"><a href="#quick" data-toggle="tab">Швидке замовлення</a></li>
                                     <li><a href="#profile" data-toggle="tab">Увійти в акаунт</a></li>
                                 </ul>
+                                {{/unless}}
                                 <!-- Tab panes -->
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="quick">
@@ -100,7 +102,7 @@
                                     <label class="control-label col-md-3">Місто</label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="shopCartUserCity">
-                                            {{> default_hbs_controls_selectboxCityUA }}
+                                            {{> default/hbs/controls/selectboxCityUA }}
                                         </select>
                                     </div>
                                 </div>
@@ -109,7 +111,7 @@
                                     <label class="control-label col-md-3" for="city">Перевізник</label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="shopCartLogistic">
-                                            {{> default_hbs_controls_selectboxLogisticUA }}
+                                            {{> default/hbs/controls/selectboxLogisticUA }}
                                         </select>
                                     </div>
                                 </div>

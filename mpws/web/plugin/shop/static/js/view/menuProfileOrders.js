@@ -10,13 +10,13 @@ define("plugin/shop/js/view/menuProfileOrders", [
         initialize: function () {
             var _self = this;
             // this should react on new order made by active profile
-            // Sandbox.eventSubscribe('shop:compare:info', function (data) {
-            //     var _count = data && data.products && data.products.length || 0;
-            //     if (_count)
-            //         _self.$('.counter').text(_count);
-            //     else
-            //         _self.$('.counter').empty();
-            // });
+            Sandbox.eventSubscribe('shop:profile:orders', function (data) {
+                var _count = data && data.orders && data.orders.length || 0;
+                if (_count)
+                    _self.$('.counter').text(_count);
+                else
+                    _self.$('.counter').empty();
+            });
         }
     });
 

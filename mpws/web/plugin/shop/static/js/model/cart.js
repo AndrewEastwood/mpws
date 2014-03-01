@@ -93,7 +93,7 @@ define("plugin/shop/js/model/cart", [
             // this.save({user: userData});
             var self = this;
             $.post(this.url, {user: userData}, function(data){
-                debugger;
+                // debugger;
                 // if (data)
                 var _data = self.parse(data);
 

@@ -34,6 +34,10 @@ class libraryDataObject {
         return !empty($this->_data['error']);
     }
 
+    public function hasData() {
+        return count($this->_data) > 1;
+    }
+
     // converters
     public function toJSON() { return json_encode($this->getData());}
     public function toNative() { return $this->getData();}
