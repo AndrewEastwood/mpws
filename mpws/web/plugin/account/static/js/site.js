@@ -4,11 +4,10 @@ define("plugin/account/js/site", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'plugin/account/js/view/menuSite',
-    'plugin/account/js/model/account',
     'default/js/lib/cache'
-], function (Site, $, _, Backbone, MenuSite, ModelAccount, Cache) {
+], function (Site, $, _, Backbone, MenuSite, Cache) {
 
-    var account = new ModelAccount();
+    // var account = new ModelAccount();
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -16,6 +15,7 @@ define("plugin/account/js/site", [
             "account/logout": "logout",
             "account/profile": "profile",
             "account/create": "create",
+            "account/settings": "settings",
         },
 
         initialize: function () {
@@ -70,6 +70,8 @@ define("plugin/account/js/site", [
         //     });
 
         // },
+
+        settings: function () {},
 
         logout: function () {},
 

@@ -22,15 +22,27 @@ class pluginAccount extends objectPlugin {
     private function _custom_api_signin () {
         $accountObj = new libraryDataObject();
 
+        $errors = array();
+
         $credentials = libraryRequest::getPostValue('credentials');
 
-        if (empty($dataAccount['login']))
-            $errors['login'] = 'Empty';
+        if (empty($credentials['email']))
+            $errors['email'] = 'Empty';
 
-        if (empty($dataAccount['password']))
+        if (empty($credentials['password']))
             $errors['password'] = 'Empty';
 
-        $dataAccount = $this->getAccount();
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            return $accountObj;
+        }
+
+        $account = $this->getCustomer()->getAccount($credentials['email'], $credentials['password']);
+
+        if (empty($account))
+            $accountObj->setError('WrongCredentials');
+        else
+            $accountObj->setData('profile', $account);
 
         return $accountObj;
     }
@@ -63,10 +75,6 @@ class pluginAccount extends objectPlugin {
         }
 
         unset($dataAccount['ConfirmPassword']);
-
-        $dataAccount['Password'] = md5($dataAccount['Password']);
-        $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
-        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
 
         $this->getCustomer()-> addAccount($dataAccount);
 

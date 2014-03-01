@@ -8,34 +8,18 @@ define("plugin/account/js/model/account", [
     var Model = MModel.getNew();
 
     var Account = Model.extend({
-
-        source: 'shop',
-        fn: 'shop_cart',
-        initialize: function () {
-            Model.prototype.initialize.call(this);
-
-            var _self = this;
-            // debugger;
-            // this.updateUrl({
-            //     action: 'INFO'
-            // });
-
-            Sandbox.eventSubscribe('account:signin', _.bind(_self.doLogin, _self));
-
-            // this.on('change', function () {
-            //     // _self.resetUrlOptions();
-            //     Sandbox.eventNotify('shop:cart:info', _self.toJSON());
-            // });
-
-        },
+        source: 'account',
+        fn: 'signin',
         doLogin: function (data) {
             // debugger;
             var self = this;
             this.updateUrl({
                 action: 'signin'
             });
-            $.post(this.url, data, function (responce) {
-                debugger;
+            $.post(this.url, {credentials: data}, function (responce) {
+                var _data = self.extractModelDataFromRespce(responce);
+                self.set(_data);
+                self.trigger('change');
             });
         },
         doLogout: function () {
@@ -50,6 +34,7 @@ define("plugin/account/js/model/account", [
 
     });
 
-    return Account;
+    // we have only one instance
+    return new Account();
 
 });

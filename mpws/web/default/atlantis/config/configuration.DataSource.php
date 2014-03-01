@@ -91,8 +91,8 @@ class configurationDefaultDataSource extends objectConfiguration {
             "fields" => array("*"),
             "limit" => 1,
             "condition" => array(
-                "filter" => "EMail (=) ? + Password (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
-                "values" => array($login, md5($password))
+                "filter" => "EMail (=) ? + Password (=) ? + IsTemporary (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
+                "values" => array($login, $password, 0)
             ),
             "options" => array(
                 "expandSingleRecord" => true

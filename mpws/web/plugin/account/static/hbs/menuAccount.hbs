@@ -1,0 +1,45 @@
+<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
+   {{#mpwsIsNotEmpty data.profile }}
+      {{lang.profile_menu_welcome}} <strong>{{data.profile.FirstName}}</strong>
+   {{else}}
+      {{lang.form_signin_menu_title}}
+   {{/mpwsIsNotEmpty}}
+<b class="caret"></b></a>
+<ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+   <li>
+      <div class="row">
+         <div class="col-md-12">
+            {{#mpwsIsNotEmpty data.profile }}
+            <ul class="nav nav-list plugin-account-menu"></ul>
+            <ul class="nav nav-list">
+               <li class="divider"></li>
+               <li><a href="/#account/settings"><i class="icon-comment"></i>{{lang.profile_menu_settings}}</a></li>
+               <li><a href="/#account/logout"><i class="icon-share"></i>{{lang.profile_menu_logout}}</a></li>
+            </ul>
+            {{else}}
+            <form accept-charset="utf-8" class="form" role="form">
+               {{#if data.error }}
+                  <p class="text-danger">{{lang.form_signin_error}}</p>
+               {{/if}}
+               <div class="form-group {{#if data.error }}has-error{{/if}}">
+                  <label class="sr-only" for="signinEmail">{{lang.form_signin_field_Email}}</label>
+                  <input type="email" class="form-control" id="signinEmail" placeholder="{{lang.form_signin_field_Email}}" required />
+               </div>
+               <div class="form-group {{#if data.error }}has-error{{/if}}">
+                  <label class="sr-only" for="signinPassword">{{lang.form_signin_field_Password}}</label>
+                  <input type="password" class="form-control" id="signinPassword" placeholder="{{lang.form_signin_field_Password}}" required />
+               </div>
+               <div class="checkbox">
+                  <label>
+                     <input type="checkbox"> {{lang.form_signin_field_RememberMe}}
+                  </label>
+               </div>
+               <div class="form-group">
+                  <button type="submit" class="btn btn-success btn-block btn-signin">{{lang.form_signin_button_signin}}</button>
+               </div>
+            </form>
+            {{/mpwsIsNotEmpty}}
+         </div>
+      </div>
+   </li>
+</ul>

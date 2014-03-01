@@ -164,8 +164,13 @@ class objectCustomer {
     }
 
     public function addAccount ($dataAccount) {
+        $key = '!MPWSservice123';
         $dataAccount["CustomerID"] = $this->getCustomerID();
         $dataAccount["ValidationString"] = md5(mktime());
+        $dataAccount['Password'] = md5($key . $dataAccount['Password']);
+        $dataAccount['IsTemporary'] = 1;
+        $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
         $config = configurationCustomerDataSource::jsapiAddAccount();
         $config['data'] = array(
             "fields" => array_keys($dataAccount),
@@ -176,6 +181,8 @@ class objectCustomer {
     }
 
     public function getAccount ($login, $password) {
+        $key = '!MPWSservice123';
+        $password = md5($key . $password);
         $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
         return $this->getDataBase()->getData($config);
     }

@@ -1,12 +1,12 @@
 {{#if data.success }}
     <div class="panel panel-success">
         <div class="panel-heading">
-            <h3 class="panel-title">Новий профіль успішно створнений!</h3>
+            <h3 class="panel-title">{{lang.form_register_message_success_title}}</h3>
         </div>
         <!-- List group -->
         <ul class="list-group">
-            <li class="list-group-item">На Вашу ел. скриньку надійде повідомлення з підтвредженням Вашї реєстрації.</li>
-            <li class="list-group-item">Для успішного завершення реєстрації Вам необхідно виконати інструкції в отриманому листі</span></li>
+            <li class="list-group-item">{{lang.form_register_message_success_line1}}</li>
+            <li class="list-group-item">{{lang.form_register_message_success_line2}}</li>
         </ul>
     </div>
 {{else}}
@@ -34,7 +34,7 @@
                     <div class="form-group has-error">
                         <input type="email" name="EMail" value="{{data.values.EMail}}" class="form-control input-lg" placeholder="{{lang.form_register_field_EMail}}" required />
                         {{#if data.error.EMail }}
-                        <div class="error-message EMail_Error"></div>
+                        <div class="error-message EMail_Error">{{lang.form_register_error_FirstName_Empty}}</div>
                         {{/if}}
                     </div>
                     <div class="form-group has-error">

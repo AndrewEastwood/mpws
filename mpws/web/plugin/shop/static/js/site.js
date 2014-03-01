@@ -17,10 +17,6 @@ define("plugin/shop/js/site", [
     var shoppingWishListModel = new ModelWishList();
     var productsCompareModel = new ModelProductsCompare();
 
-    // Sandbox.eventSubscribe('view:AccountLoginPage', function (view) {
-    //     view.$('.panel-title').text('Welcome to our store!');
-    // });
-
     var Router = Backbone.Router.extend({
         routes: {
             "": "home",
@@ -32,7 +28,8 @@ define("plugin/shop/js/site", [
             "shop/cart": "shop_cart",
             "shop/wishlist": "shop_wishlist",
             "shop/compare": "shop_compare",
-            "shop/tracking(/)(:id)": "shop_tracking"
+            "shop/tracking(/)(:id)": "shop_tracking",
+            "shop/profile/orders": "shop_profile_orders",
         },
 
         initialize: function () {
@@ -243,6 +240,38 @@ define("plugin/shop/js/site", [
         },
 
         shop_tracking: function (orderHash) {
+            Site.showBreadcrumbLocation({
+                source: 'shop',
+                fn: 'shop_location',
+                productID: null,
+                categoryID: null
+            });
+
+            require(['plugin/shop/js/view/trackingStatus'], function (TrackingStatus) {
+                Cache.withObject('TrackingStatus', function (cachedView) {
+                    // debugger;
+                    // remove previous view
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
+
+                    // create new view
+                    var trackingStatus = new TrackingStatus();
+                    Site.placeholders.shop.ordertrackingStandalone.html(trackingStatus.$el);
+                    if (orderHash)
+                        trackingStatus.fetchAndRender({
+                            orderHash: orderHash
+                        });
+                    else
+                        trackingStatus.fetchAndRender();
+
+                    // return view object to pass it into this function at next invocation
+                    return trackingStatus;
+                });
+            });
+        },
+
+        //
+        shop_profile_orders: function (orderHash) {
             Site.showBreadcrumbLocation({
                 source: 'shop',
                 fn: 'shop_location',
