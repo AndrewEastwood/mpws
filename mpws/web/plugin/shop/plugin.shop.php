@@ -459,6 +459,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
+
     // shopping cart
     // -----------------------------------------------
     private function _custom_api_shoppingCart () {
@@ -475,44 +476,20 @@ class pluginShop extends objectPlugin {
         $productID = intval(libraryRequest::getValue('productID'));
         $productQuantity = intval(libraryRequest::getValue('productQuantity'));
 
-        $_getInfoFn = function (&$_products = array()) {
+        // $_getInfoFn = function (&$_products = array()) {
 
-            // get cartInfo
-            $cartInfo = array(
-                "subTotal" => 0.0,
-                "discount" => 0,
-                "total" => 0.0,
-                "productCount" => 0
-            );
-
-            if (empty($_products))
-                return $cartInfo;
-
-            foreach ($_products as &$_item) {
-                $_item["_total"] = $_item['Price'] * $_item['_quantity'];
-                $cartInfo["subTotal"] += $_item['_total'];
-                $cartInfo["productCount"] += $_item['_quantity'];
-            }
-            $cartInfo["total"] = (($cartInfo['discount'] / 100) ?: 1) *  $cartInfo['subTotal'];
-
-            // update money formats
-            $cartInfo["discount"] = money_format('%.2n%%', $cartInfo["discount"]);
-            $cartInfo["subTotal"] = money_format('%.2n', $cartInfo["subTotal"]);
-            $cartInfo["total"] = money_format('%.2n', $cartInfo["total"]);
-
-            return $cartInfo;
-        };
+        // };
 
         // create/add product
         if ($do == 'ADD' && $productQuantity) {
-            if (empty($productData['products'][$productID]['_quantity']))
-                $productData['products'][$productID]['_quantity'] = 0;
+            if (empty($productData['products'][$productID]['Quantity']))
+                $productData['products'][$productID]['Quantity'] = 0;
 
-            $productData['products'][$productID]['_quantity'] += $productQuantity;
+            $productData['products'][$productID]['Quantity'] += $productQuantity;
 
             // we keep product until REMOVE action is invoked
-            if ($productData['products'][$productID]['_quantity'] <= 0)
-                $productData['products'][$productID]['_quantity'] = 1;
+            if ($productData['products'][$productID]['Quantity'] <= 0)
+                $productData['products'][$productID]['Quantity'] = 1;
 
             $_SESSION['shopCartProducts'] = $productData['products'];
         }
@@ -533,18 +510,6 @@ class pluginShop extends objectPlugin {
             // shopCartCreateAccount
             $cartUser = libraryRequest::getPostValue('user');
 
-            // $dataObj->setData('products', $productData['products']);
-            // $dataObj->setData('info', $_getInfoFn($productData));
-            // return $dataObj;
-
-            // var_dump($_POST);
-
-            // TODO:
-            // add new or use active account
-            // save sold products
-            // create new order
-
-
             // save account
             // -----------------------
             // AccountID
@@ -562,13 +527,6 @@ class pluginShop extends objectPlugin {
             $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
             $dataAccount["Password"] = "1234";
             $accountID = $this->getCustomer()-> addAccount($dataAccount);
-
-            // $this->getCustomer()-> addAccount(array(
-            //     "fields" => array_keys($dataAccount),
-            //     "values" => array_values($dataAccount)
-            // ));
-
-            // $accountID = $this->getDataBase()->getLastInsertId();
 
             // save order
             // -----------------------
@@ -608,8 +566,8 @@ class pluginShop extends objectPlugin {
                 $dataProduct = array();
                 $dataProduct["ProductID"] = $_item["ID"];
                 $dataProduct["OrderID"] = $orderID;
-                $dataProduct["ProductPrice"] = $_item["Price"];
-                $dataProduct["Quantity"] = $_item["_quantity"];
+                $dataProduct["ProductPrice"] = $_item["ProductPrice"];
+                $dataProduct["Quantity"] = $_item["Quantity"];
                 $configProduct['data'] = array(
                     "fields" => array_keys($dataProduct),
                     "values" => array_values($dataProduct)
@@ -627,11 +585,9 @@ class pluginShop extends objectPlugin {
                 'orderID' => $orderID,
                 'orderHash'=> $dataOrder["Hash"]
             ));
-            // $dataObj->setData('lastRecordID', );
-            // var_dump($this->getCustomer()->getCustomerInfo());
         }
 
-        $dataObj->setData('info', $_getInfoFn($productData['products']));
+        $dataObj->setData('info', $this->_custom_util_calculateBought($productData['products']));
         $dataObj->setData('products', $productData['products']);
 
         return $dataObj;
@@ -662,7 +618,7 @@ class pluginShop extends objectPlugin {
 
         // var_dump($dataOrders);
 
-        // // get order boughts
+        // get order boughts
         foreach ($dataOrders as $key => $order) {
             $configBoughts = configurationShopDataSource::jsapiShopBoughts($order['ID']);
             // var_dump($configBoughts);
@@ -672,17 +628,22 @@ class pluginShop extends objectPlugin {
                 $product = $this->_custom_api_getProductItem($soldItem['ProductID']);
                 if ($product->hasData()) { 
                     $productData = $product->getData();
-                    $boughts[$bkey]['Product'] = $productData['products'][$soldItem['ProductID']];
+                    $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
                 } else
                     $boughts[$bkey]['Product'] = null;
             }
 
+            // var_dump($boughts);
+
+            $dataOrders[$key]['Info'] = $this->_custom_util_calculateBought($boughts);
+
+            // var_dump($this->_custom_util_calculateBought($boughts));
+
             $dataOrders[$key]['Boughts'] = $boughts;
         }
 
-        // $dataObj->setData('profileOrders', $profileOrders);
         $dataObj->setData('orders', $dataOrders);
-        // var_dump($dataOrders);
+
         return $dataObj;
     }
 
@@ -754,6 +715,35 @@ class pluginShop extends objectPlugin {
 
         // var_dump($productsMap);
         return $productsMap;
+    }
+
+    private function _custom_util_calculateBought (&$_products) {
+
+        // get cartInfo
+        $cartInfo = array(
+            "subTotal" => 0.0,
+            "discount" => 0,
+            "total" => 0.0,
+            "productCount" => 0
+        );
+
+        if (empty($_products))
+            return $cartInfo;
+
+
+        foreach ($_products as &$_item) {
+            $_item["Total"] = $_item['ProductPrice'] * $_item['Quantity'];
+            $cartInfo["subTotal"] += $_item['Total'];
+            $cartInfo["productCount"] += $_item['Quantity'];
+        }
+        $cartInfo["total"] = (($cartInfo['discount'] / 100) ?: 1) *  $cartInfo['subTotal'];
+
+        // update money formats
+        $cartInfo["discount"] = money_format('%.2n%%', $cartInfo["discount"]);
+        $cartInfo["subTotal"] = money_format('%.2n', $cartInfo["subTotal"]);
+        $cartInfo["total"] = money_format('%.2n', $cartInfo["total"]);
+
+        return $cartInfo;
     }
 
     private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {

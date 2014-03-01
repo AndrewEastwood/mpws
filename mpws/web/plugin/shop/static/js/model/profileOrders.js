@@ -8,12 +8,13 @@ define('plugin/shop/js/model/profileOrders', [
         source: 'shop',
         fn: 'shop_profile_orders',
         parse: function (data) {
-            return data && data.shop;
+            var _data = data && data.shop;
+
             // debugger;
-            var products = ShopUtils.adjustProductEntry(data && data.shop);
-            return {
-                products: _(products).map(function(item){ return item; })
-            };
+            if (_data.orders)
+                for (var key in _data.orders)
+                    _data.orders[key].Boughts = ShopUtils.adjustProductEntry({products: _data.orders[key].Boughts});
+            return _data;
         }
     });
 

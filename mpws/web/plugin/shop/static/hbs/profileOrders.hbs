@@ -8,30 +8,65 @@
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" href="#collapse_{{ID}}">
-          Замовлення # {{ID}} на суму: 
+          Замовлення # {{ID}} на суму: <span class="value label label-success">{{Info.total}}<span class="moneyType">грн.</span></span>
         </a>
       </h4>
     </div>
     <div id="collapse_{{ID}}" class="panel-collapse collapse out">
       <div class="panel-body">
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <span class="prefix">Дата створення:</span>
+                <span class="label label-success">{{DateCreated}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="prefix">Дата останнього оновлення:</span>
+                <span class="label label-success">{{DateUpdated}}</span>
+            </li>
+            {{#if Shipping }}
+            <li class="list-group-item">
+                <span class="prefix">Перевізник:</span>
+                <span class="label label-success">
+                    {{#if_eq Shipping "self" }}
+                        Самовивіз
+                    {{else}}
+                        {{Shipping}}
+                    {{/if_eq}}
+                </span>
+            </li>
+            {{/if}}
+            {{#and Shipping Warehouse }}
+            <li class="list-group-item">
+                <span class="prefix">Номер складу:</span>
+                <span class="label label-success">{{Warehouse}}</span>
+            </li>
+            {{/and}}
+            {{#if Comment }}
+            <li class="list-group-item">
+                <span class="prefix">Ваш коментар:</span>
+                <span class="label label-success">{{Comment}}</span>
+            </li>
+            {{/if}}
+            <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
+            <li class="list-group-item"><a href="{{location.origin}}/#shop/tracking/{{Hash}}">{{location.origin}}/#shop/tracking/{{Hash}}</a></li>
+        </ul>
+
         <div class="shop-widget-productlist">
         {{#each Boughts }}
             <div class="wrapper">
-                <a href="javascript://" class="shop-product-remove" data-action="shop:cart:remove" data-id="{{ID}}">
-                    <i class="fa fa-trash-o"></i>
-                </a>
                 <div class="shop-product-image shop-product-image-main">
-                    <a href="/#shop/product/{{ID}}" class="link" title="{{Product.OriginName}} - {{Product.Name}}">
-                        <img src="{{Product.Attributes.IMAGES.MAIN}}" onerror="this.src='{{Product.Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{Product.OriginName}} - {{Product.Name}}" title="{{Product.OriginName}} - {{Product.Name}}" />
+                    <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
+                        <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
                     </a>
                 </div>
                 <div class="product-row">
-                    <span class="product-name"><a href="/#shop/product/{{Product.ID}}" title="{{Product.OriginName}} - {{Product.Name}}">{{Product.OriginName}} - {{Product.Name}}</a></span>
+                    <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
                     <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
                     <span class="label label-default">x</span>
                     <span class="label label-warning product-quantity">{{Quantity}}</span>
                     <span class="label label-default">=</span>
-                    <span class="label label-success product-total">{{_total}}<span class="moneyType">грн.</span></span>
+                    <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
                 </div>
             </div>
         {{/each}}

@@ -6,8 +6,8 @@ define("plugin/shop/js/view/profileOrders", [
 ], function (MView, ModelProfileOrders, tpl) {
 
     var ProfileOrders = MView.extend({
-        className: 'row shop-products-compare',
-        id: 'shop-products-compare-ID',
+        className: 'row shop-profile-orders',
+        id: 'shop-profile-orders-ID',
         model: new ModelProfileOrders(),
         template: tpl,
         initialize: function() {
