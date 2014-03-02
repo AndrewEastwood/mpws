@@ -6,7 +6,8 @@ define("default/js/site", [
     'default/js/lib/cache',
     // views + models
     'default/js/view/menu',
-    'default/js/view/breadcrumb'
+    'default/js/view/breadcrumb',
+    'default/js/lib/extend.string'
 ], function (Sandbox, $, _, Backbone, Cache, Menu, Breadcrumb) {
 
     var Site = function (options) {
@@ -46,6 +47,14 @@ define("default/js/site", [
             // debugger;
             Sandbox.eventNotify($(this).data('action'), $(this).data());
         });
+
+        $(window).on('hashchange', function() {
+            var _hashTags = window.location.hash.substr(1).split('/');
+            $('body').attr('class', "MPWSPage");
+            if (_hashTags && _hashTags[0])
+                $('body').addClass("Page" + _hashTags[0].ucWords());
+        });
+        $(window).trigger('hashchange');
 
         return {
             placeholders: _placeholders,

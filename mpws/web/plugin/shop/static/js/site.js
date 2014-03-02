@@ -29,7 +29,7 @@ define("plugin/shop/js/site", [
             "shop/wishlist": "shop_wishlist",
             "shop/compare": "shop_compare",
             "shop/tracking(/)(:id)": "shop_tracking",
-            "shop/profile/orders": "shop_profile_orders",
+            "shop/profile/orders": "shop_profile_orders"
         },
 
         initialize: function () {
@@ -274,7 +274,12 @@ define("plugin/shop/js/site", [
         shop_profile_orders: function () {
 
             if (!Site.hasPlugin('account')) {
-                Backbone.history.havigate("", {trigger: true});
+                Backbone.history.navigate("", {trigger: true});
+                return;
+            }
+
+            if (!Cache.hasObject('AccountProfileID')) {
+                Backbone.history.navigate("", {trigger: true});
                 return;
             }
 
@@ -285,24 +290,29 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/profileOrders'], function (ProfileOrders) {
-                Cache.withObject('ProfileOrders', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
 
-                    // create new view
-                    var profileOrders = new ProfileOrders();
-                    Site.placeholders.shop.ordertrackingStandalone.html(profileOrders.$el);
-                    profileOrders.fetchAndRender({
-                        profileID: Cache.getObject('AccountProfileID')
+            // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
+                require(['plugin/shop/js/view/profileOrders'], function (ProfileOrders) {
+                    Cache.withObject('ProfileOrders', function (cachedView) {
+                        // debugger;
+                        // remove previous view
+                        if (cachedView && cachedView.remove)
+                            cachedView.remove();
+
+                        // create new view
+                        var profileOrders = new ProfileOrders();
+                        // view.setPagePlaceholder(profileOrders.$el);
+                        profileOrders.fetchAndRender({
+                            profileID: Cache.getObject('AccountProfileID')
+                        });
+
+                        Sandbox.eventNotify('account:profile:show', profileOrders.$el);
+
+                        // return view object to pass it into this function at next invocation
+                        return profileOrders;
                     });
-
-                    // return view object to pass it into this function at next invocation
-                    return profileOrders;
                 });
-            });
+            // });
         }
 
     });

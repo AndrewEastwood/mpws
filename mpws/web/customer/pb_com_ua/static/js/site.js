@@ -61,9 +61,12 @@ define("customer/js/site", [
         },
         account: {
             widgetButtonAccount: $('.MPWSWidgetsTop'),
-            pageLogin: $('.MPWSPageBody .MPWSBlockCenter'),
-            pageLogout: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageProfileCreate: $('.MPWSPageBody .MPWSBlockCenter'),
             pageProfile: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageProfileOverview: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageProfileEdit: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageProfilePassword: $('.MPWSPageBody .MPWSBlockCenter'),
+            pageProfileDelete: $('.MPWSPageBody .MPWSBlockCenter'),
         }
     };
 

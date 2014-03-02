@@ -12,9 +12,8 @@
             {{#mpwsIsNotEmpty data.profile }}
             <ul class="nav nav-list plugin-account-menu"></ul>
             <ul class="nav nav-list">
-               <li class="divider"></li>
-               <li><a href="/#account/settings"><i class="icon-comment"></i>{{lang.profile_menu_settings}}</a></li>
-               <li><a href="javascript://" id="accountProfileSignOutID" data-action="account:signout" ><i class="icon-share"></i>{{lang.profile_menu_logout}}</a></li>
+               <li><a href="/#account/profile">{{lang.profile_menu_profile}}</a></li>
+               <li><a href="javascript://" id="accountProfileSignOutID">{{lang.profile_menu_logout}}</a></li>
             </ul>
             {{else}}
             <form accept-charset="utf-8" class="form" role="form">

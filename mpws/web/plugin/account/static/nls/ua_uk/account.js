@@ -31,7 +31,22 @@ define("plugin/account/nls/ua_uk/account", [
         profile_menu_title: "",
         profile_menu_welcome: "Вітаємо: ",
         profile_menu_lastAccessDate: "Останній вхід: ",
-        profile_menu_settings: "Налаштування",
+        profile_menu_profile: "Профіль",
         profile_menu_logout: "Вийти",
+        /* profile pages */
+        profile_page_menu_profile: "Профіль",
+        profile_page_menu_profile_overview: "Огляд",
+        profile_page_menu_profile_password: "Зміна паролю",
+        profile_page_menu_profile_edit: "Налаштування",
+        profile_page_menu_profile_delete: "Видалити профіль",
+        profile_page_menu_plugins: "Компоненти",
+        /* profile page:overview */
+        profile_page_overview_title: "Огляд",
+        /* profile page:settings */
+        profile_page_password_title: "Зміна паролю",
+        /* profile page:edit */
+        profile_page_edit_title: "Налаштування",
+        /* profile page:delete */
+        profile_page_delete_title: "Видалення профілю"
     }, CustomerAccount);
 });

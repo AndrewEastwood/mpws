@@ -36,13 +36,15 @@
     require(_filesToRequest, function () {
         var _args = [].slice.call(arguments);
         var _customerJs = _args[0];
+        var _routers = [];
 
         // setup plugin routers
         var pluginCount  = _args.length;
         if (pluginCount > 1)
             for (var i = 1; i < pluginCount; i++) {
                 // debugger;
-                /*var router = */new _args[i](_customerJs);
+                var router = new _args[i](_customerJs);
+                _routers.push(router);
                 // router.name = _globalConfig.PLUGINS[i - 1];
             }
 
@@ -50,6 +52,40 @@
 
         // start/init customer
         _customerJs.start();
+
+        // append undefined action to the last router
+        // debugger;
+        _routers[_routers.length - 1].route("*nomatch", "*nomatch", function() {
+            console.log('mpws: 404');
+            Backbone.history.navigate("", {trigger: true});
+        });
+        // var _paths = {};
+        // for (var rk in _routers) {
+        //     // debugger;
+        //     for (var pk in _routers[rk].routes)
+        //         _paths[pk] = _routers[rk].routes[pk];
+        // }
+
+        // _paths["*nomatch"] = 'notFound';
+
+        // '*nomatch': 'notFound'
+        // notFound: function () {
+        //     console.log('shop: 404');
+        //     Backbone.history.navigate("", {trigger: true});
+        // },
+
+        // debugger;
+
+
+
+        // new Backbone.Router.extend({
+        //     routes: {
+        //         '*nomatch': 'notFound'
+        //     },
+        //     notFound: function () { 
+        //         Backbone.history.navigate("", {trigger: true});
+        //     }
+        // });
 
         Backbone.history.start();  // Запускаем HTML5 History push
     });
