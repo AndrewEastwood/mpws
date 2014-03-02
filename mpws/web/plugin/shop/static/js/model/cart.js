@@ -102,7 +102,6 @@ define("plugin/shop/js/model/cart", [
                 });
 
                 self.trigger('change');
-
             });
         }
     });

@@ -18,6 +18,14 @@ define("default/js/model/mModel", [
 
             // resetUrlOptionsAfterFetch: true,
 
+            clearErrors: function () {
+                if (this.attributes && this.attributes.error)
+                    this.attributes.error = false;
+            },
+            clearStates: function () {
+                if (this.attributes && this.attributes.success)
+                    this.attributes.success = false;
+            },
             extractModelDataFromRespce: function (data) {
                 return data && data[this.source] || {};
             },

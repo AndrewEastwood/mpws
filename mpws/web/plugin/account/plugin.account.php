@@ -24,6 +24,27 @@ class pluginAccount extends objectPlugin {
                         $data = $this->_custom_api_status();
                         break;
                     }
+                    case "edit": {
+                        $data = $this->_custom_api_edit();
+                        break;
+                    }
+                    case "addAddress": {
+                        $data = $this->_custom_api_manageAddress(true);
+                        break;
+                    }
+                    case "updateAddress": {
+                        $data = $this->_custom_api_manageAddress(false);
+                        break;
+                    }
+                    case "removeAddress": {
+                        $AddressID = libraryRequest::getPostValue('AddressID');
+                        $data = $this->_custom_api_removeAddress($AddressID);
+                        break;
+                    }
+                    case "updatePassword": {
+                        $data = $this->_custom_api_updatePassword();
+                        break;
+                    }
                 }
                 break;
             }
@@ -114,7 +135,7 @@ class pluginAccount extends objectPlugin {
 
     private function _custom_api_status () {
         $accountObj = new libraryDataObject();
-        $account = $this->getCustomer()->isAccountSignedIn();
+        $account = $this->getCustomer()->getActiveProfile();
         $accountObj->setData('profile', $account);
         return $accountObj;
     }
@@ -124,7 +145,151 @@ class pluginAccount extends objectPlugin {
         setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
         setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
         unset($_SESSION['Account:ProfileID']);
-        $accountObj->setData('success', true);
+        $accountObj->setData('profile', null);
+        return $accountObj;
+    }
+
+    private function _custom_api_edit () {
+        $account = libraryRequest::getPostValue('account');
+        $accountObj = new libraryDataObject();
+        $errors = array();
+
+        if (!$this->getCustomer()->isAccountSignedIn()) {
+            $accountObj->setData("profile", null);
+            return $accountObj;
+        }
+
+        if (empty($account['FirstName']))
+            $errors['FirstName'] = 'Empty';
+
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            // $accountObj->setData("values", $dataAccount);
+            return $accountObj;
+        }
+
+        // get all valid fields
+        $dataAccount['FirstName'] = $account['FirstName'];
+        if (isset($account['LastName']))
+            $dataAccount['LastName'] = $account['LastName'];
+        if (isset($account['Phone']))
+            $dataAccount['Phone'] = $account['Phone'];
+
+        $this->getCustomer()->updateAccount($dataAccount);
+
+        $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+        $accountObj->setData("success", true);
+
+        return $accountObj;
+    }
+
+    private function _custom_api_manageAddress ($createNew = false) {
+        $accountObj = new libraryDataObject();
+
+        if (!$this->getCustomer()->isAccountSignedIn()) {
+            $accountObj->setData("profile", null);
+            return $accountObj;
+        }
+
+        $profile = $this->getCustomer()->getActiveProfile();
+        $accountObj->setData("profile", $profile);
+
+        $errors = array();
+
+        if (count($profile['addresses']) >= 3) {
+            $accountObj->setError('MaxAddressesReached');
+            return $accountObj;
+        }
+
+        $dataAddress = libraryRequest::getPostValue('address');
+
+        if (empty($dataAddress['Address']))
+            $errors['Address'] = 'Empty';
+
+        if (empty($dataAddress['Country']))
+            $errors['Country'] = 'Empty';
+
+        if (empty($dataAddress['City']))
+            $errors['City'] = 'Empty';
+
+        if (!$createNew && empty($dataAddress['AddressID']))
+            $errors['AddressID'] = 'Empty';
+
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+            return $accountObj;
+        }
+
+        if ($createNew)
+            $this->getCustomer()->addAccountAddress($dataAddress);
+        else
+            $this->getCustomer()->updateAccountAddress($dataAddress);
+
+        $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+        $accountObj->setData("success", true);
+
+        return $accountObj;
+    }
+
+    private function _custom_api_removeAddress ($AddressID) {
+        $accountObj = new libraryDataObject();
+        $errors = array();
+        
+        if (!$this->getCustomer()->isAccountSignedIn()) {
+            $accountObj->setData("profile", null);
+            return $accountObj;
+        }
+
+        if (empty($AddressID))
+            $errors['AddressID'] = 'Empty';
+
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+            // $accountObj->setData("values", $dataAddress);
+            return $accountObj;
+        }
+
+        $this->getCustomer()->removeAccountAddress($AddressID);
+
+        $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+        $accountObj->setData("success", true);
+
+        return $accountObj;
+    }
+
+    private function _custom_api_updatePassword () {
+        $dataAccount['Password'] = libraryRequest::getPostValue('Password');
+        $dataAccount['ConfirmPassword'] = libraryRequest::getPostValue('ConfirmPassword');
+
+        $accountObj = new libraryDataObject();
+        $errors = array();
+
+        if (empty($dataAccount['Password']))
+            $errors['Password'] = 'Empty';
+
+        if ($dataAccount['Password'] != $dataAccount['ConfirmPassword'])
+            $errors['ConfirmPassword'] = 'WrongConfirmPassword';
+
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+            return $accountObj;
+        }
+
+        unset($dataAccount['ConfirmPassword']);
+
+        $password = $this->getCustomer()->updateAccountPassword($dataAccount);
+
+        // var_dump($password);
+        setcookie('password', $password, false, '/', $_SERVER['SERVER_NAME']);
+
+        $profile = $this->getCustomer()->getActiveProfile($password);
+
+        $accountObj->setData("profile", $profile);
+        $accountObj->setData("success", true);
+
         return $accountObj;
     }
 

@@ -26,6 +26,7 @@ define("plugin/account/js/site", [
             "account/create": "create",
             "account/password": "password",
             "account/edit": "edit",
+            "account/addresses": "addresses",
             "account/delete": "delete"
         },
 
@@ -166,6 +167,37 @@ define("plugin/account/js/site", [
                     });
                 });
             // });
+
+        },
+
+        addresses: function () {
+            if (!Cache.hasObject('AccountProfileID')) {
+                Backbone.history.navigate("", {trigger: true});
+                return;
+            }
+
+            var self = this;
+
+            Site.showBreadcrumbLocation();
+
+            require(['plugin/account/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
+                // using this wrapper to cleanup previous view and create new one
+                Cache.withObject('AccountProfileAddresses', function (cachedView) {
+                    // debugger;
+                    // remove previous view
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
+
+                    // create new view
+                    var accountProfileAddresses = new AccountProfileAddresses();
+                    // view.setPagePlaceholder(accountProfileAddresses.el);
+                    self.showProfileToolbar(accountProfileAddresses.el);
+                    accountProfileAddresses.fetchAndRender();
+
+                    // return view object to pass it into this function at next invocation
+                    return accountProfileAddresses;
+                });
+            });
 
         },
 

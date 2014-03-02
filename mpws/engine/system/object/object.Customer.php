@@ -184,19 +184,48 @@ class objectCustomer {
         if ($encodePassword)
             $password = $this->getAccountPassword($password);
         $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
-        return $this->getDataBase()->getData($config);
+        // var_dump($config);
+        $profile = $this->getDataBase()->getData($config);
+        if (isset($profile['ID']))
+            $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
+        return $profile;
     }
 
     public function activateAccount () {
         
     }
 
-    public function verifyAccount () {
+    public function removeAccount () {
+        if (!$this->isAccountSignedIn())
+            return false;
         
     }
 
-    public function removeAccount () {
-        
+    public function updateAccount ($dataAccount) {
+        if (!$this->isAccountSignedIn())
+            return false;
+        if (isset($dataAccount['Password']))
+            $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiUpdateAccount();
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->getDataBase()->getData($config);
+    }
+
+    public function updateAccountPassword ($dataAccount) {
+        if (isset($dataAccount['Password']))
+            $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiUpdateAccount();
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->getDataBase()->getData($config);
+        return $dataAccount['Password'];
     }
 
     public function getAccountPassword ($rawPassword) {
@@ -204,11 +233,64 @@ class objectCustomer {
         return md5($key . $rawPassword);
     }
 
-    public function isAccountSignedIn () {
-        if (isset($_COOKIE['username']) && isset($_COOKIE['password']))
-            return $this->getAccount($_COOKIE['username'], $_COOKIE['password'], false);
+    public function getActiveProfile ($newPassword = false) {
+        if ($this->isAccountSignedIn())
+            return $this->getAccount($_COOKIE['username'], !empty($newPassword) ? $newPassword : $_COOKIE['password'], false);
         else
             return null;
+    }
+
+    public function isAccountSignedIn () {
+        if (isset($_COOKIE['username']) && isset($_COOKIE['password']) && isset($_SESSION['Account:ProfileID']))
+            return true;
+        else
+            return false;
+    }
+
+    public function getAccountAddresses ($AccountID) {
+        if (!$this->isAccountSignedIn())
+            return false;
+        $config = configurationCustomerDataSource::jsapiGetAccountAddress($AccountID);
+        return $this->getDataBase()->getData($config);
+    }
+
+    public function addAccountAddress ($address) {
+        if (!$this->isAccountSignedIn())
+            return false;
+        $address['AccountID'] = $_SESSION['Account:ProfileID'];
+        $address['DateCreated'] = date('Y:m:d H:i:s');
+        $address['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiAddAccountAddress();
+        $config['data'] = array(
+            "fields" => array_keys($address),
+            "values" => array_values($address)
+        );
+        // var_dump($config);
+        $this->getDataBase()->getData($config);
+        return $this->getDataBase()->getLastInsertId();
+    }
+
+    public function updateAccountAddress ($address) {
+        if (!$this->isAccountSignedIn())
+            return false;
+        $AddressID = $address['AddressID'];
+        unset($address['AddressID']);
+        $address['DateUpdated'] = date('Y:m:d H:i:s');
+        // var_dump($address);
+        $config = configurationCustomerDataSource::jsapiUpdateAccountAddress($AddressID);
+        $config['data'] = array(
+            "fields" => array_keys($address),
+            "values" => array_values($address)
+        );
+        // var_dump($config);
+        $this->getDataBase()->getData($config);
+    }
+
+    public function removeAccountAddress ($AddressID) {
+        if (!$this->isAccountSignedIn())
+            return false;
+        $config = configurationCustomerDataSource::jsapiRemoveAccountAddress($AddressID);
+        $this->getDataBase()->getData($config);
     }
 
     public function hasPlugin ($pluginName) {

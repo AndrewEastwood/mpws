@@ -12,7 +12,11 @@ define("plugin/account/js/view/accountProfileDelete", [
         // className: 'col-sm-9 col-md-9',
         template: tpl,
         lang: lang,
-        model: ModelAccountInstance
+        model: ModelAccountInstance,
+        initialize: function () {
+            this.model.clearErrors();
+            this.model.clearStates();
+        }
     });
 
     return AccountProfileDelete;

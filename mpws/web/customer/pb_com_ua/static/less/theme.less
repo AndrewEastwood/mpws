@@ -7,6 +7,7 @@
 @import "bootstrap-combobox";
 @import "bootstrap-slider";
 @import "bootstrap-dialog";
+@import "bootstrap-editable";
 @import "lightbox";
 @import "bootstrap-account-create";
 
@@ -753,10 +754,29 @@ i.fa {cursor: pointer;}
 .shop-profile-orders {
   padding: 0px 20px;
   .panel-title {
-    a {display: block;}
+    a {display: block; cursor: pointer;}
     a:hover {text-decoration: none;}
   }
   .panel {
     margin-bottom: 20px;
+    .panel-title {
+      .shop-orderstatus {
+        margin-right: 10px;
+      }
+      span {
+        cursor: pointer;
+        vertical-align: middle;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.account-profile-addresses {
+  .account-addresses-buttons {
+    margin-bottom: 20px;
+  }
+  .account-profile-address-entry {
+    margin-top: 20px;
   }
 }

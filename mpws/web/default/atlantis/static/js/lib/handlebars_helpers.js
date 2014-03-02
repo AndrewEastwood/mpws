@@ -386,6 +386,19 @@ define("default/js/lib/handlebars_helpers", [
             console.log(optionalValue);
         }
     }
+    helpers.toLowerCase = function(str) {
+      return str.toLowerCase();
+    }
+    helpers.mpwsGetValueByKey = function(dictionary, key, prefix, suffix, context) {
+        if (!context && suffix && suffix.hash) {
+            context = {
+                hash: _(suffix.hash).clone()
+            }
+            suffix = "";
+        }
+        var _key = prefix + key + suffix;
+        return dictionary[_key];
+    }
 
     return helpers;
 

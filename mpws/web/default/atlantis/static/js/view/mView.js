@@ -106,38 +106,8 @@ define("default/js/view/mView", [
                         });
                     else {
                         // debugger;
-                        var _tplData = null;
-                        var _tplUrlOptions = null;
-                        var _tplExtras = null;
-                        if (_self.isCollectionView()) {
-                            _tplData = _self.collection.toJSON();
-                            _tplUrlOptions = _self.collection.getUrlOptions();
-                            _tplExtras = _self.collection.getExtras();
-                        } else if (_self.isModelView()) {
-                            _tplData = this.model.toJSON();
-                            _tplUrlOptions = this.model.getUrlOptions();
-                            _tplExtras = _self.model.getExtras();
-                        }
-
-                        if (typeof this.template === "function") {
-                            var Site = require('customer/js/site');
-                            this.$el.html(this.template({
-                                lang: _self.lang || {},
-                                options: Site.options || {},
-                                plugins: Site.plugins,
-                                location: Backbone.history.location,
-                                app: {
-                                    config: window.app.config,
-                                    location: {
-                                        fragment: Backbone.history.fragment
-                                    }
-                                },
-                                data: _tplData,
-                                extras: _tplExtras,
-                                displayItems: _self.displayItems,
-                                urlOptions: _tplUrlOptions
-                            }));
-                        }
+                        if (typeof this.template === "function")
+                            this.$el.html(this.template(_self.getTemplateData.call(_self)));
 
                         if (typeof this.template === "string")
                             this.$el.html(this.template);
@@ -159,6 +129,37 @@ define("default/js/view/mView", [
                     _innerRenderFn.call(_self);
 
                 return this;
+            },
+            getTemplateData: function () {
+                var Site = require('customer/js/site');
+                var _tplData = null;
+                var _tplUrlOptions = null;
+                var _tplExtras = null;
+                if (this.isCollectionView()) {
+                    _tplData = this.collection.toJSON();
+                    _tplUrlOptions = this.collection.getUrlOptions();
+                    _tplExtras = this.collection.getExtras();
+                } else if (this.isModelView()) {
+                    _tplData = this.model.toJSON();
+                    _tplUrlOptions = this.model.getUrlOptions();
+                    _tplExtras = this.model.getExtras();
+                }
+                return {
+                    lang: this.lang || {},
+                    options: Site.options || {},
+                    plugins: Site.plugins,
+                    location: Backbone.history.location,
+                    app: {
+                        config: window.app.config,
+                        location: {
+                            fragment: Backbone.history.fragment
+                        }
+                    },
+                    data: _tplData,
+                    extras: _tplExtras,
+                    displayItems: this.displayItems,
+                    urlOptions: _tplUrlOptions
+                }
             }
         });
 

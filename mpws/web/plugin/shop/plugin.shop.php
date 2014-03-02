@@ -607,7 +607,7 @@ class pluginShop extends objectPlugin {
             return $dataObj;
         }
 
-        if (!isset($_SESSION['Account:ProfileID'])) {
+        if (!$this->getCustomer()->isAccountSignedIn()) {
             $dataObj->setError('AccessDenied');
             return $dataObj;
         }
@@ -732,6 +732,8 @@ class pluginShop extends objectPlugin {
 
 
         foreach ($_products as &$_item) {
+            if (!isset($_item['ProductPrice']))
+                $_item['ProductPrice'] = $_item['Price'];
             $_item["Total"] = $_item['ProductPrice'] * $_item['Quantity'];
             $cartInfo["subTotal"] += $_item['Total'];
             $cartInfo["productCount"] += $_item['Quantity'];

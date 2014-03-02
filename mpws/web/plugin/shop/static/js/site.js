@@ -290,29 +290,26 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
+            require(['plugin/shop/js/view/profileOrders'], function (ProfileOrders) {
+                Cache.withObject('ProfileOrders', function (cachedView) {
+                    // debugger;
+                    // remove previous view
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
 
-            // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/shop/js/view/profileOrders'], function (ProfileOrders) {
-                    Cache.withObject('ProfileOrders', function (cachedView) {
-                        // debugger;
-                        // remove previous view
-                        if (cachedView && cachedView.remove)
-                            cachedView.remove();
-
-                        // create new view
-                        var profileOrders = new ProfileOrders();
-                        // view.setPagePlaceholder(profileOrders.$el);
-                        profileOrders.fetchAndRender({
-                            profileID: Cache.getObject('AccountProfileID')
-                        });
-
-                        Sandbox.eventNotify('account:profile:show', profileOrders.$el);
-
-                        // return view object to pass it into this function at next invocation
-                        return profileOrders;
+                    // create new view
+                    var profileOrders = new ProfileOrders();
+                    // view.setPagePlaceholder(profileOrders.$el);
+                    profileOrders.fetchAndRender({
+                        profileID: Cache.getObject('AccountProfileID')
                     });
+
+                    Sandbox.eventNotify('account:profile:show', profileOrders.$el);
+
+                    // return view object to pass it into this function at next invocation
+                    return profileOrders;
                 });
-            // });
+            });
         }
 
     });

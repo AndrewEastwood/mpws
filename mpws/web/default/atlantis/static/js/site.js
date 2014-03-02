@@ -43,9 +43,11 @@ define("default/js/site", [
         });
 
         // Sandbox message handler
-        $('body').on('click', '[data-action]', function () {
+        $('body').on('click', '[data-action]', function (event) {
             // debugger;
-            Sandbox.eventNotify($(this).data('action'), $(this).data());
+            var _data = $(this).data() || {};
+            _data.event = event;
+            Sandbox.eventNotify($(this).data('action'), _data);
         });
 
         $(window).on('hashchange', function() {

@@ -268,12 +268,16 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(
-                "filter" => "AccountID (=) ? + Status (!=) ?",
-                "values" => array($profileID, 'SHOP_CLOSED')
+                "filter" => "AccountID (=) ?",
+                "values" => array($profileID)
             ),
             "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
             "offset" => 0,
             "limit" => 0,
+            "order" => array(
+                "field" => "shop_orders.DateCreated",
+                "ordering" => "DESC"
+            ),
         ));
     }
 

@@ -67,6 +67,22 @@ define("plugin/shop/js/view/cartStandalone", [
                     self.model.setExtras('account', data);
                     self.render();
                 });
+                Sandbox.eventSubscribe('account:signed:out', function (data) {
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
+                Sandbox.eventSubscribe('account:profile:address:added', function (data) {
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
+                Sandbox.eventSubscribe('account:profile:address:updated', function (data) {
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
+                Sandbox.eventSubscribe('account:profile:address:removed', function (data) {
+                    self.model.setExtras('account', data);
+                    self.render();
+                });
             }
 
         },

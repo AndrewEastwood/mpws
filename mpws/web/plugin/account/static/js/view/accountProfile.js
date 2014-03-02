@@ -16,6 +16,8 @@ define("plugin/account/js/view/accountProfile", [
         model: ModelAccountInstance,
         initialize: function () {
             var self = this;
+            this.model.clearErrors();
+            this.model.clearStates();
             this.on('mview:renderComplete', function () {
                 self.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
                 self.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');

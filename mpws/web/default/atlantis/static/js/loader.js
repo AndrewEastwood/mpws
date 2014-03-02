@@ -55,10 +55,10 @@
 
         // append undefined action to the last router
         // debugger;
-        _routers[_routers.length - 1].route("*nomatch", "*nomatch", function() {
-            console.log('mpws: 404');
-            Backbone.history.navigate("", {trigger: true});
-        });
+        // _routers[_routers.length - 1].route("*nomatch", "*nomatch", function() {
+        //     console.log('mpws: 404');
+        //     Backbone.history.navigate("", {trigger: true});
+        // });
         // var _paths = {};
         // for (var rk in _routers) {
         //     // debugger;

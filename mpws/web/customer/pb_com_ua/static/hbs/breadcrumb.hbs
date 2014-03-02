@@ -79,6 +79,12 @@
     <li class="active">Видалення</li>
     {{/srtStartsWith}}
 
+    {{#srtStartsWith app.location.fragment "account/addresses" }}
+    <li><a href="/#">Головна</a></li>
+    <li><a href="/#account/profile">Профіль</a></li>
+    <li class="active">Мої адреси</li>
+    {{/srtStartsWith}}
+
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
         {{#foreach data.shop.location}}

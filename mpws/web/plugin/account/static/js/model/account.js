@@ -52,19 +52,81 @@ define("plugin/account/js/model/account", [
                 action: 'signout'
             });
             $.post(this.url, function (responce) {
-                // var _data = self.extractModelDataFromRespce(responce);
+                var _data = self.extractModelDataFromRespce(responce);
                 Cache.setObject('AccountProfileID', null);
-                self.clear();
+                self.set(_data);
                 self.trigger('change');
                 Sandbox.eventNotify('account:signed:out', null);
             });
         },
-        showProfile: function () {
-
+        editProfile: function (data) {
+            var self = this;
+            this.updateUrl({
+                action: 'edit'
+            });
+            // debugger;
+            $.post(this.url, {account: data}, function (responce) {
+                var _data = self.extractModelDataFromRespce(responce);
+                self.set(_data);
+                self.trigger('change');
+                Sandbox.eventNotify('account:profile:updated', _data);
+            });
         },
-        editProfile: function () {
-
+        addAddress: function (data) {
+            var self = this;
+            this.updateUrl({
+                action: 'addAddress'
+            });
+            // debugger;
+            $.post(this.url, {address: data}, function (responce) {
+                var _data = self.extractModelDataFromRespce(responce);
+                self.set(_data);
+                self.trigger('change');
+                Sandbox.eventNotify('account:profile:address:added', _data);
+            });
         },
+        updateAddress: function (AddressID, data) {
+            // debugger;
+            var self = this;
+            this.updateUrl({
+                action: 'updateAddress'
+            });
+            data.AddressID = AddressID;
+            $.post(this.url, {address: data}, function (responce) {
+                var _data = self.extractModelDataFromRespce(responce);
+                self.set(_data);
+                self.trigger('change');
+                Sandbox.eventNotify('account:profile:address:updated', _data);
+            });
+        },
+        removeAddress: function (AddressID) {
+            var self = this;
+            this.updateUrl({
+                action: 'removeAddress'
+            });
+            $.post(this.url, {AddressID: AddressID}, function (responce) {
+                var _data = self.extractModelDataFromRespce(responce);
+                self.set(_data);
+                self.trigger('change');
+                Sandbox.eventNotify('account:profile:address:removed', _data);
+            });
+        },
+        changePassword: function (password, confirmation) {
+            var self = this;
+            this.updateUrl({
+                action: 'updatePassword'
+            });
+            var data = {
+                Password: password,
+                ConfirmPassword: confirmation
+            };
+            $.post(this.url, data, function (responce) {
+                var _data = self.extractModelDataFromRespce(responce);
+                self.set(_data);
+                self.trigger('change');
+                Sandbox.eventNotify('account:profile:password:updated', _data);
+            });
+        }
 
     });
 
