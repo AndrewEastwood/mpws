@@ -1,0 +1,46 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700);
+
+@mainColor: #CF7400;
+@textColor: #fff;
+@textForegroundColor: #fff;
+@buttonTextColor: #333;
+@buttonColorHover: darken(@mainColor, 10%);
+
+@import "base";
+@import "dropdowns-sub";
+@import "bootstrap-magnify";
+@import "bootstrap-combobox";
+@import "bootstrap-slider";
+@import "bootstrap-dialog";
+@import "bootstrap-editable";
+@import "lightbox";
+@import "select2";
+@import "bootstrap-account-create";
+
+.MPWSPageBody {
+    background-color: fade(@textColor, 20%);
+}
+
+.navbar {
+    border-radius: 0px;
+    position: relative;
+    min-height: 50px;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.9);
+    .navbar-brand {
+        float: left;
+        font-size: 18px;
+        line-height: 20px;
+        color: @mainColor;
+        padding: 0;
+    }
+    .logo {
+        margin: 5px;
+        height: 40px;
+    }
+}
+
+.breadcrumb {
+    background-color: #2F2F2F;
+}

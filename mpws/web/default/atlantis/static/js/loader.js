@@ -27,12 +27,14 @@
         urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
     });
 
-    var _filesToRequest = ['customer/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site')];
+    // include site file
+    var _filesToRequest = ['customer/js/site'];
 
     for (var key in _globalConfig.PLUGINS)
-        _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/site');
+        _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site'));
         // debugger;
     // start customer application
+    console.log(_filesToRequest);
     require(_filesToRequest, function () {
         var _args = [].slice.call(arguments);
         var _customerJs = _args[0];
@@ -52,7 +54,6 @@
 
         // start/init customer
         _customerJs.start();
-
         // append undefined action to the last router
         // debugger;
         // _routers[_routers.length - 1].route("*nomatch", "*nomatch", function() {

@@ -37,12 +37,16 @@
     function getCustomer () {
         $h = current(explode(':', $_SERVER['HTTP_HOST']));
         $h = strtolower($h);
-        
+
         $host_parts = explode ('.', $h);
         $customerName = '';
-        
-        if ($host_parts[0] == 'toolbox')
+
+        // var_dump($_SERVER);
+
+        if (preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']))
             $customerName = 'toolbox';
+        // else if (strstr($_SERVER['REQUEST_URI'], '/workbench/'))
+        //     $customerName = 'workbench';
         else if ($host_parts[0] == 'www')
             $customerName = implode('.', array_splice($host_parts, 1));
         else
@@ -50,11 +54,18 @@
 
         $customerName = str_replace('.', '_', $customerName);
 
+        // echo $_SERVER['REQUEST_URI'];
+        // var_dump(strstr($_SERVER['REQUEST_URI'], '/workbench/'));
+
         return $customerName;
     }
     
     function getDebugLevel (){
         return MPWS_LOG_LEVEL;
+    }
+
+    function glIsWorkbench () {
+        return MPWS_CUSTOMER === 'workbench';
     }
 
     function glIsToolbox () {

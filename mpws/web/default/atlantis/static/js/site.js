@@ -58,6 +58,27 @@ define("default/js/site", [
         });
         $(window).trigger('hashchange');
 
+        var Router = Backbone.Router.extend({
+            routes: {
+                "": "index",
+                "login": "login",
+                "logout": "logout",
+                "*nothing": "unknown",
+            },
+            index: function () {
+                Sandbox.eventNotify('site:page:index');
+            },
+            login: function () {
+                Sandbox.eventNotify('site:page:login');
+            },
+            logout: function () {
+                Sandbox.eventNotify('site:page:logout');
+            },
+            unknown: function () {
+                Sandbox.eventNotify('site:page:404');
+            }
+        });
+
         return {
             placeholders: _placeholders,
             config: app.config,
@@ -68,6 +89,7 @@ define("default/js/site", [
                 _config = config;
             },
             start: function () {
+                var defaultRouter = new Router();
                 // debugger;
                 if (_views.menu)
                     _views.menu.render();

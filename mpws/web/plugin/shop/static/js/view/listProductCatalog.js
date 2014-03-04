@@ -30,16 +30,27 @@ define("plugin/shop/js/view/listProductCatalog", [
             "click .shop-filter-cancel": 'filterProducts_CancelFilter',
             "click .shop-load-more": 'filterProducts_LoadMore',
         },
+        savedFilters: {},
+        getFilterOptions: function () {
+            return ['filter_viewSortBy',
+                    'filter_viewPageNum',
+                    'filter_commonPriceMax',
+                    'filter_commonPriceMin',
+                    'filter_commonAvailability',
+                    'filter_commonOnSaleTypes',
+                    'filter_categoryBrands',
+                    'filter_viewItemsOnPage'];
+        },
         getOrSetFilter: function (filterKey, value) {
             var key = Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
             var rez = null;
             // $.cookie.raw = true;
             if (_.isUndefined(value))
-                rez = $.cookie(key);
+                rez = this.savedFilters[key] || "";// rez = $.cookie(key);
             else
-                $.cookie(key, value);
+                this.savedFilters[key] = value;//$.cookie(key, value);
             // $.cookie.json = false;
-            return rez;
+            return "" + rez;
         },
         getDefaultFilter: function (restorePrevious) {
             return {
@@ -165,7 +176,11 @@ define("plugin/shop/js/view/listProductCatalog", [
             });
         },
         filterProducts_CancelFilter: function () {
+            var self = this;
             this.defaultFilter = this.getDefaultFilter();
+            _(this.getFilterOptions()).each(function(filterKey){
+                self.getOrSetFilter(filterKey, "");
+            });
             this.fetchAndRender(this.defaultFilter, {reset: true});
         },
         filterProducts_ListItemClicked: function () {

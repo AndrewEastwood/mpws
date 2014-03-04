@@ -1,6 +1,6 @@
 <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
    {{#mpwsIsNotEmpty data.profile }}
-      {{lang.profile_menu_welcome}} <strong>{{data.profile.FirstName}}</strong>
+      {{lang.profile_menu_welcome}} <strong>{{data.profile.FirstName}} {{data.profile.LastName}}</strong>
    {{else}}
       {{lang.form_signin_menu_title}}
    {{/mpwsIsNotEmpty}}

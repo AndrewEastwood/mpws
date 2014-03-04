@@ -138,6 +138,22 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
+    static function jsapiActivateAccount ($ValidationString) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "action" => "update",
+            "condition" => array(
+                "filter" => "ValidationString (=) ?",
+                "values" => array($ValidationString)
+            ),
+            "data" => array(
+                "fields" => array('IsTemporary'),
+                "values" => array(0)
+            ),
+            "options" => null
+        ));
+    }
+
     static function jsapiGetAccountAddresses ($AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",

@@ -191,14 +191,23 @@ class objectCustomer {
         return $profile;
     }
 
-    public function activateAccount () {
-        
+    public function activateAccount ($ValidationString) {
+        $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
+        $this->getDataBase()->getData($config);
     }
 
-    public function removeAccount () {
+    public function removeAccount ($dataAccount) {
         // if (!$this->isAccountSignedIn())
         //     return false;
-        
+        $AccountID = $dataAccount['AccountID'];
+        unset($dataAccount['AccountID']);
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiRemoveAccount($AccountID);
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->getDataBase()->getData($config);
     }
 
     public function updateAccount ($dataAccount) {

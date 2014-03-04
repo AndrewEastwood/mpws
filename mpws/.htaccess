@@ -3,6 +3,7 @@ RewriteEngine On
 RewriteBase /
 DirectoryIndex /engine/controller/controller.display.php
 
+
 # STATIC:
 RewriteRule ^static/customer/([\.a-z_-]+)/nls/(.*) /engine/controller/controller.nls.php?customer=$1&lang=$2 [L]
 RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
@@ -12,6 +13,9 @@ RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/stati
 RewriteRule ^api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
 
 # SERVICES:
+#RewriteRule ^workbench/?(.*) /engine/controller/controller.display.php?$1 [QSA,L]
+RewriteRule ^toolbox/?(.*) /engine/controller/controller.display.php?$1 [QSA,L]
+
 #RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]
 #RewriteRule storage/(....)-(..)-(..)-(.*)/(.*)? /data/uploads/$1-$2-$3/$4/$5 [QSA]
 #RewriteRule service/internal/(.*).php?(.*) /tooling/$1/index.php?$2 [QSA]

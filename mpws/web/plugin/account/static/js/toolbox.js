@@ -1,4 +1,4 @@
-define("plugin/shop/js/toolbox", [
+define("plugin/account/js/toolbox", [
     'default/js/lib/sandbox',
     'customer/js/site',
     'cmn_jquery',
@@ -6,28 +6,29 @@ define("plugin/shop/js/toolbox", [
     'default/js/lib/backbone',
 ], function (Sandbox, Site, $, _, Backbone) {
 
+    Sandbox.eventSubscribe('site:page:404', function () {
+        $('.MPWSPageBody').html('404');
+    });
+
     Sandbox.eventSubscribe('site:page:index', function () {
         // debugger;
         Site.showBreadcrumbLocation();
-        Site.addMenuItemLeft('SHOP');
-        $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">20</span></a></li>'));
+        Site.addMenuItemLeft('PROFILE');
+        $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
     });
 
     var Router = Backbone.Router.extend({
         routes: {
-            "shop/manager": "manager",
-            "shop/orders": "orders"
+            "account/profiles": "profiles"
         },
 
         initialize: function () {
 
-        },
 
-        manager: function () {
 
         },
 
-        orders: function () {
+        profiles: function () {
 
         }
 

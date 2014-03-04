@@ -1,8 +1,0 @@
-labelForLabelValueDefaultID = "Job ID";
-labelForLabelValueDefaultName = "Job Name";
-labelForLabelValueDefaultDescription = "Description";
-labelForLabelValueDefaultAction = "Action";
-labelForLabelValueDefaultSchedule = "Startup Date Time";
-labelForLabelValueDefaultLastError = "Last Error";
-labelForLabelValueDefaultDateUpdated = "Date Time Updated";
-labelForLabelValueDefaultDateCreated = "Date Time Created";
