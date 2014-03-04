@@ -19,7 +19,6 @@ define("plugin/shop/js/site", [
 
     var Router = Backbone.Router.extend({
         routes: {
-            "": "home",
             "shop": "home",
             "shop/catalog/:category": "shop_catalog_category",
             "shop/catalog/": "shop_catalog",
@@ -34,6 +33,8 @@ define("plugin/shop/js/site", [
 
         initialize: function () {
 
+            var self = this;
+
             MenuSite.render();
 
             // inject tracking order
@@ -47,6 +48,12 @@ define("plugin/shop/js/site", [
             });
             Site.placeholders.common.widgetsTop.append(cartEmbedded.$el);
             cartEmbedded.fetchAndRender();
+
+
+            Sandbox.eventSubscribe('site:page:index', function () {
+                self.home();
+            });
+
         },
 
         home: function () {

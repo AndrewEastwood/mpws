@@ -8,8 +8,6 @@ define("plugin/account/js/site", [
     'default/js/lib/cache'
 ], function (Sandbox, Site, $, _, Backbone, MenuSite, Cache) {
 
-    // var account = new ModelAccount();
-
     Sandbox.eventSubscribe('account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
             Backbone.history.navigate("", {trigger: true});
@@ -34,6 +32,7 @@ define("plugin/account/js/site", [
         },
 
         initialize: function () {
+            // debugger;
             var self = this;
 
             MenuSite.render();

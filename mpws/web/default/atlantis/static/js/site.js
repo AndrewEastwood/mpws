@@ -63,18 +63,22 @@ define("default/js/site", [
                 "": "index",
                 "login": "login",
                 "logout": "logout",
-                "*nothing": "unknown",
+                // "*nothing": "unknown",
             },
             index: function () {
+                // debugger;
                 Sandbox.eventNotify('site:page:index');
             },
             login: function () {
+                // debugger;
                 Sandbox.eventNotify('site:page:login');
             },
             logout: function () {
+                // debugger;
                 Sandbox.eventNotify('site:page:logout');
             },
             unknown: function () {
+                // debugger;
                 Sandbox.eventNotify('site:page:404');
             }
         });
