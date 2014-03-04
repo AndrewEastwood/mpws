@@ -70,13 +70,15 @@ class configurationDefaultDataSource extends objectConfiguration {
         return self::extendConfigs($configDefault, $configExtend, true);
     }
 
-    static function jsapiGetCustomer () {
+    static function jsapiGetCustomer ($ExternalKey = false) {
+        if (empty($ExternalKey))
+            $ExternalKey = MPWS_CUSTOMER;
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_customer",
             "fields" => array("*"),
             "condition" => array(
                 "filter" => "ExternalKey (=) ? + Status (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
-                "values" => array(MPWS_CUSTOMER, "ACTIVE")
+                "values" => array($ExternalKey, "ACTIVE")
             ),
             "limit" => 1,
             "options" => array(
@@ -108,25 +110,25 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiUpdateAccount () {
+    static function jsapiUpdateAccount ($AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
                 "filter" => "ID (=) ? + Status (=) ?",
-                "values" => array($_SESSION['Account:ProfileID'], "ACTIVE")
+                "values" => array($AccountID, "ACTIVE")
             ),
             "options" => null
         ));
     }
 
-    static function jsapiRemoveAccount () {
+    static function jsapiRemoveAccount ($AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
                 "filter" => "ID (=) ? + Status (=) ?",
-                "values" => array($_SESSION['Account:ProfileID'], "ACTIVE")
+                "values" => array($AccountID, "ACTIVE")
             ),
             "data" => array(
                 "fields" => array('Status', 'DateUpdated'),
@@ -136,15 +138,29 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiGetAccountAddress () {
+    static function jsapiGetAccountAddresses ($AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "fields" => array("*"),
             "condition" => array(
                 "filter" => "AccountID (=) ? + Status (=) ?",
-                "values" => array($_SESSION['Account:ProfileID'], "ACTIVE")
+                "values" => array($AccountID, "ACTIVE")
             ),
             "options" => null
+        ));
+    }
+
+    static function jsapiGetAccountAddress ($AccountID, $AddressID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accountAddresses",
+            "fields" => array("*"),
+            "condition" => array(
+                "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
+                "values" => array($AddressID, $AccountID, "ACTIVE")
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
         ));
     }
 
@@ -156,25 +172,25 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiUpdateAccountAddress ($AddressID) {
+    static function jsapiUpdateAccountAddress ($AccountID, $AddressID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
                 "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
-                "values" => array($AddressID, $_SESSION['Account:ProfileID'], "ACTIVE")
+                "values" => array($AddressID, $AccountID, "ACTIVE")
             ),
             "options" => null
         ));
     }
 
-    static function jsapiRemoveAccountAddress ($AccountID) {
+    static function jsapiRemoveAccountAddress ($AccountID, $AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
                 "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
-                "values" => array($AccountID, $_SESSION['Account:ProfileID'], "ACTIVE")
+                "values" => array($AccountID, $AccountID, "ACTIVE")
             ),
             "data" => array(
                 "fields" => array('Status', 'DateUpdated'),

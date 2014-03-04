@@ -66,8 +66,35 @@ define("default/js/model/mModel", [
                 this.url = _url.toString();
             },
 
+            getUrl: function (options) {
+
+                var self = this;
+                var _options = _.extend({}, this.urlOptions || {}, options);
+                var _url = new JSUrl(app.config.URL_API);
+
+                _url.query.token = app.config.TOKEN;
+
+                _(['source', 'fn']).each(function(key){
+                    if (_options && typeof _options[key] !== "undefined") {
+                        _url.query[key] = _options[key];
+                        delete _options[key];
+                    } else
+                        _url.query[key] = self[key];
+                });
+
+                _(_options).each(function (v, k) {
+                    _url.query[k] = !!v ? v : "";
+                });
+
+                return _url.toString();
+            },
+
             getUrlOptions: function () {
                 return this.urlOptions;
+            },
+
+            removeExtras: function (key) {
+                delete this.extras[key];
             },
 
             setExtras: function (key, val) {

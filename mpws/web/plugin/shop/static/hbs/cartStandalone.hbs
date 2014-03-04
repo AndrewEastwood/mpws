@@ -4,7 +4,7 @@
         <div class="well">
             <div class="actions">
                 <a href="javascript://" data-action="shop:cart:clear" data-id="{{ID}}">
-                    <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+                    <i class="fa fa-trash-o"></i> {{lang.shopping_cart_link_removeAll}}
                 </a>
             </div>
         </div>
@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- Checkout page title -->
-                        <h4 class="title"><i class="icon-shopping-cart"></i>Оформлення замовлення</h4>
+                        <h4 class="title"><i class="icon-shopping-cart"></i>{{lang.shopping_cart_form_title}}</h4>
                         <!-- Sub title -->
                         <h5 class="title"></h5>
                         <!-- Address and Shipping details form -->
@@ -26,107 +26,134 @@
                             <form class="form-horizontal">
 
                                 <!-- Nav tabs -->
-                                {{#unless extras.account.profile }}
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#quick" data-toggle="tab">Швидке замовлення</a></li>
-                                    <li><a href="#profile" data-toggle="tab">Увійти в акаунт</a></li>
-                                </ul>
-                                {{/unless}}
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="quick">
-
-                                        <!-- Name -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="name1">Імя</label>
-                                            <div class="col-md-6">
-                                                <input type="text" name="shopCartUserName" class="form-control" id="name1">
-                                            </div>
+                                {{#if extras.account.profile }}
+                                    <input type="hidden" name="shopCartProfileID" value="{{extras.account.profile.ID}}">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{{lang.shopping_cart_field_firstName}}</label>
+                                        <div class="col-md-6">
+                                            <span class="form-control">{{extras.account.profile.FirstName}}</span>
                                         </div>
-                                        <!-- Email -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="email1">Ел.пошта</label>
-                                            <div class="col-md-6">
-                                                <input type="text" name="shopCartUserEmail" class="form-control" id="email1">
-                                            </div>
-                                        </div>
-                                        <!-- Telephone -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="telephone">Контактний телефон</label>
-                                            <div class="col-md-6">
-                                                <input type="text" name="shopCartUserPhone" class="form-control" id="telephone">
-                                            </div>
-                                        </div>
-                                        <!-- Address -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="address">Адреса доставки</label>
-                                            <div class="col-md-6">
-                                                <textarea name="shopCartUserDelivery" class="form-control" id="address"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-3 col-sm-9">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name="shopCartCreateAccount">Створити профіль
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </div>
-                                    <div class="tab-pane" id="profile">
-
-                                        <!-- Name -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="name1">Логін</label>
-                                            <div class="col-md-6">
-                                                <input type="text" name="userLogin" class="form-control" id="name1">
-                                            </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{{lang.shopping_cart_field_lastName}}</label>
+                                        <div class="col-md-6">
+                                            <span class="form-control">{{extras.account.profile.LastName}}</span>
                                         </div>
-                                        <!-- Email -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3" for="email1">Пароль</label>
-                                            <div class="col-md-6">
-                                                <input type="text" name="userPassword" class="form-control" id="email1">
-                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{{lang.shopping_cart_field_email}}</label>
+                                        <div class="col-md-6">
+                                            <span class="form-control">{{extras.account.profile.EMail}}</span>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{{lang.shopping_cart_field_phone}}</label>
+                                        <div class="col-md-6">
+                                            <span class="form-control">{{extras.account.profile.Phone}}</span>
+                                        </div>
+                                    </div>
+                                    <!-- Name -->
+                                    <div class="form-group">
+                                        <h4>{{lang.profile_page_overview_section_addresses_title}}</h4>
+                                        <label class="control-label col-md-3" for="name1">{{lang.shopping_cart_field_profile_address}}</label>
+                                        <div class="col-md-6">
+                                            <select name="shopCartProfileAddressID" class="form-control" id="account-profile-addresses-ID">
+                                                <option value="">{{lang.shopping_cart_field_profile_address_option_none}}</option>
+                                                {{#each extras.account.profile.addresses }}
+                                                <option value="{{ID}}" data-address="{{Address}}" data-pobox="{{POBox}}" data-country="{{Country}}" data-city="{{City}}">
+                                                    {{#if Country }}
+                                                        {{Country}},
+                                                    {{/if}}
+                                                    {{#if City }}
+                                                        {{City}},
+                                                    {{/if}}
+                                                    {{#if Address }}
+                                                        {{Address}}
+                                                    {{/if}}
+                                                    {{#if POBox }}
+                                                        ({{POBox}})
+                                                    {{/if}}
+                                                </option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <!-- Name -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="shopping-cart-name-ID">{{lang.shopping_cart_field_firstName}}</label>
+                                        <div class="col-md-6">
+                                            <input type="text" name="shopCartUserName" class="form-control" id="shopping-cart-name-ID">
+                                        </div>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="shopping-cart-email-ID">{{lang.shopping_cart_field_email}}</label>
+                                        <div class="col-md-6">
+                                            <input type="text" name="shopCartUserEmail" class="form-control" id="shopping-cart-email-ID">
+                                        </div>
+                                    </div>
+                                    <!-- Telephone -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="shopping-cart-phone-ID">{{lang.shopping_cart_field_phone}}</label>
+                                        <div class="col-md-6">
+                                            <input type="text" name="shopCartUserPhone" class="form-control" id="shopping-cart-phone-ID">
+                                        </div>
+                                    </div>
+                                {{/if}}
 
+                                <!-- Address -->
+                                <div class="form-group form-group-address hide">
+                                    <label class="control-label col-md-3" for="shopping-cart-address-ID">{{lang.shopping_cart_field_address}}</label>
+                                    <div class="col-md-6">
+                                        <textarea name="shopCartUserAddress" class="form-control" id="shopping-cart-address-ID"></textarea>
                                     </div>
                                 </div>
 
-
+                                <!-- POBox -->
+                                <div class="form-group form-group-pobox hide">
+                                    <label class="control-label col-md-3" for="shopping-cart-pobox-ID">{{lang.shopping_cart_field_address}}</label>
+                                    <div class="col-md-6">
+                                        <textarea name="shopCartUserPOBox" class="form-control" id="shopping-cart-pobox-ID"></textarea>
+                                    </div>
+                                </div>
 
                                 <!-- Country -->
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Місто</label>
+                                <div class="form-group form-group-country hide">
+                                    <label class="control-label col-md-3" for="shopping-cart-country-ID">{{lang.shopping_cart_field_country}}</label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="shopCartUserCity">
-                                            {{> default/hbs/controls/selectboxCityUA }}
-                                        </select>
+                                        <input type="text" name="shopCartUserCountry" class="form-control" id="shopping-cart-country-ID">
+                                    </div>
+                                </div>
+
+                                <!-- Country -->
+                                <div class="form-group form-group-city hide">
+                                    <label class="control-label col-md-3" for="shopping-cart-city-ID">{{lang.shopping_cart_field_city}}</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="shopCartUserCity" class="form-control" id="shopping-cart-city-ID">
                                     </div>
                                 </div>
                                 <!-- State -->
                                 <div class="form-group">
-                                    <label class="control-label col-md-3" for="city">Перевізник</label>
+                                    <label class="control-label col-md-3" for="shopping-cart-logistic-ID">{{lang.shopping_cart_field_logistic}}</label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="shopCartLogistic">
+                                        <select class="form-control" id="shopping-cart-logistic-ID" name="shopCartLogistic">
                                             {{> default/hbs/controls/selectboxLogisticUA }}
                                         </select>
                                     </div>
                                 </div>
                                 <!-- City -->
                                 <div class="form-group">
-                                    <label class="control-label col-md-3" for="city">Номер складу</label>
+                                    <label class="control-label col-md-3" for="shopping-cart-warehouse-ID">{{lang.shopping_cart_field_warehouse}}</label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" id="city" name="shopCartWarehouse">
+                                        <input type="text" class="form-control" id="shopping-cart-warehouse-ID" name="shopCartWarehouse">
                                     </div>
                                 </div>
                                 <!-- Address -->
                                 <div class="form-group">
-                                    <label class="control-label col-md-3" for="address">Ваші побажання</label>
+                                    <label class="control-label col-md-3" for="shopping-cart-comment-ID">{{lang.shopping_cart_field_comment}}</label>
                                     <div class="col-md-6">
-                                        <textarea class="form-control" id="comment" name="shopCartComment"></textarea>
+                                        <textarea class="form-control" id="shopping-cart-comment-ID" name="shopCartComment"></textarea>
                                     </div>
                                 </div>
                             </form>

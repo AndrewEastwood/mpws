@@ -3,6 +3,12 @@
 	[
 		{
 			"path": "/devdata/Develop/github/web/mpws"
+		},
+		{
+			"path": "/devdata/Develop/github/bootstrap3-dialog"
+		},
+		{
+			"path": "/devdata/Develop/qBeats"
 		}
 	]
 }

@@ -284,6 +284,46 @@
 	"buffers":
 	[
 		{
+			"file": "web/plugin/shop/static/js/model/cart.js",
+			"settings":
+			{
+				"buffer_size": 3325,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/static/js/view/cartStandalone.js",
+			"settings":
+			{
+				"buffer_size": 4224,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/static/hbs/cartStandalone.hbs",
+			"settings":
+			{
+				"buffer_size": 10461,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/account/static/js/model/account.js",
+			"settings":
+			{
+				"buffer_size": 4900,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/static/hbs/productItemShort.hbs",
+			"settings":
+			{
+				"buffer_size": 2089,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "web/plugin/account/static/nls/ua_uk/account.js",
 			"settings":
 			{
@@ -320,6 +360,10 @@
 	},
 	"file_history":
 	[
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/cart.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfile.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/menuAccount.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfileOverview.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.DataSource.php",
@@ -337,7 +381,6 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfileEdit.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/partials/accountAddress.hbs",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/less/theme.less",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
 		"/devdata/Develop/github/web/mpws/web/deploy/node_modules/grunt-contrib-less/node_modules/less/.grunt/grunt-contrib-jasmine/phantom-polyfill.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfileEdit.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/mView.js",
@@ -346,7 +389,6 @@
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfile.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountAddresses.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfile.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfileDelete.js",
@@ -367,7 +409,6 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/ua_uk/shop.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us/shop.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/trackingStatus.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/config/configuration.Display.php",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/sandbox.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/site.js",
@@ -393,7 +434,6 @@
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/cache.js",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataObject.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartStandalone.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/cart.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productsCompare.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/accountOrder.hbs",
@@ -611,8 +651,149 @@
 	"groups":
 	[
 		{
+			"selected": 4,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "web/plugin/shop/static/js/model/cart.js",
+					"settings":
+					{
+						"buffer_size": 3325,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3268,
+								3268
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 870.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "web/plugin/shop/static/js/view/cartStandalone.js",
+					"settings":
+					{
+						"buffer_size": 4224,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3412,
+								3412
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "web/plugin/shop/static/hbs/cartStandalone.hbs",
+					"settings":
+					{
+						"buffer_size": 10461,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1481,
+								1481
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Handlebars/Handlebars.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 102.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "web/plugin/account/static/js/model/account.js",
+					"settings":
+					{
+						"buffer_size": 4900,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4185,
+								4185
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1122.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "web/plugin/shop/static/hbs/productItemShort.hbs",
+					"settings":
+					{
+						"buffer_size": 2089,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								638,
+								638
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Handlebars/Handlebars.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -620,7 +801,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 0,
+					"buffer": 5,
 					"file": "web/plugin/account/static/nls/ua_uk/account.js",
 					"settings":
 					{
@@ -678,7 +859,7 @@
 		"cols":
 		[
 			0.0,
-			0.635382603009,
+			0.76618705036,
 			1.0
 		],
 		"rows":
@@ -897,6 +1078,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 342.0,
+	"side_bar_width": 325.0,
 	"status_bar_visible": true
 }

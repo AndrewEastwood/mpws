@@ -11,11 +11,14 @@ define("plugin/account/js/site", [
     // var account = new ModelAccount();
 
     Sandbox.eventSubscribe('account:signed:out', function() {
-        Backbone.history.navigate("", {trigger: true});
+        if (Backbone.history.fragment.match(/^account/))
+            Backbone.history.navigate("", {trigger: true});
     });
 
     Sandbox.eventSubscribe('account:signed:in', function() {
-        if (Cache.getObject('AccountProfileID')) {
+        if (Cache.getObject('AccountProfileID') && 
+            (Backbone.history.fragment === "" || Backbone.history.fragment.match(/^account/))
+        ) {
             Backbone.history.navigate("account/profile", {trigger: true});
         }
     });
@@ -93,7 +96,9 @@ define("plugin/account/js/site", [
                         var accountProfileOverview = new AccountProfileOverview();
                         // view.setPagePlaceholder(accountProfileOverview.el);
                         self.showProfileToolbar(accountProfileOverview.el);
-                        accountProfileOverview.fetchAndRender();
+                        accountProfileOverview.fetchAndRender({
+                            action: 'status'
+                        });
 
                         // return view object to pass it into this function at next invocation
                         return accountProfileOverview;
@@ -126,7 +131,9 @@ define("plugin/account/js/site", [
                         var accountProfilePassword = new AccountProfilePassword();
                         // view.setPagePlaceholder(accountProfilePassword.el);
                         self.showProfileToolbar(accountProfilePassword.el);
-                        accountProfilePassword.fetchAndRender();
+                        accountProfilePassword.fetchAndRender({
+                            action: 'status'
+                        });
 
                         // return view object to pass it into this function at next invocation
                         return accountProfilePassword;
@@ -160,7 +167,9 @@ define("plugin/account/js/site", [
                         var accountProfileEdit = new AccountProfileEdit();
                         // self.setPagePlaceholder(accountProfileEdit.el);
                         self.showProfileToolbar(accountProfileEdit.el);
-                        accountProfileEdit.fetchAndRender();
+                        accountProfileEdit.fetchAndRender({
+                            action: 'status'
+                        });
 
                         // return view object to pass it into this function at next invocation
                         return accountProfileEdit;
@@ -192,7 +201,9 @@ define("plugin/account/js/site", [
                     var accountProfileAddresses = new AccountProfileAddresses();
                     // view.setPagePlaceholder(accountProfileAddresses.el);
                     self.showProfileToolbar(accountProfileAddresses.el);
-                    accountProfileAddresses.fetchAndRender();
+                    accountProfileAddresses.fetchAndRender({
+                        action: 'status'
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return accountProfileAddresses;
@@ -223,7 +234,9 @@ define("plugin/account/js/site", [
                     var accountProfileDelete = new AccountProfileDelete();
                     // view.setPagePlaceholder(accountProfileDelete.el);
                     self.showProfileToolbar(accountProfileDelete.el);
-                    accountProfileDelete.fetchAndRender();
+                    accountProfileDelete.fetchAndRender({
+                        action: 'status'
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return accountProfileDelete;
@@ -247,7 +260,9 @@ define("plugin/account/js/site", [
                     accountProfile.on('mview:renderComplete', function () {
                         accountProfile.setPagePlaceholder(pageContent);
                     });
-                    accountProfile.fetchAndRender();
+                    accountProfile.fetchAndRender({
+                        action: 'status'
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return accountProfile;

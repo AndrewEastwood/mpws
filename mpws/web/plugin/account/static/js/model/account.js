@@ -20,10 +20,10 @@ define("plugin/account/js/model/account", [
         },
         getStatus: function (options) {
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'status'
             });
-            $.post(this.url, function (responce) {
+            $.post(url, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
@@ -34,10 +34,10 @@ define("plugin/account/js/model/account", [
         doLogin: function (data) {
             // debugger;
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'signin'
             });
-            $.post(this.url, {credentials: data}, function (responce) {
+            $.post(url, {credentials: data}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
@@ -48,10 +48,10 @@ define("plugin/account/js/model/account", [
         doLogout: function () {
             // debugger;
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'signout'
             });
-            $.post(this.url, function (responce) {
+            $.post(url, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 Cache.setObject('AccountProfileID', null);
                 self.set(_data);
@@ -61,11 +61,11 @@ define("plugin/account/js/model/account", [
         },
         editProfile: function (data) {
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'edit'
             });
             // debugger;
-            $.post(this.url, {account: data}, function (responce) {
+            $.post(url, {account: data}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
@@ -74,11 +74,11 @@ define("plugin/account/js/model/account", [
         },
         addAddress: function (data) {
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'addAddress'
             });
             // debugger;
-            $.post(this.url, {address: data}, function (responce) {
+            $.post(url, {address: data}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
@@ -88,11 +88,11 @@ define("plugin/account/js/model/account", [
         updateAddress: function (AddressID, data) {
             // debugger;
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'updateAddress'
             });
             data.AddressID = AddressID;
-            $.post(this.url, {address: data}, function (responce) {
+            $.post(url, {address: data}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
@@ -101,10 +101,10 @@ define("plugin/account/js/model/account", [
         },
         removeAddress: function (AddressID) {
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'removeAddress'
             });
-            $.post(this.url, {AddressID: AddressID}, function (responce) {
+            $.post(url, {AddressID: AddressID}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
@@ -113,14 +113,14 @@ define("plugin/account/js/model/account", [
         },
         changePassword: function (password, confirmation) {
             var self = this;
-            this.updateUrl({
+            var url = this.getUrl({
                 action: 'updatePassword'
             });
             var data = {
                 Password: password,
                 ConfirmPassword: confirmation
             };
-            $.post(this.url, data, function (responce) {
+            $.post(url, data, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');

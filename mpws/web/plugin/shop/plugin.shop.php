@@ -468,6 +468,7 @@ class pluginShop extends objectPlugin {
         $do = libraryRequest::getValue('action');
         $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions);
 
+        $errors = array();
         // var_dump($dataObj);
 
         $productData = $dataObj->getData();
@@ -510,81 +511,119 @@ class pluginShop extends objectPlugin {
             // shopCartCreateAccount
             $cartUser = libraryRequest::getPostValue('user');
 
-            // save account
-            // -----------------------
-            // AccountID
-            // Shipping
-            // Warehouse
-            // Comment
-            // Status
-            // TrackingLink
-            // DateCreate
-            // DateUpdate
-            $dataAccount = array();
-            $dataAccount["FirstName"] = $cartUser["shopCartUserName"];
-            $dataAccount["LastName"] = "";
-            $dataAccount["EMail"] = $cartUser["shopCartUserEmail"];
-            $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
-            $dataAccount["Password"] = "1234";
-            $accountID = $this->getCustomer()-> addAccount($dataAccount);
+            $accountID = null;
+            $addressID = null;
 
-            // save order
-            // -----------------------
-            // AccountID
-            // Shipping
-            // Warehouse
-            // Comment
-            // Hash
-            // DateCreated
-            // DateUpdated
-            $configOrder = configurationShopDataSource::jsapiShopOrderCreate();
-            $dataOrder["AccountID"] = $accountID;
-            $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
-            $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
-            $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
-            $dataOrder["Comment"] = $cartUser['shopCartComment'];
-            $dataOrder["Hash"] = md5(mktime() . md5(mktime()));
-            $dataOrder['DateCreated'] = date('Y:m:d H:i:s');
-            $dataOrder['DateUpdated'] = date('Y:m:d H:i:s');
-            $configOrder['data'] = array(
-                "fields" => array_keys($dataOrder),
-                "values" => array_values($dataOrder)
-            );
+            if (!$cartUser['shopCartProfileID'] || $cartUser['shopCartProfileID'] !== $_SESSION['Account:ProfileID']) {
 
-            $this->getCustomer()->processData($configOrder);
+                // save account
+                // -----------------------
+                // AccountID
+                // Shipping
+                // Warehouse
+                // Comment
+                // Status
+                // TrackingLink
+                // DateCreate
+                // DateUpdate
+                $dataAccount = array();
+                $dataAccount["FirstName"] = $cartUser["shopCartUserName"];
+                $dataAccount["LastName"] = "";
+                $dataAccount["EMail"] = $cartUser["shopCartUserEmail"];
+                $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
+                $dataAccount["Password"] = "1234";
+                $accountID = $this->getCustomer()->addAccount($dataAccount);
 
-            $orderID = $this->getDataBase()->getLastInsertId();
+                // add account address
+                $dataAccountAddress = array();
+                $dataAccountAddress["AccountID"] = $accountID;
+                $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
+                $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
+                $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
+                $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
 
-            // save products
-            // -----------------------
-            // ProductID
-            // OrderID
-            // ProductPrice
-            // Quantity
-            foreach ($productData['products'] as $_item) {
-                $configProduct = configurationShopDataSource::jsapiShopOrderProductsSave();
-                $dataProduct = array();
-                $dataProduct["ProductID"] = $_item["ID"];
-                $dataProduct["OrderID"] = $orderID;
-                $dataProduct["ProductPrice"] = $_item["ProductPrice"];
-                $dataProduct["Quantity"] = $_item["Quantity"];
-                $configProduct['data'] = array(
-                    "fields" => array_keys($dataProduct),
-                    "values" => array_values($dataProduct)
-                );
-                $this->getCustomer()->processData($configProduct);
+                $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress, true);
+
+            } else {
+
+                $accountID = $_SESSION['Account:ProfileID'];
+
+                if (empty($cartUser["shopCartProfileAddressID"])) {
+                    $dataObj->setError('WrongProfileAddressID');
+                    return $dataObj;
+                }
+
+                // validate account address id
+                $accountAddressEntry = $this->getCustomer()->getAccountAddress($cartUser["shopCartProfileAddressID"]);
+
+                if (empty($accountAddressEntry['ID'])) {
+                    $dataObj->setError('WrongProfileAddressID');
+                    return $dataObj;
+                }
+
+                $addressID = $accountAddressEntry['ID'];
             }
 
-            // clear products
-            $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions, 'CLEAR');
-            $productData = $dataObj->getData();
+            if (!$dataObj->hasError()) {
+                // save order
+                // -----------------------
+                // AccountID
+                // Shipping
+                // Warehouse
+                // Comment
+                // Hash
+                // DateCreated
+                // DateUpdated
+                $configOrder = configurationShopDataSource::jsapiShopOrderCreate();
+                $dataOrder["AccountID"] = $accountID;
+                $dataOrder["AccountAddressesID"] = $addressID;
+                $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
+                $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
+                $dataOrder["Comment"] = $cartUser['shopCartComment'];
+                $dataOrder["Hash"] = md5(mktime() . md5(mktime()));
+                $dataOrder['DateCreated'] = date('Y:m:d H:i:s');
+                $dataOrder['DateUpdated'] = date('Y:m:d H:i:s');
+                $configOrder['data'] = array(
+                    "fields" => array_keys($dataOrder),
+                    "values" => array_values($dataOrder)
+                );
 
-            // need to shop order id and status link
-            // and send email
-            $dataObj->setData('status', array(
-                'orderID' => $orderID,
-                'orderHash'=> $dataOrder["Hash"]
-            ));
+                $this->getCustomer()->processData($configOrder);
+
+                $orderID = $this->getDataBase()->getLastInsertId();
+
+                // save products
+                // -----------------------
+                // ProductID
+                // OrderID
+                // ProductPrice
+                // Quantity
+                foreach ($productData['products'] as $_item) {
+                    $configProduct = configurationShopDataSource::jsapiShopOrderProductsSave();
+                    $dataProduct = array();
+                    $dataProduct["ProductID"] = $_item["ID"];
+                    $dataProduct["OrderID"] = $orderID;
+                    $dataProduct["ProductPrice"] = $_item["ProductPrice"];
+                    $dataProduct["Quantity"] = $_item["Quantity"];
+                    $configProduct['data'] = array(
+                        "fields" => array_keys($dataProduct),
+                        "values" => array_values($dataProduct)
+                    );
+                    $this->getCustomer()->processData($configProduct);
+                }
+
+                // clear products
+                $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions, 'CLEAR');
+                $productData = $dataObj->getData();
+
+                // need to shop order id and status link
+                // and send email
+                $dataObj->setData('status', array(
+                    'orderID' => $orderID,
+                    'orderHash'=> $dataOrder["Hash"]
+                ));
+            }
         }
 
         $dataObj->setData('info', $this->_custom_util_calculateBought($productData['products']));

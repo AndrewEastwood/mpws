@@ -54,6 +54,30 @@ class pluginAccount extends objectPlugin {
         return $data;
     }
 
+    private function isAccountSignedIn () {
+        if (isset($_COOKIE['username']) && isset($_COOKIE['password']) && isset($_SESSION['Account:ProfileID']))
+            return true;
+        else {
+            setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
+            setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
+            unset($_SESSION['Account:ProfileID']);
+            return false;
+        }
+    }
+
+    private function getActiveProfileID () {
+        if ($this->isAccountSignedIn())
+            return $_SESSION['Account:ProfileID'];
+        return false;
+    }
+
+    private function getActiveProfile ($newPassword = false) {
+        if ($this->isAccountSignedIn())
+            return $this->getCustomer()->getAccount($_COOKIE['username'], !empty($newPassword) ? $newPassword : $_COOKIE['password'], false);
+        else
+            return null;
+    }
+
     private function _custom_api_signin () {
         $accountObj = new libraryDataObject();
 
@@ -135,7 +159,7 @@ class pluginAccount extends objectPlugin {
 
     private function _custom_api_status () {
         $accountObj = new libraryDataObject();
-        $account = $this->getCustomer()->getActiveProfile();
+        $account = $this->getActiveProfile();
         $accountObj->setData('profile', $account);
         return $accountObj;
     }
@@ -154,13 +178,19 @@ class pluginAccount extends objectPlugin {
         $accountObj = new libraryDataObject();
         $errors = array();
 
-        if (!$this->getCustomer()->isAccountSignedIn()) {
+        if (!$this->isAccountSignedIn()) {
             $accountObj->setData("profile", null);
             return $accountObj;
         }
 
+        $account['AccountID'] = $this->getActiveProfileID();
+
+        if (empty($account['AccountID']))
+            $errors['AccountID'] = 'Empty';
+
         if (empty($account['FirstName']))
             $errors['FirstName'] = 'Empty';
+
 
         if (count($errors)) {
             $accountObj->setError($errors);
@@ -169,6 +199,7 @@ class pluginAccount extends objectPlugin {
         }
 
         // get all valid fields
+        $dataAccount['AccountID'] = $account['AccountID'];
         $dataAccount['FirstName'] = $account['FirstName'];
         if (isset($account['LastName']))
             $dataAccount['LastName'] = $account['LastName'];
@@ -177,7 +208,7 @@ class pluginAccount extends objectPlugin {
 
         $this->getCustomer()->updateAccount($dataAccount);
 
-        $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+        $accountObj->setData("profile", $this->getActiveProfile());
         $accountObj->setData("success", true);
 
         return $accountObj;
@@ -186,15 +217,16 @@ class pluginAccount extends objectPlugin {
     private function _custom_api_manageAddress ($createNew = false) {
         $accountObj = new libraryDataObject();
 
-        if (!$this->getCustomer()->isAccountSignedIn()) {
+        if (!$this->isAccountSignedIn()) {
             $accountObj->setData("profile", null);
             return $accountObj;
         }
 
-        $profile = $this->getCustomer()->getActiveProfile();
+        $profile = $this->getActiveProfile();
         $accountObj->setData("profile", $profile);
 
         $errors = array();
+
 
         if (count($profile['addresses']) >= 3) {
             $accountObj->setError('MaxAddressesReached');
@@ -202,6 +234,11 @@ class pluginAccount extends objectPlugin {
         }
 
         $dataAddress = libraryRequest::getPostValue('address');
+
+        $dataAddress['AccountID'] = $this->getActiveProfileID();
+
+        if (empty($dataAddress['AccountID']))
+            $errors['AccountID'] = 'Empty';
 
         if (empty($dataAddress['Address']))
             $errors['Address'] = 'Empty';
@@ -217,7 +254,7 @@ class pluginAccount extends objectPlugin {
 
         if (count($errors)) {
             $accountObj->setError($errors);
-            $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+            $accountObj->setData("profile", $this->getActiveProfile());
             return $accountObj;
         }
 
@@ -226,7 +263,7 @@ class pluginAccount extends objectPlugin {
         else
             $this->getCustomer()->updateAccountAddress($dataAddress);
 
-        $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+        $accountObj->setData("profile", $this->getActiveProfile());
         $accountObj->setData("success", true);
 
         return $accountObj;
@@ -236,7 +273,7 @@ class pluginAccount extends objectPlugin {
         $accountObj = new libraryDataObject();
         $errors = array();
         
-        if (!$this->getCustomer()->isAccountSignedIn()) {
+        if (!$this->isAccountSignedIn()) {
             $accountObj->setData("profile", null);
             return $accountObj;
         }
@@ -246,14 +283,14 @@ class pluginAccount extends objectPlugin {
 
         if (count($errors)) {
             $accountObj->setError($errors);
-            $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+            $accountObj->setData("profile", $this->getActiveProfile());
             // $accountObj->setData("values", $dataAddress);
             return $accountObj;
         }
 
-        $this->getCustomer()->removeAccountAddress($AddressID);
+        $this->getCustomer()->removeAccountAddress($this->getActiveProfileID(), $AddressID);
 
-        $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+        $accountObj->setData("profile", $this->getActiveProfile());
         $accountObj->setData("success", true);
 
         return $accountObj;
@@ -274,7 +311,7 @@ class pluginAccount extends objectPlugin {
 
         if (count($errors)) {
             $accountObj->setError($errors);
-            $accountObj->setData("profile", $this->getCustomer()->getActiveProfile());
+            $accountObj->setData("profile", $this->getActiveProfile());
             return $accountObj;
         }
 
@@ -285,7 +322,7 @@ class pluginAccount extends objectPlugin {
         // var_dump($password);
         setcookie('password', $password, false, '/', $_SERVER['SERVER_NAME']);
 
-        $profile = $this->getCustomer()->getActiveProfile($password);
+        $profile = $this->getActiveProfile($password);
 
         $accountObj->setData("profile", $profile);
         $accountObj->setData("success", true);
