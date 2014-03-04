@@ -249,7 +249,7 @@ class objectCustomer {
         return $this->getDataBase()->getData($config);
     }
 
-    public function addAccountAddress ($address, $force = false) {
+    public function addAccountAddress ($address) {
         // if (!$this->isAccountSignedIn() && !$force)
         //     return false;
 

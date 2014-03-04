@@ -66,6 +66,14 @@ define("plugin/shop/js/view/cartStandalone", [
                     } else
                         self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
                 }
+
+                self.$('#shopping-cart-logistic-ID').on('change', function (event) {
+                    if ($(this).val())
+                        self.$('.form-group-warehouse').prop('disable', false).removeClass('hide');
+                    else
+                        self.$('.form-group-warehouse').prop('disable', true).addClass('hide');
+                });
+                
             });
 
             Sandbox.eventSubscribe('shop:cart:save', function () {

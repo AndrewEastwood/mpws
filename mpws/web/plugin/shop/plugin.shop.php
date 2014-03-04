@@ -464,9 +464,10 @@ class pluginShop extends objectPlugin {
     // -----------------------------------------------
     private function _custom_api_shoppingCart () {
 
+        $sessionKey = 'shopCartProducts';
         $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
         $do = libraryRequest::getValue('action');
-        $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions);
+        $dataObj = $this->_custom_util_manageStoredProducts($sessionKey, $cartActions);
 
         $errors = array();
         // var_dump($dataObj);
@@ -542,26 +543,45 @@ class pluginShop extends objectPlugin {
                 $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
                 $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
 
-                $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress, true);
+                $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
 
             } else {
 
                 $accountID = $_SESSION['Account:ProfileID'];
 
-                if (empty($cartUser["shopCartProfileAddressID"])) {
-                    $dataObj->setError('WrongProfileAddressID');
-                    return $dataObj;
+                // add account address
+                $dataAccountAddress = array();
+                if (!empty($cartUser["shopCartUserAddress"]))
+                    $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
+                if (!empty($cartUser["shopCartUserPOBox"]))
+                    $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
+                if (!empty($cartUser["shopCartUserCountry"]))
+                    $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
+                if (!empty($cartUser["shopCartUserCity"]))
+                    $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
+
+                $customAddress = count($dataAccountAddress) > 0;
+
+                if ($customAddress) {
+                    $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
+                } else {
+
+                    if (empty($cartUser["shopCartProfileAddressID"])) {
+                        $dataObj->setError('WrongProfileAddressID');
+                        return $dataObj;
+                    }
+
+                    // validate account address id
+                    $accountAddressEntry = $this->getCustomer()->getAccountAddress($accountID, $cartUser["shopCartProfileAddressID"]);
+
+                    if (empty($accountAddressEntry['ID'])) {
+                        $dataObj->setError('WrongProfileAddressID');
+                        return $dataObj;
+                    }
+                    
+                    $addressID = $accountAddressEntry['ID'];
                 }
 
-                // validate account address id
-                $accountAddressEntry = $this->getCustomer()->getAccountAddress($cartUser["shopCartProfileAddressID"]);
-
-                if (empty($accountAddressEntry['ID'])) {
-                    $dataObj->setError('WrongProfileAddressID');
-                    return $dataObj;
-                }
-
-                $addressID = $accountAddressEntry['ID'];
             }
 
             if (!$dataObj->hasError()) {
@@ -628,6 +648,7 @@ class pluginShop extends objectPlugin {
 
         $dataObj->setData('info', $this->_custom_util_calculateBought($productData['products']));
         $dataObj->setData('products', $productData['products']);
+        $_SESSION[$sessionKey] = $productData['products'];
 
         return $dataObj;
     }
@@ -646,7 +667,7 @@ class pluginShop extends objectPlugin {
             return $dataObj;
         }
 
-        if (!$this->getCustomer()->isAccountSignedIn()) {
+        if ($_SESSION['Account:ProfileID'] != $profileID) {
             $dataObj->setError('AccessDenied');
             return $dataObj;
         }
@@ -663,21 +684,21 @@ class pluginShop extends objectPlugin {
             // var_dump($configBoughts);
             $boughts = $this->getDataBase()->getData($configBoughts);
 
-            foreach ($boughts as $bkey => $soldItem) {
-                $product = $this->_custom_api_getProductItem($soldItem['ProductID']);
-                if ($product->hasData()) { 
-                    $productData = $product->getData();
-                    $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
-                } else
-                    $boughts[$bkey]['Product'] = null;
-            }
+            if (!empty($boughts))
+                foreach ($boughts as $bkey => $soldItem) {
+                    $product = $this->_custom_api_getProductItem($soldItem['ProductID']);
+                    if ($product->hasData()) { 
+                        $productData = $product->getData();
+                        $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
+                    } else
+                        $boughts[$bkey]['Product'] = null;
+                }
 
             // var_dump($boughts);
 
             $dataOrders[$key]['Info'] = $this->_custom_util_calculateBought($boughts);
 
             // var_dump($this->_custom_util_calculateBought($boughts));
-
             $dataOrders[$key]['Boughts'] = $boughts;
         }
 
@@ -689,7 +710,6 @@ class pluginShop extends objectPlugin {
     private function _custom_api_orderStatus ($orderHash) {
         // $orderHash
         $dataObj = new libraryDataObject();
-
 
         $config = configurationShopDataSource::jsapiShopOrderStatus();
         $config["condition"]["values"][] = $orderHash;

@@ -228,7 +228,7 @@ class pluginAccount extends objectPlugin {
         $errors = array();
 
 
-        if (count($profile['addresses']) >= 3) {
+        if (count($profile['addresses']) >= 3 && $createNew) {
             $accountObj->setError('MaxAddressesReached');
             return $accountObj;
         }

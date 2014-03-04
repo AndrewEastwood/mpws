@@ -18,6 +18,7 @@ define("plugin/shop/nls/ua_uk/shop", [
         shopping_cart_field_profile_address_option_none: "Не вибрано",
         shopping_cart_field_profile_address: "Мої адреси",
         shopping_cart_field_address: "Адреса доставки",
+        shopping_cart_field_pobox: "Поштовий індекс",
         shopping_cart_field_country: "Країна",
         shopping_cart_field_city: "Місто",
         shopping_cart_field_logistic: "Перевізник",

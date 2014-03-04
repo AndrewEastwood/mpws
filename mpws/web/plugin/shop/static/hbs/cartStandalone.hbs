@@ -112,9 +112,9 @@
 
                                 <!-- POBox -->
                                 <div class="form-group form-group-pobox hide">
-                                    <label class="control-label col-md-3" for="shopping-cart-pobox-ID">{{lang.shopping_cart_field_address}}</label>
+                                    <label class="control-label col-md-3" for="shopping-cart-pobox-ID">{{lang.shopping_cart_field_pobox}}</label>
                                     <div class="col-md-6">
-                                        <textarea name="shopCartUserPOBox" class="form-control" id="shopping-cart-pobox-ID"></textarea>
+                                        <input type="text" name="shopCartUserPOBox" class="form-control" id="shopping-cart-pobox-ID"/>
                                     </div>
                                 </div>
 
@@ -138,12 +138,12 @@
                                     <label class="control-label col-md-3" for="shopping-cart-logistic-ID">{{lang.shopping_cart_field_logistic}}</label>
                                     <div class="col-md-6">
                                         <select class="form-control" id="shopping-cart-logistic-ID" name="shopCartLogistic">
-                                            {{> default/hbs/controls/selectboxLogisticUA }}
+                                            {{> customer/hbs/partials/selectboxLogisticUA }}
                                         </select>
                                     </div>
                                 </div>
                                 <!-- City -->
-                                <div class="form-group">
+                                <div class="form-group form-group-warehouse hide">
                                     <label class="control-label col-md-3" for="shopping-cart-warehouse-ID">{{lang.shopping_cart_field_warehouse}}</label>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control" id="shopping-cart-warehouse-ID" name="shopCartWarehouse">
