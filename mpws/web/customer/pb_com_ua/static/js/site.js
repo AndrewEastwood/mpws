@@ -1,25 +1,18 @@
-// APP.Modules.register("router/customer", [], [
-
-//     'lib/jquery',
-//     'lib/underscore',
-//     'lib/backbone',
-//     'lib/mpws.page',
-//     'plugin/shop/router/shopPublic',
-//     // 'lib/mpws.ui',
-
-// ], function (app, Sandbox, $, _, Backbone, mpwsPage, pluginShopRouter){
-
 define("customer/js/site", [
-
+    'default/js/lib/sandbox',
     'cmn_jquery',
+    'default/js/lib/underscore',
     'default/js/site',
     // 'default/js/lib/underscore',
     // 'default/js/lib/backbone',
     // 'default/js/lib/mpws.page',
     // 'plugin/shop/js/site'
+    // views + models
+    'default/js/view/menu',
+    'default/js/view/breadcrumb',
     'default/js/plugin/css!customer/css/theme.css'
 
-], function ($, SiteBase/*, _, Backbone, mpwsPage, pluginShopRouter*/) {
+], function (Sandbox, $, _, SiteBase, Menu, Breadcrumb) {
 
     var _customerOptions = {};
 
@@ -70,17 +63,40 @@ define("customer/js/site", [
         }
     };
 
-    _customerOptions.views = {
-        menu: {
+    var site = new SiteBase(_customerOptions);
+
+    Sandbox.eventSubscribe('global:loader:complete', function (options) {
+        $('head title').text(_customerOptions.site.title);
+
+        // init site views
+        var _views = {};
+        _views.menu = new Menu({
             el: _customerOptions.placeholders.common.menu
-        },
-        breadcrumb: {
+        });
+        _views.menu.render();
+
+        _views.breadcrumb = new Breadcrumb({
             el: _customerOptions.placeholders.common.breadcrumb,
             template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
-        }
-    }
+        });
 
-    var site = new SiteBase(_customerOptions);
+        Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {
+            _views.breadcrumb.fetchAndRender(options);
+        });
+
+        Sandbox.eventSubscribe('site:menu:inject', function (options) {
+            // debugger;
+            if (_.isArray(options))
+                _(options).each(function (option){
+                    _views.menu.addMenuItem(option.item, !!option.posRight);
+                });
+            else if (options.item)
+                _views.menu.addMenuItem(options.item, !!options.posRight);
+        });
+
+    });
+
+
 
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout

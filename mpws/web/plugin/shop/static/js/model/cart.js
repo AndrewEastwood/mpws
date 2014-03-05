@@ -106,6 +106,6 @@ define("plugin/shop/js/model/cart", [
         }
     });
 
-    return Cart;
+    return new Cart();
 
 });

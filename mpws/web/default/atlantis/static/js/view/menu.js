@@ -10,6 +10,8 @@ define("default/js/view/menu", [
 
     var Menu = View.extend({
         template: tpl,
+        containerItemsLeft: '.navbar-nav-main',
+        containerItemsRight: '.navbar-right',
         menuItems: {
             left: [],
             right: []
@@ -63,8 +65,8 @@ define("default/js/view/menu", [
         },
         getMenuItemPlaceholder: function (rightSide) {
             if (rightSide)
-                return this.$('.navbar-right');
-            return this.$el.find('.navbar-nav-main');
+                return this.$(this.containerItemsRight);
+            return this.$(this.containerItemsLeft);
         }
     });
 

@@ -41,11 +41,7 @@ define("plugin/shop/js/model/wishList", [
             });
 
             // debugger;
-            this.updateUrl({
-                action: 'INFO'
-            });
-
-            this.fetch();
+            // this.getInfo();
         },
         parse: function (data) {
             // debugger;
@@ -82,6 +78,6 @@ define("plugin/shop/js/model/wishList", [
         }
     });
 
-    return WishList;
+    return new WishList();
 
 });

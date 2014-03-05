@@ -5,17 +5,9 @@ define("plugin/shop/js/site", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/shop/js/view/menuSite',
-    'plugin/shop/js/model/productsCompare',
-    'plugin/shop/js/model/wishList',
-    'plugin/shop/js/model/cart',
-    'plugin/shop/js/view/cartEmbedded',
-    'plugin/shop/js/view/orderTrackingButton'
-], function (Sandbox, Site, $, _, Backbone, Cache, MenuSite, ModelProductsCompare, ModelWishList, ModelCart, CartEmbedded, OrderTrackingButton) {
-
-    var shoppingCartModel = new ModelCart();
-    var shoppingWishListModel = new ModelWishList();
-    var productsCompareModel = new ModelProductsCompare();
+    'plugin/shop/js/view/siteMenu',
+    'plugin/shop/js/view/siteWidgets',
+], function (Sandbox, Site, $, _, Backbone, Cache, SiteMenu, SiteWidgets) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -35,20 +27,9 @@ define("plugin/shop/js/site", [
 
             var self = this;
 
-            MenuSite.render();
+            SiteMenu.render();
 
-            // inject tracking order
-            var orderTrackingButton = new OrderTrackingButton();
-            Site.placeholders.common.widgetsTop.append(orderTrackingButton.$el);
-            orderTrackingButton.fetchAndRender();
-
-            // inject embedded shopping cart
-            var cartEmbedded = new CartEmbedded({
-                model: shoppingCartModel
-            });
-            Site.placeholders.common.widgetsTop.append(cartEmbedded.$el);
-            cartEmbedded.fetchAndRender();
-
+            SiteWidgets.render();
 
             Sandbox.eventSubscribe('site:page:index', function () {
                 self.home();
@@ -58,7 +39,7 @@ define("plugin/shop/js/site", [
 
         home: function () {
 
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -88,7 +69,7 @@ define("plugin/shop/js/site", [
         shop_catalog_category: function (categoryID) {
 
             // debugger;
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -118,7 +99,7 @@ define("plugin/shop/js/site", [
 
         shop_catalog: function (categoryID) {
 
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -129,7 +110,7 @@ define("plugin/shop/js/site", [
 
         shop_product: function (productID) {
 
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: productID,
@@ -159,7 +140,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_compare: function () {
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -173,9 +154,7 @@ define("plugin/shop/js/site", [
                         cachedView.remove();
 
                     // create new view
-                    var productsCompare = new ProductsCompare({
-                        model: productsCompareModel
-                    });
+                    var productsCompare = new ProductsCompare();
                     Site.placeholders.shop.productCompare.html(productsCompare.$el);
                     // debugger;
                     productsCompare.fetchAndRender({
@@ -189,7 +168,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_cart: function () {
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -203,9 +182,7 @@ define("plugin/shop/js/site", [
                         cachedView.remove();
 
                     // create new view
-                    var cartStandalone = new CartStandalone({
-                        model: shoppingCartModel
-                    });
+                    var cartStandalone = new CartStandalone();
                     Site.placeholders.shop.shoppingCartStandalone.html(cartStandalone.$el);
                     cartStandalone.fetchAndRender({
                         action: "INFO"
@@ -218,7 +195,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_wishlist: function () {
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -232,9 +209,7 @@ define("plugin/shop/js/site", [
                         cachedView.remove();
 
                     // create new view
-                    var wishListStandalone = new WishListStandalone({
-                        model: shoppingWishListModel
-                    });
+                    var wishListStandalone = new WishListStandalone();
                     Site.placeholders.shop.shoppingWishListStandalone.html(wishListStandalone.$el);
                     wishListStandalone.fetchAndRender({
                         action: "INFO"
@@ -247,7 +222,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_tracking: function (orderHash) {
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -290,7 +265,7 @@ define("plugin/shop/js/site", [
                 return;
             }
 
-            Site.showBreadcrumbLocation({
+            Sandbox.eventNotify('site:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,

@@ -28,16 +28,15 @@
     });
 
     // include site file
-    var _filesToRequest = ['customer/js/site'];
+    var _filesToRequest = ['default/js/lib/sandbox', 'customer/js/site'];
 
     for (var key in _globalConfig.PLUGINS)
         _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site'));
     // debugger;
     // start customer application
     console.log(_filesToRequest);
-    require(_filesToRequest, function () {
-        var _args = [].slice.call(arguments);
-        var _customerJs = _args[0];
+    require(_filesToRequest, function (Sandbox, Site) {
+        var _args = [].slice.call(arguments, 1);
         var _routers = [];
 
         // setup plugin routers
@@ -45,12 +44,13 @@
         if (pluginCount > 1)
             for (var i = 1; i < pluginCount; i++) {
                 // debugger;
-                var router = new _args[i](_customerJs);
+                var router = new _args[i](Site);
                 _routers.push(router);
             }
 
         // start/init customer
-        _customerJs.start();
+        // _customerJs.start();
+        Sandbox.eventNotify('global:loader:complete');
 
         Backbone.history.start();  // Запускаем HTML5 History push
     });

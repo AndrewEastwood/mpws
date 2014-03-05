@@ -1,10 +1,11 @@
 define("plugin/shop/js/view/menuCompare", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
+    'plugin/shop/js/model/productsCompare',
     'default/js/plugin/hbs!plugin/shop/hbs/menuCompare'
-], function (Sandbox, MView, tpl) {
+], function (Sandbox, MView, ModelProductsCompareInstance, tpl) {
 
-    var MenuCart = MView.extend({
+    var MenuCompare = MView.extend({
         tagName: 'li',
         template: tpl,
         initialize: function () {
@@ -16,9 +17,10 @@ define("plugin/shop/js/view/menuCompare", [
                 else
                     _self.$('.counter').empty();
             });
+            ModelProductsCompareInstance.getInfo();
         }
     });
 
-    return MenuCart;
+    return MenuCompare;
 
 });

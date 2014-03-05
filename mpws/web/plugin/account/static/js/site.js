@@ -4,9 +4,9 @@ define("plugin/account/js/site", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'plugin/account/js/view/menuSite',
+    'plugin/account/js/view/siteMenu',
     'default/js/lib/cache'
-], function (Sandbox, Site, $, _, Backbone, MenuSite, Cache) {
+], function (Sandbox, Site, $, _, Backbone, SiteMenu, Cache) {
 
     Sandbox.eventSubscribe('account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
@@ -37,7 +37,7 @@ define("plugin/account/js/site", [
             // debugger;
             var self = this;
 
-            MenuSite.render();
+            SiteMenu.render();
 
             Sandbox.eventSubscribe('account:profile:show', function(pageContent) {
                 self.showProfileToolbar(pageContent);
@@ -46,7 +46,7 @@ define("plugin/account/js/site", [
 
         create: function () {
 
-            Site.showBreadcrumbLocation();
+            Sandbox.eventNotify('site:breadcrumb:show');
 
             if (Cache.hasObject('AccountProfileID')) {
                 Backbone.history.navigate("account/profile", {trigger: true});
@@ -79,7 +79,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            Site.showBreadcrumbLocation();
+            Sandbox.eventNotify('site:breadcrumb:show');
 
             var self = this;
             // this.showProfileToolbar();
@@ -114,7 +114,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            Site.showBreadcrumbLocation();
+            Sandbox.eventNotify('site:breadcrumb:show');
 
             var self = this;
             // this.showProfileToolbar();
@@ -150,7 +150,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            Site.showBreadcrumbLocation();
+            Sandbox.eventNotify('site:breadcrumb:show');
 
             var self = this;
             // this.showProfileToolbar();
@@ -188,7 +188,7 @@ define("plugin/account/js/site", [
 
             var self = this;
 
-            Site.showBreadcrumbLocation();
+            Sandbox.eventNotify('site:breadcrumb:show');
 
             require(['plugin/account/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // using this wrapper to cleanup previous view and create new one
@@ -221,7 +221,7 @@ define("plugin/account/js/site", [
 
             var self = this;
 
-            Site.showBreadcrumbLocation();
+            Sandbox.eventNotify('site:breadcrumb:show');
 
             require(['plugin/account/js/view/accountProfileDelete'], function (AccountProfileDelete) {
                 // using this wrapper to cleanup previous view and create new one

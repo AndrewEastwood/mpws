@@ -1,8 +1,9 @@
 define("plugin/shop/js/view/menuWishList", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
+    'plugin/shop/js/model/wishList',
     'default/js/plugin/hbs!plugin/shop/hbs/menuWishList'
-], function (Sandbox, MView, tpl) {
+], function (Sandbox, MView, ModelWishListInstance, tpl) {
 
     var MenuWishList = MView.extend({
         tagName: 'li',
@@ -16,6 +17,7 @@ define("plugin/shop/js/view/menuWishList", [
                 else
                     _self.$('.counter').empty();
             });
+            ModelWishListInstance.getInfo();
         }
     });
 

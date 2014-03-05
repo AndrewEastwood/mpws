@@ -783,12 +783,14 @@ class pluginShop extends objectPlugin {
             "subTotal" => 0.0,
             "discount" => 0,
             "total" => 0.0,
-            "productCount" => 0
+            "productCount" => 0,
+            "productUniqueCount" => 0
         );
 
         if (empty($_products))
             return $cartInfo;
 
+        $cartInfo['productUniqueCount'] = count($_products);
 
         foreach ($_products as &$_item) {
             if (!isset($_item['ProductPrice']))

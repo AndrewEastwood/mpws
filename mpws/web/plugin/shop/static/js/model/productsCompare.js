@@ -43,11 +43,7 @@ define("plugin/shop/js/model/productsCompare", [
                 Sandbox.eventNotify('shop:compare:info', _self.toJSON());
             });
 
-            this.updateUrl({
-                action: 'INFO'
-            });
-
-            this.fetch();
+            // this.getInfo();
         },
         parse: function (data) {
             if (data && data.shop && data.shop.error) {
@@ -94,6 +90,6 @@ define("plugin/shop/js/model/productsCompare", [
         }
     });
 
-    return ProductsCompare;
+    return new ProductsCompare();
 
 });

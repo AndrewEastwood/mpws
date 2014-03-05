@@ -319,31 +319,7 @@
 			"file": "web/plugin/shop/static/js/site.js",
 			"settings":
 			{
-				"buffer_size": 11838,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/account/static/js/site.js",
-			"settings":
-			{
-				"buffer_size": 10751,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/atlantis/static/js/loader.js",
-			"settings":
-			{
-				"buffer_size": 1774,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/default/atlantis/static/js/site.js",
-			"settings":
-			{
-				"buffer_size": 4058,
+				"buffer_size": 10860,
 				"line_ending": "Unix"
 			}
 		}
@@ -388,12 +364,24 @@
 	},
 	"file_history":
 	[
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuSite.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/wishListStandalone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/wishList.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productsCompare.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/productsCompare.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/toolbox.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/widgetsSite.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuWishList.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartEmbedded.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/cart.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light_full.sql",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/toolbox.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/toolbox.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/hbs/layout.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listProductCatalog.js",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/less/theme.less",
@@ -477,11 +465,9 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/ua_uk/shop.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/model/account.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartStandalone.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/controls/selectboxLogisticUA.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfileOverview.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfile.js",
@@ -501,21 +487,11 @@
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap-dialog.less",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ua_uk/account.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemShort.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/cart.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfilePassword.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfilePassword.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/bootstrap-dialog.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfileAddresses.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/breadcrumb.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfileAddresses.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfileDelete.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfileEdit.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/partials/accountAddress.hbs",
-		"/devdata/Develop/github/web/mpws/web/deploy/node_modules/grunt-contrib-less/node_modules/less/.grunt/grunt-contrib-jasmine/phantom-polyfill.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfileEdit.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/bootstrap-editable.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap-editable.less",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountAddresses.hbs"
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/breadcrumb.hbs"
 	],
 	"find":
 	{
@@ -535,6 +511,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"shoppingCartModel",
 			"debugger",
 			"\n        debugger;",
 			"toolbox",
@@ -661,8 +638,7 @@
 			"shop",
 			"accountProfile",
 			"MenuCatalog",
-			"menuCatalog",
-			"accountLogin"
+			"menuCatalog"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -680,7 +656,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -688,15 +664,15 @@
 					"file": "web/plugin/shop/static/js/site.js",
 					"settings":
 					{
-						"buffer_size": 11838,
+						"buffer_size": 10860,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								313,
+								313
 							]
 						],
 						"settings":
@@ -707,90 +683,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "web/plugin/account/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 10751,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								707,
-								707
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "web/default/atlantis/static/js/loader.js",
-					"settings":
-					{
-						"buffer_size": 1774,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1105,
-								1105
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "web/default/atlantis/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 4058,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1939,
-								1939
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 714.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

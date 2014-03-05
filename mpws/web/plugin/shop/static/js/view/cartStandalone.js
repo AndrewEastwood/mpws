@@ -3,17 +3,19 @@ define("plugin/shop/js/view/cartStandalone", [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/view/mView',
+    'plugin/shop/js/model/cart',
     'default/js/plugin/hbs!plugin/shop/hbs/cartStandalone',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/nls/shop',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
-], function (Site, Sandbox, _, MView, tpl, lang) {
+], function (Site, Sandbox, _, MView, ModelCartInstance, tpl, lang) {
 
     $.cookie.json = true;
 
     var CartStandalone = MView.extend({
         // tagName: 'div',
+        model: ModelCartInstance,
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
         template: tpl,
