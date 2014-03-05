@@ -3,13 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 25, 2014 at 02:22 PM
--- Server version: 5.5.34
--- PHP Version: 5.3.10-1ubuntu3.8
-
-DROP DATABASE IF EXISTS `mpws_light` ;
-CREATE DATABASE `mpws_light` ;
-USE `mpws_light`;
+-- Generation Time: Mar 05, 2014 at 02:25 PM
+-- Server version: 5.5.35
+-- PHP Version: 5.3.10-1ubuntu3.9
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -138,9 +134,8 @@ INSERT INTO `editor_content` (`ID`, `Property`, `Value`, `PageOwner`) VALUES
 DROP TABLE IF EXISTS `mpws_accountAddresses`;
 CREATE TABLE IF NOT EXISTS `mpws_accountAddresses` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `AccountID` int(11) NOT NULL,
-  `Address1` varchar(200) NOT NULL,
-  `Address2` varchar(200) NOT NULL,
+  `AccountID` int(11) DEFAULT NULL,
+  `Address` varchar(500) NOT NULL,
   `POBox` varchar(50) NOT NULL,
   `Country` varchar(300) NOT NULL,
   `City` varchar(300) NOT NULL,
@@ -149,7 +144,24 @@ CREATE TABLE IF NOT EXISTS `mpws_accountAddresses` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`AccountID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+--
+-- Dumping data for table `mpws_accountAddresses`
+--
+
+INSERT INTO `mpws_accountAddresses` (`ID`, `AccountID`, `Address`, `POBox`, `Country`, `City`, `Status`, `DateCreated`, `DateUpdated`) VALUES
+(5, 79, 'wwwww', 'fsdfsdf', 'rererererer', 'fdsfsdfsdf', 'REMOVED', '2014-03-02 20:26:25', '2014-03-02 22:37:12'),
+(19, 79, 'fsdfsdf', '345345345', 'fsdfsdf', 'uuuuuuu', 'REMOVED', '2014-03-02 22:47:47', '2014-03-02 22:55:48'),
+(20, 79, 'dsadfasdasdfdfdsfdsf', 'fffff', 'ffff', 'dasdasdasdasd', 'REMOVED', '2014-03-02 23:02:38', '2014-03-03 00:40:52'),
+(21, 79, 'setsertser', 'tsetest', 'dfsdfsdfsd', 'fsdfsdfsdfsd', 'REMOVED', '2014-03-03 00:40:27', '2014-03-03 00:40:53'),
+(22, 79, 'Horodotska 123', '79001', 'Ukraine', 'Lviv', 'ACTIVE', '2014-03-03 00:41:05', '2014-03-03 19:09:57'),
+(23, 79, 'xxxxxx', 'xxxxxx', 'xxxxxx', 'xxxxxx', 'REMOVED', '2014-03-03 01:00:12', '2014-03-03 15:04:04'),
+(24, 79, 'Lvivska 34', '57841', 'Ukraine', 'Kyiv', 'ACTIVE', '2014-03-03 19:10:39', '2014-03-04 01:51:16'),
+(25, 79, 'Kyivska 3', '78451', 'Ukraine', 'Rivne', 'ACTIVE', '2014-03-04 02:22:33', '2014-03-04 02:25:13'),
+(26, NULL, 'demo', '120012', 'Ukraine', 'Lviv', 'ACTIVE', '2014-03-04 02:43:40', '2014-03-04 02:43:40'),
+(27, NULL, 'demo', '120012', 'Ukraine', 'Lviv', 'ACTIVE', '2014-03-04 02:43:46', '2014-03-04 02:43:46'),
+(28, NULL, 'demo', '120012', 'Ukraine', 'Lviv', 'ACTIVE', '2014-03-04 02:46:43', '2014-03-04 02:46:43');
 
 -- --------------------------------------------------------
 
@@ -175,18 +187,18 @@ CREATE TABLE IF NOT EXISTS `mpws_accounts` (
   UNIQUE KEY `ID` (`ID`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=68 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=82 ;
 
 --
 -- Dumping data for table `mpws_accounts`
 --
 
 INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsTemporary`, `FirstName`, `LastName`, `EMail`, `Phone`, `Password`, `ValidationString`, `Status`, `DateCreated`, `DateUpdated`) VALUES
-(63, 1, 1, '', '', '', '', '1234', '54863fd338cb9af7a449864a43fb51c5', 'ACTIVE', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(64, 1, 1, '', '', '', '', '1234', 'b242fae2fad0f7d2a6a2743c97499b10', 'ACTIVE', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(65, 1, 1, '', '', '', '', '1234', '289165f34ac6bae92e30ffce43ad7204', 'ACTIVE', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(66, 1, 1, '', '', '', '', '1234', 'd0759c841a3d75a70056f759d1bddbaf', 'ACTIVE', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(67, 1, 1, 'ggdfg', '', 'dfgdfgdf', 'gdfgdf', '1234', '0391a0b3fcd48c120dbf8cf5d47ad37b', 'ACTIVE', '2014-02-22 00:00:00', '2014-02-22 00:00:00');
+(77, 1, 1, 'James', 'Griffin', 'test@test.com', NULL, '24d04aa3d61423fb9dae48ac4d7567d5', '72e6d9fe68147c4feb0cf7b035be9e05', 'ACTIVE', '2014-03-01 01:14:14', '2014-03-01 01:14:14'),
+(78, 1, 0, 'James', 'demo2', 'test@demo2.com', NULL, '24d04aa3d61423fb9dae48ac4d7567d5', 'c261191eb31433b98994f58e57567a67', 'ACTIVE', '2014-03-01 01:16:39', '2014-03-01 01:16:39'),
+(79, 1, 0, 'Test', 'Demo', 'demo@demo.com5', '097-56-56-201', '24d04aa3d61423fb9dae48ac4d7567d5', 'b74c7e4ec4dc62728ee5a2195a8605b2', 'ACTIVE', '2014-03-01 14:38:46', '2014-03-04 14:42:02'),
+(80, 1, 1, 'tset', '', 'tset', 'ttset', '4a123a551c46b3a7a2e1b6b76e7d69c9', 'f5046014417bd9c1098e0f29bd5abf59', 'ACTIVE', '2014-03-01 14:45:03', '2014-03-01 14:45:03'),
+(81, 1, 1, '', '', '', '', '4a123a551c46b3a7a2e1b6b76e7d69c9', '23fcad34643fa6b3c4d9765778498f21', 'ACTIVE', '2014-03-01 14:45:14', '2014-03-01 14:45:14');
 
 -- --------------------------------------------------------
 
@@ -199,21 +211,21 @@ CREATE TABLE IF NOT EXISTS `mpws_customer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `ExternalKey` varchar(100) COLLATE utf8_bin NOT NULL,
   `Name` text COLLATE utf8_bin NOT NULL,
-  `Enabled` tinyint(1) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `mpws_customer`
 --
 
-INSERT INTO `mpws_customer` (`ID`, `ExternalKey`, `Name`, `Enabled`, `HomePage`, `DateCreated`, `DateUpdated`) VALUES
-(0, 'toolbox', 'toolbox', 1, '', '2013-09-03 00:00:00', '2013-09-03 00:00:00'),
-(1, 'pb_com_ua', 'Pobutteh', 1, '', '2013-09-03 00:00:00', '2013-09-03 00:00:00');
+INSERT INTO `mpws_customer` (`ID`, `ExternalKey`, `Name`, `Status`, `HomePage`, `DateCreated`, `DateUpdated`) VALUES
+(0, 'toolbox', 'toolbox', 'ACTIVE', '', '2013-09-03 00:00:00', '2013-09-03 00:00:00'),
+(1, 'pb_com_ua', 'Pobutteh', 'ACTIVE', '', '2013-09-03 00:00:00', '2013-09-03 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -262,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `mpws_subscripers` (
   UNIQUE KEY `ID` (`ID`),
   KEY `AccountID` (`AccountID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -390,18 +402,20 @@ CREATE TABLE IF NOT EXISTS `shop_boughts` (
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `OrderID` (`OrderID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
 -- Dumping data for table `shop_boughts`
 --
 
 INSERT INTO `shop_boughts` (`ID`, `ProductID`, `OrderID`, `ProductPrice`, `Quantity`) VALUES
-(15, 4, 14, 100, 1),
-(16, 4, 15, 100, 1),
-(17, 4, 16, 100, 1),
-(18, 4, 17, 100, 1),
-(19, 4, 18, 100, 1);
+(20, 5, 19, 17, 1),
+(21, 5, 20, 17, 1),
+(22, 3, 20, 213, 1),
+(23, 3, 21, 213, 1),
+(24, 4, 21, 100, 10),
+(25, 4, 24, 100, 7),
+(26, 4, 27, 100, 1);
 
 -- --------------------------------------------------------
 
@@ -552,7 +566,8 @@ DROP TABLE IF EXISTS `shop_orders`;
 CREATE TABLE IF NOT EXISTS `shop_orders` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `AccountID` int(11) NOT NULL,
+  `AccountID` int(11) DEFAULT NULL,
+  `AccountAddressesID` int(11) NOT NULL,
   `Shipping` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   `Warehouse` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
@@ -565,18 +580,22 @@ CREATE TABLE IF NOT EXISTS `shop_orders` (
   KEY `AccountID` (`AccountID`),
   KEY `Hash` (`Hash`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=28 ;
 
 --
 -- Dumping data for table `shop_orders`
 --
 
-INSERT INTO `shop_orders` (`ID`, `CustomerID`, `AccountID`, `Shipping`, `Warehouse`, `Comment`, `Status`, `Hash`, `DateCreated`, `DateUpdated`) VALUES
-(14, 1, 63, 'self', '', '', 'ACTIVE', 'cdd74945dcc972f7b3805b9ac7161eab', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(15, 1, 64, 'self', '', '', 'ACTIVE', 'ea7d452fc3ce4313485882051d81b968', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(16, 1, 65, 'self', '', '', 'ACTIVE', '96cd6d106ef265c3587aa8daa4632020', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(17, 1, 66, 'NovaPoshta', '1', 'nothing to add', 'SHOP_CLOSED', 'b47afb0291685ed843e56e1002b6e845', '2014-02-22 00:00:00', '2014-02-22 00:00:00'),
-(18, 1, 67, 'company_gunsel', '333', 'fsfgsdfds', 'ACTIVE', '019fab2b329bd9ead0659111a21b075e', '2014-02-22 00:00:00', '2014-02-22 00:00:00');
+INSERT INTO `shop_orders` (`ID`, `CustomerID`, `AccountID`, `AccountAddressesID`, `Shipping`, `Warehouse`, `Comment`, `Status`, `Hash`, `DateCreated`, `DateUpdated`) VALUES
+(19, 1, 79, 0, 'company_gunsel', 'test', 'test', 'NEW', 'feceb946892d6553534402fe85d34b0f', '2014-03-01 14:38:46', '2014-03-01 14:38:46'),
+(20, 1, 79, 0, 'company_novaposhta', 'tset', 'setset', 'LOGISTIC_DELIVERED', '4a45f03d9c345814c22c3ba14977040f', '2014-03-01 14:45:03', '2014-03-01 14:45:03'),
+(21, 1, 79, 0, 'self', '', '', 'SHOP_CLOSED', 'bf62eae73bb93385458205350b41f5c8', '2014-03-01 14:45:15', '2014-03-01 14:45:15'),
+(22, 1, 79, 26, 'self', '12', 'call', 'NEW', '539c1281990325f8870ee236920231ca', '2014-03-04 02:43:40', '2014-03-04 02:43:40'),
+(23, 1, 79, 27, 'self', '12', 'call', 'NEW', '594b40d6834fe6b7c1988e022f0e5833', '2014-03-04 02:43:46', '2014-03-04 02:43:46'),
+(24, 1, 79, 28, 'self', '12', 'call', 'NEW', '3bcff429fdb62932c9ff7636461b74e7', '2014-03-04 02:46:43', '2014-03-04 02:46:43'),
+(25, 1, 79, 22, 'self', '12', '444', 'NEW', '91bac37fd7056ede8da053fae4164d71', '2014-03-04 02:52:48', '2014-03-04 02:52:48'),
+(26, 1, 79, 22, 'self', '12', '444', 'NEW', '91a92b3864b2053b89d9214aa56f5f0d', '2014-03-04 02:53:27', '2014-03-04 02:53:27'),
+(27, 1, 79, 24, '', '', 'dedededede', 'NEW', '1206292bb1b863c76096e2e37d73232b', '2014-03-04 03:02:31', '2014-03-04 03:02:31');
 
 -- --------------------------------------------------------
 
@@ -1304,8 +1323,8 @@ ALTER TABLE `mpws_users`
 -- Constraints for table `shop_boughts`
 --
 ALTER TABLE `shop_boughts`
-  ADD CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `shop_boughts_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `shop_boughts_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `shop_categories`
