@@ -202,6 +202,9 @@
                     <li class="list-group-item">Номер замовлення: <span class="label label-success">{{data.status.orderID}}</span></li>
                     <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
                     <li class="list-group-item"><a href="{{location.origin}}/#shop/tracking/{{data.status.orderHash}}">{{location.origin}}/#shop/tracking/{{data.status.orderHash}}</a></li>
+                    {{#if extras.account.profile }}
+                    <li class="list-group-item">Також Ви можете переглянути всі Ваші замовлення в <a href="/#shop/profile/orders">особистому кабінеті</a>.</li>
+                    {{/if}}
                 </ul>
             </div>
         {{else}}

@@ -49,13 +49,16 @@ server {
     }
 
     location /static {
-      rewrite ^/static/customer/([\.a-z_-]+)/nls/(.*) /engine/controller/controller.nls.php?customer=$1&lang=$2 last;
-      rewrite ^/static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
+        rewrite ^/static/customer/([\.a-z_-]+)/nls/(.*) /engine/controller/controller.nls.php?customer=$1&lang=$2 last;
+        rewrite ^/static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
     }
 
+    location /toolbox {
+        rewrite ^toolbox/?(.*) /engine/controller/controller.display.php?$1 last;
+    }
 
     location /api {
-      rewrite ^/api\.js(.*) /engine/controller/controller.api.php?$1 last;
+        rewrite ^/api\.js(.*) /engine/controller/controller.api.php?$1 last;
     }
 
 }

@@ -11,6 +11,8 @@ define("plugin/account/js/site", [
     Sandbox.eventSubscribe('account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
             Backbone.history.navigate("", {trigger: true});
+        else
+            Backbone.history.loadUrl(Backbone.history.fragment);
     });
 
     Sandbox.eventSubscribe('account:signed:in', function() {
