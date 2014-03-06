@@ -36,6 +36,7 @@ define("customer/js/site", [
         CommonWidgetsBottom: $('.MPWSWidgetsBottom'),
         /* plugins  */
         /* = plugin shop */
+        ShopOffers: $('.MPWSPageBody .MPWSBlockCenter'),
         ShopListProductLatest: $('.MPWSPageBody .MPWSBlockCenter'),
         ShopListProductCatalog: $('.MPWSPageBody .MPWSBlockCenter'),
         ShopProductItemStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
@@ -68,7 +69,7 @@ define("customer/js/site", [
         var _container = _customerOptions.placeholders[options.name];
 
         if (!_container || !_container.length)
-            return false;
+            return;
 
         if (options.append)
             _container.append(options.el);

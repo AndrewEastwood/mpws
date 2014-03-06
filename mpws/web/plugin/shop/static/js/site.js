@@ -35,6 +35,18 @@ define("plugin/shop/js/site", [
                 self.home();
             });
 
+            Sandbox.eventSubscribe('shop:offers:get', function () {
+                self.offers();
+            });
+        },
+
+        offers: function () {
+
+            // Sandbox.eventNotify('site:content:render', {
+            //     name: 'ShopOffers',
+            //     el: $('<h1>Offers Goes here</h1>')
+            // });
+
         },
 
         home: function () {

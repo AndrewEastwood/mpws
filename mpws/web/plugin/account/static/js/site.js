@@ -38,7 +38,6 @@ define("plugin/account/js/site", [
             var self = this;
 
             // SiteMenu.render();
-
             Sandbox.eventSubscribe('account:profile:show', function(pageContent) {
                 self.showProfileToolbar(pageContent);
             });
