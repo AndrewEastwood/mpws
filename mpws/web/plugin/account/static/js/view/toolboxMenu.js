@@ -1,13 +1,13 @@
-define("plugin/shop/js/view/toolboxMenu", [
+define("plugin/account/js/view/toolboxMenu", [
     'default/js/lib/sandbox',
     'customer/js/site',
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/shop/hbs/toolboxMenu',
+    'default/js/plugin/hbs!plugin/account/hbs/toolboxMenu',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/shop',
+    'default/js/plugin/i18n!plugin/account/nls/account',
 ], function (Sandbox, Site, MView, tpl, lang) {
 
-    var toolboxMenuShop = new (MView.extend({
+    var toolboxMenuAccount = new (MView.extend({
         // tagName: 'li',
         lang: lang,
         template: tpl,
@@ -23,14 +23,13 @@ define("plugin/shop/js/view/toolboxMenu", [
         //     ModelProductsCompareInstance.getInfo();
         // }
     }))();
-    toolboxMenuShop.render();
+    toolboxMenuAccount.render();
 
     // return MenuCompare;
-
     // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
         // debugger;
-        Site.placeholders.common.menuPlugin.append(toolboxMenuShop.$el);
+        Site.placeholders.common.menuPlugin.append(toolboxMenuAccount.$el);
     });
 
 });

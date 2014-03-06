@@ -37,7 +37,7 @@ define("plugin/account/js/site", [
             // debugger;
             var self = this;
 
-            SiteMenu.render();
+            // SiteMenu.render();
 
             Sandbox.eventSubscribe('account:profile:show', function(pageContent) {
                 self.showProfileToolbar(pageContent);

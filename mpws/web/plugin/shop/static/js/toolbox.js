@@ -5,30 +5,40 @@ define("plugin/shop/js/toolbox", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'plugin/shop/js/view/toolboxMenu'
-], function (Sandbox, Site, $, _, Backbone, ToolboxMenu) {
+], function (Sandbox, Site, $, _, Backbone) {
 
     var Router = Backbone.Router.extend({
         routes: {
-            "shop/manager": "manager",
-            "shop/orders": "orders"
+            "shop/products": "products",
+            "shop/orders": "orders",
+            "shop/sales": "sales",
+            "shop/prices": "prices",
         },
 
         initialize: function () {
-            ToolboxMenu.render();
+            // ToolboxMenu.render();
 
             Sandbox.eventSubscribe('site:page:index', function () {
                 // debugger;
-                Site.showBreadcrumbLocation();
-                Site.addMenuItemLeft('SHOP');
-                $('#userMenu').append();
+                Sandbox.eventNotify('site:breadcrumb:show');
+                // Site.addMenuItemLeft('SHOP');
+                // $('#userMenu').append();
             });
         },
 
-        manager: function () {
-
+        products: function () {
+            
         },
 
         orders: function () {
+
+        },
+
+        sales: function () {
+
+        },
+
+        prices: function () {
 
         }
 

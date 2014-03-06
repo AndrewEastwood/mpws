@@ -3,16 +3,10 @@ define("customer/js/site", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/site',
-    // 'default/js/lib/underscore',
-    // 'default/js/lib/backbone',
-    // 'default/js/lib/mpws.page',
-    // 'plugin/shop/js/site'
-    // views + models
-    'default/js/view/menu',
     'default/js/view/breadcrumb',
     'default/js/plugin/css!customer/css/theme.css'
 
-], function (Sandbox, $, _, SiteBase, Menu, Breadcrumb) {
+], function (Sandbox, $, _, SiteBase, Breadcrumb) {
 
     var _customerOptions = {};
 
@@ -37,7 +31,8 @@ define("customer/js/site", [
             footerCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
             footerRight: $('.MPWSPageFooter .MPWSBlockRight'),
             breadcrumb: $('.MPWSBreadcrumb'),
-            menu: $('.MPWSPageHeader .MPWSBlockCenter'),
+            menuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
+            menuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
             widgetsTop: $('.MPWSWidgetsTop'),
             widgetsBottom: $('.MPWSWidgetsBottom')
         },
@@ -66,14 +61,17 @@ define("customer/js/site", [
     var site = new SiteBase(_customerOptions);
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
+
+        // configure titles and brand images
         $('head title').text(_customerOptions.site.title);
+        $('#site-logo-ID').attr({
+            src: _customerOptions.site.logoImageUrl,
+            title: _customerOptions.site.title
+        });
+        $('.navbar-brand').removeClass('hide');
 
         // init site views
         var _views = {};
-        _views.menu = new Menu({
-            el: _customerOptions.placeholders.common.menu
-        });
-        _views.menu.render();
 
         _views.breadcrumb = new Breadcrumb({
             el: _customerOptions.placeholders.common.breadcrumb,
@@ -83,20 +81,7 @@ define("customer/js/site", [
         Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {
             _views.breadcrumb.fetchAndRender(options);
         });
-
-        Sandbox.eventSubscribe('site:menu:inject', function (options) {
-            // debugger;
-            if (_.isArray(options))
-                _(options).each(function (option){
-                    _views.menu.addMenuItem(option.item, !!option.posRight);
-                });
-            else if (options.item)
-                _views.menu.addMenuItem(options.item, !!options.posRight);
-        });
-
     });
-
-
 
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout

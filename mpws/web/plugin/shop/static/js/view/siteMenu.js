@@ -40,26 +40,31 @@ define("plugin/shop/js/view/siteMenu", [
         view.addModuleMenuItem(menuProfileOrders.$el.find('a').clone());
     });
 
-    return {
-        render: function () {
+    // return {
+    //     render: function () {
             // debugger;
             Sandbox.eventSubscribe('global:loader:complete', function () {
-                Sandbox.eventNotify('site:menu:inject', [
-                    {
-                        item: menuCatalog.$el
-                    },
-                    {
-                        item: menuCart.$el
-                    },
-                    {
-                        item: menuWishList.$el
-                    },
-                    {
-                        item: menuCompare.$el
-                    },
-                ]);
+                // placeholders.common.menu
+                Site.placeholders.common.menuLeft.append(menuCatalog.$el);
+                Site.placeholders.common.menuLeft.append(menuCart.$el);
+                Site.placeholders.common.menuLeft.append(menuWishList.$el);
+                Site.placeholders.common.menuLeft.append(menuCompare.$el);
+                // Sandbox.eventNotify('site:menu:inject', [
+                //     {
+                //         item: menuCatalog.$el
+                //     },
+                //     {
+                //         item: menuCart.$el
+                //     },
+                //     {
+                //         item: menuWishList.$el
+                //     },
+                //     {
+                //         item: menuCompare.$el
+                //     },
+                // ]);
             });
-        }
-    }
+    //     }
+    // }
 
 });

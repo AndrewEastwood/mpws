@@ -22,22 +22,24 @@ define("plugin/account/js/view/siteMenu", [
         menuSignUp.$el.addClass('hidden');
     });
 
-    return {
-        render: function () {
+    // return {
+    //     render: function () {
             // debugger;
             Sandbox.eventSubscribe('global:loader:complete', function () {
-                Sandbox.eventNotify('site:menu:inject', [
-                    {
-                        item: menuSignUp.$el,
-                        posRight: true
-                    },
-                    {
-                        item: menuAccount.$el,
-                        posRight: true
-                    },
-                ]);
+                Site.placeholders.common.menuRight.append(menuSignUp.$el);
+                Site.placeholders.common.menuRight.append(menuAccount.$el);
+                // Sandbox.eventNotify('site:menu:inject', [
+                //     {
+                //         item: menuSignUp.$el,
+                //         posRight: true
+                //     },
+                //     {
+                //         item: menuAccount.$el,
+                //         posRight: true
+                //     },
+                // ]);
             });
-        }
-    }
+    //     }
+    // }
 
 });

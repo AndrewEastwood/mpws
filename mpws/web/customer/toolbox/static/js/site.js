@@ -2,15 +2,15 @@ define("customer/js/site", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/site',
-    'default/js/lib/backbone',
+    'default/js/view/breadcrumb',
     'default/js/plugin/css!customer/css/theme.css'
 
-], function (Sandbox, $, SiteBase, Backbone) {
+], function (Sandbox, $, SiteBase, Breadcrumb) {
 
     var _customerOptions = {};
 
     _customerOptions.site = {
-        title: 'Workbench',
+        title: 'Toolbox',
         logoImageUrl: app.config.URL_STATIC_DEFAULT + '/img/logo.gif'
     };
 
@@ -29,7 +29,9 @@ define("customer/js/site", [
             footerCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
             footerRight: $('.MPWSPageFooter .MPWSBlockRight'),
             breadcrumb: $('.MPWSBreadcrumb'),
-            menu: $('.MPWSPageHeader .MPWSBlockCenter'),
+            menuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
+            menuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
+            menuPlugin: $('.MPWSPageBody .MPWSBlockCenter #toolbox-menu-ID'),
             widgetsTop: $('.MPWSWidgetsTop'),
             widgetsBottom: $('.MPWSWidgetsBottom')
         }
@@ -46,6 +48,29 @@ define("customer/js/site", [
     }
 
     var site = new SiteBase(_customerOptions);
+
+    Sandbox.eventSubscribe('global:loader:complete', function (options) {
+
+        // configure titles and brand images
+        $('head title').text(_customerOptions.site.title);
+        $('#site-logo-ID').attr({
+            src: _customerOptions.site.logoImageUrl,
+            title: _customerOptions.site.title
+        });
+        $('.navbar-brand').removeClass('hide');
+
+        // init site views
+        var _views = {};
+
+        _views.breadcrumb = new Breadcrumb({
+            el: _customerOptions.placeholders.common.breadcrumb,
+            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
+        });
+
+        Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {
+            _views.breadcrumb.fetchAndRender(options);
+        });
+    });
 
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout

@@ -4,6 +4,7 @@ define("plugin/account/js/toolbox", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'plugin/account/js/view/toolboxMenu'
 ], function (Sandbox, Site, $, _, Backbone) {
 
     var Router = Backbone.Router.extend({
@@ -18,9 +19,9 @@ define("plugin/account/js/toolbox", [
 
             Sandbox.eventSubscribe('site:page:index', function () {
                 // debugger;
-                Site.showBreadcrumbLocation();
-                Site.addMenuItemLeft('PROFILE');
-                $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
+                Sandbox.eventNotify('site:breadcrumb:show');
+                // Site.addMenuItemLeft('PROFILE');
+                // $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
             });
 
         },

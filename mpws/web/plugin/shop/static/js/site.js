@@ -27,9 +27,9 @@ define("plugin/shop/js/site", [
 
             var self = this;
 
-            SiteMenu.render();
+            // SiteMenu.render();
 
-            SiteWidgets.render();
+            // SiteWidgets.render();
 
             Sandbox.eventSubscribe('site:page:index', function () {
                 self.home();
