@@ -17,48 +17,75 @@ define("customer/js/site", [
     };
 
     _customerOptions.placeholders = {
-        common: {
-            header: $('.MPWSPageHeader'),
-            headerLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
-            headerCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
-            headerRight: $('.MPWSPageHeader .MPWSBlockRight'),
-            body: $('.MPWSPageBody'),
-            bodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
-            bodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
-            bodyRight: $('.MPWSPageBody .MPWSBlockRight'),
-            footer: $('.MPWSPageFooter'),
-            footerLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
-            footerCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
-            footerRight: $('.MPWSPageFooter .MPWSBlockRight'),
-            breadcrumb: $('.MPWSBreadcrumb'),
-            menuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
-            menuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
-            widgetsTop: $('.MPWSWidgetsTop'),
-            widgetsBottom: $('.MPWSWidgetsBottom')
-        },
-        shop: {
-            productListOverview: $('.MPWSPageBody .MPWSBlockCenter'),
-            productListCatalog: $('.MPWSPageBody .MPWSBlockCenter'),
-            productItemStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
-            productCompare: $('.MPWSPageBody .MPWSBlockCenter'),
-            shoppingCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
-            shoppingWishListStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
-            widgetShoppingCartEmbedded: $('.MPWSWidgetsTop'),
-            widgetOrderStatusButton: $('.MPWSWidgetsTop'),
-            ordertrackingStandalone: $('.MPWSPageBody .MPWSBlockCenter')
-        },
-        account: {
-            widgetButtonAccount: $('.MPWSWidgetsTop'),
-            pageProfileCreate: $('.MPWSPageBody .MPWSBlockCenter'),
-            pageProfile: $('.MPWSPageBody .MPWSBlockCenter'),
-            pageProfileOverview: $('.MPWSPageBody .MPWSBlockCenter'),
-            pageProfileEdit: $('.MPWSPageBody .MPWSBlockCenter'),
-            pageProfilePassword: $('.MPWSPageBody .MPWSBlockCenter'),
-            pageProfileDelete: $('.MPWSPageBody .MPWSBlockCenter'),
-        }
+        CommonHeader: $('.MPWSPageHeader'),
+        CommonHeaderLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
+        CommonHeaderCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
+        CommonHeaderRight: $('.MPWSPageHeader .MPWSBlockRight'),
+        CommonBody: $('.MPWSPageBody'),
+        CommonBodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
+        CommonBodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
+        CommonBodyRight: $('.MPWSPageBody .MPWSBlockRight'),
+        CommonFooter: $('.MPWSPageFooter'),
+        CommonFooterLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
+        CommonFooterCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
+        CommonFooterRight: $('.MPWSPageFooter .MPWSBlockRight'),
+        CommonBreadcrumb: $('.MPWSBreadcrumb'),
+        CommonMenuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
+        CommonMenuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
+        CommonWidgetsTop: $('.MPWSWidgetsTop'),
+        CommonWidgetsBottom: $('.MPWSWidgetsBottom'),
+        /* plugins  */
+        /* = plugin shop */
+        ShopListProductLatest: $('.MPWSPageBody .MPWSBlockCenter'),
+        ShopListProductCatalog: $('.MPWSPageBody .MPWSBlockCenter'),
+        ShopProductItemStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+        ShopProductCompare: $('.MPWSPageBody .MPWSBlockCenter'),
+        ShopCartStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+        ShopWishList: $('.MPWSPageBody .MPWSBlockCenter'),
+        ShopWidgetShoppingCartEmbedded: $('.MPWSWidgetsTop'),
+        ShopWidgetOrderStatusButton: $('.MPWSWidgetsTop'),
+        ShopOrdertrackingStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
+        /* = plugin account */
+        AccountWidgetButtonAccount: $('.MPWSWidgetsTop'),
+        AccountPageProfileCreate: $('.MPWSPageBody .MPWSBlockCenter'),
+        AccountProfile: $('.MPWSPageBody .MPWSBlockCenter'),
+        AccountProfileOverview: $('.MPWSPageBody .MPWSBlockCenter'),
+        AccountProfileEdit: $('.MPWSPageBody .MPWSBlockCenter'),
+        AccountProfilePassword: $('.MPWSPageBody .MPWSBlockCenter'),
+        AccountProfileDelete: $('.MPWSPageBody .MPWSBlockCenter'),
     };
 
     var site = new SiteBase(_customerOptions);
+
+    var _renderFn = function (options) {
+
+        console.log('_renderFn', options);
+
+        if (!options || !options.name)
+            return;
+
+        // debugger;
+        var _container = _customerOptions.placeholders[options.name];
+
+        if (!_container || !_container.length)
+            return false;
+
+        if (options.append)
+            _container.append(options.el);
+        else if (options.prepend)
+            _container.prepend(options.el);
+        else
+            _container.html(options.el);
+    }
+
+    Sandbox.eventSubscribe('site:content:render', function (options) {
+        if (_.isArray(options))
+            _(options).each(function(option){
+                _renderFn(option);
+            });
+        else
+            _renderFn(options);
+    });
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
 
@@ -74,7 +101,7 @@ define("customer/js/site", [
         var _views = {};
 
         _views.breadcrumb = new Breadcrumb({
-            el: _customerOptions.placeholders.common.breadcrumb,
+            el: _customerOptions.placeholders.CommonBreadcrumb,
             template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
         });
 

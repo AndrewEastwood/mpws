@@ -63,7 +63,11 @@ define("plugin/account/js/site", [
 
                     // create new view
                     var accountCreate = new AccountCreate();
-                    Site.placeholders.account.pageProfileCreate.html(accountCreate.el);
+                    // Site.placeholders.account.pageProfileCreate.html(accountCreate.el);
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'AccountProfileCreate',
+                        el: accountCreate.el
+                    });
                     accountCreate.fetchAndRender();
 
                     // return view object to pass it into this function at next invocation
@@ -100,6 +104,10 @@ define("plugin/account/js/site", [
                         accountProfileOverview.fetchAndRender({
                             action: 'status'
                         });
+                        // Sandbox.eventNotify('site:content:render', {
+                        //     name: 'AccountProfileOverview',
+                        //     el: accountProfileOverview.el
+                        // });
 
                         // return view object to pass it into this function at next invocation
                         return accountProfileOverview;
@@ -231,7 +239,7 @@ define("plugin/account/js/site", [
                     if (cachedView && cachedView.remove)
                         cachedView.remove();
 
-                    // create new view
+                    // create new viewl
                     var accountProfileDelete = new AccountProfileDelete();
                     // view.setPagePlaceholder(accountProfileDelete.el);
                     self.showProfileToolbar(accountProfileDelete.el);
@@ -257,13 +265,18 @@ define("plugin/account/js/site", [
 
                     // create new view
                     var accountProfile = new AccountProfile();
-                    Site.placeholders.account.pageProfile.html(accountProfile.el);
+                    // Site.placeholders.account.pageProfile.html(accountProfile.el);
                     accountProfile.on('mview:renderComplete', function () {
                         accountProfile.setPagePlaceholder(pageContent);
                     });
                     accountProfile.fetchAndRender({
                         action: 'status'
                     });
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'AccountProfile',
+                        el: accountProfile.el
+                    });
+
 
                     // return view object to pass it into this function at next invocation
                     return accountProfile;

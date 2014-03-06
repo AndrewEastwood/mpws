@@ -604,7 +604,7 @@ class pluginShop extends objectPlugin {
                 $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
                 $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
                 $dataOrder["Comment"] = $cartUser['shopCartComment'];
-                $dataOrder["Hash"] = md5(mktime() . md5(mktime()));
+                $dataOrder["Hash"] = md5(time() . md5(time()));
                 $dataOrder['DateCreated'] = date('Y:m:d H:i:s');
                 $dataOrder['DateUpdated'] = date('Y:m:d H:i:s');
                 $configOrder['data'] = array(

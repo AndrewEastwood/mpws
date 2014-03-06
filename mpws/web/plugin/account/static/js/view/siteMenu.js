@@ -25,9 +25,21 @@ define("plugin/account/js/view/siteMenu", [
     // return {
     //     render: function () {
             // debugger;
-            Sandbox.eventSubscribe('global:loader:complete', function () {
-                Site.placeholders.common.menuRight.append(menuSignUp.$el);
-                Site.placeholders.common.menuRight.append(menuAccount.$el);
+    Sandbox.eventSubscribe('global:loader:complete', function () {
+        Sandbox.eventNotify('site:content:render', [
+            {
+                name: 'CommonMenuRight',
+                el: menuSignUp.$el,
+                append: true
+            },
+            {
+                name: 'CommonMenuRight',
+                el: menuAccount.$el,
+                append: true
+            }
+        ]);
+                // Site.placeholders.common.menuRight.append(menuSignUp.$el);
+                // Site.placeholders.common.menuRight.append(menuAccount.$el);
                 // Sandbox.eventNotify('site:menu:inject', [
                 //     {
                 //         item: menuSignUp.$el,
@@ -38,7 +50,7 @@ define("plugin/account/js/view/siteMenu", [
                 //         posRight: true
                 //     },
                 // ]);
-            });
+    });
     //     }
     // }
 

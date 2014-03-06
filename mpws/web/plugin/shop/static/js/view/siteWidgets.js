@@ -13,13 +13,19 @@ define("plugin/shop/js/view/siteWidgets", [
     var cartEmbedded = new CartEmbedded();
     cartEmbedded.fetchAndRender();
 
-    // return {
-    //     render: function () {
-            Sandbox.eventSubscribe('global:loader:complete', function () {
-                Site.placeholders.common.widgetsTop.append(orderTrackingButton.$el);
-                Site.placeholders.common.widgetsTop.append(cartEmbedded.$el);
-            });
-    //     }
-    // }
+    Sandbox.eventSubscribe('global:loader:complete', function () {
+        Sandbox.eventNotify('site:content:render', [
+            {
+                name: 'ShopWidgetOrderStatusButton',
+                el: orderTrackingButton.$el,
+                append: true
+            },
+            {
+                name: 'ShopWidgetShoppingCartEmbedded',
+                el: cartEmbedded.$el,
+                append: true
+            }
+        ]);
+    });
 
 });

@@ -57,23 +57,24 @@ define("plugin/shop/js/view/cartStandalone", [
                 // if we have account plugin
                 if (Site.hasPlugin('account')) {
                     // account is signed in
-                    if (self.model.getExtras().account) {
+                    // debugger;
+                    if (self.model.getExtras().account && self.model.getExtras().account.profile) {
                         self.$('#account-profile-addresses-ID').on('change', function (event) {
                             if ($(this).val())
-                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
+                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').addClass('hide');
                             else
-                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
+                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').removeClass('hide');
                         });
                         self.$('#account-profile-addresses-ID').trigger('change');
                     } else
-                        self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
+                        self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').removeClass('hide');
                 }
 
                 self.$('#shopping-cart-logistic-ID').on('change', function (event) {
                     if ($(this).val())
-                        self.$('.form-group-warehouse').prop('disable', false).removeClass('hide');
+                        self.$('.form-group-warehouse').removeClass('hide');
                     else
-                        self.$('.form-group-warehouse').prop('disable', true).addClass('hide');
+                        self.$('.form-group-warehouse').addClass('hide');
                 });
                 
             });

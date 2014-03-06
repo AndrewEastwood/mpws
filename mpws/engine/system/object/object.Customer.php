@@ -166,7 +166,7 @@ class objectCustomer {
     public function addAccount ($dataAccount) {
 
         $dataAccount["CustomerID"] = $this->getCustomerID();
-        $dataAccount["ValidationString"] = md5(mktime());
+        $dataAccount["ValidationString"] = md5(time());
         $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
         $dataAccount['IsTemporary'] = 1;
         $dataAccount['DateCreated'] = date('Y:m:d H:i:s');

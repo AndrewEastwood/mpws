@@ -56,8 +56,13 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var listProductLatest = new ListProductLatest();
-                    Site.placeholders.shop.productListOverview.html(listProductLatest.el);
+                    // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
                     listProductLatest.fetchAndRender();
+
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopListProductLatest',
+                        el: listProductLatest.el
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return listProductLatest;
@@ -88,8 +93,13 @@ define("plugin/shop/js/site", [
                     var listProductCatalog = new ListProductCatalog({
                         categoryID: categoryID
                     });
-                    Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
+                    // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
                     listProductCatalog.fetchAndRender();
+
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopListProductCatalog',
+                        el: listProductCatalog.el
+                    });
 
                     // return view object to pass it into this function at next invocation
                     return listProductCatalog;
@@ -127,10 +137,15 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var productItemFull = new ProductItemFull();
-                    Site.placeholders.shop.productItemStandalone.html(productItemFull.el);
+                    // Site.placeholders.shop.productItemStandalone.html(productItemFull.el);
 
                     productItemFull.fetchAndRender({
                         productID: productID
+                    });
+
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopProductItemStandalone',
+                        el: productItemFull.el
                     });
 
                     // return view object to pass it into this function at next invocation
@@ -155,12 +170,16 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var productsCompare = new ProductsCompare();
-                    Site.placeholders.shop.productCompare.html(productsCompare.$el);
+                    // Site.placeholders.shop.productCompare.html(productsCompare.$el);
                     // debugger;
                     productsCompare.fetchAndRender({
                         action: "INFO"
                     });
 
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopProductCompare',
+                        el: productsCompare.el
+                    });
                     // return view object to pass it into this function at next invocation
                     return productsCompare;
                 });
@@ -183,9 +202,13 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var cartStandalone = new CartStandalone();
-                    Site.placeholders.shop.shoppingCartStandalone.html(cartStandalone.$el);
+                    // Site.placeholders.shop.shoppingCartStandalone.html(cartStandalone.$el);
                     cartStandalone.fetchAndRender({
                         action: "INFO"
+                    });
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopCartStandalone',
+                        el: cartStandalone.el
                     });
 
                     // return view object to pass it into this function at next invocation
@@ -210,9 +233,13 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var wishListStandalone = new WishListStandalone();
-                    Site.placeholders.shop.shoppingWishListStandalone.html(wishListStandalone.$el);
+                    // Site.placeholders.shop.shoppingWishListStandalone.html(wishListStandalone.$el);
                     wishListStandalone.fetchAndRender({
                         action: "INFO"
+                    });
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopWishList',
+                        el: wishListStandalone.el
                     });
 
                     // return view object to pass it into this function at next invocation
@@ -238,7 +265,9 @@ define("plugin/shop/js/site", [
 
                     // create new view
                     var trackingStatus = new TrackingStatus();
-                    Site.placeholders.shop.ordertrackingStandalone.html(trackingStatus.$el);
+                    
+                    
+                    // Site.placeholders.shop.ordertrackingStandalone.html(trackingStatus.$el);
                     if (orderHash)
                         trackingStatus.fetchAndRender({
                             orderHash: orderHash
@@ -246,6 +275,10 @@ define("plugin/shop/js/site", [
                     else
                         trackingStatus.fetchAndRender();
 
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopOrdertrackingStandalone',
+                        el: trackingStatus.el
+                    });
                     // return view object to pass it into this function at next invocation
                     return trackingStatus;
                 });
