@@ -17,7 +17,7 @@ class configurationDefaultDatabase extends objectConfiguration {
         'USER' => '',
         'PWD' => '',
         'DB' => '',
-        'CHARSET' => '',
+        'CHARSET' => 'utf8',
         'STRING' => '',
         'DBOini' => array()
     );

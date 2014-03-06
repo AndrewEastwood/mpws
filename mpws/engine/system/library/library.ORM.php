@@ -252,6 +252,7 @@
                     self::$_config[$connection_name]['password'],
                     self::$_config[$connection_name]['driver_options']
                 );
+                $db->exec("set names utf8");
 
                 $db->setAttribute(PDO::ATTR_ERRMODE, self::$_config[$connection_name]['error_mode']);
                 self::set_db($db, $connection_name);

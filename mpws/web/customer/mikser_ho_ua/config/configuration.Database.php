@@ -3,12 +3,6 @@
 class configurationCustomerDatabase extends configurationDefaultDatabase {
 
     static $DEV = array(
-        'USER' => 'root',
-        'PWD' => '1111',
-        'DB' => 'mpws_light'
-    );
-
-    static $PROD = array(
         'HOST' => 'db2.ho.ua',
         'USER' => 'mikser',
         'PWD' => 'KL3fsa)(',

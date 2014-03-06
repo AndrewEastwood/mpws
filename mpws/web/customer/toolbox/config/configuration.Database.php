@@ -8,7 +8,7 @@ class configurationCustomerDatabase extends configurationDefaultDatabase {
         'DB' => 'mpws_light'
     );
 
-    static function init () {
+    static function init ($config = array()) {
 
         // append default config values
         self::$DEV = array_merge(parent::$DEV, self::$DEV);

@@ -3,8 +3,7 @@
 class objectConfiguration implements iConfiguration {
 
 
-
-    public function extendConfigs ($configA, $configB = null, $useRecursiveMerge = false) {
+    static function extendConfigs ($configA, $configB = null, $useRecursiveMerge = false) {
 
         return libraryUtils::array_merge_recursive_distinct($configA, $configB);
 

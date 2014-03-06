@@ -1,6 +1,6 @@
 <?php
 
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
 
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 

@@ -56,6 +56,7 @@ class libraryDataBase {
             $fieldsToSelectFromDBClear = array();
             // just to avoid mysql error: XXXX in field list is ambiguous
             foreach ($fieldsToSelectFromDB as $key => $value) {
+                // var_dump($value);
                 if ($value[0] === '@')
                     $this->dbo->select_expr(substr($value, 1));
                 elseif (!strstr($value, '.'))
@@ -91,7 +92,7 @@ class libraryDataBase {
 
 
         // condition
-        // var_dump($config);
+        // var_dump($fieldsToSelectFromDBClear);
         if (!empty($config['condition']['filter'])) {
             // var_dump('LOLOLOL');
             // translate condition filter string
@@ -213,6 +214,8 @@ class libraryDataBase {
                 $dbData = $this->dbo->find_array();
                 break;
         }
+
+        // var_dump($dbData);
 
         $_opt_expandSingleRecord = false;
 

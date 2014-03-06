@@ -1,6 +1,6 @@
 <?php
 
-class objectPlugin {
+class objectPlugin implements iPlugin {
 
     private $customer;
 

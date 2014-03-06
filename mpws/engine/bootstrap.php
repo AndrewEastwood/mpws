@@ -21,6 +21,7 @@
     //error_reporting(E_ERROR | E_WARNING | E_PARSE);
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
+    // ini_set("default_charset", 'utf-8');
 
     // include global files
     $globals = glob(DR . '/engine/global/global.*.php');
@@ -62,10 +63,6 @@
     
     function getDebugLevel (){
         return MPWS_LOG_LEVEL;
-    }
-
-    function glIsWorkbench () {
-        return MPWS_CUSTOMER === 'workbench';
     }
 
     function glIsToolbox () {

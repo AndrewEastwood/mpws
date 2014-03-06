@@ -1,6 +1,6 @@
 <?php
 
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
     // set request realm
     define ('MPWS_REQUEST', 'API');
     // start session
@@ -25,7 +25,9 @@
     // do not put $customer into global scope
     function response () {
         $customer = new libraryCustomer();
-        return $customer->getResponse();
+        $responce = $customer->getResponse();
+        // var_dump($responce->toNative());
+        return $responce;
     }
     
     $data = response();

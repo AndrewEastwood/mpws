@@ -1,6 +1,0 @@
-{* STANDART PAGE IMPLEMENTATION #1 *}
-<div id="MPWSPageStandartPublic{$INFO.GET.PAGE|capitalize:0:1}{$INFO.GET.DISPLAY|capitalize:0:1}ID" class="MPWSPage MPWSPageStandartPublicPageStyle1 MPWSPagePlugin{$INFO.GET.PLUGIN|default:None|capitalize:0:1} MPWSPageDisplay{$INFO.GET.DISPLAY|capitalize:0:1} MPWSPage{$INFO.GET.PAGE|capitalize:0:1}">
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_pageHeader _data=$_header}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_pageContent _data=$_content}
-    {include file=$CURRENT.OBJECT->objectTemplatePath_component_pageFooter _data=$_footer}
-</div>

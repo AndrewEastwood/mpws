@@ -1,6 +1,6 @@
 <?php
 
-    header('Content-Type: text/html');
+    header('Content-Type: text/html; charset=utf-8');
     // set request realm
     define ('MPWS_REQUEST', 'DISPLAY');
     // start session
@@ -24,7 +24,7 @@
     $staticPath = 'static'; // (MPWS_ENV === 'DEV' ? 'static_dev' : 'static');
     $initialJS = "{
         LOCALE: '" . configurationCustomerDisplay::$Locale . "',
-        BUILD: " . (MPWS_ENV === 'DEV' ? 'null' : file_get_contents($DR . DS . 'version.txt')) . ",
+        BUILD: " . (MPWS_ENV === 'DEV' ? 'null' : file_get_contents(DR . DS . 'version.txt')) . ",
         ISDEV: " . (MPWS_ENV === 'DEV' ? 'true' : 'false') . ",
         TOKEN: '" . libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey) . "',
         ISTOOLBOX: " . (glIsToolbox() ? 'true' : 'false') . ",
@@ -51,6 +51,7 @@
     $responce = str_replace("{{MPWS_VERSION}}", MPWS_VERSION, $responce);
     $responce = str_replace("{{MPWS_CUSTOMER}}", MPWS_CUSTOMER, $responce);
     $responce = str_replace("{{PATH_STATIC}}", $staticPath, $responce);
+
 
     // TODO: save output into file
     // and reuse it when production mode is on

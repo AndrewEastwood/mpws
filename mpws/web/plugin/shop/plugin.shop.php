@@ -167,12 +167,15 @@ class pluginShop extends objectPlugin {
 
         $products = $this->getCustomer()->processData($configProducts);
 
+        // var_dump($products);
+
         $productsMap = $this->_custom_util_getProductAttributes($products);
 
         // update main data object
         $dataObj = new libraryDataObject();
         $dataObj->setData('products', $productsMap);
 
+        // var_dump($dataObj);
         return $dataObj;
     }
 

@@ -1,9 +1,0 @@
-{$_link_target = $_target|default:''}
-{$_link_attributes = $_attr|default:[]}
-
-{$attr = ["href=\"`$_href`\"", "title=\"`$_title`\""]}
-{if not empty($_link_target)}
-    {$attr[] = ["target=\"`$_link_target`\""]}
-{/if}
-
-<a {implode(' ', $attr)}  class="MPWSLink" {implode(' ', $_link_attributes)}>{$_title}</a>
