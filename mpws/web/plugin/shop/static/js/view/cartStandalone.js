@@ -25,16 +25,17 @@ define("plugin/shop/js/view/cartStandalone", [
             var self = this;
             this.listenTo(this.model, "change", this.render);
 
-            // save user info
-            var _userInfoChanged = _.debounce(function () {
-                $.cookie("shopUser", self.collectUserInfo.call(self));
-            }, 100);
-            this.$el.on('keypress', 'input[type="text"],textarea', _userInfoChanged);
-            this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
-            this.$el.on('change', 'select', _userInfoChanged);
 
             this.on('mview:renderComplete', function () {
 
+                // save user info
+                var _userInfoChanged = _.debounce(function () {
+                    $.cookie("shopUser", self.collectUserInfo.call(self));
+                }, 100);
+                self.$el.on('keypress', 'input[type="text"],textarea', _userInfoChanged);
+                self.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
+                self.$el.on('change', 'select', _userInfoChanged);
+            
                 // restore user info
                 var _shopUser = $.cookie("shopUser");
                 if (_shopUser)
@@ -58,25 +59,25 @@ define("plugin/shop/js/view/cartStandalone", [
                 if (Site.hasPlugin('account')) {
                     // account is signed in
                     // debugger;
-                    if (self.model.getExtras().account && self.model.getExtras().account.profile) {
+                    if (self.model.hasExtras('account')) {
                         self.$('#account-profile-addresses-ID').on('change', function (event) {
                             if ($(this).val())
-                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').addClass('hide');
+                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
                             else
-                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').removeClass('hide');
+                                self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
                         });
                         self.$('#account-profile-addresses-ID').trigger('change');
                     } else
-                        self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').removeClass('hide');
+                        self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
                 }
 
                 self.$('#shopping-cart-logistic-ID').on('change', function (event) {
                     if ($(this).val())
-                        self.$('.form-group-warehouse').removeClass('hide');
+                        self.$('.form-group-warehouse').prop('disable', false).removeClass('hide');
                     else
-                        self.$('.form-group-warehouse').addClass('hide');
+                        self.$('.form-group-warehouse').prop('disable', true).addClass('hide');
                 });
-                
+
             });
 
             Sandbox.eventSubscribe('shop:cart:save', function () {

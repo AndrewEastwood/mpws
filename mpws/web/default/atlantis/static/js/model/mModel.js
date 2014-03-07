@@ -105,6 +105,10 @@ define("default/js/model/mModel", [
                 return this.extras;
             },
 
+            hasExtras: function (key) {
+                return typeof this.extras[key] !== "undefined";
+            },
+
             fetch: function (options) {
                 // debugger;
                 if (typeof this.url !== "string")

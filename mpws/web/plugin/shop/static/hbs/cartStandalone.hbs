@@ -9,7 +9,12 @@
             </div>
         </div>
 
-        {{>plugin/shop/hbs/partials/cartProductList data }}
+        <div class="shop-widget-productlist">
+        {{#each data.products }}
+            {{>plugin/shop/hbs/partials/cartProductItem . }}
+        {{/each}}
+        </div>
+        {{>plugin/shop/hbs/partials/cartInfo data }}
 
         <div class="well checkout">
             <div class="container">
@@ -24,7 +29,9 @@
 
                             <!-- Register form (not working)-->
                             <form class="form-horizontal">
-
+                                {{#if data.error }}
+                                    <div id="msg" class="alert alert-danger">{{mpwsGetValueByKey lang data.error "shopping_cart_error_"}}</div>
+                                {{/if}}
                                 <!-- Nav tabs -->
                                 {{#if extras.account }}
                                     <input type="hidden" name="shopCartProfileID" value="{{extras.account.ID}}">

@@ -33,7 +33,7 @@ define("plugin/shop/js/toolbox", [
 
         orders: function () {
 
-            require(['plugin/shop/js/view/toolboxOrders'], function (ListOrders) {
+            require(['plugin/shop/js/view/toolboxListOrders'], function (ListOrders) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListOrders', function (cachedView) {
                     // debugger;
@@ -48,7 +48,7 @@ define("plugin/shop/js/toolbox", [
 
                     Sandbox.eventNotify('site:content:render', {
                         name: 'ShopListOrders',
-                        el: listOrders.el
+                        el: listOrders.$el
                     });
 
                     // return view object to pass it into this function at next invocation

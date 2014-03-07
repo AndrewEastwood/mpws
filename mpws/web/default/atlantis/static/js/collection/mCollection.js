@@ -19,6 +19,10 @@ define("default/js/collection/mCollection", [
                 return this.get(this._urlOptions.source);
             },
 
+            extractModelDataFromRespce: function (data) {
+                return data && data[this.source] || {};
+            },
+
             resetUrl: function () {
                 this.urlOptions = {};
                 this.updateUrl();
@@ -51,6 +55,29 @@ define("default/js/collection/mCollection", [
                 this.url = _url.toString();
             },
 
+            getUrl: function (options) {
+
+                var self = this;
+                var _options = _.extend({}, this.urlOptions || {}, options);
+                var _url = new JSUrl(app.config.URL_API);
+
+                _url.query.token = app.config.TOKEN;
+
+                _(['source', 'fn']).each(function(key){
+                    if (_options && typeof _options[key] !== "undefined") {
+                        _url.query[key] = _options[key];
+                        delete _options[key];
+                    } else
+                        _url.query[key] = self[key];
+                });
+
+                _(_options).each(function (v, k) {
+                    _url.query[k] = !!v ? v : "";
+                });
+
+                return _url.toString();
+            },
+
             getUrlOptions: function () {
                 return this.urlOptions;
             },
@@ -61,6 +88,10 @@ define("default/js/collection/mCollection", [
 
             getExtras: function () {
                 return this.extras;
+            },
+
+            hasExtras: function (key) {
+                return typeof this.extras[key] !== "undefined";
             },
 
             fetch: function (options) {

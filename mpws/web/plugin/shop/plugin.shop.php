@@ -545,42 +545,39 @@ class pluginShop extends objectPlugin {
 
                 $accountID = $_SESSION['Account:ProfileID'];
 
-                // add account address
-                $dataAccountAddress = array();
-                if (!empty($cartUser["shopCartUserAddress"]))
-                    $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
-                if (!empty($cartUser["shopCartUserPOBox"]))
-                    $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
-                if (!empty($cartUser["shopCartUserCountry"]))
-                    $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
-                if (!empty($cartUser["shopCartUserCity"]))
-                    $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
 
-                $customAddress = count($dataAccountAddress) > 0;
+                if (empty($cartUser["shopCartProfileAddressID"])) {
 
-                if ($customAddress) {
-                    $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
+                    // check for custom address
+                    $dataAccountAddress = array();
+                    if (!empty($cartUser["shopCartUserAddress"]))
+                        $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
+                    if (!empty($cartUser["shopCartUserPOBox"]))
+                        $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
+                    if (!empty($cartUser["shopCartUserCountry"]))
+                        $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
+                    if (!empty($cartUser["shopCartUserCity"]))
+                        $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
+
+                    // set error or add new address
+                    if (count($dataAccountAddress) == 0)
+                        $dataObj->setError('EmptyShippingAddress');
+                    else
+                        $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
                 } else {
-
-                    if (empty($cartUser["shopCartProfileAddressID"])) {
-                        $dataObj->setError('WrongProfileAddressID');
-                        return $dataObj;
-                    }
 
                     // validate account address id
                     $accountAddressEntry = $this->getCustomer()->getAccountAddress($accountID, $cartUser["shopCartProfileAddressID"]);
 
-                    if (empty($accountAddressEntry['ID'])) {
+                    if (empty($accountAddressEntry['ID']))
                         $dataObj->setError('WrongProfileAddressID');
-                        return $dataObj;
-                    }
-                    
-                    $addressID = $accountAddressEntry['ID'];
+                    else
+                        $addressID = $accountAddressEntry['ID'];
                 }
 
             }
 
-            if (!$dataObj->hasError()) {
+            if (!$dataObj->hasError() && $addressID != null && $accountID != null) {
                 // save order
                 // -----------------------
                 // AccountID

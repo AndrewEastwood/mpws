@@ -24,5 +24,8 @@ define("plugin/shop/nls/ua_uk/shop", [
         shopping_cart_field_logistic: "Перевізник",
         shopping_cart_field_warehouse: "Номер складу",
         shopping_cart_field_comment: "Ваші побажання",
+        shopping_cart_error_EmptyShippingAddress: "Потрібно вказати адресу доставки",
+        shopping_cart_error_WrongProfileAddressID: "Вибрана неіснуюча адреса з Вашого акаунту",
+        shopping_cart_error_UnknownError: "Помилка збереження замовлення",
     }, CustomerShop);
 });

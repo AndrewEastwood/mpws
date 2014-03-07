@@ -51,11 +51,13 @@ define("plugin/shop/js/model/cart", [
         },
         parse: function (data) {
             // debugger;
-            var products = ShopUtils.adjustProductEntry(data && data.shop);
+            var _data = this.extractModelDataFromRespce(data);
+            var products = ShopUtils.adjustProductEntry(_data);
             return {
-                user: data.shop.user || {},
-                info: data.shop.info,
-                status: data.shop.status || {},
+                error: _data.error,
+                user: _data.user || {},
+                info: _data.info,
+                status: _data.status || {},
                 products: _(products).map(function(item){ return item; })
             };
         },

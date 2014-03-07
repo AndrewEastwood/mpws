@@ -10,9 +10,19 @@
 {{#if data.info.productCount }}
 <ul class="dropdown-menu shop-cart-embedded-dropdown-menu" role="menu">
     <li>
-        {{>plugin/shop/hbs/partials/cartProductList data }}
+        <div class="shop-widget-productlist">
+        {{#each_upto data.products 3 }}
+            {{>plugin/shop/hbs/partials/cartProductItem . }}
+        {{/each_upto}}
+        </div>
+        {{>plugin/shop/hbs/partials/cartInfo data }}
     </li>
+    {{#gt data.info.productCount 3 }}
+        <div class="cart-message text-left">
+            Відображаються 3 з {{data.info.productCount}}
+        </div>
+    {{/gt}}
     <li class="divider"></li>
-    <li><a href="/#shop/cart">Відкриити кошик</a></li>
+    <li><a href="/#shop/cart">Переглянути всі позиції</a></li>
 </ul>
 {{/if}}
