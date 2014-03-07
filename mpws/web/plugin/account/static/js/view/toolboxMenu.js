@@ -28,8 +28,11 @@ define("plugin/account/js/view/toolboxMenu", [
     // return MenuCompare;
     // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
-        // debugger;
-        Site.placeholders.common.menuPlugin.append(toolboxMenuAccount.$el);
+        Sandbox.eventNotify('site:content:render', {
+            name: 'CommmonToolboxMenu',
+            el: toolboxMenuAccount.$el,
+            append: true
+        });
     });
 
 });

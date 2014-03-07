@@ -11,7 +11,6 @@ define("default/js/site", [
         var _views = {};
         var _placeholders = _.extend({}, options.placeholders || {});
 
-
         $.xhrPool = [];
         $.xhrPool.abortAll = function() {
             $(this).each(function(idx, jqXHR) {
@@ -75,7 +74,7 @@ define("default/js/site", [
 
         var defaultRouter = new Router();
 
-        return {
+        var _site = {
             placeholders: _placeholders,
             config: app.config,
             options: options,
@@ -83,8 +82,46 @@ define("default/js/site", [
             plugins: window.app.config.PLUGINS,
             hasPlugin: function (pluginName) {
                 return _(window.app.config.PLUGINS).indexOf(pluginName) >= 0;
+            },
+            renderBefore: null,
+            renderAfter: null,
+            render: function (options) {
+                // console.log('_renderFn', options);
+
+                if (!options || !options.name)
+                    return;
+
+                if (_.isFunction(_site.renderBefore))
+                    _site.renderBefore(options);
+
+                // debugger;
+                var _container = _placeholders[options.name];
+
+                if (!_container || !_container.length)
+                    return;
+
+                if (options.append)
+                    _container.append(options.el);
+                else if (options.prepend)
+                    _container.prepend(options.el);
+                else
+                    _container.html(options.el);
+
+                if (_.isFunction(_site.renderAfter))
+                    _site.renderAfter(options);
             }
         }
+
+        Sandbox.eventSubscribe('site:content:render', function (options) {
+            if (_.isArray(options))
+                _(options).each(function(option){
+                    _site.render(option);
+                });
+            else
+                _site.render(options);
+        });
+
+        return _site;
     }
 
 

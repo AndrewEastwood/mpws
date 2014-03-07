@@ -12,8 +12,7 @@ define("customer/js/site", [
 
     _customerOptions.site = {
         title: 'Test and demo site',
-        logoImageUrl: app.config.URL_STATIC_CUSTOMER + '/img/mikserLogo.png',
-        showSearch: true
+        logoImageUrl: app.config.URL_STATIC_CUSTOMER + '/img/mikserLogo.png'
     };
 
     _customerOptions.placeholders = {
@@ -48,7 +47,7 @@ define("customer/js/site", [
         ShopOrdertrackingStandalone: $('.MPWSPageBody .MPWSBlockCenter'),
         /* = plugin account */
         AccountWidgetButtonAccount: $('.MPWSWidgetsTop'),
-        AccountPageProfileCreate: $('.MPWSPageBody .MPWSBlockCenter'),
+        AccountProfileCreate: $('.MPWSPageBody .MPWSBlockCenter'),
         AccountProfile: $('.MPWSPageBody .MPWSBlockCenter'),
         AccountProfileOverview: $('.MPWSPageBody .MPWSBlockCenter'),
         AccountProfileEdit: $('.MPWSPageBody .MPWSBlockCenter'),
@@ -57,36 +56,6 @@ define("customer/js/site", [
     };
 
     var site = new SiteBase(_customerOptions);
-
-    var _renderFn = function (options) {
-
-        console.log('_renderFn', options);
-
-        if (!options || !options.name)
-            return;
-
-        // debugger;
-        var _container = _customerOptions.placeholders[options.name];
-
-        if (!_container || !_container.length)
-            return;
-
-        if (options.append)
-            _container.append(options.el);
-        else if (options.prepend)
-            _container.prepend(options.el);
-        else
-            _container.html(options.el);
-    }
-
-    Sandbox.eventSubscribe('site:content:render', function (options) {
-        if (_.isArray(options))
-            _(options).each(function(option){
-                _renderFn(option);
-            });
-        else
-            _renderFn(options);
-    });
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
 

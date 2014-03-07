@@ -106,6 +106,7 @@ define("default/js/view/mView", [
                         });
                     else {
                         // debugger;
+                        // console.log('tpl data', _self.className, _self.getTemplateData.call(_self));
                         if (typeof this.template === "function")
                             this.$el.html(this.template(_self.getTemplateData.call(_self)));
 

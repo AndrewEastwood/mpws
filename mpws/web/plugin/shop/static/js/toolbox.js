@@ -4,8 +4,9 @@ define("plugin/shop/js/toolbox", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'default/js/lib/cache',
     'plugin/shop/js/view/toolboxMenu'
-], function (Sandbox, Site, $, _, Backbone) {
+], function (Sandbox, Site, $, _, Backbone, Cache) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -32,14 +33,36 @@ define("plugin/shop/js/toolbox", [
 
         orders: function () {
 
+            require(['plugin/shop/js/view/toolboxOrders'], function (ListOrders) {
+                // using this wrapper to cleanup previous view and create new one
+                Cache.withObject('ListOrders', function (cachedView) {
+                    // debugger;
+                    // remove previous view
+                    if (cachedView && cachedView.remove)
+                        cachedView.remove();
+
+                    // create new view
+                    var listOrders = new ListOrders();
+                    // Site.placeholders.shop.productListOverview.html(listOrders.el);
+                    listOrders.fetchAndRender();
+
+                    Sandbox.eventNotify('site:content:render', {
+                        name: 'ShopListOrders',
+                        el: listOrders.el
+                    });
+
+                    // return view object to pass it into this function at next invocation
+                    return listOrders;
+                });
+            });
         },
 
         sales: function () {
-
+            
         },
 
         prices: function () {
-
+            
         }
 
     });

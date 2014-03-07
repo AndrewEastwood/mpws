@@ -83,38 +83,26 @@ define("plugin/shop/js/view/cartStandalone", [
                 self.model.checkout(self.collectUserInfo());
             });
 
-            // debugger;
-            if (Site.hasPlugin('account')) {
-                Sandbox.eventNotify('account:status');
-                Sandbox.eventSubscribe('account:status:received', function (data) {
-                    // debugger;
-                    self.model.setExtras('account', data);
-                    self.render();
-                });
-                Sandbox.eventSubscribe('account:signed:in', function (data) {
-                    // debugger;
-                    self.model.setExtras('account', data);
-                    $.cookie("shopUser", null);
-                    self.render();
-                });
-                Sandbox.eventSubscribe('account:signed:out', function (data) {
-                    self.model.removeExtras('account');
-                    $.cookie("shopUser", null);
-                    self.render();
-                });
-                Sandbox.eventSubscribe('account:profile:address:added', function (data) {
-                    self.model.setExtras('account', data);
-                    self.render();
-                });
-                Sandbox.eventSubscribe('account:profile:address:updated', function (data) {
-                    self.model.setExtras('account', data);
-                    self.render();
-                });
-                Sandbox.eventSubscribe('account:profile:address:removed', function (data) {
-                    self.model.setExtras('account', data);
-                    self.render();
-                });
-            }
+            Sandbox.eventSubscribe('account:status:received', function (data) {
+                // debugger;
+                self.model.setExtras('account', data);
+            });
+            Sandbox.eventSubscribe('account:signed:in', function (data) {
+                // debugger;
+                // console.log('shop account:in', data);
+                self.model.setExtras('account', data);
+                $.cookie("shopUser", null);
+                self.model.trigger('change');
+            });
+            Sandbox.eventSubscribe('account:signed:out', function (data) {
+                // debugger;
+                // console.log('shop account:out', data);
+                self.model.setExtras('account', null);
+                $.cookie("shopUser", null);
+                self.model.trigger('change');
+            });
+
+            Sandbox.eventNotify('account:status');
 
         },
         collectUserInfo: function () {

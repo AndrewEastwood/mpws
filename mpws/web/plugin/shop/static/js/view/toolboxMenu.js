@@ -4,7 +4,7 @@ define("plugin/shop/js/view/toolboxMenu", [
     'default/js/view/mView',
     'default/js/plugin/hbs!plugin/shop/hbs/toolboxMenu',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/shop',
+    'default/js/plugin/i18n!plugin/shop/nls/toolbox',
 ], function (Sandbox, Site, MView, tpl, lang) {
 
     var toolboxMenuShop = new (MView.extend({
@@ -30,7 +30,11 @@ define("plugin/shop/js/view/toolboxMenu", [
     // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
         // debugger;
-        Site.placeholders.common.menuPlugin.append(toolboxMenuShop.$el);
+        Sandbox.eventNotify('site:content:render', {
+            name: 'CommmonToolboxMenu',
+            el: toolboxMenuShop.$el,
+            append: true
+        });
     });
 
 });

@@ -41,7 +41,10 @@ class objectCustomer {
 
     public function getCustomerInfo () {
         if (empty($this->customerInfo)) {
-            $config = configurationCustomerDataSource::jsapiGetCustomer();
+            if (glIsToolbox())
+                $config = configurationCustomerDataSource::jsapiGetCustomer(MPWS_CUSTOMER_MANAGED);
+            else
+                $config = configurationCustomerDataSource::jsapiGetCustomer();
             $this->customerInfo = $this->getDataBase()->getData($config);
         }
         return $this->customerInfo;

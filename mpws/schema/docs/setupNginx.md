@@ -55,6 +55,7 @@ server {
 
     location /toolbox {
         rewrite ^toolbox/?(.*) /engine/controller/controller.display.php?$1 last;
+        rewrite ^toolbox/api\.js?(.*) /engine/controller/controller.api.php?$1 last;
     }
 
     location /api {

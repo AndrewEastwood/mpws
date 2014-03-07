@@ -11,6 +11,7 @@ RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/stati
 
 # API
 RewriteRule ^api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
+RewriteRule ^toolbox/api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
 
 # SERVICES:
 #RewriteRule ^workbench/?(.*) /engine/controller/controller.display.php?$1 [QSA,L]

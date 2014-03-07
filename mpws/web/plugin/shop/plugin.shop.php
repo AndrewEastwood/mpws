@@ -10,13 +10,13 @@ class pluginShop extends objectPlugin {
             case "shop_location": {
                 $productID = libraryRequest::getValue('productID');
                 $categoryID = libraryRequest::getValue('categoryID');
-                $data = $this->_custom_api_getCatalogLocation($productID, $categoryID);
+                $data = $this->_api_getCatalogLocation($productID, $categoryID);
                 break;
             }
             // products list sorted by date added
             // -----------------------------------------------
             case "shop_product_list_latest": {
-                $data = $this->_custom_api_getProductList_Latest();
+                $data = $this->_api_getProductList_Latest();
                 break;
             }
             // products list sorted by popularity
@@ -42,56 +42,60 @@ class pluginShop extends objectPlugin {
             // catalog filtering
             // -----------------------------------------------
             // case "shop_shop_category_filtering": {
-            //     $data = $this->_custom_api_getCatalogFiltering($param);
+            //     $data = $this->_api_getCatalogFiltering($param);
             //     break;
             // }
             // shop catalog structure
             // -----------------------------------------------
             case "shop_catalog_structure": {
-                $data = $this->_custom_api_getCatalogStructure();
+                $data = $this->_api_getCatalogStructure();
                 break;
             }
             // products list sorted by category
             // -----------------------------------------------
             case "shop_catalog": {
-                $data = $this->_custom_api_getCatalog();
+                $data = $this->_api_getCatalog();
                 break;
             }
             // product standalone item short
             // -----------------------------------------------
             // case "shop_product_item_short" : {
-            //     $data = $this->_custom_api_getProductItem($productID, 'short');
+            //     $data = $this->_api_getProductItem($productID, 'short');
             //     break;
             // }
             // product standalone item full
             // -----------------------------------------------
             case "shop_product_item" : {
                 $productID = libraryRequest::getValue('productID');
-                $data = $this->_custom_api_getProductItem($productID);
+                $data = $this->_api_getProductItem($productID);
                 break;
             }
             // shopping cart
             // -----------------------------------------------
             case "shop_wishlist" : {
-                $data = $this->_custom_api_shoppingWishList();
+                $data = $this->_api_shoppingWishList();
                 break;
             }
             case "shop_cart" : {
-                $data = $this->_custom_api_shoppingCart();
+                $data = $this->_api_shoppingCart();
                 break;
             }
             case "shop_compare" : {
-                $data = $this->_custom_api_productsCompare();
+                $data = $this->_api_productsCompare();
                 break;
             }
             case "shop_order_status": {
                 $orderHash = libraryRequest::getValue('orderHash');
-                $data = $this->_custom_api_orderStatus($orderHash);
+                $data = $this->_api_orderStatus($orderHash);
                 break;
             }
             case "shop_profile_orders": {
                 $profileID = libraryRequest::getValue('profileID');
-                $data = $this->_custom_api_profileOrders($profileID);
+                $data = $this->_api_profileOrders($profileID);
+                break;
+            }
+            case "shop_manage_orders": {
+                $data = $this->_api_manageOrders();
                 break;
             }
         }
@@ -100,21 +104,10 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    /* PLUGIN API METHODS (ADMIN) */
-    // private function _custom_productList () {}
-    // private function _custom_productEdit () {}
-    // private function _custom_categoryList () {}
-    // private function _custom_categoryEdit () {}
-    // private function _custom_brandList () {}
-    // private function _custom_brandEdit () {}
-    // private function _custom_orderList () {}
-    // private function _custom_orderEdit () {}
-
-
-    /* PLUGIN API METHODS (PUBLIC) */
+    /* PLUGIN API METHODS */
     // breadcrumb
     // -----------------------------------------------
-    private function _custom_api_getCatalogLocation ($productID = null, $categoryID = null) {
+    private function _api_getCatalogLocation ($productID = null, $categoryID = null) {
 
         $location = new libraryDataObject();
 
@@ -138,7 +131,7 @@ class pluginShop extends objectPlugin {
             // $productDataEntry = $dataObj->getData();
 
             if (isset($productDataEntry['CategoryID'])) {
-                $location2 = $this->_custom_api_getCatalogLocation(null, $productDataEntry['CategoryID']);
+                $location2 = $this->_api_getCatalogLocation(null, $productDataEntry['CategoryID']);
                 $location->setData('location', $location2->getData('location'));
                 $location->setData('product', $productDataEntry);
             } else
@@ -159,7 +152,7 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by date added
     // -----------------------------------------------
-    private function _custom_api_getProductList_Latest () {
+    private function _api_getProductList_Latest () {
 
         $configProducts = configurationShopDataSource::jsapiProductListLatest();
 
@@ -193,13 +186,13 @@ class pluginShop extends objectPlugin {
 
     // catalog filtering
     // // -----------------------------------------------
-    // private function _custom_api_getCatalogFiltering () {
+    // private function _api_getCatalogFiltering () {
 
     // }
 
     // shop catalog structure
     // -----------------------------------------------
-    private function _custom_api_getCatalogStructure () {
+    private function _api_getCatalogStructure () {
 
         $config = configurationShopDataSource::jsapiCatalogStructure();
         $categories = $this->getCustomer()->processData($config);
@@ -221,7 +214,7 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by category
     // -----------------------------------------------
-    private function _custom_api_getCatalog () {
+    private function _api_getCatalog () {
 
         $dataObj = new libraryDataObject();
 
@@ -409,7 +402,7 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _custom_api_getProductItem ($productID) {
+    private function _api_getProductItem ($productID) {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
 
@@ -440,13 +433,13 @@ class pluginShop extends objectPlugin {
 
     // shopping wishlist
     // -----------------------------------------------
-    private function _custom_api_shoppingWishList () {
+    private function _api_shoppingWishList () {
         return $this->_custom_util_manageStoredProducts('shopWishList');
     }
 
     // shopping products compare
     // -----------------------------------------------
-    private function _custom_api_productsCompare () {
+    private function _api_productsCompare () {
         $do = libraryRequest::getValue('action');
         $productID = libraryRequest::getValue('productID');
         $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
@@ -465,7 +458,7 @@ class pluginShop extends objectPlugin {
 
     // shopping cart
     // -----------------------------------------------
-    private function _custom_api_shoppingCart () {
+    private function _api_shoppingCart () {
 
         $sessionKey = 'shopCartProducts';
         $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
@@ -656,7 +649,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _custom_api_profileOrders ($profileID) {
+    private function _api_profileOrders ($profileID) {
 
         $dataObj = new libraryDataObject();
 
@@ -689,7 +682,7 @@ class pluginShop extends objectPlugin {
 
             if (!empty($boughts))
                 foreach ($boughts as $bkey => $soldItem) {
-                    $product = $this->_custom_api_getProductItem($soldItem['ProductID']);
+                    $product = $this->_api_getProductItem($soldItem['ProductID']);
                     if ($product->hasData()) { 
                         $productData = $product->getData();
                         $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
@@ -710,7 +703,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _custom_api_orderStatus ($orderHash) {
+    private function _api_orderStatus ($orderHash) {
         // $orderHash
         $dataObj = new libraryDataObject();
 
@@ -719,6 +712,27 @@ class pluginShop extends objectPlugin {
         $orderStatus = $this->getCustomer()->processData($config);
 
         $dataObj->setData('orderStatus', $orderStatus);
+
+        return $dataObj;
+    }
+
+    // toolbox orders
+
+    private function _api_manageOrders () {
+        // in toolbox methods we must check it's permission
+        // offset
+        // limit
+        $dataObj = new libraryDataObject();
+
+        if (!$this->getCustomer()->getAccess()) {
+            $dataObj->setError('AccessDenied');
+            return $dataObj;
+        }
+
+        $config = configurationShopDataSource::jsapiShopOrders(10, 10);
+        $orders = $this->getCustomer()->processData($config);
+
+        $dataObj->setData('orders', $orders);
 
         return $dataObj;
     }
@@ -840,7 +854,7 @@ class pluginShop extends objectPlugin {
         if ($do == 'ADD') {
             // create
             if (!isset($products[$productID])) {
-                $productEntry = $this->_custom_api_getProductItem($productID);
+                $productEntry = $this->_api_getProductItem($productID);
                 if ($productEntry->hasError()) {
                     $dataObj->setError($productEntry->getError());
                     return $dataObj;
@@ -884,16 +898,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    // product list base
 
-    // accounts
-    // private function _custom_accountSignin () {}
-    // private function _custom_accountProfile () {}
-    // private function _custom_accountSubscriptions () {}
-    // private function _custom_accountSettings () {}
-    // private function _custom_accountOrdersActive () {}
-    // private function _custom_accountOrdersHistory () {}
-    // private function _custom_accountSignout () {}
 
 }
 

@@ -4,6 +4,8 @@
     define('DR', getDocumentRoot());
     // detect running customer name
     define('MPWS_CUSTOMER', getCustomer());
+    // get managed customer name
+    define('MPWS_CUSTOMER_MANAGED', getCustomer(true));
     // evironment version
     define('MPWS_VERSION', 'atlantis');
     // evironment mode
@@ -35,7 +37,7 @@
         return $_dr;
     }
     
-    function getCustomer () {
+    function getCustomer ($getManagedCustomerName = false) {
         $h = current(explode(':', $_SERVER['HTTP_HOST']));
         $h = strtolower($h);
 
@@ -44,7 +46,7 @@
 
         // var_dump($_SERVER);
 
-        if (preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']))
+        if (!$getManagedCustomerName && preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']))
             $customerName = 'toolbox';
         // else if (strstr($_SERVER['REQUEST_URI'], '/workbench/'))
         //     $customerName = 'workbench';

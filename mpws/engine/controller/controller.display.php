@@ -32,7 +32,7 @@
         MPWS_VERSION: '" . MPWS_VERSION . "',
         MPWS_CUSTOMER: '" . MPWS_CUSTOMER . "',
         PATH_STATIC_BASE: '/',
-        URL_API: '/api.js',
+        URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',
         URL_STATIC_CUSTOMER: '/" . glGetPath($staticPath, 'customer', MPWS_CUSTOMER) . "',
         URL_STATIC_PLUGIN: '/" . glGetPath($staticPath, 'plugin') . "',
         URL_STATIC_DEFAULT: '/" . glGetPath($staticPath, 'default', MPWS_VERSION) . "'

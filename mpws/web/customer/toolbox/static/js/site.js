@@ -4,7 +4,6 @@ define("customer/js/site", [
     'default/js/site',
     'default/js/view/breadcrumb',
     'default/js/plugin/css!customer/css/theme.css'
-
 ], function (Sandbox, $, SiteBase, Breadcrumb) {
 
     var _customerOptions = {};
@@ -15,37 +14,29 @@ define("customer/js/site", [
     };
 
     _customerOptions.placeholders = {
-        common: {
-            header: $('.MPWSPageHeader'),
-            headerLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
-            headerCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
-            headerRight: $('.MPWSPageHeader .MPWSBlockRight'),
-            body: $('.MPWSPageBody'),
-            bodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
-            bodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
-            bodyRight: $('.MPWSPageBody .MPWSBlockRight'),
-            footer: $('.MPWSPageFooter'),
-            footerLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
-            footerCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
-            footerRight: $('.MPWSPageFooter .MPWSBlockRight'),
-            breadcrumb: $('.MPWSBreadcrumb'),
-            menuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
-            menuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
-            menuPlugin: $('.MPWSPageBody .MPWSBlockCenter #toolbox-menu-ID'),
-            widgetsTop: $('.MPWSWidgetsTop'),
-            widgetsBottom: $('.MPWSWidgetsBottom')
-        }
+        CommonHeader: $('.MPWSPageHeader'),
+        CommonHeaderLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
+        CommonHeaderCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
+        CommonHeaderRight: $('.MPWSPageHeader .MPWSBlockRight'),
+        CommonBody: $('.MPWSPageBody'),
+        CommonBodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
+        CommonBodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
+        CommonBodyRight: $('.MPWSPageBody .MPWSBlockRight'),
+        CommonFooter: $('.MPWSPageFooter'),
+        CommonFooterLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
+        CommonFooterCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
+        CommonFooterRight: $('.MPWSPageFooter .MPWSBlockRight'),
+        CommonBreadcrumb: $('.MPWSBreadcrumb'),
+        CommonMenuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
+        CommonMenuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
+        CommonWidgetsTop: $('.MPWSWidgetsTop'),
+        CommonWidgetsBottom: $('.MPWSWidgetsBottom'),
+        CommmonToolboxMenu: $('#toolbox-menu-ID'),
+        CommmonToolboxPage: $('#toolbox-page-ID'),
+        /* plugins  */
+        /* = plugin shop */
+        ShopListOrders: $('#toolbox-page-ID'),
     };
-
-    _customerOptions.views = {
-        menu: {
-            el: _customerOptions.placeholders.common.menu
-        },
-        breadcrumb: {
-            el: _customerOptions.placeholders.common.breadcrumb,
-            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
-        }
-    }
 
     var site = new SiteBase(_customerOptions);
 
@@ -63,7 +54,7 @@ define("customer/js/site", [
         var _views = {};
 
         _views.breadcrumb = new Breadcrumb({
-            el: _customerOptions.placeholders.common.breadcrumb,
+            el: _customerOptions.placeholders.CommonBreadcrumb,
             template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
         });
 

@@ -280,6 +280,24 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             ),
         ));
     }
+    static function jsapiShopOrders ($offset = 0, $limit = 0) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_orders",
+            "condition" => null,
+            // array(
+            //     "filter" => "",
+            //     "values" => array()
+            // ),
+            "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
+            // "offset" => $offset,
+            // "limit" => $limit,
+            // "order" => array(
+            //     "field" => "shop_orders.DateCreated",
+            //     "ordering" => "DESC"
+            // ),
+        ));
+    }
 
     // <<<< Shop order
 

@@ -28,7 +28,7 @@ define("plugin/account/js/model/account", [
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:status:received', _data);
+                Sandbox.eventNotify('account:status:received', _data.profile);
             });
         },
         doLogin: function (data) {
@@ -42,7 +42,7 @@ define("plugin/account/js/model/account", [
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:signed:in', _data);
+                Sandbox.eventNotify('account:signed:in', _data.profile);
             });
         },
         doLogout: function () {

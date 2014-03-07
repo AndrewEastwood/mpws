@@ -1,7 +1,7 @@
 define("plugin/account/nls/ua_uk/account", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'default/js/plugin/i18n!customer/nls/account'
+    'customer/nls/ua_uk/account'
 ], function(_, CustomerAccount) {
     return _.extend({}, {
         /* form register */

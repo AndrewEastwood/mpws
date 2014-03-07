@@ -1,7 +1,7 @@
-define("plugin/shop/nls/ua_uk/shop", [
+define("plugin/shop/nls/ua_uk/toolbox", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/ua_uk/shop'
+    'customer/nls/ua_uk/toolbox'
 ], function (_, CustomerShop, PLuginAccount) {
     return _.extend({}, {
         order_status_NEW: 'Прийняте',
@@ -24,5 +24,10 @@ define("plugin/shop/nls/ua_uk/shop", [
         shopping_cart_field_logistic: "Перевізник",
         shopping_cart_field_warehouse: "Номер складу",
         shopping_cart_field_comment: "Ваші побажання",
+        pluginMenuTitle: 'Інтернет Магазин',
+        pluginMenu_Dashboard: 'Статистика',
+        pluginMenu_Products: 'Товари',
+        pluginMenu_Order: 'Замовлення',
+        pluginMenu_Offers: 'Акції та Розпродаж',
     }, CustomerShop);
 });
