@@ -73,12 +73,21 @@ class configurationDefaultDataSource extends objectConfiguration {
     static function jsapiGetCustomer ($ExternalKey = false) {
         if (empty($ExternalKey))
             $ExternalKey = MPWS_CUSTOMER;
+
+        $filter = "ExternalKey (=) ? + Status (=) ?";
+        $values = array($ExternalKey, "ACTIVE");
+
+        // if (glIsToolbox() && unmanaged) {
+        //     $filter = "";
+        //     $values = "";
+        // }
+
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_customer",
             "fields" => array("*"),
             "condition" => array(
-                "filter" => "ExternalKey (=) ? + Status (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
-                "values" => array($ExternalKey, "ACTIVE")
+                "filter" => $filter, //"shop_products.Status = ? AND shop_products.Enabled = ?",
+                "values" => $values
             ),
             "limit" => 1,
             "options" => array(

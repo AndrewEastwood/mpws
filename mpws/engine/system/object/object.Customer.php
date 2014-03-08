@@ -43,6 +43,8 @@ class objectCustomer {
         if (empty($this->customerInfo)) {
             if (glIsToolbox())
                 $config = configurationCustomerDataSource::jsapiGetCustomer(MPWS_CUSTOMER_MANAGED);
+            // elseif (/* unmanaged session */)
+            //     $config = configurationCustomerDataSource::jsapiGetCustomer("");
             else
                 $config = configurationCustomerDataSource::jsapiGetCustomer();
             $this->customerInfo = $this->getDataBase()->getData($config);

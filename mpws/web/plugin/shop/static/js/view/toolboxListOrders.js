@@ -1,64 +1,130 @@
 define("plugin/shop/js/view/toolboxListOrders", [
     'default/js/view/mView',
     'plugin/shop/js/collection/toolboxListOrders',
-    'plugin/shop/js/view/toolboxOrderItem',
-    'default/js/lib/backgrid'
-], function (MView, CollListOrders, OrderItem, Backgrid) {
+    // 'plugin/shop/js/view/toolboxOrderItem'
+    "default/js/lib/backgrid",
+    /* lang */
+    'default/js/plugin/i18n!plugin/shop/nls/toolbox',
+    /* extensions */
+    "default/js/lib/backgrid-paginator",
+    "default/js/lib/backgrid-select-all",
+], function (MView, CollListOrders, Backgrid, lang) {
 
+
+    // enable the select-all extension
+    // name: "",
+    // cell: "select-row",
+    // headerCell: "select-all"
     // Column definitions
     var columns = [{
-        name: "ID",
-        name: "ID",
-        cell: "string"
+        // enable the select-all extension
+        name: "",
+        cell: "select-row",
+        headerCell: "select-all",
+        // label: lang.pluginMenu_Orders_Grid_Column_ID,
+        // cell: "string",
+        // editable: false
     }, {
-        name: "Comment",
-        name: "Comment",
+        name: "Status",
+        label: lang.pluginMenu_Orders_Grid_Column_Status,
         cell: "string",
-        editable: true,
-    }, {
-        name: "DateCreated",
-        name: "DateCreated",
-        cell: "string"
-    }, {
-        name: "DateUpdated",
-        name: "DateUpdated",
-        cell: "string"
-    }, {
-        name: "Hash",
-        name: "Hash",
-        cell: "string"
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                var _status = lang['order_status_' + value];
+                return _status;
+            }
+        }
     }, {
         name: "Shipping",
-        name: "Shipping",
-        cell: "string"
-    }, {
-        name: "Status",
-        name: "Status",
-        cell: "string"
+        label: lang.pluginMenu_Orders_Grid_Column_Shipping,
+        cell: "string",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                var _logisticAgency = lang['logisticAgency_' + value];
+                if (_logisticAgency)
+                    return _logisticAgency;
+
+                return lang.logisticAgency_Unknown;
+            }
+        }
     }, {
         name: "Warehouse",
-        name: "Warehouse",
-        cell: "string"
+        label: lang.pluginMenu_Orders_Grid_Column_Warehouse,
+        cell: "string",
+        editable: false
+    }, {
+        name: "DateUpdated",
+        label: lang.pluginMenu_Orders_Grid_Column_DateUpdated,
+        cell: "string",
+        editable: false
+    }, {
+        name: "DateCreated",
+        label: lang.pluginMenu_Orders_Grid_Column_DateCreated,
+        cell: "string",
+        editable: false
     }];
+
+    var collection = new CollListOrders();
+
+    var ToolboxListOrdersGrid = new Backgrid.Grid({
+      columns: columns,
+      collection: collection
+    });
+
+
+    var Paginator = new Backgrid.Extension.Paginator({
+
+      // If you anticipate a large number of pages, you can adjust
+      // the number of page handles to show. The sliding window
+      // will automatically show the next set of page handles when
+      // you click next at the end of a window.
+      windowSize: 20, // Default is 10
+
+      // Used to multiple windowSize to yield a number of pages to slide,
+      // in the case the number is 5
+      slideScale: 0.25, // Default is 0.5
+
+      // Whether sorting should go back to the first page
+      goBackFirstOnSort: false, // Default is true
+
+      collection: collection
+    });
+
 
     var ToolboxListOrders = MView.extend({
         className: 'shop-toolbox-orders',
-        collection: new CollListOrders(),
-        itemViewClass: OrderItem,
-        initialize: function () {
-            MView.prototype.initialize.call(this);
-            var self = this;
-            var grid = new Backgrid.Grid({
-                columns: columns,
-                collection: this.collection,
-            });
-
-            this.on('mview:renderComplete', function () {
-                self.$el.html(grid.render().el);
-            });
+        render: function () {
+            // var _grid = new ToolboxListOrdersGrid();
+            // var _paginator = new Paginator();
+            // var $paginatorExample = toolboxListOrders.$el;//$("#paginator-example-result");
+            this.$el.append(ToolboxListOrdersGrid.render().el);
+            this.$el.append(Paginator.render().el);
+            collection.fetch({reset: true});
         }
-        // autoRender: true
     });
+
+
+
+    // var ToolboxListOrders = MView.extend({
+    //     className: 'shop-toolbox-orders',
+    //     collection: new CollListOrders(),
+    //     itemViewClass: OrderItem,
+    //     initialize: function () {
+    //         MView.prototype.initialize.call(this);
+    //         var self = this;
+    //         var grid = new Backgrid.Grid({
+    //             columns: columns,
+    //             collection: this.collection,
+    //         });
+
+    //         this.on('mview:renderComplete', function () {
+    //             self.$el.html(grid.render().el);
+    //         });
+    //     }
+    //     // autoRender: true
+    // });
 
     return ToolboxListOrders;
 

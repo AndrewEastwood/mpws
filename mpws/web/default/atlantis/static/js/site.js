@@ -3,8 +3,9 @@ define("default/js/site", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'default/js/lib/extend.string'
-], function (Sandbox, $, _, Backbone) {
+    'default/js/lib/url',
+    'default/js/lib/extend.string',
+], function (Sandbox, $, _, Backbone, JSUrl) {
 
     var Site = function (options) {
 
@@ -82,6 +83,23 @@ define("default/js/site", [
             plugins: window.app.config.PLUGINS,
             hasPlugin: function (pluginName) {
                 return _(window.app.config.PLUGINS).indexOf(pluginName) >= 0;
+            },
+            getApiLink: function (source, fn, extraOptions) {
+
+                var _url = new JSUrl(app.config.URL_API);
+                _url.query.token = app.config.TOKEN;
+
+                if (source)
+                    _url.query.source = source;
+
+                if (fn)
+                    _url.query.fn = fn;
+
+                _(extraOptions).each(function (v, k) {
+                    _url.query[k] = !!v ? v : "";
+                });
+
+                return _url.toString();
             },
             renderBefore: null,
             renderAfter: null,

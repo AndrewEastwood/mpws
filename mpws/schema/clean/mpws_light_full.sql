@@ -18,7 +18,7 @@ BEGIN
   WHERE  p.Status = 'ACTIVE'
          AND o.Status = 'ACTIVE'
          AND p.CategoryID = catid
-  GROUP  BY o.Name; 
+  GROUP BY o.Name; 
 -- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
 END$$
 
@@ -32,8 +32,7 @@ BEGIN
   WHERE  p.Status = 'ACTIVE'
          AND c.Status = 'ACTIVE'
          AND c.ParentID = catid
-  GROUP  BY c.Name; 
--- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
+  GROUP BY c.Name; 
 END$$
 
 CREATE PROCEDURE `getShopCategoryBrands`(IN catid INT)
@@ -60,7 +59,7 @@ END$$
 
 CREATE PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
 BEGIN
-SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
+  SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
 END$$
 
 CREATE PROCEDURE `getShopCategorySubCategories`(IN catid INT)
@@ -69,6 +68,14 @@ SELECT
   c.ID, c.ParentID, c.Name,
   (SELECT count(*) FROM shop_products AS `p` WHERE p.CategoryID = c.ID AND p.Status = 'ACTIVE') AS `ProductCount`
 FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Status = 'ACTIVE' GROUP BY c.Name;
+END$$
+
+CREATE PROCEDURE `getShopSiteOrdersCount`(IN CustomerID INT)
+BEGIN
+  SELECT COUNT(*) as `OrderCount`
+  FROM shop_orders AS o
+  WHERE o.CustomerID = CustomerID
+  ORDER BY o.DateCreated DESC;
 END$$
 
 DELIMITER ;

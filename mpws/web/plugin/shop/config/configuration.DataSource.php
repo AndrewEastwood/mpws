@@ -277,10 +277,10 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "order" => array(
                 "field" => "shop_orders.DateCreated",
                 "ordering" => "DESC"
-            ),
+            )
         ));
     }
-    static function jsapiShopOrders ($offset = 0, $limit = 0) {
+    static function jsapiShopSiteOrders () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_orders",
@@ -290,12 +290,25 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             //     "values" => array()
             // ),
             "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
-            // "offset" => $offset,
-            // "limit" => $limit,
+            "offset" => 0,
+            "limit" => 2
             // "order" => array(
             //     "field" => "shop_orders.DateCreated",
             //     "ordering" => "DESC"
             // ),
+        ));
+    }
+
+    static function jsapiShopSiteOrdersCount () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getShopSiteOrdersCount",
+                "parameters" => array()
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
         ));
     }
 

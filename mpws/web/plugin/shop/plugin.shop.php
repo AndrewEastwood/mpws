@@ -726,10 +726,39 @@ class pluginShop extends objectPlugin {
             return $dataObj;
         }
 
-        $config = configurationShopDataSource::jsapiShopOrders(10, 10);
-        $orders = $this->getCustomer()->processData($config);
+        $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
+        $configCount = configurationShopDataSource::jsapiShopSiteOrdersCount();
 
-        $dataObj->setData('orders', $orders);
+        // pagination
+        $page = libraryRequest::getValue('page');
+        $per_page = libraryRequest::getValue('per_page');
+
+        if (!empty($page) && !empty($per_page)) {
+            $configOrders['offset'] = ($page - 1) * $per_page;
+        }
+
+        // sorting
+        $sort = libraryRequest::getValue('sort');
+        $order = libraryRequest::getValue('order');
+
+        if (!empty($sort) && !empty($order)) {
+            $configOrders["order"] = array(
+                "field" =>  'shop_orders' . DOT . $sort,
+                "ordering" => strtoupper($order)
+            );
+        }
+
+        // var_dump($configOrders);
+
+        // set managed customer id
+        $configCount['procedure']['parameters'] = array($this->getCustomer()->getCustomerID());
+
+        // get data
+        $dataOrders = $this->getCustomer()->processData($configOrders);
+        $dataObj->setData('orders', $dataOrders);
+
+        $dataCount = $this->getCustomer()->processData($configCount);
+        $dataObj->setData('total_count', $dataCount['OrderCount']);
 
         return $dataObj;
     }

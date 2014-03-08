@@ -27,7 +27,18 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         pluginMenuTitle: 'Інтернет Магазин',
         pluginMenu_Dashboard: 'Статистика',
         pluginMenu_Products: 'Товари',
-        pluginMenu_Order: 'Замовлення',
+        pluginMenu_Orders: 'Замовлення',
         pluginMenu_Offers: 'Акції та Розпродаж',
+        pluginMenu_Orders_Grid_Column_ID: "#",
+        pluginMenu_Orders_Grid_Column_Shipping: "Доставка",
+        pluginMenu_Orders_Grid_Column_Status: "Статус",
+        pluginMenu_Orders_Grid_Column_Warehouse: "Склад",
+        pluginMenu_Orders_Grid_Column_DateCreated: "Створений",
+        pluginMenu_Orders_Grid_Column_DateUpdated: "Оновлений",
+        logisticAgency_company_gunsel: "Гюнсел",
+        logisticAgency_company_novaposhta: "Нова Пошта",
+        logisticAgency_company_intime: "Ін-Тайм",
+        logisticAgency_company_ukrposhta: "УкрПошта",
+        logisticAgency_Unknown: "Самовивіз"
     }, CustomerShop);
 });
