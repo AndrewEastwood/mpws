@@ -3,14 +3,14 @@ define("customer/js/site", [
     'cmn_jquery',
     'default/js/site',
     'default/js/view/breadcrumb',
-    'default/js/plugin/css!customer/css/theme.css'
+    'default/js/plugin/css!customer/css/toolboxTheme.css'
 ], function (Sandbox, $, SiteBase, Breadcrumb) {
 
     var _customerOptions = {};
 
     _customerOptions.site = {
         title: 'Toolbox',
-        logoImageUrl: app.config.URL_STATIC_DEFAULT + '/img/logo.gif'
+        logoImageUrl: app.config.URL_STATIC_DEFAULT + '/img/mpwsLogo.gif'
     };
 
     _customerOptions.placeholders = {
@@ -55,7 +55,7 @@ define("customer/js/site", [
 
         _views.breadcrumb = new Breadcrumb({
             el: _customerOptions.placeholders.CommonBreadcrumb,
-            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
+            template: 'default/js/plugin/hbs!customer/hbs/toolbox/breadcrumb'
         });
 
         Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {

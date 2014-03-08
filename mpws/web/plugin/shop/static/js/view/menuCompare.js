@@ -2,7 +2,7 @@ define("plugin/shop/js/view/menuCompare", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/js/model/productsCompare',
-    'default/js/plugin/hbs!plugin/shop/hbs/menuCompare'
+    'default/js/plugin/hbs!plugin/shop/hbs/site/menuCompare'
 ], function (Sandbox, MView, ModelProductsCompareInstance, tpl) {
 
     var MenuCompare = MView.extend({

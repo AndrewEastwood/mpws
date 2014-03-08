@@ -5,7 +5,7 @@ define("plugin/account/js/view/accountProfileEdit", [
     'plugin/account/js/model/account',
     'default/js/plugin/hbs!plugin/account/hbs/accountProfileEdit',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/account',
+    'default/js/plugin/i18n!plugin/account/nls/site/translation',
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, $, MView, ModelAccountInstance, tpl, lang) {
 

@@ -2,7 +2,7 @@ define("plugin/shop/js/view/productItemFull", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/js/model/productItemFull',
-    'default/js/plugin/hbs!plugin/shop/hbs/productItemFull',
+    'default/js/plugin/hbs!plugin/shop/hbs/site/productItemFull',
     /* enhanced ui */
     'default/js/lib/bootstrap-magnify',
     'default/js/lib/lightbox',

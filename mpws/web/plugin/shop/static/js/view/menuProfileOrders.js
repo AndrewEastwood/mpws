@@ -1,7 +1,7 @@
 define("plugin/shop/js/view/menuProfileOrders", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/shop/hbs/menuProfileOrders'
+    'default/js/plugin/hbs!plugin/shop/hbs/site/menuProfileOrders'
 ], function (Sandbox, MView, tpl) {
 
     var MenuCart = MView.extend({

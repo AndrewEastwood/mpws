@@ -1,9 +1,9 @@
 define("plugin/shop/js/view/profileOrders", [
     'default/js/view/mView',
     'plugin/shop/js/model/profileOrders',
-    'default/js/plugin/hbs!plugin/shop/hbs/profileOrders',
+    'default/js/plugin/hbs!plugin/shop/hbs/site/profileOrders',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/shop',
+    'default/js/plugin/i18n!plugin/shop/nls/site/translation',
     "default/js/lib/jquery.cookie",
 ], function (MView, ModelProfileOrders, tpl, lang) {
 

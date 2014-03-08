@@ -1,6 +1,6 @@
 define("plugin/shop/js/view/orderTrackingButton", [
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/shop/hbs/orderTrackingButton'
+    'default/js/plugin/hbs!plugin/shop/hbs/site/orderTrackingButton'
 ], function (MView, tpl) {
 
     var CartEmbedded = MView.extend({

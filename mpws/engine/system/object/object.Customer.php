@@ -40,15 +40,15 @@ class objectCustomer {
     }
 
     public function getCustomerInfo () {
-        if (empty($this->customerInfo)) {
-            if (glIsToolbox())
-                $config = configurationCustomerDataSource::jsapiGetCustomer(MPWS_CUSTOMER_MANAGED);
-            // elseif (/* unmanaged session */)
-            //     $config = configurationCustomerDataSource::jsapiGetCustomer("");
-            else
-                $config = configurationCustomerDataSource::jsapiGetCustomer();
+        // if (empty($this->customerInfo)) {
+        //     if (glIsToolbox())
+        //         $config = configurationCustomerDataSource::jsapiGetCustomer();
+        //     // elseif (/* unmanaged session */)
+        //     //     $config = configurationCustomerDataSource::jsapiGetCustomer("");
+        //     else
+            $config = configurationCustomerDataSource::jsapiGetCustomer();
             $this->customerInfo = $this->getDataBase()->getData($config);
-        }
+        // }
         return $this->customerInfo;
     }
 

@@ -5,7 +5,7 @@ define("plugin/account/js/view/accountProfilePassword", [
     'plugin/account/js/model/account',
     'default/js/plugin/hbs!plugin/account/hbs/accountProfilePassword',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/account'
+    'default/js/plugin/i18n!plugin/account/nls/site/translation'
 ], function (Sandbox, MView, BootstrapDialog, ModelAccountInstance, tpl, lang) {
 
     var AccountProfilePassword = MView.extend({

@@ -1,7 +1,7 @@
 define("plugin/shop/js/view/menuCatalog", [
     'default/js/view/mView',
     'plugin/shop/js/model/menuCatalog',
-    'default/js/plugin/hbs!plugin/shop/hbs/menuCatalog'
+    'default/js/plugin/hbs!plugin/shop/hbs/site/menuCatalog'
 ], function (MView, modelCatalogStructureMenu, tpl) {
 
     var MenuCatalog = MView.extend({

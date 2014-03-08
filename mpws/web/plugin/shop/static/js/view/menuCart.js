@@ -1,7 +1,7 @@
 define("plugin/shop/js/view/menuCart", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/shop/hbs/menuCart'
+    'default/js/plugin/hbs!plugin/shop/hbs/site/menuCart'
 ], function (Sandbox, MView, tpl) {
 
     var MenuCart = MView.extend({

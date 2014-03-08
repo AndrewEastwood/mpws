@@ -4,7 +4,7 @@ define("plugin/shop/js/view/listProductCatalog", [
     'plugin/shop/js/collection/listProductCatalog',
     'plugin/shop/js/view/productItemShort',
     'default/js/lib/bootstrap-dialog',
-    'default/js/plugin/hbs!plugin/shop/hbs/productCatalog',
+    'default/js/plugin/hbs!plugin/shop/hbs/site/productCatalog',
     'default/js/lib/bootstrap',
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',

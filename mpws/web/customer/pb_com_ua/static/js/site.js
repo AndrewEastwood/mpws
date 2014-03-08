@@ -4,7 +4,7 @@ define("customer/js/site", [
     'default/js/lib/underscore',
     'default/js/site',
     'default/js/view/breadcrumb',
-    'default/js/plugin/css!customer/css/theme.css'
+    'default/js/plugin/css!customer/css/siteTheme.css'
 
 ], function (Sandbox, $, _, SiteBase, Breadcrumb) {
 
@@ -72,7 +72,7 @@ define("customer/js/site", [
 
         _views.breadcrumb = new Breadcrumb({
             el: _customerOptions.placeholders.CommonBreadcrumb,
-            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
+            template: 'default/js/plugin/hbs!customer/hbs/site/breadcrumb'
         });
 
         Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {

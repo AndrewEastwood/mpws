@@ -70,9 +70,9 @@ class configurationDefaultDataSource extends objectConfiguration {
         return self::extendConfigs($configDefault, $configExtend, true);
     }
 
-    static function jsapiGetCustomer ($ExternalKey = false) {
-        if (empty($ExternalKey))
-            $ExternalKey = MPWS_CUSTOMER;
+    static function jsapiGetCustomer ($ExternalKey = MPWS_CUSTOMER) {
+        // if (empty($ExternalKey))
+        //     $ExternalKey = ;
 
         $filter = "ExternalKey (=) ? + Status (=) ?";
         $values = array($ExternalKey, "ACTIVE");

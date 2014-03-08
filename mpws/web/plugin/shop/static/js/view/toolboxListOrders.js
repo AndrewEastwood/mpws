@@ -4,7 +4,7 @@ define("plugin/shop/js/view/toolboxListOrders", [
     // 'plugin/shop/js/view/toolboxOrderItem'
     "default/js/lib/backgrid",
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/toolbox',
+    'default/js/plugin/i18n!plugin/shop/nls/toolbox/translation',
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",

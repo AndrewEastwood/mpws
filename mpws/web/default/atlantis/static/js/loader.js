@@ -28,7 +28,7 @@
     });
 
     // include site file
-    var _filesToRequest = ['default/js/lib/sandbox', 'customer/js/site'];
+    var _filesToRequest = ['default/js/lib/sandbox', 'customer/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site')];
 
     for (var key in _globalConfig.PLUGINS)
         _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site'));

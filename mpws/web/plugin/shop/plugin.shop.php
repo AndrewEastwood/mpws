@@ -721,10 +721,10 @@ class pluginShop extends objectPlugin {
         // limit
         $dataObj = new libraryDataObject();
 
-        if (!$this->getCustomer()->getAccess()) {
-            $dataObj->setError('AccessDenied');
-            return $dataObj;
-        }
+        // if (!$this->getCustomer()->getAccess()) {
+        //     $dataObj->setError('AccessDenied');
+        //     return $dataObj;
+        // }
 
         $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
         $configCount = configurationShopDataSource::jsapiShopSiteOrdersCount();

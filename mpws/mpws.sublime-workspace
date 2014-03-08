@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"bac",
+				"background-color"
+			],
+			[
+				"con",
+				"configOrders"
+			],
+			[
+				"Strt",
+				"strtoupper"
+			],
+			[
+				"of",
+				"offset"
+			],
+			[
+				"re",
+				"renderBefore"
+			],
+			[
 				"data",
 				"dataObj"
 			],
@@ -26,10 +46,6 @@
 			[
 				"car",
 				"cartInfo"
-			],
-			[
-				"bac",
-				"background-color"
 			],
 			[
 				"cus",
@@ -92,10 +108,6 @@
 				"config"
 			],
 			[
-				"re",
-				"removeClass"
-			],
-			[
 				"pad",
 				"padding"
 			],
@@ -110,10 +122,6 @@
 			[
 				"bo",
 				"boughts"
-			],
-			[
-				"con",
-				"configBoughts"
 			],
 			[
 				"pro",
@@ -324,58 +332,10 @@
 	"buffers":
 	[
 		{
-			"file": "web/customer/toolbox/static/js/site.js",
+			"file": "web/plugin/shop/static/js/view/cartStandalone.js",
 			"settings":
 			{
-				"buffer_size": 3395,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/js/view/toolboxOrders.js",
-			"settings":
-			{
-				"buffer_size": 746,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/js/toolbox.js",
-			"settings":
-			{
-				"buffer_size": 2096,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/static/js/site.js",
-			"settings":
-			{
-				"buffer_size": 12642,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "engine/bootstrap.php",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "web/plugin/shop/plugin.shop.php",
-			"settings":
-			{
-				"buffer_size": 35456,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "engine/system/object/object.Customer.php",
-			"settings":
-			{
-				"buffer_size": 12099,
+				"buffer_size": 5322,
 				"line_ending": "Unix"
 			}
 		}
@@ -420,21 +380,91 @@
 	},
 	"file_history":
 	[
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ste/ua_uk/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ste/en_us/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ste/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/site/ua_uk/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/site/en_us/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/site/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/toolbox/en_us/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/toolbox/ua_uk/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/toolbox/translation.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/site/en_us/toolboxShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolboxListOrders.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
+		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
+		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.Display.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolboxMenu.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/profileOrders.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us/siteShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/ua_uk/siteShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/siteShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/toolboxShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/ua_uk/toolboxShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us/toolboxShop.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/wishListStandalone.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/trackingStatus.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolboxOrderItem.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productsCompare.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemShort.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productItemFull.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/orderTrackingButton.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuWishList.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuProfileOrders.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCompare.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCart.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listProductCatalog.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartEmbedded.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
+		"/devdata/Develop/github/web/mpws/engine/system/object/object.Customer.php",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/toolbox.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.DataSource.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/ua_uk/toolbox.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backgrid-select-all.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backbone-pageable.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/toolbox.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backgrid.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/backgrid-paginator.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/backgrid.less",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/less/theme.less",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/backgrid-select-all.less",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/collection/toolboxListOrders.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backgrid-paginator.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/toolboxMenu.hbs",
+		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light_full.sql",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/mView.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/model/mModel.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backgridResponsiveGrid.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/toolboxOrders.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/model/account.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/backgrid-responsiveGrid.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/less/theme.less",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/css/theme.css",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/backgrid-responsiveGrid.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/menuAccount.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartStandalone.hbs",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/js/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolboxOrders.js",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.Database.php",
+		"/devdata/Develop/github/web/mpws/.htaccess",
+		"/devdata/Develop/github/web/mpws/schema/docs/setupNginx.md",
+		"/devdata/Develop/github/web/mpws/schema/docs/initialSetup.txt",
+		"/devdata/Develop/github/web/mpws/engine/system/library/library.Customer.php",
+		"/devdata/Develop/github/web/mpws/web/customer/toolbox/customer.toolbox.php",
 		"/devdata/Develop/github/web/mpws/engine/system/object/object.Plugin.php",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/hbs/layout.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolboxMenu.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/toolboxMenu.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/layout.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/toolboxOrders.hbs",
-		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/toolboxOrders.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/toolboxOrder.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/toolboxMenu.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/ua_uk/toolbox.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/shop.js",
-		"/devdata/Develop/github/web/mpws/web/customer/toolbox/customer.toolbox.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/en_us/account.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ua_uk/account.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us/shop.js",
@@ -444,110 +474,40 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/toolbox.js",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/configuration.Display.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/config/configuration.Display.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/toolbox.js",
-		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/less/theme.less",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/toolboxMenu.hbs",
-		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/siteMenu.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/siteMenu.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/menuAccount.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/siteWidgets.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfile.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
-		"/devdata/Develop/github/web/mpws/engine/system/object/object.Customer.php",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataBase.php",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.api.php",
 		"/devdata/Develop/github/web/mpws/web/customer/mikser_ho_ua/config/configuration.Database.php",
-		"/devdata/Develop/github/web/mpws/engine/bootstrap.php",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.ORM.php",
-		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.nls.php",
 		"/devdata/Develop/github/web/mpws/engine/system/library/library.DataObject.php",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.Database.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/config/configuration.DataSource.php",
 		"/devdata/Develop/github/web/mpws/engine/system/interface/interface.Plugin.php",
 		"/devdata/Develop/github/web/mpws/engine/global/global.methods.php",
-		"/devdata/Develop/github/web/mpws/schema/clean/mpws_light_full.sql",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/config/configuration.Database.php",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/config/configuration.Database.php",
 		"/devdata/Develop/github/web/mpws/engine/system/object/object.Configuration.php",
 		"/devdata/Develop/github/web/mpws/version.txt",
 		"/devdata/Develop/github/web/mpws/web/customer/mikser_ho_ua/config/configuration.Display.php",
 		"/devdata/Develop/github/web/mpws/web/customer/mikser_ho_ua/customer.mikser_ho_ua.php",
-		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/less/theme.less",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/cart.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/cartEmbedded.hbs",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCart.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/productsCompare.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/productsCompare.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/model/wishList.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuCompare.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuWishList.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productItemShort.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/view/menu.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/menuSite.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/menuSite.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/wishListStandalone.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/widgetsSite.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartEmbedded.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/listProductCatalog.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/productCatalog.hbs",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/hbs/breadcrumb.hbs",
 		"/devdata/Develop/github/web/mpws/web/customer/toolbox/static/hbs/breadcrumb.hbs",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/base.less",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/less/bootstrap.less",
-		"/devdata/Develop/github/web/mpws/web/deploy/Gruntfile.js",
-		"/devdata/Develop/github/web/mpws/.htaccess",
-		"/devdata/Develop/github/web/mpws/engine/controller/controller.workbench.php",
-		"/devdata/Develop/github/web/mpws/web/customer/workbench/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/customer/workbench/static/hbs/layout.hbs",
-		"/devdata/Develop/github/web/mpws/web/customer/workbench/customer.workbench.php",
-		"/devdata/Develop/github/web/mpws/engine/system/library/library.Request.php",
-		"/devdata/Develop/github/web/mpws/engine/controller/controller.toolbox.php",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.rsses.edit.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.budget.stories.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/qb_center/sass/base.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.publications.list.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.publications.edit.js",
-		"/devdata/Develop/qBeats/united/projects/local_settings.py",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.tweets.list.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.tweets.edit.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.users.list.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.ecqtasks.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.accounting.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/js/libs/jquery.jscrollpane.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/js/widgets/form.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.groups.editor.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/sass/pages/roles.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/sass/partials/_component-genres.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/sass/partials/_generateCheckbox.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/js/views/HistoryPopup.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.users.edit.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.rsses.list.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.groups.list.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/routers/page.company.edit.js",
-		"/devdata/Develop/qBeats/united/enterprise/enterprise/templates/ittool/base.htm",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/js/libs/htmlComponents.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/js/widgets/admHistoryPopup.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/htmlComponents.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/qb_center/js/widgets/qcwHistoryPopup.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/sass/partials/_base.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/qb_center/js/views/formOperatorsEditor.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/qb_center/nls/en_us/qcwHistoryPopupLabels.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/sass/partials/_style_bsDialogBase.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/sass/partials/_component-history.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/sass/partials/_popup-story-purchase.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/sass/partials/_style_popup-accounting.scss",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/admintool/sass/pages/accounting.scss",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/accountProfileOverview.hbs",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/qb_center/nls/qcwHistoryPopupLabels.j",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/qb_center/nls/qcwHistoryPopupLabels.js",
-		"/devdata/Develop/qBeats/united/qb_core/qb_core/static/common/js/widgets/qbhistory.js"
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/menu.hbs"
 	],
 	"find":
 	{
@@ -567,6 +527,30 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"_logisticAgency",
+			": ",
+			"company_",
+			"fromRaw",
+			"formatter",
+			"label",
+			"cell",
+			"$orders",
+			"$config",
+			"config",
+			"jsapiShopCategoryLocation",
+			"count",
+			"_api_manageOrders",
+			"collListOrders",
+			"$paginatorExample",
+			"pagableco",
+			"define",
+			"extras.profile",
+			"extras.account",
+			"site",
+			"renderBefore",
+			"renderAfter",
+			"_renderFn",
+			"_customerOptions.placeholders",
 			"_api_manageOrders",
 			"profile",
 			"toolboxOrder",
@@ -670,31 +654,7 @@
 			"\n    {{#srtStartsWith app.location.fragment \"account/delete\" }}\n    <li><a href=\"/#\">Головна</a></li>\n    <li><a href=\"/#account/profile\">Профіль</a></li>\n    <li class=\"active\">Видалення</li>\n    {{/srtStartsWith}}\n",
 			"AccountID",
 			"editable editable",
-			"dataAccount",
-			"_self",
-			"</td>\n                <td>",
-			"</td>",
-			"data-type",
-			"<td></td>",
-			"Handlebars",
-			"address",
-			"account-addresses",
-			"accountProfileDelete",
-			"AccountProfileDelete",
-			"accountProfileDelete",
-			"AccountProfileDelete",
-			"accountProfileDelete",
-			"AccountProfileDelete",
-			"accountProfileDelete",
-			"Empty",
-			"\"Empty\"",
-			"empty",
-			"data-original-title",
-			" style=\"background-color: rgba(0, 0, 0, 0);\"",
-			"libImgPath",
-			"loading.gif",
-			"loading",
-			"define"
+			"dataAccount"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -712,99 +672,14 @@
 	"groups":
 	[
 		{
-			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "web/customer/toolbox/static/js/site.js",
+					"file": "web/plugin/shop/static/js/view/cartStandalone.js",
 					"settings":
 					{
-						"buffer_size": 3395,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1488,
-								1488
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 105.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "web/plugin/shop/static/js/view/toolboxOrders.js",
-					"settings":
-					{
-						"buffer_size": 746,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								173,
-								173
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "web/plugin/shop/static/js/toolbox.js",
-					"settings":
-					{
-						"buffer_size": 2096,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								895,
-								895
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "web/plugin/shop/static/js/site.js",
-					"settings":
-					{
-						"buffer_size": 12642,
+						"buffer_size": 5322,
 						"regions":
 						{
 						},
@@ -812,7 +687,7 @@
 						[
 							[
 								320,
-								320
+								336
 							]
 						],
 						"settings":
@@ -820,32 +695,6 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "engine/bootstrap.php",
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -856,65 +705,8 @@
 			]
 		},
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 5,
-					"file": "web/plugin/shop/plugin.shop.php",
-					"settings":
-					{
-						"buffer_size": 35456,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								29588,
-								29588
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4049.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "engine/system/object/object.Customer.php",
-					"settings":
-					{
-						"buffer_size": 12099,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -946,7 +738,7 @@
 		"cols":
 		[
 			0.0,
-			0.580006878774,
+			0.850613617443,
 			1.0
 		],
 		"rows":
@@ -967,12 +759,36 @@
 		"selected_items":
 		[
 			[
-				"controller.display.php",
-				"mpws/engine/controller/controller.display.php"
+				"obje",
+				"mpws/engine/system/object/object.Customer.php"
 			],
 			[
 				"theme",
-				"mpws/web/customer/pb_com_ua/static/less/theme.less"
+				"mpws/web/customer/toolbox/static/less/theme.less"
+			],
+			[
+				"objcus",
+				"mpws/engine/system/object/object.Customer.php"
+			],
+			[
+				"object",
+				"mpws/engine/system/object/object.Customer.php"
+			],
+			[
+				"backbone-pageable",
+				"mpws/web/default/atlantis/static/js/lib/backbone-pageable.js"
+			],
+			[
+				"mview",
+				"mpws/web/default/atlantis/static/js/view/mView.js"
+			],
+			[
+				"mmodel",
+				"mpws/web/default/atlantis/static/js/model/mModel.js"
+			],
+			[
+				"controller.display.php",
+				"mpws/engine/controller/controller.display.php"
 			],
 			[
 				"listpro",
@@ -1007,16 +823,8 @@
 				"mpws/web/default/atlantis/static/js/model/mModel.js"
 			],
 			[
-				"mmodel",
-				"mpws/web/default/atlantis/static/js/model/mModel.js"
-			],
-			[
 				"historyp",
 				"qBeats/united/qb_core/qb_core/static/common/js/views/HistoryPopup.js"
-			],
-			[
-				"mview",
-				"mpws/web/default/atlantis/static/js/view/mView.js"
 			],
 			[
 				"accoutpro",
@@ -1209,6 +1017,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 316.0,
+	"side_bar_width": 561.0,
 	"status_bar_visible": true
 }

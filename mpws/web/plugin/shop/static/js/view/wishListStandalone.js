@@ -3,7 +3,7 @@ define("plugin/shop/js/view/wishListStandalone", [
     'default/js/lib/underscore',
     'default/js/view/mView',
     'plugin/shop/js/model/wishList',
-    'default/js/plugin/hbs!plugin/shop/hbs/wishListStandalone',
+    'default/js/plugin/hbs!plugin/shop/hbs/site/wishListStandalone',
     "default/js/lib/jquery.cookie"
 ], function (Sandbox, _, MView, ModelWishListInstance, tpl) {
 

@@ -1,7 +1,7 @@
 define("plugin/shop/js/view/trackingStatus", [
     'default/js/view/mView',
     'plugin/shop/js/model/trackingStatus',
-    'default/js/plugin/hbs!plugin/shop/hbs/trackingStatus'
+    'default/js/plugin/hbs!plugin/shop/hbs/site/trackingStatus'
 ], function (MView, ModelTrackingStatus, tpl) {
 
     var TrackingStatus = MView.extend({

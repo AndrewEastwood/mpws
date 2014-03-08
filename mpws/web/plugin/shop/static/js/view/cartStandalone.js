@@ -4,9 +4,9 @@ define("plugin/shop/js/view/cartStandalone", [
     'default/js/lib/underscore',
     'default/js/view/mView',
     'plugin/shop/js/model/cart',
-    'default/js/plugin/hbs!plugin/shop/hbs/cartStandalone',
+    'default/js/plugin/hbs!plugin/shop/hbs/site/cartStandalone',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/shop',
+    'default/js/plugin/i18n!plugin/shop/nls/site/translation',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
 ], function (Site, Sandbox, _, MView, ModelCartInstance, tpl, lang) {

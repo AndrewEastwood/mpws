@@ -4,7 +4,7 @@ define("plugin/account/js/view/accountProfileOverview", [
     'plugin/account/js/model/account',
     'default/js/plugin/hbs!plugin/account/hbs/accountProfileOverview',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/account'
+    'default/js/plugin/i18n!plugin/account/nls/site/translation'
 ], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {
 
     var AccountProfileOverview = MView.extend({

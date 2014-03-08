@@ -5,7 +5,7 @@
     // detect running customer name
     define('MPWS_CUSTOMER', getCustomer());
     // get managed customer name
-    define('MPWS_CUSTOMER_MANAGED', getCustomer(true));
+    // define('MPWS_CUSTOMER_MANAGED', getCustomer(true));
     // evironment version
     define('MPWS_VERSION', 'atlantis');
     // evironment mode
@@ -37,7 +37,7 @@
         return $_dr;
     }
     
-    function getCustomer ($getManagedCustomerName = false) {
+    function getCustomer () {
         $h = current(explode(':', $_SERVER['HTTP_HOST']));
         $h = strtolower($h);
 
@@ -46,11 +46,11 @@
 
         // var_dump($_SERVER);
 
-        if (!$getManagedCustomerName && preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']))
-            $customerName = 'toolbox';
+        // if (!$getManagedCustomerName && preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']))
+        //     $customerName = 'toolbox';
         // else if (strstr($_SERVER['REQUEST_URI'], '/workbench/'))
         //     $customerName = 'workbench';
-        else if ($host_parts[0] == 'www')
+        if ($host_parts[0] == 'www')
             $customerName = implode('.', array_splice($host_parts, 1));
         else
             $customerName = $h;
@@ -68,7 +68,10 @@
     }
 
     function glIsToolbox () {
-        return MPWS_CUSTOMER === 'toolbox';
+        return preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']) > 0;
+        //if (!$getManagedCustomerName && )
+          //  $customerName = 'toolbox';
+        // return MPWS_CUSTOMER === 'toolbox';
     }
 
     function glIsCustomer ($customerName) {
