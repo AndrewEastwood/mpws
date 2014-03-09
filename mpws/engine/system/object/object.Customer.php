@@ -263,6 +263,11 @@ class objectCustomer {
         return $this->getDataBase()->getData($config);
     }
 
+    public function getAddress ($AddressID) {
+        $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
+        return $this->getDataBase()->getData($config);
+    }
+
     public function addAccountAddress ($address) {
         // if (!$this->isAccountSignedIn() && !$force)
         //     return false;

@@ -189,6 +189,20 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
+    static function jsapiGetAddress ($AddressID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accountAddresses",
+            "fields" => array("*"),
+            "condition" => array(
+                "filter" => "ID (=) ?",
+                "values" => array($AddressID)
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
     static function jsapiAddAccountAddress () {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",

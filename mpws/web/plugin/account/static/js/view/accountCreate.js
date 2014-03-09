@@ -7,7 +7,7 @@ define("plugin/account/js/view/accountCreate", [
     /* template */
     'default/js/plugin/hbs!plugin/account/hbs/accountCreate',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site/translation'
+    'default/js/plugin/i18n!plugin/account/nls/site'
 ], function ($, _, MView, ModelAccountCreate, tpl, lang) {
 
     var View = MView.getNew();

@@ -1,4 +1,4 @@
-define("plugin/account/nls/site/translation", function() {
+define("plugin/shop/nls/toolbox", function() {
     return {
         en_us: true,
         ua_uk: true

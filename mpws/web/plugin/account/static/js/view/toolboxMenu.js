@@ -4,7 +4,7 @@ define("plugin/account/js/view/toolboxMenu", [
     'default/js/view/mView',
     'default/js/plugin/hbs!plugin/account/hbs/toolboxMenu',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site/translation',
+    'default/js/plugin/i18n!plugin/account/nls/site',
 ], function (Sandbox, Site, MView, tpl, lang) {
 
     var toolboxMenuAccount = new (MView.extend({

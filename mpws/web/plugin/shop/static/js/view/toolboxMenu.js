@@ -4,7 +4,7 @@ define("plugin/shop/js/view/toolboxMenu", [
     'default/js/view/mView',
     'default/js/plugin/hbs!plugin/shop/hbs/toolbox/toolboxMenu',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/toolbox/translation',
+    'default/js/plugin/i18n!plugin/shop/nls/toolbox',
 ], function (Sandbox, Site, MView, tpl, lang) {
 
     var toolboxMenuShop = new (MView.extend({

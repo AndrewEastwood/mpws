@@ -1,7 +1,7 @@
-define("plugin/account/nls/site/ua_uk/translation", [
+define("plugin/account/nls/ua_uk/site", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/account/site/ua_uk/translation'
+    'customer/nls/ua_uk/account_site'
 ], function(_, CustomerAccount) {
     return _.extend({}, {
         /* form register */

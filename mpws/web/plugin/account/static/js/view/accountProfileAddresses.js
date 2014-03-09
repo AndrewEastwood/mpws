@@ -8,7 +8,7 @@ define("plugin/account/js/view/accountProfileAddresses", [
     'default/js/plugin/hbs!plugin/account/hbs/accountProfileAddresses',
     'default/js/plugin/text!plugin/account/hbs/partials/accountAddress.hbs',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site/translation',
+    'default/js/plugin/i18n!plugin/account/nls/site',
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, $, _, Handlebars, MView, ModelAccountInstance, tpl, tplAddress, lang) {
 

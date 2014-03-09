@@ -94,6 +94,7 @@
              * Called when a dependency needs to be loaded.
              */
             load: function (name, req, onLoad, config) {
+                // debugger;
                 config = config || {};
 
                 if (config.locale) {
@@ -110,6 +111,8 @@
                     value = {},
                     i, part, current = "";
 
+                console.log('request', name);
+                console.log(match);
                 //If match[5] is blank, it means this is the top bundle definition,
                 //so it does not have to be handled. Locale-specific requests
                 //will have a match[4] value but no match[5]

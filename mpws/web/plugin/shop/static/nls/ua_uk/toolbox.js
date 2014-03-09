@@ -1,7 +1,7 @@
-define("plugin/shop/nls/site/ua_uk/translation", [
+define("plugin/shop/nls/ua_uk/toolbox", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/shop/site/ua_uk/translation'
+    'customer/nls/ua_uk/shop_toolbox'
 ], function (_, CustomerShop, PLuginAccount) {
     return _.extend({}, {
         order_status_NEW: 'Прийняте',
@@ -24,8 +24,21 @@ define("plugin/shop/nls/site/ua_uk/translation", [
         shopping_cart_field_logistic: "Перевізник",
         shopping_cart_field_warehouse: "Номер складу",
         shopping_cart_field_comment: "Ваші побажання",
-        shopping_cart_error_EmptyShippingAddress: "Потрібно вказати адресу доставки",
-        shopping_cart_error_WrongProfileAddressID: "Вибрана неіснуюча адреса з Вашого акаунту",
-        shopping_cart_error_UnknownError: "Помилка збереження замовлення",
+        pluginMenuTitle: 'Інтернет Магазин',
+        pluginMenu_Dashboard: 'Статистика',
+        pluginMenu_Products: 'Товари',
+        pluginMenu_Orders: 'Замовлення',
+        pluginMenu_Offers: 'Акції та Розпродаж',
+        pluginMenu_Orders_Grid_Column_ID: "#",
+        pluginMenu_Orders_Grid_Column_Shipping: "Доставка",
+        pluginMenu_Orders_Grid_Column_Status: "Статус",
+        pluginMenu_Orders_Grid_Column_Warehouse: "Склад",
+        pluginMenu_Orders_Grid_Column_DateCreated: "Створений",
+        pluginMenu_Orders_Grid_Column_DateUpdated: "Оновлений",
+        logisticAgency_company_gunsel: "Гюнсел",
+        logisticAgency_company_novaposhta: "Нова Пошта",
+        logisticAgency_company_intime: "Ін-Тайм",
+        logisticAgency_company_ukrposhta: "УкрПошта",
+        logisticAgency_Unknown: "Самовивіз"
     }, CustomerShop);
 });

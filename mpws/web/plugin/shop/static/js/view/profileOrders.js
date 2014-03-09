@@ -3,7 +3,7 @@ define("plugin/shop/js/view/profileOrders", [
     'plugin/shop/js/model/profileOrders',
     'default/js/plugin/hbs!plugin/shop/hbs/site/profileOrders',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/site/translation',
+    'default/js/plugin/i18n!plugin/shop/nls/site',
     "default/js/lib/jquery.cookie",
 ], function (MView, ModelProfileOrders, tpl, lang) {
 

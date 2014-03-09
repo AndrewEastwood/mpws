@@ -4,7 +4,7 @@ define("plugin/account/js/view/accountProfileDelete", [
     'plugin/account/js/model/account',
     'default/js/plugin/hbs!plugin/account/hbs/accountProfileDelete',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site/translation'
+    'default/js/plugin/i18n!plugin/account/nls/site'
 ], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {
 
     var AccountProfileDelete = MView.extend({

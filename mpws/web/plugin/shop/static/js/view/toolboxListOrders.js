@@ -1,16 +1,26 @@
 define("plugin/shop/js/view/toolboxListOrders", [
+    'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/js/collection/toolboxListOrders',
     // 'plugin/shop/js/view/toolboxOrderItem'
+    'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/toolbox/translation',
+    'default/js/plugin/i18n!plugin/shop/nls/toolbox',
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-], function (MView, CollListOrders, Backgrid, lang) {
+], function (Sandbox, MView, CollListOrders, BootstrapDialog, Backgrid, lang) {
 
 
+    Sandbox.eventSubscribe('shop-product-edit', function(data){
+        // debugger;
+        BootstrapDialog.show({
+            type: BootstrapDialog.TYPE_WARNING,
+            title: "Edit product",
+            message: data.oid
+        });
+    })
     // enable the select-all extension
     // name: "",
     // cell: "select-row",
@@ -64,6 +74,23 @@ define("plugin/shop/js/view/toolboxListOrders", [
         label: lang.pluginMenu_Orders_Grid_Column_DateCreated,
         cell: "string",
         editable: false
+    }, {
+        name: "Actions",
+        label: "Actions",
+        cell: "string",
+        editable: false,
+        formatter: {
+            fromRaw: function (value, model) {
+                // debugger;
+                var _link = $('<a>').attr({
+                    href: "javascript://",
+                    "data-oid": model.get('ID'),
+                    "data-action": "shop-product-edit"
+                }).text('Edit');
+                // debugger;
+                return _link.get(0);
+            }
+        }
     }];
 
     var collection = new CollListOrders();

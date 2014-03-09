@@ -98,6 +98,11 @@ class pluginShop extends objectPlugin {
                 $data = $this->_api_manageOrders();
                 break;
             }
+            case "shop_order_entry": {
+                $orderID = libraryRequest::getValue('orderID');
+                $data = $this->_api_getOrderEntry($orderID);
+                break;
+            }
         }
 
         // attach to output
@@ -673,29 +678,41 @@ class pluginShop extends objectPlugin {
 
         // get order boughts
         foreach ($dataOrders as $key => $order) {
-            $configBoughts = configurationShopDataSource::jsapiShopBoughts($order['ID']);
-            // var_dump($configBoughts);
-            $boughts = $this->getDataBase()->getData($configBoughts);
-
-            if (!empty($boughts))
-                foreach ($boughts as $bkey => $soldItem) {
-                    $product = $this->_api_getProductItem($soldItem['ProductID']);
-                    if ($product->hasData()) { 
-                        $productData = $product->getData();
-                        $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
-                    } else
-                        $boughts[$bkey]['Product'] = null;
-                }
-
-            // var_dump($boughts);
-
-            $dataOrders[$key]['Info'] = $this->_custom_util_calculateBought($boughts);
-
-            // var_dump($this->_custom_util_calculateBought($boughts));
-            $dataOrders[$key]['Boughts'] = $boughts;
+            $orderBoughtsData = $this->_api_getOrderBoughts($order['ID']);
+            if ($orderBoughtsData->hasData()) {
+                $dataOrders[$key]['Info'] = $orderBoughtsData->getData('Info');
+                $dataOrders[$key]['Boughts'] = $orderBoughtsData->getData('Boughts');
+            }
         }
 
         $dataObj->setData('orders', $dataOrders);
+
+        return $dataObj;
+    }
+
+    private function _api_getOrderBoughts ($OrderID) {
+        $dataObj = new libraryDataObject();
+
+        $configBoughts = configurationShopDataSource::jsapiShopBoughts($OrderID);
+        // var_dump($configBoughts);
+        $boughts = $this->getDataBase()->getData($configBoughts) ?: array();
+
+        if (!empty($boughts))
+            foreach ($boughts as $bkey => $soldItem) {
+                $product = $this->_api_getProductItem($soldItem['ProductID']);
+                if ($product->hasData()) { 
+                    $productData = $product->getData();
+                    $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
+                } else
+                    $boughts[$bkey]['Product'] = null;
+            }
+
+        // var_dump($boughts);
+
+        $dataObj->setData('Info', $this->_custom_util_calculateBought($boughts));
+
+        // var_dump($this->_custom_util_calculateBought($boughts));
+        $dataObj->setData('Boughts', $boughts);
 
         return $dataObj;
     }
@@ -704,8 +721,7 @@ class pluginShop extends objectPlugin {
         // $orderHash
         $dataObj = new libraryDataObject();
 
-        $config = configurationShopDataSource::jsapiShopOrderStatus();
-        $config["condition"]["values"][] = $orderHash;
+        $config = configurationShopDataSource::jsapiShopOrderStatus($orderHash);
         $orderStatus = $this->getCustomer()->processData($config);
 
         $dataObj->setData('orderStatus', $orderStatus);
@@ -714,7 +730,6 @@ class pluginShop extends objectPlugin {
     }
 
     // toolbox orders
-
     private function _api_manageOrders () {
         // in toolbox methods we must check it's permission
         // offset
@@ -762,6 +777,28 @@ class pluginShop extends objectPlugin {
 
         return $dataObj;
     }
+
+    private function _api_getOrderEntry ($orderID) {
+        $dataObj = new libraryDataObject();
+        $configOrder = configurationShopDataSource::jsapiShopOrderEntry($orderID);
+        $dataOrder = $this->getCustomer()->processData($configOrder);
+
+        $dataObj->setData('order', $dataOrder);
+        $dataObj->setData('address', $this->getCustomer()->getAddress($dataOrder['AccountAddressesID']));
+
+        $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
+        if ($orderBoughtsData->hasData()) {
+            $dataObj->setData('info', $orderBoughtsData->getData('Info'));
+            $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
+        }
+
+        return $dataObj;
+    }
+
+    private function _api_getOrdersCountByStatus ($status) {
+
+    }
+
 
     // product additional data
     // @products - array with product(s)

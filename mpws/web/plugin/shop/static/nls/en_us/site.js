@@ -1,7 +1,7 @@
-define("plugin/shop/nls/toolbox/en_us/translation", [
+define("plugin/shop/nls/en_us/site", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/shop/toolbox/en_us/translation'
+    'customer/nls/en_us/shop_site'
 ], function (_, CustomerShop) {
     return _.extend({}, {
         order_status_NEW: 'New',
