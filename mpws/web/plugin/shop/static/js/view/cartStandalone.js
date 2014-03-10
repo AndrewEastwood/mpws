@@ -98,7 +98,7 @@ define("plugin/shop/js/view/cartStandalone", [
             Sandbox.eventSubscribe('account:signed:out', function (data) {
                 // debugger;
                 // console.log('shop account:out', data);
-                self.model.setExtras('account', null);
+                self.model.removeExtras('account');
                 $.cookie("shopUser", null);
                 self.model.trigger('change');
             });
