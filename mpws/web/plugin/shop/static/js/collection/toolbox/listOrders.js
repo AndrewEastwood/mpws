@@ -1,4 +1,4 @@
-define('plugin/shop/js/collection/toolboxListOrders', [
+define('plugin/shop/js/collection/toolbox/listOrders', [
     'customer/js/site',
     'default/js/lib/underscore',
     // 'default/js/collection/mCollection',,

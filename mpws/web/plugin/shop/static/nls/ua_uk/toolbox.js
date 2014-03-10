@@ -4,11 +4,6 @@ define("plugin/shop/nls/ua_uk/toolbox", [
     'customer/nls/ua_uk/shop_toolbox'
 ], function (_, CustomerShop, PLuginAccount) {
     return _.extend({}, {
-        order_status_NEW: 'Прийняте',
-        order_status_ACTIVE: 'В процеси виконання',
-        order_status_LOGISTIC_DELIVERING: 'Відправлено',
-        order_status_LOGISTIC_DELIVERED: 'Вантаж прибув',
-        order_status_SHOP_CLOSED: 'Виконано',
         shopping_cart_link_removeAll: "Видалити всі товари з списку",
         shopping_cart_form_title: "Оформлення замовлення",
         shopping_cart_field_firstName: "Імя",
@@ -34,11 +29,6 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         pluginMenu_Orders_Grid_Column_Status: "Статус",
         pluginMenu_Orders_Grid_Column_Warehouse: "Склад",
         pluginMenu_Orders_Grid_Column_DateCreated: "Створений",
-        pluginMenu_Orders_Grid_Column_DateUpdated: "Оновлений",
-        logisticAgency_company_gunsel: "Гюнсел",
-        logisticAgency_company_novaposhta: "Нова Пошта",
-        logisticAgency_company_intime: "Ін-Тайм",
-        logisticAgency_company_ukrposhta: "УкрПошта",
-        logisticAgency_Unknown: "Самовивіз"
+        pluginMenu_Orders_Grid_Column_DateUpdated: "Оновлений"
     }, CustomerShop);
 });

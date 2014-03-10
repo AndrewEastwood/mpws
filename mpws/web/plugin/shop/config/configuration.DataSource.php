@@ -263,32 +263,35 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "limit" => 0
         ));
     }
-    static function jsapiShopProfilesOrders ($profileID) {
+    static function jsapiShopOrders () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_orders",
-            "condition" => array(
-                "filter" => "AccountID (=) ?",
-                "values" => array($profileID)
-            ),
-            "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
-            "offset" => 0,
-            "limit" => 0,
+            "condition" => null,
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
+            // "offset" => 0,
+            // "limit" => 0,
             "order" => array(
                 "field" => "shop_orders.DateCreated",
                 "ordering" => "DESC"
             )
         ));
     }
+
+    static function jsapiShopProfileOrders ($profileID) {
+        $config = self::jsapiShopOrders();
+        $config['condition'] = array(
+            "filter" => "AccountID (=) ?",
+            "values" => array($profileID)
+        );
+        return $config;
+    }
+
     static function jsapiShopSiteOrders () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "select",
-            "source" => "shop_orders",
-            "condition" => null,
-            "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
-            "offset" => 0,
-            "limit" => 2
-        ));
+        $config = self::jsapiShopOrders();
+
+
+        return $config;
     }
     static function jsapiShopOrderEntry ($orderID) {
         return self::jsapiGetDataSourceConfig(array(
@@ -298,7 +301,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                 "filter" => "ID (=) ?",
                 "values" => array($orderID)
             ),
-            "fields" => array("ID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
             // "offset" => 0,
             "limit" => 1,
             "options" => array(
@@ -308,6 +311,21 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             //     "field" => "shop_orders.DateCreated",
             //     "ordering" => "DESC"
             // ),
+        ));
+    }
+    static function jsapiShopUpdateOrderEntry ($orderID, $data) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "update",
+            "source" => "shop_orders",
+            "condition" => array(
+                "filter" => "ID (=) ?",
+                "values" => array($orderID)
+            ),
+            "data" => array(
+                "fields" => array_keys($data),
+                "values" => array_values($data)
+            ),
+            "options" => null
         ));
     }
 

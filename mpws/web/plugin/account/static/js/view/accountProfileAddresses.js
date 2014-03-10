@@ -34,6 +34,7 @@ define("plugin/account/js/view/accountProfileAddresses", [
                     self.model.removeAddress(data.id);
                 else
                     $(data.event.target).parents('table.account-profile-address-entry').remove();
+                self.$("#account-address-add-btn-ID").removeClass('hide');
             });
 
             Sandbox.eventSubscribe("account:address:save", function (data) {
@@ -46,10 +47,16 @@ define("plugin/account/js/view/accountProfileAddresses", [
 
             this.on('mview:renderComplete', function () {
                 var profile = self.model.get('profile');
-                if (profile && profile.addresses)
+                if (profile && profile.addresses) {
+                    // debugger;
+                    if (profile.addresses.length >= 3)
+                        self.$("#account-address-add-btn-ID").addClass('hide');
+                    else
+                        self.$("#account-address-add-btn-ID").removeClass('hide');
                     _(profile.addresses).each(function(address){
                         self.addAddress(address);
                     });
+                }
                 self.$('.editable').editable({
                     mode: 'inline',
                     emptytext: lang.profile_page_addresses_label_emptyValue
@@ -57,8 +64,10 @@ define("plugin/account/js/view/accountProfileAddresses", [
             });
         },
         addAddress: function (address) {
-            if (this.$('.account-addresses .account-profile-address-entry').length >= 3)
+            if (this.$('.account-addresses .account-profile-address-entry').length >= 3) {
+                this.$("#account-address-add-btn-ID").addClass('hide');
                 return false;
+            }
 
             var _entryFn = Handlebars.compile(tplAddress);
             var _tplData = this.getTemplateData();
@@ -70,6 +79,9 @@ define("plugin/account/js/view/accountProfileAddresses", [
                 emptytext: lang.profile_page_addresses_label_emptyValue
             });
             this.$('.account-addresses').append(_addressField);
+
+            if (this.$('.account-addresses .account-profile-address-entry').length >= 3)
+                this.$("#account-address-add-btn-ID").addClass('hide');
         }
     });
 

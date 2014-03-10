@@ -110,6 +110,20 @@ class configurationDefaultDataSource extends objectConfiguration {
             )
         ));
     }
+    static function jsapiGetAccountByID ($id) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "fields" => array("*"),
+            "limit" => 1,
+            "condition" => array(
+                "filter" => "ID (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
+                "values" => array($id)
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
 
     static function jsapiAddAccount () {
         return self::jsapiGetDataSourceConfig(array(
@@ -223,13 +237,13 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiRemoveAccountAddress ($AccountID, $AccountID) {
+    static function jsapiRemoveAccountAddress ($AccountID, $AddressID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
                 "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
-                "values" => array($AccountID, $AccountID, "ACTIVE")
+                "values" => array($AddressID, $AccountID, "ACTIVE")
             ),
             "data" => array(
                 "fields" => array('Status', 'DateUpdated'),

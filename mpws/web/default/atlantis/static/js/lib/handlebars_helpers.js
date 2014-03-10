@@ -390,6 +390,7 @@ define("default/js/lib/handlebars_helpers", [
       return str.toLowerCase();
     }
     helpers.mpwsGetValueByKey = function(dictionary, key, prefix, suffix, context) {
+        // debugger;
         if (!context && suffix && suffix.hash) {
             context = {
                 hash: _(suffix.hash).clone()

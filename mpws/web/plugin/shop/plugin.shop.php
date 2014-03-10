@@ -100,6 +100,13 @@ class pluginShop extends objectPlugin {
             }
             case "shop_order_entry": {
                 $orderID = libraryRequest::getValue('orderID');
+                $do = libraryRequest::getValue('action');
+                switch ($do) {
+                    case 'orderUpdate':
+                        // var_dump($do);
+                        $this->_api_updateOrderEntry($orderID);
+                        break;
+                }
                 $data = $this->_api_getOrderEntry($orderID);
                 break;
             }
@@ -671,7 +678,7 @@ class pluginShop extends objectPlugin {
         }
 
         // get orders
-        $configOrders = configurationShopDataSource::jsapiShopProfilesOrders($profileID);
+        $configOrders = configurationShopDataSource::jsapiShopProfileOrders($profileID);
         $dataOrders = $this->getCustomer()->processData($configOrders);
 
         // var_dump($dataOrders);
@@ -736,6 +743,8 @@ class pluginShop extends objectPlugin {
         // limit
         $dataObj = new libraryDataObject();
 
+        $limit = 2;
+
         // if (!$this->getCustomer()->getAccess()) {
         //     $dataObj->setError('AccessDenied');
         //     return $dataObj;
@@ -743,6 +752,8 @@ class pluginShop extends objectPlugin {
 
         $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
         $configCount = configurationShopDataSource::jsapiShopSiteOrdersCount();
+
+        $configOrders['limit'] = $limit;
 
         // pagination
         $page = libraryRequest::getValue('page');
@@ -785,6 +796,7 @@ class pluginShop extends objectPlugin {
 
         $dataObj->setData('order', $dataOrder);
         $dataObj->setData('address', $this->getCustomer()->getAddress($dataOrder['AccountAddressesID']));
+        $dataObj->setData('account', $this->getCustomer()->getAccountByID($dataOrder['AccountID']));
 
         $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
         if ($orderBoughtsData->hasData()) {
@@ -792,6 +804,25 @@ class pluginShop extends objectPlugin {
             $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
         }
 
+        return $dataObj;
+    }
+
+    private function _api_updateOrderEntry ($orderID) {
+        $dataObj = new libraryDataObject();
+
+        // get fields to update
+        $fieldName = libraryRequest::getPostValue('name');
+        $fieldValue = libraryRequest::getPostValue('value');
+        if (empty($fieldName)) {
+            $dataObj->setError('EmptyFieldName');
+            return $dataObj;
+        }
+
+        $data[$fieldName] = $fieldValue;
+
+        $configOrder = configurationShopDataSource::jsapiShopUpdateOrderEntry($orderID, $data);
+        // var_dump($configOrder);
+        $this->getCustomer()->processData($configOrder);
         return $dataObj;
     }
 

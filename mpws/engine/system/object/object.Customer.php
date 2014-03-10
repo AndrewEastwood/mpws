@@ -196,14 +196,18 @@ class objectCustomer {
         return $profile;
     }
 
+    public function getAccountByID ($id) {
+        $config = configurationCustomerDataSource::jsapiGetAccountByID($id);
+        $profile = $this->getDataBase()->getData($config);
+        return $profile;
+    }
+
     public function activateAccount ($ValidationString) {
         $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
         $this->getDataBase()->getData($config);
     }
 
     public function removeAccount ($dataAccount) {
-        // if (!$this->isAccountSignedIn())
-        //     return false;
         $AccountID = $dataAccount['AccountID'];
         unset($dataAccount['AccountID']);
         $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
@@ -216,8 +220,6 @@ class objectCustomer {
     }
 
     public function updateAccount ($dataAccount) {
-        // if (!$this->isAccountSignedIn())
-        //     return false;
         $AccountID = $dataAccount['AccountID'];
         unset($dataAccount['AccountID']);
         if (isset($dataAccount['Password']))
@@ -269,18 +271,6 @@ class objectCustomer {
     }
 
     public function addAccountAddress ($address) {
-        // if (!$this->isAccountSignedIn() && !$force)
-        //     return false;
-
-        // if ($this->isAccountSignedIn())
-        //     $address['AccountID'] = $this->getActiveProfileID();
-        // elseif ($force && !isset($address['AccountID']))
-        //     return false;
-
-
-        // if ()
-        // if (!$force)
-
         $address['DateCreated'] = date('Y:m:d H:i:s');
         $address['DateUpdated'] = date('Y:m:d H:i:s');
         $config = configurationCustomerDataSource::jsapiAddAccountAddress();
@@ -294,8 +284,6 @@ class objectCustomer {
     }
 
     public function updateAccountAddress ($address) {
-        // if (!$this->isAccountSignedIn())
-        //     return false;
         $AccountID = $address['AccountID'];
         unset($address['AccountID']);
         $AddressID = $address['AddressID'];
@@ -312,9 +300,8 @@ class objectCustomer {
     }
 
     public function removeAccountAddress ($AccountID, $AddressID) {
-        // if (!$this->isAccountSignedIn())
-        //     return false;
         $config = configurationCustomerDataSource::jsapiRemoveAccountAddress($AccountID, $AddressID);
+        // var_dump($config);
         $this->getDataBase()->getData($config);
     }
 

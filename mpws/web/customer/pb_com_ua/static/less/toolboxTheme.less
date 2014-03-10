@@ -17,6 +17,7 @@
 @import "select2";
 @import "bootstrap-account-create";
 @import "backgrid";
+@import "customer_common";
 
 .MPWSPageBody {
     background-color: fade(@textColor, 20%);
@@ -55,5 +56,11 @@
 .shop-toolbox-orders {
     .backgrid, .backgrid-paginator {
         background-color: #eee;
+    }
+}
+
+.bootstrap-dialog.shop-order-entry {
+    .modal-dialog {
+        width: 800px;
     }
 }

@@ -33,7 +33,7 @@ define("plugin/shop/js/toolbox", [
 
         orders: function () {
 
-            require(['plugin/shop/js/view/toolboxListOrders'], function (ListOrders) {
+            require(['plugin/shop/js/view/toolbox/listOrders'], function (ListOrders) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListOrders', function (cachedView) {
                     // debugger;

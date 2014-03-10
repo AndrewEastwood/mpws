@@ -1,7 +1,8 @@
-define("plugin/shop/js/view/toolboxListOrders", [
+define("plugin/shop/js/view/toolbox/listOrders", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/shop/js/collection/toolboxListOrders',
+    'plugin/shop/js/collection/toolbox/listOrders',
+    'plugin/shop/js/view/toolbox/orderEntry',
     // 'plugin/shop/js/view/toolboxOrderItem'
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
@@ -10,15 +11,25 @@ define("plugin/shop/js/view/toolboxListOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-], function (Sandbox, MView, CollListOrders, BootstrapDialog, Backgrid, lang) {
-
+], function (Sandbox, MView, CollListOrders, ViewOrderEntry, BootstrapDialog, Backgrid, lang) {
 
     Sandbox.eventSubscribe('shop-product-edit', function(data){
         // debugger;
+        var orderEntry = new ViewOrderEntry();
         BootstrapDialog.show({
             type: BootstrapDialog.TYPE_WARNING,
-            title: "Edit product",
-            message: data.oid
+            title: "Замовлення #" + data.oid,
+            message: orderEntry.$el,
+            cssClass: 'shop-order-entry',
+            buttons: [{
+                label: "Добре",
+                action: function (dialog) {
+                    dialog.close();
+                }
+            }]
+        });
+        orderEntry.fetchAndRender({
+            orderID: data.oid
         });
     })
     // enable the select-all extension

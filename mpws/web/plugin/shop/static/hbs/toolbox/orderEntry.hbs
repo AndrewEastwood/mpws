@@ -1,0 +1,119 @@
+<div class="panel">
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Деталі замовлення:</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="prefix">Дата створення:</span>
+                    <span><strong>{{data.order.DateCreated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Дата оновлення:</span>
+                    <span><strong>{{data.order.DateUpdated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Код відстеження:</span>
+                    <span><strong>{{data.order.Hash}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Тип доставки:</span>
+                    <span><strong>{{>customer/hbs/partials/orderShippingType . }}</strong></span>
+                </li>
+                {{#if data.order.Warehouse }}
+                <li class="list-group-item">
+                    <span class="prefix">Номер складу:</span>
+                    <span><strong>{{data.order.Warehouse}}</strong></span>
+                </li>
+                {{/if}}
+                <li class="list-group-item">
+                    <span class="prefix">Статус:</span>
+                    <span class="editable">
+                        <select class="form-control hide" id="order-status-control-ID">
+                            {{> customer/hbs/partials/selectboxOrderStatus . }}
+                        </select>
+                        <a href="javascript://" id="order-status-ID" class="editable">{{>customer/hbs/partials/orderStatusType . }}</a>
+                    </span>
+                </li>
+                {{#if data.order.Comment }}
+                <li class="list-group-item">
+                    <span class="prefix">Коментар:</span>
+                    <span><strong>{{data.order.Comment}}</strong></span>
+                </li>
+                {{/if}}
+            </ul>
+        </div>
+        
+        <div class="col-md-6">
+            <h4>Покупець:</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="prefix">Імя:</span>
+                    <span><strong>{{data.account.FirstName}} {{data.account.LastName}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Ел.адреса:</span>
+                    <span><strong>{{data.account.EMail}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Телефон:</span>
+                    <span><strong>{{data.account.Phone}}</strong></span>
+                </li>
+            </ul>
+            <h4>Адреса доставки:</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="prefix">Адреса:</span>
+                    <span><strong>{{data.address.Address}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Місто:</span>
+                    <span><strong>{{data.address.City}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Поштовий індекс:</span>
+                    <span><strong>{{data.address.POBox}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Країна:</span>
+                    <span><strong>{{data.address.Country}}</strong></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <h4>Список придбаних товарів:</h4>
+
+    <div class="shop-widget-productlist">
+    {{#each data.boughts }}
+        <div class="wrapper">
+            <div class="shop-product-image shop-product-image-main">
+                <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
+                    <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
+                </a>
+            </div>
+            <div class="product-row">
+                <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
+                <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
+                <span class="label label-default">x</span>
+                <span class="label label-warning product-quantity">{{Quantity}}</span>
+                <span class="label label-default">=</span>
+                <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
+            </div>
+        </div>
+    {{/each}}
+    </div>
+
+    <div class="well cartInfo">
+        <div class="shopCartSubTotal">
+            <span class="value-prefix">Сума:</span>
+            <span class="value">{{data.info.subTotal}}<span class="moneyType">грн.</span></span>
+        </div>
+        <div class="shopCartTotal">
+            <span class="value-prefix">До оплати:</span>
+            <span class="value label label-success">{{data.info.total}}<span class="moneyType">грн.</span></span>
+        </div>
+    </div>
+    
+</div>
