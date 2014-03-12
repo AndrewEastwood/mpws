@@ -11,7 +11,7 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
 
     var OrderItem = MView.extend({
         // tagName: 'div',
-        className: 'shop-order-entry',
+        // className: 'shop-order-entry',
         template: tpl,
         lang: lang,
         model: new ModelOrderEntry(),
@@ -42,6 +42,7 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
                     source: $.makeArray(source),
                     success: function (data) {
                         // debugger;
+                        Sandbox.eventNotify('shop-toolbox-orderList-refresh');
                         self.model.set(self.model.parse.call(self.model, data));
                     }
                 });

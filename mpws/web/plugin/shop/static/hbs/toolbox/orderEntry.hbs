@@ -31,7 +31,7 @@
                     <span class="prefix">Статус:</span>
                     <span class="editable">
                         <select class="form-control hide" id="order-status-control-ID">
-                            {{> customer/hbs/partials/selectboxOrderStatus . }}
+                            {{> customer/hbs/partials/selectboxItemsOrderStatus . }}
                         </select>
                         <a href="javascript://" id="order-status-ID" class="editable">{{>customer/hbs/partials/orderStatusType . }}</a>
                     </span>
@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <h4>Список придбаних товарів:</h4>
+    <h4>{{lang.orderEntry_Popup_section_boughts}}</h4>
 
     <div class="shop-widget-productlist">
     {{#each data.boughts }}

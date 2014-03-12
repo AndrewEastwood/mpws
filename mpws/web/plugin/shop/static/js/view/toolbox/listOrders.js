@@ -13,16 +13,14 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     "default/js/lib/backgrid-select-all",
 ], function (Sandbox, MView, CollListOrders, ViewOrderEntry, BootstrapDialog, Backgrid, lang) {
 
-    Sandbox.eventSubscribe('shop-product-edit', function(data){
-        // debugger;
+    Sandbox.eventSubscribe('shop-toolbox-order-edit', function(data){
         var orderEntry = new ViewOrderEntry();
         BootstrapDialog.show({
-            type: BootstrapDialog.TYPE_WARNING,
-            title: "Замовлення #" + data.oid,
+            title: lang.orderEntry_Popup_title + data.oid,
             message: orderEntry.$el,
-            cssClass: 'shop-order-entry',
+            cssClass: 'shop-toolbox-order-edit',
             buttons: [{
-                label: "Добре",
+                label: lang.orderEntry_Popup_button_OK,
                 action: function (dialog) {
                     dialog.close();
                 }
@@ -52,6 +50,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         editable: false,
         formatter: {
             fromRaw: function (value) {
+                // debugger;
                 var _status = lang['order_status_' + value];
                 return _status;
             }
@@ -87,7 +86,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         editable: false
     }, {
         name: "Actions",
-        label: "Actions",
+        label: lang.pluginMenu_Orders_Grid_Column_Actions,
         cell: "string",
         editable: false,
         formatter: {
@@ -96,10 +95,10 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 var _link = $('<a>').attr({
                     href: "javascript://",
                     "data-oid": model.get('ID'),
-                    "data-action": "shop-product-edit"
-                }).text('Edit');
+                    "data-action": "shop-toolbox-order-edit"
+                }).text(lang.pluginMenu_Orders_Grid_link_Edit);
                 // debugger;
-                return _link.get(0);
+                return _link;
             }
         }
     }];
@@ -133,36 +132,18 @@ define("plugin/shop/js/view/toolbox/listOrders", [
 
     var ToolboxListOrders = MView.extend({
         className: 'shop-toolbox-orders',
+        initialize: function () {
+            var self = this;
+            Sandbox.eventSubscribe("shop-toolbox-orderList-refresh", function () {
+                self.render();
+            });
+        },
         render: function () {
-            // var _grid = new ToolboxListOrdersGrid();
-            // var _paginator = new Paginator();
-            // var $paginatorExample = toolboxListOrders.$el;//$("#paginator-example-result");
             this.$el.append(ToolboxListOrdersGrid.render().el);
             this.$el.append(Paginator.render().el);
             collection.fetch({reset: true});
         }
     });
-
-
-
-    // var ToolboxListOrders = MView.extend({
-    //     className: 'shop-toolbox-orders',
-    //     collection: new CollListOrders(),
-    //     itemViewClass: OrderItem,
-    //     initialize: function () {
-    //         MView.prototype.initialize.call(this);
-    //         var self = this;
-    //         var grid = new Backgrid.Grid({
-    //             columns: columns,
-    //             collection: this.collection,
-    //         });
-
-    //         this.on('mview:renderComplete', function () {
-    //             self.$el.html(grid.render().el);
-    //         });
-    //     }
-    //     // autoRender: true
-    // });
 
     return ToolboxListOrders;
 

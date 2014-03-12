@@ -263,36 +263,6 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "limit" => 0
         ));
     }
-    static function jsapiShopOrders () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "select",
-            "source" => "shop_orders",
-            "condition" => null,
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
-            // "offset" => 0,
-            // "limit" => 0,
-            "order" => array(
-                "field" => "shop_orders.DateCreated",
-                "ordering" => "DESC"
-            )
-        ));
-    }
-
-    static function jsapiShopProfileOrders ($profileID) {
-        $config = self::jsapiShopOrders();
-        $config['condition'] = array(
-            "filter" => "AccountID (=) ?",
-            "values" => array($profileID)
-        );
-        return $config;
-    }
-
-    static function jsapiShopSiteOrders () {
-        $config = self::jsapiShopOrders();
-
-
-        return $config;
-    }
     static function jsapiShopOrderEntry ($orderID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -302,17 +272,43 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                 "values" => array($orderID)
             ),
             "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
-            // "offset" => 0,
             "limit" => 1,
             "options" => array(
                 "expandSingleRecord" => true
             )
-            // "order" => array(
-            //     "field" => "shop_orders.DateCreated",
-            //     "ordering" => "DESC"
-            // ),
         ));
     }
+
+    static function jsapiShopOrders () {
+        $config = self::jsapiShopOrderEntry(null);
+        $config['condition'] = null;
+        $config["order"] = array(
+            "field" => "shop_orders.DateCreated",
+            "ordering" => "DESC"
+        );
+        $config['options'] = null;
+        $config['limit'] = 0;
+        return $config;
+    }
+
+    static function jsapiShopProfileOrders ($profileID) {
+        $config = self::jsapiShopOrders();
+        $config['condition'] = array(
+            "filter" => "AccountID (=) ?",
+            "values" => array($profileID)
+        );
+        $config["order"] = array(
+            "field" => "shop_orders.ID",
+            "ordering" => "DESC"
+        );
+        return $config;
+    }
+
+    static function jsapiShopSiteOrders () {
+        $config = self::jsapiShopOrders();
+        return $config;
+    }
+
     static function jsapiShopUpdateOrderEntry ($orderID, $data) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "update",
