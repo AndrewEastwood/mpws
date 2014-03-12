@@ -3,7 +3,6 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     'default/js/view/mView',
     'plugin/shop/js/collection/toolbox/listOrders',
     'plugin/shop/js/view/toolbox/orderEntry',
-    // 'plugin/shop/js/view/toolboxOrderItem'
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
     /* lang */
@@ -11,7 +10,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-], function (Sandbox, MView, CollListOrders, ViewOrderEntry, BootstrapDialog, Backgrid, lang) {
+], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, BootstrapDialog, Backgrid, lang) {
 
     Sandbox.eventSubscribe('shop-toolbox-order-edit', function(data){
         var orderEntry = new ViewOrderEntry();
@@ -103,7 +102,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         }
     }];
 
-    var collection = new CollListOrders();
+    var collection = new CollectionListOrders();
 
     var ToolboxListOrdersGrid = new Backgrid.Grid({
       columns: columns,
@@ -130,7 +129,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     });
 
 
-    var ToolboxListOrders = MView.extend({
+    var ListOrders = MView.extend({
         className: 'shop-toolbox-orders',
         initialize: function () {
             var self = this;
@@ -145,6 +144,6 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         }
     });
 
-    return ToolboxListOrders;
+    return ListOrders;
 
 });

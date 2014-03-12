@@ -60,42 +60,42 @@ class pluginShop extends objectPlugin {
             // product standalone item short
             // -----------------------------------------------
             // case "shop_product_item_short" : {
-            //     $data = $this->_api_getProductItem($productID, 'short');
+            //     $data = $this->_api_getEntryProduct($productID, 'short');
             //     break;
             // }
             // product standalone item full
             // -----------------------------------------------
             case "shop_product_item" : {
                 $productID = libraryRequest::getValue('productID');
-                $data = $this->_api_getProductItem($productID);
+                $data = $this->_api_getEntryProduct($productID);
                 break;
             }
             // shopping cart
             // -----------------------------------------------
             case "shop_wishlist" : {
-                $data = $this->_api_shoppingWishList();
+                $data = $this->_api_getListWishes();
                 break;
             }
             case "shop_cart" : {
-                $data = $this->_api_shoppingCart();
+                $data = $this->_api_getShoppingCart();
                 break;
             }
             case "shop_compare" : {
-                $data = $this->_api_productsCompare();
+                $data = $this->_api_getListProductsToCompare();
                 break;
             }
             case "shop_order_status": {
                 $orderHash = libraryRequest::getValue('orderHash');
-                $data = $this->_api_orderStatus($orderHash);
+                $data = $this->_api_getOrderStatus($orderHash);
                 break;
             }
             case "shop_profile_orders": {
                 $profileID = libraryRequest::getValue('profileID');
-                $data = $this->_api_profileOrders($profileID);
+                $data = $this->_api_getListOrders_Profile($profileID);
                 break;
             }
             case "shop_orders_list": {
-                $data = $this->_api_getListOrders();
+                $data = $this->_api_getListOrders_Managed();
                 break;
             }
             case "shop_order_entry": {
@@ -104,10 +104,14 @@ class pluginShop extends objectPlugin {
                 switch ($do) {
                     case 'orderUpdate':
                         // var_dump($do);
-                        $this->_api_updateOrderEntry($orderID);
+                        $this->_api_updateEntryOrder($orderID);
                         break;
                 }
-                $data = $this->_api_getOrderEntry($orderID);
+                $data = $this->_api_getEntryOrder($orderID);
+                break;
+            }
+            case "shop_manage_products": {
+
                 break;
             }
         }
@@ -195,12 +199,6 @@ class pluginShop extends objectPlugin {
 
     // products list recently viewed
     // -----------------------------------------------
-
-    // catalog filtering
-    // // -----------------------------------------------
-    // private function _api_getCatalogFiltering () {
-
-    // }
 
     // shop catalog structure
     // -----------------------------------------------
@@ -414,7 +412,7 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _api_getProductItem ($productID) {
+    private function _api_getEntryProduct ($productID) {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
 
@@ -445,13 +443,13 @@ class pluginShop extends objectPlugin {
 
     // shopping wishlist
     // -----------------------------------------------
-    private function _api_shoppingWishList () {
+    private function _api_getListWishes () {
         return $this->_custom_util_manageStoredProducts('shopWishList');
     }
 
     // shopping products compare
     // -----------------------------------------------
-    private function _api_productsCompare () {
+    private function _api_getListProductsToCompare () {
         $do = libraryRequest::getValue('action');
         $productID = libraryRequest::getValue('productID');
         $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
@@ -467,10 +465,9 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-
     // shopping cart
     // -----------------------------------------------
-    private function _api_shoppingCart () {
+    private function _api_getShoppingCart () {
 
         $sessionKey = 'shopCartProducts';
         $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
@@ -660,7 +657,7 @@ class pluginShop extends objectPlugin {
 
     // orders
     // -----------------------------------------------
-    private function _api_getOrderEntry ($orderID, $addAccountInfo = true) {
+    private function _api_getEntryOrder ($orderID, $addAccountInfo = true) {
         $dataObj = new libraryDataObject();
         $configOrder = configurationShopDataSource::jsapiShopOrderEntry($orderID);
         $dataOrder = $this->getCustomer()->processData($configOrder);
@@ -689,7 +686,7 @@ class pluginShop extends objectPlugin {
 
         if (!empty($boughts))
             foreach ($boughts as $bkey => $soldItem) {
-                $product = $this->_api_getProductItem($soldItem['ProductID']);
+                $product = $this->_api_getEntryProduct($soldItem['ProductID']);
                 if ($product->hasData()) { 
                     $productData = $product->getData();
                     $boughts[$bkey] = array_merge($boughts[$bkey], $productData['products'][$soldItem['ProductID']]);
@@ -707,9 +704,9 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-
     // profile orders
-    private function _api_profileOrders ($profileID) {
+    // -----------------------------------------------
+    private function _api_getListOrders_Profile ($profileID) {
 
         $dataObj = new libraryDataObject();
 
@@ -749,7 +746,8 @@ class pluginShop extends objectPlugin {
     }
 
     // toolbox orders
-    private function _api_orderStatus ($orderHash) {
+    // -----------------------------------------------
+    private function _api_getOrderStatus ($orderHash) {
         // $orderHash
         $dataObj = new libraryDataObject();
 
@@ -761,7 +759,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_getListOrders () {
+    private function _api_getListOrders_Managed () {
         // in toolbox methods we must check it's permission
         // offset
         // limit
@@ -813,8 +811,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-
-    private function _api_updateOrderEntry ($orderID) {
+    private function _api_updateEntryOrder ($orderID) {
         $dataObj = new libraryDataObject();
 
         // get fields to update
@@ -837,12 +834,66 @@ class pluginShop extends objectPlugin {
 
     }
 
+    private function _api_getListProducts_Managed () {
+        // jsapiProductList
+        // in toolbox methods we must check it's permission
+        // offset
+        // limit
+        $dataObj = new libraryDataObject();
+
+        $limit = 2;
+
+        // if (!$this->getCustomer()->getAccess()) {
+        //     $dataObj->setError('AccessDenied');
+        //     return $dataObj;
+        // }
+
+        $configOrders = configurationShopDataSource::jsapiProductList();
+        $configCount = configurationShopDataSource::jsapiShopSiteOrdersCount();
+
+        $configOrders['limit'] = $limit;
+
+        // pagination
+        $page = libraryRequest::getValue('page');
+        $per_page = libraryRequest::getValue('per_page');
+
+        if (!empty($page) && !empty($per_page)) {
+            $configOrders['offset'] = ($page - 1) * $per_page;
+        }
+
+        // sorting
+        $sort = libraryRequest::getValue('sort');
+        $order = libraryRequest::getValue('order');
+
+        if (!empty($sort) && !empty($order)) {
+            $configOrders["order"] = array(
+                "field" =>  'shop_orders' . DOT . $sort,
+                "ordering" => strtoupper($order)
+            );
+        }
+
+        // var_dump($configOrders);
+
+        // set managed customer id
+        $configCount['procedure']['parameters'] = array($this->getCustomer()->getCustomerID());
+
+        // get data
+        $dataOrders = $this->getCustomer()->processData($configOrders);
+        $dataObj->setData('products', $dataOrders);
+
+        $dataCount = $this->getCustomer()->processData($configCount);
+        $dataObj->setData('total_count', $dataCount['OrderCount']);
+
+        return $dataObj;
+    }
 
     // product additional data
     // @products - array with product(s)
     private function _custom_util_getProductAttributes ($products) {
-        if (empty($products))
+
+        if (empty($products)) {
             return null;
+        }
         // list of product ids to fetch related attributes
         $productIDs = array();
 
@@ -955,7 +1006,7 @@ class pluginShop extends objectPlugin {
         if ($do == 'ADD') {
             // create
             if (!isset($products[$productID])) {
-                $productEntry = $this->_api_getProductItem($productID);
+                $productEntry = $this->_api_getEntryProduct($productID);
                 if ($productEntry->hasError()) {
                     $dataObj->setError($productEntry->getError());
                     return $dataObj;

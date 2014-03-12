@@ -32,10 +32,11 @@ define("customer/js/site", [
         CommonWidgetsTop: $('.MPWSWidgetsTop'),
         CommonWidgetsBottom: $('.MPWSWidgetsBottom'),
         CommmonToolboxMenu: $('#toolbox-menu-ID'),
-        CommmonToolboxPage: $('#toolbox-page-ID'),
+        CommmonToolboxPage: $('#toolbox-page-top-ID'),
         /* plugins  */
         /* = plugin shop */
-        ShopListOrders: $('#toolbox-page-ID'),
+        ShopListOrders: $('#toolbox-page-center-ID'),
+        ShopFilteringListOrders: $('#toolbox-page-top-ID'),
     };
 
     var site = new SiteBase(_customerOptions);
