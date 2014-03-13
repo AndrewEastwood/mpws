@@ -10,6 +10,20 @@ define("plugin/shop/js/view/toolbox/menu", [
     var menu = new (MView.extend({
         lang: lang,
         template: tpl,
+        initialize: function () {
+            var self = this;
+            this.on('mview:renderComplete', function () {
+                self.setActive();
+            });
+            Sandbox.eventSubscribe('plugin:shop:toolbox:menu:refresh', function () {
+                self.setActive();
+            });
+        },
+        setActive: function () {
+            this.$('a.list-group-item').removeClass('active');
+            this.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
+            this.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');
+        }
     }))();
     menu.render();
 

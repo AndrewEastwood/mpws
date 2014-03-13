@@ -107,6 +107,11 @@ class objectCustomer {
         //     return 
         // }
 
+        if (glIsToolbox()) {
+            $response->setError('AccessDenied');
+            $response->setData('redirect', 'login');
+            return $response;
+        }
 
         // perform request with plugins
         // if ($p['realm'] == OBJECT_T_PLUGIN) {
@@ -126,6 +131,7 @@ class objectCustomer {
         //     // otherwise proceed with customer
         //     // $response[OBJECT_T_CUSTOMER] = array();
         // }
+
 
         return $response;
 

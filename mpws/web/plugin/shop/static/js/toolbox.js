@@ -27,26 +27,27 @@ define("plugin/shop/js/toolbox", [
         },
 
         products: function () {
-            require(['plugin/shop/js/view/toolbox/listOrders'], function (ListOrders) {
+            require(['plugin/shop/js/view/toolbox/listProducts'], function (ListProducts) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ListOrders', function (cachedView) {
+                Cache.withObject('ListProducts', function (cachedView) {
                     // debugger;
                     // remove previous view
                     if (cachedView && cachedView.remove)
                         cachedView.remove();
 
                     // create new view
-                    var listOrders = new ListOrders();
-                    // Site.placeholders.shop.productListOverview.html(listOrders.el);
-                    listOrders.fetchAndRender();
+                    var listProducts = new ListProducts();
+                    // Site.placeholders.shop.productListOverview.html(listProducts.el);
+                    listProducts.fetchAndRender();
 
                     Sandbox.eventNotify('site:content:render', {
-                        name: 'ShopListOrders',
-                        el: listOrders.$el
+                        name: 'ShopListProducts',
+                        el: listProducts.$el
                     });
 
+                    Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
                     // return view object to pass it into this function at next invocation
-                    return listOrders;
+                    return listProducts;
                 });
             });
         },
@@ -68,10 +69,10 @@ define("plugin/shop/js/toolbox", [
 
                     Sandbox.eventNotify('site:content:render', {
                         name: 'ShopListOrders',
-                        el: listOrders.$el,
-                        append: true
+                        el: listOrders.$el
                     });
 
+                    Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
                     // return view object to pass it into this function at next invocation
                     return listOrders;
                 });
@@ -92,8 +93,7 @@ define("plugin/shop/js/toolbox", [
 
                     Sandbox.eventNotify('site:content:render', {
                         name: 'ShopFilteringListOrders',
-                        el: filteringListOrders.$el,
-                        prepend: true
+                        el: filteringListOrders.$el
                     });
 
                     // return view object to pass it into this function at next invocation
@@ -108,7 +108,7 @@ define("plugin/shop/js/toolbox", [
 
         prices: function () {
             
-        }
+        },
 
     });
 

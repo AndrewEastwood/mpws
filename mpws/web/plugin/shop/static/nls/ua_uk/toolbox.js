@@ -36,6 +36,15 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         // Order entry popup
         orderEntry_Popup_title: "Замовлення #",
         orderEntry_Popup_section_boughts: "Список придбаних товарів:",
-        orderEntry_Popup_button_OK: "Добре"
+        orderEntry_Popup_button_OK: "Добре",
+        // Product list
+        pluginMenu_Products_Grid_Column_Name: "Назва",
+        pluginMenu_Products_Grid_Column_Model: "Модель",
+        pluginMenu_Products_Grid_Column_SKU: "SKU",
+        pluginMenu_Products_Grid_Column_Price: "Ціна",
+        pluginMenu_Products_Grid_Column_Status: "Статус",
+        pluginMenu_Products_Grid_Column_DateUpdated: "Оновлений",
+        pluginMenu_Products_Grid_Column_DateCreated: "Створений",
+        pluginMenu_Products_Grid_Column_Actions: "Операції",
     }, CustomerShop);
 });

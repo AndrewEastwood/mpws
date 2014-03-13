@@ -23,12 +23,15 @@ define("default/js/site", [
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
                 $.xhrPool.push(xhr);
-            },
-            complete: function(jqXHR) {
-                var index = $.xhrPool.indexOf(jqXHR);
-                if (index > -1) {
-                    $.xhrPool.splice(index, 1);
-                }
+                xhr.always(function (data, status, xhr){
+                    var index = $.xhrPool.indexOf(xhr);
+                    if (index > -1) {
+                        $.xhrPool.splice(index, 1);
+                    }
+                    if (data && data.redirect)
+                        Backbone.history.navigate(data.redirect, true);
+                    // if (status === "success")
+                });
             }
         });
 

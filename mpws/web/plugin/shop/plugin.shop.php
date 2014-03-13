@@ -111,7 +111,7 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_manage_products": {
-
+                $data = $this->_api_getListProducts_Managed();
                 break;
             }
         }
@@ -765,7 +765,7 @@ class pluginShop extends objectPlugin {
         // limit
         $dataObj = new libraryDataObject();
 
-        $limit = 2;
+        $limit = 25;
 
         // if (!$this->getCustomer()->getAccess()) {
         //     $dataObj->setError('AccessDenied');
@@ -841,7 +841,7 @@ class pluginShop extends objectPlugin {
         // limit
         $dataObj = new libraryDataObject();
 
-        $limit = 2;
+        $limit = 25;
 
         // if (!$this->getCustomer()->getAccess()) {
         //     $dataObj->setError('AccessDenied');
@@ -849,7 +849,7 @@ class pluginShop extends objectPlugin {
         // }
 
         $configOrders = configurationShopDataSource::jsapiProductList();
-        $configCount = configurationShopDataSource::jsapiShopSiteOrdersCount();
+        $configCount = configurationShopDataSource::jsapiShopProductListCount();
 
         $configOrders['limit'] = $limit;
 
@@ -882,7 +882,7 @@ class pluginShop extends objectPlugin {
         $dataObj->setData('products', $dataOrders);
 
         $dataCount = $this->getCustomer()->processData($configCount);
-        $dataObj->setData('total_count', $dataCount['OrderCount']);
+        $dataObj->setData('total_count', $dataCount['ProductCount']);
 
         return $dataObj;
     }

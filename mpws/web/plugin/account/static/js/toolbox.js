@@ -27,7 +27,10 @@ define("plugin/account/js/toolbox", [
         },
 
         profiles: function () {
-
+            // Sandbox.eventNotify('site:content:render', {
+            //     name: 'AccountLogin',
+            //     el: "gdfgdfgdfgdfgdf"
+            // });
         }
 
     });

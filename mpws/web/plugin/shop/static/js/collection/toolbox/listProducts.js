@@ -1,12 +1,12 @@
-define('plugin/shop/js/collection/toolbox/listOrders', [
+define('plugin/shop/js/collection/toolbox/listProducts', [
     'customer/js/site',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
 ], function (Site, _, PageableCollection) {
 
-    var ListOrders = PageableCollection.extend({
+    var ListProducts = PageableCollection.extend({
 
-        url: Site.getApiLink('shop', 'shop_orders_list'),
+        url: Site.getApiLink('shop', 'shop_manage_products'),
 
         // Initial pagination states
         state: {
@@ -31,11 +31,11 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
         },
 
         parseRecords: function (resp, options) {
-            return resp.shop.orders;
+            return resp.shop.products;
         }
 
     });
 
-    return ListOrders;
+    return ListProducts;
 
 });

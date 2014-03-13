@@ -11,7 +11,7 @@ class configurationShopDataSource extends configurationDefaultDataSource {
                 "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
                 "values" => array("ACTIVE")
             ),
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "additional" => array(
@@ -330,6 +330,19 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopSiteOrdersCount",
+                "parameters" => array()
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiShopProductListCount () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getShopSiteProductsCount",
                 "parameters" => array()
             ),
             "options" => array(
