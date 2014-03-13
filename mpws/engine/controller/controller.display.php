@@ -8,7 +8,7 @@
     // bootstrap
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
-    $layout = glIsToolbox() ? 'toolboxLayout' : 'siteLayout';
+    $layout = glIsToolbox() ? 'toolbox/layout' : 'site/layout';
     // get customer or default index layout
     if (MPWS_ENV === 'DEV') {
         $layoutCustomer = glGetFullPath('web', 'customer', MPWS_CUSTOMER, 'static', 'hbs', $layout . '.hbs');

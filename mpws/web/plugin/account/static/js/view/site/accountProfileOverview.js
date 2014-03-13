@@ -1,8 +1,8 @@
-define("plugin/account/js/view/accountProfileOverview", [
+define("plugin/account/js/view/site/accountProfileOverview", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/accountProfileOverview',
+    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfileOverview',
     /* lang */
     'default/js/plugin/i18n!plugin/account/nls/site'
 ], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {

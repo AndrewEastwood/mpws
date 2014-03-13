@@ -4,7 +4,7 @@ define("plugin/account/js/site", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'plugin/account/js/view/siteMenu',
+    'plugin/account/js/view/site/menu',
     'default/js/lib/cache'
 ], function (Sandbox, Site, $, _, Backbone, SiteMenu, Cache) {
 
@@ -52,7 +52,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            require(['plugin/account/js/view/accountCreate'], function (AccountCreate) {
+            require(['plugin/account/js/view/site/accountCreate'], function (AccountCreate) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountCreate', function (cachedView) {
                     // debugger;
@@ -88,7 +88,7 @@ define("plugin/account/js/site", [
             // this.showProfileToolbar();
 
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/js/view/accountProfileOverview'], function (AccountProfileOverview) {
+                require(['plugin/account/js/view/site/accountProfileOverview'], function (AccountProfileOverview) {
                     // using this wrapper to cleanup previous view and create new one
                     Cache.withObject('AccountProfileOverview', function (cachedView) {
                         // debugger;
@@ -127,7 +127,7 @@ define("plugin/account/js/site", [
             // this.showProfileToolbar();
 
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/js/view/accountProfilePassword'], function (AccountProfilePassword) {
+                require(['plugin/account/js/view/site/accountProfilePassword'], function (AccountProfilePassword) {
                     // using this wrapper to cleanup previous view and create new one
                     Cache.withObject('AccountProfilePassword', function (cachedView) {
                         // debugger;
@@ -163,7 +163,7 @@ define("plugin/account/js/site", [
             // this.showProfileToolbar();
 
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/js/view/accountProfileEdit'], function (AccountProfileEdit) {
+                require(['plugin/account/js/view/site/accountProfileEdit'], function (AccountProfileEdit) {
                     // using this wrapper to cleanup previous view and create new one
                     Cache.withObject('AccountProfileEdit', function (cachedView) {
                         // debugger;
@@ -197,7 +197,7 @@ define("plugin/account/js/site", [
 
             Sandbox.eventNotify('site:breadcrumb:show');
 
-            require(['plugin/account/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
+            require(['plugin/account/js/view/site/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountProfileAddresses', function (cachedView) {
                     // debugger;
@@ -230,7 +230,7 @@ define("plugin/account/js/site", [
 
             Sandbox.eventNotify('site:breadcrumb:show');
 
-            require(['plugin/account/js/view/accountProfileDelete'], function (AccountProfileDelete) {
+            require(['plugin/account/js/view/site/accountProfileDelete'], function (AccountProfileDelete) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountProfileDelete', function (cachedView) {
                     // debugger;
@@ -254,7 +254,7 @@ define("plugin/account/js/site", [
         },
 
         showProfileToolbar: function (pageContent) {
-            require(['plugin/account/js/view/accountProfile'], function (AccountProfile) {
+            require(['plugin/account/js/view/site/accountProfile'], function (AccountProfile) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountProfile', function (cachedView) {
                     // debugger;

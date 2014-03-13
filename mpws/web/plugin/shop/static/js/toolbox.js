@@ -18,9 +18,9 @@ define("plugin/shop/js/toolbox", [
 
         initialize: function () {
             // ToolboxMenu.render();
-            Sandbox.eventSubscribe('site:page:index', function () {
+            Sandbox.eventSubscribe('toolbox:page:index', function () {
                 // debugger;
-                Sandbox.eventNotify('site:breadcrumb:show');
+                Sandbox.eventNotify('toolbox:breadcrumb:show');
                 // Site.addMenuItemLeft('SHOP');
                 // $('#userMenu').append();
             });
@@ -40,7 +40,7 @@ define("plugin/shop/js/toolbox", [
                     // Site.placeholders.shop.productListOverview.html(listProducts.el);
                     listProducts.fetchAndRender();
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('toolbox:content:render', {
                         name: 'ShopListProducts',
                         el: listProducts.$el
                     });
@@ -67,7 +67,7 @@ define("plugin/shop/js/toolbox", [
                     // Site.placeholders.shop.productListOverview.html(listOrders.el);
                     listOrders.fetchAndRender();
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('toolbox:content:render', {
                         name: 'ShopListOrders',
                         el: listOrders.$el
                     });
@@ -91,7 +91,7 @@ define("plugin/shop/js/toolbox", [
                     // Site.placeholders.shop.productListOverview.html(listOrders.el);
                     filteringListOrders.fetchAndRender();
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('toolbox:content:render', {
                         name: 'ShopFilteringListOrders',
                         el: filteringListOrders.$el
                     });

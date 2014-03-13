@@ -4,7 +4,7 @@ define("plugin/account/js/toolbox", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'plugin/account/js/view/toolboxMenu'
+    'plugin/account/js/view/toolbox/menu'
 ], function (Sandbox, Site, $, _, Backbone) {
 
     var Router = Backbone.Router.extend({
@@ -13,12 +13,14 @@ define("plugin/account/js/toolbox", [
         },
 
         initialize: function () {
-            Sandbox.eventSubscribe('site:page:404', function () {
-                $('.MPWSPageBody').html('404');
+            var self = this;
+
+            Sandbox.eventSubscribe('toolbox:page:login', function () {
+                self.login();
             });
 
-            Sandbox.eventSubscribe('site:page:index', function () {
-                // debugger;
+            Sandbox.eventSubscribe('toolbox:page:index', function () {
+                debugger;
                 Sandbox.eventNotify('site:breadcrumb:show');
                 // Site.addMenuItemLeft('PROFILE');
                 // $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
@@ -31,6 +33,10 @@ define("plugin/account/js/toolbox", [
             //     name: 'AccountLogin',
             //     el: "gdfgdfgdfgdfgdf"
             // });
+        },
+
+        login: function () {
+            $('.MPWSPageBody').html('404');
         }
 
     });

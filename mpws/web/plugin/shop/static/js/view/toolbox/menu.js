@@ -30,7 +30,7 @@ define("plugin/shop/js/view/toolbox/menu", [
     // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
         // debugger;
-        Sandbox.eventNotify('site:content:render', {
+        Sandbox.eventNotify('toolbox:content:render', {
             name: 'CommmonToolboxMenu',
             el: menu.$el,
             append: true

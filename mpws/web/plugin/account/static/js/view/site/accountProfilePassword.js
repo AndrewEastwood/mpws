@@ -1,9 +1,9 @@
-define("plugin/account/js/view/accountProfilePassword", [
+define("plugin/account/js/view/site/accountProfilePassword", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'default/js/lib/bootstrap-dialog',
     'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/accountProfilePassword',
+    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfilePassword',
     /* lang */
     'default/js/plugin/i18n!plugin/account/nls/site'
 ], function (Sandbox, MView, BootstrapDialog, ModelAccountInstance, tpl, lang) {

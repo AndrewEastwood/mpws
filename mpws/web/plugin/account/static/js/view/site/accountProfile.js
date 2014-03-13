@@ -1,9 +1,9 @@
-define("plugin/account/js/view/accountProfile", [
+define("plugin/account/js/view/site/accountProfile", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'default/js/lib/backbone',
     'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/accountProfile',
+    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfile',
     /* lang */
     'default/js/plugin/i18n!plugin/account/nls/site'
 ], function (Sandbox, MView, Backbone, ModelAccountInstance, tpl, lang) {

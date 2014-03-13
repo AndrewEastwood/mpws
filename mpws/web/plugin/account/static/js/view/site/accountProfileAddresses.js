@@ -1,11 +1,11 @@
-define("plugin/account/js/view/accountProfileAddresses", [
+define("plugin/account/js/view/site/accountProfileAddresses", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/handlebars',
     'default/js/view/mView',
     'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/accountProfileAddresses',
+    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfileAddresses',
     'default/js/plugin/text!plugin/account/hbs/partials/accountAddress.hbs',
     /* lang */
     'default/js/plugin/i18n!plugin/account/nls/site',

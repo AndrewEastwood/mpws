@@ -1,9 +1,9 @@
-define("plugin/account/js/view/accountProfileEdit", [
+define("plugin/account/js/view/site/accountProfileEdit", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/view/mView',
     'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/accountProfileEdit',
+    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfileEdit',
     /* lang */
     'default/js/plugin/i18n!plugin/account/nls/site',
     'default/js/lib/bootstrap-editable'

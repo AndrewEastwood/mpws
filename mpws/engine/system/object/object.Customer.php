@@ -83,15 +83,21 @@ class objectCustomer {
         $publicKey = libraryRequest::getValue('token');
         $source = libraryRequest::getValue('source');
 
-        if (empty($source))
-            throw new Exception('objectCustomer => getResponse: wrong source value', $source);
+        if (empty($source)) {
+            $response->setError('WrongSource');
+            return $response;
+        }
 
-        if (!isset($this->plugins[$source]))
-            throw new Exception('objectCustomer => getResponse: source is not allowed', $source);
+        if (!isset($this->plugins[$source])) {
+            $response->setError('UnknownSource');
+            return $response;
+        }
 
         // check page token
-        if (empty($publicKey))
+        if (empty($publicKey)) {
+            $response->setError('WrongToken');
             return $response;
+        }
 
         // // check request realm
         // if (empty($p['realm']))
@@ -109,7 +115,7 @@ class objectCustomer {
 
         if (glIsToolbox()) {
             $response->setError('AccessDenied');
-            $response->setData('redirect', 'login');
+            $response->setData('redirect', '/toolbox/#login');
             return $response;
         }
 

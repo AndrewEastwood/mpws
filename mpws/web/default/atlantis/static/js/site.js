@@ -29,7 +29,7 @@ define("default/js/site", [
                         $.xhrPool.splice(index, 1);
                     }
                     if (data && data.redirect)
-                        Backbone.history.navigate(data.redirect, true);
+                        window.location = data.redirect;
                     // if (status === "success")
                 });
             }
@@ -59,26 +59,27 @@ define("default/js/site", [
                 // "*nothing": "unknown",
             },
             index: function () {
-                // debugger;
-                Sandbox.eventNotify('site:page:index');
+                debugger;
+                Sandbox.eventNotify(_site.realm + ':page:index');
             },
             login: function () {
                 // debugger;
-                Sandbox.eventNotify('site:page:login');
+                Sandbox.eventNotify(_site.realm + ':page:login');
             },
             logout: function () {
                 // debugger;
-                Sandbox.eventNotify('site:page:logout');
+                Sandbox.eventNotify(_site.realm + ':page:logout');
             },
             unknown: function () {
                 // debugger;
-                Sandbox.eventNotify('site:page:404');
+                Sandbox.eventNotify(_site.realm + ':page:404');
             }
         });
 
         var defaultRouter = new Router();
 
         var _site = {
+            realm: app.config.ISTOOLBOX ? 'toolbox' : 'site',
             placeholders: _placeholders,
             config: app.config,
             options: options,
@@ -133,7 +134,7 @@ define("default/js/site", [
             }
         }
 
-        Sandbox.eventSubscribe('site:content:render', function (options) {
+        Sandbox.eventSubscribe(_site.realm + ':content:render', function (options) {
             if (_.isArray(options))
                 _(options).each(function(option){
                     _site.render(option);
