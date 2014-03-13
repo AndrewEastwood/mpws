@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 13, 2014 at 02:42 AM
+-- Generation Time: Mar 14, 2014 at 12:23 AM
 -- Server version: 5.5.35-0ubuntu0.12.04.2
 -- PHP Version: 5.3.10-1ubuntu3.9
 
@@ -193,6 +193,33 @@ INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsTemporary`, `FirstName`, `La
 (79, 1, 0, 'Test', 'Demo', 'demo@demo.com5', '097-56-56-201', '24d04aa3d61423fb9dae48ac4d7567d5', 'b74c7e4ec4dc62728ee5a2195a8605b2', 'ACTIVE', '2014-03-01 14:38:46', '2014-03-09 23:52:24'),
 (80, 1, 1, 'tset', '', 'tset', 'ttset', '4a123a551c46b3a7a2e1b6b76e7d69c9', 'f5046014417bd9c1098e0f29bd5abf59', 'ACTIVE', '2014-03-01 14:45:03', '2014-03-01 14:45:03'),
 (81, 1, 1, '', '', '', '', '4a123a551c46b3a7a2e1b6b76e7d69c9', '23fcad34643fa6b3c4d9765778498f21', 'ACTIVE', '2014-03-01 14:45:14', '2014-03-01 14:45:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mpws_admins`
+--
+
+DROP TABLE IF EXISTS `mpws_admins`;
+CREATE TABLE IF NOT EXISTS `mpws_admins` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Login` varchar(300) NOT NULL,
+  `Password` varchar(300) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID` (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `mpws_admins`
+--
+
+INSERT INTO `mpws_admins` (`ID`, `CustomerID`, `Login`, `Password`, `Status`, `DateUpdated`, `DateCreated`) VALUES
+(1, 1, 'main', '81dc9bdb52d04dc20036dbd8313ed055', 'ACTIVE', '2014-03-13 00:00:00', '2014-03-13 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -787,6 +814,12 @@ ALTER TABLE `mpws_accountAddresses`
 --
 ALTER TABLE `mpws_accounts`
   ADD CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `mpws_admins`
+--
+ALTER TABLE `mpws_admins`
+  ADD CONSTRAINT `mpws_admins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `mpws_jobs`
