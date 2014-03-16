@@ -105,7 +105,7 @@ class objectCustomer {
 
         if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
             // if (md5(configurationCustomerDatabase::$MasterJsApiKey) !== $publicKey)
-            $response->setError('Invalid public token key');
+            $response->setError('InvalidPublicTokenKey');
             return $response;
         }
 

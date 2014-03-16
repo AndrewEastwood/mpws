@@ -68,6 +68,8 @@
     }
 
     function glIsToolbox () {
+        if (!in_array("toolbox", configurationCustomerDisplay::$Plugins))
+            return false;
         return preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']) > 0;
         //if (!$getManagedCustomerName && )
           //  $customerName = 'toolbox';
