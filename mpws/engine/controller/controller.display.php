@@ -52,7 +52,6 @@
     $responce = str_replace("{{MPWS_CUSTOMER}}", MPWS_CUSTOMER, $responce);
     $responce = str_replace("{{PATH_STATIC}}", $staticPath, $responce);
 
-
     // TODO: save output into file
     // and reuse it when production mode is on
 

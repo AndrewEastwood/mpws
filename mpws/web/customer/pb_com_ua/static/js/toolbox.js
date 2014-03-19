@@ -62,13 +62,13 @@ define("customer/js/site", [
             template: 'default/js/plugin/hbs!customer/hbs/toolbox/breadcrumb'
         });
 
-        Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {
+        Sandbox.eventSubscribe('toolbox:breadcrumb:show', function (options) {
             _views.breadcrumb.fetchAndRender(options);
         });
     });
 
 
-    Sandbox.eventSubscribe('site:page:login', function () {
+    Sandbox.eventSubscribe('toolbox:page:login', function () {
         
     });
 

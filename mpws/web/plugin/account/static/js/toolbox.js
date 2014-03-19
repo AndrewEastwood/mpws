@@ -20,8 +20,8 @@ define("plugin/account/js/toolbox", [
             });
 
             Sandbox.eventSubscribe('toolbox:page:index', function () {
-                debugger;
-                Sandbox.eventNotify('site:breadcrumb:show');
+                // debugger;
+                Sandbox.eventNotify('toolbox:breadcrumb:show');
                 // Site.addMenuItemLeft('PROFILE');
                 // $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
             });

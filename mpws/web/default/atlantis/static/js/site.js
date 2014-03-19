@@ -48,6 +48,7 @@ define("default/js/site", [
             $('body').attr('class', "MPWSPage");
             if (_hashTags && _hashTags[0])
                 $('body').addClass("Page" + _hashTags[0].ucWords());
+            Sandbox.eventNotify('route', window.location.hash);
         });
         $(window).trigger('hashchange');
 
@@ -59,7 +60,7 @@ define("default/js/site", [
                 // "*nothing": "unknown",
             },
             index: function () {
-                debugger;
+                // debugger;
                 Sandbox.eventNotify(_site.realm + ':page:index');
             },
             login: function () {
