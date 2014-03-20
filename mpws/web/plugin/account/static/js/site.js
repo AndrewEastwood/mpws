@@ -4,9 +4,9 @@ define("plugin/account/js/site", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'default/js/lib/cache',
     'plugin/account/js/view/site/menu',
-    'default/js/lib/cache'
-], function (Sandbox, Site, $, _, Backbone, SiteMenu, Cache) {
+], function (Sandbox, Site, $, _, Backbone, Cache) {
 
     Sandbox.eventSubscribe('account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
@@ -37,7 +37,6 @@ define("plugin/account/js/site", [
             // debugger;
             var self = this;
 
-            // SiteMenu.render();
             Sandbox.eventSubscribe('account:profile:show', function(pageContent) {
                 self.showProfileToolbar(pageContent);
             });
