@@ -34,12 +34,14 @@ define("customer/js/site", [
         CommmonToolboxMenu: $('#toolbox-menu-ID'),
         CommmonToolboxPage: $('#toolbox-page-top-ID'),
         /* plugins  */
-        /* = plugin account */
-        AccountLogin: $('#toolbox-page-center-ID'),
-        /* = plugin shop */
-        ShopListOrders: $('#toolbox-page-center-ID'),
-        ShopFilteringListOrders: $('#toolbox-page-top-ID'),
-        ShopListProducts: $('#toolbox-page-center-ID'),
+        /* = plugin toolbox */
+        PageHolder: $('.MPWSPageBody .MPWSBlockCenter'),
+        // /* = plugin account */
+        // AccountLogin: $('#toolbox-page-center-ID'),
+        // /* = plugin shop */
+        // ShopListOrders: $('#toolbox-page-center-ID'),
+        // ShopFilteringListOrders: $('#toolbox-page-top-ID'),
+        // ShopListProducts: $('#toolbox-page-center-ID'),
     };
 
     var site = new SiteBase(_customerOptions);

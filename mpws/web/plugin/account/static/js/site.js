@@ -276,7 +276,6 @@ define("plugin/account/js/site", [
                         el: accountProfile.el
                     });
 
-
                     // return view object to pass it into this function at next invocation
                     return accountProfile;
                 });
