@@ -28,7 +28,7 @@ define("plugin/account/js/view/toolbox/menu", [
     // return MenuCompare;
     // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
-        Sandbox.eventNotify('toolbox:content:render', {
+        Sandbox.eventNotify('global:content:render', {
             name: 'CommmonToolboxMenu',
             el: toolboxMenuAccount.$el,
             append: true

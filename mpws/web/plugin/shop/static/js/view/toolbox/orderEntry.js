@@ -42,7 +42,7 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
                     source: $.makeArray(source),
                     success: function (data) {
                         // debugger;
-                        Sandbox.eventNotify('shop-toolbox-orderList-refresh');
+                        Sandbox.eventNotify('plugin:shop:orderList:refresh');
                         self.model.set(self.model.parse.call(self.model, data));
                     }
                 });

@@ -1,4 +1,4 @@
-define("customer/nls/ua_uk/shop_toolbox", [
+define("customer/nls/ua_uk/shop_site", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
     'customer/nls/ua_uk/shop_logistics',

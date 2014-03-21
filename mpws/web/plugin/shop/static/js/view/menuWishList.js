@@ -10,7 +10,7 @@ define("plugin/shop/js/view/menuWishList", [
         template: tpl,
         initialize: function () {
             var _self = this;
-            Sandbox.eventSubscribe('shop:wishlist:info', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:wishlist:info', function (data) {
                 var _count = data && data.products && data.products.length || 0;
                 if (_count)
                     _self.$('.counter').text(_count);

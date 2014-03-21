@@ -15,13 +15,13 @@ define("plugin/account/js/toolbox", [
         initialize: function () {
             var self = this;
 
-            Sandbox.eventSubscribe('toolbox:page:login', function () {
+            Sandbox.eventSubscribe('global:page:login', function () {
                 self.login();
             });
 
-            Sandbox.eventSubscribe('toolbox:page:index', function () {
+            Sandbox.eventSubscribe('global:page:index', function () {
                 // debugger;
-                Sandbox.eventNotify('toolbox:breadcrumb:show');
+                Sandbox.eventNotify('global:breadcrumb:show');
                 // Site.addMenuItemLeft('PROFILE');
                 // $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
             });

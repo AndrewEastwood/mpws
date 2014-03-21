@@ -1,17 +1,18 @@
 <?php
 
-class pluginShop extends objectPlugin {
+class pluginToolbox extends objectPlugin {
 
     public function getResponse () {
 
-        $data = null;
+        // $data = null;
 
-        switch(libraryRequest::getValue('fn')) {
-            case "gfgdgd":
-                break;
-        }
-        // attach to output
-        return $data;
+        // switch(libraryRequest::getValue('fn')) {
+        //     case "gfgdgd":
+        //         break;
+        // }
+        // // attach to output
+        // return $data;
+        return false;
     }
 }
 

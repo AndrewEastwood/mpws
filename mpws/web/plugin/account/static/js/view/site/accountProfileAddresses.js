@@ -29,7 +29,7 @@ define("plugin/account/js/view/site/accountProfileAddresses", [
 
             this.listenTo(this.model, "change", this.render);
 
-            Sandbox.eventSubscribe("account:address:remove", function (data) {
+            Sandbox.eventSubscribe("plugin:account:address:remove", function (data) {
                 if (data.id)
                     self.model.removeAddress(data.id);
                 else
@@ -37,7 +37,7 @@ define("plugin/account/js/view/site/accountProfileAddresses", [
                 self.$("#account-address-add-btn-ID").removeClass('hide');
             });
 
-            Sandbox.eventSubscribe("account:address:save", function (data) {
+            Sandbox.eventSubscribe("plugin:account:address:save", function (data) {
                 var _addressBlock = $(data.event.target).parents('table.account-profile-address-entry');
                 if (data.id)
                     self.model.updateAddress(data.id, _addressBlock.find('.editable').editable('getValue'));

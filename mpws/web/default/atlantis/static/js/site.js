@@ -48,7 +48,7 @@ define("default/js/site", [
             $('body').attr('class', "MPWSPage");
             if (_hashTags && _hashTags[0])
                 $('body').addClass("Page" + _hashTags[0].ucWords());
-            Sandbox.eventNotify('route', window.location.hash);
+            Sandbox.eventNotify('global:route', window.location.hash);
         });
         $(window).trigger('hashchange');
 
@@ -61,19 +61,19 @@ define("default/js/site", [
             },
             index: function () {
                 // debugger;
-                Sandbox.eventNotify(_site.realm + ':page:index');
+                Sandbox.eventNotify('global:page:index');
             },
             login: function () {
                 // debugger;
-                Sandbox.eventNotify(_site.realm + ':page:login');
+                Sandbox.eventNotify('global:page:login');
             },
             logout: function () {
                 // debugger;
-                Sandbox.eventNotify(_site.realm + ':page:logout');
+                Sandbox.eventNotify('global:page:logout');
             },
             unknown: function () {
                 // debugger;
-                Sandbox.eventNotify(_site.realm + ':page:404');
+                Sandbox.eventNotify('global:page:404');
             }
         });
 
@@ -135,7 +135,7 @@ define("default/js/site", [
             }
         }
 
-        Sandbox.eventSubscribe(_site.realm + ':content:render', function (options) {
+        Sandbox.eventSubscribe('global:content:render', function (options) {
             if (_.isArray(options))
                 _(options).each(function(option){
                     _site.render(option);

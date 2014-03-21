@@ -2,7 +2,7 @@
     {{#mpwsIsNotEmpty data.products }}
     <div class="well">
         <div class="actions">
-            <a href="javascript://" data-action="shop:compare:clear" data-id="{{ID}}">
+            <a href="javascript://" data-action="plugin:shop:compare:clear" data-id="{{ID}}">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>
         </div>
@@ -14,10 +14,10 @@
                 {{#each data.products }}
                 <td>
                     <div class="panel">
-                        <a href="javascript://" class="shop-product-remove" data-action="shop:compare:remove" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:compare:remove" data-id="{{ID}}">
                             <i class="fa fa-trash-o"></i>
                         </a>
-                        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:add" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:cart:add" data-id="{{ID}}">
                             <i class="fa fa-shopping-cart"></i>
                         </a>
                     </div>
@@ -85,10 +85,10 @@
                 {{#each data.products }}
                 <td>
                     <div class="panel">
-                        <a href="javascript://" class="shop-product-remove" data-action="shop:compare:remove" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:compare:remove" data-id="{{ID}}">
                             <i class="fa fa-trash-o"></i>
                         </a>
-                        <a href="javascript://" class="shop-product-remove" data-action="shop:cart:add" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:cart:add" data-id="{{ID}}">
                             <i class="fa fa-shopping-cart"></i>
                         </a>
                     </div>
@@ -99,7 +99,7 @@
     </div>
     <div class="well">
         <div class="actions">
-            <a href="javascript://" data-action="shop:compare:clear" data-id="{{ID}}">
+            <a href="javascript://" data-action="plugin:shop:compare:clear" data-id="{{ID}}">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>
         </div>

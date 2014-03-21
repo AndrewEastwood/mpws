@@ -14,7 +14,7 @@ define("plugin/shop/js/view/siteWidgets", [
     cartEmbedded.fetchAndRender();
 
     Sandbox.eventSubscribe('global:loader:complete', function () {
-        Sandbox.eventNotify('site:content:render', [
+        Sandbox.eventNotify('global:content:render', [
             {
                 name: 'ShopWidgetOrderStatusButton',
                 el: orderTrackingButton.$el,

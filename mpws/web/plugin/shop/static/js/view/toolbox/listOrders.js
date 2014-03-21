@@ -133,7 +133,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         className: 'shop-toolbox-orders',
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe("shop-toolbox-orderList-refresh", function () {
+            Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
                 self.render();
             });
         },

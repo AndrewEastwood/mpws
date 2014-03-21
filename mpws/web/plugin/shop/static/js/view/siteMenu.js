@@ -43,7 +43,7 @@ define("plugin/shop/js/view/siteMenu", [
     // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
         // placeholders.common.menu
-        Sandbox.eventNotify('site:content:render', [
+        Sandbox.eventNotify('global:content:render', [
             {
                 name: 'CommonMenuLeft',
                 el: menuCatalog.$el,

@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <a href="javascript://" class="shop-product-remove" data-action="shop:cart:remove" data-id="{{ID}}">
+    <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:cart:remove" data-id="{{ID}}">
         <i class="fa fa-trash-o"></i>
     </a>
     <div class="shop-product-image shop-product-image-main">
@@ -11,9 +11,9 @@
         <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
         <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
         <span class="label label-default">x</span>
-        <a class="productQuantityAction productQuantityAdd" data-action="shop:cart:add" data-id="{{ID}}" href="javascript://"><i class="fa fa-plus"></i></a>
+        <a class="productQuantityAction productQuantityAdd" data-action="plugin:shop:cart:add" data-id="{{ID}}" href="javascript://"><i class="fa fa-plus"></i></a>
         <span class="label label-warning product-quantity">{{Quantity}}</span>
-        <a class="productQuantityAction productQuantitySub" data-action="shop:cart:sub" data-id="{{ID}}" href="javascript://"><i class="fa fa-minus"></i></a>
+        <a class="productQuantityAction productQuantitySub" data-action="plugin:shop:cart:sub" data-id="{{ID}}" href="javascript://"><i class="fa fa-minus"></i></a>
         <span class="label label-default">=</span>
         <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
     </div>

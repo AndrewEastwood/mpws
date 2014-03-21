@@ -80,22 +80,22 @@ define("plugin/shop/js/view/cartStandalone", [
 
             });
 
-            Sandbox.eventSubscribe('shop:cart:save', function () {
+            Sandbox.eventSubscribe('plugin:shop:cart:save', function () {
                 self.model.checkout(self.collectUserInfo());
             });
 
-            Sandbox.eventSubscribe('account:status:received', function (data) {
+            Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
                 // debugger;
                 self.model.setExtras('account', data);
             });
-            Sandbox.eventSubscribe('account:signed:in', function (data) {
+            Sandbox.eventSubscribe('plugin:account:signed:in', function (data) {
                 // debugger;
                 // console.log('shop account:in', data);
                 self.model.setExtras('account', data);
                 $.cookie("shopUser", null);
                 self.model.trigger('change');
             });
-            Sandbox.eventSubscribe('account:signed:out', function (data) {
+            Sandbox.eventSubscribe('plugin:account:signed:out', function (data) {
                 // debugger;
                 // console.log('shop account:out', data);
                 self.model.removeExtras('account');
@@ -103,7 +103,7 @@ define("plugin/shop/js/view/cartStandalone", [
                 self.model.trigger('change');
             });
 
-            Sandbox.eventNotify('account:status');
+            Sandbox.eventNotify('plugin:account:status');
 
         },
         collectUserInfo: function () {

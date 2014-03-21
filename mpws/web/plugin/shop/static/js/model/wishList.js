@@ -10,7 +10,7 @@ define("plugin/shop/js/model/wishList", [
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
-        //     'shop:WishList:add': 'productAdd'
+        //     'plugin:shop:WishList:add': 'productAdd'
         // },
         source: 'shop',
         fn: 'shop_wishlist',
@@ -21,23 +21,23 @@ define("plugin/shop/js/model/wishList", [
             // debugger;
             // MModel.prototype.initialize.call(this);
 
-            Sandbox.eventSubscribe('shop:wishlist:add', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:wishlist:add', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productAdd(data.id);
             });
-            Sandbox.eventSubscribe('shop:wishlist:remove', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:wishlist:remove', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productRemove(data.id);
             });
-            Sandbox.eventSubscribe('shop:wishlist:clear', function () {
+            Sandbox.eventSubscribe('plugin:shop:wishlist:clear', function () {
                 // debugger;
                 _self.clearAll();
             });
 
             this.on('change', function () {
-                Sandbox.eventNotify('shop:wishlist:info', _self.toJSON());
+                Sandbox.eventNotify('plugin:shop:wishlist:info', _self.toJSON());
             });
 
             // debugger;

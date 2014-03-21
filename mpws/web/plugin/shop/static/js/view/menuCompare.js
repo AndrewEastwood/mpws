@@ -10,7 +10,7 @@ define("plugin/shop/js/view/menuCompare", [
         template: tpl,
         initialize: function () {
             var _self = this;
-            Sandbox.eventSubscribe('shop:compare:info', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:compare:info', function (data) {
                 var _count = data && data.products && data.products.length || 0;
                 if (_count)
                     _self.$('.counter').text(_count);

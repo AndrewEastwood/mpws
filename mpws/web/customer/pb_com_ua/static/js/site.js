@@ -75,7 +75,7 @@ define("customer/js/site", [
             template: 'default/js/plugin/hbs!customer/hbs/site/breadcrumb'
         });
 
-        Sandbox.eventSubscribe('site:breadcrumb:show', function (options) {
+        Sandbox.eventSubscribe('global:breadcrumb:show', function (options) {
             _views.breadcrumb.fetchAndRender(options);
         });
     });

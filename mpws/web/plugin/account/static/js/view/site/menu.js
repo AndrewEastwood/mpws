@@ -26,7 +26,7 @@ define("plugin/account/js/view/site/menu", [
     //     render: function () {
             // debugger;
     Sandbox.eventSubscribe('global:loader:complete', function () {
-        Sandbox.eventNotify('site:content:render', [
+        Sandbox.eventNotify('global:content:render', [
             {
                 name: 'CommonMenuRight',
                 el: menuSignUp.$el,

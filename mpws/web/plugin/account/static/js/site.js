@@ -8,14 +8,14 @@ define("plugin/account/js/site", [
     'plugin/account/js/view/site/menu',
 ], function (Sandbox, Site, $, _, Backbone, Cache) {
 
-    Sandbox.eventSubscribe('account:signed:out', function() {
+    Sandbox.eventSubscribe('plugin:account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
             Backbone.history.navigate("", {trigger: true});
         else
             Backbone.history.loadUrl(Backbone.history.fragment);
     });
 
-    Sandbox.eventSubscribe('account:signed:in', function() {
+    Sandbox.eventSubscribe('plugin:account:signed:in', function() {
         if (Cache.getObject('AccountProfileID') && 
             (Backbone.history.fragment === "" || Backbone.history.fragment.match(/^account/))
         ) {
@@ -37,14 +37,14 @@ define("plugin/account/js/site", [
             // debugger;
             var self = this;
 
-            Sandbox.eventSubscribe('account:profile:show', function(pageContent) {
+            Sandbox.eventSubscribe('plugin:account:profile:show', function(pageContent) {
                 self.showProfileToolbar(pageContent);
             });
         },
 
         create: function () {
 
-            Sandbox.eventNotify('site:breadcrumb:show');
+            Sandbox.eventNotify('global:breadcrumb:show');
 
             if (Cache.hasObject('AccountProfileID')) {
                 Backbone.history.navigate("account/profile", {trigger: true});
@@ -62,7 +62,7 @@ define("plugin/account/js/site", [
                     // create new view
                     var accountCreate = new AccountCreate();
                     // Site.placeholders.account.pageProfileCreate.html(accountCreate.el);
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'AccountProfileCreate',
                         el: accountCreate.el
                     });
@@ -81,7 +81,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            Sandbox.eventNotify('site:breadcrumb:show');
+            Sandbox.eventNotify('global:breadcrumb:show');
 
             var self = this;
             // this.showProfileToolbar();
@@ -102,7 +102,7 @@ define("plugin/account/js/site", [
                         accountProfileOverview.fetchAndRender({
                             action: 'status'
                         });
-                        // Sandbox.eventNotify('site:content:render', {
+                        // Sandbox.eventNotify('global:content:render', {
                         //     name: 'AccountProfileOverview',
                         //     el: accountProfileOverview.el
                         // });
@@ -120,7 +120,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            Sandbox.eventNotify('site:breadcrumb:show');
+            Sandbox.eventNotify('global:breadcrumb:show');
 
             var self = this;
             // this.showProfileToolbar();
@@ -156,7 +156,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            Sandbox.eventNotify('site:breadcrumb:show');
+            Sandbox.eventNotify('global:breadcrumb:show');
 
             var self = this;
             // this.showProfileToolbar();
@@ -194,7 +194,7 @@ define("plugin/account/js/site", [
 
             var self = this;
 
-            Sandbox.eventNotify('site:breadcrumb:show');
+            Sandbox.eventNotify('global:breadcrumb:show');
 
             require(['plugin/account/js/view/site/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // using this wrapper to cleanup previous view and create new one
@@ -227,7 +227,7 @@ define("plugin/account/js/site", [
 
             var self = this;
 
-            Sandbox.eventNotify('site:breadcrumb:show');
+            Sandbox.eventNotify('global:breadcrumb:show');
 
             require(['plugin/account/js/view/site/accountProfileDelete'], function (AccountProfileDelete) {
                 // using this wrapper to cleanup previous view and create new one
@@ -270,7 +270,7 @@ define("plugin/account/js/site", [
                     accountProfile.fetchAndRender({
                         action: 'status'
                     });
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'AccountProfile',
                         el: accountProfile.el
                     });

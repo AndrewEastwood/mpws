@@ -15,8 +15,8 @@ define("plugin/account/js/model/account", [
             // debugger;
             this.getStatus();
 
-            // Sandbox.eventSubscribe('account:signout', _.bind(this.doLogout, this));
-            Sandbox.eventSubscribe('account:status', _.bind(this.getStatus, this));
+            // Sandbox.eventSubscribe('plugin:account:signout', _.bind(this.doLogout, this));
+            Sandbox.eventSubscribe('plugin:account:status', _.bind(this.getStatus, this));
         },
         getStatus: function (options) {
             var self = this;
@@ -28,7 +28,7 @@ define("plugin/account/js/model/account", [
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:status:received', _data.profile);
+                Sandbox.eventNotify('plugin:account:status:received', _data.profile);
             });
         },
         doLogin: function (data) {
@@ -42,7 +42,7 @@ define("plugin/account/js/model/account", [
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:signed:in', _data.profile);
+                Sandbox.eventNotify('plugin:account:signed:in', _data.profile);
             });
         },
         doLogout: function () {
@@ -56,7 +56,7 @@ define("plugin/account/js/model/account", [
                 Cache.setObject('AccountProfileID', null);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:signed:out', null);
+                Sandbox.eventNotify('plugin:account:signed:out', null);
             });
         },
         editProfile: function (data) {
@@ -69,7 +69,7 @@ define("plugin/account/js/model/account", [
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:profile:updated', _data);
+                Sandbox.eventNotify('plugin:account:profile:updated', _data);
             });
         },
         addAddress: function (data) {
@@ -82,7 +82,7 @@ define("plugin/account/js/model/account", [
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:profile:address:added', _data);
+                Sandbox.eventNotify('plugin:account:profile:address:added', _data);
             });
         },
         updateAddress: function (AddressID, data) {
@@ -96,7 +96,7 @@ define("plugin/account/js/model/account", [
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:profile:address:updated', _data);
+                Sandbox.eventNotify('plugin:account:profile:address:updated', _data);
             });
         },
         removeAddress: function (AddressID) {
@@ -108,7 +108,7 @@ define("plugin/account/js/model/account", [
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:profile:address:removed', _data);
+                Sandbox.eventNotify('plugin:account:profile:address:removed', _data);
             });
         },
         changePassword: function (password, confirmation) {
@@ -124,7 +124,7 @@ define("plugin/account/js/model/account", [
                 var _data = self.extractModelDataFromRespce(responce);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('account:profile:password:updated', _data);
+                Sandbox.eventNotify('plugin:account:profile:password:updated', _data);
             });
         }
 

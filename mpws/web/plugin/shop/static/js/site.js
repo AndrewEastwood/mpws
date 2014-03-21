@@ -31,18 +31,18 @@ define("plugin/shop/js/site", [
 
             // SiteWidgets.render();
 
-            Sandbox.eventSubscribe('site:page:index', function () {
+            Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();
             });
 
-            Sandbox.eventSubscribe('shop:offers:get', function () {
+            Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
                 self.offers();
             });
         },
 
         offers: function () {
 
-            // Sandbox.eventNotify('site:content:render', {
+            // Sandbox.eventNotify('global:content:render', {
             //     name: 'ShopOffers',
             //     el: $('<h1>Offers Goes here</h1>')
             // });
@@ -51,7 +51,7 @@ define("plugin/shop/js/site", [
 
         home: function () {
 
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -71,7 +71,7 @@ define("plugin/shop/js/site", [
                     // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
                     listProductLatest.fetchAndRender();
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopListProductLatest',
                         el: listProductLatest.el
                     });
@@ -86,7 +86,7 @@ define("plugin/shop/js/site", [
         shop_catalog_category: function (categoryID) {
 
             // debugger;
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -108,7 +108,7 @@ define("plugin/shop/js/site", [
                     // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
                     listProductCatalog.fetchAndRender();
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopListProductCatalog',
                         el: listProductCatalog.el
                     });
@@ -121,7 +121,7 @@ define("plugin/shop/js/site", [
 
         shop_catalog: function (categoryID) {
 
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -132,7 +132,7 @@ define("plugin/shop/js/site", [
 
         shop_product: function (productID) {
 
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: productID,
@@ -155,7 +155,7 @@ define("plugin/shop/js/site", [
                         productID: productID
                     });
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopProductItemStandalone',
                         el: productItemFull.el
                     });
@@ -167,7 +167,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_compare: function () {
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -188,7 +188,7 @@ define("plugin/shop/js/site", [
                         action: "INFO"
                     });
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopProductCompare',
                         el: productsCompare.el
                     });
@@ -199,7 +199,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_cart: function () {
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -218,7 +218,7 @@ define("plugin/shop/js/site", [
                     cartStandalone.fetchAndRender({
                         action: "INFO"
                     });
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopCartStandalone',
                         el: cartStandalone.el
                     });
@@ -230,7 +230,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_wishlist: function () {
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -249,7 +249,7 @@ define("plugin/shop/js/site", [
                     wishListStandalone.fetchAndRender({
                         action: "INFO"
                     });
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopWishList',
                         el: wishListStandalone.el
                     });
@@ -261,7 +261,7 @@ define("plugin/shop/js/site", [
         },
 
         shop_tracking: function (orderHash) {
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -287,7 +287,7 @@ define("plugin/shop/js/site", [
                     else
                         trackingStatus.fetchAndRender();
 
-                    Sandbox.eventNotify('site:content:render', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopOrdertrackingStandalone',
                         el: trackingStatus.el
                     });
@@ -310,7 +310,7 @@ define("plugin/shop/js/site", [
                 return;
             }
 
-            Sandbox.eventNotify('site:breadcrumb:show', {
+            Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
                 fn: 'shop_location',
                 productID: null,
@@ -331,7 +331,7 @@ define("plugin/shop/js/site", [
                         profileID: Cache.getObject('AccountProfileID')
                     });
 
-                    Sandbox.eventNotify('account:profile:show', profileOrders.$el);
+                    Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
 
                     // return view object to pass it into this function at next invocation
                     return profileOrders;
