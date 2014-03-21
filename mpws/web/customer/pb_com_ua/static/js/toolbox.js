@@ -36,6 +36,8 @@ define("customer/js/site", [
         /* plugins  */
         /* = plugin toolbox */
         PageHolder: $('.MPWSPageBody .MPWSBlockCenter'),
+        SignIn: $('.MPWSPageBody .MPWSBlockCenter'),
+        SignOut: $('.MPWSPageBody .MPWSBlockCenter'),
         // /* = plugin account */
         // AccountLogin: $('#toolbox-page-center-ID'),
         // /* = plugin shop */
@@ -67,11 +69,6 @@ define("customer/js/site", [
         Sandbox.eventSubscribe('global:breadcrumb:show', function (options) {
             _views.breadcrumb.fetchAndRender(options);
         });
-    });
-
-
-    Sandbox.eventSubscribe('global:page:login', function () {
-        
     });
 
     // this object will be passed into all enabled plugins

@@ -119,8 +119,8 @@ class configurationShopDataSource extends configurationDefaultDataSource {
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(
-                "filter" => "ProductID (IN) (?)",
-                "values" => array()
+                "filter" => "Status (=) ? + ProductID (IN) (?)",
+                "values" => array('ACTIVE')
             ),
             "fields" => array(
                 "ProductID",

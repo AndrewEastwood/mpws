@@ -1,6 +1,6 @@
 define("default/js/lib/cache", function (){
 
-    var _cache = {};
+    var _cache = sessionStorage || {};
 
     function Cache () {}
 

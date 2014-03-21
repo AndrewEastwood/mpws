@@ -1,15 +1,15 @@
-define("plugin/account/js/view/site/pageHolder", [
+define("plugin/toolbox/js/view/bridge", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'default/js/lib/backbone',
-    'plugin/account/js/model/pageHolder',
-    'default/js/plugin/hbs!plugin/account/hbs/toolbox/pageHolder',
+    'plugin/toolbox/js/model/bridge',
+    'default/js/plugin/hbs!plugin/toolbox/hbs/toolbox/bridge',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site'
+    'default/js/plugin/i18n!plugin/toolbox/nls/toolbox'
 ], function (Sandbox, MView, Backbone, ModelToolboxInstance, tpl, lang) {
 
     var AccountProfile = MView.extend({
-        viewName: 'AccountProfile',
+        viewName: 'AdminProfile',
         // className: 'col-sm-3 col-md-3',
         template: tpl,
         lang: lang,
