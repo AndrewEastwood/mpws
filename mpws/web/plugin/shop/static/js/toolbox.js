@@ -17,13 +17,22 @@ define("plugin/shop/js/toolbox", [
         },
 
         initialize: function () {
+            var self = this;
             // ToolboxMenu.render();
             Sandbox.eventSubscribe('global:page:index', function () {
                 // debugger;
-                Sandbox.eventNotify('global:breadcrumb:show');
+                // Sandbox.eventNotify('global:breadcrumb:show');
                 // Site.addMenuItemLeft('SHOP');
                 // $('#userMenu').append();
+                self.dashboard();
             });
+        },
+
+        dashboard: function () {
+                    Sandbox.eventNotify('plugin:toolbox:page:show', {
+                        name: 'ShopDashboard',
+                        el: $('<div>').text('34 New Orders')
+                    });
         },
 
         products: function () {
@@ -40,7 +49,7 @@ define("plugin/shop/js/toolbox", [
                     // Site.placeholders.shop.productListOverview.html(listProducts.el);
                     listProducts.fetchAndRender();
 
-                    Sandbox.eventNotify('global:content:render', {
+                    Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopListProducts',
                         el: listProducts.$el
                     });
@@ -67,7 +76,7 @@ define("plugin/shop/js/toolbox", [
                     // Site.placeholders.shop.productListOverview.html(listOrders.el);
                     listOrders.fetchAndRender();
 
-                    Sandbox.eventNotify('global:content:render', {
+                    Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopListOrders',
                         el: listOrders.$el
                     });
@@ -91,7 +100,7 @@ define("plugin/shop/js/toolbox", [
                     // Site.placeholders.shop.productListOverview.html(listOrders.el);
                     filteringListOrders.fetchAndRender();
 
-                    Sandbox.eventNotify('global:content:render', {
+                    Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopFilteringListOrders',
                         el: filteringListOrders.$el
                     });

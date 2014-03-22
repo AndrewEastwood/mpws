@@ -19,9 +19,11 @@ define("plugin/toolbox/js/toolbox", [
         initialize: function () {
             var self = this;
 
-            Sandbox.eventSubscribe('plugin:toolbox:status:received', function () {
+            Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
                 // debugger;
                 // Sandbox.eventNotify('global:breadcrumb:show');
+                if (!status)
+                    Backbone.history.navigate('signin', true);
             });
             // Sandbox.eventSubscribe('toolbox:page:login', function () {
             //     self.login();
@@ -42,6 +44,7 @@ define("plugin/toolbox/js/toolbox", [
             Sandbox.eventSubscribe('plugin:toolbox:page:show', function (page) {
                 // debugger;
                 // Sandbox.eventNotify('global:breadcrumb:show');
+                // debugger;
                 self.showToolboxPage(page);
             });
 
@@ -59,7 +62,7 @@ define("plugin/toolbox/js/toolbox", [
 
         signin: function () {
             var self = this;
-            require(['plugin/toolbox/js/view/toolbox/signin'], function (SignIn) {
+            require(['plugin/toolbox/js/view/signin'], function (SignIn) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('SignIn', function (cachedView) {
                     // debugger;
@@ -69,10 +72,6 @@ define("plugin/toolbox/js/toolbox", [
 
                     // create new view
                     var signin = new SignIn();
-                    // Site.placeholders.account.pageProfile.html(pageHolder.el);
-                    signin.on('mview:renderComplete', function () {
-                        signin.setPagePlaceholder(pageContent);
-                    });
                     signin.fetchAndRender({
                         action: 'status'
                     });
@@ -89,7 +88,7 @@ define("plugin/toolbox/js/toolbox", [
 
         signout: function () {
             var self = this;
-            require(['plugin/toolbox/js/view/toolbox/signout'], function (SignOut) {
+            require(['plugin/toolbox/js/view/signout'], function (SignOut) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('SignOut', function (cachedView) {
                     // debugger;
@@ -99,16 +98,8 @@ define("plugin/toolbox/js/toolbox", [
 
                     // create new view
                     var signout = new SignOut();
-                    // Site.placeholders.account.pageProfile.html(signout.el);
-                    signout.on('mview:renderComplete', function () {
-                        signout.setPagePlaceholder(pageContent);
-                    });
                     signout.fetchAndRender({
-                        action: 'status'
-                    });
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'SignOut',
-                        el: signout.el
+                        action: 'signout'
                     });
 
                     // return view object to pass it into this function at next invocation
@@ -118,7 +109,7 @@ define("plugin/toolbox/js/toolbox", [
         },
 
         showToolboxPage: function (pageContent) {
-            require(['plugin/toolbox/js/view/toolbox/bridge'], function (PageHolder) {
+            require(['plugin/toolbox/js/view/bridge'], function (PageHolder) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('PageHolder', function (cachedView) {
                     // debugger;
