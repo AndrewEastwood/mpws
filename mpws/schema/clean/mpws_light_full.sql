@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 14, 2014 at 12:23 AM
+-- Generation Time: Mar 22, 2014 at 07:51 PM
 -- Server version: 5.5.35-0ubuntu0.12.04.2
 -- PHP Version: 5.3.10-1ubuntu3.9
 
@@ -193,33 +193,6 @@ INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsTemporary`, `FirstName`, `La
 (79, 1, 0, 'Test', 'Demo', 'demo@demo.com5', '097-56-56-201', '24d04aa3d61423fb9dae48ac4d7567d5', 'b74c7e4ec4dc62728ee5a2195a8605b2', 'ACTIVE', '2014-03-01 14:38:46', '2014-03-09 23:52:24'),
 (80, 1, 1, 'tset', '', 'tset', 'ttset', '4a123a551c46b3a7a2e1b6b76e7d69c9', 'f5046014417bd9c1098e0f29bd5abf59', 'ACTIVE', '2014-03-01 14:45:03', '2014-03-01 14:45:03'),
 (81, 1, 1, '', '', '', '', '4a123a551c46b3a7a2e1b6b76e7d69c9', '23fcad34643fa6b3c4d9765778498f21', 'ACTIVE', '2014-03-01 14:45:14', '2014-03-01 14:45:14');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mpws_admins`
---
-
-DROP TABLE IF EXISTS `mpws_admins`;
-CREATE TABLE IF NOT EXISTS `mpws_admins` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `Login` varchar(300) NOT NULL,
-  `Password` varchar(300) NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID` (`ID`),
-  KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `mpws_admins`
---
-
-INSERT INTO `mpws_admins` (`ID`, `CustomerID`, `Login`, `Password`, `Status`, `DateUpdated`, `DateCreated`) VALUES
-(1, 1, 'main', '81dc9bdb52d04dc20036dbd8313ed055', 'ACTIVE', '2014-03-13 00:00:00', '2014-03-13 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -619,6 +592,7 @@ CREATE TABLE IF NOT EXISTS `shop_productAttributes` (
   `ProductID` int(11) NOT NULL,
   `Attribute` enum('IMAGE','LABEL','OTHER','ISBN','MANUFACTURER','EXPIRE','TAGS') COLLATE utf8_bin NOT NULL,
   `Value` text COLLATE utf8_bin,
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   PRIMARY KEY (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `CustomerID` (`CustomerID`)
@@ -628,30 +602,30 @@ CREATE TABLE IF NOT EXISTS `shop_productAttributes` (
 -- Dumping data for table `shop_productAttributes`
 --
 
-INSERT INTO `shop_productAttributes` (`ID`, `CustomerID`, `ProductID`, `Attribute`, `Value`) VALUES
-(1, 1, 4, 'LABEL', 'test'),
-(2, 1, 4, 'TAGS', 'wash device'),
-(3, 1, 5, 'TAGS', 'light bulb'),
-(4, 1, 5, 'LABEL', 'smth elese'),
-(5, 1, 4, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(6, 1, 5, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(7, 1, 6, 'IMAGE', 'http://cmsresources.windowsphone.com/windowsphone/en-gb/Phones/Lumia820/Phone280x280.png'),
-(8, 1, 7, 'IMAGE', 'http://www.hp-laptops.org/wp-content/uploads/2011/12/HP-Probook-5330m-Images.jpg'),
-(9, 1, 8, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(10, 1, 9, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(11, 1, 10, 'IMAGE', 'http://blogs.independent.co.uk/wp-content/uploads/2013/01/ubuntu-for-phones.jpg'),
-(12, 1, 11, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(13, 1, 12, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg'),
-(14, 1, 6, 'LABEL', 'smth elese'),
-(15, 1, 7, 'LABEL', 'smth elese'),
-(16, 1, 4, 'IMAGE', 'http://jomax-international.com/files/products/images/LCD-3.jpg'),
-(17, 1, 4, 'IMAGE', 'http://www2.hull.ac.uk/student/images/lcd-tv.jpg'),
-(18, 1, 4, 'IMAGE', 'http://www.magnet.ru/pictures/17-662-201306151235480.jpg'),
-(19, 1, 4, 'IMAGE', 'http://www.nine220volts.com/images/22LH20R.jpg'),
-(20, 1, 4, 'IMAGE', 'http://img.elmir.ua/img/243547/3000/2000/monitor_lcd_22_philips_224e5qsb_01.jpg'),
-(21, 1, 4, 'IMAGE', 'http://i00.i.aliimg.com/photo/v3/485808738/FHD_1080p_42_inch_lcd_tv_led.jpg'),
-(22, 1, 4, 'IMAGE', 'http://img1.elmir.ua/img/235695/1960/1280/monitor_lcd_23_samsung_s23c570hs_ls23c570hs.jpg'),
-(23, 1, 4, 'IMAGE', 'http://www.blogcdn.com/www.engadget.com/media/2010/07/acer-s1-lcd-monitor.jpg');
+INSERT INTO `shop_productAttributes` (`ID`, `CustomerID`, `ProductID`, `Attribute`, `Value`, `Status`) VALUES
+(1, 1, 4, 'LABEL', 'test', 'ACTIVE'),
+(2, 1, 4, 'TAGS', 'wash device', 'ACTIVE'),
+(3, 1, 5, 'TAGS', 'light bulb', 'ACTIVE'),
+(4, 1, 5, 'LABEL', 'smth elese', 'ACTIVE'),
+(5, 1, 4, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg', 'ACTIVE'),
+(6, 1, 5, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg', 'ACTIVE'),
+(7, 1, 6, 'IMAGE', 'http://cmsresources.windowsphone.com/windowsphone/en-gb/Phones/Lumia820/Phone280x280.png', 'ACTIVE'),
+(8, 1, 7, 'IMAGE', 'http://www.hp-laptops.org/wp-content/uploads/2011/12/HP-Probook-5330m-Images.jpg', 'ACTIVE'),
+(9, 1, 8, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg', 'ACTIVE'),
+(10, 1, 9, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg', 'ACTIVE'),
+(11, 1, 10, 'IMAGE', 'http://blogs.independent.co.uk/wp-content/uploads/2013/01/ubuntu-for-phones.jpg', 'ACTIVE'),
+(12, 1, 11, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg', 'ACTIVE'),
+(13, 1, 12, 'IMAGE', 'http://www.informetop.com/wp-content/uploads/2012/06/TV-LCD.jpg', 'ACTIVE'),
+(14, 1, 6, 'LABEL', 'smth elese', 'ACTIVE'),
+(15, 1, 7, 'LABEL', 'smth elese', 'ACTIVE'),
+(16, 1, 4, 'IMAGE', 'http://jomax-international.com/files/products/images/LCD-3.jpg', 'REMOVED'),
+(17, 1, 4, 'IMAGE', 'http://www2.hull.ac.uk/student/images/lcd-tv.jpg', 'ACTIVE'),
+(18, 1, 4, 'IMAGE', 'http://www.magnet.ru/pictures/17-662-201306151235480.jpg', 'ACTIVE'),
+(19, 1, 4, 'IMAGE', 'http://www.nine220volts.com/images/22LH20R.jpg', 'ACTIVE'),
+(20, 1, 4, 'IMAGE', 'http://img.elmir.ua/img/243547/3000/2000/monitor_lcd_22_philips_224e5qsb_01.jpg', 'ACTIVE'),
+(21, 1, 4, 'IMAGE', 'http://i00.i.aliimg.com/photo/v3/485808738/FHD_1080p_42_inch_lcd_tv_led.jpg', 'ACTIVE'),
+(22, 1, 4, 'IMAGE', 'http://img1.elmir.ua/img/235695/1960/1280/monitor_lcd_23_samsung_s23c570hs_ls23c570hs.jpg', 'ACTIVE'),
+(23, 1, 4, 'IMAGE', 'http://www.blogcdn.com/www.engadget.com/media/2010/07/acer-s1-lcd-monitor.jpg', 'ACTIVE');
 
 -- --------------------------------------------------------
 
@@ -799,6 +773,33 @@ CREATE TABLE IF NOT EXISTS `shop_specifications` (
 INSERT INTO `shop_specifications` (`ID`, `CustomerID`, `Name`, `Fields`, `DateCreated`, `DateUpdated`) VALUES
 (1, 0, 'TV', 'Screen\\r\\nDPI', '2013-08-27 02:25:05', '2013-08-27 02:25:05');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `toolbox_admins`
+--
+
+DROP TABLE IF EXISTS `toolbox_admins`;
+CREATE TABLE IF NOT EXISTS `toolbox_admins` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Login` varchar(300) NOT NULL,
+  `Password` varchar(300) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID` (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `toolbox_admins`
+--
+
+INSERT INTO `toolbox_admins` (`ID`, `CustomerID`, `Login`, `Password`, `Status`, `DateUpdated`, `DateCreated`) VALUES
+(1, 1, 'main', '4a123a551c46b3a7a2e1b6b76e7d69c9', 'ACTIVE', '2014-03-13 00:00:00', '2014-03-13 00:00:00');
+
 --
 -- Constraints for dumped tables
 --
@@ -814,12 +815,6 @@ ALTER TABLE `mpws_accountAddresses`
 --
 ALTER TABLE `mpws_accounts`
   ADD CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Constraints for table `mpws_admins`
---
-ALTER TABLE `mpws_admins`
-  ADD CONSTRAINT `mpws_admins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `mpws_jobs`
@@ -927,6 +922,12 @@ ALTER TABLE `shop_relations`
 --
 ALTER TABLE `shop_specifications`
   ADD CONSTRAINT `shop_specifications_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `toolbox_admins`
+--
+ALTER TABLE `toolbox_admins`
+  ADD CONSTRAINT `toolbox_admins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
