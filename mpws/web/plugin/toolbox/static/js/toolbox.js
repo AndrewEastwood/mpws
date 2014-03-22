@@ -25,6 +25,9 @@ define("plugin/toolbox/js/toolbox", [
                 if (!status)
                     Backbone.history.navigate('signin', true);
             });
+            Sandbox.eventSubscribe('plugin:toolbox:signed:out', function (status) {
+                Backbone.history.navigate('signin', true);
+            });
             // Sandbox.eventSubscribe('toolbox:page:login', function () {
             //     self.login();
             // });
@@ -72,9 +75,7 @@ define("plugin/toolbox/js/toolbox", [
 
                     // create new view
                     var signin = new SignIn();
-                    signin.fetchAndRender({
-                        action: 'status'
-                    });
+
                     Sandbox.eventNotify('global:content:render', {
                         name: 'SignIn',
                         el: signin.el
@@ -98,9 +99,6 @@ define("plugin/toolbox/js/toolbox", [
 
                     // create new view
                     var signout = new SignOut();
-                    signout.fetchAndRender({
-                        action: 'signout'
-                    });
 
                     // return view object to pass it into this function at next invocation
                     return signout;
