@@ -35,7 +35,7 @@ define("customer/js/site", [
         CommmonToolboxPage: $('#toolbox-page-top-ID'),
         /* plugins  */
         /* = plugin toolbox */
-        PageHolder: $('.MPWSPageBody .MPWSBlockCenter'),
+        Bridge: $('.MPWSPageBody .MPWSBlockCenter'),
         SignIn: $('.MPWSPageBody .MPWSBlockCenter'),
         SignOut: $('.MPWSPageBody .MPWSBlockCenter'),
         // /* = plugin account */

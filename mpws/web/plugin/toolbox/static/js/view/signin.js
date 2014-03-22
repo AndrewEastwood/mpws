@@ -13,10 +13,30 @@ define("plugin/toolbox/js/view/signin", [
         template: tpl,
         lang: lang,
         model: ModelAccountInstance,
+        events: {
+            "submit .form": 'doSignIn',
+            "click #accountProfileSignOutID": 'doSignOut',
+        },
         initialize: function () {
             this.model.clearErrors();
             this.model.clearStates();
-        }
+        },
+        doSignIn: function () {
+            this.model.doLogin(this.collectCredentials());
+            return false;
+        },
+        doSignOut: function () {
+            this.model.doLogout();
+            return false;
+        },
+        collectCredentials: function () {
+            var self = this;
+            return {
+                email: self.$('#signinEmail').val(),
+                password: self.$('#signinPassword').val(),
+                remember: self.$('#signinRemember').is(':checked')
+            }
+        },
     });
 
     return SignIn;

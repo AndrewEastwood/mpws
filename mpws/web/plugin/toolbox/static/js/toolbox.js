@@ -20,9 +20,9 @@ define("plugin/toolbox/js/toolbox", [
             var self = this;
 
             Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
-                // debugger;
+                debugger;
                 // Sandbox.eventNotify('global:breadcrumb:show');
-                if (!status)
+                if (!status && Backbone.history.fragment !== "signin")
                     Backbone.history.navigate('signin', true);
             });
             Sandbox.eventSubscribe('plugin:toolbox:signed:out', function (status) {
@@ -64,18 +64,19 @@ define("plugin/toolbox/js/toolbox", [
         // },
 
         signin: function () {
+            debugger;
             var self = this;
             require(['plugin/toolbox/js/view/signin'], function (SignIn) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('SignIn', function (cachedView) {
-                    // debugger;
+                    debugger;
                     // remove previous view
                     if (cachedView && cachedView.remove)
                         cachedView.remove();
 
                     // create new view
                     var signin = new SignIn();
-
+                    signin.render();
                     Sandbox.eventNotify('global:content:render', {
                         name: 'SignIn',
                         el: signin.el
@@ -99,7 +100,7 @@ define("plugin/toolbox/js/toolbox", [
 
                     // create new view
                     var signout = new SignOut();
-
+                    signout.render();
                     // return view object to pass it into this function at next invocation
                     return signout;
                 });
@@ -107,30 +108,28 @@ define("plugin/toolbox/js/toolbox", [
         },
 
         showToolboxPage: function (pageContent) {
-            require(['plugin/toolbox/js/view/bridge'], function (PageHolder) {
+            require(['plugin/toolbox/js/view/bridge'], function (Bridge) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('PageHolder', function (cachedView) {
+                Cache.withObject('Bridge', function (cachedView) {
                     // debugger;
                     // remove previous view
                     if (cachedView && cachedView.remove)
                         cachedView.remove();
 
                     // create new view
-                    var pageHolder = new PageHolder();
-                    // Site.placeholders.account.pageProfile.html(pageHolder.el);
-                    pageHolder.on('mview:renderComplete', function () {
-                        pageHolder.setPagePlaceholder(pageContent);
+                    var bridge = new Bridge();
+                    // Site.placeholders.account.pageProfile.html(bridge.el);
+                    bridge.on('mview:renderComplete', function () {
+                        bridge.setPagePlaceholder(pageContent);
                     });
-                    pageHolder.fetchAndRender({
-                        action: 'status'
-                    });
+                    bridge.render();
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'PageHolder',
-                        el: pageHolder.el
+                        name: 'Bridge',
+                        el: bridge.el
                     });
 
                     // return view object to pass it into this function at next invocation
-                    return pageHolder;
+                    return bridge;
                 });
             });
         }

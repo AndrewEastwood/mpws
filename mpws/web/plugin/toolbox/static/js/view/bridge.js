@@ -10,7 +10,6 @@ define("plugin/toolbox/js/view/bridge", [
 
     var AccountProfile = MView.extend({
         viewName: 'AdminProfile',
-        // className: 'col-sm-3 col-md-3',
         template: tpl,
         lang: lang,
         model: ModelToolboxInstance,
@@ -49,10 +48,10 @@ define("plugin/toolbox/js/view/bridge", [
             return _item;
         },
         getModuleMenu: function () {
-            return this.$('#collapseModules .list-group');
+            return this.$('#toolbox-menu-ID');
         },
         getPagePlaceholder: function () {
-            return this.$('.account-page-placeholder');
+            return this.$('#toolbox-page-ID');
         },
         setPagePlaceholder: function (page) {
             this.getPagePlaceholder().html(page);

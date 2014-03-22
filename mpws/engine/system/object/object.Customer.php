@@ -32,6 +32,7 @@ class objectCustomer {
             // save plugin instance
             $this->plugins[$pluginName] = new $pluginObjectName($this);
         }
+        $this->customerInfo = $this->getCustomerInfo();
     }
 
     public function getCustomerID () {
@@ -40,7 +41,7 @@ class objectCustomer {
     }
 
     public function getCustomerInfo () {
-        // if (empty($this->customerInfo)) {
+        if (empty($this->customerInfo)) {
         //     if (glIsToolbox())
         //         $config = configurationCustomerDataSource::jsapiGetCustomer();
         //     // elseif (/* unmanaged session */)
@@ -48,7 +49,7 @@ class objectCustomer {
         //     else
             $config = configurationCustomerDataSource::jsapiGetCustomer();
             $this->customerInfo = $this->getDataBase()->getData($config);
-        // }
+        }
         return $this->customerInfo;
     }
 
@@ -57,7 +58,13 @@ class objectCustomer {
     }
 
     public function processData ($config) {
+            // echo 123400;
+        // echo 111111;
+        // var_dump($config);
         $customerInfo = $this->getCustomerInfo();
+
+        // var_dump($customerInfo);
+
         if (empty($config["condition"]["filter"])) {
             $config["condition"]["filter"] = "CustomerID (=) ?";
             $config["condition"]["values"] = array($customerInfo['ID']);
@@ -75,11 +82,7 @@ class objectCustomer {
 
     public function getResponse () {
 
-        // $response = array();
         $response = new libraryDataObject();
-
-        // $p = libraryRequest::getApiParam();
-        // $caller = libraryRequest::getApiCaller();
         $publicKey = libraryRequest::getValue('token');
         $source = libraryRequest::getValue('source');
 
@@ -99,80 +102,23 @@ class objectCustomer {
             return $response;
         }
 
-        // // check request realm
-        // if (empty($p['realm']))
-        //     return $response;
-
         if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
-            // if (md5(configurationCustomerDatabase::$MasterJsApiKey) !== $publicKey)
             $response->setError('InvalidPublicTokenKey');
             return $response;
         }
 
-        // if (libraryRequest::getValue('fn') === "configuration") {
-        //     return 
-        // }
+        // if ($source == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
+        //     throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
 
-
-        // perform request with plugins
-        // if ($p['realm'] == OBJECT_T_PLUGIN) {
-            if ($source == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
-                throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
-
-            if ($source == '*')
-                foreach ($this->plugins as $key => $plugin)
-                    $response->setData($key, $plugin->getResponse()->toNative());
-            elseif (isset($this->plugins[$source])) {
-                $plugin = $this->plugins[$source];
-                $response->setData($source, $plugin->getResponse()->toNative());
-            }
-        // }
-
-        // if ($p['realm'] == OBJECT_T_CUSTOMER) {
-        //     // otherwise proceed with customer
-        //     // $response[OBJECT_T_CUSTOMER] = array();
-        // }
-
+        if ($source == '*')
+            foreach ($this->plugins as $key => $plugin)
+                $response->setData($key, $plugin->getResponse()->toNative());
+        elseif (isset($this->plugins[$source])) {
+            $plugin = $this->plugins[$source];
+            $response->setData($source, $plugin->getResponse()->toNative());
+        }
 
         return $response;
-
-
-        // $p = libraryRequest::getApiParam();
-        // $caller = libraryRequest::getApiCaller();
-
-        // if (empty($caller))
-        //     throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wrong caller value', $caller);
-        
-        // // check page token
-        // if (empty($publicKey))
-        //     return;
-        
-        // if (!libraryRequest::getOrValidatePageSecurityToken($p['token'])) {
-        //     // page token is wrong
-        //     // try to verify master key
-        //     // echo 'try to verify master key: ' . $this->objectConfiguration_customer_masterJsApiKey;
-        //     //echo '<br> ' . md5($this->objectConfiguration_customer_masterJsApiKey);
-        //     //echo '<br>token: ' . $p['token'];
-
-        //     if (md5($this->objectConfiguration_customer_masterJsApiKey) !== $p['token'])
-        //         return;
-        // }
-
-        // // echo '2 Caller is ' . $caller, $p['realm'];
-        // //echo print_r($p, true);
-        // // perform request with plugins
-        // if (!empty($p['realm']) && $p['realm'] == OBJECT_T_PLUGIN) {
-        //     // check if wide js api is allowed
-        //     if ($p['realm'] == '*' && !$this->objectConfiguration_customer_allowWideJsApi)
-        //         throw new Exception('objectBaseWeb => _jsapiTriggerAsCustomer: wide api js request is not allowed');
-        //     // perform request with plugins
-        //     // echo 'OLOLOLOLO = ' . $caller . DOG . 'jsapi:default', 'Toolbox';
-        //     // return $ctx->directProcess($caller . DOG . 'jsapi:default', 'Toolbox');
-        // } else {
-        //     // echo 'ASDF';
-        //     // otherwise proceed with customer
-        // }
-        // return false;
     }
 
     public function addAccount ($dataAccount) {
@@ -188,7 +134,7 @@ class objectCustomer {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
         return $this->getDataBase()->getLastInsertId();
     }
 
@@ -197,7 +143,7 @@ class objectCustomer {
             $password = $this->getAccountPassword($password);
         $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
         // var_dump($config);
-        $profile = $this->getDataBase()->getData($config);
+        $profile = $this->processData($config);
         if (isset($profile['ID']))
             $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
         return $profile;
@@ -205,13 +151,13 @@ class objectCustomer {
 
     public function getAccountByID ($id) {
         $config = configurationCustomerDataSource::jsapiGetAccountByID($id);
-        $profile = $this->getDataBase()->getData($config);
+        $profile = $this->processData($config);
         return $profile;
     }
 
     public function activateAccount ($ValidationString) {
         $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
     }
 
     public function removeAccount ($dataAccount) {
@@ -223,7 +169,7 @@ class objectCustomer {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
     }
 
     public function updateAccount ($dataAccount) {
@@ -237,7 +183,7 @@ class objectCustomer {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
     }
 
     public function updateAccountPassword ($dataAccount) {
@@ -251,7 +197,7 @@ class objectCustomer {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
         return $dataAccount['Password'];
     }
 
@@ -264,17 +210,17 @@ class objectCustomer {
         // if (!$this->isAccountSignedIn() && !$force)
         //     return false;
         $config = configurationCustomerDataSource::jsapiGetAccountAddresses($AccountID);
-        return $this->getDataBase()->getData($config);
+        return $this->processData($config);
     }
 
     public function getAccountAddress ($AccountID, $AddressID) {
         $config = configurationCustomerDataSource::jsapiGetAccountAddress($AccountID, $AddressID);
-        return $this->getDataBase()->getData($config);
+        return $this->processData($config);
     }
 
     public function getAddress ($AddressID) {
         $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
-        return $this->getDataBase()->getData($config);
+        return $this->processData($config);
     }
 
     public function addAccountAddress ($address) {
@@ -286,7 +232,7 @@ class objectCustomer {
             "values" => array_values($address)
         );
         // var_dump($config);
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
         return $this->getDataBase()->getLastInsertId();
     }
 
@@ -303,13 +249,13 @@ class objectCustomer {
             "values" => array_values($address)
         );
         // var_dump($config);
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
     }
 
     public function removeAccountAddress ($AccountID, $AddressID) {
         $config = configurationCustomerDataSource::jsapiRemoveAccountAddress($AccountID, $AddressID);
         // var_dump($config);
-        $this->getDataBase()->getData($config);
+        $this->processData($config);
     }
 
     public function hasPlugin ($pluginName) {

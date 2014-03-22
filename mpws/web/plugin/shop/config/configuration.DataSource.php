@@ -1,6 +1,6 @@
 <?php
 
-class configurationShopDataSource extends configurationDefaultDataSource {
+class configurationShopDataSource extends objectConfiguration {
 
     // Product base configuration >>>>>
     static function jsapiProductItem () {

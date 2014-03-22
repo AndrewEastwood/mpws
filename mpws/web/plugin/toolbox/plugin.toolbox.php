@@ -36,12 +36,19 @@ class pluginToolbox extends objectPlugin {
         return $data;
     }
 
+    private function getAdminAccount ($email, $password) {
+        $passwordS = $this->getCustomer()->getAccountPassword($password);
+        // var_dump($passwordS);
+        $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $passwordS);
+        return $this->getCustomer()->processData($config);
+    }
+
     private function isAccountSignedIn () {
-        if (isset($_COOKIE['username']) && isset($_COOKIE['password']) && isset($_SESSION['Toolbox:ProfileID']))
+        if (isset($_COOKIE['tu']) && isset($_COOKIE['tp']) && isset($_SESSION['Toolbox:ProfileID']))
             return true;
         else {
-            setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
-            setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
+            setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
+            setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
             unset($_SESSION['Toolbox:ProfileID']);
             return false;
         }
@@ -55,7 +62,7 @@ class pluginToolbox extends objectPlugin {
 
     private function getActiveProfile ($newPassword = false) {
         if ($this->isAccountSignedIn())
-            return $this->getCustomer()->getAccount($_COOKIE['username'], !empty($newPassword) ? $newPassword : $_COOKIE['password'], false);
+            return $this->getAdminAccount($_COOKIE['tu'], !empty($newPassword) ? $newPassword : $_COOKIE['tp'], false);
         else
             return null;
     }
@@ -78,7 +85,7 @@ class pluginToolbox extends objectPlugin {
             return $accountObj;
         }
 
-        $account = $this->getCustomer()->getAccount($credentials['email'], $credentials['password']);
+        $account = $this->getAdminAccount($credentials['email'], $credentials['password']);
 
         if (empty($account))
             $accountObj->setError('WrongCredentials');
@@ -88,13 +95,13 @@ class pluginToolbox extends objectPlugin {
             // keep user logged in
             if ($credentials['remember']) {
                 /* Set cookie to last 1 year */
-                setcookie('username', $credentials['email'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
-                setcookie('password', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+                setcookie('tu', $credentials['email'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+                setcookie('tp', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
             
             } else {
                 /* Cookie expires when browser closes */
-                setcookie('username', $credentials['email'], false, '/', $_SERVER['SERVER_NAME']);
-                setcookie('password', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
+                setcookie('tu', $credentials['email'], false, '/', $_SERVER['SERVER_NAME']);
+                setcookie('tp', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
             }
 
             $_SESSION['Toolbox:ProfileID'] = $account['ID'];
@@ -112,8 +119,8 @@ class pluginToolbox extends objectPlugin {
 
     private function _custom_api_signout () {
         $accountObj = new libraryDataObject();
-        setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
-        setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
+        setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
+        setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
         unset($_SESSION['Toolbox:ProfileID']);
         $accountObj->setData('profile', null);
         return $accountObj;

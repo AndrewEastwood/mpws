@@ -24,19 +24,11 @@ define("plugin/shop/js/view/siteMenu", [
     var menuCompare = new MenuCompare();
     menuCompare.render();
 
+    // inject into account page shop menu items
     var menuProfileOrders = new MenuProfileOrders();
     menuProfileOrders.render();
 
-    // Sandbox.eventSubscribe('view:AccountMenu', function (view) {
-    //     if (!view.model.has('profile'))
-    //         return;
-
-    //     view.addMenuItem(menuProfileOrders.$el);
-    // });
-
     Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-        // if (!view.model.has('profile'))
-        //     return;
         view.addModuleMenuItem(menuProfileOrders.$el.find('a').clone());
     });
 

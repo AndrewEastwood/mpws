@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"s",
+				"signin"
+			],
+			[
+				"A",
+				"ACTIVE"
+			],
+			[
+				"f",
+				"function"
+			],
+			[
 				"_api_getM",
 				"_api_getListProducts_Managed"
 			],
@@ -296,10 +308,6 @@
 				"fun	Function"
 			],
 			[
-				"f",
-				"fragment"
-			],
-			[
 				"is_",
 				"is_array"
 			],
@@ -351,6 +359,54 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "web/plugin/toolbox/static/js/toolbox.js",
+			"settings":
+			{
+				"buffer_size": 5045,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/toolbox/static/js/view/signout.js",
+			"settings":
+			{
+				"buffer_size": 512,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/toolbox/static/js/view/signin.js",
+			"settings":
+			{
+				"buffer_size": 671,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/toolbox/static/js/model/bridge.js",
+			"settings":
+			{
+				"buffer_size": 2331,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/shop/static/js/toolbox.js",
+			"settings":
+			{
+				"buffer_size": 4676,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web/plugin/toolbox/plugin.toolbox.php",
+			"settings":
+			{
+				"buffer_size": 4034,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -392,8 +448,23 @@
 	},
 	"file_history":
 	[
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/site/menu.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/hbs/toolbox/signin.hbs",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/js/model/bridge.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/js/view/bridge.js",
+		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/toolbox.js",
+		"/devdata/Develop/github/web/mpws/engine/system/object/object.Customer.php",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/nls/ua_uk/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/nls/en_us/site.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/nls/en_us/toolbox.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/nls/ua_uk/toolbox.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/nls/toolbox.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/nls/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/toolbox/menu.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/site/menu.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
+		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/lib/cache.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/js/lib/auth.js",
+		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/site/cartStandalone.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/cartStandalone.js",
@@ -403,7 +474,6 @@
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/nls/ua_uk/shop_toolbox.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/nls/ua_uk/shop_site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/plugin.toolbox.php",
-		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/partials/wishProductList.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/partials/cartProductItem.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/site/productItemFull.hbs",
@@ -411,7 +481,6 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/hbs/site/productsCompare.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/site.js",
 		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/site.js",
-		"/devdata/Develop/github/web/mpws/web/customer/pb_com_ua/static/js/toolbox.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/loader.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/toolbox.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/siteWidgets.js",
@@ -438,7 +507,6 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/hbs/toolbox/pageHolder.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/plugin.shop.php",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.display.php",
-		"/devdata/Develop/github/web/mpws/engine/system/object/object.Customer.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/hbs/toolbox/menu.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/toolbox/static/toolbox.js",
 		"/devdata/Develop/github/web/mpws/engine/controller/controller.api.php",
@@ -460,7 +528,6 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/site/menuSignUp.js",
 		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/hbs/toolboxLayout.hbs",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolbox/listProducts.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/config/configuration.DataSource.php",
 		"/devdata/Develop/github/web/mpws/engine/global/global.methods.php",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/accountProfile.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/account/static/js/view/menuAccount.js",
@@ -508,18 +575,7 @@
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/site.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/toolbox.js",
 		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js/view/toolboxListOrders.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/en_us/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ua_uk/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/en_us/site.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/toolbox.js",
-		"/devdata/Develop/github/web/mpws/web/default/atlantis/static/js/plugin/i18n.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ua_uk/translation.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/translation.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/en_us/site/translation.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/shop/static/nls/translation.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ste/ua_uk/translation.js",
-		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/ste/en_us/translation.js"
+		"/devdata/Develop/github/web/mpws/web/plugin/account/static/nls/site.js"
 	],
 	"find":
 	{
@@ -527,7 +583,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"/devdata/Develop/github/web/mpws/web/plugin/shop/static/js",
@@ -540,6 +596,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"global:content:render",
+			"Account:ProfileID",
+			"debugger",
+			"account",
+			"Account",
+			"AccountProfileID",
+			"'toolbox:",
+			"jsapiProductAttributes",
 			"data-action=\"shop:",
 			"data-action=\"shop",
 			"data-action=\"shop:",
@@ -659,15 +723,7 @@
 			"collapsePluginShop",
 			"div class=\"container",
 			"bs-example-navbar-collapse-1",
-			"lang.profile_page_",
-			"profile_page_menu_profile",
-			"collapseProfile",
-			"Profile",
-			"connection_string",
-			"jsapiProductSingleInfo",
-			"_custom_api_getProductList_Latest",
-			"DEFINER=`root`@`localhost`",
-			"DEFINER=`mikser`@`s1.ho.ua`"
+			"lang.profile_page_"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -685,8 +741,177 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "web/plugin/toolbox/static/js/toolbox.js",
+					"settings":
+					{
+						"buffer_size": 5045,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2075,
+								2075
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 897.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "web/plugin/toolbox/static/js/view/signout.js",
+					"settings":
+					{
+						"buffer_size": 512,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14,
+								14
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "web/plugin/toolbox/static/js/view/signin.js",
+					"settings":
+					{
+						"buffer_size": 671,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "web/plugin/toolbox/static/js/model/bridge.js",
+					"settings":
+					{
+						"buffer_size": 2331,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1179,
+								1179
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 73.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "web/plugin/shop/static/js/toolbox.js",
+					"settings":
+					{
+						"buffer_size": 4676,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								417,
+								417
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 86.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "web/plugin/toolbox/plugin.toolbox.php",
+					"settings":
+					{
+						"buffer_size": 4034,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								678,
+								678
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 33.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{
