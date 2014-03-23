@@ -20,10 +20,13 @@ define("plugin/toolbox/js/toolbox", [
             var self = this;
 
             Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
-                debugger;
+                // debugger;
                 // Sandbox.eventNotify('global:breadcrumb:show');
                 if (!status && Backbone.history.fragment !== "signin")
                     Backbone.history.navigate('signin', true);
+            });
+            Sandbox.eventSubscribe('plugin:toolbox:signed:in', function (status) {
+                Backbone.history.navigate('', true);
             });
             Sandbox.eventSubscribe('plugin:toolbox:signed:out', function (status) {
                 Backbone.history.navigate('signin', true);
@@ -31,23 +34,23 @@ define("plugin/toolbox/js/toolbox", [
             // Sandbox.eventSubscribe('toolbox:page:login', function () {
             //     self.login();
             // });
-            Sandbox.eventSubscribe('global:route', function (hash) {
-                // debugger;
-            });
+            // Sandbox.eventSubscribe('global:route', function (hash) {
+            //     // debugger;
+            // });
 
-            Sandbox.eventSubscribe('global:loader:complete', function (hash) {
-                // debugger;
-            });
+            // Sandbox.eventSubscribe('global:loader:complete', function (hash) {
+            //     // debugger;
+            // });
 
-            Sandbox.eventSubscribe('global:page:index', function () {
-                // debugger;
-                // Sandbox.eventNotify('global:breadcrumb:show');
-            });
+            // Sandbox.eventSubscribe('global:page:index', function () {
+            //     // debugger;
+            //     // Sandbox.eventNotify('global:breadcrumb:show');
+            // });
 
             Sandbox.eventSubscribe('plugin:toolbox:page:show', function (page) {
                 // debugger;
                 // Sandbox.eventNotify('global:breadcrumb:show');
-                // debugger;
+                debugger;
                 self.showToolboxPage(page);
             });
 
