@@ -8,3 +8,9 @@ secure
 *.cache.php
 unused
 deprecated
+css/
+node_modules/
+build/
+old/
+mpws.sublime-project
+mpws.sublime-workspace
