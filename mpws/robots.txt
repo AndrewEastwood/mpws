@@ -1,11 +1,2 @@
 User-agent: *
-Allow: /page
-Disallow: /bin
-Disallow: /engine
-Disallow: /schema
-Disallow: /tooling
-Disallow: /web
-Disallow: /service
-Disallow: /mpws
-
-Sitemap: http://localhost/sitemap.xml
+Sitemap: /sitemap.xml
