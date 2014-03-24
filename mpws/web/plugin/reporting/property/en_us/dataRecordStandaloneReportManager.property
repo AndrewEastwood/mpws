@@ -1,8 +1,0 @@
-labelForLabelValueDefaultID = "ID";
-labelForLabelValueDefaultName = "Report Name";
-labelForLabelValueDefaultExternalKey = "External Key";
-labelForLabelValueDefaultDataPath = "Remote Data Path";
-labelForLabelValueDefaultReports  = "Report Scripts"
-labelForLabelValueDefaultDateCreated = "Created";
-labelForLabelValueDefaultDateUpdated = "Updated";
-labelForLabelValueDefaultReportDataUrl = "Report Data URL";

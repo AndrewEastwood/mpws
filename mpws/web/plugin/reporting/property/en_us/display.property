@@ -1,6 +1,0 @@
-menuTextManager = "Report Manager";
-menuTextDescriptionManager = "Customize reports";
-menuTextMonitor = "Monitor";
-menuTextDescriptionMonitor = "View And Analyze Reports";
-menuTextApi = "API Settings";
-menuTextDescriptionApi = "Get API Settings";
