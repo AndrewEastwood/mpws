@@ -103,23 +103,29 @@
         return $date->format($format);
     }
 
-    // global methods
-    // will be moved to 
+    // debug function (in DEV mode only)
+    // this prints debug messages
+    // set MPWS_LOG_LEVEL to:
+    // 1: just prints given variables
+    // 2: prints and stores into global variable MPWS_DEBUG
     function debug ($value, $title = '', $argsDebug = false) {
-        if (MPWS_LOG_LEVEL == 0) return;
+
+        if (MPWS_ENV != 'DEV' || MPWS_LOG_LEVEL == 0)
+            return;
+
         if (!isset($GLOBALS['MPWS_DEBUG']))
             $GLOBALS['MPWS_DEBUG'] = '';
-        //return false;
-        if (MPWS_ENV == 'DEV') {
-            
+
+        if (MPWS_LOG_LEVEL == 1) {
+
             $_debugLine = '';
             
             if ($argsDebug) {
                 $bt = debug_backtrace();
                 $_value = $bt[1]['args'];
-                
+
                 $format_args = '<div><b>[DEBUG INFO] '.date('H:i:s').'</b>%s with arguments:<pre>%s</pre></div>';
-                
+
                 $debug_args = array();
                 foreach ($_value as $idx => $arg) {
                     if (is_string($arg))
@@ -141,9 +147,9 @@
                 else
                     $_debugLine = sprintf($format_short, $value, $title);
             }
-            
+
             $GLOBALS['MPWS_DEBUG'] .= $_debugLine;
-            
+
             if (MPWS_LOG_LEVEL == 2)
                 echo $_debugLine;
         }
