@@ -28,8 +28,10 @@ define("default/js/site", [
                     if (index > -1) {
                         $.xhrPool.splice(index, 1);
                     }
-                    if (data && data.redirect)
-                        window.location = data.redirect;
+                    if (data && data.redirect && Backbone.history.fragment !== data.redirect) {
+                        console.log('redirect to', data.redirect);
+                        Backbone.history.navigate(data.redirect, true);
+                    }
                     // if (status === "success")
                 });
             }
@@ -56,8 +58,7 @@ define("default/js/site", [
             routes: {
                 "": "index",
                 "login": "login",
-                "logout": "logout",
-                // "*nothing": "unknown",
+                "logout": "logout"
             },
             index: function () {
                 // debugger;
@@ -70,10 +71,6 @@ define("default/js/site", [
             logout: function () {
                 // debugger;
                 Sandbox.eventNotify('global:page:logout');
-            },
-            unknown: function () {
-                // debugger;
-                Sandbox.eventNotify('global:page:404');
             }
         });
 
@@ -110,6 +107,7 @@ define("default/js/site", [
             renderAfter: null,
             render: function (options) {
                 // console.log('_renderFn', options);
+
 
                 if (!options || !options.name)
                     return;

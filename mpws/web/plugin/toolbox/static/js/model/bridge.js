@@ -38,10 +38,12 @@ define("plugin/toolbox/js/model/bridge", [
             });
             $.post(url, {credentials: data}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
-                Cache.setObject('AdminProfileID', _data.profile && _data.profile.ID);
+                var _profileID = _data.profile && _data.profile.ID;
+                Cache.setObject('AdminProfileID', _profileID);
                 self.set(_data);
                 self.trigger('change');
-                Sandbox.eventNotify('plugin:toolbox:signed:in', _data.profile);
+                if (_profileID)
+                    Sandbox.eventNotify('plugin:toolbox:signed:in', _data.profile);
             });
         },
         doLogout: function () {

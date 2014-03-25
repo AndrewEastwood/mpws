@@ -32,9 +32,9 @@
 
     for (var key in _globalConfig.PLUGINS)
         _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site'));
-    // debugger;
+
+    // console.log(_filesToRequest);
     // start customer application
-    console.log(_filesToRequest);
     require(_filesToRequest, function (Sandbox, Site) {
         var _args = [].slice.call(arguments, 1);
         var _routers = [];
@@ -48,11 +48,11 @@
                 _routers.push(router);
             }
 
-        // start/init customer
-        // _customerJs.start();
+        // notify all that loader completed its tasks
         Sandbox.eventNotify('global:loader:complete');
 
-        Backbone.history.start();  // Запускаем HTML5 History push
+        // start HTML5 History push
+        Backbone.history.start();
     });
 
 })();

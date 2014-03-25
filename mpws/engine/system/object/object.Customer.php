@@ -117,9 +117,14 @@ class objectCustomer {
         if ($source == '*')
             foreach ($this->plugins as $key => $plugin)
                 $response->setData($key, $plugin->getResponse()->toNative());
-        elseif (isset($this->hasPlugin($source))) {
+        elseif ($this->hasPlugin($source)) {
             $plugin = $this->getPlugin($source);
             $response->setData($source, $plugin->getResponse()->toNative());
+        }
+
+        if (!$this->isAdminActive()) {
+            $response->setError('AccessDenied');
+            $response->setData('redirect', 'signin');
         }
 
         return $response;
@@ -129,9 +134,9 @@ class objectCustomer {
         return !empty($this->plugins[$pluginName]);
     }
 
-    public function getPluginData ($source, $function, $params) {
+    public function getPluginData ($source, $function, $params = null) {
         $plugin = $this->getPlugin($source);
-        if (!isset($plugin))
+        if (empty($plugin))
             return null;
         return $plugin->getPluginData($function, $params);
     }

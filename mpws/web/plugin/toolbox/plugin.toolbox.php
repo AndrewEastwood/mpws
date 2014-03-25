@@ -50,11 +50,12 @@ class pluginToolbox extends objectPlugin {
         $passwordS = $this->getCustomer()->getAccountPassword($password);
         // var_dump($passwordS);
         $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $passwordS);
+        // var_dump($config);
         return $this->getCustomer()->processData($config);
     }
 
     private function isAccountSignedIn () {
-        if (isset($_COOKIE['tu']) && isset($_COOKIE['tp']) && isset($_SESSION['Toolbox:ProfileID']))
+        if (isset($_SESSION['Toolbox:ProfileID']))
             return true;
         else {
             setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
@@ -97,6 +98,8 @@ class pluginToolbox extends objectPlugin {
 
         $account = $this->getAdminAccount($credentials['email'], $credentials['password']);
 
+        // var_dump($account);
+
         if (empty($account))
             $accountObj->setError('WrongCredentials');
         else {
@@ -105,13 +108,13 @@ class pluginToolbox extends objectPlugin {
             // keep user logged in
             if ($credentials['remember']) {
                 /* Set cookie to last 1 year */
-                setcookie('tu', $credentials['email'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
-                setcookie('tp', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+                setcookie('tu', $credentials['email'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME'], false, true);
+                setcookie('tp', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME'], false, true);
             
             } else {
                 /* Cookie expires when browser closes */
-                setcookie('tu', $credentials['email'], false, '/', $_SERVER['SERVER_NAME']);
-                setcookie('tp', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
+                setcookie('tu', $credentials['email'], false, '/', $_SERVER['SERVER_NAME'], false, true);
+                setcookie('tp', $account['Password'], false, '/', $_SERVER['SERVER_NAME'], false, true);
             }
 
             $_SESSION['Toolbox:ProfileID'] = $account['ID'];

@@ -1,10 +1,11 @@
 define("customer/js/site", [
     'default/js/lib/sandbox',
     'cmn_jquery',
+    'default/js/lib/underscore',
     'default/js/site',
     'default/js/view/breadcrumb',
     'default/js/plugin/css!customer/css/toolboxTheme.css'
-], function (Sandbox, $, SiteBase, Breadcrumb) {
+], function (Sandbox, $, _, SiteBase, Breadcrumb) {
 
     var _customerOptions = {};
 
@@ -66,9 +67,23 @@ define("customer/js/site", [
             template: 'default/js/plugin/hbs!customer/hbs/toolbox/breadcrumb'
         });
 
+        // Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
+        //     // debugger;
+        //     // Sandbox.eventNotify('global:breadcrumb:show');
+        //     if (!status && Backbone.history.fragment !== "signin") {
+        //         Backbone.history.navigate('signin', true);
+        //         return;
+        //     }
+
         Sandbox.eventSubscribe('global:breadcrumb:show', function (options) {
-            _views.breadcrumb.fetchAndRender(options);
+            if (!_.isEmpty(options))
+                _views.breadcrumb.fetchAndRender(options);
         });
+        // });
+
+        // debugger
+        // Sandbox.eventNotify('plugin:toolbox:status');
+
     });
 
     // this object will be passed into all enabled plugins

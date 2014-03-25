@@ -14,12 +14,14 @@ define("plugin/toolbox/js/view/signin", [
         lang: lang,
         model: ModelAccountInstance,
         events: {
-            "submit .form": 'doSignIn',
+            "submit": 'doSignIn',
             "click #accountProfileSignOutID": 'doSignOut',
         },
         initialize: function () {
+            MView.prototype.initialize.call(this);
             this.model.clearErrors();
             this.model.clearStates();
+            this.listenTo(this.model, "change", this.render);
         },
         doSignIn: function () {
             this.model.doLogin(this.collectCredentials());
@@ -36,7 +38,7 @@ define("plugin/toolbox/js/view/signin", [
                 password: self.$('#signinPassword').val(),
                 remember: self.$('#signinRemember').is(':checked')
             }
-        },
+        }
     });
 
     return SignIn;

@@ -9,5 +9,6 @@ define("plugin/toolbox/nls/ua_uk/toolbox", [
         form_signin_field_login: 'Логін',
         form_signin_field_password: 'Пароль',
         form_signin_button_submit: 'Увійти',
+        form_signin_error: "Помилка авторизації"
     }, CustomerShop);
 });

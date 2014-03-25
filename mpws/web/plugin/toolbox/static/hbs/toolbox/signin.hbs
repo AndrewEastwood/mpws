@@ -3,6 +3,12 @@
   <!-- Form Name -->
   <legend>{{lang.form_signin_title}}</legend>
 
+  {{#if data.error }}
+  <div class="panel">
+    <p class="text-danger">{{lang.form_signin_error}}</p>
+  </div>
+  {{/if}}
+
   <!-- Text input-->
   <div class="form-group">
     <label class="col-md-3 control-label" for="textinput">{{lang.form_signin_field_login}}</label>
