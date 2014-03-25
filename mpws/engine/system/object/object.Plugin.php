@@ -18,6 +18,7 @@ class objectPlugin implements iPlugin {
 
     public function getResponse () {}
 
+    public function getPluginData ($fn, $params) {}
 }
 
 ?>

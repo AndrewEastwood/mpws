@@ -76,8 +76,12 @@ class objectCustomer {
         return $this->dbo->getData($config);
     }
 
-    public function getPlugins () {
+    public function getAllPlugins () {
         return $this->plugins;
+    }
+
+    public function getPlugin($key) {
+        return $this->plugins[$key];
     }
 
     public function getResponse () {
@@ -113,14 +117,31 @@ class objectCustomer {
         if ($source == '*')
             foreach ($this->plugins as $key => $plugin)
                 $response->setData($key, $plugin->getResponse()->toNative());
-        elseif (isset($this->plugins[$source])) {
-            $plugin = $this->plugins[$source];
+        elseif (isset($this->hasPlugin($source))) {
+            $plugin = $this->getPlugin($source);
             $response->setData($source, $plugin->getResponse()->toNative());
         }
 
         return $response;
     }
 
+    public function hasPlugin ($pluginName) {
+        return !empty($this->plugins[$pluginName]);
+    }
+
+    public function getPluginData ($source, $function, $params) {
+        $plugin = $this->getPlugin($source);
+        if (!isset($plugin))
+            return null;
+        return $plugin->getPluginData($function, $params);
+    }
+
+    // Admin status (requires toolbox plugin)
+    public function isAdminActive () {
+        return $this->getPluginData('toolbox', 'isActive');
+    }
+
+    // Accounts
     public function addAccount ($dataAccount) {
 
         $dataAccount["CustomerID"] = $this->getCustomerID();
@@ -256,10 +277,6 @@ class objectCustomer {
         $config = configurationCustomerDataSource::jsapiRemoveAccountAddress($AccountID, $AddressID);
         // var_dump($config);
         $this->processData($config);
-    }
-
-    public function hasPlugin ($pluginName) {
-        return !empty($this->plugins[$pluginName]);
     }
 
 }

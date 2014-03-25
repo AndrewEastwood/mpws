@@ -29,7 +29,7 @@ define("plugin/shop/js/toolbox", [
         },
 
         dashboard: function () {
-            debugger;
+            // debugger;
             Sandbox.eventNotify('plugin:toolbox:page:show', {
                 name: 'ShopDashboard',
                 el: $('<div>').text('34 New Orders')

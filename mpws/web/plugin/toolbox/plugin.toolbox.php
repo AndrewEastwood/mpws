@@ -36,6 +36,16 @@ class pluginToolbox extends objectPlugin {
         return $data;
     }
 
+    public function getPluginData ($fn, $params) {
+        switch($fn) {
+            case 'isActive': {
+                return $this->isAccountSignedIn();
+            }
+        }
+
+        return null;
+    }
+
     private function getAdminAccount ($email, $password) {
         $passwordS = $this->getCustomer()->getAccountPassword($password);
         // var_dump($passwordS);

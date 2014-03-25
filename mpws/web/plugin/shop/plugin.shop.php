@@ -814,6 +814,11 @@ class pluginShop extends objectPlugin {
     private function _api_updateEntryOrder ($orderID) {
         $dataObj = new libraryDataObject();
 
+        if (!$this->getCustomer()->isAdminActive()) {
+            $dataObj->setError('AccessDenied');
+            return $dataObj;
+        }
+
         // get fields to update
         $fieldName = libraryRequest::getPostValue('name');
         $fieldValue = libraryRequest::getPostValue('value');
@@ -840,6 +845,11 @@ class pluginShop extends objectPlugin {
         // offset
         // limit
         $dataObj = new libraryDataObject();
+
+        if (!$this->getCustomer()->isAdminActive()) {
+            $dataObj->setError('AccessDenied');
+            return $dataObj;
+        }
 
         $limit = 25;
 

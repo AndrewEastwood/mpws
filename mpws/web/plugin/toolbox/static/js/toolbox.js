@@ -50,7 +50,7 @@ define("plugin/toolbox/js/toolbox", [
             Sandbox.eventSubscribe('plugin:toolbox:page:show', function (page) {
                 // debugger;
                 // Sandbox.eventNotify('global:breadcrumb:show');
-                debugger;
+                // debugger;d
                 self.showToolboxPage(page);
             });
 
@@ -67,12 +67,12 @@ define("plugin/toolbox/js/toolbox", [
         // },
 
         signin: function () {
-            debugger;
+            // debugger;
             var self = this;
             require(['plugin/toolbox/js/view/signin'], function (SignIn) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('SignIn', function (cachedView) {
-                    debugger;
+                    // debugger;
                     // remove previous view
                     if (cachedView && cachedView.remove)
                         cachedView.remove();

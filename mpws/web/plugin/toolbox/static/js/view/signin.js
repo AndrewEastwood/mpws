@@ -8,8 +8,8 @@ define("plugin/toolbox/js/view/signin", [
 ], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {
 
     var SignIn = MView.extend({
-        // tagName: 'li',
-        // className: 'col-sm-9 col-md-9',
+        tagName: 'form',
+        className: 'form form-horizontal toolbox-component-form-signin',
         template: tpl,
         lang: lang,
         model: ModelAccountInstance,
