@@ -9,4 +9,12 @@ echo "git commit -m \"$1\""
 echo "git push"
 echo "git status"
 
-git pull && git add . && git add . -u && git commit -m \"$1\" && git push && git status
+git stash &&
+git pull &&
+git stash pop &&
+mysqldump -u root -p1111  --no-data -h localhost --databases mpws_light > ./mpws/schema/clean/mpws_light_full.sql &&
+git add . &&
+git add . -u &&
+git commit -m \"$1\" &&
+git push &&
+git status
