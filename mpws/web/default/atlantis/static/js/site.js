@@ -4,8 +4,9 @@ define("default/js/site", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/url',
+    'default/js/lib/contentInjection',
     'default/js/lib/extend.string',
-], function (Sandbox, $, _, Backbone, JSUrl) {
+], function (Sandbox, $, _, Backbone, JSUrl, contentInjection) {
 
     var Site = function (options) {
 
@@ -45,11 +46,29 @@ define("default/js/site", [
             Sandbox.eventNotify($(this).data('action'), _data);
         });
 
+        // find links and set them active accordint to current route
+        var _setActiveMenuItemsFn = function () {
+            // debugger;
+            $('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
+            $('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');
+        }
+
+        Sandbox.eventSubscribe('global:menu:set-active', function () {
+            // debugger;
+            _setActiveMenuItemsFn();
+        });
+
         $(window).on('hashchange', function() {
+            // set page name
             var _hashTags = window.location.hash.substr(1).split('/');
             $('body').attr('class', "MPWSPage");
             if (_hashTags && _hashTags[0])
                 $('body').addClass("Page" + _hashTags[0].ucWords());
+
+            // set active links
+            Sandbox.eventNotify('global:menu:set-active');
+
+            // notify all subscribers that we have changed our route
             Sandbox.eventNotify('global:route', window.location.hash);
         });
         $(window).trigger('hashchange');
@@ -108,7 +127,6 @@ define("default/js/site", [
             render: function (options) {
                 // console.log('_renderFn', options);
 
-
                 if (!options || !options.name)
                     return;
 
@@ -118,18 +136,13 @@ define("default/js/site", [
                 // debugger;
                 var _container = _placeholders[options.name];
 
-                if (!_container || !_container.length)
-                    return;
-
-                if (options.append)
-                    _container.append(options.el);
-                else if (options.prepend)
-                    _container.prepend(options.el);
-                else
-                    _container.html(options.el);
+                contentInjection.injectContent(_container, options);
 
                 if (_.isFunction(_site.renderAfter))
                     _site.renderAfter(options);
+
+                // refresh links (make them active)
+                Sandbox.eventNotify('global:menu:set-active');
             }
         }
 
@@ -144,7 +157,6 @@ define("default/js/site", [
 
         return _site;
     }
-
 
     return Site;
 });

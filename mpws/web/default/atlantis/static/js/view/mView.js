@@ -117,7 +117,19 @@ define("default/js/view/mView", [
                     if (_self.viewName)
                         Sandbox.eventNotify('view:'+_self.viewName, _self);
 
+                    // notify view that render is done
                     this.trigger('mview:renderComplete', _self);
+
+                    // notify all subscribers when render is completed
+                    if (_self.notifyWhenRenderComplete) {
+                        // debugger;
+                        if (_.isString(_self.notifyWhenRenderComplete))
+                            Sandbox.eventNotify(_self.notifyWhenRenderComplete, _self);
+                        else if (_.isArray(_self.notifyWhenRenderComplete))
+                            _(_self.notifyWhenRenderComplete).each(function(eventName){
+                                Sandbox.eventNotify(eventName, _self);
+                            });
+                    }
                 }
 
                 if (typeof this.template === "string" && this.template.has('/hbs!')) {

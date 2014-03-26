@@ -74,7 +74,7 @@ define("plugin/shop/js/toolbox", [
 
                     // create new view
                     var listOrders = new ListOrders();
-                    // Site.placeholders.shop.productListOverview.html(listOrders.el);
+
                     listOrders.fetchAndRender();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
@@ -82,32 +82,8 @@ define("plugin/shop/js/toolbox", [
                         el: listOrders.$el
                     });
 
-                    Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
                     // return view object to pass it into this function at next invocation
                     return listOrders;
-                });
-            });
-
-            require(['plugin/shop/js/view/toolbox/filteringListOrders'], function (FilteringListOrders) {
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('FilteringListOrders', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
-
-                    // create new view
-                    var filteringListOrders = new FilteringListOrders();
-                    // Site.placeholders.shop.productListOverview.html(listOrders.el);
-                    filteringListOrders.fetchAndRender();
-
-                    Sandbox.eventNotify('plugin:toolbox:page:show', {
-                        name: 'ShopFilteringListOrders',
-                        el: filteringListOrders.$el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    return filteringListOrders;
                 });
             });
         },

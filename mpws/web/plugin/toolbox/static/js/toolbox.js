@@ -5,10 +5,8 @@ define("plugin/toolbox/js/toolbox", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/toolbox/js/view/bridge'
+    'plugin/toolbox/js/view/bridge' // need to register all auth events
 ], function (Sandbox, Site, $, _, Backbone, Cache, Bridge) {
-
-    var bridge = new Bridge();
 
     // get user status when page starts
     Sandbox.eventSubscribe('global:loader:complete', function (status) {
@@ -28,13 +26,8 @@ define("plugin/toolbox/js/toolbox", [
             Backbone.history.navigate('', true);
     });
 
-    // when user is signein do smth
+    // when user is signed in do smth
     Sandbox.eventSubscribe('plugin:toolbox:signed:in', function (status) {
-        bridge.render();
-        Sandbox.eventNotify('global:content:render', {
-            name: 'Bridge',
-            el: bridge.el
-        });
         Backbone.history.navigate('', true);
     });
 
@@ -43,10 +36,50 @@ define("plugin/toolbox/js/toolbox", [
         Backbone.history.navigate('signin', true);
     });
 
+    // create new view
+    var bridge = new Bridge();
+
     // inject into toolbox layout another plugin's content
-    Sandbox.eventSubscribe('plugin:toolbox:page:show', function (page) {
-        bridge.setPagePlaceholder(page);
+    Sandbox.eventSubscribe('plugin:toolbox:page:show', function (options) {
+        // _displayToolboxPageFn(page);
+        // render toolbox container with placeholders
+        bridge.render();
+        // inject requested page
+        bridge.setPage(options);
+
+        Sandbox.eventNotify('global:content:render', {
+            name: 'Bridge',
+            el: bridge.$el,
+            keepExisted: true
+        });
     });
+
+    var _displayToolboxPageFn = function (options) {
+        require(['plugin/toolbox/js/view/bridge'], function (Bridge) {
+            // using this wrapper to cleanup previous view and create new one
+            Cache.withObject('Bridge', function (cachedView) {
+                // debugger;
+                // remove previous view
+                if (cachedView && cachedView.remove)
+                    cachedView.remove();
+
+                // create new view
+                var bridge = new Bridge();
+                // render toolbox container with placeholders
+                bridge.render();
+                // inject requested page
+                bridge.setPage(options);
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'Bridge',
+                    el: bridge.el
+                });
+
+                // return view object to pass it into this function at next invocation
+                return bridge;
+            });
+        });
+    }
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -80,8 +113,9 @@ define("plugin/toolbox/js/toolbox", [
         },
 
         signout: function () {
-            Backbone.history.navigate('signin', true);;
+            Sandbox.eventNotify('plugin:toolbox:logout');
         }
+
     });
 
     return Router;

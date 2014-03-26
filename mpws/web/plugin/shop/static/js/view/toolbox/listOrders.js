@@ -3,6 +3,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     'default/js/view/mView',
     'plugin/shop/js/collection/toolbox/listOrders',
     'plugin/shop/js/view/toolbox/orderEntry',
+    'plugin/shop/js/view/toolbox/filteringListOrders',
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
     /* lang */
@@ -10,7 +11,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, BootstrapDialog, Backgrid, lang) {
+], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, FilteringListOrders, BootstrapDialog, Backgrid, lang) {
 
     Sandbox.eventSubscribe('shop-toolbox-order-edit', function(data){
         var orderEntry = new ViewOrderEntry();
@@ -109,6 +110,8 @@ define("plugin/shop/js/view/toolbox/listOrders", [
       collection: collection
     });
 
+    // data filtering
+    var filteringListOrders = new FilteringListOrders();
 
     var Paginator = new Backgrid.Extension.Paginator({
 
@@ -138,6 +141,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
             });
         },
         render: function () {
+            this.$el.append(filteringListOrders.render().el);
             this.$el.append(ToolboxListOrdersGrid.render().el);
             this.$el.append(Paginator.render().el);
             collection.fetch({reset: true});

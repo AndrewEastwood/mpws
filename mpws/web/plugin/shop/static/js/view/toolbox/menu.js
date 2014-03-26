@@ -8,32 +8,21 @@ define("plugin/shop/js/view/toolbox/menu", [
 ], function (Sandbox, Site, MView, tpl, lang) {
 
     var menu = new (MView.extend({
+        id: 'shop-menu-ID',
         lang: lang,
-        template: tpl,
-        initialize: function () {
-            var self = this;
-            this.on('mview:renderComplete', function () {
-                self.setActive();
-            });
-            Sandbox.eventSubscribe('plugin:shop:toolbox:menu:refresh', function () {
-                self.setActive();
-            });
-        },
-        setActive: function () {
-            this.$('a.list-group-item').removeClass('active');
-            this.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
-            this.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');
-        }
+        template: tpl
     }))();
-    menu.render();
 
     // debugger;
-    Sandbox.eventSubscribe('global:loader:complete', function () {
+    Sandbox.eventSubscribe('plugin:toolbox:render:complete', function () {
         // debugger;
-        Sandbox.eventNotify('toolbox:content:render', {
+        menu.render();
+
+        Sandbox.eventNotify('plugin:toolbox:menu:display', {
             name: 'CommmonToolboxMenu',
             el: menu.$el,
-            append: true
+            append: true,
+            keepExisted: true
         });
     });
 

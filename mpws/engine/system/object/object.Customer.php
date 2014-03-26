@@ -69,8 +69,10 @@ class objectCustomer {
             $config["condition"]["filter"] = "CustomerID (=) ?";
             $config["condition"]["values"] = array($customerInfo['ID']);
         } else {
-            $config["condition"]["filter"] = "CustomerID (=) ? + " . $config["condition"]["filter"];
-            array_unshift($config["condition"]["values"], $customerInfo['ID']);
+            // if (count($config["condition"]["filter"]) > 1 || $config["condition"]["filter"][0] != "*") {
+                $config["condition"]["filter"] = "CustomerID (=) ? + " . $config["condition"]["filter"];
+                array_unshift($config["condition"]["values"], $customerInfo['ID']);
+            // }
         }
         // var_dump($config);
         return $this->dbo->getData($config);
@@ -236,17 +238,17 @@ class objectCustomer {
         // if (!$this->isAccountSignedIn() && !$force)
         //     return false;
         $config = configurationCustomerDataSource::jsapiGetAccountAddresses($AccountID);
-        return $this->processData($config);
+        return $this->dbo->getData($config);
     }
 
     public function getAccountAddress ($AccountID, $AddressID) {
         $config = configurationCustomerDataSource::jsapiGetAccountAddress($AccountID, $AddressID);
-        return $this->processData($config);
+        return $this->dbo->getData($config);
     }
 
     public function getAddress ($AddressID) {
         $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
-        return $this->processData($config);
+        return $this->dbo->getData($config);
     }
 
     public function addAccountAddress ($address) {

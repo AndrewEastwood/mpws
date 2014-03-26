@@ -16,6 +16,7 @@ define("plugin/toolbox/js/model/bridge", [
             // this.getStatus();
             // Sandbox.eventSubscribe('account:signout', _.bind(this.doLogout, this));
             Sandbox.eventSubscribe('plugin:toolbox:status', _.bind(this.getStatus, this));
+            Sandbox.eventSubscribe('plugin:toolbox:logout', _.bind(this.doLogout, this));
         },
         getStatus: function (options) {
             var self = this;
