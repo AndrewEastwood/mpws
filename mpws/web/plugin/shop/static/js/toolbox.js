@@ -18,12 +18,8 @@ define("plugin/shop/js/toolbox", [
 
         initialize: function () {
             var self = this;
-            // ToolboxMenu.render();
+
             Sandbox.eventSubscribe('global:page:index', function () {
-                // debugger;
-                // Sandbox.eventNotify('global:breadcrumb:show');
-                // Site.addMenuItemLeft('SHOP');
-                // $('#userMenu').append();
                 self.dashboard();
             });
         },
@@ -47,7 +43,7 @@ define("plugin/shop/js/toolbox", [
 
                     // create new view
                     var listProducts = new ListProducts();
-                    // Site.placeholders.shop.productListOverview.html(listProducts.el);
+
                     listProducts.fetchAndRender();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
