@@ -6,7 +6,7 @@ define('plugin/shop/js/collection/toolbox/listProducts', [
 
     var ListProducts = PageableCollection.extend({
 
-        url: Site.getApiLink('shop', 'shop_manage_products'),
+        url: Site.getApiLink('shop', 'shop_managed_products'),
 
         // Initial pagination states
         state: {

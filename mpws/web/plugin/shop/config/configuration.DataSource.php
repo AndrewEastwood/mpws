@@ -324,34 +324,33 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-
-    static function jsapiShopSiteOrdersCount () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getShopSiteOrdersCount",
-                "parameters" => array()
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
-
-    static function jsapiShopProductListCount () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getShopSiteProductsCount",
-                "parameters" => array()
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
-
     // <<<< Shop order
+
+    // static function jsapiShopSiteOrdersCount () {
+    //     return self::jsapiGetDataSourceConfig(array(
+    //         "action" => "call",
+    //         "procedure" => array(
+    //             "name" => "getShopSiteOrdersCount",
+    //             "parameters" => array()
+    //         ),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    // }
+
+    // static function jsapiShopProductListCount () {
+    //     return self::jsapiGetDataSourceConfig(array(
+    //         "action" => "call",
+    //         "procedure" => array(
+    //             "name" => "getShopSiteProductsCount",
+    //             "parameters" => array()
+    //         ),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    // }
 
 }
 

@@ -6,7 +6,7 @@ define('plugin/shop/js/model/toolbox/orderEntry', [
     var Model = MModel.getNew();
     var ToolboxOrderItem = Model.extend({
         source: 'shop',
-        fn: 'shop_order_entry',
+        fn: 'shop_managed_order_entry',
         parse: function (data) {
             // debugger;
             var _data = this.extractModelDataFromRespce(data);

@@ -94,11 +94,11 @@ class pluginShop extends objectPlugin {
                 $data = $this->_api_getListOrders_Profile($profileID);
                 break;
             }
-            case "shop_orders_list": {
+            case "shop_managed_orders_list": {
                 $data = $this->_api_getListOrders_Managed();
                 break;
             }
-            case "shop_order_entry": {
+            case "shop_managed_order_entry": {
                 $orderID = libraryRequest::getValue('orderID');
                 $do = libraryRequest::getValue('action');
                 switch ($do) {
@@ -110,7 +110,7 @@ class pluginShop extends objectPlugin {
                 $data = $this->_api_getEntryOrder($orderID);
                 break;
             }
-            case "shop_manage_products": {
+            case "shop_managed_products": {
                 $data = $this->_api_getListProducts_Managed();
                 break;
             }
@@ -383,22 +383,11 @@ class pluginShop extends objectPlugin {
         $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
         $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
 
-        // pagination
-        $_pagination = array(
-            "TotalItemsCount" => count($dataCategoryInfo),
-            "ItemsOnPage" => $filterOptionsApplied['filter_viewItemsOnPage'],
-            "PagesCount" => count($dataCategoryInfo) / $filterOptionsApplied['filter_viewItemsOnPage'],
-            "PageNext" => 2,
-            "PagePrev" => 2,
-            "Pages" => 2
-        );
-
         // var_dump($dataConfigProducts);
         // attach attributes
         $productsMap = $this->_custom_util_getProductAttributes($dataProducts);
         // store data
         $dataObj->setData('products', $productsMap);
-        $dataObj->setData('pagination', $_pagination);
         $dataObj->setData('info', array(
             "count" => count($dataCategoryInfo)
         ));
@@ -858,17 +847,26 @@ class pluginShop extends objectPlugin {
         //     return $dataObj;
         // }
 
-        $configOrders = configurationShopDataSource::jsapiProductList();
-        $configCount = configurationShopDataSource::jsapiShopProductListCount();
+        $dataConfigCategoryInfo = configurationShopDataSource::jsapiProductListCategoryInfo();
+        $dataConfigProducts = configurationShopDataSource::jsapiProductList();
 
-        $configOrders['limit'] = $limit;
+
+        // $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdges();
+        // $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrands();
+        // $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategories();
+
+
+
+
+
+        $dataConfigProducts['limit'] = $limit;
 
         // pagination
         $page = libraryRequest::getValue('page');
         $per_page = libraryRequest::getValue('per_page');
 
         if (!empty($page) && !empty($per_page)) {
-            $configOrders['offset'] = ($page - 1) * $per_page;
+            $dataConfigProducts['offset'] = ($page - 1) * $per_page;
         }
 
         // sorting
@@ -876,23 +874,23 @@ class pluginShop extends objectPlugin {
         $order = libraryRequest::getValue('order');
 
         if (!empty($sort) && !empty($order)) {
-            $configOrders["order"] = array(
+            $dataConfigProducts["order"] = array(
                 "field" =>  'shop_orders' . DOT . $sort,
                 "ordering" => strtoupper($order)
             );
         }
 
-        // var_dump($configOrders);
+        var_dump($dataConfigProducts);
 
         // set managed customer id
         $configCount['procedure']['parameters'] = array($this->getCustomer()->getCustomerID());
 
         // get data
-        $dataOrders = $this->getCustomer()->processData($configOrders);
-        $dataObj->setData('products', $dataOrders);
+        $dataProducts = $this->getCustomer()->processData($dataConfigProducts);
+        $dataObj->setData('products', $dataProducts);
 
-        $dataCount = $this->getCustomer()->processData($configCount);
-        $dataObj->setData('total_count', $dataCount['ProductCount']);
+        $dataConfigCategoryInfo = $this->getCustomer()->processData($dataConfigCategoryInfo);
+        $dataObj->setData('total_count', count($dataConfigCategoryInfo));
 
         return $dataObj;
     }

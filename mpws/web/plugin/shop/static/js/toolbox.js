@@ -51,7 +51,7 @@ define("plugin/shop/js/toolbox", [
                         el: listProducts.$el
                     });
 
-                    Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
+                    // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
                     // return view object to pass it into this function at next invocation
                     return listProducts;
                 });

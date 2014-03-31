@@ -2,7 +2,7 @@
 (function (factory) {
 	"use strict";
 	if (typeof define === 'function' && define.amd) {
-		define("default/js/lib/jsTree", ['cmn_jquery'], factory);
+		define("default/js/lib/jstree", ['cmn_jquery'], factory);
 	}
 	else if(typeof exports === 'object') {
 		factory(require('cmn_jquery'));

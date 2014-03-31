@@ -6,7 +6,7 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
 
     var ListOrders = PageableCollection.extend({
 
-        url: Site.getApiLink('shop', 'shop_orders_list'),
+        url: Site.getApiLink('shop', 'shop_managed_orders_list'),
 
         // Initial pagination states
         state: {

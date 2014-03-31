@@ -5,12 +5,15 @@ define("plugin/shop/js/view/toolbox/listProducts", [
     'plugin/shop/js/view/toolbox/orderEntry',
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
+    /* template */
+    'default/js/plugin/hbs!plugin/shop/hbs/toolbox/listProducts',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/nls/toolbox',
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-], function (Sandbox, MView, CollectionListProducts, ViewOrderEntry, BootstrapDialog, Backgrid, lang) {
+    'default/js/lib/jstree'
+], function (Sandbox, MView, CollectionListProducts, ViewOrderEntry, BootstrapDialog, Backgrid, tpl, lang) {
 
     Sandbox.eventSubscribe('shop-toolbox-product-edit', function(data){
         var orderEntry = new ViewOrderEntry();
@@ -130,15 +133,39 @@ define("plugin/shop/js/view/toolbox/listProducts", [
 
     var ListProducts = MView.extend({
         className: 'shop-toolbox-products',
+        template: tpl,
+        // collection: collection,
         initialize: function () {
+            MView.prototype.initialize.call(this);
             var self = this;
             Sandbox.eventSubscribe("shop-toolbox-listProducts-refresh", function () {
                 self.render();
             });
         },
         render: function () {
-            this.$el.append(ToolboxListProductsGrid.render().el);
-            this.$el.append(Paginator.render().el);
+            MView.prototype.render.call(this);
+            // display products
+            this.$('.shop-component-list-products').append(ToolboxListProductsGrid.render().el);
+            this.$('.shop-component-list-products').append(Paginator.render().el);
+            // display catgories and origins
+            this.$('#jstree_categories-ID').jstree({
+                "core" : {
+                    "theme" : {
+                        "variant" : "large"
+                    }
+                },
+                "plugins" : [ "wholerow", "checkbox" ]
+            });
+            this.$('#jstree_origins-ID').jstree({
+                "core" : {
+                    "theme" : {
+                        "variant" : "large"
+                    }
+                },
+                "plugins" : [ "wholerow", "checkbox" ]
+            });
+
+            // fetch products
             collection.fetch({reset: true});
         }
     });
