@@ -6,7 +6,17 @@ define("plugin/shop/js/view/toolbox/filteringListOrders", [
 ], function (Sandbox, MView, tpl) {
 
     var FilteringListOrders = MView.extend({
-        template: tpl
+        template: tpl,
+        events: {
+            'click input': 'applyFiltering'
+        },
+        applyFiltering: function () {
+            debugger;
+            // var self = this;
+            // Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
+            //     self.render();
+            // });
+        }
     });
 
     return FilteringListOrders;
