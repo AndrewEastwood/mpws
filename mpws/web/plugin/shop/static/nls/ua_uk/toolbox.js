@@ -36,6 +36,7 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         // Order entry popup
         orderEntry_Popup_title: "Замовлення #",
         orderEntry_Popup_section_boughts: "Список придбаних товарів:",
+        orderEntry_Popup_control_status: "Виберіть статус замовлення",
         orderEntry_Popup_button_OK: "Добре",
         // Product list
         pluginMenu_Products_Grid_Column_Name: "Назва",

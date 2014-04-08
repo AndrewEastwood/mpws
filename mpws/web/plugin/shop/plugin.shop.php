@@ -762,7 +762,7 @@ class pluginShop extends objectPlugin {
         // }
 
         $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
-        $configCount = configurationShopDataSource::jsapiShopSiteOrdersCount();
+        $configCount = configurationShopDataSource::jsapiGetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
 
         $configOrders['limit'] = $limit;
 
@@ -787,15 +787,15 @@ class pluginShop extends objectPlugin {
 
         // var_dump($configOrders);
 
-        // set managed customer id
-        $configCount['procedure']['parameters'] = array($this->getCustomer()->getCustomerID());
+        // get valid orders count
+        $configCount['condition'] = new ArrayObject($configOrders['condition']);
 
         // get data
         $dataOrders = $this->getCustomer()->processData($configOrders);
         $dataObj->setData('orders', $dataOrders);
 
         $dataCount = $this->getCustomer()->processData($configCount);
-        $dataObj->setData('total_count', $dataCount['OrderCount']);
+        $dataObj->setData('total_count', count($dataCount['ItemsCount']));
 
         return $dataObj;
     }
@@ -817,6 +817,7 @@ class pluginShop extends objectPlugin {
         }
 
         $data[$fieldName] = $fieldValue;
+        $data['DateUpdated'] = date('Y:m:d H:i:s');
 
         $configOrder = configurationShopDataSource::jsapiShopUpdateOrderEntry($orderID, $data);
         // var_dump($configOrder);
@@ -847,17 +848,14 @@ class pluginShop extends objectPlugin {
         //     return $dataObj;
         // }
 
-        $dataConfigCategoryInfo = configurationShopDataSource::jsapiProductListCategoryInfo();
+        // $dataConfigCategoryInfo = configurationShopDataSource::jsapiProductListCategoryInfo();
         $dataConfigProducts = configurationShopDataSource::jsapiProductList();
+        $configCount = configurationShopDataSource::jsapiGetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
 
 
         // $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdges();
         // $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrands();
         // $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategories();
-
-
-
-
 
         $dataConfigProducts['limit'] = $limit;
 
@@ -880,17 +878,18 @@ class pluginShop extends objectPlugin {
             );
         }
 
-        var_dump($dataConfigProducts);
+        // var_dump($dataConfigProducts);
 
         // set managed customer id
-        $configCount['procedure']['parameters'] = array($this->getCustomer()->getCustomerID());
+        $configCount['additional'] = new ArrayObject($dataConfigProducts['additional']);
+        $configCount['condition'] = new ArrayObject($dataConfigProducts['condition']);
 
         // get data
         $dataProducts = $this->getCustomer()->processData($dataConfigProducts);
         $dataObj->setData('products', $dataProducts);
 
-        $dataConfigCategoryInfo = $this->getCustomer()->processData($dataConfigCategoryInfo);
-        $dataObj->setData('total_count', count($dataConfigCategoryInfo));
+        $dataCount = $this->getCustomer()->processData($configCount);
+        $dataObj->setData('total_count', count($dataCount['ItemsCount']));
 
         return $dataObj;
     }

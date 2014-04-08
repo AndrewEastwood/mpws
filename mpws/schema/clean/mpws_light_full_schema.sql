@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `mpws_accountAddresses`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_accountAddresses` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
   `AccountID` int(11) DEFAULT NULL,
   `Address` varchar(500) NOT NULL,
   `POBox` varchar(50) NOT NULL,
@@ -42,6 +43,9 @@ CREATE TABLE `mpws_accountAddresses` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`AccountID`),
+  KEY `AccountID_2` (`AccountID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `mpws_accountAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -182,7 +186,7 @@ CREATE TABLE `mpws_users` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_users_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Public site users';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -509,4 +513,4 @@ CREATE TABLE `toolbox_admins` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-01  1:57:35
+-- Dump completed on 2014-04-08 23:58:48

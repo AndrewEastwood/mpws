@@ -11,6 +11,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
+    "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, FilteringListOrders, BootstrapDialog, Backgrid, lang) {
 
     Sandbox.eventSubscribe('shop-toolbox-order-edit', function(data){
@@ -35,24 +36,51 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     // cell: "select-row",
     // headerCell: "select-all"
     // Column definitions
+    // {
+    //     // enable the select-all extension
+    //     name: "",
+    //     cell: "select-row",
+    //     headerCell: "select-all",
+    //     // label: lang.pluginMenu_Orders_Grid_Column_ID,
+    //     // cell: "string",
+    //     // editable: false
+    // },
     var columns = [{
-        // enable the select-all extension
-        name: "",
-        cell: "select-row",
-        headerCell: "select-all",
-        // label: lang.pluginMenu_Orders_Grid_Column_ID,
-        // cell: "string",
-        // editable: false
-    }, {
         name: "Status",
         label: lang.pluginMenu_Orders_Grid_Column_Status,
-        cell: "string",
+        cell: "html",
         editable: false,
         formatter: {
             fromRaw: function (value) {
-                // debugger;
-                var _status = lang['order_status_' + value];
-                return _status;
+                var _wrapper = $('<div>');
+                var _icon = $('<i>').addClass('fa');
+                var _label = $('<span>').text(lang['order_status_' + value]);
+                switch (value) {
+                    case "NEW" : {
+                        _icon.addClass('fa-dot-circle-o')
+                        break;
+                    }
+                    case "ACTIVE" : {
+                        _icon.addClass('fa-circle')
+                        break;
+                    }
+                    case "LOGISTIC_DELIVERING" : {
+                        _icon.addClass('fa-plane')
+                        break;
+                    }
+                    case "LOGISTIC_DELIVERED" : {
+                        _icon.addClass('fa-gift')
+                        break;
+                    }
+                    case "SHOP_CLOSED" : {
+                        _icon.addClass('fa-check')
+                        break;
+                    }
+                }
+
+                _wrapper.append([_icon, _label])
+
+                return _wrapper;
             }
         }
     }, {
@@ -77,17 +105,17 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     }, {
         name: "DateUpdated",
         label: lang.pluginMenu_Orders_Grid_Column_DateUpdated,
-        cell: "string",
+        cell: "datetime",
         editable: false
     }, {
         name: "DateCreated",
         label: lang.pluginMenu_Orders_Grid_Column_DateCreated,
-        cell: "string",
+        cell: "datetime",
         editable: false
     }, {
         name: "Actions",
         label: lang.pluginMenu_Orders_Grid_Column_Actions,
-        cell: "string",
+        cell: "html",
         editable: false,
         formatter: {
             fromRaw: function (value, model) {
@@ -142,6 +170,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         },
         render: function () {
             this.$el.append(filteringListOrders.render().el);
+            // debugger;
             this.$el.append(ToolboxListOrdersGrid.render().el);
             this.$el.append(Paginator.render().el);
             collection.fetch({reset: true});

@@ -14,7 +14,7 @@
                     <span><strong>{{data.order.DateUpdated}}</strong></span>
                 </li>
                 <li class="list-group-item">
-                    <span class="prefix">Код відстеження:</span>
+                    <span class="prefix"><i title="Код відстеження вантажу дає можливість покупцям дізнаватися поточний статус замовлення" class="fa fa-question-circle helper helper-left"></i>Код відстеження:</span>
                     <span><strong>{{data.order.Hash}}</strong></span>
                 </li>
                 <li class="list-group-item">
@@ -38,7 +38,7 @@
                 </li>
                 {{#if data.order.Comment }}
                 <li class="list-group-item">
-                    <span class="prefix">Коментар:</span>
+                    <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i>Коментар:</span>
                     <span><strong>{{data.order.Comment}}</strong></span>
                 </li>
                 {{/if}}

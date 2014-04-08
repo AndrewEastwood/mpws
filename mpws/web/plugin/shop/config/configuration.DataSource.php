@@ -2,6 +2,9 @@
 
 class configurationShopDataSource extends objectConfiguration {
 
+    static $Table_ShopOrders = "shop_orders";
+    static $Table_ShopProducts = "shop_products";
+
     // Product base configuration >>>>>
     static function jsapiProductItem () {
         return self::jsapiGetDataSourceConfig(array(
@@ -281,7 +284,7 @@ class configurationShopDataSource extends objectConfiguration {
 
     static function jsapiShopOrders () {
         $config = self::jsapiShopOrderEntry(null);
-        $config['condition'] = null;
+        $config['condition'] = array();
         $config["order"] = array(
             "field" => "shop_orders.DateCreated",
             "ordering" => "DESC"
@@ -325,6 +328,29 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
     // <<<< Shop order
+    static function jsapiGetTableRecordsCount ($table) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => $table,
+            "condition" => array(
+                "filter" => "",
+                "values" => array()
+            ),
+            "fields" => array("@COUNT(*) AS ItemsCount"),
+            "offset" => 0,
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+
+    // >>>> Get records count
+
+
+
+    // <<<< Get records count
 
     // static function jsapiShopSiteOrdersCount () {
     //     return self::jsapiGetDataSourceConfig(array(

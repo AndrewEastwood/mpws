@@ -32,7 +32,7 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
                 self.$('#order-status-ID').editable({
                     mode: 'inline',
                     name: "Status",
-                    title: "Виберіть статус замовлення",
+                    title: lang.orderEntry_Popup_control_status,
                     type: "select",
                     value: this.model.get('order').Status,
                     pk: this.model.get('order').ID,
@@ -43,10 +43,12 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
                     success: function (data) {
                         // debugger;
                         self.model.set(self.model.parse.call(self.model, data));
+                        self.render();
                         Sandbox.eventNotify('plugin:shop:orderList:refresh');
                     }
                 });
                 // self.$('select').select2();
+                self.$('.helper').tooltip();
             });
             // order-status-ID
         }

@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `mpws_accountAddresses`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_accountAddresses` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
   `AccountID` int(11) DEFAULT NULL,
   `Address` varchar(500) NOT NULL,
   `POBox` varchar(50) NOT NULL,
@@ -42,6 +43,9 @@ CREATE TABLE `mpws_accountAddresses` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`AccountID`),
+  KEY `AccountID_2` (`AccountID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `mpws_accountAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -52,7 +56,7 @@ CREATE TABLE `mpws_accountAddresses` (
 
 LOCK TABLES `mpws_accountAddresses` WRITE;
 /*!40000 ALTER TABLE `mpws_accountAddresses` DISABLE KEYS */;
-INSERT INTO `mpws_accountAddresses` VALUES (5,79,'wwwww','fsdfsdf','rererererer','fdsfsdfsdf','REMOVED','2014-03-02 20:26:25','2014-03-02 22:37:12'),(19,79,'fsdfsdf','345345345','fsdfsdf','uuuuuuu','REMOVED','2014-03-02 22:47:47','2014-03-02 22:55:48'),(20,79,'dsadfasdasdfdfdsfdsf','fffff','ffff','dasdasdasdasd','REMOVED','2014-03-02 23:02:38','2014-03-03 00:40:52'),(21,79,'setsertser','tsetest','dfsdfsdfsd','fsdfsdfsdfsd','REMOVED','2014-03-03 00:40:27','2014-03-03 00:40:53'),(22,79,'Horodotska 123','79001','Ukraine','Lviv','REMOVED','2014-03-03 00:41:05','2014-03-10 00:40:42'),(23,79,'xxxxxx','xxxxxx','xxxxxx','xxxxxx','REMOVED','2014-03-03 01:00:12','2014-03-03 15:04:04'),(24,79,'Lvivska 34','57841','Ukraine','Kyiv','REMOVED','2014-03-03 19:10:39','2014-03-10 00:41:54'),(25,79,'Kyivska 3','78451','Ukraine','Rivne','ACTIVE','2014-03-04 02:22:33','2014-03-04 02:25:13'),(26,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:43:40','2014-03-04 02:43:40'),(27,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:43:46','2014-03-04 02:43:46'),(28,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:46:43','2014-03-04 02:46:43'),(29,NULL,'test','test','test','estsetsetset','ACTIVE','2014-03-05 22:52:14','2014-03-05 22:52:14'),(30,79,'Lvivska','78045','Ukraine','Kyiv','ACTIVE','2014-03-10 00:44:02','2014-03-10 00:44:02'),(31,79,'Zhutomyrska','79451','Ukraine','Dubno','ACTIVE','2014-03-10 00:44:58','2014-03-10 00:44:58');
+INSERT INTO `mpws_accountAddresses` VALUES (5,0,79,'wwwww','fsdfsdf','rererererer','fdsfsdfsdf','REMOVED','2014-03-02 20:26:25','2014-03-02 22:37:12'),(19,0,79,'fsdfsdf','345345345','fsdfsdf','uuuuuuu','REMOVED','2014-03-02 22:47:47','2014-03-02 22:55:48'),(20,0,79,'dsadfasdasdfdfdsfdsf','fffff','ffff','dasdasdasdasd','REMOVED','2014-03-02 23:02:38','2014-03-03 00:40:52'),(21,0,79,'setsertser','tsetest','dfsdfsdfsd','fsdfsdfsdfsd','REMOVED','2014-03-03 00:40:27','2014-03-03 00:40:53'),(22,0,79,'Horodotska 123','79001','Ukraine','Lviv','REMOVED','2014-03-03 00:41:05','2014-03-10 00:40:42'),(23,0,79,'xxxxxx','xxxxxx','xxxxxx','xxxxxx','REMOVED','2014-03-03 01:00:12','2014-03-03 15:04:04'),(24,0,79,'Lvivska 34','57841','Ukraine','Kyiv','REMOVED','2014-03-03 19:10:39','2014-03-10 00:41:54'),(25,0,79,'Kyivska 3','78451','Ukraine','Rivne','ACTIVE','2014-03-04 02:22:33','2014-03-04 02:25:13'),(26,0,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:43:40','2014-03-04 02:43:40'),(27,0,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:43:46','2014-03-04 02:43:46'),(28,0,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:46:43','2014-03-04 02:46:43'),(29,0,NULL,'test','test','test','estsetsetset','ACTIVE','2014-03-05 22:52:14','2014-03-05 22:52:14'),(30,0,79,'Lvivska','78045','Ukraine','Kyiv','ACTIVE','2014-03-10 00:44:02','2014-03-10 00:44:02'),(31,0,79,'Zhutomyrska','79451','Ukraine','Dubno','ACTIVE','2014-03-10 00:44:58','2014-03-10 00:44:58');
 /*!40000 ALTER TABLE `mpws_accountAddresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,7 +245,7 @@ CREATE TABLE `mpws_users` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_users_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Public site users';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -462,7 +466,7 @@ CREATE TABLE `shop_orders` (
 
 LOCK TABLES `shop_orders` WRITE;
 /*!40000 ALTER TABLE `shop_orders` DISABLE KEYS */;
-INSERT INTO `shop_orders` VALUES (19,1,79,0,'company_gunsel','test','test','NEW','feceb946892d6553534402fe85d34b0f','2014-03-01 14:38:46','2014-03-01 14:38:46'),(20,1,79,0,'company_novaposhta','tset','setset','LOGISTIC_DELIVERED','4a45f03d9c345814c22c3ba14977040f','2014-03-01 14:45:03','2014-03-01 14:45:03'),(21,1,79,0,'self','','','SHOP_CLOSED','bf62eae73bb93385458205350b41f5c8','2014-03-01 14:45:15','2014-03-01 14:45:15'),(22,1,79,26,'self','12','call','NEW','539c1281990325f8870ee236920231ca','2014-03-04 02:43:40','2014-03-04 02:43:40'),(23,1,79,27,'self','12','call','LOGISTIC_DELIVERED','594b40d6834fe6b7c1988e022f0e5833','2014-03-04 02:43:46','2014-03-04 02:43:46'),(24,1,79,28,'self','12','call','NEW','3bcff429fdb62932c9ff7636461b74e7','2014-03-04 02:46:43','2014-03-04 02:46:43'),(25,1,79,22,'self','12','444','NEW','91bac37fd7056ede8da053fae4164d71','2014-03-04 02:52:48','2014-03-04 02:52:48'),(26,1,79,22,'self','12','444','NEW','91a92b3864b2053b89d9214aa56f5f0d','2014-03-04 02:53:27','2014-03-04 02:53:27'),(27,1,79,24,'','','dedededede','ACTIVE','1206292bb1b863c76096e2e37d73232b','2014-03-04 03:02:31','2014-03-04 03:02:31'),(28,1,79,29,'company_novaposhta','434','testsetsetse','SHOP_CLOSED','cc9ee90f5fa3df9a1c2fa14f563f2483','2014-03-05 22:52:14','2014-03-05 22:52:14');
+INSERT INTO `shop_orders` VALUES (19,1,79,0,'company_gunsel','test','test','SHOP_CLOSED','feceb946892d6553534402fe85d34b0f','2014-03-01 14:38:46','2014-04-08 17:53:49'),(20,1,79,0,'company_novaposhta','tset','setset','LOGISTIC_DELIVERED','4a45f03d9c345814c22c3ba14977040f','2014-03-01 14:45:03','2014-03-01 14:45:03'),(21,1,79,0,'self','','','LOGISTIC_DELIVERING','bf62eae73bb93385458205350b41f5c8','2014-03-01 14:45:15','2014-03-01 14:45:15'),(22,1,79,26,'self','12','call','NEW','539c1281990325f8870ee236920231ca','2014-03-04 02:43:40','2014-03-04 02:43:40'),(23,1,79,27,'self','12','call','LOGISTIC_DELIVERED','594b40d6834fe6b7c1988e022f0e5833','2014-03-04 02:43:46','2014-03-04 02:43:46'),(24,1,79,28,'self','12','call','LOGISTIC_DELIVERING','3bcff429fdb62932c9ff7636461b74e7','2014-03-04 02:46:43','2014-04-08 18:02:18'),(25,1,79,22,'self','12','444','NEW','91bac37fd7056ede8da053fae4164d71','2014-03-04 02:52:48','2014-03-04 02:52:48'),(26,1,79,22,'self','12','444','NEW','91a92b3864b2053b89d9214aa56f5f0d','2014-03-04 02:53:27','2014-03-04 02:53:27'),(27,1,79,24,'','','dedededede','ACTIVE','1206292bb1b863c76096e2e37d73232b','2014-03-04 03:02:31','2014-04-08 22:58:01'),(28,1,79,29,'company_novaposhta','434','testsetsetse','SHOP_CLOSED','cc9ee90f5fa3df9a1c2fa14f563f2483','2014-03-05 22:52:14','2014-03-05 22:52:14');
 /*!40000 ALTER TABLE `shop_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -706,4 +710,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-01  1:57:35
+-- Dump completed on 2014-04-08 23:58:48
