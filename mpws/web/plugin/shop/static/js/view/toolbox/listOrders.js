@@ -164,14 +164,17 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         className: 'shop-toolbox-orders',
         initialize: function () {
             var self = this;
+            var jqXHR = null;
+
             Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
                 self.render();
             });
 
             Sandbox.eventSubscribe("plugin:shop:orderList:filter", function (filter) {
-                // debugger;
+                if (jqXHR)
+                    jqXHR.abort();
                 collection.queryParams.filter = filter;
-                collection.fetch({reset: true});
+                jqXHR = collection.fetch({reset: true});
             });
         },
         render: function () {

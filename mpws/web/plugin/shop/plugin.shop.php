@@ -793,7 +793,7 @@ class pluginShop extends objectPlugin {
             $configOrders['condition']['filter'] .= "Status (in) ?";
             $configOrders['condition']['values'][] = explode(',', $filter['status']);
         }
-
+        // sleep(3);
         // var_dump($configOrders);
 
         // get valid orders count
