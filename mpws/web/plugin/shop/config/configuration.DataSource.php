@@ -284,7 +284,10 @@ class configurationShopDataSource extends objectConfiguration {
 
     static function jsapiShopOrders () {
         $config = self::jsapiShopOrderEntry(null);
-        $config['condition'] = array();
+        $config['condition'] = array(
+            "filter" => "",
+            "values" => array()
+        );
         $config["order"] = array(
             "field" => "shop_orders.DateCreated",
             "ordering" => "DESC"

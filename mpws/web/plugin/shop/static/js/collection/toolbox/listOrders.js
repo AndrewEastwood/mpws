@@ -1,8 +1,9 @@
 define('plugin/shop/js/collection/toolbox/listOrders', [
+    'default/js/lib/sandbox',
     'customer/js/site',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
-], function (Site, _, PageableCollection) {
+], function (Sandbox, Site, _, PageableCollection) {
 
     var ListOrders = PageableCollection.extend({
 
@@ -20,8 +21,7 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
         queryParams: {
             totalPages: null,
             totalRecords: null,
-            sortKey: "sort",
-            // q: "state:closed repo:jashkenas/backbone"
+            sortKey: "sort"
         },
 
         parseState: function (resp, queryParams, state, options) {

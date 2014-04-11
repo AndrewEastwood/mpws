@@ -11,11 +11,20 @@ define("plugin/shop/js/view/toolbox/filteringListOrders", [
             'click input': 'applyFiltering'
         },
         applyFiltering: function () {
-            debugger;
+            // debugger;
             // var self = this;
-            // Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
-            //     self.render();
-            // });
+            var _filterData = {
+                status: [],
+                demo: 123
+            };
+
+            this.$('input:checked').each(function(){
+                _filterData.status.push($(this).val());
+            });
+
+            _filterData.status = _filterData.status.join(',')
+
+            Sandbox.eventNotify("plugin:shop:orderList:filter", _filterData);
         }
     });
 

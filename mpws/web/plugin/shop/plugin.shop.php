@@ -761,6 +761,7 @@ class pluginShop extends objectPlugin {
         //     return $dataObj;
         // }
 
+
         $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
         $configCount = configurationShopDataSource::jsapiGetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
 
@@ -783,6 +784,14 @@ class pluginShop extends objectPlugin {
                 "field" =>  'shop_orders' . DOT . $sort,
                 "ordering" => strtoupper($order)
             );
+        }
+
+        // filtering
+        $filter = libraryRequest::getValue('filter');
+
+        if (!empty($filter['status'])) {
+            $configOrders['condition']['filter'] .= "Status (in) ?";
+            $configOrders['condition']['values'][] = explode(',', $filter['status']);
         }
 
         // var_dump($configOrders);
@@ -823,10 +832,6 @@ class pluginShop extends objectPlugin {
         // var_dump($configOrder);
         $this->getCustomer()->processData($configOrder);
         return $dataObj;
-    }
-
-    private function _api_getOrdersCountByStatus ($status) {
-
     }
 
     private function _api_getListProducts_Managed () {
