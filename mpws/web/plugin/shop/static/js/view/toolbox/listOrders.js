@@ -109,7 +109,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         name: "Statuses",
         label: lang.pluginMenu_Orders_Grid_Column_Status,
         cell: "select",
-        optionValues: [["Male", "m"], ["Female", "f"]],
+        optionValues: [["Male", "m"], ["Female", "f"]]
         cell: Backgrid.SelectCell.extend({
             // It's possible to render an option group or use a
             // function to provide option values too.
