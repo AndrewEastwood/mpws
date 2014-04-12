@@ -787,13 +787,12 @@ class pluginShop extends objectPlugin {
         }
 
         // filtering
-        $filter = libraryRequest::getValue('filter');
-
-        if (!empty($filter['status'])) {
-            $configOrders['condition']['filter'] .= "Status (in) ?";
-            $configOrders['condition']['values'][] = explode(',', $filter['status']);
+        $filterBy_status = libraryRequest::getValue('status');
+        if (!empty($filterBy_status)) {
+            $configOrders['condition']['filter'] .= "Status (=) ?";
+            $configOrders['condition']['values'][] = $filterBy_status;
         }
-        // sleep(3);
+
         // var_dump($configOrders);
 
         // get valid orders count
@@ -801,9 +800,23 @@ class pluginShop extends objectPlugin {
 
         // get data
         $dataOrders = $this->getCustomer()->processData($configOrders);
-        $dataObj->setData('orders', $dataOrders);
 
         $dataCount = $this->getCustomer()->processData($configCount);
+
+        $availableStatuses = array(
+            "name" => "statuses",
+            "values" => array(
+                array("NEW", "NEW"),
+                array("OUTOFSTOCK", "OUTOFSTOCK"),
+                array("COMINGSOON", "COMINGSOON")
+            )
+        );
+
+        foreach ($dataOrders as $key => $value) {
+            $dataOrders[$key]['Statuses'] = $availableStatuses;
+        }
+
+        $dataObj->setData('orders', $dataOrders);
         $dataObj->setData('total_count', count($dataCount['ItemsCount']));
 
         return $dataObj;

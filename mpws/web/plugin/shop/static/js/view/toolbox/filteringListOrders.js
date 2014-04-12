@@ -14,15 +14,14 @@ define("plugin/shop/js/view/toolbox/filteringListOrders", [
             // debugger;
             // var self = this;
             var _filterData = {
-                status: [],
-                demo: 123
+                status: []
             };
 
             this.$('input:checked').each(function(){
                 _filterData.status.push($(this).val());
             });
 
-            _filterData.status = _filterData.status.join(',')
+            _filterData.status = _filterData.status.join(',');
 
             Sandbox.eventNotify("plugin:shop:orderList:filter", _filterData);
         }

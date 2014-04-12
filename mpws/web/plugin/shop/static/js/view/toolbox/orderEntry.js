@@ -2,12 +2,14 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/js/model/toolbox/orderEntry',
+    'default/js/lib/bootstrap-dialog',
+    /* template */
     'default/js/plugin/hbs!plugin/shop/hbs/toolbox/orderEntry',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/nls/toolbox',
     // "default/js/lib/select2/select2",
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, MView, ModelOrderEntry, tpl, lang) {
+], function (Sandbox, MView, ModelOrderEntry, BootstrapDialog, tpl, lang) {
 
     var OrderItem = MView.extend({
         // tagName: 'div',
@@ -22,6 +24,19 @@ define("plugin/shop/js/view/toolbox/orderEntry", [
             //     orderID: orderID
             // });
             this.on('mview:renderComplete', function () {
+
+                BootstrapDialog.show({
+                    title: lang.orderEntry_Popup_title + data.oid,
+                    message: self.$el,
+                    cssClass: 'shop-toolbox-order-edit',
+                    buttons: [{
+                        label: lang.orderEntry_Popup_button_OK,
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    }]
+                });
+
                 var source = self.$('#order-status-control-ID option').map(function(idx, option){
                     return {
                         value: $(option).attr('value'),

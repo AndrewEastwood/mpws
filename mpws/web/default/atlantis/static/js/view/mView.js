@@ -150,12 +150,12 @@ define("default/js/view/mView", [
                 var _tplExtras = null;
                 if (this.isCollectionView()) {
                     _tplData = this.collection.toJSON();
-                    _tplUrlOptions = this.collection.getUrlOptions();
-                    _tplExtras = this.collection.getExtras();
+                    _tplUrlOptions = this.collection.getUrlOptions && this.collection.getUrlOptions();
+                    _tplExtras = this.collection.getExtras && this.collection.getExtras();
                 } else if (this.isModelView()) {
                     _tplData = this.model.toJSON();
-                    _tplUrlOptions = this.model.getUrlOptions();
-                    _tplExtras = this.model.getExtras();
+                    _tplUrlOptions = this.model.getUrlOptions && this.model.getUrlOptions();
+                    _tplExtras = this.model.getExtras && this.model.getExtras();
                 }
                 return {
                     lang: this.lang || {},
