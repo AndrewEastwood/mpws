@@ -800,25 +800,14 @@ class pluginShop extends objectPlugin {
 
         // get data
         $dataOrders = $this->getCustomer()->processData($configOrders);
+        $dataObj->setData('orders', $dataOrders);
 
         $dataCount = $this->getCustomer()->processData($configCount);
-
-        $availableStatuses = array(
-            "name" => "statuses",
-            "values" => array(
-                array("NEW", "NEW"),
-                array("OUTOFSTOCK", "OUTOFSTOCK"),
-                array("COMINGSOON", "COMINGSOON")
-            )
-        );
-
-        foreach ($dataOrders as $key => $value) {
-            $dataOrders[$key]['Statuses'] = $availableStatuses;
-        }
-
-        $dataObj->setData('orders', $dataOrders);
         $dataObj->setData('total_count', count($dataCount['ItemsCount']));
 
+        $availableStatuses = array("NEW", "OUTOFSTOCK", "COMINGSOON");
+        $dataObj->setData('statuses', $availableStatuses);
+        
         return $dataObj;
     }
 

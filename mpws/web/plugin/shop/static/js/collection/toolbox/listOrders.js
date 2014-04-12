@@ -3,7 +3,9 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
     'customer/js/site',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
-], function (Sandbox, Site, _, PageableCollection) {
+    /* lang */
+    'default/js/plugin/i18n!plugin/shop/nls/toolbox',
+], function (Sandbox, Site, _, PageableCollection, lang) {
 
     var ListOrders = PageableCollection.extend({
 
@@ -31,7 +33,22 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
         },
 
         parseRecords: function (resp, options) {
-            return resp.shop.orders;
+            // debugger;
+            var _orders = resp.shop.orders;
+            var _statuses = [{
+                name:"Statuses",
+                values: _(resp.shop.statuses).map(function(status){
+                    return [status, status];
+                })
+            }];
+            // transform order status to render it as select control
+            _(_orders).map(function (orderEntry) {
+                // debugger;
+                orderEntry.Statuses = _statuses;
+                return orderEntry;
+            })
+            // debugger;
+            return _orders;
         }
 
     });

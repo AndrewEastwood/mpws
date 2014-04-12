@@ -12,8 +12,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-    "default/js/lib/backgrid-htmlcell",
-    "default/js/lib/backgrid-select2-cell"
+    "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
 
     var orderEntry = new ViewOrderEntry();
@@ -87,8 +86,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
 //     }
 //   })
 // });
-
-    var columns = [{
+    var columnActions = {
         name: "Actions",
         label: lang.pluginMenu_Orders_Grid_Column_Actions,
         cell: "html",
@@ -105,10 +103,20 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 return _link;
             }
         }
-    }, {
+    };
+
+    var columnStatuses = {
         name: "Statuses",
-        cell: "select2"
-    }, {
+        label: lang.pluginMenu_Orders_Grid_Column_Status,
+        cell: "select",
+        cell: Backgrid.SelectCell.extend({
+            // It's possible to render an option group or use a
+            // function to provide option values too.
+            optionValues: [["Male", "m"], ["Female", "f"]]
+        })
+    };
+
+    var columnShipping = {
         name: "Shipping",
         label: lang.pluginMenu_Orders_Grid_Column_Shipping,
         cell: "string",
@@ -122,22 +130,30 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 return lang.logisticAgency_Unknown;
             }
         }
-    }, {
+    };
+
+    var columnWarehouse = {
         name: "Warehouse",
         label: lang.pluginMenu_Orders_Grid_Column_Warehouse,
         cell: "string",
         editable: false
-    }, {
+    };
+
+    var columnDateUpdated = {
         name: "DateUpdated",
         label: lang.pluginMenu_Orders_Grid_Column_DateUpdated,
         cell: "datetime",
         editable: false
-    }, {
+    };
+
+    var columnDateCreated = {
         name: "DateCreated",
         label: lang.pluginMenu_Orders_Grid_Column_DateCreated,
         cell: "datetime",
         editable: false
-    }];
+    };
+
+    var columns = [columnActions, columnStatuses, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
 
     var ListOrders = MView.extend({
         template: tpl,
