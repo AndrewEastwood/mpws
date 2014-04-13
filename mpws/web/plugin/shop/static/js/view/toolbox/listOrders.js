@@ -15,12 +15,24 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
 
-    var orderEntry = new ViewOrderEntry();
-    Sandbox.eventSubscribe('shop-toolbox-order-edit', function(data){
+    var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
+    var orderStatusValues = [];
+    _(statuses).map(function(status){
+        // return status;
+        return orderStatusValues.push([lang["order_status_" + status] || status, status]);
+    })
+    // debugger;
+    Sandbox.eventSubscribe('plugin:shop:order:edit', function(data){
+        var orderEntry = new ViewOrderEntry();
         orderEntry.fetchAndRender({
             orderID: data.oid
         });
     });
+    // Sandbox.eventSubscribe('plugin:shop:order:setStatusList', function(data){
+    //     debugger;
+    //     columnStatuses.s =5;
+    //     orderStatusValues = data;
+    // });
 
 // {
 //     name: "Status",
@@ -97,7 +109,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 var _link = $('<a>').attr({
                     href: "javascript://",
                     "data-oid": model.get('ID'),
-                    "data-action": "shop-toolbox-order-edit"
+                    "data-action": "plugin:shop:order:edit"
                 }).text(lang.pluginMenu_Orders_Grid_link_Edit);
                 // debugger;
                 return _link;
@@ -105,15 +117,22 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         }
     };
 
-    var columnStatuses = {
-        name: "Statuses",
+    var columnStatus = {
+        name: "Status",
         label: lang.pluginMenu_Orders_Grid_Column_Status,
-        cell: "select",
-        optionValues: [["Male", "m"], ["Female", "f"]]
         cell: Backgrid.SelectCell.extend({
             // It's possible to render an option group or use a
             // function to provide option values too.
-            optionValues: [["Male", "m"], ["Female", "f"]]
+            optionValues: orderStatusValues,
+            initialize: function () {
+                // this.prototype.initialize.call(this);
+                Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+                // debugger;
+                this.listenTo(this.model, "change:Status", function(model, status) {
+                    // debugger;
+                    ViewOrderEntry.updateOrderStatus(model.get('ID'), status);
+                });
+            }
         })
     };
 
@@ -154,7 +173,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
         editable: false
     };
 
-    var columns = [columnActions, columnStatuses, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
+    var columns = [columnActions, columnStatus, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
 
     var ListOrders = MView.extend({
         template: tpl,
@@ -174,6 +193,11 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                   columns: columns,
                   collection: collection
                 });
+
+                // debugger;
+                // ToolboxListOrdersGrid.listenTo(ToolboxListOrdersGrid.model, "backgrid:edited", function (model, column, command) {
+                //     debugger;
+                // });
 
                 // data filtering
                 // var filteringListOrders = new FilteringListOrders();
@@ -214,14 +238,16 @@ define("plugin/shop/js/view/toolbox/listOrders", [
             // delivered
             // closed
             // debugger;
-            var _statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
-            var _ordersByStatus = _(_statuses).map(function(status){
+            var _ordersByStatus = _(statuses).map(function(status){
                 return _getTableCreateFn(status);
             });
 
             Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
                 // debugger;
-                self.collection.fetch({reset: true});
+                _(_ordersByStatus).each(function(orderList) {
+                    orderList.fetch({reset: true});
+                });
+                // self.collection.fetch({reset: true});
             });
 
             // Sandbox.eventSubscribe("plugin:shop:orderList:filter", function (filter) {

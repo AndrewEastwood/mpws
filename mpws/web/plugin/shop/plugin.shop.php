@@ -805,7 +805,7 @@ class pluginShop extends objectPlugin {
         $dataCount = $this->getCustomer()->processData($configCount);
         $dataObj->setData('total_count', count($dataCount['ItemsCount']));
 
-        $availableStatuses = array("NEW", "OUTOFSTOCK", "COMINGSOON");
+        $availableStatuses = array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
         $dataObj->setData('statuses', $availableStatuses);
         
         return $dataObj;
@@ -820,14 +820,20 @@ class pluginShop extends objectPlugin {
         }
 
         // get fields to update
-        $fieldName = libraryRequest::getPostValue('name');
-        $fieldValue = libraryRequest::getPostValue('value');
-        if (empty($fieldName)) {
+        $Status = libraryRequest::getPostValue('Status');
+        // $fieldValue = libraryRequest::getPostValue('value');
+        if (empty($Status)) {
             $dataObj->setError('EmptyFieldName');
             return $dataObj;
         }
 
-        $data[$fieldName] = $fieldValue;
+        // Allow to update the Status filed only
+        // if ($fieldName !== "Status") {
+        //     $dataObj->setError('WrongFieldName');
+        //     return $dataObj;
+        // }
+
+        $data['Status'] = $Status;
         $data['DateUpdated'] = date('Y:m:d H:i:s');
 
         $configOrder = configurationShopDataSource::jsapiShopUpdateOrderEntry($orderID, $data);

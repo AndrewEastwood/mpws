@@ -35,19 +35,19 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
         parseRecords: function (resp, options) {
             // debugger;
             var _orders = resp.shop.orders;
-            var _statuses = [{
-                name:"Statuses",
-                values: _(resp.shop.statuses).map(function(status){
-                    return [status, status];
-                })
-            }];
+            // var _statuses = [
+            //     _(resp.shop.statuses).map(function(status){
+            //         return [status, lang["order_status_" + status] || status];
+            //     })
+            // ];
             // transform order status to render it as select control
             _(_orders).map(function (orderEntry) {
                 // debugger;
-                orderEntry.Statuses = _statuses;
+                orderEntry.Status = [orderEntry.Status];
                 return orderEntry;
-            })
+            });
             // debugger;
+            // Sandbox.eventNotify('plugin:shop:order:setStatusList', _statuses);
             return _orders;
         }
 
