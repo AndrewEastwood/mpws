@@ -13,7 +13,7 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
 
         // Initial pagination states
         state: {
-            pageSize: 2,
+            pageSize: 10,
             // sortKey: "updated",
             order: 1
         },
