@@ -509,7 +509,7 @@ class pluginShop extends objectPlugin {
             $accountID = null;
             $addressID = null;
 
-            if (!$cartUser['shopCartProfileID'] || $cartUser['shopCartProfileID'] !== $_SESSION['Account:ProfileID']) {
+            if (!isset($cartUser['shopCartProfileID']) || $cartUser['shopCartProfileID'] !== $_SESSION['Account:ProfileID']) {
 
                 // save account
                 // -----------------------
