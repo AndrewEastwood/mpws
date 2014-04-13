@@ -736,6 +736,10 @@ class pluginShop extends objectPlugin {
 
     // toolbox orders
     // -----------------------------------------------
+    private function _api_getOrderAvailableStatusList () {
+        return array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
+    }
+
     private function _api_getOrderStatus ($orderHash) {
         // $orderHash
         $dataObj = new libraryDataObject();
@@ -754,22 +758,21 @@ class pluginShop extends objectPlugin {
         // limit
         $dataObj = new libraryDataObject();
 
-        $limit = 25;
+        // $limit = 2;
 
         // if (!$this->getCustomer()->getAccess()) {
         //     $dataObj->setError('AccessDenied');
         //     return $dataObj;
         // }
 
-
         $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
         $configCount = configurationShopDataSource::jsapiGetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
-
-        $configOrders['limit'] = $limit;
 
         // pagination
         $page = libraryRequest::getValue('page');
         $per_page = libraryRequest::getValue('per_page');
+
+        $configOrders['limit'] = $per_page;
 
         if (!empty($page) && !empty($per_page)) {
             $configOrders['offset'] = ($page - 1) * $per_page;
@@ -803,9 +806,9 @@ class pluginShop extends objectPlugin {
         $dataObj->setData('orders', $dataOrders);
 
         $dataCount = $this->getCustomer()->processData($configCount);
-        $dataObj->setData('total_count', count($dataCount['ItemsCount']));
+        $dataObj->setData('total_count', $dataCount['ItemsCount']);
 
-        $availableStatuses = array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
+        $availableStatuses = $this->_api_getOrderAvailableStatusList();
         $dataObj->setData('statuses', $availableStatuses);
         
         return $dataObj;
@@ -854,7 +857,7 @@ class pluginShop extends objectPlugin {
             return $dataObj;
         }
 
-        $limit = 25;
+        // $limit = 25;
 
         // if (!$this->getCustomer()->getAccess()) {
         //     $dataObj->setError('AccessDenied');
@@ -870,11 +873,13 @@ class pluginShop extends objectPlugin {
         // $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrands();
         // $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategories();
 
-        $dataConfigProducts['limit'] = $limit;
+        // $dataConfigProducts['limit'] = $limit;
 
         // pagination
         $page = libraryRequest::getValue('page');
         $per_page = libraryRequest::getValue('per_page');
+
+        $dataConfigProducts['limit'] = $per_page;
 
         if (!empty($page) && !empty($per_page)) {
             $dataConfigProducts['offset'] = ($page - 1) * $per_page;
@@ -886,10 +891,17 @@ class pluginShop extends objectPlugin {
 
         if (!empty($sort) && !empty($order)) {
             $dataConfigProducts["order"] = array(
-                "field" =>  'shop_orders' . DOT . $sort,
+                "field" =>  'shop_products' . DOT . $sort,
                 "ordering" => strtoupper($order)
             );
         }
+
+        // filtering
+        // $filterBy_status = libraryRequest::getValue('status');
+        // if (!empty($filterBy_status)) {
+        //     $configOrders['condition']['filter'] .= "Status (=) ?";
+        //     $configOrders['condition']['values'][] = $filterBy_status;
+        // }
 
         // var_dump($dataConfigProducts);
 
@@ -902,7 +914,7 @@ class pluginShop extends objectPlugin {
         $dataObj->setData('products', $dataProducts);
 
         $dataCount = $this->getCustomer()->processData($configCount);
-        $dataObj->setData('total_count', count($dataCount['ItemsCount']));
+        $dataObj->setData('total_count', $dataCount['ItemsCount']);
 
         return $dataObj;
     }

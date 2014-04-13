@@ -13,7 +13,7 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
 
         // Initial pagination states
         state: {
-            pageSize: 25,
+            pageSize: 2,
             // sortKey: "updated",
             order: 1
         },
@@ -27,9 +27,11 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
         },
 
         parseState: function (resp, queryParams, state, options) {
-            return {
+            var state = {
                 totalRecords: parseInt(resp.shop.total_count, 10)
             };
+            Sandbox.eventNotify('plugin:shop:orderList:parseState', {collection: this, state: state});
+            return state;
         },
 
         parseRecords: function (resp, options) {
@@ -47,7 +49,8 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
                 return orderEntry;
             });
             // debugger;
-            // Sandbox.eventNotify('plugin:shop:order:setStatusList', _statuses);
+            // Sandbox.eventNotify('plugin:shop:orderList:dataReceived', );
+            // Sandbox.eventNotify('plugin:shop:orderList:dataReceived', resp.shop);
             return _orders;
         }
 

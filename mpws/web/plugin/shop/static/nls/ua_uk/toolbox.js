@@ -23,6 +23,7 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         pluginMenu_Products: 'Товари',
         pluginMenu_Orders: 'Замовлення',
         pluginMenu_Offers: 'Акції та Розпродаж',
+        pluginMenu_Reports: 'Звіти',
         // Order list
         pluginMenu_Orders_Grid_Column_ID: "#",
         pluginMenu_Orders_Grid_Column_Shipping: "Доставка",

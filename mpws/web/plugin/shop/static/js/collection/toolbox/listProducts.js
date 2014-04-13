@@ -10,7 +10,7 @@ define('plugin/shop/js/collection/toolbox/listProducts', [
 
         // Initial pagination states
         state: {
-            pageSize: 25,
+            pageSize: 5,
             // sortKey: "updated",
             order: 1
         },

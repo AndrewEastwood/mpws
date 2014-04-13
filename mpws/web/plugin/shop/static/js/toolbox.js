@@ -44,7 +44,7 @@ define("plugin/shop/js/toolbox", [
                     // create new view
                     var listProducts = new ListProducts();
 
-                    listProducts.fetchAndRender({reset: true});
+                    listProducts.fetchAndRender();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopListProducts',

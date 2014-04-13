@@ -1573,7 +1573,6 @@ var SelectCell = Backgrid.SelectCell = Cell.extend({
      @throws {TypeError} If `optionsValues` is undefined.
   */
   initialize: function (options) {
-    // debugger;
     SelectCell.__super__.initialize.apply(this, arguments);
     this.listenTo(this.model, "backgrid:edit", function (model, column, cell, editor) {
       if (column.get("name") == this.column.get("name")) {
@@ -1590,7 +1589,7 @@ var SelectCell = Backgrid.SelectCell = Cell.extend({
   */
   render: function () {
     this.$el.empty();
-    // debugger;
+
     var optionValues = _.result(this, "optionValues");
     var model = this.model;
     var rawData = this.formatter.fromRaw(model.get(this.column.get("name")), model);

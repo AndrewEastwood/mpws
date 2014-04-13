@@ -1,3 +1,79 @@
+<div class="row well">
+
+    <button class="button">
+      <i class="fa fa-plus-circle"></i>
+      Новий товар
+    </button>
+      <button class="button">
+        <i class="fa fa-plus-circle"></i>
+        Нова категорія
+      </button>
+    <button class="button">
+      <i class="fa fa-plus-circle"></i>
+      Новий виробник
+    </button>
+
+</div>
+
+<div class="row well">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#order_status_NEW-ID" data-toggle="tab">
+                <i class="fa fa-check"></i>
+                {{lang.order_status_NEW}}Активні
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#order_status_ACTIVE-ID" data-toggle="tab">
+                <i class="fa fa-times"></i>
+                {{lang.order_status_ACTIVE}}Неактивні
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#order_status_ACTIVE-ID" data-toggle="tab">
+                <i class="fa fa-frown-o"></i>
+                {{lang.order_status_ACTIVE}}Незаповнені
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#order_status_LOGISTIC_DELIVERED-ID" data-toggle="tab">
+                <i class="fa fa-gift"></i>
+                {{lang.order_status_LOGISTIC_DELIVERED}}Акції та розпродажі
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#order_status_LOGISTIC_DELIVERED-ID" data-toggle="tab">
+                <i class="fa fa-signal"></i>
+                {{lang.order_status_LOGISTIC_DELIVERED}}Популярні
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#order_status_LOGISTIC_DELIVERED-ID" data-toggle="tab">
+                <i class="fa fa-thumbs-down"></i>
+                {{lang.order_status_LOGISTIC_DELIVERED}}Непопулярні
+                <span class="badge"></span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="order_status_NEW-ID"></div>
+      <div class="tab-pane" id="order_status_ACTIVE-ID"></div>
+      <div class="tab-pane" id="order_status_LOGISTIC_DELIVERING-ID"></div>
+      <div class="tab-pane" id="order_status_LOGISTIC_DELIVERED-ID"></div>
+      <div class="tab-pane" id="order_status_SHOP_CLOSED-ID"></div>
+    </div>
+</div>
+
+
 <div class="row">
 
     <!-- categories and orgins container -->

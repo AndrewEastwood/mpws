@@ -11,7 +11,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
     'default/js/plugin/i18n!plugin/shop/nls/toolbox',
     /* extensions */
     "default/js/lib/backgrid-paginator",
-    "default/js/lib/backgrid-select-all",
+    "default/js/lib/backgrid-htmlcell",
     'default/js/lib/jstree'
 ], function (Sandbox, MView, CollectionListProducts, ViewOrderEntry, BootstrapDialog, Backgrid, tpl, lang) {
 
@@ -20,7 +20,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
         BootstrapDialog.show({
             title: lang.orderEntry_Popup_title + data.oid,
             message: orderEntry.$el,
-            cssClass: 'shop-toolbox-product-edit',
+            cssClass: 'plugin:shop:product:edit',
             buttons: [{
                 label: lang.orderEntry_Popup_button_OK,
                 action: function (dialog) {
@@ -32,77 +32,85 @@ define("plugin/shop/js/view/toolbox/listProducts", [
             orderID: data.oid
         });
     })
-    // enable the select-all extension
-    // name: "",
-    // cell: "select-row",
-    // headerCell: "select-all"
-    // Column definitions
-    var columns = [{
-        // enable the select-all extension
-        name: "",
-        cell: "select-row",
-        headerCell: "select-all",
-        // label: lang.pluginMenu_Orders_Grid_Column_ID,
-        // cell: "string",
-        // editable: false
-    }, {
-        name: "Name",
-        label: lang.pluginMenu_Products_Grid_Column_Name,
-        cell: "string",
-        editable: false,
-    }, {
-        name: "Model",
-        label: lang.pluginMenu_Products_Grid_Column_Model,
-        cell: "string",
-        editable: false
-    }, {
-        name: "SKU",
-        label: lang.pluginMenu_Products_Grid_Column_SKU,
-        cell: "string",
-        editable: false
-    }, {
-        name: "Price",
-        label: lang.pluginMenu_Products_Grid_Column_Price,
-        cell: "string",
-        editable: false
-    }, {
-        name: "Status",
-        label: lang.pluginMenu_Products_Grid_Column_Status,
-        cell: "select-row",
-        editable: false,
-        formatter: {
-            fromRaw: function (value) {
-                return value === "ACTIVE";
-            }
-        }
-    }, {
-        name: "DateUpdated",
-        label: lang.pluginMenu_Products_Grid_Column_DateUpdated,
-        cell: "string",
-        editable: false
-    }, {
-        name: "DateCreated",
-        label: lang.pluginMenu_Products_Grid_Column_DateCreated,
-        cell: "string",
-        editable: false
-    }, {
+
+    var columnActions = {
         name: "Actions",
         label: lang.pluginMenu_Products_Grid_Column_Actions,
-        cell: "string",
+        cell: "html",
         editable: false,
+        sortable: false,
         formatter: {
             fromRaw: function (value, model) {
                 // debugger;
                 var _link = $('<a>').attr({
                     href: "javascript://",
                     "data-oid": model.get('ID'),
-                    "data-action": "shop-toolbox-product-edit"
+                    "data-action": "plugin:shop:product:edit"
                 }).text(lang.pluginMenu_Orders_Grid_link_Edit);
                 // debugger;
                 return _link;
             }
         }
-    }];
+    };
+
+    var columnName = {
+        name: "Name",
+        label: lang.pluginMenu_Products_Grid_Column_Name,
+        cell: "string",
+        editable: false,
+    };
+
+    var columnModel = {
+        name: "Model",
+        label: lang.pluginMenu_Products_Grid_Column_Model,
+        cell: "string",
+        editable: false
+    };
+
+    var columnSKU = {
+        name: "SKU",
+        label: lang.pluginMenu_Products_Grid_Column_SKU,
+        cell: "string",
+        editable: false
+    };
+
+    var columnPrice = {
+        name: "Price",
+        label: lang.pluginMenu_Products_Grid_Column_Price,
+        cell: "string",
+        editable: false
+    };
+
+    var columnStatus = {
+        name: "Status",
+        label: lang.pluginMenu_Products_Grid_Column_Status,
+        cell: "boolean",
+        editable: true,
+        formatter: {
+            fromRaw: function (value) {
+                return value === "ACTIVE";
+            },
+            toRaw: function (value) {
+                return value ? "ACTIVE" : "";
+            }
+        }
+    };
+
+    var columnDateUpdated = {
+        name: "DateUpdated",
+        label: lang.pluginMenu_Products_Grid_Column_DateUpdated,
+        cell: "string",
+        editable: false
+    };
+
+    var columnDateCreated = {
+        name: "DateCreated",
+        label: lang.pluginMenu_Products_Grid_Column_DateCreated,
+        cell: "string",
+        editable: false
+    };
+
+    var columns = [columnActions, columnName, columnModel, columnSKU, columnPrice, columnStatus, columnDateUpdated, columnDateCreated];
 
     var collection = new CollectionListProducts();
 
@@ -110,7 +118,6 @@ define("plugin/shop/js/view/toolbox/listProducts", [
       columns: columns,
       collection: collection
     });
-
 
     var Paginator = new Backgrid.Extension.Paginator({
 
@@ -125,7 +132,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
       slideScale: 0.25, // Default is 0.5
 
       // Whether sorting should go back to the first page
-      goBackFirstOnSort: false, // Default is true
+      // goBackFirstOnSort: false, // Default is true
 
       collection: collection
     });
@@ -138,7 +145,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
         initialize: function () {
             MView.prototype.initialize.call(this);
             var self = this;
-            Sandbox.eventSubscribe("shop-toolbox-listProducts-refresh", function () {
+            Sandbox.eventSubscribe("plugin:shop:listProducts:refresh", function () {
                 self.render();
             });
         },

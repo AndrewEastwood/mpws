@@ -15,10 +15,10 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
 
+    // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
     var orderStatusValues = [];
     _(statuses).map(function(status){
-        // return status;
         return orderStatusValues.push([lang["order_status_" + status] || status, status]);
     })
     // debugger;
@@ -28,81 +28,16 @@ define("plugin/shop/js/view/toolbox/listOrders", [
             orderID: data.oid
         });
     });
-    // Sandbox.eventSubscribe('plugin:shop:order:setStatusList', function(data){
-    //     debugger;
-    //     columnStatuses.s =5;
-    //     orderStatusValues = data;
+    // Sandbox.eventSubscribe('plugin:shop:orderList:dataReceived', function(data){
+    //     //
     // });
 
-// {
-//     name: "Status",
-//     label: lang.pluginMenu_Orders_Grid_Column_Status,
-//     cell: "html",
-//     editable: false,
-//     formatter: {
-//         fromRaw: function (value) {
-//             var _wrapper = $('<div>');
-//             var _icon = $('<i>').addClass('fa');
-//             var _label = $('<span>').text(lang['order_status_' + value]);
-//             switch (value) {
-//                 case "NEW" : {
-//                     _icon.addClass('fa-dot-circle-o')
-//                     break;
-//                 }
-//                 case "ACTIVE" : {
-//                     _icon.addClass('fa-circle')
-//                     break;
-//                 }
-//                 case "LOGISTIC_DELIVERING" : {
-//                     _icon.addClass('fa-plane')
-//                     break;
-//                 }
-//                 case "LOGISTIC_DELIVERED" : {
-//                     _icon.addClass('fa-gift')
-//                     break;
-//                 }
-//                 case "SHOP_CLOSED" : {
-//                     _icon.addClass('fa-check')
-//                     break;
-//                 }
-//             }
-
-//             _wrapper.append([_icon, _label])
-
-//             return _wrapper;
-//         }
-//     }
-// }, 
-// Just like SelectCell, Select2Cell supports option lists and groups
-// var numbers = [{name: 10, values: [
-//   [1, 1], [2, 2], [3, 3], [4, 4], [5, 5],
-//   [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]
-// ]}];
-
-// var MySelect2Cell = Backgrid.Extension.Select2Cell.extend({
-//   // any options specific to `select2` goes here
-//   select2Options: {
-//     // default is false because Backgrid will save the cell's value
-//     // and exit edit mode on enter
-//     openOnEnter: false
-//   },
-//   optionValues: numbers,
-//   // since the value obtained from the underlying `select` element will always be a string,
-//   // you'll need to provide a `toRaw` formatting method to convert the string back to a
-//   // type suitable for your model, which is an integer in this case.
-//   formatter: _.extend({}, Backgrid.SelectFormatter.prototype, {
-//     toRaw: function (formattedValue, model) {
-//       return formattedValue == null ? [] : _.map(formattedValue, function (v) {
-//         return parseInt(v);
-//       })
-//     }
-//   })
-// });
     var columnActions = {
         name: "Actions",
         label: lang.pluginMenu_Orders_Grid_Column_Actions,
         cell: "html",
         editable: false,
+        sortable: false,
         formatter: {
             fromRaw: function (value, model) {
                 // debugger;
@@ -162,14 +97,14 @@ define("plugin/shop/js/view/toolbox/listOrders", [
     var columnDateUpdated = {
         name: "DateUpdated",
         label: lang.pluginMenu_Orders_Grid_Column_DateUpdated,
-        cell: "datetime",
+        cell: "string",
         editable: false
     };
 
     var columnDateCreated = {
         name: "DateCreated",
         label: lang.pluginMenu_Orders_Grid_Column_DateCreated,
-        cell: "datetime",
+        cell: "string",
         editable: false
     };
 
@@ -215,7 +150,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                   slideScale: 0.25, // Default is 0.5
 
                   // Whether sorting should go back to the first page
-                  goBackFirstOnSort: false, // Default is true
+                  // goBackFirstOnSort: false, // Default is true
 
                   collection: collection
                 });
@@ -238,43 +173,36 @@ define("plugin/shop/js/view/toolbox/listOrders", [
             // delivered
             // closed
             // debugger;
-            var _ordersByStatus = _(statuses).map(function(status){
+            var _ordersByStatus = _(statuses).map(function (status){
                 return _getTableCreateFn(status);
             });
 
+            // refresh all lists
             Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
                 // debugger;
                 _(_ordersByStatus).each(function(orderList) {
                     orderList.fetch({reset: true});
                 });
-                // self.collection.fetch({reset: true});
             });
 
-            // Sandbox.eventSubscribe("plugin:shop:orderList:filter", function (filter) {
-            //     if (jqXHR)
-            //         jqXHR.abort();
-            //     collection.queryParams.filter = filter;
-            //     jqXHR = self.collection.fetch({reset: true});
-            // });
+            // when we know how many records are availabel of particular filter
+            // we do update  tapPage badge with records count
+            Sandbox.eventSubscribe('plugin:shop:orderList:parseState', function (data) {
+                // debugger;
+                var $badge = self.$('a[href="#order_status_' + data.collection.queryParams.status + '-ID"] .badge');
+                $badge.text(data.state.totalRecords || "");
+            });
 
+            // inject all lists into tabPages
             this.on('mview:renderComplete', function () {
                 var self = this;
                 _(_ordersByStatus).each(function(orderListBuilder){
-
                     var $tabPage = self.$('.tab-pane#order_status_' + orderListBuilder.status + '-ID');
-
                     $tabPage.empty();
                     $tabPage.append(orderListBuilder.ToolboxListOrdersGrid.render().el);
                     $tabPage.append(orderListBuilder.Paginator.render().el);
                     orderListBuilder.fetch({reset: true});
-
                 });
-                // this.$el.empty();
-                // this.$el.append(filteringListOrders.render().el);
-                // // debugger;
-                // this.$el.append(ToolboxListOrdersGrid.render().el);
-                // this.$el.append(Paginator.render().el);
-                // collection.fetch({reset: true});
             });
         }
     });
