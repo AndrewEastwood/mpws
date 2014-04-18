@@ -48,5 +48,11 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         pluginMenu_Products_Grid_Column_DateUpdated: "Оновлений",
         pluginMenu_Products_Grid_Column_DateCreated: "Створений",
         pluginMenu_Products_Grid_Column_Actions: "Операції",
+        product_type_Active: "Активні",
+        product_type_Inactive: "Неактивні",
+        product_type_Uncompleted: "Незаповнені",
+        product_type_Sales: "Акції та розпродажі",
+        product_type_Popular: "Популярні",
+        product_type_NotPopular: "Непопулярні",
     }, CustomerShop);
 });

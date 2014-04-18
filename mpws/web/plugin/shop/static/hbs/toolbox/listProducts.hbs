@@ -1,78 +1,19 @@
 <div class="row well">
 
-    <button class="button">
+    <button class="button button-add-product">
       <i class="fa fa-plus-circle"></i>
       Новий товар
     </button>
-      <button class="button">
+      <button class="button button-add-category">
         <i class="fa fa-plus-circle"></i>
         Нова категорія
       </button>
-    <button class="button">
+    <button class="button button-add-origin">
       <i class="fa fa-plus-circle"></i>
       Новий виробник
     </button>
 
 </div>
-
-<div class="row well">
-
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#order_status_NEW-ID" data-toggle="tab">
-                <i class="fa fa-check"></i>
-                {{lang.order_status_NEW}}Активні
-                <span class="badge"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#order_status_ACTIVE-ID" data-toggle="tab">
-                <i class="fa fa-times"></i>
-                {{lang.order_status_ACTIVE}}Неактивні
-                <span class="badge"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#order_status_ACTIVE-ID" data-toggle="tab">
-                <i class="fa fa-frown-o"></i>
-                {{lang.order_status_ACTIVE}}Незаповнені
-                <span class="badge"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#order_status_LOGISTIC_DELIVERED-ID" data-toggle="tab">
-                <i class="fa fa-gift"></i>
-                {{lang.order_status_LOGISTIC_DELIVERED}}Акції та розпродажі
-                <span class="badge"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#order_status_LOGISTIC_DELIVERED-ID" data-toggle="tab">
-                <i class="fa fa-signal"></i>
-                {{lang.order_status_LOGISTIC_DELIVERED}}Популярні
-                <span class="badge"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#order_status_LOGISTIC_DELIVERED-ID" data-toggle="tab">
-                <i class="fa fa-thumbs-down"></i>
-                {{lang.order_status_LOGISTIC_DELIVERED}}Непопулярні
-                <span class="badge"></span>
-            </a>
-        </li>
-    </ul>
-
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div class="tab-pane active" id="order_status_NEW-ID"></div>
-      <div class="tab-pane" id="order_status_ACTIVE-ID"></div>
-      <div class="tab-pane" id="order_status_LOGISTIC_DELIVERING-ID"></div>
-      <div class="tab-pane" id="order_status_LOGISTIC_DELIVERED-ID"></div>
-      <div class="tab-pane" id="order_status_SHOP_CLOSED-ID"></div>
-    </div>
-</div>
-
 
 <div class="row">
 
@@ -107,9 +48,63 @@
 
     </div>
 
-    <!-- priducts container -->
-    <div class="col-9-md col-12-xs">
-        <div class="shop-component-list-products"></div>
-    </div>
+</div>
 
+<div class="row well">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="active" data-type="Active">
+            <a href="#product_type_Active-ID" data-toggle="tab">
+                <i class="fa fa-check"></i>
+                {{lang.product_type_Active}}
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li data-type="Inactive">
+            <a href="#product_type_Inactive-ID" data-toggle="tab">
+                <i class="fa fa-times"></i>
+                {{lang.product_type_Inactive}}
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li data-type="Uncompleted">
+            <a href="#product_type_Uncompleted-ID" data-toggle="tab">
+                <i class="fa fa-frown-o"></i>
+                {{lang.product_type_Uncompleted}}
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li data-type="Sales">
+            <a href="#product_type_Sales-ID" data-toggle="tab">
+                <i class="fa fa-gift"></i>
+                {{lang.product_type_Sales}}
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li data-type="Popular">
+            <a href="#product_type_Popular-ID" data-toggle="tab">
+                <i class="fa fa-signal"></i>
+                {{lang.product_type_Popular}}
+                <span class="badge"></span>
+            </a>
+        </li>
+        <li data-type="NotPopular">
+            <a href="#product_type_NotPopular-ID" data-toggle="tab">
+                <i class="fa fa-thumbs-down"></i>
+                {{lang.product_type_NotPopular}}
+                <span class="badge"></span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="product_type_Active-ID"></div>
+      <div class="tab-pane" id="product_type_Inactive-ID"></div>
+      <div class="tab-pane" id="product_type_Uncompleted-ID"></div>
+      <div class="tab-pane" id="product_type_Sales-ID"></div>
+      <div class="tab-pane" id="product_type_Popular-ID"></div>
+      <div class="tab-pane" id="product_type_NotPopular-ID"></div>
+    </div>
 </div>
