@@ -86,14 +86,17 @@ define("plugin/shop/js/view/cartStandalone", [
 
             Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
                 // debugger;
-                self.model.setExtras('account', data);
+                if (!_.isEmpty(data))
+                    self.model.setExtras('account', data);
             });
             Sandbox.eventSubscribe('plugin:account:signed:in', function (data) {
                 // debugger;
                 // console.log('shop account:in', data);
-                self.model.setExtras('account', data);
-                $.cookie("shopUser", null);
-                self.model.trigger('change');
+                if (!_.isEmpty(data)) {
+                    self.model.setExtras('account', data);
+                    $.cookie("shopUser", null);
+                    self.model.trigger('change');
+                }
             });
             Sandbox.eventSubscribe('plugin:account:signed:out', function (data) {
                 // debugger;

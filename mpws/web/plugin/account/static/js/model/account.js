@@ -39,10 +39,15 @@ define("plugin/account/js/model/account", [
             });
             $.post(url, {credentials: data}, function (responce) {
                 var _data = self.extractModelDataFromRespce(responce);
-                Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
-                self.set(_data);
+                if (_data.profile && _data.profile.ID) {
+                    Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
+                    self.set(_data);
+                    Sandbox.eventNotify('plugin:account:signed:in', _data.profile);
+                } else {
+                    Cache.setObject('AccountProfileID', null);
+                    self.set(null);
+                }
                 self.trigger('change');
-                Sandbox.eventNotify('plugin:account:signed:in', _data.profile);
             });
         },
         doLogout: function () {

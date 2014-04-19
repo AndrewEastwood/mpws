@@ -3,6 +3,7 @@
 class pluginShop extends objectPlugin {
 
     public function getResponse () {
+        $data = new libraryDataObject();
 
         switch(libraryRequest::getValue('fn')) {
             // breadcrumb
@@ -657,10 +658,12 @@ class pluginShop extends objectPlugin {
         if ($addAccountInfo)
             $dataObj->setData('account', $this->getCustomer()->getAccountByID($dataOrder['AccountID']));
 
-        $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
-        if ($orderBoughtsData->hasData()) {
-            $dataObj->setData('info', $orderBoughtsData->getData('Info'));
-            $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
+        if (!empty($dataOrder)) {
+            $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
+            if ($orderBoughtsData->hasData()) {
+                $dataObj->setData('info', $orderBoughtsData->getData('Info'));
+                $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
+            }
         }
 
         return $dataObj;

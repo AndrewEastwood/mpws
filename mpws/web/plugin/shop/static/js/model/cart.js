@@ -89,6 +89,7 @@ define("plugin/shop/js/model/cart", [
             this.fetch();
         },
         checkout: function (userData) {
+            debugger;
             this.updateUrl({
                 action: 'SAVE'
             });

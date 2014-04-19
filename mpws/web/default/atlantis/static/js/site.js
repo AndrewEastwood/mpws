@@ -41,6 +41,9 @@ define("default/js/site", [
         $( document ).ajaxComplete(function(event, jqxhr, data) {
             if (!jqxhr.responseText)
                 return
+
+            // console.log(jqxhr.responseText);
+
             var responseObj = JSON.parse(jqxhr.responseText);
 
             if (responseObj && responseObj.error && responseObj.error === "InvalidPublicTokenKey")

@@ -69,10 +69,11 @@ class objectCustomer {
             $config["condition"]["filter"] = "CustomerID (=) ?";
             $config["condition"]["values"] = array($customerInfo['ID']);
         } else {
-            // if (count($config["condition"]["filter"]) > 1 || $config["condition"]["filter"][0] != "*") {
+            $pos = strrpos($config["condition"]["filter"], "CustomerID (=) ?");
+            if ($pos === false) {
                 $config["condition"]["filter"] = "CustomerID (=) ? + " . $config["condition"]["filter"];
                 array_unshift($config["condition"]["values"], $customerInfo['ID']);
-            // }
+            }
         }
         // var_dump($config);
         return $this->dbo->getData($config);

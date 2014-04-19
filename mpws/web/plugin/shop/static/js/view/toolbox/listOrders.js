@@ -125,17 +125,10 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 collection.queryParams.status = status;
 
                 var ToolboxListOrdersGrid = new Backgrid.Grid({
-                  columns: columns,
-                  collection: collection
+                    className: "backgrid table table-responsive",
+                    columns: columns,
+                    collection: collection
                 });
-
-                // debugger;
-                // ToolboxListOrdersGrid.listenTo(ToolboxListOrdersGrid.model, "backgrid:edited", function (model, column, command) {
-                //     debugger;
-                // });
-
-                // data filtering
-                // var filteringListOrders = new FilteringListOrders();
 
                 var Paginator = new Backgrid.Extension.Paginator({
 
@@ -158,7 +151,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 return {
                     status: status,
                     collection: collection,
-                    ToolboxListOrdersGrid: ToolboxListOrdersGrid,
+                    Grid: ToolboxListOrdersGrid,
                     Paginator: Paginator,
                     fetch: function (options) {
                         collection.fetch(options);
@@ -199,7 +192,7 @@ define("plugin/shop/js/view/toolbox/listOrders", [
                 _(_ordersByStatus).each(function(orderListBuilder){
                     var $tabPage = self.$('.tab-pane#order_status_' + orderListBuilder.status + '-ID');
                     $tabPage.empty();
-                    $tabPage.append(orderListBuilder.ToolboxListOrdersGrid.render().el);
+                    $tabPage.append(orderListBuilder.Grid.render().el);
                     $tabPage.append(orderListBuilder.Paginator.render().el);
                     orderListBuilder.fetch({reset: true});
                 });

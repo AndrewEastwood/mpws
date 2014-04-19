@@ -123,6 +123,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
                 collection.queryParams.type = type;
 
                 var ToolboxListProductsGrid = new Backgrid.Grid({
+                    className: "backgrid table table-responsive",
                     columns: columns,
                     collection: collection
                 });
@@ -180,27 +181,13 @@ define("plugin/shop/js/view/toolbox/listProducts", [
             this.on('mview:renderComplete', function () {
 
                 // debugger;
-
                 _productsByTypes = _productsByTypes || self.$('ul.nav-tabs > li').map(function() {
                     // debugger;
                     if ($(this).data('type'))
                         return _getTableCreateFn($(this).data('type'));
                 });
 
-                // create seperated lists for the following orders:
-                // new
-                // in progress
-                // shipped
-                // delivered
-                // closed
-                // debugger;
-                // var _productsByTypes = _(types).map(function (types){
-                //     return _getTableCreateFn(types);
-                // });
-
-                // debugger;
-
-                // var self = this;
+                // display products lists
                 _(_productsByTypes).each(function(productListBuilder){
                     var $tabPage = self.$('.tab-pane#product_type_' + productListBuilder.type + '-ID');
                     $tabPage.empty();
@@ -209,9 +196,6 @@ define("plugin/shop/js/view/toolbox/listProducts", [
                     productListBuilder.fetch({reset: true});
                 });
 
-                // display products
-                // self.$('.shop-component-list-products').append(ToolboxListProductsGrid.render().el);
-                // self.$('.shop-component-list-products').append(Paginator.render().el);
                 // display catgories and origins
                 self.$('#jstree_categories-ID').jstree({
                     "core" : {
@@ -237,9 +221,6 @@ define("plugin/shop/js/view/toolbox/listProducts", [
             });
 
         },
-        // render: function () {
-        //     MView.prototype.render.call(this);
-        // }
         addProduct: function (argument) {
             // body...
             // debugger;

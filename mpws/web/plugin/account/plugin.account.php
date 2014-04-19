@@ -4,6 +4,8 @@ class pluginAccount extends objectPlugin {
 
     public function getResponse () {
 
+        $data = new libraryDataObject();
+
         switch(libraryRequest::getValue('fn')) {
             case "create": {
                 $data = $this->_custom_api_createAccount();
