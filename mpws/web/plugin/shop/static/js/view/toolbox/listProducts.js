@@ -12,7 +12,8 @@ define("plugin/shop/js/view/toolbox/listProducts", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-htmlcell",
-    'default/js/lib/jstree'
+    'default/js/lib/jstree',
+    'default/js/lib/bootstrap-tagsinput',
 ], function (Sandbox, MView, CollectionListProducts, ViewOrderEntry, BootstrapDialog, Backgrid, tpl, lang) {
 
     Sandbox.eventSubscribe('plugin:shop:product:add', function(data){
@@ -100,7 +101,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
     var columns = [columnActions, columnName, columnModel, columnSKU, columnPrice, columnStatus, columnDateUpdated, columnDateCreated];
 
     var ListProducts = MView.extend({
-        className: 'shop-toolbox-products',
+        className: 'shop-toolbox-products col-md-12',
         template: tpl,
         lang: lang,
         // collection: collection,
@@ -158,21 +159,21 @@ define("plugin/shop/js/view/toolbox/listProducts", [
             var _productsByTypes = null;
 
             // refresh all lists
-            Sandbox.eventSubscribe("plugin:shop:orderList:refresh", function () {
+            Sandbox.eventSubscribe("plugin:shop:productList:refresh", function () {
                 if (!!!_productsByTypes)
                     return;
 
-                _(_productsByTypes).each(function(orderList) {
-                    orderList.fetch({reset: true});
+                _(_productsByTypes).each(function(productList) {
+                    productList.fetch({reset: true});
                 });
             });
 
             // when we know how many records are availabel of particular filter
             // we do update  tapPage badge with records count
-            Sandbox.eventSubscribe('plugin:shop:orderList:parseState', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:productList:parseState', function (data) {
                 // debugger;
-                var $badge = self.$('a[href="#product_type_' + data.collection.queryParams.types + '-ID"] .badge');
-                $badge.text(data.state.totalRecords || "");
+                var $badge = self.$('a[href="#product_type_' + data.collection.queryParams.type + '-ID"] .badge');
+                $badge.text(data.state.totalRecords * 500 || "");
             });
 
             // inject all lists into tabPages
@@ -231,6 +232,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
 
                 // fetch products
                 // collection.fetch({reset: true});
+                self.$("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
 
             });
 

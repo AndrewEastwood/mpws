@@ -1,8 +1,9 @@
 define('plugin/shop/js/collection/toolbox/listProducts', [
+    'default/js/lib/sandbox',
     'customer/js/site',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
-], function (Site, _, PageableCollection) {
+], function (Sandbox, Site, _, PageableCollection) {
 
     var ListProducts = PageableCollection.extend({
 
@@ -25,9 +26,11 @@ define('plugin/shop/js/collection/toolbox/listProducts', [
         },
 
         parseState: function (resp, queryParams, state, options) {
-            return {
-                totalRecords: parseInt(resp.shop.total_count, 10)
+            var state = {
+                totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
             };
+            Sandbox.eventNotify('plugin:shop:productList:parseState', {collection: this, state: state});
+            return state;
         },
 
         parseRecords: function (resp, options) {

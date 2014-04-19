@@ -28,7 +28,7 @@ define('plugin/shop/js/collection/toolbox/listOrders', [
 
         parseState: function (resp, queryParams, state, options) {
             var state = {
-                totalRecords: parseInt(resp.shop.total_count, 10)
+                totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
             };
             Sandbox.eventNotify('plugin:shop:orderList:parseState', {collection: this, state: state});
             return state;

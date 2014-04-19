@@ -51,7 +51,7 @@ define("plugin/shop/nls/ua_uk/toolbox", [
         product_type_Active: "Активні",
         product_type_Inactive: "Неактивні",
         product_type_Uncompleted: "Незаповнені",
-        product_type_Sales: "Акції та розпродажі",
+        product_type_Sales: "Акції",
         product_type_Popular: "Популярні",
         product_type_NotPopular: "Непопулярні",
     }, CustomerShop);

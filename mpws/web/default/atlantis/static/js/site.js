@@ -21,21 +21,34 @@ define("default/js/site", [
             $.xhrPool.length = 0
         };
 
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                $.xhrPool.push(xhr);
-                xhr.always(function (data, status, xhr){
-                    var index = $.xhrPool.indexOf(xhr);
-                    if (index > -1) {
-                        $.xhrPool.splice(index, 1);
-                    }
-                    if (data && data.redirect && Backbone.history.fragment !== data.redirect) {
-                        console.log('redirect to', data.redirect);
-                        Backbone.history.navigate(data.redirect, true);
-                    }
-                    // if (status === "success")
-                });
-            }
+        // $.ajaxSetup({
+        //     beforeSend: function(xhr, settings) {
+        //         $.xhrPool.push(xhr);
+        //         xhr.always(function (data, status, xhr){
+        //             var index = $.xhrPool.indexOf(xhr);
+        //             if (index > -1) {
+        //                 $.xhrPool.splice(index, 1);
+        //             }
+        //             if (data && data.redirect && Backbone.history.fragment !== data.redirect) {
+        //                 console.log('redirect to', data.redirect);
+        //                 Backbone.history.navigate(data.redirect, true);
+        //             }
+        //             // if (status === "success")
+        //         });
+        //     }
+        // });
+
+        $( document ).ajaxComplete(function(event, jqxhr, data) {
+            if (!jqxhr.responseText)
+                return
+            var responseObj = JSON.parse(jqxhr.responseText);
+
+            if (responseObj && responseObj.error && responseObj.error === "InvalidPublicTokenKey")
+                Sandbox.eventNotify("global:session:expired", responseObj.error);
+
+            if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
+                Sandbox.eventNotify("global:session:expired", responseObj.error);
+
         });
 
         // Sandbox message handler
@@ -49,8 +62,14 @@ define("default/js/site", [
         // find links and set them active accordint to current route
         var _setActiveMenuItemsFn = function () {
             // debugger;
-            $('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
-            $('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');
+            $('a.auto-active').removeClass('active');
+            $('a.auto-active').parents('.panel-collapse').removeClass('in');
+
+            // debugger;
+            if (window.location.hash != '#') {
+                $('a.auto-active[href^="' + window.location.hash + '"]').addClass('active');
+                $('a.auto-active[href^="' + window.location.hash + '"]').parents('.panel-collapse').addClass('in');
+            }
         }
 
         Sandbox.eventSubscribe('global:menu:set-active', function () {

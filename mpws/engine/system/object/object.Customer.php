@@ -124,9 +124,12 @@ class objectCustomer {
             $response->setData($source, $plugin->getResponse()->toNative());
         }
 
+        // this section must be located when all plugins are performed
+        // becuse the toolbox plugin does user validation and authorizations
         if (!$this->isAdminActive()) {
             $response->setError('AccessDenied');
-            $response->setData('redirect', 'signin');
+            // $response->setData('redirect', 'signin');
+            return $response;
         }
 
         return $response;

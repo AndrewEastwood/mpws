@@ -13,6 +13,7 @@
 @import "bootstrap-slider";
 @import "bootstrap-dialog";
 @import "bootstrap-editable";
+@import "bootstrap-tagsinput";
 @import "lightbox";
 @import "select2";
 @import "bootstrap-account-create";
@@ -22,6 +23,22 @@
 
 .MPWSPageBody {
     background-color: fade(@textColor, 20%);
+}
+
+.MPWSLayout {
+    background: none;
+    width: auto;
+    max-width: 100%;
+    .MPWSPageHeader {
+        display: none;
+    }
+    .MPWSWidgetsTop {
+        display: none;
+    }
+    .MPWSPageBody {
+        padding: 20px;
+        background: none;
+    }
 }
 
 .navbar {
@@ -42,15 +59,28 @@
         margin: 5px;
         height: 40px;
     }
+    display: none;
 }
 
 .breadcrumb {
     background-color: #2F2F2F;
 }
 
-.toolbox-menu {
+.toolbox-logo {
+    height: 50px;
+    font-size: 22px;
+    color: #fff;
+    text-shadow: 2px 2px 10px #aaa;
+}
+
+.container-menu {
     .panel {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        .panel-heading {
+            .glyphicon {
+                margin-right: 5px;
+            }
+        }
     }
 }
 
@@ -134,5 +164,33 @@
     }
     .fa-check {
         color: #0ECF0E;
+    }
+}
+
+.shop-toolbox-products {
+    .bootstrap-tagsinput { width: 100%; }
+    @import "bootstrap-vertical-tabs";
+    ul.nav-tabs {
+        li.productList_Active > a {
+            color: #183;
+        }
+        li.productList_Inactive > a {
+            color: #777;
+        }
+        li.productList_Uncompleted > a {
+            color: #ff2222;
+        }
+        li.productList_Sales > a {
+            color: #183;
+        }
+        li.productList_Popular > a {
+            color: #A715EC;
+        }
+        li.productList_NotPopular > a {
+            color: #990000;
+        }
+    }
+    .badge {
+        font-size: 0.6em;
     }
 }

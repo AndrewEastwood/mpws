@@ -26,15 +26,16 @@ define("plugin/toolbox/js/view/bridge", [
             });
         },
         getContainerMenu: function () {
-            return this.$('#toolbox-menu-ID');
+            return this.$('#container-menu-ID');
         },
         getContainerPage: function () {
-            return this.$('#toolbox-page-ID');
+            return this.$('#container-page-ID');
         },
         setPage: function (options) {
             contentInjection.injectContent(this.getContainerPage(), options);
         },
         setMenu: function (options) {
+            // debugger;
             contentInjection.injectContent(this.getContainerMenu(), options);
             // debugger;
             Sandbox.eventNotify('global:menu:set-active');

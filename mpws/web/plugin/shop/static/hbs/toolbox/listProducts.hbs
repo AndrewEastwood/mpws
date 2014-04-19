@@ -20,30 +20,37 @@
     <!-- categories and orgins container -->
     <div class="col-3-md col-12-xs">
 
-        <div id="jstree_categories-ID" class="well">
-            <!-- in this example the tree is populated from inline HTML -->
-                <ul>
-                  <li>Root node 1
-                    <ul>
-                      <li id="child_node_1">Child node 1</li>
-                      <li>Child node 2</li>
-                    </ul>
-                  </li>
-                  <li>Root node 2</li>
-                </ul>
+
+        <div class="well">
+          <h4>Категорії</h4>
+          <div id="jstree_categories-ID">
+              <!-- in this example the tree is populated from inline HTML -->
+                  <ul>
+                    <li>Root node 1
+                      <ul>
+                        <li id="child_node_1">Child node 1</li>
+                        <li>Child node 2</li>
+                      </ul>
+                    </li>
+                    <li>Root node 2</li>
+                  </ul>
+          </div>
         </div>
 
-        <div id="jstree_origins-ID" class="well">
-            <!-- in this example the tree is populated from inline HTML -->
-                <ul>
-                  <li>Root node 1
-                    <ul>
-                      <li id="child_node_1">Child node 1</li>
-                      <li>Child node 2</li>
-                    </ul>
-                  </li>
-                  <li>Root node 2</li>
-                </ul>
+        <div class="well">
+          <h4>Виробники</h43>
+          <div id="jstree_origins-ID">
+              <!-- in this example the tree is populated from inline HTML -->
+                  <ul>
+                    <li>Root node 1
+                      <ul>
+                        <li id="child_node_1">Child node 1</li>
+                        <li>Child node 2</li>
+                      </ul>
+                    </li>
+                    <li>Root node 2</li>
+                  </ul>
+          </div>
         </div>
 
     </div>
@@ -51,45 +58,51 @@
 </div>
 
 <div class="row well">
+  <h4>Фільтр товарів</h4>
+  <input data-role="tagsinput">
+</div>
 
+<div class="row well">
+
+  <div class="col-xs-3"> <!-- required for floating -->
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
-        <li class="active" data-type="Active">
+    <ul class="nav nav-tabs tabs-left">
+        <li class="productList_Active active" data-type="Active">
             <a href="#product_type_Active-ID" data-toggle="tab">
                 <i class="fa fa-check"></i>
                 {{lang.product_type_Active}}
                 <span class="badge"></span>
             </a>
         </li>
-        <li data-type="Inactive">
+        <li class="productList_Inactive" data-type="Inactive">
             <a href="#product_type_Inactive-ID" data-toggle="tab">
                 <i class="fa fa-times"></i>
                 {{lang.product_type_Inactive}}
                 <span class="badge"></span>
             </a>
         </li>
-        <li data-type="Uncompleted">
+        <li class="productList_Uncompleted" data-type="Uncompleted">
             <a href="#product_type_Uncompleted-ID" data-toggle="tab">
                 <i class="fa fa-frown-o"></i>
                 {{lang.product_type_Uncompleted}}
                 <span class="badge"></span>
             </a>
         </li>
-        <li data-type="Sales">
+        <li class="productList_Sales" data-type="Sales">
             <a href="#product_type_Sales-ID" data-toggle="tab">
                 <i class="fa fa-gift"></i>
                 {{lang.product_type_Sales}}
                 <span class="badge"></span>
             </a>
         </li>
-        <li data-type="Popular">
+        <li class="productList_Popular" data-type="Popular">
             <a href="#product_type_Popular-ID" data-toggle="tab">
                 <i class="fa fa-signal"></i>
                 {{lang.product_type_Popular}}
                 <span class="badge"></span>
             </a>
         </li>
-        <li data-type="NotPopular">
+        <li class="productList_NotPopular" data-type="NotPopular">
             <a href="#product_type_NotPopular-ID" data-toggle="tab">
                 <i class="fa fa-thumbs-down"></i>
                 {{lang.product_type_NotPopular}}
@@ -97,7 +110,9 @@
             </a>
         </li>
     </ul>
+  </div>
 
+  <div class="col-xs-9">
     <!-- Tab panes -->
     <div class="tab-content">
       <div class="tab-pane active" id="product_type_Active-ID"></div>
@@ -107,4 +122,5 @@
       <div class="tab-pane" id="product_type_Popular-ID"></div>
       <div class="tab-pane" id="product_type_NotPopular-ID"></div>
     </div>
+  </div>
 </div>

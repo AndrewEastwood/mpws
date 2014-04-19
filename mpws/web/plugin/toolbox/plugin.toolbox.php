@@ -46,10 +46,13 @@ class pluginToolbox extends objectPlugin {
         return null;
     }
 
-    private function getAdminAccount ($email, $password) {
-        $passwordS = $this->getCustomer()->getAccountPassword($password);
+    private function getAdminAccount ($email, $password, $encodePassword) {
+        if ($encodePassword)
+            $password = $this->getCustomer()->getAccountPassword($password);
+
+        // var_dump($password);
         // var_dump($passwordS);
-        $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $passwordS);
+        $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $password);
         // var_dump($config);
         return $this->getCustomer()->processData($config);
     }
@@ -96,7 +99,7 @@ class pluginToolbox extends objectPlugin {
             return $accountObj;
         }
 
-        $account = $this->getAdminAccount($credentials['email'], $credentials['password']);
+        $account = $this->getAdminAccount($credentials['email'], $credentials['password'], true);
 
         // var_dump($account);
 

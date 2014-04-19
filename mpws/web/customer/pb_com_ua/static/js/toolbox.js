@@ -53,11 +53,11 @@ define("customer/js/site", [
 
         // configure titles and brand images
         $('head title').text(_customerOptions.site.title);
-        $('#site-logo-ID').attr({
-            src: _customerOptions.site.logoImageUrl,
-            title: _customerOptions.site.title
-        });
-        $('.navbar-brand').removeClass('hide');
+        // $('#site-logo-ID').attr({
+        //     src: _customerOptions.site.logoImageUrl,
+        //     title: _customerOptions.site.title
+        // });
+        // $('.navbar-brand').removeClass('hide');
 
         // init site views
         var _views = {};

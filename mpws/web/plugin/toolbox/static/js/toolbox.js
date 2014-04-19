@@ -5,12 +5,29 @@ define("plugin/toolbox/js/toolbox", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/toolbox/js/view/bridge' // need to register all auth events
-], function (Sandbox, Site, $, _, Backbone, Cache, Bridge) {
+    'plugin/toolbox/js/view/menu',
+    'plugin/toolbox/js/view/bridge', // need to register all auth events
+], function (Sandbox, Site, $, _, Backbone, Cache, Menu, Bridge) {
 
     // get user status when page starts
     Sandbox.eventSubscribe('global:loader:complete', function (status) {
         Sandbox.eventNotify('plugin:toolbox:status');
+    });
+
+    Sandbox.eventSubscribe('global:session:expired', function (error) {
+        // Backbone.history.navigate('signin', true);
+
+        if (error === "InvalidPublicTokenKey") {
+            document.location.reload();
+            throw "Session timeout";
+        }
+
+        if (error === "AccessDenied" && Backbone.history.fragment !== "signin") {
+            Sandbox.eventNotify('plugin:toolbox:logout');
+            return;
+        }
+
+        throw "Unknown error";
     });
 
     // get user status with each page route action
@@ -21,14 +38,23 @@ define("plugin/toolbox/js/toolbox", [
 
     // handle user status
     Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
+        // debugger;
         // do redirecto to index page when user is signed in
-        if (status && Backbone.history.fragment === "signin")
-            Backbone.history.navigate('', true);
+        if (status && Backbone.history.fragment === "signin") {
+            var _location = localStorage.location || '';
+            Backbone.history.navigate(_location, true);
+        }
+
+        // save location
+        if (status && localStorage) {
+            localStorage.setItem('location', window.location.hash);
+        }
     });
 
     // when user is signed in do smth
     Sandbox.eventSubscribe('plugin:toolbox:signed:in', function (status) {
-        Backbone.history.navigate('', true);
+        var _location = localStorage.location || '';
+        Backbone.history.navigate(_location, true);
     });
 
     // redirect user to the signin page
