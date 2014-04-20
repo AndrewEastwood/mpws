@@ -38,11 +38,11 @@ define("plugin/shop/js/toolbox", [
                 Cache.withObject('ListProducts', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
-                    var listProducts = new ListProducts();
+                    var listProducts = cachedView || new ListProducts();
 
                     listProducts.fetchAndRender();
 
@@ -65,11 +65,11 @@ define("plugin/shop/js/toolbox", [
                 Cache.withObject('ListOrders', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
-                    var listOrders = new ListOrders();
+                    var listOrders = cachedView || new ListOrders();
 
                     listOrders.fetchAndRender();
 

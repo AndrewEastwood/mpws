@@ -427,6 +427,7 @@ CREATE TABLE `shop_products` (
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
   `Status` enum('ACTIVE','REMOVED','OUTOFSTOCK','COMINGSOON') COLLATE utf8_bin NOT NULL,
+  `SellMode` enum('NORMAL','DISCOUNT','BESTSELLER','DEFECT','ARCHIVED','') COLLATE utf8_bin NOT NULL DEFAULT 'NORMAL',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -436,7 +437,7 @@ CREATE TABLE `shop_products` (
   CONSTRAINT `shop_products_ibfk_3` FOREIGN KEY (`CategoryID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_products_ibfk_4` FOREIGN KEY (`OriginID`) REFERENCES `shop_origins` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_products_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products';
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='shop products';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -513,4 +514,4 @@ CREATE TABLE `toolbox_admins` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-19 22:05:56
+-- Dump completed on 2014-04-20 23:09:23

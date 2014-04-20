@@ -14,7 +14,7 @@ class configurationShopDataSource extends objectConfiguration {
                 "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
                 "values" => array("ACTIVE")
             ),
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated", "DateCreated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "SellMode", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "additional" => array(

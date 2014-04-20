@@ -80,6 +80,17 @@ define("customer/js/site", [
         });
     });
 
+    Sandbox.eventSubscribe('global:session:expired', function (error) {
+        // Backbone.history.navigate('signin', true);
+
+        if (error === "InvalidPublicTokenKey") {
+            document.location.reload();
+            throw "Session timeout";
+        }
+
+        throw "Unknown error";
+    });
+
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout
     return site;

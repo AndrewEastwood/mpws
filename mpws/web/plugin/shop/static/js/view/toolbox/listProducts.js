@@ -45,28 +45,49 @@ define("plugin/shop/js/view/toolbox/listProducts", [
         name: "Name",
         label: lang.pluginMenu_Products_Grid_Column_Name,
         cell: "string",
-        editable: false,
+        // editable: false,
     };
 
     var columnModel = {
         name: "Model",
         label: lang.pluginMenu_Products_Grid_Column_Model,
         cell: "string",
-        editable: false
+        // editable: false
     };
 
     var columnSKU = {
         name: "SKU",
         label: lang.pluginMenu_Products_Grid_Column_SKU,
         cell: "string",
+        // editable: false
+    };
+
+    var columnSellMode = {
+        name: "SellMode",
+        label: lang.pluginMenu_Products_Grid_Column_SellMode,
+        cell: "string",
         editable: false
+        // cell: Backgrid.SelectCell.extend({
+        //     // It's possible to render an option group or use a
+        //     // function to provide option values too.
+        //     optionValues: ["NORMAL", "DISCOUNT", "BESTSELLER", "ARCHIVED", "DEFECT"],
+        //     initialize: function () {
+        //         // this.prototype.initialize.call(this);
+        //         Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+        //         // debugger;
+        //         this.listenTo(this.model, "change:Status", function(model, status) {
+        //             // debugger;
+        //             ViewOrderEntry.updateOrderStatus(model.get('ID'), status);
+        //         });
+        //     }
+        // })
     };
 
     var columnPrice = {
         name: "Price",
         label: lang.pluginMenu_Products_Grid_Column_Price,
-        cell: "string",
-        editable: false
+        cell: "number",
+        // editable: false
     };
 
     var columnStatus = {
@@ -98,7 +119,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
         editable: false
     };
 
-    var columns = [columnActions, columnName, columnModel, columnSKU, columnPrice, columnStatus, columnDateUpdated, columnDateCreated];
+    var columns = [columnActions, columnName, columnModel, columnSKU, columnSellMode, columnPrice, columnStatus, columnDateUpdated, columnDateCreated];
 
     var ListProducts = MView.extend({
         className: 'shop-toolbox-products col-md-12',
@@ -160,6 +181,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
             var _productsByTypes = null;
 
             // refresh all lists
+            // debugger;
             Sandbox.eventSubscribe("plugin:shop:productList:refresh", function () {
                 if (!!!_productsByTypes)
                     return;
@@ -174,7 +196,7 @@ define("plugin/shop/js/view/toolbox/listProducts", [
             Sandbox.eventSubscribe('plugin:shop:productList:parseState', function (data) {
                 // debugger;
                 var $badge = self.$('a[href="#product_type_' + data.collection.queryParams.type + '-ID"] .badge');
-                $badge.text(data.state.totalRecords * 500 || "");
+                $badge.text(data.state.totalRecords || "");
             });
 
             // inject all lists into tabPages

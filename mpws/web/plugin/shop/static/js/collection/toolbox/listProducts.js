@@ -34,7 +34,12 @@ define('plugin/shop/js/collection/toolbox/listProducts', [
         },
 
         parseRecords: function (resp, options) {
-            return resp.shop.products;
+            var products = resp.shop.products;
+
+            for (var row in products)
+                products[row].Price = parseFloat(products[row].Price, 10);
+
+            return products;
         }
 
     });

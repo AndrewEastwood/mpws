@@ -849,16 +849,107 @@ class pluginShop extends objectPlugin {
     }
 
     private function _api_getListProducts_Managed () {
+        $listType = strtolower(libraryRequest::getValue('type'));
+
+        switch ($listType) {
+            case 'active':
+                return $this->_api_getListProducts_Managed_Active();
+            case 'inactive':
+                return $this->_api_getListProducts_Managed_Inactive();
+            case 'uncompleted':
+                return $this->_api_getListProducts_Managed_Uncompleted();
+            case 'sales':
+                return $this->_api_getListProducts_Managed_Sales();
+            case 'defects':
+                return $this->_api_getListProducts_Managed_Defects();
+            case 'popular':
+                return $this->_api_getListProducts_Managed_Popular();
+            case 'notpopular':
+                return $this->_api_getListProducts_Managed_NotPopular();
+            case 'archived':
+                return $this->_api_getListProducts_Managed_Archived();
+            default:
+                return $this->_api_getListProducts_Managed_All();
+        }
+    }
+
+    // custom product lists with custom filers and conditions applied
+    private function _api_getListProducts_Managed_All () {
+        return $this->_api_getListProducts_Managed_Base();
+    }
+
+    private function _api_getListProducts_Managed_Inactive () {
+        // echo 1111;
+        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+            $dataConfigProducts['condition']['values'][0] = "REMOVED";
+            return $dataConfigProducts;
+        });
+    }
+
+    private function _api_getListProducts_Managed_Uncompleted () {
+        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+            $dataConfigProducts['condition']['filter'] .= " + shop_products.Name (=) ?";
+            $dataConfigProducts['condition']['filter'] .= " + shop_products.Description (=) ?";
+            $dataConfigProducts['condition']['filter'] .= " + shop_products.Model (=) ?";
+            $dataConfigProducts['condition']['values'][] = "";
+            $dataConfigProducts['condition']['values'][] = "";
+            $dataConfigProducts['condition']['values'][] = "";
+            return $dataConfigProducts;
+        });
+    }
+
+    private function _api_getListProducts_Managed_Archived () {
+        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+            $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (=) ?";
+            $dataConfigProducts['condition']['values'][] = "ARCHIVED";
+            return $dataConfigProducts;
+        });
+    }
+
+    private function _api_getListProducts_Managed_Defects () {
+        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+            $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (=) ?";
+            $dataConfigProducts['condition']['values'][] = "DEFECT";
+            return $dataConfigProducts;
+        });
+    }
+
+    private function _api_getListProducts_Managed_Sales () {
+        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+            $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (IN) ?";
+            $dataConfigProducts['condition']['values'][] = array("DISCOUNT", "BESTSELLER");
+            return $dataConfigProducts;
+        });
+    }
+
+    private function _api_getListProducts_Managed_Popular () {
+        return $this->_api_getListProducts_Managed_Base();
+    }
+
+    private function _api_getListProducts_Managed_NotPopular () {
+        return $this->_api_getListProducts_Managed_Base();
+    }
+
+    private function _api_getListProducts_Managed_Active () {
+        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+            $dataConfigProducts['condition']['values'][0] = "ACTIVE";
+            return $dataConfigProducts;
+        });
+    }
+
+    // this is the base function that builds product list witout any conditions
+    // and returns whole list with all products types
+    private function _api_getListProducts_Managed_Base ($customConfigurator = null) {
         // jsapiProductList
         // in toolbox methods we must check it's permission
         // offset
         // limit
         $dataObj = new libraryDataObject();
 
-        if (!$this->getCustomer()->isAdminActive()) {
-            $dataObj->setError('AccessDenied');
-            return $dataObj;
-        }
+        // if (!$this->getCustomer()->isAdminActive()) {
+        //     $dataObj->setError('AccessDenied');
+        //     return $dataObj;
+        // }
 
         // $limit = 25;
 
@@ -907,10 +998,16 @@ class pluginShop extends objectPlugin {
         // }
 
         // var_dump($dataConfigProducts);
+        if ($customConfigurator)
+            $dataConfigProducts = $customConfigurator($dataConfigProducts);
+
+        // var_dump($dataConfigProducts);
 
         // set managed customer id
         $configCount['additional'] = new ArrayObject($dataConfigProducts['additional']);
         $configCount['condition'] = new ArrayObject($dataConfigProducts['condition']);
+
+
 
         // get data
         $dataProducts = $this->getCustomer()->processData($dataConfigProducts);
@@ -1084,8 +1181,6 @@ class pluginShop extends objectPlugin {
         $dataObj->setData('products', $products);
         return $dataObj;
     }
-
-
 
 }
 

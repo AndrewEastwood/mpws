@@ -64,7 +64,7 @@
 
 <div class="row well">
 
-  <div class="col-xs-3"> <!-- required for floating -->
+  <div class="col-md-12 col-lg-2"> <!-- required for floating -->
     <!-- Nav tabs -->
     <ul class="nav nav-tabs tabs-left">
         <li class="productList_Active active" data-type="Active">
@@ -95,6 +95,13 @@
                 <span class="badge"></span>
             </a>
         </li>
+        <li class="productList_Defects" data-type="Defects">
+            <a href="#product_type_Defects-ID" data-toggle="tab">
+                <i class="fa fa-wheelchair"></i>
+                {{lang.product_type_Defects}}
+                <span class="badge"></span>
+            </a>
+        </li>
         <li class="productList_Popular" data-type="Popular">
             <a href="#product_type_Popular-ID" data-toggle="tab">
                 <i class="fa fa-signal"></i>
@@ -109,18 +116,27 @@
                 <span class="badge"></span>
             </a>
         </li>
+        <li class="productList_Archived" data-type="Archived">
+            <a href="#product_type_Archived-ID" data-toggle="tab">
+                <i class="fa fa-archive"></i>
+                {{lang.product_type_Archived}}
+                <span class="badge"></span>
+            </a>
+        </li>
     </ul>
   </div>
 
-  <div class="col-xs-9">
+  <div class="col-md-12 col-lg-10">
     <!-- Tab panes -->
     <div class="tab-content">
       <div class="tab-pane active" id="product_type_Active-ID"></div>
       <div class="tab-pane" id="product_type_Inactive-ID"></div>
       <div class="tab-pane" id="product_type_Uncompleted-ID"></div>
       <div class="tab-pane" id="product_type_Sales-ID"></div>
+      <div class="tab-pane" id="product_type_Defects-ID"></div>
       <div class="tab-pane" id="product_type_Popular-ID"></div>
       <div class="tab-pane" id="product_type_NotPopular-ID"></div>
+      <div class="tab-pane" id="product_type_Archived-ID"></div>
     </div>
   </div>
 </div>

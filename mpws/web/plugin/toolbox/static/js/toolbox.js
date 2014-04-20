@@ -46,7 +46,7 @@ define("plugin/toolbox/js/toolbox", [
         }
 
         // save location
-        if (status && localStorage) {
+        if (status && localStorage && Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
             localStorage.setItem('location', window.location.hash);
         }
     });
@@ -86,11 +86,11 @@ define("plugin/toolbox/js/toolbox", [
             Cache.withObject('Bridge', function (cachedView) {
                 // debugger;
                 // remove previous view
-                if (cachedView && cachedView.remove)
-                    cachedView.remove();
+                // if (cachedView && cachedView.remove)
+                //     cachedView.remove();
 
                 // create new view
-                var bridge = new Bridge();
+                var bridge = cachedView || new Bridge();
                 // render toolbox container with placeholders
                 bridge.render();
                 // inject requested page
@@ -121,11 +121,11 @@ define("plugin/toolbox/js/toolbox", [
                 Cache.withObject('SignIn', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
-                    var signin = new SignIn();
+                    var signin = cachedView || new SignIn();
                     signin.render();
                     Sandbox.eventNotify('global:content:render', {
                         name: 'SignIn',

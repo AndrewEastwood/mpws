@@ -8,14 +8,16 @@
     // bootstrap
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
-    $layout = glIsToolbox() ? 'toolbox/layout' : 'site/layout';
+    $displayCustomer = glIsToolbox() ? MPWS_TOOLBOX : MPWS_CUSTOMER;
+    $layout = 'layout.hbs';
+
     // get customer or default index layout
     if (MPWS_ENV === 'DEV') {
-        $layoutCustomer = glGetFullPath('web', 'customer', MPWS_CUSTOMER, 'static', 'hbs', $layout . '.hbs');
-        $layoutDefault = glGetFullPath('web', 'default', MPWS_VERSION, 'static', 'hbs', $layout . '.hbs');
+        $layoutCustomer = glGetFullPath('web', 'customer', $displayCustomer, 'static', 'hbs', $layout);
+        $layoutDefault = glGetFullPath('web', 'default', MPWS_VERSION, 'static', 'hbs', $layout);
     } else {
-        $layoutCustomer = glGetFullPath('web', 'build', 'customer', MPWS_CUSTOMER, 'static', 'hbs', $layout . '.hbs');
-        $layoutDefault = glGetFullPath('web', 'build', 'default', MPWS_VERSION, 'static', 'hbs', $layout . '.hbs');
+        $layoutCustomer = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', 'hbs', $layout);
+        $layoutDefault = glGetFullPath('web', 'build', 'default', MPWS_VERSION, 'static', 'hbs', $layout);
     }
 
     debug($layoutCustomer, 'layoutCustomer');
@@ -30,14 +32,15 @@
         ISTOOLBOX: " . (glIsToolbox() ? 'true' : 'false') . ",
         PLUGINS: ['" . implode("', '", configurationCustomerDisplay::$Plugins) . "'],
         MPWS_VERSION: '" . MPWS_VERSION . "',
-        MPWS_CUSTOMER: '" . MPWS_CUSTOMER . "',
+        MPWS_CUSTOMER: '" . $displayCustomer . "',
         PATH_STATIC_BASE: '/',
-        URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',
-        URL_STATIC_CUSTOMER: '/" . glGetPath($staticPath, 'customer', MPWS_CUSTOMER) . "',
+        URL_API: '/api.js',
+        URL_STATIC_CUSTOMER: '/" . glGetPath($staticPath, 'customer', $displayCustomer) . "',
         URL_STATIC_PLUGIN: '/" . glGetPath($staticPath, 'plugin') . "',
         URL_STATIC_DEFAULT: '/" . glGetPath($staticPath, 'default', MPWS_VERSION) . "'
     }";
     $initialJS = str_replace(array("\r","\n", ' '), '', $initialJS);
+        // URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',
 
     $responce = '';
     if (file_exists($layoutCustomer))
@@ -49,7 +52,7 @@
     $responce = str_replace("{{LANG}}", configurationCustomerDisplay::$Lang, $responce);
     $responce = str_replace("{{SYSTEMJS}}", $initialJS, $responce);
     $responce = str_replace("{{MPWS_VERSION}}", MPWS_VERSION, $responce);
-    $responce = str_replace("{{MPWS_CUSTOMER}}", MPWS_CUSTOMER, $responce);
+    $responce = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $responce);
     $responce = str_replace("{{PATH_STATIC}}", $staticPath, $responce);
 
     // TODO: save output into file

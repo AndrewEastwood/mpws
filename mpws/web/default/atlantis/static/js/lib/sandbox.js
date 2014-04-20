@@ -4,6 +4,9 @@ define("default/js/lib/sandbox", [
 
     var _events = {};
 
+
+    window.sandbox = _events;
+
     // Sandbox
     var _Sandbox = {
         // subscribe on eventID
@@ -14,8 +17,12 @@ define("default/js/lib/sandbox", [
             var listenerHash = listener && listener.toString().hashCode();
             var alreadyAdded = false;
             // avoid duplicates
-            for (var i = 0, len = _events[eventID].length; i < len && !alreadyAdded; i++)
+            for (var i = 0, len = _events[eventID].length; i < len && !alreadyAdded; i++) {
                 alreadyAdded = (_events[eventID][i].id === listenerHash);
+                // override function
+                if (alreadyAdded)
+                    _events[eventID][i].fn = listener;
+            }
 
             // add another listener
             if (!alreadyAdded) {
@@ -24,13 +31,21 @@ define("default/js/lib/sandbox", [
                     id : listenerHash,
                     fn : listener
                 });
-                return true;
+                // return listenerHash;
             } else 
                 ;//_app.log(true, 'this subscriber is already added on ', eventID);
-            return false;
+            return listenerHash;
         },
         // remove callback subscription to eventID 
         eventUnsubscribe : function (eventID, listener) {
+
+            // maybe eventId is hash, so let's remove all listeners by hash
+            if (eventID)
+                for (var eventGroupKey in _events)
+                    for (var eventItemKey in _events[eventGroupKey])
+                        if (_events[eventGroupKey][eventItemKey].id === eventID)
+                            _events[eventGroupKey][eventItemKey].splice(eventItemKey, 1);
+
             if (!_events[eventID])
                 return false;
             var listenerHash = listener && listener.toString().hashCode();
