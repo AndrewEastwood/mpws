@@ -1,4 +1,4 @@
-(function(){
+define(function () {
 
     var _globalConfig = JSON.parse(JSON.stringify(window.MPWS));
 
@@ -9,15 +9,20 @@
         config: _globalConfig
     };
 
+    // set requirejs configuration
     require.config({
         locale: _globalConfig.LOCALE,
         baseUrl: _globalConfig.PATH_STATIC_BASE,
         // mpws: _globalConfig,
         paths: {
+            // application
+            application: _globalConfig.URL_STATIC_DEFAULT + "js/app",
             // default paths
             default: _globalConfig.URL_STATIC_DEFAULT,
             // customer paths
             customer: _globalConfig.URL_STATIC_CUSTOMER,
+            // website
+            website: _globalConfig.URL_STATIC_WEBSITE,
             // plugin paths
             plugin: _globalConfig.URL_STATIC_PLUGIN,
             // version suppress
@@ -27,11 +32,12 @@
         urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
     });
 
+
     // include site file
-    var _filesToRequest = ['default/js/lib/sandbox', 'customer/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site')];
+    var _filesToRequest = ['default/js/lib/sandbox', _globalConfig.ROUTER];
 
     for (var key in _globalConfig.PLUGINS)
-        _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/js/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site'));
+        _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
 
     // console.log(_filesToRequest);
     // start customer application
@@ -55,4 +61,4 @@
         Backbone.history.start();
     });
 
-})();
+})

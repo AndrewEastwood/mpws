@@ -1,11 +1,11 @@
 define("customer/toolbox/js/router", [
-    'application',
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
+    'default/js/app',
     'default/js/view/breadcrumb',
-    'default/js/plugin/css!customer/toolbox/css/theme.css'
-], function (App, Sandbox, $, _, Breadcrumb) {
+    'default/js/plugin/css!customer/css/toolboxTheme.css'
+], function (Sandbox, $, _, SiteBase, Breadcrumb) {
 
     var _customerOptions = {};
 
@@ -47,9 +47,7 @@ define("customer/toolbox/js/router", [
         // ShopListProducts: $('#toolbox-page-center-ID'),
     };
 
-    var site = new App(_customerOptions);
-
-    // debugger;
+    var site = new SiteBase(_customerOptions);
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
 

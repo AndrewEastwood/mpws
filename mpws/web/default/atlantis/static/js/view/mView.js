@@ -144,7 +144,7 @@ define("default/js/view/mView", [
                 return this;
             },
             getTemplateData: function () {
-                var Site = require('customer/js/site');
+                var Site = require('application');
                 var _tplData = null;
                 var _tplUrlOptions = null;
                 var _tplExtras = null;

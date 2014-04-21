@@ -9,14 +9,18 @@
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
     $displayCustomer = glIsToolbox() ? MPWS_TOOLBOX : MPWS_CUSTOMER;
+    $customerStaticSource = glIsToolbox() ? 'toolbox' : 'site';
+    $customerStaticCommonSource = 'common';
     $layout = 'layout.hbs';
 
     // get customer or default index layout
     if (MPWS_ENV === 'DEV') {
-        $layoutCustomer = glGetFullPath('web', 'customer', $displayCustomer, 'static', 'hbs', $layout);
+        $layoutCustomer = glGetFullPath('web', 'customer', $displayCustomer, 'static', $customerStaticSource, 'hbs', $layout);
+        $layoutCustomerCommon = glGetFullPath('web', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layout);
         $layoutDefault = glGetFullPath('web', 'default', MPWS_VERSION, 'static', 'hbs', $layout);
     } else {
-        $layoutCustomer = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', 'hbs', $layout);
+        $layoutCustomer = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', $customerStaticSource, 'hbs', $layout);
+        $layoutCustomerCommon = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layout);
         $layoutDefault = glGetFullPath('web', 'build', 'default', MPWS_VERSION, 'static', 'hbs', $layout);
     }
 
@@ -36,8 +40,10 @@
         PATH_STATIC_BASE: '/',
         URL_API: '/api.js',
         URL_STATIC_CUSTOMER: '/" . glGetPath($staticPath, 'customer', $displayCustomer) . "',
+        URL_STATIC_WEBSITE: '/" . glGetPath($staticPath, 'customer', MPWS_CUSTOMER) . "',
         URL_STATIC_PLUGIN: '/" . glGetPath($staticPath, 'plugin') . "',
-        URL_STATIC_DEFAULT: '/" . glGetPath($staticPath, 'default', MPWS_VERSION) . "'
+        URL_STATIC_DEFAULT: '/" . glGetPath($staticPath, 'default', MPWS_VERSION) . "',
+        ROUTER: '" . join(DS, array('customer', $customerStaticSource, 'js', 'router')) . "'
     }";
     $initialJS = str_replace(array("\r","\n", ' '), '', $initialJS);
         // URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',
