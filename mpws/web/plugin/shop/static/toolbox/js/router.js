@@ -9,6 +9,7 @@ define("plugin/shop/toolbox/js/router", [
 
     var Router = Backbone.Router.extend({
         routes: {
+            "shop/dashboard": "dashboard",
             "shop/products": "products",
             "shop/orders": "orders",
             "shop/sales": "sales",
@@ -24,6 +25,29 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         dashboard: function () {
+            require(['plugin/shop/toolbox/js/view/dashboard'], function (Dashboard) {
+                // using this wrapper to cleanup previous view and create new one
+                Cache.withObject('Dashboard', function (cachedView) {
+                    // debugger;
+                    // remove previous view
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
+
+                    // create new view
+                    var dashboard = cachedView || new Dashboard();
+
+                    dashboard.fetchAndRender();
+
+                    Sandbox.eventNotify('plugin:toolbox:page:show', {
+                        name: 'ShopDashboard',
+                        el: dashboard.$el
+                    });
+
+                    // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
+                    // return view object to pass it into this function at next invocation
+                    return dashboard;
+                });
+            });
             // debugger;
             Sandbox.eventNotify('plugin:toolbox:page:show', {
                 name: 'ShopDashboard',
