@@ -1,8 +1,8 @@
-define("plugin/account/nls/en_us/site", [
+define("plugin/account/site/nls/en_us/translation", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/en_us/account_site'
-], function(_, CustomerAccount) {
+    'website/nls/en_us/plugin_account'
+], function (_, CustomerPluginAccount) {
     return _.extend({}, {
         form_register_title: 'Registration',
         form_register_field_FirstName: 'First name',
@@ -16,5 +16,5 @@ define("plugin/account/nls/en_us/site", [
         register_error_LastName_Empty: 'Last name is empty',
         register_error_Email_EMpty: 'Email address is empty',
         register_error_ConfirmPassword_WrongConfirmPassword: ''
-    }, CustomerAccount);
+    }, CustomerPluginAccount);
 });

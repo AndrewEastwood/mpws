@@ -1,4 +1,4 @@
-define("customer/nls/ua_uk/shop_orders", function () {
+define("website/nls/ua_uk/plugin_shop_orders", function () {
     return {
         order_status_NEW: 'Прийняте',
         order_status_ACTIVE: 'В процесі виконання',

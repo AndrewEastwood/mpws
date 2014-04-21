@@ -19,7 +19,7 @@
                 </li>
                 <li class="list-group-item">
                     <span class="prefix">Тип доставки:</span>
-                    <span><strong>{{>website/common/hbs/partials/orderShippingType . }}</strong></span>
+                    <span><strong>{{>website/hbs/partials/orderShippingType . }}</strong></span>
                 </li>
                 {{#if data.order.Warehouse }}
                 <li class="list-group-item">
@@ -31,9 +31,9 @@
                     <span class="prefix">Статус:</span>
                     <span class="editable">
                         <select class="form-control hide" id="order-status-control-ID">
-                            {{> website/common/hbs/partials/selectboxItemsOrderStatus . }}
+                            {{> website/hbs/partials/selectboxItemsOrderStatus . }}
                         </select>
-                        <a href="javascript://" id="order-status-ID" class="editable">{{>website/common/hbs/partials/orderStatusType . }}</a>
+                        <a href="javascript://" id="order-status-ID" class="editable">{{>website/hbs/partials/orderStatusType . }}</a>
                     </span>
                 </li>
                 {{#if data.order.Comment }}

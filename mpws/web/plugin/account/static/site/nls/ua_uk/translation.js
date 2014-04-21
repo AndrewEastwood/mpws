@@ -1,8 +1,8 @@
-define("plugin/account/nls/ua_uk/site", [
+define("plugin/account/site/nls/ua_uk/translation", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/ua_uk/account_site'
-], function(_, CustomerAccount) {
+    'website/nls/ua_uk/plugin_account'
+], function (_, CustomerPluginAccount) {
     return _.extend({}, {
         /* form register */
         form_register_title: "Реєстрація",
@@ -85,5 +85,5 @@ define("plugin/account/nls/ua_uk/site", [
         profile_page_addresses_message_saveError: "Помилка під час збереження адреси",
         profile_page_addresses_button_addAddress: "Додати адресу",
         profile_page_addresses_button_saveAddress: "Зберегти"
-    }, CustomerAccount);
+    }, CustomerPluginAccount);
 });

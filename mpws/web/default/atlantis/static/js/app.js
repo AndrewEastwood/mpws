@@ -182,6 +182,11 @@ define("application", [
                 _site.render(options);
         });
 
+        // update instance
+        _(_site).each(function(prop, key) {
+            Site[key] = prop;
+        });
+
         return _site;
     }
 

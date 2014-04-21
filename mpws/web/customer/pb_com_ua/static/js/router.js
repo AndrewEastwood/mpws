@@ -1,12 +1,12 @@
-define("customer/site/js/router", [
+define("customer/js/router", [
+    'application',
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
-    'default/js/app',
     'default/js/view/breadcrumb',
-    'default/js/plugin/css!customer/css/siteTheme.css'
+    'default/js/plugin/css!customer/css/theme.css'
 
-], function (Sandbox, $, _, SiteBase, Breadcrumb) {
+], function (App, Sandbox, $, _, Breadcrumb) {
 
     var _customerOptions = {};
 
@@ -55,7 +55,7 @@ define("customer/site/js/router", [
         AccountProfileDelete: $('.MPWSPageBody .MPWSBlockCenter'),
     };
 
-    var site = new SiteBase(_customerOptions);
+    var site = new App(_customerOptions);
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
 
@@ -72,7 +72,7 @@ define("customer/site/js/router", [
 
         _views.breadcrumb = new Breadcrumb({
             el: _customerOptions.placeholders.CommonBreadcrumb,
-            template: 'default/js/plugin/hbs!customer/hbs/site/breadcrumb'
+            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
         });
 
         Sandbox.eventSubscribe('global:breadcrumb:show', function (options) {

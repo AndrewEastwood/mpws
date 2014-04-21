@@ -1,8 +1,8 @@
-define("customer/nls/ua_uk/shop_site", [
+define("website/nls/ua_uk/plugin_shop", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/ua_uk/shop_logistics',
-    'customer/nls/ua_uk/shop_orders'
+    'website/nls/ua_uk/plugin_shop_logistics',
+    'website/nls/ua_uk/plugin_shop_orders'
 ], function (_, CustomerShopLogistics, CustomerShopOrders) {
     return _.extend({}, CustomerShopLogistics, CustomerShopOrders);
 });

@@ -19,10 +19,10 @@ define(function () {
             application: _globalConfig.URL_STATIC_DEFAULT + "js/app",
             // default paths
             default: _globalConfig.URL_STATIC_DEFAULT,
-            // customer paths
-            customer: _globalConfig.URL_STATIC_CUSTOMER,
-            // website
+            // website (origin customer)
             website: _globalConfig.URL_STATIC_WEBSITE,
+            // customer paths (current running customer)
+            customer: _globalConfig.URL_STATIC_CUSTOMER,
             // plugin paths
             plugin: _globalConfig.URL_STATIC_PLUGIN,
             // version suppress

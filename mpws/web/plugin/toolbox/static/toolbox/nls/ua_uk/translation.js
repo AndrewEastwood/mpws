@@ -1,8 +1,8 @@
 define("plugin/toolbox/toolbox/nls/ua_uk/translation", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'website/toolbox/nls/ua_uk/plugin_toolbox'
-], function (_, CustomerShop) {
+    'website/nls/ua_uk/plugin_toolbox'
+], function (_, CustomerPluginToolbox) {
     return _.extend({}, {
         pluginLogoText: "myPhpWebSite TOOLBOX",
         // siginin page
@@ -17,5 +17,5 @@ define("plugin/toolbox/toolbox/nls/ua_uk/translation", [
         pluginMenu_Administrators: 'Адміністратори',
         pluginMenu_Version: 'Версія програми',
         pluginMenu_Logout: 'Завершити сесію',
-    }, CustomerShop);
+    }, CustomerPluginToolbox);
 });

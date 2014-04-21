@@ -43,7 +43,7 @@
         URL_STATIC_WEBSITE: '/" . glGetPath($staticPath, 'customer', MPWS_CUSTOMER) . "',
         URL_STATIC_PLUGIN: '/" . glGetPath($staticPath, 'plugin') . "',
         URL_STATIC_DEFAULT: '/" . glGetPath($staticPath, 'default', MPWS_VERSION) . "',
-        ROUTER: '" . join(DS, array('customer', $customerStaticSource, 'js', 'router')) . "'
+        ROUTER: '" . join(DS, array('customer', 'js', 'router')) . "'
     }";
     $initialJS = str_replace(array("\r","\n", ' '), '', $initialJS);
         // URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',

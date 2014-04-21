@@ -1,8 +1,8 @@
 define("plugin/shop/toolbox/nls/ua_uk/translation", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'website/toolbox/nls/ua_uk/plugin_shop'
-], function (_, CustomerShop) {
+    'website/nls/ua_uk/plugin_shop'
+], function (_, CustomerPluginShop) {
     return _.extend({}, {
         // orderEntry_Popup_field_firstName: "Імя",
         // orderEntry_Popup_field_lastName: "Прізвище",
@@ -57,5 +57,5 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_type_Popular: "Популярні",
         product_type_NotPopular: "Непопулярні",
         product_type_Archived: "Архівні",
-    }, CustomerShop);
+    }, CustomerPluginShop);
 });

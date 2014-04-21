@@ -1,10 +1,10 @@
-define("customer/toolbox/js/router", [
+define("customer/js/router", [
     'application',
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/view/breadcrumb',
-    'default/js/plugin/css!customer/toolbox/css/theme.css'
+    'default/js/plugin/css!customer/css/theme.css'
 ], function (App, Sandbox, $, _, Breadcrumb) {
 
     var _customerOptions = {};
@@ -66,7 +66,7 @@ define("customer/toolbox/js/router", [
 
         _views.breadcrumb = new Breadcrumb({
             el: _customerOptions.placeholders.CommonBreadcrumb,
-            template: 'default/js/plugin/hbs!customer/hbs/toolbox/breadcrumb'
+            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
         });
 
         // Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {

@@ -14,11 +14,11 @@ module.exports = function(grunt) {
         var _baseConfigWatch = {};
 
         var _getPaths = function (mode) {
-            var _dirAppBuild = 'build/' + mode + '/';
-            var _dirAppJs = 'static/' + mode + '/js';
-            var _dirAppHbs = 'static/' + mode + '/hbs';
-            var _dirAppLess = 'static/' + mode + '/less';
-            var _dirAppCss = 'static/' + mode + '/css';
+            var _dirAppBuild = 'build/';
+            var _dirAppJs = 'static/js';
+            var _dirAppHbs = 'static/hbs';
+            var _dirAppLess = 'static/less';
+            var _dirAppCss = 'static/css';
             var _dirCommonLess = 'static/common/less';
 
             var _dirDefaultLess = 'static/less';

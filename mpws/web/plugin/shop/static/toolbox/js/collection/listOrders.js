@@ -1,15 +1,15 @@
 define('plugin/shop/toolbox/js/collection/listOrders', [
+    'application',
     'default/js/lib/sandbox',
-    'customer/toolbox/js/router',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-], function (Sandbox, AppRouter, _, PageableCollection, lang) {
+], function (App, Sandbox, _, PageableCollection, lang) {
 
     var ListOrders = PageableCollection.extend({
 
-        url: AppRouter.getApiLink('shop', 'shop_managed_orders_list'),
+        url: App.getApiLink('shop', 'shop_managed_orders_list'),
 
         // Initial pagination states
         state: {

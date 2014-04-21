@@ -1,4 +1,4 @@
-define("plugin/account/nls/site", function() {
+define("plugin/account/site/nls/translation", function() {
     return {
         en_us: true,
         ua_uk: true
