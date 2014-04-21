@@ -51,7 +51,7 @@ define("plugin/shop/js/model/cart", [
         },
         parse: function (data) {
             // debugger;
-            var _data = this.extractModelDataFromRespce(data);
+            var _data = this.extractModelDataFromResponse(data);
             var products = ShopUtils.adjustProductEntry(_data);
             return {
                 error: _data.error,

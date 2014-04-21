@@ -26,7 +26,7 @@ define("default/js/model/mModel", [
                 if (this.attributes && this.attributes.success)
                     this.attributes.success = false;
             },
-            extractModelDataFromRespce: function (data) {
+            extractModelDataFromResponse: function (data) {
                 return data && data[this.source] || {};
             },
 

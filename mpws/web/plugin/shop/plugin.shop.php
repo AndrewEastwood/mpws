@@ -115,6 +115,10 @@ class pluginShop extends objectPlugin {
                 $data = $this->_api_getListProducts_Managed();
                 break;
             }
+            case "toolbox_dashboard": {
+                $data = $this->_api_getToolbox_Dashboard();
+                break;
+            }
         }
 
         // attach to output
@@ -594,8 +598,8 @@ class pluginShop extends objectPlugin {
                 $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
                 $dataOrder["Comment"] = $cartUser['shopCartComment'];
                 $dataOrder["Hash"] = md5(time() . md5(time()));
-                $dataOrder['DateCreated'] = date('Y:m:d H:i:s');
-                $dataOrder['DateUpdated'] = date('Y:m:d H:i:s');
+                $dataOrder['DateCreated'] = date('Y-m-d H:i:s');
+                $dataOrder['DateUpdated'] = date('Y-m-d H:i:s');
                 $configOrder['data'] = array(
                     "fields" => array_keys($dataOrder),
                     "values" => array_values($dataOrder)
@@ -840,7 +844,7 @@ class pluginShop extends objectPlugin {
         // }
 
         $data['Status'] = $Status;
-        $data['DateUpdated'] = date('Y:m:d H:i:s');
+        $data['DateUpdated'] = date('Y-m-d H:i:s');
 
         $configOrder = configurationShopDataSource::jsapiShopUpdateOrderEntry($orderID, $data);
         // var_dump($configOrder);
@@ -1015,6 +1019,54 @@ class pluginShop extends objectPlugin {
 
         $dataCount = $this->getCustomer()->processData($configCount);
         $dataObj->setData('total_count', $dataCount['ItemsCount']);
+
+        return $dataObj;
+    }
+
+    private function _api_getToolbox_Dashboard () {
+        $dataObj = new libraryDataObject();
+
+        // get expired orders
+        $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
+        $configOrders['condition']['filter'] .= "Status (!=) ? + DateCreated (<) ?";
+        $configOrders['condition']['values'][] = "SHOP_CLOSED";
+        $configOrders['condition']['values'][] = date('Y-m-d', strtotime("-1 week"));
+        // get data
+        $dataOrders = $this->getCustomer()->processData($configOrders);
+        if (!empty($dataOrders))
+            foreach ($dataOrders as $key => $dataOrder) {
+                $orderBoughtsData = $this->_api_getOrderBoughts($dataOrder['ID']);
+                $dataOrders[$key]['account'] = $this->getCustomer()->getAccountByID($dataOrder['AccountID']);
+                if ($orderBoughtsData->hasData()) {
+                    $dataOrders[$key]['info'] = $orderBoughtsData->getData('Info');
+                    $dataOrders[$key]['boughts'] = $orderBoughtsData->getData('Boughts');
+                }
+            }
+        $dataObj->setData('orders_expired', $dataOrders);
+
+        // get pending products
+
+        // get today's orders
+        $configOrders = configurationShopDataSource::jsapiShopSiteOrders();
+        $configOrders['condition']['filter'] .= "Status (=) ? + DateCreated (>) ?";
+        $configOrders['condition']['values'][] = "NEW";
+        $configOrders['condition']['values'][] = date('Y-m-d');
+        // get data
+        $dataOrders = $this->getCustomer()->processData($configOrders);
+        if (!empty($dataOrders))
+            foreach ($dataOrders as $key => $dataOrder) {
+                $orderBoughtsData = $this->_api_getOrderBoughts($dataOrder['ID']);
+                $dataOrders[$key]['account'] = $this->getCustomer()->getAccountByID($dataOrder['AccountID']);
+                if ($orderBoughtsData->hasData()) {
+                    $dataOrders[$key]['info'] = $orderBoughtsData->getData('Info');
+                    $dataOrders[$key]['boughts'] = $orderBoughtsData->getData('Boughts');
+                }
+            }
+        $dataObj->setData('orders_today', $dataOrders);
+
+        // get top 50 products
+
+        // get non-popuplar 50 products
 
         return $dataObj;
     }

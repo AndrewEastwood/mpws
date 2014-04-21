@@ -23,8 +23,8 @@ define("plugin/toolbox/toolbox/js/model/bridge", [
             var url = this.getUrl({
                 action: 'status'
             });
-            $.post(url, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 Cache.setObject('AdminProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
                 self.trigger('change');
@@ -37,8 +37,8 @@ define("plugin/toolbox/toolbox/js/model/bridge", [
             var url = this.getUrl({
                 action: 'signin'
             });
-            $.post(url, {credentials: data}, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, {credentials: data}, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 var _profileID = _data.profile && _data.profile.ID;
                 Cache.setObject('AdminProfileID', _profileID);
                 self.set(_data);
@@ -53,8 +53,8 @@ define("plugin/toolbox/toolbox/js/model/bridge", [
             var url = this.getUrl({
                 action: 'signout'
             });
-            $.post(url, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 Cache.setObject('AdminProfileID', null);
                 self.set(_data);
                 self.trigger('change');

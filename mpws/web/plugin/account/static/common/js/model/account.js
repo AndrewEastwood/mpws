@@ -23,8 +23,8 @@ define("plugin/account/js/model/account", [
             var url = this.getUrl({
                 action: 'status'
             });
-            $.post(url, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                 self.set(_data);
                 self.trigger('change');
@@ -37,8 +37,8 @@ define("plugin/account/js/model/account", [
             var url = this.getUrl({
                 action: 'signin'
             });
-            $.post(url, {credentials: data}, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, {credentials: data}, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 if (_data.profile && _data.profile.ID) {
                     Cache.setObject('AccountProfileID', _data.profile && _data.profile.ID);
                     self.set(_data);
@@ -56,8 +56,8 @@ define("plugin/account/js/model/account", [
             var url = this.getUrl({
                 action: 'signout'
             });
-            $.post(url, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 Cache.setObject('AccountProfileID', null);
                 self.set(_data);
                 self.trigger('change');
@@ -70,8 +70,8 @@ define("plugin/account/js/model/account", [
                 action: 'edit'
             });
             // debugger;
-            $.post(url, {account: data}, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, {account: data}, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 self.set(_data);
                 self.trigger('change');
                 Sandbox.eventNotify('plugin:account:profile:updated', _data);
@@ -83,8 +83,8 @@ define("plugin/account/js/model/account", [
                 action: 'addAddress'
             });
             // debugger;
-            $.post(url, {address: data}, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, {address: data}, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 self.set(_data);
                 self.trigger('change');
                 Sandbox.eventNotify('plugin:account:profile:address:added', _data);
@@ -97,8 +97,8 @@ define("plugin/account/js/model/account", [
                 action: 'updateAddress'
             });
             data.AddressID = AddressID;
-            $.post(url, {address: data}, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, {address: data}, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 self.set(_data);
                 self.trigger('change');
                 Sandbox.eventNotify('plugin:account:profile:address:updated', _data);
@@ -109,8 +109,8 @@ define("plugin/account/js/model/account", [
             var url = this.getUrl({
                 action: 'removeAddress'
             });
-            $.post(url, {AddressID: AddressID}, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, {AddressID: AddressID}, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 self.set(_data);
                 self.trigger('change');
                 Sandbox.eventNotify('plugin:account:profile:address:removed', _data);
@@ -125,8 +125,8 @@ define("plugin/account/js/model/account", [
                 Password: password,
                 ConfirmPassword: confirmation
             };
-            $.post(url, data, function (responce) {
-                var _data = self.extractModelDataFromRespce(responce);
+            $.post(url, data, function (response) {
+                var _data = self.extractModelDataFromResponse(response);
                 self.set(_data);
                 self.trigger('change');
                 Sandbox.eventNotify('plugin:account:profile:password:updated', _data);

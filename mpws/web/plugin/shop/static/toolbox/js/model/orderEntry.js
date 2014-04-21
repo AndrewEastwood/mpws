@@ -9,7 +9,7 @@ define('plugin/shop/toolbox/js/model/orderEntry', [
         fn: 'shop_managed_order_entry',
         parse: function (data) {
             // debugger;
-            var _data = this.extractModelDataFromRespce(data);
+            var _data = this.extractModelDataFromResponse(data);
 
             _data.boughts = ShopUtils.adjustProductEntry({products: _data.boughts});
 

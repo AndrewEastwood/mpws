@@ -29,7 +29,7 @@ define(function () {
             cmn_jquery: _globalConfig.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
         },
         waitSeconds: 15,
-        urlArgs: "v=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
+        urlArgs: "mpws_bust=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
     });
 
 

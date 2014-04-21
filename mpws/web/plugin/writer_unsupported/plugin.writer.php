@@ -2438,7 +2438,7 @@ echo $output;
         //echo $account_api['METHODS']['list_products'] . '?vendor_product_id=' . $checkoutPID;
 
         //echo $output;
-        // convert responce to native array
+        // convert response to native array
         $coResponse = json_decode($output, true);
         //echo '<pre>' . print_r($coResponse, true) . '</pre>';
 
@@ -2459,7 +2459,7 @@ echo $output;
             if ($isAdded)
                 return $coResponse['products'][0];
             
-            // return responce code 
+            // return response code 
             if (!empty($coResponse['response_code']))
                 return $coResponse['response_code'];
             return false;
@@ -2514,7 +2514,7 @@ echo $output;
         $output = curl_exec($ch);
         curl_close($ch);
         
-        // convert responce to native array
+        // convert response to native array
         $coResponse = json_decode($output, true);
         //echo '<pre>' . print_r($coResponse, true) . '</pre>';
         
@@ -2522,7 +2522,7 @@ echo $output;
         if(isset($coResponse['errors'][0]['code']))
             return $coResponse['errors'][0]['code'];
 
-        // return responce code
+        // return response code
         //if (!empty($coResponse['response_code']))
         //    return $coResponse['response_code'];
         
@@ -2574,7 +2574,7 @@ echo $output;
         $output = curl_exec($ch);
         curl_close($ch);
         
-        // convert responce to native array
+        // convert response to native array
         $coResponse = json_decode($output, true);
         
         // return error code if occured
