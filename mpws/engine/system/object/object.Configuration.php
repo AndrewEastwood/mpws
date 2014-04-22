@@ -108,6 +108,24 @@ class objectConfiguration implements iConfiguration {
 //         return $target;
     }
 
+    static function jsapiUtil_GetTableRecordsCount ($table) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => $table,
+            "condition" => array(
+                "filter" => "",
+                "values" => array()
+            ),
+            "fields" => array("@COUNT(*) AS ItemsCount"),
+            "offset" => 0,
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+
 }
 
 ?>

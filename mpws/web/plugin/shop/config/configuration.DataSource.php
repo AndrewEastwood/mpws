@@ -331,56 +331,40 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
     // <<<< Shop order
-    static function jsapiGetTableRecordsCount ($table) {
+
+    // >>>> Statistic: best and worst selling products
+    static function jsapiStat_BestSellingProducts () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
-            "source" => $table,
-            "condition" => array(
-                "filter" => "",
-                "values" => array()
+            "source" => "shop_boughts",
+            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(ProductPrice * Quantity) AS SumTotal"),
+            "order" => array(
+                "field" => "SoldTotal",
+                "ordering" => "DESC"
             ),
-            "fields" => array("@COUNT(*) AS ItemsCount"),
-            "offset" => 0,
-            "limit" => 1,
-            "options" => array(
-                "expandSingleRecord" => true
-            )
+            "limit" => 50,
+            "group" => "ProductID",
+            "options" => null
         ));
     }
-
-
-    // >>>> Get records count
-
-
-
-    // <<<< Get records count
-
-    // static function jsapiShopSiteOrdersCount () {
-    //     return self::jsapiGetDataSourceConfig(array(
-    //         "action" => "call",
-    //         "procedure" => array(
-    //             "name" => "getShopSiteOrdersCount",
-    //             "parameters" => array()
-    //         ),
-    //         "options" => array(
-    //             "expandSingleRecord" => true
-    //         )
-    //     ));
-    // }
-
-    // static function jsapiShopProductListCount () {
-    //     return self::jsapiGetDataSourceConfig(array(
-    //         "action" => "call",
-    //         "procedure" => array(
-    //             "name" => "getShopSiteProductsCount",
-    //             "parameters" => array()
-    //         ),
-    //         "options" => array(
-    //             "expandSingleRecord" => true
-    //         )
-    //     ));
-    // }
-
+    static function jsapiStat_WorstSellingProducts () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_products",
+            "fields" => array("ID"),
+            "condition" => array(
+                "filter" => "Status (=) ? + ID (NOT IN) ?",
+                "values" => array("ACTIVE", "SELECT ProductID AS ID FROM shop_boughts")
+            ),
+            "order" => array(
+                "field" => "DateCreated",
+                "ordering" => "ASC"
+            ),
+            "limit" => 50,
+            "options" => null
+        ));
+    }
+    // <<<< Statistic: best and worst selling products
 }
 
 ?>

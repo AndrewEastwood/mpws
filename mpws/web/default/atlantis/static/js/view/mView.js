@@ -173,6 +173,11 @@ define("default/js/view/mView", [
                     displayItems: this.displayItems,
                     urlOptions: _tplUrlOptions
                 }
+            },
+            close: function () {
+                this.remove();
+                this.unbind();
+                this.trigger('mview:close');
             }
         });
 

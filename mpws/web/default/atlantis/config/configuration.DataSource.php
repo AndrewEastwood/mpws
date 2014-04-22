@@ -2,6 +2,8 @@
 
 class configurationDefaultDataSource extends objectConfiguration {
 
+    static $Table_SystemAccounts = "mpws_accounts";
+
     static function jsapiGetCustomer ($ExternalKey = MPWS_CUSTOMER) {
         // if (empty($ExternalKey))
         //     $ExternalKey = ;

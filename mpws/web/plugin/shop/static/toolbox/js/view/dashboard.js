@@ -29,6 +29,14 @@ define("plugin/shop/toolbox/js/view/dashboard", [
 
             this.listenTo(this.model, "change", this.render);
 
+            var intervalID = setInterval(function() {
+                self.refresh.call(self);
+            }, 10000);
+
+            this.on('mview:close', function () {
+                clearInterval(intervalID);
+            });
+
             this.on('mview:renderComplete', function () {
                 // self.$('select').select2();
                 self.$('.helper').tooltip();

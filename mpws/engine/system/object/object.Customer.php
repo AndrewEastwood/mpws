@@ -290,6 +290,23 @@ class objectCustomer {
         $this->processData($config);
     }
 
+    public function getAccountStats () {
+        $stats = array();
+        $filterProducts = array(
+            array("key" => "ByStatusActive", "filter" => "Status (=) ?", "value" => array("ACTIVE")),
+            array("key" => "ByStatusRemoved", "filter" => "Status (=) ?", "value" => array("REMOVED")),
+            array("key" => "ByStatusActiveAndIsTemporary", "filter" => "Status (=) ? + IsTemporary (=) ?", "value" => array("ACTIVE", 1))
+        );
+        foreach ($filterProducts as $filterItem) {
+            $configCount = configurationCustomerDataSource::jsapiUtil_GetTableRecordsCount(configurationCustomerDataSource::$Table_SystemAccounts);
+            $configCount['condition']['filter'] = $filterItem['filter'];
+            $configCount['condition']['values'] = $filterItem['value'];
+            $dataCount = $this->processData($configCount);
+            $stats[$filterItem['key']] = $dataCount['ItemsCount'];
+        }
+        return $stats;
+    }
+
 }
 
 ?>
