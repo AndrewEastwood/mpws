@@ -1,10 +1,10 @@
-define("plugin/shop/js/view/listProductCatalog", [
+define("plugin/shop/site/js/view/listProductCatalog", [
     'default/js/lib/underscore',
     'default/js/view/mView',
-    'plugin/shop/js/collection/listProductCatalog',
-    'plugin/shop/js/view/productItemShort',
+    'plugin/shop/site/js/collection/listProductCatalog',
+    'plugin/shop/site/js/view/productItemShort',
     'default/js/lib/bootstrap-dialog',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/productCatalog',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/productCatalog',
     'default/js/lib/bootstrap',
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',

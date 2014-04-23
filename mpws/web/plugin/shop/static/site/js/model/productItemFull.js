@@ -1,6 +1,6 @@
-define('plugin/shop/js/model/productItemFull', [
-    'plugin/shop/js/model/productItemBase',
-    'plugin/shop/js/lib/utils'
+define('plugin/shop/site/js/model/productItemFull', [
+    'plugin/shop/site/js/model/productItemBase',
+    'plugin/shop/common/js/lib/utils'
 ], function (ProductItemBase, Utils) {
 
     var Model = ProductItemBase.getNew();

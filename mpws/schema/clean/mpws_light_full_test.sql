@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.31, for debian-linux-gnu (i686)
+-- MySQL dump 10.13  Distrib 5.5.35, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: mpws_light
 -- ------------------------------------------------------
--- Server version	5.5.31-0ubuntu0.12.04.2
+-- Server version	5.5.35-0ubuntu0.12.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -415,6 +415,7 @@ CREATE TABLE `shop_customerProductRequests` (
   `AccountID` int(11) DEFAULT NULL,
   `OptOut` text NOT NULL,
   `Email` text NOT NULL,
+  `IsTemporary` tinyint(1) NOT NULL DEFAULT '1',
   `AutoClose` tinyint(1) NOT NULL,
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -791,6 +792,116 @@ LOCK TABLES `toolbox_admins` WRITE;
 INSERT INTO `toolbox_admins` VALUES (1,1,'main','4a123a551c46b3a7a2e1b6b76e7d69c9','ACTIVE','2014-03-13 00:00:00','2014-03-13 00:00:00');
 /*!40000 ALTER TABLE `toolbox_admins` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'mpws_light'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `getAllShopCategoryBrands` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN catid INT)
+BEGIN
+  SELECT o.ID,
+         o.Name
+  FROM   shop_products AS p
+         LEFT JOIN shop_origins AS o
+                ON p.OriginID = o.ID
+  WHERE  p.Status = 'ACTIVE'
+         AND o.Status = 'ACTIVE'
+         AND p.CategoryID = catid
+  GROUP  BY o.Name; 
+-- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getAllShopCategorySubCategories` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategorySubCategories`(IN catid INT)
+BEGIN
+  SELECT c.ID,
+         c.Name
+  FROM   shop_products AS p
+         LEFT JOIN shop_categories AS c
+                ON p.CategoryID = c.ID
+  WHERE  p.Status = 'ACTIVE'
+         AND c.Status = 'ACTIVE'
+         AND c.ParentID = catid
+  GROUP  BY c.Name; 
+-- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getShopCategoryLocation` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryLocation`(IN catid INT)
+BEGIN
+SELECT T2.ID, T2.Name
+FROM (
+    SELECT
+        @r AS _id,
+        (SELECT @r := ParentID FROM shop_categories WHERE ID = _id) AS ParentID,
+        @l := @l + 1 AS lvl
+    FROM
+        (SELECT @r := catid, @l := 0) vars,
+        shop_categories h
+    WHERE @r <> 0) T1
+JOIN shop_categories T2
+ON T1._id = T2.ID
+ORDER BY T1.lvl DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getShopCategoryPriceEdges` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
+BEGIN
+SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -801,4 +912,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-23  9:57:08
+-- Dump completed on 2014-04-23 23:20:26

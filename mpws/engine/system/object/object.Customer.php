@@ -127,7 +127,7 @@ class objectCustomer {
 
         // this section must be located when all plugins are performed
         // becuse the toolbox plugin does user validation and authorizations
-        if (!$this->isAdminActive()) {
+        if (MPWS_IS_TOOLBOX && !$this->isAdminActive()) {
             $response->setError('AccessDenied');
             // $response->setData('redirect', 'signin');
             return $response;

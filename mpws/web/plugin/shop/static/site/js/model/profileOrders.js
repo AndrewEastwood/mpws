@@ -1,6 +1,6 @@
-define('plugin/shop/js/model/profileOrders', [
+define('plugin/shop/site/js/model/profileOrders', [
     'default/js/model/mModel',
-    'plugin/shop/js/lib/utils'
+    'plugin/shop/common/js/lib/utils'
 ], function (MModel, ShopUtils) {
 
     var Model = MModel.getNew();

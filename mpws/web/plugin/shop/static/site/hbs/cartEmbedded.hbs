@@ -12,10 +12,10 @@
     <li>
         <div class="shop-widget-productlist">
         {{#each_upto data.products 3 }}
-            {{>plugin/shop/hbs/partials/cartProductItem . }}
+            {{>plugin/shop/common/hbs/partials/cartProductItem . }}
         {{/each_upto}}
         </div>
-        {{>plugin/shop/hbs/partials/cartInfo data }}
+        {{>plugin/shop/common/hbs/partials/cartInfo data }}
     </li>
     {{#gt data.info.productCount 3 }}
         <div class="cart-message text-left">

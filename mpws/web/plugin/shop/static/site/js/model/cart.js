@@ -1,7 +1,7 @@
-define("plugin/shop/js/model/cart", [
+define("plugin/shop/site/js/model/cart", [
     'default/js/lib/sandbox',
     'default/js/model/mModel',
-    'plugin/shop/js/lib/utils'
+    'plugin/shop/common/js/lib/utils'
 ], function (Sandbox, MModel, ShopUtils) {
 
     var Model = MModel.getNew();

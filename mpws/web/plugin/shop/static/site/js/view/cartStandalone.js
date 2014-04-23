@@ -1,12 +1,12 @@
-define("plugin/shop/js/view/cartStandalone", [
-    'customer/js/site',
+define("plugin/shop/site/js/view/cartStandalone", [
+    "application",
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/view/mView',
-    'plugin/shop/js/model/cart',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/cartStandalone',
+    'plugin/shop/site/js/model/cart',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/cartStandalone',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/nls/site',
+    'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
 ], function (Site, Sandbox, _, MView, ModelCartInstance, tpl, lang) {

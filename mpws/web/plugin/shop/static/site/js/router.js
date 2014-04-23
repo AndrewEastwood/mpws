@@ -1,13 +1,12 @@
-define("plugin/shop/js/site", [
+define("plugin/shop/site/js/router", [
     'default/js/lib/sandbox',
-    'customer/js/site',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/shop/js/view/siteMenu',
-    'plugin/shop/js/view/siteWidgets',
-], function (Sandbox, Site, $, _, Backbone, Cache, SiteMenu, SiteWidgets) {
+    'plugin/shop/site/js/view/siteMenu',
+    'plugin/shop/site/js/view/siteWidgets',
+], function (Sandbox, $, _, Backbone, Cache, SiteMenu, SiteWidgets) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -58,7 +57,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/listProductLatest'], function (ListProductLatest) {
+            require(['plugin/shop/site/js/view/listProductLatest'], function (ListProductLatest) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListProductLatest', function (cachedView) {
                     // debugger;
@@ -94,7 +93,7 @@ define("plugin/shop/js/site", [
             });
 
             // debugger;
-            require(['plugin/shop/js/view/listProductCatalog'], function (ListProductCatalog) {
+            require(['plugin/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListProductCatalog', function (cachedView) {
                     // remove previous view
@@ -139,7 +138,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/productItemFull'], function (ProductItemFull) {
+            require(['plugin/shop/site/js/view/productItemFull'], function (ProductItemFull) {
 
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ProductItemFull', function (cachedView) {
@@ -174,7 +173,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/productsCompare'], function (ProductsCompare) {
+            require(['plugin/shop/site/js/view/productsCompare'], function (ProductsCompare) {
                 Cache.withObject('ProductsCompare', function (cachedView) {
                     // remove previous view
                     if (cachedView && cachedView.remove)
@@ -206,7 +205,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/cartStandalone'], function (CartStandalone) {
+            require(['plugin/shop/site/js/view/cartStandalone'], function (CartStandalone) {
                 Cache.withObject('CartStandalone', function (cachedView) {
                     // remove previous view
                     if (cachedView && cachedView.remove)
@@ -237,7 +236,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/wishListStandalone'], function (WishListStandalone) {
+            require(['plugin/shop/site/js/view/wishListStandalone'], function (WishListStandalone) {
                 Cache.withObject('WishListStandalone', function (cachedView) {
                     // remove previous view
                     if (cachedView && cachedView.remove)
@@ -268,7 +267,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/trackingStatus'], function (TrackingStatus) {
+            require(['plugin/shop/site/js/view/trackingStatus'], function (TrackingStatus) {
                 Cache.withObject('TrackingStatus', function (cachedView) {
                     // debugger;
                     // remove previous view
@@ -317,7 +316,7 @@ define("plugin/shop/js/site", [
                 categoryID: null
             });
 
-            require(['plugin/shop/js/view/profileOrders'], function (ProfileOrders) {
+            require(['plugin/shop/site/js/view/profileOrders'], function (ProfileOrders) {
                 Cache.withObject('ProfileOrders', function (cachedView) {
                     // debugger;
                     // remove previous view

@@ -1,7 +1,7 @@
-define("plugin/shop/js/view/productsCompare", [
+define("plugin/shop/site/js/view/productsCompare", [
     'default/js/view/mView',
-    'plugin/shop/js/model/productsCompare',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/productsCompare',
+    'plugin/shop/site/js/model/productsCompare',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/productsCompare',
     "default/js/lib/jquery.cookie"
 ], function (MView, ModelProductsCompareInstance, tpl) {
 

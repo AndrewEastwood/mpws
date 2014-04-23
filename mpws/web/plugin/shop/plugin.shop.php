@@ -674,42 +674,61 @@ class pluginShop extends objectPlugin {
             $dataObj->setData('account', $this->getCustomer()->getAccountByID($dataOrder['AccountID']));
 
         if (!empty($dataOrder)) {
-            $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
-            if ($orderBoughtsData->hasData()) {
-                $dataObj->setData('info', $orderBoughtsData->getData('Info'));
-                $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
-            }
+            // $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
+            $configBoughts = configurationShopDataSource::jsapiShopBoughts($orderID);
+            // var_dump($configBoughts);
+            $boughts = $this->getDataBase()->getData($configBoughts) ?: array();
+
+            if (!empty($boughts))
+                foreach ($boughts as $bkey => $soldItem) {
+                    $product = $this->_api_getEntryProduct($soldItem['ProductID']);
+                    if ($product->hasData()) { 
+                        $productData = $product->getData('Product');
+                        $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
+                    } else
+                        $boughts[$bkey]['Product'] = null;
+                }
+
+            $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));
+
+            // var_dump($this->_custom_util_calculateBought($boughts));
+            $dataObj->setData('boughts', $boughts);
+
+            // if ($orderBoughtsData->hasData()) {
+            //     $dataObj->setData('info', $orderBoughtsData->getData('Info'));
+            //     $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
+            // }
         }
 
         return $dataObj;
     }
 
-    private function _api_getOrderBoughts ($OrderID) {
-        $dataObj = new libraryDataObject();
+    // private function _api_getOrderBoughts ($OrderID) {
+    //     $dataObj = new libraryDataObject();
 
-        $configBoughts = configurationShopDataSource::jsapiShopBoughts($OrderID);
-        // var_dump($configBoughts);
-        $boughts = $this->getDataBase()->getData($configBoughts) ?: array();
+    //     $configBoughts = configurationShopDataSource::jsapiShopBoughts($OrderID);
+    //     // var_dump($configBoughts);
+    //     $boughts = $this->getDataBase()->getData($configBoughts) ?: array();
 
-        if (!empty($boughts))
-            foreach ($boughts as $bkey => $soldItem) {
-                $product = $this->_api_getEntryProduct($soldItem['ProductID']);
-                if ($product->hasData()) { 
-                    $productData = $product->getData('Product');
-                    $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
-                } else
-                    $boughts[$bkey]['Product'] = null;
-            }
+    //     if (!empty($boughts))
+    //         foreach ($boughts as $bkey => $soldItem) {
+    //             $product = $this->_api_getEntryProduct($soldItem['ProductID']);
+    //             if ($product->hasData()) { 
+    //                 $productData = $product->getData('Product');
+    //                 $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
+    //             } else
+    //                 $boughts[$bkey]['Product'] = null;
+    //         }
 
-        // var_dump($boughts);
+    //     // var_dump($boughts);
 
-        $dataObj->setData('Info', $this->_custom_util_calculateBought($boughts));
+    //     $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));
 
-        // var_dump($this->_custom_util_calculateBought($boughts));
-        $dataObj->setData('Boughts', $boughts);
+    //     // var_dump($this->_custom_util_calculateBought($boughts));
+    //     $dataObj->setData('boughts', $boughts);
 
-        return $dataObj;
-    }
+    //     return $dataObj;
+    // }
 
     // profile orders
     // -----------------------------------------------
@@ -737,15 +756,17 @@ class pluginShop extends objectPlugin {
         $dataOrders = $this->getCustomer()->processData($configOrders);
 
         // var_dump($dataOrders);
+        foreach ($dataOrders as $key => $order)
+            $dataOrders[$key] = $this->_api_getEntryOrder($order)->getData();
 
         // get order boughts
-        foreach ($dataOrders as $key => $order) {
-            $orderBoughtsData = $this->_api_getOrderBoughts($order['ID']);
-            if ($orderBoughtsData->hasData()) {
-                $dataOrders[$key]['Info'] = $orderBoughtsData->getData('Info');
-                $dataOrders[$key]['Boughts'] = $orderBoughtsData->getData('Boughts');
-            }
-        }
+        // foreach ($dataOrders as $key => $order) {
+        //     $orderBoughtsData = $this->_api_getOrderBoughts($order['ID']);
+        //     if ($orderBoughtsData->hasData()) {
+        //         $dataOrders[$key]['Info'] = $orderBoughtsData->getData('Info');
+        //         $dataOrders[$key]['Boughts'] = $orderBoughtsData->getData('Boughts');
+        //     }
+        // }
 
         $dataObj->setData('orders', $dataOrders);
 

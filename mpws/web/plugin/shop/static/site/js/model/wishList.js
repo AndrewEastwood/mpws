@@ -1,7 +1,7 @@
-define("plugin/shop/js/model/wishList", [
+define("plugin/shop/site/js/model/wishList", [
     'default/js/lib/sandbox',
     'default/js/model/mModel',
-    'plugin/shop/js/lib/utils'
+    'plugin/shop/common/js/lib/utils'
 ], function (Sandbox, MModel, ShopUtils) {
 
     var Model = MModel.getNew();

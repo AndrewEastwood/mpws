@@ -1,11 +1,11 @@
-define("plugin/account/js/view/site/accountProfile", [
+define("plugin/account/site/js/view/accountProfile", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'default/js/lib/backbone',
-    'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfile',
+    'plugin/account/common/js/model/account',
+    'default/js/plugin/hbs!plugin/account/site/hbs/accountProfile',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site'
+    'default/js/plugin/i18n!plugin/account/site/nls/translation'
 ], function (Sandbox, MView, Backbone, ModelAccountInstance, tpl, lang) {
 
     var AccountProfile = MView.extend({

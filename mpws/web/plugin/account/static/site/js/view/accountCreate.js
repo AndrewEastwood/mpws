@@ -1,13 +1,13 @@
-define("plugin/account/js/view/site/accountCreate", [
+define("plugin/account/site/js/view/accountCreate", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/view/mView',
     /* model */
-    'plugin/account/js/model/accountCreate',
+    'plugin/account/common/js/model/accountCreate',
     /* template */
-    'default/js/plugin/hbs!plugin/account/hbs/site/accountCreate',
+    'default/js/plugin/hbs!plugin/account/site/hbs/accountCreate',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site'
+    'default/js/plugin/i18n!plugin/account/site/nls/translation'
 ], function ($, _, MView, ModelAccountCreate, tpl, lang) {
 
     var View = MView.getNew();

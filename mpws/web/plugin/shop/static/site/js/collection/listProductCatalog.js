@@ -1,9 +1,9 @@
-define('plugin/shop/js/collection/listProductCatalog', [
+define('plugin/shop/site/js/collection/listProductCatalog', [
     'default/js/lib/underscore',
     'default/js/collection/mCollection',
-    'plugin/shop/js/model/productItemBase',
+    'plugin/shop/site/js/model/productItemBase',
     'default/js/lib/url',
-    'plugin/shop/js/lib/utils',
+    'plugin/shop/common/js/lib/utils',
     'default/js/lib/jquery.cookie',
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
 

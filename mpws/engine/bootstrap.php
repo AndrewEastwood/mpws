@@ -56,4 +56,7 @@
         // return preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']) > 0;
     }
 
+    
+    define('MPWS_IS_TOOLBOX', glIsToolbox());
+
 ?>

@@ -11,10 +11,10 @@
 
         <div class="shop-widget-productlist">
         {{#each data.products }}
-            {{>plugin/shop/hbs/partials/cartProductItem . }}
+            {{>plugin/shop/common/hbs/partials/cartProductItem . }}
         {{/each}}
         </div>
-        {{>plugin/shop/hbs/partials/cartInfo data }}
+        {{>plugin/shop/common/hbs/partials/cartInfo data }}
 
         <div class="well checkout">
             <div class="container">

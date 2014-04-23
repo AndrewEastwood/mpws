@@ -1,11 +1,11 @@
-define("plugin/account/js/view/site/accountProfileEdit", [
+define("plugin/account/site/js/view/accountProfileEdit", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/view/mView',
-    'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfileEdit',
+    'plugin/account/common/js/model/account',
+    'default/js/plugin/hbs!plugin/account/site/hbs/accountProfileEdit',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site',
+    'default/js/plugin/i18n!plugin/account/site/nls/translation',
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, $, MView, ModelAccountInstance, tpl, lang) {
 

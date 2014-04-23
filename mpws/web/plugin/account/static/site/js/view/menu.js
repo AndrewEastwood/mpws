@@ -1,9 +1,8 @@
-define("plugin/account/js/view/site/menu", [
+define("plugin/account/site/js/view/menu", [
     'default/js/lib/sandbox',
-    'customer/js/site',
-    'plugin/account/js/view/site/menuAccount',
-    'plugin/account/js/view/site/menuSignUp',
-], function (Sandbox, Site, MenuAccount, MenuSignUp) {
+    'plugin/account/site/js/view/menuAccount',
+    'plugin/account/site/js/view/menuSignUp',
+], function (Sandbox, MenuAccount, MenuSignUp) {
 
     // create SignIn button
     var menuSignUp = new MenuSignUp();
