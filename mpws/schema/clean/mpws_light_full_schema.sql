@@ -201,15 +201,15 @@ CREATE TABLE `shop_boughts` (
   `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
-  `ProductPrice` decimal(10,0) NOT NULL,
+  `ProductPrice` decimal(10,2) NOT NULL,
   `Quantity` int(11) NOT NULL,
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `OrderID` (`OrderID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `shop_boughts_ibfk_7` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_boughts_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_boughts_ibfk_7` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -294,6 +294,62 @@ CREATE TABLE `shop_currency` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `shop_customerProductRequests`
+--
+
+DROP TABLE IF EXISTS `shop_customerProductRequests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_customerProductRequests` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `AccountID` int(11) DEFAULT NULL,
+  `OptOut` text NOT NULL,
+  `Email` text NOT NULL,
+  `AutoClose` tinyint(1) NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`AccountID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `shop_favlists`
+--
+
+DROP TABLE IF EXISTS `shop_favlists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_favlists` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `AccountID` int(11) NOT NULL,
+  `Name` text NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`AccountID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `shop_favproducts`
+--
+
+DROP TABLE IF EXISTS `shop_favproducts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_favproducts` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ListID` int(11) NOT NULL,
+  `ProductID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`ListID`,`ProductID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='contains all products related to particular list';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `shop_offers`
 --
 
@@ -302,6 +358,7 @@ DROP TABLE IF EXISTS `shop_offers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shop_offers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
   `Type` enum('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED') COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
@@ -312,6 +369,7 @@ CREATE TABLE `shop_offers` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
+  KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_offers_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -519,4 +577,4 @@ CREATE TABLE `toolbox_admins` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-22 11:23:25
+-- Dump completed on 2014-04-23  9:57:08

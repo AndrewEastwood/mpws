@@ -270,15 +270,15 @@ CREATE TABLE `shop_boughts` (
   `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
-  `ProductPrice` decimal(10,0) NOT NULL,
+  `ProductPrice` decimal(10,2) NOT NULL,
   `Quantity` int(11) NOT NULL,
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `OrderID` (`OrderID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `shop_boughts_ibfk_7` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_boughts_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_boughts_ibfk_7` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -288,7 +288,7 @@ CREATE TABLE `shop_boughts` (
 
 LOCK TABLES `shop_boughts` WRITE;
 /*!40000 ALTER TABLE `shop_boughts` DISABLE KEYS */;
-INSERT INTO `shop_boughts` VALUES (20,1,5,19,17,1),(21,1,5,20,17,1),(22,1,3,20,213,1),(23,1,3,21,213,1),(24,1,4,21,100,10),(25,1,4,24,100,7),(26,1,4,27,100,1),(27,1,3,28,213,4),(28,1,4,28,100,5),(29,1,5,29,17,1),(30,1,4,29,100,1),(31,1,4,33,100,8),(32,1,10,34,171,10),(33,1,11,34,37,7),(34,1,3,35,213,1),(35,1,3,36,213,1),(36,1,3,37,213,1);
+INSERT INTO `shop_boughts` VALUES (20,1,5,19,17.00,1),(21,1,5,20,17.00,1),(22,1,3,20,213.00,1),(23,1,3,21,213.00,1),(24,1,4,21,100.00,10),(25,1,4,24,100.00,7),(26,1,4,27,100.00,1),(27,1,3,28,213.00,4),(28,1,4,28,100.00,5),(29,1,5,29,17.00,1),(30,1,4,29,100.00,1),(31,1,4,33,100.00,8),(32,1,10,34,171.00,10),(33,1,11,34,37.00,7),(34,1,3,35,213.00,1),(35,1,3,36,213.00,1),(36,1,3,37,213.00,1);
 /*!40000 ALTER TABLE `shop_boughts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -403,6 +403,89 @@ INSERT INTO `shop_currency` VALUES (1,0,0,'ACTIVE','EUR',10.70,'0000-00-00 00:00
 UNLOCK TABLES;
 
 --
+-- Table structure for table `shop_customerProductRequests`
+--
+
+DROP TABLE IF EXISTS `shop_customerProductRequests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_customerProductRequests` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `AccountID` int(11) DEFAULT NULL,
+  `OptOut` text NOT NULL,
+  `Email` text NOT NULL,
+  `AutoClose` tinyint(1) NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`AccountID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_customerProductRequests`
+--
+
+LOCK TABLES `shop_customerProductRequests` WRITE;
+/*!40000 ALTER TABLE `shop_customerProductRequests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_customerProductRequests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_favlists`
+--
+
+DROP TABLE IF EXISTS `shop_favlists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_favlists` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `AccountID` int(11) NOT NULL,
+  `Name` text NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`AccountID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_favlists`
+--
+
+LOCK TABLES `shop_favlists` WRITE;
+/*!40000 ALTER TABLE `shop_favlists` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_favlists` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_favproducts`
+--
+
+DROP TABLE IF EXISTS `shop_favproducts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_favproducts` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ListID` int(11) NOT NULL,
+  `ProductID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`,`ListID`,`ProductID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='contains all products related to particular list';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_favproducts`
+--
+
+LOCK TABLES `shop_favproducts` WRITE;
+/*!40000 ALTER TABLE `shop_favproducts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shop_favproducts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `shop_offers`
 --
 
@@ -411,6 +494,7 @@ DROP TABLE IF EXISTS `shop_offers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shop_offers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
   `Type` enum('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED') COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
@@ -421,6 +505,7 @@ CREATE TABLE `shop_offers` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
+  KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_offers_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -716,4 +801,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-22 11:23:25
+-- Dump completed on 2014-04-23  9:57:08
