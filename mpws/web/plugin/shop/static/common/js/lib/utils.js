@@ -5,16 +5,21 @@ define("plugin/shop/common/js/lib/utils", [
 
     function Utils () {};
 
-    Utils.adjustProductEntry = function (data) {
-        var _products = [];
+    Utils.adjustProductItems = function (products) {
+        if (!products)
+            return false;
+        _(products).each(function(product) {
+            Utils.adjustProductItem()
+        });
+    }
 
-        if (!data.products)
-            return _products;
+    Utils.adjustProductItem = function (product) {
+
 
         // map all by product id
         var _tmpProduct = null;
 
-        _(data.products).each(function(product) {
+        // _(data.products).each(function(product) {
 
             // debugger;
             var pid = product.ID;
@@ -58,9 +63,9 @@ define("plugin/shop/common/js/lib/utils", [
             // append price data
             if (data.prices && data.prices[pid])
                 product['ProductPrices'] = data.prices[pid];
-        });
+        // });
 
-        return data.products;
+        return product;
     }
 
     return Utils;

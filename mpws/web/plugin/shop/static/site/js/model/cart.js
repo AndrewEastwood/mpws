@@ -52,7 +52,7 @@ define("plugin/shop/site/js/model/cart", [
         parse: function (data) {
             // debugger;
             var _data = this.extractModelDataFromResponse(data);
-            var products = ShopUtils.adjustProductEntry(_data);
+            var products = ShopUtils.adjustProductItem(_data);
             return {
                 error: _data.error,
                 user: _data.user || {},

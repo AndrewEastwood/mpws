@@ -425,7 +425,7 @@ class pluginShop extends objectPlugin {
             $productsMap = $this->_custom_util_getProductAttributes(array($product));
 
             $productItem = $productsMap[$productID];
-            $dataObj->setData('Product', $productItem);
+            $dataObj->setData('product', $productItem);
 
             // save product into recently viewed
             if ($saveIntoRecent) {
@@ -683,10 +683,10 @@ class pluginShop extends objectPlugin {
                 foreach ($boughts as $bkey => $soldItem) {
                     $product = $this->_api_getEntryProduct($soldItem['ProductID']);
                     if ($product->hasData()) { 
-                        $productData = $product->getData('Product');
+                        $productData = $product->getData('product');
                         $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
                     } else
-                        $boughts[$bkey]['Product'] = null;
+                        $boughts[$bkey]['product'] = null;
                 }
 
             $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));

@@ -9,7 +9,7 @@ define('plugin/shop/site/js/model/productItemFull', [
         fn: 'shop_product_item',
         parse: function (data) {
             // debugger;
-            var products = Utils.adjustProductEntry(data && data.shop || {});
+            var products = Utils.adjustProductItem(data && data.shop || {});
             return products[this.urlOptions.productID] || {};
         }
     });

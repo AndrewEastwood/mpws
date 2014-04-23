@@ -6,7 +6,7 @@ define("plugin/account/site/js/view/accountProfileAddresses", [
     'default/js/view/mView',
     'plugin/account/common/js/model/account',
     'default/js/plugin/hbs!plugin/account/site/hbs/accountProfileAddresses',
-    'default/js/plugin/text!plugin/account/hbs/partials/accountAddress.hbs',
+    'default/js/plugin/text!plugin/account/common/hbs/partials/accountAddress.hbs',
     /* lang */
     'default/js/plugin/i18n!plugin/account/site/nls/translation',
     'default/js/lib/bootstrap-editable'

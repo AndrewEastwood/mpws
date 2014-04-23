@@ -57,7 +57,7 @@ define("plugin/shop/site/js/model/productsCompare", [
             }
 
             // debugger;
-            var products = ShopUtils.adjustProductEntry(data && data.shop);
+            var products = ShopUtils.adjustProductItem(data && data.shop);
             return {
                 products: _(products).map(function(item){ return item; })
             };

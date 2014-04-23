@@ -11,7 +11,7 @@ define('plugin/shop/toolbox/js/model/orderEntry', [
             // debugger;
             var _data = this.extractModelDataFromResponse(data);
 
-            _data.boughts = ShopUtils.adjustProductEntry({products: _data.boughts});
+            _data.boughts = ShopUtils.adjustProductItem({products: _data.boughts});
 
             return _data;
         }
