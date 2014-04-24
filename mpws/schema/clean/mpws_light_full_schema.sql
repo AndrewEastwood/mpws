@@ -225,7 +225,6 @@ CREATE TABLE `shop_categories` (
   `RootID` int(11) DEFAULT NULL,
   `ParentID` int(11) DEFAULT NULL,
   `CustomerID` int(11) NOT NULL,
-  `SchemaID` int(11) DEFAULT NULL,
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Name` varchar(100) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
@@ -235,12 +234,10 @@ CREATE TABLE `shop_categories` (
   PRIMARY KEY (`ID`),
   KEY `RootID` (`RootID`),
   KEY `ParentID` (`ParentID`),
-  KEY `SchemaID` (`SchemaID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_categories_ibfk_4` FOREIGN KEY (`RootID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_categories_ibfk_5` FOREIGN KEY (`ParentID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
-  CONSTRAINT `shop_categories_ibfk_6` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_categories_ibfk_7` FOREIGN KEY (`SchemaID`) REFERENCES `shop_specifications` (`ID`) ON UPDATE CASCADE
+  CONSTRAINT `shop_categories_ibfk_6` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -537,13 +534,13 @@ DROP TABLE IF EXISTS `shop_specifications`;
 CREATE TABLE `shop_specifications` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Name` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Fields` text COLLATE utf8_bin NOT NULL,
+  `CategoryID` int(11) NOT NULL,
+  `Field` text COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `shop_specifications_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `CategoryID` (`CategoryID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -688,4 +685,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-23 23:43:49
+-- Dump completed on 2014-04-25  0:34:57

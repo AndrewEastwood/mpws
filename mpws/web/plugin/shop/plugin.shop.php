@@ -1089,7 +1089,7 @@ class pluginShop extends objectPlugin {
             foreach ($dataBestProducts as $key => $dataProductSoldStat) {
                 $productItemObject = $this->_api_getEntryProduct($dataProductSoldStat['ProductID']);
                 if ($productItemObject->hasData())
-                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('Product');
+                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
                 else
                     $dataBestProducts[$key]['Product'] = null;
             }
@@ -1102,7 +1102,7 @@ class pluginShop extends objectPlugin {
             foreach ($dataWorstProducts as $key => $dataProduct) {
                 $productItemObject = $this->_api_getEntryProduct($dataProduct['ID']);
                 if ($productItemObject->hasData())
-                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('Product');
+                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
                 else
                     $dataWorstProducts[$key]['Product'] = null;
             }

@@ -9,8 +9,8 @@ define('plugin/shop/site/js/model/productItemFull', [
         fn: 'shop_product_item',
         parse: function (data) {
             // debugger;
-            var products = Utils.adjustProductItem(data && data.shop || {});
-            return products[this.urlOptions.productID] || {};
+            var product = Utils.adjustProductItem(data && data.shop && data.shop.product || {});
+            return product || {};
         }
     });
 

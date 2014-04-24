@@ -9,15 +9,19 @@ define("plugin/shop/common/js/lib/utils", [
         if (!products)
             return false;
         _(products).each(function(product) {
-            Utils.adjustProductItem()
+            Utils.adjustProductItem(product);
         });
+
+        return products;
     }
 
     Utils.adjustProductItem = function (product) {
 
 
+        // debugger;
+
         // map all by product id
-        var _tmpProduct = null;
+        // var _tmpProduct = null;
 
         // _(data.products).each(function(product) {
 
@@ -61,8 +65,8 @@ define("plugin/shop/common/js/lib/utils", [
             // product['ProductAttributes'] = _attr;
 
             // append price data
-            if (data.prices && data.prices[pid])
-                product['ProductPrices'] = data.prices[pid];
+            // if (product.Prices && product.Prices[pid])
+            //     product['ProductPrices'] = product.prices[pid];
         // });
 
         return product;

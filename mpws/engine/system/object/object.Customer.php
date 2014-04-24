@@ -114,8 +114,22 @@ class objectCustomer {
             return $response;
         }
 
+        if (MPWS_IS_TOOLBOX && !in_array(MPWS_TOOLBOX, configurationCustomerDisplay::$Plugins)) {
+            $response->setError('AccessDenied');
+            // $response->setData('redirect', 'signin');
+            return $response;
+        }
         // if ($source == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
         //     throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
+
+        // this section must be located when all plugins are performed
+        // becuse the toolbox plugin does user validation and authorizations
+        $action = libraryRequest::getValue('action');
+        if (MPWS_IS_TOOLBOX && !$this->isAdminActive() && $action !== "signin") {
+            $response->setError('LoginRequired');
+            // $response->setData('redirect', 'signin');
+            return $response;
+        }
 
         if ($source == '*')
             foreach ($this->plugins as $key => $plugin)
@@ -123,14 +137,6 @@ class objectCustomer {
         elseif ($this->hasPlugin($source)) {
             $plugin = $this->getPlugin($source);
             $response->setData($source, $plugin->getResponse()->toNative());
-        }
-
-        // this section must be located when all plugins are performed
-        // becuse the toolbox plugin does user validation and authorizations
-        if (MPWS_IS_TOOLBOX && !$this->isAdminActive()) {
-            $response->setError('AccessDenied');
-            // $response->setData('redirect', 'signin');
-            return $response;
         }
 
         return $response;

@@ -19,7 +19,7 @@ define('plugin/shop/site/js/collection/listProductLatest', [
             this.updateUrl();
         },
         parse: function (data) {
-            var products = ShopUtils.adjustProductItem(data && data.shop);
+            var products = ShopUtils.adjustProductItems(data && data.shop && data.shop.products);
             return _(products).map(function(item){ return item; });
         }
     });

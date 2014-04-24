@@ -50,8 +50,6 @@
 
     // returns true whether current view is toolbox
     function glIsToolbox () {
-        if (!in_array(MPWS_TOOLBOX, configurationCustomerDisplay::$Plugins))
-            return false;
         return preg_match("/^" . MPWS_TOOLBOX . "\./", $_SERVER['HTTP_HOST']) > 0;
         // return preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']) > 0;
     }

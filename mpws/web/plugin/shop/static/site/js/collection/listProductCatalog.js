@@ -15,7 +15,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
         model: ProductItemBase,
         parse: function (data) {
             // adjust products
-            var products = ShopUtils.adjustProductItem(data && data.shop);
+            var products = ShopUtils.adjustProductItems(data && data.shop && data.shop.products);
             // adjust filtering
             var filter = data.shop.filter;
             var productItems = _(products).map(function(item){ return item; });
