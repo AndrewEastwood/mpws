@@ -4,7 +4,7 @@ class configurationCustomerDisplay extends configurationDefaultDisplay {
 
     static $Locale = 'ua_uk';
     static $Homepage='//www.pobutteh.com.ua';
-    static $Plugins = array("shop", "account", "toolbox");
+    static $Plugins = array("toolbox", "shop", "account");
 
 }
 

@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/model/orderEntry', [
+define('plugin/shop/toolbox/js/model/popupOrder', [
     'default/js/model/mModel',
     'plugin/shop/common/js/lib/utils'
 ], function (MModel, ShopUtils) {

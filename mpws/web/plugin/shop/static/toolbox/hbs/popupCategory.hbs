@@ -1,0 +1,55 @@
+<div class="panel">
+
+
+    <div class="row">
+        <div class="col-md-6 category-details">
+            <h4>{{lang.popup_category_section_details_title}}</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="prefix">{{lang.popup_category_section_details_filed_parentCategory}}</span>
+                    <span><strong>{{data.order.DateCreated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">{{lang.popup_category_section_details_filed_name}}</span>
+                    <span><strong>{{data.order.DateCreated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">{{lang.popup_category_section_details_filed_status}}</span>
+                    <span><strong>{{data.order.DateCreated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">{{lang.popup_category_section_details_filed_description}}</span>
+                    <span><strong>{{data.order.DateUpdated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">{{lang.popup_category_section_details_filed_dateUpdated}}</span>
+                    <span><strong>{{data.order.DateUpdated}}</strong></span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">{{lang.popup_category_section_details_filed_dateCreated}}</span>
+                    <span><strong>{{data.order.DateUpdated}}</strong></span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-md-6 category-props">
+            <h4>{{lang.popup_category_section_props_title}}</h4>
+            <button id="category-property-add-btn-ID" class="btn btn-primary category-props-add">
+                <i class="fa fa-plus-circle"></i>
+                {{lang.popup_category_button_addProp}}
+            </button>
+            <ul class="list-group list-category-properties"></ul>
+        </div>
+    </div>
+
+    <script id="property-template" type="text/x-handlebars-template">
+        <li class="list-group-item">
+            <a href="javascript://" class="category-props-del">
+                <i class="fa fa-trash-o"></i>
+            </a>
+            <span class="prefix">{{lang.popup_category_section_details_filed_dateCreated}}</span>
+            <span><strong>{{data.order.DateUpdated}}</strong></span>
+        </li>
+    </script>
+
+</div>

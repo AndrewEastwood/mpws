@@ -57,6 +57,9 @@ define("application", [
             if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
                 Sandbox.eventNotify("global:session:expired", responseObj.error);
 
+            if (responseObj && responseObj.error && responseObj.error === "LoginRequired")
+                Sandbox.eventNotify("global:session:expired", responseObj.error);
+
         });
 
         // Sandbox message handler

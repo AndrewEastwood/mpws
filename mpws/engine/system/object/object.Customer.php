@@ -11,9 +11,15 @@ class objectCustomer {
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
 
+        $filteredPlugins = glFilteredPlugins(configurationCustomerDisplay::$Plugins);
+
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
-        foreach (configurationCustomerDisplay::$Plugins as $pluginName) {
+        foreach ($filteredPlugins as $pluginName) {
+
+            // echo $pluginName;
+            if (!MPWS_IS_TOOLBOX && $pluginName === MPWS_TOOLBOX)
+                continue;
 
             $pluginFileName = OBJECT_T_PLUGIN . DOT . $pluginName . EXT_SCRIPT;
             $pluginFilePath = $_pluginPath . DS . $pluginName . DS . $pluginFileName;

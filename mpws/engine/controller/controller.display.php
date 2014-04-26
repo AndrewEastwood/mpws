@@ -34,7 +34,7 @@
         ISDEV: " . (MPWS_ENV === 'DEV' ? 'true' : 'false') . ",
         TOKEN: '" . libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey) . "',
         ISTOOLBOX: " . (glIsToolbox() ? 'true' : 'false') . ",
-        PLUGINS: ['" . implode("', '", configurationCustomerDisplay::$Plugins) . "'],
+        PLUGINS: ['" . implode("', '", glFilteredPlugins(configurationCustomerDisplay::$Plugins)) . "'],
         MPWS_VERSION: '" . MPWS_VERSION . "',
         MPWS_CUSTOMER: '" . $displayCustomer . "',
         PATH_STATIC_BASE: '/',
