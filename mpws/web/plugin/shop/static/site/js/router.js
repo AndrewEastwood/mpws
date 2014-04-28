@@ -299,10 +299,10 @@ define("plugin/shop/site/js/router", [
         //
         shop_profile_orders: function () {
 
-            if (!Site.hasPlugin('account')) {
-                Backbone.history.navigate("", {trigger: true});
-                return;
-            }
+            // if (!Site.hasPlugin('account')) {
+            //     Backbone.history.navigate("", {trigger: true});
+            //     return;
+            // }
 
             if (!Cache.hasObject('AccountProfileID')) {
                 Backbone.history.navigate("", {trigger: true});

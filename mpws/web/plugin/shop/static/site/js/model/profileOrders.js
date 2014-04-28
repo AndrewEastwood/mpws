@@ -13,7 +13,7 @@ define('plugin/shop/site/js/model/profileOrders', [
             // debugger;
             if (_data.orders)
                 for (var key in _data.orders)
-                    _data.orders[key].Boughts = ShopUtils.adjustProductItem({products: _data.orders[key].Boughts});
+                    _data.orders[key].boughts = ShopUtils.adjustProductItems(_data.orders[key].boughts);
             return _data;
         }
     });
