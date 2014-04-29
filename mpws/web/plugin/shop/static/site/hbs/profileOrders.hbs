@@ -7,73 +7,73 @@
   <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <a data-toggle="collapse" href="#collapse_{{ID}}">
+            <a data-toggle="collapse" href="#collapse_{{order.ID}}">
 
 
-                {{#if_eq Status "SHOP_CLOSED" }}
+                {{#if_eq order.Status "SHOP_CLOSED" }}
                 <span class="shop-orderstatus label label-default">
                 {{else}}
-                    {{#if_eq Status "NEW" }}
+                    {{#if_eq order.Status "NEW" }}
                     <span class="shop-orderstatus label label-success">
                     {{else}}
                     <span class="shop-orderstatus label label-warning">
                     {{/if_eq}}
                 {{/if_eq}}
-                    {{mpwsGetValueByKey ../../lang Status "order_status_" }}
+                    {{mpwsGetValueByKey ../../lang order.Status "order_status_" }}
                 </span>
 
                 <span>
-                    <span>Замовлення # {{ID}} на суму:</span>
+                    <span>Замовлення # {{order.ID}} на суму:</span>
                     <span class="value label label-success">
-                        {{Info.total}}<span class="moneyType">грн.</span>
+                        {{info.total}}<span class="moneyType">грн.</span>
                     </span>
                 </span>
 
             </a>
         </h4>
     </div>
-    <div id="collapse_{{ID}}" class="panel-collapse collapse">
+    <div id="collapse_{{order.ID}}" class="panel-collapse collapse">
       <div class="panel-body">
 
         <ul class="list-group">
             <li class="list-group-item">
                 <span class="prefix">Дата створення:</span>
-                <span class="label label-success">{{DateCreated}}</span>
+                <span class="label label-success">{{order.DateCreated}}</span>
             </li>
             <li class="list-group-item">
                 <span class="prefix">Дата останнього оновлення:</span>
-                <span class="label label-success">{{DateUpdated}}</span>
+                <span class="label label-success">{{order.DateUpdated}}</span>
             </li>
-            {{#if Shipping }}
+            {{#if order.Shipping }}
             <li class="list-group-item">
                 <span class="prefix">Перевізник:</span>
                 <span class="label label-success">
-                    {{#if_eq Shipping "self" }}
+                    {{#if_eq order.Shipping "self" }}
                         Самовивіз
                     {{else}}
-                        {{Shipping}}
+                        {{order.Shipping}}
                     {{/if_eq}}
                 </span>
             </li>
             {{/if}}
-            {{#and Shipping Warehouse }}
+            {{#and order.Shipping Warehouse }}
             <li class="list-group-item">
                 <span class="prefix">Номер складу:</span>
-                <span class="label label-success">{{Warehouse}}</span>
+                <span class="label label-success">{{order.Warehouse}}</span>
             </li>
             {{/and}}
-            {{#if Comment }}
+            {{#if order.Comment }}
             <li class="list-group-item">
                 <span class="prefix">Ваш коментар:</span>
-                <span class="label label-success">{{Comment}}</span>
+                <span class="label label-success">{{order.Comment}}</span>
             </li>
             {{/if}}
             <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
-            <li class="list-group-item"><a href="{{location.origin}}/#shop/tracking/{{Hash}}">{{location.origin}}/#shop/tracking/{{Hash}}</a></li>
+            <li class="list-group-item"><a href="{{location.origin}}/#shop/tracking/{{Hash}}">{{location.origin}}/#shop/tracking/{{order.Hash}}</a></li>
         </ul>
 
         <div class="shop-widget-productlist">
-        {{#each Boughts }}
+        {{#each boughts }}
             <div class="wrapper">
                 <div class="shop-product-image shop-product-image-main">
                     <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
@@ -96,11 +96,11 @@
         <div class="well cartInfo">
             <div class="shopCartSubTotal">
                 <span class="value-prefix">Сума:</span>
-                <span class="value">{{Info.subTotal}}<span class="moneyType">грн.</span></span>
+                <span class="value">{{info.subTotal}}<span class="moneyType">грн.</span></span>
             </div>
             <div class="shopCartTotal">
                 <span class="value-prefix">До оплати:</span>
-                <span class="value label label-success">{{Info.total}}<span class="moneyType">грн.</span></span>
+                <span class="value label label-success">{{info.total}}<span class="moneyType">грн.</span></span>
             </div>
         </div>
 

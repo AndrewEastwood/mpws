@@ -1,4 +1,4 @@
-define("plugin/account/js/model/account", [
+define("plugin/account/common/js/model/account", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',

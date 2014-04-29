@@ -1,8 +1,8 @@
-define("plugin/shop/js/view/listProductLatest", [
+define("plugin/shop/site/js/view/listProductLatest", [
     'default/js/lib/underscore',
     'default/js/view/mView',
-    'plugin/shop/js/collection/listProductLatest',
-    'plugin/shop/js/view/productItemShort'
+    'plugin/shop/site/js/collection/listProductLatest',
+    'plugin/shop/site/js/view/productItemShort'
 ], function (_, MView, CollListProductLatest, ProductItemShort) {
 
     // debugger;

@@ -22,7 +22,7 @@ define("plugin/toolbox/toolbox/js/router", [
         }
 
         // debugger;
-        if (error === "AccessDenied" && Backbone.history.fragment !== "signin") {
+        if (_(["LoginRequired", "AccessDenied"]).indexOf(error) > -1  && Backbone.history.fragment !== "signin") {
             Sandbox.eventNotify('plugin:toolbox:logout');
             return;
         }

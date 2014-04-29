@@ -1,9 +1,9 @@
-define('plugin/shop/js/collection/listProductLatest', [
+define('plugin/shop/site/js/collection/listProductLatest', [
     'default/js/lib/underscore',
     'default/js/collection/mCollection',
-    'plugin/shop/js/model/productItemBase',
+    'plugin/shop/site/js/model/productItemBase',
     'default/js/lib/url',
-    'plugin/shop/js/lib/utils'
+    'plugin/shop/common/js/lib/utils'
 ], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
     // debugger;
 
@@ -19,7 +19,7 @@ define('plugin/shop/js/collection/listProductLatest', [
             this.updateUrl();
         },
         parse: function (data) {
-            var products = ShopUtils.adjustProductEntry(data && data.shop);
+            var products = ShopUtils.adjustProductItems(data && data.shop && data.shop.products);
             return _(products).map(function(item){ return item; });
         }
     });

@@ -1,6 +1,6 @@
-define('plugin/shop/js/model/productItemFull', [
-    'plugin/shop/js/model/productItemBase',
-    'plugin/shop/js/lib/utils'
+define('plugin/shop/site/js/model/productItemFull', [
+    'plugin/shop/site/js/model/productItemBase',
+    'plugin/shop/common/js/lib/utils'
 ], function (ProductItemBase, Utils) {
 
     var Model = ProductItemBase.getNew();
@@ -9,8 +9,8 @@ define('plugin/shop/js/model/productItemFull', [
         fn: 'shop_product_item',
         parse: function (data) {
             // debugger;
-            var products = Utils.adjustProductEntry(data && data.shop || {});
-            return products[this.urlOptions.productID] || {};
+            var product = Utils.adjustProductItem(data && data.shop && data.shop.product || {});
+            return product || {};
         }
     });
 

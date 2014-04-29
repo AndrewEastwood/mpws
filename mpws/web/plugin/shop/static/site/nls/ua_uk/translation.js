@@ -1,8 +1,8 @@
-define("plugin/shop/nls/ua_uk/site", [
+define("plugin/shop/site/nls/ua_uk/translation", [
     // here we will call default lang pkgs to override them
     'default/js/lib/underscore',
-    'customer/nls/ua_uk/shop_site'
-], function (_, CustomerShop, PLuginAccount) {
+    'website/nls/ua_uk/plugin_shop'
+], function (_, CustomerPluginShop) {
     return _.extend({}, {
         order_status_NEW: 'Прийняте',
         order_status_ACTIVE: 'В процесі виконання',
@@ -27,5 +27,5 @@ define("plugin/shop/nls/ua_uk/site", [
         shopping_cart_error_EmptyShippingAddress: "Потрібно вказати адресу доставки",
         shopping_cart_error_WrongProfileAddressID: "Вибрана неіснуюча адреса з Вашого акаунту",
         shopping_cart_error_UnknownError: "Помилка збереження замовлення",
-    }, CustomerShop);
+    }, CustomerPluginShop);
 });

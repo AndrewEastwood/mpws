@@ -1,12 +1,11 @@
-define("plugin/account/js/site", [
+define("plugin/account/site/js/router", [
     'default/js/lib/sandbox',
-    'customer/js/site',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
-    'plugin/account/js/view/site/menu',
-], function (Sandbox, Site, $, _, Backbone, Cache) {
+    'plugin/account/site/js/view/menu',
+], function (Sandbox, $, _, Backbone, Cache) {
 
     Sandbox.eventSubscribe('plugin:account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
@@ -51,7 +50,7 @@ define("plugin/account/js/site", [
                 return;
             }
 
-            require(['plugin/account/js/view/site/accountCreate'], function (AccountCreate) {
+            require(['plugin/account/site/js/view/accountCreate'], function (AccountCreate) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountCreate', function (cachedView) {
                     // debugger;
@@ -87,7 +86,7 @@ define("plugin/account/js/site", [
             // this.showProfileToolbar();
 
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/js/view/site/accountProfileOverview'], function (AccountProfileOverview) {
+                require(['plugin/account/site/js/view/accountProfileOverview'], function (AccountProfileOverview) {
                     // using this wrapper to cleanup previous view and create new one
                     Cache.withObject('AccountProfileOverview', function (cachedView) {
                         // debugger;
@@ -126,7 +125,7 @@ define("plugin/account/js/site", [
             // this.showProfileToolbar();
 
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/js/view/site/accountProfilePassword'], function (AccountProfilePassword) {
+                require(['plugin/account/site/js/view/accountProfilePassword'], function (AccountProfilePassword) {
                     // using this wrapper to cleanup previous view and create new one
                     Cache.withObject('AccountProfilePassword', function (cachedView) {
                         // debugger;
@@ -162,7 +161,7 @@ define("plugin/account/js/site", [
             // this.showProfileToolbar();
 
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/js/view/site/accountProfileEdit'], function (AccountProfileEdit) {
+                require(['plugin/account/site/js/view/accountProfileEdit'], function (AccountProfileEdit) {
                     // using this wrapper to cleanup previous view and create new one
                     Cache.withObject('AccountProfileEdit', function (cachedView) {
                         // debugger;
@@ -196,7 +195,7 @@ define("plugin/account/js/site", [
 
             Sandbox.eventNotify('global:breadcrumb:show');
 
-            require(['plugin/account/js/view/site/accountProfileAddresses'], function (AccountProfileAddresses) {
+            require(['plugin/account/site/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountProfileAddresses', function (cachedView) {
                     // debugger;
@@ -229,7 +228,7 @@ define("plugin/account/js/site", [
 
             Sandbox.eventNotify('global:breadcrumb:show');
 
-            require(['plugin/account/js/view/site/accountProfileDelete'], function (AccountProfileDelete) {
+            require(['plugin/account/site/js/view/accountProfileDelete'], function (AccountProfileDelete) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountProfileDelete', function (cachedView) {
                     // debugger;
@@ -253,7 +252,7 @@ define("plugin/account/js/site", [
         },
 
         showProfileToolbar: function (pageContent) {
-            require(['plugin/account/js/view/site/accountProfile'], function (AccountProfile) {
+            require(['plugin/account/site/js/view/accountProfile'], function (AccountProfile) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('AccountProfile', function (cachedView) {
                     // debugger;

@@ -1,14 +1,14 @@
-define("plugin/account/js/view/site/accountProfileAddresses", [
+define("plugin/account/site/js/view/accountProfileAddresses", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/handlebars',
     'default/js/view/mView',
-    'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfileAddresses',
-    'default/js/plugin/text!plugin/account/hbs/partials/accountAddress.hbs',
+    'plugin/account/common/js/model/account',
+    'default/js/plugin/hbs!plugin/account/site/hbs/accountProfileAddresses',
+    'default/js/plugin/text!plugin/account/common/hbs/partials/accountAddress.hbs',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site',
+    'default/js/plugin/i18n!plugin/account/site/nls/translation',
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, $, _, Handlebars, MView, ModelAccountInstance, tpl, tplAddress, lang) {
 

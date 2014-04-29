@@ -1,8 +1,8 @@
-define("plugin/shop/js/view/menuWishList", [
+define("plugin/shop/site/js/view/menuWishList", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/shop/js/model/wishList',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/menuWishList'
+    'plugin/shop/site/js/model/wishList',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/menuWishList'
 ], function (Sandbox, MView, ModelWishListInstance, tpl) {
 
     var MenuWishList = MView.extend({

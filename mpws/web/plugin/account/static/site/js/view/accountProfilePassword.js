@@ -1,11 +1,11 @@
-define("plugin/account/js/view/site/accountProfilePassword", [
+define("plugin/account/site/js/view/accountProfilePassword", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'default/js/lib/bootstrap-dialog',
-    'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/site/accountProfilePassword',
+    'plugin/account/common/js/model/account',
+    'default/js/plugin/hbs!plugin/account/site/hbs/accountProfilePassword',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site'
+    'default/js/plugin/i18n!plugin/account/site/nls/translation'
 ], function (Sandbox, MView, BootstrapDialog, ModelAccountInstance, tpl, lang) {
 
     var AccountProfilePassword = MView.extend({

@@ -1,4 +1,4 @@
-define("plugin/account/js/model/accountCreate", [
+define("plugin/account/common/js/model/accountCreate", [
     'default/js/model/mModel',
     'default/js/lib/utils'
 ], function (MModel, Utils) {

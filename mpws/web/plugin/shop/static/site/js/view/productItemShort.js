@@ -1,7 +1,7 @@
-define("plugin/shop/js/view/productItemShort", [
+define("plugin/shop/site/js/view/productItemShort", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/productItemShort'
+    'default/js/plugin/hbs!plugin/shop/site/hbs/productItemShort'
 ], function (Sandbox, MView, tpl) {
 
     var ProductItemShort = MView.extend({

@@ -1,10 +1,10 @@
-define("plugin/account/js/view/site/menuAccount", [
+define("plugin/account/site/js/view/menuAccount", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/account/js/model/account',
-    'default/js/plugin/hbs!plugin/account/hbs/site/menuAccount',
+    'plugin/account/common/js/model/account',
+    'default/js/plugin/hbs!plugin/account/site/hbs/menuAccount',
     /* lang */
-    'default/js/plugin/i18n!plugin/account/nls/site'
+    'default/js/plugin/i18n!plugin/account/site/nls/translation'
 ], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {
 
     var MenuAccount = MView.extend({

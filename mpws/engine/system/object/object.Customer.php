@@ -11,9 +11,15 @@ class objectCustomer {
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
 
+        $filteredPlugins = glFilteredPlugins(configurationCustomerDisplay::$Plugins);
+
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
-        foreach (configurationCustomerDisplay::$Plugins as $pluginName) {
+        foreach ($filteredPlugins as $pluginName) {
+
+            // echo $pluginName;
+            if (!MPWS_IS_TOOLBOX && $pluginName === MPWS_TOOLBOX)
+                continue;
 
             $pluginFileName = OBJECT_T_PLUGIN . DOT . $pluginName . EXT_SCRIPT;
             $pluginFilePath = $_pluginPath . DS . $pluginName . DS . $pluginFileName;
@@ -114,8 +120,22 @@ class objectCustomer {
             return $response;
         }
 
+        if (MPWS_IS_TOOLBOX && !in_array(MPWS_TOOLBOX, configurationCustomerDisplay::$Plugins)) {
+            $response->setError('AccessDenied');
+            // $response->setData('redirect', 'signin');
+            return $response;
+        }
         // if ($source == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
         //     throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
+
+        // this section must be located when all plugins are performed
+        // becuse the toolbox plugin does user validation and authorizations
+        $action = libraryRequest::getValue('action');
+        if (MPWS_IS_TOOLBOX && !$this->isAdminActive() && $action !== "signin") {
+            $response->setError('LoginRequired');
+            // $response->setData('redirect', 'signin');
+            return $response;
+        }
 
         if ($source == '*')
             foreach ($this->plugins as $key => $plugin)
@@ -123,14 +143,6 @@ class objectCustomer {
         elseif ($this->hasPlugin($source)) {
             $plugin = $this->getPlugin($source);
             $response->setData($source, $plugin->getResponse()->toNative());
-        }
-
-        // this section must be located when all plugins are performed
-        // becuse the toolbox plugin does user validation and authorizations
-        if (!$this->isAdminActive()) {
-            $response->setError('AccessDenied');
-            // $response->setData('redirect', 'signin');
-            return $response;
         }
 
         return $response;

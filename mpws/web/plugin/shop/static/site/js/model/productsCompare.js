@@ -1,7 +1,7 @@
-define("plugin/shop/js/model/productsCompare", [
+define("plugin/shop/site/js/model/productsCompare", [
     'default/js/lib/sandbox',
     'default/js/model/mModel',
-    'plugin/shop/js/lib/utils',
+    'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-dialog'
 ], function (Sandbox, MModel, ShopUtils, BootstrapDialog) {
 
@@ -57,7 +57,7 @@ define("plugin/shop/js/model/productsCompare", [
             }
 
             // debugger;
-            var products = ShopUtils.adjustProductEntry(data && data.shop);
+            var products = ShopUtils.adjustProductItem(data && data.shop);
             return {
                 products: _(products).map(function(item){ return item; })
             };

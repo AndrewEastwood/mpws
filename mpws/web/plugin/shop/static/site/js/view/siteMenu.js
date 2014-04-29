@@ -1,12 +1,11 @@
-define("plugin/shop/js/view/siteMenu", [
+define("plugin/shop/site/js/view/siteMenu", [
     'default/js/lib/sandbox',
-    'customer/js/site',
-    'plugin/shop/js/view/menuCatalog',
-    'plugin/shop/js/view/menuCart',
-    'plugin/shop/js/view/menuWishList',
-    'plugin/shop/js/view/menuCompare',
-    'plugin/shop/js/view/menuProfileOrders',
-], function (Sandbox, Site, MenuCatalog, MenuCart, MenuWishList, MenuCompare, MenuProfileOrders) {
+    'plugin/shop/site/js/view/menuCatalog',
+    'plugin/shop/site/js/view/menuCart',
+    'plugin/shop/site/js/view/menuWishList',
+    'plugin/shop/site/js/view/menuCompare',
+    'plugin/shop/site/js/view/menuProfileOrders',
+], function (Sandbox, MenuCatalog, MenuCart, MenuWishList, MenuCompare, MenuProfileOrders) {
 
     // inject shop menu (category menu)
     var menuCatalog = new MenuCatalog();

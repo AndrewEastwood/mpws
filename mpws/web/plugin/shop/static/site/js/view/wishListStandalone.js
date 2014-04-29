@@ -1,9 +1,9 @@
-define("plugin/shop/js/view/wishListStandalone", [
+define("plugin/shop/site/js/view/wishListStandalone", [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/view/mView',
-    'plugin/shop/js/model/wishList',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/wishListStandalone',
+    'plugin/shop/site/js/model/wishList',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/wishListStandalone',
     "default/js/lib/jquery.cookie"
 ], function (Sandbox, _, MView, ModelWishListInstance, tpl) {
 

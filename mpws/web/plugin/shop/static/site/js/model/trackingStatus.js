@@ -1,4 +1,4 @@
-define('plugin/shop/js/model/trackingStatus', [
+define('plugin/shop/site/js/model/trackingStatus', [
     'default/js/model/mModel',
 ], function (MModel) {
 

@@ -1,4 +1,4 @@
-define("plugin/shop/js/model/menuCatalog", [
+define("plugin/shop/site/js/model/menuCatalog", [
     'default/js/model/mModel',
     'default/js/lib/utils'
 ], function (MModel, Utils) {

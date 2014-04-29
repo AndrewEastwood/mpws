@@ -1,9 +1,8 @@
-define("plugin/shop/js/view/siteWidgets", [
+define("plugin/shop/site/js/view/siteWidgets", [
     'default/js/lib/sandbox',
-    'customer/js/site',
-    'plugin/shop/js/view/cartEmbedded',
-    'plugin/shop/js/view/orderTrackingButton'
-], function (Sandbox, Site, CartEmbedded, OrderTrackingButton) {
+    'plugin/shop/site/js/view/cartEmbedded',
+    'plugin/shop/site/js/view/orderTrackingButton'
+], function (Sandbox, CartEmbedded, OrderTrackingButton) {
 
     // inject tracking order
     var orderTrackingButton = new OrderTrackingButton();

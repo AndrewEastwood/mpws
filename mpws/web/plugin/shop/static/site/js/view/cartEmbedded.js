@@ -1,8 +1,8 @@
-define("plugin/shop/js/view/cartEmbedded", [
+define("plugin/shop/site/js/view/cartEmbedded", [
     'default/js/lib/underscore',
     'default/js/view/mView',
-    'plugin/shop/js/model/cart',
-    'default/js/plugin/hbs!plugin/shop/hbs/site/cartEmbedded'
+    'plugin/shop/site/js/model/cart',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/cartEmbedded'
 ], function (_, MView, ModelCartInstance, tpl) {
 
     var CartEmbedded = MView.extend({

@@ -1,7 +1,7 @@
-define("plugin/shop/js/model/wishList", [
+define("plugin/shop/site/js/model/wishList", [
     'default/js/lib/sandbox',
     'default/js/model/mModel',
-    'plugin/shop/js/lib/utils'
+    'plugin/shop/common/js/lib/utils'
 ], function (Sandbox, MModel, ShopUtils) {
 
     var Model = MModel.getNew();
@@ -45,7 +45,7 @@ define("plugin/shop/js/model/wishList", [
         },
         parse: function (data) {
             // debugger;
-            var products = ShopUtils.adjustProductEntry(data && data.shop);
+            var products = ShopUtils.adjustProductItem(data && data.shop);
             return {
                 products: _(products).map(function(item){ return item; })
             };

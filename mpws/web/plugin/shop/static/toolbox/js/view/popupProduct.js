@@ -1,10 +1,10 @@
-define("plugin/shop/toolbox/js/view/popupProductAdd", [
+define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/shop/toolbox/js/model/orderEntry',
+    'plugin/shop/toolbox/js/model/popupProduct',
     'default/js/lib/bootstrap-dialog',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/orderEntry',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupProduct',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     // "default/js/lib/select2/select2",

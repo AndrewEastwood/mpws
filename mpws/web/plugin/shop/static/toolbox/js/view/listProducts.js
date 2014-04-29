@@ -2,7 +2,9 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/toolbox/js/collection/listProducts',
-    'plugin/shop/toolbox/js/view/popupProductAdd',
+    'plugin/shop/toolbox/js/view/popupProduct',
+    'plugin/shop/toolbox/js/view/popupCategory',
+    'plugin/shop/toolbox/js/view/popupOrigin',
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
     /* template */
@@ -14,12 +16,32 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     "default/js/lib/backgrid-htmlcell",
     'default/js/lib/jstree',
     'default/js/lib/bootstrap-tagsinput',
-], function (Sandbox, MView, CollectionListProducts, ViewOrderEntry, BootstrapDialog, Backgrid, tpl, lang) {
+], function (Sandbox, MView, CollectionListProducts, PopupProduct, PopupCategory, PopupOrigin, BootstrapDialog, Backgrid, tpl, lang) {
 
     Sandbox.eventSubscribe('plugin:shop:product:add', function(data){
-        var orderEntry = new ViewOrderEntry();
-        orderEntry.fetchAndRender();
-    })
+        var popupProduct = new PopupProduct();
+        popupProduct.fetchAndRender();
+    });
+    Sandbox.eventSubscribe('plugin:shop:product:edit', function(data){
+        var popupProduct = new PopupProduct();
+        popupProduct.fetchAndRender();
+    });
+    Sandbox.eventSubscribe('plugin:shop:category:add', function(data){
+        var popupCategory = new PopupCategory();
+        popupCategory.fetchAndRender();
+    });
+    Sandbox.eventSubscribe('plugin:shop:category:edit', function(data){
+        var popupCategory = new PopupCategory();
+        popupCategory.fetchAndRender();
+    });
+    Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
+        var popupOrigin = new PopupOrigin();
+        popupOrigin.fetchAndRender();
+    });
+    Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
+        var popupOrigin = new PopupOrigin();
+        popupOrigin.fetchAndRender();
+    });
 
     var columnActions = {
         name: "Actions",
@@ -126,11 +148,11 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         template: tpl,
         lang: lang,
         // collection: collection,
-        events: {
-            'click .button-add-product': 'addProduct',
-            'click .button-add-category': 'addCategory',
-            'click .button-add-origin': 'addOrigin'
-        },
+        // events: {
+        //     'click .button-add-product': 'addProduct',
+        //     'click .button-add-category': 'addCategory',
+        //     'click .button-add-origin': 'addOrigin'
+        // },
         initialize: function () {
 
             MView.prototype.initialize.call(this);
@@ -242,23 +264,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
 
             });
 
-        },
-        addProduct: function (argument) {
-            // body...
-            // debugger;
-            var orderEntry = new ViewOrderEntry();
-            orderEntry.fetchAndRender({
-                orderID: 22
-            });
-        },
-        addCategory: function (argument) {
-            // body...
-            debugger;
-        },
-        addOrigin: function (argument) {
-            // body...
-            debugger;
-        },
+        }
     });
 
     return ListProducts;
