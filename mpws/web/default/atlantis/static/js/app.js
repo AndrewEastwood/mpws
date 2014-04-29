@@ -26,23 +26,6 @@ define("application", [
             $.xhrPool.length = 0
         };
 
-        // $.ajaxSetup({
-        //     beforeSend: function(xhr, settings) {
-        //         $.xhrPool.push(xhr);
-        //         xhr.always(function (data, status, xhr){
-        //             var index = $.xhrPool.indexOf(xhr);
-        //             if (index > -1) {
-        //                 $.xhrPool.splice(index, 1);
-        //             }
-        //             if (data && data.redirect && Backbone.history.fragment !== data.redirect) {
-        //                 console.log('redirect to', data.redirect);
-        //                 Backbone.history.navigate(data.redirect, true);
-        //             }
-        //             // if (status === "success")
-        //         });
-        //     }
-        // });
-
         $( document ).ajaxComplete(function(event, jqxhr, data) {
             if (!jqxhr.responseText)
                 return
