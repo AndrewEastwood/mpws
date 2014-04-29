@@ -4,7 +4,6 @@ define("default/js/lib/sandbox", [
 
     var _events = {};
 
-
     window.sandbox = _events;
 
     // Sandbox

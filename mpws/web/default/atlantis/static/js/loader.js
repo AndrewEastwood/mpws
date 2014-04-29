@@ -1,49 +1,58 @@
-var _globalConfig = JSON.parse(JSON.stringify(window.MPWS));
-
-if (!_globalConfig.ISDEV)
-    delete window.MPWS;
-
-window.app = {
-    config: _globalConfig
+var APP = {
+    config: JSON.parse(JSON.stringify(MPWS)),
+    getModulesToDownload: function() {
+        var modules = [
+            'default/js/lib/sandbox',
+            'cmn_jquery',
+            'default/js/lib/underscore',
+            'default/js/lib/backbone',
+            'default/js/lib/url',
+            'default/js/lib/contentInjection',
+            this.config.ROUTER,
+            'default/js/plugin/css!customer/css/theme.css'
+        ];
+        // include site file
+        for (var key in this.config.PLUGINS)
+            modules.push('plugin/' + this.config.PLUGINS[key] + '/' + (this.config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
+        return modules;
+    },
+    init: function () {
+        // set requirejs configuration
+        require.config({
+            locale: this.config.LOCALE,
+            baseUrl: this.config.PATH_STATIC_BASE,
+            // mpws: this.config,
+            paths: {
+                // application
+                // application: this.config.URL_STATIC_DEFAULT + "js/app",
+                // default paths
+                default: this.config.URL_STATIC_DEFAULT,
+                // website (origin customer)
+                website: this.config.URL_STATIC_WEBSITE,
+                // customer paths (current running customer)
+                customer: this.config.URL_STATIC_CUSTOMER,
+                // plugin paths
+                plugin: this.config.URL_STATIC_PLUGIN,
+                // version suppress
+                cmn_jquery: this.config.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
+            },
+            waitSeconds: 15,
+            urlArgs: "mpws_bust=" + (this.config.ISDEV ? (new Date()).getTime() : this.config.BUILD)
+        });
+    }
 };
 
-// set requirejs configuration
-require.config({
-    locale: _globalConfig.LOCALE,
-    baseUrl: _globalConfig.PATH_STATIC_BASE,
-    // mpws: _globalConfig,
-    paths: {
-        // application
-        // application: _globalConfig.URL_STATIC_DEFAULT + "js/app",
-        // default paths
-        default: _globalConfig.URL_STATIC_DEFAULT,
-        // website (origin customer)
-        website: _globalConfig.URL_STATIC_WEBSITE,
-        // customer paths (current running customer)
-        customer: _globalConfig.URL_STATIC_CUSTOMER,
-        // plugin paths
-        plugin: _globalConfig.URL_STATIC_PLUGIN,
-        // version suppress
-        cmn_jquery: _globalConfig.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
-    },
-    waitSeconds: 15,
-    urlArgs: "mpws_bust=" + (_globalConfig.ISDEV ? (new Date()).getTime() : _globalConfig.BUILD)
-});
+// if (!APP.config.ISDEV)
+//     delete MPWS;
 
-// include site file
-var _filesToRequest = [
-    'default/js/lib/sandbox',
-    'cmn_jquery',
-    'default/js/lib/underscore',
-    'default/js/lib/backbone',
-    'default/js/lib/url',
-    'default/js/lib/contentInjection',
-    'default/js/lib/extend.string',
-    _globalConfig.ROUTER
-];
+// window.app = {
+//     config: _globalConfig
+// };
 
-for (var key in _globalConfig.PLUGINS)
-    _filesToRequest.push('plugin/' + _globalConfig.PLUGINS[key] + '/' + (_globalConfig.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
+
+
+
+// debugger;
 
 // console.log(_filesToRequest);
 // start customer application
@@ -67,14 +76,17 @@ for (var key in _globalConfig.PLUGINS)
 //     Backbone.history.start();
 // });
 
-require(_filesToRequest, function (Sandbox, $, _, Backbone, JSUrl, contentInjection) {
+APP.init();
 
-    var _site = null;
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, contentInjection, CustomerRouter) {
+
+    debugger;
+    // var _site = null;
 
     // function Site (options) {
 
-        if (_site)
-            return _site;
+        // if (_site)
+        //     return _site;
 
         var _views = {};
         var _placeholders = _.extend({}, options.placeholders || {});
@@ -166,15 +178,16 @@ require(_filesToRequest, function (Sandbox, $, _, Backbone, JSUrl, contentInject
 
         var defaultRouter = new Router();
 
-        _site = {
+
+        var _site = {
             realm: app.config.ISTOOLBOX ? 'toolbox' : 'site',
             placeholders: _placeholders,
             config: app.config,
             options: options,
             views: _views,
-            plugins: window.app.config.PLUGINS,
+            plugins: APP.config.PLUGINS,
             hasPlugin: function (pluginName) {
-                return _(window.app.config.PLUGINS).indexOf(pluginName) >= 0;
+                return _(APP.config.PLUGINS).indexOf(pluginName) >= 0;
             },
             getApiLink: function (source, fn, extraOptions) {
 

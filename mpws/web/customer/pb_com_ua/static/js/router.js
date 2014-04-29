@@ -12,7 +12,7 @@ define("customer/js/router", [
 
     _customerOptions.site = {
         title: 'Test and demo site',
-        logoImageUrl: app.config.URL_STATIC_CUSTOMER + '/img/mikserLogo.png'
+        logoImageUrl: APP.config.URL_STATIC_CUSTOMER + '/img/mikserLogo.png'
     };
 
     _customerOptions.placeholders = {

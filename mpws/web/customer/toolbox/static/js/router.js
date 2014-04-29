@@ -1,17 +1,16 @@
 define("customer/js/router", [
-    'application',
+    // 'application',
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
-    'default/js/view/breadcrumb',
-    'default/js/plugin/css!customer/css/theme.css'
-], function (App, Sandbox, $, _, Breadcrumb) {
+    // 'default/js/view/breadcrumb'
+], function (/*App, */Sandbox, $, _/*, Breadcrumb*/) {
 
     var _customerOptions = {};
 
     _customerOptions.site = {
         title: 'Toolbox',
-        logoImageUrl: app.config.URL_STATIC_DEFAULT + '/img/mpwsLogo.gif'
+        logoImageUrl: APP.config.URL_STATIC_DEFAULT + '/img/mpwsLogo.gif'
     };
 
     _customerOptions.placeholders = {
@@ -47,49 +46,49 @@ define("customer/js/router", [
         // ShopListProducts: $('#toolbox-page-center-ID'),
     };
 
-    var site = new App(_customerOptions);
+    // var site = new App(_customerOptions);
 
     // debugger;
 
-    Sandbox.eventSubscribe('global:loader:complete', function (options) {
+    // Sandbox.eventSubscribe('global:loader:complete', function (options) {
 
-        // configure titles and brand images
-        $('head title').text(_customerOptions.site.title);
-        // $('#site-logo-ID').attr({
-        //     src: _customerOptions.site.logoImageUrl,
-        //     title: _customerOptions.site.title
-        // });
-        // $('.navbar-brand').removeClass('hide');
+    //     // configure titles and brand images
+    //     $('head title').text(_customerOptions.site.title);
+    //     // $('#site-logo-ID').attr({
+    //     //     src: _customerOptions.site.logoImageUrl,
+    //     //     title: _customerOptions.site.title
+    //     // });
+    //     // $('.navbar-brand').removeClass('hide');
 
-        // init site views
-        var _views = {};
+    //     // init site views
+    //     var _views = {};
 
-        _views.breadcrumb = new Breadcrumb({
-            el: _customerOptions.placeholders.CommonBreadcrumb,
-            template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
-        });
+    //     _views.breadcrumb = new Breadcrumb({
+    //         el: _customerOptions.placeholders.CommonBreadcrumb,
+    //         template: 'default/js/plugin/hbs!customer/hbs/breadcrumb'
+    //     });
 
-        // Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
-        //     // debugger;
-        //     // Sandbox.eventNotify('global:breadcrumb:show');
-        //     if (!status && Backbone.history.fragment !== "signin") {
-        //         Backbone.history.navigate('signin', true);
-        //         return;
-        //     }
+    //     // Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
+    //     //     // debugger;
+    //     //     // Sandbox.eventNotify('global:breadcrumb:show');
+    //     //     if (!status && Backbone.history.fragment !== "signin") {
+    //     //         Backbone.history.navigate('signin', true);
+    //     //         return;
+    //     //     }
 
-        Sandbox.eventSubscribe('global:breadcrumb:show', function (options) {
-            if (!_.isEmpty(options))
-                _views.breadcrumb.fetchAndRender(options);
-        });
-        // });
+    //     Sandbox.eventSubscribe('global:breadcrumb:show', function (options) {
+    //         if (!_.isEmpty(options))
+    //             _views.breadcrumb.fetchAndRender(options);
+    //     });
+    //     // });
 
-        // debugger
-        // Sandbox.eventNotify('plugin:toolbox:status');
+    //     // debugger
+    //     // Sandbox.eventNotify('plugin:toolbox:status');
 
-    });
+    // });
 
     // this object will be passed into all enabled plugins
     // to inject additional components into page layout
-    return site;
+    // return site;
 
 });
