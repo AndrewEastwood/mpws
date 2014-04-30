@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.35, for debian-linux-gnu (i686)
+-- MySQL dump 10.13  Distrib 5.5.31, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: mpws_light
 -- ------------------------------------------------------
--- Server version	5.5.35-0ubuntu0.12.04.2
+-- Server version	5.5.31-0ubuntu0.12.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -304,6 +304,7 @@ CREATE TABLE `shop_categories` (
   `RootID` int(11) DEFAULT NULL,
   `ParentID` int(11) DEFAULT NULL,
   `CustomerID` int(11) NOT NULL,
+  `SchemaID` int(11) DEFAULT NULL,
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Name` varchar(100) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
@@ -313,10 +314,12 @@ CREATE TABLE `shop_categories` (
   PRIMARY KEY (`ID`),
   KEY `RootID` (`RootID`),
   KEY `ParentID` (`ParentID`),
+  KEY `SchemaID` (`SchemaID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_categories_ibfk_4` FOREIGN KEY (`RootID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `shop_categories_ibfk_5` FOREIGN KEY (`ParentID`) REFERENCES `shop_categories` (`ID`) ON UPDATE CASCADE,
-  CONSTRAINT `shop_categories_ibfk_6` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `shop_categories_ibfk_6` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_categories_ibfk_7` FOREIGN KEY (`SchemaID`) REFERENCES `shop_specifications` (`ID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -326,7 +329,7 @@ CREATE TABLE `shop_categories` (
 
 LOCK TABLES `shop_categories` WRITE;
 /*!40000 ALTER TABLE `shop_categories` DISABLE KEYS */;
-INSERT INTO `shop_categories` VALUES (1,NULL,NULL,1,'','Побутова техніка','Побутова техніка','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(2,1,1,1,'','Дошка прасувальні','Дошка прасувальні','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(3,NULL,NULL,1,'','Мийка високого тиску','Мийка високого тиску','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(4,1,1,1,'','Посуд','Посуд','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(5,NULL,NULL,1,'','Професійна техніка','Професійна техніка','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(6,NULL,NULL,1,'','ТВ, відео, аудіо, фото','ТВ, відео, аудіо, фото','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(7,6,6,1,'','Телевізори','Відео обладнання','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(12,6,7,1,'lct_televizoru','LCD телевізори','LCD телевізори','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(13,1,1,1,'kt','Кліматична техніка','Кліматична техніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(14,1,1,1,'kt','Крупна побутова техніка','Крупна побутова техніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(15,1,1,1,'kt','Дрібна побутова техніка','Дрібна побутова техніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(16,1,1,1,'kt','Догляд за будинком','Догляд за будинком','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(17,6,6,1,'kt','Аудіо','Аудіо','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(18,6,6,1,'kt','Відео','Відео','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(19,6,6,1,'kt','Фото','Фото','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(20,6,6,1,'kt','Ігрові приставки','Ігрові приставки','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(21,NULL,NULL,1,'kt','Авто товари','Авто товари','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(22,21,21,1,'kt','Автоелектроніка','Автоелектроніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(23,21,21,1,'kt','Авто звук','Авто звук','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(24,21,23,1,'kt','Автомагнітоли','Автомагнітоли','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(25,21,23,1,'','Аксесуари до автозвуку','Аксесуари до автозвуку','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(26,21,21,1,'','АвтоОптика (Світло)','АвтоОптика (Світло)','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(27,21,26,1,'','Габаритні вогні','Габаритні вогні','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07');
+INSERT INTO `shop_categories` VALUES (1,NULL,NULL,1,NULL,'','Побутова техніка','Побутова техніка','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(2,1,1,1,NULL,'','Дошка прасувальні','Дошка прасувальні','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(3,NULL,NULL,1,NULL,'','Мийка високого тиску','Мийка високого тиску','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(4,1,1,1,NULL,'','Посуд','Посуд','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(5,NULL,NULL,1,NULL,'','Професійна техніка','Професійна техніка','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(6,NULL,NULL,1,1,'','ТВ, відео, аудіо, фото','ТВ, відео, аудіо, фото','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(7,6,6,1,NULL,'','Телевізори','Відео обладнання','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(12,6,7,1,NULL,'lct_televizoru','LCD телевізори','LCD телевізори','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(13,1,1,1,NULL,'kt','Кліматична техніка','Кліматична техніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(14,1,1,1,NULL,'kt','Крупна побутова техніка','Крупна побутова техніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(15,1,1,1,NULL,'kt','Дрібна побутова техніка','Дрібна побутова техніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(16,1,1,1,NULL,'kt','Догляд за будинком','Догляд за будинком','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(17,6,6,1,NULL,'kt','Аудіо','Аудіо','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(18,6,6,1,NULL,'kt','Відео','Відео','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(19,6,6,1,NULL,'kt','Фото','Фото','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(20,6,6,1,NULL,'kt','Ігрові приставки','Ігрові приставки','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(21,NULL,NULL,1,NULL,'kt','Авто товари','Авто товари','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(22,21,21,1,NULL,'kt','Автоелектроніка','Автоелектроніка','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(23,21,21,1,NULL,'kt','Авто звук','Авто звук','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(24,21,23,1,NULL,'kt','Автомагнітоли','Автомагнітоли','ACTIVE','0000-00-00 00:00:00','0000-00-00 00:00:00'),(25,21,23,1,NULL,'','Аксесуари до автозвуку','Аксесуари до автозвуку','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(26,21,21,1,NULL,'','АвтоОптика (Світло)','АвтоОптика (Світло)','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07'),(27,21,26,1,NULL,'','Габаритні вогні','Габаритні вогні','ACTIVE','2013-08-27 02:26:07','2013-08-27 02:26:07');
 /*!40000 ALTER TABLE `shop_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +415,6 @@ CREATE TABLE `shop_customerProductRequests` (
   `AccountID` int(11) DEFAULT NULL,
   `OptOut` text NOT NULL,
   `Email` text NOT NULL,
-  `IsTemporary` tinyint(1) NOT NULL DEFAULT '1',
   `AutoClose` tinyint(1) NOT NULL,
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -542,9 +544,9 @@ CREATE TABLE `shop_orders` (
   KEY `Hash` (`Hash`),
   KEY `CustomerID` (`CustomerID`),
   KEY `AccountAddressesID` (`AccountAddressesID`),
+  CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_accountAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_accountAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -738,14 +740,14 @@ DROP TABLE IF EXISTS `shop_specifications`;
 CREATE TABLE `shop_specifications` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `CategoryID` int(11) NOT NULL,
-  `Field` text COLLATE utf8_bin NOT NULL,
+  `Name` varchar(100) COLLATE utf8_bin NOT NULL,
+  `Fields` text COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
-  KEY `CategoryID` (`CategoryID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `shop_specifications_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -754,6 +756,7 @@ CREATE TABLE `shop_specifications` (
 
 LOCK TABLES `shop_specifications` WRITE;
 /*!40000 ALTER TABLE `shop_specifications` DISABLE KEYS */;
+INSERT INTO `shop_specifications` VALUES (1,0,'TV','Screen\\r\\nDPI','2013-08-27 02:25:05','2013-08-27 02:25:05');
 /*!40000 ALTER TABLE `shop_specifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -792,112 +795,6 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'mpws_light'
 --
-/*!50003 DROP PROCEDURE IF EXISTS `getAllShopCategoryBrands` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN catid INT)
-BEGIN
-  SELECT o.ID,
-         o.Name
-  FROM   shop_products AS p
-         LEFT JOIN shop_origins AS o
-                ON p.OriginID = o.ID
-  WHERE  p.Status = 'ACTIVE'
-         AND o.Status = 'ACTIVE'
-         AND p.CategoryID = catid
-  GROUP  BY o.Name; 
--- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `getAllShopCategorySubCategories` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategorySubCategories`(IN catid INT)
-BEGIN
-  SELECT c.ID,
-         c.Name
-  FROM   shop_products AS p
-         LEFT JOIN shop_categories AS c
-                ON p.CategoryID = c.ID
-  WHERE  p.Status = 'ACTIVE'
-         AND c.Status = 'ACTIVE'
-         AND c.ParentID = catid
-  GROUP  BY c.Name; 
--- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `getShopCategoryLocation` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryLocation`(IN catid INT)
-BEGIN
-SELECT T2.ID, T2.Name
-FROM (
-    SELECT
-        @r AS _id,
-        (SELECT @r := ParentID FROM shop_categories WHERE ID = _id) AS ParentID,
-        @l := @l + 1 AS lvl
-    FROM
-        (SELECT @r := catid, @l := 0) vars,
-        shop_categories h
-    WHERE @r <> 0) T1
-JOIN shop_categories T2
-ON T1._id = T2.ID
-ORDER BY T1.lvl DESC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `getShopCategoryPriceEdges` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
-BEGIN
-SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -908,4 +805,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-29  0:52:51
+-- Dump completed on 2014-04-30 11:10:56

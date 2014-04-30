@@ -74,7 +74,7 @@ define("plugin/toolbox/toolbox/js/router", [
         bridge.setPage(options);
 
         Sandbox.eventNotify('global:content:render', {
-            name: 'Bridge',
+            name: 'CommonBodyCenter',
             el: bridge.$el,
             keepExisted: true
         });
@@ -97,7 +97,7 @@ define("plugin/toolbox/toolbox/js/router", [
                 bridge.setPage(options);
 
                 Sandbox.eventNotify('global:content:render', {
-                    name: 'Bridge',
+                    name: 'CommonBodyCenter',
                     el: bridge.el
                 });
 
@@ -128,7 +128,7 @@ define("plugin/toolbox/toolbox/js/router", [
                     var signin = cachedView || new SignIn();
                     signin.render();
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'SignIn',
+                        name: 'CommonBodyCenter',
                         el: signin.el
                     });
 

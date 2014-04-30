@@ -62,47 +62,13 @@ var APP = {
     }
 };
 
-// if (!APP.config.ISDEV)
-//     delete MPWS;
-
-// window.app = {
-//     config: _globalConfig
-// };
-
-
-
-
-// debugger;
-
-// console.log(_filesToRequest);
-// start customer application
-// require(_filesToRequest, function (Sandbox, Site) {
-//     var _args = [].slice.call(arguments, 1);
-//     var _routers = [];
-
-//     // setup plugin routers
-//     var pluginCount  = _args.length;
-//     if (pluginCount > 1)
-//         for (var i = 1; i < pluginCount; i++) {
-//             // debugger;
-//             var router = new _args[i](Site);
-//             _routers.push(router);
-//         }
-
-//     // notify all that loader completed its tasks
-//     Sandbox.eventNotify('global:loader:complete');
-
-//     // start HTML5 History push
-//     Backbone.history.start();
-// });
-
 APP.init();
 
 require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, contentInjection, CustomerRouter) {
 
-    debugger;
+    // debugger;
 
-    var _placeholders = _.extend({}, options.placeholders || {});
+    // var _placeholders = _.extend({}, options.placeholders || {});
 
     $.xhrPool = [];
     $.xhrPool.abortAll = function() {
@@ -132,6 +98,13 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
         var _data = $(this).data() || {};
         _data.event = event;
         Sandbox.eventNotify($(this).data('action'), _data);
+    });
+
+    Sandbox.eventSubscribe('global:page:setTitle', function (title) {
+        if (_.isArray(title))
+            $('title').text(title.join(' - '));
+        else if (_.isString(title))
+            $('title').text(title);
     });
 
     // find links and set them active accordint to current route
@@ -187,6 +160,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
     var defaultRouter = new Router();
 
     var renderFn = function (options) {
+        debugger;
         if (!options || !options.name)
             return;
         // debugger;

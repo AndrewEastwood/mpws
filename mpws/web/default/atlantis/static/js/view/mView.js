@@ -144,7 +144,7 @@ define("default/js/view/mView", [
                 return this;
             },
             getTemplateData: function () {
-                var Site = require('application');
+                // var Site = require('application');
                 var _tplData = null;
                 var _tplUrlOptions = null;
                 var _tplExtras = null;
@@ -159,11 +159,11 @@ define("default/js/view/mView", [
                 }
                 return {
                     lang: this.lang || {},
-                    options: Site.options || {},
-                    plugins: Site.plugins,
+                    options: APP.options || {},
+                    plugins: APP.config.PLUGINS,
                     location: Backbone.history.location,
                     app: {
-                        config: window.app.config,
+                        config: APP.options,
                         location: {
                             fragment: Backbone.history.fragment
                         }

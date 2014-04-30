@@ -6,46 +6,51 @@ define("customer/js/router", [
     // 'default/js/view/breadcrumb'
 ], function (/*App, */Sandbox, $, _/*, Breadcrumb*/) {
 
+    Sandbox.eventSubscribe('global:loader:complete', function (options) {
 
-    var _customerOptions = {};
+        Sandbox.eventNotify('global:page:setTitle', 'Toolbox');
 
-    _customerOptions.site = {
-        title: 'Toolbox',
-        logoImageUrl: APP.config.URL_STATIC_DEFAULT + '/img/mpwsLogo.gif'
-    };
+    });
 
-    _customerOptions.placeholders = {
-        CommonHeader: $('.MPWSPageHeader'),
-        CommonHeaderLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
-        CommonHeaderCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
-        CommonHeaderRight: $('.MPWSPageHeader .MPWSBlockRight'),
-        CommonBody: $('.MPWSPageBody'),
-        CommonBodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
-        CommonBodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
-        CommonBodyRight: $('.MPWSPageBody .MPWSBlockRight'),
-        CommonFooter: $('.MPWSPageFooter'),
-        CommonFooterLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
-        CommonFooterCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
-        CommonFooterRight: $('.MPWSPageFooter .MPWSBlockRight'),
-        CommonBreadcrumb: $('.MPWSBreadcrumb'),
-        CommonMenuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
-        CommonMenuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
-        CommonWidgetsTop: $('.MPWSWidgetsTop'),
-        CommonWidgetsBottom: $('.MPWSWidgetsBottom'),
-        CommmonToolboxMenu: $('#toolbox-menu-ID'),
-        CommmonToolboxPage: $('#toolbox-page-top-ID'),
-        /* plugins  */
-        /* = plugin toolbox */
-        Bridge: $('.MPWSPageBody .MPWSBlockCenter'),
-        SignIn: $('.MPWSPageBody .MPWSBlockCenter'),
-        SignOut: $('.MPWSPageBody .MPWSBlockCenter'),
-        // /* = plugin account */
-        // AccountLogin: $('#toolbox-page-center-ID'),
-        // /* = plugin shop */
-        // ShopListOrders: $('#toolbox-page-center-ID'),
-        // ShopFilteringListOrders: $('#toolbox-page-top-ID'),
-        // ShopListProducts: $('#toolbox-page-center-ID'),
-    };
+    // var _customerOptions = {};
+
+    // _customerOptions.site = {
+    //     title: 'Toolbox',
+    //     logoImageUrl: APP.config.URL_STATIC_DEFAULT + '/img/mpwsLogo.gif'
+    // };
+
+    // _customerOptions.placeholders = {
+    //     CommonHeader: $('.MPWSPageHeader'),
+    //     CommonHeaderLeft: $('.MPWSPageHeader .MPWSBlockLeft'),
+    //     CommonHeaderCenter: $('.MPWSPageHeader .MPWSBlockCenter'),
+    //     CommonHeaderRight: $('.MPWSPageHeader .MPWSBlockRight'),
+    //     CommonBody: $('.MPWSPageBody'),
+    //     CommonBodyLeft: $('.MPWSPageBody .MPWSBlockLeft'),
+    //     CommonBodyCenter: $('.MPWSPageBody .MPWSBlockCenter'),
+    //     CommonBodyRight: $('.MPWSPageBody .MPWSBlockRight'),
+    //     CommonFooter: $('.MPWSPageFooter'),
+    //     CommonFooterLeft: $('.MPWSPageFooter .MPWSBlockLeft'),
+    //     CommonFooterCenter: $('.MPWSPageFooter .MPWSBlockCenter'),
+    //     CommonFooterRight: $('.MPWSPageFooter .MPWSBlockRight'),
+    //     CommonBreadcrumb: $('.MPWSBreadcrumb'),
+    //     CommonMenuLeft: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-left'),
+    //     CommonMenuRight: $('.MPWSPageHeader .MPWSBlockCenter .navbar-nav-main-right'),
+    //     CommonWidgetsTop: $('.MPWSWidgetsTop'),
+    //     CommonWidgetsBottom: $('.MPWSWidgetsBottom'),
+    //     CommmonToolboxMenu: $('#toolbox-menu-ID'),
+    //     CommmonToolboxPage: $('#toolbox-page-top-ID'),
+    //     /* plugins  */
+    //     /* = plugin toolbox */
+    //     Bridge: $('.MPWSPageBody .MPWSBlockCenter'),
+    //     SignIn: $('.MPWSPageBody .MPWSBlockCenter'),
+    //     SignOut: $('.MPWSPageBody .MPWSBlockCenter'),
+    //     // /* = plugin account */
+    //     // AccountLogin: $('#toolbox-page-center-ID'),
+    //     // /* = plugin shop */
+    //     // ShopListOrders: $('#toolbox-page-center-ID'),
+    //     // ShopFilteringListOrders: $('#toolbox-page-top-ID'),
+    //     // ShopListProducts: $('#toolbox-page-center-ID'),
+    // };
 
     // var site = new App(_customerOptions);
 

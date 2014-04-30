@@ -43,9 +43,9 @@ define("default/js/model/mModel", [
 
                 var self = this;
                 var _options = options && _(options).clone() || {};
-                var _url = new JSUrl(app.config.URL_API);
+                var _url = new JSUrl(APP.config.URL_API);
 
-                _url.query.token = app.config.TOKEN;
+                _url.query.token = APP.config.TOKEN;
 
                 _(['source', 'fn']).each(function(key){
                     if (_options && typeof _options[key] !== "undefined"){
@@ -70,9 +70,9 @@ define("default/js/model/mModel", [
 
                 var self = this;
                 var _options = _.extend({}, this.urlOptions || {}, options);
-                var _url = new JSUrl(app.config.URL_API);
+                var _url = new JSUrl(APP.config.URL_API);
 
-                _url.query.token = app.config.TOKEN;
+                _url.query.token = APP.config.TOKEN;
 
                 _(['source', 'fn']).each(function(key){
                     if (_options && typeof _options[key] !== "undefined") {
