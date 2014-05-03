@@ -18,7 +18,7 @@ define("plugin/shop/toolbox/js/view/menu", [
         menu.render();
 
         Sandbox.eventNotify('plugin:toolbox:menu:display', {
-            name: 'CommmonToolboxMenu',
+            name: 'CommonBodyLeft',
             el: menu.$el,
             append: true,
             keepExisted: true

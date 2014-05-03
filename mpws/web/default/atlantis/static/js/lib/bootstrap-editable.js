@@ -1,5 +1,6 @@
 define("default/js/lib/bootstrap-editable", [
-    'cmn_jquery'
+    'cmn_jquery',
+    'default/js/lib/bootstrap'
     /* component implementation */
 ], function (jQuery) {
 

@@ -18,7 +18,6 @@ define("plugin/shop/toolbox/js/router", [
 
         initialize: function () {
             var self = this;
-
             Sandbox.eventSubscribe('global:page:index', function () {
                 self.dashboard();
             });
@@ -56,6 +55,7 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         products: function () {
+
             require(['plugin/shop/toolbox/js/view/listProducts'], function (ListProducts) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ListProducts', function (cachedView) {
@@ -69,6 +69,8 @@ define("plugin/shop/toolbox/js/router", [
 
                     listProducts.fetchAndRender();
 
+
+                    debugger;
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopListProducts',
                         el: listProducts.$el

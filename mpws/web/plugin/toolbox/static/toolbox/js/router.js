@@ -5,8 +5,11 @@ define("plugin/toolbox/toolbox/js/router", [
     'default/js/lib/backbone',
     'default/js/lib/cache',
     'plugin/toolbox/toolbox/js/view/menu',
-    'plugin/toolbox/toolbox/js/view/bridge', // need to register all auth events
+    'plugin/toolbox/toolbox/js/model/bridge',
+    // 'plugin/toolbox/toolbox/js/view/bridge', // need to register all auth events
 ], function (Sandbox, $, _, Backbone, Cache, Menu, Bridge) {
+
+    var isLoading = true;
 
     // get user status when page starts
     Sandbox.eventSubscribe('global:loader:complete', function (status) {
@@ -38,16 +41,25 @@ define("plugin/toolbox/toolbox/js/router", [
 
     // handle user status
     Sandbox.eventSubscribe('plugin:toolbox:status:received', function (status) {
-        // debugger;
+        debugger;
         // do redirecto to index page when user is signed in
-        if (status && Backbone.history.fragment === "signin") {
-            var _location = localStorage.location || '';
-            Backbone.history.navigate(_location, true);
-        }
-
-        // save location
-        if (status && localStorage && Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
-            localStorage.setItem('location', window.location.hash);
+        if (status) {
+            if (Backbone.history.fragment === "signin") {
+                var _location = localStorage.location || '';
+                Backbone.history.navigate(_location, true);
+            }
+            // save location
+            if (localStorage && Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
+                localStorage.setItem('location', window.location.hash);
+            }
+            if (isLoading) {
+                isLoading = false;
+                Sandbox.eventSubscribe('global:loader:complete', function (status) {
+                    Sandbox.eventNotify('plugin:toolbox:render:complete');
+                });
+            }
+        } else {
+            Backbone.history.navigate('signin', true);
         }
     });
 
@@ -63,54 +75,42 @@ define("plugin/toolbox/toolbox/js/router", [
     });
 
     // create new view
-    var bridge = new Bridge();
+    // var bridge = new Bridge();
 
     // inject into toolbox layout another plugin's content
     Sandbox.eventSubscribe('plugin:toolbox:page:show', function (options) {
-        // _displayToolboxPageFn(page);
         // render toolbox container with placeholders
-        bridge.render();
+        // bridge.render();
         // inject requested page
-        bridge.setPage(options);
+        // bridge.setPage(options);
 
-        Sandbox.eventNotify('global:content:render', {
+        // Sandbox.eventNotify('global:content:render', {
+        //     name: 'CommonBodyCenter',
+        //     el: bridge.$el,
+        //     keepExisted: true
+        // });
+
+        debugger;
+        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
             name: 'CommonBodyCenter',
-            el: bridge.$el,
-            keepExisted: true
-        });
+        }));
     });
 
-    var _displayToolboxPageFn = function (options) {
-        require(['plugin/toolbox/toolbox/js/view/bridge'], function (Bridge) {
-            // using this wrapper to cleanup previous view and create new one
-            Cache.withObject('Bridge', function (cachedView) {
-                // debugger;
-                // remove previous view
-                // if (cachedView && cachedView.remove)
-                //     cachedView.remove();
-
-                // create new view
-                var bridge = cachedView || new Bridge();
-                // render toolbox container with placeholders
-                bridge.render();
-                // inject requested page
-                bridge.setPage(options);
-
-                Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: bridge.el
-                });
-
-                // return view object to pass it into this function at next invocation
-                return bridge;
-            });
-        });
-    }
+    Sandbox.eventSubscribe('plugin:toolbox:menu:display', function (options) {
+        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+            name: 'CommonBodyLeft',
+        }));
+        Sandbox.eventNotify('global:menu:set-active');
+    });
 
     var Router = Backbone.Router.extend({
         routes: {
             "signin": "signin",
             "signout": "signout",
+        },
+
+        initialize: function () {
+            // debugger;
         },
 
         signin: function () {

@@ -7,17 +7,19 @@ define("plugin/account/toolbox/js/view/menu", [
 ], function (Sandbox, MView, tpl, lang) {
 
     var toolboxMenuAccount = new (MView.extend({
+        id: 'account-menu-ID',
         lang: lang,
         template: tpl,
     }))();
-    toolboxMenuAccount.render();
 
     // debugger;
-    Sandbox.eventSubscribe('global:loader:complete', function () {
-        Sandbox.eventNotify('global:content:render', {
-            name: 'CommmonToolboxMenu',
+    Sandbox.eventSubscribe('plugin:toolbox:render:complete', function () {
+        toolboxMenuAccount.render();
+        Sandbox.eventNotify('plugin:toolbox:menu:display', {
+            name: 'CommonBodyLeft',
             el: toolboxMenuAccount.$el,
-            append: true
+            append: true,
+            keepExisted: true
         });
     });
 

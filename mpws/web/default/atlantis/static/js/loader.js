@@ -19,22 +19,8 @@ var APP = {
     hasPlugin: function (pluginName) {
         return _(APP.config.PLUGINS).indexOf(pluginName) >= 0;
     },
-    getApiLink: function (source, fn, extraOptions) {
-
-        var _url = new JSUrl(app.config.URL_API);
-        _url.query.token = app.config.TOKEN;
-
-        if (source)
-            _url.query.source = source;
-
-        if (fn)
-            _url.query.fn = fn;
-
-        _(extraOptions).each(function (v, k) {
-            _url.query[k] = !!v ? v : "";
-        });
-
-        return _url.toString();
+    getApiLink: function () {
+        throw "Implment function getApiLink";
     },
     init: function () {
         // set requirejs configuration
@@ -64,11 +50,29 @@ var APP = {
 
 APP.init();
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, contentInjection, CustomerRouter) {
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
+
+    // function
+    APP.getApiLink = function (source, fn, extraOptions) {
+
+        var _url = new JSUrl(APP.config.URL_API);
+        _url.query.token = APP.config.TOKEN;
+
+        if (source)
+            _url.query.source = source;
+
+        if (fn)
+            _url.query.fn = fn;
+
+        _(extraOptions).each(function (v, k) {
+            _url.query[k] = !!v ? v : "";
+        });
+
+        return _url.toString();
+    }
 
     // debugger;
-
-    // var _placeholders = _.extend({}, options.placeholders || {});
+    var _pluginsObjects = [].slice.call(arguments, 8);
 
     $.xhrPool = [];
     $.xhrPool.abortAll = function() {
@@ -160,7 +164,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
     var defaultRouter = new Router();
 
     var renderFn = function (options) {
-        debugger;
+        // debugger;
         if (!options || !options.name)
             return;
         // debugger;
@@ -180,6 +184,11 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
 
         // refresh links (make them active)
         Sandbox.eventNotify('global:menu:set-active');
+    });
+
+    // initialize plugins
+    _(_pluginsObjects).each(function(plugin){
+        new plugin();
     });
 
     // notify all that loader completed its tasks

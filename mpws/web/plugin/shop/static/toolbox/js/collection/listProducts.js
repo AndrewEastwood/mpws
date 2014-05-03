@@ -1,13 +1,12 @@
 define('plugin/shop/toolbox/js/collection/listProducts', [
-    'application',
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
-], function (App, Sandbox, _, PageableCollection) {
+], function (Sandbox, _, PageableCollection) {
 
     var ListProducts = PageableCollection.extend({
 
-        url: App.getApiLink('shop', 'shop_managed_products'),
+        url: APP.getApiLink('shop', 'shop_managed_products'),
 
         // Initial pagination states
         state: {
