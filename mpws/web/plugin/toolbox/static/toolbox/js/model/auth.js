@@ -1,4 +1,4 @@
-define("plugin/toolbox/toolbox/js/model/bridge", [
+define("plugin/toolbox/toolbox/js/model/auth", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
@@ -10,11 +10,9 @@ define("plugin/toolbox/toolbox/js/model/bridge", [
 
     var Bridge = Model.extend({
         source: 'toolbox',
-        fn: 'bridge',
+        fn: 'auth',
         initialize: function () {
             // debugger;
-            // this.getStatus();
-            // Sandbox.eventSubscribe('account:signout', _.bind(this.doLogout, this));
             Sandbox.eventSubscribe('plugin:toolbox:status', _.bind(this.getStatus, this));
             Sandbox.eventSubscribe('plugin:toolbox:logout', _.bind(this.doLogout, this));
         },

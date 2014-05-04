@@ -6,7 +6,7 @@ class configurationShopDataSource extends objectConfiguration {
     static $Table_ShopProducts = "shop_products";
 
     // Product base configuration >>>>>
-    static function jsapiProductItem () {
+    static function jsapiShopProductItemGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
@@ -43,8 +43,8 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product base configuration
 
     // Product base list configuration >>>>>
-    static function jsapiProductList () {
-        $config = self::jsapiProductItem();
+    static function jsapiShopProductListGet () {
+        $config = self::jsapiShopProductItemGet();
         unset($config['options']);
         $config['condition'] = array(
             "filter" => "shop_products.Status (=) ? + shop_categories.Status (=) ? + shop_origins.Status (=) ?",
@@ -56,8 +56,8 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product base list configuration
 
     // Product list of recently added products >>>>>
-    static function jsapiProductListLatest () {
-        $config = self::jsapiProductList();
+    static function jsapiShopProductListGetLatestGet () {
+        $config = self::jsapiShopProductListGet();
         $config['order'] = array(
             "field" => "shop_products.DateCreated",
             "ordering" => "DESC"
@@ -67,22 +67,22 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product list of recently added products
 
     // Product category (catalog)
-    static function jsapiProductListCategory () {
-        $config = self::jsapiProductList();
+    static function jsapiShopProductListGetCategoryGet () {
+        $config = self::jsapiShopProductListGet();
         $config['condition']["filter"] = "shop_products.Status (=) ? + shop_categories.Status (=) ? + shop_origins.Status (=) ? + shop_products.CategoryID (IN) ?";
         // var_dump($config);
         return $config;
     }
 
-    static function jsapiProductListCategoryInfo () {
-        $config = self::jsapiProductListCategory();
+    static function jsapiShopProductListGetCategoryGetInfoGet () {
+        $config = self::jsapiShopProductListGetCategoryGet();
         // $config["useFieldPrefix"] = false;
         $config["fields"] = array("ID", "CategoryID", "OriginID");
         $config['limit'] = 0;
         return $config;
     }
 
-    static function jsapiShopCategoryAllBrands () {
+    static function jsapiShopCategoryAllBrandsGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
@@ -92,7 +92,7 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopCategoryAllSubCategories () {
+    static function jsapiShopCategoryAllSubCategoriesGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
@@ -102,7 +102,7 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopCategoryPriceEdges () {
+    static function jsapiShopCategoryPriceEdgesGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
@@ -117,7 +117,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product category (catalog)
 
     // Product additional information >>>>>
-    static function jsapiProductAttributes () {
+    static function jsapiShopProductAttributesGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productAttributes",
@@ -148,7 +148,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product additional information
 
     // Product price stats >>>>>
-    static function jsapiProductPriceStats () {
+    static function jsapiShopProductPriceStatsGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productPrices",
@@ -176,7 +176,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product price stats
 
     // Single prouct info >>>>>
-    static function jsapiProductSingleInfo () {
+    static function jsapiShopProductSingleInfoGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
@@ -195,7 +195,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Single prouct info
 
     // Additional: category location >>>>>
-    static function jsapiShopCategoryLocation () {
+    static function jsapiShopCategoryLocationGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
@@ -207,7 +207,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Additional: category location
 
     // Shop catalog >>>>>
-    static function jsapiCatalogStructure () {
+    static function jsapiShopCatalogStructureGet () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_categories",
@@ -237,7 +237,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiShopOrderStatus ($orderHash) {
+    static function jsapiShopOrdersGettatusGet ($orderHash) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_orders",
@@ -253,7 +253,7 @@ class configurationShopDataSource extends objectConfiguration {
             )
         ));
     }
-    static function jsapiShopBoughts ($orderID) {
+    static function jsapiShopBoughtsGet ($orderID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_boughts",
@@ -266,7 +266,7 @@ class configurationShopDataSource extends objectConfiguration {
             "limit" => 0
         ));
     }
-    static function jsapiShopOrderEntry ($orderID) {
+    static function jsapiShopOrderGet ($orderID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_orders",
@@ -282,8 +282,8 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopOrders () {
-        $config = self::jsapiShopOrderEntry(null);
+    static function jsapiShopOrdersGet () {
+        $config = self::jsapiShopOrderGet(null);
         $config['condition'] = array(
             "filter" => "",
             "values" => array()
@@ -297,8 +297,8 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopProfileOrders ($profileID) {
-        $config = self::jsapiShopOrders();
+    static function jsapiShopOrdersForProfileGet ($profileID) {
+        $config = self::jsapiShopOrdersGet();
         $config['condition'] = array(
             "filter" => "AccountID (=) ?",
             "values" => array($profileID)
@@ -310,12 +310,12 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopSiteOrders () {
-        $config = self::jsapiShopOrders();
+    static function jsapiShopOrdersForSiteGet () {
+        $config = self::jsapiShopOrdersGet();
         return $config;
     }
 
-    static function jsapiShopUpdateOrderEntry ($orderID, $data) {
+    static function jsapiShopOrderUpdate ($orderID, $data) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "update",
             "source" => "shop_orders",
@@ -333,7 +333,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Shop order
 
     // >>>> Statistic: best and worst selling products
-    static function jsapiStat_BestSellingProducts () {
+    static function jsapiShopStat_BestSellingProducts () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_boughts",
@@ -347,7 +347,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiStat_WorstSellingProducts () {
+    static function jsapiShopStat_WorstSellingProducts () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
@@ -365,6 +365,47 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
     // <<<< Statistic: best and worst selling products
+
+    // >>>> Origins
+    static function jsapiShopOriginGet () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_origins",
+            "fields" => array("ID", "Name", "Description", "HomePage", "Status"),
+            "condition" => array(
+                "filter" => "Status (=) ?",
+                "values" => array("ACTIVE")
+            ),
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+    static function jsapiShopOriginListGet () {
+        $config = self::jsapiShopOriginGet();
+        unset($config['options']);
+        $config['limit'] = 0;
+        return $config;
+    }
+    static function jsapiShopOriginCreate () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "insert",
+            "source" => "shop_products",
+            "fields" => array("ID"),
+            "condition" => array(
+                "filter" => "Status (=) ? + ID (NOT IN) ?",
+                "values" => array("ACTIVE", "SELECT ProductID AS ID FROM shop_boughts")
+            ),
+            "order" => array(
+                "field" => "DateCreated",
+                "ordering" => "ASC"
+            ),
+            "limit" => 50,
+            "options" => null
+        ));
+    }
+    // <<<< Origins
 }
 
 ?>

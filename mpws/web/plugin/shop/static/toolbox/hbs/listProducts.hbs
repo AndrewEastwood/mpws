@@ -15,46 +15,36 @@
 
 </div>
 
+<!-- categories and orgins container -->
 <div class="row">
-
-    <!-- categories and orgins container -->
-    <div class="col-3-md col-12-xs">
-
-
+    <div class="col-md-6">
         <div class="well">
           <h4>Категорії</h4>
           <div id="jstree_categories-ID">
               <!-- in this example the tree is populated from inline HTML -->
+              <ul>
+                <li>Root node 1
                   <ul>
-                    <li>Root node 1
-                      <ul>
-                        <li id="child_node_1">Child node 1</li>
-                        <li>Child node 2</li>
-                      </ul>
-                    </li>
-                    <li>Root node 2</li>
+                    <li id="child_node_1">Child node 1</li>
+                    <li>Child node 2</li>
                   </ul>
+                </li>
+                <li>Root node 2</li>
+              </ul>
           </div>
         </div>
-
+    </div>
+    <div class="col-md-6">
         <div class="well">
           <h4>Виробники</h4>
-          <div id="jstree_origins-ID">
-              <!-- in this example the tree is populated from inline HTML -->
-                  <ul>
-                    <li>Root node 1
-                      <ul>
-                        <li id="child_node_1">Child node 1</li>
-                        <li>Child node 2</li>
-                      </ul>
-                    </li>
-                    <li>Root node 2</li>
-                  </ul>
-          </div>
+          <ul class="list-group shop-list-origin">
+            <li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
+            <li class="list-group-item list-group-item-info">Cras sit amet nibh libero</li>
+            <li class="list-group-item list-group-item-warning">Porta ac consectetur ac</li>
+            <li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
+          </ul>
         </div>
-
     </div>
-
 </div>
 
 <div class="row well">

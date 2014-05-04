@@ -7,7 +7,7 @@ class pluginToolbox extends objectPlugin {
         $data = false;
 
         switch(libraryRequest::getValue('fn')) {
-            case "bridge":
+            case "auth":
                 $do = libraryRequest::getValue('action');
                 switch($do) {
                     case "signin": {

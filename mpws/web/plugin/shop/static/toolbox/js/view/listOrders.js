@@ -2,7 +2,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/toolbox/js/collection/listOrders',
-    'plugin/shop/toolbox/js/view/orderEntry',
+    'plugin/shop/toolbox/js/view/popupOrder',
     'plugin/shop/toolbox/js/view/filteringListOrders',
     "default/js/lib/backgrid",
     /* template */
@@ -13,7 +13,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, MView, CollectionListOrders, ViewOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
+], function (Sandbox, MView, CollectionListOrders, PopupOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
 
     // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
@@ -23,8 +23,8 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     })
     // debugger;
     Sandbox.eventSubscribe('plugin:shop:order:edit', function(data){
-        var orderEntry = new ViewOrderEntry();
-        orderEntry.fetchAndRender({
+        var popupOrder = new PopupOrderEntry();
+        popupOrder.fetchAndRender({
             orderID: data.oid
         });
     });

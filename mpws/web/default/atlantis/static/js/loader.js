@@ -1,5 +1,6 @@
 var APP = {
     config: JSON.parse(JSON.stringify(MPWS)),
+    commonElements: [],
     getModulesToDownload: function() {
         var modules = [
             'default/js/lib/sandbox',
@@ -52,6 +53,7 @@ APP.init();
 
 require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
 
+    APP.commonElements = $('div[name^="Common"]:not(:has(*))');
     // function
     APP.getApiLink = function (source, fn, extraOptions) {
 
@@ -93,6 +95,9 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
             Sandbox.eventNotify("global:session:expired", responseObj.error);
 
         if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
+            Sandbox.eventNotify("global:session:expired", responseObj.error);
+
+        if (responseObj && responseObj.error && responseObj.error === "LoginRequired")
             Sandbox.eventNotify("global:session:expired", responseObj.error);
     });
 

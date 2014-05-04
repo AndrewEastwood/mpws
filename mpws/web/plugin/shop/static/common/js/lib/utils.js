@@ -40,7 +40,7 @@ define("plugin/shop/common/js/lib/utils", [
                 HAS_ADDITIONAL: false,
                 MAIN: false,
                 ADDITIONAL : false,
-                EMPTY: app.config.URL_STATIC_DEFAULT + 'img/noimage.png'
+                EMPTY: APP.config.URL_STATIC_DEFAULT + 'img/noimage.png'
             }
             // adjust product images
             if (_attr.IMAGE) {

@@ -1,18 +1,18 @@
 define("plugin/toolbox/toolbox/js/view/signin", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/toolbox/toolbox/js/model/bridge',
+    'plugin/toolbox/toolbox/js/model/auth',
     'default/js/plugin/hbs!plugin/toolbox/toolbox/hbs/signin',
     /* lang */
     'default/js/plugin/i18n!plugin/toolbox/toolbox/nls/translation'
-], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {
+], function (Sandbox, MView, ModelAuthInstance, tpl, lang) {
 
     var SignIn = MView.extend({
         tagName: 'form',
         className: 'form form-horizontal toolbox-component-form-signin',
         template: tpl,
         lang: lang,
-        model: ModelAccountInstance,
+        model: ModelAuthInstance,
         events: {
             "submit": 'doSignIn',
             "click #accountProfileSignOutID": 'doSignOut',

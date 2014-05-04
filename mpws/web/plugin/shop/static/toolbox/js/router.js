@@ -69,8 +69,6 @@ define("plugin/shop/toolbox/js/router", [
 
                     listProducts.fetchAndRender();
 
-
-                    debugger;
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopListProducts',
                         el: listProducts.$el
