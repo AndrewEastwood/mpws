@@ -224,7 +224,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             // inject all lists into tabPages
             this.on('mview:renderComplete', function () {
 
-                // debugger;
+                debugger;
                 _productsByTypes = _productsByTypes || self.$('ul.nav-tabs > li').map(function() {
                     // debugger;
                     if ($(this).data('type'))

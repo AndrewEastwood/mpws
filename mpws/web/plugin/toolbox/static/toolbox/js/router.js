@@ -63,6 +63,7 @@ define("plugin/toolbox/toolbox/js/router", [
 
     // when user is signed in do smth
     Sandbox.eventSubscribe('plugin:toolbox:signed:in', function (status) {
+        APP.commonElements.empty();
         var _location = localStorage.location || '';
         Backbone.history.navigate(_location, true);
         if (!renderCompleteSent) {
@@ -91,8 +92,8 @@ define("plugin/toolbox/toolbox/js/router", [
             name: 'CommonBodyLeft',
         }));
         // sort nodes
-        debugger;
-        $('#toolbox-menu-ID').tsort({place:'top'});
+        // debugger;
+        // $('#toolbox-menu-ID').tsort({place:'top'});
         Sandbox.eventNotify('global:menu:set-active');
     });
 
