@@ -2,16 +2,16 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/toolbox/js/model/popupProduct',
+    'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupProduct',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    // "default/js/lib/select2/select2",
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, MView, ModelOrderEntry, BootstrapDialog, tpl, lang) {
+], function (Sandbox, MView, ModelProductItem, ShopUtils, BootstrapDialog, tpl, lang) {
 
-    var orderItemModel = new ModelOrderEntry();
+    var orderItemModel = new ModelProductItem();
     var OrderItem = MView.extend({
         // tagName: 'div',
         // className: 'shop-order-entry',
@@ -77,7 +77,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                     // debugger;
                     // var _select = this;
                     // var _editable = ;
-                    var dfd = OrderItem.updateOrderStatus(orderID, editData.newValue);
+                    var dfd = ShopUtils.updateOrderStatus(orderID, editData.newValue);
                     dfd.done(function(data){
                         // debugger;
                         // $controlOrderStatus.removeClass($controlOrderStatus.data('editable').options.unsavedclass)
@@ -91,25 +91,6 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             // order-status-ID
         }
     });
-
-    OrderItem.updateOrderStatus = function (orderID, status) {
-        // debugger;
-        var _url = orderItemModel.getUrl({
-            orderID: orderID,
-            action: "orderUpdate",
-        });
-        var dfd = $.ajax({
-            type: 'POST',
-            url: _url,
-            data: {
-                Status: status
-            }
-        });
-        dfd.done(function(){
-            Sandbox.eventNotify('plugin:shop:orderList:refresh');
-        });
-        return dfd;
-    }
 
     return OrderItem;
 

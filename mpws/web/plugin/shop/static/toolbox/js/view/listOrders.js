@@ -1,6 +1,7 @@
 define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
+    'plugin/shop/common/js/lib/utils',
     'plugin/shop/toolbox/js/collection/listOrders',
     'plugin/shop/toolbox/js/view/popupOrder',
     'plugin/shop/toolbox/js/view/filteringListOrders',
@@ -13,7 +14,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, MView, CollectionListOrders, PopupOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
+], function (Sandbox, MView, ShopUtils, CollectionListOrders, PopupOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
 
     // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
@@ -65,7 +66,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 // debugger;
                 this.listenTo(this.model, "change:Status", function(model, status) {
                     // debugger;
-                    ViewOrderEntry.updateOrderStatus(model.get('ID'), status);
+                    ShopUtils.updateOrderStatus(model.get('ID'), status);
                 });
             }
         })

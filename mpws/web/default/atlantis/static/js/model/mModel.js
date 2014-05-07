@@ -67,26 +67,35 @@ define("default/js/model/mModel", [
             },
 
             getUrl: function (options) {
-
-                var self = this;
                 var _options = _.extend({}, this.urlOptions || {}, options);
-                var _url = new JSUrl(APP.config.URL_API);
 
-                _url.query.token = APP.config.TOKEN;
+                if (_.isEmpty(_options.source))
+                    _options.source = this.source;
+                if (_.isEmpty(_options.fn))
+                    _options.fn = this.fn;
 
-                _(['source', 'fn']).each(function(key){
-                    if (_options && typeof _options[key] !== "undefined") {
-                        _url.query[key] = _options[key];
-                        delete _options[key];
-                    } else
-                        _url.query[key] = self[key];
-                });
+                return APP.getApiLink(_options);
+                // return APP.getApiLink(options.source || this.source, options.fn || this.fn, options);
 
-                _(_options).each(function (v, k) {
-                    _url.query[k] = !!v ? v : "";
-                });
+                // var self = this;
+                // var _options = _.extend({}, this.urlOptions || {}, options);
+                // var _url = new JSUrl(APP.config.URL_API);
 
-                return _url.toString();
+                // _url.query.token = APP.config.TOKEN;
+
+                // _(['source', 'fn']).each(function(key){
+                //     if (_options && typeof _options[key] !== "undefined") {
+                //         _url.query[key] = _options[key];
+                //         delete _options[key];
+                //     } else
+                //         _url.query[key] = self[key];
+                // });
+
+                // _(_options).each(function (v, k) {
+                //     _url.query[k] = !!v ? v : "";
+                // });
+
+                // return _url.toString();
             },
 
             getUrlOptions: function () {

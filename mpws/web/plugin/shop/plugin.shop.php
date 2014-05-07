@@ -111,7 +111,7 @@ class pluginShop extends objectPlugin {
                 $data = $this->_api_orderItemGet($orderID);
                 break;
             }
-            case "shop_managed_origins": {
+            case "shop_manage_origin": {
                 $data = $this->_api_OriginListGet();
                 break;
             }

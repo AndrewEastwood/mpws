@@ -2,16 +2,16 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/toolbox/js/model/popupCategory',
+    'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupCategory',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    // "default/js/lib/select2/select2",
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, MView, ModelOrderEntry, BootstrapDialog, tpl, lang) {
+], function (Sandbox, MView, ModelCategoryItem, ShopUtils, BootstrapDialog, tpl, lang) {
 
-    var orderItemModel = new ModelOrderEntry();
+    var orderItemModel = new ModelCategoryItem();
     var OrderItem = MView.extend({
         // tagName: 'div',
         // className: 'shop-order-entry',
@@ -102,25 +102,6 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             // order-status-ID
         }
     });
-
-    OrderItem.updateOrderStatus = function (orderID, status) {
-        // debugger;
-        var _url = orderItemModel.getUrl({
-            orderID: orderID,
-            action: "orderUpdate",
-        });
-        var dfd = $.ajax({
-            type: 'POST',
-            url: _url,
-            data: {
-                Status: status
-            }
-        });
-        dfd.done(function(){
-            Sandbox.eventNotify('plugin:shop:orderList:refresh');
-        });
-        return dfd;
-    }
 
     return OrderItem;
 

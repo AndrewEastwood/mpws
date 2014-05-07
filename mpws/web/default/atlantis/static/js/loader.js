@@ -12,9 +12,6 @@ var APP = {
             this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
         ];
-        // include site file
-        for (var key in this.config.PLUGINS)
-            modules.push('plugin/' + this.config.PLUGINS[key] + '/' + (this.config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
         return modules;
     },
     hasPlugin: function (pluginName) {
@@ -74,7 +71,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
     }
 
     // debugger;
-    var _pluginsObjects = [].slice.call(arguments, 8);
+    // var _pluginsObjects = [].slice.call(arguments, 8);
 
     $.xhrPool = [];
     $.xhrPool.abortAll = function() {
@@ -191,15 +188,24 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
         Sandbox.eventNotify('global:menu:set-active');
     });
 
-    // initialize plugins
-    _(_pluginsObjects).each(function(plugin){
-        new plugin();
+    var modules = [];
+    // include site file
+    for (var key in APP.config.PLUGINS)
+        modules.push('plugin/' + APP.config.PLUGINS[key] + '/' + (APP.config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
+
+
+    require(modules, function(){
+        var _pluginsObjects = [].slice.call(arguments);
+        // initialize plugins
+        _(_pluginsObjects).each(function(plugin){
+            new plugin();
+        });
+
+        // notify all that loader completed its tasks
+        Sandbox.eventNotify('global:loader:complete');
+
+        // start HTML5 History push
+        Backbone.history.start();
+        // return Site;
     });
-
-    // notify all that loader completed its tasks
-    Sandbox.eventNotify('global:loader:complete');
-
-    // start HTML5 History push
-    Backbone.history.start();
-    // return Site;
 });

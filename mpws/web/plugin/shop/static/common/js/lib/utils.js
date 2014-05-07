@@ -1,7 +1,8 @@
 define("plugin/shop/common/js/lib/utils", [
+    'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
-], function ($, _) {
+], function (Sandbox, $, _) {
 
     function Utils () {};
 
@@ -70,6 +71,27 @@ define("plugin/shop/common/js/lib/utils", [
         // });
 
         return product;
+    }
+
+    Utils.updateOrderStatus = function (orderID, status) {
+        // debugger;
+        var _url = APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_managed_order_item',
+            orderID: orderID,
+            action: "orderUpdate",
+        });
+        var jqxhr = $.ajax({
+            type: 'POST',
+            url: _url,
+            data: {
+                Status: status
+            }
+        });
+        jqxhr.done(function(){
+            Sandbox.eventNotify('plugin:shop:orderList:refresh');
+        });
+        return jqxhr;
     }
 
     return Utils;
