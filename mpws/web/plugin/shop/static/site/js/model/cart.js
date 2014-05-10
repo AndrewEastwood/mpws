@@ -62,31 +62,40 @@ define("plugin/shop/site/js/model/cart", [
             };
         },
         getInfo: function () {
-            this.updateUrl({
+            // this.updateUrl();
+            this.fetch({
                 action: 'INFO'
             });
-            this.fetch();
         },
         clearAll: function () {
-            this.updateUrl({
+            // this.updateUrl({
+            //     action: 'CLEAR'
+            // });
+            this.fetch({
                 action: 'CLEAR'
             });
-            this.fetch();
         },
         productAdd: function (productID, productQuantity) {
-            this.updateUrl({
+            // this.updateUrl({
+            //     action: 'ADD',
+            //     productID: productID,
+            //     productQuantity: productQuantity
+            // });
+            this.fetch({
                 action: 'ADD',
                 productID: productID,
                 productQuantity: productQuantity
             });
-            this.fetch();
         },
         productRemove: function (productID) {
-            this.updateUrl({
+            // this.updateUrl({
+            //     action: 'REMOVE',
+            //     productID: productID
+            // });
+            this.fetch({
                 action: 'REMOVE',
                 productID: productID
             });
-            this.fetch();
         },
         checkout: function (userData) {
             debugger;

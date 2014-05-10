@@ -27,43 +27,35 @@ define("default/js/view/mView", [
                 var _self = this;
                 // debugger;
                 if (this.isCollectionView()) {
-                    if (options)
-                        this.collection.updateUrl(options);
 
                     if (this.collection.url) {
                         // $.xhrPool.abortAll();
-                        this.collection.fetch(_.extend({}, fetchOptions || {}, {
+                        this.collection.fetch(_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
                             success: function () {
                                 // debugger;
                                 _self.render.call(_self);
                             },
                             error: function () {
                                 // debugger;
-                                // _self.collection.reset();
                                 _self.render.call(_self);
                             }
                         }));
                     } else
                         this.render.call(_self);
                 } else if (this.isModelView()) {
-                    if (options)
-                        this.model.updateUrl(options);
 
                     // debugger;
                     if (this.model.url) {
-                        // $.xhrPool.abortAll();
-                        this.model.fetch({
+                        this.model.fetch(_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
                             success: function () {
                                 // debugger;
                                 _self.render.call(_self);
                             },
                             error: function () {
                                 // debugger;
-                                // _self.model.clear({silent: true});
                                 _self.render.call(_self);
                             }
-                        });
-                        // this.model.resetUrlOptions();
+                        }));
                     } else
                         this.render.call(_self);
                 } else
@@ -135,7 +127,7 @@ define("default/js/view/mView", [
                 if (typeof this.template === "string" && this.template.has('/hbs!')) {
                     require([this.template], function (tpl) {
                         // debugger;
-                        _self.template = tpl;// Handlebars.compile(tpl);
+                        _self.template = tpl;
                         _innerRenderFn.call(_self);
                     });
                 } else
@@ -144,24 +136,19 @@ define("default/js/view/mView", [
                 return this;
             },
             getTemplateData: function () {
-                // var Site = require('application');
                 var _tplData = null;
-                var _tplUrlOptions = null;
                 var _tplExtras = null;
                 if (this.isCollectionView()) {
                     _tplData = this.collection.toJSON();
-                    _tplUrlOptions = this.collection.getUrlOptions && this.collection.getUrlOptions();
                     _tplExtras = this.collection.getExtras && this.collection.getExtras();
                 } else if (this.isModelView()) {
                     _tplData = this.model.toJSON();
-                    _tplUrlOptions = this.model.getUrlOptions && this.model.getUrlOptions();
                     _tplExtras = this.model.getExtras && this.model.getExtras();
                 }
                 return {
                     lang: this.lang || {},
                     options: APP.options || {},
                     plugins: APP.config.PLUGINS,
-                    location: Backbone.history.location,
                     app: {
                         config: APP.options,
                         location: {
@@ -170,8 +157,7 @@ define("default/js/view/mView", [
                     },
                     data: _tplData,
                     extras: _tplExtras,
-                    displayItems: this.displayItems,
-                    urlOptions: _tplUrlOptions
+                    displayItems: this.displayItems
                 }
             },
             close: function () {

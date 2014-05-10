@@ -95,27 +95,29 @@ class pluginShop extends objectPlugin {
                 $data = $this->_api_getListOrders_Profile($profileID);
                 break;
             }
-            case "shop_managed_orders_list": {
-                $data = $this->_api_getListOrders_Managed();
-                break;
-            }
-            case "shop_managed_order_item": {
-                $orderID = libraryRequest::getValue('orderID');
+            case "shop_manage_orders": {
                 $do = libraryRequest::getValue('action');
                 switch ($do) {
-                    case 'orderUpdate':
-                        // var_dump($do);
+                    case 'update':
+                        $orderID = libraryRequest::getValue('orderID');
                         $this->_api_orderItemUpdate($orderID);
+                        $data = $this->_api_orderItemGet($orderID);
+                        break;
+                    case 'get':
+                        $orderID = libraryRequest::getValue('orderID');
+                        $data = $this->_api_orderItemGet($orderID);
+                        break;
+                    case 'list':
+                        $data = $this->_api_getListOrders_Managed();
                         break;
                 }
-                $data = $this->_api_orderItemGet($orderID);
                 break;
             }
-            case "shop_manage_origin": {
+            case "shop_manage_origins": {
                 $data = $this->_api_OriginListGet();
                 break;
             }
-            case "shop_managed_products": {
+            case "shop_manage_products": {
                 $data = $this->_api_getListProducts_Managed();
                 break;
             }

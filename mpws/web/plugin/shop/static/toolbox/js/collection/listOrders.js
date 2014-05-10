@@ -8,7 +8,11 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
 
     var ListOrders = PageableCollection.extend({
 
-        url: APP.getApiLink('shop', 'shop_managed_orders_list'),
+        url: APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_orders',
+            action: 'list'
+        }),
 
         // Initial pagination states
         state: {

@@ -11,7 +11,8 @@ define('plugin/shop/toolbox/js/model/popupCategory', [
             // debugger;
             var _data = this.extractModelDataFromResponse(data);
 
-            _data.boughts = ShopUtils.adjustProductItem({products: _data.boughts});
+            if (_data.boughts)
+                _data.boughts = ShopUtils.adjustProductItem({products: _data.boughts});
 
             return _data;
         }

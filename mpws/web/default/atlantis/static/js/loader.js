@@ -40,7 +40,7 @@ var APP = {
                 // version suppress
                 cmn_jquery: this.config.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
             },
-            waitSeconds: 15,
+            waitSeconds: 20,
             urlArgs: "mpws_bust=" + (this.config.ISDEV ? (new Date()).getTime() : this.config.BUILD)
         });
     }
@@ -52,20 +52,14 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
 
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
     // function
-    APP.getApiLink = function (source, fn, extraOptions) {
+    APP.getApiLink = function (extraOptions) {
 
         var _url = new JSUrl(APP.config.URL_API);
         _url.query.token = APP.config.TOKEN;
-
-        if (source)
-            _url.query.source = source;
-
-        if (fn)
-            _url.query.fn = fn;
-
-        _(extraOptions).each(function (v, k) {
-            _url.query[k] = !!v ? v : "";
-        });
+        if (!_.isEmpty(extraOptions))
+            _(extraOptions).each(function (v, k) {
+                _url.query[k] = !!v ? v : "";
+            });
 
         return _url.toString();
     }

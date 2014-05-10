@@ -15,71 +15,34 @@ define("default/js/collection/mCollection", [
             // and user custom options
             urlOptions: {},
 
+            clearErrors: function () {
+                if (this.attributes && this.attributes.error)
+                    this.attributes.error = false;
+            },
+
+            clearStates: function () {
+                if (this.attributes && this.attributes.success)
+                    this.attributes.success = false;
+            },
+
+            extractModelDataFromResponse: function (data) {
+                return data && data[this.source] || {};
+            },
+
             getSource: function () {
                 return this.get(this._urlOptions.source);
             },
 
-            extractModelDataFromRespce: function (data) {
-                return data && data[this.source] || {};
-            },
-
-            resetUrl: function () {
-                this.urlOptions = {};
-                this.updateUrl();
-            },
-
-            updateUrl: function (options) {
-
-                var self = this;
-                var _options = options && _(options).clone() || {};
-                var _url = new JSUrl(app.config.URL_API);
-
-                _url.query.token = app.config.TOKEN;
-
-                _(['source', 'fn']).each(function(key){
-                    if (_options && typeof _options[key] !== "undefined"){
-                        self[key] = _options[key];
-                        delete _options[key];
-                    }
-                    self.urlOptions[key] = self[key];
-                    _url.query[key] = self[key];
-                });
-
-                this.urlOptions = _.extend({}, this.urlOptions, _options);
-
-                _(this.urlOptions).each(function (v, k) {
-                    self.urlOptions[k] = !!v ? v : "";
-                    _url.query[k] = !!v ? v : "";
-                });
-
-                this.url = _url.toString();
-            },
-
             getUrl: function (options) {
-
-                var self = this;
-                var _options = _.extend({}, this.urlOptions || {}, options);
-                var _url = new JSUrl(app.config.URL_API);
-
-                _url.query.token = app.config.TOKEN;
-
-                _(['source', 'fn']).each(function(key){
-                    if (_options && typeof _options[key] !== "undefined") {
-                        _url.query[key] = _options[key];
-                        delete _options[key];
-                    } else
-                        _url.query[key] = self[key];
-                });
-
-                _(_options).each(function (v, k) {
-                    _url.query[k] = !!v ? v : "";
-                });
-
-                return _url.toString();
+                var _options = _.extend({
+                    source: this.source || '',
+                    fn: this.fn || ''
+                }, this.urlOptions ||{}, options);
+                return APP.getApiLink(_options);
             },
 
-            getUrlOptions: function () {
-                return this.urlOptions;
+            removeExtras: function (key) {
+                delete this.extras[key];
             },
 
             setExtras: function (key, val) {
@@ -94,12 +57,12 @@ define("default/js/collection/mCollection", [
                 return typeof this.extras[key] !== "undefined";
             },
 
-            fetch: function (options) {
-                if (typeof this.url !== "string")
-                    this.updateUrl();
-                var rez = Backbone.Collection.prototype.fetch.call(this, options);
+            fetch: function (options, fetchOptions) {
+                this.url = this.getUrl(options || {});
+                var rez = Backbone.Collection.prototype.fetch.call(this, fetchOptions || options || {});
                 return rez;
             }
+
         });
 
         MCollection.getNew = _factory;

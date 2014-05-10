@@ -6,12 +6,16 @@ define('plugin/shop/toolbox/js/model/popupOrder', [
     var Model = MModel.getNew();
     var ToolboxOrderItem = Model.extend({
         source: 'shop',
-        fn: 'shop_managed_order_item',
+        fn: 'shop_manage_orders',
+        urlOptions: {
+            action: 'get'
+        },
         parse: function (data) {
             // debugger;
             var _data = this.extractModelDataFromResponse(data);
 
-            _data.boughts = ShopUtils.adjustProductItem({products: _data.boughts});
+            if (_data.boughts)
+                _data.boughts = ShopUtils.adjustProductItem({products: _data.boughts});
 
             return _data;
         }

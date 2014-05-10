@@ -77,9 +77,9 @@ define("plugin/shop/common/js/lib/utils", [
         // debugger;
         var _url = APP.getApiLink({
             source: 'shop',
-            fn: 'shop_managed_order_item',
+            fn: 'shop_manage_orders',
             orderID: orderID,
-            action: "orderUpdate",
+            action: "update",
         });
         var jqxhr = $.ajax({
             type: 'POST',
@@ -89,7 +89,7 @@ define("plugin/shop/common/js/lib/utils", [
             }
         });
         jqxhr.done(function(){
-            Sandbox.eventNotify('plugin:shop:orderList:refresh');
+            Sandbox.eventNotify('plugin:shop:orderItem:updated');
         });
         return jqxhr;
     }
