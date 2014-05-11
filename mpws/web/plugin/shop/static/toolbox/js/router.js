@@ -56,27 +56,27 @@ define("plugin/shop/toolbox/js/router", [
 
         products: function () {
 
-            require(['plugin/shop/toolbox/js/view/listProducts'], function (ListProducts) {
+            require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ListProducts', function (cachedView) {
+                Cache.withObject('ProductManager', function (cachedView) {
                     // debugger;
                     // remove previous view
                     // if (cachedView && cachedView.remove)
                     //     cachedView.remove();
 
                     // create new view
-                    var listProducts = cachedView || new ListProducts();
+                    var productManager = cachedView || new ProductManager();
 
-                    listProducts.fetchAndRender();
+                    productManager.fetchAndRender();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopListProducts',
-                        el: listProducts.$el
+                        el: productManager.$el
                     });
 
                     // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
                     // return view object to pass it into this function at next invocation
-                    return listProducts;
+                    return productManager;
                 });
             });
         },

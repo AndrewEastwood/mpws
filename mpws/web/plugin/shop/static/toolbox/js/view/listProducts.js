@@ -2,9 +2,6 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
     'plugin/shop/toolbox/js/collection/listProducts',
-    'plugin/shop/toolbox/js/view/popupProduct',
-    'plugin/shop/toolbox/js/view/popupCategory',
-    'plugin/shop/toolbox/js/view/popupOrigin',
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/backgrid",
     /* template */
@@ -16,32 +13,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     "default/js/lib/backgrid-htmlcell",
     'default/js/lib/jstree',
     'default/js/lib/bootstrap-tagsinput',
-], function (Sandbox, MView, CollectionListProducts, PopupProduct, PopupCategory, PopupOrigin, BootstrapDialog, Backgrid, tpl, lang) {
-
-    Sandbox.eventSubscribe('plugin:shop:product:add', function(data){
-        var popupProduct = new PopupProduct();
-        popupProduct.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:product:edit', function(data){
-        var popupProduct = new PopupProduct();
-        popupProduct.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:category:add', function(data){
-        var popupCategory = new PopupCategory();
-        popupCategory.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:category:edit', function(data){
-        var popupCategory = new PopupCategory();
-        popupCategory.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
-        var popupOrigin = new PopupOrigin();
-        popupOrigin.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
-        var popupOrigin = new PopupOrigin();
-        popupOrigin.fetchAndRender();
-    });
+], function (Sandbox, MView, CollectionListProducts, BootstrapDialog, Backgrid, tpl, lang) {
 
     var columnActions = {
         name: "Actions",
@@ -89,20 +61,6 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         label: lang.pluginMenu_Products_Grid_Column_SellMode,
         cell: "string",
         editable: false
-        // cell: Backgrid.SelectCell.extend({
-        //     // It's possible to render an option group or use a
-        //     // function to provide option values too.
-        //     optionValues: ["NORMAL", "DISCOUNT", "BESTSELLER", "ARCHIVED", "DEFECT"],
-        //     initialize: function () {
-        //         // this.prototype.initialize.call(this);
-        //         Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-        //         // debugger;
-        //         this.listenTo(this.model, "change:Status", function(model, status) {
-        //             // debugger;
-        //             ViewOrderEntry.updateOrderStatus(model.get('ID'), status);
-        //         });
-        //     }
-        // })
     };
 
     var columnPrice = {
@@ -147,12 +105,6 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         className: 'shop-toolbox-products col-md-12',
         template: tpl,
         lang: lang,
-        // collection: collection,
-        // events: {
-        //     'click .button-add-product': 'addProduct',
-        //     'click .button-add-category': 'addCategory',
-        //     'click .button-add-origin': 'addOrigin'
-        // },
         initialize: function () {
 
             MView.prototype.initialize.call(this);
@@ -240,26 +192,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
                     productListBuilder.fetch({reset: true});
                 });
 
-                // display catgories and origins
-                self.$('#jstree_categories-ID').jstree({
-                    "core" : {
-                        "theme" : {
-                            "variant" : "large"
-                        }
-                    },
-                    "plugins" : [ "wholerow", "checkbox" ]
-                });
-                self.$('#jstree_origins-ID').jstree({
-                    "core" : {
-                        "theme" : {
-                            "variant" : "large"
-                        }
-                    },
-                    "plugins" : [ "wholerow", "checkbox" ]
-                });
-
-                // fetch products
-                // collection.fetch({reset: true});
+                // fetch products with filter
                 self.$("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
 
             });
