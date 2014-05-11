@@ -49,7 +49,7 @@ class pluginShop extends objectPlugin {
             // shop catalog structure
             // -----------------------------------------------
             case "shop_catalog_structure": {
-                $data = $this->_api_getCatalogStructure();
+                $data = $this->_api_getCategoryList();
                 break;
             }
             // products list sorted by category
@@ -61,20 +61,20 @@ class pluginShop extends objectPlugin {
             // product standalone item short
             // -----------------------------------------------
             // case "shop_product_item_short" : {
-            //     $data = $this->_api_getEntryProduct($productID, 'short');
+            //     $data = $this->_api_getProduct($productID, 'short');
             //     break;
             // }
             // product standalone item full
             // -----------------------------------------------
             case "shop_product_item" : {
                 $productID = libraryRequest::getValue('productID');
-                $data = $this->_api_getEntryProduct($productID);
+                $data = $this->_api_getProduct($productID, true);
                 break;
             }
             // shopping cart
             // -----------------------------------------------
             case "shop_wishlist" : {
-                $data = $this->_api_getListWishes();
+                $data = $this->_api_getWishList();
                 break;
             }
             case "shop_cart" : {
@@ -82,7 +82,7 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_compare" : {
-                $data = $this->_api_getListProductsToCompare();
+                $data = $this->_api_getCompareList();
                 break;
             }
             case "shop_order_status": {
@@ -92,7 +92,7 @@ class pluginShop extends objectPlugin {
             }
             case "shop_profile_orders": {
                 $profileID = libraryRequest::getValue('profileID');
-                $data = $this->_api_getListOrders_Profile($profileID);
+                $data = $this->_api_getOrderList_ForProfile($profileID);
                 break;
             }
             case "shop_manage_orders": {
@@ -100,25 +100,71 @@ class pluginShop extends objectPlugin {
                 switch ($do) {
                     case 'update':
                         $orderID = libraryRequest::getValue('orderID');
-                        $this->_api_orderItemUpdate($orderID);
-                        $data = $this->_api_orderItemGet($orderID);
+                        $this->_api_updateOrder($orderID);
+                        $data = $this->_api_getOrder($orderID);
                         break;
                     case 'get':
                         $orderID = libraryRequest::getValue('orderID');
-                        $data = $this->_api_orderItemGet($orderID);
+                        $data = $this->_api_getOrder($orderID);
                         break;
                     case 'list':
-                        $data = $this->_api_getListOrders_Managed();
+                        $data = $this->_api_orderListGet();
                         break;
                 }
                 break;
             }
             case "shop_manage_origins": {
-                $data = $this->_api_OriginListGet();
+                $do = libraryRequest::getValue('action');
+                switch ($do) {
+                    case 'update':
+                        $originID = libraryRequest::getValue('originID');
+                        $this->_api_updateOrigin($originID);
+                        $data = $this->_api_getOrigin($originID);
+                        break;
+                    case 'get':
+                        $originID = libraryRequest::getValue('originID');
+                        $data = $this->_api_getOrigin($originID);
+                        break;
+                    case 'list':
+                        $data = $this->_api_getOriginList();
+                        break;
+                }
+                break;
+            }
+            case "shop_manage_categories": {
+                $do = libraryRequest::getValue('action');
+                switch ($do) {
+                    case 'update':
+                        $categoryID = libraryRequest::getValue('categoryID');
+                        $this->_api_updateCategory($categoryID);
+                        $data = $this->_api_getCategory($categoryID);
+                        break;
+                    case 'get':
+                        $categoryID = libraryRequest::getValue('categoryID');
+                        $data = $this->_api_getCategory($categoryID);
+                        break;
+                    case 'list':
+                        $data = $this->_api_getCategoryList();
+                        break;
+                }
                 break;
             }
             case "shop_manage_products": {
-                $data = $this->_api_getListProducts_Managed();
+                $do = libraryRequest::getValue('action');
+                switch ($do) {
+                    case 'update':
+                        $productID = libraryRequest::getValue('productID');
+                        $this->_api_updateProduct($productID);
+                        $data = $this->_api_getProduct($productID);
+                        break;
+                    case 'get':
+                        $productID = libraryRequest::getValue('productID');
+                        $data = $this->_api_getProduct($productID);
+                        break;
+                    case 'list':
+                        $data = $this->_api_getProductList();
+                        break;
+                }
                 break;
             }
             case "toolbox_dashboard": {
@@ -213,23 +259,33 @@ class pluginShop extends objectPlugin {
 
     // shop catalog structure
     // -----------------------------------------------
-    private function _api_getCatalogStructure () {
-
+    private function _api_getCategoryList () {
         $config = configurationShopDataSource::jsapiShopCatalogStructureGet();
         $categories = $this->getCustomer()->processData($config);
-
         // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCatalogStructureGet['data']);
         // $categories = $dataObj->process($params)->getData();
-
         // var_dump($categories);
         $idToCategoryItemMap = array();
         foreach ($categories as $key => $value) {
           $idToCategoryItemMap[$value['ID']] = $value;
         }
-
         $dataObj = new libraryDataObject();
         $dataObj->setData('categories', $idToCategoryItemMap);
+        return $dataObj;
+    }
 
+    private function _api_getCategory () {
+        $config = configurationShopDataSource::jsapiShopCatalogStructureGet();
+        $categories = $this->getCustomer()->processData($config);
+        // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCatalogStructureGet['data']);
+        // $categories = $dataObj->process($params)->getData();
+        // var_dump($categories);
+        $idToCategoryItemMap = array();
+        foreach ($categories as $key => $value) {
+          $idToCategoryItemMap[$value['ID']] = $value;
+        }
+        $dataObj = new libraryDataObject();
+        $dataObj->setData('categories', $idToCategoryItemMap);
         return $dataObj;
     }
 
@@ -412,7 +468,7 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _api_getEntryProduct ($productID, $saveIntoRecent = false) {
+    private function _api_getProduct ($productID, $saveIntoRecent = false) {
         // what is not included in comparison to product_single_full
         // this goes without PriceArchive property
 
@@ -433,8 +489,8 @@ class pluginShop extends objectPlugin {
             $productItem = $productsMap[$productID];
             $dataObj->setData('product', $productItem);
 
-            // save product into recently viewed
-            if ($saveIntoRecent) {
+            // save product into recently viewed list
+            if ($saveIntoRecent && !glIsToolbox()) {
                 $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
                 $recentProducts[$productID] = $productItem;
                 $_SESSION['shop:recentProducts'] = $recentProducts;
@@ -446,13 +502,13 @@ class pluginShop extends objectPlugin {
 
     // shopping wishlist
     // -----------------------------------------------
-    private function _api_getListWishes () {
+    private function _api_getWishList () {
         return $this->_custom_util_manageStoredProducts('shopWishList');
     }
 
     // shopping products compare
     // -----------------------------------------------
-    private function _api_getListProductsToCompare () {
+    private function _api_getCompareList () {
         $do = libraryRequest::getValue('action');
         $productID = libraryRequest::getValue('productID');
         $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
@@ -660,7 +716,7 @@ class pluginShop extends objectPlugin {
 
     // orders
     // -----------------------------------------------
-    private function _api_orderItemGet ($orderID, $addAccountInfo = true) {
+    private function _api_getOrder ($orderID, $addAccountInfo = true) {
         $dataObj = new libraryDataObject();
 
         // if we pass orderID as real order id we do fetch this order otherwise ...
@@ -687,7 +743,7 @@ class pluginShop extends objectPlugin {
 
             if (!empty($boughts))
                 foreach ($boughts as $bkey => $soldItem) {
-                    $product = $this->_api_getEntryProduct($soldItem['ProductID']);
+                    $product = $this->_api_getProduct($soldItem['ProductID']);
                     if ($product->hasData()) { 
                         $productData = $product->getData('product');
                         $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
@@ -718,7 +774,7 @@ class pluginShop extends objectPlugin {
 
     //     if (!empty($boughts))
     //         foreach ($boughts as $bkey => $soldItem) {
-    //             $product = $this->_api_getEntryProduct($soldItem['ProductID']);
+    //             $product = $this->_api_getProduct($soldItem['ProductID']);
     //             if ($product->hasData()) { 
     //                 $productData = $product->getData('Product');
     //                 $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
@@ -738,7 +794,7 @@ class pluginShop extends objectPlugin {
 
     // profile orders
     // -----------------------------------------------
-    private function _api_getListOrders_Profile ($profileID) {
+    private function _api_getOrderList_ForProfile ($profileID) {
 
         $dataObj = new libraryDataObject();
 
@@ -763,7 +819,7 @@ class pluginShop extends objectPlugin {
 
         // var_dump($dataOrders);
         foreach ($dataOrders as $key => $order)
-            $dataOrders[$key] = $this->_api_orderItemGet($order)->getData();
+            $dataOrders[$key] = $this->_api_getOrder($order)->getData();
 
         // get order boughts
         // foreach ($dataOrders as $key => $order) {
@@ -781,7 +837,7 @@ class pluginShop extends objectPlugin {
 
     // toolbox orders
     // -----------------------------------------------
-    private function _api_getOrderAvailableStatusList () {
+    private function _api_getOrderStatusList () {
         return array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
     }
 
@@ -797,7 +853,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_getListOrders_Managed () {
+    private function _api_orderListGet () {
         // in toolbox methods we must check it's permission
         // offset
         // limit
@@ -853,13 +909,13 @@ class pluginShop extends objectPlugin {
         $dataCount = $this->getCustomer()->processData($configCount);
         $dataObj->setData('total_count', $dataCount['ItemsCount']);
 
-        $availableStatuses = $this->_api_getOrderAvailableStatusList();
+        $availableStatuses = $this->_api_getOrderStatusList();
         $dataObj->setData('statuses', $availableStatuses);
         
         return $dataObj;
     }
 
-    private function _api_orderItemUpdate ($orderID) {
+    private function _api_updateOrder ($orderID) {
         $dataObj = new libraryDataObject();
 
         if (!$this->getCustomer()->isAdminActive()) {
@@ -890,47 +946,47 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_getListProducts_Managed () {
+    private function _api_getProductList () {
         $listType = strtolower(libraryRequest::getValue('type'));
 
         // send list of types
         switch ($listType) {
             case 'active':
-                return $this->_api_getListProducts_Managed_Active();
+                return $this->_api_getProductList_Active();
             case 'inactive':
-                return $this->_api_getListProducts_Managed_Inactive();
+                return $this->_api_getProductList_Inactive();
             case 'uncompleted':
-                return $this->_api_getListProducts_Managed_Uncompleted();
+                return $this->_api_getProductList_Uncompleted();
             case 'sales':
-                return $this->_api_getListProducts_Managed_Sales();
+                return $this->_api_getProductList_Sales();
             case 'defects':
-                return $this->_api_getListProducts_Managed_Defects();
+                return $this->_api_getProductList_Defects();
             case 'popular':
-                return $this->_api_getListProducts_Managed_Popular();
+                return $this->_api_getProductList_Popular();
             case 'notpopular':
-                return $this->_api_getListProducts_Managed_NotPopular();
+                return $this->_api_getProductList_NotPopular();
             case 'archived':
-                return $this->_api_getListProducts_Managed_Archived();
+                return $this->_api_getProductList_Archived();
             default:
-                return $this->_api_getListProducts_Managed_All();
+                return $this->_api_getProductList_All();
         }
     }
 
     // custom product lists with custom filers and conditions applied
-    private function _api_getListProducts_Managed_All () {
-        return $this->_api_getListProducts_Managed_Base();
+    private function _api_getProductList_All () {
+        return $this->_api_getProductList_Base();
     }
 
-    private function _api_getListProducts_Managed_Inactive () {
+    private function _api_getProductList_Inactive () {
         // echo 1111;
-        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+        return $this->_api_getProductList_Base(function($dataConfigProducts){
             $dataConfigProducts['condition']['values'][0] = "REMOVED";
             return $dataConfigProducts;
         });
     }
 
-    private function _api_getListProducts_Managed_Uncompleted () {
-        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+    private function _api_getProductList_Uncompleted () {
+        return $this->_api_getProductList_Base(function($dataConfigProducts){
             $dataConfigProducts['condition']['filter'] .= " + shop_products.Name (=) ?";
             $dataConfigProducts['condition']['filter'] .= " + shop_products.Description (=) ?";
             $dataConfigProducts['condition']['filter'] .= " + shop_products.Model (=) ?";
@@ -941,40 +997,40 @@ class pluginShop extends objectPlugin {
         });
     }
 
-    private function _api_getListProducts_Managed_Archived () {
-        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+    private function _api_getProductList_Archived () {
+        return $this->_api_getProductList_Base(function($dataConfigProducts){
             $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (=) ?";
             $dataConfigProducts['condition']['values'][] = "ARCHIVED";
             return $dataConfigProducts;
         });
     }
 
-    private function _api_getListProducts_Managed_Defects () {
-        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+    private function _api_getProductList_Defects () {
+        return $this->_api_getProductList_Base(function($dataConfigProducts){
             $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (=) ?";
             $dataConfigProducts['condition']['values'][] = "DEFECT";
             return $dataConfigProducts;
         });
     }
 
-    private function _api_getListProducts_Managed_Sales () {
-        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+    private function _api_getProductList_Sales () {
+        return $this->_api_getProductList_Base(function($dataConfigProducts){
             $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (IN) ?";
             $dataConfigProducts['condition']['values'][] = array("DISCOUNT", "BESTSELLER");
             return $dataConfigProducts;
         });
     }
 
-    private function _api_getListProducts_Managed_Popular () {
-        return $this->_api_getListProducts_Managed_Base();
+    private function _api_getProductList_Popular () {
+        return $this->_api_getProductList_Base();
     }
 
-    private function _api_getListProducts_Managed_NotPopular () {
-        return $this->_api_getListProducts_Managed_Base();
+    private function _api_getProductList_NotPopular () {
+        return $this->_api_getProductList_Base();
     }
 
-    private function _api_getListProducts_Managed_Active () {
-        return $this->_api_getListProducts_Managed_Base(function($dataConfigProducts){
+    private function _api_getProductList_Active () {
+        return $this->_api_getProductList_Base(function($dataConfigProducts){
             $dataConfigProducts['condition']['values'][0] = "ACTIVE";
             return $dataConfigProducts;
         });
@@ -982,7 +1038,7 @@ class pluginShop extends objectPlugin {
 
     // this is the base function that builds product list witout any conditions
     // and returns whole list with all products types
-    private function _api_getListProducts_Managed_Base ($customConfigurator = null) {
+    private function _api_getProductList_Base ($customConfigurator = null) {
         // jsapiShopProductListGet
         // in toolbox methods we must check it's permission
         // offset
@@ -1060,7 +1116,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_OriginListGet () {
+    private function _api_getOriginList () {
         $dataObj = new libraryDataObject();
 
         $configOrders = configurationShopDataSource::jsapiShopOriginListGet();
@@ -1083,7 +1139,7 @@ class pluginShop extends objectPlugin {
         $dataOrdersExpired = $this->getCustomer()->processData($configOrdersExpired);
         if (!empty($dataOrdersExpired))
             foreach ($dataOrdersExpired as $key => $dataOrder)
-                $dataOrdersExpired[$key] = $this->_api_orderItemGet($dataOrder);
+                $dataOrdersExpired[$key] = $this->_api_getOrder($dataOrder);
         $dataObj->setData('orders_expired', $dataOrdersExpired);
 
         // get pending products
@@ -1097,7 +1153,7 @@ class pluginShop extends objectPlugin {
         $dataOrdersTodays = $this->getCustomer()->processData($configOrdersTodays);
         if (!empty($dataOrdersTodays))
             foreach ($dataOrdersTodays as $key => $dataOrder)
-                $dataOrdersTodays[$key] = $this->_api_orderItemGet($dataOrder);
+                $dataOrdersTodays[$key] = $this->_api_getOrder($dataOrder);
         $dataObj->setData('orders_today', $dataOrdersTodays);
 
         // get top 50 products
@@ -1105,7 +1161,7 @@ class pluginShop extends objectPlugin {
         $dataBestProducts = $this->getCustomer()->processData($configBestProducts);
         if (!empty($dataBestProducts))
             foreach ($dataBestProducts as $key => $dataProductSoldStat) {
-                $productItemObject = $this->_api_getEntryProduct($dataProductSoldStat['ProductID']);
+                $productItemObject = $this->_api_getProduct($dataProductSoldStat['ProductID']);
                 if ($productItemObject->hasData())
                     $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
                 else
@@ -1118,7 +1174,7 @@ class pluginShop extends objectPlugin {
         $dataWorstProducts = $this->getCustomer()->processData($configWorstProducts);
         if (!empty($dataWorstProducts))
             foreach ($dataWorstProducts as $key => $dataProduct) {
-                $productItemObject = $this->_api_getEntryProduct($dataProduct['ID']);
+                $productItemObject = $this->_api_getProduct($dataProduct['ID']);
                 if ($productItemObject->hasData())
                     $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
                 else
@@ -1294,7 +1350,7 @@ class pluginShop extends objectPlugin {
         if ($do == 'ADD') {
             // create
             if (!isset($products[$productID])) {
-                $productEntry = $this->_api_getEntryProduct($productID);
+                $productEntry = $this->_api_getProduct($productID);
                 if ($productEntry->hasError()) {
                     $dataObj->setError($productEntry->getError());
                     return $dataObj;

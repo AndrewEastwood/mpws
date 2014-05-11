@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/listProducts', [
+define('plugin/shop/toolbox/js/collection/listCategories', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
@@ -8,7 +8,7 @@ define('plugin/shop/toolbox/js/collection/listProducts', [
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'shop_manage_products'
+            fn: 'shop_manage_cetegories'
         }),
 
         // Initial pagination states
