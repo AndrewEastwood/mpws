@@ -1,6 +1,7 @@
 define("plugin/shop/toolbox/js/view/productManager", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
+    'default/js/lib/cache',
     /* items */
     'plugin/shop/toolbox/js/view/popupProduct',
     'plugin/shop/toolbox/js/view/popupCategory',
@@ -13,8 +14,7 @@ define("plugin/shop/toolbox/js/view/productManager", [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/productManager',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-], function (Sandbox, MView, PopupProduct, PopupCategory, PopupOrigin, ListProducts, ListCategories, ListOrigins, tpl, lang) {
-
+], function (Sandbox, MView, Cache, PopupProduct, PopupCategory, PopupOrigin, ListProducts, ListCategories, ListOrigins, tpl, lang) {
 
     var listProducts = new ListProducts();
     var listCategories = new ListCategories();
@@ -61,12 +61,12 @@ define("plugin/shop/toolbox/js/view/productManager", [
                 });
                 Cache.withObject('ListCategories', function (cachedView) {
                     listCategories.render();
-                    self.$('.shop-categories').html(listProducts.$el);
+                    self.$('.shop-categories').html(listCategories.$el);
                     return listCategories;
                 });
                 Cache.withObject('ListOrigins', function (cachedView) {
                     listOrigins.render();
-                    self.$('.shop-origins').html(listProducts.$el);
+                    self.$('.shop-origins').html(listOrigins.$el);
                     return listOrigins;
                 });
             });

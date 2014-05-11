@@ -2,8 +2,6 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',
-    /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
 ], function (Sandbox, _, PageableCollection, lang) {
 
     var ListOrders = PageableCollection.extend({
