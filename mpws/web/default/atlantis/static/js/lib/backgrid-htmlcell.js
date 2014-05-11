@@ -8,7 +8,6 @@ define("default/js/lib/backgrid-htmlcell", [
     "use strict";
 
     var HtmlCell = Backgrid.HtmlCell = Backgrid.Cell.extend({
-    // var HtmlCell = Backgrid.HtmlCell = Cell.extend({
 
       /** @property */
       className: "html-cell",
