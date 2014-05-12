@@ -8,16 +8,16 @@ define("plugin/shop/toolbox/js/view/productManager", [
     'plugin/shop/toolbox/js/view/popupOrigin',
     /* lists */
     'plugin/shop/toolbox/js/view/listProducts',
-    'plugin/shop/toolbox/js/view/listCategories',
+    'plugin/shop/toolbox/js/view/categoriesTree',
     'plugin/shop/toolbox/js/view/listOrigins',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/productManager',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-], function (Sandbox, MView, Cache, PopupProduct, PopupCategory, PopupOrigin, ListProducts, ListCategories, ListOrigins, tpl, lang) {
+], function (Sandbox, MView, Cache, PopupProduct, PopupCategory, PopupOrigin, ListProducts, CategoriesTree, ListOrigins, tpl, lang) {
 
     var listProducts = new ListProducts();
-    var listCategories = new ListCategories();
+    var categoriesTree = new CategoriesTree();
     var listOrigins = new ListOrigins();
 
     Sandbox.eventSubscribe('plugin:shop:product:add', function(data){
@@ -47,22 +47,23 @@ define("plugin/shop/toolbox/js/view/productManager", [
 
     var ProductManager = MView.extend({
         // tagName: 'div',
-        // className: 'shop-order-entry',
+        className: 'shop-product-manager',
         template: tpl,
         lang: lang,
         initialize: function () {
             MView.prototype.initialize.call(this);
             var self = this;
             this.on('mview:renderComplete', function () {
+                // debugger;
                 Cache.withObject('ListProducts', function (cachedView) {
                     listProducts.render();
                     self.$('.shop-products').html(listProducts.$el);
                     return listProducts;
                 });
-                Cache.withObject('ListCategories', function (cachedView) {
-                    listCategories.render();
-                    self.$('.shop-categories').html(listCategories.$el);
-                    return listCategories;
+                Cache.withObject('CategoriesTree', function (cachedView) {
+                    categoriesTree.fetchAndRender();
+                    self.$('.shop-categories').html(categoriesTree.$el);
+                    return categoriesTree;
                 });
                 Cache.withObject('ListOrigins', function (cachedView) {
                     listOrigins.render();
@@ -74,5 +75,4 @@ define("plugin/shop/toolbox/js/view/productManager", [
     });
 
     return ProductManager;
-
 });

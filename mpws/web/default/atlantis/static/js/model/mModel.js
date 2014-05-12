@@ -58,7 +58,7 @@ define("default/js/model/mModel", [
             },
 
             fetch: function (options, fetchOptions) {
-                this.url = this.getUrl(options || {});
+                this.url = (_.isString(this.url) && !_.isEmpty(this.url)) ? this.url : this.getUrl(options || {});
                 var rez = Backbone.Model.prototype.fetch.call(this, fetchOptions || options || {});
                 return rez;
             }

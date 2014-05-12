@@ -1,18 +1,19 @@
-<div class="toolbox-logo">{{lang.pluginLogoText}}</div>
-<div class="panel panel-success">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a data-toggle="collapse" href="#collapsePluginToolbox"><span class="glyphicon glyphicon-cog"></span>{{lang.pluginMenuTitle}}</a>
-        </h4>
-    </div>
-    <div id="collapsePluginToolbox" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                <a href="#toolbox/profile" class="list-group-item auto-active">{{lang.pluginMenu_Profile}}</a>
-                <a href="#toolbox/administrators" class="list-group-item auto-active">{{lang.pluginMenu_Administrators}}</a>
-                <a href="#toolbox/version" class="list-group-item auto-active">{{lang.pluginMenu_Version}}</a>
-                <a href="#signout" class="list-group-item auto-active">{{lang.pluginMenu_Logout}}</a>
-            </div>
-        </div>
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <ul id="sidebar_menu" class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a id="menu-toggle" href="javascript://">
+                    {{!-- {{lang.pluginLogoText}} --}}
+                    Toolbox
+                    <span id="main_icon" class="fa fa-align-justify"></span>
+                </a>
+            </li>
+        </ul>
+        <ul class="sidebar-nav" id="sidebar" name="PluginToolboxMenuList">
+            <li><a href="#toolbox/profile">{{lang.pluginMenu_Profile}}</a></li>
+            <li><a href="#toolbox/administrators">{{lang.pluginMenu_Administrators}}</a></li>
+            <li><a href="#toolbox/version">{{lang.pluginMenu_Version}}</a></li>
+            <li class="text-danger"><a href="#signout">{{lang.pluginMenu_Logout}}<span class="sub_icon fa fa-power-off"></span></a></li>
+        </ul>
     </div>
 </div>

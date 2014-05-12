@@ -13,12 +13,11 @@ define("plugin/shop/toolbox/js/view/menu", [
     }))();
 
     // debugger;
-    Sandbox.eventSubscribe('plugin:toolbox:render:complete', function () {
+    Sandbox.eventSubscribe('plugin:toolbox:menu:ready', function () {
         // debugger;
         menu.render();
 
         Sandbox.eventNotify('plugin:toolbox:menu:display', {
-            name: 'CommonBodyLeft',
             el: menu.$el,
             append: true,
             keepExisted: true

@@ -47,11 +47,6 @@ define("plugin/shop/toolbox/js/router", [
                     return dashboard;
                 });
             });
-            // debugger;
-            Sandbox.eventNotify('plugin:toolbox:page:show', {
-                name: 'ShopDashboard',
-                el: $('<div>').text('34 New Orders')
-            });
         },
 
         products: function () {

@@ -14,8 +14,8 @@ define("plugin/toolbox/toolbox/nls/ua_uk/translation", [
         // menu items
         pluginMenuTitle: 'Панель керування',
         pluginMenu_Profile: 'Профіль',
-        pluginMenu_Administrators: 'Адміністратори',
-        pluginMenu_Version: 'Версія програми',
-        pluginMenu_Logout: 'Завершити сесію',
+        pluginMenu_Administrators: 'Адміни',
+        pluginMenu_Version: 'Версія',
+        pluginMenu_Logout: 'Вийти',
     }, CustomerPluginToolbox);
 });

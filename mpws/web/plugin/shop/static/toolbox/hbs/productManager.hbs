@@ -1,24 +1,26 @@
-<div class="row well">
-
-    <button class="button button-add-product" data-action="plugin:shop:product:add">
-      <i class="fa fa-plus-circle"></i>
-      Новий товар
-    </button>
-      <button class="button button-add-category" data-action="plugin:shop:category:add">
-        <i class="fa fa-plus-circle"></i>
-        Нова категорія
-      </button>
-    <button class="button button-add-origin" data-action="plugin:shop:origin:add">
-      <i class="fa fa-plus-circle"></i>
-      Новий виробник
-    </button>
-
-</div>
-
 <!-- categories and orgins container -->
 <div class="row">
-    <div class="col-md-6 shop-categories"></div>
-    <div class="col-md-6 shop-origins"></div>
+    <div class="col-md-3">
+        <div class="well clearfix shop-manager-buttons-create">
+            <button class="button show col-md-12 text-left button-add-product" data-action="plugin:shop:product:add">
+                <i class="fa fa-plus-circle"></i>
+                Товар
+            </button>
+            <button class="button show col-md-12 text-left button-add-category" data-action="plugin:shop:category:add">
+                <i class="fa fa-plus-circle"></i>
+                Категорія
+            </button>
+            <button class="button show col-md-12 text-left button-add-origin" data-action="plugin:shop:origin:add">
+                <i class="fa fa-plus-circle"></i>
+                Виробник
+            </button>
+        </div>
+        <div class="shop-categories"></div>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-4 shop-origins"></div>
+            <div class="col-md-8 shop-products"></div>
+        </div>
+    </div>
 </div>
-
-<div class="row shop-products"></div>

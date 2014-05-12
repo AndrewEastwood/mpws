@@ -13,10 +13,9 @@ define("plugin/account/toolbox/js/view/menu", [
     }))();
 
     // debugger;
-    Sandbox.eventSubscribe('plugin:toolbox:render:complete', function () {
+    Sandbox.eventSubscribe('plugin:toolbox:menu:ready', function () {
         toolboxMenuAccount.render();
         Sandbox.eventNotify('plugin:toolbox:menu:display', {
-            name: 'CommonBodyLeft',
             el: toolboxMenuAccount.$el,
             append: true,
             keepExisted: true

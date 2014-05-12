@@ -1,19 +1,20 @@
 define('plugin/shop/toolbox/js/collection/listOrigins', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
-    'default/js/lib/backbone-pageable',
+    'default/js/lib/backbone-pageable'
 ], function (Sandbox, _, PageableCollection) {
 
     var ListProducts = PageableCollection.extend({
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'shop_manage_origins'
+            fn: 'shop_manage_origins',
+            action: 'list'
         }),
 
         // Initial pagination states
         state: {
-            pageSize: 5,
+            pageSize: 1000,
             // sortKey: "updated",
             order: 1
         },
@@ -27,21 +28,17 @@ define('plugin/shop/toolbox/js/collection/listOrigins', [
             // q: "state:closed repo:jashkenas/backbone"
         },
 
-        parseState: function (resp, queryParams, state, options) {
-            var state = {
-                totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
-            };
-            Sandbox.eventNotify('plugin:shop:productList:parseState', {collection: this, state: state});
-            return state;
-        },
+        // parseState: function (resp, queryParams, state, options) {
+        //     var state = {
+        //         totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
+        //     };
+        //     Sandbox.eventNotify('plugin:shop:productList:parseState', {collection: this, state: state});
+        //     return state;
+        // },
 
-        parseRecords: function (resp, options) {
-            var products = resp && resp.shop && resp.shop.products || [];
-
-            for (var row in products)
-                products[row].Price = parseFloat(products[row].Price, 10);
-
-            return products;
+        parseRecords: function (resp) {
+            var origins = resp && resp.shop && resp.shop.origins || [];
+            return origins;
         }
 
     });

@@ -89,7 +89,7 @@ define("plugin/toolbox/toolbox/js/router", [
 
     Sandbox.eventSubscribe('plugin:toolbox:menu:display', function (options) {
         Sandbox.eventNotify('global:content:render', _.extend({}, options, {
-            name: 'CommonBodyLeft',
+            name: options.name || 'PluginToolboxMenuList',
         }));
         // sort nodes
         // debugger;
