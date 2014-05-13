@@ -15,6 +15,8 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     'default/js/lib/bootstrap-tagsinput',
 ], function (Sandbox, MView, CollectionListProducts, BootstrapDialog, Backgrid, tpl, lang) {
 
+    var productLists = ["Active", "Inactive", "Uncompleted", "Sales", "Defects", "Popular", "NotPopular", "Archived"];
+
     var columnActions = {
         name: "Actions",
         label: lang.pluginMenu_Products_Grid_Column_Actions,
@@ -101,6 +103,47 @@ define("plugin/shop/toolbox/js/view/listProducts", [
 
     var columns = [columnActions, columnName, columnModel, columnSKU, columnSellMode, columnPrice, columnStatus, columnDateUpdated, columnDateCreated];
 
+    var _getTableCreateFn = function (type) {
+        var collection = new CollectionListProducts();
+
+        // set collection status
+        collection.queryParams.type = type;
+
+        var ToolboxListProductsGrid = new Backgrid.Grid({
+            className: "backgrid table table-responsive",
+            columns: columns,
+            collection: collection
+        });
+
+        var Paginator = new Backgrid.Extension.Paginator({
+
+            // If you anticipate a large number of pages, you can adjust
+            // the number of page handles to show. The sliding window
+            // will automatically show the next set of page handles when
+            // you click next at the end of a window.
+            windowSize: 30, // Default is 10
+
+            // Used to multiple windowSize to yield a number of pages to slide,
+            // in the case the number is 5
+            slideScale: 0.25, // Default is 0.5
+
+            // Whether sorting should go back to the first page
+            // goBackFirstOnSort: false, // Default is true
+
+            collection: collection
+        });
+
+        return {
+            type: type,
+            collection: collection,
+            Grid: ToolboxListProductsGrid,
+            Paginator: Paginator,
+            fetch: function (options) {
+                collection.fetch(options);
+            }
+        }
+    }
+
     var ListProducts = MView.extend({
         className: 'shop-toolbox-products col-md-12',
         template: tpl,
@@ -111,59 +154,16 @@ define("plugin/shop/toolbox/js/view/listProducts", [
 
             var self = this;
 
-            var _getTableCreateFn = function (type) {
-                var collection = new CollectionListProducts();
-
-                // set collection status
-                collection.queryParams.type = type;
-
-                var ToolboxListProductsGrid = new Backgrid.Grid({
-                    className: "backgrid table table-responsive",
-                    columns: columns,
-                    collection: collection
-                });
-
-                var Paginator = new Backgrid.Extension.Paginator({
-
-                    // If you anticipate a large number of pages, you can adjust
-                    // the number of page handles to show. The sliding window
-                    // will automatically show the next set of page handles when
-                    // you click next at the end of a window.
-                    windowSize: 20, // Default is 10
-
-                    // Used to multiple windowSize to yield a number of pages to slide,
-                    // in the case the number is 5
-                    slideScale: 0.25, // Default is 0.5
-
-                    // Whether sorting should go back to the first page
-                    // goBackFirstOnSort: false, // Default is true
-
-                    collection: collection
-                });
-
-                return {
-                    type: type,
-                    collection: collection,
-                    Grid: ToolboxListProductsGrid,
-                    Paginator: Paginator,
-                    fetch: function (options) {
-                        collection.fetch(options);
-                    }
-                }
-            }
-
-            var _productsByTypes = null;
-
             // refresh all lists
             // debugger;
-            Sandbox.eventSubscribe("plugin:shop:productList:refresh", function () {
-                if (!!!_productsByTypes)
-                    return;
+            // Sandbox.eventSubscribe("plugin:shop:productList:refresh", function () {
+            //     if (!!!_productsByTypes)
+            //         return;
 
-                _(_productsByTypes).each(function(productList) {
-                    productList.fetch({reset: true});
-                });
-            });
+            //     _(_productsByTypes).each(function(productList) {
+            //         productList.fetch({reset: true});
+            //     });
+            // });
 
             // when we know how many records are availabel of particular filter
             // we do update  tapPage badge with records count
@@ -177,19 +177,20 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             this.on('mview:renderComplete', function () {
 
                 // debugger;
-                _productsByTypes = _productsByTypes || self.$('ul.nav-tabs > li').map(function() {
-                    // debugger;
-                    if ($(this).data('type'))
-                        return _getTableCreateFn($(this).data('type'));
-                });
+                // _productsByTypes = _productsByTypes || self.$('ul.nav-tabs > li').map(function() {
+                //     // debugger;
+                //     if ($(this).data('type'))
+                //         return _getTableCreateFn($(this).data('type'));
+                // });
 
-                // display products lists
-                _(_productsByTypes).each(function(productListBuilder){
-                    var $tabPage = self.$('.tab-pane#product_type_' + productListBuilder.type + '-ID');
+                _(productLists).map(function(listType) {
+                    // debugger;
+                    var listItem = _getTableCreateFn(listType);
+                    var $tabPage = self.$('.tab-pane#product_type_' + listItem.type + '-ID');
                     $tabPage.empty();
-                    $tabPage.append(productListBuilder.Grid.render().el);
-                    $tabPage.append(productListBuilder.Paginator.render().el);
-                    productListBuilder.fetch({reset: true});
+                    $tabPage.append(listItem.Grid.render().el);
+                    $tabPage.append(listItem.Paginator.render().el);
+                    listItem.fetch({reset: true});
                 });
 
                 // fetch products with filter

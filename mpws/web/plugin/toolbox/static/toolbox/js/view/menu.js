@@ -22,13 +22,13 @@ define("plugin/toolbox/toolbox/js/view/menu", [
             });
         },
         refreshLayout: function () {
-            if ($("#wrapper").hasClass("active"))
+            if ($("#menu-wrapper-ID").hasClass("active"))
                 $("body").addClass("toolbox-menu-active");
             else
                 $("body").removeClass("toolbox-menu-active");
         },
         toggleMenu: function (e) {
-            this.$("#wrapper").toggleClass("active");
+            this.$("#menu-wrapper-ID").toggleClass("active");
             this.refreshLayout();
             e.preventDefault();
         }

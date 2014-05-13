@@ -24,25 +24,10 @@ define("plugin/shop/toolbox/js/view/productManager", [
         var popupProduct = new PopupProduct();
         popupProduct.fetchAndRender();
     });
+
     Sandbox.eventSubscribe('plugin:shop:product:edit', function(data){
         var popupProduct = new PopupProduct();
         popupProduct.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:category:add', function(data){
-        var popupCategory = new PopupCategory();
-        popupCategory.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:category:edit', function(data){
-        var popupCategory = new PopupCategory();
-        popupCategory.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
-        var popupOrigin = new PopupOrigin();
-        popupOrigin.fetchAndRender();
-    });
-    Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
-        var popupOrigin = new PopupOrigin();
-        popupOrigin.fetchAndRender();
     });
 
     var ProductManager = MView.extend({

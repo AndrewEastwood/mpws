@@ -187,7 +187,6 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
     for (var key in APP.config.PLUGINS)
         modules.push('plugin/' + APP.config.PLUGINS[key] + '/' + (APP.config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
 
-
     require(modules, function(){
         var _pluginsObjects = [].slice.call(arguments);
         // initialize plugins

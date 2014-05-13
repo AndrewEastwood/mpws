@@ -4,6 +4,6 @@ define("plugin/account/toolbox/nls/ua_uk/translation", [
     'website/nls/ua_uk/plugin_account'
 ], function (_, CustomerPluginAccount) {
     return _.extend({}, {
-        pluginMenu_Profile: 'Профілі'
+        pluginMenu_Profile: 'Користувачі'
     }, CustomerPluginAccount);
 });

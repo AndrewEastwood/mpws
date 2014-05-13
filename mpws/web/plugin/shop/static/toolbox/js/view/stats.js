@@ -1,10 +1,10 @@
-define("plugin/shop/toolbox/js/view/dashboard", [
+define("plugin/shop/toolbox/js/view/stats", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/shop/toolbox/js/model/dashboard',
+    'plugin/shop/toolbox/js/model/stats',
     'default/js/lib/bootstrap-dialog',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/dashboard',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/stats',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     // "default/js/lib/select2/select2",
@@ -12,14 +12,14 @@ define("plugin/shop/toolbox/js/view/dashboard", [
     /* charts */
     'default/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
     'default/js/plugin/goog!visualization,1,packages:[corechart,geochart]',
-], function (Sandbox, MView, ModelDashboard, BootstrapDialog, tpl, lang) {
+], function (Sandbox, MView, ModelStats, BootstrapDialog, tpl, lang) {
 
-    var dashboardModel = new ModelDashboard();
+    var statsModel = new ModelStats();
     return MView.extend({
-        id: 'shop-dashboard-ID',
+        id: 'shop-stats-ID',
         lang: lang,
         template: tpl,
-        model: dashboardModel,
+        model: statsModel,
         events: {
             'click #refresh': 'refresh'
         },

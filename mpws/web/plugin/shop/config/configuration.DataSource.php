@@ -4,6 +4,7 @@ class configurationShopDataSource extends objectConfiguration {
 
     static $Table_ShopOrders = "shop_orders";
     static $Table_ShopProducts = "shop_products";
+    static $Table_ShopOrigins = "shop_origins";
 
     // Product base configuration >>>>>
     static function jsapiShopProductItemGet () {

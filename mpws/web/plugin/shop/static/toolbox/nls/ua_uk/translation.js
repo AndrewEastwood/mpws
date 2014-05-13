@@ -24,6 +24,10 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders: 'Замовлення',
         pluginMenu_Offers: 'Акції та Розпродаж',
         pluginMenu_Reports: 'Звіти',
+        //
+        pluginMenu_ProductManager_Button_Create_Product: "Товар",
+        pluginMenu_ProductManager_Button_Create_Category: "Категорія",
+        pluginMenu_ProductManager_Button_Create_Origin: "Виробник",
         // Order list
         pluginMenu_Orders_Grid_Column_ID: "#",
         pluginMenu_Orders_Grid_Column_Shipping: "Доставка",
@@ -31,14 +35,16 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders_Grid_Column_Warehouse: "Склад",
         pluginMenu_Orders_Grid_Column_DateCreated: "Створений",
         pluginMenu_Orders_Grid_Column_DateUpdated: "Оновлений",
-        pluginMenu_Orders_Grid_Column_Actions: "Операції",
-        pluginMenu_Orders_Grid_link_Edit: "Редагувати",
+        pluginMenu_Orders_Grid_Column_Actions: "",
+        pluginMenu_Orders_Grid_link_Edit: "Ред.",
         pluginMenu_Orders_Grid_link_ShowDeleted: "Показати виконані",
         // Order popup
         orderEntry_Popup_title: "Замовлення #",
         orderEntry_Popup_section_boughts: "Список придбаних товарів:",
         orderEntry_Popup_control_status: "Виберіть статус замовлення",
         orderEntry_Popup_button_Close: "Закрити",
+        // Category tree
+        pluginMenu_Categories_Tree_Title: "Категорії",
         // Category popup
         popup_category_title: "Категорія",
         popup_category_section_details_title: "Деталі категорії:",
@@ -54,6 +60,13 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_category_button_addProp: "",
         popup_category_button_removeProp: "Видалити",
         popup_category_button_Close: "Закрити",
+        // Origin list
+        pluginMenu_Origins_Grid_Title: "Виробники",
+        pluginMenu_Origins_Grid_Search_placeholder: "Пошук у виробниках",
+        pluginMenu_Origins_Grid_Column_Name: "Назва",
+        pluginMenu_Origins_Grid_Column_Status: "Статус",
+        pluginMenu_Origins_Grid_Column_Actions: "",
+        pluginMenu_Origins_Grid_link_Edit: "Ред.",
         // Origin popup
         popup_origin_title: "Виробник",
         popup_origin_section_details_title: "Деталі виробника:",
@@ -72,7 +85,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Products_Grid_Column_Status: "Статус",
         pluginMenu_Products_Grid_Column_DateUpdated: "Оновлений",
         pluginMenu_Products_Grid_Column_DateCreated: "Створений",
-        pluginMenu_Products_Grid_Column_Actions: "Операції",
+        pluginMenu_Products_Grid_Column_Actions: "",
         pluginMenu_Products_Grid_Column_SellMode: "Продаж",
         product_type_Active: "Активні",
         product_type_Inactive: "Неактивні",

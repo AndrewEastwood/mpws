@@ -11,7 +11,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-htmlcell",
     'default/js/lib/backgrid-filter',
-], function (Sandbox, MView, Backgrid, CollectionListProducts, tpl, lang) {
+], function (Sandbox, MView, Backgrid, CollectionListOrigins, tpl, lang) {
 
     var columnActions = {
         name: "Actions",
@@ -26,7 +26,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
                     href: "javascript://",
                     "data-oid": model.get('ID'),
                     "data-action": "plugin:shop:origin:edit"
-                }).text(lang.pluginMenu_Orders_Grid_link_Edit);
+                }).text(lang.pluginMenu_Origins_Grid_link_Edit);
                 // debugger;
                 return _link;
             }
@@ -35,14 +35,14 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
 
     var columnName = {
         name: "Name",
-        label: lang.pluginMenu_Products_Grid_Column_Name,
+        label: lang.pluginMenu_Origins_Grid_Column_Name,
         cell: "string",
         // editable: false,
     };
 
     var columnStatus = {
         name: "Status",
-        label: lang.pluginMenu_Products_Grid_Column_Status,
+        label: lang.pluginMenu_Origins_Grid_Column_Status,
         cell: "boolean",
         editable: true,
         formatter: {
@@ -55,20 +55,6 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
         }
     };
 
-    var columnDateUpdated = {
-        name: "DateUpdated",
-        label: lang.pluginMenu_Products_Grid_Column_DateUpdated,
-        cell: "string",
-        editable: false
-    };
-
-    var columnDateCreated = {
-        name: "DateCreated",
-        label: lang.pluginMenu_Products_Grid_Column_DateCreated,
-        cell: "string",
-        editable: false
-    };
-
     var columns = [columnActions, columnName, columnStatus];
 
     var ListOrigins = MView.extend({
@@ -78,7 +64,18 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
         initialize: function () {
             var self = this;
             MView.prototype.initialize.call(this);
-            var collection = new CollectionListProducts();
+
+            Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
+                var popupOrigin = new PopupOrigin();
+                popupOrigin.fetchAndRender();
+            });
+            Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
+                var popupOrigin = new PopupOrigin();
+                popupOrigin.fetchAndRender();
+            });
+
+
+            var collection = new CollectionListOrigins();
 
             var Grid = new Backgrid.Grid({
                 className: "backgrid table table-responsive",
@@ -86,20 +83,6 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
                 collection: collection
             });
             var Paginator = new Backgrid.Extension.Paginator({
-
-                // If you anticipate a large number of pages, you can adjust
-                // the number of page handles to show. The sliding window
-                // will automatically show the next set of page handles when
-                // you click next at the end of a window.
-                windowSize: 20, // Default is 10
-
-                // Used to multiple windowSize to yield a number of pages to slide,
-                // in the case the number is 5
-                slideScale: 0.25, // Default is 0.5
-
-                // Whether sorting should go back to the first page
-                // goBackFirstOnSort: false, // Default is true
-
                 collection: collection
             });
             // ClientSideFilter performs a case-insensitive regular
@@ -107,7 +90,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
             // the search box together.
             var clientSideFilter = new Backgrid.Extension.ClientSideFilter({
                 collection: collection,
-                placeholder: "Пошук у виробниках",
+                placeholder: lang.pluginMenu_Origins_Grid_Search_placeholder,
                 // The model fields to search for matches
                 fields: ['Name'],
                 // How long to wait after typing has stopped before searching can start

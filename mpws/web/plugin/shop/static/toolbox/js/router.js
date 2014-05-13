@@ -9,8 +9,8 @@ define("plugin/shop/toolbox/js/router", [
 
     var Router = Backbone.Router.extend({
         routes: {
-            "shop/dashboard": "dashboard",
-            "shop/products": "products",
+            "shop/stats": "stats",
+            "shop/product_manager": "product_manager",
             "shop/orders": "orders",
             "shop/sales": "sales",
             "shop/prices": "prices",
@@ -19,37 +19,37 @@ define("plugin/shop/toolbox/js/router", [
         initialize: function () {
             var self = this;
             Sandbox.eventSubscribe('global:page:index', function () {
-                self.dashboard();
+                self.stats();
             });
         },
 
-        dashboard: function () {
-            require(['plugin/shop/toolbox/js/view/dashboard'], function (Dashboard) {
+        stats: function () {
+            require(['plugin/shop/toolbox/js/view/stats'], function (Stats) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('Dashboard', function (cachedView) {
+                Cache.withObject('Stats', function (cachedView) {
                     // debugger;
                     // remove previous view
                     // if (cachedView && cachedView.remove)
                     //     cachedView.remove();
 
                     // create new view
-                    var dashboard = cachedView || new Dashboard();
+                    var stats = cachedView || new Stats();
 
-                    dashboard.fetchAndRender();
+                    stats.fetchAndRender();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopDashboard',
-                        el: dashboard.$el
+                        el: stats.$el
                     });
 
                     // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
                     // return view object to pass it into this function at next invocation
-                    return dashboard;
+                    return stats;
                 });
             });
         },
 
-        products: function () {
+        product_manager: function () {
 
             require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
                 // using this wrapper to cleanup previous view and create new one

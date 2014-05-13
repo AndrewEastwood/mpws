@@ -108,7 +108,7 @@ class pluginShop extends objectPlugin {
                         $data = $this->_api_getOrder($orderID);
                         break;
                     case 'list':
-                        $data = $this->_api_orderListGet();
+                        $data = $this->_api_getOrderList();
                         break;
                 }
                 break;
@@ -167,7 +167,7 @@ class pluginShop extends objectPlugin {
                 }
                 break;
             }
-            case "toolbox_dashboard": {
+            case "shop_manage_stats": {
                 $data = $this->_api_getToolbox_Dashboard();
                 break;
             }
@@ -853,7 +853,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_orderListGet () {
+    private function _api_getOrderList () {
         // in toolbox methods we must check it's permission
         // offset
         // limit
@@ -1023,6 +1023,31 @@ class pluginShop extends objectPlugin {
 
     private function _api_getProductList_Popular () {
         return $this->_api_getProductList_Base();
+        // get top 50 products
+        $configBestProducts = configurationShopDataSource::jsapiShopStat_BestSellingProducts();
+        $dataBestProducts = $this->getCustomer()->processData($configBestProducts);
+        if (!empty($dataBestProducts))
+            foreach ($dataBestProducts as $key => $dataProductSoldStat) {
+                $productItemObject = $this->_api_getProduct($dataProductSoldStat['ProductID']);
+                if ($productItemObject->hasData())
+                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
+                else
+                    $dataBestProducts[$key]['Product'] = null;
+            }
+        $dataObj->setData('products_best', $dataBestProducts);
+
+        // get non-popuplar 50 products
+        $configWorstProducts = configurationShopDataSource::jsapiShopStat_WorstSellingProducts();
+        $dataWorstProducts = $this->getCustomer()->processData($configWorstProducts);
+        if (!empty($dataWorstProducts))
+            foreach ($dataWorstProducts as $key => $dataProduct) {
+                $productItemObject = $this->_api_getProduct($dataProduct['ID']);
+                if ($productItemObject->hasData())
+                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
+                else
+                    $dataWorstProducts[$key]['Product'] = null;
+            }
+        $dataObj->setData('products_worst', $dataWorstProducts);
     }
 
     private function _api_getProductList_NotPopular () {
@@ -1119,12 +1144,40 @@ class pluginShop extends objectPlugin {
     private function _api_getOriginList () {
         $dataObj = new libraryDataObject();
 
-        $configOrders = configurationShopDataSource::jsapiShopOriginListGet();
-        $dataOrders = $this->getCustomer()->processData($configOrders);
+        $configOrigins = configurationShopDataSource::jsapiShopOriginListGet();
+        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrigins);
 
+        // pagination
+        $page = libraryRequest::getValue('page');
+        $per_page = libraryRequest::getValue('per_page');
+
+        $configOrigins['limit'] = $per_page;
+
+        if (!empty($page) && !empty($per_page)) {
+            $configOrigins['offset'] = ($page - 1) * $per_page;
+        }
+
+        // sorting
+        $sort = libraryRequest::getValue('sort');
+        $order = libraryRequest::getValue('order');
+
+        if (!empty($sort) && !empty($order)) {
+            $configOrigins["order"] = array(
+                "field" =>  'shop_origins' . DOT . $sort,
+                "ordering" => strtoupper($order)
+            );
+        }
+
+        $configCount['additional'] = new ArrayObject($configOrigins['additional']);
+        $configCount['condition'] = new ArrayObject($configOrigins['condition']);
+
+        $dataOrders = $this->getCustomer()->processData($configOrigins);
         $dataObj->setData('origins', $dataOrders);
-        return $dataObj;
 
+        $dataCount = $this->getCustomer()->processData($configCount);
+        $dataObj->setData('total_count', $dataCount['ItemsCount']);
+
+        return $dataObj;
     }
 
     private function _api_getToolbox_Dashboard () {

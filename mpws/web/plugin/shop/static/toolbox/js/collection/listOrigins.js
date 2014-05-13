@@ -14,10 +14,12 @@ define('plugin/shop/toolbox/js/collection/listOrigins', [
 
         // Initial pagination states
         state: {
-            pageSize: 1000,
+            pageSize: 15,
             // sortKey: "updated",
             order: 1
         },
+
+        mode: "client",
 
         // You can remap the query parameters from `state` keys from
         // the default to those your server supports
@@ -28,13 +30,13 @@ define('plugin/shop/toolbox/js/collection/listOrigins', [
             // q: "state:closed repo:jashkenas/backbone"
         },
 
-        // parseState: function (resp, queryParams, state, options) {
-        //     var state = {
-        //         totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
-        //     };
-        //     Sandbox.eventNotify('plugin:shop:productList:parseState', {collection: this, state: state});
-        //     return state;
-        // },
+        parseState: function (resp, queryParams, state, options) {
+            var state = {
+                totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
+            };
+            Sandbox.eventNotify('plugin:shop:originList:parseState', {collection: this, state: state});
+            return state;
+        },
 
         parseRecords: function (resp) {
             var origins = resp && resp.shop && resp.shop.origins || [];

@@ -3,7 +3,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
     'default/js/view/mView',
     'plugin/shop/toolbox/js/model/categoriesTree',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/listCategories',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/categoriesTree',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
@@ -19,15 +19,27 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
             MView.prototype.initialize.call(this);
             var self = this;
 
+            Sandbox.eventSubscribe('plugin:shop:category:add', function(data){
+                // var popupCategory = new PopupCategory();
+                // popupCategory.fetchAndRender();
+            // $("#add").click(function() {
+                // self.$('#jstree_categories-ID').jstree("create", $("#child1.id"), "inside",  { "data" : "child2" },
+                //                   function() { alert("added"); }, true);
+            // });
+            });
+
+            Sandbox.eventSubscribe('plugin:shop:category:edit', function(data){
+                // var popupCategory = new PopupCategory();
+                // popupCategory.fetchAndRender();
+            });
+
             this.on('mview:renderComplete', function () {
                 // debugger;
                 self.$('#jstree_categories-ID').jstree({
-                    "core" : {
-                        "theme" : {
-                            "variant" : "large"
-                        }
-                    },
-                    "plugins" : [ "wholerow", "checkbox" ]
+                    "plugins" : [
+                        "contextmenu", "dnd", "search",
+                        "state", "types", "wholerow"
+                      ]
                 });
             });
         }
