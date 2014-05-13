@@ -11,34 +11,57 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, MView, ModelOriginItem, ShopUtils, BootstrapDialog, tpl, lang) {
 
-    var originItemModel = new ModelOriginItem();
-    var OrderItem = MView.extend({
+
+    // var originItemModel = ;
+    var OriginItem = MView.extend({
         template: tpl,
         lang: lang,
-        model: originItemModel,
-        initialize: function () {
+        model: new ModelOriginItem(),
+        initialize: function (isEdit) {
             MView.prototype.initialize.call(this);
             var self = this;
-            var dialogIsShown = false;
+            var isEdit = this.model.lastFetchUrlOptions.originID;
+
+            var dlg = new BootstrapDialog({
+                cssClass: 'shop-toolbox-origin-edit',
+                buttons: [{
+                    label: isEdit ? lang.popup_origin_button_Close : lang.popup_origin_button_Save,
+                    action: function (dialog) {
+                        // dialogIsShown = false;
+                        dialog.close();
+                    }
+                }]
+            });
+
+            if (isEdit)
+                dlg.setTitle(lang.popup_origin_title_edit);
+            else
+                dlg.setTitle(lang.popup_origin_title_new);
+
             this.on('mview:renderComplete', function () {
-                var orderID = this.model.get('order').ID;
-                if (!dialogIsShown)
-                    BootstrapDialog.show({
-                        title: lang.orderEntry_Popup_title + orderID,
-                        message: self.$el,
-                        cssClass: 'shop-toolbox-origin-edit',
-                        onhidden: function(dialogRef){
-                            dialogIsShown = false;
-                        },
-                        buttons: [{
-                            label: lang.orderEntry_Popup_button_OK,
-                            action: function (dialog) {
-                                dialogIsShown = false;
-                                dialog.close();
-                            }
-                        }]
-                    });
-                dialogIsShown = true;
+
+                dlg.setMessage(this.$el);
+
+                if (!dlg.isOpened())
+                    dlg.open();
+                // var orderID = this.model.get('order').ID;
+                // if (!dialogIsShown)
+                //     BootstrapDialog.show({
+                //         title: lang.orderEntry_Popup_title + orderID,
+                //         message: self.$el,
+                //         cssClass: 'shop-toolbox-origin-edit',
+                //         onhidden: function(dialogRef){
+                //             dialogIsShown = false;
+                //         },
+                //         buttons: [{
+                //             label: lang.orderEntry_Popup_button_OK,
+                //             action: function (dialog) {
+                //                 dialogIsShown = false;
+                //                 dialog.close();
+                //             }
+                //         }]
+                //     });
+                // dialogIsShown = true;
                 // var source = self.$('#order-status-control-ID option').map(function(idx, option){
                 //     return {
                 //         value: $(option).attr('value'),
@@ -62,12 +85,12 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
                 //         self.render();
                 //     });
                 // });
-                self.$('.helper').tooltip();
+                // self.$('.helper').tooltip();
             });
             // order-status-ID
         }
     });
 
-    return OrderItem;
+    return OriginItem;
 
 });

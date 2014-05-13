@@ -57,9 +57,18 @@ define("default/js/model/mModel", [
                 return typeof this.extras[key] !== "undefined";
             },
 
+            lastFetchUrlOptions: {},
+            lastFetchOptions: {},
+
             fetch: function (options, fetchOptions) {
-                this.url = (_.isString(this.url) && !_.isEmpty(this.url)) ? this.url : this.getUrl(options || {});
+                debugger;
+                this.lastFetchUrlOptions = options;
+                this.lastFetchOptions = fetchOptions;
+                var _url = (_.isString(this.url) && !_.isEmpty(this.url)) ? this.url : this.getUrl(options || {});
+                var _origUrl = this.url;
+                this.url = _url;
                 var rez = Backbone.Model.prototype.fetch.call(this, fetchOptions || options || {});
+                this.url = _origUrl;
                 return rez;
             }
 

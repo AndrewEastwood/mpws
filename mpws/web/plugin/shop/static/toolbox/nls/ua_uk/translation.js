@@ -39,10 +39,10 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders_Grid_link_Edit: "Ред.",
         pluginMenu_Orders_Grid_link_ShowDeleted: "Показати виконані",
         // Order popup
-        orderEntry_Popup_title: "Замовлення #",
-        orderEntry_Popup_section_boughts: "Список придбаних товарів:",
-        orderEntry_Popup_control_status: "Виберіть статус замовлення",
-        orderEntry_Popup_button_Close: "Закрити",
+        popup_order_title: "Замовлення #",
+        popup_order_section_boughts: "Список придбаних товарів:",
+        popup_order_control_status: "Виберіть статус замовлення",
+        popup_order_button_Close: "Закрити",
         // Category tree
         pluginMenu_Categories_Tree_Title: "Категорії",
         // Category popup
@@ -68,7 +68,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Origins_Grid_Column_Actions: "",
         pluginMenu_Origins_Grid_link_Edit: "Ред.",
         // Origin popup
-        popup_origin_title: "Виробник",
+        popup_origin_title_new: "Редагування виробника",
+        popup_origin_title_edit: "Створення виробника",
         popup_origin_section_details_title: "Деталі виробника:",
         popup_origin_section_details_filed_name: "Назва:",
         popup_origin_section_details_filed_description: "Опис:",
@@ -77,6 +78,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_origin_section_details_filed_dateUpdated: "Дата оновлення:",
         popup_origin_section_details_filed_dateCreated: "Дата сворення:",
         popup_origin_button_Close: "Закрити",
+        popup_origin_button_Save: "Зберегти",
+        // popup_origin_button_Update: "Обновити",
         // Product list
         pluginMenu_Products_Grid_Column_Name: "Назва",
         pluginMenu_Products_Grid_Column_Model: "Модель",

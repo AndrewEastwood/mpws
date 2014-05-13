@@ -65,16 +65,6 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
             var self = this;
             MView.prototype.initialize.call(this);
 
-            Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
-                var popupOrigin = new PopupOrigin();
-                popupOrigin.fetchAndRender();
-            });
-            Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
-                var popupOrigin = new PopupOrigin();
-                popupOrigin.fetchAndRender();
-            });
-
-
             var collection = new CollectionListOrigins();
 
             var Grid = new Backgrid.Grid({

@@ -1,17 +1,43 @@
 <div class="panel">
+    <form class="form-horizontal">
+        <fieldset>
 
-
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Деталі виробника:</h4>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <span class="prefix">Дата створення:</span>
-                    <span><strong>{{data.order.DateCreated}}</strong></span>
-                </li>
-            </ul>
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
+          <div class="col-md-4">
+            <input id="textinput" name="textinput" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.origin.Name}}">
+          </div>
         </div>
 
-    </div>
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_description}}</label>
+          <div class="col-md-4">
+            <textarea class="form-control" id="textarea" name="textarea">{{data.origin.Description}}</textarea>
+          </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_url}}</label>
+          <div class="col-md-4">
+            <input id="textinput" name="textinput" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.origin.HomePage}}">
+          </div>
+        </div>
+
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="selectbasic">{{lang.popup_origin_section_details_filed_status}}</label>
+          <div class="col-md-4">
+            <select id="selectbasic" name="selectbasic" class="form-control">
+              <option value="ACTIVE">Активний</option>
+              <option value="REMOVED">Не активний</option>
+            </select>
+          </div>
+        </div>
+
+        </fieldset>
+    </form>
 
 </div>

@@ -238,7 +238,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiShopOrdersGettatusGet ($orderHash) {
+    static function jsapiShopOrdersGetStatus ($orderHash) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_orders",
@@ -368,14 +368,14 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Statistic: best and worst selling products
 
     // >>>> Origins
-    static function jsapiShopOriginGet () {
+    static function jsapiShopOriginGet ($originID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_origins",
             "fields" => array("ID", "Name", "Description", "HomePage", "Status"),
             "condition" => array(
-                "filter" => "Status (=) ?",
-                "values" => array("ACTIVE")
+                "filter" => "ID (=) ?",
+                "values" => array($originID)
             ),
             "limit" => 1,
             "options" => array(
@@ -384,7 +384,11 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
     static function jsapiShopOriginListGet () {
-        $config = self::jsapiShopOriginGet();
+        $config = self::jsapiShopOriginGet(null);
+        $config['condition'] = array(
+            "filter" => "",
+            "values" => array()
+        );
         unset($config['options']);
         $config['limit'] = 0;
         return $config;

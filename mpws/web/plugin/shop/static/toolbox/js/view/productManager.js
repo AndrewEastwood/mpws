@@ -27,7 +27,22 @@ define("plugin/shop/toolbox/js/view/productManager", [
 
     Sandbox.eventSubscribe('plugin:shop:product:edit', function(data){
         var popupProduct = new PopupProduct();
-        popupProduct.fetchAndRender();
+        popupProduct.fetchAndRender({
+            productID: data.oid
+        });
+    });
+
+    Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
+        var popupOrigin = new PopupOrigin();
+        popupOrigin.fetchAndRender();
+    });
+
+    Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
+        // debugger;
+        var popupOrigin = new PopupOrigin();
+        popupOrigin.fetchAndRender({
+            originID: data.oid
+        });
     });
 
     var ProductManager = MView.extend({

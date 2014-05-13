@@ -716,19 +716,19 @@ class pluginShop extends objectPlugin {
 
     // orders
     // -----------------------------------------------
-    private function _api_getOrder ($orderID, $addAccountInfo = true) {
+    private function _api_getOrderDetails ($orderItem) {
         $dataObj = new libraryDataObject();
 
         // if we pass orderID as real order id we do fetch this order otherwise ...
-        if (is_string($orderID)) {
-            $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
-            $dataOrder = $this->getCustomer()->processData($configOrder);
-        } else {
-            // we just set the order item into dataObject
-            $dataOrder = $orderID;
-            $orderID = $dataOrder['ID'];
-        }
-        $dataObj->setData('order', $dataOrder);
+        // if (is_string($orderID)) {
+        //     $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
+        //     $dataOrder = $this->getCustomer()->processData($configOrder);
+        // } else {
+        //     // we just set the order item into dataObject
+        //     $dataOrder = $orderID;
+            $orderID = $orderItem['ID'];
+        // }
+        // $dataObj->setData('order', $dataOrder);
 
         $dataObj->setData('address', $this->getCustomer()->getAddress($dataOrder['AccountAddressesID']));
 
@@ -761,6 +761,18 @@ class pluginShop extends objectPlugin {
             //     $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
             // }
         }
+
+        return $dataObj;
+    }
+
+    private function _api_getOrder ($orderID) {
+        $dataObj = new libraryDataObject();
+
+        // if we pass orderID as real order id we do fetch this order otherwise ...
+        $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
+        $dataOrder = $this->getCustomer()->processData($configOrder);
+        $dataObj->setData('order', $dataOrder);
+        $dataObj->setData('details', $this->_api_getOrderDetails());
 
         return $dataObj;
     }
@@ -845,7 +857,7 @@ class pluginShop extends objectPlugin {
         // $orderHash
         $dataObj = new libraryDataObject();
 
-        $config = configurationShopDataSource::jsapiShopOrdersGettatusGet($orderHash);
+        $config = configurationShopDataSource::jsapiShopOrdersGetStatus($orderHash);
         $orderStatus = $this->getCustomer()->processData($config);
 
         $dataObj->setData('orderStatus', $orderStatus);
@@ -1137,6 +1149,16 @@ class pluginShop extends objectPlugin {
 
         $dataCount = $this->getCustomer()->processData($configCount);
         $dataObj->setData('total_count', $dataCount['ItemsCount']);
+
+        return $dataObj;
+    }
+
+    private function _api_getOrigin ($originID) {
+        $dataObj = new libraryDataObject();
+
+        $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
+        $dataOrigin = $this->getCustomer()->processData($configOrigin);
+        $dataObj->setData('origin', $dataOrigin);
 
         return $dataObj;
     }
