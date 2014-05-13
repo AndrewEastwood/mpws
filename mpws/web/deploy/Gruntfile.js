@@ -2,8 +2,8 @@ module.exports = function(grunt) {
 
     var version = grunt.option('mv') || 'atlantis';
     var customer = grunt.option('mc') || '';
-    var mode = grunt.option('mode') || 'all';
-    var allModes = ['site', 'toolbox'];
+    // var mode = grunt.option('mode') || 'all';
+    // var allModes = ['site', 'toolbox'];
 
     if (!customer)
         throw "Empty customer name";
@@ -13,18 +13,18 @@ module.exports = function(grunt) {
         var _baseConfigLess = {};
         var _baseConfigWatch = {};
 
-        var _getPaths = function (mode) {
+        var _getPaths = function () {
             var _dirAppBuild = 'build/';
             var _dirAppJs = 'static/js';
             var _dirAppHbs = 'static/hbs';
             var _dirAppLess = 'static/less';
             var _dirAppCss = 'static/css';
-            var _dirCommonLess = 'static/common/less';
+            // var _dirCommonLess = 'static/common/less';
 
             var _dirDefaultLess = 'static/less';
 
             var _srcLessCustomer = '../customer/' + customer + '/' + _dirAppLess + '/';
-            var _srcLessCustomerCommon = '../customer/' + customer + '/' + _dirCommonLess + '/';
+            // var _srcLessCustomerCommon = '../customer/' + customer + '/' + _dirCommonLess + '/';
             var _srcLessDefault = '../default/' + version + '/' + _dirDefaultLess;
 
             var _devLessCustomer = '../customer/' + customer + '/' + _dirAppCss + '/';
@@ -36,25 +36,25 @@ module.exports = function(grunt) {
                 dirAppHbs : _dirAppHbs,
                 dirAppLess : _dirAppLess,
                 dirAppCss : _dirAppCss,
-                dirCommonLess : _dirCommonLess,
+                // dirCommonLess : _dirCommonLess,
                 dirDefaultLess : _dirDefaultLess,
                 srcLessCustomer : _srcLessCustomer,
-                srcLessCustomerCommon : _srcLessCustomerCommon,
+                // srcLessCustomerCommon : _srcLessCustomerCommon,
                 srcLessDefault : _srcLessDefault,
                 devLessCustomer : _devLessCustomer,
                 buildLessCustomer : _buildLessCustomer
             }
         }
 
-        var _getConfigLess = function (mode) {
+        var _getConfigLess = function () {
 
-            var _paths = _getPaths(mode);
+            var _paths = _getPaths();
 
-            _baseConfigLess['development_' + mode] = {
+            _baseConfigLess['development'] = {
                 options: {
                     paths: [
-                        _paths.srcLessDefault,
-                        _paths.srcLessCustomerCommon
+                        _paths.srcLessCustomer,
+                        _paths.srcLessDefault
                     ]
                 },
                 files: [
@@ -63,18 +63,18 @@ module.exports = function(grunt) {
                         // no need for files, the config below should work
                         expand: true,
                         cwd: _paths.srcLessCustomer,
-                        src: ["*.less"],
+                        src: ["**/*", "*.less"],
                         dest: _paths.devLessCustomer,
                         ext: '.css'
                     }
                 ]
             };
 
-            _baseConfigLess['production_' + mode] = {
+            _baseConfigLess['production'] = {
                 options: {
                     paths: [
-                        _paths.srcLessDefault,
-                        _paths.srcLessCustomerCommon
+                        _paths.srcLessCustomer,
+                        _paths.srcLessDefault
                     ],
                     cleancss: true
                 },
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
                         // no need for files, the config below should work
                         expand: true,
                         cwd: _paths.srcLessCustomer,
-                        src: ["*.less"],
+                        src: ["**/*", "*.less"],
                         dest: _paths.buildLessCustomer,
                         ext: '.css'
                     }
@@ -93,30 +93,35 @@ module.exports = function(grunt) {
 
         }
 
-        var _getConfigWatch = function (mode) {
-            var _paths = _getPaths(mode);
+        var _getConfigWatch = function () {
+            var _paths = _getPaths();
 
-            _baseConfigWatch['styles_' + mode] = {
+            _baseConfigWatch['styles'] = {
                 // Which files to watch (all .less files recursively in the less directory)
-                files: [_paths.srcLessCustomer + '*.less', _paths.srcLessDefault + '*.less'],
-                tasks: ['less:development_' + mode],
+                files: [
+                    _paths.srcLessCustomer + '*.less',
+                    _paths.srcLessCustomer + '**/*.less',
+                    _paths.srcLessDefault + '*.less',
+                    _paths.srcLessDefault + '**/*.less'
+                ],
+                tasks: ['less:development'],
                 options: {
                     nospawn: true
                 }
             };
         }
 
-        var _getInBundle = function (mode) {
-            _getConfigLess(mode);
-            _getConfigWatch(mode);
+        var _getInBundle = function () {
+            _getConfigLess();
+            _getConfigWatch();
         }
 
-        if (mode === 'all')
-            for (var key in allModes) {
-                _getInBundle(allModes[key])
-            }
-        else
-            _getInBundle(mode);
+        // if (mode === 'all')
+        //     for (var key in allModes) {
+        //         _getInBundle(allModes[key])
+        //     }
+        // else
+        _getInBundle();
 
         return {
             less: _baseConfigLess,
@@ -125,11 +130,6 @@ module.exports = function(grunt) {
     }
 
     grunt.initConfig(_getBuildConfig());
-
-
-
-
-
 
 
 

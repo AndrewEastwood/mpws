@@ -9,11 +9,14 @@
                 </a>
             </li>
         </ul>
-        <ul class="sidebar-nav" id="sidebar" name="PluginToolboxMenuList">
+        <ul class="sidebar-nav" id="sidebar">
             <li><a href="#toolbox/profile">{{lang.pluginMenu_Profile}}</a></li>
             <li><a href="#toolbox/administrators">{{lang.pluginMenu_Administrators}}</a></li>
             <li><a href="#toolbox/version">{{lang.pluginMenu_Version}}</a></li>
-            <li class="text-danger"><a href="#signout">{{lang.pluginMenu_Logout}}<span class="sub_icon fa fa-power-off"></span></a></li>
+            <li>
+                <ul name="PluginToolboxMenuList"></ul>
+            </li>
+            <li><a href="#signout">{{lang.pluginMenu_Logout}}<span class="sub_icon fa fa-power-off"></span></a></li>
         </ul>
     </div>
 </div>
