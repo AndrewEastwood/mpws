@@ -1,7 +1,7 @@
 define("plugin/shop/toolbox/js/view/popupOrigin", [
     'default/js/lib/sandbox',
     'default/js/view/mView',
-    'plugin/shop/toolbox/js/model/popupOrigin',
+    'plugin/shop/toolbox/js/model/origin',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     /* template */
@@ -11,29 +11,27 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, MView, ModelOriginItem, ShopUtils, BootstrapDialog, tpl, lang) {
 
-
-    // var originItemModel = ;
     var OriginItem = MView.extend({
         template: tpl,
         lang: lang,
         model: new ModelOriginItem(),
-        initialize: function (isEdit) {
+        initialize: function () {
             MView.prototype.initialize.call(this);
             var self = this;
-            var isEdit = this.model.lastFetchUrlOptions.originID;
-
             var dlg = new BootstrapDialog({
                 cssClass: 'shop-toolbox-origin-edit',
                 buttons: [{
-                    label: isEdit ? lang.popup_origin_button_Close : lang.popup_origin_button_Save,
+                    label: lang.popup_origin_button_Save,
                     action: function (dialog) {
+                        debugger;
+                        var data = self.getFormFields();
                         // dialogIsShown = false;
                         dialog.close();
                     }
                 }]
             });
 
-            if (isEdit)
+            if (this.options.isEdit)
                 dlg.setTitle(lang.popup_origin_title_edit);
             else
                 dlg.setTitle(lang.popup_origin_title_new);

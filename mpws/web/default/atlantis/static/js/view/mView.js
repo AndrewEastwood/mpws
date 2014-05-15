@@ -22,6 +22,13 @@ define("default/js/view/mView", [
             isModelView: function () {
                 return !_.isEmpty(this.model) && !this.isCollectionView();
             },
+            getFormFields: function (selector) {
+                var fields = {};
+                this.$(selector || 'input, select').each(function(){
+                    fields[$(this).attr('name')] = $(this).val();
+                });
+                return fields;
+            },
             fetchAndRender: function (options, fetchOptions) {
                 // debugger;
                 var _self = this;

@@ -12,7 +12,7 @@ class objectPlugin implements iPlugin {
         return $this->customer;
     }
 
-    public function getDataBase () {
+    public function getCustomerDataBase () {
         return $this->customer->getDataBase();
     }
 

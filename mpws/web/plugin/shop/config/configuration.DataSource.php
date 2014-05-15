@@ -230,7 +230,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiShopOrderProductsSave () {
+    static function jsapiShopOrderProductsCreate () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "insert",
             "source" => "shop_boughts",
@@ -396,17 +396,8 @@ class configurationShopDataSource extends objectConfiguration {
     static function jsapiShopOriginCreate () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "insert",
-            "source" => "shop_products",
-            "fields" => array("ID"),
-            "condition" => array(
-                "filter" => "Status (=) ? + ID (NOT IN) ?",
-                "values" => array("ACTIVE", "SELECT ProductID AS ID FROM shop_boughts")
-            ),
-            "order" => array(
-                "field" => "DateCreated",
-                "ordering" => "ASC"
-            ),
-            "limit" => 50,
+            "source" => "shop_origins",
+            "data" => array(),
             "options" => null
         ));
     }

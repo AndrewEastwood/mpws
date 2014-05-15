@@ -116,10 +116,12 @@ class pluginShop extends objectPlugin {
             case "shop_manage_origins": {
                 $do = libraryRequest::getValue('action');
                 switch ($do) {
+                    case 'create':
+                        $data = $this->_api_createOrigin();
+                        break;
                     case 'update':
                         $originID = libraryRequest::getValue('originID');
-                        $this->_api_updateOrigin($originID);
-                        $data = $this->_api_getOrigin($originID);
+                        $data = $this->_api_updateOrigin($originID);
                         break;
                     case 'get':
                         $originID = libraryRequest::getValue('originID');
@@ -672,7 +674,7 @@ class pluginShop extends objectPlugin {
 
                 $this->getCustomer()->processData($configOrder);
 
-                $orderID = $this->getDataBase()->getLastInsertId();
+                $orderID = $this->getCustomerDataBase()->getLastInsertId();
 
                 // save products
                 // -----------------------
@@ -681,7 +683,7 @@ class pluginShop extends objectPlugin {
                 // ProductPrice
                 // Quantity
                 foreach ($productData['products'] as $_item) {
-                    $configProduct = configurationShopDataSource::jsapiShopOrderProductsSave();
+                    $configProduct = configurationShopDataSource::jsapiShopOrderProductsCreate();
                     $dataProduct = array();
                     $dataProduct["ProductID"] = $_item["ID"];
                     $dataProduct["OrderID"] = $orderID;
@@ -716,6 +718,10 @@ class pluginShop extends objectPlugin {
 
     // orders
     // -----------------------------------------------
+    private function _api_addOrder () {
+
+    }
+
     private function _api_getOrderDetails ($orderItem) {
         $dataObj = new libraryDataObject();
 
@@ -739,7 +745,7 @@ class pluginShop extends objectPlugin {
             // $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
             $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
             // var_dump($configBoughts);
-            $boughts = $this->getDataBase()->getData($configBoughts) ?: array();
+            $boughts = $this->getCustomer()->processData($configBoughts) ?: array();
 
             if (!empty($boughts))
                 foreach ($boughts as $bkey => $soldItem) {
@@ -782,7 +788,7 @@ class pluginShop extends objectPlugin {
 
     //     $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($OrderID);
     //     // var_dump($configBoughts);
-    //     $boughts = $this->getDataBase()->getData($configBoughts) ?: array();
+    //     $boughts = $this->getCustomerDataBase()->getData($configBoughts) ?: array();
 
     //     if (!empty($boughts))
     //         foreach ($boughts as $bkey => $soldItem) {
@@ -1153,13 +1159,16 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
+    private function _api_getOriginStates () {
+        return $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins);
+    }
+
     private function _api_getOrigin ($originID) {
         $dataObj = new libraryDataObject();
-
         $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
         $dataOrigin = $this->getCustomer()->processData($configOrigin);
         $dataObj->setData('origin', $dataOrigin);
-
+        $dataObj->setData('statuses', $this->_api_getOriginStates());
         return $dataObj;
     }
 
@@ -1199,6 +1208,25 @@ class pluginShop extends objectPlugin {
         $dataCount = $this->getCustomer()->processData($configCount);
         $dataObj->setData('total_count', $dataCount['ItemsCount']);
 
+        return $dataObj;
+    }
+
+    private function _api_createOrigin ($originID) {
+        $dataObj = new libraryDataObject();
+        $configOrigin = configurationShopDataSource::jsapiShopOriginCreate();
+        $dataOrigin = array();
+        $dataOrigin["ExternalKey"] = libraryRequest::getValue('Name');
+        $dataOrigin["Name"] = libraryRequest::getValue('Name');
+        $dataOrigin["Description"] = libraryRequest::getValue('Description');
+        $dataOrigin["Status"] = libraryRequest::getValue('Status');
+        $dataOrigin["HomePage"] = libraryRequest::getValue('HomePage');
+        // $requiredFields = ["Name", "Description", "Status"];
+
+        $configProduct['data'] = array(
+            "fields" => array_keys($dataOrigin),
+            "values" => array_values($dataOrigin)
+        );
+        $this->getCustomer()->processData($configProduct);
         return $dataObj;
     }
 

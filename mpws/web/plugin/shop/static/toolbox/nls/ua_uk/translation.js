@@ -68,8 +68,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Origins_Grid_Column_Actions: "",
         pluginMenu_Origins_Grid_link_Edit: "Ред.",
         // Origin popup
-        popup_origin_title_new: "Редагування виробника",
-        popup_origin_title_edit: "Створення виробника",
+        popup_origin_title_new: "Створення виробника",
+        popup_origin_title_edit: "Редагування виробника",
         popup_origin_section_details_title: "Деталі виробника:",
         popup_origin_section_details_filed_name: "Назва:",
         popup_origin_section_details_filed_description: "Опис:",
@@ -98,5 +98,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_type_Popular: "Популярні",
         product_type_NotPopular: "Непопулярні",
         product_type_Archived: "Архівні",
+        origin_field_status_ACTIVE: "Активний",
+        origin_field_status_REMOVED: "Неактивний",
     }, CustomerPluginShop);
 });

@@ -487,8 +487,8 @@ CREATE TABLE `shop_products` (
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
-  `Status` enum('ACTIVE','REMOVED','OUTOFSTOCK','COMINGSOON') COLLATE utf8_bin NOT NULL,
-  `SellMode` enum('NORMAL','DISCOUNT','BESTSELLER','DEFECT','ARCHIVED','') COLLATE utf8_bin NOT NULL DEFAULT 'NORMAL',
+  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL,
+  `SellMode` enum('NORMAL','DISCOUNT','DEFECT','ARCHIVED','COMINGSOON') COLLATE utf8_bin NOT NULL DEFAULT 'NORMAL',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -625,6 +625,30 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getFieldOptions` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFieldOptions`(IN `_tbl` VARCHAR(30), IN `_fld` VARCHAR(30))
+BEGIN
+	set @tbl = _tbl;
+	set @fld = _fld;
+	set @s = CONCAT('SHOW FIELDS FROM ', @tbl, ' WHERE FIELD = "', @fld, '"');
+    PREPARE sqlstmt_state FROM @s;
+    EXECUTE sqlstmt_state;
+    DEALLOCATE PREPARE sqlstmt_state;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `getShopCategoryLocation` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -685,4 +709,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-14  0:51:33
+-- Dump completed on 2014-05-16  1:36:40

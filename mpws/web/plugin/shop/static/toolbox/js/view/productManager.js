@@ -39,7 +39,9 @@ define("plugin/shop/toolbox/js/view/productManager", [
 
     Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
         // debugger;
-        var popupOrigin = new PopupOrigin();
+        var popupOrigin = new PopupOrigin({
+            isEdit: true
+        });
         popupOrigin.fetchAndRender({
             originID: data.oid
         });

@@ -2059,6 +2059,8 @@
 
             $query .= ');';
 
+            // var_dump($query);
+
             // echo $query;
             $caching_enabled = self::$_config[$this->_connection_name]['caching'];
 
@@ -2070,6 +2072,8 @@
                     return $cached_result;
                 }
             }
+
+            // var_dump($values);
 
             self::_execute($query, $values, $this->_connection_name);
             $statement = self::get_last_statement();

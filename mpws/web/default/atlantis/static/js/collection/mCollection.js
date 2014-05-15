@@ -58,7 +58,8 @@ define("default/js/collection/mCollection", [
             },
 
             fetch: function (options, fetchOptions) {
-                this.url = (_.isString(this.url) && !_.isEmpty(this.url)) ? this.url : this.getUrl(options || {});
+                // this.url = (_.isString(this.url) && !_.isEmpty(this.url)) ? this.url : this.getUrl(options || {});
+                this.url = !!options ? this.getUrl(options) : this.url;
                 var rez = Backbone.Collection.prototype.fetch.call(this, fetchOptions || options || {});
                 return rez;
             }
