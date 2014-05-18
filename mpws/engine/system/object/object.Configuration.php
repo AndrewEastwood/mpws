@@ -2,6 +2,12 @@
 
 class objectConfiguration implements iConfiguration {
 
+    static $DATE_FORMAT = 'Y-m-d H:i:s';
+
+    static function getDate () {
+        return date(self::$DATE_FORMAT);
+    }
+
     static function jsapiGetDataSourceConfig($configExtend = null) {
         $configDefault = array(
             "source" => "",

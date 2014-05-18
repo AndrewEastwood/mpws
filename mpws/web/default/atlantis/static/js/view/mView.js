@@ -24,20 +24,24 @@ define("default/js/view/mView", [
             },
             getFormFields: function (selector) {
                 var fields = {};
-                this.$(selector || 'input, select').each(function(){
+                this.$(selector || 'input, select, textarea').each(function(){
                     fields[$(this).attr('name')] = $(this).val();
                 });
                 return fields;
             },
             fetchAndRender: function (options, fetchOptions) {
                 // debugger;
+                fetchOptions = fetchOptions || {};
+                fetchOptions.viewOptions = JSON.parse(JSON.stringify(this.options));
+
                 var _self = this;
+                var _fn = fetchOptions && fetchOptions._fn || this.options._fn || "fetch";
                 // debugger;
                 if (this.isCollectionView()) {
 
                     if (this.collection.url) {
                         // $.xhrPool.abortAll();
-                        this.collection.fetch(_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
+                        this.collection[_fn](_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
                             success: function () {
                                 // debugger;
                                 _self.render.call(_self);
@@ -53,7 +57,7 @@ define("default/js/view/mView", [
 
                     // debugger;
                     if (this.model.url) {
-                        this.model.fetch(_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
+                        this.model[_fn](_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
                             success: function () {
                                 // debugger;
                                 _self.render.call(_self);

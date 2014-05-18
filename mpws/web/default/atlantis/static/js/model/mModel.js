@@ -57,14 +57,7 @@ define("default/js/model/mModel", [
                 return typeof this.extras[key] !== "undefined";
             },
 
-            lastFetchUrlOptions: {},
-            lastFetchOptions: {},
-
             fetch: function (options, fetchOptions) {
-                // debugger;
-                // this.lastFetchUrlOptions = options;
-                // this.lastFetchOptions = fetchOptions;
-
                 this.url = !!options ? this.getUrl(options) : this.url;
 
                 // var _url = (_.isString(this.url) && !_.isEmpty(this.url)) ? this.url : this.getUrl(options || {});

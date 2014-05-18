@@ -3,35 +3,42 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
     'default/js/view/mView',
     'plugin/shop/toolbox/js/model/origin',
     'plugin/shop/common/js/lib/utils',
+    'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupOrigin',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, MView, ModelOriginItem, ShopUtils, BootstrapDialog, tpl, lang) {
+], function (Sandbox, MView, ModelOriginItem, ShopUtils, Utils, BootstrapDialog, tpl, lang) {
 
     var OriginItem = MView.extend({
         template: tpl,
         lang: lang,
-        model: new ModelOriginItem(),
         initialize: function () {
             MView.prototype.initialize.call(this);
             var self = this;
+            this.model = new ModelOriginItem();
+            var isEdit = !!this.options.originID;
             var dlg = new BootstrapDialog({
                 cssClass: 'shop-toolbox-origin-edit',
                 buttons: [{
+                    id: "save",
                     label: lang.popup_origin_button_Save,
                     action: function (dialog) {
-                        debugger;
+                        // debugger;
                         var data = self.getFormFields();
                         // dialogIsShown = false;
+                        if (isEdit)
+                            self.model.update(self.options.originID, data);
+                        else
+                            self.model.create(data);
                         dialog.close();
                     }
                 }]
             });
 
-            if (this.options.isEdit)
+            if (isEdit)
                 dlg.setTitle(lang.popup_origin_title_edit);
             else
                 dlg.setTitle(lang.popup_origin_title_new);
@@ -42,6 +49,8 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
 
                 if (!dlg.isOpened())
                     dlg.open();
+                // debugger;
+                Utils.ActivateButtonWhenFormChanges(self.$('form'), dlg.getButton("save"));
                 // var orderID = this.model.get('order').ID;
                 // if (!dialogIsShown)
                 //     BootstrapDialog.show({

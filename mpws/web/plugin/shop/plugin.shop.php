@@ -123,9 +123,18 @@ class pluginShop extends objectPlugin {
                         $originID = libraryRequest::getValue('originID');
                         $data = $this->_api_updateOrigin($originID);
                         break;
+                    case 'update_field':
+                        $originID = libraryRequest::getValue('originID');
+                        $key = libraryRequest::getPostValue('key');
+                        $value = libraryRequest::getPostValue('value');
+                        $data = $this->_api_updateOriginField($originID, $key, $value);
+                        break;
                     case 'get':
                         $originID = libraryRequest::getValue('originID');
                         $data = $this->_api_getOrigin($originID);
+                        break;
+                    case 'statuses':
+                        $data = $this->_api_getOriginStates();
                         break;
                     case 'list':
                         $data = $this->_api_getOriginList();
@@ -1160,7 +1169,9 @@ class pluginShop extends objectPlugin {
     }
 
     private function _api_getOriginStates () {
-        return $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins);
+        $dataObj = new libraryDataObject();
+        $dataObj->setData('statuses', $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins));
+        return $dataObj;
     }
 
     private function _api_getOrigin ($originID) {
@@ -1168,7 +1179,7 @@ class pluginShop extends objectPlugin {
         $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
         $dataOrigin = $this->getCustomer()->processData($configOrigin);
         $dataObj->setData('origin', $dataOrigin);
-        $dataObj->setData('statuses', $this->_api_getOriginStates());
+        $dataObj->setData('statuses', $this->_api_getOriginStates()->getData('statuses'));
         return $dataObj;
     }
 
@@ -1211,23 +1222,42 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_createOrigin ($originID) {
+    private function _api_createOrigin () {
         $dataObj = new libraryDataObject();
-        $configOrigin = configurationShopDataSource::jsapiShopOriginCreate();
-        $dataOrigin = array();
-        $dataOrigin["ExternalKey"] = libraryRequest::getValue('Name');
-        $dataOrigin["Name"] = libraryRequest::getValue('Name');
-        $dataOrigin["Description"] = libraryRequest::getValue('Description');
-        $dataOrigin["Status"] = libraryRequest::getValue('Status');
-        $dataOrigin["HomePage"] = libraryRequest::getValue('HomePage');
-        // $requiredFields = ["Name", "Description", "Status"];
-
-        $configProduct['data'] = array(
-            "fields" => array_keys($dataOrigin),
-            "values" => array_values($dataOrigin)
-        );
-        $this->getCustomer()->processData($configProduct);
+        $dataOrigin = libraryRequest::getPostContainer("Name", "Description", "Status", "HomePage");
+        $dataOrigin["ExternalKey"] = libraryUtils::url_slug(libraryRequest::getValue('Name'), array("delimiter" => "_", 'lowercase' => true));
+        // $dataOrigin["Name"] = libraryRequest::getValue('Name');
+        // $dataOrigin["Description"] = libraryRequest::getValue('Description');
+        // $dataOrigin["Status"] = libraryRequest::getValue('Status');
+        // $dataOrigin["HomePage"] = libraryRequest::getValue('HomePage');
+        $dataOrigin["CustomerID"] = $this->getCustomer()->getCustomerID();
+        $dataOrigin['DateCreated'] = configurationShopDataSource::getDate();
+        $dataOrigin['DateUpdated'] = configurationShopDataSource::getDate();
+        $configOrigin = configurationShopDataSource::jsapiShopOriginCreate($dataOrigin);
+        $this->getCustomer()->processData($configOrigin);
+        $dataObj->setData('origin', $dataOrigin);
         return $dataObj;
+    }
+
+    private function _api_updateOrigin ($originID) {
+        $dataObj = new libraryDataObject();
+        $dataOrigin = libraryRequest::getPostContainer("Name", "Description", "Status", "HomePage");
+        $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
+        $dataOrigin['DateUpdated'] = configurationShopDataSource::getDate();
+        // $dataOrigin["Name"] = libraryRequest::getValue('Name');
+        // $dataOrigin["Description"] = libraryRequest::getValue('Description');
+        // $dataOrigin["Status"] = libraryRequest::getValue('Status');
+        // $dataOrigin["HomePage"] = libraryRequest::getValue('HomePage');
+        $configOrigin = configurationShopDataSource::jsapiShopOriginUpdate($originID, $dataOrigin);
+        $this->getCustomer()->processData($configOrigin);
+        $dataObj->setData('origin', $dataOrigin);
+        return $dataObj;
+    }
+
+    private function _api_updateOriginField ($originID, $field, $value) {
+        $dataOrigin[$field] = $value;
+        $configOrigin = configurationShopDataSource::jsapiShopOriginUpdate($originID, $dataOrigin);
+        return $this->_api_getOrigin($originID);
     }
 
     private function _api_getToolbox_Dashboard () {

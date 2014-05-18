@@ -131,11 +131,8 @@ class libraryRequest {
 
     static function getPostContainer (/* required fields */) {
         $container = array();
-        if (!empty($args)) {
-            $num = func_num_args();
-            for ($i = 0; $i < $num; $i++)
-                $container[func_get_arg($i)] = self::getPostValue(func_get_arg($i));
-        }
+        for ($i = 0, $num = func_num_args(); $i < $num; $i++)
+            $container[func_get_arg($i)] = self::getPostValue(func_get_arg($i));
         return $container;
     }
     static function getPostMapContainer ($map) {

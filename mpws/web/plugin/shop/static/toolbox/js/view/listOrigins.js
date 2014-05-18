@@ -97,6 +97,13 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
                 $placeholderSearch.html(clientSideFilter.render().el);
                 collection.fetch({reset: true});
             });
+
+            Sandbox.eventSubscribe("plugin:shop:origin:updated", function(){
+                collection.fetch({reset: true});
+            });
+            Sandbox.eventSubscribe("plugin:shop:origin:created", function(){
+                collection.fetch({reset: true});
+            });
         }
     });
 

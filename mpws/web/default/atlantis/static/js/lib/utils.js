@@ -92,5 +92,16 @@ define("default/js/lib/utils", [
         return roots;
     }
 
+    Utils.ActivateButtonWhenFormChanges = function (form, buttons) {
+        $(form).data('form', $(form).serialize());
+        return setInterval(function(){
+            var current = $(form).serialize();
+            if ($(form).data('form') === current)
+                $(buttons).addClass('disabled');
+            else
+                $(buttons).removeClass('disabled');
+        }, 300);
+    }
+
     return Utils;
 });

@@ -393,11 +393,29 @@ class configurationShopDataSource extends objectConfiguration {
         $config['limit'] = 0;
         return $config;
     }
-    static function jsapiShopOriginCreate () {
+    static function jsapiShopOriginCreate ($data) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "insert",
             "source" => "shop_origins",
-            "data" => array(),
+            "data" => array(
+                "fields" => array_keys($data),
+                "values" => array_values($data)
+            ),
+            "options" => null
+        ));
+    }
+    static function jsapiShopOriginUpdate ($originID, $data) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "update",
+            "source" => "shop_origins",
+            "condition" => array(
+                "filter" => "ID (=) ?",
+                "values" => array($originID)
+            ),
+            "data" => array(
+                "fields" => array_keys($data),
+                "values" => array_values($data)
+            ),
             "options" => null
         ));
     }

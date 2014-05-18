@@ -1,6 +1,7 @@
 define("default/js/lib/sandbox", [
+    "default/js/lib/underscore",
     "default/js/lib/extend.string"
-], function(){
+], function(_) {
 
     var _events = {};
 
@@ -9,12 +10,23 @@ define("default/js/lib/sandbox", [
     // Sandbox
     var _Sandbox = {
         // subscribe on eventID
-        eventSubscribe : function (eventID, listener) {
+        eventSubscribe: function (eventID, listener) {
+            if (!_events[eventID])
+                _events[eventID] = [];
+            _events[eventID].push(listener);
+        },
+        eventUnsubscribe: function (eventID, listener) {
+            if (!_events[eventID])
+                return;
+            _events[eventID] = _(_events[eventID]).without(listener);
+        },
+        _eventSubscribe : function (eventID, listener) {
             if (!_events[eventID])
                 _events[eventID] = [];
 
             var listenerHash = listener && listener.toString().hashCode();
             var alreadyAdded = false;
+
             // avoid duplicates
             for (var i = 0, len = _events[eventID].length; i < len && !alreadyAdded; i++) {
                 alreadyAdded = (_events[eventID][i].id === listenerHash);
@@ -36,7 +48,7 @@ define("default/js/lib/sandbox", [
             return listenerHash;
         },
         // remove callback subscription to eventID 
-        eventUnsubscribe : function (eventID, listener) {
+        _eventUnsubscribe : function (eventID, listener) {
 
             // maybe eventId is hash, so let's remove all listeners by hash
             if (eventID)
@@ -67,16 +79,16 @@ define("default/js/lib/sandbox", [
             // _app.log(true, 'eventNotify: <<<<<<<<<<<<< ', eventID, ' <<<<<<<<< ');
             // loop through listeners
             for (var i = 0, len = _events[eventID].length; i < len; i++)
-                results.push(listeners[i].fn(data));
+                results.push(listeners[i](data));
             // adjust result
-            if (results.length == 1)
-                rez = results.pop();
-            else
-                rez = results;
+            // if (results.length == 1)
+            //     rez = results.pop();
+            // else
+            //     rez = results;
             // _app.log(true, 'eventNotify: has result', rez, results);
             // perform callback with results
             if (typeof callback === "function")
-                callback(null, rez);
+                callback(null, results);
             return rez;
         }
     };
