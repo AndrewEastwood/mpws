@@ -1257,6 +1257,7 @@ class pluginShop extends objectPlugin {
     private function _api_updateOriginField ($originID, $field, $value) {
         $dataOrigin[$field] = $value;
         $configOrigin = configurationShopDataSource::jsapiShopOriginUpdate($originID, $dataOrigin);
+        $this->getCustomer()->processData($configOrigin);
         return $this->_api_getOrigin($originID);
     }
 

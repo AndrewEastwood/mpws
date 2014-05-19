@@ -8,9 +8,6 @@ define('plugin/shop/toolbox/js/model/origin', [
     var Origin = Model.extend({
         source: 'shop',
         fn: 'shop_manage_origins',
-        // urlOptions: {
-        //     action: 'get'
-        // },
         parse: function (data) {
             // debugger;
             var _data = this.extractModelDataFromResponse(data);
@@ -23,7 +20,6 @@ define('plugin/shop/toolbox/js/model/origin', [
             });
         },
         create: function (data) {
-            debugger;
             $.post(this.getUrl({
                 action: 'create'
             }), data).done(function(){

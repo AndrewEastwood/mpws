@@ -587,7 +587,7 @@ CREATE TABLE `shop_origins` (
 
 LOCK TABLES `shop_origins` WRITE;
 /*!40000 ALTER TABLE `shop_origins` DISABLE KEYS */;
-INSERT INTO `shop_origins` VALUES (1,1,'','SONY','SONY','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(2,1,'','DELL','DELL','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(3,1,'hp','HP','HP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:10:59'),(4,1,'samsung','Samsung','Samsung','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 18:01:54'),(5,1,'lg','LG','LG','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:06:03'),(6,1,'toshiba','Toshiba','Toshiba','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:06:06'),(7,1,'sharp','SHARP','SHARP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:06:09'),(8,1,'','Apple','Apple','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(9,1,'','DEX','DEX','www.dex.com','ACTIVE','2014-05-18 23:19:01','2014-05-18 23:19:01'),(10,1,'microsoft','Microsoft','Microsoft','www.microsoft.com','ACTIVE','2014-05-18 23:28:13','2014-05-18 23:28:23');
+INSERT INTO `shop_origins` VALUES (1,1,'','SONY','SONY','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(2,1,'','DELL','DELL','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(3,1,'hp','HP','HP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:10:59'),(4,1,'samsung','Samsung111','Samsung','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 18:01:54'),(5,1,'lg','LG555','LG','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:06:03'),(6,1,'toshiba','Toshiba','Toshiba','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:06:06'),(7,1,'sharp','SHARP','SHARP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-19 10:19:54'),(8,1,'','Apple','Apple','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(9,1,'dex','DEX','DEX','www.dex.com','ACTIVE','2014-05-18 23:19:01','2014-05-19 09:13:02'),(10,1,'microsoft','Microsoft','Microsoft','www.microsoft.com','ACTIVE','2014-05-18 23:28:13','2014-05-18 23:28:23');
 /*!40000 ALTER TABLE `shop_origins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -932,4 +932,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-18 23:33:26
+-- Dump completed on 2014-05-19 10:21:40

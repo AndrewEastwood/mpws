@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     'default/js/view/mView',
     "default/js/lib/backgrid",
     'plugin/shop/toolbox/js/collection/listOrigins',
+    "plugin/shop/common/js/lib/utils",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/listOrigins',
     /* lang */
@@ -11,7 +12,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-htmlcell",
     'default/js/lib/backgrid-filter',
-], function (Sandbox, MView, Backgrid, CollectionListOrigins, tpl, lang) {
+], function (Sandbox, MView, Backgrid, CollectionListOrigins, ShopUtils, tpl, lang) {
 
     var columnActions = {
         name: "Actions",
@@ -36,8 +37,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     var columnName = {
         name: "Name",
         label: lang.pluginMenu_Origins_Grid_Column_Name,
-        cell: "string",
-        // editable: false,
+        cell: "string"
     };
 
     var columnStatus = {
@@ -50,7 +50,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
                 return value === "ACTIVE";
             },
             toRaw: function (value) {
-                return value ? "ACTIVE" : "";
+                return value ? "ACTIVE" : "REMOVED";
             }
         }
     };
@@ -72,6 +72,13 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
                 columns: columns,
                 collection: collection
             });
+
+            collection.on('change', function(changedModel) {
+                // debugger;
+                for (var fieldName in changedModel.changed)
+                    ShopUtils.updateOriginField(changedModel.get('ID'), fieldName, changedModel.changed[fieldName]);
+            })
+
             var Paginator = new Backgrid.Extension.Paginator({
                 collection: collection
             });

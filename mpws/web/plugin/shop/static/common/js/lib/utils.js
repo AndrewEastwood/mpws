@@ -81,15 +81,26 @@ define("plugin/shop/common/js/lib/utils", [
             orderID: orderID,
             action: "update",
         });
-        var jqxhr = $.ajax({
-            type: 'POST',
-            url: _url,
-            data: {
-                Status: status
-            }
-        });
-        jqxhr.done(function(){
+        var jqxhr = $.post(_url, {
+            Status: status
+        }).done(function(){
             Sandbox.eventNotify('plugin:shop:orderItem:updated');
+        });
+        return jqxhr;
+    }
+
+    Utils.updateOriginField = function (originID, field, value) {
+        var _url = APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_origins',
+            originID: originID,
+            action: "update_field",
+        });
+        var jqxhr = $.post(_url, {
+            key: field,
+            value: value
+        }).done(function(){
+            Sandbox.eventNotify('plugin:shop:orderField:updated');
         });
         return jqxhr;
     }
