@@ -114,7 +114,7 @@ define("plugin/shop/common/js/lib/utils", [
             fn: 'shop_manage_origins',
             action: 'get',
             originID: originID
-        }), data, function(data){
+        }), function(data){
             Sandbox.eventNotify('plugin:shop:origin:received:item', data);
         });
     }
