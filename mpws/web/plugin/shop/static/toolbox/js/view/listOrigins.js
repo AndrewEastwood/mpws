@@ -105,10 +105,10 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
                 collection.fetch({reset: true});
             });
 
-            Sandbox.eventSubscribe("plugin:shop:origin:updated", function(){
+            Sandbox.eventSubscribe("plugin:shop:origin:item:updated", function(){
                 collection.fetch({reset: true});
             });
-            Sandbox.eventSubscribe("plugin:shop:origin:created", function(){
+            Sandbox.eventSubscribe("plugin:shop:origin:item:created", function(){
                 collection.fetch({reset: true});
             });
         }

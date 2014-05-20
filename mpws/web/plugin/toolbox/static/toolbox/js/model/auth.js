@@ -22,11 +22,12 @@ define("plugin/toolbox/toolbox/js/model/auth", [
                 action: 'status'
             });
             $.post(url, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                Cache.setObject('AdminProfileID', _data.profile && _data.profile.ID);
-                self.set(_data);
+                Cache.setObject('AdminProfileID', response.profile && response.profile.ID);
+                self.set(response);
                 self.trigger('change');
-                Sandbox.eventNotify('plugin:toolbox:status:received', _data.profile);
+                Sandbox.eventNotify('plugin:toolbox:status:received', response.profile);
+            }).error(function(){
+                Sandbox.eventNotify('plugin:toolbox:status:received', null);
             });
         },
         doLogin: function (data) {
@@ -36,13 +37,14 @@ define("plugin/toolbox/toolbox/js/model/auth", [
                 action: 'signin'
             });
             $.post(url, {credentials: data}, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                var _profileID = _data.profile && _data.profile.ID;
+                var _profileID = response.profile && response.profile.ID;
                 Cache.setObject('AdminProfileID', _profileID);
-                self.set(_data);
+                self.set(response);
                 self.trigger('change');
                 if (_profileID)
-                    Sandbox.eventNotify('plugin:toolbox:signed:in', _data.profile);
+                    Sandbox.eventNotify('plugin:toolbox:signed:in', response.profile);
+            }).error(function(){
+                debugger;
             });
         },
         doLogout: function () {
@@ -52,11 +54,12 @@ define("plugin/toolbox/toolbox/js/model/auth", [
                 action: 'signout'
             });
             $.post(url, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
                 Cache.setObject('AdminProfileID', null);
-                self.set(_data);
+                self.set(response);
                 self.trigger('change');
                 Sandbox.eventNotify('plugin:toolbox:signed:out', null);
+            }).error(function(){
+                debugger;
             });
         }
 

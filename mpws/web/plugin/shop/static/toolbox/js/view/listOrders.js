@@ -172,7 +172,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             });
 
             // refresh all lists
-            Sandbox.eventSubscribe("plugin:shop:orderItem:updated", function () {
+            Sandbox.eventSubscribe("plugin:shop:order:item:updated", function () {
                 // debugger;
                 _(_ordersByStatus).each(function(orderList) {
                     orderList.fetch({reset: true});

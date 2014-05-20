@@ -16,9 +16,10 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
         template: tpl,
         lang: lang,
         initialize: function () {
-            MView.prototype.initialize.call(this);
             var self = this;
+            // debugger;
             this.model = new ModelOriginItem();
+            MView.prototype.initialize.call(this);
             var isEdit = !!this.options.originID;
             var dlg = new BootstrapDialog({
                 cssClass: 'shop-toolbox-origin-edit',
@@ -30,9 +31,9 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
                         var data = self.getFormFields();
                         // dialogIsShown = false;
                         if (isEdit)
-                            self.model.update(self.options.originID, data);
+                            self.model.updateItem(self.options.originID, data);
                         else
-                            self.model.create(data);
+                            self.model.createItem(data);
                         dialog.close();
                     }
                 }]
@@ -95,6 +96,15 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
                 // self.$('.helper').tooltip();
             });
             // order-status-ID
+        },
+        renderEdit: function (originID) {
+            debugger;
+            this.
+            this.model.getItem(originID);
+        },
+        renderCreate: function () {
+            debugger;
+            this.model.getStatusList();
         }
     });
 

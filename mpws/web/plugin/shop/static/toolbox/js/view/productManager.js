@@ -33,19 +33,24 @@ define("plugin/shop/toolbox/js/view/productManager", [
     });
 
     Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
-        var popupOrigin = new PopupOrigin({
-            _fn: 'statuses'
-        });
-        popupOrigin.fetchAndRender();
+        // var popupOrigin = new PopupOrigin({
+        //     _fn: 'statuses'
+        // });
+        // popupOrigin.fetchAndRender();
+        var popupOrigin = new PopupOrigin();
+        popupOrigin.renderCreate();
+
     });
 
     Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
         // debugger;
-        var popupOrigin = new PopupOrigin({
-            originID: data.oid,
-            _fn: "getItem"
-        });
-        popupOrigin.fetchAndRender();
+        // var popupOrigin = new PopupOrigin({
+        //     originID: data.oid,
+        //     _fn: "getItem"
+        // });
+        // popupOrigin.fetchAndRender();
+        var popupOrigin = new PopupOrigin();
+        popupOrigin.renderEdit(data.oid);
     });
 
     var ProductManager = MView.extend({

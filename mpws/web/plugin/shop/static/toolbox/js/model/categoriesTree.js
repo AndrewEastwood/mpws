@@ -40,7 +40,7 @@ define('plugin/shop/toolbox/js/model/categoriesTree', [
         // },
 
         parse: function (data) {
-            return Utils.getTreeByJson(data && data.shop && data.shop.categories, 'ID', 'ParentID');
+            return Utils.getTreeByJson(data && data.categories, 'ID', 'ParentID');
         }
 
     });

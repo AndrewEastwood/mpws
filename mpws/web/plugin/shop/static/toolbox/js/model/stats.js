@@ -6,10 +6,7 @@ define('plugin/shop/toolbox/js/model/stats', [
     var Model = MModel.getNew();
     var ProductItemFull = Model.extend({
         source: 'shop',
-        fn: 'shop_manage_stats',
-        parse: function (response) {
-            return this.extractModelDataFromResponse(response);
-        }
+        fn: 'shop_manage_stats'
     });
 
     return ProductItemFull;

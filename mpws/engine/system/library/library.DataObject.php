@@ -26,7 +26,7 @@ class libraryDataObject {
 
     public function getData($key = null) {
         if (isset($key))
-            return $this->_data[$key];
+            return isset($this->_data[$key]) ? $this->_data[$key] : null;
         return $this->_data;
     }
 
@@ -39,7 +39,9 @@ class libraryDataObject {
     }
 
     // converters
-    public function toJSON() { return json_encode($this->getData());}
+    public function toJSON($key = null) {
+        return json_encode($this->getData($key));
+    }
     public function toNative() { return $this->getData();}
 }
 

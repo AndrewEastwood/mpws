@@ -11,12 +11,8 @@ define('plugin/shop/toolbox/js/model/popupOrder', [
             action: 'get'
         },
         parse: function (data) {
-            // debugger;
-            var _data = this.extractModelDataFromResponse(data);
-
-            if (_data.boughts)
-                _data.boughts = ShopUtils.adjustProductItem({products: _data.boughts});
-
+            if (data.boughts)
+                data.boughts = ShopUtils.adjustProductItem({products: data.boughts});
             return _data;
         }
     });

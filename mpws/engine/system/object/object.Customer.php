@@ -101,27 +101,32 @@ class objectCustomer {
 
         if (empty($source)) {
             $response->setError('WrongSource');
+            header("HTTP/1.0 404 WrongSource");
             return $response;
         }
 
         if (!isset($this->plugins[$source])) {
             $response->setError('UnknownSource');
+            header("HTTP/1.0 404 UnknownSource");
             return $response;
         }
 
         // check page token
         if (empty($publicKey)) {
             $response->setError('WrongToken');
+            header("HTTP/1.0 500 WrongToken");
             return $response;
         }
 
         if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
             $response->setError('InvalidPublicTokenKey');
+            header("HTTP/1.0 500 InvalidPublicTokenKey");
             return $response;
         }
 
         if (MPWS_IS_TOOLBOX && !in_array(MPWS_TOOLBOX, configurationCustomerDisplay::$Plugins)) {
             $response->setError('AccessDenied');
+            header("HTTP/1.0 500 AccessDenied");
             // $response->setData('redirect', 'signin');
             return $response;
         }
@@ -133,6 +138,7 @@ class objectCustomer {
         $action = libraryRequest::getValue('action');
         if (MPWS_IS_TOOLBOX && !$this->isAdminActive() && $action !== "signin") {
             $response->setError('LoginRequired');
+            header("HTTP/1.0 500 LoginRequired");
             // $response->setData('redirect', 'signin');
             return $response;
         }
@@ -143,6 +149,7 @@ class objectCustomer {
         elseif ($this->hasPlugin($source)) {
             $plugin = $this->getPlugin($source);
             $response->setData($source, $plugin->getResponse()->toNative());
+            $response->setData('exposeKey', $source);
         }
 
         return $response;

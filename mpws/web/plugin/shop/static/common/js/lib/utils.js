@@ -75,34 +75,82 @@ define("plugin/shop/common/js/lib/utils", [
 
     Utils.updateOrderStatus = function (orderID, status) {
         // debugger;
-        var _url = APP.getApiLink({
+        return $.post(APP.getApiLink({
             source: 'shop',
             fn: 'shop_manage_orders',
             orderID: orderID,
             action: "update",
-        });
-        var jqxhr = $.post(_url, {
+        }), {
             Status: status
-        }).done(function(){
-            Sandbox.eventNotify('plugin:shop:orderItem:updated');
+        }, function(data){
+            Sandbox.eventNotify('plugin:shop:order:item:updated', data);
         });
-        return jqxhr;
     }
 
+    Utils.getOriginStatusList = function () {
+        return $.post(APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_origins',
+            action: 'statuses'
+        }), function(data){
+            Sandbox.eventNotify('plugin:shop:origin:received:statuslist', data);
+        });
+    }
+
+    Utils.getOriginList = function () {
+        return $.get(APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_origins',
+            action: 'list'
+        }), function(data){
+            Sandbox.eventNotify('plugin:shop:origin:received:list', data);
+        });
+    }
+
+    Utils.getOrigin = function (originID) {
+        debugger;
+        return $.post(APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_origins',
+            action: 'get',
+            originID: originID
+        }), data, function(data){
+            Sandbox.eventNotify('plugin:shop:origin:received:item', data);
+        });
+    }
+
+    Utils.createOrigin = function (data) {
+        return $.post(APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_origins',
+            action: 'create'
+        }), data, function(data){
+            Sandbox.eventNotify('plugin:shop:origin:item:created', data);
+        });
+    }
+
+    Utils.updateOrigin = function (originID, data) {
+        return $.post(APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_origins',
+            action: 'update',
+            originID: originID
+        }), data, function(data){
+            Sandbox.eventNotify('plugin:shop:origin:item:updated', data);
+        });
+    }
     Utils.updateOriginField = function (originID, field, value) {
-        var _url = APP.getApiLink({
+        return $.post(APP.getApiLink({
             source: 'shop',
             fn: 'shop_manage_origins',
             originID: originID,
             action: "update_field",
-        });
-        var jqxhr = $.post(_url, {
+        }), {
             key: field,
             value: value
-        }).done(function(){
-            Sandbox.eventNotify('plugin:shop:orderField:updated');
+        }, function(data){
+            Sandbox.eventNotify('plugin:shop:orderField:updated', data);
         });
-        return jqxhr;
     }
 
     return Utils;

@@ -32,14 +32,14 @@ define('plugin/shop/toolbox/js/collection/listOrigins', [
 
         parseState: function (resp, queryParams, state, options) {
             var state = {
-                totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
+                totalRecords: parseInt(resp && resp.total_count || 0, 10)
             };
             Sandbox.eventNotify('plugin:shop:originList:parseState', {collection: this, state: state});
             return state;
         },
 
         parseRecords: function (resp) {
-            var origins = resp && resp.shop && resp.shop.origins || [];
+            var origins = resp && resp.origins || [];
             return origins;
         }
 
