@@ -16,10 +16,10 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
         template: tpl,
         lang: lang,
         initialize: function () {
+            MView.prototype.initialize.call(this);
             var self = this;
             // debugger;
             this.model = new ModelOriginItem();
-            MView.prototype.initialize.call(this);
             var isEdit = !!this.options.originID;
             var dlg = new BootstrapDialog({
                 cssClass: 'shop-toolbox-origin-edit',
@@ -99,7 +99,6 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
         },
         renderEdit: function (originID) {
             debugger;
-            this.
             this.model.getItem(originID);
         },
         renderCreate: function () {
