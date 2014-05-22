@@ -103,5 +103,39 @@ define("default/js/lib/utils", [
         }, 300);
     }
 
+    Utils.isCollectionView = function (obj) {
+        return !_.isEmpty(obj.collection);
+    }
+
+    Utils.isModelView = function (obj) {
+        return !_.isEmpty(obj.model) && !Utils.isCollectionView(obj);
+    }
+
+    Utils.getHBSTemplateData = function (obj) {
+        var _tplData = obj;
+        var _tplExtras = null;
+        if (Utils.isCollectionView(obj)) {
+            _tplData = obj.collection.toJSON();
+            _tplExtras = obj.collection.getExtras && obj.collection.getExtras();
+        } else if (Utils.isModelView(obj)) {
+            _tplData = obj.model.toJSON();
+            _tplExtras = obj.model.getExtras && obj.model.getExtras();
+        }
+        return {
+            lang: obj.lang || {},
+            options: APP.options || {},
+            plugins: APP.config.PLUGINS,
+            app: {
+                config: APP.options,
+                location: {
+                    fragment: Backbone.history.fragment
+                }
+            },
+            data: _tplData,
+            extras: _tplExtras,
+            displayItems: obj && obj.displayItems || []
+        }
+    }
+
     return Utils;
 });

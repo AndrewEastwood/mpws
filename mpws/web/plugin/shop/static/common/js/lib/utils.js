@@ -107,49 +107,20 @@ define("plugin/shop/common/js/lib/utils", [
         });
     }
 
-    Utils.getOrigin = function (originID) {
-        debugger;
-        return $.post(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origins',
-            action: 'get',
-            originID: originID
-        }), function(data){
-            Sandbox.eventNotify('plugin:shop:origin:received:item', data);
-        });
-    }
 
-    Utils.createOrigin = function (data) {
-        return $.post(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origins',
-            action: 'create'
-        }), data, function(data){
-            Sandbox.eventNotify('plugin:shop:origin:item:created', data);
-        });
-    }
-
-    Utils.updateOrigin = function (originID, data) {
-        return $.post(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origins',
-            action: 'update',
-            originID: originID
-        }), data, function(data){
-            Sandbox.eventNotify('plugin:shop:origin:item:updated', data);
-        });
-    }
     Utils.updateOriginField = function (originID, field, value) {
-        return $.post(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origins',
-            originID: originID,
-            action: "update_field",
-        }), {
-            key: field,
-            value: value
-        }, function(data){
-            Sandbox.eventNotify('plugin:shop:orderField:updated', data);
+        return $.ajax({
+            type: "PUT",
+            url: APP.getApiLink({
+                source: 'shop',
+                fn: 'shop_manage_origin'
+            }),
+            contentType: "application/json",
+            data: JSON.stringify({
+                ID: originID,
+                field: field,
+                value: value
+            })
         });
     }
 

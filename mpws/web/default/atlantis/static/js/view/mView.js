@@ -37,39 +37,24 @@ define("default/js/view/mView", [
                 var _self = this;
                 var _fn = fetchOptions && fetchOptions._fn || this.options._fn || "fetch";
                 // debugger;
-                if (this.isCollectionView()) {
+                var _source = false;
+                if (this.isCollectionView())
+                    _source = "collection";
+                else if (this.isModelView())
+                    _source = "model";
 
-                    if (this.collection.url) {
-                        // $.xhrPool.abortAll();
-                        this.collection[_fn](_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
-                            success: function () {
-                                // debugger;
-                                _self.render.call(_self);
-                            },
-                            error: function () {
-                                // debugger;
-                                _self.render.call(_self);
-                            }
-                        }));
-                    } else
-                        this.render.call(_self);
-                } else if (this.isModelView()) {
-
-                    // debugger;
-                    if (this.model.url) {
-                        this.model[_fn](_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
-                            success: function () {
-                                // debugger;
-                                _self.render.call(_self);
-                            },
-                            error: function () {
-                                // debugger;
-                                _self.render.call(_self);
-                            }
-                        }));
-                    } else
-                        this.render.call(_self);
-                } else
+                if (_source && this[_source].url)
+                    this[_source][_fn](_.extend({}, options || {}), _.extend({}, fetchOptions || {}, {
+                        success: function () {
+                            // debugger;
+                            _self.render.call(_self);
+                        },
+                        error: function () {
+                            // debugger;
+                            _self.render.call(_self);
+                        }
+                    }));
+                else
                     this.render.call(_self);
             },
             render: function () {

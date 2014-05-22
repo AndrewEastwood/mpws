@@ -17,18 +17,22 @@ define("plugin/toolbox/toolbox/js/router", [
         Sandbox.eventNotify('plugin:toolbox:status');
     });
 
-    Sandbox.eventSubscribe('global:session:expired', function (error) {
-        if (error === "InvalidPublicTokenKey") {
-            document.location.reload();
-            throw "Session timeout";
-        }
+    Sandbox.eventSubscribe('global:session:needlogin', function (error) {
+        if (Backbone.history.fragment !== "signin")
+            return Backbone.history.navigate("signin", true);
 
-        // debugger;
-        if (_(["LoginRequired", "AccessDenied"]).indexOf(error) >= 0) {
-            if (Backbone.history.fragment !== "signin")
-                Sandbox.eventNotify('plugin:toolbox:logout');
-            return;
-        }
+
+        // if (error === "InvalidPublicTokenKey") {
+        //     document.location.reload();
+        //     throw "Session timeout";
+        // }
+
+        // // debugger;
+        // if (_(["LoginRequired", "AccessDenied"]).indexOf(error) >= 0) {
+        //     if (Backbone.history.fragment !== "signin")
+        //         Sandbox.eventNotify('plugin:toolbox:logout');
+        //     return;
+        // }
 
         throw error;
     });
@@ -56,8 +60,6 @@ define("plugin/toolbox/toolbox/js/router", [
                 renderCompleteSent = true;
                 Sandbox.eventNotify('plugin:toolbox:render:complete');
             }
-        } else {
-            Backbone.history.navigate('signin', true);
         }
     });
 

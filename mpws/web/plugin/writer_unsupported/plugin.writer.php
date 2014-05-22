@@ -901,7 +901,7 @@ class pluginWriter {
         $oid = libraryRequest::getOID();
         
         // check for token id
-        $token = libraryRequest::getValue('token');
+        $token = libraryRequest::fromGET('token');
         
         $model['PLUGINS']['WRITER']['oid'] = $oid;
         $model['PLUGINS']['WRITER']['action'] = $action;
@@ -1283,15 +1283,15 @@ class pluginWriter {
                 ->select('*')
                 ->from('writer_orders')
                 ->where('WriterID', '=', $oid)
-                ->andWhere('DateCreated', '>', libraryRequest::getPostValue('start_date'))
-                ->andWhere('DateCreated', '<', libraryRequest::getPostValue('end_date'))
+                ->andWhere('DateCreated', '>', libraryRequest::fromPOST('start_date'))
+                ->andWhere('DateCreated', '<', libraryRequest::fromPOST('end_date'))
                 ->fetchData();
             
             foreach ($data_orders as $entry)
                 $data_credits += $entry['Credits'];
             
-            $model['PLUGINS']['WRITER']['DATA_DATE_START'] = libraryRequest::getPostValue('start_date');
-            $model['PLUGINS']['WRITER']['DATA_DATE_END'] = libraryRequest::getPostValue('end_date');
+            $model['PLUGINS']['WRITER']['DATA_DATE_START'] = libraryRequest::fromPOST('start_date');
+            $model['PLUGINS']['WRITER']['DATA_DATE_END'] = libraryRequest::fromPOST('end_date');
         }
         
         
@@ -1407,7 +1407,7 @@ class pluginWriter {
                 ->where('ID', '=', $oid)
                 ->query();
 
-            if (libraryRequest::getPostValue('writer_notify', false)) {
+            if (libraryRequest::fromPOST('writer_notify', false)) {
                 // form email object
                 $customer_config_mail = $toolbox->getCustomerObj()->GetCustomerConfiguration('MAIL');
                 $recipient = $customer_config_mail['WEBMASTER'];
@@ -1500,7 +1500,7 @@ class pluginWriter {
                             ->values(array_values($data))
                             ->query();
 
-                        $notifyWriter = libraryRequest::getPostValue('writer_notify');
+                        $notifyWriter = libraryRequest::fromPOST('writer_notify');
                         if (!empty($notifyWriter)) {
                             // form email object
                             $recipient = $customer_config_mail['WEBMASTER'];
@@ -1682,15 +1682,15 @@ class pluginWriter {
                 ->select('*')
                 ->from('writer_orders')
                 ->where('StudentID', '=', $oid)
-                ->andWhere('DateCreated', '>', libraryRequest::getPostValue('start_date'))
-                ->andWhere('DateCreated', '<', libraryRequest::getPostValue('end_date'))
+                ->andWhere('DateCreated', '>', libraryRequest::fromPOST('start_date'))
+                ->andWhere('DateCreated', '<', libraryRequest::fromPOST('end_date'))
                 ->fetchData();
             
             foreach ($data_orders as $entry)
                 $data_order_credits += $entry['Price'];
             
-            $model['PLUGINS']['WRITER']['DATA_DATE_START'] = libraryRequest::getPostValue('start_date');
-            $model['PLUGINS']['WRITER']['DATA_DATE_END'] = libraryRequest::getPostValue('end_date');
+            $model['PLUGINS']['WRITER']['DATA_DATE_START'] = libraryRequest::fromPOST('start_date');
+            $model['PLUGINS']['WRITER']['DATA_DATE_END'] = libraryRequest::fromPOST('end_date');
         //} if (libraryRequest::isPostFormAction('show sales')) {
             $data_sales = $toolbox->getDatabaseObj()
                 ->select('writer_sale.ID as `SID`, writer_sales.ID as `ID`, IsActive, Title, Description,  Pages, Price, writer_sales.DateCreated')
@@ -1699,15 +1699,15 @@ class pluginWriter {
                 ->on('writer_sales.SaleID', '=', 'writer_sale.ID')
                 ->from('writer_sales')
                 ->where('StudentID', '=', $oid)
-                ->andWhere('writer_sales.DateCreated', '>', libraryRequest::getPostValue('sales_start_date'))
-                ->andWhere('writer_sales.DateCreated', '<', libraryRequest::getPostValue('sales_end_date'))
+                ->andWhere('writer_sales.DateCreated', '>', libraryRequest::fromPOST('sales_start_date'))
+                ->andWhere('writer_sales.DateCreated', '<', libraryRequest::fromPOST('sales_end_date'))
                 ->fetchData();
             
             foreach ($data_sales as $entry)
                 $data_sales_credits += $entry['Price'];
             
-            $model['PLUGINS']['WRITER']['DATA_SALES_DATE_START'] = libraryRequest::getPostValue('sales_start_date');
-            $model['PLUGINS']['WRITER']['DATA_SALES_DATE_END'] = libraryRequest::getPostValue('sales_end_date');
+            $model['PLUGINS']['WRITER']['DATA_SALES_DATE_START'] = libraryRequest::fromPOST('sales_start_date');
+            $model['PLUGINS']['WRITER']['DATA_SALES_DATE_END'] = libraryRequest::fromPOST('sales_end_date');
         }
         
         
@@ -1931,7 +1931,7 @@ class pluginWriter {
         $data = array();
 
         // check for token id
-        $token = libraryRequest::getValue('token');
+        $token = libraryRequest::fromGET('token');
         $mdbc = $toolbox->getCustomerObj()->getCustomerConfiguration('MDBC');
 
         $model['PLUGINS']['WRITER']['oid'] = $oid;
@@ -1971,7 +1971,7 @@ class pluginWriter {
         // get writer info
         $currentWriterID = $data_order['WriterID'];
         if (libraryRequest::isPostFormAction('assign to writer'))
-            $currentWriterID = libraryRequest::getPostValue('assign_order_to');
+            $currentWriterID = libraryRequest::fromPOST('assign_order_to');
         $data_writer = $toolbox->getDatabaseObj()
             ->select('*')
             ->from('writer_writers')
@@ -2038,9 +2038,9 @@ class pluginWriter {
             //echo 'saving order';
             
             $order_new_changes = array(
-                'PublicStatus' => libraryRequest::getPostValue('set_order_publicstatus'),
-                'InternalStatus' => libraryRequest::getPostValue('set_order_internalstatus'),
-                'Credits' => libraryRequest::getPostValue('order_credits')
+                'PublicStatus' => libraryRequest::fromPOST('set_order_publicstatus'),
+                'InternalStatus' => libraryRequest::fromPOST('set_order_internalstatus'),
+                'Credits' => libraryRequest::fromPOST('order_credits')
             );
             
             $toolbox->getDatabaseObj()

@@ -1,12 +1,17 @@
 <div class="panel">
     <form class="form-horizontal">
+
+        {{#if data.ID }}
+        <input name="ID" type="hidden" value="{{data.ID}}">
+        {{/if}}
+
         <fieldset>
 
         <!-- Text input-->
         <div class="form-group">
           <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
           <div class="col-md-4">
-            <input id="textinput" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.origin.Name}}">
+            <input id="textinput" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
           </div>
         </div>
 
@@ -14,7 +19,7 @@
         <div class="form-group">
           <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_description}}</label>
           <div class="col-md-4">
-            <textarea class="form-control" id="textarea" name="Description">{{data.origin.Description}}</textarea>
+            <textarea class="form-control" id="textarea" name="Description">{{data.Description}}</textarea>
           </div>
         </div>
 
@@ -22,7 +27,7 @@
         <div class="form-group">
           <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_url}}</label>
           <div class="col-md-4">
-            <input id="textinput" name="HomePage" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.origin.HomePage}}">
+            <input id="textinput" name="HomePage" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.HomePage}}">
           </div>
         </div>
 
@@ -32,7 +37,7 @@
           <div class="col-md-4">
             <select id="selectbasic" name="Status" class="form-control">
               {{#each data.statuses }}
-              <option value="{{this}}" {{#if_eq ../data.origin.Status this}}selected{{/if_eq}}>{{mpwsGetValueByKey ../lang this "origin_field_status_"}}</option>
+              <option value="{{this}}" {{#if_eq ../data.Status this}}selected{{/if_eq}}>{{mpwsGetValueByKey ../lang this "origin_field_status_"}}</option>
               {{/each}}
             </select>
           </div>

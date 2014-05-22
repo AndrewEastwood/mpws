@@ -17,7 +17,6 @@
     }
 
     $data = response();
-    $key = $data->getData('exposeKey');
-    echo $data->toJSON($key);
+    echo $data->toJSON();
 
 ?>

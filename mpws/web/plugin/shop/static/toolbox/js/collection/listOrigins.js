@@ -9,7 +9,7 @@ define('plugin/shop/toolbox/js/collection/listOrigins', [
         url: APP.getApiLink({
             source: 'shop',
             fn: 'shop_manage_origins',
-            action: 'list'
+            // action: 'list'
         }),
 
         // Initial pagination states

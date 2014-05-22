@@ -5,12 +5,12 @@ class pluginShop extends objectPlugin {
     public function getResponse () {
         $data = new libraryDataObject();
 
-        switch(libraryRequest::getValue('fn')) {
+        switch(libraryRequest::fromGET('fn')) {
             // breadcrumb
             // -----------------------------------------------
             case "shop_location": {
-                $productID = libraryRequest::getValue('productID');
-                $categoryID = libraryRequest::getValue('categoryID');
+                $productID = libraryRequest::fromGET('productID');
+                $categoryID = libraryRequest::fromGET('categoryID');
                 $data = $this->_api_getCatalogLocation($productID, $categoryID);
                 break;
             }
@@ -67,7 +67,7 @@ class pluginShop extends objectPlugin {
             // product standalone item full
             // -----------------------------------------------
             case "shop_product_item" : {
-                $productID = libraryRequest::getValue('productID');
+                $productID = libraryRequest::fromGET('productID');
                 $data = $this->_api_getProduct($productID, true);
                 break;
             }
@@ -86,25 +86,25 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_order_status": {
-                $orderHash = libraryRequest::getValue('orderHash');
+                $orderHash = libraryRequest::fromGET('orderHash');
                 $data = $this->_api_getOrderStatus($orderHash);
                 break;
             }
             case "shop_profile_orders": {
-                $profileID = libraryRequest::getValue('profileID');
+                $profileID = libraryRequest::fromGET('profileID');
                 $data = $this->_api_getOrderList_ForProfile($profileID);
                 break;
             }
             case "shop_manage_orders": {
-                $do = libraryRequest::getValue('action');
+                $do = libraryRequest::fromGET('action');
                 switch ($do) {
                     case 'update':
-                        $orderID = libraryRequest::getValue('orderID');
+                        $orderID = libraryRequest::fromGET('orderID');
                         $this->_api_updateOrder($orderID);
                         $data = $this->_api_getOrder($orderID);
                         break;
                     case 'get':
-                        $orderID = libraryRequest::getValue('orderID');
+                        $orderID = libraryRequest::fromGET('orderID');
                         $data = $this->_api_getOrder($orderID);
                         break;
                     case 'list':
@@ -114,44 +114,62 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_manage_origins": {
-                $do = libraryRequest::getValue('action');
-                switch ($do) {
-                    case 'create':
-                        $data = $this->_api_createOrigin();
-                        break;
-                    case 'update':
-                        $originID = libraryRequest::getValue('originID');
-                        $data = $this->_api_updateOrigin($originID);
-                        break;
-                    case 'update_field':
-                        $originID = libraryRequest::getValue('originID');
-                        $key = libraryRequest::getPostValue('key');
-                        $value = libraryRequest::getPostValue('value');
-                        $data = $this->_api_updateOriginField($originID, $key, $value);
-                        break;
-                    case 'get':
-                        $originID = libraryRequest::getValue('originID');
-                        $data = $this->_api_getOrigin($originID);
-                        break;
-                    case 'statuses':
-                        $data = $this->_api_getOriginStates();
-                        break;
-                    case 'list':
-                        $data = $this->_api_getOriginList();
-                        break;
-                }
+                $data = $this->_api_getOriginList();
                 break;
             }
+            case "shop_manage_origin": {
+                // $do = libraryRequest::fromGET('action');
+                if (libraryRequest::isGET() && libraryRequest::hasInGET('ID')) {
+                    $originID = libraryRequest::fromGET('ID');
+                    $data = $this->_api_getOrigin($originID);
+                } elseif (libraryRequest::isPOST() && !libraryRequest::hasInREQUEST('ID')) {
+                    $data = $this->_api_createOrigin();
+                } elseif (libraryRequest::isPUT() && libraryRequest::hasInREQUEST('ID')) {
+                    $originID = libraryRequest::fromREQUEST('ID');
+                    $data = $this->_api_updateOrigin($originID);
+                }
+
+                $data->setData('statuses', $this->_api_getOriginStates()->getData('statuses'));
+
+
+                break;
+                // switch ($do) {
+                //     case 'create':
+                //         $data = $this->_api_createOrigin();
+                //         break;
+                //     case 'update':
+                //         $originID = libraryRequest::fromGET('originID');
+                //         $data = $this->_api_updateOrigin($originID);
+                //         break;
+                //     case 'update_field':
+                //         $originID = libraryRequest::fromGET('originID');
+                //         $key = libraryRequest::fromPOST('key');
+                //         $value = libraryRequest::fromPOST('value');
+                //         $data = $this->_api_updateOriginField($originID, $key, $value);
+                //         break;
+                //     case 'get':
+                //         $originID = libraryRequest::fromGET('originID');
+                //         $data = $this->_api_getOrigin($originID);
+                //         break;
+                //     case 'statuses':
+                //         $data = $this->_api_getOriginStates();
+                //         break;
+                //     case 'list':
+                //         $data = $this->_api_getOriginList();
+                //         break;
+                // }
+            }
             case "shop_manage_categories": {
-                $do = libraryRequest::getValue('action');
+                break;
+                $do = libraryRequest::fromGET('action');
                 switch ($do) {
                     case 'update':
-                        $categoryID = libraryRequest::getValue('categoryID');
+                        $categoryID = libraryRequest::fromGET('categoryID');
                         $this->_api_updateCategory($categoryID);
                         $data = $this->_api_getCategory($categoryID);
                         break;
                     case 'get':
-                        $categoryID = libraryRequest::getValue('categoryID');
+                        $categoryID = libraryRequest::fromGET('categoryID');
                         $data = $this->_api_getCategory($categoryID);
                         break;
                     case 'list':
@@ -161,15 +179,16 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_manage_products": {
-                $do = libraryRequest::getValue('action');
+                break;
+                $do = libraryRequest::fromGET('action');
                 switch ($do) {
                     case 'update':
-                        $productID = libraryRequest::getValue('productID');
+                        $productID = libraryRequest::fromGET('productID');
                         $this->_api_updateProduct($productID);
                         $data = $this->_api_getProduct($productID);
                         break;
                     case 'get':
-                        $productID = libraryRequest::getValue('productID');
+                        $productID = libraryRequest::fromGET('productID');
                         $data = $this->_api_getProduct($productID);
                         break;
                     case 'list':
@@ -179,6 +198,7 @@ class pluginShop extends objectPlugin {
                 break;
             }
             case "shop_manage_stats": {
+                break;
                 $data = $this->_api_getToolbox_Dashboard();
                 break;
             }
@@ -306,8 +326,8 @@ class pluginShop extends objectPlugin {
 
         $dataObj = new libraryDataObject();
 
-        $categoryID = libraryRequest::getValue('categoryID', null);
-        // $categoryId = getValue($params['categoryId'], null);
+        $categoryID = libraryRequest::fromGET('categoryID', null);
+        // $categoryId = fromGET($params['categoryId'], null);
 
         if (!is_numeric($categoryID)) {
             $dataObj->setError("Wrong category ID parameter");
@@ -341,7 +361,7 @@ class pluginShop extends objectPlugin {
         $filterOptionsAvailable['filter_commonAvailability'] = array("ACTIVE", "OUTOFSTOCK", "COMINGSOON");
         $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
         foreach ($filterOptionsApplied as $key => $value)
-            $filterOptionsApplied[$key] = libraryRequest::getValue($key) ?: $filterOptions[$key];
+            $filterOptionsApplied[$key] = libraryRequest::fromGET($key) ?: $filterOptions[$key];
 
         // set data source
         // ---
@@ -520,8 +540,8 @@ class pluginShop extends objectPlugin {
     // shopping products compare
     // -----------------------------------------------
     private function _api_getCompareList () {
-        $do = libraryRequest::getValue('action');
-        $productID = libraryRequest::getValue('productID');
+        $do = libraryRequest::fromGET('action');
+        $productID = libraryRequest::fromGET('productID');
         $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
 
         $products = $dataObj->getData();
@@ -541,7 +561,7 @@ class pluginShop extends objectPlugin {
 
         $sessionKey = 'shopCartProducts';
         $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
-        $do = libraryRequest::getValue('action');
+        $do = libraryRequest::fromGET('action');
         $dataObj = $this->_custom_util_manageStoredProducts($sessionKey, $cartActions);
 
         $errors = array();
@@ -550,8 +570,8 @@ class pluginShop extends objectPlugin {
         $productData = $dataObj->getData();
 
         // adjust product id and quantity
-        $productID = intval(libraryRequest::getValue('productID'));
-        $productQuantity = intval(libraryRequest::getValue('productQuantity'));
+        $productID = intval(libraryRequest::fromGET('productID'));
+        $productQuantity = intval(libraryRequest::fromGET('productQuantity'));
 
         // $_getInfoFn = function (&$_products = array()) {
 
@@ -585,7 +605,7 @@ class pluginShop extends objectPlugin {
             // shopCartWarehouse
             // shopCartComment
             // shopCartCreateAccount
-            $cartUser = libraryRequest::getPostValue('user');
+            $cartUser = libraryRequest::fromPOST('user');
 
             $accountID = null;
             $addressID = null;
@@ -897,8 +917,8 @@ class pluginShop extends objectPlugin {
         $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
 
         // pagination
-        $page = libraryRequest::getValue('page');
-        $per_page = libraryRequest::getValue('per_page');
+        $page = libraryRequest::fromGET('page');
+        $per_page = libraryRequest::fromGET('per_page');
 
         $configOrders['limit'] = $per_page;
 
@@ -907,8 +927,8 @@ class pluginShop extends objectPlugin {
         }
 
         // sorting
-        $sort = libraryRequest::getValue('sort');
-        $order = libraryRequest::getValue('order');
+        $sort = libraryRequest::fromGET('sort');
+        $order = libraryRequest::fromGET('order');
 
         if (!empty($sort) && !empty($order)) {
             $configOrders["order"] = array(
@@ -918,7 +938,7 @@ class pluginShop extends objectPlugin {
         }
 
         // filtering
-        $filterBy_status = libraryRequest::getValue('status');
+        $filterBy_status = libraryRequest::fromGET('status');
         if (!empty($filterBy_status)) {
             $configOrders['condition']['filter'] .= "Status (=) ?";
             $configOrders['condition']['values'][] = $filterBy_status;
@@ -951,8 +971,8 @@ class pluginShop extends objectPlugin {
         }
 
         // get fields to update
-        $Status = libraryRequest::getPostValue('Status');
-        // $fieldValue = libraryRequest::getPostValue('value');
+        $Status = libraryRequest::fromPOST('Status');
+        // $fieldValue = libraryRequest::fromPOST('value');
         if (empty($Status)) {
             $dataObj->setError('EmptyFieldName');
             return $dataObj;
@@ -974,7 +994,7 @@ class pluginShop extends objectPlugin {
     }
 
     private function _api_getProductList () {
-        $listType = strtolower(libraryRequest::getValue('type'));
+        $listType = strtolower(libraryRequest::fromGET('type'));
 
         // send list of types
         switch ($listType) {
@@ -1121,8 +1141,8 @@ class pluginShop extends objectPlugin {
         // $dataConfigProducts['limit'] = $limit;
 
         // pagination
-        $page = libraryRequest::getValue('page');
-        $per_page = libraryRequest::getValue('per_page');
+        $page = libraryRequest::fromGET('page');
+        $per_page = libraryRequest::fromGET('per_page');
 
         $dataConfigProducts['limit'] = $per_page;
 
@@ -1131,8 +1151,8 @@ class pluginShop extends objectPlugin {
         }
 
         // sorting
-        $sort = libraryRequest::getValue('sort');
-        $order = libraryRequest::getValue('order');
+        $sort = libraryRequest::fromGET('sort');
+        $order = libraryRequest::fromGET('order');
 
         if (!empty($sort) && !empty($order)) {
             $dataConfigProducts["order"] = array(
@@ -1142,7 +1162,7 @@ class pluginShop extends objectPlugin {
         }
 
         // filtering
-        // $filterBy_status = libraryRequest::getValue('status');
+        // $filterBy_status = libraryRequest::fromGET('status');
         // if (!empty($filterBy_status)) {
         //     $configOrders['condition']['filter'] .= "Status (=) ?";
         //     $configOrders['condition']['values'][] = $filterBy_status;
@@ -1176,10 +1196,11 @@ class pluginShop extends objectPlugin {
 
     private function _api_getOrigin ($originID) {
         $dataObj = new libraryDataObject();
-        $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
-        $dataOrigin = $this->getCustomer()->processData($configOrigin);
-        $dataObj->setData('origin', $dataOrigin);
-        $dataObj->setData('statuses', $this->_api_getOriginStates()->getData('statuses'));
+        if (!empty($originID)) {
+            $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
+            $dataOrigin = $this->getCustomer()->processData($configOrigin);
+            $dataObj->setData('origin', $dataOrigin);
+        }
         return $dataObj;
     }
 
@@ -1190,24 +1211,28 @@ class pluginShop extends objectPlugin {
         $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrigins);
 
         // pagination
-        $page = libraryRequest::getValue('page');
-        $per_page = libraryRequest::getValue('per_page');
+        if (libraryRequest::hasInGet('page', 'per_page')) {
+            $page = libraryRequest::fromGET('page');
+            $per_page = libraryRequest::fromGET('per_page');
 
-        $configOrigins['limit'] = $per_page;
+            $configOrigins['limit'] = $per_page;
 
-        if (!empty($page) && !empty($per_page)) {
-            $configOrigins['offset'] = ($page - 1) * $per_page;
+            if (!empty($page) && !empty($per_page)) {
+                $configOrigins['offset'] = ($page - 1) * $per_page;
+            }
         }
 
         // sorting
-        $sort = libraryRequest::getValue('sort');
-        $order = libraryRequest::getValue('order');
+        if (libraryRequest::hasInGet('sort', 'order')) {
+            $sort = libraryRequest::fromGET('sort');
+            $order = libraryRequest::fromGET('order');
 
-        if (!empty($sort) && !empty($order)) {
-            $configOrigins["order"] = array(
-                "field" =>  'shop_origins' . DOT . $sort,
-                "ordering" => strtoupper($order)
-            );
+            if (!empty($sort) && !empty($order)) {
+                $configOrigins["order"] = array(
+                    "field" =>  'shop_origins' . DOT . $sort,
+                    "ordering" => strtoupper($order)
+                );
+            }
         }
 
         $configCount['additional'] = new ArrayObject($configOrigins['additional']);
@@ -1224,12 +1249,12 @@ class pluginShop extends objectPlugin {
 
     private function _api_createOrigin () {
         $dataObj = new libraryDataObject();
-        $dataOrigin = libraryRequest::getPostContainer("Name", "Description", "Status", "HomePage");
-        $dataOrigin["ExternalKey"] = libraryUtils::url_slug(libraryRequest::getValue('Name'), array("delimiter" => "_", 'lowercase' => true));
-        // $dataOrigin["Name"] = libraryRequest::getValue('Name');
-        // $dataOrigin["Description"] = libraryRequest::getValue('Description');
-        // $dataOrigin["Status"] = libraryRequest::getValue('Status');
-        // $dataOrigin["HomePage"] = libraryRequest::getValue('HomePage');
+        $dataOrigin = libraryRequest::getObjectFromREQUEST("Name", "Description", "Status", "HomePage");
+        $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
+        // $dataOrigin["Name"] = libraryRequest::fromGET('Name');
+        // $dataOrigin["Description"] = libraryRequest::fromGET('Description');
+        // $dataOrigin["Status"] = libraryRequest::fromGET('Status');
+        // $dataOrigin["HomePage"] = libraryRequest::fromGET('HomePage');
         $dataOrigin["CustomerID"] = $this->getCustomer()->getCustomerID();
         $dataOrigin['DateCreated'] = configurationShopDataSource::getDate();
         $dataOrigin['DateUpdated'] = configurationShopDataSource::getDate();
@@ -1241,24 +1266,28 @@ class pluginShop extends objectPlugin {
 
     private function _api_updateOrigin ($originID) {
         $dataObj = new libraryDataObject();
-        $dataOrigin = libraryRequest::getPostContainer("Name", "Description", "Status", "HomePage");
-        $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
+
+        $dataOrigin = array();
+
+        // update only one field
+        if (libraryRequest::hasInREQUEST("field", "value")) {
+            $field = libraryRequest::fromREQUEST('field');
+            $value = libraryRequest::fromREQUEST('value');
+            $dataOrigin[$field] = $value;
+        } else // update whole item
+            $dataOrigin = libraryRequest::getObjectFromREQUEST("Name", "Description", "Status", "HomePage");
+
+        // update external value
+        if (isset($dataOrigin['Name']))
+            $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
+
+        // change update time
         $dataOrigin['DateUpdated'] = configurationShopDataSource::getDate();
-        // $dataOrigin["Name"] = libraryRequest::getValue('Name');
-        // $dataOrigin["Description"] = libraryRequest::getValue('Description');
-        // $dataOrigin["Status"] = libraryRequest::getValue('Status');
-        // $dataOrigin["HomePage"] = libraryRequest::getValue('HomePage');
+
         $configOrigin = configurationShopDataSource::jsapiShopOriginUpdate($originID, $dataOrigin);
         $this->getCustomer()->processData($configOrigin);
         $dataObj->setData('origin', $dataOrigin);
         return $dataObj;
-    }
-
-    private function _api_updateOriginField ($originID, $field, $value) {
-        $dataOrigin[$field] = $value;
-        $configOrigin = configurationShopDataSource::jsapiShopOriginUpdate($originID, $dataOrigin);
-        $this->getCustomer()->processData($configOrigin);
-        return $this->_api_getOrigin($originID);
     }
 
     private function _api_getToolbox_Dashboard () {
@@ -1458,8 +1487,8 @@ class pluginShop extends objectPlugin {
 
     private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {
         $dataObj = new libraryDataObject();
-        $productID = libraryRequest::getValue('productID');
-        $do = empty($action) ? libraryRequest::getValue('action') : $action;
+        $productID = libraryRequest::fromGET('productID');
+        $do = empty($action) ? libraryRequest::fromGET('action') : $action;
         $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
 
         if (!empty($userActions) && is_array($userActions))

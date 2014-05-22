@@ -5,9 +5,7 @@ class libraryDataObject {
     private $_data;
 
     function __construct() {
-        $this->_data = array(
-            "error" => null
-        );
+        $this->_data = array();
     }
 
     // data
@@ -16,12 +14,20 @@ class libraryDataObject {
         return $this;
     }
     public function getError() {
-        return $this->_data['error'];
+        return isset($this->_data['error']) ? $this->_data['error'] : false;
     }
 
     public function setData($key, $val) {
         $this->_data[$key] = $val;
         return $this;
+    }
+
+    public function overwriteData($data) {
+        if (is_array($data)) {
+            $this->_data = new ArrayObject($data);
+            return true;
+        }
+        return false;
     }
 
     public function getData($key = null) {

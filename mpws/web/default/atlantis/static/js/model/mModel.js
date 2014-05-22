@@ -8,6 +8,8 @@ define("default/js/model/mModel", [
         // debugger;
         var MModel = Backbone.Model.extend({
 
+            idAttribute: "ID",
+
             extras: {},
             // required parameters
             source: '',

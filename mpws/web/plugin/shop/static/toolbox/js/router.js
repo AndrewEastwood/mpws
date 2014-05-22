@@ -50,7 +50,6 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         product_manager: function () {
-
             require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ProductManager', function (cachedView) {

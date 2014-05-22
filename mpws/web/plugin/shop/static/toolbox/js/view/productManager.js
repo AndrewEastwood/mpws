@@ -50,6 +50,7 @@ define("plugin/shop/toolbox/js/view/productManager", [
         // });
         // popupOrigin.fetchAndRender();
         var popupOrigin = new PopupOrigin();
+        // popupOrigin.renderEdit(data.oid);
         popupOrigin.renderEdit(data.oid);
     });
 

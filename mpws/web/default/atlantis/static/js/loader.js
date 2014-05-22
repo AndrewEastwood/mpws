@@ -82,14 +82,14 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
         // console.log(jqxhr.responseText);
         var responseObj = JSON.parse(jqxhr.responseText);
 
-        if (responseObj && responseObj.error && responseObj.error === "InvalidPublicTokenKey")
-            Sandbox.eventNotify("global:session:expired", responseObj.error);
+        // if (responseObj && responseObj.error && responseObj.error === "InvalidTokenKey")
+        //     Sandbox.eventNotify("global:session:expired", responseObj.error);
 
-        if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
-            Sandbox.eventNotify("global:session:expired", responseObj.error);
+        // if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
+        //     Sandbox.eventNotify("global:session:expired", responseObj.error);
 
         if (responseObj && responseObj.error && responseObj.error === "LoginRequired")
-            Sandbox.eventNotify("global:session:expired", responseObj.error);
+            Sandbox.eventNotify("global:session:needlogin", responseObj.error);
     });
 
     // Sandbox message handler

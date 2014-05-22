@@ -17,7 +17,7 @@
         return array_merge_recursive($arrSrc, $arrExt);;
     }
     
-    function getValue ($value, $default = '') {
+    function fromGET ($value, $default = '') {
         if (isset($value))
             return $value;
         return $default;

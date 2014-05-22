@@ -16,6 +16,12 @@
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
 
+    $_REQ = json_decode(file_get_contents("php://input"), true);
+
+    // var_dump($_REQ);
+    // var_dump($_POST);
+    // var_dump($_GET);
+
     // include global files
     $globals = glob(DR . '/engine/global/global.*.php');
     foreach ($globals as $globalFile)

@@ -30,7 +30,7 @@ $msg = false;
 
 
 if (libraryRequest::isPostFormAction('save robots')) {
-    $data = libraryRequest::getPostValue('robots_content');
+    $data = libraryRequest::fromPOST('robots_content');
     file_put_contents($robots, $data);
     $msg[] = date('Y-m-d H:i:s') . ': Robots.txt is saved';
 } else

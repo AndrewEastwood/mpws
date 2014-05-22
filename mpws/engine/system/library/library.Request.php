@@ -4,98 +4,49 @@
 class libraryRequest {
 
     /* get values */
-    static function getPlugin ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('plugin', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getLocale ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('l', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getDisplay($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('display', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getPage ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('page', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getAction ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('action', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getOID ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getValue('oid', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getValue($key, $defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::value($_GET, $key, $defaultValue, $switch, $valueOnSwitch);
+    static function fromGET($key) {
+        return $_GET[$key];
     }
 
-    /* get post values */
-    static function getPostPlugin ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getPostValue('plugin', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getPostDisplay($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getPostValue('display', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getPostPage ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getPostValue('page', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getPostAction ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getPostValue('action', $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getPostValue($key, $defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::value($_POST, $key, $defaultValue, $switch, $valueOnSwitch);
-    }
-    static function getPostFormAction ($lower = true) {
-        if ($lower)
-            return strtolower(self::value($_POST, 'do'));
-        return self::value($_POST, 'do');
-    }
-    static function getPostFormField ($key, $doEscape = true, $wrap = '') {
-        $_value = self::value($_POST, renderFLD_NAME . strtolower($key));
-        
-        if ($doEscape) {
-            if (is_array($_value))
-                foreach ($_value as $k => $v)
-                    $_value[$k] = mysql_escape_string($v);
-            if (is_string($_value))
-                $_value = mysql_escape_string($_value);
-        }
-        if (!empty($wrap)) {
-            if (is_array($_value))
-                foreach ($_value as $k => $v)
-                    $_value[$k] = $wrap . $v . $wrap;
-            if (is_string($_value))
-                $_value = $wrap . $_value . $wrap;
-        }
-        return $_value;
+    static function hasInGet() {
+        for ($i = 0, $num = func_num_args(); $i < $num; $i++)
+            if (!isset($_GET[func_get_arg($i)]))
+                return false;
+        return true;
     }
 
-    /* api */
-    static function getApiCaller ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getPostValue('caller', $defaultValue, $switch, $valueOnSwitch);
+    /* get post/put value */
+    static function fromREQUEST($key) {
+        global $_REQ;
+        return $_REQ[$key];
     }
-    static function getApiFn ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        return self::getPostValue('fn', $defaultValue, $switch, $valueOnSwitch);
+
+    static function hasInREQUEST($key) {
+        global $_REQ;
+        for ($i = 0, $num = func_num_args(); $i < $num; $i++)
+            if (!isset($_REQ[func_get_arg($i)]))
+                return false;
+        return true;
     }
-    static function getApiParam ($defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        $param = self::getPostValue('p', $defaultValue, $switch, $valueOnSwitch);
-        //var_dump($param);
-        // parse_str($param, $param);
-        if (empty($param))
-            return $defaultValue;
-        // $param = libraryUtils::cleanQueryArray($param);
-        // if single parameter
-        // p=sometext
-        // return 'sometext'
-        $c = current($param);
-        if (count($param) == 1 && empty($c))
-            return $c;
-        // explode custom params
-        if (isset($param['custom'])) {
-            //echo 'LOL';
-            //echo $param['custom'];
-            $output = false;
-            parse_str(urldecode($param['custom']), $output);
-            $param['custom'] = $output;
-        }
-        return $param;
+
+    static function isPOST () {
+        return $_SERVER['REQUEST_METHOD'] === "POST";
+    }
+
+    static function isGET () {
+        return $_SERVER['REQUEST_METHOD'] === "GET";
+    }
+
+    static function isPATCH () {
+        return $_SERVER['REQUEST_METHOD'] === "PATCH";
+    }
+
+    static function isPUT () {
+        return $_SERVER['REQUEST_METHOD'] === "PUT";
+    }
+
+    static function isDELETE () {
+        return $_SERVER['REQUEST_METHOD'] === "DELETE";
     }
 
     /* state grabbers */
@@ -104,133 +55,19 @@ class libraryRequest {
         // return self::getAction() === 'api';
         return MPWS_REQUEST === "API";
     }
-    static function isPostFormAction ($equalsToThisValue) { 
-        $do = self::value($_POST, 'do');
-        //echo '<br>isPostFormAction === ' . $equalsToThisValue . ' == ' . $do;
-        //echo ' equals: ' . ($do === strtolower($equalsToThisValue)?1:0);
-        return strtolower($do) === strtolower($equalsToThisValue);
-    }
-    static function isPostFormActionMatchAny (/* looking for any action */) {
-        // we'll return tru if there are some action that you're looking for'
-        $num = func_num_args();
-        $do = self::value($_POST, 'do');
-        for ($i = 0; $i < $num; $i++)
-            if (strcasecmp($do, func_get_arg($i)) === 0)
-                return true;
-        return false;
-    }
-    static function isPostFormActionMatchAll (/* looking for any action */) {
-        // we'll return tru if there are some action that you're looking for'
-        $num = func_num_args();
-        $do = self::value($_POST, 'do');
-        for ($i = 0; $i < $num; $i++)
-            if (strcasecmp($do, func_get_arg($i)) !== 0)
-                return false;
-        return true;
-    }
 
-    static function getPostContainer (/* required fields */) {
-        $container = array();
+    static function getObjectFromREQUEST (/* required fields */) {
+        $obj = array();
         for ($i = 0, $num = func_num_args(); $i < $num; $i++)
-            $container[func_get_arg($i)] = self::getPostValue(func_get_arg($i));
-        return $container;
-    }
-    static function getPostMapContainer ($map) {
-        $container = array();
-        if (!empty($map)) {
-            foreach ($map as $containerKey => $postKey)
-                if (empty($postKey))
-                    $container[$containerKey] = '';
-                else
-                    $container[$containerKey] = self::getPostValue($postKey);
-        }
-        return $container;
+            $obj[func_get_arg($i)] = self::fromREQUEST(func_get_arg($i));
+        return $obj;
     }
 
-    static function storeOrGetRefererUrl ($store = true, $scope = '') {
-
-        if(empty($scope))
-            $scope = self::getDisplay();
-
-        //var_dump(parse_url($_SERVER['HTTP_REFERER']));
-        if ($store) {
-            $_SESSION['MPWS_STORED_URL'.$scope] = $_SERVER['REQUEST_URI'];
-        } else {
-            if (isset($_SESSION['MPWS_STORED_URL'.$scope])) {
-                $_data = parse_url($_SESSION['MPWS_STORED_URL'.$scope]);
-                return $_data['path'] . (!empty($_data['query'])? ('?' . $_data['query']) : '');
-            }
-            return false;
-        }
-    }
-
-    static function getNewUrl($key = '', $value = '', $remove = array('page', 'action'), $keep = array()) {
-        //echo 'GETTING NEW URL WITH KEY: ' . $key;
-        $_data = array();
-        parse_str($_SERVER['QUERY_STRING'], $_data);
-        if ($remove == 1)
-            $remove = array('page', 'action');
-        // array arguments
-        if (!empty($key)) {
-            if (is_array($key)) {
-                foreach ($key as $idx => $k) {
-                    if (empty($value) || $value[$idx] == null)
-                        $remove[] = $k;
-                    else
-                        $_data[$k] = $value[$idx];
-                }
-            } else {
-                if ($value == null)
-                    $remove[] = $key;
-                else
-                    $_data[$key] = $value;
-            }
-        }
-        // remove hidden keys
-        if(is_array($remove))
-            foreach ($remove as $keyToRemove)
-                unset($_data[$keyToRemove]);
-        elseif (is_string($remove))
-            unset($_data[$remove]);
-        //unset($_data['action']);
-        //$str = http_build_query($_data);
-        //var_dump($str);
-        //filter by keep value
-        if (!empty($keep)){
-            $_newData = array();
-            foreach ($_data as $_key => $_val) {
-                if (in_array($_key, $keep))
-                    $_newData[$_key] = $_val;
-            }
-            $_data = $_newData;
-        }
-        //$str = http_build_query($_data);
-        //var_dump($str);
-        //var_dump($keep);
-        return http_build_query($_data);
-    }
-
-    /* common */
-    static function value($method, $key, $defaultValue = null, $switch = null, $valueOnSwitch = null) {
-        if ($switch)
-            return $valueOnSwitch;
-        else {
-            if (isset($method[$key])) {
-                return $method[$key];
-            } else
-                return $defaultValue;
-        }
-    }
-    
     public static function getOrValidatePageSecurityToken($privateKey, $publicKey = '') {
         if (!empty($publicKey)) {
-            // echo $_SESSION['MPWS_SESSION_TOKEN'];
-            // echo 'publicKey=' . $publicKey;
-            // echo 'MPWS_SESSION_TOKEN=' . $_SESSION['MPWS_SESSION_TOKEN'];
             if (!empty($_SESSION['MPWS_SESSION_TOKEN']))
                 return $_SESSION['MPWS_SESSION_TOKEN'] === $publicKey;
             return $publicKey === self::getOrValidatePageSecurityToken($privateKey);
-
         }
         if (!self::isJsApiRequest()) {
             // make token
@@ -257,21 +94,7 @@ class libraryRequest {
         header('');
         header($post_data);
     }
-    
-    public static function locationRedirect($values, $location) {
-        // MPWS PERMISSION CHECK
-        if (!MPWS_ENABLE_REDIRECTS)
-            return;
-        header('Location: ' . self::getLocationString($values, $location));
-    }
-    
-    public static function getLocationString ($values, $location) {
-        $post_data = '';
-        foreach($values as $key => $value)
-            $post_data .= ($key . '=' . $value . '&');
-        return $location . '?' . $post_data;
-    }
- 
+
     /*
      * Original post: http://www.php.net/manual/en/function.fsockopen.php#101872
      * By: Jeremy Saintot
@@ -291,7 +114,7 @@ class libraryRequest {
         $timeout = 1,           /* Socket timeout in seconds */ 
         $req_hdr = false,          /* Include HTTP request headers */ 
         $res_hdr = false           /* Include HTTP response headers */ 
-        ) 
+        )
     { 
         
         
@@ -368,9 +191,7 @@ class libraryRequest {
     */
 
     }
-          
 
-    
     public static function getURL ($urlString) {
 
         define("PSNG_CRAWLER_MAX_FILESIZE", 150000); // only 100k data will be scanned
@@ -507,18 +328,6 @@ class libraryRequest {
         list ($usec, $sec) = explode(" ", microtime());
         return ((float) $usec + (float) $sec);
     }
-    
-    public static function explodeUrl ($url) {
-        $_url = parse_url($url);
-        //var_dump($_url);
-        //var_dump($_url['query']);
-        //var_dump(parse_str($_url['query']));
-        if (!empty($_url['query'])) {
-            parse_str($_url['query'], $_url['query']);
-        }
-        return $_url;
-    }
-    
 }
 
 

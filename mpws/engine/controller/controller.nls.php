@@ -4,8 +4,8 @@
 
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
-    $customer = libraryRequest::getValue('customer');
-    $langfile = libraryRequest::getValue('lang');
+    $customer = libraryRequest::fromGET('customer');
+    $langfile = libraryRequest::fromGET('lang');
 
     if (MPWS_ENV === 'DEV')
         $layoutCustomer = glGetFullPath('web', 'customer', $customer, 'static', 'nls', $langfile);

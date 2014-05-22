@@ -6,13 +6,13 @@ class pluginAccount extends objectPlugin {
 
         $data = new libraryDataObject();
 
-        switch(libraryRequest::getValue('fn')) {
+        switch(libraryRequest::fromGET('fn')) {
             case "create": {
                 $data = $this->_custom_api_createAccount();
                 break;
             }
             case "profile": {
-                $do = libraryRequest::getValue('action');
+                $do = libraryRequest::fromGET('action');
                 switch($do) {
                     case "signin": {
                         $data = $this->_custom_api_signin();
@@ -39,7 +39,7 @@ class pluginAccount extends objectPlugin {
                         break;
                     }
                     case "removeAddress": {
-                        $AddressID = libraryRequest::getPostValue('AddressID');
+                        $AddressID = libraryRequest::fromPOST('AddressID');
                         $data = $this->_custom_api_removeAddress($AddressID);
                         break;
                     }
@@ -85,7 +85,7 @@ class pluginAccount extends objectPlugin {
 
         $errors = array();
 
-        $credentials = libraryRequest::getPostValue('credentials');
+        $credentials = libraryRequest::fromPOST('credentials');
 
         if (empty($credentials['email']))
             $errors['email'] = 'Empty';
@@ -124,7 +124,7 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _custom_api_createAccount () {
-        $dataAccount = libraryRequest::getPostValue('account');
+        $dataAccount = libraryRequest::fromPOST('account');
 
         $accountObj = new libraryDataObject();
         $errors = array();
@@ -176,7 +176,7 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _custom_api_edit () {
-        $account = libraryRequest::getPostValue('account');
+        $account = libraryRequest::fromPOST('account');
         $accountObj = new libraryDataObject();
         $errors = array();
 
@@ -235,7 +235,7 @@ class pluginAccount extends objectPlugin {
             return $accountObj;
         }
 
-        $dataAddress = libraryRequest::getPostValue('address');
+        $dataAddress = libraryRequest::fromPOST('address');
 
         $dataAddress['AccountID'] = $this->getActiveProfileID();
 
@@ -299,8 +299,8 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _custom_api_updatePassword () {
-        $dataAccount['Password'] = libraryRequest::getPostValue('Password');
-        $dataAccount['ConfirmPassword'] = libraryRequest::getPostValue('ConfirmPassword');
+        $dataAccount['Password'] = libraryRequest::fromPOST('Password');
+        $dataAccount['ConfirmPassword'] = libraryRequest::fromPOST('ConfirmPassword');
 
         $accountObj = new libraryDataObject();
         $errors = array();

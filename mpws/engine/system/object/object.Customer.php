@@ -96,8 +96,8 @@ class objectCustomer {
     public function getResponse () {
 
         $response = new libraryDataObject();
-        $publicKey = libraryRequest::getValue('token');
-        $source = libraryRequest::getValue('source');
+        $publicKey = libraryRequest::fromGET('token');
+        $source = libraryRequest::fromGET('source');
 
         if (empty($source)) {
             $response->setError('WrongSource');
@@ -113,14 +113,14 @@ class objectCustomer {
 
         // check page token
         if (empty($publicKey)) {
-            $response->setError('WrongToken');
-            header("HTTP/1.0 500 WrongToken");
+            $response->setError('EmptyToken');
+            header("HTTP/1.0 500 EmptyToken");
             return $response;
         }
 
         if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
-            $response->setError('InvalidPublicTokenKey');
-            header("HTTP/1.0 500 InvalidPublicTokenKey");
+            $response->setError('InvalidTokenKey');
+            header("HTTP/1.0 500 InvalidTokenKey");
             return $response;
         }
 
@@ -135,12 +135,13 @@ class objectCustomer {
 
         // this section must be located when all plugins are performed
         // becuse the toolbox plugin does user validation and authorizations
-        $action = libraryRequest::getValue('action');
-        if (MPWS_IS_TOOLBOX && !$this->isAdminActive() && $action !== "signin") {
-            $response->setError('LoginRequired');
-            header("HTTP/1.0 500 LoginRequired");
-            // $response->setData('redirect', 'signin');
-            return $response;
+        if (MPWS_IS_TOOLBOX && !$this->isAdminActive()) {
+            if (!libraryRequest::hasGET('action') || libraryRequest::fromGET('action') !== "signin") {
+                $response->setError('LoginRequired');
+                header("HTTP/1.0 500 LoginRequired");
+                // $response->setData('redirect', 'signin');
+                return $response;
+            }
         }
 
         if ($source == '*')
@@ -148,8 +149,7 @@ class objectCustomer {
                 $response->setData($key, $plugin->getResponse()->toNative());
         elseif ($this->hasPlugin($source)) {
             $plugin = $this->getPlugin($source);
-            $response->setData($source, $plugin->getResponse()->toNative());
-            $response->setData('exposeKey', $source);
+            $response->overwriteData($plugin->getResponse()->toNative());
         }
 
         return $response;

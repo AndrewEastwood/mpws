@@ -6,9 +6,9 @@ class pluginToolbox extends objectPlugin {
 
         $data = false;
 
-        switch(libraryRequest::getValue('fn')) {
+        switch(libraryRequest::fromGET('fn')) {
             case "auth":
-                $do = libraryRequest::getValue('action');
+                $do = libraryRequest::fromGET('action');
                 switch($do) {
                     case "signin": {
                         $data = $this->_custom_api_signin();
@@ -86,7 +86,7 @@ class pluginToolbox extends objectPlugin {
 
         $errors = array();
 
-        $credentials = libraryRequest::getPostValue('credentials');
+        $credentials = libraryRequest::fromPOST('credentials');
 
         if (empty($credentials['email']))
             $errors['email'] = 'Empty';
