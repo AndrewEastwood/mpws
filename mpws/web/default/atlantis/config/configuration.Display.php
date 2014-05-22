@@ -20,9 +20,10 @@ class configurationDefaultDisplay extends objectConfiguration {
     static $MasterJsApiKey = 'UUUDemo1!!!MstPwd#123!@#';
 
     // features
+    static $IsManaged = true;
     static $AllowWideJsApi = false;
     static $AllowJobInstallerLink = true;
-    static $Plugins = array("toolbox");
+    static $Plugins = array();
 
     // encoding key
     static $EncKey = 'Qqq!@SdfTo__56%$#';

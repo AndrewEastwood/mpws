@@ -21,7 +21,7 @@ define("plugin/toolbox/toolbox/js/model/auth", [
             var url = this.getUrl({
                 action: 'status'
             });
-            $.post(url, function (response) {
+            $.get(url, function (response) {
                 Cache.setObject('AdminProfileID', response.profile && response.profile.ID);
                 self.set(response);
                 self.trigger('change');

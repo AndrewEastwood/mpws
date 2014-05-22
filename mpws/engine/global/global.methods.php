@@ -42,18 +42,6 @@
             return join(DS, func_get_args()) . DS;
     }
 
-    function glFilteredPlugins ($list) {
-        $listFiltered = array();
-
-        foreach ($list as $pluginName) {
-            if (!MPWS_IS_TOOLBOX && $pluginName === MPWS_TOOLBOX)
-                continue;
-            $listFiltered[] = $pluginName;
-        }
-
-        return $listFiltered;
-    }
-
     function convDT($dt,  $toTZ, $fromTZ = false, $format = 'Y-m-d H:i:s') {
         // NOTE: preg_match is temporary disabled
         //echo 'convDT:' . $fromTZ . ' => ' . $toTZ;

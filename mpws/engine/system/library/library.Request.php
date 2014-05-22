@@ -49,6 +49,10 @@ class libraryRequest {
         return $_SERVER['REQUEST_METHOD'] === "DELETE";
     }
 
+    static function getRequestMethodName () {
+        return strtolower($_SERVER['REQUEST_METHOD']) . '_' . libraryRequest::fromGET('fn');
+    }
+
     /* state grabbers */
     static function isJsApiRequest () {
         //echo 'RequestAction is ' . self::getAction();

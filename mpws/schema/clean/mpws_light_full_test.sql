@@ -70,7 +70,9 @@ DROP TABLE IF EXISTS `mpws_accounts`;
 CREATE TABLE `mpws_accounts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
+  `PermissionID` int(11) DEFAULT NULL,
   `IsTemporary` tinyint(1) NOT NULL DEFAULT '1',
+  `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
   `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
   `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
   `EMail` varchar(100) COLLATE utf8_bin NOT NULL,
@@ -78,12 +80,14 @@ CREATE TABLE `mpws_accounts` (
   `Password` varchar(50) COLLATE utf8_bin NOT NULL,
   `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `DateLastAccess` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
+  KEY `PermisionsID` (`PermissionID`),
   CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -94,7 +98,7 @@ CREATE TABLE `mpws_accounts` (
 
 LOCK TABLES `mpws_accounts` WRITE;
 /*!40000 ALTER TABLE `mpws_accounts` DISABLE KEYS */;
-INSERT INTO `mpws_accounts` VALUES (77,1,1,'James','Griffin','test@test.com',NULL,'24d04aa3d61423fb9dae48ac4d7567d5','72e6d9fe68147c4feb0cf7b035be9e05','ACTIVE','2014-03-01 01:14:14','2014-03-01 01:14:14'),(78,1,0,'James','demo2','test@demo2.com',NULL,'24d04aa3d61423fb9dae48ac4d7567d5','c261191eb31433b98994f58e57567a67','ACTIVE','2014-03-01 01:16:39','2014-03-01 01:16:39'),(79,1,0,'Test','Demo','demo@demo.com5','097-56-56-201','24d04aa3d61423fb9dae48ac4d7567d5','b74c7e4ec4dc62728ee5a2195a8605b2','ACTIVE','2014-03-01 14:38:46','2014-03-09 23:52:24'),(80,1,1,'tset','','tset','ttset','4a123a551c46b3a7a2e1b6b76e7d69c9','f5046014417bd9c1098e0f29bd5abf59','ACTIVE','2014-03-01 14:45:03','2014-03-01 14:45:03'),(81,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','23fcad34643fa6b3c4d9765778498f21','ACTIVE','2014-03-01 14:45:14','2014-03-01 14:45:14'),(82,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','79e4c5826a3eb7159495df60739ea8e4','ACTIVE','2014-04-13 17:03:11','2014-04-13 17:03:11'),(83,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','96b43a2b8b7a4345e39ff036d1fb1411','ACTIVE','2014-04-13 17:03:15','2014-04-13 17:03:15'),(84,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','a6db90adbd1ceba703b935900b63676c','ACTIVE','2014-04-13 17:03:22','2014-04-13 17:03:22'),(85,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','930b420144d08e6655a9742c4e27f7aa','ACTIVE','2014-04-13 17:06:02','2014-04-13 17:06:02'),(86,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','d8a652f26fbd5fde44eafb83366c6060','ACTIVE','2014-04-13 17:09:30','2014-04-13 17:09:31'),(87,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','731090a3ff07cd56600d19fef1ee968b','ACTIVE','2014-04-13 17:10:51','2014-04-13 17:10:51'),(88,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','b47beeb45a7da18c266e60f432fe75e6','ACTIVE','2014-04-19 21:19:49','2014-04-19 21:19:49'),(89,1,1,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','455399988248744bef4fb19d28392f94','ACTIVE','2014-04-19 21:22:04','2014-04-19 21:22:04'),(90,1,1,'test','','test@test.com','123-123-1234','4a123a551c46b3a7a2e1b6b76e7d69c9','0ccb16b9476e2423e0ff74e56750d5b2','ACTIVE','2014-04-19 21:38:08','2014-04-19 21:38:08');
+INSERT INTO `mpws_accounts` VALUES (77,1,0,1,0,'James','Griffin','test@test.com',NULL,'24d04aa3d61423fb9dae48ac4d7567d5','72e6d9fe68147c4feb0cf7b035be9e05','ACTIVE','0000-00-00 00:00:00','2014-03-01 01:14:14','2014-03-01 01:14:14'),(78,1,0,0,0,'James','demo2','test@demo2.com',NULL,'24d04aa3d61423fb9dae48ac4d7567d5','c261191eb31433b98994f58e57567a67','ACTIVE','0000-00-00 00:00:00','2014-03-01 01:16:39','2014-03-01 01:16:39'),(79,1,0,0,0,'Test','Demo','demo@demo.com5','097-56-56-201','24d04aa3d61423fb9dae48ac4d7567d5','b74c7e4ec4dc62728ee5a2195a8605b2','ACTIVE','0000-00-00 00:00:00','2014-03-01 14:38:46','2014-03-09 23:52:24'),(80,1,0,1,0,'tset','','tset','ttset','4a123a551c46b3a7a2e1b6b76e7d69c9','f5046014417bd9c1098e0f29bd5abf59','ACTIVE','0000-00-00 00:00:00','2014-03-01 14:45:03','2014-03-01 14:45:03'),(81,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','23fcad34643fa6b3c4d9765778498f21','ACTIVE','0000-00-00 00:00:00','2014-03-01 14:45:14','2014-03-01 14:45:14'),(82,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','79e4c5826a3eb7159495df60739ea8e4','ACTIVE','0000-00-00 00:00:00','2014-04-13 17:03:11','2014-04-13 17:03:11'),(83,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','96b43a2b8b7a4345e39ff036d1fb1411','ACTIVE','0000-00-00 00:00:00','2014-04-13 17:03:15','2014-04-13 17:03:15'),(84,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','a6db90adbd1ceba703b935900b63676c','ACTIVE','0000-00-00 00:00:00','2014-04-13 17:03:22','2014-04-13 17:03:22'),(85,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','930b420144d08e6655a9742c4e27f7aa','ACTIVE','0000-00-00 00:00:00','2014-04-13 17:06:02','2014-04-13 17:06:02'),(86,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','d8a652f26fbd5fde44eafb83366c6060','ACTIVE','0000-00-00 00:00:00','2014-04-13 17:09:30','2014-04-13 17:09:31'),(87,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','731090a3ff07cd56600d19fef1ee968b','ACTIVE','0000-00-00 00:00:00','2014-04-13 17:10:51','2014-04-13 17:10:51'),(88,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','b47beeb45a7da18c266e60f432fe75e6','ACTIVE','0000-00-00 00:00:00','2014-04-19 21:19:49','2014-04-19 21:19:49'),(89,1,0,1,0,'','','','','4a123a551c46b3a7a2e1b6b76e7d69c9','455399988248744bef4fb19d28392f94','ACTIVE','0000-00-00 00:00:00','2014-04-19 21:22:04','2014-04-19 21:22:04'),(90,1,0,1,0,'test','','test@test.com','123-123-1234','4a123a551c46b3a7a2e1b6b76e7d69c9','0ccb16b9476e2423e0ff74e56750d5b2','ACTIVE','0000-00-00 00:00:00','2014-04-19 21:38:08','2014-04-19 21:38:08');
 /*!40000 ALTER TABLE `mpws_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,6 +166,34 @@ INSERT INTO `mpws_jobs` VALUES (6,0,'SI Team Render Weekly Report','SI Team Rend
 UNLOCK TABLES;
 
 --
+-- Table structure for table `mpws_permissions`
+--
+
+DROP TABLE IF EXISTS `mpws_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_permissions` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `isAdmin` tinyint(1) NOT NULL,
+  `CanCreate` tinyint(1) NOT NULL,
+  `CanEdit` tinyint(1) NOT NULL,
+  `CanView` tinyint(1) NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mpws_permissions`
+--
+
+LOCK TABLES `mpws_permissions` WRITE;
+/*!40000 ALTER TABLE `mpws_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mpws_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `mpws_subscripers`
 --
 
@@ -221,41 +253,6 @@ LOCK TABLES `mpws_uploads` WRITE;
 /*!40000 ALTER TABLE `mpws_uploads` DISABLE KEYS */;
 INSERT INTO `mpws_uploads` VALUES (3,0,'/var/www/mpws/rc_1.0/data/uploads/2012-08-26/f03a4a9c48b90e54b99f84014dcdb787/e-card.PNG','f03a4a9c48b90e54b99f84014dcdb787',NULL,'2012-08-26 22:55:36');
 /*!40000 ALTER TABLE `mpws_uploads` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mpws_users`
---
-
-DROP TABLE IF EXISTS `mpws_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mpws_users` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `Name` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `Password` varchar(32) CHARACTER SET latin1 NOT NULL,
-  `Active` tinyint(1) NOT NULL,
-  `IsOnline` tinyint(1) NOT NULL,
-  `Permisions` text CHARACTER SET latin1 NOT NULL,
-  `Role` enum('SUPERADMIN','READER','REPORTER') CHARACTER SET latin1 NOT NULL DEFAULT 'READER',
-  `DateLastAccess` datetime NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_users_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Public site users';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mpws_users`
---
-
-LOCK TABLES `mpws_users` WRITE;
-/*!40000 ALTER TABLE `mpws_users` DISABLE KEYS */;
-INSERT INTO `mpws_users` VALUES (1,0,'TestUser','',0,0,'Toolbox:*:all;\\r\\nWriter:*:all;','READER','2012-06-26 00:00:00','0000-00-00 00:00:00','2012-10-27 16:55:54'),(3,0,'test3','fe01ce2a7fbac8fafaed7c982a04e229',1,1,'','READER','2013-10-23 00:30:17','2012-06-25 23:56:20','0000-00-00 00:00:00'),(4,0,'TestUser','fe01ce2a7fbac8fafaed7c982a04e229',0,0,'Toolbox:*:all;\r\nWriter:*:all;','READER','2012-06-26 00:00:00','2012-06-26 00:00:00','0000-00-00 00:00:00'),(25,0,'testusersecond','84730c4bf2fac85a5a74e9722eb88f5d',1,0,'*.*','SUPERADMIN','0000-00-00 00:00:00','2012-10-27 16:53:48','2012-10-27 16:53:48'),(26,0,'TestUserAAAA','',0,0,'qqq','SUPERADMIN','0000-00-00 00:00:00','0000-00-00 00:00:00','2012-10-29 23:20:12'),(28,0,'aaaaaaaaaaaaaaaaaaa','84730c4bf2fac85a5a74e9722eb88f5d',0,0,'fgdgdfgdgfdg','SUPERADMIN','0000-00-00 00:00:00','2012-10-29 23:55:18','2012-10-29 23:55:18');
-/*!40000 ALTER TABLE `mpws_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -587,7 +584,7 @@ CREATE TABLE `shop_origins` (
 
 LOCK TABLES `shop_origins` WRITE;
 /*!40000 ALTER TABLE `shop_origins` DISABLE KEYS */;
-INSERT INTO `shop_origins` VALUES (1,1,'','SONY','SONY','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(2,1,'','DELL','DELL','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(3,1,'hp','HP','HP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:10:59'),(4,1,'samsung32323','Samsung32323','Samsung','http://www.sony.com','REMOVED','2013-08-27 02:26:41','2014-05-22 03:56:13'),(5,1,'lg555fsdfsdfsdbbcbdgfdgd','LG555fsdfsdfsdbbcbdgfdgd','LG','http://www.sony.com','REMOVED','2013-08-27 02:26:41','2014-05-22 03:56:12'),(6,1,'toshibagfdg','Toshibagfdg','Toshiba','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 03:55:59'),(7,1,'sharp','SHARP','SHARP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-19 10:19:54'),(8,1,'','Apple','Apple','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(9,1,'dex','DEX','DEX','www.dex.com','ACTIVE','2014-05-18 23:19:01','2014-05-19 09:13:02'),(10,1,'microsoft','Microsoft','Microsoft','www.microsoft.com','ACTIVE','2014-05-18 23:28:13','2014-05-18 23:28:23'),(11,1,'','WEST','WEST','west.com','ACTIVE','2014-05-22 03:23:18','2014-05-22 03:23:18'),(12,1,'bosch','BOSCH','BOSCH','BOSCH.com','ACTIVE','2014-05-22 03:24:44','2014-05-22 03:24:44');
+INSERT INTO `shop_origins` VALUES (1,1,'','SONY','SONY','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(2,1,'','DELL','DELL','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(3,1,'hp','HP','HP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:10:59'),(4,1,'samsung','Samsung','Samsung','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 22:02:21'),(5,1,'lg','LG','LG','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 22:02:16'),(6,1,'toshibagfdg','Toshibagfdg','Toshiba','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 03:55:59'),(7,1,'sharp','SHARP','SHARP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-19 10:19:54'),(8,1,'','Apple','Apple','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(9,1,'dex','DEX','DEX','www.dex.com','ACTIVE','2014-05-18 23:19:01','2014-05-19 09:13:02'),(10,1,'microsoft','Microsoft','Microsoft','www.microsoft.com','ACTIVE','2014-05-18 23:28:13','2014-05-18 23:28:23'),(11,1,'','WEST','WEST','west.com','ACTIVE','2014-05-22 03:23:18','2014-05-22 03:23:18'),(12,1,'bosch','BOSCH','BOSCH','BOSCH.com','ACTIVE','2014-05-22 03:24:44','2014-05-22 03:24:44');
 /*!40000 ALTER TABLE `shop_origins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -932,4 +929,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-22  4:10:55
+-- Dump completed on 2014-05-23  1:38:28

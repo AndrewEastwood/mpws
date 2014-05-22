@@ -44,6 +44,10 @@ class libraryDataObject {
         return count($this->_data) > 1;
     }
 
+    public function isEmpty() {
+        return !$this->hasData();
+    }
+
     // converters
     public function toJSON($key = null) {
         return json_encode($this->getData($key));

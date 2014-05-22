@@ -1,16 +1,33 @@
 define("customer/js/router", [
-    // 'application',
     'default/js/lib/sandbox',
-    'cmn_jquery',
-    'default/js/lib/underscore',
-    // 'default/js/view/breadcrumb'
-], function (/*App, */Sandbox, $, _/*, Breadcrumb*/) {
+    'default/js/lib/auth'
+], function (Sandbox, Auth) {
 
-    Sandbox.eventSubscribe('global:loader:complete', function (options) {
 
-        Sandbox.eventNotify('global:page:setTitle', 'Toolbox');
+
+
+
+
+    Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
+
+        debugger;
 
     });
+
+
+
+
+    Sandbox.eventSubscribe('global:loader:complete', function (options) {
+        Sandbox.eventNotify('global:page:setTitle', 'Toolbox');
+    });
+
+
+    // get initial account status
+    Auth.getStatus();
+
+    // control all plugins here here 
+
+
 
     // var _customerOptions = {};
 

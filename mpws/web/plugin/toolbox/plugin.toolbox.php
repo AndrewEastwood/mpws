@@ -2,48 +2,32 @@
 
 class pluginToolbox extends objectPlugin {
 
-    public function getResponse () {
-
-        $data = false;
-
-        switch(libraryRequest::fromGET('fn')) {
-            case "auth":
-                $do = libraryRequest::fromGET('action');
-                switch($do) {
-                    case "signin": {
-                        $data = $this->_custom_api_signin();
-                        break;
-                    }
-                    case "signout": {
-                        $data = $this->_custom_api_signout();
-                        break;
-                    }
-                    case "status": {
-                        $data = $this->_custom_api_status();
-                        break;
-                    }
+    public function get_auth () {
+        $data = new libraryDataObject();
+        $do = libraryRequest::fromGET('action');
+        switch($do) {
+            case "status": {
+                $data = $this->_custom_api_status();
                 break;
             }
         }
-
-        // if (glIsToolbox()) {
-        //     $response->setError('AccessDenied');
-        //     $response->setData('redirect', '/toolbox/#login');
-        //     return $response;
-        // }
-
-        // attach to output
         return $data;
     }
 
-    public function getPluginData ($fn, $params) {
-        switch($fn) {
-            case 'isActive': {
-                return $this->isAccountSignedIn();
+    public function post_auth () {
+        $data = new libraryDataObject();
+        $do = libraryRequest::fromGET('action');
+        switch($do) {
+            case "signin": {
+                $data = $this->_custom_api_signin();
+                break;
+            }
+            case "signout": {
+                $data = $this->_custom_api_signout();
+                break;
             }
         }
-
-        return null;
+        return $data;
     }
 
     private function getAdminAccount ($email, $password, $encodePassword) {
@@ -57,7 +41,7 @@ class pluginToolbox extends objectPlugin {
         return $this->getCustomer()->processData($config);
     }
 
-    private function isAccountSignedIn () {
+    public function isAccountSignedIn () {
         if (isset($_SESSION['Toolbox:ProfileID']))
             return true;
         else {
@@ -86,7 +70,7 @@ class pluginToolbox extends objectPlugin {
 
         $errors = array();
 
-        $credentials = libraryRequest::fromPOST('credentials');
+        $credentials = libraryRequest::fromREQUEST('credentials');
 
         if (empty($credentials['email']))
             $errors['email'] = 'Empty';

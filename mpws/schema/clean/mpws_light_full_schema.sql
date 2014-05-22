@@ -60,7 +60,9 @@ DROP TABLE IF EXISTS `mpws_accounts`;
 CREATE TABLE `mpws_accounts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
+  `PermissionID` int(11) DEFAULT NULL,
   `IsTemporary` tinyint(1) NOT NULL DEFAULT '1',
+  `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
   `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
   `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
   `EMail` varchar(100) COLLATE utf8_bin NOT NULL,
@@ -68,12 +70,14 @@ CREATE TABLE `mpws_accounts` (
   `Password` varchar(50) COLLATE utf8_bin NOT NULL,
   `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `DateLastAccess` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
+  KEY `PermisionsID` (`PermissionID`),
   CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -122,6 +126,25 @@ CREATE TABLE `mpws_jobs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mpws_permissions`
+--
+
+DROP TABLE IF EXISTS `mpws_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_permissions` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `isAdmin` tinyint(1) NOT NULL,
+  `CanCreate` tinyint(1) NOT NULL,
+  `CanEdit` tinyint(1) NOT NULL,
+  `CanView` tinyint(1) NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `mpws_subscripers`
 --
 
@@ -162,31 +185,6 @@ CREATE TABLE `mpws_uploads` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_uploads_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `mpws_users`
---
-
-DROP TABLE IF EXISTS `mpws_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mpws_users` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `Name` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `Password` varchar(32) CHARACTER SET latin1 NOT NULL,
-  `Active` tinyint(1) NOT NULL,
-  `IsOnline` tinyint(1) NOT NULL,
-  `Permisions` text CHARACTER SET latin1 NOT NULL,
-  `Role` enum('SUPERADMIN','READER','REPORTER') CHARACTER SET latin1 NOT NULL DEFAULT 'READER',
-  `DateLastAccess` datetime NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_users_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Public site users';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -709,4 +707,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-22  4:10:55
+-- Dump completed on 2014-05-23  1:38:28

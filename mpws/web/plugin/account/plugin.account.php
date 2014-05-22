@@ -2,6 +2,173 @@
 
 class pluginAccount extends objectPlugin {
 
+
+
+    public function get_auth () {
+        $data = new libraryDataObject();
+        $do = libraryRequest::fromGET('action');
+        switch($do) {
+            case "status": {
+                $data = $this->_custom_api_status();
+                break;
+            }
+        }
+        return $data;
+    }
+
+    public function post_auth () {
+        $data = new libraryDataObject();
+        $do = libraryRequest::fromGET('action');
+        switch($do) {
+            case "signin": {
+                $data = $this->_custom_api_signin();
+                break;
+            }
+            case "signout": {
+                $data = $this->_custom_api_signout();
+                break;
+            }
+        }
+        return $data;
+    }
+
+    private function getAdminAccount ($email, $password, $encodePassword) {
+        if ($encodePassword)
+            $password = $this->getCustomer()->getAccountPassword($password);
+
+        // var_dump($password);
+        // var_dump($passwordS);
+        $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $password);
+        // var_dump($config);
+        return $this->getCustomer()->processData($config);
+    }
+
+    public function isAccountSignedIn () {
+        if (isset($_SESSION['Toolbox:ProfileID']))
+            return true;
+        else {
+            setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
+            setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
+            unset($_SESSION['Toolbox:ProfileID']);
+            return false;
+        }
+    }
+
+    private function getActiveProfileID () {
+        if ($this->isAccountSignedIn())
+            return $_SESSION['Toolbox:ProfileID'];
+        return false;
+    }
+
+    private function getActiveProfile ($newPassword = false) {
+        if ($this->isAccountSignedIn())
+            return $this->getAdminAccount($_COOKIE['tu'], !empty($newPassword) ? $newPassword : $_COOKIE['tp'], false);
+        else
+            return null;
+    }
+
+    private function _custom_api_signin () {
+        $accountObj = new libraryDataObject();
+
+        $errors = array();
+
+        $credentials = libraryRequest::fromREQUEST('credentials');
+
+        if (empty($credentials['email']))
+            $errors['email'] = 'Empty';
+
+        if (empty($credentials['password']))
+            $errors['password'] = 'Empty';
+
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            return $accountObj;
+        }
+
+        $account = $this->getAdminAccount($credentials['email'], $credentials['password'], true);
+
+        // var_dump($account);
+
+        if (empty($account))
+            $accountObj->setError('WrongCredentials');
+        else {
+            $accountObj->setData('profile', $account);
+
+            // keep user logged in
+            if ($credentials['remember']) {
+                /* Set cookie to last 1 year */
+                setcookie('tu', $credentials['email'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME'], false, true);
+                setcookie('tp', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME'], false, true);
+            
+            } else {
+                /* Cookie expires when browser closes */
+                setcookie('tu', $credentials['email'], false, '/', $_SERVER['SERVER_NAME'], false, true);
+                setcookie('tp', $account['Password'], false, '/', $_SERVER['SERVER_NAME'], false, true);
+            }
+
+            $_SESSION['Toolbox:ProfileID'] = $account['ID'];
+        }
+
+        return $accountObj;
+    }
+
+    private function _custom_api_status () {
+        $accountObj = new libraryDataObject();
+        $account = $this->getActiveProfile();
+        $accountObj->setData('profile', $account);
+        return $accountObj;
+    }
+
+    private function _custom_api_signout () {
+        $accountObj = new libraryDataObject();
+        setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
+        setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
+        unset($_SESSION['Toolbox:ProfileID']);
+        $accountObj->setData('profile', null);
+        return $accountObj;
+    }
+
+
+
+/******************************************************/
+/******************************************************/
+/******************************************************/
+
+
+
+
+    public function get_status () {
+        $data = new libraryDataObject();
+
+        if ($this->isAccountSignedIn()) {
+            $data->setData('status', 'ok');
+        } else
+            $data->setData('status', 'none');
+        $data->setData('account', $this->getActiveProfile());
+
+        return $data;
+    }
+
+    public function post_login () {
+
+    }
+
+    public function post_logout () {
+
+    }
+
+    public function post_user () {
+
+    }
+
+    public function get_user () {
+
+    }
+
+    public function put_user () {
+
+    }
+
     public function getResponse () {
 
         $data = new libraryDataObject();
@@ -80,7 +247,7 @@ class pluginAccount extends objectPlugin {
             return null;
     }
 
-    private function _custom_api_signin () {
+    private function _custom_api_signin ($email, $password) {
         $accountObj = new libraryDataObject();
 
         $errors = array();
@@ -331,7 +498,160 @@ class pluginAccount extends objectPlugin {
 
         return $accountObj;
     }
+    // Accounts
+    public function addAccount ($dataAccount) {
 
+        $dataAccount["CustomerID"] = $this->getCustomerID();
+        $dataAccount["ValidationString"] = md5(time());
+        $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
+        $dataAccount['IsTemporary'] = 1;
+        $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiAddAccount();
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->processData($config);
+        return $this->getDataBase()->getLastInsertId();
+    }
+
+    public function getAccount ($login, $password, $encodePassword = true) {
+        if ($encodePassword)
+            $password = $this->getAccountPassword($password);
+        $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
+        // var_dump($config);
+        $profile = $this->processData($config);
+        if (isset($profile['ID']))
+            $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
+        return $profile;
+    }
+
+    public function getAccountByID ($id) {
+        $config = configurationCustomerDataSource::jsapiGetAccountByID($id);
+        $profile = $this->processData($config);
+        return $profile;
+    }
+
+    public function activateAccount ($ValidationString) {
+        $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
+        $this->processData($config);
+    }
+
+    public function removeAccount ($dataAccount) {
+        $AccountID = $dataAccount['AccountID'];
+        unset($dataAccount['AccountID']);
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiRemoveAccount($AccountID);
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->processData($config);
+    }
+
+    public function updateAccount ($dataAccount) {
+        $AccountID = $dataAccount['AccountID'];
+        unset($dataAccount['AccountID']);
+        if (isset($dataAccount['Password']))
+            $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiUpdateAccount($AccountID);
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->processData($config);
+    }
+
+    public function updateAccountPassword ($dataAccount) {
+        $AccountID = $dataAccount['AccountID'];
+        unset($dataAccount['AccountID']);
+        if (isset($dataAccount['Password']))
+            $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
+        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiUpdateAccount();
+        $config['data'] = array(
+            "fields" => array_keys($dataAccount),
+            "values" => array_values($dataAccount)
+        );
+        $this->processData($config);
+        return $dataAccount['Password'];
+    }
+
+    public function getAccountPassword ($rawPassword) {
+        $key = '!MPWSservice123';
+        return md5($key . $rawPassword);
+    }
+
+    public function getAccountAddresses ($AccountID) {
+        // if (!$this->isAccountSignedIn() && !$force)
+        //     return false;
+        $config = configurationCustomerDataSource::jsapiGetAccountAddresses($AccountID);
+        return $this->dbo->getData($config);
+    }
+
+    public function getAccountAddress ($AccountID, $AddressID) {
+        $config = configurationCustomerDataSource::jsapiGetAccountAddress($AccountID, $AddressID);
+        return $this->dbo->getData($config);
+    }
+
+    public function getAddress ($AddressID) {
+        $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
+        return $this->dbo->getData($config);
+    }
+
+    public function addAccountAddress ($address) {
+        $address['DateCreated'] = date('Y:m:d H:i:s');
+        $address['DateUpdated'] = date('Y:m:d H:i:s');
+        $config = configurationCustomerDataSource::jsapiAddAccountAddress();
+        $config['data'] = array(
+            "fields" => array_keys($address),
+            "values" => array_values($address)
+        );
+        // var_dump($config);
+        $this->processData($config);
+        return $this->getDataBase()->getLastInsertId();
+    }
+
+    public function updateAccountAddress ($address) {
+        $AccountID = $address['AccountID'];
+        unset($address['AccountID']);
+        $AddressID = $address['AddressID'];
+        unset($address['AddressID']);
+        $address['DateUpdated'] = date('Y:m:d H:i:s');
+        // var_dump($address);
+        $config = configurationCustomerDataSource::jsapiUpdateAccountAddress($AccountID, $AddressID, $address);
+        $config['data'] = array(
+            "fields" => array_keys($address),
+            "values" => array_values($address)
+        );
+        // var_dump($config);
+        $this->processData($config);
+    }
+
+    public function removeAccountAddress ($AccountID, $AddressID) {
+        $config = configurationCustomerDataSource::jsapiRemoveAccountAddress($AccountID, $AddressID);
+        // var_dump($config);
+        $this->processData($config);
+    }
+
+    public function getAccountStats () {
+        $stats = array();
+        $filterProducts = array(
+            array("key" => "ByStatusActive", "filter" => "Status (=) ?", "value" => array("ACTIVE")),
+            array("key" => "ByStatusRemoved", "filter" => "Status (=) ?", "value" => array("REMOVED")),
+            array("key" => "ByStatusActiveAndIsTemporary", "filter" => "Status (=) ? + IsTemporary (=) ?", "value" => array("ACTIVE", 1))
+        );
+        foreach ($filterProducts as $filterItem) {
+            $configCount = configurationCustomerDataSource::jsapiUtil_GetTableRecordsCount(configurationCustomerDataSource::$Table_SystemAccounts);
+            $configCount['condition']['filter'] = $filterItem['filter'];
+            $configCount['condition']['values'] = $filterItem['value'];
+            $dataCount = $this->processData($configCount);
+            $stats[$filterItem['key']] = $dataCount['ItemsCount'];
+        }
+        return $stats;
+    }
 }
 
 ?>

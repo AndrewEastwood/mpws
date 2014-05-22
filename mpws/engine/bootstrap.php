@@ -18,6 +18,8 @@
 
     $_REQ = json_decode(file_get_contents("php://input"), true);
 
+    if (empty($_REQ))
+        $_REQ = $_POST;
     // var_dump($_REQ);
     // var_dump($_POST);
     // var_dump($_GET);

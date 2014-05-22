@@ -1,4 +1,4 @@
-define("default/js/lib/url", [], function (){
+define("default/js/lib/url", function (){
 
 /*!
  * Lightweight URL manipulation with JavaScript

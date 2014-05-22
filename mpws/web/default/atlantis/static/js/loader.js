@@ -7,18 +7,32 @@ var APP = {
             'cmn_jquery',
             'default/js/lib/underscore',
             'default/js/lib/backbone',
-            'default/js/lib/url',
             'default/js/lib/contentInjection',
             this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
         ];
         return modules;
     },
-    hasPlugin: function (pluginName) {
-        return _(APP.config.PLUGINS).indexOf(pluginName) >= 0;
+    getPluginRoutersToDownload: function () {
+        var modules = [];
+        // include site file
+        for (var key in this.config.PLUGINS)
+            modules.push('plugin/' + this.config.PLUGINS[key] + '/' + (this.config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
+        return modules;
     },
-    getApiLink: function () {
+    hasPlugin: function (pluginName) {
+        return _(this.config.PLUGINS).indexOf(pluginName) >= 0;
+    },
+    getApiLink: function (options) {
         throw "Implment function getApiLink";
+        // var url = APP.config.URL_API;
+        // var query = {
+        //     token: APP.config.TOKEN
+        // };
+
+
+
+        // return options
     },
     init: function () {
         // set requirejs configuration
@@ -48,26 +62,23 @@ var APP = {
 
 APP.init();
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
-
-    APP.commonElements = $('div[name^="Common"]:not(:has(*))');
-    // function
+require(["default/js/lib/url"], function(JSUrl) {
     APP.getApiLink = function (extraOptions) {
-
         var _url = new JSUrl(APP.config.URL_API);
         _url.query.token = APP.config.TOKEN;
         if (!_.isEmpty(extraOptions))
             _(extraOptions).each(function (v, k) {
                 _url.query[k] = !!v ? v : "";
             });
-
         return _url.toString();
     }
+})
 
-    // debugger;
-    // var _pluginsObjects = [].slice.call(arguments, 8);
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
 
-    $.xhrPool = [];
+    APP.commonElements = $('div[name^="Common"]:not(:has(*))');
+
+    $.xhrPool = []; 
     $.xhrPool.abortAll = function() {
         $(this).each(function(idx, jqXHR) {
             jqXHR.abort();
@@ -177,26 +188,18 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, JSUrl, co
             });
         else
             renderFn(options);
-
         // refresh links (make them active)
         Sandbox.eventNotify('global:menu:set-active');
     });
 
-    var modules = [];
-    // include site file
-    for (var key in APP.config.PLUGINS)
-        modules.push('plugin/' + APP.config.PLUGINS[key] + '/' + (APP.config.ISTOOLBOX ? 'toolbox' : 'site') + '/js/router');
-
-    require(modules, function(){
+    require(APP.getPluginRoutersToDownload(), function(){
         var _pluginsObjects = [].slice.call(arguments);
         // initialize plugins
         _(_pluginsObjects).each(function(plugin){
             new plugin();
         });
-
         // notify all that loader completed its tasks
         Sandbox.eventNotify('global:loader:complete');
-
         // start HTML5 History push
         Backbone.history.start();
         // return Site;

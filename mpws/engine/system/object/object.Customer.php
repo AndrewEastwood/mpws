@@ -11,15 +11,9 @@ class objectCustomer {
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
 
-        $filteredPlugins = glFilteredPlugins(configurationCustomerDisplay::$Plugins);
-
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
-        foreach ($filteredPlugins as $pluginName) {
-
-            // echo $pluginName;
-            if (!MPWS_IS_TOOLBOX && $pluginName === MPWS_TOOLBOX)
-                continue;
+        foreach (configurationCustomerDisplay::$Plugins as $pluginName) {
 
             $pluginFileName = OBJECT_T_PLUGIN . DOT . $pluginName . EXT_SCRIPT;
             $pluginFilePath = $_pluginPath . DS . $pluginName . DS . $pluginFileName;
@@ -93,6 +87,20 @@ class objectCustomer {
         return $this->plugins[$key];
     }
 
+    public function hasPlugin ($pluginName) {
+        return !empty($this->plugins[$pluginName]);
+    }
+
+    public function getPluginData ($source, $function, $params = null) {
+        $data = new libraryDataObject();
+        $plugin = $this->getPlugin($source);
+        if (empty($plugin))
+            return $data;
+        if (!method_exists($plugin, $function))
+            return $data;
+        return $plugin->$function($params);
+    }
+
     public function getResponse () {
 
         $response = new libraryDataObject();
@@ -124,7 +132,7 @@ class objectCustomer {
             return $response;
         }
 
-        if (MPWS_IS_TOOLBOX && !in_array(MPWS_TOOLBOX, configurationCustomerDisplay::$Plugins)) {
+        if (MPWS_IS_TOOLBOX && !configurationCustomerDisplay::$IsManaged) {
             $response->setError('AccessDenied');
             header("HTTP/1.0 500 AccessDenied");
             // $response->setData('redirect', 'signin');
@@ -135,8 +143,14 @@ class objectCustomer {
 
         // this section must be located when all plugins are performed
         // becuse the toolbox plugin does user validation and authorizations
-        if (MPWS_IS_TOOLBOX && !$this->isAdminActive()) {
-            if (!libraryRequest::hasGET('action') || libraryRequest::fromGET('action') !== "signin") {
+        $dataAccountStatus = $this->isAccountActive();
+
+        if ($source === 'account' && libraryRequest::hasInGET('fn') || libraryRequest::fromGET('fn') !== "status") {
+            return $dataAccountStatus;
+        }
+
+        if (MPWS_IS_TOOLBOX && $dataAccountStatus->isEmpty()) {
+            if (!libraryRequest::hasInGET('action') || libraryRequest::fromGET('action') !== "signin") {
                 $response->setError('LoginRequired');
                 header("HTTP/1.0 500 LoginRequired");
                 // $response->setData('redirect', 'signin');
@@ -147,183 +161,17 @@ class objectCustomer {
         if ($source == '*')
             foreach ($this->plugins as $key => $plugin)
                 $response->setData($key, $plugin->getResponse()->toNative());
-        elseif ($this->hasPlugin($source)) {
-            $plugin = $this->getPlugin($source);
-            $response->overwriteData($plugin->getResponse()->toNative());
+        else {
+            $data = $this->getPluginData($source, libraryRequest::getRequestMethodName());
+            $response->overwriteData($data->toNative());
         }
 
         return $response;
     }
 
-    public function hasPlugin ($pluginName) {
-        return !empty($this->plugins[$pluginName]);
-    }
-
-    public function getPluginData ($source, $function, $params = null) {
-        $plugin = $this->getPlugin($source);
-        if (empty($plugin))
-            return null;
-        return $plugin->getPluginData($function, $params);
-    }
-
     // Admin status (requires toolbox plugin)
-    public function isAdminActive () {
-        return $this->getPluginData('toolbox', 'isActive');
-    }
-
-    // Accounts
-    public function addAccount ($dataAccount) {
-
-        $dataAccount["CustomerID"] = $this->getCustomerID();
-        $dataAccount["ValidationString"] = md5(time());
-        $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
-        $dataAccount['IsTemporary'] = 1;
-        $dataAccount['DateCreated'] = date('Y:m:d H:i:s');
-        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
-        $config = configurationCustomerDataSource::jsapiAddAccount();
-        $config['data'] = array(
-            "fields" => array_keys($dataAccount),
-            "values" => array_values($dataAccount)
-        );
-        $this->processData($config);
-        return $this->getDataBase()->getLastInsertId();
-    }
-
-    public function getAccount ($login, $password, $encodePassword = true) {
-        if ($encodePassword)
-            $password = $this->getAccountPassword($password);
-        $config = configurationCustomerDataSource::jsapiGetAccount($login, $password);
-        // var_dump($config);
-        $profile = $this->processData($config);
-        if (isset($profile['ID']))
-            $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
-        return $profile;
-    }
-
-    public function getAccountByID ($id) {
-        $config = configurationCustomerDataSource::jsapiGetAccountByID($id);
-        $profile = $this->processData($config);
-        return $profile;
-    }
-
-    public function activateAccount ($ValidationString) {
-        $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
-        $this->processData($config);
-    }
-
-    public function removeAccount ($dataAccount) {
-        $AccountID = $dataAccount['AccountID'];
-        unset($dataAccount['AccountID']);
-        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
-        $config = configurationCustomerDataSource::jsapiRemoveAccount($AccountID);
-        $config['data'] = array(
-            "fields" => array_keys($dataAccount),
-            "values" => array_values($dataAccount)
-        );
-        $this->processData($config);
-    }
-
-    public function updateAccount ($dataAccount) {
-        $AccountID = $dataAccount['AccountID'];
-        unset($dataAccount['AccountID']);
-        if (isset($dataAccount['Password']))
-            $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
-        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
-        $config = configurationCustomerDataSource::jsapiUpdateAccount($AccountID);
-        $config['data'] = array(
-            "fields" => array_keys($dataAccount),
-            "values" => array_values($dataAccount)
-        );
-        $this->processData($config);
-    }
-
-    public function updateAccountPassword ($dataAccount) {
-        $AccountID = $dataAccount['AccountID'];
-        unset($dataAccount['AccountID']);
-        if (isset($dataAccount['Password']))
-            $dataAccount['Password'] = $this->getAccountPassword($dataAccount['Password']);
-        $dataAccount['DateUpdated'] = date('Y:m:d H:i:s');
-        $config = configurationCustomerDataSource::jsapiUpdateAccount();
-        $config['data'] = array(
-            "fields" => array_keys($dataAccount),
-            "values" => array_values($dataAccount)
-        );
-        $this->processData($config);
-        return $dataAccount['Password'];
-    }
-
-    public function getAccountPassword ($rawPassword) {
-        $key = '!MPWSservice123';
-        return md5($key . $rawPassword);
-    }
-
-    public function getAccountAddresses ($AccountID) {
-        // if (!$this->isAccountSignedIn() && !$force)
-        //     return false;
-        $config = configurationCustomerDataSource::jsapiGetAccountAddresses($AccountID);
-        return $this->dbo->getData($config);
-    }
-
-    public function getAccountAddress ($AccountID, $AddressID) {
-        $config = configurationCustomerDataSource::jsapiGetAccountAddress($AccountID, $AddressID);
-        return $this->dbo->getData($config);
-    }
-
-    public function getAddress ($AddressID) {
-        $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
-        return $this->dbo->getData($config);
-    }
-
-    public function addAccountAddress ($address) {
-        $address['DateCreated'] = date('Y:m:d H:i:s');
-        $address['DateUpdated'] = date('Y:m:d H:i:s');
-        $config = configurationCustomerDataSource::jsapiAddAccountAddress();
-        $config['data'] = array(
-            "fields" => array_keys($address),
-            "values" => array_values($address)
-        );
-        // var_dump($config);
-        $this->processData($config);
-        return $this->getDataBase()->getLastInsertId();
-    }
-
-    public function updateAccountAddress ($address) {
-        $AccountID = $address['AccountID'];
-        unset($address['AccountID']);
-        $AddressID = $address['AddressID'];
-        unset($address['AddressID']);
-        $address['DateUpdated'] = date('Y:m:d H:i:s');
-        // var_dump($address);
-        $config = configurationCustomerDataSource::jsapiUpdateAccountAddress($AccountID, $AddressID, $address);
-        $config['data'] = array(
-            "fields" => array_keys($address),
-            "values" => array_values($address)
-        );
-        // var_dump($config);
-        $this->processData($config);
-    }
-
-    public function removeAccountAddress ($AccountID, $AddressID) {
-        $config = configurationCustomerDataSource::jsapiRemoveAccountAddress($AccountID, $AddressID);
-        // var_dump($config);
-        $this->processData($config);
-    }
-
-    public function getAccountStats () {
-        $stats = array();
-        $filterProducts = array(
-            array("key" => "ByStatusActive", "filter" => "Status (=) ?", "value" => array("ACTIVE")),
-            array("key" => "ByStatusRemoved", "filter" => "Status (=) ?", "value" => array("REMOVED")),
-            array("key" => "ByStatusActiveAndIsTemporary", "filter" => "Status (=) ? + IsTemporary (=) ?", "value" => array("ACTIVE", 1))
-        );
-        foreach ($filterProducts as $filterItem) {
-            $configCount = configurationCustomerDataSource::jsapiUtil_GetTableRecordsCount(configurationCustomerDataSource::$Table_SystemAccounts);
-            $configCount['condition']['filter'] = $filterItem['filter'];
-            $configCount['condition']['values'] = $filterItem['value'];
-            $dataCount = $this->processData($configCount);
-            $stats[$filterItem['key']] = $dataCount['ItemsCount'];
-        }
-        return $stats;
+    public function isAccountActive () {
+        return $this->getPluginData('account', 'get_status');
     }
 
 }
