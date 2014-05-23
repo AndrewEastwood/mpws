@@ -1,8 +1,9 @@
 define("default/js/lib/auth", [
     "default/js/lib/sandbox",
     "cmn_jquery",
-    "default/js/lib/underscore"
-], function (Sandbox, $, _) {
+    "default/js/lib/underscore",
+    "default/js/lib/cache"
+], function (Sandbox, $, _, Cache) {
 
     var Auth = {
         getStatus: function () {
@@ -11,8 +12,8 @@ define("default/js/lib/auth", [
                 fn: 'status'
             });
             return $.get(url, function (response) {
-                Cache.setObject('Account', response.profile);
-                Sandbox.eventNotify('plugin:account:status:received', response.profile);
+                Cache.setCookie('account', response);
+                Sandbox.eventNotify('plugin:account:status:received', response);
             }).error(function(){
                 Sandbox.eventNotify('plugin:account:status:received', null);
             });
@@ -27,9 +28,9 @@ define("default/js/lib/auth", [
                 email: email,
                 password: password
             }, function (response) {
-                Cache.setObject('Account', response.profile);
-                if (response.profile)
-                    Sandbox.eventNotify('plugin:account:signed:in', response.profile);
+                Cache.setCookie('account', response);
+                if (response)
+                    Sandbox.eventNotify('plugin:account:signed:in', response);
             }).error(function(){
                 debugger;
                 Sandbox.eventNotify('plugin:account:signed:in', false);
@@ -42,7 +43,7 @@ define("default/js/lib/auth", [
                 fn: 'signout'
             });
             return $.post(url, function () {
-                Cache.setObject('Account', null);
+                Cache.setCookie('account', null);
                 Sandbox.eventNotify('plugin:account:signed:out', null);
             }).error(function(){
                 debugger;
