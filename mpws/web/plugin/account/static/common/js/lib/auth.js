@@ -6,6 +6,9 @@ define("plugin/account/common/js/lib/auth", [
 ], function (Sandbox, $, _, Cache) {
 
     var Auth = {
+        getAccount: function () {
+            return Cache.getCookie('account') || false;
+        },
         getStatus: function () {
             var url = APP.getApiLink({
                 source: 'account',
@@ -18,7 +21,7 @@ define("plugin/account/common/js/lib/auth", [
                 Sandbox.eventNotify('plugin:account:status:received', null);
             });
         },
-        signin: function (email, password) {
+        signin: function (email, password, remember) {
             // debugger;
             var url = APP.getApiLink({
                 source: 'account',
@@ -26,7 +29,8 @@ define("plugin/account/common/js/lib/auth", [
             });
             return $.post(url, {
                 email: email,
-                password: password
+                password: password,
+                remember: remember,
             }, function (response) {
                 Cache.setCookie('account', response);
                 if (response)

@@ -43,16 +43,6 @@ class pluginAccount extends objectPlugin {
     //     return $this->getCustomer()->processData($config);
     // }
 
-    public function isAccountSignedIn () {
-        if (isset($_SESSION['AccountID']))
-            return true;
-        else {
-            setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
-            setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
-            unset($_SESSION['AccountID']);
-            return false;
-        }
-    }
 
     // private function isAccountSignedIn () {
     //     if (isset($_COOKIE['username']) && isset($_COOKIE['password']) && isset($_SESSION['Account:ProfileID']))
@@ -65,18 +55,7 @@ class pluginAccount extends objectPlugin {
     //     }
     // }
 
-    private function getActiveAccountID () {
-        if ($this->isAccountSignedIn())
-            return $_SESSION['AccountID'];
-        return false;
-    }
 
-    private function getActiveAccount () {
-        if ($this->isAccountSignedIn())
-            return $this->getAccountByID($_SESSION['AccountID']);
-        else
-            return null;
-    }
 
     private function _custom_api_signin2 () {
         $accountObj = new libraryDataObject();
@@ -187,23 +166,95 @@ class pluginAccount extends objectPlugin {
 /******************************************************/
 /******************************************************/
 
+    public function isAccountSignedIn () {
+        if (isset($_SESSION['AccountID']))
+            return true;
+        else {
+            setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
+            setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
+            unset($_SESSION['AccountID']);
+            return false;
+        }
+    }
+    private function getActiveAccountID () {
+        if ($this->isAccountSignedIn())
+            return $_SESSION['AccountID'];
+        return false;
+    }
 
-
+    private function getActiveAccount () {
+        if ($this->isAccountSignedIn())
+            return $this->getAccountByID($_SESSION['AccountID']);
+        else
+            return null;
+    }
 
     public function get_status () {
         $data = new libraryDataObject();
 
-        if ($this->isAccountSignedIn()) {
-            $data->setData('status', 'ok');
-        } else
-            $data->setData('status', 'none');
+        // if ($this->isAccountSignedIn()) {
+        //     $data->setData('status', 'ok');
+        // } else
+        //     $data->setData('status', 'none');
         $data->setData('account', $this->getActiveAccount());
 
         return $data;
     }
 
-    public function post_login () {
+    public function post_signin () {
+        $accountObj = new libraryDataObject();
 
+        $errors = array();
+
+        $email = libraryRequest::fromREQUEST('email');
+        $password = libraryRequest::fromREQUEST('password');
+        $remember = libraryRequest::fromREQUEST('remember');
+
+        if (empty($email))
+            $errors['email'] = 'Empty';
+
+        if (empty($password))
+            $errors['password'] = 'Empty';
+
+        if (count($errors)) {
+            $accountObj->setError($errors);
+            return $accountObj;
+        }
+
+        $password = $this->encodeAccountPassword($password);
+
+        $account = $this->getAccount($email, $password);
+
+        if (empty($account))
+            $accountObj->setError('WrongCredentials');
+        else {
+            $accountObj->setData('account', $account);
+
+            // keep user logged in
+            if (!MPWS_IS_TOOLBOX && $remember) {
+                /* Set cookie to last 1 year */
+                setcookie('username', $email, time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+                setcookie('password', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+            
+            } else {
+                /* Cookie expires when browser closes */
+                setcookie('username', $email, false, '/', $_SERVER['SERVER_NAME']);
+                setcookie('password', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
+            }
+
+            $_SESSION['Account:ProfileID'] = $account['ID'];
+        }
+
+        return $accountObj;
+    }
+
+    public function getAccount ($login, $password) {
+        $config = configurationAccountDataSource::jsapiGetAccount($login, $password);
+        // var_dump($config);
+        $profile = $this->getCustomer()->processData($config);
+        if (isset($profile['ID']))
+            $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
+        return $profile;
     }
 
     public function post_logout () {
@@ -486,6 +537,7 @@ class pluginAccount extends objectPlugin {
 
         return $accountObj;
     }
+
     // Accounts
     public function addAccount ($dataAccount) {
 
@@ -504,16 +556,6 @@ class pluginAccount extends objectPlugin {
         return $this->getDataBase()->getLastInsertId();
     }
 
-    public function getAccount ($login, $password, $encodePassword = true) {
-        if ($encodePassword)
-            $password = $this->encodeAccountPassword($password);
-        $config = configurationAccountDataSource::jsapiGetAccount($login, $password);
-        // var_dump($config);
-        $profile = $this->getCustomer()->processData($config);
-        if (isset($profile['ID']))
-            $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
-        return $profile;
-    }
 
     public function getAccountByID ($id) {
         $config = configurationAccountDataSource::jsapiGetAccountByID($id);

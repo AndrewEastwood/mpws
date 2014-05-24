@@ -101,78 +101,53 @@ class libraryDataBase {
 
         // condition
         // var_dump($fieldsToSelectFromDBClear);
-        if (!empty($config['condition']['filter'])) {
+        if (!empty($config['condition'])) {
             // var_dump('LOLOLOL');
             // translate condition filter string
-            $values = $config['condition']['values'];
-
-            // var_dump($values);
-            // var_dump($config['condition']['filter']);
-
-            // ProductID (LIKE) (?) + Name (=) ?
-            $filterElements = explode (' + ', $config['condition']['filter']);
-            // $addedCount = 0;
-            for ($i = 0, $len = count($filterElements); $i < $len; $i++) {
-                $matches = null;
-                $returnValue = preg_match('/(.*)(\\s)\\((.*)\\)(\\s)(.*)/', $filterElements[$i], $matches);
-                // check for valid condition:
-                // array (
-                //   0 => 'ProductID (LIKE) ?',
-                //   1 => 'ProductID',
-                //   2 => ' ',
-                //   3 => 'LIKE',
-                //   4 => ' ',
-                //   5 => '?',
-                // )
-                // var_dump($matches);
-                // var_dump($returnValue);
-                // var_dump($values[$i]);
-                if (is_array($matches) && count($matches) === 6) {
-                    switch (strtolower($matches[3])) {
-                        case '>':
-                            $this->dbo->where_gt($matches[1], $values[$i]);
-                            break;
-                        case '>=':
-                            $this->dbo->where_gte($matches[1], $values[$i]);
-                            break;
-                        case '<':
-                            $this->dbo->where_lt($matches[1], $values[$i]);
-                            break;
-                        case '<=':
-                            $this->dbo->where_lte($matches[1], $values[$i]);
-                            break;
-                        case 'is null':
-                            $this->dbo->where_null($matches[1], $values[$i]);
-                            break;
-                        case 'is not null':
-                            $this->dbo->where_not_null($matches[1], $values[$i]);
-                            break;
-                        case '=':
-                            $this->dbo->where_equal($matches[1], $values[$i]);
-                            break;
-                        case '!=':
-                            $this->dbo->where_not_equal($matches[1], $values[$i]);
-                            break;
-                        case 'like':
-                            $this->dbo->where_like($matches[1], $values[$i]);
-                            break;
-                        case 'not like':
-                            $this->dbo->where_not_like($matches[1], $values[$i]);
-                            break;
-                        case 'in':
-                            // var_dump('using WHERE_IN', $values[$i]);
-                            $this->dbo->where_in($matches[1], is_array($values[$i]) ? $values[$i] : array($values[$i]));
-                            break;
-                        case 'not in':
-                            $this->dbo->where_not_in($matches[1], is_array($values[$i]) ? $values[$i] : array($values[$i]));
-                            break;
-                        default:
-                            var_dump('Unknown condition statement occured');
-                            break;
-                    }
+            foreach ($config['condition'] as $fieldName => $fieldOptions) {
+                switch ($fieldOptions['comparator']) {
+                    case '>':
+                        $this->dbo->where_gt($fieldName, $fieldOptions['value']);
+                        break;
+                    case '>=':
+                        $this->dbo->where_gte($fieldName, $fieldOptions['value']);
+                        break;
+                    case '<':
+                        $this->dbo->where_lt($fieldName, $fieldOptions['value']);
+                        break;
+                    case '<=':
+                        $this->dbo->where_lte($fieldName, $fieldOptions['value']);
+                        break;
+                    case 'is null':
+                        $this->dbo->where_null($fieldName, $fieldOptions['value']);
+                        break;
+                    case 'is not null':
+                        $this->dbo->where_not_null($fieldName, $fieldOptions['value']);
+                        break;
+                    case '=':
+                        $this->dbo->where_equal($fieldName, $fieldOptions['value']);
+                        break;
+                    case '!=':
+                        $this->dbo->where_not_equal($fieldName, $fieldOptions['value']);
+                        break;
+                    case 'like':
+                        $this->dbo->where_like($fieldName, $fieldOptions['value']);
+                        break;
+                    case 'not like':
+                        $this->dbo->where_not_like($fieldName, $fieldOptions['value']);
+                        break;
+                    case 'in':
+                        // var_dump('using WHERE_IN', $fieldOptions['value']);
+                        $this->dbo->where_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
+                        break;
+                    case 'not in':
+                        $this->dbo->where_not_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
+                        break;
+                    default:
+                        var_dump('Unknown condition statement occured');
+                        break;
                 }
             }
-            // $this->dbo->where_raw($config['condition']['filter'], $values ?: array());
         }
 
         if (!empty($config['group']))

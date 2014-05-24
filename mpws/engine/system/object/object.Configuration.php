@@ -8,6 +8,10 @@ class objectConfiguration implements iConfiguration {
         return date(self::$DATE_FORMAT);
     }
 
+    static function jsapiCreateDataSourceCondition() {
+        
+    }
+
     static function jsapiGetDataSourceConfig($configExtend = null) {
         $configDefault = array(
             "source" => "",

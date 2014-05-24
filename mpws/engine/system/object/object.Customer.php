@@ -65,7 +65,7 @@ class objectCustomer {
 
         // var_dump($customerInfo);
 
-        if (empty($config["condition"]["filter"])) {
+        if (!isset($config["condition"]["CustomerID"])) {
             $config["condition"]["filter"] = "CustomerID (=) ?";
             $config["condition"]["values"] = array($customerInfo['ID']);
         } else {

@@ -8,8 +8,32 @@ class configurationAccountDataSource extends objectConfiguration {
             "fields" => array("*"),
             "limit" => 1,
             "condition" => array(
-                "filter" => "EMail (=) ? + Password (=) ? + IsTemporary (=) ? + Status (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
-                "values" => array($login, $password, 0, "ACTIVE")
+                "EMail" => array(
+                    "comparator" => "=",
+                    "value" => $login,
+                    "concatenate" => "+"
+                ),
+                "Password" => array(
+                    "comparator" => "=",
+                    "value" => $password,
+                    "concatenate" => "+"
+                ),
+                "IsTemporary" => array(
+                    "comparator" => "=",
+                    "value" => 0,
+                    "concatenate" => "+"
+                ),,
+                "Status" => array(
+                    "comparator" => "=",
+                    "value" => "ACTIVE",
+                    "concatenate" => "+"
+                )
+            ),
+            "additional" => array(
+                "mpws_permissions" => array(
+                    "constraint" => array("mpws_accounts.PermissionID", "=", "mpws_permissions.ID"),
+                    "fields" => array("*")
+                )
             ),
             "options" => array(
                 "expandSingleRecord" => true
@@ -28,6 +52,29 @@ class configurationAccountDataSource extends objectConfiguration {
             "options" => array(
                 "expandSingleRecord" => true
             )
+        ));
+    }
+
+    static function jsapiGetAccountPermissions () {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_permissions",
+            "fields" => array("*"),
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiAddAccountPermissions ($data) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_permissions",
+            "fields" => array("*"),
+            "data" => array(
+                "fields" => array_keys($data),
+                "values" => array_values($data)
+            ),
+            "options" => null
         ));
     }
 

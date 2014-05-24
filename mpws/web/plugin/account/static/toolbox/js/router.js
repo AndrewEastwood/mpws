@@ -8,8 +8,13 @@ define("plugin/account/toolbox/js/router", [
     'plugin/account/toolbox/js/view/menu'
 ], function (Sandbox, $, _, Backbone, Auth, Cache) {
 
+
+    Sandbox.eventSubscribe('global:session:needlogin', function () {
+        if (Backbone.history.fragment !== "signin")
+            return Backbone.history.navigate("signin", true);
+    });
+
     Sandbox.eventSubscribe('global:page:signin', function (data) {
-        debugger;
         var self = this;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
             // using this wrapper to cleanup previous view and create new one
@@ -36,8 +41,11 @@ define("plugin/account/toolbox/js/router", [
     });
 
     Sandbox.eventSubscribe('global:page:signout', function (data) {
+        Auth.signout();
+    });
 
-            // Sandbox.eventNotify('plugin:toolbox:logout');
+    Sandbox.eventSubscribe('plugin:account:signed:out', function () {
+        Backbone.history.navigate("signin", true);
     });
 
 
@@ -45,10 +53,11 @@ define("plugin/account/toolbox/js/router", [
 
         debugger;
         if (data.account === null) {
+            $.xhrPool.abortAll();
             if (Backbone.history.fragment !== "signin")
                 Backbone.history.navigate("signin", true);
         } else {
-            if (Backbone.history.fragment === "signin") {
+            if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
                 var _location = Cache.getFromLocalStorage("location") || '';
                 Backbone.history.navigate(_location, true);
             }
