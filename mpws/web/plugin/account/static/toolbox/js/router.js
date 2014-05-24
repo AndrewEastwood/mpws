@@ -3,38 +3,65 @@ define("plugin/account/toolbox/js/router", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'plugin/account/common/js/lib/auth',
+    "default/js/lib/cache",
     'plugin/account/toolbox/js/view/menu'
-], function (Sandbox, $, _, Backbone) {
+], function (Sandbox, $, _, Backbone, Auth, Cache) {
 
-    var Router = Backbone.Router.extend({
-        routes: {
-            "account/profiles": "profiles"
-        },
+    Sandbox.eventSubscribe('global:page:signin', function (data) {
+        debugger;
+        var self = this;
+        require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
+            // using this wrapper to cleanup previous view and create new one
+            Cache.withObject('SignIn', function (cachedView) {
+                // debugger;
+                // remove previous view
+                if (cachedView && cachedView.remove)
+                    cachedView.remove();
 
-        initialize: function () {
-            var self = this;
+                // create new view
+                var signin = new SignIn();
+                signin.render();
+                // debugger;
+                APP.commonElements.empty();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: signin.el
+                });
 
-            // Sandbox.eventSubscribe('global:page:login', function () {
-            //     self.login();
-            // });
-
-            // Sandbox.eventSubscribe('global:page:index', function () {
-            //     // debugger;
-            //     Sandbox.eventNotify('global:breadcrumb:show');
-            //     // Site.addMenuItemLeft('PROFILE');
-            //     // $('#userMenu').append($('<li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox <span class="badge badge-info">20</span></a></li>'));
-            // });
-
-        },
-
-        profiles: function () {
-            // Sandbox.eventNotify('site:content:render', {
-            //     name: 'AccountLogin',
-            //     el: "gdfgdfgdfgdfgdf"
-            // });
-        }
-
+                // return view object to pass it into this function at next invocation
+                return signin;
+            });
+        });
     });
 
-    return Router;
+    Sandbox.eventSubscribe('global:page:signout', function (data) {
+
+            // Sandbox.eventNotify('plugin:toolbox:logout');
+    });
+
+
+    Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
+
+        debugger;
+        if (data.account === null) {
+            if (Backbone.history.fragment !== "signin")
+                Backbone.history.navigate("signin", true);
+        } else {
+            if (Backbone.history.fragment === "signin") {
+                var _location = Cache.getFromLocalStorage("location") || '';
+                Backbone.history.navigate(_location, true);
+            }
+        }
+        // debugger;
+        // save location
+        if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin")
+            Cache.saveInLocalStorage("location", window.location.hash);
+        // if (!renderCompleteSent) {
+        //     renderCompleteSent = true;
+        //     Sandbox.eventNotify('plugin:toolbox:render:complete');
+        // }
+    });
+
+    Auth.getStatus();
 });

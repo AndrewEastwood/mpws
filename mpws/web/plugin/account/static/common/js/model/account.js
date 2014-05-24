@@ -2,13 +2,13 @@ define("plugin/account/common/js/model/account", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
-    'default/js/model/mModel',
+    'default/js/lib/backbone',
     'default/js/lib/cache'
-], function (Sandbox, $, _, MModel, Cache) {
+], function (Sandbox, $, _, Backbone, Cache) {
 
-    var Model = MModel.getNew();
+    // var Model = MModel.getNew();
 
-    var Account = Model.extend({
+    var Account = Backbone.Model.extend({
         source: 'account',
         fn: 'profile',
         initialize: function () {

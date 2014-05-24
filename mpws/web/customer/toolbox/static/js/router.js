@@ -1,30 +1,19 @@
 define("customer/js/router", [
     'default/js/lib/sandbox',
-    'default/js/lib/auth'
-], function (Sandbox, Auth) {
-
-
-
-
-
-
-    Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
-
-        debugger;
-
-    });
-
+    'default/js/lib/auth',
+    "default/js/lib/cache"
+], function (Sandbox, Auth, Cache) {
 
 
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
         Sandbox.eventNotify('global:page:setTitle', 'Toolbox');
+        // get initial account status
     });
 
 
-    // get initial account status
-    Auth.getStatus();
 
+    // return Router;
     // control all plugins here here 
 
 

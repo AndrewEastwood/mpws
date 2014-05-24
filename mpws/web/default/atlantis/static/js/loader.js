@@ -1,6 +1,7 @@
 var APP = {
     config: JSON.parse(JSON.stringify(MPWS)),
     commonElements: [],
+    instances: {},
     getModulesToDownload: function() {
         var modules = [
             'default/js/lib/sandbox',
@@ -25,14 +26,6 @@ var APP = {
     },
     getApiLink: function (options) {
         throw "Implment function getApiLink";
-        // var url = APP.config.URL_API;
-        // var query = {
-        //     token: APP.config.TOKEN
-        // };
-
-
-
-        // return options
     },
     init: function () {
         // set requirejs configuration
@@ -151,24 +144,29 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentIn
     var Router = Backbone.Router.extend({
         routes: {
             "": "index",
-            "login": "login",
-            "logout": "logout"
+            "signin": "signin",
+            "signout": "signout"
         },
         index: function () {
             // debugger;
             Sandbox.eventNotify('global:page:index');
         },
-        login: function () {
+        signin: function () {
             // debugger;
-            Sandbox.eventNotify('global:page:login');
+            Sandbox.eventNotify('global:page:signin');
         },
-        logout: function () {
+        signout: function () {
             // debugger;
-            Sandbox.eventNotify('global:page:logout');
+            Sandbox.eventNotify('global:page:signout');
         }
     });
 
     var defaultRouter = new Router();
+
+    if (_.isFunction(CustomerRouter)) {
+        var customerRouter = new CustomerRouter();
+        APP.instances['CustomerRouter'] = customerRouter;
+    }
 
     var renderFn = function (options) {
         // debugger;
@@ -192,16 +190,30 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentIn
         Sandbox.eventNotify('global:menu:set-active');
     });
 
-    require(APP.getPluginRoutersToDownload(), function(){
-        var _pluginsObjects = [].slice.call(arguments);
-        // initialize plugins
-        _(_pluginsObjects).each(function(plugin){
-            new plugin();
+    var releasePluginsFn = function () {
+        var pluginList = APP.getPluginRoutersToDownload();
+        var pluginNames = _(pluginList).map(function(pluginListItem){ return pluginListItem.match(/^plugin\/(\w+)\//)[1]; });
+        require(pluginList, function(){
+            var _pluginsObjects = [].slice.call(arguments);
+            // initialize plugins
+            _(_pluginsObjects).each(function(plugin, key){
+                if (_.isFunction(plugin)) {
+                    var plg = new plugin();
+                    APP.instances[pluginNames[key]] = plg;
+                }
+            });
+            // start HTML5 History push
+            Backbone.history.start();
+            // notify all that loader completed its tasks
+            Sandbox.eventNotify('global:loader:complete');
+            // return Site;
         });
-        // notify all that loader completed its tasks
-        Sandbox.eventNotify('global:loader:complete');
-        // start HTML5 History push
-        Backbone.history.start();
-        // return Site;
-    });
+    }
+
+    if (_.isObject(CustomerRouter) && CustomerRouter.releasePlugins)
+        CustomerRouter.releasePlugins(releasePluginsFn);
+    else
+        releasePluginsFn();
+
+
 });
