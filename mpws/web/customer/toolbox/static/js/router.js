@@ -1,8 +1,6 @@
 define("customer/js/router", [
     'default/js/lib/sandbox',
-    'default/js/lib/auth',
-    "default/js/lib/cache"
-], function (Sandbox, Auth, Cache) {
+], function (Sandbox) {
 
 
 

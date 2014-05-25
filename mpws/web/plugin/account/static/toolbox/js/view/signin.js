@@ -18,7 +18,7 @@ define("plugin/account/toolbox/js/view/signin", [
         },
         doSignIn: function () {
             // this.model.doLogin(this.collectCredentials());
-            debugger;
+            // debugger;
             var authData = this.collectCredentials();
             Auth.signin(authData.email, authData.password, authData.remember);
             return false;

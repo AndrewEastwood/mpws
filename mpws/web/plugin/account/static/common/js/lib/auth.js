@@ -36,7 +36,7 @@ define("plugin/account/common/js/lib/auth", [
                 if (response)
                     Sandbox.eventNotify('plugin:account:signed:in', response);
             }).error(function(){
-                debugger;
+                // debugger;
                 Sandbox.eventNotify('plugin:account:signed:in', false);
             });
         },
@@ -50,7 +50,7 @@ define("plugin/account/common/js/lib/auth", [
                 Cache.setCookie('account', null);
                 Sandbox.eventNotify('plugin:account:signed:out', null);
             }).error(function(){
-                debugger;
+                // debugger;
                 Sandbox.eventNotify('plugin:account:signed:out', false);
             });
         }

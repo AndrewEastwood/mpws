@@ -44,7 +44,7 @@ class pluginAccount extends objectPlugin {
     // }
 
 
-    // private function isAccountSignedIn () {
+    // private function _isAccountSignedIn () {
     //     if (isset($_COOKIE['username']) && isset($_COOKIE['password']) && isset($_SESSION['Account:ProfileID']))
     //         return true;
     //     else {
@@ -166,38 +166,35 @@ class pluginAccount extends objectPlugin {
 /******************************************************/
 /******************************************************/
 
-    public function isAccountSignedIn () {
-        if (isset($_SESSION['AccountID']))
-            return true;
-        else {
-            setcookie('tu', null, false, '/', $_SERVER['SERVER_NAME']);
-            setcookie('tp', null, false, '/', $_SERVER['SERVER_NAME']);
-            unset($_SESSION['AccountID']);
-            return false;
-        }
-    }
-    private function getActiveAccountID () {
-        if ($this->isAccountSignedIn())
-            return $_SESSION['AccountID'];
-        return false;
+    public function _getAccountByID ($id) {
+        $config = configurationAccountDataSource::jsapiGetAccountByID($id);
+        $account = $this->getCustomer()->processData($config);
+        // var_dump('_getAccountByID', $id);
+        // var_dump($account);
+        return $account;
     }
 
-    private function getActiveAccount () {
-        if ($this->isAccountSignedIn())
-            return $this->getAccountByID($_SESSION['AccountID']);
-        else
-            return null;
+    private function _getSessionAccount () {
+        $account = null;
+        if (isset($_SESSION['Account']) && !empty($_SESSION['Account']['ID']))
+            $account = $this->_getAccountByID($_SESSION['Account']['ID']);
+
+        if (empty($account)) {
+            setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
+            setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
+            unset($_SESSION['Account']);
+        }
+
+        return $account;
     }
 
     public function get_status () {
         $data = new libraryDataObject();
-
-        // if ($this->isAccountSignedIn()) {
+        // if ($this->_isAccountSignedIn()) {
         //     $data->setData('status', 'ok');
         // } else
         //     $data->setData('status', 'none');
-        $data->setData('account', $this->getActiveAccount());
-
+        $data->setData('account', $this->_getSessionAccount());
         return $data;
     }
 
@@ -235,15 +232,16 @@ class pluginAccount extends objectPlugin {
                 /* Set cookie to last 1 year */
                 setcookie('username', $email, time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
                 setcookie('password', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
-            
             } else {
                 /* Cookie expires when browser closes */
                 setcookie('username', $email, false, '/', $_SERVER['SERVER_NAME']);
                 setcookie('password', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
             }
 
-            $_SESSION['Account:ProfileID'] = $account['ID'];
+            $_SESSION['Account'] = $account;
         }
+
+        // var_dump($_SESSION);
 
         return $accountObj;
     }
@@ -251,10 +249,10 @@ class pluginAccount extends objectPlugin {
     public function getAccount ($login, $password) {
         $config = configurationAccountDataSource::jsapiGetAccount($login, $password);
         // var_dump($config);
-        $profile = $this->getCustomer()->processData($config);
-        if (isset($profile['ID']))
-            $profile["addresses"] = $this->getAccountAddresses($profile['ID']);
-        return $profile;
+        $account = $this->getCustomer()->processData($config);
+        if (isset($account['ID']))
+            $account["addresses"] = $this->getAccountAddresses($account['ID']);
+        return $account;
     }
 
     public function post_logout () {
@@ -273,7 +271,7 @@ class pluginAccount extends objectPlugin {
 
     }
 
-    public function getResponse () {
+    public function _getResponse () {
 
         $data = new libraryDataObject();
 
@@ -386,12 +384,12 @@ class pluginAccount extends objectPlugin {
         $accountObj = new libraryDataObject();
         $errors = array();
 
-        if (!$this->isAccountSignedIn()) {
+        if (!$this->_isAccountSignedIn()) {
             $accountObj->setData("profile", null);
             return $accountObj;
         }
 
-        $account['AccountID'] = $this->getActiveAccountID();
+        $account['AccountID'] = $this->_getSessionAccountID();
 
         if (empty($account['AccountID']))
             $errors['AccountID'] = 'Empty';
@@ -425,7 +423,7 @@ class pluginAccount extends objectPlugin {
     private function _custom_api_manageAddress ($createNew = false) {
         $accountObj = new libraryDataObject();
 
-        if (!$this->isAccountSignedIn()) {
+        if (!$this->_isAccountSignedIn()) {
             $accountObj->setData("profile", null);
             return $accountObj;
         }
@@ -443,7 +441,7 @@ class pluginAccount extends objectPlugin {
 
         $dataAddress = libraryRequest::fromPOST('address');
 
-        $dataAddress['AccountID'] = $this->getActiveAccountID();
+        $dataAddress['AccountID'] = $this->_getSessionAccountID();
 
         if (empty($dataAddress['AccountID']))
             $errors['AccountID'] = 'Empty';
@@ -481,7 +479,7 @@ class pluginAccount extends objectPlugin {
         $accountObj = new libraryDataObject();
         $errors = array();
         
-        if (!$this->isAccountSignedIn()) {
+        if (!$this->_isAccountSignedIn()) {
             $accountObj->setData("profile", null);
             return $accountObj;
         }
@@ -496,7 +494,7 @@ class pluginAccount extends objectPlugin {
             return $accountObj;
         }
 
-        $this->getCustomer()->removeAccountAddress($this->getActiveAccountID(), $AddressID);
+        $this->getCustomer()->removeAccountAddress($this->_getSessionAccountID(), $AddressID);
 
         $accountObj->setData("profile", $this->getActiveAccount());
         $accountObj->setData("success", true);
@@ -557,11 +555,6 @@ class pluginAccount extends objectPlugin {
     }
 
 
-    public function getAccountByID ($id) {
-        $config = configurationAccountDataSource::jsapiGetAccountByID($id);
-        $profile = $this->getCustomer()->processData($config);
-        return $profile;
-    }
 
     public function activateAccount ($ValidationString) {
         $config = configurationAccountDataSource::jsapiActivateAccount($ValidationString);
@@ -615,20 +608,20 @@ class pluginAccount extends objectPlugin {
     }
 
     public function getAccountAddresses ($AccountID) {
-        // if (!$this->isAccountSignedIn() && !$force)
+        // if (!$this->_isAccountSignedIn() && !$force)
         //     return false;
         $config = configurationAccountDataSource::jsapiGetAccountAddresses($AccountID);
-        return $this->dbo->getData($config);
+        return $this->getCustomer()->processData($config);
     }
 
     public function getAccountAddress ($AccountID, $AddressID) {
         $config = configurationAccountDataSource::jsapiGetAccountAddress($AccountID, $AddressID);
-        return $this->dbo->getData($config);
+        return $this->getCustomer()->processData($config);
     }
 
     public function getAddress ($AddressID) {
         $config = configurationAccountDataSource::jsapiGetAddress($AddressID);
-        return $this->dbo->getData($config);
+        return $this->getCustomer()->processData($config);
     }
 
     public function addAccountAddress ($address) {

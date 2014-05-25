@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/stats", [
     'default/js/view/mView',
     'plugin/shop/toolbox/js/model/stats',
     'default/js/lib/bootstrap-dialog',
+    "default/js/lib/cache",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/stats',
     /* lang */
@@ -12,7 +13,7 @@ define("plugin/shop/toolbox/js/view/stats", [
     /* charts */
     'default/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
     'default/js/plugin/goog!visualization,1,packages:[corechart,geochart]',
-], function (Sandbox, MView, ModelStats, BootstrapDialog, tpl, lang) {
+], function (Sandbox, MView, ModelStats, BootstrapDialog, Cache, tpl, lang) {
 
     var statsModel = new ModelStats();
     return MView.extend({
@@ -30,7 +31,8 @@ define("plugin/shop/toolbox/js/view/stats", [
             this.listenTo(this.model, "change", this.render);
 
             var intervalID = setInterval(function() {
-                self.refresh.call(self);
+                if (Cache.getCookie('account'))
+                    self.refresh.call(self);
             }, 10000);
 
             this.on('mview:close', function () {

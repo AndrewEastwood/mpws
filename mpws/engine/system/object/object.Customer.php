@@ -42,11 +42,6 @@ class objectCustomer {
 
     public function getCustomerInfo () {
         if (empty($this->customerInfo)) {
-        //     if (glIsToolbox())
-        //         $config = configurationCustomerDataSource::jsapiGetCustomer();
-        //     // elseif (/* unmanaged session */)
-        //     //     $config = configurationCustomerDataSource::jsapiGetCustomer("");
-        //     else
             $config = configurationCustomerDataSource::jsapiGetCustomer();
             $this->customerInfo = $this->getDataBase()->getData($config);
         }
@@ -58,23 +53,10 @@ class objectCustomer {
     }
 
     public function processData ($config) {
-            // echo 123400;
-        // echo 111111;
-        // var_dump($config);
         $customerInfo = $this->getCustomerInfo();
-
         // var_dump($customerInfo);
-
-        if (!isset($config["condition"]["CustomerID"])) {
-            $config["condition"]["filter"] = "CustomerID (=) ?";
-            $config["condition"]["values"] = array($customerInfo['ID']);
-        } else {
-            $pos = strrpos($config["condition"]["filter"], "CustomerID (=) ?");
-            if ($pos === false) {
-                $config["condition"]["filter"] = "CustomerID (=) ? + " . $config["condition"]["filter"];
-                array_unshift($config["condition"]["values"], $customerInfo['ID']);
-            }
-        }
+        if (!isset($config["condition"]["CustomerID"]))
+            $config["condition"]["CustomerID"] = configurationCustomerDataSource::jsapiCreateDataSourceCondition($customerInfo['ID']);
         // var_dump($config);
         return $this->dbo->getData($config);
     }
@@ -143,20 +125,19 @@ class objectCustomer {
 
         // this section must be located when all plugins are performed
         // becuse the toolbox plugin does user validation and authorizations
-        $dataAccountStatus = $this->isAccountActive();
+        // $dataAccount = $this->isAuthenticated();
+        // $accountIsEmpty = $dataAccountStatus->isEmpty('account');
 
-        if ($source === 'account' && libraryRequest::hasInGET('fn') || libraryRequest::fromGET('fn') !== "status") {
-            return $dataAccountStatus;
-        }
-
-        if (MPWS_IS_TOOLBOX && $dataAccountStatus->isEmpty()) {
-            if (!libraryRequest::hasInGET('action') || libraryRequest::fromGET('action') !== "signin") {
-                $response->setError('LoginRequired');
-                header("HTTP/1.0 500 LoginRequired");
-                // $response->setData('redirect', 'signin');
-                return $response;
-            }
-        }
+        // if (MPWS_IS_TOOLBOX && $source === 'account') {
+        //     if (libraryRequest::hasInGET('fn') && libraryRequest::fromGET('fn') === "status")
+        //         return $dataAccountStatus;
+        //     if (!libraryRequest::hasInGET('fn') || libraryRequest::fromGET('fn') !== "signin") {
+        //         $response->setError('LoginRequired');
+        //         header("HTTP/1.0 500 LoginRequired");
+        //         // $response->setData('redirect', 'signin');
+        //         return $response;
+        //     }
+        // }
 
         if ($source == '*')
             foreach ($this->plugins as $key => $plugin)
@@ -166,12 +147,15 @@ class objectCustomer {
             $response->overwriteData($data->toNative());
         }
 
+
+        $response->setData('authenticated', $this->isAuthenticated());
+
         return $response;
     }
 
     // Admin status (requires toolbox plugin)
-    public function isAccountActive () {
-        return $this->getPluginData('account', 'get_status');
+    public function isAuthenticated () {
+        return $this->getPluginData('account', 'get_status')->hasKey('account');
     }
 
 }

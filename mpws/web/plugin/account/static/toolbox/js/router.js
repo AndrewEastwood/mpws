@@ -51,16 +51,17 @@ define("plugin/account/toolbox/js/router", [
 
     Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
 
-        debugger;
-        if (data.account === null) {
+        // debugger;
+        if (data.account) {
+            // debugger;
+            // if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
+                var _location = Cache.getFromLocalStorage("location") || '';
+                Backbone.history.navigate(_location, true);
+            // }
+        } else {
             $.xhrPool.abortAll();
             if (Backbone.history.fragment !== "signin")
                 Backbone.history.navigate("signin", true);
-        } else {
-            if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
-                var _location = Cache.getFromLocalStorage("location") || '';
-                Backbone.history.navigate(_location, true);
-            }
         }
         // debugger;
         // save location

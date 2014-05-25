@@ -8,31 +8,21 @@ class configurationAccountDataSource extends objectConfiguration {
             "fields" => array("*"),
             "limit" => 1,
             "condition" => array(
-                "EMail" => array(
-                    "comparator" => "=",
-                    "value" => $login,
-                    "concatenate" => "+"
-                ),
-                "Password" => array(
-                    "comparator" => "=",
-                    "value" => $password,
-                    "concatenate" => "+"
-                ),
-                "IsTemporary" => array(
-                    "comparator" => "=",
-                    "value" => 0,
-                    "concatenate" => "+"
-                ),,
-                "Status" => array(
-                    "comparator" => "=",
-                    "value" => "ACTIVE",
-                    "concatenate" => "+"
-                )
+                "EMail" => self::jsapiCreateDataSourceCondition($login),
+                "Password" => self::jsapiCreateDataSourceCondition($password),
+                "IsTemporary" => self::jsapiCreateDataSourceCondition(0),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "additional" => array(
                 "mpws_permissions" => array(
                     "constraint" => array("mpws_accounts.PermissionID", "=", "mpws_permissions.ID"),
-                    "fields" => array("*")
+                    "fields" => array(
+                        "Permission_isAdmin" => "isAdmin",
+                        "Permission_CanCreate" => "CanCreate",
+                        "Permission_CanEdit" => "CanEdit",
+                        "Permission_CanView" => "CanView",
+                        "Permission_CanAddUsers" => "CanAddUsers"
+                    )
                 )
             ),
             "options" => array(
@@ -41,18 +31,13 @@ class configurationAccountDataSource extends objectConfiguration {
         ));
     }
     static function jsapiGetAccountByID ($id) {
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "mpws_accounts",
-            "fields" => array("*"),
-            "limit" => 1,
-            "condition" => array(
-                "filter" => "ID (=) ?", //"shop_products.Status = ? AND shop_products.Enabled = ?",
-                "values" => array($id)
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
+        $config = self::jsapiGetAccount(null, null);
+
+        $config["condition"] = array(
+            "ID" => self::jsapiCreateDataSourceCondition($id)
+        );
+
+        return $config;
     }
 
     static function jsapiGetAccountPermissions () {
@@ -70,10 +55,7 @@ class configurationAccountDataSource extends objectConfiguration {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_permissions",
             "fields" => array("*"),
-            "data" => array(
-                "fields" => array_keys($data),
-                "values" => array_values($data)
-            ),
+            "data" => $data,
             "options" => null
         ));
     }
@@ -91,8 +73,8 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
-                "filter" => "ID (=) ? + Status (=) ?",
-                "values" => array($AccountID, "ACTIVE")
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "options" => null
         ));
@@ -103,12 +85,12 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
-                "filter" => "ID (=) ? + Status (=) ?",
-                "values" => array($AccountID, "ACTIVE")
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "data" => array(
-                "fields" => array('Status', 'DateUpdated'),
-                "values" => array('REMOVED', date('Y:m:d H:i:s'))
+                "Status" => 'REMOVED',
+                "DateUpdated" => date('Y:m:d H:i:s')
             ),
             "options" => null
         ));
@@ -119,12 +101,10 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
-                "filter" => "ValidationString (=) ?",
-                "values" => array($ValidationString)
+                "ValidationString" => self::jsapiCreateDataSourceCondition($ValidationString)
             ),
             "data" => array(
-                "fields" => array('IsTemporary'),
-                "values" => array(0)
+                "IsTemporary" => 0
             ),
             "options" => null
         ));
@@ -135,8 +115,8 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accountAddresses",
             "fields" => array("*"),
             "condition" => array(
-                "filter" => "AccountID (=) ? + Status (=) ?",
-                "values" => array($AccountID, "ACTIVE")
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "options" => null
         ));
@@ -147,8 +127,9 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accountAddresses",
             "fields" => array("*"),
             "condition" => array(
-                "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
-                "values" => array($AddressID, $AccountID, "ACTIVE")
+                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "options" => array(
                 "expandSingleRecord" => true
@@ -161,8 +142,7 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accountAddresses",
             "fields" => array("*"),
             "condition" => array(
-                "filter" => "ID (=) ?",
-                "values" => array($AddressID)
+                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
             ),
             "options" => array(
                 "expandSingleRecord" => true
@@ -183,8 +163,9 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
-                "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
-                "values" => array($AddressID, $AccountID, "ACTIVE")
+                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "options" => null
         ));
@@ -195,12 +176,13 @@ class configurationAccountDataSource extends objectConfiguration {
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
-                "filter" => "ID (=) ? + AccountID (=) ? + Status (=) ?",
-                "values" => array($AddressID, $AccountID, "ACTIVE")
+                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "data" => array(
-                "fields" => array('Status', 'DateUpdated'),
-                "values" => array('REMOVED', date('Y:m:d H:i:s'))
+                "Status" => 'REMOVED',
+                "DateUpdated" => date('Y:m:d H:i:s')
             ),
             "options" => null
         ));

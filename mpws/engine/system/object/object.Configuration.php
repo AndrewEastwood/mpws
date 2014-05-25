@@ -8,8 +8,12 @@ class objectConfiguration implements iConfiguration {
         return date(self::$DATE_FORMAT);
     }
 
-    static function jsapiCreateDataSourceCondition() {
-        
+    static function jsapiCreateDataSourceCondition($value, $comparator = "=", $concatenate = "+") {
+        return array(
+            "comparator" => $comparator,
+            "value" => $value,
+            "concatenate" => $concatenate
+        );
     }
 
     static function jsapiGetDataSourceConfig($configExtend = null) {
@@ -20,14 +24,8 @@ class objectConfiguration implements iConfiguration {
                 "name" => "",
                 "parameters" => array()
             ),
-            "condition" => array(
-                "filter" => "", //"shop_products.Status = ? AND shop_products.Enabled = ?",
-                "values" => array(/*"ACTIVE", 1*/)
-            ),
-            "data" => array(
-                "fields" => array(/*"DateLastAccess", "IsOnline"*/),
-                "values" => array()
-            ),
+            "condition" => array(), // use fieldName => jsapiCreateDataSourceCondition()
+            "data" => array(),
             "useFieldPrefix" => true,
             "fields" => array(/*"ID", "CategoryID", "OriginID", "Name", "Model", "SKU", "Description", "DateCreated"*/),
             "offset" => 0,

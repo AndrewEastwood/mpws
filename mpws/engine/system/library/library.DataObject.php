@@ -44,8 +44,17 @@ class libraryDataObject {
         return count($this->_data) > 1;
     }
 
-    public function isEmpty() {
+    public function isEmpty($key = null) {
+        if (!empty($key)) {
+            // var_dump($this->getData($key));
+            // return true;//
+            // empty($this->getData($key));
+        }
         return !$this->hasData();
+    }
+
+    public function hasKey ($key) {
+        return isset($this->_data[$key]);
     }
 
     // converters

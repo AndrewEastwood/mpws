@@ -96,13 +96,14 @@ class libraryDataBase {
                 }
 
                 $this->dbo->select_many($fieldsToSelectClear);
+                // var_dump($fieldsToSelectClear);
             }
 
 
         // condition
         // var_dump($fieldsToSelectFromDBClear);
         if (!empty($config['condition'])) {
-            // var_dump('LOLOLOL');
+            // var_dump($config['condition']);
             // translate condition filter string
             foreach ($config['condition'] as $fieldName => $fieldOptions) {
                 switch ($fieldOptions['comparator']) {
@@ -180,7 +181,7 @@ class libraryDataBase {
                 break;
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
-                $this->dbo->set(array_combine($config['data']['fields'], $config['data']['values']));
+                $this->dbo->set($config['data']);
                 // echo 'libraryDataObject update DB';
                 $this->dbo->save();
                 break;
@@ -188,7 +189,7 @@ class libraryDataBase {
                 $this->dbo->delete_many();
                 break;
             case 'insert':
-                $this->dbo->create(array_combine($config['data']['fields'], $config['data']['values']));
+                $this->dbo->create($config['data']);
                 $this->dbo->save();
                 break;
             case 'select':

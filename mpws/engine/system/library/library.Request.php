@@ -50,7 +50,8 @@ class libraryRequest {
     }
 
     static function getRequestMethodName () {
-        return strtolower($_SERVER['REQUEST_METHOD']) . '_' . libraryRequest::fromGET('fn');
+        $fn = strtolower($_SERVER['REQUEST_METHOD']) . '_' . libraryRequest::fromGET('fn');
+        return $fn;
     }
 
     /* state grabbers */
