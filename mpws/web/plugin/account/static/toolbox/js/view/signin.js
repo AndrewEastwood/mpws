@@ -32,7 +32,10 @@ define("plugin/account/toolbox/js/view/signin", [
             }
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var self = this;
+            Auth.getStatus().done(function(){
+                self.$el.html(tpl(Utils.getHBSTemplateData(self)));
+            });
         }
     });
 

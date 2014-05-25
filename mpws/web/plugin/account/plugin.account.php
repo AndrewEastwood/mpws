@@ -246,6 +246,15 @@ class pluginAccount extends objectPlugin {
         return $accountObj;
     }
 
+    public function post_signout () {
+        $data = new libraryDataObject();
+        setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
+        setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
+        unset($_SESSION['Account']);
+        $data->setData('account', $this->_getSessionAccount());
+        return $data;
+    }
+
     public function getAccount ($login, $password) {
         $config = configurationAccountDataSource::jsapiGetAccount($login, $password);
         // var_dump($config);
@@ -255,9 +264,6 @@ class pluginAccount extends objectPlugin {
         return $account;
     }
 
-    public function post_logout () {
-
-    }
 
     public function post_user () {
 
@@ -367,15 +373,6 @@ class pluginAccount extends objectPlugin {
         $accountObj = new libraryDataObject();
         $account = $this->getActiveAccount();
         $accountObj->setData('profile', $account);
-        return $accountObj;
-    }
-
-    private function _custom_api_signout () {
-        $accountObj = new libraryDataObject();
-        setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
-        setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
-        unset($_SESSION['Account:ProfileID']);
-        $accountObj->setData('profile', null);
         return $accountObj;
     }
 

@@ -8,12 +8,6 @@ define("plugin/account/toolbox/js/router", [
     'plugin/account/toolbox/js/view/menu'
 ], function (Sandbox, $, _, Backbone, Auth, Cache) {
 
-
-    Sandbox.eventSubscribe('global:session:needlogin', function () {
-        if (Backbone.history.fragment !== "signin")
-            return Backbone.history.navigate("signin", true);
-    });
-
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
@@ -44,34 +38,9 @@ define("plugin/account/toolbox/js/router", [
         Auth.signout();
     });
 
-    Sandbox.eventSubscribe('plugin:account:signed:out', function () {
-        Backbone.history.navigate("signin", true);
-    });
-
-
-    Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
-
-        // debugger;
-        if (data.account) {
-            // debugger;
-            // if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
-                var _location = Cache.getFromLocalStorage("location") || '';
-                Backbone.history.navigate(_location, true);
-            // }
-        } else {
-            $.xhrPool.abortAll();
-            if (Backbone.history.fragment !== "signin")
-                Backbone.history.navigate("signin", true);
+    Sandbox.eventSubscribe('global:route', function (data) {
+        if (Backbone.history.fragment !== 'signin' || Backbone.history.fragment !== 'signout') {
+            Auth.getStatus();
         }
-        // debugger;
-        // save location
-        if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin")
-            Cache.saveInLocalStorage("location", window.location.hash);
-        // if (!renderCompleteSent) {
-        //     renderCompleteSent = true;
-        //     Sandbox.eventNotify('plugin:toolbox:render:complete');
-        // }
     });
-
-    Auth.getStatus();
 });

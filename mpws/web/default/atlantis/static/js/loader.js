@@ -8,6 +8,7 @@ var APP = {
             'cmn_jquery',
             'default/js/lib/underscore',
             'default/js/lib/backbone',
+            'default/js/lib/cache',
             'default/js/lib/contentInjection',
             this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
@@ -67,7 +68,7 @@ require(["default/js/lib/url"], function(JSUrl) {
     }
 })
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
 
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
 
@@ -83,17 +84,41 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentIn
         if (!jqxhr.responseText)
             return
 
+        // debugger;
+
+
+        // if (data.account) {
+        //     // debugger;
+        //     // if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
+        //         var _location = Cache.getFromLocalStorage("location") || '';
+        //         Backbone.history.navigate(_location, true);
+        //     // }
+        // } else {
+        //     if (Backbone.history.fragment !== "signin")
+                
+        // }
         // console.log(jqxhr.responseText);
         var responseObj = JSON.parse(jqxhr.responseText);
 
-        // if (responseObj && responseObj.error && responseObj.error === "InvalidTokenKey")
-        //     Sandbox.eventNotify("global:session:expired", responseObj.error);
+        if (responseObj && responseObj.error && responseObj.error === "InvalidTokenKey") {
+            window.location.reload();
+        }
 
         // if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
         //     Sandbox.eventNotify("global:session:expired", responseObj.error);
 
-        if (responseObj && responseObj.error && responseObj.error === "LoginRequired")
-            Sandbox.eventNotify("global:session:needlogin", responseObj.error);
+        if (responseObj) {
+            if(responseObj.authenticated && Backbone.history.fragment === "signin")
+                Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
+            else if (!responseObj.authenticated) {
+                $.xhrPool.abortAll();
+                // Sandbox.eventNotify("global:session:needlogin", responseObj.error);
+                if (APP.config.ISTOOLBOX && Backbone.history.fragment !== "signin") {
+                    Backbone.history.navigate('signin');
+                    window.location.reload();
+                }
+            }
+        }
     });
 
     // Sandbox message handler
@@ -128,7 +153,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentIn
 
     $(window).on('hashchange', function() {
         // set page name
-        var _hashTags = window.location.hash.substr(1).split('/');
+        var fragment = window.location.hash.substr(1);
+        var _hashTags = fragment.split('/');
         $('body').attr('class', "MPWSPage");
         if (_hashTags && _hashTags[0])
             $('body').addClass("Page" + _hashTags[0].ucWords());
@@ -137,9 +163,34 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, contentIn
         Sandbox.eventNotify('global:menu:set-active');
 
         // notify all subscribers that we have changed our route
-        Sandbox.eventNotify('global:route', window.location.hash);
+        Sandbox.eventNotify('global:route', fragment);
+
+        // save location
+        if (fragment !== "signout" && fragment !== "signin")
+            Cache.saveInLocalStorage("location", fragment);
     });
     $(window).trigger('hashchange');
+
+    // Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
+
+    //     // debugger;
+    //     if (data.account) {
+    //         // debugger;
+    //         // if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
+    //             var _location = Cache.getFromLocalStorage("location") || '';
+    //             Backbone.history.navigate(_location, true);
+    //         // }
+    //     } else {
+    //         $.xhrPool.abortAll();
+    //         if (Backbone.history.fragment !== "signin")
+    //             Backbone.history.navigate("signin", true);
+    //     }
+    //     // debugger;
+    //     // if (!renderCompleteSent) {
+    //     //     renderCompleteSent = true;
+    //     //     Sandbox.eventNotify('plugin:toolbox:render:complete');
+    //     // }
+    // });
 
     var Router = Backbone.Router.extend({
         routes: {
