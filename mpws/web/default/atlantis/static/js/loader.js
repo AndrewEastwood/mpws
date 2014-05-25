@@ -107,6 +107,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
         // if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
         //     Sandbox.eventNotify("global:session:expired", responseObj.error);
 
+        Sandbox.eventNotify("global:ajax:responce", responseObj);
+
         if (responseObj) {
             if(responseObj.authenticated && Backbone.history.fragment === "signin")
                 Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
@@ -170,27 +172,6 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
             Cache.saveInLocalStorage("location", fragment);
     });
     $(window).trigger('hashchange');
-
-    // Sandbox.eventSubscribe('plugin:account:status:received', function (data) {
-
-    //     // debugger;
-    //     if (data.account) {
-    //         // debugger;
-    //         // if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
-    //             var _location = Cache.getFromLocalStorage("location") || '';
-    //             Backbone.history.navigate(_location, true);
-    //         // }
-    //     } else {
-    //         $.xhrPool.abortAll();
-    //         if (Backbone.history.fragment !== "signin")
-    //             Backbone.history.navigate("signin", true);
-    //     }
-    //     // debugger;
-    //     // if (!renderCompleteSent) {
-    //     //     renderCompleteSent = true;
-    //     //     Sandbox.eventNotify('plugin:toolbox:render:complete');
-    //     // }
-    // });
 
     var Router = Backbone.Router.extend({
         routes: {

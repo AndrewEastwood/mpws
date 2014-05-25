@@ -1,14 +1,15 @@
 define('plugin/shop/toolbox/js/model/stats', [
-    'default/js/model/mModel',
+    'default/js/lib/backbone',
     'plugin/shop/common/js/lib/utils'
-], function (MModel, Utils) {
+], function (Backbone, Utils) {
 
-    var Model = MModel.getNew();
-    var ProductItemFull = Model.extend({
-        source: 'shop',
-        fn: 'shop_manage_stats'
+    var Stats = Backbone.Model.extend({
+        url: APP.getApiLink({
+            source: 'shop',
+            fn: 'shop_manage_stats'
+        })
     });
 
-    return ProductItemFull;
+    return Stats;
 
 });

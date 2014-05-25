@@ -1,6 +1,6 @@
 define("plugin/shop/toolbox/js/view/stats", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
+    'default/js/lib/backbone',
     'plugin/shop/toolbox/js/model/stats',
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/cache",
@@ -13,20 +13,20 @@ define("plugin/shop/toolbox/js/view/stats", [
     /* charts */
     'default/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
     'default/js/plugin/goog!visualization,1,packages:[corechart,geochart]',
-], function (Sandbox, MView, ModelStats, BootstrapDialog, Cache, tpl, lang) {
+], function (Sandbox, Backbone, ModelStats, BootstrapDialog, Cache, tpl, lang) {
 
-    var statsModel = new ModelStats();
-    return MView.extend({
+    return Backbone.View.extend({
         id: 'shop-stats-ID',
         lang: lang,
         template: tpl,
-        model: statsModel,
         events: {
             'click #refresh': 'refresh'
         },
         initialize: function () {
-            MView.prototype.initialize.call(this);
+            // MView.prototype.initialize.call(this);
             var self = this;
+
+            this.model = new ModelStats();
 
             this.listenTo(this.model, "change", this.render);
 

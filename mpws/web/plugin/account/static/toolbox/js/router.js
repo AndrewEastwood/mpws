@@ -8,6 +8,7 @@ define("plugin/account/toolbox/js/router", [
     'plugin/account/toolbox/js/view/menu'
 ], function (Sandbox, $, _, Backbone, Auth, Cache) {
 
+    var renderCompleteSent = false;
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
@@ -17,7 +18,6 @@ define("plugin/account/toolbox/js/router", [
                 // remove previous view
                 if (cachedView && cachedView.remove)
                     cachedView.remove();
-
                 // create new view
                 var signin = new SignIn();
                 signin.render();
@@ -27,11 +27,17 @@ define("plugin/account/toolbox/js/router", [
                     name: 'CommonBodyCenter',
                     el: signin.el
                 });
-
                 // return view object to pass it into this function at next invocation
                 return signin;
             });
         });
+    });
+
+    Sandbox.eventSubscribe('global:ajax:responce', function (data) {
+        if (!renderCompleteSent) {
+            renderCompleteSent = true;
+            Sandbox.eventNotify('plugin:account:complete');
+        }
     });
 
     Sandbox.eventSubscribe('global:page:signout', function (data) {
@@ -39,8 +45,26 @@ define("plugin/account/toolbox/js/router", [
     });
 
     Sandbox.eventSubscribe('global:route', function (data) {
-        if (Backbone.history.fragment !== 'signin' || Backbone.history.fragment !== 'signout') {
+        if (Backbone.history.fragment !== 'signin' || Backbone.history.fragment !== 'signout')
             Auth.getStatus();
-        }
     });
+
+    // // inject into toolbox layout another plugin's content
+    // // this is a bridge between layout an other plugins
+    // // it is better to do render through these events
+    // Sandbox.eventSubscribe('plugin:toolbox:page:show', function (options) {
+    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+    //         name: 'CommonBodyCenter',
+    //     }));
+    // });
+
+    // Sandbox.eventSubscribe('plugin:toolbox:menu:display', function (options) {
+    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+    //         name: options.name || 'PluginToolboxMenuList',
+    //     }));
+    //     // sort nodes
+    //     // debugger;
+    //     // $('#toolbox-menu-ID').tsort({place:'top'});
+    //     Sandbox.eventNotify('global:menu:set-active');
+    // });
 });

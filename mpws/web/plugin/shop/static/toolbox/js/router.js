@@ -35,7 +35,7 @@ define("plugin/shop/toolbox/js/router", [
                     // create new view
                     var stats = cachedView || new Stats();
 
-                    stats.fetchAndRender();
+                    stats.render();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
                         name: 'ShopDashboard',
