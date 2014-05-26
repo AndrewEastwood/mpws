@@ -10,7 +10,7 @@ var APP = {
             'default/js/lib/backbone',
             'default/js/lib/cache',
             'default/js/lib/contentInjection',
-            this.config.ROUTER,
+            // this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
         ];
         return modules;
@@ -68,9 +68,20 @@ require(["default/js/lib/url"], function(JSUrl) {
     }
 })
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, contentInjection, CustomerRouter, CssInjection /* plugins goes here */) {
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, contentInjection, CssInjection /* plugins goes here */) {
 
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
+
+    var renderFn = function (options) {
+        // debugger;
+        if (!options || !options.name)
+            return;
+        // debugger;
+        var el = $('[name="' + options.name + '"]');
+        if (el.length == 0)
+            throw "Render Error: Unable to resolve element by name: " + options.name;
+        contentInjection.injectContent(el, options);
+    }
 
     $.xhrPool = []; 
     $.xhrPool.abortAll = function() {
@@ -153,6 +164,19 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
         }
     });
 
+        debugger;
+    Sandbox.eventSubscribe('global:content:render', function (options) {
+        debugger;
+        if (_.isArray(options))
+            _(options).each(function(option){
+                renderFn(option);
+            });
+        else
+            renderFn(options);
+        // refresh links (make them active)
+        Sandbox.eventNotify('global:menu:set-active');
+    });
+
     $(window).on('hashchange', function() {
         // set page name
         var fragment = window.location.hash.substr(1);
@@ -171,7 +195,33 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
         if (fragment !== "signout" && fragment !== "signin")
             Cache.saveInLocalStorage("location", fragment);
     });
-    $(window).trigger('hashchange');
+
+    // Backbone.Router.prototype.before = function () {};
+    // Backbone.Router.prototype.after = function () {};
+
+    // Backbone.Router.prototype.route = function (route, name, callback) {
+    //   if (!_.isRegExp(route)) route = this._routeToRegExp(route);
+    //   if (_.isFunction(name)) {
+    //     callback = name;
+    //     name = '';
+    //   }
+    //   if (!callback) callback = this[name];
+
+    //   var router = this;
+
+    //   Backbone.history.route(route, function(fragment) {
+    //     var args = router._extractParameters(route, fragment);
+
+    //     router.before.apply(router, arguments);
+    //     callback && callback.apply(router, args);
+    //     router.after.apply(router, arguments);
+
+    //     router.trigger.apply(router, ['route:' + name].concat(args));
+    //     router.trigger('route', name, args);
+    //     Backbone.history.trigger('route', router, name, args);
+    //   });
+    //   return this;
+    // };
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -195,57 +245,39 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
 
     var defaultRouter = new Router();
 
-    if (_.isFunction(CustomerRouter)) {
-        var customerRouter = new CustomerRouter();
-        APP.instances['CustomerRouter'] = customerRouter;
-    }
+    require([APP.config.ROUTER], function(CustomerRouter){
+        if (_.isFunction(CustomerRouter)) {
+            var customerRouter = new CustomerRouter();
+            APP.instances['CustomerRouter'] = customerRouter;
+        }
 
-    var renderFn = function (options) {
-        // debugger;
-        if (!options || !options.name)
-            return;
-        // debugger;
-        var el = $('[name="' + options.name + '"]');
-        if (el.length == 0)
-            throw "Render Error: Unable to resolve element by name: " + options.name;
-        contentInjection.injectContent(el, options);
-    }
 
-    Sandbox.eventSubscribe('global:content:render', function (options) {
-        if (_.isArray(options))
-            _(options).each(function(option){
-                renderFn(option);
+        var releasePluginsFn = function () {
+            var pluginList = APP.getPluginRoutersToDownload();
+            var pluginNames = _(pluginList).map(function(pluginListItem){ return pluginListItem.match(/^plugin\/(\w+)\//)[1]; });
+            require(pluginList, function(){
+                var _pluginsObjects = [].slice.call(arguments);
+                // initialize plugins
+                _(_pluginsObjects).each(function(plugin, key){
+                    if (_.isFunction(plugin)) {
+                        var plg = new plugin();
+                        APP.instances[pluginNames[key]] = plg;
+                    }
+                });
+                // start HTML5 History push
+                Backbone.history.start();
+                // notify all that loader completed its tasks
+                Sandbox.eventNotify('global:loader:complete');
+                // return Site;
+                $(window).trigger('hashchange');
             });
+        }
+
+        if (_.isObject(CustomerRouter) && CustomerRouter.releasePlugins)
+            CustomerRouter.releasePlugins(releasePluginsFn);
         else
-            renderFn(options);
-        // refresh links (make them active)
-        Sandbox.eventNotify('global:menu:set-active');
+            releasePluginsFn();
     });
-
-    var releasePluginsFn = function () {
-        var pluginList = APP.getPluginRoutersToDownload();
-        var pluginNames = _(pluginList).map(function(pluginListItem){ return pluginListItem.match(/^plugin\/(\w+)\//)[1]; });
-        require(pluginList, function(){
-            var _pluginsObjects = [].slice.call(arguments);
-            // initialize plugins
-            _(_pluginsObjects).each(function(plugin, key){
-                if (_.isFunction(plugin)) {
-                    var plg = new plugin();
-                    APP.instances[pluginNames[key]] = plg;
-                }
-            });
-            // start HTML5 History push
-            Backbone.history.start();
-            // notify all that loader completed its tasks
-            Sandbox.eventNotify('global:loader:complete');
-            // return Site;
-        });
-    }
-
-    if (_.isObject(CustomerRouter) && CustomerRouter.releasePlugins)
-        CustomerRouter.releasePlugins(releasePluginsFn);
-    else
-        releasePluginsFn();
 
 
 });

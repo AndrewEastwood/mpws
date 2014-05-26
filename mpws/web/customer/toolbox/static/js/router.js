@@ -1,7 +1,7 @@
 define("customer/js/router", [
     'default/js/lib/sandbox',
-], function (Sandbox) {
-
+    'customer/js/view/menu',
+], function (Sandbox, Menu) {
 
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
@@ -9,7 +9,29 @@ define("customer/js/router", [
         // get initial account status
     });
 
+    Sandbox.eventSubscribe('customer:toolbox:page:show', function (options) {
+        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+            name: 'CommonBodyCenter',
+        }));
+    });
 
+    Sandbox.eventSubscribe('customer:toolbox:menu:display', function (options) {
+        debugger;
+        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+            name: options.name || 'PluginToolboxMenuList',
+        }));
+        // sort nodes
+        // debugger;
+        // $('#toolbox-menu-ID').tsort({place:'top'});
+        Sandbox.eventNotify('global:menu:set-active');
+    });
+
+    var menu = new Menu();
+    menu.render();
+
+    // Sandbox.eventSubscribe('customer:toolbox:render', function (options) {
+    //     debugger;
+    // });
 
     // return Router;
     // control all plugins here here 

@@ -35,10 +35,10 @@ define("plugin/shop/toolbox/js/router", [
                     // create new view
                     var stats = cachedView || new Stats();
 
-                    stats.render();
+                    stats.show();
 
-                    Sandbox.eventNotify('plugin:toolbox:page:show', {
-                        name: 'ShopDashboard',
+                    Sandbox.eventNotify('customer:toolbox:page:show', {
+                        name: 'CommonBodyCenter',
                         el: stats.$el
                     });
 
@@ -61,10 +61,10 @@ define("plugin/shop/toolbox/js/router", [
                     // create new view
                     var productManager = cachedView || new ProductManager();
 
-                    productManager.fetchAndRender();
+                    productManager.render();
 
                     Sandbox.eventNotify('plugin:toolbox:page:show', {
-                        name: 'ShopListProducts',
+                        name: 'CommonBodyCenter',
                         el: productManager.$el
                     });
 
