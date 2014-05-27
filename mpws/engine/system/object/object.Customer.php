@@ -10,6 +10,7 @@ class objectCustomer {
 
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
+        $this->account = new libraryAccount();
 
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
@@ -49,6 +50,10 @@ class objectCustomer {
     }
 
     public function getDataBase () {
+        return $this->dbo;
+    }
+
+    public function getAccount () {
         return $this->dbo;
     }
 

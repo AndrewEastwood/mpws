@@ -25,6 +25,9 @@ var APP = {
     hasPlugin: function (pluginName) {
         return _(this.config.PLUGINS).indexOf(pluginName) >= 0;
     },
+    getAuthLink: function () {
+        return this.config.URL_AUTH;
+    },
     getApiLink: function (options) {
         throw "Implment function getApiLink";
     },
