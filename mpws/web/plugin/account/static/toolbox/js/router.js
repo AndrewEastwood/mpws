@@ -9,6 +9,7 @@ define("plugin/account/toolbox/js/router", [
 ], function (Sandbox, $, _, Backbone, Auth, Cache) {
 
     var renderCompleteSent = false;
+
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
@@ -34,7 +35,7 @@ define("plugin/account/toolbox/js/router", [
     });
 
     Sandbox.eventSubscribe('global:ajax:responce', function (data) {
-        if (!renderCompleteSent) {
+        if (data && data.authenticated && !renderCompleteSent) {
             renderCompleteSent = true;
             Sandbox.eventNotify('plugin:account:complete');
         }
@@ -45,8 +46,7 @@ define("plugin/account/toolbox/js/router", [
     });
 
     Sandbox.eventSubscribe('global:route', function (data) {
-        if (Backbone.history.fragment !== 'signin' || Backbone.history.fragment !== 'signout')
-            Auth.getStatus();
+        Auth.getStatus();
     });
 
     // // inject into toolbox layout another plugin's content

@@ -128,6 +128,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
                 Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
             else if (!responseObj.authenticated) {
                 $.xhrPool.abortAll();
+                APP.commonElements.empty();
                 // Sandbox.eventNotify("global:session:needlogin", responseObj.error);
                 if (APP.config.ISTOOLBOX && Backbone.history.fragment !== "signin") {
                     Backbone.history.navigate('signin');
@@ -167,9 +168,9 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
         }
     });
 
-        debugger;
+    // debugger;
     Sandbox.eventSubscribe('global:content:render', function (options) {
-        debugger;
+        // debugger;
         if (_.isArray(options))
             _(options).each(function(option){
                 renderFn(option);

@@ -188,6 +188,13 @@ class pluginAccount extends objectPlugin {
         return $account;
     }
 
+    private function _clearSessionAccount () {
+        setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
+        setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
+        unset($_SESSION['Account']);
+        return null;
+    }
+
     public function get_status () {
         $data = new libraryDataObject();
         // if ($this->_isAccountSignedIn()) {
@@ -222,9 +229,10 @@ class pluginAccount extends objectPlugin {
 
         $account = $this->getAccount($email, $password);
 
-        if (empty($account))
+        if (empty($account)) {
             $accountObj->setError('WrongCredentials');
-        else {
+            $this->_clearSessionAccount();
+        } else {
             $accountObj->setData('account', $account);
 
             // keep user logged in
@@ -248,10 +256,7 @@ class pluginAccount extends objectPlugin {
 
     public function post_signout () {
         $data = new libraryDataObject();
-        setcookie('username', null, false, '/', $_SERVER['SERVER_NAME']);
-        setcookie('password', null, false, '/', $_SERVER['SERVER_NAME']);
-        unset($_SESSION['Account']);
-        $data->setData('account', $this->_getSessionAccount());
+        $data->setData('account', $this->_clearSessionAccount());
         return $data;
     }
 

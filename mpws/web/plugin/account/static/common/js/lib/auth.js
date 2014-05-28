@@ -6,6 +6,7 @@ define("plugin/account/common/js/lib/auth", [
 ], function (Sandbox, $, _, Cache) {
 
     var Auth = {
+        isAuthenticated: false,
         getAccount: function () {
             return Cache.getCookie('account') || false;
         },
@@ -19,6 +20,8 @@ define("plugin/account/common/js/lib/auth", [
                 Sandbox.eventNotify('plugin:account:status:received', response);
             }).error(function(){
                 Sandbox.eventNotify('plugin:account:status:received', null);
+            }).always(function(response){
+                Auth.isAuthenticated = response && response.authenticated;
             });
         },
         signin: function (email, password, remember) {
@@ -28,9 +31,9 @@ define("plugin/account/common/js/lib/auth", [
                 fn: 'signin'
             });
             return $.post(url, {
-                email: email,
-                password: password,
-                remember: remember,
+                email: email || "",
+                password: password || "",
+                remember: remember || false,
             }, function (response) {
                 Cache.setCookie('account', response);
                 if (response)
@@ -38,6 +41,8 @@ define("plugin/account/common/js/lib/auth", [
             }).error(function(){
                 // debugger;
                 Sandbox.eventNotify('plugin:account:signed:in', false);
+            }).always(function(response){
+                Auth.isAuthenticated = response && response.authenticated;
             });
         },
         signout: function () {
@@ -52,9 +57,13 @@ define("plugin/account/common/js/lib/auth", [
             }).error(function(){
                 // debugger;
                 Sandbox.eventNotify('plugin:account:signed:out', false);
+            }).always(function(response){
+                Auth.isAuthenticated = response && response.authenticated;
             });
         }
     };
+
+    window.Auth = Auth;
 
     return Auth;
 

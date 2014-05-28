@@ -16,7 +16,7 @@ define("customer/js/router", [
     });
 
     Sandbox.eventSubscribe('customer:toolbox:menu:display', function (options) {
-        debugger;
+        // debugger;
         Sandbox.eventNotify('global:content:render', _.extend({}, options, {
             name: options.name || 'PluginToolboxMenuList',
         }));
