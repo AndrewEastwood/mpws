@@ -1,6 +1,5 @@
 <?php
 
-
 class libraryRequest {
 
     /* get values */
@@ -50,8 +49,15 @@ class libraryRequest {
     }
 
     static function getRequestMethodName () {
-        $fn = strtolower($_SERVER['REQUEST_METHOD']) . '_' . libraryRequest::fromGET('fn');
-        return $fn;
+        $requestFnElements = array(strtolower($_SERVER['REQUEST_METHOD']));
+
+        if (self::hasInGet('source'))
+            $requestFnElements[] = self::fromGET('source');
+        
+        if (self::hasInGet('fn'))
+            $requestFnElements[] = self::fromGET('fn');
+
+        return join("_", $requestFnElements);
     }
 
     /* state grabbers */

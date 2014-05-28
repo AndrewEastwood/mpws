@@ -29,6 +29,8 @@
     foreach ($globals as $globalFile)
         require_once $globalFile;
 
+    $_RESPONSE = new libraryDataObject();
+
     // returns root path
     function getDocumentRoot () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);

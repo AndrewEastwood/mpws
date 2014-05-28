@@ -36,10 +36,6 @@ class objectCustomer {
         $this->customerInfo = $this->getCustomerInfo();
     }
 
-    public function getAccountManager () {
-        return $this->accountManager;
-    }
-
     public function getCustomerID () {
         $info = $this->getCustomerInfo();
         return isset($info['ID']) ? $info['ID'] : null;
@@ -54,10 +50,6 @@ class objectCustomer {
     }
 
     public function getDataBase () {
-        return $this->dbo;
-    }
-
-    public function getAccount () {
         return $this->dbo;
     }
 
@@ -82,33 +74,13 @@ class objectCustomer {
         return !empty($this->plugins[$pluginName]);
     }
 
-    public function getPluginData ($source, $function, $params = null) {
-        $data = new libraryDataObject();
-        $plugin = $this->getPlugin($source);
-        if (empty($plugin))
-            return $data;
-        if (!method_exists($plugin, $function))
-            return $data;
-        return $plugin->$function($params);
-    }
-
     public function getResponse () {
 
         $response = new libraryDataObject();
-        $publicKey = libraryRequest::fromGET('token');
-        $source = libraryRequest::fromGET('source');
+        $publicKey = "";
 
-        if (empty($source)) {
-            $response->setError('WrongSource');
-            header("HTTP/1.0 404 WrongSource");
-            return $response;
-        }
-
-        if (!isset($this->plugins[$source])) {
-            $response->setError('UnknownSource');
-            header("HTTP/1.0 404 UnknownSource");
-            return $response;
-        }
+        if (libraryRequest::hasInGet('token'))
+            $publicKey = libraryRequest::fromGET('token');
 
         // check page token
         if (empty($publicKey)) {
@@ -148,24 +120,34 @@ class objectCustomer {
         //     }
         // }
 
-        if ($source == '*')
-            foreach ($this->plugins as $key => $plugin)
-                $response->setData($key, $plugin->getResponse()->toNative());
-        else {
-            $data = $this->getPluginData($source, libraryRequest::getRequestMethodName());
-            $response->overwriteData($data->toNative());
-        }
+    // public function getPluginData ($source, $function, $params = null) {
+    //     $data = new libraryDataObject();
+    //     $plugin = $this->getPlugin($source);
+    //     if (empty($plugin))
+    //         return $data;
+    //     if (!method_exists($plugin, $function))
+    //         return $data;
+    //     return $plugin->$function($params);
+    // }
+
+        // if ($source == '*')
+        foreach ($this->plugins as $key => $plugin)
+            $response->setData($key, $plugin->getResponse()->toNative());
+        // else {
+        //     $data = $this->getPluginData($source, libraryRequest::getRequestMethodName());
+        //     $response->overwriteData($data->toNative());
+        // }
 
 
-        $response->setData('authenticated', $this->isAuthenticated());
+        // $response->setData('authenticated', $this->isAuthenticated());
 
         return $response;
     }
 
     // Admin status (requires toolbox plugin)
-    public function isAuthenticated () {
-        return $this->getPluginData('account', 'get_status')->hasKey('account');
-    }
+    // public function isAuthenticated () {
+    //     return $this->getPluginData('account', 'get_status')->hasKey('account');
+    // }
 
 }
 

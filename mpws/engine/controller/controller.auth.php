@@ -11,7 +11,7 @@
     // do not put $customer into global scope
     function response () {
         $customer = new libraryCustomer();
-        $responce = $customer->getAccountManager()->get_status();
+        $responce = $customer->AccountManager();
         // var_dump($responce->toNative());
         return $responce;
     }

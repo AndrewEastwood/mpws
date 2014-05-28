@@ -10,7 +10,7 @@
 
     // do not put $customer into global scope
     function response () {
-        $customer = new libraryCustomer();
+        $customer = libraryCustomer::getCustomer();
         $responce = $customer->getResponse();
         // var_dump($responce->toNative());
         return $responce;

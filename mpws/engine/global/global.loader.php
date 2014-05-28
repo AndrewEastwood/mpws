@@ -70,11 +70,11 @@
 
                     break;
                 }
-                // case 'extension': {
-                //     //echo 'Including extension ' . $libName;
-                //     $libPath = '/engine/system/extension/extension.';
-                //     break;
-                // }
+                case 'extension': {
+                    //echo 'Including extension ' . $libName;
+                    $libPath = '/engine/system/extension/extension.';
+                    break;
+                }
                 default: {
                     $libPath = '/engine/system/class/' . $pieces[0];
                     break;
