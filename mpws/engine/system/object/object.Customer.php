@@ -1,6 +1,6 @@
 <?php
 
-class objectCustomer {
+class objectCustomer implements ICustomer {
 
     private $dbo;
     private $plugins;
