@@ -48,7 +48,7 @@ class libraryRequest {
         return $_SERVER['REQUEST_METHOD'] === "DELETE";
     }
 
-    static function getRequestMethodName () {
+    static function processRequest ($context) {
         $requestFnElements = array(strtolower($_SERVER['REQUEST_METHOD']));
 
         if (self::hasInGet('source'))
@@ -57,7 +57,10 @@ class libraryRequest {
         if (self::hasInGet('fn'))
             $requestFnElements[] = self::fromGET('fn');
 
-        return join("_", $requestFnElements);
+        $fn = join("_", $requestFnElements);
+        // echo $fn;
+        if (!empty($context) && method_exists($context, $fn))
+            $context->$fn(libraryResponse::$_RESPONSE);
     }
 
     /* state grabbers */

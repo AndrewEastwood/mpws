@@ -4,8 +4,8 @@ class libraryDataObject {
 
     private $_data;
 
-    function __construct() {
-        $this->_data = array();
+    function __construct($initialData = array()) {
+        $this->_data = $initialData;
     }
 
     // data

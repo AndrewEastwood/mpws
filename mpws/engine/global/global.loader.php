@@ -17,13 +17,18 @@
         $libPath = '';
         //$DR = $_SERVER['DOCUMENT_ROOT'];
         $pieces = preg_split('/(?=[A-Z])/', $className, -1);
+        // var_dump($pieces);
+        if (count($pieces) === 3 && empty($pieces[0]))
+            array_shift($pieces);
         $libName = implode('', array_slice($pieces, 1));
+
+        // var_dump($pieces);
 
         if (count($pieces) <= 1) {
             //throw new Exception('Wrong loading library name: ' . $className);
             $libPath = '/engine/system/class/' . $className;
         } else {
-            switch (strtolower($pieces[0])) {
+            switch ($pieces[0]) {
                 case 'controller': {
                     $libPath = '/engine/controller/controller.';
                     break;
@@ -40,7 +45,7 @@
                 //     $libPath = '/engine/system/context/context.';
                 //     break;
                 // }
-                case 'i': {
+                case 'I': {
                     $libPath = '/engine/system/interface/interface.';
                     break;
                 }

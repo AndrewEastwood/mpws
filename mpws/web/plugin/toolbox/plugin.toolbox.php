@@ -38,7 +38,7 @@ class pluginToolbox extends objectPlugin {
         // var_dump($passwordS);
         $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $password);
         // var_dump($config);
-        return $this->getCustomer()->processData($config);
+        return $this->getCustomer()->fetch($config);
     }
 
     public function isAccountSignedIn () {

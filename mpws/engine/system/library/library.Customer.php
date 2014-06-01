@@ -16,6 +16,20 @@ class libraryCustomer {
         return self::$_customer;
     }
 
+    static function runCustomer () {
+        $customer = self::getCustomer();
+        switch (MPWS_REQUEST) {
+            case 'API':
+                $customer->runAsAPI();
+                break;
+            case 'AUTH':
+                $customer->runAsAUTH();
+                break;
+            default:
+                throw new Exception("Error Processing Request: Umknown request type", 1);
+        }
+    }
+
 }
 
 ?>

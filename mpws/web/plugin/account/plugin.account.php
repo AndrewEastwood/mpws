@@ -40,7 +40,7 @@ class pluginAccount extends objectPlugin {
     //     // var_dump($passwordS);
     //     $config = configurationToolboxDataSource::jsapiGetAdminAccount($email, $password);
     //     // var_dump($config);
-    //     return $this->getCustomer()->processData($config);
+    //     return $this->getCustomer()->fetch($config);
     // }
 
 
@@ -168,7 +168,7 @@ class pluginAccount extends objectPlugin {
 
     public function _getAccountByID ($id) {
         $config = configurationAccountDataSource::jsapiGetAccountByID($id);
-        $account = $this->getCustomer()->processData($config);
+        $account = $this->getCustomer()->fetch($config);
         // var_dump('_getAccountByID', $id);
         // var_dump($account);
         return $account;
@@ -195,14 +195,15 @@ class pluginAccount extends objectPlugin {
         return null;
     }
 
-    public function get_status () {
-        $data = new libraryDataObject();
+    public function get_account_status (&$resp) {
+        // echo 111111;
+        // $data = new libraryDataObject();
         // if ($this->_isAccountSignedIn()) {
         //     $data->setData('status', 'ok');
         // } else
         //     $data->setData('status', 'none');
-        $data->setData('account', $this->_getSessionAccount());
-        return $data;
+        $resp['account'] = $this->_getSessionAccount();
+        // return $data;
     }
 
     public function post_signin () {
@@ -263,7 +264,7 @@ class pluginAccount extends objectPlugin {
     public function getAccount ($login, $password) {
         $config = configurationAccountDataSource::jsapiGetAccount($login, $password);
         // var_dump($config);
-        $account = $this->getCustomer()->processData($config);
+        $account = $this->getCustomer()->fetch($config);
         if (isset($account['ID']))
             $account["addresses"] = $this->getAccountAddresses($account['ID']);
         return $account;
@@ -552,7 +553,7 @@ class pluginAccount extends objectPlugin {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
         return $this->getDataBase()->getLastInsertId();
     }
 
@@ -560,7 +561,7 @@ class pluginAccount extends objectPlugin {
 
     public function activateAccount ($ValidationString) {
         $config = configurationAccountDataSource::jsapiActivateAccount($ValidationString);
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
     }
 
     public function removeAccount ($dataAccount) {
@@ -572,7 +573,7 @@ class pluginAccount extends objectPlugin {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
     }
 
     public function updateAccount ($dataAccount) {
@@ -586,7 +587,7 @@ class pluginAccount extends objectPlugin {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
     }
 
     public function updateAccountPassword ($dataAccount) {
@@ -600,7 +601,7 @@ class pluginAccount extends objectPlugin {
             "fields" => array_keys($dataAccount),
             "values" => array_values($dataAccount)
         );
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
         return $dataAccount['Password'];
     }
 
@@ -613,17 +614,17 @@ class pluginAccount extends objectPlugin {
         // if (!$this->_isAccountSignedIn() && !$force)
         //     return false;
         $config = configurationAccountDataSource::jsapiGetAccountAddresses($AccountID);
-        return $this->getCustomer()->processData($config);
+        return $this->getCustomer()->fetch($config);
     }
 
     public function getAccountAddress ($AccountID, $AddressID) {
         $config = configurationAccountDataSource::jsapiGetAccountAddress($AccountID, $AddressID);
-        return $this->getCustomer()->processData($config);
+        return $this->getCustomer()->fetch($config);
     }
 
     public function getAddress ($AddressID) {
         $config = configurationAccountDataSource::jsapiGetAddress($AddressID);
-        return $this->getCustomer()->processData($config);
+        return $this->getCustomer()->fetch($config);
     }
 
     public function addAccountAddress ($address) {
@@ -635,7 +636,7 @@ class pluginAccount extends objectPlugin {
             "values" => array_values($address)
         );
         // var_dump($config);
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
         return $this->getDataBase()->getLastInsertId();
     }
 
@@ -652,13 +653,13 @@ class pluginAccount extends objectPlugin {
             "values" => array_values($address)
         );
         // var_dump($config);
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
     }
 
     public function removeAccountAddress ($AccountID, $AddressID) {
         $config = configurationAccountDataSource::jsapiRemoveAccountAddress($AccountID, $AddressID);
         // var_dump($config);
-        $this->getCustomer()->processData($config);
+        $this->getCustomer()->fetch($config);
     }
 
     public function getAccountStats () {
@@ -672,7 +673,7 @@ class pluginAccount extends objectPlugin {
             $configCount = configurationAccountDataSource::jsapiUtil_GetTableRecordsCount(configurationAccountDataSource::$Table_SystemAccounts);
             $configCount['condition']['filter'] = $filterItem['filter'];
             $configCount['condition']['values'] = $filterItem['value'];
-            $dataCount = $this->getCustomer()->processData($configCount);
+            $dataCount = $this->getCustomer()->fetch($configCount);
             $stats[$filterItem['key']] = $dataCount['ItemsCount'];
         }
         return $stats;

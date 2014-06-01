@@ -16,7 +16,9 @@ class objectPlugin implements IPlugin {
         return $this->customer->getDataBase();
     }
 
-    public function getResponse () {}
+    public function run () {
+        libraryRequest::processRequest($this);
+    }
 }
 
 ?>

@@ -34,6 +34,7 @@
     }
     function glGetPath () {
         // debug (func_get_args());
+        // var_dump(debug_backtrace());
         $numargs = func_num_args();
         $_isFile = strrpos(func_get_arg($numargs - 1), '.') > 1;
         if ($_isFile)

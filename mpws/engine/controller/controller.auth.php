@@ -8,15 +8,7 @@
     // bootstrap
     include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
-    // do not put $customer into global scope
-    function response () {
-        $customer = new libraryCustomer();
-        $responce = $customer->AccountManager();
-        // var_dump($responce->toNative());
-        return $responce;
-    }
-
-    $data = response();
-    echo $data->toJSON();
+    libraryCustomer::runCustomer();
+    libraryResponse::sendResponse();
 
 ?>

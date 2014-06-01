@@ -4,13 +4,14 @@ class objectCustomer implements ICustomer {
 
     private $dbo;
     private $plugins;
+    private $extensions;
     private $customerInfo;
 
     function __construct() {
 
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
-        $this->accountManager = new libraryAccountManager();
+        $this->extensions['accounts'] = new extensionAccounts($this);
 
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
@@ -74,80 +75,44 @@ class objectCustomer implements ICustomer {
         return !empty($this->plugins[$pluginName]);
     }
 
-    public function getResponse () {
+    public function getExtension ($extensionName) {
+        return $this->extensions[$extensionName];
+    }
 
-        $response = new libraryDataObject();
+    public function hasExtension ($extensionName) {
+        return !empty($this->extensions[$extensionName]);
+    }
+
+    public function runAsAPI () {
         $publicKey = "";
-
         if (libraryRequest::hasInGet('token'))
             $publicKey = libraryRequest::fromGET('token');
 
         // check page token
         if (empty($publicKey)) {
-            $response->setError('EmptyToken');
-            header("HTTP/1.0 500 EmptyToken");
-            return $response;
+            libraryResponse::setError('EmptyToken', "HTTP/1.0 500 EmptyToken");
+            return;
         }
 
         if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
-            $response->setError('InvalidTokenKey');
-            header("HTTP/1.0 500 InvalidTokenKey");
-            return $response;
+            libraryResponse::setError('InvalidTokenKey', "HTTP/1.0 500 InvalidTokenKey");
+            return;
         }
 
         if (MPWS_IS_TOOLBOX && !configurationCustomerDisplay::$IsManaged) {
-            $response->setError('AccessDenied');
-            header("HTTP/1.0 500 AccessDenied");
-            // $response->setData('redirect', 'signin');
-            return $response;
+            libraryResponse::setError('AccessDenied', "HTTP/1.0 500 AccessDenied");
+            return;
         }
-        // if ($source == '*' && !configurationCustomerDatabase::$AllowWideJsApi)
-        //     throw new Exception('objectCustomer => getResponse: wide api js request is not allowed');
 
-        // this section must be located when all plugins are performed
-        // becuse the toolbox plugin does user validation and authorizations
-        // $dataAccount = $this->isAuthenticated();
-        // $accountIsEmpty = $dataAccountStatus->isEmpty('account');
+        libraryResponse::$_RESPONSE['authenticated'] = $this->getExtension('accounts')->isAuthenticated();
 
-        // if (MPWS_IS_TOOLBOX && $source === 'account') {
-        //     if (libraryRequest::hasInGET('fn') && libraryRequest::fromGET('fn') === "status")
-        //         return $dataAccountStatus;
-        //     if (!libraryRequest::hasInGET('fn') || libraryRequest::fromGET('fn') !== "signin") {
-        //         $response->setError('LoginRequired');
-        //         header("HTTP/1.0 500 LoginRequired");
-        //         // $response->setData('redirect', 'signin');
-        //         return $response;
-        //     }
-        // }
-
-    // public function getPluginData ($source, $function, $params = null) {
-    //     $data = new libraryDataObject();
-    //     $plugin = $this->getPlugin($source);
-    //     if (empty($plugin))
-    //         return $data;
-    //     if (!method_exists($plugin, $function))
-    //         return $data;
-    //     return $plugin->$function($params);
-    // }
-
-        // if ($source == '*')
-        foreach ($this->plugins as $key => $plugin)
-            $response->setData($key, $plugin->getResponse()->toNative());
-        // else {
-        //     $data = $this->getPluginData($source, libraryRequest::getRequestMethodName());
-        //     $response->overwriteData($data->toNative());
-        // }
-
-
-        // $response->setData('authenticated', $this->isAuthenticated());
-
-        return $response;
+        foreach ($this->plugins as $plugin)
+            $plugin->run();
     }
 
-    // Admin status (requires toolbox plugin)
-    // public function isAuthenticated () {
-    //     return $this->getPluginData('account', 'get_status')->hasKey('account');
-    // }
+    public function runAsAUTH () {
+        libraryRequest::processRequest($this->getExtension('accounts'));
+    }
 
 }
 

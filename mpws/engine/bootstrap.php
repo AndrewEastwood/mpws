@@ -1,10 +1,10 @@
 <?php
 
     // detect running customer name
-    define('DR', getDocumentRoot());
+    define('DR', glGetDocumentRoot());
     // detect running customer name
     define('MPWS_TOOLBOX', 'toolbox');
-    define('MPWS_CUSTOMER', getCustomer());
+    define('MPWS_CUSTOMER', glGetCustomerName());
     // evironment version
     define('MPWS_VERSION', 'atlantis');
     // evironment mode
@@ -17,7 +17,6 @@
     ini_set("display_errors", 1);
 
     $_REQ = json_decode(file_get_contents("php://input"), true);
-
     if (empty($_REQ))
         $_REQ = $_POST;
     // var_dump($_REQ);
@@ -29,10 +28,8 @@
     foreach ($globals as $globalFile)
         require_once $globalFile;
 
-    $_RESPONSE = new libraryDataObject();
-
     // returns root path
-    function getDocumentRoot () {
+    function glGetDocumentRoot () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);
         if ($_dr[strlen($_dr) - 1] != '/')
             $_dr .= '/';
@@ -40,7 +37,7 @@
     }
 
     // get customer key (name)
-    function getCustomer () {
+    function glGetCustomerName () {
         $h = current(explode(':', $_SERVER['HTTP_HOST']));
         $h = strtolower($h);
         $host_parts = explode ('.', $h);
@@ -54,7 +51,7 @@
     }
 
     // get debug level
-    function getDebugLevel (){
+    function glGetDebugLevel (){
         return MPWS_LOG_LEVEL;
     }
 

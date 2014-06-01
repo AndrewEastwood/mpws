@@ -1,10 +1,5 @@
 <?php
 
-interface ICustomer {
-
-
-
-
-}
+interface ICustomer {}
 
 ?>
