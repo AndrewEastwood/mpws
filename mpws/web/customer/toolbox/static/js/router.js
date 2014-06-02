@@ -1,33 +1,45 @@
 define("customer/js/router", [
     'default/js/lib/sandbox',
     'customer/js/view/menu',
-], function (Sandbox, Menu) {
+    'default/js/lib/auth',
+], function (Sandbox, Menu, Auth) {
 
+    // return {
+    //     releasePlugins: function (appInitFn) {
+    //         Sandbox.eventSubscribe("global:auth:status:active", appInitFn);
+    //         // Sandbox.eventSubscribe("global:auth:status:inactive", appInitFn);
+    //     }
+    // }
+
+    Sandbox.eventSubscribe('global:route', function () {
+        Auth.getStatus();
+    });
 
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
         Sandbox.eventNotify('global:page:setTitle', 'Toolbox');
+        Auth.getStatus();
         // get initial account status
     });
 
-    Sandbox.eventSubscribe('customer:toolbox:page:show', function (options) {
-        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
-            name: 'CommonBodyCenter',
-        }));
-    });
+    // Sandbox.eventSubscribe('customer:toolbox:page:show', function (options) {
+    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+    //         name: 'CommonBodyCenter',
+    //     }));
+    // });
 
-    Sandbox.eventSubscribe('customer:toolbox:menu:display', function (options) {
-        // debugger;
-        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
-            name: options.name || 'PluginToolboxMenuList',
-        }));
-        // sort nodes
-        // debugger;
-        // $('#toolbox-menu-ID').tsort({place:'top'});
-        Sandbox.eventNotify('global:menu:set-active');
-    });
+    // Sandbox.eventSubscribe('customer:toolbox:menu:display', function (options) {
+    //     // debugger;
+    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+    //         name: options.name || 'PluginToolboxMenuList',
+    //     }));
+    //     // sort nodes
+    //     // debugger;
+    //     // $('#toolbox-menu-ID').tsort({place:'top'});
+    //     Sandbox.eventNotify('global:menu:set-active');
+    // });
 
-    var menu = new Menu();
-    menu.render();
+    // var menu = new Menu();
+    // menu.render();
 
     // Sandbox.eventSubscribe('customer:toolbox:render', function (options) {
     //     debugger;

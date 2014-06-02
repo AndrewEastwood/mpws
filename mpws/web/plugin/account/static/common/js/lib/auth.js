@@ -63,7 +63,7 @@ define("plugin/account/common/js/lib/auth", [
         }
     };
 
-    window.Auth = Auth;
+    // window.Auth = Auth;
 
     return Auth;
 

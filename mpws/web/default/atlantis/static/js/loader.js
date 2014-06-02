@@ -9,6 +9,7 @@ var APP = {
             'default/js/lib/underscore',
             'default/js/lib/backbone',
             'default/js/lib/cache',
+            'default/js/lib/auth',
             'default/js/lib/contentInjection',
             // this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
@@ -25,8 +26,8 @@ var APP = {
     hasPlugin: function (pluginName) {
         return _(this.config.PLUGINS).indexOf(pluginName) >= 0;
     },
-    getAuthLink: function () {
-        return this.config.URL_AUTH;
+    getAuthLink: function (options) {
+        throw "Implment function getAuthLink";
     },
     getApiLink: function (options) {
         throw "Implment function getApiLink";
@@ -69,9 +70,18 @@ require(["default/js/lib/url"], function(JSUrl) {
             });
         return _url.toString();
     }
+    APP.getAuthLink = function (extraOptions) {
+        var _url = new JSUrl(APP.config.URL_AUTH);
+        _url.query.token = APP.config.TOKEN;
+        if (!_.isEmpty(extraOptions))
+            _(extraOptions).each(function (v, k) {
+                _url.query[k] = !!v ? v : "";
+            });
+        return _url.toString();
+    }
 })
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, contentInjection, CssInjection /* plugins goes here */) {
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */) {
 
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
 
@@ -122,20 +132,6 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
         //     Sandbox.eventNotify("global:session:expired", responseObj.error);
 
         Sandbox.eventNotify("global:ajax:responce", responseObj);
-
-        if (responseObj) {
-            if(responseObj.authenticated && Backbone.history.fragment === "signin")
-                Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
-            else if (!responseObj.authenticated) {
-                $.xhrPool.abortAll();
-                APP.commonElements.empty();
-                // Sandbox.eventNotify("global:session:needlogin", responseObj.error);
-                if (APP.config.ISTOOLBOX && Backbone.history.fragment !== "signin") {
-                    Backbone.history.navigate('signin');
-                    window.location.reload();
-                }
-            }
-        }
     });
 
     // Sandbox message handler
@@ -254,7 +250,6 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, co
             var customerRouter = new CustomerRouter();
             APP.instances['CustomerRouter'] = customerRouter;
         }
-
 
         var releasePluginsFn = function () {
             var pluginList = APP.getPluginRoutersToDownload();

@@ -1,12 +1,6 @@
 <?php
 
-class extensionAccounts {
-
-    private $customer;
-
-    function __construct ($customer) {
-        $this->customer = $customer;
-    }
+class extensionAccounts extends objectExtension {
 
     public function getAccountByID ($id) {
         $config = configurationAccountDataSource::jsapiGetAccountByID($id);
@@ -44,6 +38,11 @@ class extensionAccounts {
 
     public function get_status (&$resp) {
         $resp['account'] = $this->getSessionAccount();
+        $resp['authenticated'] = $this->isAuthenticated();
+    }
+
+    public function post_signin (&$resp) {
+        $resp['account'] = 11111;
         $resp['authenticated'] = $this->isAuthenticated();
     }
 }

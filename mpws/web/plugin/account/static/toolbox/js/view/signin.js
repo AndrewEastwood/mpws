@@ -1,7 +1,7 @@
 define("plugin/account/toolbox/js/view/signin", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
-    'plugin/account/common/js/lib/auth',
+    'default/js/lib/auth',
     'default/js/lib/utils',
     'default/js/plugin/hbs!plugin/account/toolbox/hbs/signin',
     /* lang */
@@ -31,9 +31,9 @@ define("plugin/account/toolbox/js/view/signin", [
         },
         render: function () {
             var self = this;
-            Auth.getStatus().done(function(){
-                self.$el.html(tpl(Utils.getHBSTemplateData(self)));
-            });
+            // Auth.getStatus().done(function(){
+            self.$el.html(tpl(Utils.getHBSTemplateData(self)));
+            // });
         }
     });
 

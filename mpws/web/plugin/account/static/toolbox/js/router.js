@@ -3,12 +3,14 @@ define("plugin/account/toolbox/js/router", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'plugin/account/common/js/lib/auth',
+    // 'plugin/account/common/js/lib/auth',
     "default/js/lib/cache",
-    'plugin/account/toolbox/js/view/menu'
-], function (Sandbox, $, _, Backbone, Auth, Cache) {
+    // 'plugin/account/toolbox/js/view/menu'
+], function (Sandbox, $, _, Backbone, Cache) {
 
-    var renderCompleteSent = false;
+
+
+    // var renderCompleteSent = false;
 
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
@@ -20,10 +22,10 @@ define("plugin/account/toolbox/js/router", [
                 if (cachedView && cachedView.remove)
                     cachedView.remove();
                 // create new view
+                APP.commonElements.empty();
                 var signin = new SignIn();
                 signin.render();
                 // debugger;
-                APP.commonElements.empty();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: signin.el
@@ -34,20 +36,20 @@ define("plugin/account/toolbox/js/router", [
         });
     });
 
-    Sandbox.eventSubscribe('global:ajax:responce', function (data) {
-        if (data && data.authenticated && !renderCompleteSent) {
-            renderCompleteSent = true;
-            Sandbox.eventNotify('plugin:account:complete');
-        }
-    });
+    // Sandbox.eventSubscribe('global:ajax:responce', function (data) {
+    //     if (data && data.authenticated && !renderCompleteSent) {
+    //         renderCompleteSent = true;
+    //         Sandbox.eventNotify('plugin:account:complete');
+    //     }
+    // });
 
-    Sandbox.eventSubscribe('global:page:signout', function (data) {
-        Auth.signout();
-    });
+    // Sandbox.eventSubscribe('global:page:signout', function (data) {
+    //     Auth.signout();
+    // });
 
-    Sandbox.eventSubscribe('global:route', function (data) {
-        Auth.getStatus();
-    });
+    // Sandbox.eventSubscribe('global:route', function (data) {
+    //     Auth.getStatus();
+    // });
 
     // // inject into toolbox layout another plugin's content
     // // this is a bridge between layout an other plugins
