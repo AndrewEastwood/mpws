@@ -11,7 +11,7 @@ class objectCustomer implements ICustomer {
 
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
-        $this->extensions['accounts'] = new extensionAccounts($this);
+        $this->extensions['auth'] = new extensionAuth($this);
 
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
@@ -104,14 +104,15 @@ class objectCustomer implements ICustomer {
             return;
         }
 
-        libraryResponse::$_RESPONSE['authenticated'] = $this->getExtension('accounts')->isAuthenticated();
-
+        libraryResponse::$_RESPONSE['authenticated'] = $this->getExtension('auth')->isAuthenticated();
+        // libraryResponse::$_RESPONSE['authenticated'] = $this->getPlugin('account')->isAuthenticated();
+        // libraryResponse::$_RESPONSE['script'] = libraryRequest::getScriptName();
         foreach ($this->plugins as $plugin)
             $plugin->run();
     }
 
     public function runAsAUTH () {
-        libraryRequest::processRequest($this->getExtension('accounts'));
+        libraryRequest::processRequest($this->getExtension('auth'));
     }
 
 }

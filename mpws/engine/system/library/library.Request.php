@@ -2,6 +2,11 @@
 
 class libraryRequest {
 
+    static function getScriptName () {
+        $name = $_SERVER['REDIRECT_URL'];
+        return basename($name, '.js');
+    }
+
     /* get values */
     static function fromGET($key) {
         return $_GET[$key];
