@@ -21,11 +21,11 @@ define("customer/js/router", [
         // get initial account status
     });
 
-    // Sandbox.eventSubscribe('customer:toolbox:page:show', function (options) {
-    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
-    //         name: 'CommonBodyCenter',
-    //     }));
-    // });
+    Sandbox.eventSubscribe('customer:toolbox:page:show', function (options) {
+        Sandbox.eventNotify('global:content:render', _.extend({}, options, {
+            name: 'CommonBodyCenter',
+        }));
+    });
 
     // Sandbox.eventSubscribe('customer:toolbox:menu:display', function (options) {
     //     // debugger;

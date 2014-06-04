@@ -15,6 +15,8 @@ define("plugin/account/toolbox/js/router", [
 
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
+        if (Auth.isAuthenticated)
+            return;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
             // using this wrapper to cleanup previous view and create new one
             Cache.withObject('SignIn', function (cachedView) {
