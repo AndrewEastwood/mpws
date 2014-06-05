@@ -36,7 +36,7 @@ define("plugin/shop/toolbox/js/view/stats", [
             }, 1000);
         },
         show: function () {
-            this.model.fetch({reset: true});
+            this.model.fetch({reset: true, silent: true});
         },
         render: function () {
 

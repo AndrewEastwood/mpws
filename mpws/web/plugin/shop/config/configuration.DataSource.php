@@ -118,13 +118,13 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product category (catalog)
 
     // Product additional information >>>>>
-    static function jsapiShopProductAttributesGet () {
+    static function jsapiShopProductAttributesGet ($ids) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(
-                "filter" => "Status (=) ? + ProductID (IN) (?)",
-                "values" => array('ACTIVE')
+                "Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
+                "ProductID" => self::jsapiCreateDataSourceCondition($ids, "IN")
             ),
             "fields" => array(
                 "ProductID",
@@ -149,13 +149,12 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product additional information
 
     // Product price stats >>>>>
-    static function jsapiShopProductPriceStatsGet () {
+    static function jsapiShopProductPriceStatsGet ($ids) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productPrices",
             "condition" => array(
-                "filter" => "ProductID (IN) (?)",
-                "values" => array()
+                "ProductID" => self::jsapiCreateDataSourceCondition($ids, "IN")
             ),
             "fields" => array(
                 "ID",
@@ -177,13 +176,13 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product price stats
 
     // Single prouct info >>>>>
-    static function jsapiShopProductSingleInfoGet () {
+    static function jsapiShopProductSingleInfoGet ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
             "condition" => array(
-                "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
-                "values" => array("ACTIVE")
+                "shop_products.ID" => self::jsapiCreateDataSourceCondition($id),
+                "shop_products.Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "fields" => array("CategoryID", "Name"),
             "offset" => 0,
@@ -213,8 +212,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(
-                "filter" => "Status (=) ?",
-                "values" => array("ACTIVE")
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
             "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
@@ -243,8 +241,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(
-                "filter" => "Hash (=) ?",
-                "values" => array($orderHash)
+                "Hash" => self::jsapiCreateDataSourceCondition($orderHash)
             ),
             "fields" => array("ID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
             "offset" => 0,
@@ -259,8 +256,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_boughts",
             "condition" => array(
-                "filter" => "OrderID (=) ?",
-                "values" => array($orderID)
+                "OrderID" => self::jsapiCreateDataSourceCondition($orderID)
             ),
             "fields" => array("ID", "ProductID", "ProductPrice", "Quantity"),
             "offset" => 0,
@@ -272,8 +268,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(
-                "filter" => "ID (=) ?",
-                "values" => array($orderID)
+                "ID" => self::jsapiCreateDataSourceCondition($orderID)
             ),
             "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
             "limit" => 1,
@@ -285,10 +280,7 @@ class configurationShopDataSource extends objectConfiguration {
 
     static function jsapiShopOrdersGet () {
         $config = self::jsapiShopOrderGet(null);
-        $config['condition'] = array(
-            "filter" => "",
-            "values" => array()
-        );
+        $config['condition'] = array();
         $config["order"] = array(
             "field" => "shop_orders.DateCreated",
             "ordering" => "DESC"
@@ -301,8 +293,7 @@ class configurationShopDataSource extends objectConfiguration {
     static function jsapiShopOrdersForProfileGet ($profileID) {
         $config = self::jsapiShopOrdersGet();
         $config['condition'] = array(
-            "filter" => "AccountID (=) ?",
-            "values" => array($profileID)
+            "AccountID" => self::jsapiCreateDataSourceCondition($profileID)
         );
         $config["order"] = array(
             "field" => "shop_orders.ID",
@@ -321,13 +312,9 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "update",
             "source" => "shop_orders",
             "condition" => array(
-                "filter" => "ID (=) ?",
-                "values" => array($orderID)
+                "ID" => self::jsapiCreateDataSourceCondition($orderID)
             ),
-            "data" => array(
-                "fields" => array_keys($data),
-                "values" => array_values($data)
-            ),
+            "data" => $data,
             "options" => null
         ));
     }
@@ -354,8 +341,8 @@ class configurationShopDataSource extends objectConfiguration {
             "source" => "shop_products",
             "fields" => array("ID"),
             "condition" => array(
-                "filter" => "Status (=) ? + ID (NOT IN) ?",
-                "values" => array("ACTIVE", "SELECT ProductID AS ID FROM shop_boughts")
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE"),
+                "ID" => self::jsapiCreateDataSourceCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
             ),
             "order" => array(
                 "field" => "DateCreated",
@@ -374,8 +361,7 @@ class configurationShopDataSource extends objectConfiguration {
             "source" => "shop_origins",
             "fields" => array("ID", "Name", "Description", "HomePage", "Status"),
             "condition" => array(
-                "filter" => "ID (=) ?",
-                "values" => array($originID)
+                "ID" => self::jsapiCreateDataSourceCondition($originID)
             ),
             "limit" => 1,
             "options" => array(
@@ -397,10 +383,7 @@ class configurationShopDataSource extends objectConfiguration {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "insert",
             "source" => "shop_origins",
-            "data" => array(
-                "fields" => array_keys($data),
-                "values" => array_values($data)
-            ),
+            "data" => $data,
             "options" => null
         ));
     }
@@ -409,13 +392,9 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "update",
             "source" => "shop_origins",
             "condition" => array(
-                "filter" => "ID (=) ?",
-                "values" => array($originID)
+                "ID" => self::jsapiCreateDataSourceCondition($originID)
             ),
-            "data" => array(
-                "fields" => array_keys($data),
-                "values" => array_values($data)
-            ),
+            "data" => $data,
             "options" => null
         ));
     }

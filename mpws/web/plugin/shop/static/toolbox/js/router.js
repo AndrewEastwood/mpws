@@ -37,9 +37,10 @@ define("plugin/shop/toolbox/js/router", [
 
                     stats.show();
 
-                    Sandbox.eventNotify('customer:toolbox:page:show', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'CommonBodyCenter',
-                        el: stats.$el
+                        el: stats.$el,
+                        append: true
                     });
 
                     // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
@@ -63,7 +64,7 @@ define("plugin/shop/toolbox/js/router", [
 
                     productManager.render();
 
-                    Sandbox.eventNotify('plugin:toolbox:page:show', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'CommonBodyCenter',
                         el: productManager.$el
                     });
@@ -90,7 +91,7 @@ define("plugin/shop/toolbox/js/router", [
 
                     listOrders.fetchAndRender();
 
-                    Sandbox.eventNotify('plugin:toolbox:page:show', {
+                    Sandbox.eventNotify('global:content:render', {
                         name: 'ShopListOrders',
                         el: listOrders.$el
                     });

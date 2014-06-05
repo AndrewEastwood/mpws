@@ -30,10 +30,7 @@ define("plugin/account/toolbox/js/view/signin", [
             }
         },
         render: function () {
-            var self = this;
-            // Auth.getStatus().done(function(){
-                self.$el.html(tpl(Utils.getHBSTemplateData(self)));
-            // });
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
         }
     });
 

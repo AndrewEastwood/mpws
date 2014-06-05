@@ -2,6 +2,192 @@
 
 class pluginShop extends objectPlugin {
 
+    private function _api_getOrder ($orderID) {
+        $dataObj = new libraryDataObject();
+
+        // if we pass orderID as real order id we do fetch this order otherwise ...
+        $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
+        $dataOrder = $this->getCustomer()->processData($configOrder);
+        $dataObj->setData('order', $dataOrder);
+        $dataObj->setData('details', $this->_api_getOrderDetails());
+
+        return $dataObj;
+    }
+
+
+    private function _api_getOrderDetails ($orderItem) {
+        $dataObj = new libraryDataObject();
+
+        // if we pass orderID as real order id we do fetch this order otherwise ...
+        // if (is_string($orderID)) {
+        //     $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
+        //     $dataOrder = $this->getCustomer()->fetch($configOrder);
+        // } else {
+        //     // we just set the order item into dataObject
+        //     $dataOrder = $orderID;
+            $orderID = $orderItem['ID'];
+        // }
+        // $dataObj->setData('order', $dataOrder);
+
+        $dataObj->setData('address', $this->getCustomer()->getAddress($dataOrder['AccountAddressesID']));
+
+        if ($addAccountInfo)
+            $dataObj->setData('account', $this->getCustomer()->getAccountByID($dataOrder['AccountID']));
+
+        if (!empty($dataOrder)) {
+            // $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
+            $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
+            // var_dump($configBoughts);
+            $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
+
+            if (!empty($boughts))
+                foreach ($boughts as $bkey => $soldItem) {
+                    $product = $this->_api_getProduct($soldItem['ProductID']);
+                    if ($product->hasData()) { 
+                        $productData = $product->getData('product');
+                        $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
+                    } else
+                        $boughts[$bkey]['product'] = null;
+                }
+
+            $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));
+
+            // var_dump($this->_custom_util_calculateBought($boughts));
+            $dataObj->setData('boughts', $boughts);
+
+            // if ($orderBoughtsData->hasData()) {
+            //     $dataObj->setData('info', $orderBoughtsData->getData('Info'));
+            //     $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
+            // }
+        }
+
+        return $dataObj;
+    }
+
+    private function _getOrders_Expired () {
+        // get expired orders
+        $configOrdersExpired = configurationShopDataSource::jsapiShopOrdersForSiteGet();
+        $configOrdersExpired['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
+        $configOrdersExpired['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
+        // get data
+        $dataOrdersExpired = $this->getCustomer()->processData($configOrdersExpired);
+        if (!empty($dataOrdersExpired))
+            foreach ($dataOrdersExpired as $key => $dataOrder)
+                $dataOrdersExpired[$key] = $this->_api_getOrder($dataOrder);
+        return $dataOrdersExpired;
+    }
+
+    private function _api_getToolbox_Dashboard () {
+        $dataObj = new libraryDataObject();
+
+        // get expired orders
+        $configOrdersExpired = configurationShopDataSource::jsapiShopOrdersForSiteGet();
+        $configOrdersExpired['condition']['filter'] .= "Status (!=) ? + DateCreated (<) ?";
+        $configOrdersExpired['condition']['values'][] = "SHOP_CLOSED";
+        $configOrdersExpired['condition']['values'][] = date('Y-m-d', strtotime("-1 week"));
+        // get data
+        $dataOrdersExpired = $this->getCustomer()->fetch($configOrdersExpired);
+        if (!empty($dataOrdersExpired))
+            foreach ($dataOrdersExpired as $key => $dataOrder)
+                $dataOrdersExpired[$key] = $this->_api_getOrder($dataOrder);
+        $dataObj->setData('orders_expired', $dataOrdersExpired);
+
+        // get pending products
+
+        // get today's orders
+        $configOrdersTodays = configurationShopDataSource::jsapiShopOrdersForSiteGet();
+        $configOrdersTodays['condition']['filter'] .= "Status (=) ? + DateCreated (>) ?";
+        $configOrdersTodays['condition']['values'][] = "NEW";
+        $configOrdersTodays['condition']['values'][] = date('Y-m-d');
+        // get data
+        $dataOrdersTodays = $this->getCustomer()->fetch($configOrdersTodays);
+        if (!empty($dataOrdersTodays))
+            foreach ($dataOrdersTodays as $key => $dataOrder)
+                $dataOrdersTodays[$key] = $this->_api_getOrder($dataOrder);
+        $dataObj->setData('orders_today', $dataOrdersTodays);
+
+        // get top 50 products
+        $configBestProducts = configurationShopDataSource::jsapiShopStat_BestSellingProducts();
+        $dataBestProducts = $this->getCustomer()->fetch($configBestProducts);
+        if (!empty($dataBestProducts))
+            foreach ($dataBestProducts as $key => $dataProductSoldStat) {
+                $productItemObject = $this->_api_getProduct($dataProductSoldStat['ProductID']);
+                if ($productItemObject->hasData())
+                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
+                else
+                    $dataBestProducts[$key]['Product'] = null;
+            }
+        $dataObj->setData('products_best', $dataBestProducts);
+
+        // get non-popuplar 50 products
+        $configWorstProducts = configurationShopDataSource::jsapiShopStat_WorstSellingProducts();
+        $dataWorstProducts = $this->getCustomer()->fetch($configWorstProducts);
+        if (!empty($dataWorstProducts))
+            foreach ($dataWorstProducts as $key => $dataProduct) {
+                $productItemObject = $this->_api_getProduct($dataProduct['ID']);
+                if ($productItemObject->hasData())
+                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
+                else
+                    $dataWorstProducts[$key]['Product'] = null;
+            }
+        $dataObj->setData('products_worst', $dataWorstProducts);
+
+        // get shop overview:
+        $shopOverview = array(
+            "Products" => array(),
+            "Orders" => array(),
+            "Users" => $this->getCustomer()->getAccountStats()
+        );
+        $filterProducts = array(
+            array("filter" => "Status (=) ?", "value" => "ACTIVE"),
+            array("filter" => "Status (=) ?", "value" => "REMOVED"),
+            array("filter" => "SellMode (=) ?", "value" => "DISCOUNT"),
+            array("filter" => "SellMode (=) ?", "value" => "DEFECT"),
+            array("filter" => "SellMode (=) ?", "value" => "ARCHIVED")
+        );
+        foreach ($filterProducts as $filterItem) {
+            $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
+            $configCount['condition']['filter'] = $filterItem['filter'];
+            $configCount['condition']['values'] = array($filterItem['value']);
+            $dataCount = $this->getCustomer()->fetch($configCount);
+            $shopOverview['Products'][$filterItem['value']] = $dataCount['ItemsCount'];
+        }
+        // general total of active products
+        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
+        $dataCount = $this->getCustomer()->fetch($configCount);
+        $shopOverview['Products']['TOTAL'] = $dataCount['ItemsCount'];
+
+        $filterOrders = array(
+            array("filter" => "Status (=) ?", "value" => "NEW"),
+            array("filter" => "Status (=) ?", "value" => "ACTIVE"),
+            array("filter" => "Status (=) ?", "value" => "LOGISTIC_DELIVERING"),
+            array("filter" => "Status (=) ?", "value" => "LOGISTIC_DELIVERED"),
+            array("filter" => "Status (=) ?", "value" => "SHOP_CLOSED")
+        );
+        foreach ($filterOrders as $filterItem) {
+            $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
+            $configCount['condition']['filter'] = $filterItem['filter'];
+            $configCount['condition']['values'] = array($filterItem['value']);
+            $dataCount = $this->getCustomer()->fetch($configCount);
+            $shopOverview['Orders'][$filterItem['value']] = $dataCount['ItemsCount'];
+        }
+        // general total of active products
+        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
+        $dataCount = $this->getCustomer()->fetch($configCount);
+        $shopOverview['Orders']['TOTAL'] = $dataCount['ItemsCount'];
+
+        $dataObj->setData('overview', $shopOverview);
+
+        return $dataObj;
+    }
+
+
+    public function get_shop_statistic (&$resp) {
+        $resp['expiredOrders'] = $this->_getOrders_Expired();
+    }
+
+
+
     public function getResponse () {
         $data = new libraryDataObject();
 
@@ -751,66 +937,6 @@ class pluginShop extends objectPlugin {
 
     }
 
-    private function _api_getOrderDetails ($orderItem) {
-        $dataObj = new libraryDataObject();
-
-        // if we pass orderID as real order id we do fetch this order otherwise ...
-        // if (is_string($orderID)) {
-        //     $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
-        //     $dataOrder = $this->getCustomer()->fetch($configOrder);
-        // } else {
-        //     // we just set the order item into dataObject
-        //     $dataOrder = $orderID;
-            $orderID = $orderItem['ID'];
-        // }
-        // $dataObj->setData('order', $dataOrder);
-
-        $dataObj->setData('address', $this->getCustomer()->getAddress($dataOrder['AccountAddressesID']));
-
-        if ($addAccountInfo)
-            $dataObj->setData('account', $this->getCustomer()->getAccountByID($dataOrder['AccountID']));
-
-        if (!empty($dataOrder)) {
-            // $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
-            $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
-            // var_dump($configBoughts);
-            $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
-
-            if (!empty($boughts))
-                foreach ($boughts as $bkey => $soldItem) {
-                    $product = $this->_api_getProduct($soldItem['ProductID']);
-                    if ($product->hasData()) { 
-                        $productData = $product->getData('product');
-                        $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
-                    } else
-                        $boughts[$bkey]['product'] = null;
-                }
-
-            $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));
-
-            // var_dump($this->_custom_util_calculateBought($boughts));
-            $dataObj->setData('boughts', $boughts);
-
-            // if ($orderBoughtsData->hasData()) {
-            //     $dataObj->setData('info', $orderBoughtsData->getData('Info'));
-            //     $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
-            // }
-        }
-
-        return $dataObj;
-    }
-
-    private function _api_getOrder ($orderID) {
-        $dataObj = new libraryDataObject();
-
-        // if we pass orderID as real order id we do fetch this order otherwise ...
-        $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
-        $dataOrder = $this->getCustomer()->fetch($configOrder);
-        $dataObj->setData('order', $dataOrder);
-        $dataObj->setData('details', $this->_api_getOrderDetails());
-
-        return $dataObj;
-    }
 
     // private function _api_getOrderBoughts ($OrderID) {
     //     $dataObj = new libraryDataObject();
@@ -1290,109 +1416,6 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_getToolbox_Dashboard () {
-        $dataObj = new libraryDataObject();
-
-        // get expired orders
-        $configOrdersExpired = configurationShopDataSource::jsapiShopOrdersForSiteGet();
-        $configOrdersExpired['condition']['filter'] .= "Status (!=) ? + DateCreated (<) ?";
-        $configOrdersExpired['condition']['values'][] = "SHOP_CLOSED";
-        $configOrdersExpired['condition']['values'][] = date('Y-m-d', strtotime("-1 week"));
-        // get data
-        $dataOrdersExpired = $this->getCustomer()->fetch($configOrdersExpired);
-        if (!empty($dataOrdersExpired))
-            foreach ($dataOrdersExpired as $key => $dataOrder)
-                $dataOrdersExpired[$key] = $this->_api_getOrder($dataOrder);
-        $dataObj->setData('orders_expired', $dataOrdersExpired);
-
-        // get pending products
-
-        // get today's orders
-        $configOrdersTodays = configurationShopDataSource::jsapiShopOrdersForSiteGet();
-        $configOrdersTodays['condition']['filter'] .= "Status (=) ? + DateCreated (>) ?";
-        $configOrdersTodays['condition']['values'][] = "NEW";
-        $configOrdersTodays['condition']['values'][] = date('Y-m-d');
-        // get data
-        $dataOrdersTodays = $this->getCustomer()->fetch($configOrdersTodays);
-        if (!empty($dataOrdersTodays))
-            foreach ($dataOrdersTodays as $key => $dataOrder)
-                $dataOrdersTodays[$key] = $this->_api_getOrder($dataOrder);
-        $dataObj->setData('orders_today', $dataOrdersTodays);
-
-        // get top 50 products
-        $configBestProducts = configurationShopDataSource::jsapiShopStat_BestSellingProducts();
-        $dataBestProducts = $this->getCustomer()->fetch($configBestProducts);
-        if (!empty($dataBestProducts))
-            foreach ($dataBestProducts as $key => $dataProductSoldStat) {
-                $productItemObject = $this->_api_getProduct($dataProductSoldStat['ProductID']);
-                if ($productItemObject->hasData())
-                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
-                else
-                    $dataBestProducts[$key]['Product'] = null;
-            }
-        $dataObj->setData('products_best', $dataBestProducts);
-
-        // get non-popuplar 50 products
-        $configWorstProducts = configurationShopDataSource::jsapiShopStat_WorstSellingProducts();
-        $dataWorstProducts = $this->getCustomer()->fetch($configWorstProducts);
-        if (!empty($dataWorstProducts))
-            foreach ($dataWorstProducts as $key => $dataProduct) {
-                $productItemObject = $this->_api_getProduct($dataProduct['ID']);
-                if ($productItemObject->hasData())
-                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
-                else
-                    $dataWorstProducts[$key]['Product'] = null;
-            }
-        $dataObj->setData('products_worst', $dataWorstProducts);
-
-        // get shop overview:
-        $shopOverview = array(
-            "Products" => array(),
-            "Orders" => array(),
-            "Users" => $this->getCustomer()->getAccountStats()
-        );
-        $filterProducts = array(
-            array("filter" => "Status (=) ?", "value" => "ACTIVE"),
-            array("filter" => "Status (=) ?", "value" => "REMOVED"),
-            array("filter" => "SellMode (=) ?", "value" => "DISCOUNT"),
-            array("filter" => "SellMode (=) ?", "value" => "DEFECT"),
-            array("filter" => "SellMode (=) ?", "value" => "ARCHIVED")
-        );
-        foreach ($filterProducts as $filterItem) {
-            $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
-            $configCount['condition']['filter'] = $filterItem['filter'];
-            $configCount['condition']['values'] = array($filterItem['value']);
-            $dataCount = $this->getCustomer()->fetch($configCount);
-            $shopOverview['Products'][$filterItem['value']] = $dataCount['ItemsCount'];
-        }
-        // general total of active products
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $shopOverview['Products']['TOTAL'] = $dataCount['ItemsCount'];
-
-        $filterOrders = array(
-            array("filter" => "Status (=) ?", "value" => "NEW"),
-            array("filter" => "Status (=) ?", "value" => "ACTIVE"),
-            array("filter" => "Status (=) ?", "value" => "LOGISTIC_DELIVERING"),
-            array("filter" => "Status (=) ?", "value" => "LOGISTIC_DELIVERED"),
-            array("filter" => "Status (=) ?", "value" => "SHOP_CLOSED")
-        );
-        foreach ($filterOrders as $filterItem) {
-            $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
-            $configCount['condition']['filter'] = $filterItem['filter'];
-            $configCount['condition']['values'] = array($filterItem['value']);
-            $dataCount = $this->getCustomer()->fetch($configCount);
-            $shopOverview['Orders'][$filterItem['value']] = $dataCount['ItemsCount'];
-        }
-        // general total of active products
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $shopOverview['Orders']['TOTAL'] = $dataCount['ItemsCount'];
-
-        $dataObj->setData('overview', $shopOverview);
-
-        return $dataObj;
-    }
 
     // product additional data
     // @products - array with product(s)

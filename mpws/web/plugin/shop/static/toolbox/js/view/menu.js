@@ -12,16 +12,9 @@ define("plugin/shop/toolbox/js/view/menu", [
         template: tpl
     }))();
 
-    // debugger;
-    Sandbox.eventSubscribe('plugin:toolbox:menu:ready', function () {
-        // debugger;
+    Sandbox.eventSubscribe('customer:menu:ready', function (CustomerMenuView) {
         menu.render();
-
-        Sandbox.eventNotify('plugin:toolbox:menu:display', {
-            el: menu.$el,
-            append: true,
-            keepExisted: true
-        });
+        CustomerMenuView.$('[name="PluginMenuList"]').append(menu.$el);
     });
 
 });

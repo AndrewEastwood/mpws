@@ -16,7 +16,6 @@ define("customer/js/view/menu", [
         },
         initialize: function () {
             var self = this;
-
             Backbone.View.prototype.initialize.call(this);
             Sandbox.eventSubscribe('global:route', function () {
                 self.refreshLayout();
@@ -35,13 +34,13 @@ define("customer/js/view/menu", [
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            Sandbox.eventNotify('customer:toolbox:menu:display', {
+            Sandbox.eventNotify('global:content:render', {
                 name: 'CommonBodyLeft',
                 el: this.$el,
                 append: true,
                 keepExisted: true
             });
-            Sandbox.eventNotify('customer:toolbox:menu:ready');
+            Sandbox.eventNotify('customer:menu:ready', this);
         }
     });
 

@@ -4,14 +4,8 @@ define("plugin/account/toolbox/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/auth',
-    // 'plugin/account/common/js/lib/auth',
-    "default/js/lib/cache",
-    // 'plugin/account/toolbox/js/view/menu'
+    'default/js/lib/cache',
 ], function (Sandbox, $, _, Backbone, Auth, Cache) {
-
-
-
-    // var renderCompleteSent = false;
 
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
@@ -39,37 +33,18 @@ define("plugin/account/toolbox/js/router", [
         });
     });
 
-    // Sandbox.eventSubscribe('global:ajax:responce', function (data) {
-    //     if (data && data.authenticated && !renderCompleteSent) {
-    //         renderCompleteSent = true;
-    //         Sandbox.eventNotify('plugin:account:complete');
-    //     }
-    // });
-
     Sandbox.eventSubscribe('global:page:signout', function (data) {
         Auth.signout();
     });
 
-    // Sandbox.eventSubscribe('global:route', function (data) {
-    //     Auth.getStatus();
-    // });
+    Sandbox.eventSubscribe('global:page:index', function () {
+        Sandbox.eventNotify('global:content:render', {
+            name: 'CommonBodyCenter',
+            el: $('<hr size=10/><div>TEST!!!!!</div>'),
+            append: true
+        });
+    });
 
-    // // inject into toolbox layout another plugin's content
-    // // this is a bridge between layout an other plugins
-    // // it is better to do render through these events
-    // Sandbox.eventSubscribe('plugin:toolbox:page:show', function (options) {
-    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
-    //         name: 'CommonBodyCenter',
-    //     }));
-    // });
 
-    // Sandbox.eventSubscribe('plugin:toolbox:menu:display', function (options) {
-    //     Sandbox.eventNotify('global:content:render', _.extend({}, options, {
-    //         name: options.name || 'PluginToolboxMenuList',
-    //     }));
-    //     // sort nodes
-    //     // debugger;
-    //     // $('#toolbox-menu-ID').tsort({place:'top'});
-    //     Sandbox.eventNotify('global:menu:set-active');
-    // });
+
 });

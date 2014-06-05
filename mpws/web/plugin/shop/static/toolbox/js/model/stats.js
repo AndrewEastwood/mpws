@@ -6,7 +6,7 @@ define('plugin/shop/toolbox/js/model/stats', [
     var Stats = Backbone.Model.extend({
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'shop_manage_stats'
+            fn: 'statistic'
         })
     });
 

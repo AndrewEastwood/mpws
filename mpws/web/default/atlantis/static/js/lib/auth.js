@@ -6,16 +6,13 @@ define("default/js/lib/auth", [
 ], function (Sandbox, $, _, Cache) {
 
     var Auth = {};
-    // Sandbox.eventNotify("global:ajax:responce", responseObj);
+
     Sandbox.eventSubscribe("global:ajax:responce", function(responseObj) {
-        // debugger;
         if (APP.config.ISTOOLBOX && responseObj) {
             if(responseObj.authenticated && Backbone.history.fragment === "signin") {
                 Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
             } else if (!responseObj.authenticated) {
                 $.xhrPool.abortAll();
-                // APP.commonElements.empty();
-                // Sandbox.eventNotify("global:session:needlogin", responseObj.error);
                 if (Backbone.history.fragment !== "signin") {
                     Backbone.history.navigate('signin', true);
                     window.location.reload();

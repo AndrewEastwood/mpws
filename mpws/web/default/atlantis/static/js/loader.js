@@ -11,6 +11,7 @@ var APP = {
             'default/js/lib/cache',
             'default/js/lib/auth',
             'default/js/lib/contentInjection',
+            'default/js/plugin/has',
             // this.config.ROUTER,
             'default/js/plugin/css!customer/css/theme.css'
         ];
