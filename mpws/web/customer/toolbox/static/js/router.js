@@ -38,8 +38,10 @@ define("customer/js/router", [
     //     Sandbox.eventNotify('global:menu:set-active');
     // });
 
-    // var menu = new Menu();
-    // menu.render();
+    Sandbox.eventSubscribe('global:auth:status:active', function (options) {
+        var menu = new Menu();
+        menu.render();
+    });
 
     // Sandbox.eventSubscribe('customer:toolbox:render', function (options) {
     //     debugger;

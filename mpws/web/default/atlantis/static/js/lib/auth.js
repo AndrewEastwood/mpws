@@ -22,13 +22,20 @@ define("default/js/lib/auth", [
                 }
             }
         }
-        Auth.setStatus(responseObj && responseObj.authenticated);
+        Auth.setStatus(responseObj);
     });
 
     Auth = {
         isAuthenticated: false,
-        setStatus: function (status) {
-            Auth.isAuthenticated = !!status;
+        setStatus: function (user) {
+            Sandbox.eventNotify('global:auth:status:received', user);
+            var status = user && user.authenticated;
+            if (Auth.isAuthenticated === status)
+                return;
+
+            Cache.setCookie('user', user || null);
+            Auth.isAuthenticated = status;
+
             if (Auth.isAuthenticated)
                 Sandbox.eventNotify("global:auth:status:active");
             else
@@ -41,14 +48,7 @@ define("default/js/lib/auth", [
             var query = {
                 fn: 'status'
             };
-            return $.get(APP.getAuthLink(query), function (response) {
-                Cache.setCookie('user', response);
-                Sandbox.eventNotify('global:auth:status:received', response);
-            }).error(function(){
-                Sandbox.eventNotify('global:auth:status:received', null);
-            }).always(function(response){
-                Auth.isAuthenticated = response && response.authenticated;
-            });
+            return $.get(APP.getAuthLink(query));
         },
         signin: function (email, password, remember) {
             var query = {
@@ -58,30 +58,13 @@ define("default/js/lib/auth", [
                 email: email,
                 password: password,
                 remember: remember,
-            }, function (response) {
-                Cache.setCookie('user', response);
-                if (response)
-                    Sandbox.eventNotify('global:auth:signed:in', response);
-            }).error(function(){
-                // debugger;
-                Sandbox.eventNotify('global:auth:signed:in', false);
-            }).always(function(response){
-                Auth.isAuthenticated = response && response.authenticated;
             });
         },
         signout: function () {
             var query = {
                 fn: 'signout'
             };
-            return $.post(APP.getAuthLink(query), function () {
-                Cache.setCookie('user', null);
-                Sandbox.eventNotify('global:auth:signed:out', null);
-            }).error(function(){
-                // debugger;
-                Sandbox.eventNotify('global:auth:signed:out', false);
-            }).always(function(response){
-                Auth.isAuthenticated = response && response.authenticated;
-            });
+            return $.post(APP.getAuthLink(query));
         }
     };
 
