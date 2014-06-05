@@ -1,13 +1,13 @@
-define("default/js/plugin/css", ['module'], function (qB, Sandbox, module){
+define("default/js/plugin/css", ['lib/jquery', 'module'], function ($, module){
 
     'use strict';
 
     function loadCss(url) {
-        var link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        link.href = url;
-        document.getElementsByTagName("head")[0].appendChild(link);
+        $("<link>").attr({
+            type: "text/css",
+            rel: "stylesheet",
+            hre: url
+        }).appendTo($('head'));
     }
 
     var css = {
