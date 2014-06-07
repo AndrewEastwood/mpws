@@ -54,6 +54,8 @@ class libraryRequest {
     }
 
     static function processRequest ($context) {
+        global $_REQ;
+
         $requestFnElements = array(strtolower($_SERVER['REQUEST_METHOD']));
 
         if (self::hasInGet('source'))
@@ -64,8 +66,12 @@ class libraryRequest {
 
         $fn = join("_", $requestFnElements);
         // echo $fn;
-        if (!empty($context) && method_exists($context, $fn))
-            $context->$fn(libraryResponse::$_RESPONSE);
+        if (!empty($context) && method_exists($context, $fn)) {
+            if (self::isGET())
+                $context->$fn(libraryResponse::$_RESPONSE, $_GET);
+            else
+                $context->$fn(libraryResponse::$_RESPONSE, $_REQ);
+        }
     }
 
     /* state grabbers */

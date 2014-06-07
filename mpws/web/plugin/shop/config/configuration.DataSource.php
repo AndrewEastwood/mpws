@@ -285,6 +285,7 @@ class configurationShopDataSource extends objectConfiguration {
             "field" => "shop_orders.DateCreated",
             "ordering" => "DESC"
         );
+        $config['fields'] = array("ID");
         $config['options'] = null;
         $config['limit'] = 0;
         return $config;

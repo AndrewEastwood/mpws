@@ -13,7 +13,11 @@ class libraryResponse {
 
     static function sendResponse () {
         $output = new libraryDataObject(self::$_RESPONSE);
-        echo $output->toJSON();
+        $_out = $output->toJSON();
+        if ($_out === "null")
+            echo "{}";
+        else
+            echo $_out;
     }
 
 }
