@@ -50,11 +50,9 @@ class configurationDefaultDataSource extends objectConfiguration {
     }
     static function jsapiGetAccountByID ($id) {
         $config = self::jsapiGetAccount(null, null);
-
         $config["condition"] = array(
             "ID" => self::jsapiCreateDataSourceCondition($id)
         );
-
         return $config;
     }
 

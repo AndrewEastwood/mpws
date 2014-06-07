@@ -7,13 +7,13 @@ class configurationShopDataSource extends objectConfiguration {
     static $Table_ShopOrigins = "shop_origins";
 
     // Product base configuration >>>>>
-    static function jsapiShopProductItemGet () {
+    static function jsapiShopProductItemGet ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
             "condition" => array(
-                "filter" => "shop_products.Status (=) ? + shop_products.ID (=) ?",
-                "values" => array("ACTIVE")
+                "shop_products.ID" => self::jsapiCreateDataSourceCondition($id),
+                "shop_products.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
             ),
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "SellMode", "DateUpdated", "DateCreated"),
             "offset" => 0,
@@ -48,8 +48,9 @@ class configurationShopDataSource extends objectConfiguration {
         $config = self::jsapiShopProductItemGet();
         unset($config['options']);
         $config['condition'] = array(
-            "filter" => "shop_products.Status (=) ? + shop_categories.Status (=) ? + shop_origins.Status (=) ?",
-            "values" => array("ACTIVE", "ACTIVE", "ACTIVE")
+            "shop_products.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
+            "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
+            "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
         );
         $config['limit'] = 64;
         return $config;
@@ -68,16 +69,15 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product list of recently added products
 
     // Product category (catalog)
-    static function jsapiShopProductListGetCategoryGet () {
+    static function jsapiShopProductListGetCategoryGet ($id) {
         $config = self::jsapiShopProductListGet();
-        $config['condition']["filter"] = "shop_products.Status (=) ? + shop_categories.Status (=) ? + shop_origins.Status (=) ? + shop_products.CategoryID (IN) ?";
+        $config['condition']["shop_products.CategoryID"] = self::jsapiCreateDataSourceCondition($id, "IN");
         // var_dump($config);
         return $config;
     }
 
     static function jsapiShopProductListGetCategoryGetInfoGet () {
         $config = self::jsapiShopProductListGetCategoryGet();
-        // $config["useFieldPrefix"] = false;
         $config["fields"] = array("ID", "CategoryID", "OriginID");
         $config['limit'] = 0;
         return $config;
@@ -118,13 +118,13 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product category (catalog)
 
     // Product additional information >>>>>
-    static function jsapiShopProductAttributesGet ($ids) {
+    static function jsapiShopProductAttributesGet ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(
                 "Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
-                "ProductID" => self::jsapiCreateDataSourceCondition($ids, "IN")
+                "ProductID" => self::jsapiCreateDataSourceCondition($id)
             ),
             "fields" => array(
                 "ProductID",
@@ -149,12 +149,12 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product additional information
 
     // Product price stats >>>>>
-    static function jsapiShopProductPriceStatsGet ($ids) {
+    static function jsapiShopProductPriceStatsGet ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productPrices",
             "condition" => array(
-                "ProductID" => self::jsapiCreateDataSourceCondition($ids, "IN")
+                "ProductID" => self::jsapiCreateDataSourceCondition($id)
             ),
             "fields" => array(
                 "ID",

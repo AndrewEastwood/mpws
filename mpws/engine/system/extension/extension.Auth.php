@@ -6,7 +6,7 @@ class extensionAuth extends objectExtension {
         $account = null;
         if (isset($_SESSION['Account']) && !empty($_SESSION['Account']['ID'])) {
             $config = configurationCustomerDataSource::jsapiGetAccountByID($_SESSION['Account']['ID']);
-            $account = $this->getCustomer()->processData($config);
+            $account = $this->getCustomer()->fetch($config);
             if (MPWS_IS_TOOLBOX && empty($account['Permission_isAdmin']))
                 return $this->сlearSessionAccount();
         }
@@ -43,7 +43,7 @@ class extensionAuth extends objectExtension {
         $credentials['password'] = librarySecure::EncodeAccountPassword($credentials['password']);
 
         $config = configurationCustomerDataSource::jsapiGetAccount($credentials['email'], $credentials['password']);
-        $account = $this->getCustomer()->processData($config);
+        $account = $this->getCustomer()->fetch($config);
 
         if (empty($account))
             $resp['error'] = 'WrongCredentials';

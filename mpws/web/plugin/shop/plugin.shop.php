@@ -2,39 +2,116 @@
 
 class pluginShop extends objectPlugin {
 
-    private function _api_getOrder ($orderID) {
-        $dataObj = new libraryDataObject();
+    // product standalone item (short or full)
+    // -----------------------------------------------
+    private function _api_getProduct ($productID, $saveIntoRecent = false) {
+        // what is not included in comparison to product_single_full
+        // this goes without PriceArchive property
 
-        // if we pass orderID as real order id we do fetch this order otherwise ...
-        $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
-        $dataOrder = $this->getCustomer()->processData($configOrder);
-        $dataObj->setData('order', $dataOrder);
-        $dataObj->setData('details', $this->_api_getOrderDetails());
+        // update main data object
+        $product = null;
+        // $dataObj = new libraryDataObject();
+
+        if (empty($productID) || !is_numeric($productID))
+            return $product;
+            // $dataObj->setError('wrongProductID');
+        // else {
+
+            // set config
+        $config = configurationShopDataSource::jsapiShopProductItemGet($productID);
+        $product = $this->getCustomer()->fetch($config);
+
+            // $productsMap = $this->_custom_util_getProductAttributes(array($product));
+
+        // if (empty($products)) {
+        //     return null;
+        // }
+        // list of product ids to fetch related attributes
+        // $productIDs = array();
+
+        // mapped data (key is record's ID)
+        // $productsMap = array();
+        // $attributesMap = array();
+        // $pricesMap = array();
+
+        // pluck product IDs and create product map
+        // foreach ($products as $value) {
+        //     $productIDs[] = $value['ID'];
+        //     $productsMap[$value['ID']] = $value;
+        // }
+
+        $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet($productID);
+        // $configProductsAttr["condition"]["values"][] = $productIDs;
+        // var_dump($configProductsAttr);
+
+        $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet($productID);
+        // $configProductsPrice["condition"]["values"][] = $productIDs;
+
+        // configure product attribute object
+        $attributes = $this->getCustomer()->fetch($configProductsAttr);
+        $prices = $this->getCustomer()->fetch($configProductsPrice);
+
+        // pluck product IDs and create product map
+        if (!empty($attributes))
+            foreach ($attributes as $value)
+                $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
+
+        // pluck product IDs and create product map
+        if (!empty($prices))
+            foreach ($prices as $value) 
+                $pricesMap[$value['ProductID']] = $value['PriceArchive'];
+
+        foreach ($productsMap as $key => $value) {
+
+            $productsMap[$key]['Attributes'] = array();
+            $productsMap[$key]['Prices'] = array();
+
+            if (!empty($attributesMap[$key]))
+                $productsMap[$key]['Attributes'] = $attributesMap[$key];
+
+            if (!empty($pricesMap[$key]))
+                $productsMap[$key]['Prices'] = $pricesMap[$key];
+        }
+
+        // var_dump($productsMap);
+        // return $productsMap;
+
+
+
+            $productItem = $productsMap[$productID];
+            $dataObj->setData('product', $productItem);
+
+            // save product into recently viewed list
+            if ($saveIntoRecent && !glIsToolbox()) {
+                $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
+                $recentProducts[$productID] = $productItem;
+                $_SESSION['shop:recentProducts'] = $recentProducts;
+            }
+        // }
 
         return $dataObj;
     }
 
-
-    private function _api_getOrderDetails ($orderItem) {
-        $dataObj = new libraryDataObject();
+    private function _api_getOrder ($orderID) {
+        // $dataObj = new libraryDataObject();
 
         // if we pass orderID as real order id we do fetch this order otherwise ...
-        // if (is_string($orderID)) {
-        //     $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
-        //     $dataOrder = $this->getCustomer()->fetch($configOrder);
-        // } else {
-        //     // we just set the order item into dataObject
-        //     $dataOrder = $orderID;
-            $orderID = $orderItem['ID'];
-        // }
+        $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
+        $dataOrder = $this->getCustomer()->fetch($configOrder);
         // $dataObj->setData('order', $dataOrder);
+        // $dataObj->setData('details', $this->_api_getOrderDetails());
 
-        $dataObj->setData('address', $this->getCustomer()->getAddress($dataOrder['AccountAddressesID']));
-
-        if ($addAccountInfo)
-            $dataObj->setData('account', $this->getCustomer()->getAccountByID($dataOrder['AccountID']));
+        $dataOrder['account'] = null;
+        $dataOrder['address'] = null;
+        $dataOrder['info'] = null;
+        $dataOrder['boughts'] = null;
 
         if (!empty($dataOrder)) {
+
+            if ($this->getCustomer()->hasPlugin('account')) {
+                $dataOrder['address'] = $this->getPlugin('account')->getAddress($dataOrder['AccountAddressesID']);
+                $dataOrder['account'] = $this->getPlugin('account')->getAccountByID($dataOrder['AccountID']);
+            }
             // $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
             $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
             // var_dump($configBoughts);
@@ -50,18 +127,12 @@ class pluginShop extends objectPlugin {
                         $boughts[$bkey]['product'] = null;
                 }
 
-            $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));
-
-            // var_dump($this->_custom_util_calculateBought($boughts));
-            $dataObj->setData('boughts', $boughts);
-
-            // if ($orderBoughtsData->hasData()) {
-            //     $dataObj->setData('info', $orderBoughtsData->getData('Info'));
-            //     $dataObj->setData('boughts', $orderBoughtsData->getData('Boughts'));
-            // }
+            $dataOrder['info'] = $this->_custom_util_calculateBought($boughts);
+            $dataOrder['boughts'] = $boughts;
         }
 
-        return $dataObj;
+
+        return $dataOrder;
     }
 
     private function _getOrders_Expired () {
@@ -70,7 +141,7 @@ class pluginShop extends objectPlugin {
         $configOrdersExpired['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
         $configOrdersExpired['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
         // get data
-        $dataOrdersExpired = $this->getCustomer()->processData($configOrdersExpired);
+        $dataOrdersExpired = $this->getCustomer()->fetch($configOrdersExpired);
         if (!empty($dataOrdersExpired))
             foreach ($dataOrdersExpired as $key => $dataOrder)
                 $dataOrdersExpired[$key] = $this->_api_getOrder($dataOrder);
@@ -683,39 +754,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    // product standalone item (short or full)
-    // -----------------------------------------------
-    private function _api_getProduct ($productID, $saveIntoRecent = false) {
-        // what is not included in comparison to product_single_full
-        // this goes without PriceArchive property
 
-        // update main data object
-        $dataObj = new libraryDataObject();
-
-        if (empty($productID) || !is_numeric($productID))
-            $dataObj->setError('wrongProductID');
-        else {
-
-            // set config
-            $config = configurationShopDataSource::jsapiShopProductItemGet();
-            $config["condition"]["values"][] = $productID;
-            $product = $this->getCustomer()->fetch($config);
-
-            $productsMap = $this->_custom_util_getProductAttributes(array($product));
-
-            $productItem = $productsMap[$productID];
-            $dataObj->setData('product', $productItem);
-
-            // save product into recently viewed list
-            if ($saveIntoRecent && !glIsToolbox()) {
-                $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
-                $recentProducts[$productID] = $productItem;
-                $_SESSION['shop:recentProducts'] = $recentProducts;
-            }
-        }
-
-        return $dataObj;
-    }
 
     // shopping wishlist
     // -----------------------------------------------
@@ -1421,58 +1460,7 @@ class pluginShop extends objectPlugin {
     // @products - array with product(s)
     private function _custom_util_getProductAttributes ($products) {
 
-        if (empty($products)) {
-            return null;
-        }
-        // list of product ids to fetch related attributes
-        $productIDs = array();
 
-        // mapped data (key is record's ID)
-        $productsMap = array();
-        $attributesMap = array();
-        $pricesMap = array();
-
-        // pluck product IDs and create product map
-        foreach ($products as $value) {
-            $productIDs[] = $value['ID'];
-            $productsMap[$value['ID']] = $value;
-        }
-
-        $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet();
-        $configProductsAttr["condition"]["values"][] = $productIDs;
-        // var_dump($configProductsAttr);
-
-        $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet();
-        $configProductsPrice["condition"]["values"][] = $productIDs;
-
-        // configure product attribute object
-        $attributes = $this->getCustomer()->fetch($configProductsAttr);
-        $prices = $this->getCustomer()->fetch($configProductsPrice);
-
-        // pluck product IDs and create product map
-        if (!empty($attributes))
-            foreach ($attributes as $value)
-                $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
-
-        // pluck product IDs and create product map
-        if (!empty($prices))
-            foreach ($prices as $value) 
-                $pricesMap[$value['ProductID']] = $value['PriceArchive'];
-
-        foreach ($productsMap as $key => $value) {
-
-            $productsMap[$key]['Attributes'] = array();
-            $productsMap[$key]['Prices'] = array();
-
-            if (!empty($attributesMap[$key]))
-                $productsMap[$key]['Attributes'] = $attributesMap[$key];
-
-            if (!empty($pricesMap[$key]))
-                $productsMap[$key]['Prices'] = $pricesMap[$key];
-        }
-
-        // var_dump($productsMap);
-        return $productsMap;
     }
 
     private function _custom_util_calculateBought (&$_products) {

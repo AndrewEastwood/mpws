@@ -54,7 +54,7 @@ class objectCustomer implements ICustomer {
         return $this->dbo;
     }
 
-    public function processData ($config) {
+    public function fetch ($config) {
         $customerInfo = $this->getCustomerInfo();
         // var_dump($customerInfo);
         if (!isset($config["condition"]["CustomerID"]))
