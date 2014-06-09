@@ -147,13 +147,13 @@ CREATE TABLE `mpws_permissions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `mpws_subscripers`
+-- Table structure for table `mpws_subscribers`
 --
 
-DROP TABLE IF EXISTS `mpws_subscripers`;
+DROP TABLE IF EXISTS `mpws_subscribers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mpws_subscripers` (
+CREATE TABLE `mpws_subscribers` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `AccountID` int(11) NOT NULL,
@@ -164,8 +164,8 @@ CREATE TABLE `mpws_subscripers` (
   UNIQUE KEY `ID` (`ID`),
   KEY `AccountID` (`AccountID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_subscripers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `mpws_subscripers_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `mpws_subscribers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mpws_subscribers_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -487,8 +487,7 @@ CREATE TABLE `shop_products` (
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL,
-  `SellMode` enum('NORMAL','DISCOUNT','DEFECT','ARCHIVED','COMINGSOON') COLLATE utf8_bin NOT NULL DEFAULT 'NORMAL',
+  `Status` enum('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -709,4 +708,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-08  1:04:28
+-- Dump completed on 2014-06-10  1:12:40

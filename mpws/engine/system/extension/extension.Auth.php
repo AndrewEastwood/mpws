@@ -2,15 +2,17 @@
 
 class extensionAuth extends objectExtension {
 
-    public function getSessionAccount () {
+    public function getSessionAccount ($refresh = true) {
+        if (!$refresh)
+            return $_SESSION['Account'];
         $account = null;
         if (isset($_SESSION['Account']) && !empty($_SESSION['Account']['ID'])) {
             $config = configurationCustomerDataSource::jsapiGetAccountByID($_SESSION['Account']['ID']);
             $account = $this->getCustomer()->fetch($config);
+            $_SESSION['Account'] = $account;
             if (MPWS_IS_TOOLBOX && empty($account['Permission_isAdmin']))
                 return $this->сlearSessionAccount();
         }
-
         return $account;
     }
 

@@ -8,8 +8,10 @@ class libraryRequest {
     }
 
     /* get values */
-    static function fromGET($key) {
-        return $_GET[$key];
+    static function fromGET($key, $defaultValue = null) {
+        if (isset($_GET[$key]))
+            return $_GET[$key];
+        return $defaultValue;
     }
 
     static function hasInGet() {
@@ -20,9 +22,11 @@ class libraryRequest {
     }
 
     /* get post/put value */
-    static function fromREQUEST($key) {
+    static function fromREQUEST($key, $defaultValue = null) {
         global $_REQ;
-        return $_REQ[$key];
+        if (isset($_REQ[$key]))
+            return $_REQ[$key];
+        return $defaultValue;
     }
 
     static function hasInREQUEST($key) {

@@ -4,146 +4,138 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _api_getProduct ($productID, $saveIntoRecent = false) {
-        // what is not included in comparison to product_single_full
-        // this goes without PriceArchive property
-
-        // update main data object
-        // $product = null;
-        // $dataObj = new libraryDataObject();
-
+    private function _getProductByID ($productID, $saveIntoRecent = false) {
         if (empty($productID) || !is_numeric($productID))
             return null;
-            // $dataObj->setError('wrongProductID');
-        // else {
 
-            // set config
         $config = configurationShopDataSource::jsapiShopProductItemGet($productID);
         $product = $this->getCustomer()->fetch($config);
 
-        // var_dump($config)
-
         if (empty($product))
             return null;
-            // $productsMap = $this->_custom_util_getProductAttributes(array($product));
-
-        // if (empty($products)) {
-        //     return null;
-        // }
-        // list of product ids to fetch related attributes
-        // $productIDs = array();
-
-        // mapped data (key is record's ID)
-        // $productsMap = array();
-        // $attributesMap = array();
-        // $pricesMap = array();
-
-        // pluck product IDs and create product map
-        // foreach ($products as $value) {
-        //     $productIDs[] = $value['ID'];
-        //     $productsMap[$value['ID']] = $value;
-        // }
 
         $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet($productID);
-        // $configProductsAttr["condition"]["values"][] = $productIDs;
-        // var_dump($configProductsAttr);
-
         $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet($productID);
-        // $configProductsPrice["condition"]["values"][] = $productIDs;
 
-        // configure product attribute object
-        $attributes = $this->getCustomer()->fetch($configProductsAttr);
-        $prices = $this->getCustomer()->fetch($configProductsPrice);
+        $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
+        $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
 
-        $product['Attributes'] = $attributes;
-        $product['Prices'] = $prices;
-
-
-
-        // pluck product IDs and create product map
-        // if (!empty($attributes))
-        //     foreach ($attributes as $value)
-        //         $attributesMap[$value['ProductID']] = $value['ProductAttributes'];
-
-        // // pluck product IDs and create product map
-        // if (!empty($prices))
-        //     foreach ($prices as $value) 
-        //         $pricesMap[$value['ProductID']] = $value['PriceArchive'];
-
-        // foreach ($productsMap as $key => $value) {
-
-        //     $productsMap[$key]['Attributes'] = array();
-        //     $productsMap[$key]['Prices'] = array();
-
-        //     if (!empty($attributesMap[$key]))
-        //         $productsMap[$key]['Attributes'] = $attributesMap[$key];
-
-        //     if (!empty($pricesMap[$key]))
-        //         $productsMap[$key]['Prices'] = $pricesMap[$key];
-        // }
-
-        // var_dump($productsMap);
-        // return $productsMap;
-
-
-
-            // $productItem = $productsMap[$productID];
-            // $dataObj->setData('product', $productItem);
-
-            // save product into recently viewed list
-            if ($saveIntoRecent && !glIsToolbox()) {
-                $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
-                $recentProducts[$productID] = $product;
-                $_SESSION['shop:recentProducts'] = $recentProducts;
-            }
-        // }
-
+        // save product into recently viewed list
+        if ($saveIntoRecent && !glIsToolbox()) {
+            $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
+            $recentProducts[$productID] = $product;
+            $_SESSION['shop:recentProducts'] = $recentProducts;
+        }
         return $product;
     }
 
-    private function _api_getOrder ($orderID) {
-        // $dataObj = new libraryDataObject();
+    // products list sorted by date added
+    // -----------------------------------------------
+    private function _getProductList_Latest () {
+        $config = configurationShopDataSource::jsapiShopProductListGetLatestGet();
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        foreach ($productIDs as $val)
+            $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
 
-        // if we pass orderID as real order id we do fetch this order otherwise ...
-        $configOrder = configurationShopDataSource::jsapiShopOrderGet($orderID);
-        $dataOrder = $this->getCustomer()->fetch($configOrder);
-        // $dataObj->setData('order', $dataOrder);
-        // $dataObj->setData('details', $this->_api_getOrderDetails());
+    private function _getProducts_TopNonPopular () {
+        // get non-popuplar 50 products
+        $config = configurationShopDataSource::jsapiShopStat_NonPopularProducts();
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
 
-        // var_dump($configOrder);
+    private function _getProducts_TopPopular () {
+        // get top 50 products
+        $config = configurationShopDataSource::jsapiShopStat_PopularProducts();
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ProductID']);
+        return $data;
+    }
 
+    private function _getProducts_Latest () {
+        // get expired orders
+        $config = configurationShopDataSource::jsapiShopProductListLatest();
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
 
+    private function _getProducts_ByStatus ($status) {
+        $config = configurationShopDataSource::jsapiShopProductListByStatus($status);
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
+
+    private function _getProducts_Sale () {
+        $config = configurationShopDataSource::jsapiShopProductListByStatus(array('DISCOUNT', 'DEFECT'), 'IN');
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
+
+    private function _getProducts_Uncompleted () {
+        $config = configurationShopDataSource::jsapiShopProductListUncompleted();
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
+
+    private function _getOrderByID ($orderID) {
+        $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
+        $dataOrder = $this->getCustomer()->fetch($config);
+        $this->___setOrderExtras($dataOrder);
+        return $dataOrder;
+    }
+
+    private function _getOrderByHash ($orderHash) {
+        $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
+        $dataOrder = $this->getCustomer()->fetch($config);
+        $this->___setOrderExtras($dataOrder);
+        return $dataOrder;
+    }
+
+    private function ___setOrderExtras (&$dataOrder) {
         if (!empty($dataOrder)) {
+            $orderID = $dataOrder['ID'];
             $dataOrder['account'] = null;
             $dataOrder['address'] = null;
             $dataOrder['info'] = null;
             $dataOrder['boughts'] = null;
-
             if ($this->getCustomer()->hasPlugin('account')) {
                 $dataOrder['address'] = $this->getCustomer()->getPlugin('account')->getAddress($dataOrder['AccountAddressesID']);
                 $dataOrder['account'] = $this->getCustomer()->getPlugin('account')->getAccountByID($dataOrder['AccountID']);
             }
-            // $orderBoughtsData = $this->_api_getOrderBoughts($orderID);
             $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
-            // var_dump($configBoughts);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
-
             if (!empty($boughts))
-                foreach ($boughts as $bkey => $soldItem) {
-                    $product = $this->_api_getProduct($soldItem['ProductID']);
-                    // if ($product->hasData()) { 
-                    //     $productData = $product->getData('product');
-                    //     $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
-                    // } else
-                        $boughts[$bkey]['product'] = $product;
-                }
-
+                foreach ($boughts as $bkey => $soldItem)
+                    $boughts[$bkey]['product'] = $this->_getProductByID($soldItem['ProductID']);
             $dataOrder['info'] = $this->_custom_util_calculateBought($boughts);
             $dataOrder['boughts'] = $boughts;
         }
-
-
-        return $dataOrder;
     }
 
     private function _getOrders_Expired () {
@@ -151,12 +143,11 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
-        // get data
-        $data = $this->getCustomer()->fetch($config);
-        // var_dump($data);
-        if (!empty($data))
-            foreach ($data as $key => $dataOrder)
-                $data[$key] = $this->_api_getOrder($dataOrder['ID']);
+        $orderIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[] = $this->_getOrderByID($val['ID']);
         return $data;
     }
 
@@ -165,117 +156,275 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("NEW");
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'));
-        // get data
-        $data = $this->getCustomer()->fetch($config);
-        // var_dump($data);
-        if (!empty($data))
-            foreach ($data as $key => $dataOrder)
-                $data[$key] = $this->_api_getOrder($dataOrder['ID']);
+        $orderIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[] = $this->_getOrderByID($val['ID']);
         return $data;
     }
+
     private function _getOrders_ByStatus ($status) {
         // get expired orders
         $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($status);
-        // get data
-        $data = $this->getCustomer()->fetch($config);
-        // var_dump($data);
-        if (!empty($data))
-            foreach ($data as $key => $dataOrder)
-                $data[$key] = $this->_api_getOrder($dataOrder['ID']);
+        $orderIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[] = $this->_getOrderByID($val['ID']);
         return $data;
     }
 
-    private function _api_getToolbox_Dashboard () {
-        $dataObj = new libraryDataObject();
-
-        // get top 50 products
-        $configBestProducts = configurationShopDataSource::jsapiShopStat_BestSellingProducts();
-        $dataBestProducts = $this->getCustomer()->fetch($configBestProducts);
-        if (!empty($dataBestProducts))
-            foreach ($dataBestProducts as $key => $dataProductSoldStat) {
-                $productItemObject = $this->_api_getProduct($dataProductSoldStat['ProductID']);
-                if ($productItemObject->hasData())
-                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
-                else
-                    $dataBestProducts[$key]['Product'] = null;
-            }
-        $dataObj->setData('products_best', $dataBestProducts);
-
-        // get non-popuplar 50 products
-        $configWorstProducts = configurationShopDataSource::jsapiShopStat_WorstSellingProducts();
-        $dataWorstProducts = $this->getCustomer()->fetch($configWorstProducts);
-        if (!empty($dataWorstProducts))
-            foreach ($dataWorstProducts as $key => $dataProduct) {
-                $productItemObject = $this->_api_getProduct($dataProduct['ID']);
-                if ($productItemObject->hasData())
-                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
-                else
-                    $dataWorstProducts[$key]['Product'] = null;
-            }
-        $dataObj->setData('products_worst', $dataWorstProducts);
-
-        // get shop overview:
-        $shopOverview = array(
-            "Products" => array(),
-            "Orders" => array(),
-            "Users" => $this->getCustomer()->getAccountStats()
-        );
-        $filterProducts = array(
-            array("filter" => "Status (=) ?", "value" => "ACTIVE"),
-            array("filter" => "Status (=) ?", "value" => "REMOVED"),
-            array("filter" => "SellMode (=) ?", "value" => "DISCOUNT"),
-            array("filter" => "SellMode (=) ?", "value" => "DEFECT"),
-            array("filter" => "SellMode (=) ?", "value" => "ARCHIVED")
-        );
-        foreach ($filterProducts as $filterItem) {
-            $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
-            $configCount['condition']['filter'] = $filterItem['filter'];
-            $configCount['condition']['values'] = array($filterItem['value']);
-            $dataCount = $this->getCustomer()->fetch($configCount);
-            $shopOverview['Products'][$filterItem['value']] = $dataCount['ItemsCount'];
-        }
-        // general total of active products
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $shopOverview['Products']['TOTAL'] = $dataCount['ItemsCount'];
-
-        $filterOrders = array(
-            array("filter" => "Status (=) ?", "value" => "NEW"),
-            array("filter" => "Status (=) ?", "value" => "ACTIVE"),
-            array("filter" => "Status (=) ?", "value" => "LOGISTIC_DELIVERING"),
-            array("filter" => "Status (=) ?", "value" => "LOGISTIC_DELIVERED"),
-            array("filter" => "Status (=) ?", "value" => "SHOP_CLOSED")
-        );
-        foreach ($filterOrders as $filterItem) {
-            $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
-            $configCount['condition']['filter'] = $filterItem['filter'];
-            $configCount['condition']['values'] = array($filterItem['value']);
-            $dataCount = $this->getCustomer()->fetch($configCount);
-            $shopOverview['Orders'][$filterItem['value']] = $dataCount['ItemsCount'];
-        }
-        // general total of active products
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $shopOverview['Orders']['TOTAL'] = $dataCount['ItemsCount'];
-
-        $dataObj->setData('overview', $shopOverview);
-
-        return $dataObj;
+    private function _getStats_OrdersOverview () {
+        $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
+        $data = $this->getCustomer()->fetch($config);
+        return $data;
     }
 
-
-    public function get_shop_statistic (&$resp) {
-        $resp['expiredOrders'] = $this->_getOrders_Expired();
+    private function _getStats_ProductsOverview () {
+        // get shop products overview:
+        $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
+        $data = $this->getCustomer()->fetch($config);
+        return $data;
     }
 
+    // breadcrumb
+    // -----------------------------------------------
+    private function _getCatalogLocation ($productID = null, $categoryID = null) {
+        $location = null;
 
+        if (empty($productID) && empty($categoryID))
+            return $location;
+
+        if ($productID) {
+            // get product entry
+            $configProduct = configurationShopDataSource::jsapiShopProductSingleInfoGet($productID);
+            $productDataEntry = $this->getCustomer()->fetch($configProduct);
+            if (isset($productDataEntry['CategoryID'])) {
+                $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
+                $location = $this->getCustomer()->fetch($configLocation);
+                $location['product'] = $productDataEntry;
+            }
+        } else {
+            $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($categoryID);
+            $location = $this->getCustomer()->fetch($configLocation);
+        }
+        return $location;
+    }
+
+    // shop catalog tree
+    // -----------------------------------------------
+    private function _getCatalogTree () {
+
+        function getTree (array &$elements, $parentId = null) {
+            $branch = array();
+            // echo "#######Looking for element where parentid ==", $parentId, PHP_EOL;
+            foreach ($elements as $key => $element) {
+                // echo "~~~Current element ID = ", $element['ParentID'], PHP_EOL;
+                if ($element['ParentID'] == $parentId) {
+                    // echo "Element is found".PHP_EOL;
+                    // echo "Looking for element child nodes wherer ParentID = ", $key,PHP_EOL;
+                    $element['childNodes'] = getTree($elements, $key);
+                    $branch[$key] = $element;
+                    // unset($elements[$key]);
+                }
+            }
+            // echo PHP_EOL . "-=-=-=-=-=-=--=--Results for element where parentid ==", $parentId. PHP_EOL;
+            // var_dump($branch);
+            return $branch;
+        }
+
+        $config = configurationShopDataSource::jsapiShopCatalogTree();
+        $categories = $this->getCustomer()->fetch($config);
+        $map = array();
+        foreach ($categories as $key => $value)
+            $map[$value['ID']] = $value;
+
+        $tree = getTree($map);
+
+        return $tree;
+    }
+
+    private function _getCatalogBrowse () {
+
+        $data = array();
+        $categoryID = libraryRequest::fromGET('id', null);
+
+        if (!is_numeric($categoryID)) {
+            $data['error'] = '"id" parameter is missed';
+            return $data;
+        }
+
+        $categoryID = intval($categoryID);
+
+        $filterOptions = array(
+            /* common options */
+            "filter_viewSortBy" => null,
+            "filter_viewItemsOnPage" => 16,
+            "filter_viewPageNum" => 0,
+            "filter_commonPriceMax" => null,
+            "filter_commonPriceMin" => 0,
+            "filter_commonStatus" => array(),
+
+            /* category based */
+            "filter_categoryBrands" => array(),
+            "filter_categorySubCategories" => array(),
+            "filter_categorySpecifications" => array()
+        );
+
+        // filtering
+        $filterOptionsApplied = new ArrayObject($filterOptions);
+        $filterOptionsAvailable = new ArrayObject($filterOptions);
+
+        // init filter
+        $filterOptionsAvailable['filter_commonStatus'] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
+        foreach ($filterOptionsApplied as $key => $value)
+            $filterOptionsApplied[$key] = libraryRequest::fromGET($key) ?: $filterOptions[$key];
+
+        $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
+        $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrandsGet($categoryID);
+        $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet($categoryID);
+
+        $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
+        // get category sub-categories and origins
+        $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
+        $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
+
+        //filter: get category price edges
+        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges['PriceMax'] ?: 0);
+        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges['PriceMin'] ?: 0);
+
+        // filter: update filters
+        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
+
+        $cetagorySubIDs = array($categoryID);
+        if (!empty($dataCategoryAllSubCategories))
+            foreach ($dataCategoryAllSubCategories as $value)
+                $cetagorySubIDs[] = $value['ID'];
+
+        // set data source
+        // ---
+        $dataConfigCategoryInfo = configurationShopDataSource::jsapiGetShopCategoryProductInfo($cetagorySubIDs);
+        $dataConfigProducts = configurationShopDataSource::jsapiGetShopCategoryProductList($cetagorySubIDs);
+
+        // filter: display intems count
+        if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
+            $dataConfigProducts['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
+        else
+            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
+
+        if (!empty($filterOptionsApplied['filter_viewPageNum']))
+            $dataConfigProducts['offset'] = $filterOptionsApplied['filter_viewPageNum'] * $dataConfigProducts['limit'];
+        else
+            $filterOptionsApplied['filter_viewPageNum'] = $dataConfigProducts['offset'];
+
+        // filter: items sorting
+        $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
+        if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
+            $dataConfigProducts['order'] = array('field' => $dataConfigProducts['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
+        else
+            $filterOptionsApplied['filter_viewSortBy'] = null;
+
+        // filter: price 
+        if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax'])
+            $dataConfigProducts['condition']['Price'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
+        else
+            $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
+
+        if ($filterOptionsApplied['filter_commonPriceMin'] > 0)
+            $dataConfigProducts['condition']['Price'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '>=');
+        else
+            $filterOptionsApplied['filter_commonPriceMin'] = 0;
+
+        // filter: brands
+        if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
+            if (!is_array($filterOptionsApplied['filter_categoryBrands']))
+                $filterOptionsApplied['filter_categoryBrands'] = array($filterOptionsApplied['filter_categoryBrands']);
+            $dataConfigProducts['condition']['OriginID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
+        } else
+            $filterOptionsApplied['filter_categoryBrands'] = array();
+
+
+        // get products
+        $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
+        // get category info according to product filter
+        $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+        $dataCategoryInfo = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+
+        $products = array();
+        if (!empty($dataProducts))
+            foreach ($dataProducts as $val)
+                $products[] = $this->_getProductByID($val['ID']);
+
+        $productsInfo = array();
+        if (!empty($dataCategoryInfo))
+            foreach ($dataCategoryInfo as $val)
+                $productsInfo[] = $this->_getProductByID($val['ID']);
+
+        // get origins\sub-categories according to product filter
+        $uniqueBrands = array();
+        $uniqueSubCategories = array();
+        if ($productsInfo)
+            foreach ($productsInfo as $obj) {
+                if (isset($obj['OriginID'])) {
+                    if (empty($uniqueBrands[$obj['OriginID']]))
+                        $uniqueBrands[$obj['OriginID']] = array(
+                            "ID" => $obj['OriginID'],
+                            "Name" => $obj['OriginName'],
+                            "ProductCount" => 1,
+                            "IsSelected" => false
+                        );
+                    else
+                        $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
+                    if (in_array($obj['OriginID'], $filterOptionsApplied['filter_categoryBrands']))
+                        $uniqueBrands[$obj['OriginID']]["IsSelected"] = true;
+                }
+                if (isset($obj['CategoryID']))
+                    if (empty($uniqueSubCategories[$obj['CategoryID']]))
+                        $uniqueSubCategories[$obj['CategoryID']] = array(
+                            "ID" => $obj['CategoryID'],
+                            "Name" => $obj['CategoryName'],
+                            "ProductCount" => 1
+                        );
+                    else
+                        $uniqueSubCategories[$obj['CategoryID']]["ProductCount"]++;
+            }
+        $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
+        $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
+
+        // store data
+        $data['products'] = $products;
+        $data['info'] =  array(
+            "count" => count($dataCategoryInfo)
+        );
+        $data['filter'] = array(
+            'filterOptionsAvailable' => $filterOptionsAvailable,
+            'filterOptionsApplied' => $filterOptionsApplied
+        );
+        // return data object
+        return $data;
+    }
+
+    // ----------------------------------------
+    // requests
+    // ----------------------------------------
     public function get_shop_order (&$resp, $req) {
-        $resp = $this->_api_getOrder($req['id']);
+        if (isset($req['id'])) {
+            $resp = $this->_getOrderByID($req['id']);
+            return;
+        }
+        if (isset($req['hash'])) {
+            $resp = $this->_getOrderByHash($req['hash']);
+            return;
+        }
+
+        $resp['error'] = '"id" or "hash" is missed in the request';
     }
 
     public function get_shop_product (&$resp, $req) {
-        $resp = $this->_api_getProduct($req['id']);
+        $resp = $this->_getProductByID($req['id']);
     }
 
     public function get_shop_orders (&$resp, $req) {
@@ -283,85 +432,101 @@ class pluginShop extends objectPlugin {
             $resp = $this->_getOrders_ByStatus($req['status']);
             return;
         }
-        switch ($req['type']) {
-            case "expired":
-                $resp = $this->_getOrders_Expired();
-                break;
-            case "todays":
-                $resp = $this->_getOrders_Todays();
-                break;
+        if (!empty($req['type'])) {
+            switch ($req['type']) {
+                case "expired":
+                    $resp = $this->_getOrders_Expired();
+                    break;
+                case "todays":
+                    $resp = $this->_getOrders_Todays();
+                    break;
+            }
+            return;
         }
+
+        $resp['error'] = '"type" or "status" is missed in the request';
     }
+
+    public function get_shop_overview (&$resp) {
+        $resp['products'] = $this->_getStats_ProductsOverview();
+        $resp['orders'] = $this->_getStats_OrdersOverview();
+        $resp['popular'] = $this->_getProducts_TopPopular();
+        $resp['non_popular'] = $this->_getProducts_TopNonPopular();
+    }
+
+    public function get_shop_location (&$resp, $req) {
+        if (!isset($req['productID']) && !isset($req['categoryID'])) {
+            $resp['error'] = 'The request must contain at least one of parameters: "productID" or "categoryID"';
+            return;
+        }
+        $resp['location'] = $this->_getCatalogLocation(libraryRequest::fromGET('productID'), libraryRequest::fromGET('categoryID'));
+    }
+
+    public function get_shop_products (&$resp, $req) {
+        if (!empty($req['status'])) {
+            $resp = $this->_getProducts_ByStatus($req['status']);
+            return;
+        }
+        if (!empty($req['type'])) {
+            switch ($req['type']) {
+                case "latest":
+                    $resp = $this->_getProducts_Latest();
+                    break;
+                case "popular":
+                    $resp = $this->_getProducts_TopPopular();
+                    break;
+                case "non_popular":
+                    $resp = $this->_getProducts_TopNonPopular();
+                    break;
+                case "sale":
+                    $resp = $this->_getProducts_Sale();
+                    break;
+                case "uncompleted":
+                    $resp = $this->_getProducts_Uncompleted();
+                    break;
+            }
+            return;
+        }
+
+        $resp['error'] = '"type" or "status" is missed in the request';
+    }
+
+    public function get_shop_catalog (&$resp, $req) {
+        if (!empty($req['type'])) {
+            switch ($req['type']) {
+                case "tree":
+                    $resp = $this->_getCatalogTree();
+                    break;
+                case "browse":
+                    $resp = $this->_getCatalogBrowse();
+                    break;
+            }
+            return;
+        }
+
+        $resp['error'] = '"type" is missed in the request';
+    }
+
+
+
+
+
+
+
+
+
 
     public function getResponse () {
         $data = new libraryDataObject();
 
         switch(libraryRequest::fromGET('fn')) {
-            // breadcrumb
-            // -----------------------------------------------
-            case "shop_location": {
-                $productID = libraryRequest::fromGET('productID');
-                $categoryID = libraryRequest::fromGET('categoryID');
-                $data = $this->_api_getCatalogLocation($productID, $categoryID);
-                break;
-            }
-            // products list sorted by date added
-            // -----------------------------------------------
-            case "shop_product_list_latest": {
-                $data = $this->_api_getProductList_Latest();
-                break;
-            }
-            // products list sorted by popularity
-            // -----------------------------------------------
-            case "shop_product_list_popular" : {
-                break;
-            }
-            // products list onsale
-            // -----------------------------------------------
-            case "shop_product_list_onsale" : {
-                break;
-            }
-            // products list related
-            // -----------------------------------------------
-            case "shop_product_list_related" : {
-                break;
-            }
-            // products list recently viewed
-            // -----------------------------------------------
-            case "shop_product_list_recent" : {
-                break;
-            }
-            // catalog filtering
-            // -----------------------------------------------
-            // case "shop_shop_category_filtering": {
-            //     $data = $this->_api_getCatalogFiltering($param);
-            //     break;
-            // }
-            // shop catalog structure
-            // -----------------------------------------------
-            case "shop_catalog_structure": {
-                $data = $this->_api_getCategoryList();
-                break;
-            }
             // products list sorted by category
             // -----------------------------------------------
             case "shop_catalog": {
                 $data = $this->_api_getCatalog();
                 break;
             }
-            // product standalone item short
             // -----------------------------------------------
-            // case "shop_product_item_short" : {
-            //     $data = $this->_api_getProduct($productID, 'short');
-            //     break;
-            // }
-            // product standalone item full
-            // -----------------------------------------------
-            case "shop_product_item" : {
-                $productID = libraryRequest::fromGET('productID');
-                $data = $this->_api_getProduct($productID, true);
-                break;
-            }
             // shopping cart
             // -----------------------------------------------
             case "shop_wishlist" : {
@@ -374,11 +539,6 @@ class pluginShop extends objectPlugin {
             }
             case "shop_compare" : {
                 $data = $this->_api_getCompareList();
-                break;
-            }
-            case "shop_order_status": {
-                $orderHash = libraryRequest::fromGET('orderHash');
-                $data = $this->_api_getOrderStatus($orderHash);
                 break;
             }
             case "shop_profile_orders": {
@@ -500,296 +660,6 @@ class pluginShop extends objectPlugin {
     }
 
     /* PLUGIN API METHODS */
-    // breadcrumb
-    // -----------------------------------------------
-    private function _api_getCatalogLocation ($productID = null, $categoryID = null) {
-
-        $location = new libraryDataObject();
-
-        $location->setData('location', false);
-
-        if (empty($productID) && empty($categoryID))
-            return $location;
-
-        if ($productID) {
-
-            // get product entry
-            $configProduct = configurationShopDataSource::jsapiShopProductSingleInfoGet();
-            $configProduct["condition"]["values"][] = $productID;
-            $productDataEntry = $this->getCustomer()->fetch($configProduct);
-            // var_dump($productDataEntry);
-
-            // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopProductSingleInfoGet['data']);
-            // $dataObj->setValuesDbCondition($productID, MERGE_MODE_APPEND);
-            // $dataObj->process();
-
-            // $productDataEntry = $dataObj->getData();
-
-            if (isset($productDataEntry['CategoryID'])) {
-                $location2 = $this->_api_getCatalogLocation(null, $productDataEntry['CategoryID']);
-                $location->setData('location', $location2->getData('location'));
-                $location->setData('product', $productDataEntry);
-            } else
-                $location->setError("Product category is missing");
-
-        } else {
-            $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet();
-            $configLocation["procedure"]["parameters"][] = $categoryID;
-            $location->setData('location', $this->getCustomer()->fetch($configLocation));
-
-            // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCategoryLocationGet['data']);
-            // $dataObj->setValuesDbProcedure($categoryId);
-            // $dataObj->process($params);
-        }
-
-        return $location;
-    }
-
-    // products list sorted by date added
-    // -----------------------------------------------
-    private function _api_getProductList_Latest () {
-
-        $configProducts = configurationShopDataSource::jsapiShopProductListGetLatestGet();
-
-        // var_dump($configProducts);
-
-        $products = $this->getCustomer()->fetch($configProducts);
-
-        // var_dump($products);
-
-        $productsMap = $this->_custom_util_getProductAttributes($products);
-
-        // update main data object
-        $dataObj = new libraryDataObject();
-        $dataObj->setData('products', $productsMap);
-
-        // var_dump($dataObj);
-        return $dataObj;
-    }
-
-    // products list sorted by popularity
-    // -----------------------------------------------
-
-    // products list onsale
-    // -----------------------------------------------
-
-    // products list related
-    // -----------------------------------------------
-
-    // products list recently viewed
-    // -----------------------------------------------
-
-    // shop catalog structure
-    // -----------------------------------------------
-    private function _api_getCategoryList () {
-        $config = configurationShopDataSource::jsapiShopCatalogStructureGet();
-        $categories = $this->getCustomer()->fetch($config);
-        // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCatalogStructureGet['data']);
-        // $categories = $dataObj->process($params)->getData();
-        // var_dump($categories);
-        $idToCategoryItemMap = array();
-        foreach ($categories as $key => $value) {
-          $idToCategoryItemMap[$value['ID']] = $value;
-        }
-        $dataObj = new libraryDataObject();
-        $dataObj->setData('categories', $idToCategoryItemMap);
-        return $dataObj;
-    }
-
-    private function _api_getCategory () {
-        $config = configurationShopDataSource::jsapiShopCatalogStructureGet();
-        $categories = $this->getCustomer()->fetch($config);
-        // $dataObj = new mpwsData(false, $this->objectConfiguration_data_jsapiShopCatalogStructureGet['data']);
-        // $categories = $dataObj->process($params)->getData();
-        // var_dump($categories);
-        $idToCategoryItemMap = array();
-        foreach ($categories as $key => $value) {
-          $idToCategoryItemMap[$value['ID']] = $value;
-        }
-        $dataObj = new libraryDataObject();
-        $dataObj->setData('categories', $idToCategoryItemMap);
-        return $dataObj;
-    }
-
-    // products list sorted by category
-    // -----------------------------------------------
-    private function _api_getCatalog () {
-
-        $dataObj = new libraryDataObject();
-
-        $categoryID = libraryRequest::fromGET('categoryID', null);
-        // $categoryId = fromGET($params['categoryId'], null);
-
-        if (!is_numeric($categoryID)) {
-            $dataObj->setError("Wrong category ID parameter");
-            return $dataObj;
-        }
-
-        $categoryID = intval($categoryID);
-
-
-        $filterOptions = array(
-            /* common options */
-            "filter_viewSortBy" => null,
-            "filter_viewItemsOnPage" => 16,
-            "filter_viewPageNum" => 0,
-            "filter_commonPriceMax" => null,
-            "filter_commonPriceMin" => 0,
-            "filter_commonAvailability" => array(),
-            "filter_commonOnSaleTypes" => array(),
-
-            /* category based */
-            "filter_categoryBrands" => array(),
-            "filter_categorySubCategories" => array(),
-            "filter_categorySpecifications" => array()
-        );
-
-        // filtering
-        $filterOptionsApplied = new ArrayObject($filterOptions);
-        $filterOptionsAvailable = new ArrayObject($filterOptions);
-
-        // init filter
-        $filterOptionsAvailable['filter_commonAvailability'] = array("ACTIVE", "OUTOFSTOCK", "COMINGSOON");
-        $filterOptionsAvailable['filter_commonOnSaleTypes'] = array('SHOP_CLEARANCE','SHOP_NEW','SHOP_HOTOFFER','SHOP_BESTSELLER','SHOP_LIMITED');
-        foreach ($filterOptionsApplied as $key => $value)
-            $filterOptionsApplied[$key] = libraryRequest::fromGET($key) ?: $filterOptions[$key];
-
-        // set data source
-        // ---
-        $dataConfigCategoryInfo = configurationShopDataSource::jsapiShopProductListGetCategoryGetInfoGet();
-        $dataConfigProducts = configurationShopDataSource::jsapiShopProductListGetCategoryGet();
-        $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet();
-        $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrandsGet();
-        $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet();
-
-        // update configs using user filter
-        // ---
-        $dataConfigCategoryPriceEdges['procedure']['parameters'][] = $categoryID;
-        $dataConfigCategoryAllBrands['procedure']['parameters'][] = $categoryID;
-        $dataConfigCategoryAllSubCategories['procedure']['parameters'][] = $categoryID;
-
-        //filter: get category price edges
-        $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
-        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges['PriceMax'] ?: 0);
-        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges['PriceMin'] ?: 0);
-
-        // filter: display intems count
-        if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
-            $dataConfigProducts['limit'] = $filterOptionsApplied['filter_viewItemsOnPage'];
-        else
-            $filterOptionsApplied['filter_viewItemsOnPage'] = $dataConfigProducts['limit'];
-
-        if (!empty($filterOptionsApplied['filter_viewPageNum']))
-            $dataConfigProducts['offset'] = $filterOptionsApplied['filter_viewPageNum'] * $dataConfigProducts['limit'];
-        else
-            $filterOptionsApplied['filter_viewPageNum'] = $dataConfigProducts['offset'];
-
-        // filter: items sorting
-        $_filterSorting = explode('_', strtolower($filterOptionsApplied['filter_viewSortBy']));
-        if (count($_filterSorting) === 2 && !empty($_filterSorting[0]) && ($_filterSorting[1] === 'asc' || $_filterSorting[1] === 'desc'))
-            $dataConfigProducts['order'] = array('field' => $dataConfigProducts['source'] . '.' . ucfirst($_filterSorting[0]), 'ordering' => strtoupper($_filterSorting[1]));
-        else
-            $filterOptionsApplied['filter_viewSortBy'] = null;
-
-        // get category sub-categories and origins
-        $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
-        $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
-
-        // filter: update filters
-        $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
-        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
-
-        $cetagorySubIDs = array($categoryID);
-        if (!empty($dataCategoryAllSubCategories))
-            foreach ($dataCategoryAllSubCategories as $value)
-                $cetagorySubIDs[] = $value['ID'];
-
-        // fetch data with filter options
-        $dataConfigProducts['condition']['values'][] = $cetagorySubIDs;
-
-        // filter: price 
-        if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax']) {
-            $dataConfigProducts['condition']['filter'] .= " + Price (<=) ?";
-            $dataConfigProducts['condition']['values'][] = $filterOptionsApplied['filter_commonPriceMax'];
-        } else
-            $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
-
-        if ($filterOptionsApplied['filter_commonPriceMin'] > 0) {
-            $dataConfigProducts['condition']['filter'] .= " + Price (>=) ?";
-            $dataConfigProducts['condition']['values'][] = $filterOptionsApplied['filter_commonPriceMin'];
-        } else
-            $filterOptionsApplied['filter_commonPriceMin'] = 0;
-
-        // filter: brands
-        if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
-            $dataConfigProducts['condition']['filter'] .= " + OriginID (IN) ?";
-            if (!is_array($filterOptionsApplied['filter_categoryBrands']))
-                $filterOptionsApplied['filter_categoryBrands'] = array($filterOptionsApplied['filter_categoryBrands']);
-            $dataConfigProducts['condition']['values'][] = $filterOptionsApplied['filter_categoryBrands'];
-        } else
-            $filterOptionsApplied['filter_categoryBrands'] = array();
-
-        // var_dump($filterOptionsApplied);
-
-        // get products
-        $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
-
-        // get category info according to product filter
-        $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-        $dataCategoryInfo = $this->getCustomer()->fetch($dataConfigCategoryInfo);
-
-        // get origins\sub-categories according to product filter
-        $uniqueBrands = array();
-        $uniqueSubCategories = array();
-        if ($dataCategoryInfo)
-            foreach ($dataCategoryInfo as $obj) {
-                if (isset($obj['OriginID'])) {
-                    if (empty($uniqueBrands[$obj['OriginID']]))
-                        $uniqueBrands[$obj['OriginID']] = array(
-                            "ID" => $obj['OriginID'],
-                            "Name" => $obj['OriginName'],
-                            "ProductCount" => 1,
-                            "IsSelected" => false
-                        );
-                    else
-                        $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
-
-                    if (in_array($obj['OriginID'], $filterOptionsApplied['filter_categoryBrands']))
-                        $uniqueBrands[$obj['OriginID']]["IsSelected"] = true;
-                }
-
-                if (isset($obj['CategoryID']))
-                    if (empty($uniqueSubCategories[$obj['CategoryID']]))
-                        $uniqueSubCategories[$obj['CategoryID']] = array(
-                            "ID" => $obj['CategoryID'],
-                            "Name" => $obj['CategoryName'],
-                            "ProductCount" => 1
-                        );
-                    else
-                        $uniqueSubCategories[$obj['CategoryID']]["ProductCount"]++;
-
-            }
-        $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
-        $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
-
-        // var_dump($dataConfigProducts);
-        // attach attributes
-        $productsMap = $this->_custom_util_getProductAttributes($dataProducts);
-        // store data
-        $dataObj->setData('products', $productsMap);
-        $dataObj->setData('info', array(
-            "count" => count($dataCategoryInfo)
-        ));
-        $dataObj->setData('filter', array(
-            'filterOptionsAvailable' => $filterOptionsAvailable,
-            'filterOptionsApplied' => $filterOptionsApplied
-        ));
-        // return data object
-        return $dataObj;
-    }
-
-
-
     // shopping wishlist
     // -----------------------------------------------
     private function _api_getWishList () {
@@ -1010,34 +880,6 @@ class pluginShop extends objectPlugin {
 
     }
 
-
-    // private function _api_getOrderBoughts ($OrderID) {
-    //     $dataObj = new libraryDataObject();
-
-    //     $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($OrderID);
-    //     // var_dump($configBoughts);
-    //     $boughts = $this->getCustomerDataBase()->getData($configBoughts) ?: array();
-
-    //     if (!empty($boughts))
-    //         foreach ($boughts as $bkey => $soldItem) {
-    //             $product = $this->_api_getProduct($soldItem['ProductID']);
-    //             if ($product->hasData()) { 
-    //                 $productData = $product->getData('Product');
-    //                 $boughts[$bkey] = array_merge($boughts[$bkey], $productData);
-    //             } else
-    //                 $boughts[$bkey]['Product'] = null;
-    //         }
-
-    //     // var_dump($boughts);
-
-    //     $dataObj->setData('info', $this->_custom_util_calculateBought($boughts));
-
-    //     // var_dump($this->_custom_util_calculateBought($boughts));
-    //     $dataObj->setData('boughts', $boughts);
-
-    //     return $dataObj;
-    // }
-
     // profile orders
     // -----------------------------------------------
     private function _api_getOrderList_ForProfile ($profileID) {
@@ -1087,17 +929,6 @@ class pluginShop extends objectPlugin {
         return array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
     }
 
-    private function _api_getOrderStatus ($orderHash) {
-        // $orderHash
-        $dataObj = new libraryDataObject();
-
-        $config = configurationShopDataSource::jsapiShopOrdersGetStatus($orderHash);
-        $orderStatus = $this->getCustomer()->fetch($config);
-
-        $dataObj->setData('orderStatus', $orderStatus);
-
-        return $dataObj;
-    }
 
     private function _api_getOrderList () {
         // in toolbox methods we must check it's permission
@@ -1189,201 +1020,6 @@ class pluginShop extends objectPlugin {
         $configOrder = configurationShopDataSource::jsapiShopOrderUpdate($orderID, $data);
         // var_dump($configOrder);
         $this->getCustomer()->fetch($configOrder);
-        return $dataObj;
-    }
-
-    private function _api_getProductList () {
-        $listType = strtolower(libraryRequest::fromGET('type'));
-
-        // send list of types
-        switch ($listType) {
-            case 'active':
-                return $this->_api_getProductList_Active();
-            case 'inactive':
-                return $this->_api_getProductList_Inactive();
-            case 'uncompleted':
-                return $this->_api_getProductList_Uncompleted();
-            case 'sales':
-                return $this->_api_getProductList_Sales();
-            case 'defects':
-                return $this->_api_getProductList_Defects();
-            case 'popular':
-                return $this->_api_getProductList_Popular();
-            case 'notpopular':
-                return $this->_api_getProductList_NotPopular();
-            case 'archived':
-                return $this->_api_getProductList_Archived();
-            default:
-                return $this->_api_getProductList_All();
-        }
-    }
-
-    // custom product lists with custom filers and conditions applied
-    private function _api_getProductList_All () {
-        return $this->_api_getProductList_Base();
-    }
-
-    private function _api_getProductList_Inactive () {
-        // echo 1111;
-        return $this->_api_getProductList_Base(function($dataConfigProducts){
-            $dataConfigProducts['condition']['values'][0] = "REMOVED";
-            return $dataConfigProducts;
-        });
-    }
-
-    private function _api_getProductList_Uncompleted () {
-        return $this->_api_getProductList_Base(function($dataConfigProducts){
-            $dataConfigProducts['condition']['filter'] .= " + shop_products.Name (=) ?";
-            $dataConfigProducts['condition']['filter'] .= " + shop_products.Description (=) ?";
-            $dataConfigProducts['condition']['filter'] .= " + shop_products.Model (=) ?";
-            $dataConfigProducts['condition']['values'][] = "";
-            $dataConfigProducts['condition']['values'][] = "";
-            $dataConfigProducts['condition']['values'][] = "";
-            return $dataConfigProducts;
-        });
-    }
-
-    private function _api_getProductList_Archived () {
-        return $this->_api_getProductList_Base(function($dataConfigProducts){
-            $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (=) ?";
-            $dataConfigProducts['condition']['values'][] = "ARCHIVED";
-            return $dataConfigProducts;
-        });
-    }
-
-    private function _api_getProductList_Defects () {
-        return $this->_api_getProductList_Base(function($dataConfigProducts){
-            $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (=) ?";
-            $dataConfigProducts['condition']['values'][] = "DEFECT";
-            return $dataConfigProducts;
-        });
-    }
-
-    private function _api_getProductList_Sales () {
-        return $this->_api_getProductList_Base(function($dataConfigProducts){
-            $dataConfigProducts['condition']['filter'] .= " + shop_products.SellMode (IN) ?";
-            $dataConfigProducts['condition']['values'][] = array("DISCOUNT", "BESTSELLER");
-            return $dataConfigProducts;
-        });
-    }
-
-    private function _api_getProductList_Popular () {
-        return $this->_api_getProductList_Base();
-        // get top 50 products
-        $configBestProducts = configurationShopDataSource::jsapiShopStat_BestSellingProducts();
-        $dataBestProducts = $this->getCustomer()->fetch($configBestProducts);
-        if (!empty($dataBestProducts))
-            foreach ($dataBestProducts as $key => $dataProductSoldStat) {
-                $productItemObject = $this->_api_getProduct($dataProductSoldStat['ProductID']);
-                if ($productItemObject->hasData())
-                    $dataBestProducts[$key]['Product'] = $productItemObject->getData('product');
-                else
-                    $dataBestProducts[$key]['Product'] = null;
-            }
-        $dataObj->setData('products_best', $dataBestProducts);
-
-        // get non-popuplar 50 products
-        $configWorstProducts = configurationShopDataSource::jsapiShopStat_WorstSellingProducts();
-        $dataWorstProducts = $this->getCustomer()->fetch($configWorstProducts);
-        if (!empty($dataWorstProducts))
-            foreach ($dataWorstProducts as $key => $dataProduct) {
-                $productItemObject = $this->_api_getProduct($dataProduct['ID']);
-                if ($productItemObject->hasData())
-                    $dataWorstProducts[$key]['Product'] = $productItemObject->getData('product');
-                else
-                    $dataWorstProducts[$key]['Product'] = null;
-            }
-        $dataObj->setData('products_worst', $dataWorstProducts);
-    }
-
-    private function _api_getProductList_NotPopular () {
-        return $this->_api_getProductList_Base();
-    }
-
-    private function _api_getProductList_Active () {
-        return $this->_api_getProductList_Base(function($dataConfigProducts){
-            $dataConfigProducts['condition']['values'][0] = "ACTIVE";
-            return $dataConfigProducts;
-        });
-    }
-
-    // this is the base function that builds product list witout any conditions
-    // and returns whole list with all products types
-    private function _api_getProductList_Base ($customConfigurator = null) {
-        // jsapiShopProductListGet
-        // in toolbox methods we must check it's permission
-        // offset
-        // limit
-        $dataObj = new libraryDataObject();
-
-        // if (!$this->getCustomer()->isAdminActive()) {
-        //     $dataObj->setError('AccessDenied');
-        //     return $dataObj;
-        // }
-
-        // $limit = 25;
-
-        // if (!$this->getCustomer()->getAccess()) {
-        //     $dataObj->setError('AccessDenied');
-        //     return $dataObj;
-        // }
-
-        // $dataConfigCategoryInfo = configurationShopDataSource::jsapiShopProductListGetCategoryGetInfoGet();
-        $dataConfigProducts = configurationShopDataSource::jsapiShopProductListGet();
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopProducts);
-
-
-        // $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet();
-        // $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrandsGet();
-        // $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet();
-
-        // $dataConfigProducts['limit'] = $limit;
-
-        // pagination
-        $page = libraryRequest::fromGET('page');
-        $per_page = libraryRequest::fromGET('per_page');
-
-        $dataConfigProducts['limit'] = $per_page;
-
-        if (!empty($page) && !empty($per_page)) {
-            $dataConfigProducts['offset'] = ($page - 1) * $per_page;
-        }
-
-        // sorting
-        $sort = libraryRequest::fromGET('sort');
-        $order = libraryRequest::fromGET('order');
-
-        if (!empty($sort) && !empty($order)) {
-            $dataConfigProducts["order"] = array(
-                "field" =>  'shop_products' . DOT . $sort,
-                "ordering" => strtoupper($order)
-            );
-        }
-
-        // filtering
-        // $filterBy_status = libraryRequest::fromGET('status');
-        // if (!empty($filterBy_status)) {
-        //     $configOrders['condition']['filter'] .= "Status (=) ?";
-        //     $configOrders['condition']['values'][] = $filterBy_status;
-        // }
-
-        // var_dump($dataConfigProducts);
-        if ($customConfigurator)
-            $dataConfigProducts = $customConfigurator($dataConfigProducts);
-
-        // var_dump($dataConfigProducts);
-
-        // set managed customer id
-        $configCount['additional'] = new ArrayObject($dataConfigProducts['additional']);
-        $configCount['condition'] = new ArrayObject($dataConfigProducts['condition']);
-
-        // get data
-        $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
-        $dataObj->setData('products', $dataProducts);
-
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $dataObj->setData('total_count', $dataCount['ItemsCount']);
-
         return $dataObj;
     }
 
@@ -1487,14 +1123,6 @@ class pluginShop extends objectPlugin {
         $this->getCustomer()->fetch($configOrigin);
         $dataObj->setData('origin', $dataOrigin);
         return $dataObj;
-    }
-
-
-    // product additional data
-    // @products - array with product(s)
-    private function _custom_util_getProductAttributes ($products) {
-
-
     }
 
     private function _custom_util_calculateBought (&$_products) {

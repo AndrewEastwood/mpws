@@ -84,18 +84,20 @@ class libraryDataBase {
                     continue;
                 $this->dbo->join($addSource, $addConfig['constraint']);
 
-                $fieldsToSelect = $addConfig['fields'];
-                $fieldsToSelectClear = array();
+                if (!empty($addConfig['fields'])) {
+                    $fieldsToSelect = $addConfig['fields'];
+                    $fieldsToSelectClear = array();
 
-                foreach ($fieldsToSelect as $key => $value) {
-                    if ($value[0] === '@')
-                        $this->dbo->select_expr(substr($value, 1));
-                        // $fieldsToSelect[$key] = substr($value, 1);
-                    elseif (!strstr($value, '.'))
-                        $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
+                    foreach ($fieldsToSelect as $key => $value) {
+                        if ($value[0] === '@')
+                            $this->dbo->select_expr(substr($value, 1));
+                            // $fieldsToSelect[$key] = substr($value, 1);
+                        elseif (!strstr($value, '.'))
+                            $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
+                    }
+
+                    $this->dbo->select_many($fieldsToSelectClear);
                 }
-
-                $this->dbo->select_many($fieldsToSelectClear);
                 // var_dump($fieldsToSelectClear);
             }
 
@@ -106,7 +108,7 @@ class libraryDataBase {
             // var_dump($config['condition']);
             // translate condition filter string
             foreach ($config['condition'] as $fieldName => $fieldOptions) {
-                switch ($fieldOptions['comparator']) {
+                switch (strtolower($fieldOptions['comparator'])) {
                     case '>':
                         $this->dbo->where_gt($fieldName, $fieldOptions['value']);
                         break;

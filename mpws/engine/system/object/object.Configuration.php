@@ -29,7 +29,7 @@ class objectConfiguration implements IConfiguration {
             "useFieldPrefix" => true,
             "fields" => array(/*"ID", "CategoryID", "OriginID", "Name", "Model", "SKU", "Description", "DateCreated"*/),
             "offset" => 0,
-            "limit" => 10,
+            "limit" => 0,
             // "output" => "DEFAULT", // see function "to" for available values
             "group" => "", // "ProductID"
             "transformToArray" => array(), // keys which values will be served as array
