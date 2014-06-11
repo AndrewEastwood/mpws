@@ -227,6 +227,16 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
+    static function jsapiShopGetProductSpecs ($id) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getProductSpecs",
+                "parameters" => array($id)
+            )
+        ));
+    }
+
 
 
 
@@ -298,6 +308,16 @@ class configurationShopDataSource extends objectConfiguration {
     }
     // <<<< Shop catalog
 
+
+    static function jsapiShopGetCategorySpecs ($id) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "call",
+            "procedure" => array(
+                "name" => "getCategorySpecs",
+                "parameters" => array($id)
+            )
+        ));
+    }
 
 
 

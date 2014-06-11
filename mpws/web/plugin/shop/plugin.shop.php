@@ -279,25 +279,37 @@ class pluginShop extends objectPlugin {
 
         // init filter
         $filterOptionsAvailable['filter_commonStatus'] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
-        foreach ($filterOptionsApplied as $key => $value)
-            $filterOptionsApplied[$key] = libraryRequest::fromGET($key) ?: $filterOptions[$key];
+        foreach ($filterOptionsApplied as $key => $value) {
+            $filterOptionsApplied[$key] = libraryRequest::fromGET($key, $filterOptions[$key]);
+            if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")
+                $filterOptionsApplied[$key] = floatval($filterOptionsApplied[$key]);
+            if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
+                $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
+        }
 
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
         $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAllBrandsGet($categoryID);
         $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet($categoryID);
+        $dataConfigCategorySpecifications = configurationShopDataSource::jsapiShopGetCategorySpecs($categoryID);
 
-        $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
         // get category sub-categories and origins
+        $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
         $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
         $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
+        $dataCategorySpecifications = $this->getCustomer()->fetch($dataConfigCategorySpecifications);
 
         //filter: get category price edges
-        $filterOptionsAvailable['filter_commonPriceMax'] = intval($dataCategoryPriceEdges['PriceMax'] ?: 0);
-        $filterOptionsAvailable['filter_commonPriceMin'] = intval($dataCategoryPriceEdges['PriceMin'] ?: 0);
+        $filterOptionsAvailable['filter_commonPriceMax'] = floatval($dataCategoryPriceEdges['PriceMax'] ?: 0);
+        $filterOptionsAvailable['filter_commonPriceMin'] = floatval($dataCategoryPriceEdges['PriceMin'] ?: 0);
 
+        // var_dump($dataCategorySpecifications);
         // filter: update filters
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
         $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
+
+        if (!empty($dataCategorySpecifications))
+            foreach ($dataCategorySpecifications as $val)
+                $filterOptionsAvailable['filter_categorySpecifications'][$val['ID']] = $val['Specs'];
 
         $cetagorySubIDs = array($categoryID);
         if (!empty($dataCategoryAllSubCategories))
