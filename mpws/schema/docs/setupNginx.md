@@ -27,7 +27,7 @@ lrwxrwxrwx 1 root root   34 Nov 19 13:26 default -> /etc/nginx/sites-available/d
 lrwxrwxrwx 1 root root   36 Feb 13 10:46 mpws.conf -> /etc/nginx/sites-available/mpws.conf
 
 
-/etc/nginx/sites-enabled$ nano mpws.conf
+nano /etc/nginx/sites-enabled/mpws.conf
 
 server {
     listen 5001;
@@ -61,6 +61,10 @@ server {
 
     location /api {
       rewrite ^/api\.js(.*) /engine/controller/controller.api.php?$1 last;
+    }
+
+    location /auth {
+      rewrite ^/auth\.js(.*) /engine/controller/controller.auth.php?$1 last;
     }
 
 }

@@ -10,5 +10,4 @@
 
     libraryCustomer::runCustomer();
     libraryResponse::sendResponse();
-
 ?>

@@ -10,7 +10,6 @@ RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/stati
 # API
 RewriteRule ^api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
 RewriteRule ^auth\.js?(.*) /engine/controller/controller.auth.php?$1 [QSA,L]
-#RewriteRule ^(\w+)\.js?(.*) /engine/controller/controller.script.php?$1 [QSA,L]
 
 # TOOLBOX:
 #RewriteRule ^toolbox/api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]

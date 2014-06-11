@@ -728,64 +728,97 @@ LOCK TABLES `shop_relations` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `shop_specifications`
+-- Table structure for table `shop_specCategoryGroups`
 --
 
-DROP TABLE IF EXISTS `shop_specifications`;
+DROP TABLE IF EXISTS `shop_specCategoryGroups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shop_specifications` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
+CREATE TABLE `shop_specCategoryGroups` (
   `CategoryID` int(11) NOT NULL,
-  `Field` text COLLATE utf8_bin NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `CustomerID` (`CustomerID`),
-  KEY `CategoryID` (`CategoryID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `SpecFieldID` int(11) NOT NULL,
+  KEY `CategoryID` (`CategoryID`,`SpecFieldID`),
+  KEY `SpecFieldID` (`SpecFieldID`),
+  CONSTRAINT `shop_specCategoryGroups_ibfk_2` FOREIGN KEY (`SpecFieldID`) REFERENCES `shop_specFields` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_specCategoryGroups_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `shop_categories` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `shop_specifications`
+-- Dumping data for table `shop_specCategoryGroups`
 --
 
-LOCK TABLES `shop_specifications` WRITE;
-/*!40000 ALTER TABLE `shop_specifications` DISABLE KEYS */;
-/*!40000 ALTER TABLE `shop_specifications` ENABLE KEYS */;
+LOCK TABLES `shop_specCategoryGroups` WRITE;
+/*!40000 ALTER TABLE `shop_specCategoryGroups` DISABLE KEYS */;
+INSERT INTO `shop_specCategoryGroups` VALUES (1,1),(1,2);
+/*!40000 ALTER TABLE `shop_specCategoryGroups` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `toolbox_admins`
+-- Table structure for table `shop_specFields`
 --
 
-DROP TABLE IF EXISTS `toolbox_admins`;
+DROP TABLE IF EXISTS `shop_specFields`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `toolbox_admins` (
+CREATE TABLE `shop_specFields` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Login` varchar(300) NOT NULL,
-  `Password` varchar(300) NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') NOT NULL,
+  `FieldName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `DefaultValue` text COLLATE utf8_bin NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `Field` (`FieldName`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_specFields_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_specFields`
+--
+
+LOCK TABLES `shop_specFields` WRITE;
+/*!40000 ALTER TABLE `shop_specFields` DISABLE KEYS */;
+INSERT INTO `shop_specFields` VALUES (1,1,'width','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,'height','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,'weight','0','2014-06-11 00:00:00','2014-06-11 00:00:00');
+/*!40000 ALTER TABLE `shop_specFields` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shop_specProductValues`
+--
+
+DROP TABLE IF EXISTS `shop_specProductValues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_specProductValues` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ProductID` int(11) NOT NULL,
+  `SpecFieldID` int(11) NOT NULL,
+  `Value` text NOT NULL,
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `toolbox_admins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `CustomerID` (`CustomerID`,`ProductID`,`SpecFieldID`),
+  KEY `ProductID` (`ProductID`),
+  KEY `SpecFieldID` (`SpecFieldID`),
+  CONSTRAINT `shop_specProductValues_ibfk_3` FOREIGN KEY (`SpecFieldID`) REFERENCES `shop_specFields` (`ID`),
+  CONSTRAINT `shop_specProductValues_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`),
+  CONSTRAINT `shop_specProductValues_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `toolbox_admins`
+-- Dumping data for table `shop_specProductValues`
 --
 
-LOCK TABLES `toolbox_admins` WRITE;
-/*!40000 ALTER TABLE `toolbox_admins` DISABLE KEYS */;
-INSERT INTO `toolbox_admins` VALUES (1,1,'main','4a123a551c46b3a7a2e1b6b76e7d69c9','ACTIVE','2014-03-13 00:00:00','2014-03-13 00:00:00');
-/*!40000 ALTER TABLE `toolbox_admins` ENABLE KEYS */;
+LOCK TABLES `shop_specProductValues` WRITE;
+/*!40000 ALTER TABLE `shop_specProductValues` DISABLE KEYS */;
+INSERT INTO `shop_specProductValues` VALUES (1,1,3,1,'test','2014-06-11 00:00:00','2014-06-11 00:00:00');
+/*!40000 ALTER TABLE `shop_specProductValues` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -931,4 +964,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-10  1:12:40
+-- Dump completed on 2014-06-11 16:04:53
