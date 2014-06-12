@@ -16,9 +16,11 @@ class pluginShop extends objectPlugin {
 
         $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet($productID);
         $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet($productID);
+        $configProductsFeatures = configurationShopDataSource::jsapiShopGetProductSpecs($productID);
 
         $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
         $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
+        $product['Features'] = $this->getCustomer()->fetch($configProductsFeatures);
 
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
@@ -349,6 +351,11 @@ class pluginShop extends objectPlugin {
             $dataConfigProducts['condition']['Price'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '>=');
         else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
+
+        if (!empty($filterOptionsApplied['filter_categorySpecifications'])) {
+            $filterOptionsApplied['filter_categorySpecifications'] = explode(",", $filterOptionsApplied['filter_categorySpecifications']);
+            $dataConfigProducts['condition']["SpecFieldID"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categorySpecifications'], 'in');
+        }
 
         // filter: brands
         if (!empty($filterOptionsApplied['filter_categoryBrands'])) {

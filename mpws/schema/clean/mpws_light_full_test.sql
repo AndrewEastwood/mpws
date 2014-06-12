@@ -752,7 +752,7 @@ CREATE TABLE `shop_specCategoryGroups` (
 
 LOCK TABLES `shop_specCategoryGroups` WRITE;
 /*!40000 ALTER TABLE `shop_specCategoryGroups` DISABLE KEYS */;
-INSERT INTO `shop_specCategoryGroups` VALUES (1,1),(1,2);
+INSERT INTO `shop_specCategoryGroups` VALUES (1,1),(1,2),(1,3),(1,4);
 /*!40000 ALTER TABLE `shop_specCategoryGroups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -774,7 +774,7 @@ CREATE TABLE `shop_specFields` (
   UNIQUE KEY `Field` (`FieldName`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_specFields_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -783,7 +783,7 @@ CREATE TABLE `shop_specFields` (
 
 LOCK TABLES `shop_specFields` WRITE;
 /*!40000 ALTER TABLE `shop_specFields` DISABLE KEYS */;
-INSERT INTO `shop_specFields` VALUES (1,1,'width','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,'height','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,'weight','0','2014-06-11 00:00:00','2014-06-11 00:00:00');
+INSERT INTO `shop_specFields` VALUES (1,1,'width55','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,'height100','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,'weight5','0','2014-06-11 00:00:00','2014-06-11 00:00:00'),(4,1,'weight10','10','2014-06-11 00:00:00','2014-06-11 00:00:00'),(5,1,'width65','65','2014-06-11 00:00:00','2014-06-11 00:00:00');
 /*!40000 ALTER TABLE `shop_specFields` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -810,7 +810,7 @@ CREATE TABLE `shop_specProductValues` (
   CONSTRAINT `shop_specProductValues_ibfk_3` FOREIGN KEY (`SpecFieldID`) REFERENCES `shop_specFields` (`ID`),
   CONSTRAINT `shop_specProductValues_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`),
   CONSTRAINT `shop_specProductValues_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -819,7 +819,7 @@ CREATE TABLE `shop_specProductValues` (
 
 LOCK TABLES `shop_specProductValues` WRITE;
 /*!40000 ALTER TABLE `shop_specProductValues` DISABLE KEYS */;
-INSERT INTO `shop_specProductValues` VALUES (1,1,3,1,'200','2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,3,2,'150','2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,3,3,'5','2014-06-11 00:00:00','2014-06-11 00:00:00');
+INSERT INTO `shop_specProductValues` VALUES (1,1,3,1,'200','2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,3,2,'150','2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,3,3,'5','2014-06-11 00:00:00','2014-06-11 00:00:00'),(4,1,5,2,'6','2014-06-11 00:00:00','2014-06-11 00:00:00'),(5,1,6,2,'6.2','2014-06-11 00:00:00','2014-06-11 00:00:00'),(6,1,7,2,'5','2014-06-11 00:00:00','2014-06-11 00:00:00'),(7,1,7,3,'5','2014-06-11 00:00:00','2014-06-11 00:00:00'),(8,1,8,3,'5','2014-06-11 00:00:00','2014-06-11 00:00:00'),(9,1,10,1,'200','2014-06-11 00:00:00','2014-06-11 00:00:00');
 /*!40000 ALTER TABLE `shop_specProductValues` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -886,9 +886,9 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
@@ -896,7 +896,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCategorySpecs`(IN `CategoryID` I
     READS SQL DATA
 SELECT shop_specFields.ID, shop_specFields.FieldName as `Specs`
 FROM  `shop_specCategoryGroups` LEFT JOIN shop_specFields ON shop_specCategoryGroups.SpecFieldID = shop_specFields.ID
-WHERE shop_specCategoryGroups.CategoryID = CategoryID ;;
+WHERE shop_specCategoryGroups.CategoryID = CategoryID GROUP BY shop_specCategoryGroups.SpecFieldID ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1005,4 +1005,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-12  5:25:43
+-- Dump completed on 2014-06-12  8:39:45

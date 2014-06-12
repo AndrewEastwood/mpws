@@ -207,19 +207,28 @@ class libraryDataBase {
 
         // apply data transformation options
         if (!empty($config['options']))
-            foreach ($config['options'] as $key => $value)
+            foreach ($config['options'] as $key => $_options)
                 switch ($key) {
                     case 'transformToArray':
                         // optimize values
-                        $dbData = $this->_mpwsOptimizeDataValues($dbData, $value ?: array());
+                        $dbData = $this->_mpwsOptimizeDataValues($dbData, $_options ?: array());
                         break;
                     case 'combineDataByKeys':
                         // var_dump($dbData);
-                        $dbData = $this->_mpwsCombineDataByKeys($dbData, $value['mapKeysToCombine'], isset($value['doOptimization']) ?: true, isset($value['keysToForceTransformToArray']) ? $value['keysToForceTransformToArray'] : array());
+                        $dbData = $this->_mpwsCombineDataByKeys($dbData, $_options['mapKeysToCombine'], isset($_options['doOptimization']) ?: true, isset($_options['keysToForceTransformToArray']) ? $_options['keysToForceTransformToArray'] : array());
                         break;
                     case 'expandSingleRecord':
-                        if (is_bool($value))
-                            $_opt_expandSingleRecord = $value;
+                        if (is_bool($_options))
+                            $_opt_expandSingleRecord = $_options;
+                        break;
+                    case "asDict":
+                        $dict = array();
+                        $keyForKey = $_options['keys'];
+                        $keyForVal = $_options['values'];
+                        foreach ($dbData as $key => $val) {
+                            $dict[$val[$keyForKey]] = $val[$keyForVal];
+                        }
+                        $dbData = $dict;
                         break;
                     default:
                         # code...

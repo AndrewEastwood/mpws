@@ -19,3 +19,14 @@ LIMIT 0 , 30
 
 SELECT shop_specProductValues.Value, shop_specFields.FieldName FROM `shop_specProductValues` LEFT JOIN shop_specFields ON shop_specProductValues.SpecFieldID = shop_specFields.ID
 WHERE shop_specProductValues.ProductID = 1
+
+SELECT shop_products.Name, shop_specFields.FieldName, shop_specProductValues.Value
+FROM  `shop_specProductValues` 
+LEFT JOIN shop_products ON shop_specProductValues.ProductID = shop_products.ID
+LEFT JOIN shop_specFields ON shop_specProductValues.SpecFieldID = shop_specFields.ID
+WHERE shop_products.ID =3
+LIMIT 0 , 30
+
+
+SELECT shop_products.ID FROM shop_products
+LEFT JOIN shop_specProductValues ON shop_products.ID = shop_specProductValues.ProductID WHERE shop_specProductValues.SpecFieldID in (2,3) GROUP BY shop_products.ID

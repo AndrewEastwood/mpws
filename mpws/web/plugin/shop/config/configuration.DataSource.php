@@ -51,14 +51,21 @@ class configurationShopDataSource extends objectConfiguration {
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
+        $config['group'] = 'shop_products.ID';
         $config['additional'] = array(
             "shop_categories" => array(
-                "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
+                "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
                 "fields" => array("Status")
             ),
             "shop_origins" => array(
-                "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
+                "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
                 "fields" => array("Status")
+            ),
+            "shop_specProductValues" => array(
+                "constraint" => array("shop_specProductValues.ProductID", "=", "shop_products.ID"),
+                "fields" => array(
+                    "SpecFieldID" => "SpecFieldID",
+                    "SpecValue" => "Value")
             )
         );
         unset($config['options']);
@@ -107,6 +114,15 @@ class configurationShopDataSource extends objectConfiguration {
         $config = self::jsapiShopProductList();
         $config['condition']["shop_products.CategoryID"] = self::jsapiCreateDataSourceCondition($ids, "IN");
         // var_dump($config);
+
+        // if (!empty($filters['features'])) {
+        //     $config["additional"]["shop_specProductValues"] = array(
+        //         "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
+        //         "fields" => array(
+        //             "SpecFieldID" => "SpecFieldID"
+        //         )
+        //     );
+        // }
         return $config;
     }
 
@@ -233,6 +249,12 @@ class configurationShopDataSource extends objectConfiguration {
             "procedure" => array(
                 "name" => "getProductSpecs",
                 "parameters" => array($id)
+            ),
+            "options" => array(
+                "asDict" => array(
+                    "keys" => "FieldName",
+                    "values" => "Value"
+                )
             )
         ));
     }
