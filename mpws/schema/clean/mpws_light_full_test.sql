@@ -19,6 +19,8 @@
 -- Current Database: `mpws_light`
 --
 
+/*!40000 DROP DATABASE IF EXISTS `mpws_light`*/;
+
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `mpws_light` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `mpws_light`;
@@ -1003,4 +1005,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-12  5:24:07
+-- Dump completed on 2014-06-12  5:25:43
