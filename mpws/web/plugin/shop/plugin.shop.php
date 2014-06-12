@@ -526,7 +526,13 @@ class pluginShop extends objectPlugin {
         $resp['error'] = '"type" is missed in the request';
     }
 
+    public function get_shop_wish (&$resp, $req) {
 
+    }
+
+    public function get_shop_cart (&$resp, $req) {
+
+    }
 
 
 
