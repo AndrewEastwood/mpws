@@ -108,24 +108,30 @@ class pluginShop extends objectPlugin {
     private function _getOrderByID ($orderID) {
         $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
         $dataOrder = $this->getCustomer()->fetch($config);
-        $this->___setOrderExtras($dataOrder);
+        $this->___attachOrderExtras($dataOrder);
         return $dataOrder;
     }
 
     private function _getOrderByHash ($orderHash) {
         $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
         $dataOrder = $this->getCustomer()->fetch($config);
-        $this->___setOrderExtras($dataOrder);
+        $this->___attachOrderExtras($dataOrder);
         return $dataOrder;
     }
 
-    private function ___setOrderExtras (&$dataOrder) {
+    private function ___attachOrderExtras (&$dataOrder) {
         if (!empty($dataOrder)) {
             $orderID = $dataOrder['ID'];
             $dataOrder['account'] = null;
             $dataOrder['address'] = null;
-            $dataOrder['info'] = null;
             $dataOrder['boughts'] = null;
+            $dataOrder['info'] = array(
+                "subTotal" => 0.0,
+                "discount" => 0,
+                "total" => 0.0,
+                "productCount" => 0,
+                "productUniqueCount" => 0
+            );
             if ($this->getCustomer()->hasPlugin('account')) {
                 $dataOrder['address'] = $this->getCustomer()->getPlugin('account')->getAddress($dataOrder['AccountAddressesID']);
                 $dataOrder['account'] = $this->getCustomer()->getPlugin('account')->getAccountByID($dataOrder['AccountID']);
@@ -133,9 +139,18 @@ class pluginShop extends objectPlugin {
             $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
-                foreach ($boughts as $bkey => $soldItem)
-                    $boughts[$bkey]['product'] = $this->_getProductByID($soldItem['ProductID']);
-            $dataOrder['info'] = $this->_custom_util_calculateBought($boughts);
+                foreach ($boughts as $bkey => $soldItem) {
+                    $product = $this->_getProductByID($soldItem['ProductID']);
+                    $product["Total"] = $product['Price'] * $product['Quantity'];
+                    $dataOrder['info']["subTotal"] += $product['Total'];
+                    $dataOrder['info']["productCount"] += $product['Quantity'];
+                    $boughts[$bkey]['product'] = $product;
+                }
+            // update money formats
+            $dataOrder['info']["subTotal"] = money_format('%.2n', $dataOrder['info']["subTotal"]);
+            $dataOrder['info']["discount"] = money_format('%.2n%%', $dataOrder['info']["discount"]);
+            $dataOrder['info']["total"] = money_format('%.2n', $dataOrder['info']["total"]);
+            $dataOrder['info']['productUniqueCount'] = count($boughts);
             $dataOrder['boughts'] = $boughts;
         }
     }
@@ -527,11 +542,19 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_wish (&$resp, $req) {
+        $key = 'shop:wishList';
+        $resp['wishlist'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+    }
 
+    public function get_shop_compare (&$resp, $req) {
+        $key = 'shop:compare';
+        $resp['compare'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+        $resp['limit'] = 10;
     }
 
     public function get_shop_cart (&$resp, $req) {
-
+        $key = 'shop:cart';
+        $resp['cart'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
     }
 
 
@@ -892,7 +915,7 @@ class pluginShop extends objectPlugin {
             }
         }
 
-        $dataObj->setData('info', $this->_custom_util_calculateBought($productData['products']));
+        $dataObj->setData('info', $this->___calcOrderBoughts($productData['products']));
         $dataObj->setData('products', $productData['products']);
         $_SESSION[$sessionKey] = $productData['products'];
 
@@ -1148,39 +1171,6 @@ class pluginShop extends objectPlugin {
         $this->getCustomer()->fetch($configOrigin);
         $dataObj->setData('origin', $dataOrigin);
         return $dataObj;
-    }
-
-    private function _custom_util_calculateBought (&$_products) {
-
-        // get cartInfo
-        $cartInfo = array(
-            "subTotal" => 0.0,
-            "discount" => 0,
-            "total" => 0.0,
-            "productCount" => 0,
-            "productUniqueCount" => 0
-        );
-
-        if (empty($_products))
-            return $cartInfo;
-
-        $cartInfo['productUniqueCount'] = count($_products);
-
-        foreach ($_products as &$_item) {
-            if (!isset($_item['ProductPrice']))
-                $_item['ProductPrice'] = $_item['Price'];
-            $_item["Total"] = $_item['ProductPrice'] * $_item['Quantity'];
-            $cartInfo["subTotal"] += $_item['Total'];
-            $cartInfo["productCount"] += $_item['Quantity'];
-        }
-        $cartInfo["total"] = (($cartInfo['discount'] / 100) ?: 1) *  $cartInfo['subTotal'];
-
-        // update money formats
-        $cartInfo["discount"] = money_format('%.2n%%', $cartInfo["discount"]);
-        $cartInfo["subTotal"] = money_format('%.2n', $cartInfo["subTotal"]);
-        $cartInfo["total"] = money_format('%.2n', $cartInfo["total"]);
-
-        return $cartInfo;
     }
 
     private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {
