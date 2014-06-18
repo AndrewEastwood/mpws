@@ -1,27 +1,32 @@
 define("plugin/shop/site/js/model/cart", [
     'default/js/lib/sandbox',
-    'default/js/model/mModel',
+    'default/js/lib/backbone',
     'plugin/shop/common/js/lib/utils'
-], function (Sandbox, MModel, ShopUtils) {
+], function (Sandbox, Backbone, ShopUtils) {
 
-    var Model = MModel.getNew();
+    // var Model = MModel.getNew();
 
-    var Cart = Model.extend({
+    var Cart = Backbone.Model.extend({
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
         //     'plugin:shop:cart:add': 'productAdd'
         // },
-        source: 'shop',
-        fn: 'shop_cart',
+        url: function () {
+            // debugger;
+            return APP.getApiLink({
+                source: 'shop',
+                fn: 'cart'
+            })
+        },
         initialize: function () {
-            Model.prototype.initialize.call(this);
+            Backbone.Model.prototype.initialize.call(this);
 
             var _self = this;
             // debugger;
-            this.updateUrl({
-                action: 'INFO'
-            });
+            // this.updateUrl({
+            //     action: 'INFO'
+            // });
 
             Sandbox.eventSubscribe('plugin:shop:cart:add', function (data) {
                 // debugger;
@@ -51,13 +56,13 @@ define("plugin/shop/site/js/model/cart", [
         },
         parse: function (data) {
             // debugger;
-            var _data = this.extractModelDataFromResponse(data);
-            var products = ShopUtils.adjustProductItem(_data);
+            // var _data = this.extractModelDataFromResponse(data);
+            var products = ShopUtils.adjustProductItem(data.items);
             return {
-                error: _data.error,
-                user: _data.user || {},
-                info: _data.info,
-                status: _data.status || {},
+                error: data.error,
+                user: data.user || {},
+                info: data.info,
+                status: data.status || {},
                 products: _(products).map(function(item){ return item; })
             };
         },

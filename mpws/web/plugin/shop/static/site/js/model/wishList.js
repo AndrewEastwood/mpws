@@ -1,19 +1,24 @@
 define("plugin/shop/site/js/model/wishList", [
     'default/js/lib/sandbox',
-    'default/js/model/mModel',
+    'default/js/lib/backbone',
     'plugin/shop/common/js/lib/utils'
-], function (Sandbox, MModel, ShopUtils) {
+], function (Sandbox, Backbone, ShopUtils) {
 
-    var Model = MModel.getNew();
+    // var Model = MModel.getNew();
 
-    var WishList = Model.extend({
+    var WishList = Backbone.Model.extend({
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
         //     'plugin:shop:WishList:add': 'productAdd'
         // },
-        source: 'shop',
-        fn: 'shop_wishlist',
+        url: function () {
+            // debugger;
+            return APP.getApiLink({
+                source: 'shop',
+                fn: 'wish'
+            })
+        },
         initialize: function () {
             // MModel.prototype.initialize.call(this);
 
@@ -45,15 +50,15 @@ define("plugin/shop/site/js/model/wishList", [
         },
         parse: function (data) {
             // debugger;
-            var products = ShopUtils.adjustProductItem(data && data.shop);
+            var products = ShopUtils.adjustProductItem(data.items);
             return {
                 products: _(products).map(function(item){ return item; })
             };
         },
         getInfo: function () {
-            this.updateUrl({
-                action: 'INFO'
-            });
+            // this.updateUrl({
+            //     action: 'INFO'
+            // });
             this.fetch();
         },
         clearAll: function () {

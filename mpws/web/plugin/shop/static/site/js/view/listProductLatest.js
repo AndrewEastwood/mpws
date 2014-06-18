@@ -1,17 +1,26 @@
 define("plugin/shop/site/js/view/listProductLatest", [
-    'default/js/lib/underscore',
-    'default/js/view/mView',
+    'default/js/lib/backbone',
     'plugin/shop/site/js/collection/listProductLatest',
     'plugin/shop/site/js/view/productItemShort'
-], function (_, MView, CollListProductLatest, ProductItemShort) {
+], function (Backbone, CollListProductLatest, ProductItemShort) {
 
     // debugger;
-    var ListProductLatest = MView.extend({
-        // tagName: 'div',
+    var ListProductLatest = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-latest',
         collection: new CollListProductLatest(),
-        itemViewClass: ProductItemShort,
-        autoRender: true
+        initialize: function () {
+            // debugger;
+            this.collection.on('reset', this.render, this);
+        },
+        render: function () {
+            // debugger;
+            var self = this;
+            this.collection.each(function(model){
+                var productView = new ProductItemShort({model: model});
+                self.$el.append(productView.render().el);
+            });
+            return this;
+        }
     });
 
     return ListProductLatest;

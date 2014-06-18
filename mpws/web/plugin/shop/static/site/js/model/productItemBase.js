@@ -1,10 +1,11 @@
 define('plugin/shop/site/js/model/productItemBase', [
-    'default/js/model/mModel'
-], function (MModel) {
+    'default/js/lib/backbone'
+], function (Backbone) {
 
     // debugger;
-    var ProductItemBase = MModel.getNew();
-
-    return ProductItemBase;
+    // var ProductItemBase = MModel.getNew();
+    return Backbone.Model.extend({
+        idAttribute: "ID"
+    });
 
 });

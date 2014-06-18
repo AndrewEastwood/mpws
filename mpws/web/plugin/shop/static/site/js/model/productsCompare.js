@@ -1,21 +1,23 @@
 define("plugin/shop/site/js/model/productsCompare", [
     'default/js/lib/sandbox',
-    'default/js/model/mModel',
+    'default/js/lib/backbone',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-dialog'
-], function (Sandbox, MModel, ShopUtils, BootstrapDialog) {
+], function (Sandbox, Backbone, ShopUtils, BootstrapDialog) {
 
-    // debugger;
-    var Model = MModel.getNew();
-
-    var ProductsCompare = Model.extend({
+    var ProductsCompare = Backbone.Model.extend({
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
         //     'shop:ProductsCompare:add': 'productAdd'
         // },
-        source: 'shop',
-        fn: 'shop_compare',
+        url: function () {
+            // debugger;
+            return APP.getApiLink({
+                source: 'shop',
+                fn: 'compare'
+            })
+        },
         initialize: function () {
             // MModel.prototype.initialize.call(this);
             
@@ -46,7 +48,7 @@ define("plugin/shop/site/js/model/productsCompare", [
             // this.getInfo();
         },
         parse: function (data) {
-            if (data && data.shop && data.shop.error) {
+            if (data.error) {
                 debugger;
                 if (data.shop.error === "MaxProductsAdded")
                     BootstrapDialog.show({
@@ -57,15 +59,15 @@ define("plugin/shop/site/js/model/productsCompare", [
             }
 
             // debugger;
-            var products = ShopUtils.adjustProductItem(data && data.shop);
+            var products = ShopUtils.adjustProductItem(data.items);
             return {
                 products: _(products).map(function(item){ return item; })
             };
         },
         getInfo: function () {
-            this.updateUrl({
-                action: 'INFO'
-            });
+            // this.updateUrl({
+            //     action: 'INFO'
+            // });
             this.fetch();
         },
         clearAll: function () {

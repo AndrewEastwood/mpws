@@ -504,19 +504,19 @@ class pluginShop extends objectPlugin {
         if (!empty($req['type'])) {
             switch ($req['type']) {
                 case "latest":
-                    $resp = $this->_getProducts_Latest();
+                    $resp["items"] = $this->_getProducts_Latest();
                     break;
                 case "popular":
-                    $resp = $this->_getProducts_TopPopular();
+                    $resp["items"] = $this->_getProducts_TopPopular();
                     break;
                 case "non_popular":
-                    $resp = $this->_getProducts_TopNonPopular();
+                    $resp["items"] = $this->_getProducts_TopNonPopular();
                     break;
                 case "sale":
-                    $resp = $this->_getProducts_Sale();
+                    $resp["items"] = $this->_getProducts_Sale();
                     break;
                 case "uncompleted":
-                    $resp = $this->_getProducts_Uncompleted();
+                    $resp["items"] = $this->_getProducts_Uncompleted();
                     break;
             }
             return;
@@ -543,18 +543,18 @@ class pluginShop extends objectPlugin {
 
     public function get_shop_wish (&$resp, $req) {
         $key = 'shop:wishList';
-        $resp['wishlist'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+        $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
     }
 
     public function get_shop_compare (&$resp, $req) {
         $key = 'shop:compare';
-        $resp['compare'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+        $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
         $resp['limit'] = 10;
     }
 
     public function get_shop_cart (&$resp, $req) {
         $key = 'shop:cart';
-        $resp['cart'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+        $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
     }
 
 

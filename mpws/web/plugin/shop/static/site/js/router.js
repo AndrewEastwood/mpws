@@ -68,10 +68,11 @@ define("plugin/shop/site/js/router", [
                     // create new view
                     var listProductLatest = new ListProductLatest();
                     // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
-                    listProductLatest.fetchAndRender();
+                    // debugger;
+                    listProductLatest.collection.fetch();
 
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopListProductLatest',
+                        name: 'CommonBodyCenter',
                         el: listProductLatest.el
                     });
 
@@ -101,14 +102,14 @@ define("plugin/shop/site/js/router", [
                         cachedView.remove();
 
                     // create new view
-                    var listProductCatalog = new ListProductCatalog({
+                    var listProductCatalog = new ListProductCatalog();
+                    // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
+                    listProductCatalog.collection.fetch({
                         categoryID: categoryID
                     });
-                    // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
-                    listProductCatalog.fetchAndRender();
 
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopListProductCatalog',
+                        name: 'CommonBodyCenter',
                         el: listProductCatalog.el
                     });
 
@@ -138,29 +139,21 @@ define("plugin/shop/site/js/router", [
                 categoryID: null
             });
 
-            require(['plugin/shop/site/js/view/productItemFull'], function (ProductItemFull) {
-
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ProductItemFull', function (cachedView) {
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
-
-                    // create new view
-                    var productItemFull = new ProductItemFull();
-                    // Site.placeholders.shop.productItemStandalone.html(productItemFull.el);
-
-                    productItemFull.fetchAndRender({
-                        productID: productID
-                    });
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopProductItemStandalone',
-                        el: productItemFull.el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    return productItemFull;
+            require([
+                'plugin/shop/site/js/model/productItemFull',
+                'plugin/shop/site/js/view/productItemFull'
+            ], function (ModelProductItemFull, ProductItemFull) {
+                // create new view
+                var modelProductItemFull = new ModelProductItemFull({
+                    id: productID
+                });
+                var viewProductItemFull = new ProductItemFull({
+                    model: modelProductItemFull
+                });
+                modelProductItemFull.fetch();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewProductItemFull.el
                 });
             });
         },

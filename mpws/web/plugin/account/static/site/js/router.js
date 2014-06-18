@@ -1,11 +1,13 @@
 define("plugin/account/site/js/router", [
-    'default/js/lib/sandbox',
-    'cmn_jquery',
-    'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'default/js/lib/cache',
-    'plugin/account/site/js/view/menu',
-], function (Sandbox, $, _, Backbone, Cache) {
+    // 'default/js/lib/sandbox',
+    // 'cmn_jquery',
+    // 'default/js/lib/underscore',
+    // 'default/js/lib/cache',
+    // 'plugin/account/site/js/view/menu',
+], function (Backbone, Sandbox, $, _, Cache) {
+
+    return Backbone.Router.extend({});
 
     Sandbox.eventSubscribe('plugin:account:signed:out', function() {
         if (Backbone.history.fragment.match(/^account/))
