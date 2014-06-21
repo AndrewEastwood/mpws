@@ -87,7 +87,7 @@
 
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
-        {{#foreach data.shop.location}}
+        {{#foreach data.location.items}}
             {{#if $last}}
                 <li class="active">{{Name}}</li>
             {{else}}
@@ -98,11 +98,11 @@
 
     {{#srtStartsWith app.location.fragment "shop/product/" }}
         <li><a href="/#">Головна</a></li>
-        {{#foreach data.shop.location}}
+        {{#foreach data.location.items}}
         <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
         {{/foreach}}
-        {{#if data.shop.product}}
-        <li class="active">{{data.shop.product.Name}}</li>
+        {{#if data.location.product}}
+        <li class="active">{{data.location.product.Name}}</li>
         {{/if}}
     {{/srtStartsWith}}
 </ol>

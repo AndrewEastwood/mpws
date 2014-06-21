@@ -91,10 +91,12 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         if (!options || !options.name)
             return;
         // debugger;
-        var el = $('[name="' + options.name + '"]');
-        if (el.length == 0)
+        var $el = $('[name="' + options.name + '"]');
+        if ($el.length == 0)
             throw "Render Error: Unable to resolve element by name: " + options.name;
-        contentInjection.injectContent(el, options);
+        // $el.each(function(){
+            contentInjection.injectContent($el, options);
+        // });
     }
 
     $.xhrPool = []; 
@@ -278,6 +280,5 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         else
             releasePluginsFn();
     });
-
 
 });

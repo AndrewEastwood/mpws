@@ -22,6 +22,10 @@ class pluginShop extends objectPlugin {
         $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
         $product['Features'] = $this->getCustomer()->fetch($configProductsFeatures);
 
+        // adjusting
+        $product['Prices'] = $product['Prices']['PriceArchive'];
+        $product['Attributes'] = $product['Attributes']['ProductAttributes'];
+
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
             $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
@@ -33,14 +37,6 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by date added
     // -----------------------------------------------
-    private function _getProductList_Latest () {
-        $config = configurationShopDataSource::jsapiShopProductListGetLatestGet();
-        $productIDs = $this->getCustomer()->fetch($config);
-        $data = array();
-        foreach ($productIDs as $val)
-            $data[] = $this->_getProductByID($val['ID']);
-        return $data;
-    }
 
     private function _getProducts_TopNonPopular () {
         // get non-popuplar 50 products
@@ -68,7 +64,7 @@ class pluginShop extends objectPlugin {
         // get expired orders
         $config = configurationShopDataSource::jsapiShopProductListLatest();
         $productIDs = $this->getCustomer()->fetch($config);
-        $data = array();
+        $data = array($productIDs);
         if (!empty($productIDs))
             foreach ($productIDs as $val)
                 $data[] = $this->_getProductByID($val['ID']);
@@ -220,12 +216,12 @@ class pluginShop extends objectPlugin {
             $productDataEntry = $this->getCustomer()->fetch($configProduct);
             if (isset($productDataEntry['CategoryID'])) {
                 $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
-                $location = $this->getCustomer()->fetch($configLocation);
+                $location['items'] = $this->getCustomer()->fetch($configLocation);
                 $location['product'] = $productDataEntry;
             }
         } else {
             $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($categoryID);
-            $location = $this->getCustomer()->fetch($configLocation);
+            $location['items'] = $this->getCustomer()->fetch($configLocation);
         }
         return $location;
     }

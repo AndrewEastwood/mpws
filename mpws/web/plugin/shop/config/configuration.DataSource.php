@@ -85,7 +85,6 @@ class configurationShopDataSource extends objectConfiguration {
             "field" => "shop_products.DateCreated",
             "ordering" => "DESC"
         );
-        $config['limit'] = 5;
         return $config;
     }
     // <<<< Product list of recently added products
@@ -151,6 +150,7 @@ class configurationShopDataSource extends objectConfiguration {
             "limit" => 10,
             "group" => "ProductID",
             "options" => array(
+                "expandSingleRecord" => true,
                 "combineDataByKeys" => array(
                     "mapKeysToCombine" => array(
                         "ProductAttributes" => array(
@@ -185,6 +185,7 @@ class configurationShopDataSource extends objectConfiguration {
                 "ordering" => "ASC"
             ),
             "options" => array(
+                "expandSingleRecord" => true,
                 "transformToArray" => array("PriceArchive")
             )
         ));

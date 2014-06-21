@@ -40,19 +40,17 @@ define("plugin/shop/site/js/router", [
         },
 
         offers: function () {
-
             // Sandbox.eventNotify('global:content:render', {
             //     name: 'ShopOffers',
             //     el: $('<h1>Offers Goes here</h1>')
             // });
-
         },
 
         home: function () {
 
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: null
             });
@@ -88,7 +86,7 @@ define("plugin/shop/site/js/router", [
             // debugger;
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: categoryID
             });
@@ -123,7 +121,7 @@ define("plugin/shop/site/js/router", [
 
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: categoryID
             });
@@ -134,23 +132,17 @@ define("plugin/shop/site/js/router", [
 
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: productID,
                 categoryID: null
             });
 
-            require([
-                'plugin/shop/site/js/model/productItemFull',
-                'plugin/shop/site/js/view/productItemFull'
-            ], function (ModelProductItemFull, ProductItemFull) {
+            require(['plugin/shop/site/js/view/productItemFull'], function (ViewProductItemFull) {
                 // create new view
-                var modelProductItemFull = new ModelProductItemFull({
+                var viewProductItemFull = new ViewProductItemFull({
                     id: productID
                 });
-                var viewProductItemFull = new ProductItemFull({
-                    model: modelProductItemFull
-                });
-                modelProductItemFull.fetch();
+                viewProductItemFull.render();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewProductItemFull.el
@@ -161,7 +153,7 @@ define("plugin/shop/site/js/router", [
         shop_compare: function () {
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: null
             });
@@ -193,7 +185,7 @@ define("plugin/shop/site/js/router", [
         shop_cart: function () {
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: null
             });
@@ -224,7 +216,7 @@ define("plugin/shop/site/js/router", [
         shop_wishlist: function () {
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: null
             });
@@ -255,7 +247,7 @@ define("plugin/shop/site/js/router", [
         shop_tracking: function (orderHash) {
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: null
             });
@@ -304,7 +296,7 @@ define("plugin/shop/site/js/router", [
 
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'shop_location',
+                fn: 'location',
                 productID: null,
                 categoryID: null
             });

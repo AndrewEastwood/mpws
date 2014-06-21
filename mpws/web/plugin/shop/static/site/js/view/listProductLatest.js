@@ -6,7 +6,7 @@ define("plugin/shop/site/js/view/listProductLatest", [
 
     // debugger;
     var ListProductLatest = Backbone.View.extend({
-        className: 'shop-product-list shop-product-list-latest',
+        className: 'shop-product-list shop-product-list-latest clearfix',
         collection: new CollListProductLatest(),
         initialize: function () {
             // debugger;
