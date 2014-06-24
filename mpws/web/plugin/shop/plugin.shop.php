@@ -537,9 +537,19 @@ class pluginShop extends objectPlugin {
         $resp['error'] = '"type" is missed in the request';
     }
 
-    public function get_shop_wish (&$resp, $req) {
+    public function get_shop_wish (&$resp) {
         $key = 'shop:wishList';
         $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+    }
+
+    public function post_shop_wish (&$resp, $req) {
+        if (isset($req['productID'])) {
+            $key = 'shop:wishList';
+            $product = $this->_getProductByID($req['productID']);
+            $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+            $resp['items'][$req['productID']] = $product;
+            $_SESSION[$key] = $resp['items'];
+        }
     }
 
     public function get_shop_compare (&$resp, $req) {

@@ -15,17 +15,18 @@ define("plugin/shop/site/js/view/menuWishList", [
             // Sandbox.eventSubscribe('plugin:shop:wishlist:info', function (data) {
             // });
             // wishCollectionInstance.getInfo();
-            this.listenTo(wishCollectionInstance, 'change', function(){
-                // var _count = data && data.products && data.products.length || 0;
-                if (wishCollectionInstance.length)
-                    _self.$('.counter').text(wishCollectionInstance.length);
-                else
-                    _self.$('.counter').empty();
-            });
+            this.listenTo(wishCollectionInstance, 'reset', this.updateCounter);
+            this.listenTo(wishCollectionInstance, 'sync', this.updateCounter);
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             return this;
+        },
+        updateCounter: function() {
+            if (wishCollectionInstance.length)
+                this.$('.counter').text(wishCollectionInstance.length);
+            else
+                this.$('.counter').empty();
         }
     });
 

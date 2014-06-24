@@ -148,10 +148,10 @@ define("plugin/shop/site/js/router", [
             });
 
             require(['plugin/shop/site/js/view/productsCompare'], function (ProductsCompare) {
-                Cache.withObject('ProductsCompare', function (cachedView) {
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                // Cache.withObject('ProductsCompare', function (cachedView) {
+                //     // remove previous view
+                //     if (cachedView && cachedView.remove)
+                //         cachedView.remove();
 
                     // create new view
                     var productsCompare = new ProductsCompare();
@@ -162,12 +162,12 @@ define("plugin/shop/site/js/router", [
                     });
 
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopProductCompare',
+                        name: 'CommonBodyCenter',
                         el: productsCompare.el
                     });
                     // return view object to pass it into this function at next invocation
-                    return productsCompare;
-                });
+                //     return productsCompare;
+                // });
             });
         },
 
