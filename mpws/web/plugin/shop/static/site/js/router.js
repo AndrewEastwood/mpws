@@ -56,26 +56,15 @@ define("plugin/shop/site/js/router", [
             });
 
             require(['plugin/shop/site/js/view/listProductLatest'], function (ListProductLatest) {
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ListProductLatest', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                // create new view
+                var listProductLatest = new ListProductLatest();
+                // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
+                // debugger;
+                listProductLatest.collection.fetch();
 
-                    // create new view
-                    var listProductLatest = new ListProductLatest();
-                    // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
-                    // debugger;
-                    listProductLatest.collection.fetch();
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: listProductLatest.el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    return listProductLatest;
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listProductLatest.el
                 });
             });
 
@@ -142,7 +131,7 @@ define("plugin/shop/site/js/router", [
                 var viewProductItemFull = new ViewProductItemFull({
                     id: productID
                 });
-                viewProductItemFull.render();
+                viewProductItemFull.model.fetch();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: viewProductItemFull.el

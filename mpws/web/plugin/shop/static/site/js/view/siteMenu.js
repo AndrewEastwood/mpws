@@ -9,15 +9,15 @@ define("plugin/shop/site/js/view/siteMenu", [
 
     // inject shop menu (category menu)
     var menuCatalog = new MenuCatalog();
-    menuCatalog.fetchAndRender();
+    menuCatalog.model.fetch();
 
     // inject shop menu (category menu)
     var menuCart = new MenuCart();
-    menuCart.render();
+    // menuCart.model.fetch();
 
     // inject shop menu (category menu)
     var menuWishList = new MenuWishList();
-    menuWishList.render();
+    menuWishList.collection.fetch();
 
     // inject shop menu (category menu)
     var menuCompare = new MenuCompare();

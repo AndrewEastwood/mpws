@@ -525,10 +525,10 @@ class pluginShop extends objectPlugin {
         if (!empty($req['type'])) {
             switch ($req['type']) {
                 case "tree":
-                    $resp = $this->_getCatalogTree();
+                    $resp['tree'] = $this->_getCatalogTree();
                     break;
                 case "browse":
-                    $resp = $this->_getCatalogBrowse();
+                    $resp['browse'] = $this->_getCatalogBrowse();
                     break;
             }
             return;

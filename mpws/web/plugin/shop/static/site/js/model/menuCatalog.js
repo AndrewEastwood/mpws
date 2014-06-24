@@ -1,15 +1,18 @@
 define("plugin/shop/site/js/model/menuCatalog", [
-    'default/js/model/mModel',
+    'default/js/lib/backbone',
     'default/js/lib/utils'
-], function (MModel, Utils) {
+], function (Backbone, Utils) {
 
-    var Model = MModel.getNew();
-    // debugger;
-    var CatalogStructure = Model.extend({
-        source: 'shop',
-        fn: 'shop_catalog_structure',
+    var CatalogStructure = Backbone.Model.extend({
+        url: function () {
+            return APP.getApiLink({
+                source: 'shop',
+                fn: 'catalog',
+                type: 'tree'
+            })
+        },
         parse: function (data) {
-            return Utils.getTreeByJson(data && data.shop && data.shop.categories, 'ID', 'ParentID');
+            return data['tree'];
         }
     });
 

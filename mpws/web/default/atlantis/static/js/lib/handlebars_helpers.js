@@ -410,7 +410,17 @@ define("default/js/lib/handlebars_helpers", [
             result.push(options.fn(ary[i]));
         return result.join('');
     }
-
+    var audaciousFn;
+    helpers.recursive = function(children, options) {
+        var out = '';
+        if (typeof options.fn !== "undefined") {
+            audaciousFn = options.fn;
+        }
+        _(children).each(function(child){
+            out = out + audaciousFn(child);
+        });
+        return out;
+    }
     return helpers;
 
 });

@@ -2,34 +2,19 @@
     Каталог <span class="caret"></span>
 </a>
 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-{{#each data }}
-    {{#compare childrenCount ">" 0 }}
+{{#recursive data}}
+    {{#if childNodes}}
     <li class="dropdown-submenu">
         <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
         <ul class="dropdown-menu">
-        {{#each children }}
-            {{#compare childrenCount ">" 0 }}
-            <li class="dropdown-submenu">
-                <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-                <ul class="dropdown-menu">
-                {{#each children }}
-                    <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
-                {{/each}}
-                </ul>
-            </li>
-            {{else}}
-            <li>
-                <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-            </li>
-            {{/compare}}
-        {{/each}}
+            {{{recursive childNodes}}}
         </ul>
     </li>
     {{else}}
     <li>
         <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
     </li>
-    {{/compare}}
-{{/each}}
+    {{/if}}
+{{/recursive}}
 </ul>
 <!--end nav-->

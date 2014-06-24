@@ -16,29 +16,25 @@ define("plugin/shop/site/js/view/productItemFull", [
             this.model = new Model({
                 id: this.options.id
             });
+            this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            var self = this;
-            this.model.fetch({
-                success: function() {
-                    self.$el.html(self.template(Utils.getHBSTemplateData(self)));
-                    // show lense over product
-                    self.$('.shop-product-image-main img').magnify();
-                    // show price chart (powered by http://omnipotent.net/jquery.sparkline)
-                    // debugger;
-                    var _prices = (self.model.get('Prices') || []).filter(function(p) { return parseFloat(p); });
-                    if (_prices.length) {
-                        self.$("#sparkline").sparkline(_prices, {
-                            type: 'bar',
-                            width: '150px',
-                            height: '15px',
-                            lineColor: '#cf7400',
-                            fillColor: false,
-                            drawNormalOnTop: true
-                        });
-                    }
-                }
-            });
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            // show lense over product
+            this.$('.shop-product-image-main img').magnify();
+            // show price chart (powered by http://omnipotent.net/jquery.sparkline)
+            // debugger;
+            var _prices = (this.model.get('Prices') || []).filter(function(p) { return parseFloat(p); });
+            if (_prices.length) {
+                this.$("#sparkline").sparkline(_prices, {
+                    type: 'bar',
+                    width: '150px',
+                    height: '15px',
+                    lineColor: '#cf7400',
+                    fillColor: false,
+                    drawNormalOnTop: true
+                });
+            }
             return this;
         }
     });
