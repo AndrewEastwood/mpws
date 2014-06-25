@@ -21,7 +21,7 @@ define("plugin/shop/site/js/view/siteMenu", [
 
     // inject shop menu (category menu)
     var menuCompare = new MenuCompare();
-    menuCompare.render();
+    menuCompare.collection.fetch();
 
     // inject into account page shop menu items
     var menuProfileOrders = new MenuProfileOrders();

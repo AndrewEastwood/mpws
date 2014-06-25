@@ -10,7 +10,7 @@ define("plugin/shop/site/js/model/cart", [
         // Consider how to inject this
         // -=-=-=-=-=-=-=-=-=-=-=-=
         // globalEvents: {
-        //     'plugin:shop:cart:add': 'productAdd'
+        //     'plugin:shop:list_cart:add': 'productAdd'
         // },
         url: function () {
             // debugger;
@@ -28,29 +28,29 @@ define("plugin/shop/site/js/model/cart", [
             //     action: 'INFO'
             // });
 
-            Sandbox.eventSubscribe('plugin:shop:cart:add', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:list_cart:add', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productAdd(data.id, 1);
             });
-            Sandbox.eventSubscribe('plugin:shop:cart:sub', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:list_cart:sub', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productAdd(data.id, -1);
             });
-            Sandbox.eventSubscribe('plugin:shop:cart:remove', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:list_cart:remove', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productRemove(data.id);
             });
-            Sandbox.eventSubscribe('plugin:shop:cart:clear', function () {
+            Sandbox.eventSubscribe('plugin:shop:list_cart:clear', function () {
                 // debugger;
                 _self.clearAll();
             });
 
             this.on('change', function () {
                 // _self.resetUrlOptions();
-                Sandbox.eventNotify('plugin:shop:cart:info', _self.toJSON());
+                Sandbox.eventNotify('plugin:shop:list_cart:info', _self.toJSON());
             });
 
         },

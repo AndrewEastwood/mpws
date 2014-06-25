@@ -26,23 +26,23 @@ define("plugin/shop/site/js/model/productsCompare", [
 
             // MModel.prototype.initialize.call(this);
 
-            Sandbox.eventSubscribe('plugin:shop:compare:add', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:list_compare:add', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productAdd(data.id);
             });
-            Sandbox.eventSubscribe('plugin:shop:compare:remove', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:list_compare:remove', function (data) {
                 // debugger;
                 if (data && data.id)
                     _self.productRemove(data.id);
             });
-            Sandbox.eventSubscribe('plugin:shop:compare:clear', function () {
+            Sandbox.eventSubscribe('plugin:shop:list_compare:clear', function () {
                 // debugger;
                 _self.clearAll();
             });
 
             this.on('change', function () {
-                Sandbox.eventNotify('plugin:shop:compare:info', _self.toJSON());
+                Sandbox.eventNotify('plugin:shop:list_compare:info', _self.toJSON());
             });
 
             // this.getInfo();

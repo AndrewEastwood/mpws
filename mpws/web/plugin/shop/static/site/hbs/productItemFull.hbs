@@ -80,25 +80,42 @@
 
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
-                        <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                            <i class="fa fa-shopping-cart"></i> + в кошик
-                            {{#if data.ViewExtras.InCartCount }}
-                            <sub>(додано: {{data.ViewExtras.InCartCount}})</sub>
-                            {{/if}}
-                        </button>
-                        {{#if data.ViewExtras.InWish }}
-                            <button class="btn btn-warning btn-xs btn-add-to-wish disabled"><i class="fa fa-heart"></i>В списку</button>
+                        {{#if data.ViewExtras.InCartCount }}
+                            <button class="btn btn-warning btn-xs btn-add-to-cart" data-action="plugin:shop:list_cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                                <i class="fa fa-shopping-cart"></i> +1 в кошик
+                                <sub>(додано: {{data.ViewExtras.InCartCount}})</sub>
+                            </button>
                         {{else}}
-                            <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:wishlist:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-heart"></i> + в мій список
+                            <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:list_cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                                <i class="fa fa-shopping-cart"></i> +1 в кошик
+                            </button>
+                        {{/if}}
+                        {{#if data.ViewExtras.InWish }}
+                            <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                                <i class="fa fa-heart"></i>
+                                <i class="fa fa-minus"></i>
+                                з списку
+                            </button>
+                        {{else}}
+                            <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                                <i class="fa fa-heart"></i>
+                                <i class="fa fa-plus"></i>
+                                в мій список
                             </button>
                         {{/if}}
                         {{#if data.ViewExtras.InCompare }}
-                            <button class="btn btn-warning btn-xs btn-add-to-compare disabled"><i class="fa fa-heart"></i>В порівнянні</button>
+                            <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                                <i class="fa fa-files-o"></i>
+                                <i class="fa fa-minus"></i>
+                                з порівняння
+                            </button>
                         {{else}}
-                        <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                            <i class="fa fa-files-o"></i>порівняти
-                        </button>
+                            <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                                <i class="fa fa-files-o"></i>
+                                <i class="fa fa-plus"></i>
+                                до порівняння
+
+                            </button>
                         {{/if}}
                     </div>
                 </li>

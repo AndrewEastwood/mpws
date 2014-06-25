@@ -80,7 +80,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
 
             });
 
-            Sandbox.eventSubscribe('plugin:shop:cart:save', function () {
+            Sandbox.eventSubscribe('plugin:shop:list_cart:save', function () {
                 self.model.checkout(self.collectUserInfo());
             });
 

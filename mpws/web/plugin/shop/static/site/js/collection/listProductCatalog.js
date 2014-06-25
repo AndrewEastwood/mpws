@@ -1,18 +1,18 @@
 define('plugin/shop/site/js/collection/listProductCatalog', [
     'default/js/lib/underscore',
     'default/js/collection/mCollection',
-    'plugin/shop/site/js/model/productItemBase',
+    'plugin/shop/site/js/model/product',
     'default/js/lib/url',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/jquery.cookie',
-], function (_, MCollection, ProductItemBase, JSUrl, ShopUtils) {
+], function (_, MCollection, ModelProduct, JSUrl, ShopUtils) {
 
     var Collection = MCollection.getNew();
 
     var ListProductCatalog = Collection.extend({
         source: 'shop',
         fn: 'shop_catalog',
-        model: ProductItemBase,
+        model: ModelProduct,
         parse: function (data) {
             // adjust products
             var products = ShopUtils.adjustProductItems(data && data.shop && data.shop.products);

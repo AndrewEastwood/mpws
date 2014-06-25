@@ -9,7 +9,7 @@ define("plugin/shop/site/js/view/menuCart", [
         template: tpl,
         initialize: function () {
             var _self = this;
-            Sandbox.eventSubscribe('plugin:shop:cart:info', function (data) {
+            Sandbox.eventSubscribe('plugin:shop:list_cart:info', function (data) {
                 var _count = data && data.info && data.info.productCount || 0;
                 if (_count)
                     _self.$('.counter').text(_count);

@@ -1,8 +1,8 @@
 <div class="col-md-12">
-    {{#mpwsIsNotEmpty data.products }}
+    {{#mpwsIsNotEmpty data }}
     <div class="well">
         <div class="actions">
-            <a href="javascript://" data-action="plugin:shop:compare:clear" data-id="{{ID}}">
+            <a href="javascript://" data-action="plugin:shop:list_compare:clear" data-id="*">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>
         </div>
@@ -11,13 +11,13 @@
         <table class="table table-condensed table-responsive">
             <tr>
                 <td></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>
                     <div class="panel">
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:compare:remove" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
                             <i class="fa fa-trash-o"></i>
                         </a>
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:cart:add" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
                             <i class="fa fa-shopping-cart"></i>
                         </a>
                     </div>
@@ -26,7 +26,7 @@
             </tr>
             <tr>
                 <td><span class="label label-default">Фото</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>
                     <div class="shop-component shop-product-images">
                         <div class="shop-product-image shop-product-image-main">
@@ -40,55 +40,55 @@
             </tr>
             <tr>
                 <td><span class="label label-default">Назва</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>{{OriginName}} - {{Name}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><span class="label label-default">Виробник</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>{{OriginName}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><span class="label label-default">Категорія</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>{{CategoryName}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><span class="label label-default">Ціна</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td><span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span></td>
                 {{/each}}
             </tr>
             <tr>
                 <td><span class="label label-default">Опис</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>{{Description}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><span class="label label-default">Характеристики</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>{{Description}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><span class="label label-default">Додаткові зображення</span></td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>{{Description}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td> </td>
-                {{#each data.products }}
+                {{#each data }}
                 <td>
                     <div class="panel">
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:compare:remove" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
                             <i class="fa fa-trash-o"></i>
                         </a>
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:cart:add" data-id="{{ID}}">
+                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
                             <i class="fa fa-shopping-cart"></i>
                         </a>
                     </div>
@@ -99,7 +99,7 @@
     </div>
     <div class="well">
         <div class="actions">
-            <a href="javascript://" data-action="plugin:shop:compare:clear" data-id="{{ID}}">
+            <a href="javascript://" data-action="plugin:shop:list_compare:clear" data-id="*">
                 <i class="fa fa-trash-o"></i> Видалити всі товари з списку
             </a>
         </div>

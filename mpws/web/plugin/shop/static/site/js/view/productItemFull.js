@@ -1,20 +1,25 @@
 define("plugin/shop/site/js/view/productItemFull", [
     'default/js/lib/backbone',
-    'plugin/shop/site/js/model/productItemFull',
+    'default/js/lib/underscore',
+    'plugin/shop/site/js/view/productItemShort',
+    'plugin/shop/site/js/model/product',
     'default/js/lib/utils',
     'default/js/plugin/hbs!plugin/shop/site/hbs/productItemFull',
     /* enhanced ui */
     'default/js/lib/bootstrap-magnify',
     'default/js/lib/lightbox',
     'default/js/lib/jquery.sparkline'
-], function (Backbone, Model, Utils, tpl) {
+], function (Backbone, _, ViewProductItemShort, ModelProduct, Utils, tpl) {
 
-    var ProductItemFull = Backbone.View.extend({
+    var ProductItemFull = ViewProductItemShort.extend({
         className: 'shop-product-item shop-product-item-full',
         template: tpl,
-        initialize: function () {
-            this.model = new Model({
-                id: this.options.id
+        initialize: function (options) {
+            // debugger;
+            // _.bindAll(this, 'buttonWish', 'buttonCompare');
+            ViewProductItemShort.prototype.initialize.call(this);
+            this.model = new ModelProduct({
+                id: options.productID
             });
             this.listenTo(this.model, 'change', this.render);
         },

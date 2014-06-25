@@ -129,7 +129,7 @@ define("plugin/shop/site/js/router", [
             require(['plugin/shop/site/js/view/productItemFull'], function (ViewProductItemFull) {
                 // create new view
                 var viewProductItemFull = new ViewProductItemFull({
-                    id: productID
+                    productID: productID
                 });
                 viewProductItemFull.model.fetch();
                 Sandbox.eventNotify('global:content:render', {
@@ -147,24 +147,14 @@ define("plugin/shop/site/js/router", [
                 categoryID: null
             });
 
-            require(['plugin/shop/site/js/view/productsCompare'], function (ProductsCompare) {
-                // Cache.withObject('ProductsCompare', function (cachedView) {
-                //     // remove previous view
-                //     if (cachedView && cachedView.remove)
-                //         cachedView.remove();
-
-                    // create new view
-                    var productsCompare = new ProductsCompare();
-                    // Site.placeholders.shop.productCompare.html(productsCompare.$el);
-                    // debugger;
-                    productsCompare.render();
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: productsCompare.el
-                    });
-                    // return view object to pass it into this function at next invocation
-                //     return productsCompare;
-                // });
+            require(['plugin/shop/site/js/view/listProductCompare'], function (ListProductCompare) {
+                // create new view
+                var listProductCompare = new ListProductCompare();
+                listProductCompare.render();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listProductCompare.el
+                });
             });
         },
 
@@ -207,24 +197,14 @@ define("plugin/shop/site/js/router", [
                 categoryID: null
             });
 
-            require(['plugin/shop/site/js/view/wishListStandalone'], function (WishListStandalone) {
-                // Cache.withObject('WishListStandalone', function (cachedView) {
-                //     // remove previous view
-                //     if (cachedView && cachedView.remove)
-                //         cachedView.remove();
-
-                    // create new view
-                    var wishListStandalone = new WishListStandalone();
-                    // Site.placeholders.shop.shoppingWishListStandalone.html(wishListStandalone.$el);
-                    wishListStandalone.render();
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: wishListStandalone.el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    // return wishListStandalone;
-                // });
+            require(['plugin/shop/site/js/view/listProductWish'], function (ListProductWish) {
+                // create new view
+                var listProductWish = new ListProductWish();
+                listProductWish.render();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listProductWish.el
+                });
             });
         },
 

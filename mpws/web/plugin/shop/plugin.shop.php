@@ -562,6 +562,7 @@ class pluginShop extends objectPlugin {
                 $_SESSION[$this->_listKey_Wish] = $resp['items'];
             }
         }
+        $resp['req'] = $req;
     }
 
     public function delete_shop_wish (&$resp, $req) {
@@ -586,6 +587,31 @@ class pluginShop extends objectPlugin {
     public function get_shop_compare (&$resp) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         $resp['limit'] = 10;
+    }
+
+    public function post_shop_compare (&$resp, $req) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        if (isset($req['productID'])) {
+            $productID = $req['productID'];
+            if (!isset($resp['items'][$productID])) {
+                $product = $this->_getProductByID($productID);
+                $resp['items'][$productID] = $product;
+                $_SESSION[$this->_listKey_Compare] = $resp['items'];
+            }
+        }
+    }
+
+    public function delete_shop_compare (&$resp, $req) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        if (isset($req['productID'])) {
+            $productID = $req['productID'];
+            if ($productID === "*") {
+                $resp['items'] = array();
+            } elseif (isset($resp['items'][$productID])) {
+                unset($resp['items'][$productID]);
+            }
+            $_SESSION[$this->_listKey_Compare] = $resp['items'];
+        }
     }
 
     private function __productIsInCompareList ($id) {
