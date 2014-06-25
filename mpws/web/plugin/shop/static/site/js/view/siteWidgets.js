@@ -4,6 +4,7 @@ define("plugin/shop/site/js/view/siteWidgets", [
     'plugin/shop/site/js/view/orderTrackingButton'
 ], function (Sandbox, CartEmbedded, OrderTrackingButton) {
 
+    return;
     // inject tracking order
     var orderTrackingButton = new OrderTrackingButton();
     orderTrackingButton.fetchAndRender();

@@ -2,44 +2,62 @@ define('plugin/shop/site/js/collection/listProductWish', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'plugin/shop/site/js/model/productItemBase',
     'plugin/shop/common/js/lib/utils'
-], function (Sandbox, _, Backbone, ShopUtils) {
+], function (Sandbox, _, Backbone, ProductItemBase, ShopUtils) {
 
     var ListProductWish = Backbone.Collection.extend({
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'wish'
-        }),
+        model: ProductItemBase,
+        url: function (options) {
+            return APP.getApiLink(_.extend({
+                source: 'shop',
+                fn: 'wish'}, options));
+        },
         initialize: function () {
-            var self = this;
             listProductWish = this;
-            Sandbox.eventSubscribe('plugin:shop:wishlist:add', function (data) {
-                // debugger;
-                // if (data && data.id)
-                //     _self.productAdd(data.id);
-                if (data && data.id)
-                    self.create({
-                        productID: data.id
+
+            _.bindAll(this, 'removeProductByID', 'addNew', 'removeAll');
+
+            Sandbox.eventSubscribe('plugin:shop:wishlist:add', this.addNew);
+            Sandbox.eventSubscribe('plugin:shop:wishlist:remove', this.removeProductByID);
+            Sandbox.eventSubscribe('plugin:shop:wishlist:clear', this.removeAll);
+
+        },
+        removeProductByID:  function (data) {
+            var self = this;
+            if (data && data.id) {
+                var model = this.get(data.id);
+                if (model) {
+                    model.destroy({
+                        url: this.url({productID: data.id}),
+                        success: function (collection, data) {
+                            self.reset(self.parse(data));
+                        }
                     });
+                }
+            }
+        },
+        addNew: function (data) {
+            var self = this;
+            if (data && data.id && !this.get(data.id)) {
+                this.create({productID: data.id}, {
+                    success: function (model, data) {
+                        self.reset(self.parse(data));
+                    }
+                });
+            }
+        },
+        removeAll: function () {
+            var self = this;
+            this.sync("delete", this, {
+                url: this.url({productID: "*"}),
+                success: function (collection, data) {
+                    self.reset(self.parse(data));
+                }
             });
-            Sandbox.eventSubscribe('plugin:shop:wishlist:remove', function (data) {
-                debugger;
-                // if (data && data.id)
-                //     _self.productRemove(data.id);
-            });
-            Sandbox.eventSubscribe('plugin:shop:wishlist:clear', function () {
-                debugger;
-                // _self.clearAll();
-
-            });
-            this.on('sync', function(data){
-                debugger;
-
-                this.parse(data);
-            }, this);
         },
         parse: function (data) {
-            debugger;
+            // debugger;
             var products = ShopUtils.adjustProductItems(data && data.items);
             return _(products).map(function(item){ return item; });
         }

@@ -2,6 +2,11 @@
 
 class pluginShop extends objectPlugin {
 
+    private $_listKey_Wish = 'shop:wishList';
+    private $_listKey_Recent = 'shop:listRecent';
+    private $_listKey_Compare = 'shop:listCompare';
+    private $_listKey_Cart = 'shop:cart';
+
     // product standalone item (short or full)
     // -----------------------------------------------
     private function _getProductByID ($productID, $saveIntoRecent = false) {
@@ -26,11 +31,17 @@ class pluginShop extends objectPlugin {
         $product['Prices'] = $product['Prices']['PriceArchive'];
         $product['Attributes'] = $product['Attributes']['ProductAttributes'];
 
+        // Utils
+        $product['ViewExtras'] = array();
+        $product['ViewExtras']['InWish'] = $this->__productIsInWishList($productID);
+        $product['ViewExtras']['InCompare'] = $this->__productIsInCompareList($productID);
+        $product['ViewExtras']['InCartCount'] = $this->__productCountInCart($productID);
+
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
-            $recentProducts = isset($_SESSION['shop:recentProducts']) ? $_SESSION['shop:recentProducts'] : array();
+            $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[$productID] = $product;
-            $_SESSION['shop:recentProducts'] = $recentProducts;
+            $_SESSION[$this->_listKey_Recent] = $recentProducts;
         }
         return $product;
     }
@@ -64,7 +75,7 @@ class pluginShop extends objectPlugin {
         // get expired orders
         $config = configurationShopDataSource::jsapiShopProductListLatest();
         $productIDs = $this->getCustomer()->fetch($config);
-        $data = array($productIDs);
+        $data = array();
         if (!empty($productIDs))
             foreach ($productIDs as $val)
                 $data[] = $this->_getProductByID($val['ID']);
@@ -538,29 +549,59 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_wish (&$resp) {
-        $key = 'shop:wishList';
-        $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+        $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
     }
 
     public function post_shop_wish (&$resp, $req) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
         if (isset($req['productID'])) {
-            $key = 'shop:wishList';
-            $product = $this->_getProductByID($req['productID']);
-            $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
-            $resp['items'][$req['productID']] = $product;
-            $_SESSION[$key] = $resp['items'];
+            $productID = $req['productID'];
+            if (!isset($resp['items'][$productID])) {
+                $product = $this->_getProductByID($productID);
+                $resp['items'][$productID] = $product;
+                $_SESSION[$this->_listKey_Wish] = $resp['items'];
+            }
         }
     }
 
-    public function get_shop_compare (&$resp, $req) {
-        $key = 'shop:compare';
-        $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+    public function delete_shop_wish (&$resp, $req) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
+        if (isset($req['productID'])) {
+            $productID = $req['productID'];
+            if ($productID === "*") {
+                $resp['items'] = array();
+            } elseif (isset($resp['items'][$productID])) {
+                unset($resp['items'][$productID]);
+            }
+            $_SESSION[$this->_listKey_Wish] = $resp['items'];
+        }
+    }
+
+    private function __productIsInWishList ($id) {
+        $list = array();
+        $this->get_shop_wish($list);
+        return isset($list['items'][$id]);
+    }
+
+    public function get_shop_compare (&$resp) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         $resp['limit'] = 10;
     }
 
-    public function get_shop_cart (&$resp, $req) {
-        $key = 'shop:cart';
-        $resp['items'] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
+    private function __productIsInCompareList ($id) {
+        $list = array();
+        $this->get_shop_compare($list);
+        return isset($list['items'][$id]);
+    }
+
+    public function get_shop_cart (&$resp) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+    }
+
+    private function __productCountInCart ($id) {
+        $list = array();
+        $this->get_shop_cart($list);
+        return isset($list['items'][$id]) ? $list['items'][$id]['count'] : 0;
     }
 
 
@@ -574,27 +615,6 @@ class pluginShop extends objectPlugin {
         $data = new libraryDataObject();
 
         switch(libraryRequest::fromGET('fn')) {
-            // products list sorted by category
-            // -----------------------------------------------
-            case "shop_catalog": {
-                $data = $this->_api_getCatalog();
-                break;
-            }
-            // -----------------------------------------------
-            // shopping cart
-            // -----------------------------------------------
-            case "shop_wishlist" : {
-                $data = $this->_api_getWishList();
-                break;
-            }
-            case "shop_cart" : {
-                $data = $this->_api_getShoppingCart();
-                break;
-            }
-            case "shop_compare" : {
-                $data = $this->_api_getCompareList();
-                break;
-            }
             case "shop_profile_orders": {
                 $profileID = libraryRequest::fromGET('profileID');
                 $data = $this->_api_getOrderList_ForProfile($profileID);
@@ -713,34 +733,29 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    /* PLUGIN API METHODS */
-    // shopping wishlist
-    // -----------------------------------------------
-    private function _api_getWishList () {
-        return $this->_custom_util_manageStoredProducts('shopWishList');
-    }
+
 
     // shopping products compare
     // -----------------------------------------------
-    private function _api_getCompareList () {
-        $do = libraryRequest::fromGET('action');
-        $productID = libraryRequest::fromGET('productID');
-        $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
+    // private function _api_getCompareList () {
+    //     $do = libraryRequest::fromGET('action');
+    //     $productID = libraryRequest::fromGET('productID');
+    //     $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
 
-        $products = $dataObj->getData();
+    //     $products = $dataObj->getData();
 
-        if ($do == 'ADD' && count($products['products']) > 10) {
-            unset($products['products'][$productID]);
-            $dataObj->setError("MaxProductsAdded");
-            $dataObj->setData('products', $products);
-        }
+    //     if ($do == 'ADD' && count($products['products']) > 10) {
+    //         unset($products['products'][$productID]);
+    //         $dataObj->setError("MaxProductsAdded");
+    //         $dataObj->setData('products', $products);
+    //     }
 
-        return $dataObj;
-    }
+    //     return $dataObj;
+    // }
 
     // shopping cart
     // -----------------------------------------------
-    private function _api_getShoppingCart () {
+    private function www_api_getShoppingCart () {
 
         $sessionKey = 'shopCartProducts';
         $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
@@ -930,13 +945,13 @@ class pluginShop extends objectPlugin {
 
     // orders
     // -----------------------------------------------
-    private function _api_addOrder () {
+    private function www_api_addOrder () {
 
     }
 
     // profile orders
     // -----------------------------------------------
-    private function _api_getOrderList_ForProfile ($profileID) {
+    private function www_api_getOrderList_ForProfile ($profileID) {
 
         $dataObj = new libraryDataObject();
 
@@ -979,12 +994,12 @@ class pluginShop extends objectPlugin {
 
     // toolbox orders
     // -----------------------------------------------
-    private function _api_getOrderStatusList () {
+    private function www_api_getOrderStatusList () {
         return array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
     }
 
 
-    private function _api_getOrderList () {
+    private function www_api_getOrderList () {
         // in toolbox methods we must check it's permission
         // offset
         // limit
@@ -1046,7 +1061,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_updateOrder ($orderID) {
+    private function www_api_updateOrder ($orderID) {
         $dataObj = new libraryDataObject();
 
         if (!$this->getCustomer()->isAdminActive()) {
@@ -1077,13 +1092,13 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_getOriginStates () {
+    private function www_api_getOriginStates () {
         $dataObj = new libraryDataObject();
         $dataObj->setData('statuses', $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins));
         return $dataObj;
     }
 
-    private function _api_getOrigin ($originID) {
+    private function www_api_getOrigin ($originID) {
         $dataObj = new libraryDataObject();
         if (!empty($originID)) {
             $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
@@ -1093,7 +1108,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_getOriginList () {
+    private function www_api_getOriginList () {
         $dataObj = new libraryDataObject();
 
         $configOrigins = configurationShopDataSource::jsapiShopOriginListGet();
@@ -1136,7 +1151,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_createOrigin () {
+    private function www_api_createOrigin () {
         $dataObj = new libraryDataObject();
         $dataOrigin = libraryRequest::getObjectFromREQUEST("Name", "Description", "Status", "HomePage");
         $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
@@ -1153,7 +1168,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _api_updateOrigin ($originID) {
+    private function www_api_updateOrigin ($originID) {
         $dataObj = new libraryDataObject();
 
         $dataOrigin = array();
@@ -1179,7 +1194,7 @@ class pluginShop extends objectPlugin {
         return $dataObj;
     }
 
-    private function _custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {
+    private function www_custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {
         $dataObj = new libraryDataObject();
         $productID = libraryRequest::fromGET('productID');
         $do = empty($action) ? libraryRequest::fromGET('action') : $action;

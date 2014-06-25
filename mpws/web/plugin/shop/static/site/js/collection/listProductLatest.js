@@ -1,10 +1,12 @@
 define('plugin/shop/site/js/collection/listProductLatest', [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'plugin/shop/site/js/model/productItemBase',
     'plugin/shop/common/js/lib/utils'
-], function (_, Backbone, ShopUtils) {
+], function (_, Backbone, ProductItemBase, ShopUtils) {
 
     var ListProductLatest = Backbone.Collection.extend({
+        model: ProductItemBase,
         url: APP.getApiLink({
             source: 'shop',
             fn: 'products',

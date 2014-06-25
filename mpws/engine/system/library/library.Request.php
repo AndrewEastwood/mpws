@@ -7,6 +7,15 @@ class libraryRequest {
         return basename($name, '.js');
     }
 
+    static function getRequestData () {
+        if (self::isGET() || self::isDELETE()) // DLETE uses GET var
+            return $_GET;
+        if (self::isPOST() || self::isPUT() || self::isPATCH()) {
+            $_PUT = json_decode(file_get_contents('php://input'), true);
+            return $_PUT;
+        }
+    }
+
     /* get values */
     static function fromGET($key, $defaultValue = null) {
         if (isset($_GET[$key]))
@@ -23,14 +32,14 @@ class libraryRequest {
 
     /* get post/put value */
     static function fromREQUEST($key, $defaultValue = null) {
-        global $_REQ;
+        $_REQ = self::getRequestData();
         if (isset($_REQ[$key]))
             return $_REQ[$key];
         return $defaultValue;
     }
 
     static function hasInREQUEST($key) {
-        global $_REQ;
+        $_REQ = self::getRequestData();
         for ($i = 0, $num = func_num_args(); $i < $num; $i++)
             if (!isset($_REQ[func_get_arg($i)]))
                 return false;
@@ -58,7 +67,7 @@ class libraryRequest {
     }
 
     static function processRequest ($context) {
-        global $_REQ;
+        $_REQ = self::getRequestData();
 
         $requestFnElements = array(strtolower($_SERVER['REQUEST_METHOD']));
 
@@ -70,12 +79,8 @@ class libraryRequest {
 
         $fn = join("_", $requestFnElements);
         // echo $fn;
-        if (!empty($context) && method_exists($context, $fn)) {
-            if (self::isGET())
-                $context->$fn(libraryResponse::$_RESPONSE, $_GET);
-            else
-                $context->$fn(libraryResponse::$_RESPONSE, $_REQ);
-        }
+        if (!empty($context) && method_exists($context, $fn))
+            $context->$fn(libraryResponse::$_RESPONSE, $_REQ);
     }
 
     /* state grabbers */

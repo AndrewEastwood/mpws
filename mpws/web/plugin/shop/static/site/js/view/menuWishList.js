@@ -11,22 +11,16 @@ define("plugin/shop/site/js/view/menuWishList", [
         template: tpl,
         collection: wishCollectionInstance,
         initialize: function () {
-            // var _self = this;
-            // Sandbox.eventSubscribe('plugin:shop:wishlist:info', function (data) {
-            // });
-            // wishCollectionInstance.getInfo();
-            this.listenTo(wishCollectionInstance, 'reset', this.updateCounter);
-            this.listenTo(wishCollectionInstance, 'sync', this.updateCounter);
+            this.listenTo(wishCollectionInstance, 'reset', this.render);
+            this.listenTo(wishCollectionInstance, 'sync', this.render);
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            return this;
-        },
-        updateCounter: function() {
             if (wishCollectionInstance.length)
                 this.$('.counter').text(wishCollectionInstance.length);
             else
                 this.$('.counter').empty();
+            return this;
         }
     });
 

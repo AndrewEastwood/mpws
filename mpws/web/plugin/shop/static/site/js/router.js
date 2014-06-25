@@ -60,7 +60,7 @@ define("plugin/shop/site/js/router", [
                 var listProductLatest = new ListProductLatest();
                 // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
                 // debugger;
-                listProductLatest.collection.fetch();
+                listProductLatest.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
@@ -157,10 +157,7 @@ define("plugin/shop/site/js/router", [
                     var productsCompare = new ProductsCompare();
                     // Site.placeholders.shop.productCompare.html(productsCompare.$el);
                     // debugger;
-                    productsCompare.fetchAndRender({
-                        action: "INFO"
-                    });
-
+                    productsCompare.render();
                     Sandbox.eventNotify('global:content:render', {
                         name: 'CommonBodyCenter',
                         el: productsCompare.el
@@ -192,7 +189,7 @@ define("plugin/shop/site/js/router", [
                         action: "INFO"
                     });
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopCartStandalone',
+                        name: 'CommonBodyCenter',
                         el: cartStandalone.el
                     });
 
@@ -211,25 +208,23 @@ define("plugin/shop/site/js/router", [
             });
 
             require(['plugin/shop/site/js/view/wishListStandalone'], function (WishListStandalone) {
-                Cache.withObject('WishListStandalone', function (cachedView) {
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                // Cache.withObject('WishListStandalone', function (cachedView) {
+                //     // remove previous view
+                //     if (cachedView && cachedView.remove)
+                //         cachedView.remove();
 
                     // create new view
                     var wishListStandalone = new WishListStandalone();
                     // Site.placeholders.shop.shoppingWishListStandalone.html(wishListStandalone.$el);
-                    wishListStandalone.fetchAndRender({
-                        action: "INFO"
-                    });
+                    wishListStandalone.render();
                     Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopWishList',
+                        name: 'CommonBodyCenter',
                         el: wishListStandalone.el
                     });
 
                     // return view object to pass it into this function at next invocation
-                    return wishListStandalone;
-                });
+                    // return wishListStandalone;
+                // });
             });
         },
 

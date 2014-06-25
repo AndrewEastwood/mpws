@@ -12,7 +12,7 @@ define("plugin/shop/site/js/view/wishListStandalone", [
         collection: wishCollectionInstance,
         className: 'row shop-wishlist-standalone',
         id: 'shop-cart-wishlist-ID',
-        template: tpl,,
+        template: tpl,
         initialize: function () {
             this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.collection, 'sync', this.render);

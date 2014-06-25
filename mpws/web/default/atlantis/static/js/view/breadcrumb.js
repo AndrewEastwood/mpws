@@ -12,8 +12,8 @@ define("default/js/view/breadcrumb", [
 
     var Breadcrumb = Backbone.View.extend({
         model: new ModelBreadcrumb(),
-        initialize: function () {
-            this.template = this.options.template;
+        initialize: function (options) {
+            this.template = options.template;
         },
         render: function () {
             var self = this;
