@@ -1,7 +1,19 @@
-define("default/js/lib/bootstrap-alert", [
-    'cmn_jquery',
-    'default/js/lib/underscore'
-], function ($, _) {
+(function (factory) {
+    "use strict";
+    if (typeof define === 'function' && define.amd) {
+        define("default/js/lib/bootstrap-alert", ['cmn_jquery', 'default/js/lib/underscore'], factory);
+    }
+    else if(typeof exports === 'object') {
+        factory(require('cmn_jquery'), require('default/js/lib/underscore'));
+    }
+    else {
+        factory(jQuery, _);
+    }
+}(function ($, _) {
+    "use strict";
+
+    var _maxVisibleAlerts = 3;
+    var _alertDisplayDelay = 3000;
 
     function Alerts () {}
 
@@ -42,9 +54,9 @@ define("default/js/lib/bootstrap-alert", [
 
         setTimeout(function () {
             _closeAlert.call(_msg);
-        }, 3000);
+        }, _alertDisplayDelay);
 
-        if (_msgStack.length > 3)
+        if (_msgStack.length > _maxVisibleAlerts)
             _closeAlert(_msgStack.pop());
 
         _msg.close = function () {
@@ -59,11 +71,10 @@ define("default/js/lib/bootstrap-alert", [
             $(itemToRremove).remove();
             return;
         }
-
         $(this).remove();
         _msgStack.splice(_(_msgStack).indexOf($(this)), 1);
     }
 
     return Alerts;
 
-});
+}));

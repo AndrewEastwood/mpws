@@ -624,6 +624,31 @@ class pluginShop extends objectPlugin {
         $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
     }
 
+
+    public function post_shop_cart (&$resp, $req) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+        if (isset($req['productID'])) {
+            $productID = $req['productID'];
+            if (!isset($resp['items'][$productID])) {
+                $product = $this->_getProductByID($productID);
+                $resp['items'][$productID] = $product;
+                $_SESSION[$this->_listKey_Cart] = $resp['items'];
+            }
+        }
+    }
+
+    public function delete_shop_cart (&$resp, $req) {
+        $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+        if (isset($req['productID'])) {
+            $productID = $req['productID'];
+            if ($productID === "*") {
+                $resp['items'] = array();
+            } elseif (isset($resp['items'][$productID])) {
+                unset($resp['items'][$productID]);
+            }
+            $_SESSION[$this->_listKey_Cart] = $resp['items'];
+        }
+    }
     private function __productCountInCart ($id) {
         $list = array();
         $this->get_shop_cart($list);

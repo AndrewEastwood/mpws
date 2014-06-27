@@ -131,8 +131,6 @@ module.exports = function(grunt) {
 
     grunt.initConfig(_getBuildConfig());
 
-
-
     // grunt.initConfig({
     // });
 
@@ -147,4 +145,4 @@ module.exports = function(grunt) {
 
     // grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 
-};
+};;

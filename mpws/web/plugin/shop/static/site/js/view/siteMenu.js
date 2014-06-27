@@ -13,7 +13,7 @@ define("plugin/shop/site/js/view/siteMenu", [
 
     // inject shop menu (category menu)
     var menuCart = new MenuCart();
-    // menuCart.model.fetch();
+    menuCart.collection.fetch();
 
     // inject shop menu (category menu)
     var menuWishList = new MenuWishList();

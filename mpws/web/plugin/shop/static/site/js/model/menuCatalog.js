@@ -1,7 +1,6 @@
 define("plugin/shop/site/js/model/menuCatalog", [
-    'default/js/lib/backbone',
-    'default/js/lib/utils'
-], function (Backbone, Utils) {
+    'default/js/lib/backbone'
+], function (Backbone) {
 
     var CatalogStructure = Backbone.Model.extend({
         url: function () {
@@ -12,7 +11,7 @@ define("plugin/shop/site/js/model/menuCatalog", [
             })
         },
         parse: function (data) {
-            return data['tree'];
+            return data.tree;
         }
     });
 

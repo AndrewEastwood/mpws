@@ -25,7 +25,7 @@
     <div class="well">
         <div class="actions">
             <a href="javascript://" data-action="plugin:shop:list_wish:clear" data-id="*">
-                <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+                <i class="fa fa-trash-o"></i> {{lang.list_wish_link_clear}}
             </a>
         </div>
     </div>
@@ -35,11 +35,11 @@
     <div class="well">
         <div class="actions">
             <a href="javascript://" data-action="plugin:shop:list_wish:clear" data-id="*">
-                <i class="fa fa-trash-o"></i> Видалити всі товари з списку
+                <i class="fa fa-trash-o"></i> {{lang.list_wish_link_clear}}
             </a>
         </div>
     </div>
     {{else}}
-    <div class="alert alert-warning">Ваш список товарів порожній</div>
+    <div class="alert alert-warning">{{lang.list_wish_empty}}</div>
     {{/mpwsIsNotEmpty}}
 </div>

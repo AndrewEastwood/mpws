@@ -4,8 +4,10 @@ define('plugin/shop/site/js/collection/listProductCompare', [
     'default/js/lib/backbone',
     'plugin/shop/site/js/model/product',
     'plugin/shop/common/js/lib/utils',
-    'default/js/lib/bootstrap-alert'
-], function (Sandbox, _, Backbone, ModelProduct, ShopUtils, BSAlert) {
+    'default/js/lib/bootstrap-alert',
+    /* lang */
+    'default/js/plugin/i18n!plugin/shop/site/nls/translation',
+], function (Sandbox, _, Backbone, ModelProduct, ShopUtils, BSAlert, lang) {
 
     var ListProductCompare = Backbone.Collection.extend({
         model: ModelProduct,
@@ -31,7 +33,7 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                         success: function (collection, resp) {
                             self.reset(self.parse(resp));
                             Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
-                            BSAlert.info('Removed');
+                            BSAlert.warning(lang.list_wish_alert_remove);
                         }
                     });
                 }
@@ -45,7 +47,7 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                     success: function (model, resp) {
                         self.reset(self.parse(resp));
                         Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
-                        BSAlert.info('Added');
+                        BSAlert.success(lang.list_compare_alert_add);
                     }
                 });
             }
@@ -57,7 +59,7 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                 success: function (collection, resp) {
                     self.reset(self.parse(resp));
                     Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
-                    BSAlert.info('Cleared all');
+                    BSAlert.danger(lang.list_wish_alert_clear);
                 }
             });
         },

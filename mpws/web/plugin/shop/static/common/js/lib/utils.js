@@ -21,6 +21,7 @@ define("plugin/shop/common/js/lib/utils", [
         product.ID = parseInt(product.ID, 10);
 
         product.Attributes = product.Attributes || {};
+        product.Features = product.Features || {};
 
         // get product attributes
         var _attr = product.Attributes;

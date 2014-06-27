@@ -1,7 +1,8 @@
 define('plugin/shop/site/js/model/product', [
     'default/js/lib/backbone',
+    'default/js/lib/underscore',
     'plugin/shop/common/js/lib/utils'
-], function (Backbone, ShopUtils) {
+], function (Backbone, _, ShopUtils) {
 
     // debugger;
     return Backbone.Model.extend({
@@ -17,6 +18,26 @@ define('plugin/shop/site/js/model/product', [
         },
         parse: function (data) {
             return ShopUtils.adjustProductItem(data);
+        },
+        // getFeatureKeys: function () {
+        //     return _(this.get('Features')).keys();
+        // },
+        getFeatures: function (compatibilityList) {
+            var _features = this.get('Features');
+            var k = null;
+            // debugger;
+            if (compatibilityList instanceof Backbone.Collection) {
+                compatibilityList.each(function(model){
+                    var f = model.getFeatures();
+                    for (k in f)
+                        if (!_features[k])
+                            _features[k] = null;
+                })
+            } else if (_.isObject(compatibilityList))
+                for (k in compatibilityList)
+                    if (!_features[k])
+                        _features[k] = null;
+            return _features;
         }
     });
 

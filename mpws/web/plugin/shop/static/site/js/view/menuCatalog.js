@@ -9,10 +9,10 @@ define("plugin/shop/site/js/view/menuCatalog", [
         tagName: 'li',
         className: 'dropdown shop-dropdown-catalog',
         id: 'shop-dropdown-catalog-ID',
-        model: new modelCatalogStructureMenu(),
         template: tpl,
+        model: new modelCatalogStructureMenu(),
         initialize: function () {
-            this.listenTo(this.model, 'change', this.render);
+            this.model.on('change', this.render, this);
         },
         render: function() {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
