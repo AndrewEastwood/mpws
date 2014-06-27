@@ -64,7 +64,9 @@ define('plugin/shop/site/js/collection/listProductCart', [
             });
         },
         parse: function (data) {
+            // var self = this;
             // debugger;
+            this.info = data.info;
             return _(data.items).map(function(item){ return item; });
         }
     });

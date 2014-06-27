@@ -148,9 +148,9 @@ class pluginShop extends objectPlugin {
             if (!empty($boughts))
                 foreach ($boughts as $bkey => $soldItem) {
                     $product = $this->_getProductByID($soldItem['ProductID']);
-                    $product["Total"] = $product['Price'] * $product['Quantity'];
+                    $product["Total"] = $product['Price'] * $soldItem['Quantity'];
                     $dataOrder['info']["subTotal"] += $product['Total'];
-                    $dataOrder['info']["productCount"] += $product['Quantity'];
+                    $dataOrder['info']["productCount"] += $soldItem['Quantity'];
                     $boughts[$bkey]['product'] = $product;
                 }
             // update money formats

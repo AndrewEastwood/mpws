@@ -42,5 +42,8 @@ define("plugin/shop/site/nls/ua_uk/translation", [
         llist_cart_alert_add: "Товар доданий в список порівнянь",
         llist_cart_alert_remove: "Товар видалений з списоку порівнянь",
         llist_cart_alert_clear: "Список порівнянь очищено",
+        order_trackingPage_label_hash: "Отримати статус",
+        order_trackingPage_button_get: "Отримати статус",
+        order_trackingPage_wrongHash: "Невірно вказаний трекнг-код замовлення",
     }, CustomerPluginShop);
 });

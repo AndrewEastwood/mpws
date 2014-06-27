@@ -167,24 +167,12 @@ define("plugin/shop/site/js/router", [
             });
 
             require(['plugin/shop/site/js/view/cartStandalone'], function (CartStandalone) {
-                Cache.withObject('CartStandalone', function (cachedView) {
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
-
-                    // create new view
-                    var cartStandalone = new CartStandalone();
-                    // Site.placeholders.shop.shoppingCartStandalone.html(cartStandalone.$el);
-                    cartStandalone.fetchAndRender({
-                        action: "INFO"
-                    });
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: cartStandalone.el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    return cartStandalone;
+                // create new view
+                var cartStandalone = new CartStandalone();
+                cartStandalone.render();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: cartStandalone.el
                 });
             });
         },
@@ -217,30 +205,12 @@ define("plugin/shop/site/js/router", [
             });
 
             require(['plugin/shop/site/js/view/trackingStatus'], function (TrackingStatus) {
-                Cache.withObject('TrackingStatus', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
-
-                    // create new view
-                    var trackingStatus = new TrackingStatus();
-                    
-                    
-                    // Site.placeholders.shop.ordertrackingStandalone.html(trackingStatus.$el);
-                    if (orderHash)
-                        trackingStatus.fetchAndRender({
-                            orderHash: orderHash
-                        });
-                    else
-                        trackingStatus.fetchAndRender();
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopOrdertrackingStandalone',
-                        el: trackingStatus.el
-                    });
-                    // return view object to pass it into this function at next invocation
-                    return trackingStatus;
+                // create new view
+                var trackingStatus = new TrackingStatus();
+                trackingStatus.setOrderHash(orderHash);
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: trackingStatus.el
                 });
             });
         },

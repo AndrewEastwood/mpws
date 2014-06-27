@@ -1,19 +1,25 @@
 define("plugin/shop/site/js/view/cartEmbedded", [
     'default/js/lib/underscore',
-    'default/js/view/mView',
-    'plugin/shop/site/js/model/cart',
-    'default/js/plugin/hbs!plugin/shop/site/hbs/cartEmbedded'
-], function (_, MView, ModelCartInstance, tpl) {
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
+    'plugin/shop/site/js/collection/listProductCart',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/cartEmbedded',
+    /* lang */
+    'default/js/plugin/i18n!plugin/shop/site/nls/translation'
+], function (_, Backbone, Utils, cartCollectionInstance, tpl, lang) {
 
-    var CartEmbedded = MView.extend({
-        // tagName: 'div',
-        model: ModelCartInstance,
+    var CartEmbedded = Backbone.View.extend({
+        collection: cartCollectionInstance,
         className: 'btn-group shop-cart-embedded',
         id: 'shop-cart-embedded-ID',
         template: tpl,
+        lang: lang,
         initialize: function() {
-            MView.prototype.initialize.call(this);
-            this.listenTo(this.model, "change", this.render);
+            this.listenTo(this.collection, "reset", this.render);
+            this.listenTo(this.collection, "sync", this.render);
+        },
+        render: function () {
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
         }
     });
 

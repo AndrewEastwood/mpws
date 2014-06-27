@@ -3259,7 +3259,7 @@ the specific language governing permissions and limitations under the Apache Lic
 }(jQuery));
 
 // >>>> START MPWS PATHCH
-if (app.config.LOCALE === 'ua_uk') {
+if (APP.config.LOCALE === 'ua_uk') {
     require(['default/js/lib/select2/select2_locale_ua']);
 }
 // <<<< END MPWS PATHCH

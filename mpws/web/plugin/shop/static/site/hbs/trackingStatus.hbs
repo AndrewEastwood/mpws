@@ -3,219 +3,227 @@
 
         <div class="form-horizontal">
             <div class="form-group">
-                <label for="inputOrderTrackingID" class="col-sm-2 control-label">Код замовлення</label>
+                <label for="inputOrderTrackingID" class="col-sm-2 control-label">{{lang.order_trackingPage_label_hash}}</label>
                     <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputOrderTrackingID" value="{{data.orderStatus.Hash}}" placeholder="# код замовлення впишіть сюди">
+                    <input type="text" class="form-control" id="inputOrderTrackingID" value="{{data.Hash}}" placeholder="# код замовлення впишіть сюди">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" id="shopGetOrderStatusID" class="btn btn-success">Отримати статус</button>
+                    <button type="button" id="shopGetOrderStatusID" class="btn btn-success">{{lang.order_trackingPage_button_get}}</button>
                 </div>
             </div>
         </div>
 
-        {{#if_eq data.orderStatus.Status "SHOP_CLOSED" }}
-        <div class="well">
-            <h3>Вітаємо Вас з придбаним товаром! :)</h3>
-            <h5>Якщо у Вас виникли труднощі з придбаним товаром:
-                невідповідність отриманого товару з очікуваним, сервісне обслуговування або інформаційна підтримка
-                під час експлуатації придбаного товару, неодмінно звертайтесь до нас:
-            </h5>
-            <h5>Контактна інформація:</h5>
-            <ol>
-                <li>Гаряча лінія: </li>
-                <li>МТС: </li>
-                <li>Київстар: </li>
-                <li>Ел.пошта: </li>
-            </ol>
-        </div>
-        {{/if_eq}}
+        {{#unless data.ID }}
+            <div class="alert alert-warning">
+                {{lang.order_trackingPage_wrongHash}}
+                <i class="fa fa-frown-o"></i>
+            </div>
+        {{else}}
 
-        {{#if data.orderStatus.Hash }}
+            {{#if_eq data.Status "SHOP_CLOSED" }}
+            <div class="well">
+                <h3>Вітаємо Вас з придбаним товаром! :)</h3>
+                <h5>Якщо у Вас виникли труднощі з придбаним товаром:
+                    невідповідність отриманого товару з очікуваним, сервісне обслуговування або інформаційна підтримка
+                    під час експлуатації придбаного товару, неодмінно звертайтесь до нас:
+                </h5>
+                <h5>Контактна інформація:</h5>
+                <ol>
+                    <li>Гаряча лінія: </li>
+                    <li>МТС: </li>
+                    <li>Київстар: </li>
+                    <li>Ел.пошта: </li>
+                </ol>
+            </div>
+            {{/if_eq}}
 
-            <h4>Статус Вашого замовлення:</h4>
+            {{#if data.Hash }}
 
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <span class="prefix">Дата створення:</span>
-                    <span class="label label-success">{{data.orderStatus.DateCreated}}</span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">Дата останнього оновлення:</span>
-                    <span class="label label-success">{{data.orderStatus.DateUpdated}}</span>
-                </li>
-                {{#if data.orderStatus.Shipping }}
-                <li class="list-group-item">
-                    <span class="prefix">Перевізник:</span>
-                    <span class="label label-success">
-                        {{#if_eq data.orderStatus.Shipping "self" }}
-                            Самовивіз
-                        {{else}}
-                            {{data.orderStatus.Shipping}}
+                <h4>Статус Вашого замовлення:</h4>
+
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="prefix">Дата створення:</span>
+                        <span class="label label-success">{{data.DateCreated}}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Дата останнього оновлення:</span>
+                        <span class="label label-success">{{data.DateUpdated}}</span>
+                    </li>
+                    {{#if data.Shipping }}
+                    <li class="list-group-item">
+                        <span class="prefix">Перевізник:</span>
+                        <span class="label label-success">
+                            {{#if_eq data.Shipping "self" }}
+                                Самовивіз
+                            {{else}}
+                                {{data.Shipping}}
+                            {{/if_eq}}
+                        </span>
+                    </li>
+                    {{/if}}
+                    {{#and data.Shipping data.Warehouse }}
+                    <li class="list-group-item">
+                        <span class="prefix">Номер складу:</span>
+                        <span class="label label-success">{{data.Warehouse}}</span>
+                    </li>
+                    {{/and}}
+                    {{#if data.Comment }}
+                    <li class="list-group-item">
+                        <span class="prefix">Ваш коментар:</span>
+                        <span class="label label-success">{{data.Comment}}</span>
+                    </li>
+                    {{/if}}
+                    <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
+                    <li class="list-group-item"><a href="{{app.location.origin}}/#shop/tracking/{{data.Hash}}">{{app.location.origin}}/#shop/tracking/{{data.Hash}}</a></li>
+                </ul>
+
+                <div class="order-status">
+
+                    <div class="order-status-timeline">
+                        {{#if_eq data.Status "NEW" }}
+                        <div class="order-status-timeline-completion c0"></div>
                         {{/if_eq}}
-                    </span>
-                </li>
-                {{/if}}
-                {{#and data.orderStatus.Shipping data.orderStatus.Warehouse }}
-                <li class="list-group-item">
-                    <span class="prefix">Номер складу:</span>
-                    <span class="label label-success">{{data.orderStatus.Warehouse}}</span>
-                </li>
-                {{/and}}
-                {{#if data.orderStatus.Comment }}
-                <li class="list-group-item">
-                    <span class="prefix">Ваш коментар:</span>
-                    <span class="label label-success">{{data.orderStatus.Comment}}</span>
-                </li>
-                {{/if}}
-                <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
-                <li class="list-group-item"><a href="{{app.location.origin}}/#shop/tracking/{{data.orderStatus.Hash}}">{{app.location.origin}}/#shop/tracking/{{data.orderStatus.Hash}}</a></li>
-            </ul>
+                        {{#if_eq data.Status "ACTIVE" }}
+                        <div class="order-status-timeline-completion c1"></div>
+                        {{/if_eq}}
+                        {{#if_eq data.Status "LOGISTIC_DELIVERING" }}
+                        <div class="order-status-timeline-completion c2"></div>
+                        {{/if_eq}}
+                        {{#if_eq data.Status "LOGISTIC_DELIVERED" }}
+                        <div class="order-status-timeline-completion c3"></div>
+                        {{/if_eq}}
+                        {{#if_eq data.Status "SHOP_CLOSED" }}
+                        <div class="order-status-timeline-completion c4"></div>
+                        {{/if_eq}}
+                    </div>
 
-            <div class="order-status">
+                    {{#if_eq data.Status "NEW" }}
+                        <div class="image-order-status image-order-status-new active img-circle">
+                            <span class="status">Прийняте</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-active disabled img-circle">
+                            <span class="status">В процеси виконання</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-intransit disabled img-circle">
+                            <span class="status">Відправлено</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-delivered disabled img-circle">
+                            <span class="status">Вантаж прибув</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-completed disabled img-circle">
+                            <span class="status">Виконано</span>
+                            <div class="icon"></div>
+                        </div>
+                    {{/if_eq}}
 
-                <div class="order-status-timeline">
-                    {{#if_eq data.orderStatus.Status "NEW" }}
-                    <div class="order-status-timeline-completion c0"></div>
+
+                    {{#if_eq data.Status "ACTIVE" }}
+                        <div class="image-order-status image-order-status-new active img-circle">
+                            <span class="status">Прийняте</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-active active img-circle">
+                            <span class="status">В процеси виконання</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-intransit disabled img-circle">
+                            <span class="status">Відправлено</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-delivered disabled img-circle">
+                            <span class="status">Вантаж прибув</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-completed disabled img-circle">
+                            <span class="status">Виконано</span>
+                            <div class="icon"></div>
+                        </div>
                     {{/if_eq}}
-                    {{#if_eq data.orderStatus.Status "ACTIVE" }}
-                    <div class="order-status-timeline-completion c1"></div>
+
+
+                    {{#if_eq data.Status "LOGISTIC_DELIVERING" }}
+                        <div class="image-order-status image-order-status-new active img-circle">
+                            <span class="status">Прийняте</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-active active img-circle">
+                            <span class="status">В процеси виконання</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-intransit active img-circle">
+                            <span class="status">Відправлено</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-delivered disabled img-circle">
+                            <span class="status">Вантаж прибув</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-completed disabled img-circle">
+                            <span class="status">Виконано</span>
+                            <div class="icon"></div>
+                        </div>
                     {{/if_eq}}
-                    {{#if_eq data.orderStatus.Status "LOGISTIC_DELIVERING" }}
-                    <div class="order-status-timeline-completion c2"></div>
+
+
+                    {{#if_eq data.Status "LOGISTIC_DELIVERED" }}
+                        <div class="image-order-status image-order-status-new active img-circle">
+                            <span class="status">Прийняте</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-active active img-circle">
+                            <span class="status">В процеси виконання</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-intransit active img-circle">
+                            <span class="status">Відправлено</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-delivered active img-circle">
+                            <span class="status">Вантаж прибув</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-completed disabled img-circle">
+                            <span class="status">Виконано</span>
+                            <div class="icon"></div>
+                        </div>
                     {{/if_eq}}
-                    {{#if_eq data.orderStatus.Status "LOGISTIC_DELIVERED" }}
-                    <div class="order-status-timeline-completion c3"></div>
+
+
+                    {{#if_eq data.Status "SHOP_CLOSED" }}
+                        <div class="image-order-status image-order-status-new active img-circle">
+                            <span class="status">Прийняте</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-active active img-circle">
+                            <span class="status">В процеси виконання</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-intransit active img-circle">
+                            <span class="status">Відправлено</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-delivered active img-circle">
+                            <span class="status">Вантаж прибув</span>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="image-order-status image-order-status-completed active img-circle">
+                            <span class="status">Виконано</span>
+                            <div class="icon"></div>
+                        </div>
                     {{/if_eq}}
-                    {{#if_eq data.orderStatus.Status "SHOP_CLOSED" }}
-                    <div class="order-status-timeline-completion c4"></div>
-                    {{/if_eq}}
+
                 </div>
 
-                {{#if_eq data.orderStatus.Status "NEW" }}
-                    <div class="image-order-status image-order-status-new active img-circle">
-                        <span class="status">Прийняте</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-active disabled img-circle">
-                        <span class="status">В процеси виконання</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-intransit disabled img-circle">
-                        <span class="status">Відправлено</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-delivered disabled img-circle">
-                        <span class="status">Вантаж прибув</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-completed disabled img-circle">
-                        <span class="status">Виконано</span>
-                        <div class="icon"></div>
-                    </div>
-                {{/if_eq}}
+            {{/if}}
 
-
-                {{#if_eq data.orderStatus.Status "ACTIVE" }}
-                    <div class="image-order-status image-order-status-new active img-circle">
-                        <span class="status">Прийняте</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-active active img-circle">
-                        <span class="status">В процеси виконання</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-intransit disabled img-circle">
-                        <span class="status">Відправлено</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-delivered disabled img-circle">
-                        <span class="status">Вантаж прибув</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-completed disabled img-circle">
-                        <span class="status">Виконано</span>
-                        <div class="icon"></div>
-                    </div>
-                {{/if_eq}}
-
-
-                {{#if_eq data.orderStatus.Status "LOGISTIC_DELIVERING" }}
-                    <div class="image-order-status image-order-status-new active img-circle">
-                        <span class="status">Прийняте</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-active active img-circle">
-                        <span class="status">В процеси виконання</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-intransit active img-circle">
-                        <span class="status">Відправлено</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-delivered disabled img-circle">
-                        <span class="status">Вантаж прибув</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-completed disabled img-circle">
-                        <span class="status">Виконано</span>
-                        <div class="icon"></div>
-                    </div>
-                {{/if_eq}}
-
-
-                {{#if_eq data.orderStatus.Status "LOGISTIC_DELIVERED" }}
-                    <div class="image-order-status image-order-status-new active img-circle">
-                        <span class="status">Прийняте</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-active active img-circle">
-                        <span class="status">В процеси виконання</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-intransit active img-circle">
-                        <span class="status">Відправлено</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-delivered active img-circle">
-                        <span class="status">Вантаж прибув</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-completed disabled img-circle">
-                        <span class="status">Виконано</span>
-                        <div class="icon"></div>
-                    </div>
-                {{/if_eq}}
-
-
-                {{#if_eq data.orderStatus.Status "SHOP_CLOSED" }}
-                    <div class="image-order-status image-order-status-new active img-circle">
-                        <span class="status">Прийняте</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-active active img-circle">
-                        <span class="status">В процеси виконання</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-intransit active img-circle">
-                        <span class="status">Відправлено</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-delivered active img-circle">
-                        <span class="status">Вантаж прибув</span>
-                        <div class="icon"></div>
-                    </div>
-                    <div class="image-order-status image-order-status-completed active img-circle">
-                        <span class="status">Виконано</span>
-                        <div class="icon"></div>
-                    </div>
-                {{/if_eq}}
-
-            </div>
-
-        {{/if}}
-
+        {{/unless}}
     </div>
 </div>
 

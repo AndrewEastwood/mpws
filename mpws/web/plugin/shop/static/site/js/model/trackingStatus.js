@@ -1,13 +1,16 @@
 define('plugin/shop/site/js/model/trackingStatus', [
-    'default/js/model/mModel',
-], function (MModel) {
+    'default/js/lib/backbone',
+], function (Backbone) {
 
-    var Model = MModel.getNew();
-    var TrackingSystem = Model.extend({
-        source: 'shop',
-        fn: 'shop_order_status',
-        parse: function (data) {
-            return data && data.shop;
+    var TrackingSystem = Backbone.Model.extend({
+        idAttribute: "ID",
+        url: function () {
+            var _params =  {
+                source: 'shop',
+                fn: 'order',
+                hash: this.get('Hash')
+            };
+            return APP.getApiLink(_params);
         }
     });
 

@@ -19,9 +19,6 @@ define('plugin/shop/site/js/model/product', [
         parse: function (data) {
             return ShopUtils.adjustProductItem(data);
         },
-        // getFeatureKeys: function () {
-        //     return _(this.get('Features')).keys();
-        // },
         getFeatures: function (compatibilityList) {
             var _features = this.get('Features');
             var k = null;
