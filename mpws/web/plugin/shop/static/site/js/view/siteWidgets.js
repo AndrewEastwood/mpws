@@ -4,24 +4,23 @@ define("plugin/shop/site/js/view/siteWidgets", [
     'plugin/shop/site/js/view/orderTrackingButton'
 ], function (Sandbox, CartEmbedded, OrderTrackingButton) {
 
-    return;
     // inject tracking order
     var orderTrackingButton = new OrderTrackingButton();
-    orderTrackingButton.fetchAndRender();
+    orderTrackingButton.render();
 
     // inject embedded shopping cart
     var cartEmbedded = new CartEmbedded();
-    cartEmbedded.fetchAndRender();
+    cartEmbedded.render();
 
     Sandbox.eventSubscribe('global:loader:complete', function () {
         Sandbox.eventNotify('global:content:render', [
             {
-                name: 'ShopWidgetOrderStatusButton',
+                name: 'CommonWidgetsTop',
                 el: orderTrackingButton.$el,
                 append: true
             },
             {
-                name: 'ShopWidgetShoppingCartEmbedded',
+                name: 'CommonWidgetsTop',
                 el: cartEmbedded.$el,
                 append: true
             }

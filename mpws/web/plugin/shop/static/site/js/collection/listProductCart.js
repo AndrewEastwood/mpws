@@ -33,7 +33,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                         success: function (collection, resp) {
                             self.reset(self.parse(resp));
                             Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
-                            BSAlert.warning(lang.list_wish_alert_remove);
+                            BSAlert.warning(lang.list_cart_alert_remove);
                         }
                     });
                 }
@@ -59,7 +59,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                 success: function (collection, resp) {
                     self.reset(self.parse(resp));
                     Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
-                    BSAlert.danger(lang.list_wish_alert_clear);
+                    BSAlert.danger(lang.list_cart_alert_clear);
                 }
             });
         },

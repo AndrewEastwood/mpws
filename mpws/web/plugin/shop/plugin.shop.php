@@ -652,7 +652,7 @@ class pluginShop extends objectPlugin {
     private function __productCountInCart ($id) {
         $list = array();
         $this->get_shop_cart($list);
-        return isset($list['items'][$id]) ? $list['items'][$id]['count'] : 0;
+        return 0;//isset($list['items'][$id]) ? $list['items'][$id]['count'] : 0;
     }
 
 
