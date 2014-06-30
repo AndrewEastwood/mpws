@@ -40,6 +40,7 @@ define("plugin/shop/site/nls/ua_uk/translation", [
         list_cart_link_clear: "Видалити всі товари з кошику",
         list_cart_empty: "Ваш кошик порожній",
         list_cart_alert_add: "Товар доданий в кошик",
+        list_cart_alert_updated: "Товар в кошику оновлено",
         list_cart_alert_remove: "Товар видалений з кошику",
         list_cart_alert_clear: "Ваш кошик очищено",
         order_trackingPage_label_hash: "Код замовлення",

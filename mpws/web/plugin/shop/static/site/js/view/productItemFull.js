@@ -40,6 +40,12 @@ define("plugin/shop/site/js/view/productItemFull", [
                     drawNormalOnTop: true
                 });
             }
+            // shop pulse animation for cart button badge
+            // debugger;
+            if (this.model.hasChanged('ViewExtras') && this.model.previous('ViewExtras') && this.model.get('ViewExtras').InCartCount !== this.model.previous('ViewExtras').InCartCount)
+                this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
+                    $(this).removeClass("pulse").dequeue();
+                });
             return this;
         }
     });

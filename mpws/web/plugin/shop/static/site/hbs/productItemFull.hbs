@@ -81,9 +81,13 @@
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
                         {{#if data.ViewExtras.InCartCount }}
-                            <button class="btn btn-warning btn-xs btn-add-to-cart" data-action="plugin:shop:list_cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:list_cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-shopping-cart"></i> +1 в кошик
-                                <sub>(додано: {{data.ViewExtras.InCartCount}})</sub>
+                                {{#gt data.ViewExtras.InCartCount 99}}
+                                <sub class="badge wide animated">&gt;99</sub>
+                                {{else}}
+                                <sub class="badge animated">{{data.ViewExtras.InCartCount}}</sub>
+                                {{/gt}}
                             </button>
                         {{else}}
                             <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:list_cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
@@ -92,29 +96,20 @@
                         {{/if}}
                         {{#if data.ViewExtras.InWish }}
                             <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-heart"></i>
-                                <i class="fa fa-minus"></i>
-                                з списку
+                                <i class="fa fa-check-square-o"></i> мій список
                             </button>
                         {{else}}
                             <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-heart"></i>
-                                <i class="fa fa-plus"></i>
-                                в мій список
+                                <i class="fa fa-square-o"></i> мій список
                             </button>
                         {{/if}}
                         {{#if data.ViewExtras.InCompare }}
                             <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-files-o"></i>
-                                <i class="fa fa-minus"></i>
-                                з порівняння
+                                <i class="fa fa-check-square-o"></i> порівняння
                             </button>
                         {{else}}
                             <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-files-o"></i>
-                                <i class="fa fa-plus"></i>
-                                до порівняння
-
+                                <i class="fa fa-square-o"></i> порівняння
                             </button>
                         {{/if}}
                     </div>

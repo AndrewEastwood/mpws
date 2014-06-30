@@ -131,14 +131,7 @@ class pluginShop extends objectPlugin {
             $orderID = $dataOrder['ID'];
             $dataOrder['account'] = null;
             $dataOrder['address'] = null;
-            $dataOrder['boughts'] = null;
-            $dataOrder['info'] = array(
-                "subTotal" => 0.0,
-                "discount" => 0,
-                "total" => 0.0,
-                "productCount" => 0,
-                "productUniqueCount" => 0
-            );
+            $dataOrder['items'] = array();
             if ($this->getCustomer()->hasPlugin('account')) {
                 $dataOrder['address'] = $this->getCustomer()->getPlugin('account')->getAddress($dataOrder['AccountAddressesID']);
                 $dataOrder['account'] = $this->getCustomer()->getPlugin('account')->getAccountByID($dataOrder['AccountID']);
@@ -148,18 +141,31 @@ class pluginShop extends objectPlugin {
             if (!empty($boughts))
                 foreach ($boughts as $bkey => $soldItem) {
                     $product = $this->_getProductByID($soldItem['ProductID']);
-                    $product["Total"] = $product['Price'] * $soldItem['Quantity'];
-                    $dataOrder['info']["subTotal"] += $product['Total'];
-                    $dataOrder['info']["productCount"] += $soldItem['Quantity'];
-                    $boughts[$bkey]['product'] = $product;
+                    $product["Quantity"] = $soldItem['Quantity'];
+                    $product["Total"] = $product['Price'] * $product['Quantity'];
+                    $dataOrder['items'][$product['ID']] = $product;
                 }
-            // update money formats
-            $dataOrder['info']["subTotal"] = money_format('%.2n', $dataOrder['info']["subTotal"]);
-            $dataOrder['info']["discount"] = money_format('%.2n%%', $dataOrder['info']["discount"]);
-            $dataOrder['info']["total"] = money_format('%.2n', $dataOrder['info']["total"]);
-            $dataOrder['info']['productUniqueCount'] = count($boughts);
-            $dataOrder['boughts'] = $boughts;
+            $dataOrder['info'] = $this>___attachOrderInfo($dataOrder['items']);
         }
+    }
+    private function ___attachOrderInfo ($productItems) {
+        $info = array(
+            "subTotal" => 0.0,
+            "discount" => 0,
+            "total" => 0.0,
+            "productCount" => 0,
+            "productUniqueCount" => 0
+        );
+        foreach ($productItems as $product) {
+            $info["subTotal"] += $product['Total'];
+            $info["productCount"] += $product['Quantity'];
+        }
+        // update money formats
+        $info["subTotal"] = money_format('%.2n', $info["subTotal"]);
+        $info["discount"] = money_format('%.2n%%', $info["discount"]);
+        $info["total"] = money_format('%.2n', $info["total"]);
+        $info['productUniqueCount'] = count($productItems);
+        return $info;
     }
 
     private function _getOrders_Expired () {
@@ -622,37 +628,55 @@ class pluginShop extends objectPlugin {
 
     public function get_shop_cart (&$resp) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+        $resp['info'] = $this->___attachOrderInfo($resp['items']);
     }
 
 
     public function post_shop_cart (&$resp, $req) {
-        $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
         if (isset($req['productID'])) {
+            $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
             $productID = $req['productID'];
-            if (!isset($resp['items'][$productID])) {
+            $decrease = isset($req['decrease']);
+            $drop = isset($req['drop']);
+            if (!isset($items[$productID])) {
                 $product = $this->_getProductByID($productID);
-                $resp['items'][$productID] = $product;
-                $_SESSION[$this->_listKey_Cart] = $resp['items'];
+                $items[$productID] = $product;
+                $items[$productID]['Quantity'] = 1;
+            } else {
+                if ($decrease) {
+                    $items[$productID]['Quantity']--;
+                } else {
+                    $items[$productID]['Quantity']++;
+                }
+                if ($items[$productID]['Quantity'] <= 0 || $drop) {
+                    unset($items[$productID]);
+                }
             }
+            if (isset($items[$productID])) {
+                $items[$productID]["Total"] = $items[$productID]['Price'] * $items[$productID]['Quantity'];
+            }
+            $_SESSION[$this->_listKey_Cart] = $items;
         }
+        $this->get_shop_cart($resp);
     }
 
     public function delete_shop_cart (&$resp, $req) {
-        $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
         if (isset($req['productID'])) {
+            $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
             $productID = $req['productID'];
             if ($productID === "*") {
-                $resp['items'] = array();
-            } elseif (isset($resp['items'][$productID])) {
-                unset($resp['items'][$productID]);
+                $items = array();
+            } elseif (isset($items[$productID])) {
+                unset($items[$productID]);
             }
-            $_SESSION[$this->_listKey_Cart] = $resp['items'];
+            $_SESSION[$this->_listKey_Cart] = $items;
         }
+        $this->get_shop_cart($resp);
     }
     private function __productCountInCart ($id) {
         $list = array();
         $this->get_shop_cart($list);
-        return 0;//isset($list['items'][$id]) ? $list['items'][$id]['count'] : 0;
+        return isset($list['items'][$id]) ? $list['items'][$id]['Quantity'] : 0;
     }
 
 

@@ -18,12 +18,59 @@ define('plugin/shop/site/js/collection/listProductCart', [
         },
         initialize: function () {
             listProductCart = this;
-            _.bindAll(this, 'removeProductByID', 'addNew', 'removeAll');
-            Sandbox.eventSubscribe('plugin:shop:list_cart:add', this.addNew);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:remove', this.removeProductByID);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:clear', this.removeAll);
+            _.bindAll(this, 'decrease', 'increase', 'add', 'remove', 'clear');
+            Sandbox.eventSubscribe('plugin:shop:list_cart:add', this.add);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:decrease', this.decrease);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:increase', this.increase);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:remove', this.remove);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:clear', this.clear);
         },
-        removeProductByID:  function (data) {
+        decrease:  function (data) {
+            var self = this;
+            if (data && data.id) {
+                var model = this.get(data.id);
+                if (model) {
+                    model.save({
+                        url: this.url({productID: data.id, decrease: 1}),
+                        success: function (collection, resp) {
+                            self.reset(self.parse(resp));
+                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                            BSAlert.warning(lang.list_cart_alert_updated);
+                        }
+                    });
+                }
+            }
+        },
+        increase:  function (data) {
+            var self = this;
+            if (data && data.id) {
+                var model = this.get(data.id);
+                if (model) {
+                    model.save({
+                        url: this.url({productID: data.id}),
+                        success: function (collection, resp) {
+                            self.reset(self.parse(resp));
+                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                            BSAlert.warning(lang.list_cart_alert_updated);
+                        }
+                    });
+                }
+            }
+        },
+        add: function (data) {
+            var self = this;
+            if (data && data.id) {
+                this.create({productID: data.id}, {
+                    url: this.url(),
+                    success: function (model, resp) {
+                        self.reset(self.parse(resp));
+                        Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                        BSAlert.success(lang.list_cart_alert_add);
+                    }
+                });
+            }
+        },
+        remove: function (data) {
             var self = this;
             if (data && data.id) {
                 var model = this.get(data.id);
@@ -39,20 +86,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                 }
             }
         },
-        addNew: function (data) {
-            var self = this;
-            if (data && data.id && !this.get(data.id)) {
-                this.create({productID: data.id}, {
-                    url: this.url(),
-                    success: function (model, resp) {
-                        self.reset(self.parse(resp));
-                        Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
-                        BSAlert.success(lang.list_cart_alert_add);
-                    }
-                });
-            }
-        },
-        removeAll: function (data) {
+        clear: function (data) {
             var self = this;
             this.sync("delete", this, {
                 url: this.url({productID: "*"}),

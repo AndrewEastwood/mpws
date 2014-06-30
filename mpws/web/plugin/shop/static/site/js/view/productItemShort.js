@@ -17,6 +17,7 @@ define("plugin/shop/site/js/view/productItemShort", [
 
             Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:changed', this.refresh);
 
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
@@ -30,6 +31,11 @@ define("plugin/shop/site/js/view/productItemShort", [
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            // shop pulse animation for cart button badge
+            if (this.model.hasChanged('ViewExtras') && this.model.previous('ViewExtras') && this.model.get('ViewExtras').InCartCount !== this.model.previous('ViewExtras').InCartCount)
+                this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
+                    $(this).removeClass("pulse").dequeue();
+                });
             return this;
         }
     });

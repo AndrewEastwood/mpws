@@ -249,6 +249,42 @@ i.fa {cursor: pointer;}
   }
 }
 
+.btn.withNotificationBadge {
+  position: relative;
+  margin-right: 18px;
+  .badge {
+    background: radial-gradient( center -9px, circle closest-side, #fff 0, @mainColor 26px );
+    background: -moz-radial-gradient( center -9px, circle closest-side, #fff 0, @mainColor 26px );
+    background: -ms-radial-gradient( center -9px, circle closest-side, #fff 0, @mainColor 26px );
+    background: -o-radial-gradient( center -9px, circle closest-side, #fff 0, @mainColor 26px );
+    background: -webkit-radial-gradient( center -9px, circle closest-side, #fff 0, @mainColor 26px );
+    background-color: @mainColor;
+    border: 1px solid #fff;
+    border-radius: 12px; /* must be 1/2 of ( border-width*2 + width ) */
+    box-shadow: 1px 1px 1px #000;
+    color: #fff;
+    font: bold 13px/14px Helvetica, Verdana, Tahoma;
+    height: 20px; /* height + padding-top must equal width */
+    padding-top: 2px; /* height + padding-top must equal width */
+    text-align: center;
+    width: 22px;
+    padding-left: 3px;
+    position: absolute;
+    right: -17px;
+    top: -16px;
+    &.wide {
+      width: 27px;
+      font-size: 11px;
+      background: radial-gradient( center -9px, circle closest-side, #fff 0, @buttonColorHover 26px );
+      background: -moz-radial-gradient( center -9px, circle closest-side, #fff 0, @buttonColorHover 26px );
+      background: -ms-radial-gradient( center -9px, circle closest-side, #fff 0, @buttonColorHover 26px );
+      background: -o-radial-gradient( center -9px, circle closest-side, #fff 0, @buttonColorHover 26px );
+      background: -webkit-radial-gradient( center -9px, circle closest-side, #fff 0, @buttonColorHover 26px );
+      background-color: @buttonColorHover;
+    }
+  }
+}
+
 .shop-product-item-full {
   .product-name {color: @textForegroundColor;}
   .productSparkline {}
