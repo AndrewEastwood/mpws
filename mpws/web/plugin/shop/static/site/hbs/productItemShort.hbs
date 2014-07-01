@@ -37,24 +37,24 @@
 
             {{#if data.ViewExtras.InWish }}
                 <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                    <i class="fa fa-minus"></i>
+                    <sub><i class="fa fa-check-square-o"></i></sub>
                     <i class="fa fa-heart"></i>
                 </button>
             {{else}}
                 <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                    <i class="fa fa-plus"></i>
+                    <sub><i class="fa fa-square-o"></i></sub>
                     <i class="fa fa-heart"></i>
                 </button>
             {{/if}}
 
             {{#if data.ViewExtras.InCompare }}
                 <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                    <i class="fa fa-minus"></i>
+                    <sub><i class="fa fa-check-square-o"></i></sub>
                     <i class="fa fa-files-o"></i>
                 </button>
             {{else}}
                 <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                    <i class="fa fa-plus"></i>
+                    <sub><i class="fa fa-square-o"></i></sub>
                     <i class="fa fa-files-o"></i>
                 </button>
             {{/if}}
