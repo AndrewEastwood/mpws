@@ -79,6 +79,8 @@ class libraryRequest {
 
         $fn = join("_", $requestFnElements);
         // echo $fn;
+        // var_dump($requestFnElements);
+        // var_dump($_REQ);
         if (!empty($context) && method_exists($context, $fn))
             $context->$fn(libraryResponse::$_RESPONSE, $_REQ);
     }

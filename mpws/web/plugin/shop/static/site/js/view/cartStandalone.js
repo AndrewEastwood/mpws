@@ -22,6 +22,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
         lang: lang,
         initialize: function() {
             this.listenTo(this.collection, "reset", this.render);
+            this.listenTo(this.collection, 'sync', this.render);
         },
         collectUserInfo: function () {
             // collect user info
@@ -42,6 +43,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
         },
         render: function () {
             var self = this;
+            // debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             // save user info
             var _userInfoChanged = _.debounce(function () {
@@ -74,7 +76,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             if (APP.hasPlugin('account')) {
                 // account is signed in
                 // debugger;
-                if (this.model.hasExtras('account')) {
+                if (this.collection.extras.account) {
                     this.$('#account-profile-addresses-ID').on('change', function (event) {
                         if ($(this).val())
                             self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');

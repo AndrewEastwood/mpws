@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    {{#if data.info.productCount }}
+    {{#if extras.info.productCount }}
 
         <div class="well">
             <div class="actions">
@@ -10,11 +10,11 @@
         </div>
 
         <div class="shop-widget-productlist">
-        {{#each data.products }}
-            {{>plugin/shop/common/hbs/partials/cartProductItem . }}
+        {{#each data }}
+            {{>plugin/shop/common/hbs/partials/cartProductItem }}
         {{/each}}
         </div>
-        {{>plugin/shop/common/hbs/partials/cartInfo data }}
+        {{>plugin/shop/common/hbs/partials/cartInfo extras }}
 
         <div class="well checkout">
             <div class="container">
@@ -29,7 +29,7 @@
 
                             <!-- Register form (not working)-->
                             <form class="form-horizontal">
-                                {{#if data.error }}
+                                {{#if errors }}
                                     <div id="msg" class="alert alert-danger">{{mpwsGetValueByKey lang data.error "shopping_cart_error_"}}</div>
                                 {{/if}}
                                 <!-- Nav tabs -->

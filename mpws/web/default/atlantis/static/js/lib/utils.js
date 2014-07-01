@@ -116,11 +116,12 @@ define("default/js/lib/utils", [
         var _tplExtras = null;
         if (Utils.isCollectionView(obj)) {
             _tplData = obj.collection.toJSON();
-            _tplExtras = obj.collection.getExtras && obj.collection.getExtras();
+            _tplExtras = obj.collection.extras;
         } else if (Utils.isModelView(obj)) {
             _tplData = obj.model.toJSON();
-            _tplExtras = obj.model.getExtras && obj.model.getExtras();
+            _tplExtras = obj.model.extras;
         }
+        // debugger;
         return {
             lang: obj.lang || {},
             options: APP.options || {},

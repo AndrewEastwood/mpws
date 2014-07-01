@@ -3,8 +3,21 @@
         <span class="value-prefix">Сума:</span>
         <span class="value">{{info.subTotal}}<span class="moneyType">грн.</span></span>
     </div>
+    {{#gt info.discount 0 }}
+    <div class="shopCartDiscount">
+        <span class="value-prefix">Знижка:</span>
+        <span class="value"><strong>{{info.discount}}<span class="percentType">%</span></strong></span>
+    </div>
+    {{/gt}}
     <div class="shopCartTotal">
         <span class="value-prefix">До оплати:</span>
-        <span class="value label label-success">{{info.total}}<span class="moneyType">грн.</span></span>
+        <span class="value"><strong>{{info.total}}<span class="moneyType">грн.</span></strong></span>
+    </div>
+    <div class="shopPropmoCode">
+        <form class="form-inline" role="form">
+            <i class="fa fa-tag"></i> Для отримання знижки введіть промо-код:
+            <input type="email" class="form-control" id="search" placeholder="XXXXX-XXXXX-XXXXX">
+            <button type="submit" class="btn btn-default">Застосувати</button>
+        </form>
     </div>
 </div>

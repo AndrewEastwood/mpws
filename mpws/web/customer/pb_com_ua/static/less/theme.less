@@ -493,12 +493,13 @@ i.fa {cursor: pointer;}
   .cartInfo {
     margin-bottom: 0px;
     padding: 5px;
-    .shopCartSubTotal {padding-right: 10px;}
-    .shopCartTotal {display: none;}
+    .shopCartSubTotal, .shopCartDiscount {padding-right: 10px;}
+    .shopPropmoCode {display: none;}
+    .shopCartTotal {font-size: 1em;}
   }
   .cart-message {
     font-weight: bold;
-    padding: 4px 10px;
+    padding: 10px 10px 0px;
   }
 }
 
@@ -530,6 +531,17 @@ i.fa {cursor: pointer;}
     .product-quantity {width: 30px;}
     .product-total {width: 80px;}
   }
+  .cartInfo {
+    & > div:not(.shopPropmoCode) {
+      margin-bottom: 10px;
+      border-bottom: 1px dotted #aaa;
+      width: auto;
+    }
+    .value-prefix {
+      display: inline-block;
+      width: 150px;
+    }
+  }
 }
 
 .shop-wishlist-standalone {
@@ -555,7 +567,7 @@ i.fa {cursor: pointer;}
 
 .cartInfo {
   margin-top: 10px;
-  .shopCartSubTotal {padding-left: 10px;}
+  .shopCartSubTotal, .shopCartDiscount {padding-left: 10px;}
   .shopCartTotal {padding-left: 10px; font-size: 1.3em;}
   .value {font-weight: bold;}
 }

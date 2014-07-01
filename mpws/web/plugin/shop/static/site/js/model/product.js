@@ -17,6 +17,7 @@ define('plugin/shop/site/js/model/product', [
             return APP.getApiLink(_params);
         },
         parse: function (data) {
+            // debugger;
             return ShopUtils.adjustProductItem(data);
         },
         getFeatures: function (compatibilityList) {

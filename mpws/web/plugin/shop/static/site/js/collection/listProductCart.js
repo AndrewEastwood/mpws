@@ -11,6 +11,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
 
     var ListProductCart = Backbone.Collection.extend({
         model: ModelProduct,
+        extras: {},
         url: function (options) {
             return APP.getApiLink(_.extend({
                 source: 'shop',
@@ -18,38 +19,22 @@ define('plugin/shop/site/js/collection/listProductCart', [
         },
         initialize: function () {
             listProductCart = this;
-            _.bindAll(this, 'decrease', 'increase', 'add', 'remove', 'clear');
-            Sandbox.eventSubscribe('plugin:shop:list_cart:add', this.add);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:decrease', this.decrease);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:increase', this.increase);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:remove', this.remove);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:clear', this.clear);
+            _.bindAll(this, '_productDecrease', '_productIncrease', '_productAdd', '_productRemove', '_productClear');
+            Sandbox.eventSubscribe('plugin:shop:list_cart:add', this._productAdd);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:decrease', this._productDecrease);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:increase', this._productIncrease);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:remove', this._productRemove);
+            Sandbox.eventSubscribe('plugin:shop:list_cart:clear', this._productClear);
         },
-        decrease:  function (data) {
+        _productDecrease:  function (data) {
             var self = this;
             if (data && data.id) {
                 var model = this.get(data.id);
                 if (model) {
-                    model.save({
-                        url: this.url({productID: data.id, decrease: 1}),
-                        success: function (collection, resp) {
-                            self.reset(self.parse(resp));
-                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
-                            BSAlert.warning(lang.list_cart_alert_updated);
-                        }
-                    });
-                }
-            }
-        },
-        increase:  function (data) {
-            var self = this;
-            if (data && data.id) {
-                var model = this.get(data.id);
-                if (model) {
-                    model.save({
+                    model.save({Quantity: model.get('Quantity') - 1}, {
                         url: this.url({productID: data.id}),
                         success: function (collection, resp) {
-                            self.reset(self.parse(resp));
+                            self.reset(self.parse(resp), {parse: true});
                             Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
                             BSAlert.warning(lang.list_cart_alert_updated);
                         }
@@ -57,20 +42,36 @@ define('plugin/shop/site/js/collection/listProductCart', [
                 }
             }
         },
-        add: function (data) {
+        _productIncrease:  function (data) {
+            var self = this;
+            if (data && data.id) {
+                var model = this.get(data.id);
+                if (model) {
+                    model.save({Quantity: model.get('Quantity') + 1},{
+                        url: this.url({productID: data.id}),
+                        success: function (collection, resp) {
+                            self.reset(self.parse(resp), {parse: true});
+                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                            BSAlert.warning(lang.list_cart_alert_updated);
+                        }
+                    });
+                }
+            }
+        },
+        _productAdd: function (data) {
             var self = this;
             if (data && data.id) {
                 this.create({productID: data.id}, {
                     url: this.url(),
                     success: function (model, resp) {
-                        self.reset(self.parse(resp));
+                        self.reset(self.parse(resp), {parse: true});
                         Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
                         BSAlert.success(lang.list_cart_alert_add);
                     }
                 });
             }
         },
-        remove: function (data) {
+        _productRemove: function (data) {
             var self = this;
             if (data && data.id) {
                 var model = this.get(data.id);
@@ -78,7 +79,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                     model.destroy({
                         url: this.url({productID: data.id}),
                         success: function (collection, resp) {
-                            self.reset(self.parse(resp));
+                            self.reset(self.parse(resp), {parse: true});
                             Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
                             BSAlert.warning(lang.list_cart_alert_remove);
                         }
@@ -86,12 +87,12 @@ define('plugin/shop/site/js/collection/listProductCart', [
                 }
             }
         },
-        clear: function (data) {
+        _productClear: function (data) {
             var self = this;
             this.sync("delete", this, {
                 url: this.url({productID: "*"}),
                 success: function (collection, resp) {
-                    self.reset(self.parse(resp));
+                    self.reset(self.parse(resp), {parse: true});
                     Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
                     BSAlert.danger(lang.list_cart_alert_clear);
                 }
@@ -99,9 +100,12 @@ define('plugin/shop/site/js/collection/listProductCart', [
         },
         parse: function (data) {
             // var self = this;
+            if (data.info && data.items) {
+                this.extras.info = data.info;
+                return _(data.items).map(function(item){ return item; });
+            }
+            return data;
             // debugger;
-            this.info = data.info;
-            return _(data.items).map(function(item){ return item; });
         }
     });
 

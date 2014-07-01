@@ -151,19 +151,20 @@ class pluginShop extends objectPlugin {
     private function ___attachOrderInfo ($productItems) {
         $info = array(
             "subTotal" => 0.0,
-            "discount" => 0,
+            "discount" => 5,
             "total" => 0.0,
             "productCount" => 0,
             "productUniqueCount" => 0
         );
         foreach ($productItems as $product) {
+            $info["total"] += $product['Total'];
             $info["subTotal"] += $product['Total'];
             $info["productCount"] += $product['Quantity'];
         }
         // update money formats
         $info["subTotal"] = money_format('%.2n', $info["subTotal"]);
-        $info["discount"] = money_format('%.2n%%', $info["discount"]);
-        $info["total"] = money_format('%.2n', $info["total"]);
+        $info["discount"] = $info["discount"];
+        $info["total"] = money_format('%.2n', (100 - $info["discount"]) / 100 * $info["subTotal"]);
         $info['productUniqueCount'] = count($productItems);
         return $info;
     }
@@ -631,35 +632,42 @@ class pluginShop extends objectPlugin {
         $resp['info'] = $this->___attachOrderInfo($resp['items']);
     }
 
-
+    // create new product in the shopping cart list
     public function post_shop_cart (&$resp, $req) {
         if (isset($req['productID'])) {
             $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
             $productID = $req['productID'];
-            $decrease = isset($req['decrease']);
-            $drop = isset($req['drop']);
             if (!isset($items[$productID])) {
                 $product = $this->_getProductByID($productID);
+                $product['Quantity'] = 1;
+                $product["Total"] = $product['Price'];
                 $items[$productID] = $product;
-                $items[$productID]['Quantity'] = 1;
-            } else {
-                if ($decrease) {
-                    $items[$productID]['Quantity']--;
-                } else {
-                    $items[$productID]['Quantity']++;
-                }
-                if ($items[$productID]['Quantity'] <= 0 || $drop) {
-                    unset($items[$productID]);
-                }
-            }
-            if (isset($items[$productID])) {
-                $items[$productID]["Total"] = $items[$productID]['Price'] * $items[$productID]['Quantity'];
             }
             $_SESSION[$this->_listKey_Cart] = $items;
         }
         $this->get_shop_cart($resp);
     }
 
+    // modify existed product quantity in the shopping cart list
+    public function put_shop_cart (&$resp, $req) {
+        if (isset($req['ID'])) {
+            $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+            $productID = $req['ID'];
+            $resp['ID'] = $productID;
+            $newQuantity = floatval($req['Quantity']);
+            if (isset($items[$productID])) {
+                $items[$productID]['Quantity'] = $newQuantity;
+                if ($items[$productID]['Quantity'] <= 0)
+                    unset($items[$productID]);
+                else
+                    $items[$productID]["Total"] = $items[$productID]['Price'] * $items[$productID]['Quantity'];
+            }
+            $_SESSION[$this->_listKey_Cart] = $items;
+        }
+        $this->get_shop_cart($resp);
+    }
+
+    // removes particular product or clears whole shopping cart
     public function delete_shop_cart (&$resp, $req) {
         if (isset($req['productID'])) {
             $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
@@ -673,6 +681,7 @@ class pluginShop extends objectPlugin {
         }
         $this->get_shop_cart($resp);
     }
+
     private function __productCountInCart ($id) {
         $list = array();
         $this->get_shop_cart($list);

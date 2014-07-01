@@ -1,25 +1,25 @@
 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-shopping-cart"></i>
-        {{#if data.info.productCount }}
-            {{data.info.productCount}}шт. у кошику
+        {{#if extras.info.productCount }}
+            {{extras.info.productCount}}шт. у кошику
             <span class="caret"></span>
         {{else}}
             Ваш кошик порожній
         {{/if}}
 </button>
-{{#if data.info.productCount }}
+{{#if extras.info.productCount }}
 <ul class="dropdown-menu shop-cart-embedded-dropdown-menu" role="menu">
     <li>
         <div class="shop-widget-productlist">
-        {{#each_upto data.products 3 }}
+        {{#each_upto data 3 }}
             {{>plugin/shop/common/hbs/partials/cartProductItem . }}
         {{/each_upto}}
         </div>
-        {{>plugin/shop/common/hbs/partials/cartInfo data }}
+        {{>plugin/shop/common/hbs/partials/cartInfo extras }}
     </li>
-    {{#gt data.info.productCount 3 }}
+    {{#gt extras.info.productCount 3 }}
         <div class="cart-message text-left">
-            Відображаються 3 з {{data.info.productCount}}
+            Відображаються 3 з {{extras.info.productCount}}
         </div>
     {{/gt}}
     <li class="divider"></li>
