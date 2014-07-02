@@ -25,6 +25,9 @@ define('plugin/shop/site/js/collection/listProductCart', [
             Sandbox.eventSubscribe('plugin:shop:list_cart:increase', this._productIncrease);
             Sandbox.eventSubscribe('plugin:shop:list_cart:remove', this._productRemove);
             Sandbox.eventSubscribe('plugin:shop:list_cart:clear', this._productClear);
+            this.on("reset", function() {
+                Sandbox.eventNotify('plugin:shop:list_cart:changed', this);
+            }, this);
         },
         _productDecrease:  function (data) {
             var self = this;
@@ -35,7 +38,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                         url: this.url({productID: data.id}),
                         success: function (collection, resp) {
                             self.reset(self.parse(resp), {parse: true});
-                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                            Sandbox.eventNotify('plugin:shop:list_cart:changed', self);
                             BSAlert.warning(lang.list_cart_alert_updated);
                         }
                     });
@@ -51,7 +54,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                         url: this.url({productID: data.id}),
                         success: function (collection, resp) {
                             self.reset(self.parse(resp), {parse: true});
-                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                            Sandbox.eventNotify('plugin:shop:list_cart:changed', self);
                             BSAlert.warning(lang.list_cart_alert_updated);
                         }
                     });
@@ -65,7 +68,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                     url: this.url(),
                     success: function (model, resp) {
                         self.reset(self.parse(resp), {parse: true});
-                        Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                        Sandbox.eventNotify('plugin:shop:list_cart:changed', self);
                         BSAlert.success(lang.list_cart_alert_add);
                     }
                 });
@@ -80,7 +83,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                         url: this.url({productID: data.id}),
                         success: function (collection, resp) {
                             self.reset(self.parse(resp), {parse: true});
-                            Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                            Sandbox.eventNotify('plugin:shop:list_cart:changed', self);
                             BSAlert.warning(lang.list_cart_alert_remove);
                         }
                     });
@@ -93,7 +96,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
                 url: this.url({productID: "*"}),
                 success: function (collection, resp) {
                     self.reset(self.parse(resp), {parse: true});
-                    Sandbox.eventNotify('plugin:shop:list_cart:changed', data);
+                    Sandbox.eventNotify('plugin:shop:list_cart:changed', self);
                     BSAlert.danger(lang.list_cart_alert_clear);
                 }
             });
@@ -109,5 +112,7 @@ define('plugin/shop/site/js/collection/listProductCart', [
         }
     });
 
-    return new ListProductCart();
+    return ListProductCart;
+
+    // return new ListProductCart();
 });

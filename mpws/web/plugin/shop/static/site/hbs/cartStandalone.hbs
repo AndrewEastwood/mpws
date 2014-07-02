@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    {{#if extras.info.productCount }}
+    {{#if data.info.productCount }}
 
         <div class="well">
             <div class="actions">
@@ -10,11 +10,11 @@
         </div>
 
         <div class="shop-widget-productlist">
-        {{#each data }}
-            {{>plugin/shop/common/hbs/partials/cartProductItem }}
+        {{#each data.items }}
+            {{>plugin/shop/common/hbs/partials/cartProductItem . }}
         {{/each}}
         </div>
-        {{>plugin/shop/common/hbs/partials/cartInfo extras }}
+        {{>plugin/shop/common/hbs/partials/cartInfo data }}
 
         <div class="well checkout">
             <div class="container">
@@ -33,30 +33,30 @@
                                     <div id="msg" class="alert alert-danger">{{mpwsGetValueByKey lang data.error "shopping_cart_error_"}}</div>
                                 {{/if}}
                                 <!-- Nav tabs -->
-                                {{#if extras.account }}
-                                    <input type="hidden" name="shopCartProfileID" value="{{extras.account.ID}}">
+                                {{#if data.account }}
+                                    <input type="hidden" name="shopCartProfileID" value="{{data.account.ID}}">
                                     <div class="form-group">
                                         <label class="control-label col-md-3">{{lang.shopping_cart_field_firstName}}</label>
                                         <div class="col-md-6">
-                                            <span class="form-control">{{extras.account.FirstName}}</span>
+                                            <span class="form-control">{{data.account.FirstName}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">{{lang.shopping_cart_field_lastName}}</label>
                                         <div class="col-md-6">
-                                            <span class="form-control">{{extras.account.LastName}}</span>
+                                            <span class="form-control">{{data.account.LastName}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">{{lang.shopping_cart_field_email}}</label>
                                         <div class="col-md-6">
-                                            <span class="form-control">{{extras.account.EMail}}</span>
+                                            <span class="form-control">{{data.account.EMail}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">{{lang.shopping_cart_field_phone}}</label>
                                         <div class="col-md-6">
-                                            <span class="form-control">{{extras.account.Phone}}</span>
+                                            <span class="form-control">{{data.account.Phone}}</span>
                                         </div>
                                     </div>
                                     <!-- Name -->
@@ -66,7 +66,7 @@
                                         <div class="col-md-6">
                                             <select name="shopCartProfileAddressID" class="form-control" id="account-profile-addresses-ID">
                                                 <option value="">{{lang.shopping_cart_field_profile_address_option_none}}</option>
-                                                {{#each extras.account.addresses }}
+                                                {{#each data.account.addresses }}
                                                 <option value="{{ID}}" data-address="{{Address}}" data-pobox="{{POBox}}" data-country="{{Country}}" data-city="{{City}}">
                                                     {{#if Country }}
                                                         {{Country}},
@@ -209,7 +209,7 @@
                     <li class="list-group-item">Номер замовлення: <span class="label label-success">{{data.status.orderID}}</span></li>
                     <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
                     <li class="list-group-item"><a href="{{app.location.origin}}/#shop/tracking/{{data.status.orderHash}}">{{app.location.origin}}/#shop/tracking/{{data.status.orderHash}}</a></li>
-                    {{#if extras.account }}
+                    {{#if data.account }}
                     <li class="list-group-item">Також Ви можете переглянути всі Ваші замовлення в <a href="/#shop/profile/orders">особистому кабінеті</a>.</li>
                     {{/if}}
                 </ul>

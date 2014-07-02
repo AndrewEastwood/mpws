@@ -145,7 +145,7 @@ class pluginShop extends objectPlugin {
                     $product["Total"] = $product['Price'] * $product['Quantity'];
                     $dataOrder['items'][$product['ID']] = $product;
                 }
-            $dataOrder['info'] = $this>___attachOrderInfo($dataOrder['items']);
+            $dataOrder['info'] = $this->___attachOrderInfo($dataOrder['items']);
         }
     }
     private function ___attachOrderInfo ($productItems) {
@@ -183,7 +183,7 @@ class pluginShop extends objectPlugin {
     }
 
     private function _getOrders_Todays () {
-        // get expired orders
+        // get todays orders
         $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("NEW");
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'));
@@ -204,6 +204,40 @@ class pluginShop extends objectPlugin {
         if (!empty($orderIDs))
             foreach ($orderIDs as $val)
                 $data[] = $this->_getOrderByID($val['ID']);
+        return $data;
+    }
+
+    private function _getOrders_Browse ($req) {
+        // get all orders
+        $config = configurationShopDataSource::jsapiShopOrdersGet();
+
+        // pagination
+        $page = isset($req['page']) ? $req['page'] : false;
+        $per_page = isset($req['per_page']) ? $req['per_page'] : false;
+
+        if (!empty($per_page)) {
+            $config['limit'] = $per_page;
+            if (!empty($page)) {
+                $config['offset'] = ($page - 1) * $per_page;
+            }
+        }
+
+        // sorting
+        $sort = isset($req['sort']) ? $req['sort'] : false;
+        $order = isset($req['order']) ? $req['order'] : false;
+        if (!empty($sort) && !empty($order)) {
+            $config["order"] = array(
+                "field" =>  'shop_orders' . DOT . $sort,
+                "ordering" => strtoupper($order)
+            );
+        }
+
+        $orderIDs = $this->getCustomer()->fetch($config);
+        // var_dump($orderIDs);
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[$val['ID']] = $this->_getOrderByID($val['ID']);
         return $data;
     }
 
@@ -458,41 +492,9 @@ class pluginShop extends objectPlugin {
     // ----------------------------------------
     // requests
     // ----------------------------------------
-    public function get_shop_order (&$resp, $req) {
-        if (isset($req['id'])) {
-            $resp = $this->_getOrderByID($req['id']);
-            return;
-        }
-        if (isset($req['hash'])) {
-            $resp = $this->_getOrderByHash($req['hash']);
-            return;
-        }
-
-        $resp['error'] = '"id" or "hash" is missed in the request';
-    }
 
     public function get_shop_product (&$resp, $req) {
         $resp = $this->_getProductByID($req['id']);
-    }
-
-    public function get_shop_orders (&$resp, $req) {
-        if (!empty($req['status'])) {
-            $resp = $this->_getOrders_ByStatus($req['status']);
-            return;
-        }
-        if (!empty($req['type'])) {
-            switch ($req['type']) {
-                case "expired":
-                    $resp = $this->_getOrders_Expired();
-                    break;
-                case "todays":
-                    $resp = $this->_getOrders_Todays();
-                    break;
-            }
-            return;
-        }
-
-        $resp['error'] = '"type" or "status" is missed in the request';
     }
 
     public function get_shop_overview (&$resp) {
@@ -627,7 +629,59 @@ class pluginShop extends objectPlugin {
         return isset($list['items'][$id]);
     }
 
-    public function get_shop_cart (&$resp) {
+
+
+
+
+
+
+
+
+
+
+
+
+    public function get_shop_orders (&$resp, $req) {
+        if (!empty($req['status'])) {
+            $resp = $this->_getOrders_ByStatus($req['status']);
+            return;
+        }
+        if (!empty($req['type'])) {
+            switch ($req['type']) {
+                case "expired":
+                    $resp = $this->_getOrders_Expired();
+                    break;
+                case "todays":
+                    $resp = $this->_getOrders_Todays();
+                    break;
+                case "browse":
+                    $resp = $this->_getOrders_Browse($req);
+                    break;
+            }
+            return;
+        }
+
+        $resp['error'] = '"type" or "status" is missed in the request';
+    }
+
+    public function get_shop_order (&$resp, $req) {
+        if (isset($req['id'])) {
+            $resp = $this->_getOrderByID($req['id']);
+            return;
+        } else if (isset($req['hash'])) {
+            $resp = $this->_getOrderByHash($req['hash']);
+            return;
+        } else {
+            $this->get_shop_cart($resp, $req);
+        }
+        // $resp['error'] = '"id" or "hash" is missed in the request';
+    }
+
+    public function post_shop_order (&$resp, $req) {
+
+    }
+
+    public function get_shop_cart (&$resp, $req) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
         $resp['info'] = $this->___attachOrderInfo($resp['items']);
     }
@@ -645,7 +699,7 @@ class pluginShop extends objectPlugin {
             }
             $_SESSION[$this->_listKey_Cart] = $items;
         }
-        $this->get_shop_cart($resp);
+        $this->get_shop_cart($resp, $req);
     }
 
     // modify existed product quantity in the shopping cart list
@@ -653,7 +707,7 @@ class pluginShop extends objectPlugin {
         if (isset($req['ID'])) {
             $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
             $productID = $req['ID'];
-            $resp['ID'] = $productID;
+            // $resp['ID'] = $productID;
             $newQuantity = floatval($req['Quantity']);
             if (isset($items[$productID])) {
                 $items[$productID]['Quantity'] = $newQuantity;
@@ -664,7 +718,7 @@ class pluginShop extends objectPlugin {
             }
             $_SESSION[$this->_listKey_Cart] = $items;
         }
-        $this->get_shop_cart($resp);
+        $this->get_shop_cart($resp, $req);
     }
 
     // removes particular product or clears whole shopping cart
@@ -679,12 +733,12 @@ class pluginShop extends objectPlugin {
             }
             $_SESSION[$this->_listKey_Cart] = $items;
         }
-        $this->get_shop_cart($resp);
+        $this->get_shop_cart($resp, $req);
     }
 
     private function __productCountInCart ($id) {
         $list = array();
-        $this->get_shop_cart($list);
+        $this->get_shop_cart($list, null);
         return isset($list['items'][$id]) ? $list['items'][$id]['Quantity'] : 0;
     }
 

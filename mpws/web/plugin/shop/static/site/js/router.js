@@ -169,7 +169,8 @@ define("plugin/shop/site/js/router", [
             require(['plugin/shop/site/js/view/cartStandalone'], function (CartStandalone) {
                 // create new view
                 var cartStandalone = new CartStandalone();
-                cartStandalone.collection.fetch({merge:true});
+                // cartStandalone.collection.fetch({merge:true});
+                cartStandalone.render();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: cartStandalone.el

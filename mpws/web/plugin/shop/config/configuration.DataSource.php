@@ -404,7 +404,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopOrdersGet () {
-        $config = self::jsapiShopOrderGet(null);
+        $config = self::jsapiGetShopOrderByID(null);
         $config['condition'] = array();
         $config["order"] = array(
             "field" => "shop_orders.DateCreated",
@@ -417,7 +417,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopOrdersForProfileGet ($profileID) {
-        $config = self::jsapiShopOrdersGet();
+        $config = self::jsapiGetShopOrderByID();
         $config['condition'] = array(
             "AccountID" => self::jsapiCreateDataSourceCondition($profileID)
         );
@@ -429,7 +429,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopOrdersForSiteGet () {
-        $config = self::jsapiShopOrdersGet();
+        $config = self::jsapiGetShopOrderByID();
         return $config;
     }
 

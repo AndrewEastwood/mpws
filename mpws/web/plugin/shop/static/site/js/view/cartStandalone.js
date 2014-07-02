@@ -3,7 +3,8 @@ define("plugin/shop/site/js/view/cartStandalone", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/site/js/collection/listProductCart',
+    // 'plugin/shop/site/js/collection/listProductCart',
+    'plugin/shop/site/js/model/order',
     'default/js/plugin/hbs!plugin/shop/site/hbs/cartStandalone',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
@@ -15,14 +16,16 @@ define("plugin/shop/site/js/view/cartStandalone", [
 
     var CartStandalone = Backbone.View.extend({
         // tagName: 'div',
-        collection: cartCollectionInstance,
+        // collection: cartCollectionInstance,
+        model: cartCollectionInstance,
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
         template: tpl,
         lang: lang,
         initialize: function() {
-            this.listenTo(this.collection, "reset", this.render);
-            this.listenTo(this.collection, 'sync', this.render);
+            // this.listenTo(this.collection, "reset", this.render);
+            // this.listenTo(this.collection, 'sync', this.render);
+            this.listenTo(this.model, 'change', this.render);
         },
         collectUserInfo: function () {
             // collect user info
@@ -76,7 +79,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             if (APP.hasPlugin('account')) {
                 // account is signed in
                 // debugger;
-                if (this.collection.extras.account) {
+                if (!!this.model.get('account')) {
                     this.$('#account-profile-addresses-ID').on('change', function (event) {
                         if ($(this).val())
                             self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
