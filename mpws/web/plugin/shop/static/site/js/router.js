@@ -4,9 +4,25 @@ define("plugin/shop/site/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
+    'plugin/shop/site/js/model/order',
     'plugin/shop/site/js/view/siteMenu',
     'plugin/shop/site/js/view/siteWidgets',
-], function (Sandbox, $, _, Backbone, Cache, SiteMenu, SiteWidgets) {
+], function (Sandbox, $, _, Backbone, Cache, SiteOrder, SiteMenu, SiteWidgets) {
+
+    var order = new SiteOrder({
+        ID: "temp"
+    });
+    order.url = APP.getApiLink({source: 'shop', fn: 'order'});
+
+    SiteMenu({
+        order: order
+    });
+
+    SiteWidgets({
+        order: order
+    });
+
+    order.fetch();
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -25,10 +41,6 @@ define("plugin/shop/site/js/router", [
         initialize: function () {
 
             var self = this;
-
-            // SiteMenu.render();
-
-            // SiteWidgets.render();
 
             Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();

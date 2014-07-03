@@ -1,17 +1,17 @@
 <div class="well cartInfo">
     <div class="shopCartSubTotal">
         <span class="value-prefix">Сума:</span>
-        <span class="value">{{info.subTotal}}<span class="moneyType">грн.</span></span>
+        <span class="value">{{subTotal}}<span class="moneyType">грн.</span></span>
     </div>
-    {{#gt info.discount 0 }}
+    {{#gt discount 0 }}
     <div class="shopCartDiscount">
         <span class="value-prefix">Знижка:</span>
-        <span class="value"><strong>{{info.discount}}<span class="percentType">%</span></strong></span>
+        <span class="value"><strong>{{discount}}<span class="percentType">%</span></strong></span>
     </div>
     {{/gt}}
     <div class="shopCartTotal">
         <span class="value-prefix">До оплати:</span>
-        <span class="value"><strong>{{info.total}}<span class="moneyType">грн.</span></strong></span>
+        <span class="value"><strong>{{total}}<span class="moneyType">грн.</span></strong></span>
     </div>
     <div class="shopPropmoCode">
         <form class="form-inline" role="form">

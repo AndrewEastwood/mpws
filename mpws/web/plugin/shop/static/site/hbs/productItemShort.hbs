@@ -21,7 +21,7 @@
         <p>
 
             {{#if data.ViewExtras.InCartCount }}
-                <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:list_cart:increase" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
                     {{#gt data.ViewExtras.InCartCount 99}}
                     <sub class="badge wide animated">&gt;99</sub>
@@ -30,7 +30,7 @@
                     {{/gt}}
                 </button>
             {{else}}
-                <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:list_cart:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
                 </button>
             {{/if}}

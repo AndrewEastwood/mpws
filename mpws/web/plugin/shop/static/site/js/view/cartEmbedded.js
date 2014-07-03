@@ -3,14 +3,12 @@ define("plugin/shop/site/js/view/cartEmbedded", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     // 'plugin/shop/site/js/collection/listProductCart',
-    'plugin/shop/site/js/model/order',
     'default/js/plugin/hbs!plugin/shop/site/hbs/cartEmbedded',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation'
-], function (_, Backbone, Utils, cartCollectionInstance, tpl, lang) {
+], function (_, Backbone, Utils, tpl, lang) {
 
     var CartEmbedded = Backbone.View.extend({
-        model: cartCollectionInstance,
         className: 'btn-group shop-cart-embedded',
         id: 'shop-cart-embedded-ID',
         template: tpl,

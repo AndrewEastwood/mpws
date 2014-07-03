@@ -10,12 +10,8 @@
 {{#if data.info.productCount }}
 <ul class="dropdown-menu shop-cart-embedded-dropdown-menu" role="menu">
     <li>
-        <div class="shop-widget-productlist">
-        {{#each_upto data.items 3 }}
-            {{>plugin/shop/common/hbs/partials/cartProductItem . }}
-        {{/each_upto}}
-        </div>
-        {{>plugin/shop/common/hbs/partials/cartInfo data }}
+        {{>plugin/shop/common/hbs/partials/cartProductList data.items }}
+        {{>plugin/shop/common/hbs/partials/cartInfo data.info }}
     </li>
     {{#gt data.info.productCount 3 }}
         <div class="cart-message text-left">

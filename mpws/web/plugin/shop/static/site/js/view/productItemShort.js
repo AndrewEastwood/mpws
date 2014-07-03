@@ -17,12 +17,13 @@ define("plugin/shop/site/js/view/productItemShort", [
 
             Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
-            Sandbox.eventSubscribe('plugin:shop:list_cart:changed', this.refresh);
+            Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
 
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
         },
         refresh: function (data) {
+            // debugger;
             if (this.model) {
                 if (data && data.id && (data.id === this.model.id || data.id === "*")) {
                     this.model.fetch();

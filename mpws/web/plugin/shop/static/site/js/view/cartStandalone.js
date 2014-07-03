@@ -22,10 +22,17 @@ define("plugin/shop/site/js/view/cartStandalone", [
         id: 'shop-cart-standalone-ID',
         template: tpl,
         lang: lang,
+        events: {
+            'change .quantity': 'updateProductQuantity'
+        },
         initialize: function() {
             // this.listenTo(this.collection, "reset", this.render);
             // this.listenTo(this.collection, 'sync', this.render);
             this.listenTo(this.model, 'change', this.render);
+        },
+        updateProductQuantity: function (event) {
+            debugger;
+            
         },
         collectUserInfo: function () {
             // collect user info
