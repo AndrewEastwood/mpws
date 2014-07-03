@@ -31,8 +31,7 @@ define("plugin/shop/common/js/lib/utils", [
             HAS_MAIN: false,
             HAS_ADDITIONAL: false,
             MAIN: false,
-            ADDITIONAL : false,
-            EMPTY: APP.config.URL_STATIC_DEFAULT + 'img/noimage.png'
+            ADDITIONAL : false
         }
 
         // adjust product images

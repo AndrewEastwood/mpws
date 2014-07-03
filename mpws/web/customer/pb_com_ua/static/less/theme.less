@@ -11,6 +11,7 @@
 @import "select2";
 @import "bootstrap-account-create";
 @import "common";
+@import "animation";
 
 @mainColor: #CF7400;
 @textColor: #333;
@@ -296,7 +297,10 @@ i.fa {cursor: pointer;}
       background-color: #fff;
       .image {
         max-height: 150px;
+        height: 150px;
         margin: 0px auto;
+        background: url('@{imgPath}noimage.png') no-repeat center center;
+        background-size: contain;
       }
     }
   }

@@ -26,6 +26,7 @@ define("default/js/plugin/image", function(){
             }else{
                 img = new Image();
                 img.onerror = function (err) {
+                    debugger;
                     onLoad.error(err);
                 };
                 img.onload = function(evt){
