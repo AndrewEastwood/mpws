@@ -530,13 +530,26 @@ i.fa {cursor: pointer;}
   .cartInfo {
     margin-bottom: 0px;
     padding: 5px;
+    & > div:not(.shopPropmoCode) {
+      margin-bottom: 5px;
+      border-bottom: 1px dotted #aaa;
+      width: auto;
+    }
+    .value-prefix {
+      display: inline-block;
+      width: 120px;
+    }
     .shopCartSubTotal, .shopCartDiscount {padding-right: 10px;}
     .shopPropmoCode {display: none;}
-    .shopCartTotal {font-size: 1em;}
+    div.shopCartTotal {font-size: 1em; margin-bottom: 0px; border-bottom: 0px none;}
   }
   .cart-message {
     font-weight: bold;
-    padding: 10px 10px 0px;
+    padding: 5px 10px 8px;
+  }
+  .open-cart-standalone {
+    padding: 10px;
+    text-align: right;
   }
 }
 

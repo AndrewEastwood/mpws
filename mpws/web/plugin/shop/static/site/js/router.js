@@ -92,28 +92,17 @@ define("plugin/shop/site/js/router", [
                 categoryID: categoryID
             });
 
-            // debugger;
             require(['plugin/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ListProductCatalog', function (cachedView) {
-                    // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                // create new view
+                var listProductCatalog = new ListProductCatalog();
+                // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
+                listProductCatalog.collection.fetch({
+                    categoryID: categoryID
+                });
 
-                    // create new view
-                    var listProductCatalog = new ListProductCatalog();
-                    // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
-                    listProductCatalog.collection.fetch({
-                        categoryID: categoryID
-                    });
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: listProductCatalog.el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    return listProductCatalog;
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listProductCatalog.el
                 });
             });
         },

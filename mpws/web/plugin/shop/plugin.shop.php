@@ -489,7 +489,7 @@ class pluginShop extends objectPlugin {
         $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
 
         // store data
-        $data['products'] = $products;
+        $data['items'] = $products;
         $data['info'] =  array(
             "count" => count($dataCategoryInfo)
         );

@@ -21,7 +21,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             this.listenTo(this.model, 'change', this.render);
         },
         updateProductQuantity: function (event) {
-            var $input = this.$('input.quantity');
+            var $input = this.$(event.target);
             var elementData = $input.data();
             if (this.model.getProductByID(elementData.id) && $input.val())
                 this.model.setProductQuantity(elementData, elementData.id, $input.val());
