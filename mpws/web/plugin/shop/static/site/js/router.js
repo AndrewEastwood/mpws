@@ -180,7 +180,9 @@ define("plugin/shop/site/js/router", [
 
             require(['plugin/shop/site/js/view/cartStandalone'], function (CartStandalone) {
                 // create new view
-                var cartStandalone = new CartStandalone();
+                var cartStandalone = new CartStandalone({
+                    model: order
+                });
                 // cartStandalone.collection.fetch({merge:true});
                 cartStandalone.render();
                 Sandbox.eventNotify('global:content:render', {

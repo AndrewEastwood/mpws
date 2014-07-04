@@ -14,11 +14,9 @@ define("plugin/shop/site/js/view/productItemShort", [
         lang: lang,
         initialize: function () {
             _.bindAll(this, 'refresh');
-
             Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
-
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
         },
@@ -37,6 +35,7 @@ define("plugin/shop/site/js/view/productItemShort", [
                 this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
                     $(this).removeClass("pulse").dequeue();
                 });
+            this.$('[data-toggle="tooltip"]').tooltip();
             return this;
         }
     });

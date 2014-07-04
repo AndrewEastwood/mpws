@@ -8,7 +8,7 @@
         <div class="shop-component shop-product-images">
             <div class="shop-product-image shop-product-image-main">
                 <a href="/#shop/product/{{data.ID}}" class="link">
-                    <div class="image image_{{data.ID}}">
+                    <div class="image productimage noimage image_{{data.ID}}">
                         {{#if data.Attributes.IMAGES.MAIN}}
                         <div id="facebookG">
                             <div id="blockG_1" class="facebook_blockG"></div>
@@ -23,7 +23,7 @@
                         require(["default/js/plugin/image!{{data.Attributes.IMAGES.MAIN}}"], function(img){
                             img.title = "{{data.Name}}";
                             img.className = "image img-responsive";
-                            $('.image_{{data.ID}}').html($(img).clone());
+                            $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
                         });
                     })();
                     </script>
@@ -40,7 +40,7 @@
         <p>
 
             {{#if data.ViewExtras.InCartCount }}
-                <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
                     {{#gt data.ViewExtras.InCartCount 99}}
                     <sub class="badge wide animated">&gt;99</sub>
@@ -49,30 +49,29 @@
                     {{/gt}}
                 </button>
             {{else}}
-                <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
                 </button>
             {{/if}}
-
             {{#if data.ViewExtras.InWish }}
-                <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="забрати з мого списку" data-placement="top" data-toggle="tooltip">
                     <sub><i class="fa fa-check-square-o"></i></sub>
                     <i class="fa fa-heart"></i>
                 </button>
             {{else}}
-                <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip">
                     <sub><i class="fa fa-square-o"></i></sub>
                     <i class="fa fa-heart"></i>
                 </button>
             {{/if}}
 
             {{#if data.ViewExtras.InCompare }}
-                <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="забрати з порівняння" data-placement="top" data-toggle="tooltip">
                     <sub><i class="fa fa-check-square-o"></i></sub>
                     <i class="fa fa-files-o"></i>
                 </button>
             {{else}}
-                <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="додати до порівняння" data-placement="top" data-toggle="tooltip">
                     <sub><i class="fa fa-square-o"></i></sub>
                     <i class="fa fa-files-o"></i>
                 </button>

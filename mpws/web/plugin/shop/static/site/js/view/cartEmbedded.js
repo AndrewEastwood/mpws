@@ -14,8 +14,6 @@ define("plugin/shop/site/js/view/cartEmbedded", [
         template: tpl,
         lang: lang,
         initialize: function() {
-            // this.listenTo(this.collection, "reset", this.render);
-            // this.listenTo(this.collection, "sync", this.render);
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {

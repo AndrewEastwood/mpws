@@ -25,7 +25,9 @@ define("plugin/shop/site/js/view/productItemFull", [
             // this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            ViewProductItemShort.prototype.render.call(this);
+            
+            // this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             // show lense over product
             this.$('.shop-product-image-main img').magnify();
             // show price chart (powered by http://omnipotent.net/jquery.sparkline)
@@ -42,10 +44,11 @@ define("plugin/shop/site/js/view/productItemFull", [
             }
             // shop pulse animation for cart button badge
             // debugger;
-            if (this.model.hasChanged('ViewExtras') && this.model.previous('ViewExtras') && this.model.get('ViewExtras').InCartCount !== this.model.previous('ViewExtras').InCartCount)
-                this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
-                    $(this).removeClass("pulse").dequeue();
-                });
+            // if (this.model.hasChanged('ViewExtras') && this.model.previous('ViewExtras') && this.model.get('ViewExtras').InCartCount !== this.model.previous('ViewExtras').InCartCount)
+            //     this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
+            //         $(this).removeClass("pulse").dequeue();
+            //     });
+            // this.$('data-toggle="tooltip"').tooltip();
             return this;
         }
     });

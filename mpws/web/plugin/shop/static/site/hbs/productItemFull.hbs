@@ -15,7 +15,26 @@
             <div class="shop-component shop-product-images">
                 <div class="shop-product-image shop-product-image-main">
                     <a href="{{data.Attributes.IMAGES.MAIN}}" class="link" data-lightbox="shop-product-image-main">
-                        <img src="{{data.Attributes.IMAGES.MAIN}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
+                        <div class="image productimage noimage image_{{data.ID}}">
+                            {{#if data.Attributes.IMAGES.MAIN}}
+                            <div id="facebookG">
+                                <div id="blockG_1" class="facebook_blockG"></div>
+                                <div id="blockG_2" class="facebook_blockG"></div>
+                                <div id="blockG_3" class="facebook_blockG"></div>
+                            </div>
+                            {{/if}}
+                        </div>
+                        {{#if data.Attributes.IMAGES.MAIN}}
+                        <script>
+                        (function() {
+                            require(["default/js/plugin/image!{{data.Attributes.IMAGES.MAIN}}"], function(img){
+                                img.title = "{{data.Name}}";
+                                img.className = "image img-responsive";
+                                $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
+                            });
+                        })();
+                        </script>
+                        {{/if}}
                     </a>
                 </div>
                 {{#if data.Attributes.IMAGES.ADDITIONAL}}
@@ -81,7 +100,7 @@
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
                         {{#if data.ViewExtras.InCartCount }}
-                            <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-shopping-cart"></i> +1 в кошик
                                 {{#gt data.ViewExtras.InCartCount 99}}
                                 <sub class="badge wide animated">&gt;99</sub>
@@ -90,12 +109,12 @@
                                 {{/gt}}
                             </button>
                         {{else}}
-                            <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+ в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-shopping-cart"></i> +1 в кошик
                             </button>
                         {{/if}}
                         {{#if data.ViewExtras.InWish }}
-                            <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="забрати з мого списку" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-check-square-o"></i> мій список
                             </button>
                         {{else}}
@@ -104,11 +123,11 @@
                             </button>
                         {{/if}}
                         {{#if data.ViewExtras.InCompare }}
-                            <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="забрати з порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-check-square-o"></i> порівняння
                             </button>
                         {{else}}
-                            <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="порівняти" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="додати до порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-square-o"></i> порівняння
                             </button>
                         {{/if}}

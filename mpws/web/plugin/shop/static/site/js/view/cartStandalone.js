@@ -3,36 +3,28 @@ define("plugin/shop/site/js/view/cartStandalone", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    // 'plugin/shop/site/js/collection/listProductCart',
-    'plugin/shop/site/js/model/order',
     'default/js/plugin/hbs!plugin/shop/site/hbs/cartStandalone',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
-], function (Sandbox, _, Backbone, Utils, cartCollectionInstance, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, tpl, lang) {
 
     $.cookie.json = true;
 
     var CartStandalone = Backbone.View.extend({
-        // tagName: 'div',
-        // collection: cartCollectionInstance,
-        model: cartCollectionInstance,
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
         template: tpl,
         lang: lang,
-        events: {
-            'change .quantity': 'updateProductQuantity'
-        },
         initialize: function() {
-            // this.listenTo(this.collection, "reset", this.render);
-            // this.listenTo(this.collection, 'sync', this.render);
             this.listenTo(this.model, 'change', this.render);
         },
         updateProductQuantity: function (event) {
-            debugger;
-            
+            var $input = this.$('input.quantity');
+            var elementData = $input.data();
+            if (this.model.getProductByID(elementData.id) && $input.val())
+                this.model.setProductQuantity(elementData, elementData.id, $input.val());
         },
         collectUserInfo: function () {
             // collect user info
@@ -59,10 +51,13 @@ define("plugin/shop/site/js/view/cartStandalone", [
             var _userInfoChanged = _.debounce(function () {
                 $.cookie("shopUser", self.collectUserInfo.call(self));
             }, 100);
+            var _productQunatityChanged = _.debounce(function (event) {
+                self.updateProductQuantity.call(self, event);
+            }, 300);
             this.$el.on('keypress', 'input[type="text"],textarea', _userInfoChanged);
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
             this.$el.on('change', 'select', _userInfoChanged);
-
+            this.$el.on('change', 'input.quantity', _productQunatityChanged);
             // restore user info
             var _shopUser = $.cookie("shopUser");
             if (_shopUser)

@@ -12,15 +12,10 @@ define("plugin/shop/site/js/view/menuCart", [
         tagName: 'li',
         template: tpl,
         lang: lang,
-        // collection: cartCollectionInstance,
         initialize: function () {
-            // this.listenTo(cartCollectionInstance, 'reset', this.render);
-            // this.listenTo(cartCollectionInstance, 'sync', this.render);
-            // debugger;
             this.model.on('change', this.render, this);
         },
         render: function () {
-            // debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             if (this.model.getProductCount())
                 this.$('.counter').text(this.model.getProductCount());

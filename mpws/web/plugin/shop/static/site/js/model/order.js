@@ -2,12 +2,11 @@ define('plugin/shop/site/js/model/order', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/underscore',
-    'plugin/shop/site/js/model/product',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-alert',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
-], function (Sandbox, Backbone, _, ModelProduct, ShopUtils, BSAlert, lang) {
+], function (Sandbox, Backbone, _, ShopUtils, BSAlert, lang) {
 
     // debugger;
     var model = Backbone.Model.extend({
@@ -23,14 +22,6 @@ define('plugin/shop/site/js/model/order', [
             Sandbox.eventSubscribe('plugin:shop:order:add', this.productAdd);
             Sandbox.eventSubscribe('plugin:shop:order:remove', this.productRemove);
             Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
-            // Sandbox.eventSubscribe('plugin:shop:list_cart:changed', function(data) {
-            //     // Sandbox.eventNotify('plugin:shop:order:changed', self);
-            //     debugger;
-            //     self.trigger('change');
-            // });
-            // this.on('change', function () {
-            //     debugger;
-            // });
         },
         parse: function (data) {
             // debugger;
@@ -38,8 +29,7 @@ define('plugin/shop/site/js/model/order', [
                 account: data.account || {},
                 info: data.info || {},
                 items: _(data.items).reduce(function(target, productData){
-                    var _product = new ModelProduct(productData);
-                    target[_product.id] = _product.toJSON();
+                    target[productData.ID] = ShopUtils.adjustProductItem(productData);
                     return target;
                 }, {})
             };
@@ -49,6 +39,9 @@ define('plugin/shop/site/js/model/order', [
         },
         getProductCount: function () {
             return Object.getOwnPropertyNames(this.get('items') || {}).length;
+        },
+        getProductByID: function (productID) {
+            return this.get('items')[productID] || null;
         },
         setProductQuantity:  function (event, productID, quantity) {
             var self = this;
@@ -67,14 +60,14 @@ define('plugin/shop/site/js/model/order', [
         },
         productAdd: function (event) {
             // debugger;
-            var product = this.get('items')[event.id];
+            var product = this.getProductByID(event.id);
             if (product)
                 this.setProductQuantity(event, event.id, product.Quantity + 1);
             else
                 this.setProductQuantity(event, event.id, 1);
         },
         productRemove: function (event) {
-            var product = this.get('items')[event.id];
+            var product = this.getProductByID(event.id);
             if (product)
                 this.setProductQuantity(event, event.id, 0);
         },

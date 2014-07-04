@@ -722,6 +722,8 @@ class pluginShop extends objectPlugin {
                 $product['Quantity'] = $newQuantity;
                 $product["Total"] = $product['Price'];
                 $items[$productID] = $product;
+            } else if ($req['productID'] === "*") {
+                $items = array();
             }
             $_SESSION[$this->_listKey_Cart] = $items;
         }
@@ -729,19 +731,19 @@ class pluginShop extends objectPlugin {
     }
 
     // removes particular product or clears whole shopping cart
-    public function delete_shop_cart (&$resp, $req) {
-        if (isset($req['productID'])) {
-            $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
-            $productID = $req['productID'];
-            if ($productID === "*") {
-                $items = array();
-            } elseif (isset($items[$productID])) {
-                unset($items[$productID]);
-            }
-            $_SESSION[$this->_listKey_Cart] = $items;
-        }
-        $this->_getOrderTemp($resp, $req);
-    }
+    // public function delete_shop_cart (&$resp, $req) {
+    //     if (isset($req['productID'])) {
+    //         $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+    //         $productID = $req['productID'];
+    //         if ($productID === "*") {
+    //             $items = array();
+    //         } elseif (isset($items[$productID])) {
+    //             unset($items[$productID]);
+    //         }
+    //         $_SESSION[$this->_listKey_Cart] = $items;
+    //     }
+    //     $this->_getOrderTemp($resp, $req);
+    // }
 
     private function __productCountInCart ($id) {
         $list = $this->_getOrderTemp();

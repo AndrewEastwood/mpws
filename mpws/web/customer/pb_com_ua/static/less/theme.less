@@ -288,6 +288,23 @@ i.fa {cursor: pointer;}
 .shop-product-item-full {
   .product-name {color: @textForegroundColor;}
   .productSparkline {}
+  .shop-product-image-main {
+    .link {
+      display: block;
+      background-color: #fff;
+      .productimage {
+        max-height: 300px;
+        height: 300px;
+        margin: 0px auto;
+        text-align: center;
+        padding: 20px;
+        img {
+          display: inline-block;
+          max-height: 250px;
+        }
+      }
+    }
+  }
 }
 
 .shop-product-item-short {
@@ -295,12 +312,10 @@ i.fa {cursor: pointer;}
     .link {
       display: block;
       background-color: #fff;
-      .image {
+      .productimage {
         max-height: 150px;
         height: 150px;
         margin: 0px auto;
-        background: url('@{imgPath}noimage.png') no-repeat center center;
-        background-size: contain;
       }
     }
   }
@@ -309,6 +324,15 @@ i.fa {cursor: pointer;}
       width: auto;
     }
   }
+}
+
+.noimage {
+  background: url('@{imgPath}noimage.png') no-repeat center center;
+  background-size: contain;
+}
+
+.productimage {
+  margin: 0px auto;
 }
 
 /* product images */
@@ -469,6 +493,9 @@ i.fa {cursor: pointer;}
     margin-left: -110px;
   }
   .shop-widget-productlist {
+    .wrapper:nth-child(n+4) {
+      display: none;
+    }
     .wrapper {
       text-align: left;
       .shop-product-image-main {
@@ -485,6 +512,11 @@ i.fa {cursor: pointer;}
         position: relative;
         right: 0px;
         margin-top: -40px;
+        .productimage {
+          max-height: 36px;
+          height: 36px;
+          margin: 0px auto;
+        }
       }
       .shop-product-remove {z-index: 99; position: relative;}
       .product-name {display: block;}
@@ -492,6 +524,7 @@ i.fa {cursor: pointer;}
       .product-quantity {width: 25px;}
       .product-total {width: 50px;}
       .productQuantityAction {display: none;}
+      input.quantity {display: none;}
     }
   }
   .cartInfo {
@@ -519,6 +552,12 @@ i.fa {cursor: pointer;}
     .shop-product-image-main {
       width: 40px;
       margin-left: 10px;
+      vertical-align: middle;
+    }
+    .productimage {
+      max-height: 36px;
+      height: 36px;
+      margin: 0px auto;
     }
     .product-name {
       display: inline-block;
@@ -534,6 +573,11 @@ i.fa {cursor: pointer;}
     .product-price {width: 60px;}
     .product-quantity {width: 30px;}
     .product-total {width: 80px;}
+    .form-control.quantity {
+      display: inline-block;
+      width: 80px;
+      margin: 0px 10px;
+    }
   }
   .cartInfo {
     & > div:not(.shopPropmoCode) {
