@@ -14,7 +14,6 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
         template: tpl,
-        collection: new CollListProductCatalog(),
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_Other',
@@ -33,20 +32,30 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         //             'filter_categoryBrands',
         //             'filter_viewItemsOnPage'];
         // },
-        initialize: function () {
+        initialize: function (options) {
             // debugger;
             // this.defaultFilter = this.getDefaultFilter(true);
             // this.collection.updateUrl(this.defaultFilter);
+            this.collection = new CollListProductCatalog(options.categoryID);
+            this.collection.on('sync', this.render, this);
             this.collection.on('reset', this.render, this);
         },
         render: function () {
             // debugger;
+
             var self = this;
+            var displayItems = [];
+            var _filterData = this.collection.filter;
+
             this.collection.each(function(model){
                 var productView = new ProductItemShort({model: model});
-                self.$el.append(productView.render().el);
+                displayItems.push(productView.render().el);
             });
-            var _filterData = this.collection.getExtras().filter;
+
+            this.$el.html(this.template({
+                displayItems: displayItems,
+                filter: _filterData
+            }));
 
             // update (restore) filter options by server applied filter
             this.$('#shopProductListFiltering_SortByID').val(_filterData.filterOptionsApplied.filter_viewSortBy);
@@ -63,7 +72,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var _filterPrice = this.$('.slider').slider();
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
             return this;
-        }
+        },
         // fetchAndRender: function (options, fetchOptions) {
         //     // debugger;
         //     debugger;
@@ -85,7 +94,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             else
                 _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(event.target).val());
 
-            this.collection.getOrSetFilter(_targetFilterName, _filterOptions[_targetFilterName]);
+            this.collection.setFilter(_targetFilterName, _filterOptions[_targetFilterName]);
 
             this.collection.fetch();
             // this.fetchAndRender(_filterOptions);
@@ -96,9 +105,9 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var filter_viewSortBy = this.$('#shopProductListFiltering_SortByID').val();
             var filter_viewItemsOnPage = this.$('#shopProductListDisplayItems_DisplayCountID').val();
 
-            this.collection.getOrSetFilter('filter_viewPageNum', 0);
-            this.collection.getOrSetFilter('filter_viewSortBy', filter_viewSortBy);
-            this.collection.getOrSetFilter('filter_viewItemsOnPage', filter_viewItemsOnPage);
+            this.collection.setFilter('filter_viewPageNum', 0);
+            this.collection.setFilter('filter_viewSortBy', filter_viewSortBy);
+            this.collection.setFilter('filter_viewItemsOnPage', filter_viewItemsOnPage);
             this.collection.fetch();
             /*
             this.fetchAndRender({
@@ -115,8 +124,8 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var filter_commonPriceMin = _priceRange[0];
             var filter_commonPriceMax = _priceRange[1];
 
-            this.collection.getOrSetFilter('filter_commonPriceMin', filter_commonPriceMin);
-            this.collection.getOrSetFilter('filter_commonPriceMax', filter_commonPriceMax);
+            this.collection.setFilter('filter_commonPriceMin', filter_commonPriceMin);
+            this.collection.setFilter('filter_commonPriceMax', filter_commonPriceMax);
 
             this.$('.shop-filter-price-start').text(filter_commonPriceMin);
             this.$('.shop-filter-price-end').text(filter_commonPriceMax);
@@ -129,13 +138,13 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             // });
         },
         filterProducts_CancelFilter: function () {
-            var self = this;
-            // this.defaultFilter = this.getDefaultFilter();
-            _(this.getFilterOptions()).each(function(filterKey){
-                self.collection.getOrSetFilter(filterKey, "");
-            });
+            // var self = this;
+            // // this.defaultFilter = this.getDefaultFilter();
+            // _(this.getFilterOptions()).each(function(filterKey){
+            //     self.collection.setFilter(filterKey, "");
+            // });
             // this.fetchAndRender(this.defaultFilter, {reset: true});
-            this.collection.fetch({reset: true});
+            this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function () {
             var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
@@ -143,9 +152,9 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             _innerCheckbox.trigger('change');
         },
         filterProducts_LoadMore: function () {
-            var _filterOptions = this.collection.getFilter(true);
-            _filterOptions.filter_viewPageNum++;
-            this.collection.getOrSetFilter('filter_commonPriceMin', filter_commonPriceMin);
+            var _filter_commonPriceMin = this.collection.getFilter('filter_commonPriceMin');
+            _filter_commonPriceMin++;
+            this.collection.setFilter('filter_commonPriceMin', _filter_commonPriceMin);
             // debugger;
             this.collection.fetch({update: true, remove: false});
             // this.fetchAndRender(_filterOptions, {update: true, remove: false});

@@ -94,11 +94,11 @@ define("plugin/shop/site/js/router", [
 
             require(['plugin/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
                 // create new view
-                var listProductCatalog = new ListProductCatalog();
-                // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
-                listProductCatalog.collection.fetch({
+                var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
                 });
+                // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
+                listProductCatalog.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',

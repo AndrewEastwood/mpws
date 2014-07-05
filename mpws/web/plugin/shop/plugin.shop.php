@@ -337,6 +337,7 @@ class pluginShop extends objectPlugin {
 
         $filterOptions = array(
             /* common options */
+            "id" => $categoryID,
             "filter_viewSortBy" => null,
             "filter_viewItemsOnPage" => 16,
             "filter_viewPageNum" => 0,
@@ -490,12 +491,12 @@ class pluginShop extends objectPlugin {
 
         // store data
         $data['items'] = $products;
-        $data['info'] =  array(
-            "count" => count($dataCategoryInfo)
-        );
         $data['filter'] = array(
             'filterOptionsAvailable' => $filterOptionsAvailable,
-            'filterOptionsApplied' => $filterOptionsApplied
+            'filterOptionsApplied' => $filterOptionsApplied,
+            'info' => array(
+                "count" => count($dataCategoryInfo)
+            )
         );
         // return data object
         return $data;

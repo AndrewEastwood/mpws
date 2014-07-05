@@ -8,71 +8,76 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
 
     var ListProductCatalog = Backbone.Collection.extend({
         model: ModelProduct,
+        filter: {
+            filterOptionsAvailable: {},
+            filterOptionsApplied: {},
+            info: {}
+        },
         savedFilters: {},
-        getFilterOptions: function () {
-            return _(this.getRequestFilter()).keys();
+        initialize: function (categoryID) {
+            this.categoryID = categoryID;
+            this.filter.filterOptionsApplied = this.createFilter(false);
         },
-        getAppliedFilter: function () {
-            return this.filter.filterOptionsApplied;
-        },
-        getAvailableFilter: function () {
-            return this.filter.filterOptionsAvailable;
-        },
-        getRequestFilter: function (reset) {
+        createFilter: function (reset) {
             return {
 
-                categoryID: this.options.categoryID,
+                id: this.categoryID,
 
-                filter_viewSortBy: reset ? null : this.getOrSetFilter('filter_viewSortBy') || null,
+                filter_viewSortBy: reset ? null : this.restoreFilter('filter_viewSortBy') || null,
 
                 filter_viewItemsOnPage: 3,
 
-                filter_viewPageNum: reset ? null : this.getOrSetFilter('filter_viewPageNum') || null,
+                filter_viewPageNum: reset ? null : this.restoreFilter('filter_viewPageNum') || null,
 
                 // common
                 // these options are common for all existed categories
                 // so we just keep them here and render them at very top
                 // of the filter panel
-                filter_commonPriceMax: reset ? null : this.getOrSetFilter('filter_commonPriceMax') || null,
+                filter_commonPriceMax: reset ? null : this.restoreFilter('filter_commonPriceMax') || null,
 
-                filter_commonPriceMin: reset ? null : this.getOrSetFilter('filter_commonPriceMin') || null,
+                filter_commonPriceMin: reset ? null : this.restoreFilter('filter_commonPriceMin') || null,
 
-                filter_commonAvailability: reset ? [] : this.getOrSetFilter('filter_commonAvailability') ? this.getOrSetFilter('filter_commonAvailability').split(',') : [],
+                filter_commonAvailability: reset ? [] : this.restoreFilter('filter_commonAvailability') ? this.restoreFilter('filter_commonAvailability').split(',') : [],
 
-                filter_commonOnSaleTypes: reset ? [] : this.getOrSetFilter('filter_commonOnSaleTypes') ? this.getOrSetFilter('filter_commonOnSaleTypes').split(',') : [],
+                filter_commonOnSaleTypes: reset ? [] : this.restoreFilter('filter_commonOnSaleTypes') ? this.restoreFilter('filter_commonOnSaleTypes').split(',') : [],
 
                 // category based (use specifications of current category)
                 // these options have category specific options and they are
                 // being rendered under the common options
-                filter_categoryBrands: reset ? [] : this.getOrSetFilter('filter_categoryBrands') ? this.getOrSetFilter('filter_categoryBrands').split(',') : [],
+                filter_categoryBrands: reset ? [] : this.restoreFilter('filter_categoryBrands') ? this.restoreFilter('filter_categoryBrands').split(',') : [],
             };
         },
-        getOrSetFilter: function (filterKey, value) {
-            var key = Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
-            var rez = null;
-            // $.cookie.raw = true;
-            if (_.isUndefined(value))
-                rez = this.savedFilters[key] || "";// rez = $.cookie(key);
-            else
-                this.savedFilters[key] = value;//$.cookie(key, value);
-            // $.cookie.json = false;
-            return "" + rez;
+        resetFilter: function () {
+            this.filter.filterOptionsApplied = this.createFilter(true);
+            return this;
+        },
+        generateFilterStorageKey: function (filterKey) {
+            return Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
+        },
+        restoreFilter: function (filterKey) {
+            var key = this.generateFilterStorageKey(filterKey);
+            return this.savedFilters[key] || "";
+        },
+        getFilter: function (filterKey) {
+            return this.filter.filterOptionsApplied[filterKey];
+        },
+        setFilter: function (filterKey, value) {
+            var key = this.generateFilterStorageKey(filterKey);
+            this.filter.filterOptionsApplied[filterKey] = value;
+            this.savedFilters[key] = value;
         },
         url: function () {
             return APP.getApiLink(_.extend({
                 source: 'shop',
                 fn: 'catalog',
-                type: 'browse'}, this.getRequestFilter()));
-        },
-        applyFilter: function (filterOptions) {
-
+                type: 'browse'}, this.filter.filterOptionsApplied));
         },
         parse: function (data) {
             // adjust products
-            debugger;
+            // debugger;
             // adjust filtering
-            var filter = data.filter;
-            var productItems = _(data.items).map(function(item){ return item; });
+            var filter = data.browse.filter;
+            var productItems = _(data.browse.items).map(function(item){ return item; });
 
             // join category/origin info
             _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){
@@ -94,8 +99,9 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
 
             // debugger;
             this.filter = filter;
-            this.hasMoreProducts = data.info.count > productItems.length + this.length;
+            this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
 
+            // debugger;
             return productItems;
         }
     });
