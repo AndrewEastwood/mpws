@@ -22,27 +22,13 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             "click .shop-filter-cancel": 'filterProducts_CancelFilter',
             "click .shop-load-more": 'filterProducts_LoadMore',
         },
-        // getFilterOptions: function () {
-        //     return ['filter_viewSortBy',
-        //             'filter_viewPageNum',
-        //             'filter_commonPriceMax',
-        //             'filter_commonPriceMin',
-        //             'filter_commonAvailability',
-        //             'filter_commonOnSaleTypes',
-        //             'filter_categoryBrands',
-        //             'filter_viewItemsOnPage'];
-        // },
         initialize: function (options) {
-            // debugger;
-            // this.defaultFilter = this.getDefaultFilter(true);
-            // this.collection.updateUrl(this.defaultFilter);
             this.collection = new CollListProductCatalog(options.categoryID);
             this.collection.on('sync', this.render, this);
             this.collection.on('reset', this.render, this);
         },
         render: function () {
             // debugger;
-
             var self = this;
             var displayItems = [];
             var _filterData = this.collection.filter;
@@ -52,20 +38,22 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                 displayItems.push(productView.render().el);
             });
 
+            // debugger;
             this.$el.html(this.template({
                 displayItems: displayItems,
                 filter: _filterData
             }));
 
             // update (restore) filter options by server applied filter
-            this.$('#shopProductListFiltering_SortByID').val(_filterData.filterOptionsApplied.filter_viewSortBy);
-            this.$('#shopProductListDisplayItems_DisplayCountID').val(_filterData.filterOptionsApplied.filter_viewItemsOnPage);
-            this.$('input[name^="filter_"]').each(function(){
-                var _targetFilterName = $(this).attr('name');
-                var _targetFilterValue = $(this).val();
-                if (_(_filterData.filterOptionsApplied[_targetFilterName]).indexOf(_targetFilterValue) >= 0)
-                    $(this).prop('checked', 'checked').attr('checked', 'checked');
-            });
+            // this.$('#shopProductListFiltering_SortByID').val(_filterData.filterOptionsApplied.filter_viewSortBy);
+            // this.$('#shopProductListDisplayItems_DisplayCountID').val(_filterData.filterOptionsApplied.filter_viewItemsOnPage);
+            // this.$('input[name^="filter_"]').each(function(){
+            //     // debugger;
+            //     var _targetFilterName = $(this).attr('name');
+            //     var _targetFilterValue = $(this).val();
+            //     if (_(_filterData.filterOptionsApplied[_targetFilterName]).indexOf(_targetFilterValue) >= 0)
+            //         $(this).prop('checked', 'checked').attr('checked', 'checked');
+            // });
 
             // // enhance ui components
             // debugger;
@@ -73,11 +61,6 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
             return this;
         },
-        // fetchAndRender: function (options, fetchOptions) {
-        //     // debugger;
-        //     debugger;
-        //     // return MView.prototype.fetchAndRender.call(this, _.extend({}, this.collection.defaultFilter, options), fetchOptions);
-        // },
         filterProducts_Other: function (event) {
             // console.log(event);
             // debugger;
@@ -87,17 +70,18 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                 filter_viewPageNum: 0
             };
 
-            _filterOptions[_targetFilterName] = [];
+            _filterOptions[_targetFilterName] = this.collection.getFilter(_targetFilterName);
+            // debugger;
 
             if ($(event.target).is(':checked'))
                 _filterOptions[_targetFilterName].push($(event.target).val());
             else
                 _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(event.target).val());
 
+            this.collection.setFilter('filter_viewPageNum', 0);
             this.collection.setFilter(_targetFilterName, _filterOptions[_targetFilterName]);
 
             this.collection.fetch();
-            // this.fetchAndRender(_filterOptions);
         },
         filterProducts_Dropdowns: function (event) {
             // console.log(event);
@@ -109,12 +93,6 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.collection.setFilter('filter_viewSortBy', filter_viewSortBy);
             this.collection.setFilter('filter_viewItemsOnPage', filter_viewItemsOnPage);
             this.collection.fetch();
-            /*
-            this.fetchAndRender({
-                filter_viewPageNum: 0,
-                filter_viewSortBy: filter_viewSortBy,
-                filter_viewItemsOnPage: filter_viewItemsOnPage
-            });*/
         },
         filterProducts_PriceChanged: function (event) {
             // console.log(event);
@@ -124,6 +102,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             var filter_commonPriceMin = _priceRange[0];
             var filter_commonPriceMax = _priceRange[1];
 
+            this.collection.setFilter('filter_viewPageNum', 0);
             this.collection.setFilter('filter_commonPriceMin', filter_commonPriceMin);
             this.collection.setFilter('filter_commonPriceMax', filter_commonPriceMax);
 
@@ -131,33 +110,21 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.$('.shop-filter-price-end').text(filter_commonPriceMax);
 
             this.collection.fetch();
-            // this.fetchAndRender({
-            //     filter_viewPageNum: 0,
-            //     filter_commonPriceMin: filter_commonPriceMin,
-            //     filter_commonPriceMax: filter_commonPriceMax
-            // });
         },
         filterProducts_CancelFilter: function () {
-            // var self = this;
-            // // this.defaultFilter = this.getDefaultFilter();
-            // _(this.getFilterOptions()).each(function(filterKey){
-            //     self.collection.setFilter(filterKey, "");
-            // });
-            // this.fetchAndRender(this.defaultFilter, {reset: true});
             this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function () {
-            var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
-            _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
-            _innerCheckbox.trigger('change');
+            // var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
+            // _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
+            // _innerCheckbox.trigger('change');
         },
         filterProducts_LoadMore: function () {
-            var _filter_commonPriceMin = this.collection.getFilter('filter_commonPriceMin');
-            _filter_commonPriceMin++;
-            this.collection.setFilter('filter_commonPriceMin', _filter_commonPriceMin);
+            var _filter_viewPageNum = this.collection.getFilter('filter_viewPageNum');
+            _filter_viewPageNum++;
+            this.collection.setFilter('filter_viewPageNum', _filter_viewPageNum);
             // debugger;
             this.collection.fetch({update: true, remove: false});
-            // this.fetchAndRender(_filterOptions, {update: true, remove: false});
         }
     });
 

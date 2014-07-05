@@ -360,7 +360,7 @@ define("default/js/lib/handlebars_helpers", [
             item.$last = index === arr.length - 1;
             return options.fn(item);
         }).join('');
-    };
+    }
     // helpers.mpwsPartial = function (partialID, partialData) {
     // }
     helpers.mpwsIsEmpty = function (object, options) {
@@ -368,6 +368,13 @@ define("default/js/lib/handlebars_helpers", [
     }
     helpers.mpwsIsNotEmpty = function (object, options) {
         return !_.isEmpty(object) ? options.fn(this) : options.inverse(this);
+    }
+    helpers.in_array = function (array, value, options) {
+        return array && _(array).indexOf(value) > -1 ? options.fn(this) : options.inverse(this);
+    }
+    helpers.has = function (object, key, options) {
+        // debugger;
+        return _(object).has(key) ? options.fn(this) : options.inverse(this);
     }
     // helpers.mpwsPartial = function (templateName, partialData) {
     //     var _partial = Handlebars.partials[templateName];

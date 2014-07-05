@@ -359,10 +359,17 @@ class pluginShop extends objectPlugin {
         $filterOptionsAvailable['filter_commonStatus'] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
         foreach ($filterOptionsApplied as $key => $value) {
             $filterOptionsApplied[$key] = libraryRequest::fromGET($key, $filterOptions[$key]);
-            if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")
-                $filterOptionsApplied[$key] = floatval($filterOptionsApplied[$key]);
             if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
                 $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
+            if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")
+                $filterOptionsApplied[$key] = floatval($filterOptionsApplied[$key]);
+            if (is_string($filterOptionsApplied[$key])) {
+                if ($key == "filter_commonStatus" || $key == "filter_categoryBrands")
+                    $filterOptionsApplied[$key] = explode(',', $filterOptionsApplied[$key]);
+                if ($key == "filter_categorySubCategories" || $key == "filter_categorySpecifications")
+                    $filterOptionsApplied[$key] = explode(',', $filterOptionsApplied[$key]);
+            }
+            // var_dump($filterOptionsApplied[$key]);
         }
 
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
@@ -428,19 +435,15 @@ class pluginShop extends objectPlugin {
         else
             $filterOptionsApplied['filter_commonPriceMin'] = 0;
 
-        if (!empty($filterOptionsApplied['filter_categorySpecifications'])) {
-            $filterOptionsApplied['filter_categorySpecifications'] = explode(",", $filterOptionsApplied['filter_categorySpecifications']);
+        if (count($filterOptionsApplied['filter_categorySpecifications']))
             $dataConfigProducts['condition']["SpecFieldID"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categorySpecifications'], 'in');
-        }
+
+        if (count($filterOptionsApplied['filter_commonStatus']))
+            $dataConfigProducts['condition']["Status"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
 
         // filter: brands
-        if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
-            if (!is_array($filterOptionsApplied['filter_categoryBrands']))
-                $filterOptionsApplied['filter_categoryBrands'] = array($filterOptionsApplied['filter_categoryBrands']);
+        if (count($filterOptionsApplied['filter_categoryBrands']))
             $dataConfigProducts['condition']['OriginID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
-        } else
-            $filterOptionsApplied['filter_categoryBrands'] = array();
-
 
         // get products
         $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
@@ -468,8 +471,7 @@ class pluginShop extends objectPlugin {
                         $uniqueBrands[$obj['OriginID']] = array(
                             "ID" => $obj['OriginID'],
                             "Name" => $obj['OriginName'],
-                            "ProductCount" => 1,
-                            "IsSelected" => false
+                            "ProductCount" => 1
                         );
                     else
                         $uniqueBrands[$obj['OriginID']]["ProductCount"]++;
@@ -486,8 +488,8 @@ class pluginShop extends objectPlugin {
                     else
                         $uniqueSubCategories[$obj['CategoryID']]["ProductCount"]++;
             }
-        $filterOptionsApplied['filter_categoryBrands'] = $uniqueBrands;
-        $filterOptionsApplied['filter_categorySubCategories'] = $uniqueSubCategories;
+        $filterOptionsAvailable['filter_categoryBrands'] = $uniqueBrands;
+        $filterOptionsAvailable['filter_categorySubCategories'] = $uniqueSubCategories;
 
         // store data
         $data['items'] = $products;

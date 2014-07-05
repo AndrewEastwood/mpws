@@ -52,11 +52,11 @@
                         {{#if ProductCount }}
                         <a class="list-group-item" href="javascript://" data-brand_id="{{ID}}" title="{{Name}}">
                             <label>
-                                {{#if IsSelected }}
+                                {{#in_array filter.filterOptionsApplied.filter_categoryBrands ID }}
                                     <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
                                 {{else}}
                                     <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
-                                {{/if}}
+                                {{/in_array}}
                                 {{Name}}
                             </label>
                             <span class="badge label-success">{{ProductCount}}</span>
@@ -118,8 +118,12 @@
                 {{#each filter.filterOptionsAvailable.filter_categorySpecifications }}
                 <div>
                     <label>
-                        <input type="checkbox" value="{{ID}}" name="filter_categorySpecifications">
-                        {{Name}}
+                        {{#in_array ../filter.filterOptionsApplied.filter_categorySpecifications @key }}
+                        <input type="checkbox" value="{{@key}}" name="filter_categorySpecifications" checked="checked">
+                        {{else}}
+                        <input type="checkbox" value="{{@key}}" name="filter_categorySpecifications">
+                        {{/in_array}}
+                        {{this}}
                     </label>
                 </div>
                 {{/each}}
@@ -130,43 +134,23 @@
 
         <div class="shop-component-catalog-filtering">
             <div class="title row">
-                <strong><span>Додатково:</span></strong>
+                <strong><span>Наявність:</span></strong>
             </div>
             <div class="content row">
-
-                {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonAvailability }}
+                {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonStatus }}
                 <div class="spacer"></div>
-                <div class="subtitle row">
-                    Наявність:
+                {{#each filter.filterOptionsAvailable.filter_commonStatus }}
+                <div>
+                    <label>
+                        {{#in_array ../filter.filterOptionsApplied.filter_commonStatus @key }}
+                        <input type="checkbox" value="{{this}}" name="filter_commonStatus" checked="checked">
+                        {{else}}
+                        <input type="checkbox" value="{{@key}}" name="filter_commonStatus">
+                        {{/in_array}}
+                        {{this}}
+                    </label>
                 </div>
-                <div class="row">
-                    {{#each filter.filterOptionsAvailable.filter_commonAvailability }}
-                    <div>
-                        <label>
-                            <input type="checkbox" value="{{this}}" name="filter_commonAvailability">
-                            {{this}}
-                        </label>
-                    </div>
-                    {{/each}}
-                </div>
-                <div class="spacer"></div>
-                {{/mpwsIsNotEmpty}}
-
-                {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonOnSaleTypes }}
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                    Пропозиції:
-                </div>
-                <div class="row">
-                    {{#each filter.filterOptionsAvailable.filter_commonOnSaleTypes }}
-                    <div>
-                        <label>
-                            <input type="checkbox" value="{{this}}" name="filter_commonOnSaleTypes">
-                            {{this}}
-                        </label>
-                    </div>
-                    {{/each}}
-                </div>
+                {{/each}}
                 <div class="spacer"></div>
                 {{/mpwsIsNotEmpty}}
 

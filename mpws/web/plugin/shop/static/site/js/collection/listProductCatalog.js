@@ -27,7 +27,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
 
                 filter_viewItemsOnPage: 3,
 
-                filter_viewPageNum: reset ? null : this.restoreFilter('filter_viewPageNum') || null,
+                filter_viewPageNum: reset ? null : this.restoreFilter('filter_viewPageNum') || 1,
 
                 // common
                 // these options are common for all existed categories
@@ -35,16 +35,15 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
                 // of the filter panel
                 filter_commonPriceMax: reset ? null : this.restoreFilter('filter_commonPriceMax') || null,
 
-                filter_commonPriceMin: reset ? null : this.restoreFilter('filter_commonPriceMin') || null,
+                filter_commonPriceMin: reset ? null : this.restoreFilter('filter_commonPriceMin') || 0,
 
-                filter_commonAvailability: reset ? [] : this.restoreFilter('filter_commonAvailability') ? this.restoreFilter('filter_commonAvailability').split(',') : [],
-
-                filter_commonOnSaleTypes: reset ? [] : this.restoreFilter('filter_commonOnSaleTypes') ? this.restoreFilter('filter_commonOnSaleTypes').split(',') : [],
+                filter_commonStatus: reset ? null : this.restoreFilter('filter_commonStatus') ? this.restoreFilter('filter_commonStatus') : null,
 
                 // category based (use specifications of current category)
                 // these options have category specific options and they are
                 // being rendered under the common options
-                filter_categoryBrands: reset ? [] : this.restoreFilter('filter_categoryBrands') ? this.restoreFilter('filter_categoryBrands').split(',') : [],
+                filter_categoryBrands: reset ? null : this.restoreFilter('filter_categoryBrands') ? this.restoreFilter('filter_categoryBrands') : null,
+                filter_categorySpecifications: reset ? null : this.restoreFilter('filter_categorySpecifications') ? this.restoreFilter('filter_categorySpecifications') : null,
             };
         },
         resetFilter: function () {
@@ -56,7 +55,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
         },
         restoreFilter: function (filterKey) {
             var key = this.generateFilterStorageKey(filterKey);
-            return this.savedFilters[key] || "";
+            return this.savedFilters[key] || null;
         },
         getFilter: function (filterKey) {
             return this.filter.filterOptionsApplied[filterKey];
@@ -67,10 +66,21 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             this.savedFilters[key] = value;
         },
         url: function () {
+            var _options = {};
+            // debugger;
+            _(this.filter.filterOptionsApplied).each(function(item, key){
+                if (_.isEmpty(item))
+                    return;
+                if (_.isArray(item))
+                    _options[key] = item.join(',');
+                else
+                    _options[key] = item;
+            });
+            console.log(_options);
             return APP.getApiLink(_.extend({
                 source: 'shop',
                 fn: 'catalog',
-                type: 'browse'}, this.filter.filterOptionsApplied));
+                type: 'browse'}, _options));
         },
         parse: function (data) {
             // adjust products
@@ -80,25 +90,26 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             var productItems = _(data.browse.items).map(function(item){ return item; });
 
             // join category/origin info
-            _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){
-                // debugger;
-                if (filter.filterOptionsApplied.filter_categoryBrands[brand.ID])
-                    _.extend(brand, filter.filterOptionsApplied.filter_categoryBrands[brand.ID]);
-                else
-                    brand.ProductCount = 0;
-            });
-            _(filter.filterOptionsAvailable.filter_categorySubCategories).each(function(category){
-                if (filter.filterOptionsApplied.filter_categorySubCategories[category.ID])
-                    category.ProductCount = filter.filterOptionsApplied.filter_categorySubCategories[category.ID].ProductCount;
-                else
-                    category.ProductCount = 0;
-            });
+            // _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){
+            //     // debugger;
+            //     if (filter.filterOptionsApplied.filter_categoryBrands[brand.ID])
+            //         _.extend(brand, filter.filterOptionsApplied.filter_categoryBrands[brand.ID]);
+            //     else
+            //         brand.ProductCount = 0;
+            // });
+            // _(filter.filterOptionsAvailable.filter_categorySubCategories).each(function(category){
+            //     if (filter.filterOptionsApplied.filter_categorySubCategories[category.ID])
+            //         category.ProductCount = filter.filterOptionsApplied.filter_categorySubCategories[category.ID].ProductCount;
+            //     else
+            //         category.ProductCount = 0;
+            // });
 
             // console.log(filter);
             // console.log(data.shop.info.count, productItems.length, this.length);
 
             // debugger;
             this.filter = filter;
+            // debugger;
             this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
 
             // debugger;
