@@ -21,7 +21,7 @@ class pluginShop extends objectPlugin {
 
         $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet($productID);
         $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet($productID);
-        $configProductsFeatures = configurationShopDataSource::jsapiShopGetProductSpecs($productID);
+        $configProductsFeatures = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
 
         $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
         $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
@@ -30,6 +30,9 @@ class pluginShop extends objectPlugin {
         // adjusting
         $product['Prices'] = $product['Prices']['PriceArchive'];
         $product['Attributes'] = $product['Attributes']['ProductAttributes'];
+
+        if (!is_array($product['Features']))
+            $product['Features'] = array();
 
         // Utils
         $product['ViewExtras'] = array();
@@ -344,16 +347,19 @@ class pluginShop extends objectPlugin {
             "filter_commonPriceMax" => null,
             "filter_commonPriceMin" => 0,
             "filter_commonStatus" => array(),
+            "filter_commonFeatures" => array(),
 
             /* category based */
             "filter_categoryBrands" => array(),
             "filter_categorySubCategories" => array(),
-            "filter_categorySpecifications" => array()
         );
 
         // filtering
         $filterOptionsApplied = new ArrayObject($filterOptions);
         $filterOptionsAvailable = new ArrayObject($filterOptions);
+
+        // get all product available statuses
+        $filterOptionsAvailable['filter_commonStatus'] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
@@ -365,7 +371,7 @@ class pluginShop extends objectPlugin {
             if (is_string($filterOptionsApplied[$key])) {
                 if ($key == "filter_commonStatus" || $key == "filter_categoryBrands")
                     $filterOptionsApplied[$key] = explode(',', $filterOptionsApplied[$key]);
-                if ($key == "filter_categorySubCategories" || $key == "filter_categorySpecifications")
+                if ($key == "filter_categorySubCategories" || $key == "filter_commonFeatures")
                     $filterOptionsApplied[$key] = explode(',', $filterOptionsApplied[$key]);
             }
             // var_dump($filterOptionsApplied[$key]);
@@ -373,16 +379,16 @@ class pluginShop extends objectPlugin {
 
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
         $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet($categoryID);
-        $dataConfigCategorySpecifications = configurationShopDataSource::jsapiShopGetCategorySpecs($categoryID);
+        // $dataConfigCategorySpecifications = configurationShopDataSource::jsapiShopGetCategorySpecs($categoryID);
 
         // get category sub-categories and origins
         $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
         $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
-        $dataCategorySpecifications = $this->getCustomer()->fetch($dataConfigCategorySpecifications);
+        // $dataCategorySpecifications = $this->getCustomer()->fetch($dataConfigCategorySpecifications);
 
-        if (!empty($dataCategorySpecifications))
-            foreach ($dataCategorySpecifications as $val)
-                $filterOptionsAvailable['filter_categorySpecifications'][$val['ID']] = $val['Specs'];
+        // if (!empty($dataCategorySpecifications))
+        //     foreach ($dataCategorySpecifications as $val)
+        //         $filterOptionsAvailable['filter_commonFeatures'][$val['ID']] = $val['Specs'];
 
         $cetagorySubIDs = array($categoryID);
         if (!empty($dataCategoryAllSubCategories))
@@ -436,8 +442,8 @@ class pluginShop extends objectPlugin {
             $filterOptionsApplied['filter_commonPriceMin'] = $filterOptionsAvailable['filter_commonPriceMin'];
 
         // var_dump($filterOptionsApplied);
-        if (count($filterOptionsApplied['filter_categorySpecifications']))
-            $dataConfigProducts['condition']["SpecFieldID"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categorySpecifications'], 'in');
+        if (count($filterOptionsApplied['filter_commonFeatures']))
+            $dataConfigProducts['condition']["FeatureID"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
 
         if (count($filterOptionsApplied['filter_commonStatus']))
             $dataConfigProducts['condition']["shop_products.Status"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
@@ -450,9 +456,7 @@ class pluginShop extends objectPlugin {
         // get products
         $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
         // get category info according to product filter
-        $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-        if (isset($dataConfigCategoryInfo['condition']['OriginID']))
-            unset($dataConfigCategoryInfo['condition']['OriginID']);
+        // $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
         $dataCategoryInfo = $this->getCustomer()->fetch($dataConfigCategoryInfo);
 
         $products = array();
@@ -468,7 +472,8 @@ class pluginShop extends objectPlugin {
         // adjust brands and categories
         $brands = array();
         $categories = array();
-        $statuses = array();
+        $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
+        $features = array();
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
             $brands[$brand['ID']] = $brand;
             $brands[$brand['ID']]['ProductCount'] = 0;
@@ -477,23 +482,36 @@ class pluginShop extends objectPlugin {
             $categories[$category['ID']] = $category;
             $categories[$category['ID']]['ProductCount'] = 0;
         }
+        foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
+            $statuses[$status]['ID'] = $status;
+            $statuses[$status]['ProductCount'] = 0;
+        }
 
         if ($productsInfo)
             foreach ($productsInfo as $obj) {
                 $OriginID = $obj['OriginID'];
                 $CategoryID = $obj['CategoryID'];
-                $statuses[] = $obj['Status'];
+                $status = $obj['Status'];
+                if (isset($statuses[$status]))
+                    $statuses[$status]['ProductCount']++;
                 if (isset($brands[$OriginID]))
                     $brands[$OriginID]['ProductCount']++;
                 if (isset($categories[$CategoryID]))
                     $categories[$CategoryID]['ProductCount']++;
+                foreach ($obj['Features'] as $featureKey => $feature) {
+                    if (isset($features[$featureKey]))
+                        $features[$featureKey]['ProductCount']++;
+                    else {
+                        $features[$featureKey]['Name'] = $feature;
+                        $features[$featureKey]['ProductCount'] = 0;
+                    }
+                }
             }
 
         $filterOptionsAvailable['filter_categoryBrands'] = $brands;
         $filterOptionsAvailable['filter_categorySubCategories'] = $categories;
-
-        // extract available category product statuses
-        $filterOptionsAvailable['filter_commonStatus'] = array_unique($statuses);//$this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
+        $filterOptionsAvailable['filter_commonStatus'] = $statuses;
+        $filterOptionsAvailable['filter_commonFeatures'] = $features;
 
         // store data
         $data['items'] = $products;

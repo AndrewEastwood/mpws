@@ -486,6 +486,36 @@ LOCK TABLES `shop_favproducts` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `shop_features`
+--
+
+DROP TABLE IF EXISTS `shop_features`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_features` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `FieldName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `Field` (`FieldName`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_features_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_features`
+--
+
+LOCK TABLES `shop_features` WRITE;
+/*!40000 ALTER TABLE `shop_features` DISABLE KEYS */;
+INSERT INTO `shop_features` VALUES (1,1,'LED','2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,'16:9','2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,'UltraFlat','2014-06-11 00:00:00','2014-06-11 00:00:00'),(4,1,'HD Support','2014-06-11 00:00:00','2014-06-11 00:00:00'),(5,1,'Wi-Fi','2014-06-11 00:00:00','2014-06-11 00:00:00');
+/*!40000 ALTER TABLE `shop_features` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `shop_offers`
 --
 
@@ -626,6 +656,41 @@ INSERT INTO `shop_productAttributes` VALUES (1,1,4,'LABEL','test','ACTIVE'),(2,1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `shop_productFeatures`
+--
+
+DROP TABLE IF EXISTS `shop_productFeatures`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_productFeatures` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `ProductID` int(11) NOT NULL,
+  `FeatureID` int(11) NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID` (`ID`),
+  KEY `CustomerID` (`CustomerID`,`ProductID`,`FeatureID`),
+  KEY `ProductID` (`ProductID`),
+  KEY `SpecFieldID` (`FeatureID`),
+  CONSTRAINT `shop_productFeatures_ibfk_3` FOREIGN KEY (`FeatureID`) REFERENCES `shop_features` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_productFeatures_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_productFeatures_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_productFeatures`
+--
+
+LOCK TABLES `shop_productFeatures` WRITE;
+/*!40000 ALTER TABLE `shop_productFeatures` DISABLE KEYS */;
+INSERT INTO `shop_productFeatures` VALUES (1,1,3,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,4,2,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,4,3,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(4,1,4,2,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(5,1,6,2,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(6,1,7,2,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(7,1,7,3,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(8,1,8,3,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(9,1,10,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(10,1,16,3,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(11,1,17,4,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(12,1,18,4,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(13,1,19,4,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(14,1,20,4,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(15,1,21,4,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(16,1,27,3,'2014-06-21 00:00:00','2014-06-21 00:00:00');
+/*!40000 ALTER TABLE `shop_productFeatures` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `shop_productPrices`
 --
 
@@ -727,100 +792,6 @@ CREATE TABLE `shop_relations` (
 LOCK TABLES `shop_relations` WRITE;
 /*!40000 ALTER TABLE `shop_relations` DISABLE KEYS */;
 /*!40000 ALTER TABLE `shop_relations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shop_specCategoryGroups`
---
-
-DROP TABLE IF EXISTS `shop_specCategoryGroups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shop_specCategoryGroups` (
-  `CategoryID` int(11) NOT NULL,
-  `SpecFieldID` int(11) NOT NULL,
-  KEY `CategoryID` (`CategoryID`,`SpecFieldID`),
-  KEY `SpecFieldID` (`SpecFieldID`),
-  CONSTRAINT `shop_specCategoryGroups_ibfk_1` FOREIGN KEY (`CategoryID`) REFERENCES `shop_categories` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_specCategoryGroups_ibfk_2` FOREIGN KEY (`SpecFieldID`) REFERENCES `shop_specFields` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shop_specCategoryGroups`
---
-
-LOCK TABLES `shop_specCategoryGroups` WRITE;
-/*!40000 ALTER TABLE `shop_specCategoryGroups` DISABLE KEYS */;
-INSERT INTO `shop_specCategoryGroups` VALUES (1,1),(1,2),(1,3),(1,4);
-/*!40000 ALTER TABLE `shop_specCategoryGroups` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shop_specFields`
---
-
-DROP TABLE IF EXISTS `shop_specFields`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shop_specFields` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `FieldName` varchar(200) COLLATE utf8_bin NOT NULL,
-  `DefaultValue` tinyint(1) DEFAULT '0',
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `Field` (`FieldName`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `shop_specFields_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shop_specFields`
---
-
-LOCK TABLES `shop_specFields` WRITE;
-/*!40000 ALTER TABLE `shop_specFields` DISABLE KEYS */;
-INSERT INTO `shop_specFields` VALUES (1,1,'LED',0,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,'16:9',0,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,'UltraFlat',0,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(4,1,'HD Support',0,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(5,1,'Wi-Fi',0,'2014-06-11 00:00:00','2014-06-11 00:00:00');
-/*!40000 ALTER TABLE `shop_specFields` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shop_specProductValues`
---
-
-DROP TABLE IF EXISTS `shop_specProductValues`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shop_specProductValues` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `ProductID` int(11) NOT NULL,
-  `SpecFieldID` int(11) NOT NULL,
-  `Value` tinyint(1) NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID` (`ID`),
-  KEY `CustomerID` (`CustomerID`,`ProductID`,`SpecFieldID`),
-  KEY `ProductID` (`ProductID`),
-  KEY `SpecFieldID` (`SpecFieldID`),
-  CONSTRAINT `shop_specProductValues_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`),
-  CONSTRAINT `shop_specProductValues_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`),
-  CONSTRAINT `shop_specProductValues_ibfk_3` FOREIGN KEY (`SpecFieldID`) REFERENCES `shop_specFields` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shop_specProductValues`
---
-
-LOCK TABLES `shop_specProductValues` WRITE;
-/*!40000 ALTER TABLE `shop_specProductValues` DISABLE KEYS */;
-INSERT INTO `shop_specProductValues` VALUES (1,1,3,1,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(2,1,4,2,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(3,1,4,3,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(4,1,4,2,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(5,1,6,2,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(6,1,7,2,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(7,1,7,3,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(8,1,8,3,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(9,1,10,1,1,'2014-06-11 00:00:00','2014-06-11 00:00:00'),(10,1,16,3,1,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(11,1,17,4,1,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(12,1,18,4,1,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(13,1,19,4,1,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(14,1,20,4,1,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(15,1,21,4,1,'2014-06-21 00:00:00','2014-06-21 00:00:00'),(16,1,27,3,1,'2014-06-21 00:00:00','2014-06-21 00:00:00');
-/*!40000 ALTER TABLE `shop_specProductValues` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1022,4 +993,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-06 18:21:35
+-- Dump completed on 2014-07-06 20:24:13

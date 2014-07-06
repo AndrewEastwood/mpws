@@ -124,7 +124,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             _innerCheckbox.trigger('change');
             if (event && event.stopPropagation)
                 event.stopPropagation();
-            if ($el.parents('a').attr('rel') === 'brand')
+            if ($el.parents('a').attr('rel') !== 'categoty')
                 return false;
         },
         filterProducts_LoadMore: function () {

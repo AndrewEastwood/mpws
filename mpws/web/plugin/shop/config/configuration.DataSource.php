@@ -61,11 +61,9 @@ class configurationShopDataSource extends objectConfiguration {
                 "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
                 "fields" => array("Status")
             ),
-            "shop_specProductValues" => array(
-                "constraint" => array("shop_specProductValues.ProductID", "=", "shop_products.ID"),
-                "fields" => array(
-                    "SpecFieldID" => "SpecFieldID",
-                    "SpecValue" => "Value")
+            "shop_productFeatures" => array(
+                "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
+                "fields" => array("FeatureID")
             )
         );
         unset($config['options']);
@@ -115,7 +113,7 @@ class configurationShopDataSource extends objectConfiguration {
         // var_dump($config);
 
         // if (!empty($filters['features'])) {
-        //     $config["additional"]["shop_specProductValues"] = array(
+        //     $config["additional"]["shop_productFeatures"] = array(
         //         "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
         //         "fields" => array(
         //             "SpecFieldID" => "SpecFieldID"
@@ -244,17 +242,25 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopGetProductSpecs ($id) {
+    static function jsapiShopGetProductFeatures ($id) {
         return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getProductSpecs",
-                "parameters" => array($id)
+            "action" => "select",
+            "source" => "shop_productFeatures",
+            "fields" => array("FeatureID"),
+            'additional' => array(
+                "shop_features" => array(
+                    "constraint" => array("shop_productFeatures.FeatureID", "=", "shop_features.ID"),
+                    "fields" => array("FieldName")
+                )
             ),
+            "condition" => array(
+                "ProductID" => self::jsapiCreateDataSourceCondition($id)
+            ),
+            "limit" => 0,
             "options" => array(
                 "asDict" => array(
-                    "keys" => "FieldName",
-                    "values" => "Value"
+                    "keys" => "FeatureID",
+                    "values" => "FieldName"
                 )
             )
         ));
@@ -330,18 +336,6 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
     // <<<< Shop catalog
-
-
-    static function jsapiShopGetCategorySpecs ($id) {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getCategorySpecs",
-                "parameters" => array($id)
-            )
-        ));
-    }
-
 
 
 

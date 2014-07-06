@@ -479,6 +479,15 @@ i.fa {cursor: pointer;}
     font-size: 1em;
     font-weight: bold;
   }
+  &.applied {
+    .list-group-item:not(disabled) {
+      .product-count {
+        &:before {
+          content: '+';
+        }
+      }
+    }
+  }
 }
 
 .shop-component {

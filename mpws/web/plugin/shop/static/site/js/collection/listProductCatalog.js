@@ -43,7 +43,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
                 // these options have category specific options and they are
                 // being rendered under the common options
                 filter_categoryBrands: reset ? null : this.restoreFilter('filter_categoryBrands') ? this.restoreFilter('filter_categoryBrands') : null,
-                filter_categorySpecifications: reset ? null : this.restoreFilter('filter_categorySpecifications') ? this.restoreFilter('filter_categorySpecifications') : null,
+                filter_commonFeatures: reset ? null : this.restoreFilter('filter_commonFeatures') ? this.restoreFilter('filter_commonFeatures') : null,
             };
         },
         resetFilter: function () {
