@@ -117,10 +117,15 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         filterProducts_CancelFilter: function () {
             this.collection.resetFilter().fetch({reset: true});
         },
-        filterProducts_ListItemClicked: function () {
-            // var _innerCheckbox = $(event.target).find('input[type="checkbox"]');
-            // _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
-            // _innerCheckbox.trigger('change');
+        filterProducts_ListItemClicked: function (event) {
+            var $el = $(event.target);
+            var _innerCheckbox = $el.find('input[type="checkbox"]');
+            _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
+            _innerCheckbox.trigger('change');
+            if (event && event.stopPropagation)
+                event.stopPropagation();
+            if ($el.parents('a').attr('rel') === 'brand')
+                return false;
         },
         filterProducts_LoadMore: function () {
             var _filter_viewPageNum = this.collection.getFilter('filter_viewPageNum');

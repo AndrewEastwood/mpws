@@ -272,11 +272,11 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
-    static function jsapiShopCategoryAllBrandsGet ($categoryID) {
+    static function jsapiShopCategoryAndSubCategoriesAllBrandsGet ($categoryID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
-                "name" => "getAllShopCategoryBrands",
+                "name" => "getAllShopCategoryBrandsWithSubCategories",
                 "parameters" => array($categoryID)
             )
         ));

@@ -25,7 +25,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
 
                 filter_viewSortBy: reset ? null : this.restoreFilter('filter_viewSortBy') || null,
 
-                filter_viewItemsOnPage: 3,
+                // filter_viewItemsOnPage: 3,
 
                 filter_viewPageNum: reset ? null : this.restoreFilter('filter_viewPageNum') || 1,
 
