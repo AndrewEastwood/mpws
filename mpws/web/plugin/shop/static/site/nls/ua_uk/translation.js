@@ -57,6 +57,7 @@ define("plugin/shop/site/nls/ua_uk/translation", [
         list_cart_alert_clear: "Ваш кошик очищено",
         order_trackingPage_label_hash: "Код замовлення",
         order_trackingPage_button_get: "Отримати статус",
-        order_trackingPage_wrongHash: "Невірно вказаний трекнг-код замовлення",
+        order_trackingPage_wrongHash: "Невірно вказаний код замовлення",
+        order_trackingPage_emptyHash: "Вкажіть Ваш код замовлення",
     }, CustomerPluginShop);
 });

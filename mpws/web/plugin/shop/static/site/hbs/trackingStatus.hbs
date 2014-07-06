@@ -16,10 +16,16 @@
         </div>
 
         {{#unless data.ID }}
+            {{#isNull data.Hash }}
+            <div class="alert alert-info">
+                {{lang.order_trackingPage_emptyHash}}
+            </div>
+            {{else}}
             <div class="alert alert-warning">
                 {{lang.order_trackingPage_wrongHash}}
                 <i class="fa fa-frown-o"></i>
             </div>
+            {{/isNull}}
         {{else}}
 
             {{#if_eq data.Status "SHOP_CLOSED" }}

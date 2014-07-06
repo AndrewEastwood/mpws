@@ -155,6 +155,7 @@ define("default/js/lib/handlebars_helpers", [
          * @example: {{if_eq this compare=that}}
          */
         if_eq: function (left, right, options) {
+            debugger;
             if (left === right) {
                 return options.fn(this);
             }
@@ -375,6 +376,9 @@ define("default/js/lib/handlebars_helpers", [
     helpers.has = function (object, key, options) {
         // debugger;
         return _(object).has(key) ? options.fn(this) : options.inverse(this);
+    }
+    helpers.isNull = function (value, options) {
+        return value === null ? options.fn(this) : options.inverse(this);
     }
     // helpers.mpwsPartial = function (templateName, partialData) {
     //     var _partial = Handlebars.partials[templateName];

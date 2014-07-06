@@ -26,7 +26,7 @@ define("plugin/shop/site/js/view/trackingStatus", [
             // debugger;
             this.model.clear({silent: true});
             if (hash instanceof $.Event)
-                this.model.set('Hash', this.$('input#inputOrderTrackingID').val());
+                this.model.set('Hash', this.$('input#inputOrderTrackingID').val() || null);
             else
                 this.model.set('Hash', hash);
         },
