@@ -142,12 +142,12 @@
                 {{#each filter.filterOptionsAvailable.filter_commonStatus }}
                 <div>
                     <label>
-                        {{#in_array ../filter.filterOptionsApplied.filter_commonStatus @key }}
+                        {{#in_array ../filter.filterOptionsApplied.filter_commonStatus this }}
                         <input type="checkbox" value="{{this}}" name="filter_commonStatus" checked="checked">
                         {{else}}
-                        <input type="checkbox" value="{{@key}}" name="filter_commonStatus">
+                        <input type="checkbox" value="{{this}}" name="filter_commonStatus">
                         {{/in_array}}
-                        {{this}}
+                        {{mpwsGetValueByKey ../lang this "product_status_"}}
                     </label>
                 </div>
                 {{/each}}

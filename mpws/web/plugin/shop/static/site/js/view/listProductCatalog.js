@@ -5,11 +5,13 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'plugin/shop/site/js/view/productItemShort',
     'default/js/lib/bootstrap-dialog',
     'default/js/plugin/hbs!plugin/shop/site/hbs/productCatalog',
+    /* lang */
+    'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     'default/js/lib/bootstrap',
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',
     "default/js/lib/jquery.cookie"
-], function (_, Backbone, CollListProductCatalog, ProductItemShort, dlg, tpl) {
+], function (_, Backbone, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
@@ -41,7 +43,8 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             // debugger;
             this.$el.html(this.template({
                 displayItems: displayItems,
-                filter: _filterData
+                filter: _filterData,
+                lang: lang
             }));
 
             // update (restore) filter options by server applied filter

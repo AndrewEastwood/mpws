@@ -101,6 +101,51 @@ class libraryDataBase {
                 // var_dump($fieldsToSelectClear);
             }
 
+        $_fieldOptionsWorkerFn = function ($context, $fieldName, $fieldOptions) {
+            switch (strtolower($fieldOptions['comparator'])) {
+                case '>':
+                    $context->dbo->where_gt($fieldName, $fieldOptions['value']);
+                    break;
+                case '>=':
+                    $context->dbo->where_gte($fieldName, $fieldOptions['value']);
+                    break;
+                case '<':
+                    $context->dbo->where_lt($fieldName, $fieldOptions['value']);
+                    break;
+                case '<=':
+                    $context->dbo->where_lte($fieldName, $fieldOptions['value']);
+                    break;
+                case 'is null':
+                    $context->dbo->where_null($fieldName, $fieldOptions['value']);
+                    break;
+                case 'is not null':
+                    $context->dbo->where_not_null($fieldName, $fieldOptions['value']);
+                    break;
+                case '=':
+                    $context->dbo->where_equal($fieldName, $fieldOptions['value']);
+                    break;
+                case '!=':
+                    $context->dbo->where_not_equal($fieldName, $fieldOptions['value']);
+                    break;
+                case 'like':
+                    $context->dbo->where_like($fieldName, $fieldOptions['value']);
+                    break;
+                case 'not like':
+                    $context->dbo->where_not_like($fieldName, $fieldOptions['value']);
+                    break;
+                case 'in':
+                    // var_dump('using WHERE_IN', $fieldOptions['value']);
+                    $context->dbo->where_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
+                    break;
+                case 'not in':
+                    $context->dbo->where_not_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
+                    break;
+                default:
+                    var_dump('Unknown condition statement occured');
+                    break;
+            }
+        };
+
 
         // condition
         // var_dump($fieldsToSelectFromDBClear);
@@ -108,47 +153,12 @@ class libraryDataBase {
             // var_dump($config['condition']);
             // translate condition filter string
             foreach ($config['condition'] as $fieldName => $fieldOptions) {
-                switch (strtolower($fieldOptions['comparator'])) {
-                    case '>':
-                        $this->dbo->where_gt($fieldName, $fieldOptions['value']);
-                        break;
-                    case '>=':
-                        $this->dbo->where_gte($fieldName, $fieldOptions['value']);
-                        break;
-                    case '<':
-                        $this->dbo->where_lt($fieldName, $fieldOptions['value']);
-                        break;
-                    case '<=':
-                        $this->dbo->where_lte($fieldName, $fieldOptions['value']);
-                        break;
-                    case 'is null':
-                        $this->dbo->where_null($fieldName, $fieldOptions['value']);
-                        break;
-                    case 'is not null':
-                        $this->dbo->where_not_null($fieldName, $fieldOptions['value']);
-                        break;
-                    case '=':
-                        $this->dbo->where_equal($fieldName, $fieldOptions['value']);
-                        break;
-                    case '!=':
-                        $this->dbo->where_not_equal($fieldName, $fieldOptions['value']);
-                        break;
-                    case 'like':
-                        $this->dbo->where_like($fieldName, $fieldOptions['value']);
-                        break;
-                    case 'not like':
-                        $this->dbo->where_not_like($fieldName, $fieldOptions['value']);
-                        break;
-                    case 'in':
-                        // var_dump('using WHERE_IN', $fieldOptions['value']);
-                        $this->dbo->where_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
-                        break;
-                    case 'not in':
-                        $this->dbo->where_not_in($fieldName, is_array($fieldOptions['value']) ? $fieldOptions['value'] : array($fieldOptions['value']));
-                        break;
-                    default:
-                        var_dump('Unknown condition statement occured');
-                        break;
+                if (is_array($fieldOptions) && !isset($fieldOptions['comparator'])) {
+                    // var_dump($fieldOptions);
+                    foreach ($fieldOptions as $fieldOption)
+                        $_fieldOptionsWorkerFn($this, $fieldName, $fieldOption);
+                } else {
+                    $_fieldOptionsWorkerFn($this, $fieldName, $fieldOptions);
                 }
             }
         }

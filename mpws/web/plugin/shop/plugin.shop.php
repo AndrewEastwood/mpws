@@ -425,25 +425,30 @@ class pluginShop extends objectPlugin {
             $filterOptionsApplied['filter_viewSortBy'] = null;
 
         // filter: price 
-        if ($filterOptionsApplied['filter_commonPriceMax'] > 0 && $filterOptionsApplied['filter_commonPriceMax'] < $filterOptionsAvailable['filter_commonPriceMax'])
-            $dataConfigProducts['condition']['Price'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
+        if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMax'] <= $filterOptionsAvailable['filter_commonPriceMax'])
+            $dataConfigProducts['condition']['Price'][] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
         else
             $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
 
-        if ($filterOptionsApplied['filter_commonPriceMin'] > 0)
-            $dataConfigProducts['condition']['Price'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '>=');
+        if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMin'] >= $filterOptionsAvailable['filter_commonPriceMin'])
+            $dataConfigProducts['condition']['Price'][] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
         else
-            $filterOptionsApplied['filter_commonPriceMin'] = 0;
+            $filterOptionsApplied['filter_commonPriceMin'] = $filterOptionsAvailable['filter_commonPriceMin'];
+
+        // var_dump($filterOptionsApplied);
 
         if (count($filterOptionsApplied['filter_categorySpecifications']))
             $dataConfigProducts['condition']["SpecFieldID"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categorySpecifications'], 'in');
 
         if (count($filterOptionsApplied['filter_commonStatus']))
-            $dataConfigProducts['condition']["Status"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
+            $dataConfigProducts['condition']["shop_products.Status"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
 
         // filter: brands
         if (count($filterOptionsApplied['filter_categoryBrands']))
             $dataConfigProducts['condition']['OriginID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
+
+
+        // var_dump($dataConfigProducts);
 
         // get products
         $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
