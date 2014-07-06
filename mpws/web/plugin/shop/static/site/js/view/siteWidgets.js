@@ -1,8 +1,9 @@
 define("plugin/shop/site/js/view/siteWidgets", [
     'default/js/lib/sandbox',
     'plugin/shop/site/js/view/cartEmbedded',
-    'plugin/shop/site/js/view/orderTrackingButton'
-], function (Sandbox, CartEmbedded, OrderTrackingButton) {
+    'plugin/shop/site/js/view/orderTrackingButton',
+    'plugin/shop/site/js/view/widgetAddress',
+], function (Sandbox, CartEmbedded, OrderTrackingButton, Address) {
 
     return function (models) {
 
@@ -16,6 +17,9 @@ define("plugin/shop/site/js/view/siteWidgets", [
         });
         cartEmbedded.render();
 
+        var addr = new Address();
+        addr.render();
+
         Sandbox.eventSubscribe('global:loader:complete', function () {
             Sandbox.eventNotify('global:content:render', [
                 {
@@ -26,6 +30,11 @@ define("plugin/shop/site/js/view/siteWidgets", [
                 {
                     name: 'CommonWidgetsTop',
                     el: cartEmbedded.$el,
+                    append: true
+                },
+                {
+                    name: 'CommonWidgetsTop',
+                    el: addr.$el,
                     append: true
                 }
             ]);

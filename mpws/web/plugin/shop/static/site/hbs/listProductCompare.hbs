@@ -13,25 +13,42 @@
                 <td></td>
                 {{#each data }}
                 <td>
-                    <div class="panel">
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
-                            <i class="fa fa-shopping-cart"></i>
-                        </a>
-                    </div>
+                    <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                    <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
                 </td>
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Фото</span></td>
+                <td><strong>Фото</strong></td>
                 {{#each data }}
                 <td>
                     <div class="shop-component shop-product-images">
                         <div class="shop-product-image shop-product-image-main">
                             <a href="/#shop/product/{{ID}}" class="link">
-                                <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{Name}}" title="{{Name}}" />
+                                <div class="image productimage noimage image_{{ID}}">
+                                    {{#if Attributes.IMAGES.MAIN}}
+                                    <div id="facebookG">
+                                        <div id="blockG_1" class="facebook_blockG"></div>
+                                        <div id="blockG_2" class="facebook_blockG"></div>
+                                        <div id="blockG_3" class="facebook_blockG"></div>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                {{#if Attributes.IMAGES.MAIN}}
+                                <script>
+                                (function() {
+                                    require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
+                                        img.title = "{{Name}}";
+                                        img.className = "image img-responsive";
+                                        $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                    });
+                                })();
+                                </script>
+                                {{/if}}
                             </a>
                         </div>
                     </div>
@@ -39,44 +56,44 @@
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Назва</span></td>
+                <td><strong>Назва</strong></td>
                 {{#each data }}
                 <td>{{OriginName}} - {{Name}}</td>
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Виробник</span></td>
+                <td><strong>Виробник</strong></td>
                 {{#each data }}
                 <td>{{OriginName}}</td>
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Категорія</span></td>
+                <td><strong>Категорія</strong></td>
                 {{#each data }}
                 <td>{{CategoryName}}</td>
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Ціна</span></td>
+                <td><strong>Ціна</strong></td>
                 {{#each data }}
                 <td><span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span></td>
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Опис</span></td>
+                <td><strong>Опис</strong></td>
                 {{#each data }}
                 <td>{{Description}}</td>
                 {{/each}}
             </tr>
             <tr>
-                <td><span class="label label-default">Характеристики</span></td>
+                <td><strong>Характеристики</strong></td>
                 {{#each data }}
                 <td>{{Description}}</td>
                 {{/each}}
             </tr>
             {{#each productFeatues }}
             <tr>
-                <td><span class="label label-default">{{ @key }}</span></td>
+                <td><strong>{{ @key }}</strong></td>
                 {{#each this }}
                 <td>
                     {{#if this }}
@@ -89,7 +106,7 @@
             </tr>
             {{/each}}
             <tr>
-                <td><span class="label label-default">Додаткові зображення</span></td>
+                <td><strong>Додаткові зображення</strong></td>
                 {{#each data }}
                 <td>{{Description}}</td>
                 {{/each}}
@@ -98,14 +115,12 @@
                 <td> </td>
                 {{#each data }}
                 <td>
-                    <div class="panel">
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
-                        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
-                            <i class="fa fa-shopping-cart"></i>
-                        </a>
-                    </div>
+                    <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                    <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
                 </td>
                 {{/each}}
             </tr>
