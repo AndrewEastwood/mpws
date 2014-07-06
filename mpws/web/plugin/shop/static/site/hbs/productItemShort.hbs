@@ -43,8 +43,7 @@
             <div class="badge">{{data.Price}}</div>
             <span class="value-suffix moneyType">грн.</span>
         </div>
-        <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
-        <p>
+        <div class="buttons">
 
             {{#if data.ViewExtras.InCartCount }}
                 <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
@@ -84,7 +83,7 @@
                 </button>
             {{/if}}
 
-        </p>
+        </div>
         <p>
             <a href="/#shop/product/{{data.ID}}" class="btn btn-success btn-block btn-warning">Детальніше <span class="fa fa-chevron-right"></span></a>
         </p>

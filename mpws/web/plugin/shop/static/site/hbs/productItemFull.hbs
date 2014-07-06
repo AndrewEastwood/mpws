@@ -1,5 +1,11 @@
 <div class="container">
-
+    <div class="productBadge {{data.Status}}">
+       <div class="ribbon-wrapper">
+            <div class="ribbon">
+                {{mpwsGetValueByKey lang data.Status "product_badge_"}}
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="product-name">

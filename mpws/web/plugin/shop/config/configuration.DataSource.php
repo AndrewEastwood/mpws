@@ -5,8 +5,23 @@ class configurationShopDataSource extends objectConfiguration {
     static $Table_ShopOrders = "shop_orders";
     static $Table_ShopProducts = "shop_products";
     static $Table_ShopOrigins = "shop_origins";
+    static $Table_ShopSettings = "shop_settings";
 
     // Product base configuration >>>>>
+    static function jsapiShopSettings ($id) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_settings",
+            "fields" => array("ID", "Property", "Value"),
+            "limit" => 0,
+            "options" => array(
+                "asDict" => array(
+                    "keys" => "Property",
+                    "values" => "Value"
+                )
+            )
+        ));
+    }
     static function jsapiShopProductItemGet ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -79,6 +94,8 @@ class configurationShopDataSource extends objectConfiguration {
             "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
             "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
         );
+        if (isset($config['additional']['shop_productFeatures']))
+            unset($config['additional']['shop_productFeatures']);
         $config['order'] = array(
             "field" => "shop_products.DateCreated",
             "ordering" => "DESC"

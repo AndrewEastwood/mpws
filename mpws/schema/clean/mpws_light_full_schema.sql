@@ -411,6 +411,7 @@ CREATE TABLE `shop_orders` (
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
   `Status` enum('ACTIVE','SHOP_REVIEWING','SHOP_PACKAGE','LOGISTIC_DELIVERING','CUSTOMER_POSTPONE','CUSTOMER_CANCELED','CUSTOMER_CHANGED','SHOP_WAITING_CUSTOMER_APPROVAL','CUSTOMER_APPROVED','LOGISTIC_DELIVERED','SHOP_CLOSED','CUSTOMER_REOPENED','CUSTOMER_CLOSED','CUSTOMER_WAITNG_REFUND','SHOP_REFUNDED','REMOVED','NEW') COLLATE utf8_bin NOT NULL DEFAULT 'NEW',
   `Hash` varchar(100) COLLATE utf8_bin NOT NULL,
+  `PromoID` varchar(50) COLLATE utf8_bin NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -548,6 +549,27 @@ CREATE TABLE `shop_products` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `shop_promo`
+--
+
+DROP TABLE IF EXISTS `shop_promo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_promo` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Code` varchar(50) NOT NULL,
+  `DateStart` datetime NOT NULL,
+  `DateExpire` datetime NOT NULL,
+  `Discount` decimal(10,0) NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_promo_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `shop_relations`
 --
 
@@ -568,6 +590,25 @@ CREATE TABLE `shop_relations` (
   CONSTRAINT `shop_relations_ibfk_4` FOREIGN KEY (`ProductB_ID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_relations_ibfk_5` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `shop_settings`
+--
+
+DROP TABLE IF EXISTS `shop_settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_settings` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Property` varchar(50) NOT NULL,
+  `Value` varchar(150) NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `shop_settings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -769,4 +810,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-06 20:39:14
+-- Dump completed on 2014-07-06 21:33:37

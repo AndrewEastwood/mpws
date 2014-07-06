@@ -379,16 +379,10 @@ class pluginShop extends objectPlugin {
 
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
         $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet($categoryID);
-        // $dataConfigCategorySpecifications = configurationShopDataSource::jsapiShopGetCategorySpecs($categoryID);
 
         // get category sub-categories and origins
         $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
         $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
-        // $dataCategorySpecifications = $this->getCustomer()->fetch($dataConfigCategorySpecifications);
-
-        // if (!empty($dataCategorySpecifications))
-        //     foreach ($dataCategorySpecifications as $val)
-        //         $filterOptionsAvailable['filter_commonFeatures'][$val['ID']] = $val['Specs'];
 
         $cetagorySubIDs = array($categoryID);
         if (!empty($dataCategoryAllSubCategories))
@@ -469,7 +463,7 @@ class pluginShop extends objectPlugin {
             foreach ($dataCategoryInfo as $val)
                 $productsInfo[] = $this->_getProductByID($val['ID']);
 
-        // adjust brands and categories
+        // adjust brands, categories and features
         $brands = array();
         $categories = array();
         $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
@@ -503,7 +497,7 @@ class pluginShop extends objectPlugin {
                         $features[$featureKey]['ProductCount']++;
                     else {
                         $features[$featureKey]['Name'] = $feature;
-                        $features[$featureKey]['ProductCount'] = 0;
+                        $features[$featureKey]['ProductCount'] = 1;
                     }
                 }
             }
