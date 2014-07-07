@@ -52,17 +52,23 @@
                     <div class="list-group list-group-category-brands">
                     {{#each filter.filterOptionsAvailable.filter_categoryBrands }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="javascript://" rel="brand" title="{{Name}}">
-                            <label>
-                                {{#in_array ../../filter.filterOptionsApplied.filter_categoryBrands ID }}
+                            {{#in_array ../../filter.filterOptionsApplied.filter_categoryBrands ID }}
+                            <a class="list-group-item active" href="javascript://" rel="brand" title="{{Name}}">
+                                <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
-                                {{else}}
+                                    {{Name}}
+                                </label>
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                            </a>
+                            {{else}}
+                            <a class="list-group-item" href="javascript://" rel="brand" title="{{Name}}">
+                                <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
-                                {{/in_array}}
-                                {{Name}}
-                            </label>
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                        </a>
+                                    {{Name}}
+                                </label>
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                            </a>
+                            {{/in_array}}
                         {{else}}
                         <a class="list-group-item disabled" href="javascript://" rel="brand" title="{{Name}}">
                             <label>
@@ -122,17 +128,23 @@
                     <div class="list-group list-group-category-brands">
                     {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
-                            <label>
-                                {{#in_array ../../filter.filterOptionsApplied.filter_commonFeatures @key }}
-                                    <input type="checkbox" value="{{@key}}" name="filter_commonFeatures" checked="checked">
-                                {{else}}
-                                    <input type="checkbox" value="{{@key}}" name="filter_commonFeatures">
-                                {{/in_array}}
-                                {{Name}}
-                            </label>
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                        </a>
+                            {{#in_array ../../filter.filterOptionsApplied.filter_commonFeatures @key }}
+                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
+                                <label>
+                                    <input type="checkbox" value="{{@key}}" name="filter_commonFeatures" checked="checked"> 
+                                    {{Name}}
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                                </label>
+                            </a>
+                            {{else}}
+                            <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
+                                <label>
+                                    <input type="checkbox" value="{{@key}}" name="filter_commonFeatures"> 
+                                    {{Name}}
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                                </label>
+                            </a>
+                            {{/in_array}}
                         {{else}}
                         <a class="list-group-item disabled" href="javascript://" rel="status" title="{{Name}}">
                             <label>
@@ -161,17 +173,23 @@
                     <div class="list-group list-group-category-brands">
                     {{#each filter.filterOptionsAvailable.filter_commonStatus }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
-                            <label>
-                                {{#in_array ../../filter.filterOptionsApplied.filter_commonStatus ID }}
+                            {{#in_array ../../filter.filterOptionsApplied.filter_commonStatus ID }}
+                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
+                                <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
-                                {{else}}
+                                    {{mpwsGetValueByKey ../../lang ID "product_status_"}}
+                                </label>
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                            </a>
+                            {{else}}
+                            <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
+                                <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
-                                {{/in_array}}
-                                {{mpwsGetValueByKey ../../lang ID "product_status_"}}
-                            </label>
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                        </a>
+                                    {{mpwsGetValueByKey ../../lang ID "product_status_"}}
+                                </label>
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                            </a>
+                            {{/in_array}}
                         {{else}}
                         <a class="list-group-item disabled" href="javascript://" rel="status" title="{{Name}}">
                             <label>
