@@ -22,10 +22,12 @@ class pluginShop extends objectPlugin {
         $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet($productID);
         $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet($productID);
         $configProductsFeatures = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
+        $configProductsRelations = configurationShopDataSource::jsapiShopProductRelations($productID);
 
         $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
         $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
         $product['Features'] = $this->getCustomer()->fetch($configProductsFeatures);
+        $product['Relations'] = $this->getCustomer()->fetch($configProductsRelations);
 
         // adjusting
         $product['Prices'] = $product['Prices']['PriceArchive'];
@@ -33,6 +35,16 @@ class pluginShop extends objectPlugin {
 
         if (!is_array($product['Features']))
             $product['Features'] = array();
+
+        $relations = array();
+        if (isset($product['Relations'])) {
+            foreach ($product['Relations'] as $relationItem) {
+                $relatedProduct = $this->_getProductByID($relationItem['ProductB_ID']);
+                if (isset($relatedProduct))
+                    $relations[] = $relatedProduct;
+            }
+        }
+        $product['Relations'] = $relations;
 
         // Utils
         $product['ViewExtras'] = array();
@@ -450,6 +462,8 @@ class pluginShop extends objectPlugin {
         // get products
         $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
         // get category info according to product filter
+        if (isset($dataConfigProducts['condition']['Price']))
+            $dataConfigCategoryInfo['condition']['Price'] = $dataConfigProducts['condition']['Price'];
         // $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
         $dataCategoryInfo = $this->getCustomer()->fetch($dataConfigCategoryInfo);
 

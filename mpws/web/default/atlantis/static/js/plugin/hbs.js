@@ -1,6 +1,5 @@
-define('default/js/plugin/hbs', [
 /**
- * @license Handlebars hbs 0.4.0 - Alex Sexton, but Handlebars has it's own licensing junk
+ * @license Handlebars hbs 0.4.0 - Alex Sexton, but Handlebars has its own licensing junk
  *
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/require-cs for details on the plugin this was based off of
@@ -10,9 +9,10 @@ define('default/js/plugin/hbs', [
 /*jslint evil: true, strict: false, plusplus: false, regexp: false */
 /*global require: false, XMLHttpRequest: false, ActiveXObject: false,
 define: false, process: false, window: false */
+define('default/js/plugin/hbs', [
 //>>excludeStart('excludeHbs', pragmas.excludeHbs)
   'default/js/lib/handlebars', 'default/js/lib/underscore', 'default/js/lib/i18nprecompile', 'default/js/lib/json2'
-// >>excludeEnd('excludeHbs')
+//>>excludeEnd('excludeHbs')
 ], function (
 //>>excludeStart('excludeHbs', pragmas.excludeHbs)
   Handlebars, _, precompile, JSON
@@ -34,6 +34,7 @@ define: false, process: false, window: false */
   var helperDirectory = 'templates/helpers/';
   var i18nDirectory = 'templates/i18n/';
   var buildCSSFileName = 'screen.build.css';
+  var onHbsReadMethod = "onHbsRead";
 
   Handlebars.registerHelper('$', function() {
     //placeholder for translation helper
@@ -91,7 +92,7 @@ define: false, process: false, window: false */
     fetchText = function (url, callback) {
       var xdm = false;
       // If url is a fully qualified URL, it might be a cross domain request. Check for that.
-      // IF url is a relative url, it cannot be cross domain.
+    // IF url is a relative url, it cannot be cross domain.
       if (url.indexOf('http') != 0 ){
           xdm = false;
       }else{
@@ -106,7 +107,7 @@ define: false, process: false, window: false */
          var xdr = getXhr(true);
         xdr.open('GET', url);
         xdr.onload = function() {
-          callback(xdr.responseText);
+          callback(xdr.responseText, url);
         };
         xdr.onprogress = function(){};
         xdr.ontimeout = function(){};
@@ -122,7 +123,7 @@ define: false, process: false, window: false */
           //Do not explicitly handle errors, those should be
           //visible via console output in the browser.
           if (xhr.readyState === 4) {
-            callback(xhr.responseText);
+            callback(xhr.responseText, url);
           }
         };
         xhr.send(null);
@@ -141,21 +142,21 @@ define: false, process: false, window: false */
       var body = fs.readFileSync(path, 'utf8') || '';
       // we need to remove BOM stuff from the file content
       body = body.replace(/^\uFEFF/, '');
-      callback(body);
+      callback(body, path);
     };
   }
   else if (typeof java !== 'undefined' && typeof java.io !== 'undefined') {
     fetchText = function(path, callback) {
-      var f = new java.io.File(path);
-      var is = new java.io.FileReader(f);
-      var reader = new java.io.BufferedReader(is);
+      var fis = new java.io.FileInputStream(path);
+      var streamReader = new java.io.InputStreamReader(fis, "UTF-8");
+      var reader = new java.io.BufferedReader(streamReader);
       var line;
       var text = '';
       while ((line = reader.readLine()) !== null) {
         text += new String(line) + '\n';
       }
       reader.close();
-      callback(text);
+      callback(text, path);
     };
   }
 
@@ -165,7 +166,7 @@ define: false, process: false, window: false */
       callback(cache[path]);
     }
     else {
-      fetchText(path, function(data){
+      fetchText(path, function(data, path){
         cache[path] = data;
         callback.call(this, data);
       });
@@ -203,6 +204,11 @@ define: false, process: false, window: false */
         if(!partialsUrl.match(/\/$/)) partialsUrl += '/';
       }
 
+      // Let redefine default fetchText
+      if(config.hbs.fetchText) {
+          fetchText = config.hbs.fetchText;
+      }
+
       var partialDeps = [];
 
       function recursiveNodeSearch( statements, res ) {
@@ -226,7 +232,7 @@ define: false, process: false, window: false */
         if ( nodes && nodes.statements ) {
           res = recursiveNodeSearch( nodes.statements, [] );
         }
-        return _(res).unique();
+        return _.unique(res);
       }
 
       // See if the first item is a comment that's json
@@ -241,7 +247,9 @@ define: false, process: false, window: false */
               return res;
             }
             catch (e) {
-              return '{ "description" : "' + statement.comment + '" }';
+              return JSON.stringify({
+                description: res
+              });
             }
           }
         }
@@ -301,8 +309,32 @@ define: false, process: false, window: false */
                   || param instanceof Handlebars.AST.StringNode
                   || param instanceof Handlebars.AST.IntegerNode
                   || param instanceof Handlebars.AST.BooleanNode
+                  || param instanceof Handlebars.AST.SexprNode
                 ) {
                   helpersres.push(statement.id.string);
+
+                  // Look into the params to find subexpressions
+                  if (typeof statement.params !== 'undefined') {
+                      _(statement.params).forEach(function(param) {
+                        if (param.type === 'sexpr' && param.isHelper === true) {
+                          // Found subexpression in params
+                          helpersres.push(param.id.string);
+                        }
+                      });
+                  }
+
+                  // Look in the hash to find sub expressions
+                  if (typeof statement.hash !== 'undefined' && typeof statement.hash.pairs !== 'undefined') {
+                    _(statement.hash.pairs).forEach(function(pair) {
+                      var pairName = pair[0],
+                          pairValue = pair[1];
+                      if (pairValue.type === 'sexpr' && pairValue.isHelper === true) {
+                        // Found subexpression in hash params
+                        helpersres.push(pairValue.id.string);
+                      }
+                    });
+                  }
+
                 }
 
                 parts = composeParts( param.parts );
@@ -385,9 +417,11 @@ define: false, process: false, window: false */
       };
 
       function fetchAndRegister(langMap) {
-        fetchText(path, function(text) {
+          fetchText(path, function(text, path) {
+
+          var readCallback = (config.isBuild && config[onHbsReadMethod]) ? config[onHbsReadMethod]:  function(name,path,text){return text} ;
           // for some reason it doesn't include hbs _first_ when i don't add it here...
-          var nodes = Handlebars.parse(text);
+          var nodes = Handlebars.parse( readCallback(name, path, text));
           var partials = findPartialDeps( nodes );
           var meta = getMetaData( nodes );
           var extDeps = getExternalDeps( nodes );
@@ -530,7 +564,8 @@ define: false, process: false, window: false */
 
           text = '/* START_TEMPLATE */\n' +
                  'define('+tmplName+"['default/js/plugin/hbs','default/js/lib/handlebars'"+depStr+helpDepStr+'], function( hbs, Handlebars ){ \n' +
-                   'var t = Handlebars.template(' + prec + ');\n';
+                   'var t = Handlebars.template(' + prec + ');\n' +
+                   "Handlebars.registerPartial('" + name + "', t);\n";
 
           for(var i=0; i<partialReferences.length;i++)
             text += "Handlebars.registerPartial('" + partialReferences[i] + "', t);\n";
@@ -576,7 +611,7 @@ define: false, process: false, window: false */
             });
           }
 
-          if ( config.removeCombined ) {
+          if ( config.removeCombined && path ) {
             fs.unlinkSync(path);
           }
 

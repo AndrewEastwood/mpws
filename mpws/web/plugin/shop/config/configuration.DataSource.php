@@ -284,6 +284,21 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
 
+    // Product additional information >>>>>
+    static function jsapiShopProductRelations ($id) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_relations",
+            "condition" => array(
+                "ProductA_ID" => self::jsapiCreateDataSourceCondition($id)
+            ),
+            "fields" => array("ProductB_ID"),
+            "offset" => 0,
+            "limit" => 0
+        ));
+    }
+    // <<<< Product additional information
+
 
 
 

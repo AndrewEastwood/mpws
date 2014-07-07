@@ -577,12 +577,9 @@ DROP TABLE IF EXISTS `shop_relations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shop_relations` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ProductA_ID` int(11) NOT NULL,
   `ProductB_ID` int(11) NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID` (`ID`),
   KEY `ProductB_ID` (`ProductB_ID`),
   KEY `ProductA_ID` (`ProductA_ID`),
   KEY `CustomerID` (`CustomerID`),
@@ -635,7 +632,7 @@ BEGIN
          AND o.Status = 'ACTIVE'
          AND p.CategoryID = catid
   GROUP  BY o.Name; 
-
+-- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -680,7 +677,7 @@ BEGIN
          AND c.Status = 'ACTIVE'
          AND c.ParentID = catid
   GROUP  BY c.Name; 
-
+-- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -810,4 +807,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-07 13:20:23
+-- Dump completed on 2014-07-08  0:25:30

@@ -759,7 +759,7 @@ CREATE TABLE `shop_products` (
 
 LOCK TABLES `shop_products` WRITE;
 /*!40000 ALTER TABLE `shop_products` DISABLE KEYS */;
-INSERT INTO `shop_products` VALUES (3,1,1,1,'TES 1','tes1','test test 33','test test 33','test test 33','test test 33',213.00,'PREORDER','2014-07-06 20:54:29','2014-07-06 20:54:29'),(4,1,1,5,'LCD S32DV','lcds32dv','LCD S32DV Description','','S32DV','S32DV11111',100.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(5,1,1,2,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',17.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(6,1,1,1,'I AM HIDDEN PRODUCT','test2','test test','test test','test test','test test',36.00,'ARCHIVED','2014-07-06 20:54:29','2014-07-06 20:54:29'),(7,1,4,1,'Ложки','logku','Опис тут','','L100','ALLL1200100',46.25,'DEFECT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(8,1,16,7,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',56.00,'WAITING','2014-07-06 20:54:29','2014-07-06 20:54:29'),(9,1,15,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',71.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(10,1,13,8,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',171.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(11,1,23,2,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',37.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(12,1,3,3,'AAA S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',17.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(13,1,1,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',355.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(14,1,27,3,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',68.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(15,1,1,3,'Discount Two','disctwo','Product with discount','','D2','DSCTWO0001',25.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(16,1,1,1,'EEE S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',554.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(17,1,15,6,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(18,1,1,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',65.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(19,1,16,6,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(20,1,1,1,'BBB S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',55.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(21,1,14,8,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',45.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(22,1,14,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',65.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(23,1,14,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',83.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(24,1,1,7,'GGG S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(25,1,23,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(26,1,21,8,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(27,1,1,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(28,1,7,2,'','fsdfsdfs','','','',NULL,0.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(29,1,7,2,'','fsdfsdfs','','','',NULL,0.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29');
+INSERT INTO `shop_products` VALUES (3,1,1,1,'TES 1','tes1','test test 33','test test 33','test test 33','test test 33',213.00,'PREORDER','2014-07-06 20:54:29','2014-07-06 20:54:29'),(4,1,1,5,'LCD S32DV','lcds32dv','LCD S32DV Description','','S32DV','S32DV11111',100.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(5,1,1,2,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',17.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(6,1,1,1,'I AM HIDDEN PRODUCT','test2','test test','test test','test test','test test',36.00,'ARCHIVED','2014-07-06 20:54:29','2014-07-06 20:54:29'),(7,1,4,1,'Ложки','logku','Опис тут','','L100','ALLL1200100',46.25,'DEFECT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(8,1,16,7,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',56.00,'WAITING','2014-07-06 20:54:29','2014-07-06 20:54:29'),(9,1,15,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',71.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(10,1,13,8,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',171.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(11,1,23,2,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',37.00,'PREORDER','2014-07-06 20:54:29','2014-07-06 20:54:29'),(12,1,3,3,'AAA S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',17.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(13,1,1,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',355.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(14,1,27,3,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',68.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(15,1,1,3,'Discount Two','disctwo','Product with discount','','D2','DSCTWO0001',25.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(16,1,1,1,'EEE S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',554.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(17,1,15,6,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(18,1,1,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',65.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(19,1,16,6,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(20,1,1,1,'BBB S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',55.00,'DISCOUNT','2014-07-06 20:54:29','2014-07-06 20:54:29'),(21,1,14,8,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',45.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(22,1,14,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',65.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(23,1,14,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',83.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(24,1,1,7,'GGG S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(25,1,23,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(26,1,21,8,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(27,1,1,1,'LCD S48DV','lcds48dv','LCD S48DV Description','','S48DV','S48DV222222',7.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(28,1,7,2,'','fsdfsdfs','','','',NULL,0.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29'),(29,1,7,2,'','fsdfsdfs','','','',NULL,0.00,'ACTIVE','2014-07-06 20:54:29','2014-07-06 20:54:29');
 /*!40000 ALTER TABLE `shop_products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -802,12 +802,9 @@ DROP TABLE IF EXISTS `shop_relations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shop_relations` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `ProductA_ID` int(11) NOT NULL,
   `ProductB_ID` int(11) NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID` (`ID`),
   KEY `ProductB_ID` (`ProductB_ID`),
   KEY `ProductA_ID` (`ProductA_ID`),
   KEY `CustomerID` (`CustomerID`),
@@ -823,6 +820,7 @@ CREATE TABLE `shop_relations` (
 
 LOCK TABLES `shop_relations` WRITE;
 /*!40000 ALTER TABLE `shop_relations` DISABLE KEYS */;
+INSERT INTO `shop_relations` VALUES (1,3,10),(1,3,11);
 /*!40000 ALTER TABLE `shop_relations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -879,7 +877,7 @@ BEGIN
          AND o.Status = 'ACTIVE'
          AND p.CategoryID = catid
   GROUP  BY o.Name; 
-
+-- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -924,7 +922,7 @@ BEGIN
          AND c.Status = 'ACTIVE'
          AND c.ParentID = catid
   GROUP  BY c.Name; 
-
+-- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1054,4 +1052,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-07 13:20:24
+-- Dump completed on 2014-07-08  0:25:30

@@ -9,8 +9,13 @@ define("plugin/shop/common/js/lib/utils", [
     Utils.adjustProductItems = function (products) {
         if (!products)
             return false;
+
         _(products).each(function(product) {
             Utils.adjustProductItem(product);
+            if (product.Relations)
+                _(products.Relations).each(function(relatedProduct) {
+                    Utils.adjustProductItem(relatedProduct);
+                });
         });
 
         return products;

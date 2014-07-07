@@ -1,11 +1,4 @@
 <div class="container">
-    <div class="productBadge {{data.Status}}">
-       <div class="ribbon-wrapper">
-            <div class="ribbon">
-                {{mpwsGetValueByKey lang data.Status "product_badge_"}}
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="product-name">
@@ -20,6 +13,13 @@
         <div class="col-md-5">
             <div class="shop-component shop-product-images">
                 <div class="shop-product-image shop-product-image-main">
+                    <div class="productBadge {{data.Status}}">
+                       <div class="ribbon-wrapper">
+                            <div class="ribbon">
+                                {{mpwsGetValueByKey lang data.Status "product_badge_"}}
+                            </div>
+                        </div>
+                    </div>
                     <a href="{{data.Attributes.IMAGES.MAIN}}" class="link" data-lightbox="shop-product-image-main">
                         <div class="image productimage noimage image_{{data.ID}}">
                             {{#if data.Attributes.IMAGES.MAIN}}
@@ -102,6 +102,74 @@
                 <li class="list-group-item">
                     <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
                 </li>
+
+                {{#if data.Relations }}
+                <li class="list-group-item">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Можливо Вам знадобиться також це:</div>
+                        <div class="panel-body">
+                            <div id="carousel-product-relations" class="carousel slide product-relations" data-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators">
+                                {{#each data.Relations }}
+                                    <li data-target="#carousel-product-relations" data-slide-to="{{ID}}" class="{{#if @first }}active{{/if}}"></li>
+                                {{/each}}
+                                </ol>
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner">
+                                {{#each data.Relations }}
+                                    <div class="item{{#if @first }} active{{/if}}">
+                                        <div class="shop-product-image shop-product-image-main">
+                                            <div class="productBadge {{Status}}">
+                                               <div class="ribbon-wrapper">
+                                                    <div class="ribbon">
+                                                        {{mpwsGetValueByKey ../../lang Status "product_badge_"}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="{{Attributes.IMAGES.MAIN}}" class="link" data-lightbox="shop-product-image-main">
+                                                <div class="image productimage noimage image_{{ID}}">
+                                                    {{#if Attributes.IMAGES.MAIN}}
+                                                    <div id="facebookG">
+                                                        <div id="blockG_1" class="facebook_blockG"></div>
+                                                        <div id="blockG_2" class="facebook_blockG"></div>
+                                                        <div id="blockG_3" class="facebook_blockG"></div>
+                                                    </div>
+                                                    {{/if}}
+                                                </div>
+                                                {{#if Attributes.IMAGES.MAIN}}
+                                                <script>
+                                                (function() {
+                                                    require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
+                                                        img.title = "{{Name}}";
+                                                        img.className = "image img-responsive";
+                                                        $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                                    });
+                                                })();
+                                                </script>
+                                                {{/if}}
+                                            </a>
+                                        </div>
+                                        <div class="carousel-caption">{{OriginName}} - {{Name}} ({{Model}})</div>
+                                        <div class="carousel-caption price">
+                                            Всього за:
+                                            <span class="label label-warning moneyType">{{Price}} грн.</span>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                                </div>
+                                <!-- Controls -->
+                                <a class="left carousel-control" href="#carousel-product-relations" role="button" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-product-relations" role="button" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {{/if}}
 
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
