@@ -1,7 +1,19 @@
+{{#if info.hasPromo }}
+<div>
+    <span class="helptext"><i class="fa fa-chevron-down"></i> Індикатор знижки товару</span>
+</div>
+{{/if}}
 <div class="shop-widget-productlist">
 {{#each items }}
     <div class="wrapper">
-        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:order:remove" data-id="{{ID}}">
+        {{#if ../info.hasPromo}}
+            {{#if ../IsPromo }}
+                <i class="fa fa-check-circle text-success" data-toggle="tooltip" title="Знижка: {{../../../promo.Discount}}%"></i>
+            {{else}}
+                <i class="fa fa-exclamation-circle text-danger" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+            {{/if}}
+        {{/if}}
+        <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
             <i class="fa fa-trash-o"></i>
         </a>
         <div class="shop-product-image shop-product-image-main">
@@ -36,13 +48,6 @@
             <span class="label label-warning product-quantity">{{Quantity}}</span>
             <span class="label label-default">=</span>
             <strong>{{Total}}<span class="moneyType">грн.</span></strong>
-            {{#if ../info.hasPromo}}
-                {{#if ../IsPromo }}
-                    <span class="label label-success product-total">Знижка: {{../../../promo.Discount}}<span class="percentType">%</span></span>
-                {{else}}
-                    <span class="label label-danger"><i class="fa fa-exclamation-circle"></i> На цей товар не діє знижка</span>
-                {{/if}}
-            {{/if}}
         </div>
     </div>
 {{/each}}

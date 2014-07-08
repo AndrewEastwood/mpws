@@ -29,7 +29,6 @@ define("plugin/shop/common/js/lib/utils", [
         product.Features = product.Features || {};
 
         product.ID = parseInt(product.ID, 10);
-        product.IsPromo = parseInt(product.IsPromo, 10) === 1;
 
         // get product attributes
         var _attr = product.Attributes;
