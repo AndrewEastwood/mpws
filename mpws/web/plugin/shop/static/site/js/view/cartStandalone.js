@@ -46,7 +46,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
         render: function () {
             var self = this;
             // debugger;
-            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            this.$el.off().empty().html(this.template(Utils.getHBSTemplateData(this)));
             // save user info
             var _userInfoChanged = _.debounce(function () {
                 $.cookie("shopUser", self.collectUserInfo.call(self));
@@ -58,6 +58,9 @@ define("plugin/shop/site/js/view/cartStandalone", [
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
             this.$el.on('change', 'select', _userInfoChanged);
             this.$el.on('change', 'input.quantity', _productQunatityChanged);
+            this.$el.on('click', '.btn-promo', function() {
+                self.model.applyPromo(self.$('#shop-order-promo-ID').val());
+            });
             // restore user info
             var _shopUser = $.cookie("shopUser");
             if (_shopUser)

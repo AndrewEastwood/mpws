@@ -174,7 +174,7 @@
                     {{#each filter.filterOptionsAvailable.filter_commonStatus }}
                         {{#if ProductCount }}
                             {{#in_array ../../filter.filterOptionsApplied.filter_commonStatus ID }}
-                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
+                            <a class="list-group-item {{ID}} active" href="javascript://" rel="status" title="{{Name}}">
                                 <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
                                     {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
@@ -182,7 +182,7 @@
                                 <span class="badge label-success product-count">{{ProductCount}}</span>
                             </a>
                             {{else}}
-                            <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
+                            <a class="list-group-item {{ID}}" href="javascript://" rel="status" title="{{Name}}">
                                 <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
                                     {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
@@ -191,7 +191,7 @@
                             </a>
                             {{/in_array}}
                         {{else}}
-                        <a class="list-group-item disabled" href="javascript://" rel="status" title="{{Name}}">
+                        <a class="list-group-item {{ID}} disabled" href="javascript://" rel="status" title="{{Name}}">
                             <label>
                                 <input type="checkbox" value="{{ID}}" name="filter_commonStatus" disabled="disabled">
                                 {{mpwsGetValueByKey ../../../lang ID "product_status_"}}

@@ -141,12 +141,18 @@ class pluginShop extends objectPlugin {
         return $dataOrder;
     }
 
-    private function _getOrderTemp () {
+    private function _getOrderTemp ($options = array()) {
         // $dataOrder['ID'] = null;
-        $dataOrder['items'] = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
-        $this->___attachOrderExtras($dataOrder);
-        $dataOrder['temp'] = true;
-        return $dataOrder;
+        $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+        if (isset($options['useBackup']) && $options['useBackup'] && !empty($order))
+            return $order;
+        $order['items'] = isset($order['items']) ? $order['items'] : array();
+        if (isset($options['promo']))
+            $order['promo'] = $options['promo'];
+        $this->___attachOrderExtras($order);
+        $order['temp'] = true;
+        $_SESSION[$this->_listKey_Cart] = $order;
+        return $order;
     }
 
     private function ___attachOrderExtras (&$dataOrder) {
@@ -168,32 +174,32 @@ class pluginShop extends objectPlugin {
                     foreach ($boughts as $bkey => $soldItem) {
                         $product = $this->_getProductByID($soldItem['ProductID']);
                         $product["Quantity"] = $soldItem['Quantity'];
-                        $product["Total"] = $product['Price'] * $product['Quantity'];
+                        $product["SubTotal"] = $product['Price'] * $product['Quantity'];
+                        if ($product['IsPromo'] !== 0 && isset($dataOrder['promo']) && !empty($dataOrder['promo']['Discount'])) {
+                            $newPrice = (100 - intval($dataOrder['promo']['Discount'])) / 100 * $product['Price'];
+                            $product["Total"] = $newPrice * $product['Quantity'];
+                        } else {
+                            $product["Total"] = $product['Price'] * $product['Quantity'];
+                        }
                         $dataOrder['items'][$product['ID']] = $product;
                     }
             }
-            $dataOrder['info'] = $this->___attachOrderInfo($dataOrder['items']);
+            // append info
+            $productItems = $dataOrder['items'];
+            $info = array(
+                "subTotal" => 0.0,
+                "total" => 0.0,
+                "productCount" => 0,
+                "productUniqueCount" => count($productItems)
+            );
+            foreach ($productItems as $product) {
+                $info["total"] += floatval($product['Total']);
+                $info["subTotal"] += floatval($product['SubTotal']);
+                $info["productCount"] += intval($product['Quantity']);
+                
+            }
+            $dataOrder['info'] = $info;
         }
-    }
-    private function ___attachOrderInfo ($productItems) {
-        $info = array(
-            "subTotal" => 0.0,
-            "discount" => 5,
-            "total" => 0.0,
-            "productCount" => 0,
-            "productUniqueCount" => 0
-        );
-        foreach ($productItems as $product) {
-            $info["total"] += $product['Total'];
-            $info["subTotal"] += $product['Total'];
-            $info["productCount"] += $product['Quantity'];
-        }
-        // update money formats
-        $info["subTotal"] = money_format('%.2n', $info["subTotal"]);
-        $info["discount"] = $info["discount"];
-        $info["total"] = money_format('%.2n', (100 - $info["discount"]) / 100 * $info["subTotal"]);
-        $info['productUniqueCount'] = count($productItems);
-        return $info;
     }
 
     private function _getOrders_Expired () {
@@ -534,6 +540,11 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
+    private function _getPromoByHash ($hash) {
+        $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash);
+        return $this->getCustomer()->fetch($config);
+    }
+
     // ----------------------------------------
     // requests
     // ----------------------------------------
@@ -717,7 +728,7 @@ class pluginShop extends objectPlugin {
             $resp = $this->_getOrderByHash($req['hash']);
             return;
         } else {
-            $resp = $this->_getOrderTemp();
+            $resp = $this->_getOrderTemp(array("useBackup" => true));
         }
         // $resp['error'] = '"id" or "hash" is missed in the request';
     }
@@ -740,27 +751,38 @@ class pluginShop extends objectPlugin {
 
     // modify existed product quantity in the shopping cart list
     public function patch_shop_order (&$resp, $req) {
+        $options = array();
         if (isset($req['productID'])) {
-            $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+            $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+            $items = $order['items'];
             $productID = $req['productID'];
             $newQuantity = floatval($req['Quantity']);
             if (isset($items[$productID])) {
                 $items[$productID]['Quantity'] = $newQuantity;
                 if ($items[$productID]['Quantity'] <= 0)
                     unset($items[$productID]);
-                else
+                else {
                     $items[$productID]["Total"] = $items[$productID]['Price'] * $items[$productID]['Quantity'];
+                    $items[$productID]["SubTotal"] = $product['Price'] * $product['Quantity'];
+                }
             } else if ($newQuantity > 0) {
                 $product = $this->_getProductByID($productID);
                 $product['Quantity'] = $newQuantity;
                 $product["Total"] = $product['Price'];
+                $product["SubTotal"] = $product['Price'];
                 $items[$productID] = $product;
             } else if ($req['productID'] === "*") {
                 $items = array();
             }
-            $_SESSION[$this->_listKey_Cart] = $items;
+            $order['items'] = $items;
+            $_SESSION[$this->_listKey_Cart] = $order;
+            
+        } elseif (isset($req['promo'])) {
+            $options['promo'] = $this->_getPromoByHash($req['promo']);
+        } else {
+            $options['useBackup'] = true;
         }
-        $resp = $this->_getOrderTemp();
+        $resp = $this->_getOrderTemp($options);
     }
 
     // removes particular product or clears whole shopping cart
@@ -782,6 +804,85 @@ class pluginShop extends objectPlugin {
         $list = $this->_getOrderTemp();
         return isset($list['items'][$id]) ? $list['items'][$id]['Quantity'] : 0;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

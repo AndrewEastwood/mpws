@@ -32,7 +32,7 @@ class configurationShopDataSource extends objectConfiguration {
                 // "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
                 // "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
             ),
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "Status", "DateUpdated", "DateCreated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "additional" => array(
@@ -283,8 +283,7 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-
-    // Product additional information >>>>>
+    // Product relations >>>>>
     static function jsapiShopProductRelations ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -297,7 +296,7 @@ class configurationShopDataSource extends objectConfiguration {
             "limit" => 0
         ));
     }
-    // <<<< Product additional information
+    // <<<< Product relations
 
 
 
@@ -310,6 +309,7 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
+    // Product category (catalog) >>>>>
     static function jsapiShopCategoryAndSubCategoriesAllBrandsGet ($categoryID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "call",
@@ -356,7 +356,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
     // <<<< Additional: category location
 
-    // Shop catalog >>>>>
+    // Shop catalog tree >>>>>
     static function jsapiShopCatalogTree () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -367,7 +367,7 @@ class configurationShopDataSource extends objectConfiguration {
             "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
     }
-    // <<<< Shop catalog
+    // <<<< Shop catalog tree
 
 
 
@@ -485,6 +485,69 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Statistic: order overview
 
 
+    
+    // <<<< Promo area
+    static function jsapiShopGetPromoByHash ($hash) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_promo",
+            "condition" => array(
+                "Code" => self::jsapiCreateDataSourceCondition($hash)
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiShopGetPromoByID ($promoID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_promo",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($promoID)
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiShopCreatePromo ($data) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "insert",
+            "source" => "shop_promo",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopUpdatePromo ($promoID, $data) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "update",
+            "source" => "shop_promo",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($promoID)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopClosePromo ($promoID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "update",
+            "source" => "shop_promo",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($promoID)
+            ),
+            "data" => array(
+                "DateExpire" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
+    // Promo area >>>>>
 
 
 

@@ -47,17 +47,6 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                 lang: lang
             }));
 
-            // update (restore) filter options by server applied filter
-            // this.$('#shopProductListFiltering_SortByID').val(_filterData.filterOptionsApplied.filter_viewSortBy);
-            // this.$('#shopProductListDisplayItems_DisplayCountID').val(_filterData.filterOptionsApplied.filter_viewItemsOnPage);
-            // this.$('input[name^="filter_"]').each(function(){
-            //     // debugger;
-            //     var _targetFilterName = $(this).attr('name');
-            //     var _targetFilterValue = $(this).val();
-            //     if (_(_filterData.filterOptionsApplied[_targetFilterName]).indexOf(_targetFilterValue) >= 0)
-            //         $(this).prop('checked', 'checked').attr('checked', 'checked');
-            // });
-
             // // enhance ui components
             // debugger;
             var _filterPrice = this.$('.slider').slider();

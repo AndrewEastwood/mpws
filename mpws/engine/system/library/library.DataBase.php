@@ -245,6 +245,9 @@ class libraryDataBase {
                         break;
                 }
 
+        if ($action === 'insert')
+            return $this->getLastInsertId();
+
         //var_dump($dbData);
         // var_dump($config['options']);
         // echo "do expand single record ? " . ($_opt_expandSingleRecord ? 'true' : 'false');

@@ -73,6 +73,20 @@ define('plugin/shop/site/js/model/order', [
         },
         productRemoveAll: function (event) {
             this.setProductQuantity(event, event.id, 0);
+        },
+        applyPromo: function (promo) {
+            var self = this;
+            this.sync("patch", this, {
+                attrs: {
+                    promo: promo
+                },
+                parse: true,
+                success: function (response) {
+                    self.set(self.parse(response));
+                    BSAlert.warning(lang.list_cart_alert_promoAdded);
+                    Sandbox.eventNotify('plugin:shop:order:changed', event);
+                }
+            });
         }
     });
 
