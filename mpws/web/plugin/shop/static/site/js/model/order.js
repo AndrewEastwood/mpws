@@ -14,6 +14,7 @@ define('plugin/shop/site/js/model/order', [
         defaults: {
             items: {},
             info: {},
+            promo: {},
             account: {}
         },
         initialize: function () {
@@ -28,6 +29,7 @@ define('plugin/shop/site/js/model/order', [
             return {
                 account: data.account || {},
                 info: data.info || {},
+                promo: data.promo || {},
                 items: _(data.items).reduce(function(target, productData){
                     target[productData.ID] = ShopUtils.adjustProductItem(productData);
                     return target;

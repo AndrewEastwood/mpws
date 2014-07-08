@@ -1,18 +1,25 @@
+{{#unless info.allProductsWithPromo }}
+<div class="alert alert-danger alert-not-all-products-promo" role="alert">
+    <strong><i class="fa fa-exclamation-circle"></i> Не на всі товари діє знижка</strong>
+</div>
+{{/unless}}
 <div class="well cartInfo">
     <div class="shopCartSubTotal">
         <span class="value-prefix">Сума:</span>
-        <span class="value">{{subTotal}}<span class="moneyType">грн.</span></span>
+        <span class="value">{{info.subTotal}}<span class="moneyType">грн.</span></span>
     </div>
-    {{#gt discount 0 }}
+    {{#if info.hasPromo }}
     <div class="shopCartDiscount">
         <span class="value-prefix">Знижка:</span>
-        <span class="value"><strong>{{discount}}<span class="percentType">%</span></strong></span>
+        <span class="value"><strong>{{promo.Discount}}<span class="percentType">%</span></strong></span>
+        <sub class="promocode">Ваш промокод <b>{{promo.Code}}</b> діє до <b>{{promo.DateExpire}}</b></sub>
     </div>
-    {{/gt}}
+    {{/if}}
     <div class="shopCartTotal">
         <span class="value-prefix">До оплати:</span>
-        <span class="value"><strong>{{total}}<span class="moneyType">грн.</span></strong></span>
+        <span class="value"><strong>{{info.total}}<span class="moneyType">грн.</span></strong></span>
     </div>
+    {{#unless info.hasPromo }}
     <div class="shopPropmoCode">
         <form class="form-inline" role="form">
             <i class="fa fa-tag"></i> Для отримання знижки введіть промо-код:
@@ -20,4 +27,5 @@
             <button type="button" class="btn btn-default btn-promo">Застосувати</button>
         </form>
     </div>
+    {{/unless}}
 </div>

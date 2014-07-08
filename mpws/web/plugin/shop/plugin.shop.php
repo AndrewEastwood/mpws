@@ -158,6 +158,7 @@ class pluginShop extends objectPlugin {
     private function ___attachOrderExtras (&$order) {
         if (!empty($order)) {
             $orderID = isset($order['ID']) ? $order['ID']: null;
+            $promo = isset($order['promo']) ? $order['promo'] : array();
             $order['account'] = null;
             $order['address'] = null;
             $productItems = !empty($order['items']) ? $order['items'] : array();
@@ -184,12 +185,15 @@ class pluginShop extends objectPlugin {
                 "subTotal" => 0.0,
                 "total" => 0.0,
                 "productCount" => 0,
-                "productUniqueCount" => count($productItems)
-            );
-            foreach ($productItems as $product) {
+                "productUniqueCount" => count($productItems),
+                "hasPromo" => isset($promo['Discount']) && $promo['Discount'] > 0,
+                "allProductsWithPromo" => true
+            ); 
+            foreach ($productItems as &$product) {
                 $product["SubTotal"] = $product['Price'] * $product['Quantity'];
-                if ($product['IsPromo'] !== 0 && isset($order['promo']) && !empty($order['promo']['Discount'])) {
-                    $newPrice = (100 - intval($order['promo']['Discount'])) / 100 * $product['Price'];
+                $product['IsPromo'] = intval($product['IsPromo']) === 1;
+                if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount'])) {
+                    $newPrice = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
                     $product["Total"] = $newPrice * $product['Quantity'];
                 } else {
                     $product["Total"] = $product['Price'] * $product['Quantity'];
@@ -197,6 +201,7 @@ class pluginShop extends objectPlugin {
                 $info["total"] += floatval($product['Total']);
                 $info["subTotal"] += floatval($product['SubTotal']);
                 $info["productCount"] += intval($product['Quantity']);
+                $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'] === 1;
             }
             $order['items'] = $productItems;
             $order['info'] = $info;

@@ -317,6 +317,9 @@ i.fa {cursor: pointer;}
     .value-prefix {
       width: 100px;
     }
+    .value-prefix {
+
+    }
   }
   .productBadge {
     .ribbon-wrapper {
@@ -671,6 +674,7 @@ i.fa {cursor: pointer;}
     .shopCartSubTotal, .shopCartDiscount {padding-right: 10px;}
     .shopPropmoCode {display: none;}
     div.shopCartTotal {font-size: 1em; margin-bottom: 0px; border-bottom: 0px none;}
+    .promocode {display: none;}
   }
   .cart-message {
     font-weight: bold;
@@ -731,6 +735,13 @@ i.fa {cursor: pointer;}
       display: inline-block;
       width: 150px;
     }
+    .promocode {
+      display: block;
+      margin-left: 0px;
+      margin-top: 0px;
+      line-height: normal;
+      margin-bottom: 3px;
+    }
   }
 }
 
@@ -760,6 +771,10 @@ i.fa {cursor: pointer;}
   .shopCartSubTotal, .shopCartDiscount {padding-left: 10px;}
   .shopCartTotal {padding-left: 10px; font-size: 1.3em;}
   .value {font-weight: bold;}
+  .promocode {
+    bottom: 0px;
+    margin-left: 5px;
+  }
 }
 
 .shop-order-tracking-button {
@@ -1124,4 +1139,8 @@ i.fa {cursor: pointer;}
 
 .MPWSWidgetsTop {
   height: 100px;
+}
+
+.alert-not-all-products-promo {
+  margin-top: 25px;
 }

@@ -1,5 +1,5 @@
 <div class="shop-widget-productlist">
-{{#each . }}
+{{#each items }}
     <div class="wrapper">
         <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:order:remove" data-id="{{ID}}">
             <i class="fa fa-trash-o"></i>
@@ -35,7 +35,14 @@
             <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{Quantity}}">
             <span class="label label-warning product-quantity">{{Quantity}}</span>
             <span class="label label-default">=</span>
-            <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
+            <strong>{{Total}}<span class="moneyType">грн.</span></strong>
+            {{#if ../info.hasPromo}}
+                {{#if ../IsPromo }}
+                    <span class="label label-success product-total">Знижка: {{../../../promo.Discount}}<span class="percentType">%</span></span>
+                {{else}}
+                    <span class="label label-danger"><i class="fa fa-exclamation-circle"></i> На цей товар не діє знижка</span>
+                {{/if}}
+            {{/if}}
         </div>
     </div>
 {{/each}}
