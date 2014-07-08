@@ -58,9 +58,13 @@ define("plugin/shop/site/js/view/cartStandalone", [
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
             this.$el.on('change', 'select', _userInfoChanged);
             this.$el.on('change', 'input.quantity', _productQunatityChanged);
-            this.$el.on('click', '.btn-promo', function() {
+            this.$el.on('click', '.btn-promo-submit', function() {
                 self.model.applyPromo(self.$('#shop-order-promo-ID').val());
             });
+            this.$el.on('click', '.btn-promo-cancel', function() {
+                self.model.applyPromo(false);
+            });
+            this.$('[data-toggle="tooltip"]').tooltip();
             // restore user info
             var _shopUser = $.cookie("shopUser");
             if (_shopUser)

@@ -89,19 +89,15 @@
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-price">
                         <span class="value-prefix">
-                        {{#if data.hasPromo }}
-                            Ціна зі знижкою:
+                        {{#if data.promoIsApplied }}
+                            Ціна зі знижкою {{data.promo.Discount}}%
                         {{else}}
                             Ціна:
                         {{/if}}
                         </span>
-                        <strong>{{data.Price}} грн.</strong>
-                        {{#if data.hasPromo }}
-                        <div>
-                            <span class="value-prefix">Знижка:</span>
-                            <strong>{{data.Promo.Discount}}<span class="percentType">%</span></strong>
-                            <sub class="promocode">Ваш промокод <b>{{data.Promo.Code}}</b> діє до <b>{{data.Promo.DateExpire}}</b></sub>
-                        </div>
+                        <strong>{{currency data.Price}} грн.</strong>
+                        {{#if data.promoIsApplied }}
+                        <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b></sub>
                         {{/if}}
                     </div>
                     {{#mpwsIsNotEmpty data.Prices }}
@@ -140,7 +136,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="{{Attributes.IMAGES.MAIN}}" class="link" data-lightbox="shop-product-image-main">
+                                            <a href="/#shop/product/{{ID}}" class="link">
                                                 <div class="image productimage noimage image_{{ID}}">
                                                     {{#if Attributes.IMAGES.MAIN}}
                                                     <div id="facebookG">
@@ -163,10 +159,15 @@
                                                 {{/if}}
                                             </a>
                                         </div>
-                                        <div class="carousel-caption">{{OriginName}} - {{Name}} ({{Model}})</div>
+                                        <div class="carousel-caption">
+                                            <a href="/#shop/product/{{ID}}">{{OriginName}} - {{Name}} ({{Model}})</a>
+                                        </div>
                                         <div class="carousel-caption price">
                                             Всього за:
                                             <span class="label label-warning moneyType">{{Price}} грн.</span>
+                                            {{#if promoIsApplied }}
+                                                <span class="label label-success">(Знижка {{promo.Discount}}%)</span>
+                                            {{/if}}
                                         </div>
                                     </div>
                                 {{/each}}
@@ -230,7 +231,7 @@
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#shop-product-overview-genereal-ID" data-toggle="tab">Опис</a></li>
-                            <li><a href="#shop-product-overview-technical" data-toggle="tab">Характеристики</a></li>
+                            <li><a href="#shop-product-overview-technical-ID" data-toggle="tab">Характеристики</a></li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -238,7 +239,13 @@
                                 <p>{{data.Description}}</p>
                             </div>
                             <div class="tab-pane" id="shop-product-overview-technical-ID">
-                                <p>{{data.Description}}</p>
+                                <p>
+                                    <ul>
+                                    {{#each data.Features}}
+                                        <li>{{this}}</li>
+                                    {{/each}}
+                                    </ul>
+                                </p>
                             </div>
                         </div>
                     </div>

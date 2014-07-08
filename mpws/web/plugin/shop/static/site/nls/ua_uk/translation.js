@@ -58,6 +58,7 @@ define("plugin/shop/site/nls/ua_uk/translation", [
         list_cart_alert_remove: "Товар видалений з кошику",
         list_cart_alert_clear: "Ваш кошик очищено",
         list_cart_alert_promoAdded: "Ваш промо-код успішно прийнято",
+        list_cart_alert_promoRemoved: "Промо-код скасовано",
         order_trackingPage_label_hash: "Код замовлення",
         order_trackingPage_button_get: "Отримати статус",
         order_trackingPage_wrongHash: "Невірно вказаний код замовлення",

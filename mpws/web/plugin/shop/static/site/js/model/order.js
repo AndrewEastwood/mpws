@@ -85,7 +85,10 @@ define('plugin/shop/site/js/model/order', [
                 parse: true,
                 success: function (response) {
                     self.set(self.parse(response));
-                    BSAlert.warning(lang.list_cart_alert_promoAdded);
+                    if (!!promo)
+                        BSAlert.success(lang.list_cart_alert_promoAdded);
+                    else
+                        BSAlert.danger(lang.list_cart_alert_promoRemoved);
                     Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
             });

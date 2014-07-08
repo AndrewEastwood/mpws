@@ -1,17 +1,19 @@
 {{#if info.hasPromo }}
-<div>
-    <span class="helptext"><i class="fa fa-chevron-down"></i> Індикатор знижки товару</span>
-</div>
+    {{#unless info.allProductsWithPromo }}
+    <span class="discount-helptext"><i class="fa fa-chevron-down"></i> Індикатор застосування знижки {{promo.Discount}}%</span>
+    {{/unless}}
 {{/if}}
 <div class="shop-widget-productlist">
 {{#each items }}
     <div class="wrapper">
         {{#if ../info.hasPromo}}
-            {{#if ../IsPromo }}
-                <i class="fa fa-check-circle text-success" data-toggle="tooltip" title="Знижка: {{../../../promo.Discount}}%"></i>
-            {{else}}
-                <i class="fa fa-exclamation-circle text-danger" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
-            {{/if}}
+            {{#unless ../../info.allProductsWithPromo}}
+                {{#if ../../IsPromo }}
+                    <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                {{else}}
+                    <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                {{/if}}
+            {{/unless}}
         {{/if}}
         <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
             <i class="fa fa-trash-o"></i>
@@ -42,12 +44,12 @@
         </div>
         <div class="product-row">
             <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
-            <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
+            <span class="label label-warning product-price">{{currency Price}}<span class="moneyType">грн.</span></span>
             <span class="label label-default">x</span>
             <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{Quantity}}">
             <span class="label label-warning product-quantity">{{Quantity}}</span>
             <span class="label label-default">=</span>
-            <strong>{{Total}}<span class="moneyType">грн.</span></strong>
+            <strong>{{currency Total}}<span class="moneyType">грн.</span></strong>
         </div>
     </div>
 {{/each}}

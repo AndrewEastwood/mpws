@@ -31,9 +31,13 @@ class pluginShop extends objectPlugin {
         $product['Relations'] = $this->getCustomer()->fetch($configProductsRelations);
 
         // adjusting
-        $product['Prices'] = $product['Prices']['PriceArchive'];
+        $product['ID'] = intval($product['ID']);
+        $product['CategoryID'] = intval($product['CategoryID']);
+        $product['OriginID'] = intval($product['OriginID']);
         $product['Attributes'] = $product['Attributes']['ProductAttributes'];
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
+        $product['Price'] = floatval($product['Price']);
+        $product['Prices'] = array_map(function($price) { return floatval($price); }, $product['Prices']['PriceArchive'] ?: array());
 
         if (!is_array($product['Features']))
             $product['Features'] = array();
@@ -56,10 +60,11 @@ class pluginShop extends objectPlugin {
 
         // promo
         $promo = isset($_SESSION[$this->_listKey_Promo]) ? $_SESSION[$this->_listKey_Promo] : array();
-        $product['hasPromo'] = isset($promo['Discount']) && $promo['Discount'] > 0;
-        if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount'])) {
+        $product['promoIsApplied'] = false;
+        if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount'])&& $promo['Discount'] > 0) {
+            $product['promoIsApplied'] = true;
             $product['Price'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
-            $product['Promo'] = $promo;
+            $product['promo'] = $promo;
         }
 
         // save product into recently viewed list
@@ -209,7 +214,7 @@ class pluginShop extends objectPlugin {
                 $info["total"] += floatval($product['Total']);
                 $info["subTotal"] += floatval($product['SubTotal']);
                 $info["productCount"] += intval($product['Quantity']);
-                $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'] === 1;
+                $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'];
             }
             $order['items'] = $productItems;
             $order['info'] = $info;

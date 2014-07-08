@@ -39,9 +39,19 @@
             </div>
         </div>
         <div class="shop-component shop-product-attr shop-product-attr-price">
-            <div class="value-prefix">Ціна:</div>
-            <div class="badge">{{data.Price}}</div>
-            <span class="value-suffix moneyType">грн.</span>
+            <div class="value-prefix">
+            {{#if data.promoIsApplied }}
+                Ваша ціна:
+            {{else}}
+                Ціна:
+            {{/if}}
+            </div>
+            {{#if data.promoIsApplied }}
+            <div class="label label-success">{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></div>
+            <sub class="promocode">(Знижка: {{data.promo.Discount}}%)</sub>
+            {{else}}
+            <strong>{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></strong>
+            {{/if}}
         </div>
         <div class="buttons">
 

@@ -23,12 +23,8 @@ define("plugin/shop/common/js/lib/utils", [
 
     Utils.adjustProductItem = function (product) {
 
-        product.ID = parseInt(product.ID, 10);
-
         product.Attributes = product.Attributes || {};
         product.Features = product.Features || {};
-
-        product.ID = parseInt(product.ID, 10);
 
         // get product attributes
         var _attr = product.Attributes;
