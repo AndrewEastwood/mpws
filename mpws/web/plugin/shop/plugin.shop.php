@@ -129,20 +129,20 @@ class pluginShop extends objectPlugin {
 
     private function _getOrderByID ($orderID) {
         $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
-        $dataOrder = $this->getCustomer()->fetch($config);
-        $this->___attachOrderExtras($dataOrder);
-        return $dataOrder;
+        $order = $this->getCustomer()->fetch($config);
+        $this->___attachOrderExtras($order);
+        return $order;
     }
 
     private function _getOrderByHash ($orderHash) {
         $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
-        $dataOrder = $this->getCustomer()->fetch($config);
-        $this->___attachOrderExtras($dataOrder);
-        return $dataOrder;
+        $order = $this->getCustomer()->fetch($config);
+        $this->___attachOrderExtras($order);
+        return $order;
     }
 
     private function _getOrderTemp ($options = array()) {
-        // $dataOrder['ID'] = null;
+        // $order['ID'] = null;
         $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
         if (isset($options['useBackup']) && $options['useBackup'] && !empty($order))
             return $order;
@@ -155,37 +155,31 @@ class pluginShop extends objectPlugin {
         return $order;
     }
 
-    private function ___attachOrderExtras (&$dataOrder) {
-        if (!empty($dataOrder)) {
-            $orderID = isset($dataOrder['ID']) ? $dataOrder['ID']: null;
-            $dataOrder['account'] = null;
-            $dataOrder['address'] = null;
+    private function ___attachOrderExtras (&$order) {
+        if (!empty($order)) {
+            $orderID = isset($order['ID']) ? $order['ID']: null;
+            $order['account'] = null;
+            $order['address'] = null;
+            $productItems = !empty($order['items']) ? $order['items'] : array();
             if ($this->getCustomer()->hasPlugin('account')) {
-                if (isset($dataOrder['AccountAddressesID']))
-                    $dataOrder['address'] = $this->getCustomer()->getPlugin('account')->getAddress($dataOrder['AccountAddressesID']);
-                if (isset($dataOrder['AccountID']))
-                    $dataOrder['account'] = $this->getCustomer()->getPlugin('account')->getAccountByID($dataOrder['AccountID']);
+                if (isset($order['AccountAddressesID']))
+                    $order['address'] = $this->getCustomer()->getPlugin('account')->getAddress($order['AccountAddressesID']);
+                if (isset($order['AccountID']))
+                    $order['account'] = $this->getCustomer()->getPlugin('account')->getAccountByID($order['AccountID']);
             }
             if (isset($orderID)) {
-                $dataOrder['items'] = array();
+                // $order['items'] = array();
+                $productItems = array();
                 $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
                 $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
                 if (!empty($boughts))
                     foreach ($boughts as $bkey => $soldItem) {
                         $product = $this->_getProductByID($soldItem['ProductID']);
                         $product["Quantity"] = $soldItem['Quantity'];
-                        $product["SubTotal"] = $product['Price'] * $product['Quantity'];
-                        if ($product['IsPromo'] !== 0 && isset($dataOrder['promo']) && !empty($dataOrder['promo']['Discount'])) {
-                            $newPrice = (100 - intval($dataOrder['promo']['Discount'])) / 100 * $product['Price'];
-                            $product["Total"] = $newPrice * $product['Quantity'];
-                        } else {
-                            $product["Total"] = $product['Price'] * $product['Quantity'];
-                        }
-                        $dataOrder['items'][$product['ID']] = $product;
+                        $order['items'][$product['ID']] = $product;
                     }
             }
             // append info
-            $productItems = $dataOrder['items'];
             $info = array(
                 "subTotal" => 0.0,
                 "total" => 0.0,
@@ -193,12 +187,19 @@ class pluginShop extends objectPlugin {
                 "productUniqueCount" => count($productItems)
             );
             foreach ($productItems as $product) {
+                $product["SubTotal"] = $product['Price'] * $product['Quantity'];
+                if ($product['IsPromo'] !== 0 && isset($order['promo']) && !empty($order['promo']['Discount'])) {
+                    $newPrice = (100 - intval($order['promo']['Discount'])) / 100 * $product['Price'];
+                    $product["Total"] = $newPrice * $product['Quantity'];
+                } else {
+                    $product["Total"] = $product['Price'] * $product['Quantity'];
+                }
                 $info["total"] += floatval($product['Total']);
                 $info["subTotal"] += floatval($product['SubTotal']);
                 $info["productCount"] += intval($product['Quantity']);
-                
             }
-            $dataOrder['info'] = $info;
+            $order['items'] = $productItems;
+            $order['info'] = $info;
         }
     }
 
@@ -754,24 +755,18 @@ class pluginShop extends objectPlugin {
         $options = array();
         if (isset($req['productID'])) {
             $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
-            $items = $order['items'];
+            $items = empty($order['items']) ? array() : $order['items'];
             $productID = $req['productID'];
             $newQuantity = floatval($req['Quantity']);
             if (isset($items[$productID])) {
                 $items[$productID]['Quantity'] = $newQuantity;
                 if ($items[$productID]['Quantity'] <= 0)
                     unset($items[$productID]);
-                else {
-                    $items[$productID]["Total"] = $items[$productID]['Price'] * $items[$productID]['Quantity'];
-                    $items[$productID]["SubTotal"] = $product['Price'] * $product['Quantity'];
-                }
-            } else if ($newQuantity > 0) {
+            } elseif ($newQuantity > 0) {
                 $product = $this->_getProductByID($productID);
                 $product['Quantity'] = $newQuantity;
-                $product["Total"] = $product['Price'];
-                $product["SubTotal"] = $product['Price'];
                 $items[$productID] = $product;
-            } else if ($req['productID'] === "*") {
+            } elseif ($req['productID'] === "*") {
                 $items = array();
             }
             $order['items'] = $items;
