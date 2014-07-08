@@ -1,8 +1,10 @@
-{{#unless info.allProductsWithPromo }}
-<div class="alert alert-danger alert-not-all-products-promo" role="alert">
-    <strong><i class="fa fa-exclamation-circle"></i> Не на всі товари діє знижка</strong>
-</div>
-{{/unless}}
+{{#if info.hasPromo }}
+    {{#unless info.allProductsWithPromo }}
+    <div class="alert alert-danger alert-not-all-products-promo" role="alert">
+        <strong><i class="fa fa-exclamation-circle"></i> Не на всі товари діє знижка</strong>
+    </div>
+    {{/unless}}
+{{/if}}
 <div class="well cartInfo">
     <div class="shopCartSubTotal">
         <span class="value-prefix">Сума:</span>

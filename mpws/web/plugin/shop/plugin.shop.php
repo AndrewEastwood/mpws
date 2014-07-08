@@ -6,6 +6,7 @@ class pluginShop extends objectPlugin {
     private $_listKey_Recent = 'shop:listRecent';
     private $_listKey_Compare = 'shop:listCompare';
     private $_listKey_Cart = 'shop:cart';
+    private $_listKey_Promo = 'shop:promo';
 
     // product standalone item (short or full)
     // -----------------------------------------------
@@ -32,6 +33,7 @@ class pluginShop extends objectPlugin {
         // adjusting
         $product['Prices'] = $product['Prices']['PriceArchive'];
         $product['Attributes'] = $product['Attributes']['ProductAttributes'];
+        $product['IsPromo'] = intval($product['IsPromo']) === 1;
 
         if (!is_array($product['Features']))
             $product['Features'] = array();
@@ -51,6 +53,14 @@ class pluginShop extends objectPlugin {
         $product['ViewExtras']['InWish'] = $this->__productIsInWishList($productID);
         $product['ViewExtras']['InCompare'] = $this->__productIsInCompareList($productID);
         $product['ViewExtras']['InCartCount'] = $this->__productCountInCart($productID);
+
+        // promo
+        $promo = isset($_SESSION[$this->_listKey_Promo]) ? $_SESSION[$this->_listKey_Promo] : array();
+        $product['hasPromo'] = isset($promo['Discount']) && $promo['Discount'] > 0;
+        if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount'])) {
+            $product['Price'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
+            $product['Promo'] = $promo;
+        }
 
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
@@ -152,6 +162,7 @@ class pluginShop extends objectPlugin {
         $this->___attachOrderExtras($order);
         $order['temp'] = true;
         $_SESSION[$this->_listKey_Cart] = $order;
+        $_SESSION[$this->_listKey_Promo] = $order['promo'];
         return $order;
     }
 
@@ -192,12 +203,9 @@ class pluginShop extends objectPlugin {
             foreach ($productItems as &$product) {
                 $product["SubTotal"] = $product['Price'] * $product['Quantity'];
                 $product['IsPromo'] = intval($product['IsPromo']) === 1;
-                if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount'])) {
-                    $newPrice = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
-                    $product["Total"] = $newPrice * $product['Quantity'];
-                } else {
-                    $product["Total"] = $product['Price'] * $product['Quantity'];
-                }
+                if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount']))
+                    $product['Price'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
+                $product["Total"] = $product['Price'] * $product['Quantity'];
                 $info["total"] += floatval($product['Total']);
                 $info["subTotal"] += floatval($product['SubTotal']);
                 $info["productCount"] += intval($product['Quantity']);

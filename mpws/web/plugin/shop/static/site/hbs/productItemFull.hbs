@@ -72,24 +72,37 @@
                         {{#compare data.Status "==" "ACTIVE"}}
                         <span class="label label-success">є в наявності</span>
                         {{else}}
-                        <span class="label label-warning">немає в наявності</span>
+                        <span class="label label-danger">немає в наявності</strong>
                         {{/compare}}
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-origin">
                         <span class="value-prefix">Виробник:</span>
-                        <span class="label label-default">{{data.OriginName}}</span>
+                        <strong>{{data.OriginName}}</strong>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-model">
                         <span class="value-prefix">Модель:</span>
-                        <span class="label label-default">{{data.Model}}</span>
+                        <strong>{{data.Model}}</strong>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-code">
                         <span class="value-prefix">Код товару:</span>
-                        <span class="label label-default">#{{data.ID}}</span>
+                        <strong>#{{data.ID}}</strong>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-price">
-                        <span class="value-prefix">Ціна:</span>
-                        <span class="label label-default moneyType">{{data.Price}} грн.</span>
+                        <span class="value-prefix">
+                        {{#if data.hasPromo }}
+                            Ціна зі знижкою:
+                        {{else}}
+                            Ціна:
+                        {{/if}}
+                        </span>
+                        <strong>{{data.Price}} грн.</strong>
+                        {{#if data.hasPromo }}
+                        <div>
+                            <span class="value-prefix">Знижка:</span>
+                            <strong>{{data.Promo.Discount}}<span class="percentType">%</span></strong>
+                            <sub class="promocode">Ваш промокод <b>{{data.Promo.Code}}</b> діє до <b>{{data.Promo.DateExpire}}</b></sub>
+                        </div>
+                        {{/if}}
                     </div>
                     {{#mpwsIsNotEmpty data.Prices }}
                     <div class="shop-component shop-product-attr shop-product-attr-price">
