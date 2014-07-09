@@ -127,7 +127,7 @@
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
                                 {{#each data.Relations }}
-                                    <div class="item{{#if @first }} active{{/if}}">
+                                    <div class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="#shop/product/{{ID}}">
                                         <div class="shop-product-image shop-product-image-main">
                                             <div class="productBadge {{Status}}">
                                                <div class="ribbon-wrapper">
@@ -136,32 +136,28 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="/#shop/product/{{ID}}" class="link">
-                                                <div class="image productimage noimage image_{{ID}}">
-                                                    {{#if Attributes.IMAGES.MAIN}}
-                                                    <div id="facebookG">
-                                                        <div id="blockG_1" class="facebook_blockG"></div>
-                                                        <div id="blockG_2" class="facebook_blockG"></div>
-                                                        <div id="blockG_3" class="facebook_blockG"></div>
-                                                    </div>
-                                                    {{/if}}
-                                                </div>
+                                            <div class="image productimage noimage image_{{ID}}">
                                                 {{#if Attributes.IMAGES.MAIN}}
-                                                <script>
-                                                (function() {
-                                                    require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
-                                                        img.title = "{{Name}}";
-                                                        img.className = "image img-responsive";
-                                                        $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
-                                                    });
-                                                })();
-                                                </script>
+                                                <div id="facebookG">
+                                                    <div id="blockG_1" class="facebook_blockG"></div>
+                                                    <div id="blockG_2" class="facebook_blockG"></div>
+                                                    <div id="blockG_3" class="facebook_blockG"></div>
+                                                </div>
                                                 {{/if}}
-                                            </a>
+                                            </div>
+                                            {{#if Attributes.IMAGES.MAIN}}
+                                            <script>
+                                            (function() {
+                                                require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
+                                                    img.title = "{{Name}}";
+                                                    img.className = "image img-responsive";
+                                                    $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                                });
+                                            })();
+                                            </script>
+                                            {{/if}}
                                         </div>
-                                        <div class="carousel-caption">
-                                            <a href="/#shop/product/{{ID}}">{{OriginName}} - {{Name}} ({{Model}})</a>
-                                        </div>
+                                        <div class="carousel-caption">{{OriginName}} - {{Name}} ({{Model}})</div>
                                         <div class="carousel-caption price">
                                             Всього за:
                                             <span class="label label-warning moneyType">{{Price}} грн.</span>

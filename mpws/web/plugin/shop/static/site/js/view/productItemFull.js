@@ -1,4 +1,5 @@
 define("plugin/shop/site/js/view/productItemFull", [
+    'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/underscore',
     'plugin/shop/site/js/view/productItemShort',
@@ -11,7 +12,7 @@ define("plugin/shop/site/js/view/productItemFull", [
     'default/js/lib/bootstrap-magnify',
     'default/js/lib/lightbox',
     'default/js/lib/jquery.sparkline'
-], function (Backbone, _, ViewProductItemShort, ModelProduct, Utils, tpl, lang) {
+], function (Sandbox, Backbone, _, ViewProductItemShort, ModelProduct, Utils, tpl, lang) {
 
     var ProductItemFull = ViewProductItemShort.extend({
         className: 'shop-product-item shop-product-item-full',
@@ -42,6 +43,11 @@ define("plugin/shop/site/js/view/productItemFull", [
                     drawNormalOnTop: true
                 });
             }
+
+            Sandbox.eventSubscribe("plugin:shop:product:open", function(data){
+                Backbone.history.navigate(data.page, true);
+            });
+            
             // shop pulse animation for cart button badge
             // debugger;
             // if (this.model.hasChanged('ViewExtras') && this.model.previous('ViewExtras') && this.model.get('ViewExtras').InCartCount !== this.model.previous('ViewExtras').InCartCount)
