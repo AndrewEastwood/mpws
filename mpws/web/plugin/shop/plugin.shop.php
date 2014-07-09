@@ -67,6 +67,9 @@ class pluginShop extends objectPlugin {
             $product['promo'] = $promo;
         }
 
+        // is available
+        $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
+
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
@@ -167,7 +170,8 @@ class pluginShop extends objectPlugin {
         $this->___attachOrderExtras($order);
         $order['temp'] = true;
         $_SESSION[$this->_listKey_Cart] = $order;
-        $_SESSION[$this->_listKey_Promo] = $order['promo'];
+        if (isset($order['promo']))
+            $_SESSION[$this->_listKey_Promo] = $order['promo'];
         return $order;
     }
 
@@ -559,8 +563,8 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    private function _getPromoByHash ($hash) {
-        $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash);
+    private function _getPromoByHash ($hash, $activeOnly = false) {
+        $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash, $activeOnly);
         return $this->getCustomer()->fetch($config);
     }
 
@@ -791,7 +795,10 @@ class pluginShop extends objectPlugin {
             $_SESSION[$this->_listKey_Cart] = $order;
             
         } elseif (isset($req['promo'])) {
-            $options['promo'] = $this->_getPromoByHash($req['promo']);
+            if ($req['promo'] === false)
+                $options['promo'] = array();
+            else
+                $options['promo'] = $this->_getPromoByHash($req['promo'], true);
         } else {
             $options['useBackup'] = true;
         }

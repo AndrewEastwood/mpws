@@ -69,11 +69,11 @@
                 <li class="list-group-item">
                     <div class="shop-component shop-product-attr shop-product-attr-availability">
                         <span class="value-prefix">Цей товар:</span>
-                        {{#compare data.Status "==" "ACTIVE"}}
+                        {{#if data._available }}
                         <span class="label label-success">є в наявності</span>
                         {{else}}
                         <span class="label label-danger">немає в наявності</strong>
-                        {{/compare}}
+                        {{/if}}
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-origin">
                         <span class="value-prefix">Виробник:</span>

@@ -436,7 +436,7 @@ define("default/js/lib/handlebars_helpers", [
         if (typeof(amount) === 'string') { amount = options.contexts[0].get(amount); }
         var rounded = Math.round(amount * 100);
         var dec = rounded % 100;
-        var whole = rounded / 100 - dec / 100;
+        var whole = Math.round(rounded / 100 - dec / 100);
         var decStr = '' + dec;
         return /*'$' + */whole + '.' + decStr + ( decStr.length < 2 ? '0' : '');
     }

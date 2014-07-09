@@ -487,8 +487,8 @@ class configurationShopDataSource extends objectConfiguration {
 
     
     // <<<< Promo area
-    static function jsapiShopGetPromoByHash ($hash) {
-        return self::jsapiGetDataSourceConfig(array(
+    static function jsapiShopGetPromoByHash ($hash, $activeOnly) {
+        $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_promo",
             "condition" => array(
@@ -498,6 +498,13 @@ class configurationShopDataSource extends objectConfiguration {
                 "expandSingleRecord" => true
             )
         ));
+
+        if ($activeOnly) {
+            $config['condition']['DateExpire'] = self::jsapiCreateDataSourceCondition(self::getDate(), '>=');
+            $config['condition']['DateStart'] = self::jsapiCreateDataSourceCondition(self::getDate(), '<=');
+        }
+
+        return $config;
     }
 
     static function jsapiShopGetPromoByID ($promoID) {
