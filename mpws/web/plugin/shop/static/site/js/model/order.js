@@ -50,7 +50,7 @@ define('plugin/shop/site/js/model/order', [
             this.sync("patch", this, {
                 attrs: {
                     productID: productID,
-                    Quantity: parseInt(quantity, 10),
+                    _orderQuantity: parseInt(quantity, 10),
                 },
                 parse: true,
                 success: function (response) {
@@ -64,7 +64,7 @@ define('plugin/shop/site/js/model/order', [
             // debugger;
             var product = this.getProductByID(event.id);
             if (product)
-                this.setProductQuantity(event, event.id, product.Quantity + 1);
+                this.setProductQuantity(event, event.id, product._orderQuantity + 1);
             else
                 this.setProductQuantity(event, event.id, 1);
         },

@@ -1,11 +1,19 @@
 define("plugin/account/site/js/router", [
     'default/js/lib/backbone',
+    'plugin/shop/site/js/view/siteMenu',
     // 'default/js/lib/sandbox',
     // 'cmn_jquery',
     // 'default/js/lib/underscore',
     // 'default/js/lib/cache',
     // 'plugin/account/site/js/view/menu',
-], function (Backbone, Sandbox, $, _, Cache) {
+], function (Backbone, SiteMenu, Sandbox, $, _, Cache) {
+    var order = new SiteOrder({
+        ID: "temp"
+    });
+    SiteMenu({
+        order: order
+    });
+    order.fetch();
 
     return Backbone.Router.extend({});
 

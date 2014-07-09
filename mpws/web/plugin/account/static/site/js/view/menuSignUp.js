@@ -1,11 +1,18 @@
 define("plugin/account/site/js/view/menuSignUp", [
-    'default/js/view/mView',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
     'default/js/plugin/hbs!plugin/account/site/hbs/menuSignUp'
-], function (MView, tpl) {
+], function (Backbone, Utils, tpl) {
 
-    var MenuSignUp = MView.extend({
+    var MenuSignUp = Backbone.View.extend({
         tagName: 'li',
-        template: tpl
+        template: tpl,
+        initialize: function () {
+            this.listenTo(this.model, "change", this.render);
+        },
+        render: function () {
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+        }
     });
 
     return MenuSignUp;

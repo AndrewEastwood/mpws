@@ -1,27 +1,27 @@
 define("plugin/account/site/js/view/menuAccount", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
-    'plugin/account/common/js/model/account',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
     'default/js/plugin/hbs!plugin/account/site/hbs/menuAccount',
     /* lang */
     'default/js/plugin/i18n!plugin/account/site/nls/translation'
-], function (Sandbox, MView, ModelAccountInstance, tpl, lang) {
+], function (Sandbox, Backbone, Utils, tpl, lang) {
 
-    var MenuAccount = MView.extend({
-        viewName: 'AccountMenu',
+    var MenuAccount = Backbone.View.extend({
         tagName: 'li',
         className: 'dropdown account-dropdown-signin',
         id: 'account-dropdown-signin-ID',
         template: tpl,
-        model: ModelAccountInstance,
         lang: lang,
         events: {
             "submit .form": 'doSignIn',
             "click #accountProfileSignOutID": 'doSignOut',
         },
         initialize: function () {
-            MView.prototype.initialize.call(this);
             this.listenTo(this.model, "change", this.render);
+        },
+        render: function () {
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
         },
         doSignIn: function () {
             this.model.doLogin(this.collectCredentials());

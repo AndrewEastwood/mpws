@@ -32,7 +32,7 @@ class configurationShopDataSource extends objectConfiguration {
                 // "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
                 // "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
             ),
-            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Specifications", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
+            "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
             "additional" => array(

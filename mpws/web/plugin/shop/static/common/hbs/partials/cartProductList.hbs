@@ -46,8 +46,8 @@
             <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
             <span class="label label-warning product-price">{{currency Price}}<span class="moneyType">грн.</span></span>
             <span class="label label-default">x</span>
-            <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{Quantity}}">
-            <span class="label label-warning product-quantity">{{Quantity}}</span>
+            <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{_orderQuantity}}">
+            <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
             <span class="label label-default">=</span>
             <strong>{{currency Total}}<span class="moneyType">грн.</span></strong>
         </div>

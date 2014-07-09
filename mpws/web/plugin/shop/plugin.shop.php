@@ -10,7 +10,7 @@ class pluginShop extends objectPlugin {
 
     // product standalone item (short or full)
     // -----------------------------------------------
-    private function _getProductByID ($productID, $saveIntoRecent = false) {
+    private function _getProductByID ($productID, $saveIntoRecent = false, $skipRelations = false) {
         if (empty($productID) || !is_numeric($productID))
             return null;
 
@@ -28,7 +28,6 @@ class pluginShop extends objectPlugin {
         $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
         $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
         $product['Features'] = $this->getCustomer()->fetch($configProductsFeatures);
-        $product['Relations'] = $this->getCustomer()->fetch($configProductsRelations);
 
         // adjusting
         $product['ID'] = intval($product['ID']);
@@ -43,26 +42,32 @@ class pluginShop extends objectPlugin {
             $product['Features'] = array();
 
         $relations = array();
-        if (isset($product['Relations'])) {
-            foreach ($product['Relations'] as $relationItem) {
-                $relatedProduct = $this->_getProductByID($relationItem['ProductB_ID']);
-                if (isset($relatedProduct))
-                    $relations[] = $relatedProduct;
+        if (!$skipRelations) {
+            $relatedItemsIDs = $this->getCustomer()->fetch($configProductsRelations);
+            if (isset($relatedItemsIDs)) {
+                foreach ($relatedItemsIDs as $relationItem) {
+                    $relatedProductID = intval($relationItem['ProductB_ID']);
+                    if ($relatedProductID === $productID)
+                        continue;
+                    $relatedProduct = $this->_getProductByID($relatedProductID, $saveIntoRecent, true);
+                    if (isset($relatedProduct))
+                        $relations[] = $relatedProduct;
+                }
             }
         }
         $product['Relations'] = $relations;
 
         // Utils
-        $product['ViewExtras'] = array();
-        $product['ViewExtras']['InWish'] = $this->__productIsInWishList($productID);
-        $product['ViewExtras']['InCompare'] = $this->__productIsInCompareList($productID);
-        $product['ViewExtras']['InCartCount'] = $this->__productCountInCart($productID);
+        $product['_viewExtras'] = array();
+        $product['_viewExtras']['InWish'] = $this->__productIsInWishList($productID);
+        $product['_viewExtras']['InCompare'] = $this->__productIsInCompareList($productID);
+        $product['_viewExtras']['InCartCount'] = $this->__productCountInCart($productID);
 
         // promo
         $promo = isset($_SESSION[$this->_listKey_Promo]) ? $_SESSION[$this->_listKey_Promo] : array();
-        $product['promoIsApplied'] = false;
+        $product['_promoIsApplied'] = false;
         if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount'])&& $promo['Discount'] > 0) {
-            $product['promoIsApplied'] = true;
+            $product['_promoIsApplied'] = true;
             $product['Price'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
             $product['promo'] = $promo;
         }
@@ -165,8 +170,13 @@ class pluginShop extends objectPlugin {
         if (isset($options['useBackup']) && $options['useBackup'] && !empty($order))
             return $order;
         $order['items'] = isset($order['items']) ? $order['items'] : array();
-        if (isset($options['promo']))
+        if (isset($options['promo'])) {
             $order['promo'] = $options['promo'];
+            
+        }
+        // re-validate promo
+        if (isset($order['promo']) && isset($order['promo']['Code']))
+            $order['promo'] = $this->_getPromoByHash($order['promo']['Code'], true) ?: array();
         $this->___attachOrderExtras($order);
         $order['temp'] = true;
         $_SESSION[$this->_listKey_Cart] = $order;
@@ -196,7 +206,7 @@ class pluginShop extends objectPlugin {
                 if (!empty($boughts))
                     foreach ($boughts as $bkey => $soldItem) {
                         $product = $this->_getProductByID($soldItem['ProductID']);
-                        $product["Quantity"] = $soldItem['Quantity'];
+                        $product["_orderQuantity"] = $soldItem['_orderQuantity'];
                         $order['items'][$product['ID']] = $product;
                     }
             }
@@ -210,14 +220,14 @@ class pluginShop extends objectPlugin {
                 "allProductsWithPromo" => true
             ); 
             foreach ($productItems as &$product) {
-                $product["SubTotal"] = $product['Price'] * $product['Quantity'];
+                $product["_orderSubTotal"] = $product['Price'] * $product['_orderQuantity'];
                 $product['IsPromo'] = intval($product['IsPromo']) === 1;
                 if ($product['IsPromo'] && isset($promo) && !empty($promo['Discount']))
                     $product['Price'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
-                $product["Total"] = $product['Price'] * $product['Quantity'];
+                $product["Total"] = $product['Price'] * $product['_orderQuantity'];
                 $info["total"] += floatval($product['Total']);
-                $info["subTotal"] += floatval($product['SubTotal']);
-                $info["productCount"] += intval($product['Quantity']);
+                $info["subTotal"] += floatval($product['_orderSubTotal']);
+                $info["productCount"] += intval($product['_orderQuantity']);
                 $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'];
             }
             $order['items'] = $productItems;
@@ -763,7 +773,7 @@ class pluginShop extends objectPlugin {
     //         $productID = $req['productID'];
     //         if (!isset($items[$productID])) {
     //             $product = $this->_getProductByID($productID);
-    //             $product['Quantity'] = 1;
+    //             $product['_orderQuantity'] = 1;
     //             $product["Total"] = $product['Price'];
     //             $items[$productID] = $product;
     //         }
@@ -779,14 +789,14 @@ class pluginShop extends objectPlugin {
             $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
             $items = empty($order['items']) ? array() : $order['items'];
             $productID = $req['productID'];
-            $newQuantity = floatval($req['Quantity']);
+            $newQuantity = floatval($req['_orderQuantity']);
             if (isset($items[$productID])) {
-                $items[$productID]['Quantity'] = $newQuantity;
-                if ($items[$productID]['Quantity'] <= 0)
+                $items[$productID]['_orderQuantity'] = $newQuantity;
+                if ($items[$productID]['_orderQuantity'] <= 0)
                     unset($items[$productID]);
             } elseif ($newQuantity > 0) {
                 $product = $this->_getProductByID($productID);
-                $product['Quantity'] = $newQuantity;
+                $product['_orderQuantity'] = $newQuantity;
                 $items[$productID] = $product;
             } elseif ($req['productID'] === "*") {
                 $items = array();
@@ -822,7 +832,7 @@ class pluginShop extends objectPlugin {
 
     private function __productCountInCart ($id) {
         $list = $this->_getOrderTemp();
-        return isset($list['items'][$id]) ? $list['items'][$id]['Quantity'] : 0;
+        return isset($list['items'][$id]) ? $list['items'][$id]['_orderQuantity'] : 0;
     }
 
 
@@ -1077,14 +1087,14 @@ class pluginShop extends objectPlugin {
 
         // create/add product
         if ($do == 'ADD' && $productQuantity) {
-            if (empty($productData['products'][$productID]['Quantity']))
-                $productData['products'][$productID]['Quantity'] = 0;
+            if (empty($productData['products'][$productID]['_orderQuantity']))
+                $productData['products'][$productID]['_orderQuantity'] = 0;
 
-            $productData['products'][$productID]['Quantity'] += $productQuantity;
+            $productData['products'][$productID]['_orderQuantity'] += $productQuantity;
 
             // we keep product until REMOVE action is invoked
-            if ($productData['products'][$productID]['Quantity'] <= 0)
-                $productData['products'][$productID]['Quantity'] = 1;
+            if ($productData['products'][$productID]['_orderQuantity'] <= 0)
+                $productData['products'][$productID]['_orderQuantity'] = 1;
 
             $_SESSION['shopCartProducts'] = $productData['products'];
         }
@@ -1208,14 +1218,14 @@ class pluginShop extends objectPlugin {
                 // ProductID
                 // OrderID
                 // ProductPrice
-                // Quantity
+                // _orderQuantity
                 foreach ($productData['products'] as $_item) {
                     $configProduct = configurationShopDataSource::jsapiShopOrderProductsCreate();
                     $dataProduct = array();
                     $dataProduct["ProductID"] = $_item["ID"];
                     $dataProduct["OrderID"] = $orderID;
                     $dataProduct["ProductPrice"] = $_item["ProductPrice"];
-                    $dataProduct["Quantity"] = $_item["Quantity"];
+                    $dataProduct["_orderQuantity"] = $_item["_orderQuantity"];
                     $configProduct['data'] = array(
                         "fields" => array_keys($dataProduct),
                         "values" => array_values($dataProduct)

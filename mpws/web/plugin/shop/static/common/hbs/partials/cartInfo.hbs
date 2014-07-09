@@ -14,7 +14,7 @@
     <div class="shopCartDiscount">
         <span class="value-prefix">Знижка:</span>
         <span class="value"><strong>{{promo.Discount}}<span class="percentType">%</span></strong></span>
-        <sub class="promocode">Ваш промокод <b>{{promo.Code}}</b> діє до <b>{{promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel"></i></sub>
+        <sub class="promocode">Ваш промокод <b>{{promo.Code}}</b> діє до <b>{{promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
     </div>
     {{/if}}
     <div class="shopCartTotal">

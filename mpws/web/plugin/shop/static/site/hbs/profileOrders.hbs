@@ -84,7 +84,7 @@
                     <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
                     <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
                     <span class="label label-default">x</span>
-                    <span class="label label-warning product-quantity">{{Quantity}}</span>
+                    <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
                     <span class="label label-default">=</span>
                     <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
                 </div>
@@ -96,7 +96,7 @@
         <div class="well cartInfo">
             <div class="shopCartSubTotal">
                 <span class="value-prefix">Сума:</span>
-                <span class="value">{{info.subTotal}}<span class="moneyType">грн.</span></span>
+                <span class="value">{{info._orderSubTotal}}<span class="moneyType">грн.</span></span>
             </div>
             <div class="shopCartTotal">
                 <span class="value-prefix">До оплати:</span>

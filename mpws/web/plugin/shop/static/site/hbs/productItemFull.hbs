@@ -89,14 +89,14 @@
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-price">
                         <span class="value-prefix">
-                        {{#if data.promoIsApplied }}
+                        {{#if data._promoIsApplied }}
                             Ціна зі знижкою {{data.promo.Discount}}%
                         {{else}}
                             Ціна:
                         {{/if}}
                         </span>
                         <strong>{{currency data.Price}} грн.</strong>
-                        {{#if data.promoIsApplied }}
+                        {{#if data._promoIsApplied }}
                         <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b></sub>
                         {{/if}}
                     </div>
@@ -161,7 +161,7 @@
                                         <div class="carousel-caption price">
                                             Всього за:
                                             <span class="label label-warning moneyType">{{Price}} грн.</span>
-                                            {{#if promoIsApplied }}
+                                            {{#if _promoIsApplied }}
                                                 <span class="label label-success">(Знижка {{promo.Discount}}%)</span>
                                             {{/if}}
                                         </div>
@@ -183,13 +183,13 @@
 
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
-                        {{#if data.ViewExtras.InCartCount }}
+                        {{#if data._viewExtras.InCartCount }}
                             <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-shopping-cart"></i> +1 в кошик
-                                {{#gt data.ViewExtras.InCartCount 99}}
+                                {{#gt data._viewExtras.InCartCount 99}}
                                 <sub class="badge wide animated">&gt;99</sub>
                                 {{else}}
-                                <sub class="badge animated">{{data.ViewExtras.InCartCount}}</sub>
+                                <sub class="badge animated">{{data._viewExtras.InCartCount}}</sub>
                                 {{/gt}}
                             </button>
                         {{else}}
@@ -197,7 +197,7 @@
                                 <i class="fa fa-shopping-cart"></i> +1 в кошик
                             </button>
                         {{/if}}
-                        {{#if data.ViewExtras.InWish }}
+                        {{#if data._viewExtras.InWish }}
                             <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="забрати з мого списку" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-check-square-o"></i> мій список
                             </button>
@@ -206,7 +206,7 @@
                                 <i class="fa fa-square-o"></i> мій список
                             </button>
                         {{/if}}
-                        {{#if data.ViewExtras.InCompare }}
+                        {{#if data._viewExtras.InCompare }}
                             <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="забрати з порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
                                 <i class="fa fa-check-square-o"></i> порівняння
                             </button>

@@ -40,13 +40,13 @@
         </div>
         <div class="shop-component shop-product-attr shop-product-attr-price">
             <div class="value-prefix">
-            {{#if data.promoIsApplied }}
+            {{#if data._promoIsApplied }}
                 Ваша ціна:
             {{else}}
                 Ціна:
             {{/if}}
             </div>
-            {{#if data.promoIsApplied }}
+            {{#if data._promoIsApplied }}
             <div class="label label-success">{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></div>
             <sub class="promocode">(Знижка: {{data.promo.Discount}}%)</sub>
             {{else}}
@@ -55,13 +55,13 @@
         </div>
         <div class="buttons">
 
-            {{#if data.ViewExtras.InCartCount }}
+            {{#if data._viewExtras.InCartCount }}
                 <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
-                    {{#gt data.ViewExtras.InCartCount 99}}
+                    {{#gt data._viewExtras.InCartCount 99}}
                     <sub class="badge wide animated">&gt;99</sub>
                     {{else}}
-                    <sub class="badge animated">{{data.ViewExtras.InCartCount}}</sub>
+                    <sub class="badge animated">{{data._viewExtras.InCartCount}}</sub>
                     {{/gt}}
                 </button>
             {{else}}
@@ -69,7 +69,7 @@
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
                 </button>
             {{/if}}
-            {{#if data.ViewExtras.InWish }}
+            {{#if data._viewExtras.InWish }}
                 <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="забрати з мого списку" data-placement="top" data-toggle="tooltip">
                     <sub><i class="fa fa-check-square-o"></i></sub>
                     <i class="fa fa-heart"></i>
@@ -81,7 +81,7 @@
                 </button>
             {{/if}}
 
-            {{#if data.ViewExtras.InCompare }}
+            {{#if data._viewExtras.InCompare }}
                 <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="забрати з порівняння" data-placement="top" data-toggle="tooltip">
                     <sub><i class="fa fa-check-square-o"></i></sub>
                     <i class="fa fa-files-o"></i>

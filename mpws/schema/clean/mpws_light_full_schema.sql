@@ -531,7 +531,6 @@ CREATE TABLE `shop_products` (
   `Name` varchar(200) COLLATE utf8_bin NOT NULL,
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin,
-  `Specifications` text COLLATE utf8_bin,
   `Model` text COLLATE utf8_bin,
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL,
@@ -808,4 +807,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-09 10:24:18
+-- Dump completed on 2014-07-10  0:39:58
