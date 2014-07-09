@@ -12,7 +12,22 @@ class pluginAccount extends objectPlugin {
         $account = $this->getCustomer()->fetch($config);
         // var_dump('getAccountByID', $id);
         // var_dump($account);
+        // get account info
+        // get account addresses
         return $account;
+    }
+
+    public function get_account_account () {
+
+    }
+
+    public function patch_account_account () {
+        
+    }
+
+
+    public function delete_account_account () {
+        
     }
 
 }

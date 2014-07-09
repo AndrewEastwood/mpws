@@ -9,6 +9,22 @@ define("plugin/account/common/js/model/account", [
     // var Model = MModel.getNew();
 
     var Account = Backbone.Model.extend({
+        idAttribute: "ID",
+        defaults: {
+            items: {},
+            info: {},
+            promo: {},
+            account: {}
+        },
+        url: function () {
+            var _params =  {
+                source: 'account',
+                fn: 'account'
+            };
+            if (!this.isNew())
+                _params.id = this.id;
+            return APP.getApiLink(_params);
+        },
         source: 'account',
         fn: 'profile',
         initialize: function () {
