@@ -4,6 +4,17 @@ class configurationDefaultDataSource extends objectConfiguration {
 
     static $Table_SystemAccounts = "mpws_accounts";
 
+    static function jsapiGetNewPermission () {
+        return array(
+            "isAdmin" => 0,
+            "CanCreate" => 0,
+            "CanEdit" => 0,
+            "CanView" => 0,
+            "CanAddUsers" => 0
+        );
+    }
+
+
     static function jsapiGetCustomer ($ExternalKey = MPWS_CUSTOMER) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_customer",
@@ -20,17 +31,12 @@ class configurationDefaultDataSource extends objectConfiguration {
     }
 
 
-    static function jsapiGetAccount ($login, $password) {
-        return self::jsapiGetDataSourceConfig(array(
+    static function jsapiGetAccount ($login = null, $password = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "fields" => array("*"),
             "limit" => 1,
-            "condition" => array(
-                "EMail" => self::jsapiCreateDataSourceCondition($login),
-                "Password" => self::jsapiCreateDataSourceCondition($password),
-                "IsTemporary" => self::jsapiCreateDataSourceCondition(0),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
-            ),
+            "condition" => array(),
             "additional" => array(
                 "mpws_permissions" => array(
                     "constraint" => array("mpws_accounts.PermissionID", "=", "mpws_permissions.ID"),
@@ -47,20 +53,33 @@ class configurationDefaultDataSource extends objectConfiguration {
                 "expandSingleRecord" => true
             )
         ));
+        if (!empty($login))
+            $config["condition"]["EMail"] = self::jsapiCreateDataSourceCondition($login);
+        if (!empty($password))
+            $config["condition"]["Password"] = self::jsapiCreateDataSourceCondition($password);
+        // if (!empty($activeOnly)) {
+        //     $config["condition"]["IsTemporary"] = self::jsapiCreateDataSourceCondition(0);
+        //     $config["condition"]["Status"] = self::jsapiCreateDataSourceCondition("ACTIVE");
+
+        // }
+
+        return $config;
     }
     static function jsapiGetAccountByID ($id) {
-        $config = self::jsapiGetAccount(null, null);
+        $config = self::jsapiGetAccount();
         $config["condition"] = array(
             "ID" => self::jsapiCreateDataSourceCondition($id)
         );
         return $config;
     }
 
-    static function jsapiGetAccountPermissions () {
+    static function jsapiGetAccountPermissions ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_permissions",
             "fields" => array("*"),
-            "limit" => 1,
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($id)
+            ),
             "options" => array(
                 "expandSingleRecord" => true
             )
@@ -70,7 +89,7 @@ class configurationDefaultDataSource extends objectConfiguration {
     static function jsapiAddAccountPermissions ($data) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_permissions",
-            "fields" => array("*"),
+            "action" => "insert",
             "data" => $data,
             "options" => null
         ));
@@ -80,6 +99,7 @@ class configurationDefaultDataSource extends objectConfiguration {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "insert",
+            "data" => $data,
             "options" => null
         ));
     }
@@ -120,22 +140,24 @@ class configurationDefaultDataSource extends objectConfiguration {
                 "ValidationString" => self::jsapiCreateDataSourceCondition($ValidationString)
             ),
             "data" => array(
-                "IsTemporary" => 0
+                "Status" => "ACTIVE"
             ),
             "options" => null
         ));
     }
 
     static function jsapiGetAccountAddresses ($AccountID) {
-        return self::jsapiGetDataSourceConfig(array(
+        $config = self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "fields" => array("*"),
             "condition" => array(
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
             ),
             "options" => null
         ));
+        if (!glIsToolbox())
+            $config['condition']["Status"] = self::jsapiCreateDataSourceCondition("ACTIVE");
+        return $config;
     }
 
     static function jsapiGetAccountAddress ($AccountID, $AddressID) {

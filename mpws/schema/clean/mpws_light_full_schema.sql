@@ -62,8 +62,7 @@ DROP TABLE IF EXISTS `mpws_accounts`;
 CREATE TABLE `mpws_accounts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `PermissionID` int(11) DEFAULT NULL,
-  `IsTemporary` tinyint(1) NOT NULL DEFAULT '1',
+  `PermissionID` int(11) NOT NULL,
   `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
   `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
   `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
@@ -71,7 +70,7 @@ CREATE TABLE `mpws_accounts` (
   `Phone` varchar(15) COLLATE utf8_bin DEFAULT NULL,
   `Password` varchar(50) COLLATE utf8_bin NOT NULL,
   `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Status` enum('ACTIVE','REMOVED','TEMP') COLLATE utf8_bin NOT NULL DEFAULT 'TEMP',
   `DateLastAccess` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -79,9 +78,9 @@ CREATE TABLE `mpws_accounts` (
   UNIQUE KEY `ID` (`ID`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
-  KEY `PermisionsID` (`PermissionID`),
-  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `mpws_accounts_ibfk_5` FOREIGN KEY (`PermissionID`) REFERENCES `mpws_permissions` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `PermissionID` (`PermissionID`),
+  CONSTRAINT `mpws_accounts_ibfk_5` FOREIGN KEY (`PermissionID`) REFERENCES `mpws_permissions` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -807,4 +806,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-10  1:06:02
+-- Dump completed on 2014-07-12  3:24:40
