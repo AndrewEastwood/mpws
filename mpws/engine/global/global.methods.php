@@ -1,5 +1,11 @@
 <?php
 
+    function glWrap ($key, $value) {
+      $rez = array();
+      $rez[$key] = $value;
+      return $rez;
+    }
+
     function arrExtend (&$arrSrc, $arrExt) {
         if (empty($arrSrc)) {
             $arrSrc = $arrExt;

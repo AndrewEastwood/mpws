@@ -7,9 +7,23 @@ class pluginAccount extends objectPlugin {
         return $this->getCustomer()->fetch($config);
     }
 
-    public function _createAccountBy () {
+    public function _createAccount ($reqData) {
         $result = array();
         $errors = array();
+
+
+        if (!libraryValidate::eachValueIsNotEmpty($reqData)) {
+            $errors[] = '';
+        }
+
+        if (strcasecmp($reqData["Password"], $reqData["ConfirmPassword"]) !== 0) {
+            $errors[] = 'ConfirmationPasswordWrong'
+        }
+
+        if (count($errors)) {
+            return glWrap("errors", $errors);
+        }
+
         // create permission
         $data = array();
         if (glIsToolbox()) {
@@ -21,19 +35,19 @@ class pluginAccount extends objectPlugin {
 
             if (empty($PermissionID)) {
                 $errors[] = 'PermissionCreateError';
-                return;
+                return glWrap("errors", $errors);
             }
         }
 
         $data = array()
-        $data["PermissionID"] = $PermissionID;
-        $data["FirstName"] = $req['FirstName'];
-        $data["LastName"] = $req['LastName'];
-        $data["EMail"] = $req['EMail'];
-        $data["Phone"] = $req['Phone'];
-        $data["Password"] = $req['Password'];
-        $data["ValidationString"] = $req['ValidationString'];
         $data["CustomerID"] = $this->getCustomer()->getCustomerID();
+        $data["PermissionID"] = $PermissionID;
+        $data["FirstName"] = $reqData['FirstName'];
+        $data["LastName"] = $reqData['LastName'];
+        $data["EMail"] = $reqData['EMail'];
+        $data["Phone"] = $reqData['Phone'];
+        $data["Password"] = $reqData['Password'];
+        $data["ValidationString"] = librarySecure::EncodeAccountPassword(time());
         $data["DateLastAccess"] = configurationDefaultDataSource::getDate();
         $data["DateCreated"] = configurationDefaultDataSource::getDate();
         $data["DateUpdated"] = configurationDefaultDataSource::getDate();
@@ -43,7 +57,7 @@ class pluginAccount extends objectPlugin {
 
         if (empty($AccountID)) {
             $errors[] = 'AccountCreateError';
-            return;
+            return glWrap("errors", $errors);
         }
 
         $result = $this->_getAccountByID($AccountID);
@@ -95,7 +109,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function post_account_account (&$resp, $req) {
-        $resp = $this->_createAccountBy();
+        $data = libraryRequest::getObjectFromREQUEST("FirstName", "LastName", "EMail", "Phone", "Password", "ConfirmPassword");
+        $resp = $this->_createAccount($data);
     }
 
     public function patch_account_account () {
