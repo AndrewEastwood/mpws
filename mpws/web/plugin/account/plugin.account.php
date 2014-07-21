@@ -11,13 +11,23 @@ class pluginAccount extends objectPlugin {
         $result = array();
         $errors = array();
 
+        // $emptyKeys = libraryValidate::eachValueIsNotEmpty($reqData);
+        // if (!) {
+        //     $errors[] = '';
+        // }
+        // var_dump($reqData);
+        $e = libraryValidate::getValidData($reqData, array(
+            'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
+            'LastName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
+            'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
+            'Phone' => array('isPhone'),
+            'Password' => array('isPassword', 'min' => 8, 'max' => 30)
+        ));
 
-        if (!libraryValidate::eachValueIsNotEmpty($reqData)) {
-            $errors[] = '';
-        }
+        return $e;
 
         if (strcasecmp($reqData["Password"], $reqData["ConfirmPassword"]) !== 0) {
-            $errors[] = 'ConfirmationPasswordWrong'
+            $errors[] = 'ConfirmationPasswordWrong';
         }
 
         if (count($errors)) {
@@ -39,7 +49,7 @@ class pluginAccount extends objectPlugin {
             }
         }
 
-        $data = array()
+        $data = array();
         $data["CustomerID"] = $this->getCustomer()->getCustomerID();
         $data["PermissionID"] = $PermissionID;
         $data["FirstName"] = $reqData['FirstName'];
@@ -109,8 +119,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function post_account_account (&$resp, $req) {
-        $data = libraryRequest::getObjectFromREQUEST("FirstName", "LastName", "EMail", "Phone", "Password", "ConfirmPassword");
-        $resp = $this->_createAccount($data);
+        // $data = libraryRequest::getObjectFromREQUEST("FirstName", "LastName", "EMail", "Phone", "Password", "ConfirmPassword");
+        $resp = $this->_createAccount($req);
     }
 
     public function patch_account_account () {
