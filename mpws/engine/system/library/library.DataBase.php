@@ -15,6 +15,22 @@ class libraryDataBase {
         return $this->dbo;
     }
 
+    public function getDBLink () {
+        return libraryORM::get_db();
+    }
+
+    public function beginTransaction () {
+        $this->getDBLink()->beginTransaction();
+    }
+
+    public function commit () {
+        $this->getDBLink()->commit();
+    }
+
+    public function rollback () {
+        $this->getDBLink()->rollBack();
+    }
+
     public function getDataJSON($config) {
         if (is_string($config))
             return json_encode(array("message" => $config));

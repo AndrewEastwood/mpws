@@ -44,7 +44,7 @@ class libraryValidate {
 
         foreach ($dataRules as $keyToValidate => $rules) {
 
-            $values[$keyToValidate] = $dataArray[$keyToValidate] ?: null;
+            $values[$keyToValidate] = isset($dataArray[$keyToValidate]) ? $dataArray[$keyToValidate] : null;
             $errors[$keyToValidate] = array();
 
             // string
@@ -127,7 +127,12 @@ class libraryValidate {
 
             // regex
             if (in_array("regex", $rules) && preg_match($rules["regex"], $values[$keyToValidate]) !== 1) {
-                $errors[$keyToValidate] = $keyToValidate . "IsNull";
+                $errors[$keyToValidate][] = $keyToValidate . "IsNull";
+            }
+
+            // equalTo
+            if (isset($rules['equalTo']) && $values[$keyToValidate] !== $dataArray[$rules['equalTo']]) {
+                $errors[$keyToValidate][] = $keyToValidate . "IsNotEqualTo_" . $rules['equalTo'];
             }
 
             $totalErrors += count($errors[$keyToValidate]);

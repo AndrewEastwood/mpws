@@ -54,10 +54,10 @@ class objectCustomer implements ICustomer {
         return $this->dbo;
     }
 
-    public function fetch ($config) {
+    public function fetch ($config, $skipCustomerID = false) {
         $customerInfo = $this->getCustomerInfo();
         // var_dump($customerInfo);
-        if (!isset($config["condition"]["CustomerID"]))
+        if (!isset($config["condition"]["CustomerID"]) && !$skipCustomerID)
             $config["condition"]["CustomerID"] = configurationCustomerDataSource::jsapiCreateDataSourceCondition($customerInfo['ID']);
         // var_dump($config);
         return $this->dbo->getData($config);

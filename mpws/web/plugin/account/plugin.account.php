@@ -11,34 +11,24 @@ class pluginAccount extends objectPlugin {
         $result = array();
         $errors = array();
 
-        // $emptyKeys = libraryValidate::eachValueIsNotEmpty($reqData);
-        // if (!) {
-        //     $errors[] = '';
-        // }
-        // var_dump($reqData);
-        $e = libraryValidate::getValidData($reqData, array(
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
             'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
             'Phone' => array('isPhone'),
-            'Password' => array('isPassword', 'min' => 8, 'max' => 30)
+            'Password' => array('isPassword', 'min' => 8, 'max' => 30),
+            'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty')
         ));
 
-        return $e;
-
-        if (strcasecmp($reqData["Password"], $reqData["ConfirmPassword"]) !== 0) {
-            $errors[] = 'ConfirmationPasswordWrong';
+        if ($validatedDataObj["totalErrors"] > 0) {
+            return glWrap("errors", $validatedDataObj["errors"]);
         }
 
-        if (count($errors)) {
-            return glWrap("errors", $errors);
-        }
+        try {
 
-        // create permission
-        $data = array();
-        if (glIsToolbox()) {
+            $this->getCustomerDataBase()->beginTransaction();
 
-        } else {
+            // create permission
             $data = configurationDefaultDataSource::jsapiGetNewPermission();
             $configCreatePermission = configurationDefaultDataSource::jsapiAddAccountPermissions($data);
             $PermissionID = $this->getCustomer()->fetch($configCreatePermission) ?: null;
@@ -47,23 +37,30 @@ class pluginAccount extends objectPlugin {
                 $errors[] = 'PermissionCreateError';
                 return glWrap("errors", $errors);
             }
+
+            $validatedValues = $validatedDataObj['values'];
+
+            $data = array();
+            $data["CustomerID"] = $this->getCustomer()->getCustomerID();
+            $data["PermissionID"] = $PermissionID;
+            $data["FirstName"] = $validatedValues['FirstName'];
+            $data["LastName"] = $validatedValues['LastName'];
+            $data["EMail"] = $validatedValues['EMail'];
+            $data["Phone"] = $validatedValues['Phone'];
+            $data["Password"] = $validatedValues['Password'];
+            $data["ValidationString"] = librarySecure::EncodeAccountPassword(time());
+            $data["DateLastAccess"] = configurationDefaultDataSource::getDate();
+            $data["DateCreated"] = configurationDefaultDataSource::getDate();
+            $data["DateUpdated"] = configurationDefaultDataSource::getDate();
+
+            $configCreateAccount = configurationDefaultDataSource::jsapiAddAccount($data);
+
+            $AccountID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
+
+            $this->getCustomerDataBase()->commit();
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
         }
-
-        $data = array();
-        $data["CustomerID"] = $this->getCustomer()->getCustomerID();
-        $data["PermissionID"] = $PermissionID;
-        $data["FirstName"] = $reqData['FirstName'];
-        $data["LastName"] = $reqData['LastName'];
-        $data["EMail"] = $reqData['EMail'];
-        $data["Phone"] = $reqData['Phone'];
-        $data["Password"] = $reqData['Password'];
-        $data["ValidationString"] = librarySecure::EncodeAccountPassword(time());
-        $data["DateLastAccess"] = configurationDefaultDataSource::getDate();
-        $data["DateCreated"] = configurationDefaultDataSource::getDate();
-        $data["DateUpdated"] = configurationDefaultDataSource::getDate();
-
-        $configCreateAccount = configurationDefaultDataSource::jsapiAddAccount($data);
-        $AccountID = $this->getCustomer()->fetch($configCreatePermission) ?: null;
 
         if (empty($AccountID)) {
             $errors[] = 'AccountCreateError';
@@ -79,7 +76,9 @@ class pluginAccount extends objectPlugin {
         $config = configurationCustomerDataSource::jsapiGetAccountByID($id);
         $account = $this->getCustomer()->fetch($config);
         // var_dump('getAccountByID', $id);
-        // var_dump($account);
+        if (is_null($account)) {
+            return glWrap('error', 'Account does not exist');
+        }
         // get account info
         // get account addresses
         $configAddresses = configurationCustomerDataSource::jsapiGetAccountAddresses($id);
@@ -93,6 +92,7 @@ class pluginAccount extends objectPlugin {
         $account['IsOnline'] = intval($account['IsOnline']) === 1;
         unset($account['CustomerID']);
         unset($account['PermissionID']);
+        unset($account['Password']);
 
         foreach ($account as $key => $value) {
             if (preg_match("/^Permission_/", $key) === 1) {
@@ -110,12 +110,19 @@ class pluginAccount extends objectPlugin {
         return $account;
     }
 
+    private function _disableAccountByID ($id) {
+        $config = configurationCustomerDataSource::jsapiRemoveAccount($id);
+        $this->getCustomer()->fetch($config);
+        return glWrap("ok", true);
+    }
+
     public function get_account_account (&$resp, $req) {
-        $id = intval($req['id']);
-        if (empty($id))
-            $resp['error'] = 'The request must contain "id" parameter';
-        else
+        if (!empty($req['id'])) {
+            $id = intval($req['id']);
             $resp = $this->_getAccountByID($id);
+            return;
+        }
+        $resp['error'] = 'The request must contain "id" parameter';
     }
 
     public function post_account_account (&$resp, $req) {
@@ -123,13 +130,20 @@ class pluginAccount extends objectPlugin {
         $resp = $this->_createAccount($req);
     }
 
-    public function patch_account_account () {
-        
+    public function patch_account_account (&$resp, $req) {
+        var_dump($_SERVER['REQUEST_METHOD']);
+        var_dump(file_get_contents('php://input'));
     }
 
 
-    public function delete_account_account () {
-        
+    public function delete_account_account (&$resp, $req) {
+        var_dump($_POST);
+        if (!empty($req['id'])) {
+            $id = intval($req['id']);
+            $resp = $this->_disableAccountByID($id);
+            return;
+        }
+        $resp['error'] = 'The request must contain "id" parameter';
     }
 
 }

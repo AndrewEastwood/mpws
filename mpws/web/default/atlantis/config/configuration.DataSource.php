@@ -95,7 +95,7 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiAddAccount () {
+    static function jsapiAddAccount ($data) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "insert",
@@ -121,8 +121,7 @@ class configurationDefaultDataSource extends objectConfiguration {
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
