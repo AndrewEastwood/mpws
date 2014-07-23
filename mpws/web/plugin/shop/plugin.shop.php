@@ -784,6 +784,10 @@ class pluginShop extends objectPlugin {
 
     // modify existed product quantity in the shopping cart list
     public function patch_shop_order (&$resp, $req) {
+        // var_dump($req);
+        // var_dump($_SERVER['REQUEST_METHOD']);
+        // var_dump($_POST);
+        // var_dump(file_get_contents('php://input'));
         $options = array();
         if (isset($req['productID'])) {
             $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();

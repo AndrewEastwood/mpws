@@ -16,6 +16,8 @@
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
 
+    $PHP_INPUT = file_get_contents('php://input');
+
     // json_decode(file_get_contents("php://input"), true);
     // if (empty($_REQ))
     //     $_REQ = $_POST;

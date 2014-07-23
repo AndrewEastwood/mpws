@@ -2,20 +2,25 @@
 
 class libraryRequest {
 
+
     static function getScriptName () {
         $name = $_SERVER['REDIRECT_URL'];
         return basename($name, '.js');
     }
 
     static function getRequestData () {
-        if (self::isGET() || self::isDELETE()) // DLETE uses GET var
+        global $PHP_INPUT;
+        if (self::isGET()) // DLETE uses GET var
             return $_GET;
-        if (self::isPOST() || self::isPUT() || self::isPATCH()) {
-            $_PUT = json_decode(file_get_contents('php://input'), true);
-            if (empty($_PUT) && self::isPOST() && !empty($_POST))
-                return $_POST;
-            return $_PUT;
-        }
+        if (self::isDELETE() || self::isPUT() || self::isPATCH()) // DLETE uses GET var
+            return json_decode($PHP_INPUT, true);
+        if (self::isPOST())
+            return $_POST;
+        // if (self::isPOST() || self::isPUT() || self::isPATCH()) {
+        //     $_PUT = json_decode($PHP_INPUT, true);
+        //     if (empty($_PUT) && self::isPOST() && !empty($_POST))
+        //     return $_PUT;
+        // }
     }
 
     /* get values */

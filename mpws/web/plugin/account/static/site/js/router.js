@@ -7,13 +7,13 @@ define("plugin/account/site/js/router", [
     // 'default/js/lib/cache',
     // 'plugin/account/site/js/view/menu',
 ], function (Backbone, SiteMenu, Sandbox, $, _, Cache) {
-    var order = new SiteOrder({
-        ID: "temp"
-    });
-    SiteMenu({
-        order: order
-    });
-    order.fetch();
+    // var order = new SiteOrder({
+    //     ID: "temp"
+    // });
+    // SiteMenu({
+    //     order: order
+    // });
+    // order.fetch();
 
     return Backbone.Router.extend({});
 

@@ -121,11 +121,11 @@ class configurationDefaultDataSource extends objectConfiguration {
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
+                "ID" => self::jsapiCreateDataSourceCondition($AccountID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => date('Y:m:d H:i:s')
+                "DateUpdated" => self::getDate()
             ),
             "options" => null
         ));
@@ -219,7 +219,7 @@ class configurationDefaultDataSource extends objectConfiguration {
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => date('Y:m:d H:i:s')
+                "DateUpdated" => self::getDate()
             ),
             "options" => null
         ));

@@ -131,13 +131,15 @@ class pluginAccount extends objectPlugin {
     }
 
     public function patch_account_account (&$resp, $req) {
-        var_dump($_SERVER['REQUEST_METHOD']);
-        var_dump(file_get_contents('php://input'));
+        // var_dump($req);
+        // var_dump($_SERVER['REQUEST_METHOD']);
+        // var_dump(file_get_contents('php://input'));
     }
 
-
     public function delete_account_account (&$resp, $req) {
-        var_dump($_POST);
+        // global $PHP_INPUT;
+        // var_dump($req);
+        // var_dump($PHP_INPUT);
         if (!empty($req['id'])) {
             $id = intval($req['id']);
             $resp = $this->_disableAccountByID($id);
