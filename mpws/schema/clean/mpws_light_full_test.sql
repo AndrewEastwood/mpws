@@ -49,7 +49,7 @@ CREATE TABLE `mpws_accountAddresses` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_accountAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `mpws_accountAddresses` (
 
 LOCK TABLES `mpws_accountAddresses` WRITE;
 /*!40000 ALTER TABLE `mpws_accountAddresses` DISABLE KEYS */;
-INSERT INTO `mpws_accountAddresses` VALUES (5,1,79,'wwwww','fsdfsdf','rererererer','fdsfsdfsdf','REMOVED','2014-03-02 20:26:25','2014-03-02 22:37:12'),(19,1,79,'fsdfsdf','345345345','fsdfsdf','uuuuuuu','REMOVED','2014-03-02 22:47:47','2014-03-02 22:55:48'),(20,1,79,'dsadfasdasdfdfdsfdsf','fffff','ffff','dasdasdasdasd','REMOVED','2014-03-02 23:02:38','2014-03-03 00:40:52'),(21,1,79,'setsertser','tsetest','dfsdfsdfsd','fsdfsdfsdfsd','REMOVED','2014-03-03 00:40:27','2014-03-03 00:40:53'),(22,1,79,'Horodotska 123','79001','Ukraine','Lviv','REMOVED','2014-03-03 00:41:05','2014-03-10 00:40:42'),(23,1,79,'xxxxxx','xxxxxx','xxxxxx','xxxxxx','REMOVED','2014-03-03 01:00:12','2014-03-03 15:04:04'),(24,1,79,'Lvivska 34','57841','Ukraine','Kyiv','REMOVED','2014-03-03 19:10:39','2014-03-10 00:41:54'),(25,1,79,'Kyivska 3','78451','Ukraine','Rivne','ACTIVE','2014-03-04 02:22:33','2014-03-04 02:25:13'),(26,1,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:43:40','2014-03-04 02:43:40'),(27,1,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:43:46','2014-03-04 02:43:46'),(28,1,NULL,'demo','120012','Ukraine','Lviv','ACTIVE','2014-03-04 02:46:43','2014-03-04 02:46:43'),(29,1,NULL,'test','test','test','estsetsetset','ACTIVE','2014-03-05 22:52:14','2014-03-05 22:52:14'),(30,1,79,'Lvivska','78045','Ukraine','Kyiv','ACTIVE','2014-03-10 00:44:02','2014-03-10 00:44:02'),(31,1,79,'Zhutomyrska','79451','Ukraine','Dubno','ACTIVE','2014-03-10 00:44:58','2014-03-10 00:44:58'),(40,1,90,'groiv upa 12','11111','Ukraine','Lviv','ACTIVE','2014-04-19 21:38:08','2014-04-19 21:38:08');
+INSERT INTO `mpws_accountAddresses` VALUES (45,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:30:54','2014-07-26 17:35:39'),(46,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:31:06','2014-07-26 17:35:39'),(47,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:31:07','2014-07-26 17:35:39');
 /*!40000 ALTER TABLE `mpws_accountAddresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +72,6 @@ DROP TABLE IF EXISTS `mpws_accounts`;
 CREATE TABLE `mpws_accounts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `PermissionID` int(11) NOT NULL,
   `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
   `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
   `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
@@ -89,10 +88,8 @@ CREATE TABLE `mpws_accounts` (
   UNIQUE KEY `EMail_2` (`EMail`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
-  KEY `PermissionID` (`PermissionID`),
-  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `mpws_accounts_ibfk_5` FOREIGN KEY (`PermissionID`) REFERENCES `mpws_permissions` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +98,7 @@ CREATE TABLE `mpws_accounts` (
 
 LOCK TABLES `mpws_accounts` WRITE;
 /*!40000 ALTER TABLE `mpws_accounts` DISABLE KEYS */;
-INSERT INTO `mpws_accounts` VALUES (77,1,1,0,'James','Griffin','test@test.com',NULL,'24d04aa3d61423fb9dae48ac4d7567d5','72e6d9fe68147c4feb0cf7b035be9e05','TEMP','0000-00-00 00:00:00','2014-03-01 01:14:14','2014-03-01 01:14:14'),(78,1,1,0,'James','demo2','test@demo2.com',NULL,'24d04aa3d61423fb9dae48ac4d7567d5','c261191eb31433b98994f58e57567a67','ACTIVE','0000-00-00 00:00:00','2014-03-01 01:16:39','2014-03-01 01:16:39'),(79,1,1,0,'Test','Demo','demo@demo.com5','097-56-56-201','24d04aa3d61423fb9dae48ac4d7567d5','b74c7e4ec4dc62728ee5a2195a8605b2','ACTIVE','0000-00-00 00:00:00','2014-03-01 14:38:46','2014-03-09 23:52:24'),(80,1,1,0,'tset','','tset','ttset','4a123a551c46b3a7a2e1b6b76e7d69c9','f5046014417bd9c1098e0f29bd5abf59','TEMP','0000-00-00 00:00:00','2014-03-01 14:45:03','2014-03-01 14:45:03'),(90,1,1,0,'test','','test2@test.com','123-123-1234','4a123a551c46b3a7a2e1b6b76e7d69c9','0ccb16b9476e2423e0ff74e56750d5b2','TEMP','0000-00-00 00:00:00','2014-04-19 21:38:08','2014-04-19 21:38:08'),(91,1,1,0,'test','','admin@pb.com.ua','123-123-1234','4a123a551c46b3a7a2e1b6b76e7d69c9','0ccb16b9476e2423e0ff74e56750d5b2','ACTIVE','0000-00-00 00:00:00','2014-04-19 21:38:08','2014-04-19 21:38:08'),(102,1,30,0,'dfg','fdgfdg','gfdgfd+gfdg@fdsf.ff','(123) 123-12-12','Aa!w133f','68240ecd11d71072d6f7c5db70b9dc0f','TEMP','2014-07-22 12:11:51','2014-07-22 12:11:51','2014-07-22 12:11:51'),(108,1,37,0,'xxxx','dddd','admin3@pb.com.ua','(787) 111-11-11','Qq1@21we','8cf876593ccced5f04bbd94e05f0cbb6','TEMP','2014-07-23 13:14:55','2014-07-23 13:14:55','2014-07-23 13:14:55'),(120,1,49,0,'xxxx','dddd','admin4@pb.com.ua','(787) 111-11-11','Qq1@21we','840ace0524fecd98093fb596c0a7ba64','REMOVED','2014-07-23 13:17:00','2014-07-23 13:17:00','2014-07-24 00:11:48'),(129,1,58,0,'xxxx','dddd','admin5@pb.com.ua','(787) 111-11-11','Qq1@21we','2b12c06d869ac288b76306425638d661','TEMP','2014-07-23 13:54:00','2014-07-23 13:54:00','2014-07-23 13:54:00'),(135,1,64,0,'xxxx','dddd','admin6@pb.com.ua','(787) 111-11-11','Qq1@21we','304e33a3d64d828036c5da30788ca902','TEMP','2014-07-23 14:02:58','2014-07-23 14:02:58','2014-07-23 14:02:58');
+INSERT INTO `mpws_accounts` VALUES (139,1,0,'ddddd','dfdsfsdf','fdsfdsf@fdf.fdf','(434) 534-53-35','a5232aee5b6f36cbbd72d639e8429ba2','8de111e04ec15fc171c7723caa5342e2','REMOVED','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-07-26 17:35:39');
 /*!40000 ALTER TABLE `mpws_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,15 +174,18 @@ DROP TABLE IF EXISTS `mpws_permissions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_permissions` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `isAdmin` tinyint(1) NOT NULL,
+  `AccountID` int(11) NOT NULL,
+  `IsAdmin` tinyint(1) NOT NULL,
   `CanCreate` tinyint(1) NOT NULL,
   `CanEdit` tinyint(1) NOT NULL,
   `CanView` tinyint(1) NOT NULL,
   `CanAddUsers` tinyint(1) NOT NULL,
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  PRIMARY KEY (`ID`),
+  KEY `AccountID` (`AccountID`),
+  CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +194,7 @@ CREATE TABLE `mpws_permissions` (
 
 LOCK TABLES `mpws_permissions` WRITE;
 /*!40000 ALTER TABLE `mpws_permissions` DISABLE KEYS */;
-INSERT INTO `mpws_permissions` VALUES (1,1,1,1,1,1,'2014-05-24 00:00:00','2014-05-24 00:00:00'),(30,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(31,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(32,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(37,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(49,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(58,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(64,0,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+INSERT INTO `mpws_permissions` VALUES (72,139,1,1,1,1,0,'2014-07-26 17:22:45','2014-07-26 16:34:38');
 /*!40000 ALTER TABLE `mpws_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,7 +290,6 @@ CREATE TABLE `shop_boughts` (
 
 LOCK TABLES `shop_boughts` WRITE;
 /*!40000 ALTER TABLE `shop_boughts` DISABLE KEYS */;
-INSERT INTO `shop_boughts` VALUES (20,1,5,19,17.00,1),(21,1,5,20,17.00,1),(22,1,3,20,213.00,1),(23,1,3,21,213.00,1),(24,1,4,21,100.00,10),(25,1,4,24,100.00,7),(26,1,4,27,100.00,1),(27,1,3,28,213.00,4),(28,1,4,28,100.00,5),(36,1,3,37,213.00,3);
 /*!40000 ALTER TABLE `shop_boughts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -587,7 +586,6 @@ CREATE TABLE `shop_orders` (
 
 LOCK TABLES `shop_orders` WRITE;
 /*!40000 ALTER TABLE `shop_orders` DISABLE KEYS */;
-INSERT INTO `shop_orders` VALUES (19,1,79,26,'company_gunsel','test','test','SHOP_CLOSED','feceb946892d6553534402fe85d34b0f','','2014-03-01 14:38:46','2014-04-08 17:53:49'),(20,1,79,26,'company_novaposhta','tset','setset','SHOP_CLOSED','4a45f03d9c345814c22c3ba14977040f','','2014-03-01 14:45:03','2014-04-19 00:52:02'),(21,1,79,26,'self','','','SHOP_CLOSED','bf62eae73bb93385458205350b41f5c8','','2014-03-01 14:45:15','2014-04-13 03:54:55'),(22,1,79,26,'self','12','call','SHOP_CLOSED','539c1281990325f8870ee236920231ca','','2014-03-04 02:43:40','2014-04-13 03:54:57'),(23,1,79,27,'self','12','call','SHOP_CLOSED','594b40d6834fe6b7c1988e022f0e5833','','2014-03-04 02:43:46','2014-04-13 15:57:44'),(24,1,79,28,'self','12','call','SHOP_CLOSED','3bcff429fdb62932c9ff7636461b74e7','','2014-03-04 02:46:43','2014-04-13 03:54:53'),(25,1,79,22,'self','12','444','SHOP_CLOSED','91bac37fd7056ede8da053fae4164d71','','2014-03-04 02:52:48','2014-04-13 15:57:46'),(26,1,79,22,'self','12','444','SHOP_CLOSED','91a92b3864b2053b89d9214aa56f5f0d','','2014-03-04 02:53:27','2014-04-13 15:57:43'),(27,1,79,24,'','','dedededede','SHOP_CLOSED','1206292bb1b863c76096e2e37d73232b','','2014-03-04 03:02:31','2014-04-13 15:57:40'),(28,1,79,29,'company_novaposhta','434','testsetsetse','SHOP_CLOSED','cc9ee90f5fa3df9a1c2fa14f563f2483','','2014-03-05 22:52:14','2014-03-05 22:52:14'),(37,1,90,40,'company_gunsel','12','ffff','ACTIVE','af3fdec761065fe66fbec0ace3af59cf','','2014-04-19 21:38:08','2014-05-10 20:33:48'),(38,1,90,40,'company_gunsel','13','ffff','NEW','af3fdec761065fe66fbec0ace3af59cf','','2014-04-22 21:38:08','2014-05-10 20:39:30');
 /*!40000 ALTER TABLE `shop_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1052,4 +1050,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-24  0:12:57
+-- Dump completed on 2014-07-26 17:37:36

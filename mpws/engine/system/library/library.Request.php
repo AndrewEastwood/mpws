@@ -2,7 +2,6 @@
 
 class libraryRequest {
 
-
     static function getScriptName () {
         $name = $_SERVER['REDIRECT_URL'];
         return basename($name, '.js');

@@ -2,12 +2,15 @@
 
 class libraryValidate {
 
-    public static $FORMAT_PHONE = array('(###) ###-##-##');
+    public static $FORMAT_PHONE = '(###) ###-##-##';
 
     // is taken from http://stackoverflow.com/a/18119964
     public static function validatePhoneNumber ($number) {
-        $format = trim(preg_replace('/[0-9]/', '#', $number));
-        return (in_array($format, self::$FORMAT_PHONE)) ? true : false;
+        $count = 0;
+        $format = trim(preg_replace('/[0-9]/', '#', $number, -1, $count));
+        if ($count !== substr_count(self::$FORMAT_PHONE, '#'))
+            return false;
+        return ($format === self::$FORMAT_PHONE) ? true : false;
     }
 
     public static function validatePassword ($password) {
@@ -72,9 +75,15 @@ class libraryValidate {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNull";
             }
 
-            // notIsset
-            if (!in_array("notIsset", $rules) && !isset($dataArray[$keyToValidate])) {
-                $errors[$keyToValidate][] = $keyToValidate . "IsNotSet";
+            // exists
+            if (!isset($dataArray[$keyToValidate])) {
+                if (in_array("skipIfUnset", $rules)) {
+                    unset($values[$keyToValidate]);
+                    unset($errors[$keyToValidate]);
+                    continue;
+                } else {
+                    $errors[$keyToValidate][] = $keyToValidate . "IsNotExists";
+                }
             }
 
             // notEmpty
@@ -96,8 +105,7 @@ class libraryValidate {
             // phone
             if (in_array("isPhone", $rules) && false === self::validatePhoneNumber($dataArray[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotPhone";
-                $errors[$keyToValidate][] = "PhoneAvailableFormats";
-                $errors[$keyToValidate][] = join(", ", self::$FORMAT_PHONE);
+                $errors[$keyToValidate][] = "FormatMustBe:" . self::$FORMAT_PHONE;
             }
 
             if (!empty($rules['min']) || !empty($rules['max'])) {
@@ -133,6 +141,11 @@ class libraryValidate {
             // equalTo
             if (isset($rules['equalTo']) && $values[$keyToValidate] !== $dataArray[$rules['equalTo']]) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotEqualTo_" . $rules['equalTo'];
+            }
+
+            // inPairWith
+            if (isset($rules['inPairWith']) && !empty($rules['inPairWith']) && !isset($dataArray[$rules['inPairWith']])) {
+                $errors[$keyToValidate][] = $keyToValidate . "MissedRelatedField_" . $rules['inPairWith'];
             }
 
             $totalErrors += count($errors[$keyToValidate]);

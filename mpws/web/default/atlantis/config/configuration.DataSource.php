@@ -6,14 +6,13 @@ class configurationDefaultDataSource extends objectConfiguration {
 
     static function jsapiGetNewPermission () {
         return array(
-            "isAdmin" => 0,
+            "IsAdmin" => 0,
             "CanCreate" => 0,
             "CanEdit" => 0,
             "CanView" => 0,
             "CanAddUsers" => 0
         );
     }
-
 
     static function jsapiGetCustomer ($ExternalKey = MPWS_CUSTOMER) {
         return self::jsapiGetDataSourceConfig(array(
@@ -30,41 +29,26 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-
-    static function jsapiGetAccount ($login = null, $password = null) {
+    static function jsapiGetAccount () {
         $config = self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "fields" => array("*"),
             "limit" => 1,
             "condition" => array(),
-            "additional" => array(
-                "mpws_permissions" => array(
-                    "constraint" => array("mpws_accounts.PermissionID", "=", "mpws_permissions.ID"),
-                    "fields" => array(
-                        "Permission_isAdmin" => "isAdmin",
-                        "Permission_CanCreate" => "CanCreate",
-                        "Permission_CanEdit" => "CanEdit",
-                        "Permission_CanView" => "CanView",
-                        "Permission_CanAddUsers" => "CanAddUsers"
-                    )
-                )
-            ),
             "options" => array(
                 "expandSingleRecord" => true
             )
         ));
-        if (!empty($login))
-            $config["condition"]["EMail"] = self::jsapiCreateDataSourceCondition($login);
-        if (!empty($password))
-            $config["condition"]["Password"] = self::jsapiCreateDataSourceCondition($password);
-        // if (!empty($activeOnly)) {
-        //     $config["condition"]["IsTemporary"] = self::jsapiCreateDataSourceCondition(0);
-        //     $config["condition"]["Status"] = self::jsapiCreateDataSourceCondition("ACTIVE");
-
-        // }
-
         return $config;
     }
+
+    static function jsapiGetAccountByCredentials ($login, $password) {
+        $config = self::jsapiGetAccount();
+        $config["condition"]["EMail"] = self::jsapiCreateDataSourceCondition($login);
+        $config["condition"]["Password"] = self::jsapiCreateDataSourceCondition($password);
+        return $config;
+    }
+
     static function jsapiGetAccountByID ($id) {
         $config = self::jsapiGetAccount();
         $config["condition"] = array(
@@ -73,29 +57,18 @@ class configurationDefaultDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiGetAccountPermissions ($id) {
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "mpws_permissions",
-            "fields" => array("*"),
-            "condition" => array(
-                "ID" => self::jsapiCreateDataSourceCondition($id)
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
-
-    static function jsapiAddAccountPermissions ($data) {
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "mpws_permissions",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
+    static function jsapiGetAccountByValidationString ($ValidationString) {
+        $config = self::jsapiGetAccount();
+        $config["condition"] = array(
+            "ValidationString" => self::jsapiCreateDataSourceCondition($ValidationString)
+        );
+        return $config;
     }
 
     static function jsapiAddAccount ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        $data["DateLastAccess"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "insert",
@@ -104,19 +77,20 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiUpdateAccount ($AccountID) {
+    static function jsapiUpdateAccount ($AccountID, $data) {
+        $data["DateUpdated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "update",
             "condition" => array(
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
+                "ID" => self::jsapiCreateDataSourceCondition($AccountID)
             ),
+            "data" => $data,
             "options" => null
         ));
     }
 
-    static function jsapiRemoveAccount ($AccountID) {
+    static function jsapiDisableAccount ($AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accounts",
             "action" => "update",
@@ -139,8 +113,47 @@ class configurationDefaultDataSource extends objectConfiguration {
                 "ValidationString" => self::jsapiCreateDataSourceCondition($ValidationString)
             ),
             "data" => array(
-                "Status" => "ACTIVE"
+                "Status" => "ACTIVE",
+                "DateUpdated" => self::getDate()
             ),
+            "options" => null
+        ));
+    }
+
+    static function jsapiGetPermissions ($AccountID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_permissions",
+            "fields" => array("*"),
+            "condition" => array(
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
+            ),
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    static function jsapiAddPermissions ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_permissions",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiUpdatePermissions ($AccountID, $data) {
+        $data["DateUpdated"] = self::getDate();
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_permissions",
+            "action" => "update",
+            "condition" => array(
+                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
+            ),
+            "data" => $data,
             "options" => null
         ));
     }
@@ -159,20 +172,20 @@ class configurationDefaultDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiGetAccountAddress ($AccountID, $AddressID) {
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "mpws_accountAddresses",
-            "fields" => array("*"),
-            "condition" => array(
-                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
+    // static function jsapiGetAccountAddress ($AccountID, $AddressID) {
+    //     return self::jsapiGetDataSourceConfig(array(
+    //         "source" => "mpws_accountAddresses",
+    //         "fields" => array("*"),
+    //         "condition" => array(
+    //             "ID" => self::jsapiCreateDataSourceCondition($AddressID),
+    //             "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
+    //             "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
+    //         ),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    // }
 
     static function jsapiGetAddress ($AddressID) {
         return self::jsapiGetDataSourceConfig(array(
@@ -187,35 +200,36 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiAddAccountAddress () {
+    static function jsapiAddAddress ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "action" => "insert",
+            "data" => $data,
             "options" => null
         ));
     }
 
-    static function jsapiUpdateAccountAddress ($AccountID, $AddressID) {
+    static function jsapiUpdateAddress ($AddressID, $data) {
+        $data["DateUpdated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
-                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
+                "ID" => self::jsapiCreateDataSourceCondition($AddressID)
             ),
+            "data" => $data,
             "options" => null
         ));
     }
 
-    static function jsapiRemoveAccountAddress ($AccountID, $AddressID) {
+    static function jsapiDisableAddress ($AddressID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "action" => "update",
             "condition" => array(
-                "ID" => self::jsapiCreateDataSourceCondition($AddressID),
-                "AccountID" => self::jsapiCreateDataSourceCondition($AccountID),
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
+                "ID" => self::jsapiCreateDataSourceCondition($AddressID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',

@@ -19,6 +19,10 @@ class libraryDataBase {
         return libraryORM::get_db();
     }
 
+    public function getLastErrorCode () {
+        return $this->getDBLink()->errorCode();
+    }
+
     public function beginTransaction () {
         $this->getDBLink()->beginTransaction();
     }

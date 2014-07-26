@@ -49,7 +49,7 @@ CREATE TABLE `mpws_accountAddresses` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_accountAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,7 +62,6 @@ DROP TABLE IF EXISTS `mpws_accounts`;
 CREATE TABLE `mpws_accounts` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `PermissionID` int(11) NOT NULL,
   `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
   `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
   `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
@@ -79,10 +78,8 @@ CREATE TABLE `mpws_accounts` (
   UNIQUE KEY `EMail_2` (`EMail`),
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
-  KEY `PermissionID` (`PermissionID`),
-  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `mpws_accounts_ibfk_5` FOREIGN KEY (`PermissionID`) REFERENCES `mpws_permissions` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,15 +134,18 @@ DROP TABLE IF EXISTS `mpws_permissions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_permissions` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `isAdmin` tinyint(1) NOT NULL,
+  `AccountID` int(11) NOT NULL,
+  `IsAdmin` tinyint(1) NOT NULL,
   `CanCreate` tinyint(1) NOT NULL,
   `CanEdit` tinyint(1) NOT NULL,
   `CanView` tinyint(1) NOT NULL,
   `CanAddUsers` tinyint(1) NOT NULL,
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  PRIMARY KEY (`ID`),
+  KEY `AccountID` (`AccountID`),
+  CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -807,4 +807,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-24  0:12:57
+-- Dump completed on 2014-07-26 17:37:36
