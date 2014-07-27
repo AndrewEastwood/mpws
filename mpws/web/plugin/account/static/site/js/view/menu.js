@@ -6,11 +6,15 @@ define("plugin/account/site/js/view/menu", [
 
     return function (models) {
         // create SignIn button
-        var menuSignUp = new MenuSignUp();
+        var menuSignUp = new MenuSignUp({
+            model: models.account
+        });
         menuSignUp.render();
 
         // create SignIn button
-        var menuAccount = new MenuAccount();
+        var menuAccount = new MenuAccount({
+            model: models.account
+        });
         menuAccount.render();
 
         // Sandbox.eventSubscribe('view:AccountMenu', function (view) {

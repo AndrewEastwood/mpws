@@ -125,16 +125,16 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
                 
         // }
         // console.log(jqxhr.responseText);
-        var responseObj = JSON.parse(jqxhr.responseText);
+        var response = JSON.parse(jqxhr.responseText);
 
-        if (responseObj && responseObj.error && responseObj.error === "InvalidTokenKey") {
+        if (response && response.error && response.error === "InvalidTokenKey") {
             window.location.reload();
         }
 
-        // if (responseObj && responseObj.error && responseObj.error === "AccessDenied")
-        //     Sandbox.eventNotify("global:session:expired", responseObj.error);
+        // if (response && response.error && response.error === "AccessDenied")
+        //     Sandbox.eventNotify("global:session:expired", response.error);
 
-        Sandbox.eventNotify("global:ajax:responce", responseObj);
+        Sandbox.eventNotify("global:ajax:responce", response);
     });
 
     // Sandbox message handler
@@ -272,6 +272,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
                 Sandbox.eventNotify('global:loader:complete');
                 // return Site;
                 $(window).trigger('hashchange');
+                // get auth status
+                Auth.getStatus();
             });
         }
 

@@ -98,7 +98,7 @@ CREATE TABLE `mpws_accounts` (
 
 LOCK TABLES `mpws_accounts` WRITE;
 /*!40000 ALTER TABLE `mpws_accounts` DISABLE KEYS */;
-INSERT INTO `mpws_accounts` VALUES (139,1,0,'ddddd','dfdsfsdf','fdsfdsf@fdf.fdf','(434) 534-53-35','a5232aee5b6f36cbbd72d639e8429ba2','8de111e04ec15fc171c7723caa5342e2','REMOVED','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-07-26 17:35:39');
+INSERT INTO `mpws_accounts` VALUES (139,1,0,'ddddd','dfdsfsdf','demo@demo.com','(434) 534-53-35','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-07-27 14:52:08');
 /*!40000 ALTER TABLE `mpws_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1050,4 +1050,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-26 17:37:36
+-- Dump completed on 2014-07-27 15:28:20

@@ -1,19 +1,35 @@
 define("plugin/account/site/js/router", [
+    'default/js/lib/sandbox',
     'default/js/lib/backbone',
-    'plugin/shop/site/js/view/siteMenu',
-    // 'default/js/lib/sandbox',
+    'plugin/account/site/js/view/menu',
+    'default/js/lib/auth',
+    'plugin/account/common/js/model/account'
     // 'cmn_jquery',
     // 'default/js/lib/underscore',
     // 'default/js/lib/cache',
     // 'plugin/account/site/js/view/menu',
-], function (Backbone, SiteMenu, Sandbox, $, _, Cache) {
-    // var order = new SiteOrder({
-    //     ID: "temp"
-    // });
-    // SiteMenu({
-    //     order: order
-    // });
+], function (Sandbox, Backbone, SiteMenu, Auth, Account, $, _, Cache) {
+    var account = new Account();
+    SiteMenu({
+        account: account
+    });
     // order.fetch();
+
+    // Auth.getStatus();
+
+
+
+    Sandbox.eventSubscribe('global:auth:status:active', function (data) {
+        debugger;
+        account.id = data.id;
+        account.fetch();
+    });
+
+
+    Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
+        
+    });
+
 
     return Backbone.Router.extend({});
 

@@ -1,6 +1,6 @@
 <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
-   {{#mpwsIsNotEmpty data.profile }}
-      {{lang.profile_menu_welcome}} <strong>{{data.profile.FirstName}} {{data.profile.LastName}}</strong>
+   {{#mpwsIsNotEmpty data.account }}
+      {{lang.profile_menu_welcome}} <strong>{{data.account.FirstName}} {{data.account.LastName}}</strong>
    {{else}}
       {{lang.form_signin_menu_title}}
    {{/mpwsIsNotEmpty}}
@@ -9,7 +9,7 @@
    <li>
       <div class="row">
          <div class="col-md-12">
-            {{#mpwsIsNotEmpty data.profile }}
+            {{#mpwsIsNotEmpty data.account }}
             <ul class="nav nav-list plugin-account-menu"></ul>
             <ul class="nav nav-list">
                <li><a href="/#account/profile">{{lang.profile_menu_profile}}</a></li>

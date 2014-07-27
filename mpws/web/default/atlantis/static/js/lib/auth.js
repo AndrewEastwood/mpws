@@ -7,11 +7,11 @@ define("default/js/lib/auth", [
 
     var Auth = {};
 
-    Sandbox.eventSubscribe("global:ajax:responce", function(responseObj) {
-        if (APP.config.ISTOOLBOX && responseObj) {
-            if(responseObj.authenticated && Backbone.history.fragment === "signin") {
+    Sandbox.eventSubscribe("global:ajax:responce", function(response) {
+        if (APP.config.ISTOOLBOX && response) {
+            if(response.authenticated && Backbone.history.fragment === "signin") {
                 Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
-            } else if (!responseObj.authenticated) {
+            } else if (!response.authenticated) {
                 $.xhrPool.abortAll();
                 if (Backbone.history.fragment !== "signin") {
                     Backbone.history.navigate('signin', true);
@@ -19,18 +19,21 @@ define("default/js/lib/auth", [
                 }
             }
         }
-        Auth.setStatus(responseObj);
+        Auth.setStatus(response);
     });
 
     Auth = {
         isAuthenticated: false,
-        setStatus: function (user) {
-            Sandbox.eventNotify('global:auth:status:received', user);
-            var status = user && user.authenticated;
+        setStatus: function (response) {
+            // debugger;
+            var status = response && response.authenticated;
             if (Auth.isAuthenticated === status)
                 return;
 
-            Cache.setCookie('user', user || null);
+            if ()
+            Sandbox.eventNotify('global:auth:status:received', response);
+
+            Cache.setCookie('user', response || null);
             Auth.isAuthenticated = status;
 
             if (Auth.isAuthenticated)
@@ -45,7 +48,9 @@ define("default/js/lib/auth", [
             var query = {
                 fn: 'status'
             };
-            return $.get(APP.getAuthLink(query));
+            return $.get(APP.getAuthLink(query)).always(function(data){
+                debugger;
+            });
         },
         signin: function (email, password, remember) {
             var query = {

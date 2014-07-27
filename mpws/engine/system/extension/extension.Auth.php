@@ -45,7 +45,11 @@ class extensionAuth extends objectExtension {
         $credentials['password'] = librarySecure::EncodeAccountPassword($credentials['password']);
 
         $config = configurationCustomerDataSource::jsapiGetAccountByCredentials($credentials['email'], $credentials['password']);
+        // avoid removed account
+        $config["condition"]["Status"] = configurationCustomerDataSource::jsapiCreateDataSourceCondition('REMOVED', '!=');
         $account = $this->getCustomer()->fetch($config);
+
+        // var_dump($config);
 
         if (empty($account))
             $resp['error'] = 'WrongCredentials';

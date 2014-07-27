@@ -13,11 +13,11 @@ define("plugin/account/toolbox/js/router", [
             return;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
             // using this wrapper to cleanup previous view and create new one
-            Cache.withObject('SignIn', function (cachedView) {
+            // Cache.withObject('SignIn', function (cachedView) {
                 // debugger;
                 // remove previous view
-                if (cachedView && cachedView.remove)
-                    cachedView.remove();
+                // if (cachedView && cachedView.remove)
+                //     cachedView.remove();
                 // create new view
                 APP.commonElements.empty();
                 var signin = new SignIn();
@@ -28,7 +28,7 @@ define("plugin/account/toolbox/js/router", [
                     el: signin.el
                 });
                 // return view object to pass it into this function at next invocation
-                return signin;
+                // return signin;
             });
         });
     });

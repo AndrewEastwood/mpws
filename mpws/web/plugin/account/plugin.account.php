@@ -202,9 +202,16 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _activateAccountByValidationStyring ($ValidationString) {
-        $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
-        $this->getCustomer()->fetch($config);
-        return $this->_getAccountByValidationString($ValidationString);
+        $account = $this->_getAccountByValidationString($ValidationString);
+        if ($account['Status'] === "TEMP" || glIsToolbox()) {
+            $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
+            $this->getCustomer()->fetch($config);
+            $account = $this->_getAccountByValidationString($ValidationString);
+            if ($account['Status'] === 'ACTIVE')
+                return $account;
+        } elseif ($account['Status'] === 'REMOVED')
+            return glWrap('error', 'AccountIsRemoved');
+        return $account;
     }
 
     private function _disableAccountByID ($AccountID) {
@@ -358,10 +365,6 @@ class pluginAccount extends objectPlugin {
         }
         $resp['error'] = 'MissedParameter_id';
     }
-
-
-
-
 
     public function patch_account_address (&$resp, $req) {
         if (!empty($req['id'])) {
