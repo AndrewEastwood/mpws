@@ -21,8 +21,10 @@ define("plugin/account/site/js/router", [
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         debugger;
-        account.id = data.id;
-        account.fetch();
+        var authAccountID = Auth.getAccountID();
+        // if (authAccount && authAccount.ID)
+        // account.id = data.id;
+        // account.fetch();
     });
 
 

@@ -120,6 +120,36 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
+    static function jsapiSetOnlineAccount ($AccountID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($AccountID)
+            ),
+            "data" => array(
+                "IsOnline" => true,
+                "DateUpdated" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
+
+    static function jsapiSetOfflineAccount ($AccountID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "mpws_accounts",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($AccountID)
+            ),
+            "data" => array(
+                "IsOnline" => true,
+                "DateUpdated" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
+
     static function jsapiGetPermissions ($AccountID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_permissions",

@@ -108,7 +108,7 @@ class objectCustomer implements ICustomer {
         // libraryResponse::$_RESPONSE['script'] = libraryRequest::getScriptName();
         foreach ($this->plugins as $plugin)
             $plugin->run();
-        libraryResponse::$_RESPONSE['authenticated'] = $this->getExtension('auth')->isAuthenticated();
+        libraryResponse::$_RESPONSE['auth_id'] = $this->getExtension('auth')->getAuthID();
     }
 
     public function runAsAUTH () {

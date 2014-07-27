@@ -23,17 +23,12 @@ define("default/js/lib/auth", [
     });
 
     Auth = {
-        isAuthenticated: false,
         setStatus: function (response) {
             // debugger;
             var status = response && response.authenticated;
             if (Auth.isAuthenticated === status)
                 return;
 
-            if ()
-            Sandbox.eventNotify('global:auth:status:received', response);
-
-            Cache.setCookie('user', response || null);
             Auth.isAuthenticated = status;
 
             if (Auth.isAuthenticated)
@@ -41,15 +36,18 @@ define("default/js/lib/auth", [
             else
                 Sandbox.eventNotify("global:auth:status:inactive");
         },
-        getAccount: function () {
-            return Cache.getCookie('user') || false;
+        getAccountID: function () {
+            return Cache.getCookie('auth_id') || false;
         },
         getStatus: function () {
             var query = {
                 fn: 'status'
             };
-            return $.get(APP.getAuthLink(query)).always(function(data){
-                debugger;
+            return $.get(APP.getAuthLink(query), function(response){
+                // debugger;
+                // Sandbox.eventNotify('global:auth:status:received', response);
+                Auth.setStatus(response, true);
+                Cache.setCookie('auth_id', response.auth_id || null);
             });
         },
         signin: function (email, password, remember) {
@@ -60,13 +58,20 @@ define("default/js/lib/auth", [
                 email: email,
                 password: password,
                 remember: remember,
+            }, function(response){
+                // debugger;
+                // Sandbox.eventNotify('global:auth:status:received', response);
+                Cache.setCookie('auth_id', response.auth_id || null);
             });
+
         },
         signout: function () {
             var query = {
                 fn: 'signout'
             };
-            return $.post(APP.getAuthLink(query));
+            return $.post(APP.getAuthLink(query), function () {
+                Cache.setCookie('auth_id', null);
+            });
         }
     };
 
