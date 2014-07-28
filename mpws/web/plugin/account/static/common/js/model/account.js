@@ -15,6 +15,7 @@ define("plugin/account/common/js/model/account", [
                 source: 'account',
                 fn: 'account'
             };
+            // debugger;
             if (!this.isNew())
                 _params.id = this.id;
             return APP.getApiLink(_params);

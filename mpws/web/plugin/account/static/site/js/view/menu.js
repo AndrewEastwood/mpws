@@ -5,7 +5,7 @@ define("plugin/account/site/js/view/menu", [
 ], function (Sandbox, MenuAccount, MenuSignUp) {
 
     return function (models) {
-        // create SignIn button
+        // create SignUp button
         var menuSignUp = new MenuSignUp({
             model: models.account
         });
@@ -16,29 +16,6 @@ define("plugin/account/site/js/view/menu", [
             model: models.account
         });
         menuAccount.render();
-
-        // Sandbox.eventSubscribe('view:AccountMenu', function (view) {
-        //     if (!view.model.has('profile')) {
-        //         menuSignUp.$el.removeClass('hidden');
-        //         return;
-        //     }
-        //     menuSignUp.$el.addClass('hidden');
-        // });
-
-        // Sandbox.eventSubscribe('global:loader:complete', function () {
-        //     Sandbox.eventNotify('global:content:render', [
-        //         {
-        //             name: 'CommonMenuRight',
-        //             el: menuSignUp.$el,
-        //             append: true
-        //         },
-        //         {
-        //             name: 'CommonMenuRight',
-        //             el: menuAccount.$el,
-        //             append: true
-        //         }
-        //     ]);
-        // });
 
         Sandbox.eventSubscribe('global:loader:complete', function () {
             // placeholders.common.menu

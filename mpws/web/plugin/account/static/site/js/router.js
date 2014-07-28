@@ -9,45 +9,24 @@ define("plugin/account/site/js/router", [
     // 'default/js/lib/cache',
     // 'plugin/account/site/js/view/menu',
 ], function (Sandbox, Backbone, SiteMenu, Auth, Account, $, _, Cache) {
+
+    // this is the account instance
     var account = new Account();
     SiteMenu({
         account: account
     });
-    // order.fetch();
-
-    // Auth.getStatus();
-
-
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        debugger;
+        // debugger;
         var authAccountID = Auth.getAccountID();
-        // if (authAccount && authAccount.ID)
-        // account.id = data.id;
-        // account.fetch();
+        if (authAccountID) {
+            account.set('ID', authAccountID);
+            account.fetch();
+        }
     });
-
 
     Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
-        
-    });
-
-
-    return Backbone.Router.extend({});
-
-    Sandbox.eventSubscribe('plugin:account:signed:out', function() {
-        if (Backbone.history.fragment.match(/^account/))
-            Backbone.history.navigate("", {trigger: true});
-        else
-            Backbone.history.loadUrl(Backbone.history.fragment);
-    });
-
-    Sandbox.eventSubscribe('plugin:account:signed:in', function() {
-        if (Cache.getObject('AccountProfileID') && 
-            (Backbone.history.fragment === "" || Backbone.history.fragment.match(/^account/))
-        ) {
-            Backbone.history.navigate("account/profile", {trigger: true});
-        }
+        account.clear();
     });
 
     var Router = Backbone.Router.extend({
@@ -73,18 +52,18 @@ define("plugin/account/site/js/router", [
 
             Sandbox.eventNotify('global:breadcrumb:show');
 
-            if (Cache.hasObject('AccountProfileID')) {
+            if (Auth.getAccountID()) {
                 Backbone.history.navigate("account/profile", {trigger: true});
                 return;
             }
 
             require(['plugin/account/site/js/view/accountCreate'], function (AccountCreate) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('AccountCreate', function (cachedView) {
+                // Cache.withObject('AccountCreate', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
                     var accountCreate = new AccountCreate();
@@ -93,11 +72,11 @@ define("plugin/account/site/js/router", [
                         name: 'AccountProfileCreate',
                         el: accountCreate.el
                     });
-                    accountCreate.fetchAndRender();
+                    accountCreate.render();
 
                     // return view object to pass it into this function at next invocation
-                    return accountCreate;
-                });
+                //     return accountCreate;
+                // });
             });
 
         },
@@ -116,11 +95,11 @@ define("plugin/account/site/js/router", [
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
                 require(['plugin/account/site/js/view/accountProfileOverview'], function (AccountProfileOverview) {
                     // using this wrapper to cleanup previous view and create new one
-                    Cache.withObject('AccountProfileOverview', function (cachedView) {
+                    // Cache.withObject('AccountProfileOverview', function (cachedView) {
                         // debugger;
                         // remove previous view
-                        if (cachedView && cachedView.remove)
-                            cachedView.remove();
+                        // if (cachedView && cachedView.remove)
+                        //     cachedView.remove();
 
                         // create new view
                         var accountProfileOverview = new AccountProfileOverview();
@@ -135,8 +114,8 @@ define("plugin/account/site/js/router", [
                         // });
 
                         // return view object to pass it into this function at next invocation
-                        return accountProfileOverview;
-                    });
+                    //     return accountProfileOverview;
+                    // });
                 });
             // });
         },
@@ -155,11 +134,11 @@ define("plugin/account/site/js/router", [
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
                 require(['plugin/account/site/js/view/accountProfilePassword'], function (AccountProfilePassword) {
                     // using this wrapper to cleanup previous view and create new one
-                    Cache.withObject('AccountProfilePassword', function (cachedView) {
+                    // Cache.withObject('AccountProfilePassword', function (cachedView) {
                         // debugger;
                         // remove previous view
-                        if (cachedView && cachedView.remove)
-                            cachedView.remove();
+                        // if (cachedView && cachedView.remove)
+                        //     cachedView.remove();
 
                         // create new view
                         var accountProfilePassword = new AccountProfilePassword();
@@ -170,8 +149,8 @@ define("plugin/account/site/js/router", [
                         });
 
                         // return view object to pass it into this function at next invocation
-                        return accountProfilePassword;
-                    });
+                    //     return accountProfilePassword;
+                    // });
                 });
             // });
 
@@ -191,11 +170,11 @@ define("plugin/account/site/js/router", [
             // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
                 require(['plugin/account/site/js/view/accountProfileEdit'], function (AccountProfileEdit) {
                     // using this wrapper to cleanup previous view and create new one
-                    Cache.withObject('AccountProfileEdit', function (cachedView) {
+                    // Cache.withObject('AccountProfileEdit', function (cachedView) {
                         // debugger;
                         // remove previous view
-                        if (cachedView && cachedView.remove)
-                            cachedView.remove();
+                        // if (cachedView && cachedView.remove)
+                        //     cachedView.remove();
 
                         // create new view
                         var accountProfileEdit = new AccountProfileEdit();
@@ -206,8 +185,8 @@ define("plugin/account/site/js/router", [
                         });
 
                         // return view object to pass it into this function at next invocation
-                        return accountProfileEdit;
-                    });
+                    //     return accountProfileEdit;
+                    // });
                 });
             // });
 
@@ -225,11 +204,11 @@ define("plugin/account/site/js/router", [
 
             require(['plugin/account/site/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('AccountProfileAddresses', function (cachedView) {
+                // Cache.withObject('AccountProfileAddresses', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
                     var accountProfileAddresses = new AccountProfileAddresses();
@@ -240,8 +219,8 @@ define("plugin/account/site/js/router", [
                     });
 
                     // return view object to pass it into this function at next invocation
-                    return accountProfileAddresses;
-                });
+                //     return accountProfileAddresses;
+                // });
             });
 
         },
@@ -258,11 +237,11 @@ define("plugin/account/site/js/router", [
 
             require(['plugin/account/site/js/view/accountProfileDelete'], function (AccountProfileDelete) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('AccountProfileDelete', function (cachedView) {
+                // Cache.withObject('AccountProfileDelete', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new viewl
                     var accountProfileDelete = new AccountProfileDelete();
@@ -273,8 +252,8 @@ define("plugin/account/site/js/router", [
                     });
 
                     // return view object to pass it into this function at next invocation
-                    return accountProfileDelete;
-                });
+                //     return accountProfileDelete;
+                // });
             });
 
         },
@@ -282,11 +261,11 @@ define("plugin/account/site/js/router", [
         showProfileToolbar: function (pageContent) {
             require(['plugin/account/site/js/view/accountProfile'], function (AccountProfile) {
                 // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('AccountProfile', function (cachedView) {
+                // Cache.withObject('AccountProfile', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
                     var accountProfile = new AccountProfile();
@@ -303,8 +282,8 @@ define("plugin/account/site/js/router", [
                     });
 
                     // return view object to pass it into this function at next invocation
-                    return accountProfile;
-                });
+                //     return accountProfile;
+                // });
             });
         }
 

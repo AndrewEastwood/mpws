@@ -28,6 +28,10 @@ define("plugin/account/site/js/view/menuAccount", [
             Auth.signin(authData.email, authData.password, authData.remember);
             return false;
         },
+        doSignOut: function () {
+            Auth.signout();
+            return false;
+        },
         collectCredentials: function () {
             var self = this;
             return {
@@ -53,10 +57,7 @@ define("plugin/account/site/js/view/menuAccount", [
         //     this.model.doLogin(this.collectCredentials());
         //     return false;
         // },
-        // doSignOut: function () {
-        //     this.model.doLogout();
-        //     return false;
-        // },
+
         // collectCredentials: function () {
         //     var self = this;
         //     return {

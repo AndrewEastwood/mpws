@@ -4,10 +4,11 @@ define("plugin/shop/site/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
+    'default/js/lib/auth',
     'plugin/shop/site/js/model/order',
     'plugin/shop/site/js/view/siteMenu',
     'plugin/shop/site/js/view/siteWidgets',
-], function (Sandbox, $, _, Backbone, Cache, SiteOrder, SiteMenu, SiteWidgets) {
+], function (Sandbox, $, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets) {
 
     var order = new SiteOrder({
         ID: "temp"
@@ -222,13 +223,8 @@ define("plugin/shop/site/js/router", [
         //
         shop_profile_orders: function () {
 
-            // if (!Site.hasPlugin('account')) {
-            //     Backbone.history.navigate("", {trigger: true});
-            //     return;
-            // }
-
-            if (!Cache.hasObject('AccountProfileID')) {
-                Backbone.history.navigate("", {trigger: true});
+            if (!Site.hasPlugin('account') || !Auth.getAccountID()) {
+                Backbone.history.navigate("", true);
                 return;
             }
 
@@ -240,11 +236,11 @@ define("plugin/shop/site/js/router", [
             });
 
             require(['plugin/shop/site/js/view/profileOrders'], function (ProfileOrders) {
-                Cache.withObject('ProfileOrders', function (cachedView) {
+                // Cache.withObject('ProfileOrders', function (cachedView) {
                     // debugger;
                     // remove previous view
-                    if (cachedView && cachedView.remove)
-                        cachedView.remove();
+                    // if (cachedView && cachedView.remove)
+                    //     cachedView.remove();
 
                     // create new view
                     var profileOrders = new ProfileOrders();
@@ -256,8 +252,8 @@ define("plugin/shop/site/js/router", [
                     Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
 
                     // return view object to pass it into this function at next invocation
-                    return profileOrders;
-                });
+                    // return profileOrders;
+                // });
             });
         }
 

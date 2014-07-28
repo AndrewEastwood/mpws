@@ -9,9 +9,9 @@ define("default/js/lib/auth", [
 
     Sandbox.eventSubscribe("global:ajax:responce", function(response) {
         if (APP.config.ISTOOLBOX && response) {
-            if(response.authenticated && Backbone.history.fragment === "signin") {
+            if(response.auth_id && Backbone.history.fragment === "signin") {
                 Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
-            } else if (!response.authenticated) {
+            } else if (!response.auth_id) {
                 $.xhrPool.abortAll();
                 if (Backbone.history.fragment !== "signin") {
                     Backbone.history.navigate('signin', true);
@@ -25,30 +25,26 @@ define("default/js/lib/auth", [
     Auth = {
         setStatus: function (response) {
             // debugger;
-            var status = response && response.authenticated;
-            if (Auth.isAuthenticated === status)
+            var auth_id = response && response.auth_id;
+            if (Auth.auth_id === auth_id)
                 return;
 
-            Auth.isAuthenticated = status;
+            Auth.auth_id = auth_id;
+            Cache.setCookie('auth_id', auth_id);
 
-            if (Auth.isAuthenticated)
-                Sandbox.eventNotify("global:auth:status:active");
-            else
+            if (Auth.auth_id === null)
                 Sandbox.eventNotify("global:auth:status:inactive");
+            else
+                Sandbox.eventNotify("global:auth:status:active");
         },
         getAccountID: function () {
-            return Cache.getCookie('auth_id') || false;
+            return Cache.getCookie('auth_id') || null;
         },
         getStatus: function () {
             var query = {
                 fn: 'status'
             };
-            return $.get(APP.getAuthLink(query), function(response){
-                // debugger;
-                // Sandbox.eventNotify('global:auth:status:received', response);
-                Auth.setStatus(response, true);
-                Cache.setCookie('auth_id', response.auth_id || null);
-            });
+            return $.get(APP.getAuthLink(query));
         },
         signin: function (email, password, remember) {
             var query = {
@@ -58,10 +54,6 @@ define("default/js/lib/auth", [
                 email: email,
                 password: password,
                 remember: remember,
-            }, function(response){
-                // debugger;
-                // Sandbox.eventNotify('global:auth:status:received', response);
-                Cache.setCookie('auth_id', response.auth_id || null);
             });
 
         },
@@ -69,9 +61,7 @@ define("default/js/lib/auth", [
             var query = {
                 fn: 'signout'
             };
-            return $.post(APP.getAuthLink(query), function () {
-                Cache.setCookie('auth_id', null);
-            });
+            return $.post(APP.getAuthLink(query));
         }
     };
 
