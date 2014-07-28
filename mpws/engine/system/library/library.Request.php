@@ -9,17 +9,23 @@ class libraryRequest {
 
     static function getRequestData () {
         global $PHP_INPUT;
+
+        $data = null;
+
         if (self::isGET()) // DLETE uses GET var
-            return $_GET;
+            $data = $_GET;
         if (self::isDELETE() || self::isPUT() || self::isPATCH()) // DLETE uses GET var
-            return json_decode($PHP_INPUT, true);
+            $data = json_decode($PHP_INPUT, true);
         if (self::isPOST())
-            return $_POST;
+            $data = $_POST;
         // if (self::isPOST() || self::isPUT() || self::isPATCH()) {
         //     $_PUT = json_decode($PHP_INPUT, true);
         //     if (empty($_PUT) && self::isPOST() && !empty($_POST))
         //     return $_PUT;
         // }
+        if (empty($data) && !empty($PHP_INPUT))
+            $data = json_decode($PHP_INPUT, true);
+        return $data;
     }
 
     /* get values */

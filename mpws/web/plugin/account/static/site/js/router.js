@@ -82,7 +82,7 @@ define("plugin/account/site/js/router", [
         },
 
         profile: function () {
-            if (!Cache.hasObject('AccountProfileID')) {
+            if (!Auth.getAccountID()) {
                 Backbone.history.navigate("", {trigger: true});
                 return;
             }

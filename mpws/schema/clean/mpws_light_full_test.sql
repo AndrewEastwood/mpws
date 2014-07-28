@@ -89,7 +89,7 @@ CREATE TABLE `mpws_accounts` (
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `mpws_accounts` (
 
 LOCK TABLES `mpws_accounts` WRITE;
 /*!40000 ALTER TABLE `mpws_accounts` DISABLE KEYS */;
-INSERT INTO `mpws_accounts` VALUES (139,1,1,'ddddd','dfdsfsdf','demo@demo.com','(434) 534-53-35','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-07-28 09:35:50');
+INSERT INTO `mpws_accounts` VALUES (139,1,1,'ddddd','dfdsfsdf','demo@demo.com','(434) 534-53-35','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-07-28 22:31:13'),(140,1,0,'xxx','dddd','admin323@pb.com.ua','(787) 111-11-11','a5232aee5b6f36cbbd72d639e8429ba2','c3410e91b0da48f807a4f954e00f46d0','TEMP','2014-07-28 22:33:14','2014-07-28 22:33:14','2014-07-28 22:33:14');
 /*!40000 ALTER TABLE `mpws_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,7 +185,7 @@ CREATE TABLE `mpws_permissions` (
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`AccountID`),
   CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +194,7 @@ CREATE TABLE `mpws_permissions` (
 
 LOCK TABLES `mpws_permissions` WRITE;
 /*!40000 ALTER TABLE `mpws_permissions` DISABLE KEYS */;
-INSERT INTO `mpws_permissions` VALUES (72,139,1,1,1,1,0,'2014-07-26 17:22:45','2014-07-26 16:34:38');
+INSERT INTO `mpws_permissions` VALUES (72,139,1,1,1,1,0,'2014-07-26 17:22:45','2014-07-26 16:34:38'),(73,140,0,0,0,0,0,'2014-07-28 22:33:14','2014-07-28 22:33:14');
 /*!40000 ALTER TABLE `mpws_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1050,4 +1050,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-07-28  9:44:29
+-- Dump completed on 2014-07-28 23:01:03
