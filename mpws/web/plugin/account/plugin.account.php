@@ -132,6 +132,7 @@ class pluginAccount extends objectPlugin {
     private function _updateAccountByID ($AccountID, $reqData) {
 
         $errors = array();
+        $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'FirstName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
@@ -148,55 +149,59 @@ class pluginAccount extends objectPlugin {
             'p_CanAddUsers' => array('skipIfUnset', 'bool', 'notEmpty')
         ));
 
-        if ($validatedDataObj["totalErrors"] > 0) {
-            return glWrap("errors", $validatedDataObj["errors"]);
-        }
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
 
-        try {
+                $this->getCustomerDataBase()->beginTransaction();
 
-            $this->getCustomerDataBase()->beginTransaction();
+                $validatedValues = $validatedDataObj['values'];
 
-            $validatedValues = $validatedDataObj['values'];
+                // separate data
+                $dataAccount = array();
+                $dataPermission = array();
 
-            // separate data
-            $dataAccount = array();
-            $dataPermission = array();
-
-            foreach ($validatedValues as $field => $value) {
-                if (preg_match("/^p_/", $field) === 1)
-                    $dataPermission[substr($field, strlen("p_"))] = $value;
-                else
-                    $dataAccount[$field] = $value;
-            }
-
-            if (count($dataAccount)) {
-                if (isset($dataAccount['Password'])) {
-                    $dataAccount['Password'] = librarySecure::EncodeAccountPassword($validatedValues['Password']);
-                    unset($dataAccount['ConfirmPassword']);
+                foreach ($validatedValues as $field => $value) {
+                    if (preg_match("/^p_/", $field) === 1)
+                        $dataPermission[substr($field, strlen("p_"))] = $value;
+                    else
+                        $dataAccount[$field] = $value;
                 }
-                $configUpdateAccount = configurationDefaultDataSource::jsapiUpdateAccount($AccountID, $dataAccount);
-                $this->getCustomer()->fetch($configUpdateAccount);
-                // var_dump($configUpdateAccount);
-            }
 
-            if (count($dataPermission)) {
-                // foreach ($dataPermission as $key => $value) {
-                //     $dataPermission[$key] = $value ? 1: 0;
-                // }
-                $configUpdatePermissions = configurationDefaultDataSource::jsapiUpdatePermissions($AccountID, $dataPermission);
-                // var_dump($configUpdatePermissions);
-                $this->getCustomer()->fetch($configUpdatePermissions, true);
-            }
+                if (count($dataAccount)) {
+                    if (isset($dataAccount['Password'])) {
+                        $dataAccount['Password'] = librarySecure::EncodeAccountPassword($validatedValues['Password']);
+                        unset($dataAccount['ConfirmPassword']);
+                    }
+                    $configUpdateAccount = configurationDefaultDataSource::jsapiUpdateAccount($AccountID, $dataAccount);
+                    $this->getCustomer()->fetch($configUpdateAccount);
+                    // var_dump($configUpdateAccount);
+                }
 
-            $this->getCustomerDataBase()->commit();
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-            // echo $this->getCustomerDataBase()->getLastErrorCode();
-            // echo $e;
-            return glWrap("error", 'AccountUpdateError');
-        }
+                if (count($dataPermission)) {
+                    // foreach ($dataPermission as $key => $value) {
+                    //     $dataPermission[$key] = $value ? 1: 0;
+                    // }
+                    $configUpdatePermissions = configurationDefaultDataSource::jsapiUpdatePermissions($AccountID, $dataPermission);
+                    // var_dump($configUpdatePermissions);
+                    $this->getCustomer()->fetch($configUpdatePermissions, true);
+                }
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                // echo $this->getCustomerDataBase()->getLastErrorCode();
+                // echo $e;
+                // return glWrap("error", 'AccountUpdateError');
+                $errors[] = 'AccountUpdateError';
+            }
+        else
+            $errors = $validatedDataObj["errors"];
 
         $result = $this->_getAccountByID($AccountID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
 
         return $result;
     }

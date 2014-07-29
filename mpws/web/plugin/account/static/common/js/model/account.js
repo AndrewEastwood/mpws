@@ -20,24 +20,16 @@ define("plugin/account/common/js/model/account", [
                 _params.id = this.id;
             return APP.getApiLink(_params);
         },
+        clearStates: function () {
+            this.set({
+                errors: null,
+                success: false
+            }, {silent: true});
+        },
         update: function (data) {
             var self = this;
-            // _(data).each(function(v, k) {
-            //     self.set(k,v, {silent: true});
-            // });
-            this.save(_.extend(this.toJSON(), data), {
-                patch: true,
-                success: function (model, response) {
-                    debugger;
-                }
-            });
-            // debugger;
-            // $.post(url, {account: data}, function (response) {
-            //     var _data = self.extractModelDataFromResponse(response);
-            //     self.set(_data);
-            //     self.trigger('change');
-            //     Sandbox.eventNotify('plugin:account:profile:updated', _data);
-            // });
+            data.ID = this.id;
+            this.save(data, {patch: true});
         },
         addAddress: function (data) {
             var self = this;

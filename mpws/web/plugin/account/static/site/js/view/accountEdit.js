@@ -21,6 +21,7 @@ define("plugin/account/site/js/view/accountEdit", [
         render: function () {
             var self = this;
             // debugger;
+
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             this.$('.editable').editable({
                 mode: 'inline',
@@ -36,6 +37,10 @@ define("plugin/account/site/js/view/accountEdit", [
             this.$('#save-btn').click(function() {
                 self.model.update(self.$('.myeditable').editable('getValue'));
             });
+
+            // clear errors
+            this.model.clearStates();
+
             return this;
         }
     });

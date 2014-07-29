@@ -148,7 +148,10 @@ class libraryValidate {
                 $errors[$keyToValidate][] = $keyToValidate . "MissedRelatedField_" . $rules['inPairWith'];
             }
 
-            $totalErrors += count($errors[$keyToValidate]);
+            if (empty($errors[$keyToValidate]))
+                unset($errors[$keyToValidate]);
+            else
+                $totalErrors += count($errors[$keyToValidate]);
         }
 
         return array(

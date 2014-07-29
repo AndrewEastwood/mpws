@@ -3,8 +3,22 @@
     {{#if data.success }}
         <div id="msg" class="alert alert-success">{{lang.profile_page_edit_message_saveSuccess}}</div>
     {{else}}
-        {{#mpwsIsNotEmpty data.error }}
-            <div id="msg" class="alert alert-danger">{{lang.profile_page_edit_error_commonError}}</div>
+        {{#mpwsIsNotEmpty data.errors }}
+        <div id="msg" class="alert alert-danger">
+            {{lang.profile_page_edit_error_commonError}}
+            <ul class="errors">
+            {{#each data.errors}}
+                <li>
+                    <strong>{{@key}}</strong>
+                    <ul>
+                    {{#each this}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                    </ul>
+                </li>
+            {{/each}}
+            </ul>
+        </div>
         {{/mpwsIsNotEmpty}}
     {{/if}}
     <table id="user" class="table table-bordered table-striped">
