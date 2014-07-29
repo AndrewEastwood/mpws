@@ -1,27 +1,23 @@
-define("plugin/account/site/js/view/accountProfile", [
+define("plugin/account/site/js/view/accountHolder", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
     'default/js/lib/backbone',
-    'plugin/account/common/js/model/account',
-    'default/js/plugin/hbs!plugin/account/site/hbs/accountProfile',
+    'default/js/lib/utils',
+    'default/js/plugin/hbs!plugin/account/site/hbs/accountHolder',
     /* lang */
     'default/js/plugin/i18n!plugin/account/site/nls/translation'
-], function (Sandbox, MView, Backbone, ModelAccountInstance, tpl, lang) {
+], function (Sandbox, Backbone, Utils, tpl, lang) {
 
-    var AccountProfile = MView.extend({
-        viewName: 'AccountProfile',
+    var AccountProfile = Backbone.View.extend({
+        // viewName: 'AccountProfile',
         // className: 'col-sm-3 col-md-3',
         template: tpl,
         lang: lang,
-        model: ModelAccountInstance,
-        initialize: function () {
-            var self = this;
-            this.model.clearErrors();
-            this.model.clearStates();
-            this.on('mview:renderComplete', function () {
-                self.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
-                self.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');
-            });
+        render: function (pageContent) {
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            this.getPagePlaceholder().html(pageContent);
+            this.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').addClass('active');
+            this.$('a.list-group-item[href*="' + Backbone.history.fragment + '"]').parents('.panel-collapse').addClass('in');
+            return this;
         },
         addModuleMenuItem: function (item) {
             if (Array.isArray(item)) {
@@ -53,9 +49,6 @@ define("plugin/account/site/js/view/accountProfile", [
         },
         getPagePlaceholder: function () {
             return this.$('.account-page-placeholder');
-        },
-        setPagePlaceholder: function (page) {
-            this.getPagePlaceholder().html(page);
         }
     });
 

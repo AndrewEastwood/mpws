@@ -4,10 +4,6 @@ define("plugin/account/site/js/router", [
     'plugin/account/site/js/view/menu',
     'default/js/lib/auth',
     'plugin/account/common/js/model/account'
-    // 'cmn_jquery',
-    // 'default/js/lib/underscore',
-    // 'default/js/lib/cache',
-    // 'plugin/account/site/js/view/menu',
 ], function (Sandbox, Backbone, SiteMenu, Auth, Account, $, _, Cache) {
 
     // this is the account instance
@@ -17,7 +13,6 @@ define("plugin/account/site/js/router", [
     });
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        // debugger;
         var authAccountID = Auth.getAccountID();
         if (authAccountID) {
             account.set('ID', authAccountID);
@@ -29,9 +24,17 @@ define("plugin/account/site/js/router", [
         account.clear();
     });
 
+    var _navigateToHomeIfNotAuthorizedFn = function () {
+        if (!Auth.getAccountID()) {
+            Backbone.history.navigate("", true);
+            return true;
+        }
+        return false;
+    }
+
     var Router = Backbone.Router.extend({
         routes: {
-            "account/profile": "profile",
+            "account/summary": "summary",
             "account/create": "create",
             "account/password": "password",
             "account/edit": "edit",
@@ -40,250 +43,118 @@ define("plugin/account/site/js/router", [
         },
 
         initialize: function () {
-            // debugger;
             var self = this;
-
             Sandbox.eventSubscribe('plugin:account:profile:show', function(pageContent) {
                 self.showProfileToolbar(pageContent);
             });
         },
 
         create: function () {
+            if (_navigateToHomeIfNotAuthorizedFn())
+                return;
 
             Sandbox.eventNotify('global:breadcrumb:show');
 
-            if (Auth.getAccountID()) {
-                Backbone.history.navigate("account/profile", {trigger: true});
-                return;
-            }
-
             require(['plugin/account/site/js/view/accountCreate'], function (AccountCreate) {
-                // using this wrapper to cleanup previous view and create new one
-                // Cache.withObject('AccountCreate', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
-
-                    // create new view
-                    var accountCreate = new AccountCreate();
-                    // Site.placeholders.account.pageProfileCreate.html(accountCreate.el);
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'AccountProfileCreate',
-                        el: accountCreate.el
-                    });
-                    accountCreate.render();
-
-                    // return view object to pass it into this function at next invocation
-                //     return accountCreate;
-                // });
+                // create new view
+                var accountCreate = new AccountCreate();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'AccountProfileCreate',
+                    el: accountCreate.el
+                });
+                accountCreate.render();
             });
 
         },
 
-        profile: function () {
-            if (!Auth.getAccountID()) {
-                Backbone.history.navigate("", {trigger: true});
+        summary: function () {
+            if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            }
-
             Sandbox.eventNotify('global:breadcrumb:show');
-
             var self = this;
-            // this.showProfileToolbar();
-
-            // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/site/js/view/accountProfileOverview'], function (AccountProfileOverview) {
-                    // using this wrapper to cleanup previous view and create new one
-                    // Cache.withObject('AccountProfileOverview', function (cachedView) {
-                        // debugger;
-                        // remove previous view
-                        // if (cachedView && cachedView.remove)
-                        //     cachedView.remove();
-
-                        // create new view
-                        var accountProfileOverview = new AccountProfileOverview();
-                        // view.setPagePlaceholder(accountProfileOverview.el);
-                        self.showProfileToolbar(accountProfileOverview.el);
-                        accountProfileOverview.fetchAndRender({
-                            action: 'status'
-                        });
-                        // Sandbox.eventNotify('global:content:render', {
-                        //     name: 'AccountProfileOverview',
-                        //     el: accountProfileOverview.el
-                        // });
-
-                        // return view object to pass it into this function at next invocation
-                    //     return accountProfileOverview;
-                    // });
+            require(['plugin/account/site/js/view/accountSummary'], function (AccountSummary) {
+                var accountSummary = new AccountSummary({
+                    model: account
                 });
-            // });
+                accountSummary.render();
+                self.showProfileToolbar(accountSummary.$el);
+            });
         },
 
         password: function () {
-            if (!Cache.hasObject('AccountProfileID')) {
-                Backbone.history.navigate("", {trigger: true});
+            if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            }
-
             Sandbox.eventNotify('global:breadcrumb:show');
-
             var self = this;
-            // this.showProfileToolbar();
-
-            // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/site/js/view/accountProfilePassword'], function (AccountProfilePassword) {
-                    // using this wrapper to cleanup previous view and create new one
-                    // Cache.withObject('AccountProfilePassword', function (cachedView) {
-                        // debugger;
-                        // remove previous view
-                        // if (cachedView && cachedView.remove)
-                        //     cachedView.remove();
-
-                        // create new view
-                        var accountProfilePassword = new AccountProfilePassword();
-                        // view.setPagePlaceholder(accountProfilePassword.el);
-                        self.showProfileToolbar(accountProfilePassword.el);
-                        accountProfilePassword.fetchAndRender({
-                            action: 'status'
-                        });
-
-                        // return view object to pass it into this function at next invocation
-                    //     return accountProfilePassword;
-                    // });
+            require(['plugin/account/site/js/view/accountProfilePassword'], function (AccountProfilePassword) {
+                // create new view
+                var accountProfilePassword = new AccountProfilePassword();
+                self.showProfileToolbar(accountProfilePassword.el);
+                accountProfilePassword.fetchAndRender({
+                    action: 'status'
                 });
-            // });
-
+            });
         },
 
         edit: function () {
-            if (!Cache.hasObject('AccountProfileID')) {
-                Backbone.history.navigate("", {trigger: true});
+            if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            }
-
             Sandbox.eventNotify('global:breadcrumb:show');
-
             var self = this;
-            // this.showProfileToolbar();
-
-            // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-                require(['plugin/account/site/js/view/accountProfileEdit'], function (AccountProfileEdit) {
-                    // using this wrapper to cleanup previous view and create new one
-                    // Cache.withObject('AccountProfileEdit', function (cachedView) {
-                        // debugger;
-                        // remove previous view
-                        // if (cachedView && cachedView.remove)
-                        //     cachedView.remove();
-
-                        // create new view
-                        var accountProfileEdit = new AccountProfileEdit();
-                        // self.setPagePlaceholder(accountProfileEdit.el);
-                        self.showProfileToolbar(accountProfileEdit.el);
-                        accountProfileEdit.fetchAndRender({
-                            action: 'status'
-                        });
-
-                        // return view object to pass it into this function at next invocation
-                    //     return accountProfileEdit;
-                    // });
+            require(['plugin/account/site/js/view/accountEdit'], function (AccountEdit) {
+                // create new view
+                var accountEdit = new AccountEdit({
+                    model: account
                 });
-            // });
-
+                // self.setPagePlaceholder(accountEdit.el);
+                self.showProfileToolbar(accountEdit.$el);
+                accountEdit.render();
+            });
         },
 
         addresses: function () {
-            if (!Cache.hasObject('AccountProfileID')) {
-                Backbone.history.navigate("", {trigger: true});
+            if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            }
-
             var self = this;
-
             Sandbox.eventNotify('global:breadcrumb:show');
-
             require(['plugin/account/site/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
-                // using this wrapper to cleanup previous view and create new one
-                // Cache.withObject('AccountProfileAddresses', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
-
-                    // create new view
-                    var accountProfileAddresses = new AccountProfileAddresses();
-                    // view.setPagePlaceholder(accountProfileAddresses.el);
-                    self.showProfileToolbar(accountProfileAddresses.el);
-                    accountProfileAddresses.fetchAndRender({
-                        action: 'status'
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                //     return accountProfileAddresses;
-                // });
+                // create new view
+                var accountProfileAddresses = new AccountProfileAddresses();
+                // view.setPagePlaceholder(accountProfileAddresses.el);
+                self.showProfileToolbar(accountProfileAddresses.el);
+                accountProfileAddresses.fetchAndRender({
+                    action: 'status'
+                });
             });
-
         },
 
         delete: function () {
-            if (!Cache.hasObject('AccountProfileID')) {
-                Backbone.history.navigate("", {trigger: true});
+            if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            }
-
             var self = this;
-
             Sandbox.eventNotify('global:breadcrumb:show');
-
             require(['plugin/account/site/js/view/accountProfileDelete'], function (AccountProfileDelete) {
-                // using this wrapper to cleanup previous view and create new one
-                // Cache.withObject('AccountProfileDelete', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
-
-                    // create new viewl
-                    var accountProfileDelete = new AccountProfileDelete();
-                    // view.setPagePlaceholder(accountProfileDelete.el);
-                    self.showProfileToolbar(accountProfileDelete.el);
-                    accountProfileDelete.fetchAndRender({
-                        action: 'status'
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                //     return accountProfileDelete;
-                // });
+                // create new viewl
+                var accountProfileDelete = new AccountProfileDelete();
+                // view.setPagePlaceholder(accountProfileDelete.el);
+                self.showProfileToolbar(accountProfileDelete.el);
+                accountProfileDelete.fetchAndRender({
+                    action: 'status'
+                });
             });
-
         },
 
         showProfileToolbar: function (pageContent) {
-            require(['plugin/account/site/js/view/accountProfile'], function (AccountProfile) {
-                // using this wrapper to cleanup previous view and create new one
-                // Cache.withObject('AccountProfile', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
-
-                    // create new view
-                    var accountProfile = new AccountProfile();
-                    // Site.placeholders.account.pageProfile.html(accountProfile.el);
-                    accountProfile.on('mview:renderComplete', function () {
-                        accountProfile.setPagePlaceholder(pageContent);
-                    });
-                    accountProfile.fetchAndRender({
-                        action: 'status'
-                    });
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'AccountProfile',
-                        el: accountProfile.el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                //     return accountProfile;
-                // });
+            require(['plugin/account/site/js/view/accountHolder'], function (ViewAccountHolder) {
+                // create new view
+                var viewAccountHolder = new ViewAccountHolder({
+                    model: account
+                });
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: viewAccountHolder.$el
+                });
+                viewAccountHolder.render(pageContent);
             });
         }
 

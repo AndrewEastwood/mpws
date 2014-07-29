@@ -346,8 +346,8 @@ class pluginAccount extends objectPlugin {
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
         // var_dump(file_get_contents('php://input'));
-        if (!empty($req['id'])) {
-            $AccountID = intval($req['id']);
+        if (!empty($req['ID'])) {
+            $AccountID = intval($req['ID']);
             $resp = $this->_updateAccountByID($AccountID, $req);
             return;
         }
@@ -358,8 +358,8 @@ class pluginAccount extends objectPlugin {
         // global $PHP_INPUT;
         // var_dump($req);
         // var_dump($PHP_INPUT);
-        if (!empty($req['id'])) {
-            $AccountID = intval($req['id']);
+        if (!empty($req['ID'])) {
+            $AccountID = intval($req['ID']);
             $resp = $this->_disableAccountByID($AccountID);
             return;
         }
@@ -367,8 +367,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function patch_account_address (&$resp, $req) {
-        if (!empty($req['id'])) {
-            $AddressID = intval($req['id']);
+        if (!empty($req['ID'])) {
+            $AddressID = intval($req['ID']);
             $resp = $this->_updateAddressByID($AddressID, $req);
             return;
         }
@@ -376,8 +376,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function post_account_address (&$resp, $req) {
-        if (!empty($req['id'])) {
-            $AccountID = intval($req['id']);
+        if (!empty($req['ID'])) {
+            $AccountID = intval($req['ID']);
             $account = $this->_getAccountByID($AccountID);
             if (empty($account))
                 $resp['error'] = 'WrongAccount';
@@ -391,8 +391,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function delete_account_address (&$resp, $req) {
-        if (!empty($req['id'])) {
-            $AddressID = intval($req['id']);
+        if (!empty($req['ID'])) {
+            $AddressID = intval($req['ID']);
             $resp = $this->_disableAddressByID($AddressID);
             return;
         }

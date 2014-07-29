@@ -20,18 +20,24 @@ define("plugin/account/common/js/model/account", [
                 _params.id = this.id;
             return APP.getApiLink(_params);
         },
-        updateProfile: function (data) {
+        update: function (data) {
             var self = this;
-            var url = this.getUrl({
-                action: 'edit'
+            // _(data).each(function(v, k) {
+            //     self.set(k,v, {silent: true});
+            // });
+            this.save(_.extend(this.toJSON(), data), {
+                patch: true,
+                success: function (model, response) {
+                    debugger;
+                }
             });
             // debugger;
-            $.post(url, {account: data}, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                self.set(_data);
-                self.trigger('change');
-                Sandbox.eventNotify('plugin:account:profile:updated', _data);
-            });
+            // $.post(url, {account: data}, function (response) {
+            //     var _data = self.extractModelDataFromResponse(response);
+            //     self.set(_data);
+            //     self.trigger('change');
+            //     Sandbox.eventNotify('plugin:account:profile:updated', _data);
+            // });
         },
         addAddress: function (data) {
             var self = this;
