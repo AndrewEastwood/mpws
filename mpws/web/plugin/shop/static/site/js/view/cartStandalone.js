@@ -3,14 +3,16 @@ define("plugin/shop/site/js/view/cartStandalone", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
+    'default/js/lib/cache',
     'default/js/plugin/hbs!plugin/shop/site/hbs/cartStandalone',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
-], function (Sandbox, _, Backbone, Utils, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
 
-    $.cookie.json = true;
+    // $.cookie.json = true;
+    var _accountModel = Cache.getObject('account:model');
 
     var CartStandalone = Backbone.View.extend({
         className: 'row shop-cart-standalone',
@@ -19,6 +21,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
         lang: lang,
         initialize: function() {
             this.listenTo(this.model, 'change', this.render);
+            if (APP.hasPlugin('account')) {
+                var _accountModel = Cache.getObject('account:model');
+                if (_accountModel)
+                    this.listenTo(_accountModel, 'change', this.render);
+            }
         },
         updateProductQuantity: function (event) {
             var $input = this.$(event.target);
@@ -46,7 +53,12 @@ define("plugin/shop/site/js/view/cartStandalone", [
         render: function () {
             var self = this;
             // debugger;
-            this.$el.off().empty().html(this.template(Utils.getHBSTemplateData(this)));
+            var data = Utils.getHBSTemplateData(this);
+            if (APP.hasPlugin('account')) {
+                if (_accountModel)
+                    this.listenTo(_accountModel, 'change', this.render);
+            }
+            this.$el.off().empty().html(this.template(data));
             // save user info
             var _userInfoChanged = _.debounce(function () {
                 $.cookie("shopUser", self.collectUserInfo.call(self));

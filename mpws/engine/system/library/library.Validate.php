@@ -105,7 +105,7 @@ class libraryValidate {
             // phone
             if (in_array("isPhone", $rules) && false === self::validatePhoneNumber($dataArray[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotPhone";
-                $errors[$keyToValidate][] = "FormatMustBe:" . self::$FORMAT_PHONE;
+                $errors[$keyToValidate][] = "FormatMustBe__" . str_replace(' ', '_', self::$FORMAT_PHONE);
             }
 
             if (!empty($rules['min']) || !empty($rules['max'])) {

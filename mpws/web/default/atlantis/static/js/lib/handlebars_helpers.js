@@ -400,7 +400,7 @@ define("default/js/lib/handlebars_helpers", [
     helpers.toLowerCase = function(str) {
       return str.toLowerCase();
     }
-    helpers.mpwsGetValueByKey = function(dictionary, key, prefix, suffix, context) {
+    helpers.mpwsGetValueByKey = function(dictionary, key, prefix, suffix, getFirstPartSplittedBy, context) {
         // debugger;
         if (!context && suffix && suffix.hash) {
             context = {

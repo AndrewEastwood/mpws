@@ -6,7 +6,8 @@ define("plugin/account/site/js/view/accountEdit", [
     'default/js/plugin/hbs!plugin/account/site/hbs/accountEdit',
     /* lang */
     'default/js/plugin/i18n!plugin/account/site/nls/translation',
-    'default/js/lib/bootstrap-editable'
+    'default/js/lib/bootstrap-editable',
+    'default/js/lib/jquery.maskedinput'
 ], function (Sandbox, $, Backbone, Utils, tpl, lang) {
 
     var AccountEdit = Backbone.View.extend({
@@ -23,6 +24,12 @@ define("plugin/account/site/js/view/accountEdit", [
             // debugger;
 
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+
+            $('.myeditable_phone').on('shown', function() {
+                // debugger;
+                $(this).data('editable').input.$input.mask('(999) 999-99-99');
+            });
+
             this.$('.editable').editable({
                 mode: 'inline',
                 emptytext: lang.profile_page_edit_label_emptyValue

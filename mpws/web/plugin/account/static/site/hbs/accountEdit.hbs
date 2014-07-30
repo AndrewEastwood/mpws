@@ -14,7 +14,7 @@
                     </strong>
                     <ul>
                     {{#each this}}
-                        <li>{{this}}</li>
+                        <li>{{mpwsGetValueByKey ../../lang this "profile_page_edit_error_"}}</li>
                     {{/each}}
                     </ul>
                 </li>
@@ -35,7 +35,7 @@
             </tr>
             <tr>
                 <td>{{lang.profile_page_edit_field_phone}}</td>
-                <td><a href="#" class="myeditable editable editable-click" data-type="tel" data-name="Phone" data-original-title="{{lang.profile_page_edit_field_phone_placeholder}}">{{data.Phone}}</a></td>
+                <td><a href="#" class="myeditable editable editable-click myeditable_phone" data-type="tel" data-name="Phone" data-original-title="{{lang.profile_page_edit_field_phone_placeholder}}">{{data.Phone}}</a></td>
             </tr>
         </tbody>
     </table>

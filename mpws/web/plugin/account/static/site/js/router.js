@@ -3,14 +3,25 @@ define("plugin/account/site/js/router", [
     'default/js/lib/backbone',
     'plugin/account/site/js/view/menu',
     'default/js/lib/auth',
-    'plugin/account/common/js/model/account'
-], function (Sandbox, Backbone, SiteMenu, Auth, Account, $, _, Cache) {
+    'plugin/account/common/js/model/account',
+    'default/js/lib/cache'
+], function (Sandbox, Backbone, SiteMenu, Auth, Account, Cache, $, _) {
 
     // this is the account instance
     var account = new Account();
     SiteMenu({
         account: account
     });
+
+    Cache.setObject('account:model', account);
+
+    var _navigateToHomeIfNotAuthorizedFn = function () {
+        if (!Auth.getAccountID()) {
+            Backbone.history.navigate("", true);
+            return true;
+        }
+        return false;
+    }
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         var authAccountID = Auth.getAccountID();
@@ -22,15 +33,9 @@ define("plugin/account/site/js/router", [
 
     Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
         account.clear();
+        _navigateToHomeIfNotAuthorizedFn();
     });
 
-    var _navigateToHomeIfNotAuthorizedFn = function () {
-        if (!Auth.getAccountID()) {
-            Backbone.history.navigate("", true);
-            return true;
-        }
-        return false;
-    }
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -88,11 +93,11 @@ define("plugin/account/site/js/router", [
             var self = this;
             require(['plugin/account/site/js/view/accountProfilePassword'], function (AccountProfilePassword) {
                 // create new view
-                var accountProfilePassword = new AccountProfilePassword();
-                self.showProfileToolbar(accountProfilePassword.el);
-                accountProfilePassword.fetchAndRender({
-                    action: 'status'
+                var accountProfilePassword = new AccountProfilePassword({
+                    model: account
                 });
+                accountProfilePassword.render();
+                self.showProfileToolbar(accountProfilePassword.$el);
             });
         },
 
