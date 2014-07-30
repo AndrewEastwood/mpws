@@ -38,9 +38,6 @@ define("plugin/account/site/js/view/accountEdit", [
                 self.model.update(self.$('.myeditable').editable('getValue'));
             });
 
-            // clear errors
-            this.model.clearStates();
-
             return this;
         }
     });

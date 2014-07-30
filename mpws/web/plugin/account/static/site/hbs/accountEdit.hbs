@@ -9,7 +9,9 @@
             <ul class="errors">
             {{#each data.errors}}
                 <li>
-                    <strong>{{@key}}</strong>
+                    <strong>
+                        {{mpwsGetValueByKey ../lang @key "profile_page_edit_error_atField_"}}
+                    </strong>
                     <ul>
                     {{#each this}}
                         <li>{{this}}</li>

@@ -71,6 +71,8 @@ define("plugin/account/site/nls/ua_uk/translation", [
         profile_page_edit_error_requiredField: "Поле є обовязковим для заповнення",
         profile_page_edit_error_commonError: "Помилка під час оновлення профілю",
         profile_page_edit_label_emptyValue: "Немає значення",
+        profile_page_edit_error_atField_FirstName: "Помилка в полі 'Імя'",
+        profile_page_edit_error_FirstNameLengthIsLowerThan_2: "Довжина імені повинна бути бліьше ніж 2 символи",
         /* profile page:delete */
         profile_page_delete_title: "Видалення профілю",
         /* profile page:addresses */

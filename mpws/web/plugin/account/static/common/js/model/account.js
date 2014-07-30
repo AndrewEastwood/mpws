@@ -15,20 +15,20 @@ define("plugin/account/common/js/model/account", [
                 source: 'account',
                 fn: 'account'
             };
-            // debugger;
             if (!this.isNew())
                 _params.id = this.id;
             return APP.getApiLink(_params);
         },
-        clearStates: function () {
-            this.set({
-                errors: null,
-                success: false
-            }, {silent: true});
+        initialize: function () {
+            // autoclean errors when user goes wherever else
+            Sandbox.eventSubscribe('global:route', $.proxy(function () {
+                this.unset('errors', {silent: true});
+                this.unset('success', {silent: true});
+            }, this));
         },
         update: function (data) {
             var self = this;
-            data.ID = this.id;
+            data.id = this.id;
             this.save(data, {patch: true});
         },
         addAddress: function (data) {
@@ -72,19 +72,20 @@ define("plugin/account/common/js/model/account", [
         },
         changePassword: function (password, confirmation) {
             var self = this;
-            var url = this.getUrl({
-                action: 'updatePassword'
-            });
+            // var url = this.getUrl({
+            //     action: 'updatePassword'
+            // });
             var data = {
                 Password: password,
                 ConfirmPassword: confirmation
             };
-            $.post(url, data, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                self.set(_data);
-                self.trigger('change');
-                Sandbox.eventNotify('plugin:account:profile:password:updated', _data);
-            });
+            this.update(data);
+            // $.post(url, data, function (response) {
+            //     var _data = self.extractModelDataFromResponse(response);
+            //     self.set(_data);
+            //     self.trigger('change');
+            //     Sandbox.eventNotify('plugin:account:profile:password:updated', _data);
+            // });
         }
 
     });
