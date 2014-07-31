@@ -12,7 +12,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
 ], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
 
     // $.cookie.json = true;
-    var _accountModel = Cache.getObject('account:model');
 
     var CartStandalone = Backbone.View.extend({
         className: 'row shop-cart-standalone',
@@ -21,11 +20,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
         lang: lang,
         initialize: function() {
             this.listenTo(this.model, 'change', this.render);
-            if (APP.hasPlugin('account')) {
-                var _accountModel = Cache.getObject('account:model');
-                if (_accountModel)
-                    this.listenTo(_accountModel, 'change', this.render);
-            }
+            // if (APP.hasPlugin('account')) {
+            //     var _accountModel = Cache.getObject('account:model');
+            //     if (_accountModel)
+            //         this.listenTo(_accountModel, 'change', this.render);
+            // }
         },
         updateProductQuantity: function (event) {
             var $input = this.$(event.target);
@@ -54,10 +53,10 @@ define("plugin/shop/site/js/view/cartStandalone", [
             var self = this;
             // debugger;
             var data = Utils.getHBSTemplateData(this);
-            if (APP.hasPlugin('account')) {
-                if (_accountModel)
-                    this.listenTo(_accountModel, 'change', this.render);
-            }
+            // if (APP.hasPlugin('account')) {
+            //     if (_accountModel)
+            //         this.listenTo(_accountModel, 'change', this.render);
+            // }
             this.$el.off().empty().html(this.template(data));
             // save user info
             var _userInfoChanged = _.debounce(function () {
@@ -97,10 +96,10 @@ define("plugin/shop/site/js/view/cartStandalone", [
             //     self.clearUserInfo();
 
             // if we have account plugin
-            if (APP.hasPlugin('account')) {
+            if (APP.hasPlugin('account') && this.model.has('account')) {
                 // account is signed in
                 // debugger;
-                if (!!this.model.get('account')) {
+                // if (!!this.model.get('account')) {
                     this.$('#account-profile-addresses-ID').on('change', function (event) {
                         if ($(this).val())
                             self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
@@ -108,8 +107,8 @@ define("plugin/shop/site/js/view/cartStandalone", [
                             self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
                     });
                     self.$('#account-profile-addresses-ID').trigger('change');
-                } else
-                    this.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
+                // } else
+                    // this.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
             }
 
             this.$('#shopping-cart-logistic-ID').on('change', function (event) {

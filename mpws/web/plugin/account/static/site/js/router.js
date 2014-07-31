@@ -15,6 +15,10 @@ define("plugin/account/site/js/router", [
 
     Cache.setObject('account:model', account);
 
+    account.on('change', function () {
+        Sandbox.eventNotify('plugin:account:model:change', account);
+    });
+
     var _navigateToHomeIfNotAuthorizedFn = function () {
         if (!Auth.getAccountID()) {
             Backbone.history.navigate("", true);
@@ -35,7 +39,6 @@ define("plugin/account/site/js/router", [
         account.clear();
         _navigateToHomeIfNotAuthorizedFn();
     });
-
 
     var Router = Backbone.Router.extend({
         routes: {
