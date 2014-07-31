@@ -1,4 +1,35 @@
 <table class="table table-bordered table-striped account-profile-address-entry">
+{{#if data.success }}
+    <tr>
+        <td colspan="2">
+            <div id="msg" class="alert alert-success">{{lang.profile_page_editAddress_saveSuccess}}</div>
+        </td>
+    </tr>
+{{else}}
+    {{#mpwsIsNotEmpty data.errors }}
+    <tr>
+        <td colspan="2">
+            <div id="msg" class="alert alert-danger">
+                {{lang.profile_page_editAddress_error_commonError}}
+                <ul class="errors">
+                {{#each data.errors}}
+                    <li>
+                        <strong>
+                            {{mpwsGetValueByKey ../lang @key "profile_page_edit_error_atField_"}}
+                        </strong>
+                        <ul>
+                        {{#each this}}
+                            <li>{{mpwsGetValueByKey ../../lang this "profile_page_edit_error_"}}</li>
+                        {{/each}}
+                        </ul>
+                    </li>
+                {{/each}}
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {{/mpwsIsNotEmpty}}
+{{/if}}
     <tr>
         <td>
             <a href="javascript://" class="account-address-remove" data-action="account:address:remove" data-id="{{data.ID}}">

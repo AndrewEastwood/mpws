@@ -1,10 +1,11 @@
 define("plugin/account/common/js/model/account", [
+    'plugin/account/common/js/model/accountAddress',
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache'
-], function (Sandbox, $, _, Backbone, Cache) {
+], function (AccountAddress, Sandbox, $, _, Backbone, Cache) {
 
     // var Model = MModel.getNew();
 
@@ -28,48 +29,64 @@ define("plugin/account/common/js/model/account", [
         },
         update: function (data) {
             var self = this;
-            data.id = this.id;
-            this.save(data, {patch: true});
+            this.set(data, {silent: true});
+            this.save(this.toJSON(), {patch: true});
         },
-        addAddress: function (data) {
-            var self = this;
-            var url = this.getUrl({
-                action: 'addAddress'
-            });
-            // debugger;
-            $.post(url, {address: data}, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                self.set(_data);
-                self.trigger('change');
-                Sandbox.eventNotify('plugin:account:profile:address:added', _data);
-            });
+        destroy: function () {
+            debugger;
         },
-        updateAddress: function (AddressID, data) {
-            // debugger;
-            var self = this;
-            var url = this.getUrl({
-                action: 'updateAddress'
-            });
-            data.AddressID = AddressID;
-            $.post(url, {address: data}, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                self.set(_data);
-                self.trigger('change');
-                Sandbox.eventNotify('plugin:account:profile:address:updated', _data);
-            });
-        },
-        removeAddress: function (AddressID) {
-            var self = this;
-            var url = this.getUrl({
-                action: 'removeAddress'
-            });
-            $.post(url, {AddressID: AddressID}, function (response) {
-                var _data = self.extractModelDataFromResponse(response);
-                self.set(_data);
-                self.trigger('change');
-                Sandbox.eventNotify('plugin:account:profile:address:removed', _data);
-            });
-        },
+        // addAddress: function (data) {
+        //     var self = this;
+        //     var url = this.getUrl({
+        //         action: 'addAddress'
+        //     });
+        //     // debugger;
+        //     $.post(url, {address: data}, function (response) {
+        //         var _data = self.extractModelDataFromResponse(response);
+        //         self.set(_data);
+        //         self.trigger('change');
+        //         Sandbox.eventNotify('plugin:account:profile:address:added', _data);
+        //     });
+        // },
+        // updateOrCreateAddress: function (AddressID, data) {
+        //     var address = new AccountAddress(data);
+        //     var update = !!AddressID;
+        //     if (update) {
+        //         address.set('ID', AddressID);
+        //     } else {
+        //         address.set('AccountID', this.id);
+        //     }
+        //     // if (AddressID)
+        //     debugger;
+        //     var self = this;
+        //     address.save().success(function(model, response){
+                
+        //         self.fetch();
+        //     });
+        //     // var self = this;
+        //     // var url = this.getUrl({
+        //     //     action: 'updateAddress'
+        //     // });
+        //     // data.AddressID = AddressID;
+        //     // $.post(url, {address: data}, function (response) {
+        //     //     var _data = self.extractModelDataFromResponse(response);
+        //     //     self.set(_data);
+        //     //     self.trigger('change');
+        //     //     Sandbox.eventNotify('plugin:account:profile:address:updated', _data);
+        //     // });
+        // },
+        // removeAddress: function (AddressID) {
+        //     var self = this;
+        //     var url = this.getUrl({
+        //         action: 'removeAddress'
+        //     });
+        //     $.post(url, {AddressID: AddressID}, function (response) {
+        //         var _data = self.extractModelDataFromResponse(response);
+        //         self.set(_data);
+        //         self.trigger('change');
+        //         Sandbox.eventNotify('plugin:account:profile:address:removed', _data);
+        //     });
+        // },
         changePassword: function (password, confirmation) {
             var self = this;
             // var url = this.getUrl({

@@ -127,12 +127,12 @@ define("plugin/account/site/js/router", [
             Sandbox.eventNotify('global:breadcrumb:show');
             require(['plugin/account/site/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // create new view
-                var accountProfileAddresses = new AccountProfileAddresses();
-                // view.setPagePlaceholder(accountProfileAddresses.el);
-                self.showProfileToolbar(accountProfileAddresses.el);
-                accountProfileAddresses.fetchAndRender({
-                    action: 'status'
+                var accountProfileAddresses = new AccountProfileAddresses({
+                    model: account
                 });
+                // view.setPagePlaceholder(accountProfileAddresses.el);
+                self.showProfileToolbar(accountProfileAddresses.$el);
+                accountProfileAddresses.render();
             });
         },
 

@@ -8,24 +8,39 @@ class libraryRequest {
     }
 
     static function getRequestData () {
-        global $PHP_INPUT;
-
-        $data = null;
-
-        if (self::isGET()) // DLETE uses GET var
-            $data = $_GET;
-        if (self::isDELETE() || self::isPUT() || self::isPATCH()) // DLETE uses GET var
-            $data = json_decode($PHP_INPUT, true);
-        if (self::isPOST())
-            $data = $_POST;
-        // if (self::isPOST() || self::isPUT() || self::isPATCH()) {
-        //     $_PUT = json_decode($PHP_INPUT, true);
-        //     if (empty($_PUT) && self::isPOST() && !empty($_POST))
-        //     return $_PUT;
-        // }
-        if (empty($data) && !empty($PHP_INPUT))
-            $data = json_decode($PHP_INPUT, true);
-        return $data;
+        // global $PHP_INPUT;
+        // $data = array(
+        //     'get' => $_GET,
+        //     'post' => $_POST,
+        //     'data' => json_decode($PHP_INPUT, true)
+        // );
+        // if (self::isGET()) // DLETE uses GET var
+        //     $data = $_GET;
+        // if (self::isDELETE() || self::isPUT() || self::isPATCH()) // DLETE uses GET var
+        //     $data = json_decode($PHP_INPUT, true);
+        // if (self::isPOST())
+        //     $data = $_POST;
+        // // if (self::isPOST() || self::isPUT() || self::isPATCH()) {
+        // //     $_PUT = json_decode($PHP_INPUT, true);
+        // //     if (empty($_PUT) && self::isPOST() && !empty($_POST))
+        // //     return $_PUT;
+        // // }
+        // var_dump($_GET);
+        // if (empty($data) && !empty($PHP_INPUT))
+        //     $data = json_decode($PHP_INPUT, true);
+        return new class {
+            public function get ($key) {
+                return $_GET[$key];
+            }
+            public function post ($key) {
+                return $_POST[$key];
+            }
+            public function data ($key) {
+                global $PHP_INPUT;
+                $data = json_decode($PHP_INPUT, true);
+                return $data[$key];
+            }
+        };
     }
 
     /* get values */
