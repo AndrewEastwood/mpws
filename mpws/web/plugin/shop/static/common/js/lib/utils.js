@@ -60,56 +60,56 @@ define("plugin/shop/common/js/lib/utils", [
         return product;
     }
 
-    Utils.updateOrderStatus = function (orderID, status) {
-        // debugger;
-        return $.post(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_orders',
-            orderID: orderID,
-            action: "update",
-        }), {
-            Status: status
-        }, function(data){
-            Sandbox.eventNotify('plugin:shop:order:item:updated', data);
-        });
-    }
+    // Utils.updateOrderStatus = function (orderID, status) {
+    //     // debugger;
+    //     return $.post(APP.getApiLink({
+    //         source: 'shop',
+    //         fn: 'shop_manage_orders',
+    //         orderID: orderID,
+    //         action: "update",
+    //     }), {
+    //         Status: status
+    //     }, function(data){
+    //         Sandbox.eventNotify('plugin:shop:order:item:updated', data);
+    //     });
+    // }
 
-    Utils.getOriginStatusList = function () {
-        return $.post(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origins',
-            action: 'statuses'
-        }), function(data){
-            Sandbox.eventNotify('plugin:shop:origin:received:statuslist', data);
-        });
-    }
+    // Utils.getOriginStatusList = function () {
+    //     return $.post(APP.getApiLink({
+    //         source: 'shop',
+    //         fn: 'shop_manage_origins',
+    //         action: 'statuses'
+    //     }), function(data){
+    //         Sandbox.eventNotify('plugin:shop:origin:received:statuslist', data);
+    //     });
+    // }
 
-    Utils.getOriginList = function () {
-        return $.get(APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origins',
-            action: 'list'
-        }), function(data){
-            Sandbox.eventNotify('plugin:shop:origin:received:list', data);
-        });
-    }
+    // Utils.getOriginList = function () {
+    //     return $.get(APP.getApiLink({
+    //         source: 'shop',
+    //         fn: 'shop_manage_origins',
+    //         action: 'list'
+    //     }), function(data){
+    //         Sandbox.eventNotify('plugin:shop:origin:received:list', data);
+    //     });
+    // }
 
 
-    Utils.updateOriginField = function (originID, field, value) {
-        return $.ajax({
-            type: "PUT",
-            url: APP.getApiLink({
-                source: 'shop',
-                fn: 'shop_manage_origin'
-            }),
-            contentType: "application/json",
-            data: JSON.stringify({
-                ID: originID,
-                field: field,
-                value: value
-            })
-        });
-    }
+    // Utils.updateOriginField = function (originID, field, value) {
+    //     return $.ajax({
+    //         type: "PUT",
+    //         url: APP.getApiLink({
+    //             source: 'shop',
+    //             fn: 'shop_manage_origin'
+    //         }),
+    //         contentType: "application/json",
+    //         data: JSON.stringify({
+    //             ID: originID,
+    //             field: field,
+    //             value: value
+    //         })
+    //     });
+    // }
 
     return Utils;
 

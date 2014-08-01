@@ -7,8 +7,6 @@ define("plugin/account/common/js/model/account", [
     'default/js/lib/cache'
 ], function (AccountAddress, Sandbox, $, _, Backbone, Cache) {
 
-    // var Model = MModel.getNew();
-
     var Account = Backbone.Model.extend({
         idAttribute: "ID",
         url: function () {
@@ -27,87 +25,16 @@ define("plugin/account/common/js/model/account", [
                 this.unset('success', {silent: true});
             }, this));
         },
-        update: function (data) {
-            var self = this;
-            this.set(data, {silent: true});
-            this.save(this.toJSON(), {patch: true});
-        },
-        destroy: function () {
-            debugger;
-        },
-        // addAddress: function (data) {
-        //     var self = this;
-        //     var url = this.getUrl({
-        //         action: 'addAddress'
-        //     });
-        //     // debugger;
-        //     $.post(url, {address: data}, function (response) {
-        //         var _data = self.extractModelDataFromResponse(response);
-        //         self.set(_data);
-        //         self.trigger('change');
-        //         Sandbox.eventNotify('plugin:account:profile:address:added', _data);
-        //     });
-        // },
-        // updateOrCreateAddress: function (AddressID, data) {
-        //     var address = new AccountAddress(data);
-        //     var update = !!AddressID;
-        //     if (update) {
-        //         address.set('ID', AddressID);
-        //     } else {
-        //         address.set('AccountID', this.id);
-        //     }
-        //     // if (AddressID)
-        //     debugger;
-        //     var self = this;
-        //     address.save().success(function(model, response){
-                
-        //         self.fetch();
-        //     });
-        //     // var self = this;
-        //     // var url = this.getUrl({
-        //     //     action: 'updateAddress'
-        //     // });
-        //     // data.AddressID = AddressID;
-        //     // $.post(url, {address: data}, function (response) {
-        //     //     var _data = self.extractModelDataFromResponse(response);
-        //     //     self.set(_data);
-        //     //     self.trigger('change');
-        //     //     Sandbox.eventNotify('plugin:account:profile:address:updated', _data);
-        //     // });
-        // },
-        // removeAddress: function (AddressID) {
-        //     var self = this;
-        //     var url = this.getUrl({
-        //         action: 'removeAddress'
-        //     });
-        //     $.post(url, {AddressID: AddressID}, function (response) {
-        //         var _data = self.extractModelDataFromResponse(response);
-        //         self.set(_data);
-        //         self.trigger('change');
-        //         Sandbox.eventNotify('plugin:account:profile:address:removed', _data);
-        //     });
-        // },
         changePassword: function (password, confirmation) {
-            var self = this;
-            // var url = this.getUrl({
-            //     action: 'updatePassword'
-            // });
             var data = {
                 Password: password,
                 ConfirmPassword: confirmation
             };
-            this.update(data);
-            // $.post(url, data, function (response) {
-            //     var _data = self.extractModelDataFromResponse(response);
-            //     self.set(_data);
-            //     self.trigger('change');
-            //     Sandbox.eventNotify('plugin:account:profile:password:updated', _data);
-            // });
+            this.save(data, {patch: true});
         }
 
     });
 
-    // --- we have only one instance
     return Account;
 
 });

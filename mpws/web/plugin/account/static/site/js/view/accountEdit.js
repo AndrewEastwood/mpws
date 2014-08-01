@@ -42,7 +42,7 @@ define("plugin/account/site/js/view/accountEdit", [
             });
 
             this.$('#save-btn').click(function() {
-                self.model.update(self.$('.myeditable').editable('getValue'));
+                self.model.save(self.$('.myeditable').editable('getValue'), {patch: true});
             });
 
             return this;

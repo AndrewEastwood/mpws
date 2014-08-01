@@ -798,7 +798,7 @@ class pluginShop extends objectPlugin {
                 $items[$productID]['_orderQuantity'] = $newQuantity;
                 if ($items[$productID]['_orderQuantity'] <= 0)
                     unset($items[$productID]);
-            } elseif ($newQuantlity > 0) {
+            } elseif ($newQuantity > 0) {
                 $product = $this->_getProductByID($productID);
                 $product['_orderQuantity'] = $newQuantity;
                 $items[$productID] = $product;

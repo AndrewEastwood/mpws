@@ -89,16 +89,21 @@ define("plugin/account/site/nls/ua_uk/translation", [
         profile_page_edit_error_atField_ConfirmPassword: "Пароль підтвердження:",
         profile_page_edit_error_ConfirmPasswordIsNotEqualTo_Password: 'Пароль підтвердження не співпадає з основним паролем',
         /* profile addresses */
+        profile_page_editAddress_destroySuccess: "Адресу успішно видалено",
         profile_page_editAddress_saveSuccess: "Зміни успішно збережені",
         profile_page_editAddress_error_commonError: "Помилка збереження адреси",
+        profile_page_editAddress_error_MissedParameter_id: "Помилка видалення адреси",
         profile_page_edit_error_atField_City: "Помилка в полі Місто",
         profile_page_edit_error_CityLengthIsLowerThan_2: 'Мінімальна довжина 2 символи',
+        profile_page_edit_error_CityIsNoString: 'Немає літер в назві міста',
         profile_page_edit_error_atField_Country: "Помилка в полі Країна",
         profile_page_edit_error_CountryLengthIsLowerThan_2: 'Мінімальна довжина 2 символи',
+        profile_page_edit_error_CountryIsNoString: 'Немає літер в назві країни',
         profile_page_edit_error_atField_POBox: "Помилка в полі Поштовий індекс",
         profile_page_edit_error_POBoxLengthIsLowerThan_2: 'Мінімальна довжина 2 символи',
         profile_page_edit_error_atField_Address: "Помилка в полі Адреса",
         profile_page_edit_error_AddressLengthIsLowerThan_2: 'Мінімальна довжина 2 символи',
+        profile_page_edit_error_AddressIsNoString: 'Немає літер в адресі',
         /* profile page:delete */
         profile_page_delete_title: "Видалення профілю",
         /* profile page:addresses */

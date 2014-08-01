@@ -30,22 +30,6 @@ class libraryRequest {
         return true;
     }
 
-    /* get post/put value */
-    static function fromREQUEST($key, $defaultValue = null) {
-        $_REQ = self::getRequestData();
-        if (isset($_REQ[$key]))
-            return $_REQ[$key];
-        return $defaultValue;
-    }
-
-    static function hasInREQUEST($key) {
-        $_REQ = self::getRequestData();
-        for ($i = 0, $num = func_num_args(); $i < $num; $i++)
-            if (!isset($_REQ[func_get_arg($i)]))
-                return false;
-        return true;
-    }
-
     static function isPOST () {
         return $_SERVER['REQUEST_METHOD'] === "POST";
     }
@@ -90,13 +74,6 @@ class libraryRequest {
         //echo 'RequestAction is ' . self::getAction();
         // return self::getAction() === 'api';
         return MPWS_REQUEST === "API";
-    }
-
-    static function getObjectFromREQUEST (/* required fields */) {
-        $obj = array();
-        for ($i = 0, $num = func_num_args(); $i < $num; $i++)
-            $obj[func_get_arg($i)] = self::fromREQUEST(func_get_arg($i));
-        return $obj;
     }
 
     public static function getOrValidatePageSecurityToken($privateKey, $publicKey = '') {

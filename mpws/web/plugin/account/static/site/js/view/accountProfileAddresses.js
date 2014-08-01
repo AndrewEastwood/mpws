@@ -18,12 +18,14 @@ define("plugin/account/site/js/view/accountProfileAddresses", [
         template: tpl,
         lang: lang,
         events: {
-            "click #account-address-add-btn-ID": "addAddress",
+            "click #account-address-add-btn-ID": "addNewAddress",
         },
         initialize: function () {
+            _(this.addressList).invoke('remove');
+            this.addressList = [];
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
-            _.bindAll(this, 'addAddress');
+            _.bindAll(this, 'addNewAddress', 'refreshAddNewAddressButton', 'renderAddressItem');
         },
         render: function () {
             var self = this;
@@ -33,13 +35,8 @@ define("plugin/account/site/js/view/accountProfileAddresses", [
             var addresses = this.model.get('Addresses');
 
             // debugger;
-            if (addresses && addresses.length >= 3)
-                this.$("#account-address-add-btn-ID").addClass('hide');
-            else
-                this.$("#account-address-add-btn-ID").removeClass('hide');
-
             _(addresses).each(function(address){
-                self.addAddress(address);
+                self.renderAddressItem(address);
             });
 
             this.$('.editable').editable({
@@ -47,55 +44,14 @@ define("plugin/account/site/js/view/accountProfileAddresses", [
                 emptytext: lang.profile_page_addresses_label_emptyValue
             });
 
+            this.refreshAddNewAddressButton();
+
             return this;
         },
-        // initialize: function () {
-        //     var self = this;
-
-        //     this.model.clearErrors();
-        //     this.model.clearStates();
-
-        //     this.listenTo(this.model, "change", this.render);
-
-        //     Sandbox.eventSubscribe("plugin:account:address:remove", function (data) {
-        //         if (data.id)
-        //             self.model.removeAddress(data.id);
-        //         else
-        //             $(data.event.target).parents('table.account-profile-address-entry').remove();
-        //         self.$("#account-address-add-btn-ID").removeClass('hide');
-        //     });
-
-        //     Sandbox.eventSubscribe("plugin:account:address:save", function (data) {
-        //         var _addressBlock = $(data.event.target).parents('table.account-profile-address-entry');
-        //         if (data.id)
-        //             self.model.updateAddress(data.id, _addressBlock.find('.editable').editable('getValue'));
-        //         else
-        //             self.model.addAddress(_addressBlock.find('.editable').editable('getValue'));
-        //     });
-
-        //     this.on('mview:renderComplete', function () {
-        //         var profile = self.model.get('profile');
-        //         if (profile && profile.addresses) {
-        //             // debugger;
-        //             if (profile.addresses.length >= 3)
-        //                 self.$("#account-address-add-btn-ID").addClass('hide');
-        //             else
-        //                 self.$("#account-address-add-btn-ID").removeClass('hide');
-        //             _(profile.addresses).each(function(address){
-        //                 self.addAddress(address);
-        //             });
-        //         }
-        //         self.$('.editable').editable({
-        //             mode: 'inline',
-        //             emptytext: lang.profile_page_addresses_label_emptyValue
-        //         });
-        //     });
-        // },
-        addAddress: function (address) {
+        refreshAddNewAddressButton: function () {
             this.$("#account-address-add-btn-ID").toggleClass('hide', this.addressList.length >= 3);
-
-            if (this.addressList.length >= 3)
-                return;
+        },
+        renderAddressItem: function (address) {
 
             // debugger;
             var addressView = new ViewAccountAddress({
@@ -107,19 +63,25 @@ define("plugin/account/site/js/view/accountProfileAddresses", [
             var self = this;
 
             addressView.model.on('change', function() {
-                self.model.fetch();
+                self.model.fetch({silent: true});
             });
-            addressView.model.on('destroy', function() {
-                self.model.fetch();
-                this.addressList = _(self.addressList).without(addressView);
-                this.$("#account-address-add-btn-ID").toggleClass('hide', this.addressList.length >= 3);
+            addressView.model.on('destroy:ok', function() {
+                self.model.fetch({silent: true});
+                addressView.remove();
+                self.addressList = _(self.addressList).without(addressView);
+                self.refreshAddNewAddressButton();
             });
 
             this.addressList.push(addressView);
 
             this.$('.account-addresses').append(addressView.$el);
 
-            this.$("#account-address-add-btn-ID").toggleClass('hide', this.addressList.length >= 3);
+            this.refreshAddNewAddressButton();
+        },
+        addNewAddress: function (address) {
+            if (this.addressList.length >= 3)
+                return;
+            this.renderAddressItem();
         }
     });
 

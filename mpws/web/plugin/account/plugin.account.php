@@ -238,47 +238,58 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _createAddress ($AccountID, $reqData) {
+        $result = array();
         $errors = array();
+        $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Address' => array('string', 'notEmpty', 'min' => 2, 'max' => 100),
-            'POBox' => array('string', 'notEmpty', 'min' => 2, 'max' => 100),
+            'POBox' => array('notEmpty', 'min' => 2, 'max' => 100),
             'Country' => array('string', 'min' => 2, 'max' => 100),
             'City' => array('string', 'min' => 2, 'max' => 100)
         ));
 
-        if ($validatedDataObj["totalErrors"] > 0) {
-            return glWrap("errors", $validatedDataObj["errors"]);
-        }
+        // if ($validatedDataObj["totalErrors"] > 0) {
+        //     return glWrap("errors", $validatedDataObj["errors"]);
+        // }
 
-        try {
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
 
-            $this->getCustomerDataBase()->beginTransaction();
+                $this->getCustomerDataBase()->beginTransaction();
 
-            $validatedValues = $validatedDataObj['values'];
+                $validatedValues = $validatedDataObj['values'];
 
-            $data = array();
-            $data["CustomerID"] = $this->getCustomer()->getCustomerID();
-            $data["AccountID"] = $AccountID;
-            $data["Address"] = $validatedValues['Address'];
-            $data["POBox"] = $validatedValues['POBox'];
-            $data["Country"] = $validatedValues['Country'];
-            $data["City"] = $validatedValues['City'];
+                $data = array();
+                $data["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $data["AccountID"] = $AccountID;
+                $data["Address"] = $validatedValues['Address'];
+                $data["POBox"] = $validatedValues['POBox'];
+                $data["Country"] = $validatedValues['Country'];
+                $data["City"] = $validatedValues['City'];
 
-            $configCreateAccount = configurationDefaultDataSource::jsapiAddAddress($data);
+                $configCreateAccount = configurationDefaultDataSource::jsapiAddAddress($data);
 
-            $AddressID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
+                $AddressID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
 
-            $this->getCustomerDataBase()->commit();
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-        }
+                $this->getCustomerDataBase()->commit();
 
-        if (empty($AddressID)) {
-            return glWrap("error", 'AddressCreateError');
-        }
+                $result = $this->_getAddressByID($AddressID);
 
-        $result = $this->_getAddressByID($AddressID);
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = 'AddressCreateError';
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        // if (empty($AddressID)) {
+        //     return glWrap("error", 'AddressCreateError');
+        // }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
 
         return $result;
     }
@@ -288,10 +299,10 @@ class pluginAccount extends objectPlugin {
         $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Address' => array('skipIfUnset', 'min' => 2, 'max' => 100),
+            'Address' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
             'POBox' => array('skipIfUnset', 'min' => 2, 'max' => 100),
-            'Country' => array('skipIfUnset', 'min' => 2, 'max' => 100),
-            'City' => array('skipIfUnset', 'min' => 2, 'max' => 100)
+            'Country' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
+            'City' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100)
         ));
 
         // if ($validatedDataObj["totalErrors"] > 0) {
@@ -360,9 +371,9 @@ class pluginAccount extends objectPlugin {
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
         // var_dump(file_get_contents('php://input'));
-        if (!empty($req->data['id'])) {
-            $AccountID = intval($req->data['id']);
-            $resp = $this->_updateAccountByID($AccountID, $req);
+        if (!empty($req->get['id'])) {
+            $AccountID = intval($req->get['id']);
+            $resp = $this->_updateAccountByID($AccountID, $req->data);
             return;
         }
         $resp['error'] = 'MissedParameter_id';
@@ -385,17 +396,17 @@ class pluginAccount extends objectPlugin {
     }
 
     public function patch_account_address (&$resp, $req) {
-        if (!empty($req->data['ID'])) {
-            $AddressID = intval($req->data['ID']);
-            $resp = $this->_updateAddressByID($AddressID, $req);
+        if (!empty($req->get['id'])) {
+            $AddressID = intval($req->get['id']);
+            $resp = $this->_updateAddressByID($AddressID, $req->data);
             return;
         }
-        $resp['error'] = 'MissedParameter_ID';
+        $resp['error'] = 'MissedParameter_id';
     }
 
     public function post_account_address (&$resp, $req) {
-        if (!empty($req->post['AccountID'])) {
-            $AccountID = intval($req->post['AccountID']);
+        if (!empty($req->data['AccountID'])) {
+            $AccountID = intval($req->data['AccountID']);
             $account = $this->_getAccountByID($AccountID);
             if (empty($account))
                 $resp['error'] = 'WrongAccount';
@@ -409,12 +420,12 @@ class pluginAccount extends objectPlugin {
     }
 
     public function delete_account_address (&$resp, $req) {
-        // if (!empty($req->get('id')) {
-        //     $AddressID = intval($req->get('id'));
-        //     $resp = $this->_disableAddressByID($AddressID);
-        //     return;
-        // }
-        // $resp['error'] = 'MissedParameter_id';
+        if (!empty($req->get['id'])) {
+            $AddressID = intval($req->get['id']);
+            $resp = $this->_disableAddressByID($AddressID);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
     }
 
 }

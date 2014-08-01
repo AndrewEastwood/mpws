@@ -2,11 +2,12 @@ define("plugin/account/common/js/view/accountAddress", [
     'default/js/lib/backbone',
     'plugin/account/common/js/model/accountAddress',
     'default/js/lib/utils',
+    'default/js/lib/bootstrap-alert',
     'default/js/plugin/hbs!plugin/account/common/hbs/partials/accountAddress',
     /* lang */
     'default/js/plugin/i18n!plugin/account/site/nls/translation',
     'default/js/lib/bootstrap-editable'
-], function (Backbone, ModelAccountAddress, Utils, tpl, lang) {
+], function (Backbone, ModelAccountAddress, Utils, BSAlert, tpl, lang) {
 
     var AccountAddress = Backbone.View.extend({
         template: tpl,
@@ -34,23 +35,23 @@ define("plugin/account/common/js/view/accountAddress", [
             return this;
         },
         saveAddress: function (event) {
-            // debugger;
-            // var data = $(event.target).data();
             var _addressBlock = $(event.target).parents('table.account-profile-address-entry');
             var updatedData = _addressBlock.find('.editable').editable('getValue');
-            this.model.set(updatedData, {silent: true});
-            this.model.save(this.model.toJSON(), {patch: true});
+            this.model.save(updatedData, {patch: true});
         },
         removeAddress: function (event) {
-            // debugger;
-            this.model.destroy(this.model.toJSON());
-            this.$el.off().remove();
-            // var data = $(event.target).data();
-            // if (data.id)
-            //     this.model.removeAddress(data.id);
-            // else
-            //     $(event.target).parents('table.account-profile-address-entry').remove();
-            // this.$("#account-address-add-btn-ID").removeClass('hide');
+            this.model.destroy({
+                success: function (model, response) {
+                    if (response) {
+                        if (response.ok) {
+                            BSAlert.success(lang.profile_page_editAddress_destroySuccess);
+                            model.trigger('destroy:ok');
+                        }
+                        else if (response.error)
+                            BSAlert.danger(lang['profile_page_editAddress_error_' + response.error]);
+                    }
+                }
+            });
         }
     });
     return AccountAddress;

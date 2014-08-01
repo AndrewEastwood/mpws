@@ -29,16 +29,20 @@ class extensionAuth extends objectExtension {
         $resp['auth_id'] = $this->getAuthID();
     }
 
-    public function post_signin (&$resp) {
-        $credentials = libraryRequest::getObjectFromREQUEST('email', 'password', 'remember');
-        if (empty($credentials['email']) || empty($credentials['password'])) {
+    public function post_signin (&$resp, $req) {
+
+        $password = $req->post['password'];
+        $email = $req->post['email'];
+        $remember = $req->post['remember'];
+
+        if (empty($email) || empty($password)) {
             $resp['error'] = 'WrongCredentials';
             return;
         }
 
-        $credentials['password'] = librarySecure::EncodeAccountPassword($credentials['password']);
+        $password = librarySecure::EncodeAccountPassword($password);
 
-        $config = configurationCustomerDataSource::jsapiGetAccountByCredentials($credentials['email'], $credentials['password']);
+        $config = configurationCustomerDataSource::jsapiGetAccountByCredentials($email, $password);
         // avoid removed account
         $config["fields"] = array("ID");
         $config["condition"]["Status"] = configurationCustomerDataSource::jsapiCreateDataSourceCondition('REMOVED', '!=');
@@ -58,14 +62,14 @@ class extensionAuth extends objectExtension {
             //     return $this->post_signout($resp);
 
             // keep user logged in
-            // if (!empty($credentials['remember'])) {
+            // if (!empty($remember)) {
             //     /* Set cookie to last 1 year */
-            //     // setcookie('username', $credentials['email'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
+            //     // setcookie('username', $email, time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
             //     // setcookie('password', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
             
             // } else {
             //     /* Cookie expires when browser closes */
-            //     // setcookie('username', $credentials['email'], false, '/', $_SERVER['SERVER_NAME']);
+            //     // setcookie('username', $email, false, '/', $_SERVER['SERVER_NAME']);
             //     // setcookie('password', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
             // }
 
