@@ -4,10 +4,10 @@ define("customer/js/router", [
     'default/js/lib/auth',
 ], function (Sandbox, Menu, Auth) {
 
-    // with every route we get user status
-    Sandbox.eventSubscribe('global:route', function () {
-        Auth.getStatus();
-    });
+    // // with every route we get user status
+    // Sandbox.eventSubscribe('global:route', function () {
+    //     Auth.getStatus();
+    // });
 
     // when page is loaded first time
     Sandbox.eventSubscribe('global:loader:complete', function (options) {
@@ -20,5 +20,4 @@ define("customer/js/router", [
         var menu = new Menu();
         menu.render();
     });
-
 });

@@ -29,7 +29,6 @@ define("plugin/account/toolbox/js/router", [
                 });
                 // return view object to pass it into this function at next invocation
                 // return signin;
-            });
         });
     });
 
@@ -44,7 +43,5 @@ define("plugin/account/toolbox/js/router", [
             append: true
         });
     });
-
-
 
 });
