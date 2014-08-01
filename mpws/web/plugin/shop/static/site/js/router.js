@@ -31,7 +31,6 @@ define("plugin/shop/site/js/router", [
             "shop/catalog/:category": "shop_catalog_category",
             "shop/catalog/": "shop_catalog",
             "shop/product/:product": "shop_product",
-            "shop/wizard": "shop_wizard",
             "shop/cart": "shop_cart",
             "shop/wishlist": "shop_wishlist",
             "shop/compare": "shop_compare",
