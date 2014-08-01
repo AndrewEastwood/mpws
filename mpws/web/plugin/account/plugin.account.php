@@ -334,8 +334,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function get_account_account (&$resp, $req) {
-        if (!empty($req['id'])) {
-            $AccountID = intval($req['id']);
+        if (!empty($req->get['id'])) {
+            $AccountID = intval($req->get['id']);
             $resp = $this->_getAccountByID($AccountID);
             return;
         }
@@ -343,8 +343,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function get_account_activate (&$resp, $req) {
-        if (!empty($req['hash'])) {
-            $ValidationString = $req['hash'];
+        if (!empty($req->get['hash'])) {
+            $ValidationString = $req->get['hash'];
             $resp = $this->_activateAccountByValidationStyring($ValidationString);
             return;
         }
@@ -353,15 +353,15 @@ class pluginAccount extends objectPlugin {
 
     public function post_account_account (&$resp, $req) {
         // $data = libraryRequest::getObjectFromREQUEST("FirstName", "LastName", "EMail", "Phone", "Password", "ConfirmPassword");
-        $resp = $this->_createAccount($req);
+        $resp = $this->_createAccount($req->data);
     }
 
     public function patch_account_account (&$resp, $req) {
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
         // var_dump(file_get_contents('php://input'));
-        if (!empty($req['id'])) {
-            $AccountID = intval($req['id']);
+        if (!empty($req->data['id'])) {
+            $AccountID = intval($req->data['id']);
             $resp = $this->_updateAccountByID($AccountID, $req);
             return;
         }
@@ -376,8 +376,8 @@ class pluginAccount extends objectPlugin {
         // global $PHP_INPUT;
         // var_dump($req);
         // var_dump($PHP_INPUT);
-        if (!empty($req['id'])) {
-            $AccountID = intval($req['id']);
+        if (!empty($req->get['id'])) {
+            $AccountID = intval($req->get['id']);
             $resp = $this->_disableAccountByID($AccountID);
             return;
         }
@@ -385,8 +385,8 @@ class pluginAccount extends objectPlugin {
     }
 
     public function patch_account_address (&$resp, $req) {
-        if (!empty($req['ID'])) {
-            $AddressID = intval($req['ID']);
+        if (!empty($req->data['ID'])) {
+            $AddressID = intval($req->data['ID']);
             $resp = $this->_updateAddressByID($AddressID, $req);
             return;
         }
@@ -394,27 +394,27 @@ class pluginAccount extends objectPlugin {
     }
 
     public function post_account_address (&$resp, $req) {
-        if (!empty($req['AccountID'])) {
-            $AccountID = intval($req['AccountID']);
+        if (!empty($req->post['AccountID'])) {
+            $AccountID = intval($req->post['AccountID']);
             $account = $this->_getAccountByID($AccountID);
             if (empty($account))
                 $resp['error'] = 'WrongAccount';
             elseif (count($account['Addresses']) >= 3)
                 $resp['error'] = 'AddressLimitExcided';
             else
-                $resp = $this->_createAddress($AccountID, $req);
+                $resp = $this->_createAddress($AccountID, $req->data);
             return;
         }
         $resp['error'] = 'MissedParameter_AccountID';
     }
 
     public function delete_account_address (&$resp, $req) {
-        if (!empty($req->get('id')) {
-            $AddressID = intval($req->get('id'));
-            $resp = $this->_disableAddressByID($AddressID);
-            return;
-        }
-        $resp['error'] = 'MissedParameter_id';
+        // if (!empty($req->get('id')) {
+        //     $AddressID = intval($req->get('id'));
+        //     $resp = $this->_disableAddressByID($AddressID);
+        //     return;
+        // }
+        // $resp['error'] = 'MissedParameter_id';
     }
 
 }

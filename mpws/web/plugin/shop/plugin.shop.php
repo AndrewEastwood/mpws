@@ -278,8 +278,8 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopOrdersGet();
 
         // pagination
-        $page = isset($req['page']) ? $req['page'] : false;
-        $per_page = isset($req['per_page']) ? $req['per_page'] : false;
+        $page = isset($req->get['page']) ? $req->get['page'] : false;
+        $per_page = isset($req->get['per_page']) ? $req->get['per_page'] : false;
 
         if (!empty($per_page)) {
             $config['limit'] = $per_page;
@@ -289,8 +289,8 @@ class pluginShop extends objectPlugin {
         }
 
         // sorting
-        $sort = isset($req['sort']) ? $req['sort'] : false;
-        $order = isset($req['order']) ? $req['order'] : false;
+        $sort = isset($req->get['sort']) ? $req->get['sort'] : false;
+        $order = isset($req->get['order']) ? $req->get['order'] : false;
         if (!empty($sort) && !empty($order)) {
             $config["order"] = array(
                 "field" =>  'shop_orders' . DOT . $sort,
@@ -583,7 +583,7 @@ class pluginShop extends objectPlugin {
     // ----------------------------------------
 
     public function get_shop_product (&$resp, $req) {
-        $resp = $this->_getProductByID($req['id']);
+        $resp = $this->_getProductByID($req->get['id']);
     }
 
     public function get_shop_overview (&$resp) {
@@ -594,7 +594,7 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_location (&$resp, $req) {
-        if (!isset($req['productID']) && !isset($req['categoryID'])) {
+        if (!isset($req->get['productID']) && !isset($req->get['categoryID'])) {
             $resp['error'] = 'The request must contain at least one of parameters: "productID" or "categoryID"';
             return;
         }
@@ -602,12 +602,12 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_products (&$resp, $req) {
-        if (!empty($req['status'])) {
+        if (!empty($req->get['status'])) {
             $resp = $this->_getProducts_ByStatus($req['status']);
             return;
         }
-        if (!empty($req['type'])) {
-            switch ($req['type']) {
+        if (!empty($req->get['type'])) {
+            switch ($req->get['type']) {
                 case "latest":
                     $resp["items"] = $this->_getProducts_Latest();
                     break;
@@ -631,8 +631,8 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_catalog (&$resp, $req) {
-        if (!empty($req['type'])) {
-            switch ($req['type']) {
+        if (!empty($req->get['type'])) {
+            switch ($req->get['type']) {
                 case "tree":
                     $resp['tree'] = $this->_getCatalogTree();
                     break;
@@ -643,30 +643,30 @@ class pluginShop extends objectPlugin {
             return;
         }
 
-        $resp['error'] = '"type" is missed in the request';
+        $resp['error'] = "MissedParameter_type";
     }
 
     public function get_shop_wish (&$resp) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
     }
 
-    public function post_shop_wish (&$resp, $req) {
+    public function post_shop_wish (&$resp, $req) { 
         $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
-        if (isset($req['productID'])) {
-            $productID = $req['productID'];
+        if (isset($req->data['productID'])) {
+            $productID = $req->data['productID'];
             if (!isset($resp['items'][$productID])) {
                 $product = $this->_getProductByID($productID);
                 $resp['items'][$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $resp['items'];
             }
         }
-        $resp['req'] = $req;
+        // $resp['req'] = $req;
     }
 
     public function delete_shop_wish (&$resp, $req) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
-        if (isset($req['productID'])) {
-            $productID = $req['productID'];
+        if (isset($req->get['productID'])) {
+            $productID = $req->get['productID'];
             if ($productID === "*") {
                 $resp['items'] = array();
             } elseif (isset($resp['items'][$productID])) {
@@ -689,8 +689,8 @@ class pluginShop extends objectPlugin {
 
     public function post_shop_compare (&$resp, $req) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
-        if (isset($req['productID'])) {
-            $productID = $req['productID'];
+        if (isset($req->data['productID'])) {
+            $productID = $req->data['productID'];
             if (!isset($resp['items'][$productID])) {
                 $product = $this->_getProductByID($productID);
                 $resp['items'][$productID] = $product;
@@ -701,8 +701,8 @@ class pluginShop extends objectPlugin {
 
     public function delete_shop_compare (&$resp, $req) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
-        if (isset($req['productID'])) {
-            $productID = $req['productID'];
+        if (isset($req->get['productID'])) {
+            $productID = $req->get['productID'];
             if ($productID === "*") {
                 $resp['items'] = array();
             } elseif (isset($resp['items'][$productID])) {
@@ -731,12 +731,12 @@ class pluginShop extends objectPlugin {
 
 
     public function get_shop_orders (&$resp, $req) {
-        if (!empty($req['status'])) {
-            $resp = $this->_getOrders_ByStatus($req['status']);
+        if (!empty($req->get['status'])) {
+            $resp = $this->_getOrders_ByStatus($req->get['status']);
             return;
         }
-        if (!empty($req['type'])) {
-            switch ($req['type']) {
+        if (!empty($req->get['type'])) {
+            switch ($req->get['type']) {
                 case "expired":
                     $resp = $this->_getOrders_Expired();
                     break;
@@ -754,11 +754,11 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_order (&$resp, $req) {
-        if (isset($req['id']) && $req['id'] !== "temp") {
-            $resp = $this->_getOrderByID($req['id']);
+        if (isset($req->get['ID']) && $req->get['ID'] !== "temp") {
+            $resp = $this->_getOrderByID($req->get['ID']);
             return;
-        } else if (isset($req['hash'])) {
-            $resp = $this->_getOrderByHash($req['hash']);
+        } else if (isset($req->get['hash'])) {
+            $resp = $this->_getOrderByHash($req->get['hash']);
             return;
         } else {
             $resp = $this->_getOrderTemp(array("useBackup" => true));
@@ -789,30 +789,30 @@ class pluginShop extends objectPlugin {
         // var_dump($_POST);
         // var_dump(file_get_contents('php://input'));
         $options = array();
-        if (isset($req['productID'])) {
+        if (isset($req->data['productID'])) {
             $order = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
             $items = empty($order['items']) ? array() : $order['items'];
-            $productID = $req['productID'];
-            $newQuantity = floatval($req['_orderQuantity']);
+            $productID = $req->data['productID'];
+            $newQuantity = floatval($req->data['_orderQuantity']);
             if (isset($items[$productID])) {
                 $items[$productID]['_orderQuantity'] = $newQuantity;
                 if ($items[$productID]['_orderQuantity'] <= 0)
                     unset($items[$productID]);
-            } elseif ($newQuantity > 0) {
+            } elseif ($newQuantlity > 0) {
                 $product = $this->_getProductByID($productID);
                 $product['_orderQuantity'] = $newQuantity;
                 $items[$productID] = $product;
-            } elseif ($req['productID'] === "*") {
+            } elseif ($req->data['productID'] === "*") {
                 $items = array();
             }
             $order['items'] = $items;
             $_SESSION[$this->_listKey_Cart] = $order;
             
-        } elseif (isset($req['promo'])) {
-            if ($req['promo'] === false)
+        } elseif (isset($req->data['promo'])) {
+            if ($req->data['promo'] === false)
                 $options['promo'] = array();
             else
-                $options['promo'] = $this->_getPromoByHash($req['promo'], true);
+                $options['promo'] = $this->_getPromoByHash($req->data['promo'], true);
         } else {
             $options['useBackup'] = true;
         }
