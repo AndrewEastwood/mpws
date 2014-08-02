@@ -9,6 +9,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
+    "default/js/lib/fuelux.wizard"
 ], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
 
     // $.cookie.json = true;
@@ -117,6 +118,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 else
                     self.$('.form-group-warehouse').prop('disable', true).addClass('hide');
             });
+            $('#myWizard').wizard();
             return this;
         }
     });
