@@ -96,8 +96,9 @@ define('plugin/shop/site/js/model/order', [
                 }
             });
         },
-        saveOrder: function () {
+        saveOrder: function (formData) {
             var self = this;
+            this.set('form', formData, {silent: true});
             this.sync("create", this, {
                 parse: true,
                 success: function (response) {

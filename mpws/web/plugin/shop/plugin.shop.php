@@ -185,6 +185,214 @@ class pluginShop extends objectPlugin {
         return $order;
     }
 
+    private function _createOrder ($reqData) {
+
+        $errors = array();
+
+        $order = $this->_getOrderTemp(array("useBackup" => true));
+        // var_dump($order);
+        // var_dump($reqData);
+
+        $accountID = $reqData['account']['ID'];
+        $formAccountID = $reqData['form']['shopCartProfileID'];
+
+        // check if matches
+        if ($accountID !== $formAccountID) {
+            $errors[] = 'OrderCreateError';
+            return;
+        }
+
+        try {
+
+            $this->getCustomerDataBase()->beginTransaction();
+
+            // create new profile
+            if (empty($accountID) && empty($formAccountID)) {
+            } else {
+                // need validate account
+                // if account exits
+                // if account is active
+                // create order for active account
+                $addressID = $['form']['shopCartProfileAddressID'];
+
+                // if account provides custom address
+                if (empty($addressID)) {
+
+                } else {
+                    // if () need validate address
+                    // if account has this address
+                }
+            }
+
+            $configOrder = configurationShopDataSource::jsapiShopOrderCreate($dataOrder);
+
+            $configOrderProducts = configurationShopDataSource::jsapiShopOrderProductsCreate($dataOrderProducts);
+
+            
+
+            $this->getCustomerDataBase()->commit();
+            $success = true;
+
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = 'OrderCreateError';
+        }
+
+
+
+        // $validatedDataObj = libraryValidate::getValidData($reqData, array(
+        //     'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
+        //     'LastName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
+        //     'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
+        //     'Phone' => array('isPhone'),
+        //     'Password' => array('isPassword', 'min' => 8, 'max' => 30),
+        //     'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty')
+        // ));
+
+        return;
+
+
+        // if ($validatedDataObj["totalErrors"] > 0) {
+        //     return glWrap("errors", $validatedDataObj["errors"]);
+        // }
+
+
+
+
+
+        // $cartUser = libraryRequest::fromPOST('user');
+
+
+
+        if (!isset($cartUser['shopCartProfileID']) || $cartUser['shopCartProfileID'] !== $_SESSION['Account:ProfileID']) {
+
+            // save account
+            // -----------------------
+            // AccountID
+            // Shipping
+            // Warehouse
+            // Comment
+            // Status
+            // TrackingLink
+            // DateCreate
+            // DateUpdate
+            $dataAccount = array();
+            $dataAccount["FirstName"] = $cartUser["shopCartUserName"];
+            $dataAccount["LastName"] = "";
+            $dataAccount["EMail"] = $cartUser["shopCartUserEmail"];
+            $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
+            $dataAccount["Password"] = "1234";
+            $accountID = $this->getCustomer()->addAccount($dataAccount);
+
+            // add account address
+            $dataAccountAddress = array();
+            $dataAccountAddress["AccountID"] = $accountID;
+            $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
+            $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
+            $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
+            $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
+
+            $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
+
+        } else {
+
+            $accountID = $_SESSION['Account:ProfileID'];
+
+
+            if (empty($cartUser["shopCartProfileAddressID"])) {
+
+                // check for custom address
+                $dataAccountAddress = array();
+                if (!empty($cartUser["shopCartUserAddress"]))
+                    $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
+                if (!empty($cartUser["shopCartUserPOBox"]))
+                    $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
+                if (!empty($cartUser["shopCartUserCountry"]))
+                    $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
+                if (!empty($cartUser["shopCartUserCity"]))
+                    $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
+
+                // set error or add new address
+                if (count($dataAccountAddress) == 0)
+                    $dataObj->setError('EmptyShippingAddress');
+                else
+                    $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
+            } else {
+
+                // validate account address id
+                $accountAddressEntry = $this->getCustomer()->getAccountAddress($accountID, $cartUser["shopCartProfileAddressID"]);
+
+                if (empty($accountAddressEntry['ID']))
+                    $dataObj->setError('WrongProfileAddressID');
+                else
+                    $addressID = $accountAddressEntry['ID'];
+            }
+
+        }
+
+        if (!$dataObj->hasError() && $addressID != null && $accountID != null) {
+            // save order
+            // -----------------------
+            // AccountID
+            // Shipping
+            // Warehouse
+            // Comment
+            // Hash
+            // DateCreated
+            // DateUpdated
+            $configOrder = configurationShopDataSource::jsapiShopOrderCreate();
+            $dataOrder["AccountID"] = $accountID;
+            $dataOrder["AccountAddressesID"] = $addressID;
+            $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
+            $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
+            $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
+            $dataOrder["Comment"] = $cartUser['shopCartComment'];
+            $dataOrder["Hash"] = md5(time() . md5(time()));
+            $dataOrder['DateCreated'] = date('Y-m-d H:i:s');
+            $dataOrder['DateUpdated'] = date('Y-m-d H:i:s');
+            $configOrder['data'] = array(
+                "fields" => array_keys($dataOrder),
+                "values" => array_values($dataOrder)
+            );
+
+            $this->getCustomer()->fetch($configOrder);
+
+            $orderID = $this->getCustomerDataBase()->getLastInsertId();
+
+            // save products
+            // -----------------------
+            // ProductID
+            // OrderID
+            // ProductPrice
+            // _orderQuantity
+            foreach ($productData['products'] as $_item) {
+                $configProduct = configurationShopDataSource::jsapiShopOrderProductsCreate();
+                $dataProduct = array();
+                $dataProduct["ProductID"] = $_item["ID"];
+                $dataProduct["OrderID"] = $orderID;
+                $dataProduct["ProductPrice"] = $_item["ProductPrice"];
+                $dataProduct["_orderQuantity"] = $_item["_orderQuantity"];
+                $configProduct['data'] = array(
+                    "fields" => array_keys($dataProduct),
+                    "values" => array_values($dataProduct)
+                );
+                $this->getCustomer()->fetch($configProduct);
+            }
+
+            // clear products
+            $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions, 'CLEAR');
+            $productData = $dataObj->getData();
+
+            // need to shop order id and status link
+            // and send email
+            $dataObj->setData('status', array(
+                'orderID' => $orderID,
+                'orderHash'=> $dataOrder["Hash"]
+            ));
+        }
+
+    }
+
     private function ___attachOrderExtras (&$order) {
         if (!empty($order)) {
             $orderID = isset($order['ID']) ? $order['ID']: null;
@@ -780,8 +988,8 @@ class pluginShop extends objectPlugin {
         //     $_SESSION[$this->_listKey_Cart] = $items;
         // }
         // $this->get_shop_cart($resp, $req);
-        var_dump($req->get);
-        var_dump($req->data);
+        $resp = $this->_createOrder($req->data);
+        // var_dump($req->data);
     }
 
     // modify existed product quantity in the shopping cart list

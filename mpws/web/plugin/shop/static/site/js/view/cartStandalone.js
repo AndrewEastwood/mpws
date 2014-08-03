@@ -145,7 +145,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
             });
 
             this.$('.button-order-save').click(function(){
-                self.model.saveOrder();
+                var result = {};
+                $.each(​self.$('form.form-order-create').serializeArray(), function() {
+                    result[this.name] = this.value;
+                })​;
+                self.model.saveOrder(result);
                 // ({
                 //     post: true,
                 //     success: function (model, response) {
