@@ -25,7 +25,6 @@ define('plugin/shop/site/js/model/order', [
             Sandbox.eventSubscribe('plugin:shop:order:clear', this.productRemoveAll);
         },
         parse: function (data) {
-            // debugger;
             return {
                 account: data.account || {},
                 info: data.info || {},
@@ -93,6 +92,24 @@ define('plugin/shop/site/js/model/order', [
                     }
                     else
                         BSAlert.danger(lang.list_cart_alert_promoRemoved);
+                    Sandbox.eventNotify('plugin:shop:order:changed', event);
+                }
+            });
+        },
+        saveOrder: function () {
+            var self = this;
+            this.sync("create", this, {
+                parse: true,
+                success: function (response) {
+                    // self.set(self.parse(response));
+                    // if (!!promo) {
+                    //     if (self.get('promo').code)
+                    //         BSAlert.success(lang.list_cart_alert_promoAdded);
+                    //     else
+                    //         BSAlert.danger(lang.list_cart_alert_promoRejected);
+                    // }
+                    // else
+                    //     BSAlert.danger(lang.list_cart_alert_promoRemoved);
                     Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
             });

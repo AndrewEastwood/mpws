@@ -81,7 +81,6 @@
             return this.trigger("unmask");
         },
         mask: function(mask, settings) {
-            debugger;
             var input,
                 defs,
                 tests,

@@ -9,7 +9,14 @@ define("plugin/shop/site/js/view/cartStandalone", [
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     "default/js/lib/jquery.cookie",
     "default/js/lib/select2/select2",
-    "default/js/lib/fuelux.wizard"
+    "default/js/lib/fuelux/wizard",
+    "default/js/lib/bootstrapvalidator/bootstrapValidator",
+    "default/js/lib/bootstrapvalidator/validator/emailAddress",
+    "default/js/lib/bootstrapvalidator/validator/phone",
+    "default/js/lib/bootstrapvalidator/validator/regexp",
+    "default/js/lib/bootstrapvalidator/validator/notEmpty",
+    "default/js/lib/bootstrapvalidator/validator/stringLength",
+    'default/js/lib/jquery.maskedinput'
 ], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
 
     // $.cookie.json = true;
@@ -48,20 +55,16 @@ define("plugin/shop/site/js/view/cartStandalone", [
             return _userInfo;
         },
         clearUserInfo: function () {
-            $.cookie("shopUser", null);
+            Cache.setCookie("shopUser", null);
         },
         render: function () {
             var self = this;
             // debugger;
             var data = Utils.getHBSTemplateData(this);
-            // if (APP.hasPlugin('account')) {
-            //     if (_accountModel)
-            //         this.listenTo(_accountModel, 'change', this.render);
-            // }
             this.$el.off().empty().html(this.template(data));
             // save user info
             var _userInfoChanged = _.debounce(function () {
-                $.cookie("shopUser", self.collectUserInfo.call(self));
+                Cache.setCookie("shopUser", self.collectUserInfo.call(self));
             }, 100);
             var _productQunatityChanged = _.debounce(function (event) {
                 self.updateProductQuantity.call(self, event);
@@ -78,7 +81,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             });
             this.$('[data-toggle="tooltip"]').tooltip();
             // restore user info
-            var _shopUser = $.cookie("shopUser");
+            var _shopUser = Cache.getCookie("shopUser");
             if (_shopUser)
                 _(_shopUser).each(function(val, key){
                     // debugger;
@@ -91,25 +94,22 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 });
 
             this.$('select').select2();
-            
-            // if we have saved order we clear user data
-            // if (self.model.has('status') &&  self.model.get('status').orderID)
-            //     self.clearUserInfo();
+            this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
 
+
+            var account = APP.hasPlugin('account') && this.model.has('account') && this.model.get('account').ID;
+            // if we have saved order we clear user data
             // if we have account plugin
-            if (APP.hasPlugin('account') && this.model.has('account')) {
+            // debugger;
+            if (account) {
                 // account is signed in
-                // debugger;
-                // if (!!this.model.get('account')) {
-                    this.$('#account-profile-addresses-ID').on('change', function (event) {
-                        if ($(this).val())
-                            self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
-                        else
-                            self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
-                    });
-                    self.$('#account-profile-addresses-ID').trigger('change');
-                // } else
-                    // this.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
+                this.$('#account-profile-addresses-ID').on('change', function (event) {
+                    if ($(this).val())
+                        self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
+                    else
+                        self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
+                });
+                self.$('#account-profile-addresses-ID').trigger('change');
             }
 
             this.$('#shopping-cart-logistic-ID').on('change', function (event) {
@@ -118,7 +118,124 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 else
                     self.$('.form-group-warehouse').prop('disable', true).addClass('hide');
             });
-            $('#myWizard').wizard();
+
+            var $form = this.$('.form-order-create');
+            var $formPreview = this.$('.form-order-preview');
+
+            $formPreview.on('submit', function () {
+                return false;
+            })
+
+            this.$('.button-order-back').click(function(){
+                self.$('.wizard').wizard('back');
+            });
+
+            this.$('.button-order-preview').click(function(){
+                var formValidator = $form.data('bootstrapValidator');
+                formValidator.validate();
+                if (formValidator.isValid()) {
+                    self.$('form.form-order-create .form-control').each(function(){
+                        var fldName = $(this).attr('name');
+                        var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
+                        if (fldName)
+                            self.$('form.form-order-preview').find('.form-control[name="' + fldName + '"]').text(value);
+                    });
+                    self.$('.wizard').wizard('next');
+                }
+            });
+
+            this.$('.button-order-save').click(function(){
+                self.model.saveOrder();
+                // ({
+                //     post: true,
+                //     success: function (model, response) {
+                //         if (response) {
+                //             if (response.ok) {
+                //                 self.$('.wizard').wizard('next');
+                //             } else if (response.error) {
+                //                 // show error
+                //             }
+                //         }
+                //     }
+                // });
+            });
+
+            $form.bootstrapValidator({
+                message: 'Вказане значення є неправильне',
+                feedbackIcons: {
+                    valid: 'fa fa-check',
+                    invalid: 'fa fa-ban',
+                    validating: 'fa fa-refresh'
+                },
+                fields: {
+                    shopCartUserName: {
+                        message: 'Неправильне імя',
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_]+$/,
+                                message: 'Недопустимі символи в полі (дозволено букви, цифри та нижнє підкреслення)'
+                            }
+                        }
+                    },
+                    shopCartUserEmail: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            },
+                            emailAddress: {
+                                message: 'Невірно введений ел. адреса'
+                            }
+                        }
+                    },
+                    shopCartUserPhone: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            }
+                        }
+                    },
+                    shopCartUserAddress: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            }
+                        }
+                    },
+                    shopCartUserPOBox: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            }
+                        }
+                    },
+                    shopCartUserCountry: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            }
+                        }
+                    },
+                    shopCartUserCity: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            }
+                        }
+                    },
+                    shopCartWarehouse: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Це поле не може бути порожнім'
+                            }
+                        }
+                    }
+                }
+             });
+
+
             return this;
         }
     });

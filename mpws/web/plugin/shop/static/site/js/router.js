@@ -172,9 +172,12 @@ define("plugin/shop/site/js/router", [
                 var _accountModel = Cache.getObject('account:model');
                 Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
                     // debugger;
-                    order.set('account', accountModel.toJSON());
+                    if (accountModel.has('ID'))
+                        order.set('account', accountModel.toJSON());
+                    else
+                        order.unset('account');
                 });
-                if (_accountModel)
+                if (_accountModel && _accountModel.has('ID'))
                     order.set('account', _accountModel.toJSON());
                 // create new view
                 var cartStandalone = new CartStandalone({

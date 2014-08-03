@@ -20,7 +20,7 @@ define("plugin/account/site/js/router", [
     });
 
     var _navigateToHomeIfNotAuthorizedFn = function () {
-        if (!Auth.getAccountID()) {
+        if (!Auth.getAccountID() && /^account/.test(Backbone.history.fragment)) {
             Backbone.history.navigate("", true);
             return true;
         }

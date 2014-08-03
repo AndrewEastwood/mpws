@@ -754,8 +754,8 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_order (&$resp, $req) {
-        if (isset($req->get['ID']) && $req->get['ID'] !== "temp") {
-            $resp = $this->_getOrderByID($req->get['ID']);
+        if (isset($req->get['id']) && $req->get['id'] !== "temp") {
+            $resp = $this->_getOrderByID($req->get['id']);
             return;
         } else if (isset($req->get['hash'])) {
             $resp = $this->_getOrderByHash($req->get['hash']);
@@ -766,21 +766,23 @@ class pluginShop extends objectPlugin {
         // $resp['error'] = '"id" or "hash" is missed in the request';
     }
 
-    // // create new product in the shopping cart list
-    // public function post_shop_cart (&$resp, $req) {
-    //     if (isset($req['productID'])) {
-    //         $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
-    //         $productID = $req['productID'];
-    //         if (!isset($items[$productID])) {
-    //             $product = $this->_getProductByID($productID);
-    //             $product['_orderQuantity'] = 1;
-    //             $product["Total"] = $product['Price'];
-    //             $items[$productID] = $product;
-    //         }
-    //         $_SESSION[$this->_listKey_Cart] = $items;
-    //     }
-    //     $this->get_shop_cart($resp, $req);
-    // }
+    // create new product in the shopping cart list
+    public function post_shop_order (&$resp, $req) {
+        // if (isset($req['productID'])) {
+        //     $items = isset($_SESSION[$this->_listKey_Cart]) ? $_SESSION[$this->_listKey_Cart] : array();
+        //     $productID = $req['productID'];
+        //     if (!isset($items[$productID])) {
+        //         $product = $this->_getProductByID($productID);
+        //         $product['_orderQuantity'] = 1;
+        //         $product["Total"] = $product['Price'];
+        //         $items[$productID] = $product;
+        //     }
+        //     $_SESSION[$this->_listKey_Cart] = $items;
+        // }
+        // $this->get_shop_cart($resp, $req);
+        var_dump($req->get);
+        var_dump($req->data);
+    }
 
     // modify existed product quantity in the shopping cart list
     public function patch_shop_order (&$resp, $req) {
