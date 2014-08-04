@@ -196,6 +196,8 @@ class pluginShop extends objectPlugin {
         $accountID = $reqData['account']['ID'];
         $formAccountID = $reqData['form']['shopCartProfileID'];
 
+        $pluginAccount = $this->withPlugin('account');
+
         // check if matches
         if ($accountID !== $formAccountID) {
             $errors[] = 'OrderCreateError';
@@ -208,6 +210,38 @@ class pluginShop extends objectPlugin {
 
             // create new profile
             if (empty($accountID) && empty($formAccountID)) {
+
+                // create new account
+                $new_password = librarySecure::generateStrongPassword(6);
+                $account = $pluginAccount->createAccount(array(
+                    "FirstName" => $reqData['form']['shopCartUserName'],
+                    "LastName" => "",
+                    "EMail" => $reqData['form']['shopCartUserEmail'],
+                    "Phone" => $reqData['form']['shopCartUserPhone'],
+                    "Password" => $new_password,
+                    "ConfirmPassword" => $new_password
+                ));
+
+                if (count($account['errors']))
+                    $errors['Account'] = $account['errors'];
+
+                if ($account['success'] === false)
+                    throw new Exception("AccountCreateError", 1);
+
+                // create account address
+                $accountAddress = $pluginAccount->createAddress($account['ID'], array(
+                    "Address" => $reqData['form']['shopCartUserAddress'],
+                    "POBox" => $reqData['form']['shopCartUserPOBox'],
+                    "Country" => $reqData['form']['shopCartUserCountry'],
+                    "City" => $reqData['form']['shopCartUserCity']
+                ));
+
+                if (count($accountAddress['errors']))
+                    $errors['Account'] = $accountAddress['errors'];
+
+                if ($accountAddress['success'] === false)
+                    throw new Exception("AccountAddressCreateError", 1);
+
             } else {
                 // need validate account
                 // if account exits
@@ -235,7 +269,7 @@ class pluginShop extends objectPlugin {
 
         } catch (Exception $e) {
             $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'OrderCreateError';
+            $errors['Order'][] = 'OrderCreateError';
         }
 
 

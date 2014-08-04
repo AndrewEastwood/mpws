@@ -7,14 +7,14 @@
         factory($.fn.bootstrapValidator, jQuery);
     }
 }(function (bootstrapValidator, $) {
-    $.fn.bootstrapValidator.i18n.stringLength = $.extend($.fn.bootstrapValidator.i18n.stringLength || {}, {
+    bootstrapValidator.i18n.stringLength = $.extend(bootstrapValidator.i18n.stringLength || {}, {
         'default': 'Please enter a value with valid length',
         less: 'Please enter less than %s characters',
         more: 'Please enter more than %s characters',
         between: 'Please enter value between %s and %s characters long'
     });
 
-    $.fn.bootstrapValidator.validators.stringLength = {
+    bootstrapValidator.validators.stringLength = {
         html5Attributes: {
             message: 'message',
             min: 'min',
@@ -60,7 +60,7 @@
                 max     = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max),
                 length  = value.length,
                 isValid = true,
-                message = options.message || $.fn.bootstrapValidator.i18n.stringLength['default'];
+                message = options.message || bootstrapValidator.i18n.stringLength['default'];
 
             if ((min && length < parseInt(min, 10)) || (max && length > parseInt(max, 10))) {
                 isValid = false;
@@ -68,15 +68,15 @@
 
             switch (true) {
                 case (!!min && !!max):
-                    message = $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.stringLength.between, [parseInt(min, 10), parseInt(max, 10)]);
+                    message = bootstrapValidator.helpers.format(options.message || bootstrapValidator.i18n.stringLength.between, [parseInt(min, 10), parseInt(max, 10)]);
                     break;
 
                 case (!!min):
-                    message = $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.stringLength.more, parseInt(min, 10));
+                    message = bootstrapValidator.helpers.format(options.message || bootstrapValidator.i18n.stringLength.more, parseInt(min, 10));
                     break;
 
                 case (!!max):
-                    message = $.fn.bootstrapValidator.helpers.format(options.message || $.fn.bootstrapValidator.i18n.stringLength.less, parseInt(max, 10));
+                    message = bootstrapValidator.helpers.format(options.message || bootstrapValidator.i18n.stringLength.less, parseInt(max, 10));
                     break;
 
                 default:

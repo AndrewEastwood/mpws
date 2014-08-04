@@ -16,6 +16,13 @@ class objectPlugin implements IPlugin {
         return $this->customer->getDataBase();
     }
 
+    public function withPlugin ($pluginName) {
+        // if ($this->getCustomer()->hasPlugin($pluginName)) {
+            $anotherPlugin = $this->getCustomer()->getPlugin($pluginName);
+            return $anotherPlugin;
+        // }
+    }
+
     public function run () {
         libraryRequest::processRequest($this);
     }

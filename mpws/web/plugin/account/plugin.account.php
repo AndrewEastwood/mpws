@@ -66,8 +66,10 @@ class pluginAccount extends objectPlugin {
         return $account;
     }
 
-    private function _createAccount ($reqData) {
+    public function createAccount ($reqData) {
+        $result = array();
         $errors = array();
+        $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
@@ -78,53 +80,50 @@ class pluginAccount extends objectPlugin {
             'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty')
         ));
 
-        if ($validatedDataObj["totalErrors"] > 0) {
-            return glWrap("errors", $validatedDataObj["errors"]);
-        }
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
 
-        try {
+                $this->getCustomerDataBase()->beginTransaction();
 
-            $this->getCustomerDataBase()->beginTransaction();
+                $validatedValues = $validatedDataObj['values'];
 
-            $validatedValues = $validatedDataObj['values'];
+                $data = array();
+                $data["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $data["FirstName"] = $validatedValues['FirstName'];
+                $data["LastName"] = $validatedValues['LastName'];
+                $data["EMail"] = $validatedValues['EMail'];
+                $data["Phone"] = $validatedValues['Phone'];
+                $data["Password"] = librarySecure::EncodeAccountPassword($validatedValues['Password']);
+                $data["ValidationString"] = librarySecure::EncodeAccountPassword(time());
+                $configCreateAccount = configurationDefaultDataSource::jsapiAddAccount($data);
+                $AccountID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
 
-            $data = array();
-            $data["CustomerID"] = $this->getCustomer()->getCustomerID();
-            $data["FirstName"] = $validatedValues['FirstName'];
-            $data["LastName"] = $validatedValues['LastName'];
-            $data["EMail"] = $validatedValues['EMail'];
-            $data["Phone"] = $validatedValues['Phone'];
-            $data["Password"] = librarySecure::EncodeAccountPassword($validatedValues['Password']);
-            $data["ValidationString"] = librarySecure::EncodeAccountPassword(time());
-            $configCreateAccount = configurationDefaultDataSource::jsapiAddAccount($data);
-            $AccountID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
+                if (empty($AccountID))
+                    throw new Exception('AccountCreateError');
 
-            if (empty($AccountID)) {
-                $errors[] = 'AccountCreateError';
-                return glWrap("errors", $errors);
+                // create permission
+                $data = configurationDefaultDataSource::jsapiGetNewPermission();
+                $data['AccountID'] = $AccountID;
+                $configCreatePermission = configurationDefaultDataSource::jsapiAddPermissions($data);
+                $PermissionID = $this->getCustomer()->fetch($configCreatePermission) ?: null;
+
+                if (empty($PermissionID))
+                    throw new Exception('PermissionCreateError');
+
+                $this->getCustomerDataBase()->commit();
+
+                $result = $this->_getAccountByID($AccountID);
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
             }
+        else
+            $errors = $validatedDataObj["errors"];
 
-            // create permission
-            $data = configurationDefaultDataSource::jsapiGetNewPermission();
-            $data['AccountID'] = $AccountID;
-            $configCreatePermission = configurationDefaultDataSource::jsapiAddPermissions($data);
-            $PermissionID = $this->getCustomer()->fetch($configCreatePermission) ?: null;
-
-            if (empty($PermissionID)) {
-                $errors[] = 'PermissionCreateError';
-                return glWrap("errors", $errors);
-            }
-
-            $this->getCustomerDataBase()->commit();
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-        }
-
-        if (empty($AccountID)) {
-            return glWrap("error", 'AccountCreateError');
-        }
-
-        $result = $this->_getAccountByID($AccountID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
 
         return $result;
     }
@@ -237,7 +236,7 @@ class pluginAccount extends objectPlugin {
         return $address;
     }
 
-    private function _createAddress ($AccountID, $reqData) {
+    public function createAddress ($AccountID, $reqData) {
         $result = array();
         $errors = array();
         $success = false;
@@ -248,10 +247,6 @@ class pluginAccount extends objectPlugin {
             'Country' => array('string', 'min' => 2, 'max' => 100),
             'City' => array('string', 'min' => 2, 'max' => 100)
         ));
-
-        // if ($validatedDataObj["totalErrors"] > 0) {
-        //     return glWrap("errors", $validatedDataObj["errors"]);
-        // }
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
@@ -279,14 +274,10 @@ class pluginAccount extends objectPlugin {
                 $success = true;
             } catch (Exception $e) {
                 $this->getCustomerDataBase()->rollBack();
-                $errors[] = 'AddressCreateError';
+                $errors[] = 'AccountAddressCreateError';
             }
         else
             $errors = $validatedDataObj["errors"];
-
-        // if (empty($AddressID)) {
-        //     return glWrap("error", 'AddressCreateError');
-        // }
 
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -364,7 +355,7 @@ class pluginAccount extends objectPlugin {
 
     public function post_account_account (&$resp, $req) {
         // $data = libraryRequest::getObjectFromREQUEST("FirstName", "LastName", "EMail", "Phone", "Password", "ConfirmPassword");
-        $resp = $this->_createAccount($req->data);
+        $resp = $this->createAccount($req->data);
     }
 
     public function patch_account_account (&$resp, $req) {
@@ -413,7 +404,7 @@ class pluginAccount extends objectPlugin {
             elseif (count($account['Addresses']) >= 3)
                 $resp['error'] = 'AddressLimitExcided';
             else
-                $resp = $this->_createAddress($AccountID, $req->data);
+                $resp = $this->createAddress($AccountID, $req->data);
             return;
         }
         $resp['error'] = 'MissedParameter_AccountID';

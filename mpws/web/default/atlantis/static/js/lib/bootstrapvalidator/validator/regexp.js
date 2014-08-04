@@ -7,11 +7,11 @@
         factory($.fn.bootstrapValidator, jQuery);
     }
 }(function (bootstrapValidator, $) {
-    $.fn.bootstrapValidator.i18n.regexp = $.extend($.fn.bootstrapValidator.i18n.regexp || {}, {
+    bootstrapValidator.i18n.regexp = $.extend(bootstrapValidator.i18n.regexp || {}, {
         'default': 'Please enter a value matching the pattern'
     });
 
-    $.fn.bootstrapValidator.validators.regexp = {
+    bootstrapValidator.validators.regexp = {
         html5Attributes: {
             message: 'message',
             regexp: 'regexp'
