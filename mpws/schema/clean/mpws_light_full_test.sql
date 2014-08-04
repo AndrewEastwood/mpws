@@ -274,6 +274,7 @@ CREATE TABLE `shop_boughts` (
   `OrderID` int(11) NOT NULL,
   `ProductPrice` decimal(10,2) NOT NULL,
   `Quantity` int(11) NOT NULL,
+  `IsPromo` tinyint(1) NOT NULL,
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `OrderID` (`OrderID`),
@@ -1050,4 +1051,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-05  0:10:09
+-- Dump completed on 2014-08-05  0:59:40

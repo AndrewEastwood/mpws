@@ -195,7 +195,9 @@ class configurationDefaultDataSource extends objectConfiguration {
             "condition" => array(
                 "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
             ),
-            "options" => null
+            "options" => array(
+                "asDict" => "ID"
+            )
         ));
         if (!glIsToolbox())
             $config['condition']["Status"] = self::jsapiCreateDataSourceCondition("ACTIVE");

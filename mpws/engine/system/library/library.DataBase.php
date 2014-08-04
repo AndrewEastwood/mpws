@@ -253,10 +253,21 @@ class libraryDataBase {
                         break;
                     case "asDict":
                         $dict = array();
-                        $keyForKey = $_options['keys'];
-                        $keyForVal = $_options['values'];
-                        foreach ($dbData as $key => $val) {
-                            $dict[$val[$keyForKey]] = $val[$keyForVal];
+                        $keyForKey = null;
+                        $keyForVal = null;
+                        if (is_string($_options))
+                            $keyForKey = $_options;
+                        elseif (is_array($_options)) {
+                            $keyForKey = $_options['keys'] ?: null;
+                            $keyForVal = $_options['values'] ?: null;
+                        }
+                        if (!empty($keyForKey))
+                            foreach ($dbData as $key => $val) {
+                                if ($keyForVal)
+                                    $dict[$val[$keyForKey]] = $val[$keyForVal] ?: null;
+                                else
+                                    $dict[$val[$keyForKey]] = $val;
+                            }
                         }
                         $dbData = $dict;
                         break;
