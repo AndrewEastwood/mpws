@@ -177,8 +177,10 @@ class pluginShop extends objectPlugin {
         // re-validate promo
         if (isset($order['promo']) && isset($order['promo']['Code']))
             $order['promo'] = $this->_getPromoByHash($order['promo']['Code'], true) ?: array();
+        else
+            $order['promo'] = array();
         // re-calc totals
-        if (!isset($options['useBackup']) && !$options['useBackup'])
+        if (!isset($options['useBackup']) || !$options['useBackup'])
             $this->___attachOrderExtras($order);
             // return $order;
 
@@ -195,7 +197,9 @@ class pluginShop extends objectPlugin {
 
     private function _createOrder ($reqData) {
 
+        $result = array();
         $errors = array();
+        $success = false;
 
         // var_dump($order);
         // var_dump($reqData);
@@ -246,7 +250,6 @@ class pluginShop extends objectPlugin {
 
                 if (empty($account))
                     throw new Exception("WrongAccount", 1);
-                    
 
                 if ($account['Status'] !== "ACTIVE")
                     throw new Exception("AccountIsBlocked", 1);
@@ -268,16 +271,13 @@ class pluginShop extends objectPlugin {
             // create new address for account
             if (empty($formAddressID) || empty($formAccountToken)) {
 
-                // TODO: if account is authorized and do not have maximum addresses
-                // we must link new address to the account otherwise create unlinked account
-
                 // create account address
-                $accountAddress = $pluginAccount->createAddress(empty($formAccountToken) ? $accountID : null, array(
+                $accountAddress = $pluginAccount->createAddress($accountID, array(
                     "Address" => $reqData['form']['shopCartUserAddress'],
                     "POBox" => $reqData['form']['shopCartUserPOBox'],
                     "Country" => $reqData['form']['shopCartUserCountry'],
                     "City" => $reqData['form']['shopCartUserCity']
-                ));
+                ), true); // <= this allows creating unliked addresses or add new address to account when it's possible
 
                 if (count($accountAddress['errors']))
                     $errors['Account'] = $accountAddress['errors'];
@@ -344,12 +344,21 @@ class pluginShop extends objectPlugin {
 
             $success = true;
 
+            // reset temp order
+            $this->_getOrderTemp(array("reset" => true));
+
+            // get created order
+            $result = $this->_getOrderByID($orderID);
+
         } catch (Exception $e) {
             $this->getCustomerDataBase()->rollBack();
             $errors['Order'][] = $e->getMessage();
         }
 
+        $result['errors'] = $errors;
+        $result['success'] = $success;
 
+        return $result;
         // $validatedDataObj = libraryValidate::getValidData($reqData, array(
         //     'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
         //     'LastName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
@@ -358,8 +367,6 @@ class pluginShop extends objectPlugin {
         //     'Password' => array('isPassword', 'min' => 8, 'max' => 30),
         //     'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty')
         // ));
-
-        return
     }
 
     private function ___attachOrderExtras (&$order) {

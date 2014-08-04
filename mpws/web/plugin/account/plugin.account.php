@@ -236,7 +236,7 @@ class pluginAccount extends objectPlugin {
         return $address;
     }
 
-    public function createAddress ($AccountID, $reqData) {
+    public function createAddress ($AccountID, $reqData, $allowStandalone = false) {
         $result = array();
         $errors = array();
         $success = false;
@@ -250,6 +250,18 @@ class pluginAccount extends objectPlugin {
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
+
+                // TODO: if account is authorized and do not have maximum addresses
+                // we must link new address to the account otherwise create unlinked account
+                $account = $this->getAccountByID($AccountID);
+                if (empty($account))
+                    throw new Exception("WrongAccount", 1);
+                elseif (count($account['Addresses']) >= 3) {
+                    if (!$allowStandalone)
+                        throw new Exception("AddressLimitExcided", 1);
+                    else
+                        $AccountID = null;
+                }
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -275,6 +287,7 @@ class pluginAccount extends objectPlugin {
             } catch (Exception $e) {
                 $this->getCustomerDataBase()->rollBack();
                 $errors[] = 'AccountAddressCreateError';
+                $errors[] = $e->getMessage();
             }
         else
             $errors = $validatedDataObj["errors"];
@@ -398,13 +411,7 @@ class pluginAccount extends objectPlugin {
     public function post_account_address (&$resp, $req) {
         if (!empty($req->data['AccountID'])) {
             $AccountID = intval($req->data['AccountID']);
-            $account = $this->getAccountByID($AccountID);
-            if (empty($account))
-                $resp['error'] = 'WrongAccount';
-            elseif (count($account['Addresses']) >= 3)
-                $resp['error'] = 'AddressLimitExcided';
-            else
-                $resp = $this->createAddress($AccountID, $req->data);
+            $resp = $this->createAddress($AccountID, $req->data);
             return;
         }
         $resp['error'] = 'MissedParameter_AccountID';

@@ -98,8 +98,8 @@ define('plugin/shop/site/js/model/order', [
         },
         saveOrder: function (formData) {
             var self = this;
-            debugger;
-            return;
+            // debugger;
+            // return;
             // this.set('form', formData, {silent: true});
             this.sync("create", this, {
                 success: function (response) {

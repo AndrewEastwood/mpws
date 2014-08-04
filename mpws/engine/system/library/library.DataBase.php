@@ -268,7 +268,6 @@ class libraryDataBase {
                                 else
                                     $dict[$val[$keyForKey]] = $val;
                             }
-                        }
                         $dbData = $dict;
                         break;
                     default:
