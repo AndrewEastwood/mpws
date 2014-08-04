@@ -144,11 +144,13 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 }
             });
 
+                // _(​formDataArray).each();
             this.$('.button-order-save').click(function(){
                 var result = {};
-                $.each(​self.$('form.form-order-create').serializeArray(), function() {
-                    result[this.name] = this.value;
-                })​;
+                var formDataArray = $form.serializeArray();
+                _(formDataArray).each(function(item){
+                    result[item.name] = item.value;
+                });
                 self.model.saveOrder(result);
                 // ({
                 //     post: true,

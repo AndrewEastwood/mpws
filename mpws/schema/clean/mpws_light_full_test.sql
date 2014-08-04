@@ -98,7 +98,7 @@ CREATE TABLE `mpws_accounts` (
 
 LOCK TABLES `mpws_accounts` WRITE;
 /*!40000 ALTER TABLE `mpws_accounts` DISABLE KEYS */;
-INSERT INTO `mpws_accounts` VALUES (139,1,1,'dsfdsffdsfdsfs','dsadsad','demo@demo.com','(546) 565-65-65','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-08-03 22:32:51'),(140,1,0,'xxx','dddd','admin323@pb.com.ua','(787) 111-11-11','a5232aee5b6f36cbbd72d639e8429ba2','c3410e91b0da48f807a4f954e00f46d0','TEMP','2014-07-28 22:33:14','2014-07-28 22:33:14','2014-07-28 22:33:14');
+INSERT INTO `mpws_accounts` VALUES (139,1,1,'dsfdsffdsfdsfs','dsadsad','demo@demo.com','(546) 565-65-65','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-08-04 23:33:53'),(140,1,0,'xxx','dddd','admin323@pb.com.ua','(787) 111-11-11','a5232aee5b6f36cbbd72d639e8429ba2','c3410e91b0da48f807a4f954e00f46d0','TEMP','2014-07-28 22:33:14','2014-07-28 22:33:14','2014-07-28 22:33:14');
 /*!40000 ALTER TABLE `mpws_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1050,4 +1050,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-04  9:56:14
+-- Dump completed on 2014-08-05  0:10:09

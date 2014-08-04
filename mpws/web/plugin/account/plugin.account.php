@@ -43,10 +43,10 @@ class pluginAccount extends objectPlugin {
         return $account;
     }
 
-    private function _getAccountByValidationString ($ValidationString) {
+    public function getAccountByValidationString ($ValidationString) {
         $config = configurationCustomerDataSource::jsapiGetAccountByValidationString($ValidationString);
         $account = $this->getCustomer()->fetch($config);
-        // var_dump('_getAccountByValidationString', $config);
+        // var_dump('getAccountByValidationString', $config);
         if (is_null($account)) {
             return glWrap('error', 'Account does not exist');
         }
@@ -56,7 +56,7 @@ class pluginAccount extends objectPlugin {
         return $account;
     }
 
-    private function _getAccountByID ($AccountID) {
+    public function getAccountByID ($AccountID) {
         $config = configurationCustomerDataSource::jsapiGetAccountByID($AccountID);
         $account = $this->getCustomer()->fetch($config);
         // var_dump('getAccountByID', $AccountID);
@@ -112,7 +112,7 @@ class pluginAccount extends objectPlugin {
 
                 $this->getCustomerDataBase()->commit();
 
-                $result = $this->_getAccountByID($AccountID);
+                $result = $this->getAccountByID($AccountID);
 
                 $success = true;
             } catch (Exception $e) {
@@ -198,7 +198,7 @@ class pluginAccount extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->_getAccountByID($AccountID);
+        $result = $this->getAccountByID($AccountID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -206,11 +206,11 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _activateAccountByValidationStyring ($ValidationString) {
-        $account = $this->_getAccountByValidationString($ValidationString);
+        $account = $this->getAccountByValidationString($ValidationString);
         if ($account['Status'] === "TEMP" || glIsToolbox()) {
             $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
             $this->getCustomer()->fetch($config);
-            $account = $this->_getAccountByValidationString($ValidationString);
+            $account = $this->getAccountByValidationString($ValidationString);
             if ($account['Status'] === 'ACTIVE')
                 return $account;
         } elseif ($account['Status'] === 'REMOVED')
@@ -222,7 +222,7 @@ class pluginAccount extends objectPlugin {
         $config = configurationCustomerDataSource::jsapiDisableAccount($AccountID);
         $this->getCustomer()->fetch($config);
         // disable all related addresses
-        $account = $this->_getAccountByID($AccountID);
+        $account = $this->getAccountByID($AccountID);
         if ($account['Addresses'])
             foreach ($account['Addresses'] as $addr) {
                 $this->_disableAddressByID($addr['ID']);
@@ -230,7 +230,7 @@ class pluginAccount extends objectPlugin {
         return glWrap("ok", true);
     }
 
-    private function _getAddressByID ($AddressID) {
+    public function getAddressByID ($AddressID) {
         $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
         $address = $this->getCustomer()->fetch($config);
         return $address;
@@ -269,7 +269,7 @@ class pluginAccount extends objectPlugin {
 
                 $this->getCustomerDataBase()->commit();
 
-                $result = $this->_getAddressByID($AddressID);
+                $result = $this->getAddressByID($AddressID);
 
                 $success = true;
             } catch (Exception $e) {
@@ -322,7 +322,7 @@ class pluginAccount extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->_getAddressByID($AddressID);
+        $result = $this->getAddressByID($AddressID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -338,7 +338,7 @@ class pluginAccount extends objectPlugin {
     public function get_account_account (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $AccountID = intval($req->get['id']);
-            $resp = $this->_getAccountByID($AccountID);
+            $resp = $this->getAccountByID($AccountID);
             return;
         }
         $resp['error'] = 'MissedParameter_id';
@@ -398,7 +398,7 @@ class pluginAccount extends objectPlugin {
     public function post_account_address (&$resp, $req) {
         if (!empty($req->data['AccountID'])) {
             $AccountID = intval($req->data['AccountID']);
-            $account = $this->_getAccountByID($AccountID);
+            $account = $this->getAccountByID($AccountID);
             if (empty($account))
                 $resp['error'] = 'WrongAccount';
             elseif (count($account['Addresses']) >= 3)

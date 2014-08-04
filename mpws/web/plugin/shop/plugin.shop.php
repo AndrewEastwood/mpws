@@ -193,14 +193,15 @@ class pluginShop extends objectPlugin {
         // var_dump($order);
         // var_dump($reqData);
 
-        $accountID = $reqData['account']['ID'];
-        $formAccountID = $reqData['form']['shopCartProfileID'];
+        $accountToken = $reqData['account']['ValidationString'];
+        $formAccountToken = $reqData['form']['shopCartAccountValidationString'];
+        $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
         $pluginAccount = $this->withPlugin('account');
 
         // check if matches
-        if ($accountID !== $formAccountID) {
-            $errors[] = 'OrderCreateError';
+        if ($accountToken !== $formAccountToken) {
+            $errors[] = 'WrongTokensOccured';
             return;
         }
 
@@ -209,7 +210,10 @@ class pluginShop extends objectPlugin {
             $this->getCustomerDataBase()->beginTransaction();
 
             // create new profile
-            if (empty($accountID) && empty($formAccountID)) {
+            if (empty($accountToken) && empty($formAccountToken)) {
+
+                // reset address id becuase empty account is occured
+                $formAddressID = null;
 
                 // create new account
                 $new_password = librarySecure::generateStrongPassword(6);
@@ -228,8 +232,40 @@ class pluginShop extends objectPlugin {
                 if ($account['success'] === false)
                     throw new Exception("AccountCreateError", 1);
 
+            } else {
+
+                // get account by token string (ValidationString)
+                $account = $pluginAccount->getAccountByValidationString($formAccountToken);
+
+                if (empty($account))
+                    throw new Exception("WrongAccount", 1);
+                    
+
+                if ($account['Status'] !== "ACTIVE")
+                    throw new Exception("AccountIsBlocked", 1);
+
+                // need to validate account
+                // if account exits
+                // if account is active
+                if ($account["FirstName"] !== $reqData["form"]["shopCartAccountFirstName"] ||
+                    $account["LastName"] !== $reqData["form"]["shopCartAccountLastName"] ||
+                    $account["EMail"] !== $reqData["form"]["shopCartAccountEMail"] ||
+                    $account["Phone"] !== $reqData["form"]["shopCartAccountPhone"])
+                    throw new Exception("AccountDataMismatch", 1);
+
+                // at this point we have a valid account
+            }
+
+            $accountID = $account['ID'];
+
+            // create new address for account
+            if (empty($formAddressID) || empty($formAccountToken)) {
+
+                // TODO: if account is authorized and do not have maximum addresses
+                // we must link new address to the account otherwise create unlinked account
+
                 // create account address
-                $accountAddress = $pluginAccount->createAddress($account['ID'], array(
+                $accountAddress = $pluginAccount->createAddress(empty($formAccountToken) ? $accountID : null, array(
                     "Address" => $reqData['form']['shopCartUserAddress'],
                     "POBox" => $reqData['form']['shopCartUserPOBox'],
                     "Country" => $reqData['form']['shopCartUserCountry'],
@@ -243,20 +279,39 @@ class pluginShop extends objectPlugin {
                     throw new Exception("AccountAddressCreateError", 1);
 
             } else {
-                // need validate account
-                // if account exits
-                // if account is active
-                // create order for active account
-                $addressID = $['form']['shopCartProfileAddressID'];
-
-                // if account provides custom address
-                if (empty($addressID)) {
-
-                } else {
-                    // if () need validate address
-                    // if account has this address
+                // validate provided address id for account
+                // we must check it if the authenticated account has this address id
+                $addressOK = false;
+                foreach ($account['Addresses'] as $addressItem) {
+                    $addressOK = $addressItem[$formAddressID] && $addressItem['AccountID'] == $accountID;
                 }
+                if (!$addressID)
+                    throw new Exception("WrongAccountAddressID", 1);
             }
+
+            $addressID = $accountAddress['ID'];
+
+
+
+            throw new Exception("", 1);
+                
+
+            // create order for active account
+            // if account provides custom address
+            if (empty($addressID)) {
+
+
+            } else {
+                // if () need validate address
+                // if account has this address
+                
+            }
+
+
+
+            if (empty($accountID) || empty($addressID))
+                throw new Exception("UnableToLinkAccountOrAddress", 1);
+
 
             $configOrder = configurationShopDataSource::jsapiShopOrderCreate($dataOrder);
 

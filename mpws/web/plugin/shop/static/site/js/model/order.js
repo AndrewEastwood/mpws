@@ -98,9 +98,10 @@ define('plugin/shop/site/js/model/order', [
         },
         saveOrder: function (formData) {
             var self = this;
-            this.set('form', formData, {silent: true});
+            debugger;
+            return;
+            // this.set('form', formData, {silent: true});
             this.sync("create", this, {
-                parse: true,
                 success: function (response) {
                     // self.set(self.parse(response));
                     // if (!!promo) {
