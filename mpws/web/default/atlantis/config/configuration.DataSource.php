@@ -57,6 +57,15 @@ class configurationDefaultDataSource extends objectConfiguration {
         return $config;
     }
 
+    static function jsapiGetAccountByEMail ($email) {
+        $config = self::jsapiGetAccount();
+        $config["condition"] = array(
+            "EMail" => self::jsapiCreateDataSourceCondition($email)
+        );
+        return $config;
+    }
+
+
     static function jsapiGetAccountByValidationString ($ValidationString) {
         $config = self::jsapiGetAccount();
         $config["condition"] = array(
@@ -191,7 +200,7 @@ class configurationDefaultDataSource extends objectConfiguration {
     static function jsapiGetAccountAddresses ($AccountID) {
         $config = self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
-            "fields" => array("*"),
+            "fields" => array("ID", "AccountID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
             "condition" => array(
                 "AccountID" => self::jsapiCreateDataSourceCondition($AccountID)
             ),
@@ -222,7 +231,7 @@ class configurationDefaultDataSource extends objectConfiguration {
     static function jsapiGetAddress ($AddressID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
-            "fields" => array("*"),
+            "fields" => array("ID", "AccountID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
             "condition" => array(
                 "ID" => self::jsapiCreateDataSourceCondition($AddressID),
             ),

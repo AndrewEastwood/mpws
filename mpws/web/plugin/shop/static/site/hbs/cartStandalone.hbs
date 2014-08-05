@@ -3,13 +3,35 @@
     {{#if data.info.productCount }}
         <div class="wizard" data-initialize="wizard">
             <ul class="steps">
-                <li class="active" data-step="1"><span class="badge badge-info">1</span>Оформлення<span class="chevron"></span></li>
+                <li {{#unless data.success }}class="active"{{/unless}} data-step="1"><span class="badge badge-info">1</span>Оформлення<span class="chevron"></span></li>
                 <li data-step="2"><span class="badge">2</span>Перегляд<span class="chevron"></span></li>
-                <li data-step="3"><span class="badge">3</span>Підтвердження<span class="chevron"></span></li>
+                <li {{#if data.success }}class="active"{{/if}} data-step="3"><span class="badge">3</span>Підтвердження<span class="chevron"></span></li>
             </ul>
             <div class="step-content">
+                {{#unless data.success }}
                 <div class="step-pane active sample-pane" data-step="1">
                     <h4><i class="icon-shopping-cart"></i>{{lang.shopping_cart_form_title}}</h4>
+
+                    {{#mpwsIsNotEmpty data.errors }}
+                    <div id="msg" class="alert alert-danger">
+                        {{lang.profile_page_edit_error_commonError}}
+                        <ol class="errors">
+                        {{#each data.errors}}
+                            <li>
+                                <strong>
+                                    {{mpwsGetValueByKey ../lang @key "profile_page_edit_error_atField_"}}
+                                </strong>
+                                <ol>
+                                {{#each this}}
+                                    <li>{{mpwsGetValueByKey ../../lang this "profile_page_edit_error_"}}</li>
+                                {{/each}}
+                                </ol>
+                            </li>
+                        {{/each}}
+                        </ol>
+                    </div>
+                    {{/mpwsIsNotEmpty}}
+
                     <div class="well">
                         <a href="javascript://" data-action="plugin:shop:order:clear" data-id="*">
                             <i class="fa fa-trash-o"></i> {{lang.shopping_cart_link_removeAll}}
@@ -318,21 +340,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="step-pane sample-pane" data-step="3">
+                {{else}}
+                <div class="step-pane active sample-pane" data-step="3">
                     <h4>Дякуємо за Ваше замовлення!</h4>
                     <div class="panel panel-success">
                         <!-- List group -->
-                        <ul class="list-group">
-                            <li class="list-group-item">Найближчим часом в робочий час до Вас подзвонить наш працівник для уточнення замовлення.</li>
-                            <li class="list-group-item">Номер замовлення: <span class="label label-success">{{data.status.orderID}}</span></li>
-                            <li class="list-group-item">Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання:</li>
-                            <li class="list-group-item"><a href="{{app.location.origin}}/#shop/tracking/{{data.status.orderHash}}">{{app.location.origin}}/#shop/tracking/{{data.status.orderHash}}</a></li>
-                            {{#if data.account }}
-                            <li class="list-group-item">Також Ви можете переглянути всі Ваші замовлення в <a href="/#shop/profile/orders">особистому кабінеті</a>.</li>
-                            {{/if}}
-                        </ul>
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                Якщо в нас виникнуть додаткові запитання то ми неодмінно вам подзвонимо.
+                            </div>
+                            <div class="list-group-item">
+                                Номер замовлення: <span class="label label-success">{{data.ID}}</span>
+                            </div>
+                            <div class="list-group-item">
+                                Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання: <a href="{{app.location.origin}}/#shop/tracking/{{data.Hash}}">{{app.location.origin}}/#shop/tracking/{{data.Hash}}</a>
+                            </div>
+                            <div class="list-group-item">
+                                Також Ви можете переглянути всі Ваші замовлення в особистому кабінеті.
+                            </div>
+                            <div class="list-group-item">
+                                Якщо у Вас виникли будь-які запитання то неодмінно подзвоніть нам. Наші телефони в меню "Контакти"
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {{/unless}}
             </div>
         </div>
     {{else}}

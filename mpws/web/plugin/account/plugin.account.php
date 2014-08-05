@@ -36,7 +36,6 @@ class pluginAccount extends objectPlugin {
         if (!empty($account['Addresses']))
             foreach ($account['Addresses'] as &$item) {
                 $item['ID'] = intval($item['ID']);
-                $item['CustomerID'] = intval($item['CustomerID']);
                 $item['AccountID'] = intval($item['AccountID']);
             }
 
@@ -62,8 +61,13 @@ class pluginAccount extends objectPlugin {
         // var_dump('getAccountByID', $AccountID);
         if (!is_null($account))
             $account = $this->__attachAccountDetails($account);
-
         return $account;
+    }
+
+    public function isEmailAllowedToRegister ($email) {
+        $config = configurationCustomerDataSource::jsapiGetAccountByEMail($email);
+        $accountWithEmail = $this->getCustomer()->fetch($config);
+        return empty($accountWithEmail);
     }
 
     public function createAccount ($reqData) {
@@ -83,9 +87,12 @@ class pluginAccount extends objectPlugin {
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
-                $this->getCustomerDataBase()->beginTransaction();
-
                 $validatedValues = $validatedDataObj['values'];
+
+                if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
+                    throw new Exception("EmailAlreadyInUse", 1);
+
+                $this->getCustomerDataBase()->beginTransaction();
 
                 $data = array();
                 $data["CustomerID"] = $this->getCustomer()->getCustomerID();
@@ -136,7 +143,6 @@ class pluginAccount extends objectPlugin {
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'FirstName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('skipIfUnset', 'string'),
-            'EMail' => array('skipIfUnset', 'isEmail', 'min' => 5, 'max' => 100),
             'Phone' => array('skipIfUnset', 'isPhone'),
             'Password' => array('skipIfUnset', 'isPassword', 'min' => 8, 'max' => 30, 'inPairWith' => 'ConfirmPassword'),
             'ConfirmPassword' => array('skipIfUnset', 'equalTo' => 'Password', 'notEmpty'),
@@ -233,6 +239,9 @@ class pluginAccount extends objectPlugin {
     public function getAddressByID ($AddressID) {
         $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
         $address = $this->getCustomer()->fetch($config);
+        // adjust values
+        $address['ID'] = intval($address['ID']);
+        $address['AccountID'] = intval($address['AccountID']);
         return $address;
     }
 

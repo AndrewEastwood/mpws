@@ -155,7 +155,6 @@ define("default/js/lib/handlebars_helpers", [
          * @example: {{if_eq this compare=that}}
          */
         if_eq: function (left, right, options) {
-            debugger;
             if (left === right) {
                 return options.fn(this);
             }

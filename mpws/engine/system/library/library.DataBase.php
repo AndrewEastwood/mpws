@@ -5,6 +5,7 @@ class libraryDataBase {
     var $config;
     var $dbo;
     var $transactionIsActive = false;
+    var $disableTransactions = false;
 
     public function __construct($config = false) {
         $this->config = $config;
@@ -32,6 +33,8 @@ class libraryDataBase {
     }
 
     public function beginTransaction () {
+        if (!$this->isTransactionsAllowed())
+            return false;
         if ($this->transactionIsActive)
             return false;
         $this->getDBLink()->beginTransaction();
@@ -39,13 +42,29 @@ class libraryDataBase {
     }
 
     public function commit () {
+        if (!$this->isTransactionsAllowed())
+            return false;
         $this->getDBLink()->commit();
         $this->transactionIsActive = false;
     }
 
     public function rollback () {
+        if (!$this->isTransactionsAllowed())
+            return false;
         $this->getDBLink()->rollBack();
         $this->transactionIsActive = false;
+    }
+
+    public function disableTransactions () {
+        $this->disableTransactions = true;
+    }
+
+    public function enableTransactions () {
+        $this->disableTransactions = false;
+    }
+
+    public function isTransactionsAllowed () {
+        return !$this->disableTransactions;
     }
 
     public function getDataJSON($config) {

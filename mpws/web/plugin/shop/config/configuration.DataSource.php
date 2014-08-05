@@ -406,7 +406,7 @@ class configurationShopDataSource extends objectConfiguration {
             "condition" => array(
                 "OrderID" => self::jsapiCreateDataSourceCondition($orderID)
             ),
-            "fields" => array("ID", "ProductID", "ProductPrice", "Quantity"),
+            "fields" => array("ID", "ProductID", "ProductPrice", "Quantity", "IsPromo", "DateCreated"),
             "offset" => 0,
             "limit" => 0
         ));
@@ -418,7 +418,7 @@ class configurationShopDataSource extends objectConfiguration {
             "condition" => array(
                 "ID" => self::jsapiCreateDataSourceCondition($orderID)
             ),
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
             "limit" => 1,
             "options" => array(
                 "expandSingleRecord" => true

@@ -16,7 +16,7 @@ class objectPlugin implements IPlugin {
         return $this->customer->getDataBase();
     }
 
-    public function withPlugin ($pluginName) {
+    public function getPlugin ($pluginName) {
         // if ($this->getCustomer()->hasPlugin($pluginName)) {
             $anotherPlugin = $this->getCustomer()->getPlugin($pluginName);
             return $anotherPlugin;

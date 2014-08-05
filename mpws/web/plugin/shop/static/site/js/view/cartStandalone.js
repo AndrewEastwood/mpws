@@ -19,8 +19,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
     'default/js/lib/jquery.maskedinput'
 ], function (Sandbox, _, Backbone, Utils, Cache, tpl, lang) {
 
-    // $.cookie.json = true;
-
     var CartStandalone = Backbone.View.extend({
         className: 'row shop-cart-standalone',
         id: 'shop-cart-standalone-ID',
@@ -28,11 +26,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
         lang: lang,
         initialize: function() {
             this.listenTo(this.model, 'change', this.render);
-            // if (APP.hasPlugin('account')) {
-            //     var _accountModel = Cache.getObject('account:model');
-            //     if (_accountModel)
-            //         this.listenTo(_accountModel, 'change', this.render);
-            // }
         },
         updateProductQuantity: function (event) {
             var $input = this.$(event.target);
@@ -62,6 +55,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
             // debugger;
             var data = Utils.getHBSTemplateData(this);
             this.$el.off().empty().html(this.template(data));
+
+            // debugger;
+            if (this.model.isSaved())
+                self.clearUserInfo();
+
             // save user info
             var _userInfoChanged = _.debounce(function () {
                 Cache.setCookie("shopUser", self.collectUserInfo.call(self));
@@ -96,7 +94,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
             this.$('select').select2();
             this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
 
-
             var account = APP.hasPlugin('account') && this.model.has('account') && this.model.get('account').ID;
             // if we have saved order we clear user data
             // if we have account plugin
@@ -127,7 +124,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
             })
 
             this.$('.button-order-back').click(function(){
-                self.$('.wizard').wizard('back');
+                self.$('.wizard').wizard('previous');
+            });
+
+            this.$('.steps > li').click(function(){
+                return false;
             });
 
             this.$('.button-order-preview').click(function(){
@@ -152,18 +153,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
                     result[item.name] = item.value;
                 });
                 self.model.saveOrder(result);
-                // ({
-                //     post: true,
-                //     success: function (model, response) {
-                //         if (response) {
-                //             if (response.ok) {
-                //                 self.$('.wizard').wizard('next');
-                //             } else if (response.error) {
-                //                 // show error
-                //             }
-                //         }
-                //     }
-                // });
             });
 
             $form.bootstrapValidator({
