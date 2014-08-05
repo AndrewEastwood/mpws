@@ -391,7 +391,6 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
     static function jsapiShopOrderBoughtCreate ($data) {
-        $data["DateUpdated"] = self::getDate();
         $data["DateCreated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_boughts",

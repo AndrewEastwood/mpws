@@ -100,7 +100,7 @@ define('plugin/shop/site/js/model/order', [
             var self = this;
             // debugger;
             // return;
-            // this.set('form', formData, {silent: true});
+            this.set('form', formData, {silent: true});
             this.sync("create", this, {
                 success: function (response) {
                     // self.set(self.parse(response));

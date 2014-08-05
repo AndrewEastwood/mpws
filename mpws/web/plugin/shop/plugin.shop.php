@@ -204,21 +204,27 @@ class pluginShop extends objectPlugin {
         // var_dump($order);
         // var_dump($reqData);
 
-        $accountToken = $reqData['account']['ValidationString'];
-        $formAccountToken = $reqData['form']['shopCartAccountValidationString'];
-        $formAddressID = $reqData['form']['shopCartAccountAddressID'];
+        $accountToken =  "";
+        $formAccountToken = "";
+        $formAddressID = "";
+
+        if (!empty($reqData['account']))
+            $accountToken = $reqData['account']['ValidationString'];
+
+        if (!empty($reqData['form']['shopCartAccountValidationString']))
+            $formAccountToken = $reqData['form']['shopCartAccountValidationString'];
+
+        if (!empty($reqData['form']['shopCartAccountValidationString']))
+            $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
         $pluginAccount = $this->withPlugin('account');
 
-        // check if matches
-        if ($accountToken !== $formAccountToken) {
-            $errors[] = 'WrongTokensOccured';
-            return;
-        }
-
         try {
-
             $this->getCustomerDataBase()->beginTransaction();
+
+            // check if matches
+            if ($accountToken !== $formAccountToken)
+                throw new Exception("WrongTokensOccured", 1);
 
             // create new profile
             if (empty($accountToken) && empty($formAccountToken)) {
@@ -227,10 +233,10 @@ class pluginShop extends objectPlugin {
                 $formAddressID = null;
 
                 // create new account
-                $new_password = librarySecure::generateStrongPassword(6);
+                $new_password = librarySecure::generateStrongPassword();
+
                 $account = $pluginAccount->createAccount(array(
                     "FirstName" => $reqData['form']['shopCartUserName'],
-                    "LastName" => "",
                     "EMail" => $reqData['form']['shopCartUserEmail'],
                     "Phone" => $reqData['form']['shopCartUserPhone'],
                     "Password" => $new_password,

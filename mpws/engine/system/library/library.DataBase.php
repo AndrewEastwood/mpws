@@ -4,6 +4,7 @@ class libraryDataBase {
 
     var $config;
     var $dbo;
+    var $transactionIsActive = false;
 
     public function __construct($config = false) {
         $this->config = $config;
@@ -23,16 +24,28 @@ class libraryDataBase {
         return $this->getDBLink()->errorCode();
     }
 
+    public function getLastErrorInfo ($index = null) {
+        $arr = $this->getDBLink()->errorInfo();
+        if (is_null($index))
+            return $arr;
+        return $arr[$index];
+    }
+
     public function beginTransaction () {
+        if ($this->transactionIsActive)
+            return false;
         $this->getDBLink()->beginTransaction();
+        $this->transactionIsActive = true;
     }
 
     public function commit () {
         $this->getDBLink()->commit();
+        $this->transactionIsActive = false;
     }
 
     public function rollback () {
         $this->getDBLink()->rollBack();
+        $this->transactionIsActive = false;
     }
 
     public function getDataJSON($config) {

@@ -49,7 +49,7 @@ CREATE TABLE `mpws_accountAddresses` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_accountAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `mpws_accountAddresses` (
 
 LOCK TABLES `mpws_accountAddresses` WRITE;
 /*!40000 ALTER TABLE `mpws_accountAddresses` DISABLE KEYS */;
-INSERT INTO `mpws_accountAddresses` VALUES (45,1,139,'dsfsdfsdfs','fsdfsdf','fdgdgdg','dsadsad','REMOVED','2014-07-26 17:30:54','2014-08-01 23:01:10'),(46,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:31:06','2014-07-26 17:35:39'),(47,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:31:07','2014-07-26 17:35:39'),(48,1,139,'fdsfdsf','dsfdsfdsf','fdsfdsfds','fdsfdsf','REMOVED','2014-08-01 23:52:06','2014-08-01 23:52:16'),(49,1,139,'vsdfsd4334fdsf','35435435','vfgd54435','fdsfdsf','REMOVED','2014-08-02 00:00:30','2014-08-02 00:00:43'),(50,1,139,'fdsfdsfsdf','fdsfdsf','fdfsdf','fdsfdsf','REMOVED','2014-08-02 00:01:05','2014-08-02 00:04:36'),(51,1,139,'dsadsad','dsadsad','dsdsad','dasdsadas','REMOVED','2014-08-02 00:04:48','2014-08-02 00:08:47'),(52,1,139,'vcxvxc','vcxvcxv','vcxvxcv','vcxvcxv','REMOVED','2014-08-02 00:08:57','2014-08-02 00:23:20'),(53,1,139,'dsfsdf','fdsfds','fdsfdsf','fdsfdsf','REMOVED','2014-08-02 00:23:37','2014-08-02 00:24:00'),(54,1,139,'fgfdgfdg','gfdgfd','gfdgfdg','gfdgfdgdf','REMOVED','2014-08-02 00:24:18','2014-08-02 00:24:20'),(55,1,139,'xxxxx','zzzzz','ccccc','mmmmm','ACTIVE','2014-08-02 00:25:29','2014-08-02 00:25:29');
+INSERT INTO `mpws_accountAddresses` VALUES (45,1,139,'dsfsdfsdfs','fsdfsdf','fdgdgdg','dsadsad','REMOVED','2014-07-26 17:30:54','2014-08-01 23:01:10'),(46,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:31:06','2014-07-26 17:35:39'),(47,1,139,'ddd','fff','ddd','sss','REMOVED','2014-07-26 17:31:07','2014-07-26 17:35:39'),(48,1,139,'fdsfdsf','dsfdsfdsf','fdsfdsfds','fdsfdsf','REMOVED','2014-08-01 23:52:06','2014-08-01 23:52:16'),(49,1,139,'vsdfsd4334fdsf','35435435','vfgd54435','fdsfdsf','REMOVED','2014-08-02 00:00:30','2014-08-02 00:00:43'),(50,1,139,'fdsfdsfsdf','fdsfdsf','fdfsdf','fdsfdsf','REMOVED','2014-08-02 00:01:05','2014-08-02 00:04:36'),(51,1,139,'dsadsad','dsadsad','dsdsad','dasdsadas','REMOVED','2014-08-02 00:04:48','2014-08-02 00:08:47'),(52,1,139,'vcxvxc','vcxvcxv','vcxvxcv','vcxvcxv','REMOVED','2014-08-02 00:08:57','2014-08-02 00:23:20'),(53,1,139,'dsfsdf','fdsfds','fdsfdsf','fdsfdsf','REMOVED','2014-08-02 00:23:37','2014-08-02 00:24:00'),(54,1,139,'fgfdgfdg','gfdgfd','gfdgfdg','gfdgfdgdf','REMOVED','2014-08-02 00:24:18','2014-08-02 00:24:20'),(55,1,139,'xxxxx','zzzzz','ccccc','mmmmm','ACTIVE','2014-08-02 00:25:29','2014-08-02 00:25:29'),(56,1,141,'addr','797979','ua','lwo','ACTIVE','2014-08-05 10:32:13','2014-08-05 10:32:13'),(57,1,149,'addr','797979','ua','lwo','ACTIVE','2014-08-05 10:57:18','2014-08-05 10:57:18'),(58,1,150,'addr','797979','ua','lwo','ACTIVE','2014-08-05 11:00:52','2014-08-05 11:00:52');
 /*!40000 ALTER TABLE `mpws_accountAddresses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +89,7 @@ CREATE TABLE `mpws_accounts` (
   KEY `EMail` (`EMail`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `mpws_accounts` (
 
 LOCK TABLES `mpws_accounts` WRITE;
 /*!40000 ALTER TABLE `mpws_accounts` DISABLE KEYS */;
-INSERT INTO `mpws_accounts` VALUES (139,1,1,'dsfdsffdsfdsfs','dsadsad','demo@demo.com','(546) 565-65-65','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-08-04 23:33:53'),(140,1,0,'xxx','dddd','admin323@pb.com.ua','(787) 111-11-11','a5232aee5b6f36cbbd72d639e8429ba2','c3410e91b0da48f807a4f954e00f46d0','TEMP','2014-07-28 22:33:14','2014-07-28 22:33:14','2014-07-28 22:33:14');
+INSERT INTO `mpws_accounts` VALUES (139,1,1,'dsfdsffdsfdsfs','dsadsad','demo@demo.com','(546) 565-65-65','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE','2014-07-26 16:34:38','2014-07-26 16:34:38','2014-08-04 23:33:53'),(140,1,0,'xxx','dddd','admin323@pb.com.ua','(787) 111-11-11','a5232aee5b6f36cbbd72d639e8429ba2','c3410e91b0da48f807a4f954e00f46d0','TEMP','2014-07-28 22:33:14','2014-07-28 22:33:14','2014-07-28 22:33:14'),(141,1,0,'aaaaa','','b@b.com','(888) 888-88-88','31f0da87d498ad541571a8063cd360d7','b171bbebe00c66a1238949e36be30b3e','TEMP','2014-08-05 10:32:13','2014-08-05 10:32:13','2014-08-05 10:32:13'),(149,1,0,'aaaaa','','b@b11.com','(888) 888-88-88','d8515d78f6615f01971995be7a575d5f','ff5d086315205802d2cacf122a95e8f0','TEMP','2014-08-05 10:57:18','2014-08-05 10:57:18','2014-08-05 10:57:18'),(150,1,0,'aaaaa','','b@b1331.com','(888) 888-88-88','56c71dc038e377dd3fdc80ef57589095','f1ac67d12a5c14b888330a97e207e6ef','TEMP','2014-08-05 11:00:52','2014-08-05 11:00:52','2014-08-05 11:00:52');
 /*!40000 ALTER TABLE `mpws_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,7 +185,7 @@ CREATE TABLE `mpws_permissions` (
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`AccountID`),
   CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +194,7 @@ CREATE TABLE `mpws_permissions` (
 
 LOCK TABLES `mpws_permissions` WRITE;
 /*!40000 ALTER TABLE `mpws_permissions` DISABLE KEYS */;
-INSERT INTO `mpws_permissions` VALUES (72,139,1,1,1,1,0,'2014-07-26 17:22:45','2014-07-26 16:34:38'),(73,140,0,0,0,0,0,'2014-07-28 22:33:14','2014-07-28 22:33:14');
+INSERT INTO `mpws_permissions` VALUES (72,139,1,1,1,1,0,'2014-07-26 17:22:45','2014-07-26 16:34:38'),(73,140,0,0,0,0,0,'2014-07-28 22:33:14','2014-07-28 22:33:14'),(74,141,0,0,0,0,0,'2014-08-05 10:32:13','2014-08-05 10:32:13'),(75,149,0,0,0,0,0,'2014-08-05 10:57:18','2014-08-05 10:57:18'),(76,150,0,0,0,0,0,'2014-08-05 11:00:52','2014-08-05 11:00:52');
 /*!40000 ALTER TABLE `mpws_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,6 +275,7 @@ CREATE TABLE `shop_boughts` (
   `ProductPrice` decimal(10,2) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `IsPromo` tinyint(1) NOT NULL,
+  `DateCreated` datetime NOT NULL,
   UNIQUE KEY `ID` (`ID`),
   KEY `ProductID` (`ProductID`),
   KEY `OrderID` (`OrderID`),
@@ -282,7 +283,7 @@ CREATE TABLE `shop_boughts` (
   CONSTRAINT `shop_boughts_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_boughts_ibfk_6` FOREIGN KEY (`OrderID`) REFERENCES `shop_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_boughts_ibfk_7` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,6 +292,7 @@ CREATE TABLE `shop_boughts` (
 
 LOCK TABLES `shop_boughts` WRITE;
 /*!40000 ALTER TABLE `shop_boughts` DISABLE KEYS */;
+INSERT INTO `shop_boughts` VALUES (1,0,16,2,554.00,1,0,'2014-08-05 11:00:53');
 /*!40000 ALTER TABLE `shop_boughts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -566,7 +568,7 @@ CREATE TABLE `shop_orders` (
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
   `Status` enum('ACTIVE','SHOP_REVIEWING','SHOP_PACKAGE','LOGISTIC_DELIVERING','CUSTOMER_POSTPONE','CUSTOMER_CANCELED','CUSTOMER_CHANGED','SHOP_WAITING_CUSTOMER_APPROVAL','CUSTOMER_APPROVED','LOGISTIC_DELIVERED','SHOP_CLOSED','CUSTOMER_REOPENED','CUSTOMER_CLOSED','CUSTOMER_WAITNG_REFUND','SHOP_REFUNDED','REMOVED','NEW') COLLATE utf8_bin NOT NULL DEFAULT 'NEW',
   `Hash` varchar(100) COLLATE utf8_bin NOT NULL,
-  `PromoID` varchar(50) COLLATE utf8_bin NOT NULL,
+  `PromoID` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -578,7 +580,7 @@ CREATE TABLE `shop_orders` (
   CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_accountAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -587,6 +589,7 @@ CREATE TABLE `shop_orders` (
 
 LOCK TABLES `shop_orders` WRITE;
 /*!40000 ALTER TABLE `shop_orders` DISABLE KEYS */;
+INSERT INTO `shop_orders` VALUES (2,1,150,58,'company_gunsel','12','nope','NEW','9a6526c13c782efec386f9a2736fc6b1',NULL,'2014-08-05 11:00:52','2014-08-05 11:00:52');
 /*!40000 ALTER TABLE `shop_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1051,4 +1054,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-05  1:25:58
+-- Dump completed on 2014-08-05 11:02:23

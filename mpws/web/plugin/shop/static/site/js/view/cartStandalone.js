@@ -103,13 +103,13 @@ define("plugin/shop/site/js/view/cartStandalone", [
             // debugger;
             if (account) {
                 // account is signed in
-                this.$('#account-profile-addresses-ID').on('change', function (event) {
+                this.$('#account-addresses-ID').on('change', function (event) {
                     if ($(this).val())
                         self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', true).addClass('hide');
                     else
                         self.$('.form-group-address, .form-group-pobox, .form-group-country, .form-group-city').prop('disable', false).removeClass('hide');
                 });
-                self.$('#account-profile-addresses-ID').trigger('change');
+                self.$('#account-addresses-ID').trigger('change');
             }
 
             this.$('#shopping-cart-logistic-ID').on('change', function (event) {

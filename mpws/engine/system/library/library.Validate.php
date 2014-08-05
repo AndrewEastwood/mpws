@@ -17,7 +17,7 @@ class libraryValidate {
         $uppercase = preg_match('/[A-Z]/', $password);
         $lowercase = preg_match('/[a-z]/', $password);
         $number    = preg_match('/[0-9]/', $password);
-        $special   = preg_match('/[!@#$%*]/', $password);
+        $special   = preg_match('/[!@#$%&*?]/', $password);
 
         $errors = array();
 
@@ -78,8 +78,12 @@ class libraryValidate {
             // exists
             if (!isset($dataArray[$keyToValidate])) {
                 if (in_array("skipIfUnset", $rules)) {
-                    unset($values[$keyToValidate]);
-                    unset($errors[$keyToValidate]);
+                    if (isset($rules["defaultValueIfUnset"]))
+                        $values[$keyToValidate] = $rules["defaultValueIfUnset"];
+                    else {
+                        unset($values[$keyToValidate]);
+                        unset($errors[$keyToValidate]);
+                    }
                     continue;
                 } else {
                     $errors[$keyToValidate][] = $keyToValidate . "IsNotExists";

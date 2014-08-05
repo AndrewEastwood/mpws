@@ -73,7 +73,7 @@ class pluginAccount extends objectPlugin {
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
-            'LastName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
+            'LastName' => array('skipIfUnset', 'string', "defaultValueIfUnset" => ""),
             'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
             'Phone' => array('isPhone'),
             'Password' => array('isPassword', 'min' => 8, 'max' => 30),
@@ -135,7 +135,7 @@ class pluginAccount extends objectPlugin {
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'FirstName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
-            'LastName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
+            'LastName' => array('skipIfUnset', 'string'),
             'EMail' => array('skipIfUnset', 'isEmail', 'min' => 5, 'max' => 100),
             'Phone' => array('skipIfUnset', 'isPhone'),
             'Password' => array('skipIfUnset', 'isPassword', 'min' => 8, 'max' => 30, 'inPairWith' => 'ConfirmPassword'),

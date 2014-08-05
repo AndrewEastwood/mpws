@@ -27,7 +27,6 @@
                                 <div class="form form-small">
                                     <!-- Register form (not working)-->
                                     <form class="form-horizontal form-order-create">
-                                        <!-- Nav tabs -->
                                         {{#if data.account.ID }}
                                             <input type="hidden" name="shopCartAccountValidationString" value="{{data.account.ValidationString}}">
                                             <input type="hidden" name="shopCartAccountFirstName" value="{{data.account.FirstName}}">
@@ -63,7 +62,7 @@
                                                 <h4>{{lang.profile_page_overview_section_addresses_title}}</h4>
                                                 <label class="control-label col-md-3" for="name1">{{lang.shopping_cart_field_profile_address}}</label>
                                                 <div class="col-md-6">
-                                                    <select name="shopCartProfileAddressID" class="form-control" id="account-profile-addresses-ID">
+                                                    <select name="shopCartAccountAddressID" class="form-control" id="account-addresses-ID">
                                                         <option value="">{{lang.shopping_cart_field_profile_address_option_none}}</option>
                                                         {{#each data.account.Addresses }}
                                                         <option value="{{ID}}" data-address="{{Address}}" data-pobox="{{POBox}}" data-country="{{Country}}" data-city="{{City}}">
