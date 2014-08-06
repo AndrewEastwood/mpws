@@ -68,7 +68,7 @@ class pluginShop extends objectPlugin {
         $product['_promoIsApplied'] = false;
         if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount'])&& $promo['Discount'] > 0) {
             $product['_promoIsApplied'] = true;
-            $product['Price'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
+            $product['DiscountPrice'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
             $product['promo'] = $promo;
         }
 
@@ -961,8 +961,11 @@ class pluginShop extends objectPlugin {
             }
             $order['items'] = $items;
             $this->_setSessionOrder($order);
-        } elseif (!empty($req->data['promo'])) {
-            $this->_setSessionPromo($this->_getPromoByHash($req->data['promo'], true));
+        } elseif (isset($req->data['promo'])) {
+            if (empty($req->data['promo']))
+                $this->_resetSessionPromo();
+            else
+                $this->_setSessionPromo($this->_getPromoByHash($req->data['promo'], true));
             // if ($req->data['promo'] === false)
             //     $options['promo'] = array();
             // else
@@ -1057,11 +1060,20 @@ class pluginShop extends objectPlugin {
         );
         // calc order totals
         foreach ($productItems as &$product) {
+
+            $price = isset($product['DiscountPrice']) && !empty($order['promo']) ? $product['DiscountPrice'] : $product['Price'];
+            // if (!isset($product['CurrentPrice']))
+            //     $product['CurrentPrice'] = floatval($product['Price']);
+
             $product["_orderSubTotal"] = $product['Price'] * $product['_orderQuantity'];
             $product['IsPromo'] = intval($product['IsPromo']) === 1;
-            if ($product['IsPromo'] && isset($order['promo']) && !empty($order['promo']['Discount']))
-                $product['Price'] = (100 - intval($order['promo']['Discount'])) / 100 * $product['Price'];
-            $product["Total"] = $product['Price'] * $product['_orderQuantity'];
+
+            // if (isset($order['temp']) && isset($product['DiscountPrice'])) {
+            //     if ($product['IsPromo'] && isset($order['promo']) && !empty($order['promo']['Discount']))
+            //         $product['Price'] = (100 - intval($order['promo']['Discount'])) / 100 * $product['CurrentPrice'];
+            // }
+            $product['Price'] = floatval($price);
+            $product["Total"] = $price * $product['_orderQuantity'];
             // update order totals
             $info["total"] += floatval($product['Total']);
             $info["subTotal"] += floatval($product['_orderSubTotal']);

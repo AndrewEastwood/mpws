@@ -47,7 +47,7 @@
             {{/if}}
             </div>
             {{#if data._promoIsApplied }}
-            <div class="label label-success">{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></div>
+            <div class="label label-success">{{currency data.DiscountPrice}}<span class="value-suffix moneyType">грн.</span></div>
             <sub class="promocode">(Знижка: {{data.promo.Discount}}%)</sub>
             {{else}}
             <strong>{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></strong>
