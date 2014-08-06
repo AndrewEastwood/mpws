@@ -31,10 +31,10 @@ define("plugin/shop/site/js/view/listProductCompare", [
 
             // transform collection to object with array values
             var productFeatuesTable = {};
-            if (_productFeatures.length)
-                _(_productFeatures[0]).each(function(v, k){
-                    productFeatuesTable[k] = _(_productFeatures).pluck(k);
-                });
+            debugger;
+            _(_productFeatures).each(function(v, k){
+                productFeatuesTable[k] = _(_productFeatures).pluck(k);
+            });
             // debugger;
 
             tplData.productFeatues = productFeatuesTable;
