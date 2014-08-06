@@ -93,8 +93,7 @@
             </tr>
             {{#each productFeatues }}
             <tr>
-                {{debug}}
-                <td><strong>{{ this }}</strong></td>
+                <td><strong>{{ @key }}</strong></td>
                 {{#each this }}
                 <td>
                     {{#if this }}
