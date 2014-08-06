@@ -533,6 +533,7 @@ class configurationShopDataSource extends objectConfiguration {
             "condition" => array(
                 "ID" => self::jsapiCreateDataSourceCondition($promoID)
             ),
+            "fields" => array("ID", "Code", "DateStart", "DateExpire", "Discount", "DateCreated"),
             "options" => array(
                 "expandSingleRecord" => true
             )

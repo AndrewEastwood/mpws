@@ -712,12 +712,18 @@ class pluginShop extends objectPlugin {
 
     private function _getPromoByID ($id) {
         $config = configurationShopDataSource::jsapiShopGetPromoByID($id);
-        return $this->getCustomer()->fetch($config);
+        $data = $this->getCustomer()->fetch($config);
+        $data['ID'] = intval($data['ID']);
+        $data['Discount'] = intval($data['Discount']);
+        return $data;
     }
 
     private function _getPromoByHash ($hash, $activeOnly = false) {
         $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash, $activeOnly);
-        return $this->getCustomer()->fetch($config);
+        $data = $this->getCustomer()->fetch($config);
+        $data['ID'] = intval($data['ID']);
+        $data['Discount'] = intval($data['Discount']);
+        return $data;
     }
 
     // session data
