@@ -474,6 +474,21 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
+
+    static function jsapiDisableOrder ($OrderID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_orders",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($OrderID)
+            ),
+            "data" => array(
+                "Status" => 'REMOVED',
+                "DateUpdated" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
     // <<<< Shop order
 
     static function jsapiShopStat_OrdersOverview () {

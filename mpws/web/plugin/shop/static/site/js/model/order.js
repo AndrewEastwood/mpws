@@ -40,19 +40,6 @@ define('plugin/shop/site/js/model/order', [
                     return target;
                 }, {});
             return data;
-            // return {
-            //     account: data.account || {},
-            //     info: data.info || {},
-            //     promo: data.promo || {},
-            //     saved: data.Hash && data.ID !== "temp",
-            //     items: _(data.items).reduce(function(target, productData){
-            //         target[productData.ID] = ShopUtils.adjustProductItem(productData);
-            //         return target;
-            //     }, {})
-            // };
-            // debugger;
-            // this.shoppingCart.reset(_(data.items).map(function(item){ return item; }), {parse: true});
-            // return ShopUtils.adjustProductItem(data);
         },
         getProductCount: function () {
             return Object.getOwnPropertyNames(this.get('items') || {}).length;
@@ -84,12 +71,18 @@ define('plugin/shop/site/js/model/order', [
                 this.setProductQuantity(event, event.id, 1);
         },
         productRemove: function (event) {
-            var product = this.getProductByID(event.id);
-            if (product)
-                this.setProductQuantity(event, event.id, 0);
+            BootstrapDialog.confirm('Видалити цей товар?', function (result) {
+                if (result) {
+                    var product = this.getProductByID(event.id);
+                    if (product)
+                        this.setProductQuantity(event, event.id, 0);
+                }
+            });
         },
         productRemoveAll: function (event) {
-            this.setProductQuantity(event, event.id, 0);
+            BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
+                this.setProductQuantity(event, event.id, 0);
+            });
         },
         applyPromo: function (promo) {
             var self = this;
@@ -101,7 +94,7 @@ define('plugin/shop/site/js/model/order', [
                 success: function (response) {
                     self.set(self.parse(response));
                     if (!!promo) {
-                        if (self.get('promo').code)
+                        if (self.get('promo').Code)
                             BSAlert.success(lang.list_cart_alert_promoAdded);
                         else
                             BSAlert.danger(lang.list_cart_alert_promoRejected);
@@ -121,14 +114,7 @@ define('plugin/shop/site/js/model/order', [
                 success: function (response) {
                     // debugger;
                     self.set(self.parse(response));
-                    // if (!!promo) {
-                    //     if (self.get('promo').code)
-                    //         BSAlert.success(lang.list_cart_alert_promoAdded);
-                    //     else
-                    //         BSAlert.danger(lang.list_cart_alert_promoRejected);
-                    // }
-                    // else
-                    //     BSAlert.danger(lang.list_cart_alert_promoRemoved);
+                    self.trigger('change');
                     Sandbox.eventNotify('plugin:shop:order:changed');
                 }
             });

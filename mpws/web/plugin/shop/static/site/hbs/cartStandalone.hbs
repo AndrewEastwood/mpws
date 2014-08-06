@@ -14,19 +14,12 @@
 
                     {{#mpwsIsNotEmpty data.errors }}
                     <div id="msg" class="alert alert-danger">
-                        {{lang.profile_page_edit_error_commonError}}
+                        {{lang.shopping_cart_error_title}}
                         <ol class="errors">
                         {{#each data.errors}}
-                            <li>
-                                <strong>
-                                    {{mpwsGetValueByKey ../lang @key "profile_page_edit_error_atField_"}}
-                                </strong>
-                                <ol>
-                                {{#each this}}
-                                    <li>{{mpwsGetValueByKey ../../lang this "profile_page_edit_error_"}}</li>
-                                {{/each}}
-                                </ol>
-                            </li>
+                            {{#each this}}
+                                <li>{{mpwsGetValueByKey ../../lang this "shopping_cart_error_"}}</li>
+                            {{/each}}
                         {{/each}}
                         </ol>
                     </div>

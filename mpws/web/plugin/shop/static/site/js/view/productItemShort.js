@@ -16,14 +16,14 @@ define("plugin/shop/site/js/view/productItemShort", [
             _.bindAll(this, 'refresh');
             Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
-            Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
+            Sandbox.eventSubscribe('plugin:shop:order:product:changed', this.refresh);
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
         },
-        refresh: function (data) {
-            // debugger;
+        refresh: function (productID) {
+            debugger;
             if (this.model) {
-                if (data && data.id && (data.id === this.model.id || data.id === "*")) {
+                if (productID && (productID === this.model.id || productID === "*")) {
                     this.model.fetch();
                 }
             }
