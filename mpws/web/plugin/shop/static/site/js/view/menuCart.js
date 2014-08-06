@@ -17,7 +17,7 @@ define("plugin/shop/site/js/view/menuCart", [
         },
         render: function () {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            if (this.model.getProductCount())
+            if (this.model.getProductCount() && !this.model.isSaved())
                 this.$('.counter').text(this.model.get('info').productCount);
             else
                 this.$('.counter').empty();

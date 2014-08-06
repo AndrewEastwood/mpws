@@ -73,6 +73,7 @@ class pluginShop extends objectPlugin {
         }
 
         $product['SellingPrice'] = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
+        $product['SellingPrice'] = floatval($product['SellingPrice']);
 
         // is available
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
@@ -293,6 +294,7 @@ class pluginShop extends objectPlugin {
             $order = $this->_getOrderTemp();
             // $sessionOrderProducts = $this->_getSessionOrderProducts();
 
+            // var_dump($this->_getSessionOrderProducts());
             if (empty($order['items']))
                  throw new Exception("NoProudctsToPurchase", 1);
 
@@ -344,17 +346,18 @@ class pluginShop extends objectPlugin {
             $this->getCustomerDataBase()->commit();
 
             $success = true;
-
-            // reset temp order
-            $this->_resetOrderTemp();
-
-            // get created order
-            $result = $this->_getOrderByID($orderID);
-
         } catch (Exception $e) {
             $this->getCustomerDataBase()->enableTransactions();
             $this->getCustomerDataBase()->rollBack();
             $errors['Order'][] = $e->getMessage();
+            $success = false;
+        }
+
+        if ($success) {
+            // reset temp order
+            $this->_resetOrderTemp();
+            // get created order
+            $result = $this->_getOrderByID($orderID);
         }
 
         $result['errors'] = $errors;
@@ -1043,11 +1046,11 @@ class pluginShop extends objectPlugin {
                     $product["CurrentPrice"] = $product['Price'];
                     $product["CurrentSellingPrice"] = $product['SellingPrice'];
                     // restore product info at purchase moment
-                    $product["Price"] = $soldItem['Price'];
-                    $product["SellingPrice"] = $soldItem['SellingPrice'];
-                    $product["IsPromo"] = $soldItem['IsPromo'];
+                    $product["Price"] = floatval($soldItem['Price']);
+                    $product["SellingPrice"] = floatval($soldItem['SellingPrice']);
+                    $product["IsPromo"] = intval($soldItem['IsPromo']) === 1;
                     // get purchased product quantity
-                    $product["_orderQuantity"] = $soldItem['Quantity'];
+                    $product["_orderQuantity"] = floatval($soldItem['Quantity']);
                     // actual price (with discount if promo is active)
                     // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
                     // set product gross and net totals
