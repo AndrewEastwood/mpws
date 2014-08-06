@@ -4,9 +4,10 @@ define('plugin/shop/site/js/model/order', [
     'default/js/lib/underscore',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-alert',
+    'default/js/lib/bootstrap-dialog',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
-], function (Sandbox, Backbone, _, ShopUtils, BSAlert, lang) {
+], function (Sandbox, Backbone, _, ShopUtils, BSAlert, BootstrapDialog, lang) {
 
     // debugger;
     var model = Backbone.Model.extend({
@@ -71,17 +72,20 @@ define('plugin/shop/site/js/model/order', [
                 this.setProductQuantity(event, event.id, 1);
         },
         productRemove: function (event) {
+            var self = this;
             BootstrapDialog.confirm('Видалити цей товар?', function (result) {
                 if (result) {
-                    var product = this.getProductByID(event.id);
+                    var product = self.getProductByID(event.id);
                     if (product)
-                        this.setProductQuantity(event, event.id, 0);
+                        self.setProductQuantity(event, event.id, 0);
                 }
             });
         },
         productRemoveAll: function (event) {
+            var self = this;
             BootstrapDialog.confirm('Видалити всі товари з кошика?', function (result) {
-                this.setProductQuantity(event, event.id, 0);
+                if (result)
+                    self.setProductQuantity(event, event.id, 0);
             });
         },
         applyPromo: function (promo) {
