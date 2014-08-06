@@ -72,6 +72,8 @@ class pluginShop extends objectPlugin {
             $product['promo'] = $promo;
         }
 
+        $product['SellingPrice'] = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
+
         // is available
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
 
@@ -166,18 +168,18 @@ class pluginShop extends objectPlugin {
         return $order;
     }
 
-    private function _getOrderTemp ($options = array()) {
-        $order = $this->_getSessionOrder();
+    private function _getOrderTemp () {
+        // $order = $this->_getSessionOrderProducts();
         $order['temp'] = true;
         $this->__attachOrderDetails($order);
         // save order in session
-        $this->_setSessionOrder($order);
+        // $this->_setSessionOrderProducts($order);
         return $order;
     }
 
     private function _resetOrderTemp () {
         $this->_resetSessionPromo();
-        $this->_resetSessionOrder();
+        $this->_resetSessionOrderProducts();
     }
 
     private function _createOrder ($reqData) {
@@ -288,7 +290,8 @@ class pluginShop extends objectPlugin {
 
             $addressID = $accountAddress['ID'];
 
-            $order = $this->_getOrderTemp(array("useBackup" => true));
+            $order = $this->_getOrderTemp();
+            // $sessionOrderProducts = $this->_getSessionOrderProducts();
 
             if (empty($order['items']))
                  throw new Exception("NoProudctsToPurchase", 1);
@@ -322,7 +325,8 @@ class pluginShop extends objectPlugin {
                 $dataBought["CustomerID"] = $this->getCustomer()->getCustomerID();
                 $dataBought["ProductID"] = $productItem["ID"];
                 $dataBought["OrderID"] = $orderID;
-                $dataBought["ProductPrice"] = $productItem["Price"];
+                $dataBought["Price"] = $productItem["Price"];
+                $dataBought["SellingPrice"] = $productItem["SellingPrice"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
                 $configBought = configurationShopDataSource::jsapiShopOrderBoughtCreate($dataBought);
@@ -728,17 +732,17 @@ class pluginShop extends objectPlugin {
         $_SESSION[$this->_listKey_Promo] = null;
     }
 
-    private function _setSessionOrder ($order) {
+    private function _setSessionOrderProducts ($order) {
         $_SESSION[$this->_listKey_Cart] = $order;
     }
 
-    private function _getSessionOrder () {
+    private function _getSessionOrderProducts () {
         if (!isset($_SESSION[$this->_listKey_Cart]))
             $_SESSION[$this->_listKey_Cart] = array();
         return $_SESSION[$this->_listKey_Cart];
     }
 
-    private function _resetSessionOrder () {
+    private function _resetSessionOrderProducts () {
         $_SESSION[$this->_listKey_Cart] = array();
     }
 
@@ -926,7 +930,7 @@ class pluginShop extends objectPlugin {
             $resp = $this->_getOrderByHash($req->get['hash']);
             return;
         } else {
-            $resp = $this->_getOrderTemp(array("useBackup" => true));
+            $resp = $this->_getOrderTemp();
         }
         // $resp['error'] = '"id" or "hash" is missed in the request';
     }
@@ -942,25 +946,27 @@ class pluginShop extends objectPlugin {
         // var_dump($_SERVER['REQUEST_METHOD']);
         // var_dump($_POST);
         // var_dump(file_get_contents('php://input'));
-        $options = array();
+        // $options = array();
         if (isset($req->data['productID'])) {
-            $order = $this->_getSessionOrder();
-            $items = empty($order['items']) ? array() : $order['items'];
+            $sessionOrderProducts = $this->_getSessionOrderProducts();
+            // $items = empty($order['items']) ? array() : $order['items'];
             $productID = $req->data['productID'];
             $newQuantity = floatval($req->data['_orderQuantity']);
-            if (isset($items[$productID])) {
-                $items[$productID]['_orderQuantity'] = $newQuantity;
-                if ($items[$productID]['_orderQuantity'] <= 0)
-                    unset($items[$productID]);
+            if (isset($sessionOrderProducts[$productID])) {
+                $sessionOrderProducts[$productID]['_orderQuantity'] = $newQuantity;
+                if ($sessionOrderProducts[$productID]['_orderQuantity'] <= 0)
+                    unset($sessionOrderProducts[$productID]);
+                $this->_setSessionOrderProducts($sessionOrderProducts);
             } elseif ($newQuantity > 0) {
-                $product = $this->_getProductByID($productID);
+                // $product = $this->_getProductByID($productID);
+                $product['ID'] = $productID;
                 $product['_orderQuantity'] = $newQuantity;
-                $items[$productID] = $product;
+                $sessionOrderProducts[$productID] = $product;
+                $this->_setSessionOrderProducts($sessionOrderProducts);
             } elseif ($req->data['productID'] === "*") {
-                $items = array();
+                $this->_resetSessionOrderProducts();
             }
-            $order['items'] = $items;
-            $this->_setSessionOrder($order);
+            // $order['items'] = $items;
         } elseif (isset($req->data['promo'])) {
             if (empty($req->data['promo']))
                 $this->_resetSessionPromo();
@@ -974,7 +980,8 @@ class pluginShop extends objectPlugin {
         // else {
         //     $options['useBackup'] = true;
         // }
-        $resp = $this->_getOrderTemp($options);
+        // var_dump($sessionOrder);
+        $resp = $this->_getOrderTemp();
     }
 
     // removes particular product or clears whole shopping cart
@@ -995,8 +1002,9 @@ class pluginShop extends objectPlugin {
     }
 
     private function __productCountInCart ($id) {
-        $order = $this->_getOrderTemp();
-        return isset($order['items'][$id]) ? $order['items'][$id]['_orderQuantity'] : 0;
+        // $order = $this->_getOrderTemp();
+        $sessionOrderProducts = $this->_getSessionOrderProducts();
+        return isset($sessionOrderProducts[$id]) ? $sessionOrderProducts[$id]['_orderQuantity'] : 0;
     }
 
     private function __attachOrderDetails (&$order) {
@@ -1004,7 +1012,7 @@ class pluginShop extends objectPlugin {
         if (empty($order))
             return;
 
-        $orderID = isset($order['ID']) ? $order['ID']: null;
+        $orderID = isset($order['ID']) ? $order['ID'] : null;
         $order['promo'] = null;
         $order['account'] = null;
         $order['address'] = null;
@@ -1028,26 +1036,54 @@ class pluginShop extends objectPlugin {
             $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
-                foreach ($boughts as $bkey => $soldItem) {
+                foreach ($boughts as $soldItem) {
                     $product = $this->_getProductByID($soldItem['ProductID']);
                     // save current product info
                     $product["CurrentIsPromo"] = $product['IsPromo'];
                     $product["CurrentPrice"] = $product['Price'];
+                    $product["CurrentSellingPrice"] = $product['SellingPrice'];
                     // restore product info at purchase moment
-                    $product["Price"] = $soldItem['ProductPrice'];
+                    $product["Price"] = $soldItem['Price'];
+                    $product["SellingPrice"] = $soldItem['SellingPrice'];
                     $product["IsPromo"] = $soldItem['IsPromo'];
                     // get purchased product quantity
                     $product["_orderQuantity"] = $soldItem['Quantity'];
+                    // actual price (with discount if promo is active)
+                    // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
+                    // set product gross and net totals
+                    $product["_orderProductSubTotal"] = $product['Price'] * $product['_orderQuantity'];
+                    $product["_orderProductTotal"] = $product['SellingPrice'] * $product['_orderQuantity'];
                     // add into list
                     $productItems[$product['ID']] = $product;
                 }
         } else {
-            $productItems = !empty($order['items']) ? $order['items'] : array();
-            // re-validate promo
+            // $productItems = !empty($order['items']) ? $order['items'] : array();
             $sessionPromo = $this->_getSessionPromo();
-            if (!empty($sessionPromo) && isset($sessionPromo['Code']))
+            $sessionOrderProducts = $this->_getSessionOrderProducts();
+            // re-validate promo
+            if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
                 $sessionPromo = $this->_getPromoByHash($sessionPromo['Code'], true);
-            $order['promo'] = $sessionPromo;
+                if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
+                    $this->_setSessionPromo($sessionPromo);
+                    $order['promo'] = $sessionPromo;
+                } else {
+                    $this->_resetSessionPromo();
+                    $order['promo'] = null;
+                }
+            }
+            // get prodcut items
+            foreach ($sessionOrderProducts as $purchasingProduct) {
+                $product = $this->_getProductByID($purchasingProduct['ID']);
+                // actual price (with discount if promo is active)
+                // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
+                // set product gross and net totals
+                // get purchased product quantity
+                $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
+                $product["_orderProductSubTotal"] = $product['Price'] * $purchasingProduct['_orderQuantity'];
+                $product["_orderProductTotal"] = $product['SellingPrice'] * $purchasingProduct['_orderQuantity'];
+                // add into list
+                $productItems[$product['ID']] = $product;
+            }
         }
         // append info
         $info = array(
@@ -1059,24 +1095,20 @@ class pluginShop extends objectPlugin {
             "allProductsWithPromo" => true
         );
         // calc order totals
-        foreach ($productItems as &$product) {
-
-            $price = isset($product['DiscountPrice']) && !empty($order['promo']) ? $product['DiscountPrice'] : $product['Price'];
-            // if (!isset($product['CurrentPrice']))
-            //     $product['CurrentPrice'] = floatval($product['Price']);
-
-            $product["_orderSubTotal"] = $product['Price'] * $product['_orderQuantity'];
-            $product['IsPromo'] = intval($product['IsPromo']) === 1;
-
-            // if (isset($order['temp']) && isset($product['DiscountPrice'])) {
-            //     if ($product['IsPromo'] && isset($order['promo']) && !empty($order['promo']['Discount']))
-            //         $product['Price'] = (100 - intval($order['promo']['Discount'])) / 100 * $product['CurrentPrice'];
-            // }
-            $product['Price'] = floatval($price);
-            $product["Total"] = $price * $product['_orderQuantity'];
+        foreach ($productItems as $product) {
+            // $product = $this->_getProductByID($soldItem['ProductID']);
+            // // if (!isset($product['CurrentPrice']))
+            // //     $product['CurrentPrice'] = floatval($product['Price']);
+            // $product["_orderProductSubTotal"] = $product['Price'] * $product['_orderQuantity'];
+            // // if (isset($order['temp']) && isset($product['DiscountPrice'])) {
+            // //     if ($product['IsPromo'] && isset($order['promo']) && !empty($order['promo']['Discount']))
+            // //         $product['Price'] = (100 - intval($order['promo']['Discount'])) / 100 * $product['CurrentPrice'];
+            // // }
+            // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
+            // $product["_orderProductTotal"] = $price * $product['_orderQuantity'];
             // update order totals
-            $info["total"] += floatval($product['Total']);
-            $info["subTotal"] += floatval($product['_orderSubTotal']);
+            $info["total"] += floatval($product['_orderProductTotal']);
+            $info["subTotal"] += floatval($product['_orderProductSubTotal']);
             $info["productCount"] += intval($product['_orderQuantity']);
             $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'];
         }

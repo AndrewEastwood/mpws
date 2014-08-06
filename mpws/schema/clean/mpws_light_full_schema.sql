@@ -203,7 +203,8 @@ CREATE TABLE `shop_boughts` (
   `CustomerID` int(11) NOT NULL,
   `ProductID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
-  `ProductPrice` decimal(10,2) NOT NULL,
+  `Price` decimal(10,2) NOT NULL,
+  `SellingPrice` decimal(10,0) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `IsPromo` tinyint(1) NOT NULL,
   `DateCreated` datetime NOT NULL,
@@ -810,4 +811,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-06 10:06:13
+-- Dump completed on 2014-08-07  1:03:17
