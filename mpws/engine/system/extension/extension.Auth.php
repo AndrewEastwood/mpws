@@ -2,6 +2,8 @@
 
 class extensionAuth extends objectExtension {
 
+    public $Permissions = array();
+
     public function getAuthID ($refresh = true) {
         if (!isset($_SESSION['AccountID']))
             $_SESSION['AccountID'] = null;
@@ -74,6 +76,8 @@ class extensionAuth extends objectExtension {
             // }
 
             $_SESSION['AccountID'] = $AccountID;
+
+            // set online state for account
             $configOnline = configurationCustomerDataSource::jsapiSetOnlineAccount($AccountID);
             $this->getCustomer()->fetch($configOnline);
         }

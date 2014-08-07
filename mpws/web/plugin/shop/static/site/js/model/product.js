@@ -21,20 +21,35 @@ define('plugin/shop/site/js/model/product', [
             return ShopUtils.adjustProductItem(data);
         },
         getFeatures: function (compatibilityList) {
-            var _features = this.get('Features');
+            var _features = {};
+
             var k = null;
             // debugger;
             if (compatibilityList instanceof Backbone.Collection) {
                 compatibilityList.each(function(model){
                     var f = model.getFeatures();
                     for (k in f)
-                        if (!_features[k])
-                            _features[k] = null;
+                        if (!_features[k]) {
+                            _features[k] = f[k];
+                            _features[k].active = false;
+                        }
                 })
             } else if (_.isObject(compatibilityList))
                 for (k in compatibilityList)
-                    if (!_features[k])
-                        _features[k] = null;
+                    if (!_features[k]) {
+                        _features[k] = f[k];
+                        _features[k].active = false;
+                    }
+
+            // transform features
+            _(this.get('Features')).each(function(fName, fKey){
+                _features[fName] = {
+                    key: fKey,
+                    name: fName,
+                    active: true
+                }
+            });
+
             return _features;
         }
     });

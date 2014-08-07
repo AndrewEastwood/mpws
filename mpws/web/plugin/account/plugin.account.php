@@ -267,7 +267,7 @@ class pluginAccount extends objectPlugin {
                     throw new Exception("WrongAccount", 1);
                 elseif (count($account['Addresses']) >= 3) {
                     if (!$allowStandalone)
-                        throw new Exception("AddressLimitExcided", 1);
+                        throw new Exception("AddressLimitExceeded", 1);
                     else
                         $AccountID = null;
                 }

@@ -10,7 +10,7 @@ class configurationDefaultDataSource extends objectConfiguration {
             "CanCreate" => 0,
             "CanEdit" => 0,
             "CanView" => 0,
-            "CanAddUsers" => 0
+            "CanViewOther" => 0
         );
     }
 

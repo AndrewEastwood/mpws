@@ -62,6 +62,7 @@ define("plugin/shop/site/nls/ua_uk/translation", [
         list_compare_alert_add: "Товар доданий в список порівнянь",
         list_compare_alert_remove: "Товар видалений з списоку порівнянь",
         list_compare_alert_clear: "Список порівнянь очищено",
+        list_compare_alert_ProductLimitExceeded: "Перевищено к-сть товарів для порівняння",
         list_cart_link_clear: "Видалити всі товари з кошику",
         list_cart_empty: "Ваш кошик порожній",
         list_cart_alert_add: "Товар доданий в кошик",

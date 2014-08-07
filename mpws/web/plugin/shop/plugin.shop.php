@@ -165,6 +165,10 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
         $order = $this->getCustomer()->fetch($config);
         $order['ID'] = intval($order['ID']);
+
+        // check permissions
+        
+
         $this->__attachOrderDetails($order);
         return $order;
     }
@@ -837,7 +841,8 @@ class pluginShop extends objectPlugin {
                 $resp['items'][$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $resp['items'];
             }
-        }
+        } else
+            $resp['error'] = "MissedParameter_productID";
         // $resp['req'] = $req;
     }
 
@@ -867,6 +872,10 @@ class pluginShop extends objectPlugin {
 
     public function post_shop_compare (&$resp, $req) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        if (count($resp['items']) >= 10) {
+            $resp['error'] = "ProductLimitExceeded";
+            return;
+        }
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($resp['items'][$productID])) {

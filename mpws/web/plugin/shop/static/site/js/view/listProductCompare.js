@@ -32,12 +32,12 @@ define("plugin/shop/site/js/view/listProductCompare", [
             // transform collection to object with array values
             var productFeatuesTable = {};
             _(_productFeatures[0]).each(function(v, k){
-                productFeatuesTable[v] = _(_productFeatures).pluck(k);
+                productFeatuesTable[k] = _(_productFeatures).pluck(k);
             });
-            debugger;
 
             tplData.productFeatues = productFeatuesTable;
             this.$el.html(this.template(tplData));
+
             return this;
         }
     });

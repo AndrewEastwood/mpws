@@ -46,8 +46,12 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                     url: this.url(),
                     success: function (model, resp) {
                         self.reset(self.parse(resp));
+                        if (resp.error) {
+                            BSAlert.danger(lang['list_compare_alert_' + resp.error]);
+                        } else {
+                            BSAlert.success(lang.list_compare_alert_add);
+                        }
                         Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
-                        BSAlert.success(lang.list_compare_alert_add);
                     }
                 });
             }
