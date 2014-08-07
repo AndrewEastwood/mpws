@@ -435,6 +435,36 @@ LOCK TABLES `shop_customerProductRequests` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `shop_deliveryAgencies`
+--
+
+DROP TABLE IF EXISTS `shop_deliveryAgencies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop_deliveryAgencies` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `WebSite` varchar(300) NOT NULL,
+  `State` enum('ACTIVE','REMOVED','','') NOT NULL DEFAULT 'ACTIVE',
+  `DateCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CustomerID` (`CustomerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_deliveryAgencies`
+--
+
+LOCK TABLES `shop_deliveryAgencies` WRITE;
+/*!40000 ALTER TABLE `shop_deliveryAgencies` DISABLE KEYS */;
+INSERT INTO `shop_deliveryAgencies` VALUES (1,2,'wwww','wwwwee','ACTIVE','2014-08-07 22:47:24','2014-08-08 00:00:00');
+/*!40000 ALTER TABLE `shop_deliveryAgencies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `shop_favlists`
 --
 
@@ -1056,4 +1086,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-08  1:33:26
+-- Dump completed on 2014-08-08  1:53:17
