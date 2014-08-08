@@ -5,13 +5,14 @@ class configurationDefaultDataSource extends objectConfiguration {
     static $Table_SystemAccounts = "mpws_accounts";
 
     static function jsapiGetNewPermission () {
-        return array(
+        $perms = array(
             "IsAdmin" => 0,
             "CanCreate" => 0,
             "CanEdit" => 0,
-            "CanView" => 0,
-            "CanViewOther" => 0
+            "CanViewReports" => 0,
+            "CanAddUsers" => 0
         );
+        return $perms;
     }
 
     static function jsapiGetCustomer ($ExternalKey = MPWS_CUSTOMER) {

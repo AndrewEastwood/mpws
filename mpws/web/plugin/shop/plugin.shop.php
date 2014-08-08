@@ -89,7 +89,6 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by date added
     // -----------------------------------------------
-
     private function _getProducts_TopNonPopular () {
         // get non-popuplar 50 products
         $config = configurationShopDataSource::jsapiShopStat_NonPopularProducts();
@@ -153,9 +152,77 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
+    private function _createProduct ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+            return glWrap("AccessDenied");
+        }
+
+    }
+
+    private function _updateProduct ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+            return glWrap("AccessDenied");
+        }
+
+    }
+
+    // origin
+    // -----------------------------------------------
+
+    private function _getOriginByID ($originID) {
+
+    }
+
+    private function _createOrigin ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+            return glWrap("AccessDenied");
+        }
+
+    }
+
+    private function _updateOrigin ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+            return glWrap("AccessDenied");
+        }
+
+    }
+
+    // category
+    // -----------------------------------------------
+    private function _getCategoryByID ($categoryID) {
+
+    }
+
+    private function _createCategory ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+            return glWrap("AccessDenied");
+        }
+
+    }
+
+    private function _updateCategory ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+            return glWrap("AccessDenied");
+        }
+
+    }
+
+    // orders
+    // -----------------------------------------------
     private function _getOrderByID ($orderID) {
         $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
-        $order = $this->getCustomer()->fetch($config);
+        $order = null;
+        if ($this->hasPermission('IsAdmin')) {
+            $order = $this->getCustomer()->fetch($config);
+        } else {
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $order = $this->getCustomer()->fetch($config);
+        }
+
+        if (empty($order)) {
+            return glWrap('error', 'OrderDoesNotExist');
+        }
+
         $order['ID'] = intval($order['ID']);
         $this->__attachOrderDetails($order);
         return $order;
@@ -164,27 +231,132 @@ class pluginShop extends objectPlugin {
     private function _getOrderByHash ($orderHash) {
         $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
         $order = $this->getCustomer()->fetch($config);
+
+        if (empty($order)) {
+            return glWrap('error', 'OrderDoesNotExist');
+        }
+
         $order['ID'] = intval($order['ID']);
-
-        // check permissions
-        
-
         $this->__attachOrderDetails($order);
         return $order;
     }
 
     private function _getOrderTemp () {
-        // $order = $this->_getSessionOrderProducts();
         $order['temp'] = true;
         $this->__attachOrderDetails($order);
-        // save order in session
-        // $this->_setSessionOrderProducts($order);
         return $order;
     }
 
     private function _resetOrderTemp () {
         $this->_resetSessionPromo();
         $this->_resetSessionOrderProducts();
+    }
+
+    private function _getOrders_Expired () {
+        // get expired orders
+        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
+        $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
+
+        // check permissions
+        $orderIDs = array();
+        if ($this->hasPermission('IsAdmin')) {
+            $orderIDs = $this->getCustomer()->fetch($config);
+        } else {
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $orderIDs = $this->getCustomer()->fetch($config);
+        }
+
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[] = $this->_getOrderByID($val['ID']);
+        return $data;
+    }
+
+    private function _getOrders_Todays () {
+        // get todays orders
+        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("NEW");
+        $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'));
+
+        // set permissions
+        $orderIDs = array();
+        if ($this->hasPermission('IsAdmin')) {
+            $orderIDs = $this->getCustomer()->fetch($config);
+        } else {
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $orderIDs = $this->getCustomer()->fetch($config);
+        }
+
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[] = $this->_getOrderByID($val['ID']);
+        return $data;
+    }
+
+    private function _getOrders_ByStatus ($status) {
+        // get expired orders
+        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($status);
+
+        // check permissions
+        $orderIDs = array();
+        if ($this->hasPermission('IsAdmin')) {
+            $orderIDs = $this->getCustomer()->fetch($config);
+        } else {
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $orderIDs = $this->getCustomer()->fetch($config);
+        }
+
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[] = $this->_getOrderByID($val['ID']);
+        return $data;
+    }
+
+    private function _getOrders_Browse ($req) {
+        // get all orders
+        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+
+        // pagination
+        $page = isset($req->get['page']) ? $req->get['page'] : false;
+        $per_page = isset($req->get['per_page']) ? $req->get['per_page'] : false;
+
+        if (!empty($per_page)) {
+            $config['limit'] = $per_page;
+            if (!empty($page)) {
+                $config['offset'] = ($page - 1) * $per_page;
+            }
+        }
+
+        // sorting
+        $sort = isset($req->get['sort']) ? $req->get['sort'] : false;
+        $order = isset($req->get['order']) ? $req->get['order'] : false;
+        if (!empty($sort) && !empty($order)) {
+            $config["order"] = array(
+                "field" =>  'shop_orders' . DOT . $sort,
+                "ordering" => strtoupper($order)
+            );
+        }
+
+        // check permissions
+        $orderIDs = array();
+        if ($this->hasPermission('IsAdmin')) {
+            $orderIDs = $this->getCustomer()->fetch($config);
+        } else {
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $orderIDs = $this->getCustomer()->fetch($config);
+        }
+
+        // var_dump($orderIDs);
+        $data = array();
+        if (!empty($orderIDs))
+            foreach ($orderIDs as $val)
+                $data[$val['ID']] = $this->_getOrderByID($val['ID']);
+        return $data;
     }
 
     private function _createOrder ($reqData) {
@@ -370,91 +542,39 @@ class pluginShop extends objectPlugin {
         return $result;
     }
 
-    private function _getOrders_Expired () {
-        // get expired orders
-        $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
-        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
-        $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
-        $orderIDs = $this->getCustomer()->fetch($config);
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[] = $this->_getOrderByID($val['ID']);
-        return $data;
-    }
-
-    private function _getOrders_Todays () {
-        // get todays orders
-        $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
-        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("NEW");
-        $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'));
-        $orderIDs = $this->getCustomer()->fetch($config);
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[] = $this->_getOrderByID($val['ID']);
-        return $data;
-    }
-
-    private function _getOrders_ByStatus ($status) {
-        // get expired orders
-        $config = configurationShopDataSource::jsapiShopOrdersForSiteGet();
-        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($status);
-        $orderIDs = $this->getCustomer()->fetch($config);
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[] = $this->_getOrderByID($val['ID']);
-        return $data;
-    }
-
-    private function _getOrders_Browse ($req) {
-        // get all orders
-        $config = configurationShopDataSource::jsapiShopOrdersGet();
-
-        // pagination
-        $page = isset($req->get['page']) ? $req->get['page'] : false;
-        $per_page = isset($req->get['per_page']) ? $req->get['per_page'] : false;
-
-        if (!empty($per_page)) {
-            $config['limit'] = $per_page;
-            if (!empty($page)) {
-                $config['offset'] = ($page - 1) * $per_page;
-            }
+    private function _updateOrder ($reqData) {
+        // only admin can update orders
+        if (!$this->hasPermission('IsAdmin') || !$this->hasPermission('CanEdit')) {
+            return glWrap("AccessDenied");
         }
-
-        // sorting
-        $sort = isset($req->get['sort']) ? $req->get['sort'] : false;
-        $order = isset($req->get['order']) ? $req->get['order'] : false;
-        if (!empty($sort) && !empty($order)) {
-            $config["order"] = array(
-                "field" =>  'shop_orders' . DOT . $sort,
-                "ordering" => strtoupper($order)
-            );
-        }
-
-        $orderIDs = $this->getCustomer()->fetch($config);
-        // var_dump($orderIDs);
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[$val['ID']] = $this->_getOrderByID($val['ID']);
-        return $data;
     }
 
     private function _disableOrderByID ($OrderID) {
-        $config = configurationShopDataSource::jsapiDisableOrder($OrderID);
-        $this->getCustomer()->fetch($config);
-        return glWrap("ok", true);
+        // check permissions
+        if ($this->hasPermission('IsAdmin') && $this->hasPermission('CanEdit')) {
+            $config = configurationShopDataSource::jsapiDisableOrder($OrderID);
+            $this->getCustomer()->fetch($config);
+            return glWrap("ok", true);
+        } else {
+            return glWrap("error", "AccessDenied");
+        }
     }
 
+    // stats
+    // -----------------------------------------------
     private function _getStats_OrdersOverview () {
+        if (!$this->hasPermission('IsAdmin')) {
+            return null;
+        }
         $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
         $data = $this->getCustomer()->fetch($config);
         return $data;
     }
 
     private function _getStats_ProductsOverview () {
+        if (!$this->hasPermission('IsAdmin')) {
+            return null;
+        }
         // get shop products overview:
         $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
         $data = $this->getCustomer()->fetch($config);
@@ -714,11 +834,13 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    private function _getPromoByID ($id) {
-        $config = configurationShopDataSource::jsapiShopGetPromoByID($id);
+    // promo
+    // -----------------------------------------------
+    private function _getPromoByID ($promoID) {
+        $config = configurationShopDataSource::jsapiShopGetPromoByID($promoID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
-        $data['Discount'] = intval($data['Discount']);
+        $data['Discount'] = floatval($data['Discount']);
         return $data;
     }
 
@@ -726,11 +848,24 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash, $activeOnly);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
-        $data['Discount'] = intval($data['Discount']);
+        $data['Discount'] = floatval($data['Discount']);
         return $data;
     }
 
+    private function _createPromo ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+            return glWrap("AccessDenied");
+        }
+    }
+
+    private function _updatePromo ($reqData) {
+        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+            return glWrap("AccessDenied");
+        }
+    }
+
     // session data
+    // -----------------------------------------------
     private function _setSessionPromo ($promo) {
         $_SESSION[$this->_listKey_Promo] = $promo;
     }
@@ -1579,7 +1714,7 @@ class pluginShop extends objectPlugin {
         }
 
         // get orders
-        $configOrders = configurationShopDataSource::jsapiShopOrdersForProfileGet($profileID);
+        $configOrders = configurationShopDataSource::jsapiGetShopOrdersForProfile($profileID);
         $dataOrders = $this->getCustomer()->fetch($configOrders);
 
         // var_dump($dataOrders);
@@ -1620,7 +1755,7 @@ class pluginShop extends objectPlugin {
         //     return $dataObj;
         // }
 
-        $configOrders = configurationShopDataSource::jsapiShopOrdersForSiteGet();
+        $configOrders = configurationShopDataSource::jsapiGetShopOrders();
         $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
 
         // pagination

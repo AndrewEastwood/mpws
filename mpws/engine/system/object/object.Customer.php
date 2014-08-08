@@ -68,7 +68,7 @@ class objectCustomer implements ICustomer {
     }
 
     public function getPlugin($key) {
-        return $this->plugins[$key];
+        return $this->plugins[$key] ?: null;
     }
 
     public function hasPlugin ($pluginName) {
@@ -76,7 +76,7 @@ class objectCustomer implements ICustomer {
     }
 
     public function getExtension ($extensionName) {
-        return $this->extensions[$extensionName];
+        return $this->extensions[$extensionName] ?: null;
     }
 
     public function hasExtension ($extensionName) {

@@ -8,17 +8,6 @@ define("default/js/lib/auth", [
     var Auth = {};
 
     Sandbox.eventSubscribe("global:ajax:responce", function(response) {
-        if (APP.config.ISTOOLBOX && response) {
-            if(response.auth_id && Backbone.history.fragment === "signin") {
-                Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
-            } else if (!response.auth_id) {
-                $.xhrPool.abortAll();
-                if (Backbone.history.fragment !== "signin") {
-                    Backbone.history.navigate('signin', true);
-                    window.location.reload();
-                }
-            }
-        }
         Auth.setStatus(response);
     });
 

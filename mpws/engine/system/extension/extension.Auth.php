@@ -2,16 +2,14 @@
 
 class extensionAuth extends objectExtension {
 
-    public $Permissions = array();
+    public $permissions = array();
 
-    public function getAuthID ($refresh = true) {
+    public function getAuthID () {
         if (!isset($_SESSION['AccountID']))
             $_SESSION['AccountID'] = null;
-        if (!$refresh)
-            return $_SESSION['AccountID'];
         if (isset($_SESSION['AccountID'])) {
             $configPermissions = configurationCustomerDataSource::jsapiGetPermissions($_SESSION['AccountID']);
-            $permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
+            $this->permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
             if (glIsToolbox() && empty($account['IsAdmin']))
                 return $this->clearAuthID();
         }
@@ -24,6 +22,7 @@ class extensionAuth extends objectExtension {
             $this->getCustomer()->fetch($configOffline);
         }
         $_SESSION['AccountID'] = null;
+        $this->permissions = array();
         return null;
     }
 
