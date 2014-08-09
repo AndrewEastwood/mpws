@@ -10,7 +10,7 @@ class extensionAuth extends objectExtension {
         if (isset($_SESSION['AccountID'])) {
             $configPermissions = configurationCustomerDataSource::jsapiGetPermissions($_SESSION['AccountID']);
             $this->permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
-            if (glIsToolbox() && empty($account['IsAdmin']))
+            if (glIsToolbox() && empty($this->permissions['IsAdmin']))
                 return $this->clearAuthID();
         }
         return $_SESSION['AccountID'];
@@ -79,6 +79,7 @@ class extensionAuth extends objectExtension {
             // set online state for account
             $configOnline = configurationCustomerDataSource::jsapiSetOnlineAccount($AccountID);
             $this->getCustomer()->fetch($configOnline);
+
         }
 
         // $resp['account_id'] = $AccountID;

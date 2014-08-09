@@ -5,7 +5,7 @@
     // detect running customer name
     define('MPWS_TOOLBOX', 'toolbox');
     define('MPWS_CUSTOMER', glGetCustomerName());
-    // evironment version
+    // framework version
     define('MPWS_VERSION', 'atlantis');
     // evironment mode
     define('MPWS_ENV', 'DEV'); // [PROD | DEV]
@@ -17,13 +17,6 @@
     ini_set("display_errors", 1);
 
     $PHP_INPUT = file_get_contents('php://input');
-
-    // json_decode(file_get_contents("php://input"), true);
-    // if (empty($_REQ))
-    //     $_REQ = $_POST;
-    // var_dump($_REQ);
-    // var_dump($_POST);
-    // var_dump($_GET);
 
     // include global files
     $globals = glob(DR . '/engine/global/global.*.php');
@@ -62,8 +55,5 @@
         return preg_match("/^" . MPWS_TOOLBOX . "\./", $_SERVER['HTTP_HOST']) > 0;
         // return preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']) > 0;
     }
-
-    
-    define('MPWS_IS_TOOLBOX', glIsToolbox());
 
 ?>

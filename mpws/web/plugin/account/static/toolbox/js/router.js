@@ -32,10 +32,6 @@ define("plugin/account/toolbox/js/router", [
         });
     });
 
-    Sandbox.eventSubscribe('global:page:signout', function (data) {
-        Auth.signout();
-    });
-
     Sandbox.eventSubscribe('global:page:index', function () {
         Sandbox.eventNotify('global:content:render', {
             name: 'CommonBodyCenter',

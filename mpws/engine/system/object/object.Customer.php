@@ -84,30 +84,34 @@ class objectCustomer implements ICustomer {
     }
 
     public function runAsAPI () {
-        $publicKey = "";
-        if (libraryRequest::hasInGet('token'))
-            $publicKey = libraryRequest::fromGET('token');
 
-        // // check page token
-        // if (empty($publicKey)) {
-        //     libraryResponse::setError('EmptyToken', "HTTP/1.0 500 EmptyToken");
-        //     return;
-        // }
+        // if (glIsToolbox()) {
+        //     $publicKey = "";
+        //     if (libraryRequest::hasInGet('token'))
+        //         $publicKey = libraryRequest::fromGET('token');
 
-        // if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
-        //     libraryResponse::setError('InvalidTokenKey', "HTTP/1.0 500 InvalidTokenKey");
-        //     return;
-        // }
+        // // // check page token
+        // // if (empty($publicKey)) {
+        // //     libraryResponse::setError('EmptyToken', "HTTP/1.0 500 EmptyToken");
+        // //     return;
+        // // }
 
-        // if (MPWS_IS_TOOLBOX && !configurationCustomerDisplay::$IsManaged) {
-        //     libraryResponse::setError('AccessDenied', "HTTP/1.0 500 AccessDenied");
-        //     return;
+        // // if (!libraryRequest::getOrValidatePageSecurityToken(configurationCustomerDisplay::$MasterJsApiKey, $publicKey)) {
+        // //     libraryResponse::setError('InvalidTokenKey', "HTTP/1.0 500 InvalidTokenKey");
+        // //     return;
+        // // }
+
+        // // if (MPWS_IS_TOOLBOX && !configurationCustomerDisplay::$IsManaged) {
+        // //     libraryResponse::setError('AccessDenied', "HTTP/1.0 500 AccessDenied");
+        // //     return;
+        // // }
         // }
 
         // libraryResponse::$_RESPONSE['authenticated'] = $this->getPlugin('account')->isAuthenticated();
         // libraryResponse::$_RESPONSE['script'] = libraryRequest::getScriptName();
         foreach ($this->plugins as $plugin)
             $plugin->run();
+
         libraryResponse::$_RESPONSE['auth_id'] = $this->getExtension('auth')->getAuthID();
     }
 

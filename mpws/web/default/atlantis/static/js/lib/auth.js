@@ -29,13 +29,17 @@ define("default/js/lib/auth", [
         getAccountID: function () {
             return Cache.getCookie('auth_id') || null;
         },
-        getStatus: function () {
+        getStatus: function (callback) {
             var query = {
                 fn: 'status'
             };
-            return $.get(APP.getAuthLink(query));
+            return $.get(APP.getAuthLink(query), function(response){
+                Auth.setStatus(response);
+                if (_.isFunction(callback))
+                    callback(Auth.getAccountID());
+            });
         },
-        signin: function (email, password, remember) {
+        signin: function (email, password, remember, callback) {
             var query = {
                 fn: 'signin'
             };
@@ -43,14 +47,22 @@ define("default/js/lib/auth", [
                 email: email,
                 password: password,
                 remember: remember,
+            }, function(response){
+                Auth.setStatus(response);
+                if (_.isFunction(callback))
+                    callback(Auth.getAccountID());
             });
 
         },
-        signout: function () {
+        signout: function (callback) {
             var query = {
                 fn: 'signout'
             };
-            return $.post(APP.getAuthLink(query));
+            return $.post(APP.getAuthLink(query), function(response){
+                Auth.setStatus(response);
+                if (_.isFunction(callback))
+                    callback(Auth.getAccountID());
+            });
         }
     };
 

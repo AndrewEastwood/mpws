@@ -237,7 +237,7 @@ class pluginAccount extends objectPlugin {
             $accountObj->setData('account', $account);
 
             // keep user logged in
-            if (!MPWS_IS_TOOLBOX && $remember) {
+            if (!glIsToolbox && $remember) {
                 /* Set cookie to last 1 year */
                 setcookie('username', $email, time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
                 setcookie('password', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);

@@ -234,15 +234,17 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         },
         index: function () {
             // debugger;
-            Sandbox.eventNotify('global:page:index');
+            Sandbox.eventNotify('global:page:index', '');
         },
         signin: function () {
             // debugger;
-            Sandbox.eventNotify('global:page:signin');
+            Sandbox.eventNotify('global:page:signin', 'signin');
         },
         signout: function () {
             // debugger;
-            Sandbox.eventNotify('global:page:signout');
+            Auth.signout(function(){
+                Sandbox.eventNotify('global:page:signout', 'signout');
+            });
         }
     });
 

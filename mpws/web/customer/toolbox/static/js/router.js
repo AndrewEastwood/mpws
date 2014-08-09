@@ -2,7 +2,8 @@ define("customer/js/router", [
     'default/js/lib/sandbox',
     'customer/js/view/menu',
     'default/js/lib/auth',
-], function (Sandbox, Menu, Auth) {
+    'default/js/lib/cache',
+], function (Sandbox, Menu, Auth, Cache) {
 
     // // with every route we get user status
     // Sandbox.eventSubscribe('global:route', function () {
@@ -19,37 +20,27 @@ define("customer/js/router", [
         //         }
         //     }
         // }
-
-
-
-    var _ifNotAuthorizedNavigateTo = function () {
-        if (Auth.getAccountID() && Backbone.history.fragment === "signin") {
-            Backbone.history.navigate(Cache.getFromLocalStorage("location") || '', true);
-            return true;
-        } else if (!Auth.getAccountID()) {
-            $.xhrPool.abortAll();
-            if (Backbone.history.fragment !== "signin") {
-                Backbone.history.navigate('signin', true);
-                window.location.reload();
-            }
-            return false;
-        }
-
-        // if (!Auth.getAccountID() && /^account/.test(Backbone.history.fragment)) {
-        //     Backbone.history.navigate("signin", true);
-        //     return true;
-        // }
-        // return false;
+    if (!APP.hasPlugin('account')) {
+        throw "Account plugin is unavailable";
     }
 
-    Sandbox.eventSubscribe('global:route', function () {
-        _ifNotAuthorizedNavigateTo('signin');
-        var authAccountID = Auth.getAccountID();
-        if (authAccountID) {
-            account.set('ID', authAccountID);
-            account.fetch();
-        }
+    Sandbox.eventSubscribe('global:page:signout', function (fragment) {
+        _ifNotAuthorizedNavigateTo(fragment, 'signin');
     });
+
+    Sandbox.eventSubscribe('global:route', function (fragment) {
+        _ifNotAuthorizedNavigateTo(fragment, 'signin');
+    });
+
+    var _ifNotAuthorizedNavigateTo = function (fragment, route) {
+        // debugger;
+        if (!Auth.getAccountID() && fragment !== route) {
+            $.xhrPool.abortAll();
+            Backbone.history.navigate(route, true);
+            window.location.reload();
+        }
+    }
+
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
     //     var authAccountID = Auth.getAccountID();
@@ -59,6 +50,7 @@ define("customer/js/router", [
     //     }
         var menu = new Menu();
         menu.render();
+        Backbone.history.navigate('', true);
     });
 
     // Sandbox.eventSubscribe('global:auth:status:inactive', function (data) {
