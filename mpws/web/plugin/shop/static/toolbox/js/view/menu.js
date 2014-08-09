@@ -1,20 +1,28 @@
 define("plugin/shop/toolbox/js/view/menu", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/menu',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-], function (Sandbox, MView, tpl, lang) {
+], function (Sandbox, Backbone, Utils, tpl, lang) {
 
-    var menu = new (MView.extend({
+    var menu = new (Backbone.View.extend({
         id: 'shop-menu-ID',
         lang: lang,
-        template: tpl
+        template: tpl,
+        render: function () {
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+        }
     }))();
 
-    Sandbox.eventSubscribe('customer:menu:ready', function (CustomerMenuView) {
+    Sandbox.eventSubscribe('customer:container:ready', function (CustomerMenuView) {
         menu.render();
-        CustomerMenuView.$('[name="PluginMenuList"]').append(menu.$el);
+        Sandbox.eventNotify('global:content:render', {
+            name: 'MenuLeft',
+            el: menu.$('li'),
+            append: true
+        });
     });
 
 });

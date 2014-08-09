@@ -9,7 +9,7 @@ define("plugin/shop/toolbox/js/router", [
 
     var Router = Backbone.Router.extend({
         routes: {
-            "shop/stats": "stats",
+            // "shop/stats": "stats",
             "shop/products": "products",
             "shop/orders": "orders",
             "shop/sales": "sales",

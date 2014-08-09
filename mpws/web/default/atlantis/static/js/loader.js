@@ -163,12 +163,16 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // debugger;
         $('a.auto-active').removeClass('active');
         $('a.auto-active').parents('.panel-collapse').removeClass('in');
+        $('a.auto-active').parents('li').removeClass('active');
 
         // debugger;
-        if (window.location.hash != '#') {
-            $('a.auto-active[href^="' + window.location.hash + '"]').addClass('active');
-            $('a.auto-active[href^="' + window.location.hash + '"]').parents('.panel-collapse').addClass('in');
-        }
+        var hash = !!window.location.hash ? window.location.hash : '#';
+        console.log(hash);
+        // if (window.location.hash != '#') {
+            $('a.auto-active[href="' + hash + '"]').addClass('active');
+            $('a.auto-active[href="' + hash + '"]').parents('.panel-collapse').addClass('in');
+            $('a.auto-active[href="' + hash + '"]').parents('li').addClass('active');
+        // }
     });
 
     // debugger;

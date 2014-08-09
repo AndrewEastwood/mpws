@@ -47,12 +47,4 @@ define("plugin/account/toolbox/js/router", [
         });
     });
 
-    Sandbox.eventSubscribe('global:page:index', function () {
-        Sandbox.eventNotify('global:content:render', {
-            name: 'CommonBodyCenter',
-            el: $('<hr size=10/><div>TEST!!!!!</div>'),
-            append: true
-        });
-    });
-
 });
