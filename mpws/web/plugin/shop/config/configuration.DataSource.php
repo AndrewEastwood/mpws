@@ -22,16 +22,10 @@ class configurationShopDataSource extends objectConfiguration {
             )
         ));
     }
-    static function jsapiShopProductItemGet ($id) {
-        return self::jsapiGetDataSourceConfig(array(
+    static function jsapiShopProductItemGet ($productID = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
-            "condition" => array(
-                "shop_products.ID" => self::jsapiCreateDataSourceCondition($id)
-                // "shop_products.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
-                // "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
-                // "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
-            ),
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
@@ -57,12 +51,19 @@ class configurationShopDataSource extends objectConfiguration {
                 "expandSingleRecord" => true
             )
         ));
+
+        if (!is_null($productID))
+            $config["condition"] = array(
+                "shop_products.ID" => self::jsapiCreateDataSourceCondition($productID)
+            );
+
+        return $config;
     }
     // <<<< Product base configuration
 
     // Product base list configuration >>>>>
     static function jsapiShopProductList () {
-        $config = self::jsapiShopProductItemGet(null);
+        $config = self::jsapiShopProductItemGet();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
@@ -221,12 +222,12 @@ class configurationShopDataSource extends objectConfiguration {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_boughts",
-            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(ProductPrice * Quantity) AS SumTotal"),
+            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
             "order" => array(
                 "field" => "SoldTotal",
                 "ordering" => "DESC"
             ),
-            "limit" => 25,
+            "limit" => 20,
             "group" => "ProductID",
             "options" => null
         ));
@@ -244,18 +245,23 @@ class configurationShopDataSource extends objectConfiguration {
                 "field" => "DateCreated",
                 "ordering" => "ASC"
             ),
-            "limit" => 25,
+            "limit" => 20,
             "options" => null
         ));
     }
     static function jsapiShopStat_ProductsOverview () {
-        $config = self::jsapiShopProductItemGet(null);
+        $config = self::jsapiShopProductItemGet();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'Status',
+                'values' => 'ItemsCount'
+            )
+        );
         unset($config['condition']);
         unset($config['additional']);
-        unset($config['options']);
         return $config;
     }
 
@@ -501,13 +507,18 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Shop order
 
     static function jsapiShopStat_OrdersOverview () {
-        $config = self::jsapiShopOrderGet(null);
+        $config = self::jsapiGetShopOrders();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'Status',
+                'values' => 'ItemsCount'
+            )
+        );
         unset($config['condition']);
         unset($config['additional']);
-        unset($config['options']);
         return $config;
     }
     // <<<< Statistic: order overview

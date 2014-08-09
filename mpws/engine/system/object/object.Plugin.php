@@ -32,17 +32,11 @@ class objectPlugin implements IPlugin {
         return $extAuth->getAuthID();
     }
 
-    public function hasPermission ($name) {
+    public function ifYou ($canDoThis) {
         $extAuth = $this->getExtension('auth');
         if (empty($extAuth))
             throw new Exception("Auth extension is missing for plugin", 1);
-
-        $permissions = $extAuth->permissions;
-
-        if (!isset($permissions[$name]))
-            return false;
-
-        return !empty($permission[$name]);
+        return $extAuth->ifYou($canDoThis);
     }
 
     public function run () {

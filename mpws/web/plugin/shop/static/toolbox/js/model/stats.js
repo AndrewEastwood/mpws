@@ -1,12 +1,11 @@
 define('plugin/shop/toolbox/js/model/stats', [
-    'default/js/lib/backbone',
-    'plugin/shop/common/js/lib/utils'
-], function (Backbone, Utils) {
+    'default/js/lib/backbone'
+], function (Backbone) {
 
     var Stats = Backbone.Model.extend({
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'statistic'
+            fn: 'overview'
         })
     });
 

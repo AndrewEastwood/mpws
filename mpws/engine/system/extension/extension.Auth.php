@@ -2,15 +2,37 @@
 
 class extensionAuth extends objectExtension {
 
-    public $permissions = array();
+    var $permissions;
+
+    private function _setPermissions ($perms) {
+        $listOfDOs = array();
+        // adjust permission values
+        foreach ($perms as $field => $value) {
+            if (preg_match("/^Can/", $field) === 1)
+                $listOfDOs[$field] = intval($value) === 1;
+        }
+        $this->permissions = $listOfDOs;
+    }
+
+    public function getPermissions () {
+        return $this->permissions;
+    }
+
+    public function ifYou ($canDoThis) {
+        $permissions = $this->getPermissions();
+        if (!isset($permissions[$canDoThis]))
+            return false;
+        return $this->permissions[$canDoThis];
+    }
 
     public function getAuthID () {
         if (!isset($_SESSION['AccountID']))
             $_SESSION['AccountID'] = null;
         if (isset($_SESSION['AccountID'])) {
             $configPermissions = configurationCustomerDataSource::jsapiGetPermissions($_SESSION['AccountID']);
-            $this->permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
-            if (glIsToolbox() && empty($this->permissions['IsAdmin']))
+            $permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
+            $this->_setPermissions($permissions);
+            if (glIsToolbox() && !$this->ifYou('CanAdmin'))
                 return $this->clearAuthID();
         }
         return $_SESSION['AccountID'];
@@ -22,7 +44,7 @@ class extensionAuth extends objectExtension {
             $this->getCustomer()->fetch($configOffline);
         }
         $_SESSION['AccountID'] = null;
-        $this->permissions = array();
+        $this->_setPermissions(array());
         return null;
     }
 

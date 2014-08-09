@@ -1,22 +1,194 @@
 <div class="well well-sm">
-    <big><strong>Статистика інтернет-магазину<i title="На ці замовлення покупці очікують вже дуже довго. Їх слід обробити першими" class="fa fa-refresh helper helper-right" id="refresh"></i></strong></big>
+    <i class="fa fa-refresh helper helper-right" id="refresh"></i>
+    <big><strong>Статистика інтернет-магазину</strong></big>
 </div>
 
 <div class="row">
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-info-circle fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <a href="#shop/products">
+                            Активних товарів:
+                            <strong>
+                                {{default_value data.all_products.ACTIVE 0 }}
+                            </strong>
+                        </a>
+                        <a href="#shop/products">
+                            Для замовлення:
+                            <strong>
+                                {{default_value data.all_products.PREORDER 0 }}
+                            </strong>
+                        </a>
+                        <a href="#shop/products">
+                            З знижкою:
+                            <strong>
+                                {{default_value data.all_products.DISCOUNT 0 }}
+                            </strong>
+                        </a>
+                        <a href="#shop/orders">
+                            Виконано:
+                            <strong>
+                                {{default_value data.all_orders.SHOP_CLOSED 0 }}
+                            </strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/reports">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-gift fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <a href="#shop/products">{{array_length data.products_todays}}</a>
+                        </div>
+                        <div>Нові товари!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/products">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-truck fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <a href="#shop/products">1</a>
+                        </div>
+                        <div>Потрібно замовити!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/reports">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-shopping-cart fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <a href="#shop/orders">{{array_length data.orders_todays}}</a>
+                        </div>
+                        <div>Сьогоднішні!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/orders">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-shopping-cart fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <a href="#shop/orders">{{array_length data.orders_all_new}}</a>
+                        </div>
+                        <div>Активні!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/orders">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-warning fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <a href="#shop/orders">{{array_length data.orders_expired}}</a>
+                        </div>
+                        <div>Протерміновані!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/orders">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
     <div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading"><i title="Сьогодні маємо нові замовлення" class="fa fa-smile-o helper helper-left"></i>Сьогодніші замовлення:</div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><i title="Сьогодні маємо нові замовлення" class="fa fa-smile-o helper helper-left"></i> Сьогодніші замовлення:</div>
             <div class="panel-body">
-            {{#mpwsIsEmpty data.orders_today}}
+            {{#mpwsIsEmpty data.orders_todays}}
                 <stron>У Вас немає більше нових замовлень <i class="fa fa-frown-o"></i>
             {{else}}
                 <ul class="list-group">
-                    {{#each data.orders_today}}
+                    {{#each data.orders_todays}}
                     <li class="list-group-item">
-                        <a href="javascript://">ред.</a>
-                        <b>{{account.FirstName}} {{account.LastName}}</b>
-                        на суму:
-                        <span class="label label-success">{{info.total}}<span class="moneyType">грн.</span></span>
+                        <i class="fa fa-pencil-square-o"></i>
+                        <strong>{{account.FirstName}} {{account.LastName}}</strong>
+                        <span class="badge">{{info.total}}<span class="moneyType">грн.</span></span>
                     </li>
                     {{/each}}
                 </ul>
@@ -26,21 +198,19 @@
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="panel panel-success">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <i title="Ці товари користуються попитом. Їх слід більше закуповувати." class="fa fa-star helper helper-left"></i>
-                ТОП 50 товарів:
+                <i title="Ці товари слід закуповувати більше." class="fa fa-star helper helper-left"></i> ТОП 20 товарів:
             </div>
             <div class="panel-body">
                 <ul class="list-group">
-                    {{#each data.products_best}}
+                    {{#each data.products_popular}}
                     <li class="list-group-item">
-                        <a href="javascript://">ред.</a>
-                        <b>{{Product.Name}}</b>
-                        продано:
-                        <span class="label label-default">{{SoldTotal}}</span>
-                        на суму:
-                        <span class="label label-success">{{SumTotal}}<span class="moneyType">грн.</span></span>
+                        <i class="fa fa-pencil-square-o"></i>
+                        <b>{{Name}}</b>
+                        <span class="badge">
+                            продано <b>{{SoldTotal}}</b> на суму <b>{{SumTotal}}<span class="moneyType">грн.</span></b>
+                        </span>
                     </li>
                     {{/each}}
                 </ul>
@@ -49,18 +219,15 @@
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-4">
-        <div class="panel panel-danger">
-            <div class="panel-heading"><i title="Ці товари ніхто не купує. Їх слід не продавати або знизити ціну." class="fa fa-thumbs-o-down helper helper-left"></i>Товари що не продаються:</div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><i title="Рекомендую знизити ціну або продавати під замовлення." class="fa fa-thumbs-o-down helper helper-left"></i> Товари що не продаються:</div>
             <div class="panel-body">
                 <ul class="list-group">
-                    {{#each data.products_worst}}
+                    {{#each data.products_non_popular}}
                     <li class="list-group-item">
-                        <a href="javascript://">ред.</a>
-                        <b>{{Product.Name}}</b>
-                        <span class="label label-warning">{{Product.Price}}</span>
-                        додано:
-                        <span class="label label-default">{{Product.DateCreated}}</span>
-
+                        <i class="fa fa-pencil-square-o"></i>
+                        <b>{{Name}}</b>
+                        <span class="badge">{{Price}}<span class="moneyType">грн.</span></span>
                     </li>
                     {{/each}}
                 </ul>
@@ -136,59 +303,6 @@
             <div class="panel-heading">Витрати та прибуток</div>
             <div class="panel-body">
                 <div id="shop-chart-balance-ID"></div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
-<div class="row">
-
-    <div class="col-xs-12 col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading">Інформація про товари:</div>
-            <div class="panel-body">
-                <ul class="list-group">
-                    {{#each data.overview.Products}}
-                    <li class="list-group-item">
-                        <span class="prefix">{{@key}}</span>
-                        <span><strong>{{this}}</strong></span>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xs-12 col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading">Інформація про замовлення:</div>
-            <div class="panel-body">
-                <ul class="list-group">
-                    {{#each data.overview.Orders}}
-                    <li class="list-group-item">
-                        <span class="prefix">{{@key}}</span>
-                        <span><strong>{{this}}</strong></span>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xs-12 col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading">Інформація про користувачі:</div>
-            <div class="panel-body">
-                <ul class="list-group">
-                    {{#each data.overview.Users}}
-                    <li class="list-group-item">
-                        <span class="prefix">{{@key}}</span>
-                        <span><strong>{{this}}</strong></span>
-                    </li>
-                    {{/each}}
-                </ul>
             </div>
         </div>
     </div>

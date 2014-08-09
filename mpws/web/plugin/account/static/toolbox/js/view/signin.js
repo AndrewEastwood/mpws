@@ -16,6 +16,12 @@ define("plugin/account/toolbox/js/view/signin", [
         events: {
             "submit": 'doSignIn'
         },
+        initialize: function () {
+            var self = this;
+            Sandbox.eventSubscribe('global:auth:status:active', function(){
+                self.remove();
+            });
+        },
         doSignIn: function () {
             var authData = this.collectCredentials();
             Auth.signin(authData.email, authData.password, authData.remember);

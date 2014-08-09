@@ -9,6 +9,7 @@ define("plugin/account/site/js/router", [
 
     // this is the account instance
     var account = new Account();
+
     SiteMenu({
         account: account
     });

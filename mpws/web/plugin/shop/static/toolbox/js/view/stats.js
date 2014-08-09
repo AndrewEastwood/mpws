@@ -5,6 +5,7 @@ define("plugin/shop/toolbox/js/view/stats", [
     'default/js/lib/bootstrap-dialog',
     "default/js/lib/cache",
     'default/js/lib/utils',
+    'default/js/lib/auth',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/stats',
     /* lang */
@@ -14,15 +15,18 @@ define("plugin/shop/toolbox/js/view/stats", [
     /* charts */
     'default/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
     'default/js/plugin/goog!visualization,1,packages:[corechart,geochart]',
-], function (Sandbox, Backbone, ModelStats, BootstrapDialog, Cache, Utils, tpl, lang) {
+], function (Sandbox, Backbone, ModelStats, BootstrapDialog, Cache, Utils, Auth, tpl, lang) {
 
     return Backbone.View.extend({
-        id: 'shop-stats-ID',
+        attributes: {
+            id: 'shop-stats-ID'
+        },
+        className: 'plugin-shop-stats',
         model: new ModelStats(),
         lang: lang,
         template: tpl,
         events: {
-            'click #refresh': 'show'
+            'click #refresh': 'refresh'
         },
         initialize: function () {
             // MView.prototype.initialize.call(this);
@@ -31,12 +35,12 @@ define("plugin/shop/toolbox/js/view/stats", [
             this.listenTo(this.model, "change", this.render);
 
             var intervalID = setInterval(function() {
-                if (Cache.getCookie('account') && Backbone.history.fragment === "shop/stats")
-                    self.show.call(self);
-            }, 1000);
+                if (Auth.getAccountID() && (Backbone.history.fragment === "shop/stats" || Backbone.history.fragment === ""))
+                    self.refresh.call(self);
+            }, 10000);
         },
-        show: function () {
-            this.model.fetch({reset: true, silent: true});
+        refresh: function () {
+            this.model.fetch({reset: true});
         },
         render: function () {
 

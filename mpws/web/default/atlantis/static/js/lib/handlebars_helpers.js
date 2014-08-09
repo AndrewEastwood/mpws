@@ -439,6 +439,14 @@ define("default/js/lib/handlebars_helpers", [
         var decStr = '' + dec;
         return /*'$' + */whole + '.' + decStr + ( decStr.length < 2 ? '0' : '');
     }
+    helpers.array_length = function(value) {
+        if (_.isArray(value))
+            return value.length;
+        return 0;
+    }
+    helpers.default_value = function(value, defaultValue) {
+        return _.isEmpty(value) ? defaultValue : value;
+    }
     return helpers;
 
 });

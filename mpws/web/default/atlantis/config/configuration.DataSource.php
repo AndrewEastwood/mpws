@@ -6,7 +6,7 @@ class configurationDefaultDataSource extends objectConfiguration {
 
     static function jsapiGetNewPermission () {
         $perms = array(
-            "IsAdmin" => 0,
+            "CanAdmin" => 0,
             "CanCreate" => 0,
             "CanEdit" => 0,
             "CanViewReports" => 0,

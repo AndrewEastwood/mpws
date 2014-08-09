@@ -106,8 +106,12 @@ class pluginShop extends objectPlugin {
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($productIDs))
-            foreach ($productIDs as $val)
-                $data[] = $this->_getProductByID($val['ProductID']);
+            foreach ($productIDs as $val) {
+                $product = $this->_getProductByID($val['ProductID']);
+                $product['SoldTotal'] = $val['SoldTotal'];
+                $product['SumTotal'] = $val['SumTotal'];
+                $data[] = $product;
+            }
         return $data;
     }
 
@@ -152,15 +156,27 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
+    private function _getProducts_Todays () {
+        $config = configurationShopDataSource::jsapiShopProductListByStatus('ARCHIVED', '!=');
+        $config['condition']['shop_products.DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
+        $productIDs = $this->getCustomer()->fetch($config);
+        // var_dump($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
+    }
+
     private function _createProduct ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
             return glWrap("AccessDenied");
         }
 
     }
 
     private function _updateProduct ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
             return glWrap("AccessDenied");
         }
 
@@ -174,14 +190,14 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createOrigin ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
             return glWrap("AccessDenied");
         }
 
     }
 
     private function _updateOrigin ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
             return glWrap("AccessDenied");
         }
 
@@ -194,14 +210,14 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createCategory ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
             return glWrap("AccessDenied");
         }
 
     }
 
     private function _updateCategory ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
             return glWrap("AccessDenied");
         }
 
@@ -212,12 +228,12 @@ class pluginShop extends objectPlugin {
     private function _getOrderByID ($orderID) {
         $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
         $order = null;
-        if ($this->hasPermission('IsAdmin')) {
+        // if ($this->ifYou('CanAdmin')) {
             $order = $this->getCustomer()->fetch($config);
-        } else {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
-            $order = $this->getCustomer()->fetch($config);
-        }
+        // } else {
+        //     $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+        //     $order = $this->getCustomer()->fetch($config);
+        // }
 
         if (empty($order)) {
             return glWrap('error', 'OrderDoesNotExist');
@@ -260,7 +276,7 @@ class pluginShop extends objectPlugin {
 
         // check permissions
         $orderIDs = array();
-        if ($this->hasPermission('IsAdmin')) {
+        if ($this->ifYou('CanAdmin')) {
             $orderIDs = $this->getCustomer()->fetch($config);
         } else {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
@@ -278,11 +294,11 @@ class pluginShop extends objectPlugin {
         // get todays orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("NEW");
-        $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'));
+        $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
 
         // set permissions
         $orderIDs = array();
-        if ($this->hasPermission('IsAdmin')) {
+        if ($this->ifYou('CanAdmin')) {
             $orderIDs = $this->getCustomer()->fetch($config);
         } else {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
@@ -303,7 +319,7 @@ class pluginShop extends objectPlugin {
 
         // check permissions
         $orderIDs = array();
-        if ($this->hasPermission('IsAdmin')) {
+        if ($this->ifYou('CanAdmin')) {
             $orderIDs = $this->getCustomer()->fetch($config);
         } else {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
@@ -344,7 +360,7 @@ class pluginShop extends objectPlugin {
 
         // check permissions
         $orderIDs = array();
-        if ($this->hasPermission('IsAdmin')) {
+        if ($this->ifYou('CanAdmin')) {
             $orderIDs = $this->getCustomer()->fetch($config);
         } else {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
@@ -533,6 +549,7 @@ class pluginShop extends objectPlugin {
             // reset temp order
             $this->_resetOrderTemp();
             // get created order
+
             $result = $this->_getOrderByID($orderID);
         }
 
@@ -544,14 +561,14 @@ class pluginShop extends objectPlugin {
 
     private function _updateOrder ($reqData) {
         // only admin can update orders
-        if (!$this->hasPermission('IsAdmin') || !$this->hasPermission('CanEdit')) {
+        if (!$this->ifYou('CanAdmin') || !$this->ifYou('CanEdit')) {
             return glWrap("AccessDenied");
         }
     }
 
     private function _disableOrderByID ($OrderID) {
         // check permissions
-        if ($this->hasPermission('IsAdmin') && $this->hasPermission('CanEdit')) {
+        if ($this->ifYou('CanAdmin') && $this->ifYou('CanEdit')) {
             $config = configurationShopDataSource::jsapiDisableOrder($OrderID);
             $this->getCustomer()->fetch($config);
             return glWrap("ok", true);
@@ -563,7 +580,7 @@ class pluginShop extends objectPlugin {
     // stats
     // -----------------------------------------------
     private function _getStats_OrdersOverview () {
-        if (!$this->hasPermission('IsAdmin')) {
+        if (!$this->ifYou('CanAdmin')) {
             return null;
         }
         $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
@@ -572,7 +589,7 @@ class pluginShop extends objectPlugin {
     }
 
     private function _getStats_ProductsOverview () {
-        if (!$this->hasPermission('IsAdmin')) {
+        if (!$this->ifYou('CanAdmin')) {
             return null;
         }
         // get shop products overview:
@@ -853,13 +870,13 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createPromo ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanCreate')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
             return glWrap("AccessDenied");
         }
     }
 
     private function _updatePromo ($reqData) {
-        if (!$this->hasPermission('IsAdmin') && !$this->hasPermission('CanEdit')) {
+        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
             return glWrap("AccessDenied");
         }
     }
@@ -904,10 +921,14 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_overview (&$resp) {
-        $resp['products'] = $this->_getStats_ProductsOverview();
-        $resp['orders'] = $this->_getStats_OrdersOverview();
-        $resp['popular'] = $this->_getProducts_TopPopular();
-        $resp['non_popular'] = $this->_getProducts_TopNonPopular();
+        $resp['all_products'] = $this->_getStats_ProductsOverview();
+        $resp['all_orders'] = $this->_getStats_OrdersOverview();
+        $resp['products_todays'] = $this->_getProducts_Todays();
+        $resp['products_popular'] = $this->_getProducts_TopPopular();
+        $resp['products_non_popular'] = $this->_getProducts_TopNonPopular();
+        $resp['orders_all_new'] = $this->_getOrders_ByStatus('NEW');
+        $resp['orders_todays'] = $this->_getOrders_Todays();
+        $resp['orders_expired'] = $this->_getOrders_Expired();
     }
 
     public function get_shop_location (&$resp, $req) {
@@ -1077,7 +1098,10 @@ class pluginShop extends objectPlugin {
 
     public function get_shop_order (&$resp, $req) {
         if (isset($req->get['id']) && $req->get['id'] !== "temp") {
-            $resp = $this->_getOrderByID($req->get['id']);
+            if ($this->ifYou('CanAdmin'))
+                $resp = $this->_getOrderByID($req->get['id']);
+            else
+                $resp['error'] = 'AccessDenied';
             return;
         } else if (isset($req->get['hash'])) {
             $resp = $this->_getOrderByHash($req->get['hash']);
@@ -1228,7 +1252,6 @@ class pluginShop extends objectPlugin {
             foreach ($sessionOrderProducts as $purchasingProduct) {
                 $product = $this->_getProductByID($purchasingProduct['ID']);
                 // actual price (with discount if promo is active)
-                // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
                 // set product gross and net totals
                 // get purchased product quantity
                 $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
@@ -1249,16 +1272,6 @@ class pluginShop extends objectPlugin {
         );
         // calc order totals
         foreach ($productItems as $product) {
-            // $product = $this->_getProductByID($soldItem['ProductID']);
-            // // if (!isset($product['CurrentPrice']))
-            // //     $product['CurrentPrice'] = floatval($product['Price']);
-            // $product["_orderProductSubTotal"] = $product['Price'] * $product['_orderQuantity'];
-            // // if (isset($order['temp']) && isset($product['DiscountPrice'])) {
-            // //     if ($product['IsPromo'] && isset($order['promo']) && !empty($order['promo']['Discount']))
-            // //         $product['Price'] = (100 - intval($order['promo']['Discount'])) / 100 * $product['CurrentPrice'];
-            // // }
-            // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
-            // $product["_orderProductTotal"] = $price * $product['_orderQuantity'];
             // update order totals
             $info["total"] += floatval($product['_orderProductTotal']);
             $info["subTotal"] += floatval($product['_orderProductSubTotal']);
@@ -1268,746 +1281,6 @@ class pluginShop extends objectPlugin {
         $order['items'] = $productItems;
         $order['info'] = $info;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function getResponse () {
-        $data = new libraryDataObject();
-
-        switch(libraryRequest::fromGET('fn')) {
-            case "shop_profile_orders": {
-                $profileID = libraryRequest::fromGET('profileID');
-                $data = $this->_api_getOrderList_ForProfile($profileID);
-                break;
-            }
-            case "shop_manage_orders": {
-                $do = libraryRequest::fromGET('action');
-                switch ($do) {
-                    case 'update':
-                        $orderID = libraryRequest::fromGET('orderID');
-                        $this->_api_updateOrder($orderID);
-                        $data = $this->_api_getOrder($orderID);
-                        break;
-                    case 'get':
-                        $orderID = libraryRequest::fromGET('orderID');
-                        $data = $this->_api_getOrder($orderID);
-                        break;
-                    case 'list':
-                        $data = $this->_api_getOrderList();
-                        break;
-                }
-                break;
-            }
-            case "shop_manage_origins": {
-                $data = $this->_api_getOriginList();
-                break;
-            }
-            case "shop_manage_origin": {
-                // $do = libraryRequest::fromGET('action');
-                if (libraryRequest::isGET() && libraryRequest::hasInGET('ID')) {
-                    $originID = libraryRequest::fromGET('ID');
-                    $data = $this->_api_getOrigin($originID);
-                } elseif (libraryRequest::isPOST() && !libraryRequest::hasInREQUEST('ID')) {
-                    $data = $this->_api_createOrigin();
-                } elseif (libraryRequest::isPUT() && libraryRequest::hasInREQUEST('ID')) {
-                    $originID = libraryRequest::fromREQUEST('ID');
-                    $data = $this->_api_updateOrigin($originID);
-                }
-
-                $data->setData('statuses', $this->_api_getOriginStates()->getData('statuses'));
-
-
-                break;
-                // switch ($do) {
-                //     case 'create':
-                //         $data = $this->_api_createOrigin();
-                //         break;
-                //     case 'update':
-                //         $originID = libraryRequest::fromGET('originID');
-                //         $data = $this->_api_updateOrigin($originID);
-                //         break;
-                //     case 'update_field':
-                //         $originID = libraryRequest::fromGET('originID');
-                //         $key = libraryRequest::fromPOST('key');
-                //         $value = libraryRequest::fromPOST('value');
-                //         $data = $this->_api_updateOriginField($originID, $key, $value);
-                //         break;
-                //     case 'get':
-                //         $originID = libraryRequest::fromGET('originID');
-                //         $data = $this->_api_getOrigin($originID);
-                //         break;
-                //     case 'statuses':
-                //         $data = $this->_api_getOriginStates();
-                //         break;
-                //     case 'list':
-                //         $data = $this->_api_getOriginList();
-                //         break;
-                // }
-            }
-            case "shop_manage_categories": {
-                break;
-                $do = libraryRequest::fromGET('action');
-                switch ($do) {
-                    case 'update':
-                        $categoryID = libraryRequest::fromGET('categoryID');
-                        $this->_api_updateCategory($categoryID);
-                        $data = $this->_api_getCategory($categoryID);
-                        break;
-                    case 'get':
-                        $categoryID = libraryRequest::fromGET('categoryID');
-                        $data = $this->_api_getCategory($categoryID);
-                        break;
-                    case 'list':
-                        $data = $this->_api_getCategoryList();
-                        break;
-                }
-                break;
-            }
-            case "shop_manage_products": {
-                break;
-                $do = libraryRequest::fromGET('action');
-                switch ($do) {
-                    case 'update':
-                        $productID = libraryRequest::fromGET('productID');
-                        $this->_api_updateProduct($productID);
-                        $data = $this->_api_getProduct($productID);
-                        break;
-                    case 'get':
-                        $productID = libraryRequest::fromGET('productID');
-                        $data = $this->_api_getProduct($productID);
-                        break;
-                    case 'list':
-                        $data = $this->_api_getProductList();
-                        break;
-                }
-                break;
-            }
-            case "shop_manage_stats": {
-                break;
-                $data = $this->_api_getToolbox_Dashboard();
-                break;
-            }
-        }
-
-        // attach to output
-        return $data;
-    }
-
-
-
-    // shopping products compare
-    // -----------------------------------------------
-    // private function _api_getCompareList () {
-    //     $do = libraryRequest::fromGET('action');
-    //     $productID = libraryRequest::fromGET('productID');
-    //     $dataObj = $this->_custom_util_manageStoredProducts('shopProductsCompare');
-
-    //     $products = $dataObj->getData();
-
-    //     if ($do == 'ADD' && count($products['products']) > 10) {
-    //         unset($products['products'][$productID]);
-    //         $dataObj->setError("MaxProductsAdded");
-    //         $dataObj->setData('products', $products);
-    //     }
-
-    //     return $dataObj;
-    // }
-
-    // shopping cart
-    // -----------------------------------------------
-    private function www_api_getShoppingCart () {
-
-        $sessionKey = 'shopCartProducts';
-        $cartActions = array('ADD', 'REMOVE', 'CLEAR', 'INFO', 'SAVE');
-        $do = libraryRequest::fromGET('action');
-        $dataObj = $this->_custom_util_manageStoredProducts($sessionKey, $cartActions);
-
-        $errors = array();
-        // var_dump($dataObj);
-
-        $productData = $dataObj->getData();
-
-        // adjust product id and quantity
-        $productID = intval(libraryRequest::fromGET('productID'));
-        $productQuantity = intval(libraryRequest::fromGET('productQuantity'));
-
-        // $_getInfoFn = function (&$_products = array()) {
-
-        // };
-
-        // create/add product
-        if ($do == 'ADD' && $productQuantity) {
-            if (empty($productData['products'][$productID]['_orderQuantity']))
-                $productData['products'][$productID]['_orderQuantity'] = 0;
-
-            $productData['products'][$productID]['_orderQuantity'] += $productQuantity;
-
-            // we keep product until REMOVE action is invoked
-            if ($productData['products'][$productID]['_orderQuantity'] <= 0)
-                $productData['products'][$productID]['_orderQuantity'] = 1;
-
-            $_SESSION['shopCartProducts'] = $productData['products'];
-        }
-
-        // get shopping cart info
-        if ($do == 'SAVE') {
-
-            // cartUser data
-            // -----------------------
-            // shopCartUserName
-            // shopCartUserEmail
-            // shopCartUserPhone
-            // shopCartUserDelivery
-            // shopCartUserCity
-            // shopCartLogistic
-            // shopCartWarehouse
-            // shopCartComment
-            // shopCartCreateAccount
-            $cartUser = libraryRequest::fromPOST('user');
-
-            $accountID = null;
-            $addressID = null;
-
-            if (!isset($cartUser['shopCartProfileID']) || $cartUser['shopCartProfileID'] !== $_SESSION['Account:ProfileID']) {
-
-                // save account
-                // -----------------------
-                // AccountID
-                // Shipping
-                // Warehouse
-                // Comment
-                // Status
-                // TrackingLink
-                // DateCreate
-                // DateUpdate
-                $dataAccount = array();
-                $dataAccount["FirstName"] = $cartUser["shopCartUserName"];
-                $dataAccount["LastName"] = "";
-                $dataAccount["EMail"] = $cartUser["shopCartUserEmail"];
-                $dataAccount["Phone"] = $cartUser["shopCartUserPhone"];
-                $dataAccount["Password"] = "1234";
-                $accountID = $this->getCustomer()->addAccount($dataAccount);
-
-                // add account address
-                $dataAccountAddress = array();
-                $dataAccountAddress["AccountID"] = $accountID;
-                $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
-                $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
-                $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
-                $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
-
-                $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
-
-            } else {
-
-                $accountID = $_SESSION['Account:ProfileID'];
-
-
-                if (empty($cartUser["shopCartProfileAddressID"])) {
-
-                    // check for custom address
-                    $dataAccountAddress = array();
-                    if (!empty($cartUser["shopCartUserAddress"]))
-                        $dataAccountAddress["Address"] = $cartUser["shopCartUserAddress"];
-                    if (!empty($cartUser["shopCartUserPOBox"]))
-                        $dataAccountAddress["POBox"] = $cartUser["shopCartUserPOBox"];
-                    if (!empty($cartUser["shopCartUserCountry"]))
-                        $dataAccountAddress["Country"] = $cartUser["shopCartUserCountry"];
-                    if (!empty($cartUser["shopCartUserCity"]))
-                        $dataAccountAddress["City"] = $cartUser["shopCartUserCity"];
-
-                    // set error or add new address
-                    if (count($dataAccountAddress) == 0)
-                        $dataObj->setError('EmptyShippingAddress');
-                    else
-                        $addressID = $this->getCustomer()->addAccountAddress($dataAccountAddress);
-                } else {
-
-                    // validate account address id
-                    $accountAddressEntry = $this->getCustomer()->getAccountAddress($accountID, $cartUser["shopCartProfileAddressID"]);
-
-                    if (empty($accountAddressEntry['ID']))
-                        $dataObj->setError('WrongProfileAddressID');
-                    else
-                        $addressID = $accountAddressEntry['ID'];
-                }
-
-            }
-
-            if (!$dataObj->hasError() && $addressID != null && $accountID != null) {
-                // save order
-                // -----------------------
-                // AccountID
-                // Shipping
-                // Warehouse
-                // Comment
-                // Hash
-                // DateCreated
-                // DateUpdated
-                $configOrder = configurationShopDataSource::jsapiShopOrderCreate();
-                $dataOrder["AccountID"] = $accountID;
-                $dataOrder["AccountAddressesID"] = $addressID;
-                $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
-                $dataOrder["Shipping"] = $cartUser['shopCartLogistic'];
-                $dataOrder["Warehouse"] = $cartUser['shopCartWarehouse'];
-                $dataOrder["Comment"] = $cartUser['shopCartComment'];
-                $dataOrder["Hash"] = md5(time() . md5(time()));
-                $dataOrder['DateCreated'] = date('Y-m-d H:i:s');
-                $dataOrder['DateUpdated'] = date('Y-m-d H:i:s');
-                $configOrder['data'] = array(
-                    "fields" => array_keys($dataOrder),
-                    "values" => array_values($dataOrder)
-                );
-
-                $this->getCustomer()->fetch($configOrder);
-
-                $orderID = $this->getCustomerDataBase()->getLastInsertId();
-
-                // save products
-                // -----------------------
-                // ProductID
-                // OrderID
-                // ProductPrice
-                // _orderQuantity
-                foreach ($productData['products'] as $_item) {
-                    $configProduct = configurationShopDataSource::jsapiShopOrderProductsCreate();
-                    $dataProduct = array();
-                    $dataProduct["ProductID"] = $_item["ID"];
-                    $dataProduct["OrderID"] = $orderID;
-                    $dataProduct["ProductPrice"] = $_item["ProductPrice"];
-                    $dataProduct["_orderQuantity"] = $_item["_orderQuantity"];
-                    $configProduct['data'] = array(
-                        "fields" => array_keys($dataProduct),
-                        "values" => array_values($dataProduct)
-                    );
-                    $this->getCustomer()->fetch($configProduct);
-                }
-
-                // clear products
-                $dataObj = $this->_custom_util_manageStoredProducts('shopCartProducts', $cartActions, 'CLEAR');
-                $productData = $dataObj->getData();
-
-                // need to shop order id and status link
-                // and send email
-                $dataObj->setData('status', array(
-                    'orderID' => $orderID,
-                    'orderHash'=> $dataOrder["Hash"]
-                ));
-            }
-        }
-
-        $dataObj->setData('info', $this->___calcOrderBoughts($productData['products']));
-        $dataObj->setData('products', $productData['products']);
-        $_SESSION[$sessionKey] = $productData['products'];
-
-        return $dataObj;
-    }
-
-    // orders
-    // -----------------------------------------------
-    private function www_api_addOrder () {
-
-    }
-
-    // profile orders
-    // -----------------------------------------------
-    private function www_api_getOrderList_ForProfile ($profileID) {
-
-        $dataObj = new libraryDataObject();
-
-        if (!isset($profileID)) {
-            $dataObj->setError('WrongProfileID');
-            return $dataObj;
-        }
-
-        if (!$this->getCustomer()->hasPlugin('account')) {
-            $dataObj->setError('WrongRequest');
-            return $dataObj;
-        }
-
-        if ($_SESSION['Account:ProfileID'] != $profileID) {
-            $dataObj->setError('AccessDenied');
-            return $dataObj;
-        }
-
-        // get orders
-        $configOrders = configurationShopDataSource::jsapiGetShopOrdersForProfile($profileID);
-        $dataOrders = $this->getCustomer()->fetch($configOrders);
-
-        // var_dump($dataOrders);
-        foreach ($dataOrders as $key => $order)
-            $dataOrders[$key] = $this->_api_getOrder($order)->getData();
-
-        // get order boughts
-        // foreach ($dataOrders as $key => $order) {
-        //     $orderBoughtsData = $this->_api_getOrderBoughts($order['ID']);
-        //     if ($orderBoughtsData->hasData()) {
-        //         $dataOrders[$key]['Info'] = $orderBoughtsData->getData('Info');
-        //         $dataOrders[$key]['Boughts'] = $orderBoughtsData->getData('Boughts');
-        //     }
-        // }
-
-        $dataObj->setData('orders', $dataOrders);
-
-        return $dataObj;
-    }
-
-    // toolbox orders
-    // -----------------------------------------------
-    private function www_api_getOrderStatusList () {
-        return array("NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED");
-    }
-
-
-    private function www_api_getOrderList () {
-        // in toolbox methods we must check it's permission
-        // offset
-        // limit
-        $dataObj = new libraryDataObject();
-
-        // $limit = 2;
-
-        // if (!$this->getCustomer()->getAccess()) {
-        //     $dataObj->setError('AccessDenied');
-        //     return $dataObj;
-        // }
-
-        $configOrders = configurationShopDataSource::jsapiGetShopOrders();
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders);
-
-        // pagination
-        $page = libraryRequest::fromGET('page');
-        $per_page = libraryRequest::fromGET('per_page');
-
-        $configOrders['limit'] = $per_page;
-
-        if (!empty($page) && !empty($per_page)) {
-            $configOrders['offset'] = ($page - 1) * $per_page;
-        }
-
-        // sorting
-        $sort = libraryRequest::fromGET('sort');
-        $order = libraryRequest::fromGET('order');
-
-        if (!empty($sort) && !empty($order)) {
-            $configOrders["order"] = array(
-                "field" =>  'shop_orders' . DOT . $sort,
-                "ordering" => strtoupper($order)
-            );
-        }
-
-        // filtering
-        $filterBy_status = libraryRequest::fromGET('status');
-        if (!empty($filterBy_status)) {
-            $configOrders['condition']['filter'] .= "Status (=) ?";
-            $configOrders['condition']['values'][] = $filterBy_status;
-        }
-
-        // var_dump($configOrders);
-
-        // get valid orders count
-        $configCount['condition'] = new ArrayObject($configOrders['condition']);
-
-        // get data
-        $dataOrders = $this->getCustomer()->fetch($configOrders);
-        $dataObj->setData('orders', $dataOrders);
-
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $dataObj->setData('total_count', $dataCount['ItemsCount']);
-
-        $availableStatuses = $this->_api_getOrderStatusList();
-        $dataObj->setData('statuses', $availableStatuses);
-        
-        return $dataObj;
-    }
-
-    private function www_api_updateOrder ($orderID) {
-        $dataObj = new libraryDataObject();
-
-        if (!$this->getCustomer()->isAdminActive()) {
-            $dataObj->setError('AccessDenied');
-            return $dataObj;
-        }
-
-        // get fields to update
-        $Status = libraryRequest::fromPOST('Status');
-        // $fieldValue = libraryRequest::fromPOST('value');
-        if (empty($Status)) {
-            $dataObj->setError('EmptyFieldName');
-            return $dataObj;
-        }
-
-        // Allow to update the Status filed only
-        // if ($fieldName !== "Status") {
-        //     $dataObj->setError('WrongFieldName');
-        //     return $dataObj;
-        // }
-
-        $data['Status'] = $Status;
-        $data['DateUpdated'] = date('Y-m-d H:i:s');
-
-        $configOrder = configurationShopDataSource::jsapiShopOrderUpdate($orderID, $data);
-        // var_dump($configOrder);
-        $this->getCustomer()->fetch($configOrder);
-        return $dataObj;
-    }
-
-    private function www_api_getOriginStates () {
-        $dataObj = new libraryDataObject();
-        $dataObj->setData('statuses', $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins));
-        return $dataObj;
-    }
-
-    private function www_api_getOrigin ($originID) {
-        $dataObj = new libraryDataObject();
-        if (!empty($originID)) {
-            $configOrigin = configurationShopDataSource::jsapiShopOriginGet($originID);
-            $dataOrigin = $this->getCustomer()->fetch($configOrigin);
-            $dataObj->setData('origin', $dataOrigin);
-        }
-        return $dataObj;
-    }
-
-    private function www_api_getOriginList () {
-        $dataObj = new libraryDataObject();
-
-        $configOrigins = configurationShopDataSource::jsapiShopOriginListGet();
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrigins);
-
-        // pagination
-        if (libraryRequest::hasInGet('page', 'per_page')) {
-            $page = libraryRequest::fromGET('page');
-            $per_page = libraryRequest::fromGET('per_page');
-
-            $configOrigins['limit'] = $per_page;
-
-            if (!empty($page) && !empty($per_page)) {
-                $configOrigins['offset'] = ($page - 1) * $per_page;
-            }
-        }
-
-        // sorting
-        if (libraryRequest::hasInGet('sort', 'order')) {
-            $sort = libraryRequest::fromGET('sort');
-            $order = libraryRequest::fromGET('order');
-
-            if (!empty($sort) && !empty($order)) {
-                $configOrigins["order"] = array(
-                    "field" =>  'shop_origins' . DOT . $sort,
-                    "ordering" => strtoupper($order)
-                );
-            }
-        }
-
-        $configCount['additional'] = new ArrayObject($configOrigins['additional']);
-        $configCount['condition'] = new ArrayObject($configOrigins['condition']);
-
-        $dataOrders = $this->getCustomer()->fetch($configOrigins);
-        $dataObj->setData('origins', $dataOrders);
-
-        $dataCount = $this->getCustomer()->fetch($configCount);
-        $dataObj->setData('total_count', $dataCount['ItemsCount']);
-
-        return $dataObj;
-    }
-
-    private function www_api_createOrigin () {
-        $dataObj = new libraryDataObject();
-        $dataOrigin = libraryRequest::getObjectFromREQUEST("Name", "Description", "Status", "HomePage");
-        $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
-        // $dataOrigin["Name"] = libraryRequest::fromGET('Name');
-        // $dataOrigin["Description"] = libraryRequest::fromGET('Description');
-        // $dataOrigin["Status"] = libraryRequest::fromGET('Status');
-        // $dataOrigin["HomePage"] = libraryRequest::fromGET('HomePage');
-        $dataOrigin["CustomerID"] = $this->getCustomer()->getCustomerID();
-        $dataOrigin['DateCreated'] = configurationShopDataSource::getDate();
-        $dataOrigin['DateUpdated'] = configurationShopDataSource::getDate();
-        $configOrigin = configurationShopDataSource::jsapiShopOriginCreate($dataOrigin);
-        $this->getCustomer()->fetch($configOrigin);
-        $dataObj->setData('origin', $dataOrigin);
-        return $dataObj;
-    }
-
-    private function www_api_updateOrigin ($originID) {
-        $dataObj = new libraryDataObject();
-
-        $dataOrigin = array();
-
-        // update only one field
-        if (libraryRequest::hasInREQUEST("field", "value")) {
-            $field = libraryRequest::fromREQUEST('field');
-            $value = libraryRequest::fromREQUEST('value');
-            $dataOrigin[$field] = $value;
-        } else // update whole item
-            $dataOrigin = libraryRequest::getObjectFromREQUEST("Name", "Description", "Status", "HomePage");
-
-        // update external value
-        if (isset($dataOrigin['Name']))
-            $dataOrigin["ExternalKey"] = libraryUtils::url_slug($dataOrigin['Name'], array("delimiter" => "_", 'lowercase' => true));
-
-        // change update time
-        $dataOrigin['DateUpdated'] = configurationShopDataSource::getDate();
-
-        $configOrigin = configurationShopDataSource::jsapiShopOriginUpdate($originID, $dataOrigin);
-        $this->getCustomer()->fetch($configOrigin);
-        $dataObj->setData('origin', $dataOrigin);
-        return $dataObj;
-    }
-
-    private function www_custom_util_manageStoredProducts ($sessionKey, $userActions = array(), $action = null) {
-        $dataObj = new libraryDataObject();
-        $productID = libraryRequest::fromGET('productID');
-        $do = empty($action) ? libraryRequest::fromGET('action') : $action;
-        $actions = array('ADD', 'REMOVE', 'CLEAR', 'INFO');
-
-        if (!empty($userActions) && is_array($userActions))
-            $actions = array_merge($actions, $userActions);
-
-        if (empty($do) || !in_array($do, $actions)) {
-            $dataObj->setError("UnknownAction");
-            return $dataObj;
-        }
-
-        // adjust product id and quantity
-        $productID = intval($productID);
-
-        if (empty($productID) && $do == 'ADD') {
-            $dataObj->setError("EmptyProductID");
-            return $dataObj;
-        }
-
-        $products = isset($_SESSION[$sessionKey]) ? $_SESSION[$sessionKey] : array();
-
-        // create/add product
-        if ($do == 'ADD') {
-            // create
-            if (!isset($products[$productID])) {
-                $productEntry = $this->_api_getProduct($productID);
-                if ($productEntry->hasError()) {
-                    $dataObj->setError($productEntry->getError());
-                    return $dataObj;
-                } else {
-                    $products[$productID] = $productEntry->getData('Product');
-                    $_SESSION[$sessionKey] = $products;
-                }
-            }
-
-            $dataObj->setData('products', $products);
-
-            return $dataObj;
-        }
-
-        // remove product
-        if ($do == 'REMOVE') {
-            if (isset($products[$productID]))
-                unset($products[$productID]);
-
-            $dataObj->setData('products', $products);
-            $_SESSION[$sessionKey] = $products;
-
-            return $dataObj;
-        }
-
-        // truncate shopping cart
-        if ($do == 'CLEAR') {
-            unset($_SESSION[$sessionKey]);
-            $dataObj->setData('products', null);
-            return $dataObj;
-        }
-
-        // get shopping cart info
-        if ($do == 'INFO') {
-            $dataObj->setData('products', $products);
-            return $dataObj;
-        }
-
-        $dataObj->setData('products', $products);
-        return $dataObj;
-    }
-
 }
 
 ?>

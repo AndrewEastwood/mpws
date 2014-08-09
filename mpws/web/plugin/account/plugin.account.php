@@ -147,7 +147,7 @@ class pluginAccount extends objectPlugin {
             'Password' => array('skipIfUnset', 'isPassword', 'min' => 8, 'max' => 30, 'inPairWith' => 'ConfirmPassword'),
             'ConfirmPassword' => array('skipIfUnset', 'equalTo' => 'Password', 'notEmpty'),
             // permissions
-            'p_IsAdmin' => array('skipIfUnset', 'bool', 'notEmpty'),
+            'p_CanAdmin' => array('skipIfUnset', 'bool', 'notEmpty'),
             'p_CanCreate' => array('skipIfUnset', 'bool', 'notEmpty'),
             'p_CanEdit' => array('skipIfUnset', 'bool', 'notEmpty'),
             'p_CanView' => array('skipIfUnset', 'bool', 'notEmpty'),

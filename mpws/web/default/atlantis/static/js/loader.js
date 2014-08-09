@@ -86,6 +86,10 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
 
+    Backbone.Model.prototype.isEmpty = function () {
+        return _.isEmpty(this.attributes);
+    }
+
     var renderFn = function (options) {
         // debugger;
         if (!options || !options.name)

@@ -10,7 +10,7 @@ define("plugin/shop/toolbox/js/router", [
     var Router = Backbone.Router.extend({
         routes: {
             "shop/stats": "stats",
-            "shop/product_manager": "product_manager",
+            "shop/products": "products",
             "shop/orders": "orders",
             "shop/sales": "sales",
             "shop/prices": "prices",
@@ -25,32 +25,19 @@ define("plugin/shop/toolbox/js/router", [
 
         stats: function () {
             require(['plugin/shop/toolbox/js/view/stats'], function (Stats) {
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('Stats', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
-
                     // create new view
-                    var stats = cachedView || new Stats();
+                var stats = new Stats();
+                stats.refresh();
 
-                    stats.show();
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: stats.$el,
-                        append: true
-                    });
-
-                    // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
-                    // return view object to pass it into this function at next invocation
-                    return stats;
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: stats.$el,
+                    append: true
                 });
             });
         },
 
-        product_manager: function () {
+        products: function () {
             require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
                 // using this wrapper to cleanup previous view and create new one
                 Cache.withObject('ProductManager', function (cachedView) {
