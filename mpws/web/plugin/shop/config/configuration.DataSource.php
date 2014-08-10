@@ -227,7 +227,7 @@ class configurationShopDataSource extends objectConfiguration {
                 "field" => "SoldTotal",
                 "ordering" => "DESC"
             ),
-            "limit" => 20,
+            "limit" => 15,
             "group" => "ProductID",
             "options" => null
         ));
@@ -245,7 +245,7 @@ class configurationShopDataSource extends objectConfiguration {
                 "field" => "DateCreated",
                 "ordering" => "ASC"
             ),
-            "limit" => 20,
+            "limit" => 15,
             "options" => null
         ));
     }
