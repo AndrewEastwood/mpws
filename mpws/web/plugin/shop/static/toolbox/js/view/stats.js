@@ -52,14 +52,29 @@ define("plugin/shop/toolbox/js/view/stats", [
             ///
             if (google) {
 
-            // function drawChart() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Рік', 'Замовлення'],
-                    ['СІЧ',  100],
-                    ['ЛЮТ',  110],
-                    ['БЕР',  60],
-                    ['КВІ',  100]
-                ]);
+                // orders income for last month
+                var ordersNewInstensity = this.model.get('orders_intensity_new_last_month');
+                var ordersClosedInstensity = this.model.get('orders_intensity_closed_last_month');
+
+                var mergedOrdersDataOfIntensity = {};
+
+                _(ordersNewInstensity).each(function (count, date) {
+                    mergedOrdersDataOfIntensity[date] = mergedOrdersDataOfIntensity[date] || {};
+                    mergedOrdersDataOfIntensity[date]['placed'] = parseInt(count, 10);
+                });
+
+                _(ordersClosedInstensity).each(function (count, date) {
+                    mergedOrdersDataOfIntensity[date] = mergedOrdersDataOfIntensity[date] || {};
+                    mergedOrdersDataOfIntensity[date]['closed'] = parseInt(count, 10);
+                });
+
+                var dataOrders = [['Дата', 'Нові', 'Закриті']];
+
+                _(mergedOrdersDataOfIntensity).each(function (values, date) {
+                    dataOrders.push([date, values.placed || 0, values.closed || 0]);
+                });
+
+                dataOrders = google.visualization.arrayToDataTable(dataOrders);
 
                 var options = {
                     title: 'Статистика замовлень',
@@ -67,24 +82,46 @@ define("plugin/shop/toolbox/js/view/stats", [
                     legend: { position: 'bottom' }
                 };
 
-                var chart = new google.visualization.LineChart(self.$('#shop-chart-sales-ID').get(0));
-                chart.draw(data, options);
-            // }
-                var data = google.visualization.arrayToDataTable([
-                  ['Рік', 'Продажі', 'Витрати'],
-                  ['СІЧ',  1000,      400],
-                  ['ЛЮТ',  1170,      460],
-                  ['БЕР',  660,       1120],
-                  ['КВІ',  1030,      540]
-                ]);
+                var chart = new google.visualization.LineChart(self.$('#shop-chart-new-sales-ID').get(0));
+                chart.draw(dataOrders, options);
+
+                // products income for last month
+                var productsNewInstensity = this.model.get('products_new_intensity_last_month');
+                var productsDiscountInstensity = this.model.get('products_discount_intensity_last_month');
+                var productsPreorderInstensity = this.model.get('products_preorder_intensity_last_month');
+
+                var mergedProductsDataOfIntensity = {};
+
+                _(productsNewInstensity).each(function (count, date) {
+                    mergedProductsDataOfIntensity[date] = mergedProductsDataOfIntensity[date] || {};
+                    mergedProductsDataOfIntensity[date]['added'] = parseInt(count, 10);
+                });
+
+                _(productsDiscountInstensity).each(function (count, date) {
+                    mergedProductsDataOfIntensity[date] = mergedProductsDataOfIntensity[date] || {};
+                    mergedProductsDataOfIntensity[date]['discount'] = parseInt(count, 10);
+                });
+
+                _(productsPreorderInstensity).each(function (count, date) {
+                    mergedProductsDataOfIntensity[date] = mergedProductsDataOfIntensity[date] || {};
+                    mergedProductsDataOfIntensity[date]['preorder'] = parseInt(count, 10);
+                });
+
+                var dataProducts = [['Дата', 'Нові', 'З знижкою', 'Для замовлення']];
+
+                _(mergedProductsDataOfIntensity).each(function (values, date) {
+                    dataProducts.push([date, values.added || 0, values.discount || 0, values.preorder || 0]);
+                });
+
+                var dataProducts = google.visualization.arrayToDataTable(dataProducts);
 
                 var options = {
-                    title: 'Прибутки магазину',
+                    title: 'Надходження товарів',
                     legend: { position: 'bottom' }
                 };
 
-                var chart = new google.visualization.ColumnChart(self.$('#shop-chart-balance-ID').get(0));
-                chart.draw(data, options);
+                var chart = new google.visualization.ColumnChart(self.$('#shop-chart-new-products-ID').get(0));
+                chart.draw(dataProducts, options);
             }
         }
     });

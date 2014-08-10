@@ -521,6 +521,44 @@ class configurationShopDataSource extends objectConfiguration {
         unset($config['additional']);
         return $config;
     }
+
+    static function jsapiShopStat_OrdersIntensityLastMonth ($status) {
+        $config = self::jsapiGetShopOrders();
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
+        $config['condition'] = array(
+            'Status' => self::jsapiCreateDataSourceCondition($status),
+            'DateCreated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-10 month")), ">")
+        );
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'IncomeDate',
+                'values' => 'ItemsCount'
+            )
+        );
+        $config['group'] = 'Date(DateCreated)';
+        $config['limit'] = 0;
+        unset($config['additional']);
+        return $config;
+    }
+
+    static function jsapiShopStat_ProductsIntensityLastMonth ($status) {
+        $config = self::jsapiShopProductItemGet();
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
+        $config['condition'] = array(
+            'Status' => self::jsapiCreateDataSourceCondition($status),
+            'DateCreated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-10 month")), ">")
+        );
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'IncomeDate',
+                'values' => 'ItemsCount'
+            )
+        );
+        $config['group'] = 'Date(DateCreated)';
+        $config['limit'] = 0;
+        unset($config['additional']);
+        return $config;
+    }
     // <<<< Statistic: order overview
 
 

@@ -584,7 +584,17 @@ class pluginShop extends objectPlugin {
             return null;
         }
         $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
-        $data = $this->getCustomer()->fetch($config);
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        return $data;
+    }
+
+    private function _getStats_OrdersIntensityLastMonth ($status) {
+        if (!$this->ifYou('CanAdmin')) {
+            return null;
+        }
+        $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status);
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        // var_dump($config);
         return $data;
     }
 
@@ -594,7 +604,17 @@ class pluginShop extends objectPlugin {
         }
         // get shop products overview:
         $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
-        $data = $this->getCustomer()->fetch($config);
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        return $data;
+    }
+
+    private function _getStats_ProductsIntensityLastMonth ($status) {
+        if (!$this->ifYou('CanAdmin')) {
+            return null;
+        }
+        $config = configurationShopDataSource::jsapiShopStat_ProductsIntensityLastMonth($status);
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        // var_dump($config);
         return $data;
     }
 
@@ -929,6 +949,11 @@ class pluginShop extends objectPlugin {
         $resp['orders_all_new'] = $this->_getOrders_ByStatus('NEW');
         $resp['orders_todays'] = $this->_getOrders_Todays();
         $resp['orders_expired'] = $this->_getOrders_Expired();
+        $resp['orders_intensity_new_last_month'] = $this->_getStats_OrdersIntensityLastMonth('NEW');
+        $resp['orders_intensity_closed_last_month'] = $this->_getStats_OrdersIntensityLastMonth('SHOP_CLOSED');
+        $resp['products_new_intensity_last_month'] = $this->_getStats_ProductsIntensityLastMonth('ACTIVE');
+        $resp['products_discount_intensity_last_month'] = $this->_getStats_ProductsIntensityLastMonth('DISCOUNT');
+        $resp['products_preorder_intensity_last_month'] = $this->_getStats_ProductsIntensityLastMonth('PREORDER');
     }
 
     public function get_shop_location (&$resp, $req) {

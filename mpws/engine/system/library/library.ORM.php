@@ -1233,7 +1233,7 @@
          * Add a column to the list of columns to GROUP BY
          */
         public function group_by($column_name) {
-            $column_name = $this->_quote_identifier($column_name);
+            // $column_name = $this->_quote_identifier($column_name);
             $this->_group_by[] = $column_name;
             return $this;
         }
