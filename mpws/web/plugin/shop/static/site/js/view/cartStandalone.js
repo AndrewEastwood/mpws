@@ -168,10 +168,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
                         validators: {
                             notEmpty: {
                                 message: 'Це поле не може бути порожнім'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_]+$/,
-                                message: 'Недопустимі символи в полі (дозволено букви, цифри та нижнє підкреслення)'
                             }
                         }
                     },

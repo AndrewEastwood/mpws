@@ -183,15 +183,29 @@
             {{#mpwsIsEmpty data.orders_todays}}
                 <stron>У Вас немає більше нових замовлень <i class="fa fa-frown-o"></i>
             {{else}}
-                <ul class="list-group">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ред.</th>
+                            <th>Покупець</th>
+                            <th>Контакти</th>
+                            <th>Сума</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {{#each data.orders_todays}}
-                    <li class="list-group-item">
-                        <i class="fa fa-pencil-square-o"></i>
-                        <strong>{{account.FirstName}} {{account.LastName}}</strong>
-                        <span class="badge">{{info.total}}<span class="moneyType">грн.</span></span>
-                    </li>
+                        <tr>
+                            <td><i class="fa fa-pencil-square-o"></i></td>
+                            <td>{{account.FirstName}} {{account.LastName}}</td>
+                            <td>
+                                {{address.POBox}}, {{address.Country}} {{address.City}}<br>
+                                {{account.Phone}}, {{account.EMail}}
+                            </td>
+                            <td>{{info.total}}<span class="moneyType">грн.</span></td>
+                        </tr>
                     {{/each}}
-                </ul>
+                    </tbody>
+                </table>
             {{/mpwsIsEmpty}}
             </div>
         </div>
@@ -203,17 +217,28 @@
                 <i title="Ці товари слід закуповувати більше." class="fa fa-star helper helper-left"></i> ТОП 20 товарів:
             </div>
             <div class="panel-body">
-                <ul class="list-group">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ред.</th>
+                            <th>Виробник</th>
+                            <th>Назва</th>
+                            <th>Продано</th>
+                            <th>Сума</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {{#each data.products_popular}}
-                    <li class="list-group-item">
-                        <i class="fa fa-pencil-square-o"></i>
-                        <b>{{Name}}</b>
-                        <span class="badge">
-                            продано <b>{{SoldTotal}}</b> на суму <b>{{SumTotal}}<span class="moneyType">грн.</span></b>
-                        </span>
-                    </li>
+                        <tr>
+                            <td><i class="fa fa-pencil-square-o"></i></td>
+                            <td>{{OriginName}}</td>
+                            <td>{{Name}}</td>
+                            <td>{{SoldTotal}}</td>
+                            <td>{{SumTotal}}<span class="moneyType">грн.</span></td>
+                        </tr>
                     {{/each}}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -222,15 +247,26 @@
         <div class="panel panel-default">
             <div class="panel-heading"><i title="Рекомендую знизити ціну або продавати під замовлення." class="fa fa-thumbs-o-down helper helper-left"></i> Товари що не продаються:</div>
             <div class="panel-body">
-                <ul class="list-group">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ред.</th>
+                            <th>Виробник</th>
+                            <th>Назва</th>
+                            <th>Ціна</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {{#each data.products_non_popular}}
-                    <li class="list-group-item">
-                        <i class="fa fa-pencil-square-o"></i>
-                        <b>{{Name}}</b>
-                        <span class="badge">{{Price}}<span class="moneyType">грн.</span></span>
-                    </li>
+                        <tr>
+                            <td><i class="fa fa-pencil-square-o"></i></td>
+                            <td>{{OriginName}}</td>
+                            <td>{{Name}}</td>
+                            <td>{{Price}}<span class="moneyType">грн.</span></td>
+                        </tr>
                     {{/each}}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
