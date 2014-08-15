@@ -29,6 +29,7 @@ define("customer/js/router", [
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         var pageContainer = new PageContainer();
         pageContainer.render();
-        Backbone.history.navigate('', true);
+        Backbone.history.navigate(Cache.getFromLocalStorage('location') || "", true);
     });
+
 });

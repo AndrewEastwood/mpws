@@ -320,7 +320,7 @@ class libraryDataBase {
         if (count($dbData) === 1) {
             // echo print_r($dbData, true) . PHP_EOL;
             //echo '_opt_expandSingleRecord: ' . ($_opt_expandSingleRecord ? 'Y': 'N') . PHP_EOL;
-            if ($_opt_expandSingleRecord)
+            if ($_opt_expandSingleRecord && isset($dbData[0]))
                 $data = $dbData[0];
             else
                 $data = $dbData;

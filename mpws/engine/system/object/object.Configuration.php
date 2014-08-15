@@ -82,14 +82,11 @@ class objectConfiguration implements IConfiguration {
         return libraryUtils::array_merge_recursive_distinct($configA, $configB);
     }
 
-    static function jsapiUtil_GetTableRecordsCount ($table) {
+    static function jsapiUtil_GetTableRecordsCount ($table, $condition = array()) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => $table,
-            "condition" => array(
-                "filter" => "",
-                "values" => array()
-            ),
+            "condition" => $condition,
             "fields" => array("@COUNT(*) AS ItemsCount"),
             "offset" => 0,
             "limit" => 1,

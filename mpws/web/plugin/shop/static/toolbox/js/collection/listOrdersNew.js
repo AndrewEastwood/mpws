@@ -8,8 +8,13 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'orders'
+            fn: 'orders',
+            action: 'list'
         }),
+
+        initialize: function (ordersState) {
+            debugger;
+        },
 
         // Initial pagination states
         state: {
@@ -28,7 +33,7 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
 
         parseState: function (resp, queryParams, state, options) {
             var state = {
-                totalRecords: parseInt(resp && resp.count || 0, 10)
+                totalRecords: parseInt(resp && resp.total_count || 0, 10)
             };
             Sandbox.eventNotify('plugin:shop:orderList:parseState', {collection: this, state: state});
             return state;
@@ -36,7 +41,7 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
 
         parseRecords: function (resp, options) {
             // debugger;
-            var _orders = resp.items;
+            var _orders = resp.orders;
             // var _statuses = [
             //     _(resp.shop.statuses).map(function(status){
             //         return [status, lang["order_status_" + status] || status];
@@ -46,9 +51,6 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
             _(_orders).map(function (orderEntry) {
                 // debugger;
                 orderEntry.Status = [orderEntry.Status];
-                orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
-                orderEntry.AccountPhone = orderEntry.account.Phone;
-                orderEntry.InfoTotal = orderEntry.info.total;
                 return orderEntry;
             });
             // debugger;

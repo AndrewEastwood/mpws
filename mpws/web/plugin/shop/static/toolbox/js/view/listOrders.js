@@ -1,10 +1,9 @@
 define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
-    'plugin/shop/common/js/lib/utils',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
     'plugin/shop/toolbox/js/collection/listOrders',
     'plugin/shop/toolbox/js/view/popupOrder',
-    'plugin/shop/toolbox/js/view/filteringListOrders',
     "default/js/lib/backgrid",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/listOrders',
@@ -14,24 +13,36 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, MView, ShopUtils, CollectionListOrders, PopupOrderEntry, FilteringListOrders, Backgrid, tpl, lang) {
+], function (Sandbox, Backbone, Utils, CollectionListOrders, PopupOrderEntry, Backgrid, tpl, lang) {
 
     // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
     var orderStatusValues = [];
-    _(statuses).map(function(status){
-        return orderStatusValues.push([lang["order_status_" + status] || status, status]);
-    })
-    // debugger;
-    Sandbox.eventSubscribe('plugin:shop:order:edit', function(data){
-        var popupOrder = new PopupOrderEntry();
-        popupOrder.fetchAndRender({
-            orderID: data.oid
-        });
-    });
-    // Sandbox.eventSubscribe('plugin:shop:orderList:dataReceived', function(data){
-    //     //
-    // });
+    var dataSources = {};
+
+    var columnAccountFullName = {
+        name: "AccountFullName",
+        label: lang.pluginMenu_Orders_Grid_Column_AccountFullName,
+        cell: "string",
+        editable: false
+    };
+    var columnAccountPhone = {
+        name: "AccountPhone",
+        label: lang.pluginMenu_Orders_Grid_Column_AccountPhone,
+        cell: "string",
+        editable: false
+    };
+    var columnInfoTotal = {
+        name: "InfoTotal",
+        label: lang.pluginMenu_Orders_Grid_Column_InfoTotal,
+        cell: "string",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                return value + ' грн.';
+            }
+        }
+    };
 
     var columnActions = {
         name: "Actions",
@@ -42,12 +53,15 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         formatter: {
             fromRaw: function (value, model) {
                 // debugger;
-                var _link = $('<a>').attr({
-                    href: "javascript://",
-                    "data-oid": model.get('ID'),
-                    "data-action": "plugin:shop:order:edit"
+                var _link = $('<a/>').attr({
+                    href: "javascript://"
                 }).text(lang.pluginMenu_Orders_Grid_link_Edit);
                 // debugger;
+                _link.on('click', function(){
+                    // debugger;
+                    var popupOrder = new PopupOrderEntry(model.toJSON());
+                    popupOrder.render();
+                });
                 return _link;
             }
         }
@@ -66,7 +80,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 // debugger;
                 this.listenTo(this.model, "change:Status", function(model, status) {
                     // debugger;
-                    ShopUtils.updateOrderStatus(model.get('ID'), status);
+                    // ShopUtils.updateOrderStatus(model.get('ID'), status);
                 });
             }
         })
@@ -109,74 +123,63 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         editable: false
     };
 
-    var columns = [columnActions, columnStatus, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
+    var columns = [columnActions, columnAccountFullName, columnAccountPhone, columnInfoTotal, columnStatus, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
 
-    var ListOrders = MView.extend({
+    function getOrderDataSource (status) {
+        var collection = new CollectionListOrders();
+
+        // set collection status
+        collection.queryParams.status = status;
+
+        var ToolboxListOrdersGrid = new Backgrid.Grid({
+            className: "backgrid table table-responsive",
+            columns: columns,
+            collection: collection
+        });
+
+        var Paginator = new Backgrid.Extension.Paginator({
+            collection: collection
+        });
+
+        return {
+            status: status,
+            collection: collection,
+            Grid: ToolboxListOrdersGrid,
+            Paginator: Paginator,
+            fetch: function (options) {
+                collection.fetch(options);
+            }
+        }
+    }
+
+    // Sandbox.eventSubscribe('plugin:shop:orderList:dataReceived', function(data){
+    //     //
+    // });
+    // create seperated lists for the following orders:
+    // new
+    // in progress
+    // shipped
+    // delivered
+    // closed
+    // debugger;
+    _(statuses).map(function (status){
+        dataSources[status] =getOrderDataSource(status);
+        orderStatusValues.push([lang["order_status_" + status] || status, status]);
+    });
+
+    var ListOrders = Backbone.View.extend({
         template: tpl,
         lang: lang,
         className: 'shop-toolbox-orders',
         initialize: function () {
             var self = this;
-            var jqXHR = null;
-
-            var _getTableCreateFn = function (status) {
-                var collection = new CollectionListOrders();
-
-                // set collection status
-                collection.queryParams.status = status;
-
-                var ToolboxListOrdersGrid = new Backgrid.Grid({
-                    className: "backgrid table table-responsive",
-                    columns: columns,
-                    collection: collection
-                });
-
-                var Paginator = new Backgrid.Extension.Paginator({
-
-                    // If you anticipate a large number of pages, you can adjust
-                    // the number of page handles to show. The sliding window
-                    // will automatically show the next set of page handles when
-                    // you click next at the end of a window.
-                    windowSize: 20, // Default is 10
-
-                    // Used to multiple windowSize to yield a number of pages to slide,
-                    // in the case the number is 5
-                    slideScale: 0.25, // Default is 0.5
-
-                    // Whether sorting should go back to the first page
-                    // goBackFirstOnSort: false, // Default is true
-
-                    collection: collection
-                });
-
-                return {
-                    status: status,
-                    collection: collection,
-                    Grid: ToolboxListOrdersGrid,
-                    Paginator: Paginator,
-                    fetch: function (options) {
-                        collection.fetch(options);
-                    }
-                }
-            }
-
-            // create seperated lists for the following orders:
-            // new
-            // in progress
-            // shipped
-            // delivered
-            // closed
-            // debugger;
-            var _ordersByStatus = _(statuses).map(function (status){
-                return _getTableCreateFn(status);
+            _(dataSources).each(function(dataSource){
+                self.listenTo(dataSource.collection, 'change', self.render);
             });
 
             // refresh all lists
             Sandbox.eventSubscribe("plugin:shop:order:item:updated", function () {
-                // debugger;
-                _(_ordersByStatus).each(function(orderList) {
-                    orderList.fetch({reset: true});
-                });
+                _(dataSources).invoke('fetch', {reset: true});
             });
 
             // when we know how many records are availabel of particular filter
@@ -186,18 +189,19 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 var $badge = self.$('a[href="#order_status_' + data.collection.queryParams.status + '-ID"] .badge');
                 $badge.text(data.state.totalRecords || "");
             });
+        },
+        render: function () {
+            var self = this;
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
-            // inject all lists into tabPages
-            this.on('mview:renderComplete', function () {
-                var self = this;
-                _(_ordersByStatus).each(function(orderListBuilder){
-                    var $tabPage = self.$('.tab-pane#order_status_' + orderListBuilder.status + '-ID');
-                    $tabPage.empty();
-                    $tabPage.append(orderListBuilder.Grid.render().el);
-                    $tabPage.append(orderListBuilder.Paginator.render().el);
-                    orderListBuilder.fetch({reset: true});
-                });
+            _(dataSources).each(function(dataSource){
+                var $tabPage = self.$('.tab-pane#order_status_' + dataSource.status + '-ID');
+                $tabPage.empty();
+                $tabPage.append(dataSource.Grid.render().el);
+                $tabPage.append(dataSource.Paginator.render().el);
             });
+
+            _(dataSources).invoke('fetch', {reset: true});
         }
     });
 

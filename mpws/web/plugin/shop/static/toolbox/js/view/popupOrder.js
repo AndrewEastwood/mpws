@@ -1,6 +1,7 @@
 define("plugin/shop/toolbox/js/view/popupOrder", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
     'plugin/shop/toolbox/js/model/popupOrder',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
@@ -9,61 +10,64 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, MView, ModelOrderItem, ShopUtils, BootstrapDialog, tpl, lang) {
+], function (Sandbox, Backbone, Utils, ModelOrderPopup, ShopUtils, BootstrapDialog, tpl, lang) {
 
-    var dlg = new BootstrapDialog({
-        cssClass: 'shop-toolbox-origin-edit',
-        // onhidden: function(dialogRef){
-        //     dialogIsShown = false;
-        // },
-        buttons: [{
-            label: lang.popup_order_button_Close,
-            action: function (dialog) {
-                dialogIsShown = false;
-                dialog.close();
-            }
-        }]
-    });
-    var orderItemModel = new ModelOrderItem();
-    var OrderItem = MView.extend({
+    var OrderItem = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        model: orderItemModel,
-        initialize: function () {
-            MView.prototype.initialize.call(this);
-            var self = this;
-            var dialogIsShown = false;
+        initialize: function (orderData) {
+            // var self = this;
+            // var dialogIsShown = false;
             debugger;
-            this.on('mview:renderComplete', function () {
-                var orderID = this.model.get('order').ID;
-                // if (!dialogIsShown)
-                // dialogIsShown = true;
-                var source = self.$('#order-status-control-ID option').map(function(idx, option){
-                    return {
-                        value: $(option).attr('value'),
-                        text: $(option).text()
-                    }
-                });
-                var $controlOrderStatus = self.$('#order-status-ID');
-                $controlOrderStatus.editable({
-                    mode: 'inline',
-                    name: "Status",
-                    title: lang.popup_order_control_status,
-                    type: "select",
-                    value: this.model.get('order').Status,
-                    pk: this.model.get('order').ID,
-                    source: $.makeArray(source),
-                });
-                $controlOrderStatus.on('save', function(event, editData) {
-                    var jqxhr = ShopUtils.updateOrderStatus(orderID, editData.newValue);
-                    jqxhr.done(function(data){
-                        self.model.set(self.model.parse.call(self.model, data));
-                        self.render();
-                    });
-                });
-                self.$('.helper').tooltip();
+            this.model = new ModelOrderPopup(orderData);
+            this.listenTo(this.model, 'change', this.render);
+        },
+        render: function () {
+            var self = this;
+
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+
+            var orderID = this.model.id;
+            // if (!dialogIsShown)
+            // dialogIsShown = true;
+            var source = this.$('#order-status-control-ID option').map(function(idx, option){
+                return {
+                    value: $(option).attr('value'),
+                    text: $(option).text()
+                }
             });
-            // order-status-ID
+            var $controlOrderStatus = this.$('#order-status-ID');
+            $controlOrderStatus.editable({
+                mode: 'inline',
+                name: "Status",
+                title: lang.popup_order_control_status,
+                type: "select",
+                value: this.model.get('Status'),
+                pk: this.model.id,
+                source: $.makeArray(source),
+            });
+            $controlOrderStatus.on('save', function(event, editData) {
+                // self.model.set('Status', editData.newValue);
+                self.model.save({Status: editData.newValue}, {patch: true});
+                // var jqxhr = ShopUtils.updateOrderStatus(orderID, editData.newValue);
+                // jqxhr.done(function(data){
+                //     this.model.set(this.model.parse.call(this.model, data));
+                //     this.render();
+                // });
+            });
+            this.$('.helper').tooltip();
+
+            BootstrapDialog.show({
+                message: this.$el,
+                cssClass: 'pluginShopOrderPopup',
+                buttons: [{
+                    label: lang.popup_order_button_Close,
+                    action: function (dialog) {
+                        // dialogIsShown = false;
+                        dialog.close();
+                    }
+                }]
+            });
         }
     });
 

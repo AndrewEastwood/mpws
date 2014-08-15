@@ -312,25 +312,64 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    private function _getOrders_ByStatus ($status) {
+    private function _getOrders_ByStatus ($req) {
         // get expired orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
-        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($status);
 
         // check permissions
         $orderIDs = array();
-        if ($this->ifYou('CanAdmin')) {
-            $orderIDs = $this->getCustomer()->fetch($config);
-        } else {
+        if (!$this->ifYou('CanAdmin')) {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
-            $orderIDs = $this->getCustomer()->fetch($config);
         }
 
+        $limit = 10;
+        $page = 1;
+
+        if (is_string($req)) {
+            $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req);
+        } elseif (is_object($req)) {
+            if (!isset($req->get['status']))
+                return glWrap('error', 'OrderStatusIsNotSet');
+            $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req->get['status']);
+
+            if (isset($req->get['sort']))
+                $config['order']['field'] = $req->get['sort'];
+            if (isset($req->get['order']))
+                $config['order']['ordering'] = $req->get['order'];
+
+            if (isset($req->get['page']))
+                $page = intval($req->get['page']);
+            if (isset($req->get['per_page']))
+                $limit = intval($req->get['per_page']);
+
+            if ($limit >= 1)
+                $config['limit'] = $limit;
+            if ($page >= 1 && $limit >= 1)
+                $config['offset'] = ($page - 1) * $limit;
+
+        } else {
+            return glWrap('error', 'WrongParameterType');
+        }
+
+        $orderIDs = $this->getCustomer()->fetch($config);
+
         $data = array();
+        
         if (!empty($orderIDs))
             foreach ($orderIDs as $val)
                 $data[] = $this->_getOrderByID($val['ID']);
-        return $data;
+
+        // get total orders by status
+        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders, $config['condition']);
+        // $configCount['condition'] = new ArrayObject();
+        $countData = $this->getCustomer()->fetch($configCount);
+
+        return array(
+            "items" => $data,
+            "page" => $page,
+            "per_page" => $limit,
+            "count" => intval($countData["ItemsCount"])
+        );
     }
 
     private function _getOrders_Browse ($req) {
@@ -1100,7 +1139,7 @@ class pluginShop extends objectPlugin {
 
     public function get_shop_orders (&$resp, $req) {
         if (!empty($req->get['status'])) {
-            $resp = $this->_getOrders_ByStatus($req->get['status']);
+            $resp = $this->_getOrders_ByStatus($req);
             return;
         }
         if (!empty($req->get['type'])) {
@@ -1149,6 +1188,16 @@ class pluginShop extends objectPlugin {
         // var_dump($_POST);
         // var_dump(file_get_contents('php://input'));
         // $options = array();
+
+        if (glIsToolbox()) {
+            if ($this->ifYou('CanAdmin')) {
+                // here we're gonna change order's status only
+            } else {
+                $resp['error'] = 'AccessDenied';
+            }
+            return;
+        }
+
         if (isset($req->data['productID'])) {
             $sessionOrderProducts = $this->_getSessionOrderProducts();
             // $items = empty($order['items']) ? array() : $order['items'];

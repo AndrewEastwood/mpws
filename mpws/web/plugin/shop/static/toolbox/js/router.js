@@ -39,52 +39,38 @@ define("plugin/shop/toolbox/js/router", [
 
         products: function () {
             require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ProductManager', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
+                // create new view
+                var productManager = new ProductManager();
+                productManager.render();
 
-                    // create new view
-                    var productManager = cachedView || new ProductManager();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: productManager.$el
+                });
 
-                    productManager.render();
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'CommonBodyCenter',
-                        el: productManager.$el
-                    });
-
-                    // Sandbox.eventNotify("plugin:shop:toolbox:menu:refresh");
-                    // return view object to pass it into this function at next invocation
-                    return productManager;
+                // set page title
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CustomerPageName',
+                    el: "Товари"
                 });
             });
         },
 
         orders: function () {
-
             require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
-                // using this wrapper to cleanup previous view and create new one
-                Cache.withObject('ListOrders', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
+                // create new view
+                var listOrders = new ListOrders();
+                listOrders.render();
 
-                    // create new view
-                    var listOrders = cachedView || new ListOrders();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listOrders.$el
+                });
 
-                    listOrders.fetchAndRender();
-
-                    Sandbox.eventNotify('global:content:render', {
-                        name: 'ShopListOrders',
-                        el: listOrders.$el
-                    });
-
-                    // return view object to pass it into this function at next invocation
-                    return listOrders;
+                // set page title
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CustomerPageName',
+                    el: "Замовлення"
                 });
             });
         },
