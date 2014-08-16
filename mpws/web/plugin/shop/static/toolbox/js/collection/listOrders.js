@@ -52,6 +52,8 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
                 orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
                 orderEntry.AccountPhone = orderEntry.account.Phone;
                 orderEntry.InfoTotal = orderEntry.info.total;
+                orderEntry.HasPromo = !!orderEntry.promo;
+                orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;
                 return orderEntry;
             });
             // debugger;

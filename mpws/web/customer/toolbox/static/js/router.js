@@ -20,7 +20,7 @@ define("customer/js/router", [
     var _ifNotAuthorizedNavigateTo = function (fragment, route) {
         // debugger;
         if (!Auth.getAccountID() && fragment !== route) {
-            $.xhrPool.abortAll();
+            APP.xhrAbortAll();
             Backbone.history.navigate(route, true);
             window.location.reload();
         }
@@ -31,5 +31,10 @@ define("customer/js/router", [
         pageContainer.render();
         Backbone.history.navigate(Cache.getFromLocalStorage('location') || "", true);
     });
+
+    // Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+    //     // debugger;
+    //     _ifNotAuthorizedNavigateTo('signin');
+    // });
 
 });

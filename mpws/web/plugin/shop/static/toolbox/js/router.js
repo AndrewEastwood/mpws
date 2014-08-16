@@ -12,8 +12,10 @@ define("plugin/shop/toolbox/js/router", [
             // "shop/stats": "stats",
             "shop/products": "products",
             "shop/orders": "orders",
+            "shop/order/:id": "order",
             "shop/sales": "sales",
             "shop/prices": "prices",
+            "shop/reports": "reports"
         },
 
         initialize: function () {
@@ -38,6 +40,7 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         products: function () {
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
             require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
                 // create new view
                 var productManager = new ProductManager();
@@ -57,10 +60,32 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         orders: function () {
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
                 // create new view
                 var listOrders = new ListOrders();
                 listOrders.customDataSources.fetch({reset: true});
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listOrders.$el
+                });
+
+                // set page title
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CustomerPageName',
+                    el: "Замовлення"
+                });
+            });
+        },
+
+        order: function (orderID) {
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
+            require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
+                // create new view
+                var listOrders = new ListOrders();
+                listOrders.customDataSources.fetch({reset: true});
+                listOrders.showOrder(orderID)
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
@@ -81,6 +106,10 @@ define("plugin/shop/toolbox/js/router", [
 
         prices: function () {
             
+        },
+
+        reports: function () {
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
         },
 
     });

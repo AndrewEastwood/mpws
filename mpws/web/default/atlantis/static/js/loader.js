@@ -103,43 +103,26 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // });
     }
 
-    $.xhrPool = []; 
-    $.xhrPool.abortAll = function() {
-        $(this).each(function(idx, jqXHR) {
-            jqXHR.abort();
-        });
-        $.xhrPool.length = 0
-    };
-
+    var xhrPool = [];
+    $(document).ajaxSend(function(e, jqXHR, options){
+        xhrPool.push(jqXHR);
+    });
     $(document).ajaxComplete(function(event, jqxhr, data) {
+        xhrPool = $.grep(xhrPool, function(x){return x!=jqxhr});
         if (!jqxhr.responseText)
-            return
-
+            return;
         // debugger;
-
-
-        // if (data.account) {
-        //     // debugger;
-        //     // if (Backbone.history.fragment !== "signout" && Backbone.history.fragment !== "signin") {
-        //         var _location = Cache.getFromLocalStorage("location") || '';
-        //         Backbone.history.navigate(_location, true);
-        //     // }
-        // } else {
-        //     if (Backbone.history.fragment !== "signin")
-                
-        // }
-        // console.log(jqxhr.responseText);
         var response = JSON.parse(jqxhr.responseText);
-
-        if (response && response.error && response.error === "InvalidTokenKey") {
-            window.location.reload();
-        }
-
-        // if (response && response.error && response.error === "AccessDenied")
-        //     Sandbox.eventNotify("global:session:expired", response.error);
-
+        // if (response && response.error && response.error === "InvalidTokenKey") {
+        //     window.location.reload();
+        // }
         Sandbox.eventNotify("global:ajax:responce", response);
     });
+    APP.xhrAbortAll = function() {
+        $.each(xhrPool, function(idx, jqXHR) {
+            jqXHR.abort();
+        });
+    };
 
     // Sandbox message handler
     $('body').on('click', '[data-action]', function (event) {
@@ -157,22 +140,24 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     });
 
     // find links and set them active accordint to current route
-    Sandbox.eventSubscribe('global:menu:set-active', function () {
+    Sandbox.eventSubscribe('global:menu:set-active', function (selector) {
         // debugger;
         // _setActiveMenuItemsFn();
         // debugger;
-        $('a.auto-active').removeClass('active');
-        $('a.auto-active').parents('.panel-collapse').removeClass('in');
-        $('a.auto-active').parents('li').removeClass('active');
-
-        // debugger;
-        var hash = !!window.location.hash ? window.location.hash : '#';
-        console.log(hash);
-        // if (window.location.hash != '#') {
+        if (selector) {
+            $('[rel="menu"]').removeClass('active');
+            $(selector + '[rel="menu"]').addClass('active');
+        } else {
+            $('a.auto-active').removeClass('active');
+            $('a.auto-active').parents('.panel-collapse').removeClass('in');
+            $('a.auto-active').parents('li').removeClass('active');
+            // debugger;
+            var hash = !!window.location.hash ? window.location.hash : '#';
             $('a.auto-active[href="' + hash + '"]').addClass('active');
             $('a.auto-active[href="' + hash + '"]').parents('.panel-collapse').addClass('in');
             $('a.auto-active[href="' + hash + '"]').parents('li').addClass('active');
-        // }
+        }
+
     });
 
     // debugger;

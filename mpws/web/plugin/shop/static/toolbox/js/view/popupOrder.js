@@ -36,15 +36,33 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
         template: tpl,
         lang: lang,
         initialize: function (orderData) {
-            if (_.isArray(orderData.Status))
-                orderData.Status = orderData.Status[0];
             this.model = new ModelOrder(orderData);
+            if (orderData) {
+                if (_.isArray(orderData.Status))
+                    orderData.Status = orderData.Status[0];
+                this.model.set(orderData);
+            }
             this.listenTo(this.model, 'change', this.render);
+            this.$title = $('<span/>');
+            this.$dialog = new BootstrapDialog({
+                title: this.$title,
+                message: this.$el,
+                cssClass: 'pluginShopOrderPopup',
+                // onhide: function () {
+                //     self.dialogIsShown = false;
+                // },
+                buttons: [{
+                    label: lang.popup_order_button_Close,
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
         },
         render: function () {
             var self = this;
 
-            var $title = $('<span/>').html(_getTitleByStatus(self.model.get('Status')));
+            this.$title.html(_getTitleByStatus(self.model.get('Status')));
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
@@ -71,29 +89,13 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                     if (!response || !response.success) {
                         BSAlert.danger('Помилка під час оновлення замовлення');
                     }
-                    $title.html(_getTitleByStatus(response.Status));
+                    self.$title.html(_getTitleByStatus(response.Status));
                 });
             });
             this.$('.helper').tooltip();
 
-            if (!self.dialogIsShown) {
-                BootstrapDialog.show({
-                    title: $title,
-                    message: this.$el,
-                    cssClass: 'pluginShopOrderPopup',
-                    onhide: function () {
-                        self.dialogIsShown = false;
-                    },
-                    buttons: [{
-                        label: lang.popup_order_button_Close,
-                        action: function (dialog) {
-                            dialog.close();
-                        }
-                    }]
-                });
-                self.dialogIsShown = true;
-            }
-
+            if (!this.$dialog.isOpened())
+                this.$dialog.open();
         }
     });
 

@@ -21,8 +21,10 @@ define("default/js/lib/auth", [
             Auth.auth_id = auth_id;
             Cache.setCookie('auth_id', auth_id);
 
-            if (Auth.auth_id === null)
+            if (Auth.auth_id === null) {
                 Sandbox.eventNotify("global:auth:status:inactive");
+                
+            }
             else
                 Sandbox.eventNotify("global:auth:status:active");
         },

@@ -39,6 +39,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders_Grid_Column_AccountFullName: "Покупець",
         pluginMenu_Orders_Grid_Column_AccountPhone: "Телефон",
         pluginMenu_Orders_Grid_Column_InfoTotal: "Сума (грн.)",
+        pluginMenu_Orders_Grid_Column_HasPromo: "Промо",
+pluginMenu_Orders_Grid_Column_Discount: "Знижка",
         pluginMenu_Orders_Grid_link_Edit: "Ред.",
         pluginMenu_Orders_Grid_link_ShowDeleted: "Показати виконані",
         // Order popup

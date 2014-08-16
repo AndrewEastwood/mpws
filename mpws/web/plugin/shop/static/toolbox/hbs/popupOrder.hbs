@@ -37,7 +37,7 @@
                 </li>
                 {{#if data.Comment }}
                 <li class="list-group-item">
-                    <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i>Коментар:</span>
+                    <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i> Коментар:</span>
                     <span><strong>{{data.Comment}}</strong></span>
                 </li>
                 {{/if}}
@@ -87,35 +87,7 @@
 
     <h4>{{lang.popup_order_section_boughts}}</h4>
 
-    <div class="shop-widget-productlist">
-    {{#each data.items }}
-        <div class="wrapper">
-            <div class="shop-product-image shop-product-image-main">
-                <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
-                    <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
-                </a>
-            </div>
-            <div class="product-row">
-                <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
-                <span class="label label-warning product-price">{{ProductPrice}}<span class="moneyType">грн.</span></span>
-                <span class="label label-default">x</span>
-                <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
-                <span class="label label-default">=</span>
-                <span class="label label-success product-total">{{Total}}<span class="moneyType">грн.</span></span>
-            </div>
-        </div>
-    {{/each}}
-    </div>
+    {{>plugin/shop/common/hbs/partials/cartProductList data }}
 
-    <div class="well cartInfo">
-        <div class="shopCartSubTotal">
-            <span class="value-prefix">Сума:</span>
-            <span class="value">{{data.info.subTotal}}<span class="moneyType">грн.</span></span>
-        </div>
-        <div class="shopCartTotal">
-            <span class="value-prefix">До оплати:</span>
-            <span class="value label label-success">{{data.info.total}}<span class="moneyType">грн.</span></span>
-        </div>
-    </div>
-    
+    {{>plugin/shop/common/hbs/partials/cartInfo data }}
 </div>

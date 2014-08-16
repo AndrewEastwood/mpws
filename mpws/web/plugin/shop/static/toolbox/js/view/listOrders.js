@@ -43,6 +43,30 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             }
         }
     };
+    var columnHasPromo = {
+        name: "HasPromo",
+        label: lang.pluginMenu_Orders_Grid_Column_HasPromo,
+        cell: "html",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                if (!!value)
+                    return $('<i/>').addClass('fa fa-check-circle-o');
+            }
+        }
+    };
+    var columnDiscount = {
+        name: "Discount",
+        label: lang.pluginMenu_Orders_Grid_Column_Discount,
+        cell: "string",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                if (value)
+                    return value + ' %';
+            }
+        }
+    };
 
     var columnActions = {
         name: "Actions",
@@ -62,10 +86,6 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                     var popupOrder = new PopupOrderEntry(model.toJSON());
                     popupOrder.render();
                     popupOrder.listenTo(popupOrder.model, 'change', function(){
-                        // debugger;
-                        // var _newModelData = popupOrder.model.toJSON();
-                        // _newModelData.Status = [_newModelData.Status];
-                        // model.set(_newModelData).trigger('change');
                         Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
                     });
                 });
@@ -131,7 +151,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         editable: false
     };
 
-    var columns = [columnActions, columnAccountFullName, columnAccountPhone, columnInfoTotal, columnStatus, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
+    var columns = [columnActions, columnAccountFullName, columnAccountPhone, columnInfoTotal, columnHasPromo, columnDiscount, columnStatus, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
 
     function getOrderDataSource (status) {
         var collection = new CollectionListOrders();
@@ -220,6 +240,15 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 // debugger;
                 var $badge = self.$('a[href="#order_status_' + dataSource.status + '-ID"] .badge');
                 $badge.text(dataSource.collection.state.totalRecords || "");
+            });
+        },
+        showOrder: function (orderID) {
+            // debugger;
+            var popupOrder = new PopupOrderEntry();
+            popupOrder.model.set('ID', orderID);
+            popupOrder.model.fetch();
+            popupOrder.listenTo(popupOrder.model, 'change', function(){
+                Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
             });
         }
     });
