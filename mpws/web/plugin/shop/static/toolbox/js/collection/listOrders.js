@@ -1,10 +1,13 @@
 define('plugin/shop/toolbox/js/collection/listOrders', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
+    'plugin/shop/toolbox/js/model/order',
     'default/js/lib/backbone-pageable',
-], function (Sandbox, _, PageableCollection, lang) {
+], function (Sandbox, _, ModelOrder, PageableCollection, lang) {
 
     var ListOrders = PageableCollection.extend({
+
+        model: ModelOrder,
 
         url: APP.getApiLink({
             source: 'shop',
@@ -30,7 +33,7 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
             var state = {
                 totalRecords: parseInt(resp && resp.count || 0, 10)
             };
-            Sandbox.eventNotify('plugin:shop:orderList:parseState', {collection: this, state: state});
+            // Sandbox.eventNotify('plugin:shop:orderList:parseState', {collection: this, state: state});
             return state;
         },
 

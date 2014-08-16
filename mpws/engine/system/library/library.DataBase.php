@@ -198,7 +198,6 @@ class libraryDataBase {
             }
         };
 
-
         // condition
         // var_dump($fieldsToSelectFromDBClear);
         if (!empty($config['condition'])) {
@@ -218,10 +217,10 @@ class libraryDataBase {
         if (!empty($config['group']))
             $this->dbo->group_by($config['group']);
 
-        if (!empty($config['offset']))
+        if (!empty($config['offset']) && $config['offset'] >= 0)
             $this->dbo->offset($config['offset']);
 
-        if (!empty($config['limit']))
+        if (!empty($config['limit']) && $config['limit'] >= 0)
             $this->dbo->limit($config['limit']);
 
         if (!empty($config['order']) && !empty($config['order']['field'])) {
@@ -402,7 +401,6 @@ class libraryDataBase {
         }
         return $dataArray;
     }
-
 }
 
 ?>

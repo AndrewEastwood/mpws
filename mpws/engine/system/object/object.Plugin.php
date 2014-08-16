@@ -21,23 +21,23 @@ class objectPlugin implements IPlugin {
         return $anotherPlugin;
     }
 
-    public function getExtension ($extensionName) {
-        return $this->getCustomer()->getExtension($extensionName);
-    }
+    // public function getExtension ($extensionName) {
+    //     return $this->getCustomer()->getExtension($extensionName);
+    // }
 
-    public function getSessionAccountID () {
-        $extAuth = $this->getExtension('auth');
-        if (empty($extAuth))
-            throw new Exception("Auth extension is missing for plugin", 1);
-        return $extAuth->getAuthID();
-    }
+    // public function getSessionAccountID () {
+    //     // $extAuth = $this->getExtension('Auth');
+    //     // if (empty($extAuth))
+    //     //     throw new Exception("Auth extension is missing for plugin", 1);
+    //     return $this->getCustomer()->getAuthID();
+    // }
 
-    public function ifYou ($canDoThis) {
-        $extAuth = $this->getExtension('auth');
-        if (empty($extAuth))
-            throw new Exception("Auth extension is missing for plugin", 1);
-        return $extAuth->ifYou($canDoThis);
-    }
+    // public function ifYouCan ($action) {
+    //     // $extAuth = $this->getExtension('Auth');
+    //     // if (empty($extAuth))
+    //     //     throw new Exception("Auth extension is missing for plugin", 1);
+    //     return $this->getCustomer()->ifYouCan($action);
+    // }
 
     public function run () {
         libraryRequest::processRequest($this);

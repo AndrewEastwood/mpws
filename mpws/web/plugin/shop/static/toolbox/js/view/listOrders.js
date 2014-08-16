@@ -61,6 +61,13 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                     // debugger;
                     var popupOrder = new PopupOrderEntry(model.toJSON());
                     popupOrder.render();
+                    popupOrder.listenTo(popupOrder.model, 'change', function(){
+                        // debugger;
+                        // var _newModelData = popupOrder.model.toJSON();
+                        // _newModelData.Status = [_newModelData.Status];
+                        // model.set(_newModelData).trigger('change');
+                        Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
+                    });
                 });
                 return _link;
             }
@@ -79,7 +86,9 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
                 // debugger;
                 this.listenTo(this.model, "change:Status", function(model, status) {
-                    // debugger;
+                    model.saveOrderStatus(status).success(function(){
+                        Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
+                    });
                     // ShopUtils.updateOrderStatus(model.get('ID'), status);
                 });
             }
@@ -96,7 +105,6 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 var _logisticAgency = lang['logisticAgency_' + value];
                 if (_logisticAgency)
                     return _logisticAgency;
-
                 return lang.logisticAgency_Unknown;
             }
         }
@@ -173,24 +181,34 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         className: 'shop-toolbox-orders',
         initialize: function () {
             var self = this;
+
+            this.customDataSources = {
+                fetch: function (options) {
+                    _(dataSources).invoke('fetch', options);
+                }
+            }
+
             _(dataSources).each(function(dataSource){
-                self.listenTo(dataSource.collection, 'change', self.render);
+                self.listenTo(dataSource.collection, 'reset', self.render);
             });
 
+// function() {
+                    // debugger;
+                    // _(dataSources).invoke('fetch', {reset: true});
+                // }
             // refresh all lists
-            Sandbox.eventSubscribe("plugin:shop:order:item:updated", function () {
-                _(dataSources).invoke('fetch', {reset: true});
+            Sandbox.eventSubscribe("plugin:shop:orderList:fetch", function (options) {
+                self.customDataSources.fetch(options);
             });
 
             // when we know how many records are availabel of particular filter
             // we do update  tapPage badge with records count
-            Sandbox.eventSubscribe('plugin:shop:orderList:parseState', function (data) {
-                // debugger;
-                var $badge = self.$('a[href="#order_status_' + data.collection.queryParams.status + '-ID"] .badge');
-                $badge.text(data.state.totalRecords || "");
-            });
+            // Sandbox.eventSubscribe('plugin:shop:orderList:parseState', function (data) {
+            //     // debugger;
+            // });
         },
         render: function () {
+            //debugger;
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
@@ -199,9 +217,10 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 $tabPage.empty();
                 $tabPage.append(dataSource.Grid.render().el);
                 $tabPage.append(dataSource.Paginator.render().el);
+                // debugger;
+                var $badge = self.$('a[href="#order_status_' + dataSource.status + '-ID"] .badge');
+                $badge.text(dataSource.collection.state.totalRecords || "");
             });
-
-            _(dataSources).invoke('fetch', {reset: true});
         }
     });
 

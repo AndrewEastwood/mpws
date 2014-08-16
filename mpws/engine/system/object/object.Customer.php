@@ -1,17 +1,22 @@
 <?php
 
-class objectCustomer implements ICustomer {
+class objectCustomer extends objectMultiExtendable implements ICustomer {
 
     private $dbo;
     private $plugins;
-    private $extensions;
+    // private $extensions;
     private $customerInfo;
 
     function __construct() {
 
         // init dbo
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
-        $this->extensions['auth'] = new extensionAuth($this);
+
+        // init extensions
+        // $this->extensions['Auth'] = new extensionAuth($this);
+        // $this->extensions['DataInterface'] = new extensionDataInterface($this);
+        $this->addExtension(new extensionAuth($this));
+        $this->addExtension(new extensionDataInterface($this));
 
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
@@ -36,6 +41,7 @@ class objectCustomer implements ICustomer {
         }
         $this->customerInfo = $this->getCustomerInfo();
     }
+
 
     public function getCustomerID () {
         $info = $this->getCustomerInfo();
@@ -75,14 +81,6 @@ class objectCustomer implements ICustomer {
         return !empty($this->plugins[$pluginName]);
     }
 
-    public function getExtension ($extensionName) {
-        return $this->extensions[$extensionName] ?: null;
-    }
-
-    public function hasExtension ($extensionName) {
-        return !empty($this->extensions[$extensionName]);
-    }
-
     public function runAsAPI () {
 
         // if (glIsToolbox()) {
@@ -110,7 +108,7 @@ class objectCustomer implements ICustomer {
         // libraryResponse::$_RESPONSE['authenticated'] = $this->getPlugin('account')->isAuthenticated();
         // libraryResponse::$_RESPONSE['script'] = libraryRequest::getScriptName();
 
-        $authID = $this->getExtension('auth')->getAuthID();
+        $authID = $this->getAuthID();
 
         foreach ($this->plugins as $plugin)
             $plugin->run();
@@ -119,7 +117,7 @@ class objectCustomer implements ICustomer {
     }
 
     public function runAsAUTH () {
-        libraryRequest::processRequest($this->getExtension('auth'));
+        libraryRequest::processRequest($this->getExtension('Auth'));
     }
 
 }

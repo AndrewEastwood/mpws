@@ -60,7 +60,7 @@ define("plugin/shop/toolbox/js/router", [
             require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
                 // create new view
                 var listOrders = new ListOrders();
-                listOrders.render();
+                listOrders.customDataSources.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',

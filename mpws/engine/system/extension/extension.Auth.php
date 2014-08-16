@@ -4,6 +4,10 @@ class extensionAuth extends objectExtension {
 
     var $permissions;
 
+    // public function test () {
+    //     echo 'I AM TEST FROM EXT AUTH';
+    // }
+
     private function _setPermissions ($perms) {
         $listOfDOs = array();
         // adjust permission values
@@ -18,11 +22,11 @@ class extensionAuth extends objectExtension {
         return $this->permissions;
     }
 
-    public function ifYou ($canDoThis) {
+    public function ifYouCan ($action) {
         $permissions = $this->getPermissions();
-        if (!isset($permissions[$canDoThis]))
+        if (!isset($permissions['Can' . $action]))
             return false;
-        return $this->permissions[$canDoThis];
+        return $this->permissions['Can' . $action];
     }
 
     public function getAuthID () {
@@ -32,7 +36,7 @@ class extensionAuth extends objectExtension {
             $configPermissions = configurationCustomerDataSource::jsapiGetPermissions($_SESSION['AccountID']);
             $permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
             $this->_setPermissions($permissions);
-            if (glIsToolbox() && !$this->ifYou('CanAdmin'))
+            if (glIsToolbox() && !$this->ifYouCan('Admin'))
                 return $this->clearAuthID();
         }
         return $_SESSION['AccountID'];

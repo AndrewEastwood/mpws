@@ -169,14 +169,14 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createProduct ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
             return glWrap("AccessDenied");
         }
 
     }
 
     private function _updateProduct ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("AccessDenied");
         }
 
@@ -190,14 +190,14 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createOrigin ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
             return glWrap("AccessDenied");
         }
 
     }
 
     private function _updateOrigin ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("AccessDenied");
         }
 
@@ -210,14 +210,14 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createCategory ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
             return glWrap("AccessDenied");
         }
 
     }
 
     private function _updateCategory ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("AccessDenied");
         }
 
@@ -228,10 +228,10 @@ class pluginShop extends objectPlugin {
     private function _getOrderByID ($orderID) {
         $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
         $order = null;
-        // if ($this->ifYou('CanAdmin')) {
+        // if ($this->getCustomer()->ifYouCan('Admin')) {
             $order = $this->getCustomer()->fetch($config);
         // } else {
-        //     $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+        //     $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
         //     $order = $this->getCustomer()->fetch($config);
         // }
 
@@ -276,10 +276,10 @@ class pluginShop extends objectPlugin {
 
         // check permissions
         $orderIDs = array();
-        if ($this->ifYou('CanAdmin')) {
+        if ($this->getCustomer()->ifYouCan('Admin')) {
             $orderIDs = $this->getCustomer()->fetch($config);
         } else {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
             $orderIDs = $this->getCustomer()->fetch($config);
         }
 
@@ -298,10 +298,10 @@ class pluginShop extends objectPlugin {
 
         // set permissions
         $orderIDs = array();
-        if ($this->ifYou('CanAdmin')) {
+        if ($this->getCustomer()->ifYouCan('Admin')) {
             $orderIDs = $this->getCustomer()->fetch($config);
         } else {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
             $orderIDs = $this->getCustomer()->fetch($config);
         }
 
@@ -317,101 +317,44 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
 
         // check permissions
-        $orderIDs = array();
-        if (!$this->ifYou('CanAdmin')) {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
-        }
+        if (!$this->getCustomer()->ifYouCan('Admin'))
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
 
-        $limit = 10;
-        $page = 1;
-
+        // set order status
         if (is_string($req)) {
             $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req);
         } elseif (is_object($req)) {
             if (!isset($req->get['status']))
                 return glWrap('error', 'OrderStatusIsNotSet');
             $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req->get['status']);
-
-            if (isset($req->get['sort']))
-                $config['order']['field'] = $req->get['sort'];
-            if (isset($req->get['order']))
-                $config['order']['ordering'] = $req->get['order'];
-
-            if (isset($req->get['page']))
-                $page = intval($req->get['page']);
-            if (isset($req->get['per_page']))
-                $limit = intval($req->get['per_page']);
-
-            if ($limit >= 1)
-                $config['limit'] = $limit;
-            if ($page >= 1 && $limit >= 1)
-                $config['offset'] = ($page - 1) * $limit;
-
         } else {
             return glWrap('error', 'WrongParameterType');
         }
 
-        $orderIDs = $this->getCustomer()->fetch($config);
+        $dataList = $this->getCustomer()->getDataList($config, $req);
 
-        $data = array();
-        
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[] = $this->_getOrderByID($val['ID']);
+        if (!empty($dataList['items']))
+            foreach ($dataList['items'] as $key => $orderRawItem)
+                $dataList['items'][$key] = $this->_getOrderByID($orderRawItem['ID']);
 
-        // get total orders by status
-        $configCount = configurationShopDataSource::jsapiUtil_GetTableRecordsCount(configurationShopDataSource::$Table_ShopOrders, $config['condition']);
-        // $configCount['condition'] = new ArrayObject();
-        $countData = $this->getCustomer()->fetch($configCount);
-
-        return array(
-            "items" => $data,
-            "page" => $page,
-            "per_page" => $limit,
-            "count" => intval($countData["ItemsCount"])
-        );
+        return $dataList;
     }
 
     private function _getOrders_Browse ($req) {
         // get all orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
 
-        // pagination
-        $page = isset($req->get['page']) ? $req->get['page'] : false;
-        $per_page = isset($req->get['per_page']) ? $req->get['per_page'] : false;
-
-        if (!empty($per_page)) {
-            $config['limit'] = $per_page;
-            if (!empty($page)) {
-                $config['offset'] = ($page - 1) * $per_page;
-            }
-        }
-
-        // sorting
-        $sort = isset($req->get['sort']) ? $req->get['sort'] : false;
-        $order = isset($req->get['order']) ? $req->get['order'] : false;
-        if (!empty($sort) && !empty($order)) {
-            $config["order"] = array(
-                "field" =>  'shop_orders' . DOT . $sort,
-                "ordering" => strtoupper($order)
-            );
-        }
-
         // check permissions
-        $orderIDs = array();
-        if ($this->ifYou('CanAdmin')) {
-            $orderIDs = $this->getCustomer()->fetch($config);
-        } else {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getSessionAccountID());
-            $orderIDs = $this->getCustomer()->fetch($config);
-        }
+        if (!$this->getCustomer()->ifYouCan('Admin'))
+            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
 
-        // var_dump($orderIDs);
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[$val['ID']] = $this->_getOrderByID($val['ID']);
-        return $data;
+        $dataList = $this->getCustomer()->getDataList($config, $req);
+
+        if (!empty($dataList['items']))
+            foreach ($dataList['items'] as $key => $orderRawItem)
+                $dataList['items'][$key] = $this->_getOrderByID($orderRawItem['ID']);
+
+        return $dataList;
     }
 
     private function _createOrder ($reqData) {
@@ -598,16 +541,50 @@ class pluginShop extends objectPlugin {
         return $result;
     }
 
-    private function _updateOrder ($reqData) {
-        // only admin can update orders
-        if (!$this->ifYou('CanAdmin') || !$this->ifYou('CanEdit')) {
-            return glWrap("AccessDenied");
+    private function _updateOrder ($OrderID, $reqData) {
+        // check permissions
+        if (!$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
         }
+
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Status' => array('string', 'notEmpty')
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $configUpdateOrder = configurationShopDataSource::jsapiShopOrderUpdate($OrderID, $validatedValues);
+
+                $this->getCustomer()->fetch($configUpdateOrder, true);
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = 'OrderUpdateError';
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result = $this->_getOrderByID($OrderID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
     private function _disableOrderByID ($OrderID) {
         // check permissions
-        if ($this->ifYou('CanAdmin') && $this->ifYou('CanEdit')) {
+        if ($this->getCustomer()->ifYouCan('Admin') && $this->getCustomer()->ifYouCan('Edit')) {
             $config = configurationShopDataSource::jsapiDisableOrder($OrderID);
             $this->getCustomer()->fetch($config);
             return glWrap("ok", true);
@@ -619,7 +596,7 @@ class pluginShop extends objectPlugin {
     // stats
     // -----------------------------------------------
     private function _getStats_OrdersOverview () {
-        if (!$this->ifYou('CanAdmin')) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
         $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
@@ -628,7 +605,7 @@ class pluginShop extends objectPlugin {
     }
 
     private function _getStats_OrdersIntensityLastMonth ($status) {
-        if (!$this->ifYou('CanAdmin')) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
         $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status);
@@ -638,7 +615,7 @@ class pluginShop extends objectPlugin {
     }
 
     private function _getStats_ProductsOverview () {
-        if (!$this->ifYou('CanAdmin')) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
         // get shop products overview:
@@ -648,7 +625,7 @@ class pluginShop extends objectPlugin {
     }
 
     private function _getStats_ProductsIntensityLastMonth ($status) {
-        if (!$this->ifYou('CanAdmin')) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
         $config = configurationShopDataSource::jsapiShopStat_ProductsIntensityLastMonth($status);
@@ -929,13 +906,13 @@ class pluginShop extends objectPlugin {
     }
 
     private function _createPromo ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanCreate')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
             return glWrap("AccessDenied");
         }
     }
 
     private function _updatePromo ($reqData) {
-        if (!$this->ifYou('CanAdmin') && !$this->ifYou('CanEdit')) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("AccessDenied");
         }
     }
@@ -1162,7 +1139,7 @@ class pluginShop extends objectPlugin {
 
     public function get_shop_order (&$resp, $req) {
         if (isset($req->get['id']) && $req->get['id'] !== "temp") {
-            if ($this->ifYou('CanAdmin'))
+            if ($this->getCustomer()->ifYouCan('Admin'))
                 $resp = $this->_getOrderByID($req->get['id']);
             else
                 $resp['error'] = 'AccessDenied';
@@ -1176,63 +1153,58 @@ class pluginShop extends objectPlugin {
         // $resp['error'] = '"id" or "hash" is missed in the request';
     }
 
-    // create new product in the shopping cart list
+    // create new order
     public function post_shop_order (&$resp, $req) {
         $resp = $this->_createOrder($req->data);
     }
 
-    // modify existed product quantity in the shopping cart list
+    // modify existent order status or
+    // product quantity in the shopping cart list of temporary order
     public function patch_shop_order (&$resp, $req) {
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
         // var_dump($_POST);
         // var_dump(file_get_contents('php://input'));
         // $options = array();
+        $isTemp = !isset($req->get['id']);
 
-        if (glIsToolbox()) {
-            if ($this->ifYou('CanAdmin')) {
+        if (!$isTemp && glIsToolbox()) {
+            // if ($this->getCustomer()->ifYouCan('Admin')) {
                 // here we're gonna change order's status only
-            } else {
-                $resp['error'] = 'AccessDenied';
-            }
+            $resp = $this->_updateOrder($req->get['id'], $req->data);
+            // } else {
+                // $resp['error'] = 'AccessDenied';
+            // }
             return;
         }
 
-        if (isset($req->data['productID'])) {
-            $sessionOrderProducts = $this->_getSessionOrderProducts();
-            // $items = empty($order['items']) ? array() : $order['items'];
-            $productID = $req->data['productID'];
-            $newQuantity = floatval($req->data['_orderQuantity']);
-            if (isset($sessionOrderProducts[$productID])) {
-                $sessionOrderProducts[$productID]['_orderQuantity'] = $newQuantity;
-                if ($sessionOrderProducts[$productID]['_orderQuantity'] <= 0)
-                    unset($sessionOrderProducts[$productID]);
-                $this->_setSessionOrderProducts($sessionOrderProducts);
-            } elseif ($newQuantity > 0) {
-                // $product = $this->_getProductByID($productID);
-                $product['ID'] = $productID;
-                $product['_orderQuantity'] = $newQuantity;
-                $sessionOrderProducts[$productID] = $product;
-                $this->_setSessionOrderProducts($sessionOrderProducts);
-            } elseif ($req->data['productID'] === "*") {
-                $this->_resetSessionOrderProducts();
+        // for temp order (site side only)
+        if ($isTemp) {
+            if (isset($req->data['productID'])) {
+                $sessionOrderProducts = $this->_getSessionOrderProducts();
+                $productID = $req->data['productID'];
+                $newQuantity = floatval($req->data['_orderQuantity']);
+                if (isset($sessionOrderProducts[$productID])) {
+                    $sessionOrderProducts[$productID]['_orderQuantity'] = $newQuantity;
+                    if ($sessionOrderProducts[$productID]['_orderQuantity'] <= 0)
+                        unset($sessionOrderProducts[$productID]);
+                    $this->_setSessionOrderProducts($sessionOrderProducts);
+                } elseif ($newQuantity > 0) {
+                    $product['ID'] = $productID;
+                    $product['_orderQuantity'] = $newQuantity;
+                    $sessionOrderProducts[$productID] = $product;
+                    $this->_setSessionOrderProducts($sessionOrderProducts);
+                } elseif ($req->data['productID'] === "*") {
+                    $this->_resetSessionOrderProducts();
+                }
+            } elseif (isset($req->data['promo'])) {
+                if (empty($req->data['promo']))
+                    $this->_resetSessionPromo();
+                else
+                    $this->_setSessionPromo($this->_getPromoByHash($req->data['promo'], true));
             }
-            // $order['items'] = $items;
-        } elseif (isset($req->data['promo'])) {
-            if (empty($req->data['promo']))
-                $this->_resetSessionPromo();
-            else
-                $this->_setSessionPromo($this->_getPromoByHash($req->data['promo'], true));
-            // if ($req->data['promo'] === false)
-            //     $options['promo'] = array();
-            // else
-            //     $options['promo'] = $this->_getPromoByHash($req->data['promo'], true);
+            $resp = $this->_getOrderTemp();
         }
-        // else {
-        //     $options['useBackup'] = true;
-        // }
-        // var_dump($sessionOrder);
-        $resp = $this->_getOrderTemp();
     }
 
     // removes particular product or clears whole shopping cart
