@@ -22,7 +22,7 @@ define("plugin/shop/toolbox/js/view/stats", [
             id: 'shop-stats-ID'
         },
         className: 'plugin-shop-stats',
-        model: new ModelStats(),
+        // model: new (),
         lang: lang,
         template: tpl,
         events: {
@@ -31,17 +31,17 @@ define("plugin/shop/toolbox/js/view/stats", [
         initialize: function () {
             // MView.prototype.initialize.call(this);
             var self = this;
-
+            this.model = new ModelStats();
             this.listenTo(this.model, "change", this.render);
 
-            var intervalID = setInterval(function() {
-                if (Auth.getAccountID() && (Backbone.history.fragment === "shop/stats" || Backbone.history.fragment === ""))
-                    self.refresh.call(self);
-            }, 10000);
+            // var intervalID = setInterval(function() {
+            //     if (Auth.getAccountID() && (Backbone.history.fragment === "shop/stats" || Backbone.history.fragment === ""))
+            //         self.refresh.call(self);
+            // }, 10000);
         },
-        refresh: function () {
-            this.model.fetch({reset: true});
-        },
+        // refresh: function () {
+        //     this.model.clear({silent: true}).fetch();
+        // },
         render: function () {
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
@@ -123,6 +123,8 @@ define("plugin/shop/toolbox/js/view/stats", [
                 var chart = new google.visualization.ColumnChart(self.$('#shop-chart-new-products-ID').get(0));
                 chart.draw(dataProducts, options);
             }
+
+            return this;
         }
     });
 });

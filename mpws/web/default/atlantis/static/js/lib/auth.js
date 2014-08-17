@@ -13,17 +13,17 @@ define("default/js/lib/auth", [
 
     Auth = {
         setStatus: function (response) {
-            // debugger;
             var auth_id = response && response.auth_id;
+            // console.log('Auth set auth_id', auth_id);
             if (Auth.auth_id === auth_id)
                 return;
+            // debugger;
 
             Auth.auth_id = auth_id;
             Cache.setCookie('auth_id', auth_id);
 
             if (Auth.auth_id === null) {
                 Sandbox.eventNotify("global:auth:status:inactive");
-                
             }
             else
                 Sandbox.eventNotify("global:auth:status:active");

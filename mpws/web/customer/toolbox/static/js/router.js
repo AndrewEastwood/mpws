@@ -9,22 +9,25 @@ define("customer/js/router", [
         throw "Account plugin is unavailable";
     }
 
-    Sandbox.eventSubscribe('global:page:signout', function (fragment) {
-        _ifNotAuthorizedNavigateTo(fragment, 'signin');
-    });
-
-    Sandbox.eventSubscribe('global:route', function (fragment) {
-        _ifNotAuthorizedNavigateTo(fragment, 'signin');
-    });
-
-    var _ifNotAuthorizedNavigateTo = function (fragment, route) {
+    var _ifNotAuthorizedNavigateToSignin = function () {
         // debugger;
-        if (!Auth.getAccountID() && fragment !== route) {
+        if (!Auth.getAccountID()) {
             APP.xhrAbortAll();
-            Backbone.history.navigate(route, true);
-            window.location.reload();
+            if (!/signin/.test(Backbone.history.getHash())) {
+                Backbone.history.fragment = false;
+                Backbone.history.navigate('signin', true);
+                // window.location.reload();
+            }
         }
     }
+
+    Sandbox.eventSubscribe('global:page:signout', function () {
+        _ifNotAuthorizedNavigateToSignin();
+    });
+
+    Sandbox.eventSubscribe('global:route', function () {
+        _ifNotAuthorizedNavigateToSignin();
+    });
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         var pageContainer = new PageContainer();
@@ -32,9 +35,9 @@ define("customer/js/router", [
         Backbone.history.navigate(Cache.getFromLocalStorage('location') || "", true);
     });
 
-    // Sandbox.eventSubscribe('global:auth:status:inactive', function () {
-    //     // debugger;
-    //     _ifNotAuthorizedNavigateTo('signin');
-    // });
+    Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+        // debugger;
+        _ifNotAuthorizedNavigateToSignin();
+    });
 
 });

@@ -107,12 +107,12 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     $(document).ajaxSend(function(e, jqXHR, options){
         xhrPool.push(jqXHR);
     });
-    $(document).ajaxComplete(function(event, jqxhr, data) {
-        xhrPool = $.grep(xhrPool, function(x){return x!=jqxhr});
-        if (!jqxhr.responseText)
+    $(document).ajaxComplete(function(event, jqXHR, data) {
+        xhrPool = $.grep(xhrPool, function(x){return x!=jqXHR});
+        if (!jqXHR.responseText)
             return;
         // debugger;
-        var response = JSON.parse(jqxhr.responseText);
+        var response = JSON.parse(jqXHR.responseText);
         // if (response && response.error && response.error === "InvalidTokenKey") {
         //     window.location.reload();
         // }
@@ -175,7 +175,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
     $(window).on('hashchange', function() {
         // set page name
-        var fragment = window.location.hash.substr(1);
+        var fragment = Backbone.history.getFragment();
         var _hashTags = fragment.split('/');
         $('body').attr('class', "MPWSPage");
         if (_hashTags && _hashTags[0])

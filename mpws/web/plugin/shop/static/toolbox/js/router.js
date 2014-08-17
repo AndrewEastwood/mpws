@@ -27,9 +27,10 @@ define("plugin/shop/toolbox/js/router", [
 
         stats: function () {
             require(['plugin/shop/toolbox/js/view/stats'], function (Stats) {
-                    // create new view
+                // debugger;
+                // create new view
                 var stats = new Stats();
-                stats.refresh();
+                stats.model.fetch();
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
