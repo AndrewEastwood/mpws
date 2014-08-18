@@ -357,6 +357,63 @@ class pluginAccount extends objectPlugin {
         return glWrap("ok", true);
     }
 
+    // stats
+    // -----------------------------------------------
+    private function _getStats_AccountsOverview () {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            return null;
+        }
+        $config = configurationCustomerDataSource::jsapiStat_AccountsOverview();
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        return $data;
+    }
+
+    private function _getStats_AccountsIntensityLastMonth ($status) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            return null;
+        }
+        $config = configurationCustomerDataSource::jsapiStat_AccountsIntensityLastMonth($status);
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        // var_dump($config);
+        return $data;
+    }
+
+    // private function _getStats_OrdersIntensityLastMonth ($status) {
+    //     if (!$this->getCustomer()->ifYouCan('Admin')) {
+    //         return null;
+    //     }
+    //     $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status);
+    //     $data = $this->getCustomer()->fetch($config) ?: array();
+    //     // var_dump($config);
+    //     return $data;
+    // }
+
+    // private function _getStats_ProductsOverview () {
+    //     if (!$this->getCustomer()->ifYouCan('Admin')) {
+    //         return null;
+    //     }
+    //     // get shop products overview:
+    //     $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
+    //     $data = $this->getCustomer()->fetch($config) ?: array();
+    //     return $data;
+    // }
+
+    public function get_account_overview (&$resp) {
+        $resp['all_accounts'] = $this->_getStats_AccountsOverview();
+        // $resp['all_orders'] = $this->_getStats_OrdersOverview();
+        // $resp['products_todays'] = $this->_getProducts_Todays();
+        // $resp['products_popular'] = $this->_getProducts_TopPopular();
+        // $resp['products_non_popular'] = $this->_getProducts_TopNonPopular();
+        // $resp['orders_all_new'] = $this->_getOrders_ByStatus('NEW');
+        // $resp['orders_todays'] = $this->_getOrders_Todays();
+        // $resp['orders_expired'] = $this->_getOrders_Expired();
+        // $resp['orders_intensity_new_last_month'] = $this->_getStats_OrdersIntensityLastMonth('NEW');
+        // $resp['orders_intensity_closed_last_month'] = $this->_getStats_OrdersIntensityLastMonth('SHOP_CLOSED');
+        $resp['accounts_intensity_last_month_active'] = $this->_getStats_AccountsIntensityLastMonth('ACTIVE');
+        $resp['accounts_intensity_last_month_temp'] = $this->_getStats_AccountsIntensityLastMonth('TEMP');
+        $resp['accounts_intensity_last_month_removed'] = $this->_getStats_AccountsIntensityLastMonth('REMOVED');
+    }
+
     public function get_account_account (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $AccountID = intval($req->get['id']);

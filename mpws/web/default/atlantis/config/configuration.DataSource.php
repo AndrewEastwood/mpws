@@ -281,6 +281,42 @@ class configurationDefaultDataSource extends objectConfiguration {
         ));
     }
 
+    // >>>> Account statistics
+    static function jsapiStat_AccountsOverview () {
+        $config = self::jsapiGetAccount();
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
+        $config['group'] = "Status";
+        $config['limit'] = 0;
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'Status',
+                'values' => 'ItemsCount'
+            )
+        );
+        unset($config['condition']);
+        unset($config['additional']);
+        return $config;
+    }
+
+    static function jsapiStat_AccountsIntensityLastMonth ($status) {
+        $config = self::jsapiGetAccount();
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
+        $config['condition'] = array(
+            'Status' => self::jsapiCreateDataSourceCondition($status),
+            'DateCreated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-10 month")), ">")
+        );
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'IncomeDate',
+                'values' => 'ItemsCount'
+            )
+        );
+        $config['group'] = 'Date(DateCreated)';
+        $config['limit'] = 0;
+        unset($config['additional']);
+        return $config;
+    }
+    // <<<< Account statistics
 }
 
 

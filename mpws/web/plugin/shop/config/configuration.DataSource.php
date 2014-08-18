@@ -217,54 +217,6 @@ class configurationShopDataSource extends objectConfiguration {
     }
     // <<<< Single prouct info
 
-    // >>>> Statistic: best and worst selling products
-    static function jsapiShopStat_PopularProducts () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "select",
-            "source" => "shop_boughts",
-            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
-            "order" => array(
-                "field" => "SoldTotal",
-                "ordering" => "DESC"
-            ),
-            "limit" => 15,
-            "group" => "ProductID",
-            "options" => null
-        ));
-    }
-    static function jsapiShopStat_NonPopularProducts () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "select",
-            "source" => "shop_products",
-            "fields" => array("ID"),
-            "condition" => array(
-                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE"),
-                "ID" => self::jsapiCreateDataSourceCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
-            ),
-            "order" => array(
-                "field" => "DateCreated",
-                "ordering" => "ASC"
-            ),
-            "limit" => 15,
-            "options" => null
-        ));
-    }
-    static function jsapiShopStat_ProductsOverview () {
-        $config = self::jsapiShopProductItemGet();
-        $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
-        $config['group'] = "Status";
-        $config['limit'] = 0;
-        $config['options'] = array(
-            'asDict' => array(
-                'keys' => 'Status',
-                'values' => 'ItemsCount'
-            )
-        );
-        unset($config['condition']);
-        unset($config['additional']);
-        return $config;
-    }
-
     static function jsapiShopGetProductFeatures ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -506,6 +458,57 @@ class configurationShopDataSource extends objectConfiguration {
     }
     // <<<< Shop order
 
+
+    // >>>> Shop statistics
+    static function jsapiShopStat_PopularProducts () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_boughts",
+            "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
+            "order" => array(
+                "field" => "SoldTotal",
+                "ordering" => "DESC"
+            ),
+            "limit" => 15,
+            "group" => "ProductID",
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopStat_NonPopularProducts () {
+        return self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_products",
+            "fields" => array("ID"),
+            "condition" => array(
+                "Status" => self::jsapiCreateDataSourceCondition("ACTIVE"),
+                "ID" => self::jsapiCreateDataSourceCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
+            ),
+            "order" => array(
+                "field" => "DateCreated",
+                "ordering" => "ASC"
+            ),
+            "limit" => 15,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopStat_ProductsOverview () {
+        $config = self::jsapiShopProductItemGet();
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
+        $config['group'] = "Status";
+        $config['limit'] = 0;
+        $config['options'] = array(
+            'asDict' => array(
+                'keys' => 'Status',
+                'values' => 'ItemsCount'
+            )
+        );
+        unset($config['condition']);
+        unset($config['additional']);
+        return $config;
+    }
+
     static function jsapiShopStat_OrdersOverview () {
         $config = self::jsapiGetShopOrders();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
@@ -559,10 +562,9 @@ class configurationShopDataSource extends objectConfiguration {
         unset($config['additional']);
         return $config;
     }
-    // <<<< Statistic: order overview
+    // <<<< Shop statistics
 
 
-    
     // <<<< Promo area
     static function jsapiShopGetPromoByHash ($hash, $activeOnly) {
         $config = self::jsapiGetDataSourceConfig(array(

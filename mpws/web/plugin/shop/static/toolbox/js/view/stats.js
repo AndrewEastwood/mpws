@@ -14,7 +14,7 @@ define("plugin/shop/toolbox/js/view/stats", [
     'default/js/lib/bootstrap-editable',
     /* charts */
     'default/js/plugin/async!http://maps.google.com/maps/api/js?sensor=false',
-    'default/js/plugin/goog!visualization,1,packages:[corechart,geochart]',
+    'default/js/plugin/goog!visualization,1,packages:[corechart,geochart]'
 ], function (Sandbox, Backbone, ModelStats, BootstrapDialog, Cache, Utils, Auth, tpl, lang) {
 
     return Backbone.View.extend({
@@ -22,26 +22,16 @@ define("plugin/shop/toolbox/js/view/stats", [
             id: 'shop-stats-ID'
         },
         className: 'plugin-shop-stats',
-        // model: new (),
         lang: lang,
         template: tpl,
         events: {
             'click #refresh': 'refresh'
         },
         initialize: function () {
-            // MView.prototype.initialize.call(this);
             var self = this;
             this.model = new ModelStats();
             this.listenTo(this.model, "change", this.render);
-
-            // var intervalID = setInterval(function() {
-            //     if (Auth.getAccountID() && (Backbone.history.fragment === "shop/stats" || Backbone.history.fragment === ""))
-            //         self.refresh.call(self);
-            // }, 10000);
         },
-        // refresh: function () {
-        //     this.model.clear({silent: true}).fetch();
-        // },
         render: function () {
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));

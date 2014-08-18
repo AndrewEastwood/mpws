@@ -2,7 +2,7 @@ define("customer/js/router", [
     'default/js/lib/sandbox',
     'customer/js/view/pageContainer',
     'default/js/lib/auth',
-    'default/js/lib/cache',
+    'default/js/lib/cache'
 ], function (Sandbox, PageContainer, Auth, Cache) {
 
     if (!APP.hasPlugin('account')) {

@@ -96,10 +96,13 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
             return;
         // debugger;
         var $el = $('[name="' + options.name + '"]');
-        if ($el.length == 0)
-            throw "Render Error: Unable to resolve element by name: " + options.name;
-        // $el.each(function(){
+        if ($el.length === 0) {
+            if (APP.config.ISDEV) {
+                throw "Render Error: Unable to resolve element by name: " + options.name;
+            }
+        } else
             contentInjection.injectContent($el, options);
+        // $el.each(function(){
         // });
     }
 

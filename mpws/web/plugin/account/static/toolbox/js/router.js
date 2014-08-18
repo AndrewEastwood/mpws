@@ -47,4 +47,79 @@ define("plugin/account/toolbox/js/router", [
         });
     });
 
+    var Router = Backbone.Router.extend({
+        routes: {
+            "account/overview": "overview",
+            "account/accounts": "accounts",
+            "account/account/:id": "accounts"
+        },
+
+        initialize: function () {
+            var self = this;
+            Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
+                self.stats();
+            });
+        },
+
+        stats: function () {
+            require(['plugin/account/toolbox/js/view/stats'], function (Stats) {
+                // debugger;
+                // create new view
+                var stats = new Stats();
+                stats.model.fetch();
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: stats.$el,
+                    append: true
+                });
+            });
+        },
+
+        overview: function () {
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
+            require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
+                // create new view
+                var productManager = new ProductManager();
+                productManager.render();
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: productManager.$el
+                });
+
+                // set page title
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CustomerPageName',
+                    el: "Товари"
+                });
+            });
+        },
+
+        accounts: function (accountID) {
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
+            require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
+                // create new view
+                var productManager = new ProductManager();
+                productManager.render();
+
+                if (accountID)
+                    productManager.showAccount(accountID);
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: productManager.$el
+                });
+
+                // set page title
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CustomerPageName',
+                    el: "Товари"
+                });
+            });
+        }
+    });
+
+    return Router;
+
 });

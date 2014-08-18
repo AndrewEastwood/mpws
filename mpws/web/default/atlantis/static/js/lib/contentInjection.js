@@ -34,10 +34,7 @@ define("default/js/lib/contentInjection", [
                 else // or just append as new one into container
                     cnt.append(options.el);
             }
-            return;
-        }
-
-        if (options.append)
+        } else if (options.append)
             cnt.append(options.el);
         else if (options.prepend)
             cnt.prepend(options.el);

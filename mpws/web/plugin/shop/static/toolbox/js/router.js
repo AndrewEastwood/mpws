@@ -12,7 +12,7 @@ define("plugin/shop/toolbox/js/router", [
             // "shop/stats": "stats",
             "shop/products": "products",
             "shop/orders": "orders",
-            "shop/order/:id": "order",
+            "shop/order/:id": "orders",
             "shop/sales": "sales",
             "shop/prices": "prices",
             "shop/reports": "reports"
@@ -20,7 +20,7 @@ define("plugin/shop/toolbox/js/router", [
 
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('global:page:index', function () {
+            Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
                 self.stats();
             });
         },
@@ -60,33 +60,15 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
 
-        orders: function () {
+        orders: function (orderID) {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
                 // create new view
                 var listOrders = new ListOrders();
                 listOrders.customDataSources.fetch({reset: true});
 
-                Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: listOrders.$el
-                });
-
-                // set page title
-                Sandbox.eventNotify('global:content:render', {
-                    name: 'CustomerPageName',
-                    el: "Замовлення"
-                });
-            });
-        },
-
-        order: function (orderID) {
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
-            require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
-                // create new view
-                var listOrders = new ListOrders();
-                listOrders.customDataSources.fetch({reset: true});
-                listOrders.showOrder(orderID)
+                if (orderID)
+                    listOrders.showOrder(orderID)
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
