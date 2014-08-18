@@ -250,6 +250,10 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             popupOrder.listenTo(popupOrder.model, 'change', function(){
                 Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
             });
+        },
+        showPage: function (pageName) {
+            debugger;
+            this.$('a.orders-' + pageName).tab('show');
         }
     });
 

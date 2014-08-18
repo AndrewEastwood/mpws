@@ -11,8 +11,9 @@ define("plugin/shop/toolbox/js/router", [
         routes: {
             // "shop/stats": "stats",
             "shop/products": "products",
-            "shop/orders": "orders",
-            "shop/order/:id": "orders",
+            "shop/orders": "ordersList",
+            "shop/orders/:page": "ordersList",
+            "shop/order/:id": "orderDetails",
             "shop/sales": "sales",
             "shop/prices": "prices",
             "shop/reports": "reports"
@@ -33,9 +34,8 @@ define("plugin/shop/toolbox/js/router", [
                 stats.model.fetch();
 
                 Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: stats.$el,
-                    append: true
+                    name: 'DashboardForPlugin_shop',
+                    el: stats.$el
                 });
             });
         },
@@ -60,15 +60,24 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
 
-        orders: function (orderID) {
+        orderDetails: function (orderID) {
+            this.orders(false, orderID);
+        },
+        ordersList: function (activeTabPage) {
+            this.orders(activeTabPage);
+        },
+        orders: function (activeTabPage, orderID) {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
                 // create new view
                 var listOrders = new ListOrders();
                 listOrders.customDataSources.fetch({reset: true});
 
+                // debugger
                 if (orderID)
-                    listOrders.showOrder(orderID)
+                    listOrders.showOrder(orderID);
+                if (activeTabPage)
+                    listOrders.showPage(activeTabPage);
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',

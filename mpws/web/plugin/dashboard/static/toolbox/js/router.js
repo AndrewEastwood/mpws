@@ -5,7 +5,9 @@ define("plugin/dashboard/toolbox/js/router", [
     'default/js/lib/backbone'
 ], function (Sandbox, $, Auth, Backbone) {
 
-    Sandbox.eventSubscribe('global:page:index', function (data) {
+    Sandbox.eventSubscribe('customer:container:ready', function (data) {
+        if (Backbone.history.getFragment() !== '')
+            return;
         if (!Auth.getAccountID())
             return;
         require(['plugin/dashboard/toolbox/js/view/dashboard'], function (ViewDashboard) {
@@ -18,5 +20,7 @@ define("plugin/dashboard/toolbox/js/router", [
             Sandbox.eventNotify('plugin:dashboard:ready', dashboard);
         });
     });
+    // Sandbox.eventSubscribe('global:page:index', function (data) {
+    // });
 
 });

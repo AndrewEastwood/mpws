@@ -11,6 +11,7 @@
 @import "bootstrap-slider";
 @import "backgrid-paginator";
 @import "bootstrap-dialog";
+@import "bootstrap-editable";
 
 body {
     background-image: none;
@@ -114,5 +115,18 @@ body {
         .shopPropmoCode {
             display: none;
         }
+    }
+    .list-group-item-status_ACTIVE {
+        background-color: #EFD;
+    }
+    .list-group-item-status_NEW {
+        background-color: #FDD;
+    }
+    .list-group-item-status_LOGISTIC_DELIVERING,
+    .list-group-item-status_LOGISTIC_DELIVERED {
+        background-color: #FFFEDD;
+    }
+    .list-group-item-status_SHOP_CLOSED {
+        background-color: #DDD;
     }
 }

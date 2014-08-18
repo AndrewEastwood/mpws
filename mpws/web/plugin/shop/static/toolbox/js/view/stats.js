@@ -24,20 +24,15 @@ define("plugin/shop/toolbox/js/view/stats", [
         className: 'plugin-shop-stats',
         lang: lang,
         template: tpl,
-        events: {
-            'click #refresh': 'refresh'
-        },
         initialize: function () {
             var self = this;
             this.model = new ModelStats();
             this.listenTo(this.model, "change", this.render);
         },
         render: function () {
-
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             // self.$('select').select2();
             this.$('.helper').tooltip();
-
             // debugger;
             ///
             if (google) {

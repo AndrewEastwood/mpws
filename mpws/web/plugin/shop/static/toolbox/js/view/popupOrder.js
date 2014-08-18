@@ -52,7 +52,23 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                 //     self.dialogIsShown = false;
                 // },
                 buttons: [{
+                    label: "Надіслати фактуру",
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }, {
+                    label: "Друкувати фактуру",
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }, {
+                    label: "Надіслати код-відстеження",
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }, {
                     label: lang.popup_order_button_Close,
+                    cssClass: 'btn-warning',
                     action: function (dialog) {
                         dialog.close();
                     }
@@ -89,7 +105,7 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                     if (!response || !response.success) {
                         BSAlert.danger('Помилка під час оновлення замовлення');
                     }
-                    self.$title.html(_getTitleByStatus(response.Status));
+                    // self.$title.html(_getTitleByStatus(response.Status));
                 });
             });
             this.$('.helper').tooltip();

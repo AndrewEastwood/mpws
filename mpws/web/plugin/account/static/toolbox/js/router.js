@@ -69,9 +69,8 @@ define("plugin/account/toolbox/js/router", [
                 stats.model.fetch();
 
                 Sandbox.eventNotify('global:content:render', {
-                    name: 'CommonBodyCenter',
-                    el: stats.$el,
-                    append: true
+                    name: 'DashboardForPlugin_account',
+                    el: stats.$el
                 });
             });
         },

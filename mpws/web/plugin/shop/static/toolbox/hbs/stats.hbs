@@ -1,69 +1,24 @@
 <div class="well well-sm">
-    <i class="fa fa-refresh helper helper-right" id="refresh"></i>
-    <big><strong>Статистика інтернет-магазину</strong></big>
+    <big><strong>Інтернет-магазин</strong></big>
 </div>
 
 <div class="row">
-    <div class="col-lg-2 col-md-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-info-circle fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <a href="#shop/products">
-                            Активних товарів:
-                            <strong>
-                                {{default_value data.all_products.ACTIVE 0 }}
-                            </strong>
-                        </a>
-                        <a href="#shop/products">
-                            Для замовлення:
-                            <strong>
-                                {{default_value data.all_products.PREORDER 0 }}
-                            </strong>
-                        </a>
-                        <a href="#shop/products">
-                            З знижкою:
-                            <strong>
-                                {{default_value data.all_products.DISCOUNT 0 }}
-                            </strong>
-                        </a>
-                        <a href="#shop/orders">
-                            Виконано:
-                            <strong>
-                                {{default_value data.all_orders.SHOP_CLOSED 0 }}
-                            </strong>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <a href="#shop/reports">
-                <div class="panel-footer">
-                    <span class="pull-left">Детальніше</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
     <div class="col-lg-2 col-md-6">
         <div class="panel panel-green">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-gift fa-3x"></i>
+                        <i class="fa fa-shopping-cart fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">
-                            <a href="#shop/products">{{array_length data.products_todays}}</a>
+                            <a href="#shop/orders">{{array_length data.orders_todays}}</a>
                         </div>
-                        <div>Нові товари!</div>
+                        <div>Сьогоднішні!</div>
                     </div>
                 </div>
             </div>
-            <a href="#shop/products">
+            <a href="#shop/orders">
                 <div class="panel-footer">
                     <span class="pull-left">Детальніше</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -88,30 +43,6 @@
                 </div>
             </div>
             <a href="#shop/reports">
-                <div class="panel-footer">
-                    <span class="pull-left">Детальніше</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-2 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-shopping-cart fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div class="huge">
-                            <a href="#shop/orders">{{array_length data.orders_todays}}</a>
-                        </div>
-                        <div>Сьогоднішні!</div>
-                    </div>
-                </div>
-            </div>
-            <a href="#shop/orders">
                 <div class="panel-footer">
                     <span class="pull-left">Детальніше</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -160,6 +91,74 @@
                 </div>
             </div>
             <a href="#shop/orders">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-gift fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <a href="#shop/products">{{array_length data.products_todays}}</a>
+                        </div>
+                        <div>Нові товари!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/products">
+                <div class="panel-footer">
+                    <span class="pull-left">Детальніше</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-info-circle fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <a href="#shop/products">
+                            Активних товарів:
+                            <strong>
+                                {{default_value data.all_products.ACTIVE 0 }}
+                            </strong>
+                        </a>
+                        <a href="#shop/products">
+                            Для замовлення:
+                            <strong>
+                                {{default_value data.all_products.PREORDER 0 }}
+                            </strong>
+                        </a>
+                        <a href="#shop/products">
+                            З знижкою:
+                            <strong>
+                                {{default_value data.all_products.DISCOUNT 0 }}
+                            </strong>
+                        </a>
+                        <a href="#shop/orders">
+                            Виконано:
+                            <strong>
+                                {{default_value data.all_orders.SHOP_CLOSED 0 }}
+                            </strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <a href="#shop/reports">
                 <div class="panel-footer">
                     <span class="pull-left">Детальніше</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
