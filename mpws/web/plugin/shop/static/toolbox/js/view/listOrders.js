@@ -17,56 +17,8 @@ define("plugin/shop/toolbox/js/view/listOrders", [
 
     // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
-    var orderStatusValues = [];
-    var dataSources = {};
-
-    var columnAccountFullName = {
-        name: "AccountFullName",
-        label: lang.pluginMenu_Orders_Grid_Column_AccountFullName,
-        cell: "string",
-        editable: false
-    };
-    var columnAccountPhone = {
-        name: "AccountPhone",
-        label: lang.pluginMenu_Orders_Grid_Column_AccountPhone,
-        cell: "string",
-        editable: false
-    };
-    var columnInfoTotal = {
-        name: "InfoTotal",
-        label: lang.pluginMenu_Orders_Grid_Column_InfoTotal,
-        cell: "string",
-        editable: false,
-        formatter: {
-            fromRaw: function (value) {
-                return value + ' грн.';
-            }
-        }
-    };
-    var columnHasPromo = {
-        name: "HasPromo",
-        label: lang.pluginMenu_Orders_Grid_Column_HasPromo,
-        cell: "html",
-        editable: false,
-        formatter: {
-            fromRaw: function (value) {
-                if (!!value)
-                    return $('<i/>').addClass('fa fa-check-circle-o');
-            }
-        }
-    };
-    var columnDiscount = {
-        name: "Discount",
-        label: lang.pluginMenu_Orders_Grid_Column_Discount,
-        cell: "string",
-        editable: false,
-        formatter: {
-            fromRaw: function (value) {
-                if (value)
-                    return value + ' %';
-            }
-        }
-    };
+    var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
+    // var dataSources = {};
 
     var columnActions = {
         name: "Actions",
@@ -85,11 +37,75 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                     // debugger;
                     var popupOrder = new PopupOrderEntry(model.toJSON());
                     popupOrder.render();
-                    popupOrder.listenTo(popupOrder.model, 'change', function(){
-                        Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
-                    });
+                    // popupOrder.listenTo(popupOrder.model, 'change', function (popupOrderModel){
+                    //     // debugger;
+                    //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
+                    //         status: popupOrderModel.previousAttributes().Status,
+                    //         options: {
+                    //             reset: true
+                    //         }
+                    //     });
+                    //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
+                    //         status: popupOrderModel.changedAttributes().Status,
+                    //         options: {
+                    //             reset: true
+                    //         }
+                    //     });
+                    // });
                 });
                 return _link;
+            }
+        }
+    };
+
+    var columnAccountFullName = {
+        name: "AccountFullName",
+        label: lang.pluginMenu_Orders_Grid_Column_AccountFullName,
+        cell: "string",
+        editable: false
+    };
+
+    var columnAccountPhone = {
+        name: "AccountPhone",
+        label: lang.pluginMenu_Orders_Grid_Column_AccountPhone,
+        cell: "string",
+        editable: false
+    };
+
+    var columnInfoTotal = {
+        name: "InfoTotal",
+        label: lang.pluginMenu_Orders_Grid_Column_InfoTotal,
+        cell: "string",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                return value + ' грн.';
+            }
+        }
+    };
+
+    var columnHasPromo = {
+        name: "HasPromo",
+        label: lang.pluginMenu_Orders_Grid_Column_HasPromo,
+        cell: "html",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                if (!!value)
+                    return $('<i/>').addClass('fa fa-check-circle-o');
+            }
+        }
+    };
+
+    var columnDiscount = {
+        name: "Discount",
+        label: lang.pluginMenu_Orders_Grid_Column_Discount,
+        cell: "string",
+        editable: false,
+        formatter: {
+            fromRaw: function (value) {
+                if (value)
+                    return value + ' %';
             }
         }
     };
@@ -151,7 +167,58 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         editable: false
     };
 
-    var columns = [columnActions, columnAccountFullName, columnAccountPhone, columnInfoTotal, columnHasPromo, columnDiscount, columnStatus, columnShipping, columnWarehouse, columnDateUpdated, columnDateCreated];
+    var ListOrders = Backbone.View.extend({
+        columns: [
+            columnActions,
+            columnAccountFullName,
+            columnAccountPhone,
+            columnInfoTotal,
+            columnHasPromo,
+            columnDiscount,
+            columnStatus,
+            columnShipping,
+            columnWarehouse,
+            columnDateUpdated,
+            columnDateCreated
+        ],
+        initialize: function (options) {
+            var self = this;
+            this.options = options;
+            if (this.collection)
+                this.listenTo(this.collection, 'reset', this.render);
+            Sandbox.eventSubscribe('plugin:shop:order:changed', function (diff) {
+                // debugger;
+                var status = self.collection.queryParams.status;
+                if (diff.current.Status === status || diff.previous.Status === status)
+                    self.collection.fetch({reset: true});
+            });
+
+            // displays active records count
+            this.$counter = $('<span/>');
+        },
+        render: function () {
+            var toolboxListOrdersGrid = new Backgrid.Grid({
+                className: "backgrid table table-responsive",
+                columns: this.columns,
+                collection: this.collection
+            });
+
+            var paginator = new Backgrid.Extension.Paginator({
+                collection: this.collection
+            });
+
+            this.$el.empty().append(toolboxListOrdersGrid.render().$el)
+                .append(paginator.render().$el);
+
+            this.$counter.html(this.collection.state.totalRecords);
+
+            return this;
+        }
+    });
+
+    return ListOrders;
+
+/*
 
     function getOrderDataSource (status) {
         var collection = new CollectionListOrders();
@@ -257,6 +324,6 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         }
     });
 
-    return ListOrders;
+    return ListOrders;*/
 
 });

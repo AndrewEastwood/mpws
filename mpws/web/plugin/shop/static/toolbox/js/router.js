@@ -67,28 +67,29 @@ define("plugin/shop/toolbox/js/router", [
             this.orders(activeTabPage);
         },
         orders: function (activeTabPage, orderID) {
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
-            require(['plugin/shop/toolbox/js/view/listOrders'], function (ListOrders) {
+            // set active menu
+            // Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
+            // // set page title
+            // Sandbox.eventNotify('global:content:render', {
+            //     name: 'CustomerPageName',
+            //     el: "Замовлення"
+            // });
+            require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 // create new view
-                var listOrders = new ListOrders();
-                listOrders.customDataSources.fetch({reset: true});
-
+                var managerOrders = new ManagerOrders();
+                // managerOrders.customDataSources.fetch({reset: true});
+                managerOrders.render();
                 // debugger
                 if (orderID)
-                    listOrders.showOrder(orderID);
+                    managerOrders.openOrder(orderID);
                 if (activeTabPage)
-                    listOrders.showPage(activeTabPage);
+                    managerOrders.activateTabPage(activeTabPage);
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
-                    el: listOrders.$el
+                    el: managerOrders.$el
                 });
 
-                // set page title
-                Sandbox.eventNotify('global:content:render', {
-                    name: 'CustomerPageName',
-                    el: "Замовлення"
-                });
             });
         },
 

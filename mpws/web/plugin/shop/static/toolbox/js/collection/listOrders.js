@@ -2,7 +2,7 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/order',
-    'default/js/lib/backbone-pageable',
+    'default/js/lib/backbone-pageable'
 ], function (Sandbox, _, ModelOrder, PageableCollection, lang) {
 
     var ListOrders = PageableCollection.extend({
@@ -27,6 +27,12 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
             totalPages: null,
             totalRecords: null,
             sortKey: "sort"
+        },
+
+        initialize: function (status) {
+            var self = this;
+            if (status)
+                this.queryParams.status = status;
         },
 
         parseState: function (resp, queryParams, state, options) {
