@@ -957,12 +957,14 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_overview (&$resp) {
+        $orders_new = $this->_getOrders_ByStatus('NEW');
+
         $resp['all_products'] = $this->_getStats_ProductsOverview();
         $resp['all_orders'] = $this->_getStats_OrdersOverview();
         $resp['products_todays'] = $this->_getProducts_Todays();
         $resp['products_popular'] = $this->_getProducts_TopPopular();
         $resp['products_non_popular'] = $this->_getProducts_TopNonPopular();
-        $resp['orders_all_new'] = $this->_getOrders_ByStatus('NEW');
+        $resp['orders_all_new'] = $orders_new['items'];
         $resp['orders_todays'] = $this->_getOrders_Todays();
         $resp['orders_expired'] = $this->_getOrders_Expired();
         $resp['orders_intensity_new_last_month'] = $this->_getStats_OrdersIntensityLastMonth('NEW');

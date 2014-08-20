@@ -1,7 +1,4 @@
-<div class="well well-sm">
-    <big><strong>Інтернет-магазин</strong></big>
-</div>
-
+<h2>Інтернет-магазин</h2>
 <div class="row">
     <div class="col-lg-2 col-md-6">
         <div class="panel panel-green">
@@ -12,7 +9,7 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">
-                            <a href="#shop/orders/new">{{array_length data.orders_todays}}</a>
+                            <a href="#shop/orders/new">{{data.orders_todays.length}}</a>
                         </div>
                         <div>Сьогоднішні!</div>
                     </div>
@@ -36,7 +33,7 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">
-                            <a href="#shop/orders/active">{{array_length data.orders_all_new}}</a>
+                            <a href="#shop/orders/active">{{data.orders_all_new.length}}</a>
                         </div>
                         <div>Активні!</div>
                     </div>
@@ -56,11 +53,11 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-warning fa-3x"></i>
+                        <i class="fa fa-warning fa-3x{{#if data.orders_expired.length }} shakeAlways{{/if}}"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">
-                            <a href="#shop/orders">{{array_length data.orders_expired}}</a>
+                            <a href="#shop/orders">{{data.orders_expired.length}}</a>
                         </div>
                         <div>Протерміновані!</div>
                     </div>
@@ -84,7 +81,7 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">
-                            <a href="#shop/products">{{array_length data.products_todays}}</a>
+                            <a href="#shop/products">{{data.products_todays.length}}</a>
                         </div>
                         <div>Нові товари!</div>
                     </div>
@@ -104,7 +101,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-truck fa-3x"></i>
+                        <i class="fa fa-truck fa-3x{{#if data.orders_expired.length }} shakeAlways{{/if}}"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">

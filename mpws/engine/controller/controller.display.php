@@ -12,16 +12,27 @@
     $customerStaticSource = glIsToolbox() ? 'toolbox' : 'site';
     $customerStaticCommonSource = 'common';
     $layout = 'layout.hbs';
+    $layoutBody = 'layoutBody.hbs';
 
     // get customer or default index layout
     if (MPWS_ENV === 'DEV') {
-        $layoutCustomer = glGetFullPath('web', 'customer', $displayCustomer, 'static', $customerStaticSource, 'hbs', $layout);
-        $layoutCustomerCommon = glGetFullPath('web', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layout);
+        // get layout
+        $layoutCustomer = glGetFullPath('web', 'customer', $displayCustomer, 'static', 'hbs', $layout);
+        // $layoutCustomerCommon = glGetFullPath('web', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layout);
         $layoutDefault = glGetFullPath('web', 'default', MPWS_VERSION, 'static', 'hbs', $layout);
+        // get layout body
+        $layoutBodyCustomer = glGetFullPath('web', 'customer', $displayCustomer, 'static', 'hbs', $layoutBody);
+        // $layoutBodyCustomerCommon = glGetFullPath('web', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layoutBody);
+        $layoutBodyDefault = glGetFullPath('web', 'default', MPWS_VERSION, 'static', 'hbs', $layoutBody);
     } else {
-        $layoutCustomer = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', $customerStaticSource, 'hbs', $layout);
-        $layoutCustomerCommon = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layout);
+        // get layout
+        $layoutCustomer = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', 'hbs', $layout);
+        // $layoutCustomerCommon = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layout);
         $layoutDefault = glGetFullPath('web', 'build', 'default', MPWS_VERSION, 'static', 'hbs', $layout);
+        // get layout body
+        $layoutBodyCustomer = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', 'hbs', $layoutBody);
+        // $layoutBodyCustomerCommon = glGetFullPath('web', 'build', 'customer', $displayCustomer, 'static', $customerStaticCommonSource, 'hbs', $layoutBody);
+        $layoutBodyDefault = glGetFullPath('web', 'build', 'default', MPWS_VERSION, 'static', 'hbs', $layoutBody);
     }
 
     debug($layoutCustomer, 'layoutCustomer');
@@ -49,21 +60,31 @@
     $initialJS = str_replace(array("\r","\n", ' '), '', $initialJS);
         // URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',
 
-    $responce = '';
+    $response = '';
+    $layoutBodyContent = '';
+
+    // init response with layout content
     if (file_exists($layoutCustomer))
-        $responce = file_get_contents($layoutCustomer);
+        $response = file_get_contents($layoutCustomer);
     else if (file_exists($layoutDefault))
-        $responce = file_get_contents($layoutDefault);
+        $response = file_get_contents($layoutDefault);
+
+    // get layout body content
+    if (file_exists($layoutBodyCustomer))
+        $layoutBodyContent = file_get_contents($layoutBodyCustomer);
+    else if (file_exists($layoutBodyDefault))
+        $layoutBodyContent = file_get_contents($layoutBodyDefault);
 
     // add system data
-    $responce = str_replace("{{LANG}}", configurationCustomerDisplay::$Lang, $responce);
-    $responce = str_replace("{{SYSTEMJS}}", $initialJS, $responce);
-    $responce = str_replace("{{MPWS_VERSION}}", MPWS_VERSION, $responce);
-    $responce = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $responce);
-    $responce = str_replace("{{PATH_STATIC}}", $staticPath, $responce);
+    $response = str_replace("{{BODY}}", $layoutBodyContent, $response);
+    $response = str_replace("{{LANG}}", configurationCustomerDisplay::$Lang, $response);
+    $response = str_replace("{{SYSTEMJS}}", $initialJS, $response);
+    $response = str_replace("{{MPWS_VERSION}}", MPWS_VERSION, $response);
+    $response = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $response);
+    $response = str_replace("{{PATH_STATIC}}", $staticPath, $response);
 
     // TODO: save output into file
     // and reuse it when production mode is on
 
-    echo $responce;
+    echo $response;
 ?>

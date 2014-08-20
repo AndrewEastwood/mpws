@@ -2,14 +2,14 @@ define("plugin/dashboard/toolbox/js/router", [
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/auth',
-    'default/js/lib/backbone'
+    'default/js/lib/backbone',
+    'plugin/dashboard/toolbox/js/view/menu'
 ], function (Sandbox, $, Auth, Backbone) {
 
-    Sandbox.eventSubscribe('customer:container:ready', function (data) {
-        if (Backbone.history.getFragment() !== '')
-            return;
+    Sandbox.eventSubscribe('global:page:index', function () {
         if (!Auth.getAccountID())
             return;
+        Sandbox.eventNotify('global:menu:set-active', '.menu-dashboard-dashboard');
         require(['plugin/dashboard/toolbox/js/view/dashboard'], function (ViewDashboard) {
             var dashboard = new ViewDashboard();
             dashboard.render();
@@ -20,7 +20,5 @@ define("plugin/dashboard/toolbox/js/router", [
             Sandbox.eventNotify('plugin:dashboard:ready', dashboard);
         });
     });
-    // Sandbox.eventSubscribe('global:page:index', function (data) {
-    // });
 
 });

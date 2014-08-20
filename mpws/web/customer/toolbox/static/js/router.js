@@ -1,9 +1,33 @@
+requirejs.config({
+    //Remember: only use shim config for non-AMD scripts,
+    //scripts that do not already call define(). The shim
+    //config will not work correctly if used on AMD scripts,
+    //in particular, the exports and init config will not
+    //be triggered, and the deps config will be confusing
+    //for those cases.
+    shim: {
+        'customer/js/lib/sb-admin-2': {
+            //These script dependencies should be loaded before loading
+            //customer/js/lib/sb-admin-2.js
+            deps: ['cmn_jquery'],
+            //module value.
+            exports: 'customer/js/lib/sb-admin-2'
+        },
+        'customer/js/lib/metisMenu': {
+            deps: ['cmn_jquery'],
+            exports: 'customer/js/lib/metisMenu'
+        }
+    }
+});
+
 define("customer/js/router", [
     'default/js/lib/sandbox',
-    'customer/js/view/pageContainer',
     'default/js/lib/auth',
-    'default/js/lib/cache'
-], function (Sandbox, PageContainer, Auth, Cache) {
+    'default/js/lib/cache',
+    'default/js/lib/bootstrap',
+    'customer/js/lib/sb-admin-2',
+    'customer/js/lib/metisMenu'
+], function (Sandbox, Auth, Cache) {
 
     if (!APP.hasPlugin('account')) {
         throw "Account plugin is unavailable";
@@ -30,9 +54,8 @@ define("customer/js/router", [
     });
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        var pageContainer = new PageContainer();
-        pageContainer.render();
         Backbone.history.navigate(Cache.getFromLocalStorage('location') || "", true);
+        $('#side-menu').metisMenu();
     });
 
     Sandbox.eventSubscribe('global:auth:status:inactive', function () {

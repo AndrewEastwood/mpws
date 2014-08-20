@@ -25,7 +25,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
                 });
             });
         },
-        render: function () {
+        render: function (activePage) {
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             _(this.listsByStatus).each(function(listView, status){
@@ -35,6 +35,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
                 $badge.html(listView.$counter);
                 listView.collection.fetch({reset: true});
             });
+            // debugger;
             return this;
         },
         openOrder: function (orderID) {
@@ -61,7 +62,11 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         },
         activateTabPage: function (pageName) {
             // debugger;
-            this.$('a.orders-' + pageName).tab('show');
+            this.$('li.tab-link').removeClass('active');
+            this.$('div.tab-pane').removeClass('active');
+            var $tabPageLink = this.$('li.tab-link.orders-' + pageName);
+            $tabPageLink.toggleClass('active', true);
+            this.$($tabPageLink.find('a').attr('href')).addClass('active');
         }
     });
 

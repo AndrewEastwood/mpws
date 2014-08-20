@@ -68,7 +68,7 @@ define("plugin/shop/toolbox/js/router", [
         },
         orders: function (activeTabPage, orderID) {
             // set active menu
-            // Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             // // set page title
             // Sandbox.eventNotify('global:content:render', {
             //     name: 'CustomerPageName',
@@ -77,13 +77,14 @@ define("plugin/shop/toolbox/js/router", [
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 // create new view
                 var managerOrders = new ManagerOrders();
-                // managerOrders.customDataSources.fetch({reset: true});
                 managerOrders.render();
+                // managerOrders.customDataSources.fetch({reset: true});
                 // debugger
                 if (orderID)
                     managerOrders.openOrder(orderID);
                 if (activeTabPage)
                     managerOrders.activateTabPage(activeTabPage);
+
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',

@@ -1,15 +1,17 @@
-define("plugin/shop/toolbox/js/view/menu", [
+define("plugin/dashboard/toolbox/js/view/menu", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/menu',
+    /* template */
+    'default/js/plugin/hbs!plugin/dashboard/toolbox/hbs/menu',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
+    'default/js/plugin/i18n!plugin/dashboard/toolbox/nls/translation',
 ], function (Sandbox, Backbone, Utils, tpl, lang) {
 
     var menu = new (Backbone.View.extend({
         tagName: 'li',
-        id: 'shop-menu-ID',
+        id: 'dashboard-menu-ID',
+        className: 'menu-dashboard-dashboard',
         attributes: {
             rel: "menu"
         },
@@ -25,7 +27,7 @@ define("plugin/shop/toolbox/js/view/menu", [
         Sandbox.eventNotify('global:content:render', {
             name: 'MenuLeft',
             el: menu.$el,
-            append: true
+            prepend: true
         });
     });
 
