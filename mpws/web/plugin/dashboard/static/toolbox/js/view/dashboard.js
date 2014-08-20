@@ -11,14 +11,14 @@ define("plugin/dashboard/toolbox/js/view/dashboard", [
         className: 'plugin-dashboard',
         render: function () {
             var self = this;
-            var pluginsItems = APP.config.PLUGINS;
 
             this.$el.empty();
             // debugger;
-            _(pluginsItems).each(function (pluginName) {
-                self.$el.append($('<div/>').attr({
-                    name: 'DashboardForPlugin_' + pluginName
-                }).html(tplFBAnim()));
+            _(APP.instances).each(function (pluginInstance, pluginName) {
+                if (pluginInstance.stats)
+                    self.$el.append($('<div/>').attr({
+                        name: 'DashboardForPlugin_' + pluginName
+                    }).html(tplFBAnim()));
             });
 
             return this;

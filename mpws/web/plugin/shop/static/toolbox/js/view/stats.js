@@ -38,8 +38,8 @@ define("plugin/shop/toolbox/js/view/stats", [
             if (google) {
 
                 // orders income for last month
-                var ordersNewInstensity = this.model.get('orders_intensity_new_last_month');
-                var ordersClosedInstensity = this.model.get('orders_intensity_closed_last_month');
+                var ordersNewInstensity = this.model.get('orders_intensity_last_month_new');
+                var ordersClosedInstensity = this.model.get('orders_intensity_last_month_closed');
 
                 var mergedOrdersDataOfIntensity = {};
 
@@ -71,9 +71,9 @@ define("plugin/shop/toolbox/js/view/stats", [
                 chart.draw(dataOrders, options);
 
                 // products income for last month
-                var productsNewInstensity = this.model.get('products_new_intensity_last_month');
-                var productsDiscountInstensity = this.model.get('products_discount_intensity_last_month');
-                var productsPreorderInstensity = this.model.get('products_preorder_intensity_last_month');
+                var productsNewInstensity = this.model.get('products_intensity_last_month_new');
+                var productsDiscountInstensity = this.model.get('products_intensity_last_month_discount');
+                var productsPreorderInstensity = this.model.get('products_intensity_last_month_preorder');
 
                 var mergedProductsDataOfIntensity = {};
 

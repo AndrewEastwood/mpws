@@ -6,14 +6,14 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'plugin/shop/toolbox/js/view/popupOrder',
     "default/js/lib/backgrid",
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/listOrders',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMainMenuForListOrderItem',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, CollectionListOrders, PopupOrderEntry, Backgrid, tpl, lang) {
+], function (Sandbox, Backbone, Utils, CollectionListOrders, PopupOrderEntry, Backgrid, tplBtnMenuMainItem, lang) {
 
     // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
@@ -29,31 +29,33 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         formatter: {
             fromRaw: function (value, model) {
                 // debugger;
-                var _link = $('<a/>').attr({
-                    href: "javascript://"
-                }).text(lang.pluginMenu_Orders_Grid_link_Edit);
-                // debugger;
-                _link.on('click', function(){
-                    // debugger;
-                    var popupOrder = new PopupOrderEntry(model.toJSON());
-                    popupOrder.render();
-                    // popupOrder.listenTo(popupOrder.model, 'change', function (popupOrderModel){
-                    //     // debugger;
-                    //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
-                    //         status: popupOrderModel.previousAttributes().Status,
-                    //         options: {
-                    //             reset: true
-                    //         }
-                    //     });
-                    //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
-                    //         status: popupOrderModel.changedAttributes().Status,
-                    //         options: {
-                    //             reset: true
-                    //         }
-                    //     });
-                    // });
-                });
-                return _link;
+                var btn = tplBtnMenuMainItem(model.toJSON());
+
+                // var _link = $('<a/>').attr({
+                //     href: "javascript://"
+                // }).text(lang.pluginMenu_Orders_Grid_link_Edit);
+                // // debugger;
+                // _link.on('click', function(){
+                //     // debugger;
+                //     var popupOrder = new PopupOrderEntry(model.toJSON());
+                //     popupOrder.render();
+                //     // popupOrder.listenTo(popupOrder.model, 'change', function (popupOrderModel){
+                //     //     // debugger;
+                //     //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
+                //     //         status: popupOrderModel.previousAttributes().Status,
+                //     //         options: {
+                //     //             reset: true
+                //     //         }
+                //     //     });
+                //     //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
+                //     //         status: popupOrderModel.changedAttributes().Status,
+                //     //         options: {
+                //     //             reset: true
+                //     //         }
+                //     //     });
+                //     // });
+                // });
+                return btn;
             }
         }
     };

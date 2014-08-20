@@ -74,6 +74,7 @@ define("plugin/shop/toolbox/js/router", [
             //     name: 'CustomerPageName',
             //     el: "Замовлення"
             // });
+            activeTabPage = activeTabPage || 'new';
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 // create new view
                 var managerOrders = new ManagerOrders();

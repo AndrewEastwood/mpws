@@ -6,7 +6,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
     'plugin/shop/toolbox/js/view/listOrders',
     'plugin/shop/toolbox/js/view/popupOrder',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/listOrders',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerOrders',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
 ], function (Sandbox, Backbone, Utils, CollectionOrders, ViewOrders, PopupOrderEntry, tpl, lang) {
@@ -26,6 +26,8 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             });
         },
         render: function (activePage) {
+            // TODO:
+            // add expired and todays orders
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             _(this.listsByStatus).each(function(listView, status){
