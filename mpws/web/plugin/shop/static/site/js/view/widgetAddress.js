@@ -21,7 +21,6 @@ define("plugin/shop/site/js/view/widgetAddress", [
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            // debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
         }
     });

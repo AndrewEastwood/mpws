@@ -1,18 +1,30 @@
 define("plugin/shop/toolbox/js/router", [
+    'require',
     'default/js/lib/sandbox',
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'default/js/lib/cache',
-    'plugin/shop/toolbox/js/view/menu'
-], function (Sandbox, $, _, Backbone, Cache) {
+    'default/js/lib/cache'
+], function (require, Sandbox, $, _, Backbone, Cache) {
+
+    Sandbox.eventSubscribe('global:auth:status:active', function (data) {
+        require(['plugin/shop/toolbox/js/view/menu'], function (ViewMenu) {
+            var menu = new ViewMenu();
+            menu.render();
+            Sandbox.eventNotify('customer:menu:set', {
+                name: 'MenuLeft',
+                el: menu.$el,
+                append: true
+            });
+        });
+    });
 
     var Router = Backbone.Router.extend({
         routes: {
             // "shop/stats": "stats",
             "shop/products": "products",
             "shop/orders": "ordersList",
-            "shop/orders/:page": "ordersList",
+            "shop/orders/:status": "ordersList",
             "shop/order/:id": "orderDetails",
             "shop/sales": "sales",
             "shop/prices": "prices",
@@ -59,14 +71,18 @@ define("plugin/shop/toolbox/js/router", [
                 });
             });
         },
-
         orderDetails: function (orderID) {
-            this.orders(false, orderID);
+            require(['plugin/shop/toolbox/js/view/popupOrder'], function (PopupOrderEntry) {
+                var popupOrder = new PopupOrderEntry();
+                popupOrder.model.set('ID', orderID);
+                popupOrder.model.fetch();
+                // debugger;
+                popupOrder.$dialog.getModal().on('hide', function () {
+                    Backbone.history.history.back();
+                })
+            });
         },
-        ordersList: function (activeTabPage) {
-            this.orders(activeTabPage);
-        },
-        orders: function (activeTabPage, orderID) {
+        ordersList: function (status) {
             // set active menu
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             // // set page title
@@ -74,24 +90,19 @@ define("plugin/shop/toolbox/js/router", [
             //     name: 'CustomerPageName',
             //     el: "Замовлення"
             // });
-            activeTabPage = activeTabPage || 'new';
+            // activeTabPage = activeTabPage || 'new';
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 // create new view
-                var managerOrders = new ManagerOrders();
-                managerOrders.render();
-                // managerOrders.customDataSources.fetch({reset: true});
-                // debugger
-                if (orderID)
-                    managerOrders.openOrder(orderID);
-                if (activeTabPage)
-                    managerOrders.activateTabPage(activeTabPage);
-
+                debugger;
+                var managerOrders = new ManagerOrders({
+                    status: status
+                });
+                managerOrders.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: managerOrders.$el
                 });
-
             });
         },
 

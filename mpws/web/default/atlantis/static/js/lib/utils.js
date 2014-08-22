@@ -1,8 +1,9 @@
 define("default/js/lib/utils", [
     'cmn_jquery',
-    'default/js/lib/underscore'
+    'default/js/lib/underscore',
+    'default/js/lib/backbone'
     /* component implementation */
-], function ($, _) {
+], function ($, _, Backbone) {
 
     function Utils () {}
 
@@ -111,6 +112,10 @@ define("default/js/lib/utils", [
         return !_.isEmpty(obj.model) && !Utils.isCollectionView(obj);
     }
 
+    Utils.isView = function (obj) {
+        return !Utils.isModelView(obj) && obj instanceof Backbone.View;
+    }
+
     Utils.getHBSTemplateData = function (obj) {
         var _tplData = obj;
         var _tplExtras = null;
@@ -120,6 +125,9 @@ define("default/js/lib/utils", [
         } else if (Utils.isModelView(obj)) {
             _tplData = obj.model.toJSON();
             _tplExtras = obj.model.extras;
+        } if (Utils.isView(obj)) {
+            _tplData = obj.options;
+            _tplExtras = obj.extras;
         }
         // debugger;
         return {

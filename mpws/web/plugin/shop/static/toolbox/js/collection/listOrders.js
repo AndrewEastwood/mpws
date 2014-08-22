@@ -26,13 +26,12 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
         queryParams: {
             totalPages: null,
             totalRecords: null,
-            sortKey: "sort"
+            sortKey: "sort",
+            status: 'new'
         },
 
         initialize: function (status) {
-            var self = this;
-            if (status)
-                this.queryParams.status = status;
+            this.queryParams.status = status || 'new';
         },
 
         parseState: function (resp, queryParams, state, options) {

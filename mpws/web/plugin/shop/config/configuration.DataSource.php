@@ -525,11 +525,13 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopStat_OrdersIntensityLastMonth ($status) {
+    static function jsapiShopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
+        if (!is_string($comparator))
+            $comparator = self::$DEFAULT_COMPARATOR;
         $config = self::jsapiGetShopOrders();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
         $config['condition'] = array(
-            'Status' => self::jsapiCreateDataSourceCondition($status),
+            'Status' => self::jsapiCreateDataSourceCondition($status, $comparator),
             'DateCreated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-10 month")), ">")
         );
         $config['options'] = array(

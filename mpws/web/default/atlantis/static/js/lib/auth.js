@@ -38,7 +38,7 @@ define("default/js/lib/auth", [
             return $.get(APP.getAuthLink(query), function(response){
                 Auth.setStatus(response);
                 if (_.isFunction(callback))
-                    callback(Auth.getAccountID());
+                    callback(Auth.getAccountID(), response);
             });
         },
         signin: function (email, password, remember, callback) {
@@ -52,9 +52,8 @@ define("default/js/lib/auth", [
             }, function(response){
                 Auth.setStatus(response);
                 if (_.isFunction(callback))
-                    callback(Auth.getAccountID());
+                    callback(Auth.getAccountID(), response);
             });
-
         },
         signout: function (callback) {
             var query = {
@@ -63,7 +62,7 @@ define("default/js/lib/auth", [
             return $.post(APP.getAuthLink(query), function(response){
                 Auth.setStatus(response);
                 if (_.isFunction(callback))
-                    callback(Auth.getAccountID());
+                    callback(Auth.getAccountID(), response);
             });
         }
     };

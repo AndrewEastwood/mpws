@@ -2,6 +2,7 @@ var APP = {
     config: JSON.parse(JSON.stringify(MPWS)),
     commonElements: [],
     instances: {},
+    isCompleted: false,
     getModulesToDownload: function() {
         var modules = [
             'default/js/lib/sandbox',
@@ -272,6 +273,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
                 $(window).trigger('hashchange');
                 // get auth status
                 Auth.getStatus();
+                // set completion state
+                APP.isCompleted = true;
             });
         }
 

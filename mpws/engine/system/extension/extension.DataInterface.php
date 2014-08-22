@@ -30,12 +30,12 @@ class extensionDataInterface extends objectExtension {
                 if ($limit >= 1)
                     $dsConfig['limit'] = $limit;
                 if ($page >= 1 && $limit >= 1) {
-
                     if ($page > round($count / $limit + 0.49)) {
                         $page = round($count / $limit + 0.49);
                     }
                     $dsConfig['offset'] = ($page - 1) * $limit;
-                }
+                } elseif ($page === 0)
+                    $page = 1;
             }
         }
 
@@ -44,7 +44,7 @@ class extensionDataInterface extends objectExtension {
         $items = $this->getCustomer()->fetch($dsConfig);
 
         return array(
-            "items" => $items,
+            "items" => $items ?: array(),
             "page" => $page,
             "per_page" => $limit,
             "count" => $count

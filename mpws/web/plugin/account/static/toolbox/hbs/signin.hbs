@@ -3,9 +3,9 @@
   <!-- Form Name -->
   <legend>{{lang.form_signin_title}}</legend>
 
-  {{#if data.error }}
-  <div class="panel">
-    <p class="text-danger">{{lang.form_signin_error}}</p>
+  {{#if extras.error }}
+  <div class="alert alert-danger fade in">
+    {{lang.form_signin_error}}
   </div>
   {{/if}}
 
@@ -30,7 +30,7 @@
   <!-- Button -->
   <div class="form-group buttons">
     <div class="col-md-10">
-      <button class="btn btn-default btn-sm">{{lang.form_signin_button_submit}}</button>
+      <button class="btn btn-success btn-sm">{{lang.form_signin_button_submit}}</button>
     </div>
   </div>
 

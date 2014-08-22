@@ -3,17 +3,24 @@
 class objectConfiguration implements IConfiguration {
 
     static $DATE_FORMAT = 'Y-m-d H:i:s';
+    static $DEFAULT_COMPARATOR = '=';
+    static $DEFAULT_CONCATENATE = '+';
 
     static function getDate () {
         return date(self::$DATE_FORMAT);
     }
 
-    static function jsapiCreateDataSourceCondition($value, $comparator = "=", $concatenate = "+") {
-        return array(
+    static function jsapiCreateDataSourceCondition($value, $comparator = null, $concatenate = null) {
+        $condition = array(
             "comparator" => $comparator,
             "value" => $value,
             "concatenate" => $concatenate
         );
+        if (!is_string($condition['comparator']))
+            $condition['comparator'] = self::$DEFAULT_COMPARATOR;
+        if (!is_string($condition['concatenate']))
+            $condition['concatenate'] = self::$DEFAULT_CONCATENATE;
+        return $condition;
     }
 
     static function jsapiGetDataSourceConfig($configExtend = null) {

@@ -4,10 +4,9 @@ define("plugin/account/toolbox/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'plugin/account/common/js/model/account',
-    'plugin/account/toolbox/js/view/buttonAccount',
     'default/js/lib/auth',
     'default/js/lib/cache',
-], function (Sandbox, $, _, Backbone, Account, ViewButtonAccount, Auth, Cache) {
+], function (Sandbox, $, _, Backbone, Account, Auth, Cache) {
 
     // this is the account instance
     var account = new Account();
@@ -17,13 +16,15 @@ define("plugin/account/toolbox/js/router", [
         if (authAccountID) {
             account.set('ID', authAccountID);
             account.fetch();
-            var buttonAccount = new ViewButtonAccount({
-                model: account
-            });
-            buttonAccount.render();
-            Sandbox.eventNotify('global:content:render', {
-                name: 'TopMenuRight',
-                el: buttonAccount.$el
+            require(['plugin/account/toolbox/js/view/buttonAccount'], function (ViewButtonAccount) {
+                var buttonAccount = new ViewButtonAccount({
+                    model: account
+                });
+                buttonAccount.render();
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'TopMenuRight',
+                    el: buttonAccount.$el
+                });
             });
         }
     });
@@ -41,7 +42,7 @@ define("plugin/account/toolbox/js/router", [
             signin.render();
             // debugger;
             Sandbox.eventNotify('global:content:render', {
-                name: 'Page',
+                name: 'CommonBodyCenter',
                 el: signin.$el
             });
         });

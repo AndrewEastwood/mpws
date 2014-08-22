@@ -5,10 +5,10 @@ define("plugin/dashboard/toolbox/js/view/menu", [
     /* template */
     'default/js/plugin/hbs!plugin/dashboard/toolbox/hbs/menu',
     /* lang */
-    'default/js/plugin/i18n!plugin/dashboard/toolbox/nls/translation',
+    'default/js/plugin/i18n!plugin/dashboard/toolbox/nls/translation'
 ], function (Sandbox, Backbone, Utils, tpl, lang) {
 
-    var menu = new (Backbone.View.extend({
+    var Menu = Backbone.View.extend({
         tagName: 'li',
         id: 'dashboard-menu-ID',
         className: 'menu-dashboard-dashboard',
@@ -17,18 +17,18 @@ define("plugin/dashboard/toolbox/js/view/menu", [
         },
         lang: lang,
         template: tpl,
+        initialize: function () {
+            var self = this;
+            Sandbox.eventSubscribe('global:auth:status:inactive', function () {
+                self.off();
+                self.remove();
+            });
+        },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
         }
-    }))();
-
-    Sandbox.eventSubscribe('global:loader:complete', function (CustomerMenuView) {
-        menu.render();
-        Sandbox.eventNotify('global:content:render', {
-            name: 'MenuLeft',
-            el: menu.$el,
-            prepend: true
-        });
     });
+
+    return Menu;
 
 });

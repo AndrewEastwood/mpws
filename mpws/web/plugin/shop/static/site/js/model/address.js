@@ -1,7 +1,7 @@
 define('plugin/shop/site/js/model/address', [
     'default/js/lib/backbone',
     'default/js/lib/underscore'
-], function (Backbone, _, ShopUtils) {
+], function (Backbone, _) {
 
     return Backbone.Model.extend({
         defaults: {

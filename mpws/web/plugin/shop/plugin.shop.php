@@ -268,7 +268,7 @@ class pluginShop extends objectPlugin {
         $this->_resetSessionOrderProducts();
     }
 
-    private function _getOrders_Expired () {
+    private function _getOrders_Expired ($req) {
         // get expired orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
@@ -283,17 +283,21 @@ class pluginShop extends objectPlugin {
             $orderIDs = $this->getCustomer()->fetch($config);
         }
 
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[] = $this->_getOrderByID($val['ID']);
-        return $data;
+        $dataList = $this->getCustomer()->getDataList($config, $req);
+
+        if (!empty($dataList['items'])) {
+            $items = array();
+            foreach ($dataList['items'] as $key => $orderRawItem)
+                $items[] = $this->_getOrderByID($orderRawItem['ID']);
+            $dataList['items'] = $items;
+        }
+
+        return $dataList;
     }
 
-    private function _getOrders_Todays () {
+    private function _getOrders_Todays ($req) {
         // get todays orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
-        $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("NEW");
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
 
         // set permissions
@@ -305,11 +309,16 @@ class pluginShop extends objectPlugin {
             $orderIDs = $this->getCustomer()->fetch($config);
         }
 
-        $data = array();
-        if (!empty($orderIDs))
-            foreach ($orderIDs as $val)
-                $data[] = $this->_getOrderByID($val['ID']);
-        return $data;
+        $dataList = $this->getCustomer()->getDataList($config, $req);
+
+        if (!empty($dataList['items'])) {
+            $items = array();
+            foreach ($dataList['items'] as $key => $orderRawItem)
+                $items[] = $this->_getOrderByID($orderRawItem['ID']);
+            $dataList['items'] = $items;
+        }
+
+        return $dataList;
     }
 
     private function _getOrders_ByStatus ($req) {
@@ -333,9 +342,12 @@ class pluginShop extends objectPlugin {
 
         $dataList = $this->getCustomer()->getDataList($config, $req);
 
-        if (!empty($dataList['items']))
+        if (!empty($dataList['items'])) {
+            $items = array();
             foreach ($dataList['items'] as $key => $orderRawItem)
-                $dataList['items'][$key] = $this->_getOrderByID($orderRawItem['ID']);
+                $items[] = $this->_getOrderByID($orderRawItem['ID']);
+            $dataList['items'] = $items;
+        }
 
         return $dataList;
     }
@@ -350,9 +362,12 @@ class pluginShop extends objectPlugin {
 
         $dataList = $this->getCustomer()->getDataList($config, $req);
 
-        if (!empty($dataList['items']))
+        if (!empty($dataList['items'])) {
+            $items = array();
             foreach ($dataList['items'] as $key => $orderRawItem)
-                $dataList['items'][$key] = $this->_getOrderByID($orderRawItem['ID']);
+                $items[] = $this->_getOrderByID($orderRawItem['ID']);
+            $dataList['items'] = $items;
+        }
 
         return $dataList;
     }
@@ -604,11 +619,11 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    private function _getStats_OrdersIntensityLastMonth ($status) {
+    private function _getStats_OrdersIntensityLastMonth ($status, $comparator = null) {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status);
+        $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status, $comparator);
         $data = $this->getCustomer()->fetch($config) ?: array();
         // var_dump($config);
         return $data;
@@ -957,21 +972,33 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_overview (&$resp) {
-        $orders_new = $this->_getOrders_ByStatus('NEW');
 
-        $resp['all_products'] = $this->_getStats_ProductsOverview();
-        $resp['all_orders'] = $this->_getStats_OrdersOverview();
-        $resp['products_todays'] = $this->_getProducts_Todays();
-        $resp['products_popular'] = $this->_getProducts_TopPopular();
-        $resp['products_non_popular'] = $this->_getProducts_TopNonPopular();
-        $resp['orders_all_new'] = $orders_new['items'];
-        $resp['orders_todays'] = $this->_getOrders_Todays();
-        $resp['orders_expired'] = $this->_getOrders_Expired();
-        $resp['orders_intensity_last_month_new'] = $this->_getStats_OrdersIntensityLastMonth('NEW');
-        $resp['orders_intensity_last_month_closed'] = $this->_getStats_OrdersIntensityLastMonth('SHOP_CLOSED');
-        $resp['products_intensity_last_month_new'] = $this->_getStats_ProductsIntensityLastMonth('ACTIVE');
-        $resp['products_intensity_last_month_discount'] = $this->_getStats_ProductsIntensityLastMonth('DISCOUNT');
-        $resp['products_intensity_last_month_preorder'] = $this->_getStats_ProductsIntensityLastMonth('PREORDER');
+        $type = false;
+        if (!empty($req->get['type'])) {
+            $type = $req->get['type'];
+            return;
+        }
+
+        switch ($type) {
+            case 'value':
+                break;
+            default:
+                $orders_new = $this->_getOrders_ByStatus('NEW');
+                $resp['orders_new'] = $orders_new['items'];
+                $resp['orders_todays'] = $this->_getOrders_Todays();
+                $resp['orders_expired'] = $this->_getOrders_Expired();
+                $resp['orders_intensity_last_month_open'] = $this->_getStats_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
+                $resp['orders_intensity_last_month_closed'] = $this->_getStats_OrdersIntensityLastMonth('SHOP_CLOSED');
+                $resp['overview_products'] = $this->_getStats_ProductsOverview();
+                $resp['overview_orders'] = $this->_getStats_OrdersOverview();
+                $resp['products_todays'] = $this->_getProducts_Todays();
+                $resp['products_popular'] = $this->_getProducts_TopPopular();
+                $resp['products_non_popular'] = $this->_getProducts_TopNonPopular();
+                $resp['products_intensity_last_month_new'] = $this->_getStats_ProductsIntensityLastMonth('ACTIVE');
+                $resp['products_intensity_last_month_discount'] = $this->_getStats_ProductsIntensityLastMonth('DISCOUNT');
+                $resp['products_intensity_last_month_preorder'] = $this->_getStats_ProductsIntensityLastMonth('PREORDER');
+                break;
+        }
     }
 
     public function get_shop_location (&$resp, $req) {
@@ -1117,20 +1144,24 @@ class pluginShop extends objectPlugin {
 
 
     public function get_shop_orders (&$resp, $req) {
-        if (!empty($req->get['status'])) {
-            $resp = $this->_getOrders_ByStatus($req);
-            return;
-        }
+        // var_dump($req->get);
+        // if (!empty($req->get['status'])) {
+        //     $resp = $this->_getOrders_ByStatus($req);
+        //     return;
+        // }
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
                 case "expired":
-                    $resp = $this->_getOrders_Expired();
+                    $resp = $this->_getOrders_Expired($req);
                     break;
                 case "todays":
-                    $resp = $this->_getOrders_Todays();
+                    $resp = $this->_getOrders_Todays($req);
                     break;
                 case "browse":
                     $resp = $this->_getOrders_Browse($req);
+                    break;
+                case "status":
+                    $resp = $this->_getOrders_ByStatus($req);
                     break;
             }
             return;

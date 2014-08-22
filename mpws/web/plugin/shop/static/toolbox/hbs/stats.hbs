@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">
-                            <a href="#shop/orders/new">{{data.orders_all_new.length}}</a>
+                            <a href="#shop/orders/new">{{data.orders_new.length}}</a>
                         </div>
                         <div>Не оброблені!</div>
                     </div>
@@ -131,25 +131,25 @@
                         <a href="#shop/products">
                             Активних товарів:
                             <strong>
-                                {{default_value data.all_products.ACTIVE 0 }}
+                                {{default_value data.overview_products.ACTIVE 0 }}
                             </strong>
                         </a>
                         <a href="#shop/products">
                             Для замовлення:
                             <strong>
-                                {{default_value data.all_products.PREORDER 0 }}
+                                {{default_value data.overview_products.PREORDER 0 }}
                             </strong>
                         </a>
                         <a href="#shop/products">
                             З знижкою:
                             <strong>
-                                {{default_value data.all_products.DISCOUNT 0 }}
+                                {{default_value data.overview_products.DISCOUNT 0 }}
                             </strong>
                         </a>
                         <a href="#shop/orders/closed" title="Зекриті замовлення">
                             Замовлення:
                             <strong>
-                                {{default_value data.all_orders.SHOP_CLOSED 0 }}
+                                {{default_value data.overview_orders.SHOP_CLOSED 0 }}
                             </strong>
                         </a>
                     </div>

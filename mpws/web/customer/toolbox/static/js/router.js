@@ -40,7 +40,7 @@ define("customer/js/router", [
             if (!/signin/.test(Backbone.history.getHash())) {
                 Backbone.history.fragment = false;
                 Backbone.history.navigate('signin', true);
-                // window.location.reload();
+                window.location.reload();
             }
         }
     }
@@ -55,12 +55,15 @@ define("customer/js/router", [
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         Backbone.history.navigate(Cache.getFromLocalStorage('location') || "", true);
-        $('#side-menu').metisMenu();
     });
 
     Sandbox.eventSubscribe('global:auth:status:inactive', function () {
-        // debugger;
         _ifNotAuthorizedNavigateToSignin();
+    });
+
+    Sandbox.eventSubscribe('customer:menu:set', function (renderParams) {
+        Sandbox.eventNotify("global:content:render", renderParams);
+        $('#side-menu').metisMenu();
     });
 
 });

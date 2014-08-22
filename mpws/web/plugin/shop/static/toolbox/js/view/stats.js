@@ -38,12 +38,12 @@ define("plugin/shop/toolbox/js/view/stats", [
             if (google) {
 
                 // orders income for last month
-                var ordersNewInstensity = this.model.get('orders_intensity_last_month_new');
+                var ordersOpenInstensity = this.model.get('orders_intensity_last_month_open');
                 var ordersClosedInstensity = this.model.get('orders_intensity_last_month_closed');
 
                 var mergedOrdersDataOfIntensity = {};
 
-                _(ordersNewInstensity).each(function (count, date) {
+                _(ordersOpenInstensity).each(function (count, date) {
                     mergedOrdersDataOfIntensity[date] = mergedOrdersDataOfIntensity[date] || {};
                     mergedOrdersDataOfIntensity[date]['placed'] = parseInt(count, 10);
                 });

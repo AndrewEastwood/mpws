@@ -20,6 +20,18 @@ body {
     background-image: none;
 }
 
+.PageSignin {
+    background-color: #292525;
+    .navbar-static-top {
+        display: none;
+    }
+    #page-wrapper {
+        padding-top: 100px;
+        background: none;
+        margin: 0px;
+    }
+}
+
 .title-powered {
     color: #fff;
     display: none;
@@ -31,16 +43,13 @@ body {
 
 .toolbox-component-form-signin {
     margin: 0px auto;
-    border: 1px solid #eee;
+    border: 1px solid #333;
     box-shadow: 0px 0px 10px #000;
-    background-color: fade(@textColor, 20%);
-    .border-top-radius(5px);
-    .border-bottom-radius(5px);
+    background-color: #FFF;
     padding: 10px;
     width: 400px;
     &, legend {
-        text-shadow: 2px 2px 9px #000;
-        color: #FFF;
+        color: #333;
     }
     .form-group.buttons {
         text-align: right;
