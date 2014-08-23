@@ -7,13 +7,15 @@ define("plugin/shop/toolbox/js/view/dashboard", [
     'plugin/shop/toolbox/js/view/statsProductsOverview',
     'plugin/shop/toolbox/js/view/statsOrdersIntensityLastMonth',
     'plugin/shop/toolbox/js/view/statsProductsIntensityLastMonth',
+    'plugin/shop/toolbox/js/view/statsProductsPopular',
+    'plugin/shop/toolbox/js/view/statsProductsNonPopular',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/dashboard',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
 ], function (Backbone, Utils, ViewStatsOrdersPending, ViewStatsOrdersExpired, 
     ViewStatsOrdersOverview, ViewStatsProductsOverview, ViewStatsOrdersIntensityLastMonth,
-    ViewStatsProductsIntensityLastMonth, tpl, lang) {
+    ViewStatsProductsIntensityLastMonth, ViewStatsProductsPopular, ViewStatsProductsNonPopular, tpl, lang) {
 
     return Backbone.View.extend({
         id: 'shop-stats-ID',
@@ -27,6 +29,8 @@ define("plugin/shop/toolbox/js/view/dashboard", [
             var wgtProductsOverview = new ViewStatsProductsOverview();
             var wgtOrdersIntensityLastMonth = new ViewStatsOrdersIntensityLastMonth();
             var wgtProductsIntensityLastMonth = new ViewStatsProductsIntensityLastMonth();
+            var wgtProductsPopular = new ViewStatsProductsPopular();
+            var wgtProductsNonPopular = new ViewStatsProductsNonPopular();
 
             wgtOrdersPending.collection.fetch({reset: true});
             wgtOrdersExpired.collection.fetch({reset: true});
@@ -34,6 +38,8 @@ define("plugin/shop/toolbox/js/view/dashboard", [
             wgtProductsOverview.model.fetch();
             wgtOrdersIntensityLastMonth.model.fetch();
             wgtProductsIntensityLastMonth.model.fetch();
+            wgtProductsPopular.collection.fetch({reset: true});
+            wgtProductsNonPopular.collection.fetch({reset: true});
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             this.$('.ordersPending').html(wgtOrdersPending.$el);
@@ -42,6 +48,8 @@ define("plugin/shop/toolbox/js/view/dashboard", [
             this.$('.productsOverview').html(wgtProductsOverview.$el);
             this.$('.ordersIntensityLastMonth').html(wgtOrdersIntensityLastMonth.$el);
             this.$('.productsIntensityLastMonth').html(wgtProductsIntensityLastMonth.$el);
+            this.$('.productsPopular').html(wgtProductsPopular.$el);
+            this.$('.productsNonPopular').html(wgtProductsNonPopular.$el);
             
             // self.$('select').select2();
             // this.$('.helper').tooltip();

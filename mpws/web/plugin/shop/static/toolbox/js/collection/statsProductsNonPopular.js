@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/statsProductsPopular', [
+define('plugin/shop/toolbox/js/collection/statsProductsNonPopular', [
     'plugin/shop/toolbox/js/collection/basicProducts'
 ], function (ListOrders) {
 
@@ -8,7 +8,7 @@ define('plugin/shop/toolbox/js/collection/statsProductsPopular', [
             this.url = APP.getApiLink({
                 source: 'shop',
                 fn: 'stats',
-                type: 'products_list_popular'
+                type: 'products_list_non_popular'
             });
         },
         mode: "client"

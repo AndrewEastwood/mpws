@@ -23,6 +23,7 @@ define("plugin/shop/toolbox/js/router", [
         routes: {
             // "shop/stats": "stats",
             "shop/products": "products",
+            "shop/products/:status": "products",
             "shop/orders": "ordersList",
             "shop/orders/:status": "ordersList",
             "shop/order/:id": "orderDetails",
@@ -54,14 +55,14 @@ define("plugin/shop/toolbox/js/router", [
 
         products: function () {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
-            require(['plugin/shop/toolbox/js/view/productManager'], function (ProductManager) {
+            require(['plugin/shop/toolbox/js/view/managerProducts'], function (ManagerProducts) {
                 // create new view
-                var productManager = new ProductManager();
-                productManager.render();
+                var managerProducts = new ManagerProducts();
+                managerProducts.render();
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
-                    el: productManager.$el
+                    el: managerProducts.$el
                 });
 
                 // set page title
@@ -92,7 +93,7 @@ define("plugin/shop/toolbox/js/router", [
             // activeTabPage = activeTabPage || 'new';
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 // create new view
-                debugger;
+                // debugger;
                 var managerOrders = new ManagerOrders({
                     status: status
                 });

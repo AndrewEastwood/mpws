@@ -41,7 +41,6 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders_Grid_Column_InfoTotal: "Сума (грн.)",
         pluginMenu_Orders_Grid_Column_HasPromo: "Промо",
         pluginMenu_Orders_Grid_Column_Discount: "Знижка",
-        pluginMenu_Orders_Grid_link_Edit: "Ред.",
         pluginMenu_Orders_Grid_link_ShowDeleted: "Показати виконані",
         // Order popup
         popup_order_title: "Замовлення #",
@@ -105,5 +104,11 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_type_Archived: "Архівні",
         origin_field_status_ACTIVE: "Активний",
         origin_field_status_REMOVED: "Неактивний",
+        product_status_ACTIVE: 'Активний',
+        product_status_ARCHIVED: 'Архівний',
+        product_status_DISCOUNT: 'Знижка',
+        product_status_DEFECT: 'З дефектом',
+        product_status_WAITING: 'Очікування',
+        product_status_PREORDER: 'Під замовлення'
     }, CustomerPluginShop);
 });

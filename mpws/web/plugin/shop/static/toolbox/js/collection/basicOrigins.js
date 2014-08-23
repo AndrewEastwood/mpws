@@ -39,7 +39,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
         },
 
         parseRecords: function (resp) {
-            var origins = resp && resp.origins || [];
+            var origins = resp && resp.items || [];
             return origins;
         }
 

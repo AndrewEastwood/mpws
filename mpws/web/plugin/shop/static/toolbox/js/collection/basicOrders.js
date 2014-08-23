@@ -32,19 +32,12 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
             var state = {
                 totalRecords: parseInt(resp && resp.count || 0, 10)
             };
-            // Sandbox.eventNotify('plugin:shop:orderList:parseState', {collection: this, state: state});
             return state;
         },
 
         parseRecords: function (resp, options) {
             // debugger;
             var _orders = resp.items;
-            // var _statuses = [
-            //     _(resp.shop.statuses).map(function(status){
-            //         return [status, lang["order_status_" + status] || status];
-            //     })
-            // ];
-            // transform order status to render it as select control
             _(_orders).map(function (orderEntry) {
                 // debugger;
                 orderEntry.Status = [orderEntry.Status];
@@ -55,9 +48,6 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
                 orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;
                 return orderEntry;
             });
-            // debugger;
-            // Sandbox.eventNotify('plugin:shop:orderList:dataReceived', );
-            // Sandbox.eventNotify('plugin:shop:orderList:dataReceived', resp.shop);
             return _orders;
         }
 

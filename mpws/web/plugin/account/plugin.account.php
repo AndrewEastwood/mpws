@@ -399,7 +399,7 @@ class pluginAccount extends objectPlugin {
     // }
 
     public function get_account_overview (&$resp) {
-        $resp['all_accounts'] = $this->_getStats_AccountsOverview();
+        $resp['overview_accounts'] = $this->_getStats_AccountsOverview();
         // $resp['all_orders'] = $this->_getStats_OrdersOverview();
         // $resp['products_todays'] = $this->_getProducts_Todays();
         // $resp['products_popular'] = $this->_getProducts_TopPopular();

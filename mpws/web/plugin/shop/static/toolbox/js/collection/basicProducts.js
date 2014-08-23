@@ -1,20 +1,22 @@
 define('plugin/shop/toolbox/js/collection/basicProducts', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
-    'default/js/lib/backbone-pageable',
-], function (Sandbox, _, PageableCollection) {
+    'plugin/shop/toolbox/js/model/product',
+    'default/js/lib/backbone-pageable'
+], function (Sandbox, _, ModelProduct, PageableCollection, lang) {
 
-    var ListProducts = PageableCollection.extend({
+    var ListOrders = PageableCollection.extend({
+
+        model: ModelProduct,
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'shop_manage_products'
+            fn: 'products'
         }),
 
         // Initial pagination states
         state: {
-            pageSize: 5,
-            // sortKey: "updated",
+            pageSize: 10,
             order: 1
         },
 
@@ -23,29 +25,34 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
         queryParams: {
             totalPages: null,
             totalRecords: null,
-            sortKey: "sort",
-            // q: "state:closed repo:jashkenas/backbone"
+            sortKey: "sort"
         },
 
         parseState: function (resp, queryParams, state, options) {
             var state = {
-                totalRecords: parseInt(resp && resp.shop && resp.shop.total_count || 0, 10)
+                totalRecords: parseInt(resp && resp.count || 0, 10)
             };
-            Sandbox.eventNotify('plugin:shop:productList:parseState', {collection: this, state: state});
             return state;
         },
 
         parseRecords: function (resp, options) {
-            var products = resp && resp.shop && resp.shop.products || [];
-
-            for (var row in products)
-                products[row].Price = parseFloat(products[row].Price, 10);
-
-            return products;
+            // debugger;
+            var _orders = resp.items;
+            // _(_orders).map(function (orderEntry) {
+            //     // debugger;
+            //     // orderEntry.Status = [orderEntry.Status];
+            //     // orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
+            //     // orderEntry.AccountPhone = orderEntry.account.Phone;
+            //     // orderEntry.InfoTotal = orderEntry.info.total;
+            //     // orderEntry.HasPromo = !!orderEntry.promo;
+            //     // orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;
+            //     return orderEntry;
+            // });
+            return _orders;
         }
 
     });
 
-    return ListProducts;
+    return ListOrders;
 
 });

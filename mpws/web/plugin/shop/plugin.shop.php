@@ -89,56 +89,41 @@ class pluginShop extends objectPlugin {
 
     // products list sorted by date added
     // -----------------------------------------------
-    public function getProducts_TopNonPopular ($req) {
-        // get non-popuplar 50 products
+    public function getProducts_TopNonPopular () {
+        // get non-popuplar 15 products
         $config = configurationShopDataSource::jsapiShopStat_NonPopularProducts();
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem)
-                    $_items[] = $self->getProductByID($orderRawItem['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-        return $dataList;
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->getProductByID($val['ID']);
+        return $data;
     }
 
-    public function getProducts_TopPopular ($req) {
-        // get top 50 products
+    public function getProducts_TopPopular () {
+        // get top 15 products
         $config = configurationShopDataSource::jsapiShopStat_PopularProducts();
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem) {
-                    $product = $this->getProductByID($orderRawItem['ProductID']);
-                    $product['SoldTotal'] = $val['SoldTotal'];
-                    $product['SumTotal'] = $val['SumTotal'];
-                    $_items[] = $product;
-                }
-                return $_items;
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val) {
+                $product = $this->getProductByID($val['ProductID']);
+                $product['SoldTotal'] = floatval($val['SoldTotal']);
+                $product['SumTotal'] = floatval($val['SumTotal']);
+                $data[] = $product;
             }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-        return $dataList;
+        return $data;
     }
 
     public function getProducts_Latest ($req) {
         // get expired orders
         $config = configurationShopDataSource::jsapiShopProductListLatest();
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem)
-                    $_items[] = $self->getProductByID($orderRawItem['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-        return $dataList;
+        $productIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($productIDs))
+            foreach ($productIDs as $val)
+                $data[] = $this->_getProductByID($val['ID']);
+        return $data;
     }
 
     public function getProducts_ByStatus ($status) {
@@ -302,7 +287,7 @@ class pluginShop extends objectPlugin {
         $this->_resetSessionOrderProducts();
     }
 
-    public function getOrders_Expired ($req) {
+    public function getOrders_ListExpired ($req) {
         // get expired orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
@@ -325,7 +310,7 @@ class pluginShop extends objectPlugin {
         return $dataList;
     }
 
-    public function getOrders_Todays ($req) {
+    public function getOrders_ListTodays ($req) {
         // get todays orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
@@ -347,7 +332,7 @@ class pluginShop extends objectPlugin {
         return $dataList;
     }
 
-    public function getOrders_ByStatus ($req) {
+    public function getOrders_ListPending ($req) {
         // get expired orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
         // check permissions
@@ -380,7 +365,7 @@ class pluginShop extends objectPlugin {
         return $dataList;
     }
 
-    public function getOrders_Browse ($req) {
+    public function getOrders_List ($req) {
         // get all orders
         $config = configurationShopDataSource::jsapiGetShopOrderIDs();
         // check permissions
@@ -1018,16 +1003,16 @@ class pluginShop extends objectPlugin {
         $self = $this;
         $sources = array();
         // $sources['orders_new'] = function ($req) use ($self) {
-        //     return $self->getOrders_ByStatus($req);
+        //     return $self->getOrders_ListPending($req);
         // };
         $sources['orders_list_pending'] = function ($req) use ($self) {
-            return $self->getOrders_ByStatus('NEW');
+            return $self->getOrders_ListPending('NEW');
         };
         $sources['orders_list_todays'] = function ($req) use ($self) {
-            return $self->getOrders_Todays($req);
+            return $self->getOrders_ListTodays($req);
         };
         $sources['orders_list_expired'] = function ($req) use ($self) {
-            return $self->getOrders_Expired($req);
+            return $self->getOrders_ListExpired($req);
         };
         $sources['orders_intensity_last_month'] = function ($req) use ($self) {
             $res = array();
@@ -1042,13 +1027,19 @@ class pluginShop extends objectPlugin {
             return $self->getStats_ProductsOverview();
         };
         $sources['products_list_todays'] = function ($req) use ($self) {
-            return $self->getProducts_Todays($req);
+            $res = array();
+            $res['items'] = $self->getProducts_Todays($req);
+            return $res;
         };
         $sources['products_list_popular'] = function ($req) use ($self) {
-            return $self->getProducts_TopPopular($req);
+            $res = array();
+            $res['items'] = $self->getProducts_TopPopular($req);
+            return $res;
         };
         $sources['products_list_non_popular'] = function ($req) use ($self) {
-            return $self->getProducts_TopNonPopular($req);
+            $res = array();
+            $res['items'] = $self->getProducts_TopNonPopular($req);
+            return $res;
         };
         $sources['products_intensity_last_month'] = function ($req) use ($self) {
             $res = array();
@@ -1077,32 +1068,35 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_products (&$resp, $req) {
-        if (!empty($req->get['status'])) {
-            $resp = $this->getProducts_ByStatus($req['status']);
-            return;
-        }
-        if (!empty($req->get['type'])) {
-            switch ($req->get['type']) {
-                case "latest":
-                    $resp["items"] = $this->getProducts_Latest();
-                    break;
-                case "popular":
-                    $resp["items"] = $this->getProducts_TopPopular();
-                    break;
-                case "non_popular":
-                    $resp["items"] = $this->getProducts_TopNonPopular();
-                    break;
-                case "sale":
-                    $resp["items"] = $this->getProducts_Sale();
-                    break;
-                case "uncompleted":
-                    $resp["items"] = $this->getProducts_Uncompleted();
-                    break;
-            }
-            return;
-        }
+        // if (!empty($req->get['status'])) {
+        //     $resp = $this->getProducts_ByStatus($req['status']);
+        //     return;
+        // }
+        // if (!empty($req->get['type'])) {
+        //     switch ($req->get['type']) {
+        //         case "latest":
+        //             $resp = $this->getProducts_Latest($req);
+        //             break;
+        //         case "popular":
+        //             $resp['popular'] = $this->getProducts_TopPopular($req);
+        //             break;
+        //         case "non_popular":
+        //             $resp['non_popular'] = $this->getProducts_TopNonPopular($req);
+        //             break;
+        //         case "sale":
+        //             $resp = $this->getProducts_Sale($req);
+        //             break;
+        //         case "uncompleted":
+        //             $resp = $this->getProducts_Uncompleted($req);
+        //             break;
+        //         default:
+        //             $resp['error'] = 'unknown type: ' . $req->get['type'];
+        //             break;
+        //     }
+        //     return;
+        // }
 
-        $resp['error'] = '"type" or "status" is missed in the request';
+        $resp['error'] = '"type" is missed in the request';
     }
 
     public function get_shop_catalog (&$resp, $req) {
@@ -1216,28 +1210,7 @@ class pluginShop extends objectPlugin {
         //     $resp = $this->getOrders_ByStatus($req);
         //     return;
         // }
-        if (!empty($req->get['type'])) {
-            switch ($req->get['type']) {
-                case "expired":
-                    $resp = $this->getOrders_Expired($req);
-                    break;
-                case "todays":
-                    $resp = $this->getOrders_Todays($req);
-                    break;
-                case "browse":
-                    $resp = $this->getOrders_Browse($req);
-                    break;
-                case "status":
-                    $resp = $this->getOrders_ByStatus($req);
-                    break;
-                default:
-                    $resp['error'] = 'unknown type: ' . $req->get['type'];
-                    break;
-            }
-            return;
-        }
-
-        $resp['error'] = '"type" or "status" is missed in the request';
+        $resp = $this->getOrders_List($req);
     }
 
     public function get_shop_order (&$resp, $req) {

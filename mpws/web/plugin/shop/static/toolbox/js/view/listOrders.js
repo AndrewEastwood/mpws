@@ -5,7 +5,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'plugin/shop/toolbox/js/collection/basicOrders',
     "default/js/lib/backgrid",
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMainMenuForListOrderItem',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOrderListItem',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
@@ -14,7 +14,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, Backbone, Utils, CollectionListOrders, Backgrid, tplBtnMenuMainItem, lang) {
 
-    // TODO: do smth to fetch states from backend
+    // TODO: do smth to fetch states from server
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
     var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
 
@@ -91,17 +91,17 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             // It's possible to render an option group or use a
             // function to provide option values too.
             optionValues: orderStatusValues,
-            initialize: function () {
-                // this.prototype.initialize.call(this);
-                Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                // debugger;
-                this.listenTo(this.model, "change:Status", function(model, status) {
-                    model.saveOrderStatus(status).success(function(){
-                        Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
-                    });
-                    // ShopUtils.updateOrderStatus(model.get('ID'), status);
-                });
-            }
+            // initialize: function () {
+            //     // this.prototype.initialize.call(this);
+            //     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+            //     // debugger;
+            //     this.listenTo(this.model, "change:Status", function(model, status) {
+            //         model.saveOrderStatus(status).success(function(){
+            //             Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
+            //         });
+            //         // ShopUtils.updateOrderStatus(model.get('ID'), status);
+            //     });
+            // }
         })
     };
 
