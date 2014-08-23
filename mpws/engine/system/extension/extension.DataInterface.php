@@ -2,7 +2,7 @@
 
 class extensionDataInterface extends objectExtension {
 
-    public function getDataList ($dsConfig, $req = null) {
+    public function getDataList ($dsConfig, $req = null, $callbacks = array()) {
         $limit = $dsConfig['limit'];
         $page = 1;
         $items = array();
@@ -41,7 +41,13 @@ class extensionDataInterface extends objectExtension {
 
         // var_dump($dsConfig);
         // get data
-        $items = $this->getCustomer()->fetch($dsConfig);
+        $items = $this->getCustomer()->fetch($dsConfig) ?: array();
+        // var_dump($items);
+
+        if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
+            $parseFn = $callbacks['parse'];
+            $items = $parseFn($items) ?: array();
+        }
 
         return array(
             "items" => $items ?: array(),

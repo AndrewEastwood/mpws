@@ -225,7 +225,7 @@ class pluginShop extends objectPlugin {
 
     // orders
     // -----------------------------------------------
-    private function _getOrderByID ($orderID) {
+    public function getOrderByID ($orderID) {
         $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
         $order = null;
         // if ($this->getCustomer()->ifYouCan('Admin')) {
@@ -244,7 +244,7 @@ class pluginShop extends objectPlugin {
         return $order;
     }
 
-    private function _getOrderByHash ($orderHash) {
+    public function getOrderByHash ($orderHash) {
         $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
         $order = $this->getCustomer()->fetch($config);
 
@@ -275,22 +275,22 @@ class pluginShop extends objectPlugin {
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
 
         // check permissions
-        $orderIDs = array();
-        if ($this->getCustomer()->ifYouCan('Admin')) {
-            $orderIDs = $this->getCustomer()->fetch($config);
-        } else {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
-            $orderIDs = $this->getCustomer()->fetch($config);
         }
 
-        $dataList = $this->getCustomer()->getDataList($config, $req);
+        $self = $this;
 
-        if (!empty($dataList['items'])) {
-            $items = array();
-            foreach ($dataList['items'] as $key => $orderRawItem)
-                $items[] = $this->_getOrderByID($orderRawItem['ID']);
-            $dataList['items'] = $items;
-        }
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem)
+                    $_items[] = $self->getOrderByID($orderRawItem['ID']);
+                return $_items;
+            }
+        );
+
+        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
         return $dataList;
     }
@@ -302,21 +302,22 @@ class pluginShop extends objectPlugin {
 
         // set permissions
         $orderIDs = array();
-        if ($this->getCustomer()->ifYouCan('Admin')) {
-            $orderIDs = $this->getCustomer()->fetch($config);
-        } else {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
-            $orderIDs = $this->getCustomer()->fetch($config);
         }
 
-        $dataList = $this->getCustomer()->getDataList($config, $req);
+        $self = $this;
 
-        if (!empty($dataList['items'])) {
-            $items = array();
-            foreach ($dataList['items'] as $key => $orderRawItem)
-                $items[] = $this->_getOrderByID($orderRawItem['ID']);
-            $dataList['items'] = $items;
-        }
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem)
+                    $_items[] = $self->getOrderByID($orderRawItem['ID']);
+                return $_items;
+            }
+        );
+
+        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
         return $dataList;
     }
@@ -333,21 +334,29 @@ class pluginShop extends objectPlugin {
         if (is_string($req)) {
             $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req);
         } elseif (is_object($req)) {
-            if (!isset($req->get['status']))
+            if (isset($req->get['status'])) {
+                if (is_array($req->get['status']))
+                    $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req->get['status'], 'IN');
+                else
+                    $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req->get['status']);
+            } else
                 return glWrap('error', 'OrderStatusIsNotSet');
-            $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition($req->get['status']);
         } else {
             return glWrap('error', 'WrongParameterType');
         }
 
-        $dataList = $this->getCustomer()->getDataList($config, $req);
+        $self = $this;
 
-        if (!empty($dataList['items'])) {
-            $items = array();
-            foreach ($dataList['items'] as $key => $orderRawItem)
-                $items[] = $this->_getOrderByID($orderRawItem['ID']);
-            $dataList['items'] = $items;
-        }
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem)
+                    $_items[] = $self->getOrderByID($orderRawItem['ID']);
+                return $_items;
+            }
+        );
+
+        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
         return $dataList;
     }
@@ -360,14 +369,18 @@ class pluginShop extends objectPlugin {
         if (!$this->getCustomer()->ifYouCan('Admin'))
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
 
-        $dataList = $this->getCustomer()->getDataList($config, $req);
+        $self = $this;
 
-        if (!empty($dataList['items'])) {
-            $items = array();
-            foreach ($dataList['items'] as $key => $orderRawItem)
-                $items[] = $this->_getOrderByID($orderRawItem['ID']);
-            $dataList['items'] = $items;
-        }
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem)
+                    $_items[] = $self->getOrderByID($orderRawItem['ID']);
+                return $_items;
+            }
+        );
+
+        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
         return $dataList;
     }
@@ -547,7 +560,7 @@ class pluginShop extends objectPlugin {
             $this->_resetOrderTemp();
             // get created order
 
-            $result = $this->_getOrderByID($orderID);
+            $result = $this->getOrderByID($orderID);
         }
 
         $result['errors'] = $errors;
@@ -590,7 +603,7 @@ class pluginShop extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->_getOrderByID($OrderID);
+        $result = $this->getOrderByID($OrderID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -904,7 +917,7 @@ class pluginShop extends objectPlugin {
 
     // promo
     // -----------------------------------------------
-    private function _getPromoByID ($promoID) {
+    public function getPromoByID ($promoID) {
         $config = configurationShopDataSource::jsapiShopGetPromoByID($promoID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
@@ -912,7 +925,7 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    private function _getPromoByHash ($hash, $activeOnly = false) {
+    public function getPromoByHash ($hash, $activeOnly = false) {
         $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash, $activeOnly);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
@@ -1163,6 +1176,9 @@ class pluginShop extends objectPlugin {
                 case "status":
                     $resp = $this->_getOrders_ByStatus($req);
                     break;
+                default:
+                    $resp['error'] = 'unknown type: ' . $req->get['type'];
+                    break;
             }
             return;
         }
@@ -1173,12 +1189,12 @@ class pluginShop extends objectPlugin {
     public function get_shop_order (&$resp, $req) {
         if (isset($req->get['id']) && $req->get['id'] !== "temp") {
             if ($this->getCustomer()->ifYouCan('Admin'))
-                $resp = $this->_getOrderByID($req->get['id']);
+                $resp = $this->getOrderByID($req->get['id']);
             else
                 $resp['error'] = 'AccessDenied';
             return;
         } else if (isset($req->get['hash'])) {
-            $resp = $this->_getOrderByHash($req->get['hash']);
+            $resp = $this->getOrderByHash($req->get['hash']);
             return;
         } else {
             $resp = $this->_getOrderTemp();
@@ -1234,7 +1250,7 @@ class pluginShop extends objectPlugin {
                 if (empty($req->data['promo']))
                     $this->_resetSessionPromo();
                 else
-                    $this->_setSessionPromo($this->_getPromoByHash($req->data['promo'], true));
+                    $this->_setSessionPromo($this->getPromoByHash($req->data['promo'], true));
             }
             $resp = $this->_getOrderTemp();
         }
@@ -1287,7 +1303,7 @@ class pluginShop extends objectPlugin {
             }
             // get promo
             if (!empty($order['PromoID']))
-                $order['promo'] = $this->_getPromoByID($order['PromoID']);
+                $order['promo'] = $this->getPromoByID($order['PromoID']);
             // $order['items'] = array();
             $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
@@ -1318,7 +1334,7 @@ class pluginShop extends objectPlugin {
             $sessionOrderProducts = $this->_getSessionOrderProducts();
             // re-validate promo
             if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
-                $sessionPromo = $this->_getPromoByHash($sessionPromo['Code'], true);
+                $sessionPromo = $this->getPromoByHash($sessionPromo['Code'], true);
                 if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
                     $this->_setSessionPromo($sessionPromo);
                     $order['promo'] = $sessionPromo;
