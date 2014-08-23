@@ -8,7 +8,7 @@ define("plugin/dashboard/toolbox/js/router", [
     Sandbox.eventSubscribe('global:page:index', function () {
         if (!Auth.getAccountID())
             return;
-        require(['plugin/dashboard/toolbox/js/view/dashboard', ''], function (ViewDashboard) {
+        require(['plugin/dashboard/toolbox/js/view/dashboard'], function (ViewDashboard) {
             var dashboard = new ViewDashboard();
             dashboard.render();
             Sandbox.eventNotify('global:content:render', {

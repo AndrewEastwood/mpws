@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/listOrders', [
+define('plugin/shop/toolbox/js/collection/basicOrders', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/order',
@@ -17,7 +17,6 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
         // Initial pagination states
         state: {
             pageSize: 10,
-            // sortKey: "updated",
             order: 1
         },
 
@@ -26,12 +25,7 @@ define('plugin/shop/toolbox/js/collection/listOrders', [
         queryParams: {
             totalPages: null,
             totalRecords: null,
-            sortKey: "sort",
-            status: 'new'
-        },
-
-        initialize: function (status) {
-            this.queryParams.status = status || 'new';
+            sortKey: "sort"
         },
 
         parseState: function (resp, queryParams, state, options) {

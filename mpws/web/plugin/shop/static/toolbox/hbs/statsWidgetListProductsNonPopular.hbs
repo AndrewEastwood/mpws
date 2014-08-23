@@ -1,0 +1,23 @@
+<div class="panel-heading"><i title="Рекомендую знизити ціну або продавати під замовлення." class="fa fa-thumbs-o-down helper helper-left"></i> Товари що не продаються:</div>
+<div class="panel-body">
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Ред.</th>
+                <th>Виробник</th>
+                <th>Назва</th>
+                <th>Ціна</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each data.products_non_popular}}
+            <tr>
+                <td><i class="fa fa-pencil-square-o"></i></td>
+                <td>{{OriginName}}</td>
+                <td>{{Name}}</td>
+                <td>{{Price}}<span class="moneyType">грн.</span></td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>

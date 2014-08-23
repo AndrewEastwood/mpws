@@ -2,7 +2,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/listOrders',
+    'plugin/shop/toolbox/js/collection/basicOrders',
     'plugin/shop/toolbox/js/view/listOrders',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerOrders',
@@ -17,8 +17,9 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         // statuses: ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"],
         // listsByStatus: {},
         initialize: function (options) {
-            this.options = _.defaults({}, options, {status: 'new'});
-            this.collection = new CollectionOrders(this.options.status);
+            this.options = options;
+            this.collection = new CollectionOrders();
+            this.collection.queryParams.status = this.options.status;
             this.listenTo(this.collection, 'update reset', this.render);
         },
         render: function () {

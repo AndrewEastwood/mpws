@@ -2,8 +2,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/listOrders',
-    'plugin/shop/toolbox/js/view/popupOrder',
+    'plugin/shop/toolbox/js/collection/basicOrders',
     "default/js/lib/backgrid",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMainMenuForListOrderItem',
@@ -13,12 +12,11 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, CollectionListOrders, PopupOrderEntry, Backgrid, tplBtnMenuMainItem, lang) {
+], function (Sandbox, Backbone, Utils, CollectionListOrders, Backgrid, tplBtnMenuMainItem, lang) {
 
     // TODO: do smth to fetch states from backend
     var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
     var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
-    // var dataSources = {};
 
     var columnActions = {
         name: "Actions",
@@ -28,33 +26,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         sortable: false,
         formatter: {
             fromRaw: function (value, model) {
-                // debugger;
                 var btn = tplBtnMenuMainItem(model.toJSON());
-
-                // var _link = $('<a/>').attr({
-                //     href: "javascript://"
-                // }).text(lang.pluginMenu_Orders_Grid_link_Edit);
-                // // debugger;
-                // _link.on('click', function(){
-                //     // debugger;
-                //     var popupOrder = new PopupOrderEntry(model.toJSON());
-                //     popupOrder.render();
-                //     // popupOrder.listenTo(popupOrder.model, 'change', function (popupOrderModel){
-                //     //     // debugger;
-                //     //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
-                //     //         status: popupOrderModel.previousAttributes().Status,
-                //     //         options: {
-                //     //             reset: true
-                //     //         }
-                //     //     });
-                //     //     Sandbox.eventNotify('plugin:shop:listOrders:fetch', {
-                //     //         status: popupOrderModel.changedAttributes().Status,
-                //     //         options: {
-                //     //             reset: true
-                //     //         }
-                //     //     });
-                //     // });
-                // });
                 return btn;
             }
         }
@@ -170,19 +142,19 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     };
 
     var ListOrders = Backbone.View.extend({
-        columns: [
-            columnActions,
-            columnAccountFullName,
-            columnAccountPhone,
-            columnInfoTotal,
-            columnHasPromo,
-            columnDiscount,
-            columnStatus,
-            columnShipping,
-            columnWarehouse,
-            columnDateUpdated,
-            columnDateCreated
-        ],
+        columns: {
+            columnActions: columnActions,
+            columnAccountFullName: columnAccountFullName,
+            columnAccountPhone: columnAccountPhone,
+            columnInfoTotal: columnInfoTotal,
+            columnHasPromo: columnHasPromo,
+            columnDiscount: columnDiscount,
+            columnStatus: columnStatus,
+            columnShipping: columnShipping,
+            columnWarehouse: columnWarehouse,
+            columnDateUpdated: columnDateUpdated,
+            columnDateCreated: columnDateCreated
+        },
         initialize: function (options) {
             var self = this;
             this.options = options;
@@ -201,7 +173,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         render: function () {
             var toolboxListOrdersGrid = new Backgrid.Grid({
                 className: "backgrid table table-responsive",
-                columns: this.columns,
+                columns: _(this.columns).values(),
                 collection: this.collection
             });
 
@@ -219,113 +191,4 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     });
 
     return ListOrders;
-
-/*
-
-    function getOrderDataSource (status) {
-        var collection = new CollectionListOrders();
-
-        // set collection status
-        collection.queryParams.status = status;
-
-        var ToolboxListOrdersGrid = new Backgrid.Grid({
-            className: "backgrid table table-responsive",
-            columns: columns,
-            collection: collection
-        });
-
-        var Paginator = new Backgrid.Extension.Paginator({
-            collection: collection
-        });
-
-        return {
-            status: status,
-            collection: collection,
-            Grid: ToolboxListOrdersGrid,
-            Paginator: Paginator,
-            fetch: function (options) {
-                collection.fetch(options);
-            }
-        }
-    }
-
-    // Sandbox.eventSubscribe('plugin:shop:orderList:dataReceived', function(data){
-    //     //
-    // });
-    // create seperated lists for the following orders:
-    // new
-    // in progress
-    // shipped
-    // delivered
-    // closed
-    // debugger;
-    _(statuses).map(function (status){
-        dataSources[status] =getOrderDataSource(status);
-        orderStatusValues.push([lang["order_status_" + status] || status, status]);
-    });
-
-    var ListOrders = Backbone.View.extend({
-        template: tpl,
-        lang: lang,
-        className: 'shop-toolbox-orders',
-        initialize: function () {
-            var self = this;
-
-            this.customDataSources = {
-                fetch: function (options) {
-                    _(dataSources).invoke('fetch', options);
-                }
-            }
-
-            _(dataSources).each(function(dataSource){
-                self.listenTo(dataSource.collection, 'reset', self.render);
-            });
-
-// function() {
-                    // debugger;
-                    // _(dataSources).invoke('fetch', {reset: true});
-                // }
-            // refresh all lists
-            Sandbox.eventSubscribe("plugin:shop:orderList:fetch", function (options) {
-                self.customDataSources.fetch(options);
-            });
-
-            // when we know how many records are availabel of particular filter
-            // we do update  tapPage badge with records count
-            // Sandbox.eventSubscribe('plugin:shop:orderList:parseState', function (data) {
-            //     // debugger;
-            // });
-        },
-        render: function () {
-            //debugger;
-            var self = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-
-            _(dataSources).each(function(dataSource){
-                var $tabPage = self.$('.tab-pane#order_status_' + dataSource.status + '-ID');
-                $tabPage.empty();
-                $tabPage.append(dataSource.Grid.render().el);
-                $tabPage.append(dataSource.Paginator.render().el);
-                // debugger;
-                var $badge = self.$('a[href="#order_status_' + dataSource.status + '-ID"] .badge');
-                $badge.text(dataSource.collection.state.totalRecords || "");
-            });
-        },
-        showOrder: function (orderID) {
-            // debugger;
-            var popupOrder = new PopupOrderEntry();
-            popupOrder.model.set('ID', orderID);
-            popupOrder.model.fetch();
-            popupOrder.listenTo(popupOrder.model, 'change', function(){
-                Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
-            });
-        },
-        showPage: function (pageName) {
-            debugger;
-            this.$('a.orders-' + pageName).tab('show');
-        }
-    });
-
-    return ListOrders;*/
-
 });

@@ -58,11 +58,11 @@ define("plugin/account/toolbox/js/router", [
         initialize: function () {
             var self = this;
             Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
-                self.stats();
+                self.dashboard();
             });
         },
 
-        stats: function () {
+        dashboard: function () {
             require(['plugin/account/toolbox/js/view/stats'], function (Stats) {
                 // debugger;
                 // create new view

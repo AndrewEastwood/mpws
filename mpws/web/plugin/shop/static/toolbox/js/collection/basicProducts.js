@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/listProducts', [
+define('plugin/shop/toolbox/js/collection/basicProducts', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable',

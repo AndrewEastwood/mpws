@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/model/stats', [
+define('plugin/shop/toolbox/js/model/statsOrdersIntensityLastMonth', [
     'default/js/lib/backbone'
 ], function (Backbone) {
 
@@ -6,8 +6,8 @@ define('plugin/shop/toolbox/js/model/stats', [
         initialize: function (type) {
             this.url = APP.getApiLink({
                 source: 'shop',
-                fn: 'overview',
-                type: type
+                fn: 'stats',
+                type: 'orders_intensity_last_month'
             });
         }
     });

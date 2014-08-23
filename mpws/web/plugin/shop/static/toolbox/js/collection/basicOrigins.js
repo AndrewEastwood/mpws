@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/listOrigins', [
+define('plugin/shop/toolbox/js/collection/basicOrigins', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone-pageable'

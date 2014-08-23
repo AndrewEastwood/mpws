@@ -34,20 +34,20 @@ define("plugin/shop/toolbox/js/router", [
         initialize: function () {
             var self = this;
             Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
-                self.stats();
+                self.dashboard();
             });
         },
 
-        stats: function () {
-            require(['plugin/shop/toolbox/js/view/stats'], function (Stats) {
+        dashboard: function () {
+            require(['plugin/shop/toolbox/js/view/dashboard'], function (ViewDashboard) {
                 // debugger;
                 // create new view
-                var stats = new Stats();
-                stats.model.fetch();
+                var dashboard = new ViewDashboard();
+                dashboard.render();
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'DashboardForPlugin_shop',
-                    el: stats.$el
+                    el: dashboard.$el
                 });
             });
         },
@@ -76,10 +76,9 @@ define("plugin/shop/toolbox/js/router", [
                 var popupOrder = new PopupOrderEntry();
                 popupOrder.model.set('ID', orderID);
                 popupOrder.model.fetch();
-                // debugger;
-                popupOrder.$dialog.getModal().on('hide', function () {
+                popupOrder.$dialog.onHide(function () {
                     Backbone.history.history.back();
-                })
+                });
             });
         },
         ordersList: function (status) {

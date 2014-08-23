@@ -125,7 +125,7 @@ define("default/js/lib/utils", [
         } else if (Utils.isModelView(obj)) {
             _tplData = obj.model.toJSON();
             _tplExtras = obj.model.extras;
-        } if (Utils.isView(obj)) {
+        } else if (Utils.isView(obj)) {
             _tplData = obj.options;
             _tplExtras = obj.extras;
         }
