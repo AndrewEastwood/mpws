@@ -30,7 +30,6 @@ define("plugin/shop/toolbox/js/view/statsProductsNonPopular", [
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (this.collection.length)
                 this.$('.panel-body').html(this.list.$el);
-            this.list.render();
             return this;
         }
     });

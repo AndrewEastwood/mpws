@@ -27,7 +27,7 @@ define("plugin/shop/toolbox/js/view/statsOrdersExpired", [
             this.listenTo(this.collection, 'update reset', this.render);
         },
         refresh: function () {
-            this.collection.fetch({reset: true});
+            this.collection.fetch({update: true});
         },
         render: function () {
             // debugger;
@@ -36,7 +36,6 @@ define("plugin/shop/toolbox/js/view/statsOrdersExpired", [
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (this.collection.length)
                 this.$('.panel-body').html(this.list.$el);
-            this.list.render();
             return this;
         }
     });

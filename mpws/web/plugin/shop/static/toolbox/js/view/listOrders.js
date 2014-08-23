@@ -91,17 +91,20 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             // It's possible to render an option group or use a
             // function to provide option values too.
             optionValues: orderStatusValues,
-            // initialize: function () {
-            //     // this.prototype.initialize.call(this);
-            //     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-            //     // debugger;
-            //     this.listenTo(this.model, "change:Status", function(model, status) {
-            //         model.saveOrderStatus(status).success(function(){
-            //             Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
-            //         });
-            //         // ShopUtils.updateOrderStatus(model.get('ID'), status);
-            //     });
-            // }
+            initialize: function () {
+                // debugger;
+                // this.prototype.initialize.call(this);
+                Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+                // debugger;
+                this.listenTo(this.model, "change:Status", function(model, status) {
+                    // debugger;
+                    model.saveOrderStatus(status).success(function(){
+                        model.collection.fetch({reset: true, merge: false});
+                        // Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
+                    });
+                    // ShopUtils.updateOrderStatus(model.get('ID'), status);
+                });
+            }
         })
     };
 
@@ -142,35 +145,36 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     };
 
     var ListOrders = Backbone.View.extend({
-        columns: {
-            columnActions: columnActions,
-            columnAccountFullName: columnAccountFullName,
-            columnAccountPhone: columnAccountPhone,
-            columnInfoTotal: columnInfoTotal,
-            columnHasPromo: columnHasPromo,
-            columnDiscount: columnDiscount,
-            columnStatus: columnStatus,
-            columnShipping: columnShipping,
-            columnWarehouse: columnWarehouse,
-            columnDateUpdated: columnDateUpdated,
-            columnDateCreated: columnDateCreated
-        },
-        initialize: function (options) {
+        initialize: function () {
             var self = this;
-            this.options = options;
+            // this.options = options;
+            this.columns = {
+                columnActions: columnActions,
+                columnAccountFullName: columnAccountFullName,
+                columnAccountPhone: columnAccountPhone,
+                columnInfoTotal: columnInfoTotal,
+                columnHasPromo: columnHasPromo,
+                columnDiscount: columnDiscount,
+                columnStatus: columnStatus,
+                columnShipping: columnShipping,
+                columnWarehouse: columnWarehouse,
+                columnDateUpdated: columnDateUpdated,
+                columnDateCreated: columnDateCreated
+            };
             if (this.collection)
                 this.listenTo(this.collection, 'reset', this.render);
-            Sandbox.eventSubscribe('plugin:shop:order:changed', function (diff) {
-                // debugger;
-                var status = self.collection.queryParams.status;
-                if (diff.current.Status === status || diff.previous.Status === status)
-                    self.collection.fetch({reset: true});
-            });
+            // Sandbox.eventSubscribe('plugin:shop:order:changed', function (diff) {
+            //     // debugger;
+            //     var status = self.collection.queryParams.status;
+            //     if (diff.current.Status === status || diff.previous.Status === status)
+            //         self.collection.fetch({reset: true});
+            // });
 
             // displays active records count
             this.$counter = $('<span/>');
         },
         render: function () {
+            // debugger;
             var toolboxListOrdersGrid = new Backgrid.Grid({
                 className: "backgrid table table-responsive",
                 columns: _(this.columns).values(),
@@ -181,11 +185,12 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 collection: this.collection
             });
 
-            this.$el.empty().append(toolboxListOrdersGrid.render().$el)
+            this.$el.html(toolboxListOrdersGrid.render().$el)
                 .append(paginator.render().$el);
 
             this.$counter.html(this.collection.state.totalRecords);
 
+            window.g1 = this;
             return this;
         }
     });

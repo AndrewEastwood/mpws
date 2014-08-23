@@ -17,6 +17,14 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
             'click .refresh': 'refresh'
         },
         initialize: function () {
+            // debugger;
+            this.list = new ViewListOrders({collection: this.collection});
+            // adjust columns
+            // delete listView.columns.columnStatus;
+            delete this.list.columns.columnShipping;
+            delete this.list.columns.columnWarehouse;
+            delete this.list.columns.columnDateUpdated;
+            delete this.list.columns.columnDateCreated;
             this.collection = new CollectionOrdersTodays();
             this.listenTo(this.collection, 'update reset', this.render);
         },
@@ -24,19 +32,10 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
             this.collection.fetch({reset: true});
         },
         render: function () {
-            // debugger;
-            var listView = new ViewListOrders({collection: this.collection});
-            // adjust columns
-            // delete listView.columns.columnStatus;
-            delete listView.columns.columnShipping;
-            delete listView.columns.columnWarehouse;
-            delete listView.columns.columnDateUpdated;
-            delete listView.columns.columnDateCreated;
             // render into panel body
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (this.collection.length)
-                this.$('.panel-body').html(listView.$el);
-            listView.render();
+                this.$('.panel-body').html(this.list.$el);
             return this;
         }
     });
