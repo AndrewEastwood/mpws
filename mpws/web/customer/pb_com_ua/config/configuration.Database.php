@@ -27,7 +27,10 @@ class configurationCustomerDatabase extends configurationDefaultDatabase {
             "connection_string" => self::$DEV['STRING'],
             "id_column" => 'ID',
             "username" => self::$DEV['USER'],
-            "password" => self::$DEV['PWD']
+            "password" => self::$DEV['PWD'],
+            "driver_options" => array(
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"'
+            )
         );
 
         $source = MPWS_ENV;

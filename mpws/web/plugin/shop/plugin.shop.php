@@ -581,9 +581,9 @@ class pluginShop extends objectPlugin {
             'Status' => array('string', 'notEmpty')
         ));
 
-        var_dump($validatedDataObj);
+        // var_dump($validatedDataObj);
 
-        return;
+        // return;
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {

@@ -60,7 +60,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             var currentStatus = this.collection.getCustomQueryFiled("Status");
             // debugger;
             self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
-            self.$('.tab-link.orders-' + currentStatus.toLowerCase() + ' .badge').html(this.viewList.$counter);
+            self.$('.tab-link.orders-' + currentStatus.toLowerCase() + ' .badge').html(this.viewList.collection.state.totalRecords);
             
             // show sub-view
             self.$('.tab-pane').html(this.viewList.$el);
