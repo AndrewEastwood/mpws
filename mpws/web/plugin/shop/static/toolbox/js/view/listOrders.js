@@ -165,10 +165,10 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     }
 
     var ListOrders = Backbone.View.extend({
+        onBeforeInitColumns: function () {},
         initialize: function () {
             var self = this;
             // this.options = options;
-            this.columns = {};
             // this.$counter = $('<span/>');
             if (this.collection) {
                 this.listenTo(this.collection, 'reset', this.render);
@@ -187,27 +187,28 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             console.log('listOrders: render');
             // debugger;
             // this.columns = getColumns();
-            if (this.toolboxListOrdersGrid)
-                this.toolboxListOrdersGrid.remove();
-            this.toolboxListOrdersGrid = null;
-            if (this.paginator)
-                this.paginator.remove();
-            this.paginator = null;
-                this.toolboxListOrdersGrid = new Backgrid.Grid({
-                    className: "backgrid table table-responsive",
-                    columns: _(getColumns()).values(),
-                    collection: this.collection
-                });
-                this.paginator = new Backgrid.Extension.Paginator({
-                    collection: this.collection
-                });
-                this.toolboxListOrdersGrid.render();
-                this.paginator.render();
             this.$el.off().empty();
-            if (this.toolboxListOrdersGrid)
-                this.$el.append(this.toolboxListOrdersGrid.$el)
-            if (this.paginator)
-                this.$el.append(this.paginator.$el);
+            if (this.collection) {
+                this.columns = getColumns();
+                var toolboxListOrdersGrid = new Backgrid.Grid({
+                    className: "backgrid table table-responsive",
+                    columns: _(this.columns).values(),
+                    collection: this.collection
+                });
+                var paginator = new Backgrid.Extension.Paginator({
+                    collection: this.collection
+                });
+                // if (this.toolboxListOrdersGrid)
+                //     this.toolboxListOrdersGrid.remove();
+                // this.toolboxListOrdersGrid = null;
+                // if (this.paginator)
+                //     this.paginator.remove();
+                // this.paginator = null;
+                // if (this.toolboxListOrdersGrid)
+                    this.$el.append(toolboxListOrdersGrid.render().$el)
+                // if (this.paginator)
+                    this.$el.append(paginator.render().$el);
+            }
 
             // if (this.collection)
             //     this.$counter.html(this.collection.state.totalRecords);

@@ -48,7 +48,7 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
             var _orders = resp.items;
             _(_orders).map(function (orderEntry) {
                 // debugger;
-                orderEntry.Status = [orderEntry.Status];
+                // orderEntry.Status = orderEntry.Status;
                 orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
                 orderEntry.AccountPhone = orderEntry.account.Phone;
                 orderEntry.InfoTotal = orderEntry.info.total;
