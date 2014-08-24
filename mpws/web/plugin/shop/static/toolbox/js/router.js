@@ -94,9 +94,9 @@ define("plugin/shop/toolbox/js/router", [
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
                 // create new view
                 // debugger;
-                var managerOrders = new ManagerOrders({
-                    status: status
-                });
+                var options = status ? {status: status} : {};
+
+                var managerOrders = new ManagerOrders(options);
                 managerOrders.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {

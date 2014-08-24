@@ -98,10 +98,11 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 // debugger;
                 this.listenTo(this.model, "change:Status", function(model, status) {
                     // debugger;
-                    model.saveOrderStatus(status).success(function(){
-                        model.collection.fetch({reset: true, merge: false});
-                        // Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
-                    });
+                    if (status && _.isString(status))
+                        model.saveOrderStatus(status).success(function(){
+                            model.collection.fetch({reset: true, merge: false});
+                            // Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
+                        });
                     // ShopUtils.updateOrderStatus(model.get('ID'), status);
                 });
             }

@@ -17,7 +17,8 @@ define("plugin/dashboard/toolbox/js/view/dashboard", [
             _(APP.instances).each(function (pluginInstance, pluginName) {
                 if (pluginInstance.dashboard)
                     self.$el.append($('<div/>').attr({
-                        name: 'DashboardForPlugin_' + pluginName
+                        name: 'DashboardForPlugin_' + pluginName,
+                        "class": 'dashboard-container'
                     }).html(tplFBAnim()));
             });
 

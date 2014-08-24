@@ -28,6 +28,14 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
             sortKey: "sort"
         },
 
+        setCustomQueryField: function (field, value) {
+            this.queryParams['_f' + field] = value;
+        },
+
+        getCustomQueryFiled: function (field) {
+            return this.queryParams["_f" + field];
+        },
+
         parseState: function (resp, queryParams, state, options) {
             var state = {
                 totalRecords: parseInt(resp && resp.count || 0, 10)
