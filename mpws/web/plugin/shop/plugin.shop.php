@@ -171,7 +171,7 @@ class pluginShop extends objectPlugin {
         return $dataList;
     }
 
-    public function getProducts_Todays ($req) {
+    public function getProducts_ListTodays ($req) {
         $config = configurationShopDataSource::jsapiShopProductListByStatus('ARCHIVED', '!=');
         $config['condition']['shop_products.DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
         $self = $this;
@@ -1028,7 +1028,7 @@ class pluginShop extends objectPlugin {
         };
         $sources['products_list_todays'] = function ($req) use ($self) {
             $res = array();
-            $res['items'] = $self->getProducts_Todays($req);
+            $res['items'] = $self->getProducts_ListTodays($req);
             return $res;
         };
         $sources['products_list_popular'] = function ($req) use ($self) {

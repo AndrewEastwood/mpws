@@ -17,10 +17,11 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         // statuses: ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"],
         // listsByStatus: {},
         initialize: function (options) {
+            // debugger;
             this.options = options;
             this.collection = new CollectionOrders();
-            if (this.options.status)
-                this.collection.queryParams.status = this.options.status;
+            // if (this.options.status)
+            this.collection.queryParams.status = this.options.status || "NEW";
             this.listenTo(this.collection, 'update reset', this.render);
             this.list = new ViewListOrders({collection: this.collection});
             this.list.render();
@@ -31,7 +32,7 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
-            self.$('.tab-link orders-' + this.options.status + ' .badge').html(this.list.$counter);
+            self.$('.tab-link orders-' + this.collection.queryParams.status + ' .badge').html(this.list.$counter);
             self.$('.tab-pane').html(this.list.$el);
 
             // _(this.listsByStatus).each(function(listView, status){

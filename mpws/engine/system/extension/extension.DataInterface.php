@@ -39,6 +39,15 @@ class extensionDataInterface extends objectExtension {
             }
         }
 
+        // grab other fields
+        foreach ($req->get as $key => $value) {
+            $matches = array();
+            if (preg_match("/^_f:(\w+)$/", $value, $matches)) {
+                // $matches
+                $config['condition'][$matches[0]] = configurationDefaultDataSource::jsapiCreateDataSourceCondition();
+            }
+        }
+
         // var_dump($dsConfig);
         // get data
         $items = $this->getCustomer()->fetch($dsConfig) ?: array();
