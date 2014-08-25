@@ -17,16 +17,20 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
             'click .refresh': 'refresh'
         },
         initialize: function () {
-            // debugger;
-            this.list = new ViewListOrders({collection: this.collection});
-            // adjust columns
-            // delete listView.columns.columnStatus;
-            delete this.list.columns.columnShipping;
-            delete this.list.columns.columnWarehouse;
-            delete this.list.columns.columnDateUpdated;
-            delete this.list.columns.columnDateCreated;
             this.collection = new CollectionOrdersTodays();
-            this.listenTo(this.collection, 'update reset', this.render);
+            this.viewList = new ViewListOrders({
+                collection: this.collection,
+                adjustColumns: function (columns) {
+                    // adjust columns
+                    delete columns.columnShipping;
+                    delete columns.columnWarehouse;
+                    delete columns.columnDateUpdated;
+                    delete columns.columnDateCreated;
+                    return columns;
+                }
+            });
+            this.viewList.grid.emptyText = "Всі замовлення оброблені";
+            this.render();
         },
         refresh: function () {
             this.collection.fetch({reset: true});
@@ -34,8 +38,7 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
         render: function () {
             // render into panel body
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            if (this.collection.length)
-                this.$('.panel-body').html(this.list.$el);
+            this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
     });

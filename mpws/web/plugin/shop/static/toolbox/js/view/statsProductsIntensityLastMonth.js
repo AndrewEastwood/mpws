@@ -51,6 +51,9 @@ define("plugin/shop/toolbox/js/view/statsProductsIntensityLastMonth", [
                     dataProducts.push([date, values.active, values.discount || 0, values.preorder || 0]);
                 });
 
+                if (dataProducts.length === 1)
+                    return this;
+
                 var dataProducts = google.visualization.arrayToDataTable(dataProducts);
 
                 var options = {

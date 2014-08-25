@@ -15,21 +15,20 @@ define("plugin/shop/toolbox/js/view/statsProductsNonPopular", [
         template: tpl,
         initialize: function () {
             this.collection = new CollectionProductsNonPopular();
-            this.list = new ViewListProducts({collection: this.collection});
-            // delete listView.columns.columnStatus;
-            // delete this.list.columns.columnShipping;
-            // delete this.list.columns.columnWarehouse;
-            delete this.list.columns.columnDateUpdated;
-            delete this.list.columns.columnDateCreated;
-            this.listenTo(this.collection, 'update reset', this.render);
+            this.viewList = new ViewListProducts({
+                collection: this.collection,
+                adjustColumns: function (columns) {
+                    delete columns.columnDateUpdated;
+                    delete columns.columnDateCreated;
+                    return columns;
+                }
+            });
+            this.viewList.grid.emptyText = "Немає не популярних товарів";
+            this.render();
         },
         render: function () {
-            // debugger;
-            // adjust columns
-            // render into panel body
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            if (this.collection.length)
-                this.$('.panel-body').html(this.list.$el);
+            this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
     });

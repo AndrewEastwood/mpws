@@ -2,7 +2,6 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/basicOrders',
     "default/js/lib/backgrid",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOrderListItem',
@@ -12,7 +11,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, CollectionListOrders, Backgrid, tplBtnMenuMainItem, lang) {
+], function (Sandbox, Backbone, Utils, Backgrid, tplBtnMenuMainItem, lang) {
 
     function getColumns () {
 
@@ -28,7 +27,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(model.toJSON());
+                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
                     return btn;
                 }
             }
@@ -165,55 +164,33 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     }
 
     var ListOrders = Backbone.View.extend({
-        onBeforeInitColumns: function () {},
-        initialize: function () {
-            var self = this;
-            // this.options = options;
-            // this.$counter = $('<span/>');
+        initialize: function (options) {
+            this.options = options;
             if (this.collection) {
                 this.listenTo(this.collection, 'reset', this.render);
-                // this.render();
+                var columns = getColumns();
+                if (this.options.adjustColumns)
+                    columns = this.options.adjustColumns(columns);
+                this.grid = new Backgrid.Grid({
+                    className: "backgrid table table-responsive",
+                    columns: _(columns).values(),
+                    collection: this.collection
+                });
+                this.paginator = new Backgrid.Extension.Paginator({
+                    collection: this.collection
+                });
             }
-            // Sandbox.eventSubscribe('plugin:shop:order:changed', function (diff) {
-            //     // debugger;
-            //     var status = self.collection.queryParams.status;
-            //     if (diff.current.Status === status || diff.previous.Status === status)
-            //         self.collection.fetch({reset: true});
-            // });
-
-            // displays active records count
         },
         render: function () {
-            console.log('listOrders: render');
+            // console.log('listOrders: render');
             // debugger;
-            // this.columns = getColumns();
             this.$el.off().empty();
-            if (this.collection) {
-                this.columns = getColumns();
-                var toolboxListOrdersGrid = new Backgrid.Grid({
-                    className: "backgrid table table-responsive",
-                    columns: _(this.columns).values(),
-                    collection: this.collection
-                });
-                var paginator = new Backgrid.Extension.Paginator({
-                    collection: this.collection
-                });
-                // if (this.toolboxListOrdersGrid)
-                //     this.toolboxListOrdersGrid.remove();
-                // this.toolboxListOrdersGrid = null;
-                // if (this.paginator)
-                //     this.paginator.remove();
-                // this.paginator = null;
-                // if (this.toolboxListOrdersGrid)
-                    this.$el.append(toolboxListOrdersGrid.render().$el)
-                // if (this.paginator)
-                    this.$el.append(paginator.render().$el);
+            if (this.collection.length) {
+                this.$el.append(this.grid.render().$el);
+                this.$el.append(this.paginator.render().$el);
+            } else {
+                this.$el.html(this.grid.emptyText);
             }
-
-            // if (this.collection)
-            //     this.$counter.html(this.collection.state.totalRecords);
-
-            window.g1 = this;
             return this;
         }
     });

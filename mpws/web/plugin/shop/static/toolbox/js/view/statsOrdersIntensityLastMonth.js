@@ -45,6 +45,9 @@ define("plugin/shop/toolbox/js/view/statsOrdersIntensityLastMonth", [
                     dataOrders.push([date, values.placed || 0, values.closed || 0]);
                 });
 
+                if (dataOrders.length === 1)
+                    return this;
+
                 dataOrders = google.visualization.arrayToDataTable(dataOrders);
 
                 var options = {

@@ -19,18 +19,27 @@ define("plugin/shop/toolbox/js/router", [
         });
     });
 
+    var routes = {
+        // "shop/stats": "stats",
+        "shop/products": "productsList",
+        "shop/products/:status": "productsListPage",
+        "shop/product/edit/:id": "productEdit",
+        "shop/orders": "ordersList",
+        "shop/orders/:status": "ordersListPage",
+        "shop/order/edit/:id": "orderEdit",
+        "shop/order/print/:id": "orderPrint",
+        "shop/order/email_tracking/:id": "orderEmailTracking",
+        "shop/order/email_reciept/:id": "orderEmailReceipt",
+        "shop/sales": "sales",
+        "shop/prices": "prices",
+        "shop/reports": "reports"
+    };
+
     var Router = Backbone.Router.extend({
-        routes: {
-            // "shop/stats": "stats",
-            "shop/products": "products",
-            "shop/products/:status": "products",
-            "shop/orders": "ordersList",
-            "shop/orders/:status": "ordersList",
-            "shop/order/:id": "orderDetails",
-            "shop/sales": "sales",
-            "shop/prices": "prices",
-            "shop/reports": "reports"
-        },
+
+        routes: routes,
+
+        urls: _(routes).invert(),
 
         initialize: function () {
             var self = this;
@@ -52,8 +61,13 @@ define("plugin/shop/toolbox/js/router", [
                 });
             });
         },
+        productEdit: function (productID) {
 
-        products: function () {
+        },
+        productsList: function () {
+            this.productsListPage();
+        },
+        productsListPage: function () {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
             require(['plugin/shop/toolbox/js/view/managerProducts'], function (ManagerProducts) {
                 // create new view
@@ -72,7 +86,10 @@ define("plugin/shop/toolbox/js/router", [
                 });
             });
         },
-        orderDetails: function (orderID) {
+        orderPrint: function (orderID) {},
+        orderEmailTracking: function (orderID) {},
+        orderEmailReceipt: function (orderID) {},
+        orderEdit: function (orderID) {
             require(['plugin/shop/toolbox/js/view/popupOrder'], function (PopupOrderEntry) {
                 var popupOrder = new PopupOrderEntry();
                 popupOrder.model.set('ID', orderID);
@@ -82,7 +99,10 @@ define("plugin/shop/toolbox/js/router", [
                 });
             });
         },
-        ordersList: function (status) {
+        ordersList: function () {
+            this.ordersListPage();
+        },
+        ordersListPage: function (status) {
             // set active menu
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
             // // set page title

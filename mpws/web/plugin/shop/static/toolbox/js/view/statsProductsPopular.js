@@ -15,40 +15,37 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
         template: tpl,
         initialize: function () {
             this.collection = new CollectionProductsPopular();
-            this.list = new ViewListProducts({collection: this.collection});
-            // delete listView.columns.columnStatus;
-            // delete this.list.columns.columnShipping;
-            // delete this.list.columns.columnWarehouse;
-            delete this.list.columns.columnDateUpdated;
-            delete this.list.columns.columnDateCreated;
-
-            this.list.columns.SoldTotal = {
-                name: "SoldTotal",
-                label: "Продано",
-                cell: "string",
-                editable: false
-            };
-            this.list.columns.SumTotal = {
-                name: "SumTotal",
-                label: "На суму",
-                cell: "string",
-                editable: false,
-                formatter: {
-                    fromRaw: function (value) {
-                        return value + ' грн.';
-                    }
+            this.viewList = new ViewListProducts({
+                collection: this.collection,
+                adjustColumns: function (columns) {
+                    delete columns.columnDateUpdated;
+                    delete columns.columnDateCreated;
+                    columns.SoldTotal = {
+                        name: "SoldTotal",
+                        label: "Продано",
+                        cell: "string",
+                        editable: false
+                    };
+                    columns.SumTotal = {
+                        name: "SumTotal",
+                        label: "На суму",
+                        cell: "string",
+                        editable: false,
+                        formatter: {
+                            fromRaw: function (value) {
+                                return value + ' грн.';
+                            }
+                        }
+                    };
+                    return columns;
                 }
-            };
-
-            this.listenTo(this.collection, 'update reset', this.render);
+            });
+            this.viewList.grid.emptyText = "Немає популярних товарів";
+            this.render();
         },
         render: function () {
-            // debugger;
-            // adjust columns
-            // render into panel body
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            if (this.collection.length)
-                this.$('.panel-body').html(this.list.$el);
+            this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
     });

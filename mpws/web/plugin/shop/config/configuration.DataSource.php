@@ -529,18 +529,18 @@ class configurationShopDataSource extends objectConfiguration {
         if (!is_string($comparator))
             $comparator = self::$DEFAULT_COMPARATOR;
         $config = self::jsapiGetShopOrders();
-        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => self::jsapiCreateDataSourceCondition($status, $comparator),
-            'DateCreated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-10 month")), ">")
+            'DateUpdated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), "<=")
         );
         $config['options'] = array(
             'asDict' => array(
-                'keys' => 'IncomeDate',
+                'keys' => 'CloseDate',
                 'values' => 'ItemsCount'
             )
         );
-        $config['group'] = 'Date(DateCreated)';
+        $config['group'] = 'Date(DateUpdated)';
         $config['limit'] = 0;
         unset($config['additional']);
         return $config;
@@ -548,14 +548,14 @@ class configurationShopDataSource extends objectConfiguration {
 
     static function jsapiShopStat_ProductsIntensityLastMonth ($status) {
         $config = self::jsapiShopProductItemGet();
-        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
+        $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => self::jsapiCreateDataSourceCondition($status),
-            'DateCreated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-10 month")), ">")
+            'DateUpdated' => self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), "<=")
         );
         $config['options'] = array(
             'asDict' => array(
-                'keys' => 'IncomeDate',
+                'keys' => 'CloseDate',
                 'values' => 'ItemsCount'
             )
         );

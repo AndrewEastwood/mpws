@@ -447,6 +447,15 @@ define("default/js/lib/handlebars_helpers", [
     helpers.default_value = function(value, defaultValue) {
         return _.isEmpty(value) ? defaultValue : value;
     }
+    helpers.bb_link = function(url, options) {
+        if (options.hash.asRoot) {
+            url = "/#" + url.replace(/^(\/#)|^#|^\//, '');
+        }
+        _(options.hash).each(function(v, k){
+            url = url.replace(":" + k, v);
+        });
+        return url;
+    }
     return helpers;
 
 });

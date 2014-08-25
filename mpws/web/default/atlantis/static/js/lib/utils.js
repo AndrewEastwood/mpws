@@ -142,7 +142,8 @@ define("default/js/lib/utils", [
             },
             data: _tplData,
             extras: _tplExtras,
-            displayItems: obj && obj.displayItems || []
+            displayItems: obj && obj.displayItems || [],
+            instances: APP.instances
         }
     }
 
