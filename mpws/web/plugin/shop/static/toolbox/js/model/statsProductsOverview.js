@@ -1,16 +1,9 @@
 define('plugin/shop/toolbox/js/model/statsProductsOverview', [
-    'default/js/lib/backbone'
-], function (Backbone) {
+    'plugin/shop/toolbox/js/model/basicStats'
+], function (ModelBasicStats) {
 
-    var Stats = Backbone.Model.extend({
-        initialize: function (type) {
-            this.url = APP.getApiLink({
-                source: 'shop',
-                fn: 'stats',
-                type: 'overview_products'
-            });
-        }
+    return ModelBasicStats.extend({
+        type: 'overview_products'
     });
 
-    return Stats;
 });
