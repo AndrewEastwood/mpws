@@ -85,6 +85,11 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label for="shop-order-internalComment-ID">Внутрішній коментар (для адміністратора)</label>
+        <textarea class="form-control" name="InternalComment" id="shop-order-internalComment-ID">{{data.InternalComment}}</textarea>
+    </div>
+
     <h4>{{lang.popup_order_section_boughts}}</h4>
 
     {{>plugin/shop/common/hbs/partials/cartProductList data }}

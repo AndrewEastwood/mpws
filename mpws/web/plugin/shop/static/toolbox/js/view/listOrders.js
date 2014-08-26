@@ -97,14 +97,16 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                     // this.prototype.initialize.call(this);
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
                     // debugger;
-                    this.listenTo(this.model, "change:Status", function(model, status) {
+                    this.listenTo(this.model, "change", function(model, attr) {
                         // debugger;
-                        console.log('status is changed', status);
+                        // console.log('status is changed', status);
                         // if (status && _.isString(status))
-                        model.saveOrderStatus(status).success(function(){
-                            model.collection.fetch({reset: true});
-                            // model.collection.reset();
-                            // Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
+                        model.save(attr, {
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                                // model.collection.reset();
+                                // Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
                         });
                         // ShopUtils.updateOrderStatus(model.get('ID'), status);
                     });

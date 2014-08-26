@@ -14,16 +14,16 @@ class pluginShop extends objectPlugin {
         if (empty($productID) || !is_numeric($productID))
             return null;
 
-        $config = configurationShopDataSource::jsapiShopProductItemGet($productID);
+        $config = configurationShopDataSource::jsapiShopGetProductItem($productID);
         $product = $this->getCustomer()->fetch($config);
 
         if (empty($product))
             return null;
 
-        $configProductsAttr = configurationShopDataSource::jsapiShopProductAttributesGet($productID);
-        $configProductsPrice = configurationShopDataSource::jsapiShopProductPriceStatsGet($productID);
+        $configProductsAttr = configurationShopDataSource::jsapiShopGetProductAttributes($productID);
+        $configProductsPrice = configurationShopDataSource::jsapiShopGetProductPriceStats($productID);
         $configProductsFeatures = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
-        $configProductsRelations = configurationShopDataSource::jsapiShopProductRelations($productID);
+        $configProductsRelations = configurationShopDataSource::jsapiShopGetProductRelations($productID);
 
         $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
         $product['Prices'] = $this->getCustomer()->fetch($configProductsPrice);
@@ -115,65 +115,35 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    public function getProducts_Latest ($req) {
-        // get expired orders
-        $config = configurationShopDataSource::jsapiShopProductListLatest();
-        $productIDs = $this->getCustomer()->fetch($config);
-        $data = array();
-        if (!empty($productIDs))
-            foreach ($productIDs as $val)
-                $data[] = $this->_getProductByID($val['ID']);
-        return $data;
-    }
+    // public function getProducts_Latest ($req) {
+    //     // get expired orders
+    //     $config = configurationShopDataSource::jsapiShopProductListLatest();
+    //     $productIDs = $this->getCustomer()->fetch($config);
+    //     $data = array();
+    //     if (!empty($productIDs))
+    //         foreach ($productIDs as $val)
+    //             $data[] = $this->_getProductByID($val['ID']);
+    //     return $data;
+    // }
 
-    public function getProducts_ByStatus ($status) {
-        $config = configurationShopDataSource::jsapiShopProductListByStatus($status);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem)
-                    $_items[] = $self->getProductByID($orderRawItem['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-        return $dataList;
-    }
+    // public function getProducts_ListTodays ($req) {
+    //     $config = configurationShopDataSource::jsapiShopProductListByStatus('ARCHIVED', '!=');
+    //     $config['condition']['shop_products.DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
+    //     $self = $this;
+    //     $callbacks = array(
+    //         "parse" => function ($items) use($self) {
+    //             $_items = array();
+    //             foreach ($items as $key => $orderRawItem)
+    //                 $_items[] = $self->getProductByID($orderRawItem['ID']);
+    //             return $_items;
+    //         }
+    //     );
+    //     $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
+    //     return $dataList;
+    // }
 
-    public function getProducts_Sale ($req) {
-        $config = configurationShopDataSource::jsapiShopProductListByStatus(array('DISCOUNT', 'DEFECT'), 'IN');
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem)
-                    $_items[] = $self->getProductByID($orderRawItem['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-        return $dataList;
-    }
-
-    public function getProducts_Uncompleted ($req) {
-        $config = configurationShopDataSource::jsapiShopProductListUncompleted();
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem)
-                    $_items[] = $self->getProductByID($orderRawItem['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-        return $dataList;
-    }
-
-    public function getProducts_ListTodays ($req) {
-        $config = configurationShopDataSource::jsapiShopProductListByStatus('ARCHIVED', '!=');
-        $config['condition']['shop_products.DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
+    public function getProducts_List ($req) {
+        $config = configurationShopDataSource::jsapiShopProductList();
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -245,7 +215,7 @@ class pluginShop extends objectPlugin {
     // orders
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
-        $config = configurationShopDataSource::jsapiGetShopOrderByID($orderID);
+        $config = configurationShopDataSource::jsapiShopGetOrderItem($orderID);
         $order = null;
         // if ($this->getCustomer()->ifYouCan('Admin')) {
             $order = $this->getCustomer()->fetch($config);
@@ -289,7 +259,7 @@ class pluginShop extends objectPlugin {
 
     public function getOrders_ListExpired ($req) {
         // get expired orders
-        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config = configurationShopDataSource::jsapiGetShopOrderList();
         $config['condition']['Status'] = configurationShopDataSource::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
 
@@ -312,7 +282,7 @@ class pluginShop extends objectPlugin {
 
     public function getOrders_ListTodays ($req) {
         // get todays orders
-        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config = configurationShopDataSource::jsapiGetShopOrderList();
         $config['condition']['DateCreated'] = configurationShopDataSource::jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
         // set permissions
         $orderIDs = array();
@@ -334,7 +304,7 @@ class pluginShop extends objectPlugin {
 
     public function getOrders_ListPending ($req) {
         // get expired orders
-        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config = configurationShopDataSource::jsapiGetShopOrderList();
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin'))
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
@@ -367,7 +337,7 @@ class pluginShop extends objectPlugin {
 
     public function getOrders_List ($req) {
         // get all orders
-        $config = configurationShopDataSource::jsapiGetShopOrderIDs();
+        $config = configurationShopDataSource::jsapiGetShopOrderList();
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin'))
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
@@ -511,7 +481,7 @@ class pluginShop extends objectPlugin {
             $dataOrder["Comment"] = $reqData['form']['shopCartComment'];
             $dataOrder["PromoID"] = $orderPromoID;
 
-            $configOrder = configurationShopDataSource::jsapiShopOrderCreate($dataOrder);
+            $configOrder = configurationShopDataSource::jsapiShopCreateOrder($dataOrder);
             $orderID = $this->getCustomer()->fetch($configOrder);
 
             if (empty($orderID))
@@ -532,7 +502,7 @@ class pluginShop extends objectPlugin {
                 $dataBought["SellingPrice"] = $productItem["SellingPrice"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
-                $configBought = configurationShopDataSource::jsapiShopOrderBoughtCreate($dataBought);
+                $configBought = configurationShopDataSource::jsapiShopCreateOrderBought($dataBought);
                 $boughtID = $this->getCustomer()->fetch($configBought);
 
                 // check for created bought
@@ -578,7 +548,8 @@ class pluginShop extends objectPlugin {
         $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Status' => array('string', 'notEmpty')
+            'Status' => array('string', 'notEmpty'),
+            'InternalComment' => array('string', 'notEmpty')
         ));
 
         // var_dump($validatedDataObj);
@@ -592,7 +563,7 @@ class pluginShop extends objectPlugin {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $configUpdateOrder = configurationShopDataSource::jsapiShopOrderUpdate($OrderID, $validatedValues);
+                $configUpdateOrder = configurationShopDataSource::jsapiShopUpdateOrder($OrderID, $validatedValues);
 
                 $this->getCustomer()->fetch($configUpdateOrder, true);
 
@@ -616,7 +587,7 @@ class pluginShop extends objectPlugin {
     public function _disableOrderByID ($OrderID) {
         // check permissions
         if ($this->getCustomer()->ifYouCan('Admin') && $this->getCustomer()->ifYouCan('Edit')) {
-            $config = configurationShopDataSource::jsapiDisableOrder($OrderID);
+            $config = configurationShopDataSource::jsapiShopDisableOrder($OrderID);
             $this->getCustomer()->fetch($config);
             return glWrap("ok", true);
         } else {
@@ -634,13 +605,18 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
-        foreach ($data as $key => $value) {
-            $data[$key] = intval($value);
-            $total += $data[$key];
+        $res = array();
+        $availableStatuses = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrders);
+        foreach ($availableStatuses as $key) {
+            if (isset($data[$key])) {
+                $res[$key] = intval($data[$key]);
+                $total += $data[$key];
+            } else
+                $res[$key] = 0;
         }
         // get total
-        $data['TOTAL'] = $total;
-        return $data;
+        $res['TOTAL'] = $total;
+        return $res;
     }
 
     public function getStats_OrdersIntensityLastMonth ($status, $comparator = null) {
@@ -661,13 +637,18 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
-        foreach ($data as $key => $value) {
-            $data[$key] = intval($value);
-            $total += $data[$key];
+        $res = array();
+        $availableStatuses = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
+        foreach ($availableStatuses as $key) {
+            if (isset($data[$key])) {
+                $res[$key] = intval($data[$key]);
+                $total += $data[$key];
+            } else
+                $res[$key] = 0;
         }
         // get total
-        $data['TOTAL'] = $total;
-        return $data;
+        $res['TOTAL'] = $total;
+        return $res;
     }
 
     public function getStats_ProductsIntensityLastMonth ($status) {
@@ -1030,11 +1011,11 @@ class pluginShop extends objectPlugin {
         $sources['overview_products'] = function ($req) use ($self) {
             return $self->getStats_ProductsOverview();
         };
-        $sources['products_list_todays'] = function ($req) use ($self) {
-            $res = array();
-            $res['items'] = $self->getProducts_ListTodays($req);
-            return $res;
-        };
+        // $sources['products_list_todays'] = function ($req) use ($self) {
+        //     $res = array();
+        //     $res['items'] = $self->getProducts_ListTodays($req);
+        //     return $res;
+        // };
         $sources['products_list_popular'] = function ($req) use ($self) {
             $res = array();
             $res['items'] = $self->getProducts_TopPopular($req);
@@ -1072,35 +1053,7 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_products (&$resp, $req) {
-        // if (!empty($req->get['status'])) {
-        //     $resp = $this->getProducts_ByStatus($req['status']);
-        //     return;
-        // }
-        // if (!empty($req->get['type'])) {
-        //     switch ($req->get['type']) {
-        //         case "latest":
-        //             $resp = $this->getProducts_Latest($req);
-        //             break;
-        //         case "popular":
-        //             $resp['popular'] = $this->getProducts_TopPopular($req);
-        //             break;
-        //         case "non_popular":
-        //             $resp['non_popular'] = $this->getProducts_TopNonPopular($req);
-        //             break;
-        //         case "sale":
-        //             $resp = $this->getProducts_Sale($req);
-        //             break;
-        //         case "uncompleted":
-        //             $resp = $this->getProducts_Uncompleted($req);
-        //             break;
-        //         default:
-        //             $resp['error'] = 'unknown type: ' . $req->get['type'];
-        //             break;
-        //     }
-        //     return;
-        // }
-
-        $resp['error'] = '"type" is missed in the request';
+        $resp = $this->getProducts_List($req);
     }
 
     public function get_shop_catalog (&$resp, $req) {
@@ -1209,11 +1162,6 @@ class pluginShop extends objectPlugin {
 
 
     public function get_shop_orders (&$resp, $req) {
-        // var_dump($req->get);
-        // if (!empty($req->get['status'])) {
-        //     $resp = $this->getOrders_ByStatus($req);
-        //     return;
-        // }
         $resp = $this->getOrders_List($req);
     }
 
@@ -1230,7 +1178,6 @@ class pluginShop extends objectPlugin {
         } else {
             $resp = $this->_getOrderTemp();
         }
-        // $resp['error'] = '"id" or "hash" is missed in the request';
     }
 
     // create new order
@@ -1336,7 +1283,7 @@ class pluginShop extends objectPlugin {
             if (!empty($order['PromoID']))
                 $order['promo'] = $this->getPromoByID($order['PromoID']);
             // $order['items'] = array();
-            $configBoughts = configurationShopDataSource::jsapiShopBoughtsGet($orderID);
+            $configBoughts = configurationShopDataSource::jsapiShopGetOrderBoughts($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {

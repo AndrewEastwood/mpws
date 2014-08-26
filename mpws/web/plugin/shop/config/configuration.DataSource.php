@@ -22,7 +22,7 @@ class configurationShopDataSource extends objectConfiguration {
             )
         ));
     }
-    static function jsapiShopProductItemGet ($productID = null) {
+    static function jsapiShopGetProductItem ($productID = null) {
         $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
@@ -62,8 +62,8 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product base configuration
 
     // Product base list configuration >>>>>
-    static function jsapiShopProductList () {
-        $config = self::jsapiShopProductItemGet();
+    static function jsapiShopGetProductList () {
+        $config = self::jsapiShopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
@@ -88,45 +88,45 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product base list configuration
 
     // Product list of recently added products >>>>>
-    static function jsapiShopProductListLatest () {
-        $config = self::jsapiShopProductList();
-        $config['condition'] = array(
-            "shop_products.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
-            "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
-            "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
-        );
-        if (isset($config['additional']['shop_productFeatures']))
-            unset($config['additional']['shop_productFeatures']);
-        $config['order'] = array(
-            "field" => "shop_products.DateCreated",
-            "ordering" => "DESC"
-        );
-        return $config;
-    }
+    // static function jsapiShopGetProductListLatest () {
+    //     $config = self::jsapiShopGetProductList();
+    //     $config['condition'] = array(
+    //         "shop_products.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
+    //         "shop_categories.Status" => self::jsapiCreateDataSourceCondition('ACTIVE'),
+    //         "shop_origins.Status" => self::jsapiCreateDataSourceCondition('ACTIVE')
+    //     );
+    //     if (isset($config['additional']['shop_productFeatures']))
+    //         unset($config['additional']['shop_productFeatures']);
+    //     $config['order'] = array(
+    //         "field" => "shop_products.DateCreated",
+    //         "ordering" => "DESC"
+    //     );
+    //     return $config;
+    // }
     // <<<< Product list of recently added products
 
     // Product list of products by status >>>>>
-    static function jsapiShopProductListByStatus ($status, $comparator = '=') {
-        $config = self::jsapiShopProductList();
-        $config['condition']['shop_products.Status'] = self::jsapiCreateDataSourceCondition($status, $comparator);
-        return $config;
-    }
+    // static function jsapiShopGetProductListByStatus ($status, $comparator = '=') {
+    //     $config = self::jsapiShopGetProductList();
+    //     $config['condition']['shop_products.Status'] = self::jsapiCreateDataSourceCondition($status, $comparator);
+    //     return $config;
+    // }
     // <<<< Product list of products by status
 
     // Product list of uncompleted products >>>>>
-    static function jsapiShopProductListUncompleted () {
-        $config = self::jsapiShopProductList();
-        $config['condition']['shop_products.Name'] = self::jsapiCreateDataSourceCondition("");
-        $config['condition']['shop_products.Description'] = self::jsapiCreateDataSourceCondition("");
-        $config['condition']['shop_products.Model'] = self::jsapiCreateDataSourceCondition("");
-        $config['condition']['shop_products.Price'] = self::jsapiCreateDataSourceCondition(0.00);
-        return $config;
-    }
+    // static function jsapiShopGetProductListUncompleted () {
+    //     $config = self::jsapiShopGetProductList();
+    //     $config['condition']['shop_products.Name'] = self::jsapiCreateDataSourceCondition("");
+    //     $config['condition']['shop_products.Description'] = self::jsapiCreateDataSourceCondition("");
+    //     $config['condition']['shop_products.Model'] = self::jsapiCreateDataSourceCondition("");
+    //     $config['condition']['shop_products.Price'] = self::jsapiCreateDataSourceCondition(0.00);
+    //     return $config;
+    // }
     // <<<< Product list of uncompleted products
 
     // Product category (catalog)
     static function jsapiGetShopCategoryProductList ($ids) {
-        $config = self::jsapiShopProductList();
+        $config = self::jsapiShopGetProductList();
         $config['condition']["shop_products.CategoryID"] = self::jsapiCreateDataSourceCondition($ids, "IN");
         // var_dump($config);
 
@@ -149,7 +149,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     // Product additional information >>>>>
-    static function jsapiShopProductAttributesGet ($id) {
+    static function jsapiShopGetProductAttributes ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productAttributes",
@@ -181,7 +181,7 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product additional information
 
     // Product price stats >>>>>
-    static function jsapiShopProductPriceStatsGet ($id) {
+    static function jsapiShopGetProductPriceStats ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productPrices",
@@ -209,8 +209,8 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product price stats
 
     // Single prouct info >>>>>
-    static function jsapiShopProductSingleInfoGet ($id) {
-        $config = self::jsapiShopProductItemGet($id);
+    static function jsapiShopGetProductSingleInfo ($id) {
+        $config = self::jsapiShopGetProductItem($id);
         $config['fields'] = array("CategoryID", "Name");
         unset($config['additional']);
         return $config;
@@ -242,7 +242,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     // Product relations >>>>>
-    static function jsapiShopProductRelations ($id) {
+    static function jsapiShopGetProductRelations ($id) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_relations",
@@ -337,7 +337,44 @@ class configurationShopDataSource extends objectConfiguration {
 
 
     // Shop order >>>>>
-    static function jsapiShopOrderCreate ($data) {
+    static function jsapiShopGetOrderItem ($orderID = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_orders",
+            "condition" => array(),
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
+            "options" => array(
+                "expandSingleRecord" => true
+            ),
+            "limit" => 1
+        ));
+
+        if (!is_null($orderID))
+            $config["condition"] = array(
+                "shop_orders.ID" => self::jsapiCreateDataSourceCondition($orderID)
+            );
+
+        return $config;
+    }
+    // static function jsapiShopOrdersGet () {
+    //     $config = self::jsapiShopGetOrderItem();
+    //     $config['condition'] = array();
+    //     $config["order"] = array(
+    //         "field" => "shop_orders.DateCreated",
+    //         "ordering" => "DESC"
+    //     );
+    //     $config['fields'] = array("ID");
+    //     $config['options'] = null;
+    //     $config['limit'] = 0;
+    //     return $config;
+    // }
+    static function jsapiGetShopOrderList () {
+        $config = self::jsapiShopGetOrderItem();
+        $config['fields'] = array("ID");
+        $config['limit'] = 0;
+        return $config;
+    }
+    static function jsapiShopCreateOrder ($data) {
         $data["DateUpdated"] = self::getDate();
         $data["DateCreated"] = self::getDate();
         $data["Hash"] = md5(time() . md5(time()));
@@ -348,7 +385,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiShopOrderBoughtCreate ($data) {
+    static function jsapiShopCreateOrderBought ($data) {
         $data["DateCreated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_boughts",
@@ -357,7 +394,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiShopBoughtsGet ($orderID) {
+    static function jsapiShopGetOrderBoughts ($orderID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_boughts",
@@ -369,33 +406,8 @@ class configurationShopDataSource extends objectConfiguration {
             "limit" => 0
         ));
     }
-    static function jsapiGetShopOrders () {
-        return self::jsapiGetDataSourceConfig(array(
-            "action" => "select",
-            "source" => "shop_orders",
-            "condition" => array(),
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
-            "options" => null
-        ));
-    }
-    static function jsapiGetShopOrderIDs () {
-        $config = self::jsapiGetShopOrders();
-        $config['fields'] = array("ID");
-        return $config;
-    }
-    static function jsapiGetShopOrderByID ($orderID) {
-        $config = self::jsapiGetShopOrders();
-        $config['condition'] = array(
-            "ID" => self::jsapiCreateDataSourceCondition($orderID)
-        );
-        $config['options'] = array(
-            "expandSingleRecord" => true
-        );
-        $config['limit'] = 1;
-        return $config;
-    }
     static function jsapiGetShopOrderByHash ($orderHash) {
-        $config = self::jsapiGetShopOrders();
+        $config = self::jsapiShopGetOrderItem();
         $config['condition'] = array(
             "Hash" => self::jsapiCreateDataSourceCondition($orderHash)
         );
@@ -405,31 +417,7 @@ class configurationShopDataSource extends objectConfiguration {
         $config['limit'] = 1;
         return $config;
     }
-    static function jsapiShopOrdersGet () {
-        $config = self::jsapiGetShopOrders();
-        $config['condition'] = array();
-        $config["order"] = array(
-            "field" => "shop_orders.DateCreated",
-            "ordering" => "DESC"
-        );
-        $config['fields'] = array("ID");
-        $config['options'] = null;
-        $config['limit'] = 0;
-        return $config;
-    }
-    // static function jsapiGetShopOrdersForProfile ($profileID) {
-    //     $config = self::jsapiGetShopOrders();
-    //     $config['condition'] = array(
-    //         "AccountID" => self::jsapiCreateDataSourceCondition($profileID)
-    //     );
-    //     $config["order"] = array(
-    //         "field" => "shop_orders.ID",
-    //         "ordering" => "DESC"
-    //     );
-    //     return $config;
-    // }
-
-    static function jsapiShopOrderUpdate ($orderID, $data) {
+    static function jsapiShopUpdateOrder ($orderID, $data) {
         $data["DateUpdated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "action" => "update",
@@ -441,8 +429,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-
-    static function jsapiDisableOrder ($OrderID) {
+    static function jsapiShopDisableOrder ($OrderID) {
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_orders",
             "action" => "update",
@@ -494,7 +481,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopStat_ProductsOverview () {
-        $config = self::jsapiShopProductItemGet();
+        $config = self::jsapiShopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -510,7 +497,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopStat_OrdersOverview () {
-        $config = self::jsapiGetShopOrders();
+        $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -528,7 +515,7 @@ class configurationShopDataSource extends objectConfiguration {
     static function jsapiShopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
         if (!is_string($comparator))
             $comparator = self::$DEFAULT_COMPARATOR;
-        $config = self::jsapiGetShopOrders();
+        $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => self::jsapiCreateDataSourceCondition($status, $comparator),
@@ -547,7 +534,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopStat_ProductsIntensityLastMonth ($status) {
-        $config = self::jsapiShopProductItemGet();
+        $config = self::jsapiShopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => self::jsapiCreateDataSourceCondition($status),
@@ -650,7 +637,7 @@ class configurationShopDataSource extends objectConfiguration {
 
 
     // >>>> Origins
-    static function jsapiShopOriginGet ($originID) {
+    static function jsapiShop_GetOrigin ($originID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_origins",
@@ -664,7 +651,7 @@ class configurationShopDataSource extends objectConfiguration {
             )
         ));
     }
-    static function jsapiShopOriginListGet () {
+    static function jsapiShop_GetOriginList () {
         $config = self::jsapiShopOriginGet(null);
         $config['condition'] = array(
             "filter" => "",
@@ -674,7 +661,7 @@ class configurationShopDataSource extends objectConfiguration {
         $config['limit'] = 0;
         return $config;
     }
-    static function jsapiShopOriginCreate ($data) {
+    static function jsapiShop_CreateOrigin ($data) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "insert",
             "source" => "shop_origins",
@@ -682,7 +669,7 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
-    static function jsapiShopOriginUpdate ($originID, $data) {
+    static function jsapiShop_UpdateOrigin ($originID, $data) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "update",
             "source" => "shop_origins",

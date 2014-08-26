@@ -15,8 +15,6 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         template: tpl,
         lang: lang,
         className: 'shop-toolbox-orders',
-        // statuses: ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"],
-        // listsByStatus: {},
         initialize: function (options) {
             // debugger;
             // set options
@@ -56,19 +54,11 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             // add expired and todays orders
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-
             var currentStatus = this.collection.getCustomQueryFiled("Status");
             // debugger;
             self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
-            //self.$('.tab-link.orders-' + currentStatus.toLowerCase() + ' .badge').html(this.viewList.collection.state.totalRecords);
-            
             // show sub-view
             self.$('.tab-pane').html(this.viewList.$el);
-
-            // _(this.listsByStatus).each(function(listView, status){
-            //     listView.collection.fetch({reset: true});
-            // });
-            // debugger;
             this.modelStats.clear({silent: true}).fetch();
             return this;
         }

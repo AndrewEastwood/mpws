@@ -432,6 +432,7 @@ CREATE TABLE `shop_orders` (
   `Shipping` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   `Warehouse` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
+  `InternalComment` varchar(300) COLLATE utf8_bin DEFAULT NULL,
   `Status` enum('ACTIVE','LOGISTIC_DELIVERING','CUSTOMER_CANCELED','LOGISTIC_DELIVERED','SHOP_CLOSED','SHOP_REFUNDED','NEW') COLLATE utf8_bin NOT NULL DEFAULT 'NEW',
   `Hash` varchar(100) COLLATE utf8_bin NOT NULL,
   `PromoID` varchar(50) COLLATE utf8_bin DEFAULT NULL,
@@ -831,4 +832,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-25  3:23:07
+-- Dump completed on 2014-08-26 23:42:42

@@ -28,6 +28,14 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
             sortKey: "sort"
         },
 
+        setCustomQueryField: function (field, value) {
+            this.queryParams['_f' + field] = value;
+        },
+
+        getCustomQueryFiled: function (field) {
+            return this.queryParams["_f" + field];
+        },
+
         parseState: function (resp, queryParams, state, options) {
             var state = {
                 totalRecords: parseInt(resp && resp.count || 0, 10)
@@ -36,19 +44,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
         },
 
         parseRecords: function (resp, options) {
-            // debugger;
-            var _orders = resp.items;
-            // _(_orders).map(function (orderEntry) {
-            //     // debugger;
-            //     // orderEntry.Status = [orderEntry.Status];
-            //     // orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
-            //     // orderEntry.AccountPhone = orderEntry.account.Phone;
-            //     // orderEntry.InfoTotal = orderEntry.info.total;
-            //     // orderEntry.HasPromo = !!orderEntry.promo;
-            //     // orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;
-            //     return orderEntry;
-            // });
-            return _orders;
+            return resp.items;
         }
 
     });

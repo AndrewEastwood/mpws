@@ -1,76 +1,69 @@
-define("plugin/shop/toolbox/js/view/productManager", [
+define('plugin/shop/toolbox/js/view/managerProducts', [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
-    'default/js/lib/cache',
-    /* items */
-    'plugin/shop/toolbox/js/view/popupProduct',
-    'plugin/shop/toolbox/js/view/popupCategory',
-    'plugin/shop/toolbox/js/view/popupOrigin',
-    /* lists */
-    'plugin/shop/toolbox/js/view/listProducts',
-    'plugin/shop/toolbox/js/view/categoriesTree',
-    'plugin/shop/toolbox/js/view/listOrigins',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
+    'plugin/shop/toolbox/js/collection/basicOrders',
+    'plugin/shop/toolbox/js/view/listOrders',
+    'plugin/shop/toolbox/js/model/statsOrdersOverview',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/productManager',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerOrders',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-], function (Sandbox, MView, Cache, PopupProduct, PopupCategory, PopupOrigin, ListProducts, CategoriesTree, ListOrigins, tpl, lang) {
+    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
+], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, ModelOrdersOverview, tpl, lang) {
 
-    var listProducts = new ListProducts();
-    var categoriesTree = new CategoriesTree();
-    var listOrigins = new ListOrigins();
-
-    Sandbox.eventSubscribe('plugin:shop:product:add', function(data){
-        var popupProduct = new PopupProduct();
-        popupProduct.fetchAndRender();
-    });
-
-    Sandbox.eventSubscribe('plugin:shop:product:edit', function(data){
-        var popupProduct = new PopupProduct();
-        popupProduct.fetchAndRender({
-            productID: data.oid
-        });
-    });
-
-    Sandbox.eventSubscribe('plugin:shop:origin:add', function(data){
-        var popupOrigin = new PopupOrigin();
-        popupOrigin.renderCreate();
-
-    });
-
-    Sandbox.eventSubscribe('plugin:shop:origin:edit', function(data){
-        var popupOrigin = new PopupOrigin();
-        popupOrigin.renderEdit(data.oid);
-    });
-
-    var ProductManager = MView.extend({
-        // tagName: 'div',
-        className: 'shop-product-manager',
+    var ManagerOrders = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        initialize: function () {
-            MView.prototype.initialize.call(this);
-            var self = this;
-            this.on('mview:renderComplete', function () {
-                // debugger;
-                Cache.withObject('ListProducts', function (cachedView) {
-                    listProducts.render();
-                    self.$('.shop-products').html(listProducts.$el);
-                    return listProducts;
-                });
-                Cache.withObject('CategoriesTree', function (cachedView) {
-                    categoriesTree.fetchAndRender();
-                    self.$('.shop-categories').html(categoriesTree.$el);
-                    return categoriesTree;
-                });
-                Cache.withObject('ListOrigins', function (cachedView) {
-                    listOrigins.render();
-                    self.$('.shop-origins').html(listOrigins.$el);
-                    return listOrigins;
-                });
+        className: 'shop-toolbox-orders',
+        initialize: function (options) {
+            // debugger;
+            // set options
+            this.setOptions(options);
+            // create collection and viewList
+            this.collection = new CollectionOrders();
+            this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            this.listenTo(this.collection, 'reset', this.render);
+            this.viewList = new ViewListOrders({collection: this.collection});
+            // create stats model
+            this.modelStats = new ModelOrdersOverview();
+            this.modelStats.on('change', this.refreshBadges, this);
+            // render viewList (it's subview) only once
+            // because it's $el is being changed every time
+            // when collection raises reset event
+            this.viewList.render();
+        },
+        setOptions: function (options) {
+            // merge with defaults
+            this.options = _.defaults({}, options, {
+                status: "NEW"
             });
+            // and adjust thme
+            if (!this.options.Status)
+                this.options.Status = "NEW";
+        },
+        refreshBadges: function () {
+            // debugger;
+            var stats = this.modelStats.toJSON();
+            this.$('.tab-link .badge').html("0");
+            _(stats).each(function(ordersCount, orderStatus){
+                this.$('.tab-link.orders-' + orderStatus.toLowerCase() + ' .badge').html(parseInt(ordersCount, 10) || 0);
+            });
+        },
+        render: function () {
+            // TODO:
+            // add expired and todays orders
+            var self = this;
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var currentStatus = this.collection.getCustomQueryFiled("Status");
+            // debugger;
+            self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
+            // show sub-view
+            self.$('.tab-pane').html(this.viewList.$el);
+            this.modelStats.clear({silent: true}).fetch();
+            return this;
         }
     });
 
-    return ProductManager;
+    return ManagerOrders;
+
 });

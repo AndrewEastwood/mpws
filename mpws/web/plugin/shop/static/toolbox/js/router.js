@@ -30,8 +30,6 @@ define("plugin/shop/toolbox/js/router", [
         "shop/order/print/:id": "orderPrint",
         "shop/order/email_tracking/:id": "orderEmailTracking",
         "shop/order/email_reciept/:id": "orderEmailReceipt",
-        "shop/sales": "sales",
-        "shop/prices": "prices",
         "shop/reports": "reports"
     };
 
@@ -67,12 +65,13 @@ define("plugin/shop/toolbox/js/router", [
         productsList: function () {
             this.productsListPage();
         },
-        productsListPage: function () {
+        productsListPage: function (status) {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
             require(['plugin/shop/toolbox/js/view/managerProducts'], function (ManagerProducts) {
                 // create new view
-                var managerProducts = new ManagerProducts();
-                managerProducts.render();
+                var options = status ? {status: status} : {};
+                var managerProducts = new ManagerProducts(options);
+                managerProducts.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
@@ -80,10 +79,10 @@ define("plugin/shop/toolbox/js/router", [
                 });
 
                 // set page title
-                Sandbox.eventNotify('global:content:render', {
-                    name: 'CustomerPageName',
-                    el: "Товари"
-                });
+                // Sandbox.eventNotify('global:content:render', {
+                //     name: 'CustomerPageName',
+                //     el: "Товари"
+                // });
             });
         },
         orderPrint: function (orderID) {},
@@ -124,14 +123,6 @@ define("plugin/shop/toolbox/js/router", [
                     el: managerOrders.$el
                 });
             });
-        },
-
-        sales: function () {
-            
-        },
-
-        prices: function () {
-            
         },
 
         reports: function () {
