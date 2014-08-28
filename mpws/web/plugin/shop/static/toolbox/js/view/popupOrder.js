@@ -101,13 +101,31 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                 source: $.makeArray(source),
             });
             $controlOrderStatus.on('save', function(event, editData) {
-                self.model.saveOrderStatus(editData.newValue).success(function(response){
-                    if (!response || !response.success) {
-                        BSAlert.danger('Помилка під час оновлення замовлення');
+                self.model.save({
+                    Status: editData.newValue
+                }, {
+                    patch: true,
+                    success: function (model, response) {
+                        if (!response || !response.success) {
+                            BSAlert.danger('Помилка під час оновлення замовлення');
+                        }
                     }
-                    // self.$title.html(_getTitleByStatus(response.Status));
                 });
             });
+            var $controlOrderInternalComment = this.$('#shop-order-internalComment-ID');
+            var lazyLayout = _.debounce(function () {
+                self.model.save({
+                    InternalComment: $controlOrderInternalComment.val()
+                }, {
+                    patch: true,
+                    success: function (model, response) {
+                        if (!response || !response.success) {
+                            BSAlert.danger('Помилка під час оновлення замовлення');
+                        }
+                    }
+                });
+            }, 300);
+            $controlOrderInternalComment.on('keyup', lazyLayout);
             this.$('.helper').tooltip();
 
             if (!this.$dialog.isOpened())

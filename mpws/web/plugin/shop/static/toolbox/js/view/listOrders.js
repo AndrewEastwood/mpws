@@ -101,6 +101,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                         // debugger;
                         // console.log('status is changed', status);
                         // if (status && _.isString(status))
+                        debugger;
                         model.save(attr, {
                             success: function() {
                                 model.collection.fetch({reset: true});

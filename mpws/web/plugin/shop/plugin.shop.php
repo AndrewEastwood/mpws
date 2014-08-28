@@ -351,6 +351,10 @@ class pluginShop extends objectPlugin {
             }
         );
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
+
+        if (isset($req->get['withstats']))
+            $dataList['stats'] = $this->getStats_OrdersOverview();
+
         return $dataList;
     }
 
@@ -548,39 +552,39 @@ class pluginShop extends objectPlugin {
         $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Status' => array('string', 'notEmpty'),
-            'InternalComment' => array('string', 'notEmpty')
+            'Status' => array('skipIfUnset', 'string', 'notEmpty'),
+            'InternalComment' => array('skipIfUnset', 'string')
         ));
 
         // var_dump($validatedDataObj);
 
         // return;
+        if ($validatedDataObj['count'] > 0) {
+            if ($validatedDataObj["totalErrors"] == 0)
+                try {
 
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
+                    $this->getCustomerDataBase()->beginTransaction();
 
-                $this->getCustomerDataBase()->beginTransaction();
+                    $validatedValues = $validatedDataObj['values'];
 
-                $validatedValues = $validatedDataObj['values'];
+                    $configUpdateOrder = configurationShopDataSource::jsapiShopUpdateOrder($OrderID, $validatedValues);
 
-                $configUpdateOrder = configurationShopDataSource::jsapiShopUpdateOrder($OrderID, $validatedValues);
+                    $this->getCustomer()->fetch($configUpdateOrder, true);
 
-                $this->getCustomer()->fetch($configUpdateOrder, true);
+                    $this->getCustomerDataBase()->commit();
 
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = 'OrderUpdateError';
-            }
-        else
-            $errors = $validatedDataObj["errors"];
+                    $success = true;
+                } catch (Exception $e) {
+                    $this->getCustomerDataBase()->rollBack();
+                    $errors[] = 'OrderUpdateError';
+                }
+            else
+                $errors = $validatedDataObj["errors"];
+        }
 
         $result = $this->getOrderByID($OrderID);
         $result['errors'] = $errors;
         $result['success'] = $success;
-
         return $result;
     }
 

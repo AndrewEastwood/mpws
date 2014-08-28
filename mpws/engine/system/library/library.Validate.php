@@ -161,7 +161,8 @@ class libraryValidate {
         return array(
             "values" => $values,
             "errors" => $errors,
-            "totalErrors" => $totalErrors
+            "totalErrors" => $totalErrors,
+            "count" => count($values)
         );
     }
 
