@@ -1,8 +1,8 @@
 /*
-  backbone-pageable 1.4.5
-  http://github.com/backbone-paginator/backbone-pageable
+  backbone.paginator 2.0.0
+  http://github.com/backbone-paginator/backbone.paginator
 
-  Copyright (c) 2013 Jimmy Yuen Ho Wong
+  Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
   Licensed under the MIT @license.
 */
 
@@ -14,7 +14,7 @@
   }
   // AMD
   else if (typeof define == "function" && define.amd) {
-    define("default/js/lib/backbone-pageable", ["default/js/lib/underscore", "default/js/lib/backbone"], factory);
+    define("default/js/lib/backbone-paginator", ["default/js/lib/underscore", "default/js/lib/backbone"], factory);
   }
   // Browser
   else if (typeof _ !== "undefined" && typeof Backbone !== "undefined") {
@@ -63,7 +63,6 @@
   var _isObject = _.isObject;
   var _keys = _.keys;
   var _isUndefined = _.isUndefined;
-  var _result = _.result;
   var ceil = Math.ceil;
   var floor = Math.floor;
   var max = Math.max;
@@ -275,13 +274,13 @@
        @param {-1|1} [options.state.order] The order to use for sorting. Specify
        -1 for ascending order and 1 for descending order.
 
-       @param {Object} [options.queryParams]
+       @param {Object} [options.queryParam]
     */
     constructor: function (models, options) {
 
       BBColProto.constructor.apply(this, arguments);
 
-      options = this.options = _clone(options) || {};
+      options = options || {};
 
       var mode = this.mode = options.mode || this.mode || PageableProto.mode;
 
@@ -303,6 +302,7 @@
         state.currentPage;
 
       if (!_isArray(models)) models = models ? [models] : [];
+      models = models.slice();
 
       if (mode != "server" && state.totalRecords == null && !_isEmpty(models)) {
         state.totalRecords = models.length;
@@ -331,24 +331,13 @@
         // make sure the models in the current page and full collection have the
         // same references
         if (models && !_isEmpty(models)) {
-          this.reset([].slice.call(models), _extend({silent: true}, options));
+          this.reset(models, _extend({silent: true}, options));
           this.getPage(state.currentPage);
           models.splice.apply(models, [0, models.length].concat(this.models));
         }
       }
 
       this._initState = _clone(this.state);
-    },
-
-    /**
-       Makes a clone of this Backbone.PageableCollection instance by using the
-       options originally supplied to the constructor.
-
-       @return {Backbone.PageableCollection}
-     */
-    clone: function () {
-      return new this.constructor((this.fullCollection || this).toJSON(),
-                                  _clone(this.options));
     },
 
     /**
@@ -480,6 +469,10 @@
                   pageCol.push(nextModel, {onRemove: true});
                 });
               }
+              else if (!pageCol.length && state.totalRecords) {
+                pageCol.reset(fullCol.models.slice(pageStart - pageSize, pageEnd - pageSize),
+                              _extend({}, options, {parse: false}));
+              }
               fullCol.remove(model);
             }
             else if (removedIndex >= pageStart && removedIndex < pageEnd) {
@@ -489,6 +482,10 @@
                 });
               }
               pageCol.remove(model);
+              if (!pageCol.length && state.totalRecords) {
+                pageCol.reset(fullCol.models.slice(pageStart - pageSize, pageEnd - pageSize),
+                              _extend({}, options, {parse: false}));
+              }
             }
           }
           else delete options.onAdd;
@@ -649,12 +646,7 @@
       var state = this.state;
       var totalPages = ceil(state.totalRecords / pageSize);
       var currentPage = totalPages ?
-        max(state.firstPage,
-            floor(totalPages *
-                  (state.firstPage ?
-                   state.currentPage :
-                   state.currentPage + 1) /
-                  state.totalPages)) :
+          max(state.firstPage, floor(totalPages * state.currentPage / state.totalPages)) :
         state.firstPage;
 
       state = this.state = this._checkState(_extend({}, state, {
@@ -756,7 +748,7 @@
        @return {boolean} `true` if this collection can page backward, `false`
        otherwise.
     */
-    hasPrevious: function () {
+    hasPreviousPage: function () {
       var state = this.state;
       var currentPage = state.currentPage;
       if (this.mode != "infinite") return currentPage > state.firstPage;
@@ -767,7 +759,7 @@
        @return {boolean} `true` if this collection can page forward, `false`
        otherwise.
     */
-    hasNext: function () {
+    hasNextPage: function () {
       var state = this.state;
       var currentPage = this.state.currentPage;
       if (this.mode != "infinite") return currentPage < state.lastPage;
@@ -1136,7 +1128,8 @@
       var data = options.data || {};
 
       // dedup query params
-      var url = _result(options, "url") || _result(this, "url") || '';
+      var url = options.url || this.url || "";
+      if (_isFunction(url)) url = url.call(this);
       var qsi = url.indexOf('?');
       if (qsi != -1) {
         _extend(data, queryStringToParams(url.slice(qsi + 1)));
@@ -1163,7 +1156,10 @@
 
       // fix up sorting parameters
       if (state.sortKey && state.order) {
-        data[queryParams.order] = this.queryParams.directions[state.order + ""];
+        var o = _isFunction(queryParams.order) ?
+          queryParams.order.call(thisCopy) :
+          queryParams.order;
+        data[o] = this.queryParams.directions[state.order + ""];
       }
       else if (!state.sortKey) delete data[queryParams.order];
 

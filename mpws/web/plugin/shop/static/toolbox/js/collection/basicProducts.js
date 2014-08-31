@@ -2,7 +2,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/product',
-    'default/js/lib/backbone-pageable'
+    'default/js/lib/backbone-paginator'
 ], function (Sandbox, _, ModelProduct, PageableCollection, lang) {
 
     var ListOrders = PageableCollection.extend({
@@ -32,7 +32,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
             this.queryParams['_f' + field] = value;
         },
 
-        getCustomQueryFiled: function (field) {
+        getCustomQueryField: function (field) {
             return this.queryParams["_f" + field];
         },
 

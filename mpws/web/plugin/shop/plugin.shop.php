@@ -345,14 +345,15 @@ class pluginShop extends objectPlugin {
         $callbacks = array(
             "parse" => function ($items) use($self) {
                 $_items = array();
-                foreach ($items as $key => $orderRawItem)
+                foreach ($items as $orderRawItem) {
                     $_items[] = $self->getOrderByID($orderRawItem['ID']);
+                }
                 return $_items;
             }
         );
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
-        if (isset($req->get['withstats']))
+        if (isset($req->get['_pStats']))
             $dataList['stats'] = $this->getStats_OrdersOverview();
 
         return $dataList;

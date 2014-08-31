@@ -16,20 +16,21 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         lang: lang,
         className: 'shop-toolbox-orders',
         initialize: function (options) {
+            var self = this;
             // debugger;
             // set options
             this.setOptions(options);
             // create collection and viewList
             this.collection = new CollectionOrders();
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            this.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'sync', function (collection, resp, options) {
+                if (resp && resp.stats)
+                    self.refreshBadges(resp.stats);
+            });
             this.viewList = new ViewListOrders({collection: this.collection});
-            // create stats model
-            this.modelStats = new ModelOrdersOverview();
-            this.modelStats.on('change', this.refreshBadges, this);
-            // render viewList (it's subview) only once
-            // because it's $el is being changed every time
-            // when collection raises reset event
+            this.viewList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
             this.viewList.render();
         },
         setOptions: function (options) {
@@ -37,13 +38,11 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             this.options = _.defaults({}, options, {
                 status: "NEW"
             });
-            // and adjust thme
+            // and adjust them
             if (!this.options.Status)
                 this.options.Status = "NEW";
         },
-        refreshBadges: function () {
-            // debugger;
-            var stats = this.modelStats.toJSON();
+        refreshBadges: function (stats) {
             this.$('.tab-link .badge').html("0");
             _(stats).each(function(ordersCount, orderStatus){
                 this.$('.tab-link.orders-' + orderStatus.toLowerCase() + ' .badge').html(parseInt(ordersCount, 10) || 0);
@@ -54,12 +53,10 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             // add expired and todays orders
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            var currentStatus = this.collection.getCustomQueryFiled("Status");
-            // debugger;
+            var currentStatus = this.collection.getCustomQueryField("Status");
             self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
             // show sub-view
-            self.$('.tab-pane').html(this.viewList.$el);
-            this.modelStats.clear({silent: true}).fetch();
+            self.$('.tab-pane').html(self.viewList.$el);
             return this;
         }
     });

@@ -10,12 +10,13 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-    "default/js/lib/backgrid-htmlcell"
+    "default/js/lib/backgrid-htmlcell",
+    "default/js/lib/backgrid-select2-cell"
 ], function (Sandbox, Backbone, Utils, Backgrid, tplBtnMenuMainItem, lang) {
 
     function getColumns () {
 
-        // TODO: do smth to fetch states from server
+        // we show following statuses only
         var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
         var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
 
@@ -92,24 +93,16 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 // It's possible to render an option group or use a
                 // function to provide option values too.
                 optionValues: orderStatusValues,
-                initialize: function () {
-                    // debugger;
-                    // this.prototype.initialize.call(this);
+                initialize: function (options) {
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                    // debugger;
-                    this.listenTo(this.model, "change", function(model, attr) {
-                        // debugger;
-                        // console.log('status is changed', status);
-                        // if (status && _.isString(status))
-                        debugger;
-                        model.save(attr, {
+                    this.listenTo(this.model, "change:Status", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
                             success: function() {
+                                model.collection.queryParams.page = 1;
                                 model.collection.fetch({reset: true});
                             }
-                                // model.collection.reset();
-                                // Sandbox.eventNotify('plugin:shop:orderList:fetch', {reset: true});
                         });
-                        // ShopUtils.updateOrderStatus(model.get('ID'), status);
                     });
                 }
             })
@@ -186,7 +179,6 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         },
         render: function () {
             // console.log('listOrders: render');
-            // debugger;
             this.$el.off().empty();
             if (this.collection.length) {
                 this.$el.append(this.grid.render().$el);

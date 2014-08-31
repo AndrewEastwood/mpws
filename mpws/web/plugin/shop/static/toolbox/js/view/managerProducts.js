@@ -54,7 +54,7 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             // add expired and todays orders
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            var currentStatus = this.collection.getCustomQueryFiled("Status");
+            var currentStatus = this.collection.getCustomQueryField("Status");
             // debugger;
             self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
             // show sub-view

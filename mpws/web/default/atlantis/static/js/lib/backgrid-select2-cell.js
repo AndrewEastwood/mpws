@@ -2,7 +2,8 @@ define("default/js/lib/backgrid-select2-cell", [
     "cmn_jquery",
     "default/js/lib/underscore",
     "default/js/lib/backbone",
-    "default/js/lib/backgrid"
+    "default/js/lib/backgrid",
+    "default/js/lib/select2/select2"
 ], function ($, _, Backbone, Backgrid) {
 
 /*

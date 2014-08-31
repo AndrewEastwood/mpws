@@ -372,6 +372,7 @@ class configurationShopDataSource extends objectConfiguration {
         $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("ID");
         $config['limit'] = 0;
+        $config['options']['expandSingleRecord'] = false;
         return $config;
     }
     static function jsapiShopCreateOrder ($data) {

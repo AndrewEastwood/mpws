@@ -1,7 +1,7 @@
 define('plugin/shop/toolbox/js/collection/basicOrigins', [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
-    'default/js/lib/backbone-pageable'
+    'default/js/lib/backbone-paginator'
 ], function (Sandbox, _, PageableCollection) {
 
     var ListProducts = PageableCollection.extend({

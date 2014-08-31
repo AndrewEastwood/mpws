@@ -42,6 +42,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders_Grid_Column_HasPromo: "Промо",
         pluginMenu_Orders_Grid_Column_Discount: "Знижка",
         pluginMenu_Orders_Grid_link_ShowDeleted: "Показати виконані",
+        pluginMenu_Orders_Grid_noData_ByStatus: "Немає замовлень по цьому статусу",
         // Order popup
         popup_order_title: "Замовлення #",
         popup_order_section_boughts: "Список придбаних товарів:",
