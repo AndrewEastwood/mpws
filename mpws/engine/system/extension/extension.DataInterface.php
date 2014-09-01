@@ -76,12 +76,27 @@ class extensionDataInterface extends objectExtension {
             $items = $parseFn($items) ?: array();
         }
 
-        return array(
-            "items" => $items ?: array(),
+        $rez = array();
+
+        $listInfo = array(
             "page" => $page,
             "per_page" => $limit,
-            "count" => $count
+            "total_pages" => round($count / $limit + 0.49),
+            "total_entries" => $count
         );
+
+        if (isset($dsConfig['order']['field'])) {
+            $listInfo["order_by"] = $dsConfig['order']['field'];
+        }
+
+        if (isset($dsConfig['order']['ordering'])) {
+            $listInfo["order"] = $dsConfig['order']['ordering'];
+        }
+
+        $rez["info"] = $listInfo;
+        $rez["items"] = $items ?: array();
+
+        return $rez;
     }
 
 }

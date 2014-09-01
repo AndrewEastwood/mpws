@@ -45,11 +45,10 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
         },
 
         parseState: function (resp, queryParams, state, options) {
-            // debugger;
             var state = {
-                totalRecords: parseInt(resp && resp.count || 0, 10)
+                totalRecords: parseInt(resp && resp.info.total_entries || 0, 10),
+                currentPage: parseInt(resp && resp.info.page || 1, 10)
             };
-
             return state;
         },
 

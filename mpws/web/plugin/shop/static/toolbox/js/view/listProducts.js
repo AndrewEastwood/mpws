@@ -68,6 +68,17 @@ define("plugin/shop/toolbox/js/view/listProducts", [
                 // It's possible to render an option group or use a
                 // function to provide option values too.
                 optionValues: orderStatusValues,
+                initialize: function (options) {
+                    Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+                    this.listenTo(this.model, "change:Status", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                        });
+                    });
+                }
             })
         };
 

@@ -44,8 +44,8 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         },
         refreshBadges: function (stats) {
             this.$('.tab-link .badge').html("0");
-            _(stats).each(function(ordersCount, orderStatus){
-                this.$('.tab-link.orders-' + orderStatus.toLowerCase() + ' .badge').html(parseInt(ordersCount, 10) || 0);
+            _(stats).each(function(count, status){
+                this.$('.tab-link.orders-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
         },
         render: function () {

@@ -143,7 +143,7 @@ class pluginShop extends objectPlugin {
     // }
 
     public function getProducts_List ($req) {
-        $config = configurationShopDataSource::jsapiShopProductList();
+        $config = configurationShopDataSource::jsapiShopGetProductList();
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -154,6 +154,10 @@ class pluginShop extends objectPlugin {
             }
         );
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
+
+        if (isset($req->get['_pStats']))
+            $dataList['stats'] = $this->getStats_ProductsOverview();
+
         return $dataList;
     }
 

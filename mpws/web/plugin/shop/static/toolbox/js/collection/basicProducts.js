@@ -36,9 +36,18 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
             return this.queryParams["_f" + field];
         },
 
+        setCustomQueryParam: function (param, value) {
+            this.queryParams['_p' + param] = value;
+        },
+
+        getCustomQueryParam: function (param) {
+            return this.queryParams["_p" + param];
+        },
+
         parseState: function (resp, queryParams, state, options) {
             var state = {
-                totalRecords: parseInt(resp && resp.count || 0, 10)
+                totalRecords: parseInt(resp && resp.info.total_entries || 0, 10),
+                currentPage: parseInt(resp && resp.info.page || 1, 10)
             };
             return state;
         },

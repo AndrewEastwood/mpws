@@ -371,7 +371,7 @@ class configurationShopDataSource extends objectConfiguration {
     static function jsapiGetShopOrderList () {
         $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("ID");
-        $config['limit'] = 0;
+        $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }

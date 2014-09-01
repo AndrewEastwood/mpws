@@ -10,12 +10,10 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
-    "default/js/lib/backgrid-htmlcell",
-    "default/js/lib/backgrid-select2-cell"
+    "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, Backbone, Utils, Backgrid, tplBtnMenuMainItem, lang) {
 
     function getColumns () {
-
         // we show following statuses only
         var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
         var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
@@ -99,7 +97,6 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                         model.save(model.changed, {
                             patch: true,
                             success: function() {
-                                model.collection.queryParams.page = 1;
                                 model.collection.fetch({reset: true});
                             }
                         });

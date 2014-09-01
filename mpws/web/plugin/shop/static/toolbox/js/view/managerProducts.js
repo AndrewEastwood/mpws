@@ -2,64 +2,61 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/basicOrders',
-    'plugin/shop/toolbox/js/view/listOrders',
-    'plugin/shop/toolbox/js/model/statsOrdersOverview',
+    'plugin/shop/toolbox/js/collection/basicProducts',
+    'plugin/shop/toolbox/js/view/listProducts',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerOrders',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerProducts',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, ModelOrdersOverview, tpl, lang) {
+], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'shop-toolbox-orders',
+        className: 'shop-toolbox-products',
         initialize: function (options) {
+            var self = this;
             // debugger;
             // set options
             this.setOptions(options);
             // create collection and viewList
             this.collection = new CollectionOrders();
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            this.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'sync', function (collection, resp, options) {
+                if (resp && resp.stats)
+                    self.refreshBadges(resp.stats);
+            });
             this.viewList = new ViewListOrders({collection: this.collection});
-            // create stats model
-            this.modelStats = new ModelOrdersOverview();
-            this.modelStats.on('change', this.refreshBadges, this);
-            // render viewList (it's subview) only once
-            // because it's $el is being changed every time
-            // when collection raises reset event
+            this.viewList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.viewList.render();
         },
         setOptions: function (options) {
             // merge with defaults
             this.options = _.defaults({}, options, {
-                status: "NEW"
+                status: "ACTIVE"
             });
             // and adjust thme
             if (!this.options.Status)
-                this.options.Status = "NEW";
+                this.options.Status = "ACTIVE";
         },
-        refreshBadges: function () {
-            // debugger;
-            var stats = this.modelStats.toJSON();
+        refreshBadges: function (stats) {
             this.$('.tab-link .badge').html("0");
-            _(stats).each(function(ordersCount, orderStatus){
-                this.$('.tab-link.orders-' + orderStatus.toLowerCase() + ' .badge').html(parseInt(ordersCount, 10) || 0);
+            _(stats).each(function(count, status){
+                this.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
         },
         render: function () {
             // TODO:
-            // add expired and todays orders
+            // add expired and todays products
             var self = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             var currentStatus = this.collection.getCustomQueryField("Status");
             // debugger;
-            self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
+            self.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
             // show sub-view
             self.$('.tab-pane').html(this.viewList.$el);
-            this.modelStats.clear({silent: true}).fetch();
             return this;
         }
     });

@@ -95,6 +95,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Products_Grid_Column_DateCreated: "Створений",
         pluginMenu_Products_Grid_Column_Actions: "",
         pluginMenu_Products_Grid_Column_SellMode: "Продаж",
+        pluginMenu_Products_Grid_noData_ByStatus: "Немає товарів в цьому списку",
         product_type_Active: "Активні",
         product_type_Inactive: "Неактивні",
         product_type_Uncompleted: "Незаповнені",
