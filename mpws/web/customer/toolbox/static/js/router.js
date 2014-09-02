@@ -29,6 +29,9 @@ define("customer/js/router", [
     'customer/js/lib/metisMenu'
 ], function (Sandbox, Auth, Cache) {
 
+    $('head title').text(APP.config.URL_PUBLIC_TITLE);
+    $('a.navbar-brand').attr('href', APP.config.URL_PUBLIC_HOMEPAGE).html(APP.config.URL_PUBLIC_TITLE);
+
     if (!APP.hasPlugin('account')) {
         throw "Account plugin is unavailable";
     }

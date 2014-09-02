@@ -49,6 +49,8 @@
         MPWS_VERSION: '" . MPWS_VERSION . "',
         MPWS_CUSTOMER: '" . $displayCustomer . "',
         PATH_STATIC_BASE: '/',
+        URL_PUBLIC_HOMEPAGE: '" . configurationCustomerDisplay::$Homepage . "',
+        URL_PUBLIC_TITLE: '" . configurationCustomerDisplay::$Title . "',
         URL_API: '/api.js',
         URL_AUTH: '/auth.js',
         URL_STATIC_CUSTOMER: '/" . glGetPath($staticPath, 'customer', $displayCustomer) . "',
@@ -57,7 +59,7 @@
         URL_STATIC_DEFAULT: '/" . glGetPath($staticPath, 'default', MPWS_VERSION) . "',
         ROUTER: '" . join(DS, array('customer', 'js', 'router')) . "'
     }";
-    $initialJS = str_replace(array("\r","\n", ' '), '', $initialJS);
+    $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
         // URL_API: '" . (glIsToolbox() ? '/toolbox/api.js' : '/api.js' ) . "',
 
     $response = '';
