@@ -1,11 +1,10 @@
 define('plugin/shop/toolbox/js/collection/categoriesTree', [
-    'default/js/lib/sandbox',
+    'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'default/js/lib/utils',
     'plugin/shop/toolbox/js/model/category'
     // 'default/js/lib/backbone-pageable',
-], function (Sandbox, _, Backbone, Utils, ModelCategory) {
+], function ($, _, Backbone, ModelCategory) {
 
     var CategoriesTree = Backbone.Collection.extend({
 
@@ -13,12 +12,13 @@ define('plugin/shop/toolbox/js/collection/categoriesTree', [
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'shop_manage_categories',
-            action: 'list'
+            fn: 'categories',
+            type: 'all'
         }),
 
         parse: function (data) {
-            return Utils.getTreeByJson(data && data.categories, 'ID', 'ParentID');
+            return data.items;
+            // return Utils.getTreeByJson(data && data.categories, 'ID', 'ParentID');
         }
 
     });

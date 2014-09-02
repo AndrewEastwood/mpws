@@ -33,7 +33,7 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             this.viewList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.viewList.render();
             this.viewCatergoriesTree = new ViewCategoriesTree();
-            this.viewCatergoriesTree.collection.fetch();
+            this.viewCatergoriesTree.collection.fetch({reset: true});
         },
         setOptions: function (options) {
             // merge with defaults

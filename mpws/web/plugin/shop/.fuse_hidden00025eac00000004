@@ -189,10 +189,10 @@ class pluginShop extends objectPlugin {
         if (empty($category))
             return null;
 
-        $category['ID'] = intval($category['ID']);
-        $category['RootID'] = intval($category['RootID']);
-        $category['ParentID'] = intval($category['ParentID']);
-        // $category['CustomerID'] = intval($category['CustomerID']);
+        $product['ID'] = intval($product['ID']);
+        $product['RootID'] = intval($product['RootID']);
+        $product['ParentID'] = intval($product['ParentID']);
+        $product['CustomerID'] = intval($product['CustomerID']);
 
         return $category;
     }
@@ -208,25 +208,6 @@ class pluginShop extends objectPlugin {
             }
         }
         return $data;
-    }
-
-    public function getCategories_List () {
-        $config = configurationShopDataSource::jsapiShopGetCategoryList();
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $val)
-                    $_items[] = $self->getCategoryByID($val['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-
-        // if (isset($req->get['_pStats']))
-        //     $dataList['stats'] = $this->getStats_ProductsOverview();
-
-        return $dataList;
     }
 
     public function createCategory ($reqData) {
@@ -1114,10 +1095,10 @@ class pluginShop extends objectPlugin {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
                 case "all":
-                    $resp["items"] = $this->getCategories_All();
+                    $resp['all'] = $this->getCategories_All();
                     break;
                 case "list":
-                    $resp["items"] = $this->getCategories_List();
+                    $resp['browse'] = $this->getCategories_List();
                     break;
             }
             return;

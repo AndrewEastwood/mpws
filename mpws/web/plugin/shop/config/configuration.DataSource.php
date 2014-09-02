@@ -286,6 +286,35 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
+    static function jsapiShopGetCategoryItem ($id = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_categories",
+            "condition" => array(),
+            "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Description", "Status", "DateCreated", "DateUpdated"),
+            "options" => array(
+                "expandSingleRecord" => true
+            ),
+            "limit" => 1
+        ));
+
+        if (!is_null($id)) {
+            $config["condition"] = array(
+                "shop_categories.ID" => self::jsapiCreateDataSourceCondition($id)
+            );
+        }
+
+        return $config;
+    }
+
+    static function jsapiShopGetCategoryList () {
+        $config = self::jsapiShopGetCategoryItem();
+        $config['fields'] = array("ID");
+        $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        return $config;
+    }
+
 
 
 
