@@ -4,7 +4,7 @@ define("plugin/shop/site/js/view/siteMenu", [
     'plugin/shop/site/js/view/menuCart',
     'plugin/shop/site/js/view/menuWishList',
     'plugin/shop/site/js/view/menuCompare',
-    'plugin/shop/site/js/view/menuProfileOrders',
+    // 'plugin/shop/site/js/view/menuProfileOrders',
 ], function (Sandbox, MenuCatalog, MenuCart, MenuWishList, MenuCompare, MenuProfileOrders) {
 
     return function (models) {
@@ -27,12 +27,12 @@ define("plugin/shop/site/js/view/siteMenu", [
         menuCompare.collection.fetch();
 
         // inject into account page shop menu items
-        var menuProfileOrders = new MenuProfileOrders();
-        menuProfileOrders.render();
+        // var menuProfileOrders = new MenuProfileOrders();
+        // menuProfileOrders.render();
 
-        Sandbox.eventSubscribe('view:AccountProfile', function (view) {
-            view.addModuleMenuItem(menuProfileOrders.$el.find('a').clone());
-        });
+        // Sandbox.eventSubscribe('view:AccountProfile', function (view) {
+        //     view.addModuleMenuItem(menuProfileOrders.$el.find('a').clone());
+        // });
 
         // debugger;
         Sandbox.eventSubscribe('global:loader:complete', function () {

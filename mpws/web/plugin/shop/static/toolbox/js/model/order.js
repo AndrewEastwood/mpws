@@ -1,7 +1,6 @@
 define('plugin/shop/toolbox/js/model/order', [
-    'default/js/lib/sandbox',
     'default/js/lib/backbone'
-], function (Sandbox, Backbone) {
+], function (Backbone) {
 
     var Order = Backbone.Model.extend({
         idAttribute: "ID",

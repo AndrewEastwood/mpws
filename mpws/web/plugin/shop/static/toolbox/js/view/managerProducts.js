@@ -4,11 +4,12 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
     'default/js/lib/utils',
     'plugin/shop/toolbox/js/collection/basicProducts',
     'plugin/shop/toolbox/js/view/listProducts',
+    'plugin/shop/toolbox/js/view/categoriesTree',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerProducts',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, tpl, lang) {
+], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -31,6 +32,8 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             this.viewList = new ViewListOrders({collection: this.collection});
             this.viewList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.viewList.render();
+            this.viewCatergoriesTree = new ViewCategoriesTree();
+            this.viewCatergoriesTree.collection.fetch();
         },
         setOptions: function (options) {
             // merge with defaults
@@ -57,6 +60,7 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             self.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
             // show sub-view
             self.$('.tab-pane').html(this.viewList.$el);
+            self.$('.tree').html(this.viewCatergoriesTree.$el);
             return this;
         }
     });
