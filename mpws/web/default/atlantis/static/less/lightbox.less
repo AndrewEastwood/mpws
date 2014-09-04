@@ -1,10 +1,8 @@
-@import "base";
-
-@libImgPath: ~"@{imgBasePath}lightbox/";
+@import "mpws-vars.less";
 
 /* line 7, ../sass/lightbox.sass */
 body:after {
-  content: ~"url(@{libImgPath}close.png)" ~"url(@{libImgPath}loading.gif)" ~"url(@{libImgPath}prev.png)" ~"url(@{libImgPath}next.png)";
+  content: ~"url(@{libImgPath_Lightbox}close.png)" ~"url(@{libImgPath_Lightbox}loading.gif)" ~"url(@{libImgPath_Lightbox}prev.png)" ~"url(@{libImgPath_Lightbox}next.png)";
   display: none;
 }
 
@@ -89,7 +87,7 @@ body:after {
   width: 32px;
   height: 32px;
   margin: 0 auto;
-  background: ~"url(@{libImgPath}loading.gif)" no-repeat;
+  background: ~"url(@{libImgPath_Lightbox}loading.gif)" no-repeat;
 }
 
 /* line 64, ../sass/lightbox.sass */
@@ -136,7 +134,7 @@ body:after {
 .lb-prev:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
-  background: ~"url(@{libImgPath}prev.png)" left 48% no-repeat;
+  background: ~"url(@{libImgPath_Lightbox}prev.png)" left 48% no-repeat;
 }
 
 /* line 94, ../sass/lightbox.sass */
@@ -154,7 +152,7 @@ body:after {
 .lb-next:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
-  background: ~"url(@{libImgPath}next.png)" right 48% no-repeat;
+  background: ~"url(@{libImgPath_Lightbox}next.png)" right 48% no-repeat;
 }
 
 /* line 103, ../sass/lightbox.sass */
@@ -209,7 +207,7 @@ body:after {
   float: right;
   width: 30px;
   height: 30px;
-  background: ~"url(@{libImgPath}close.png)" top right no-repeat;
+  background: ~"url(@{libImgPath_Lightbox}close.png)" top right no-repeat;
   text-align: right;
   outline: none;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
