@@ -7,29 +7,12 @@ define("default/js/lib/cache", [
 
     function Cache () {}
 
-    Cache.getObject = function (name, setupFn) {
-        if (_cache[name])
-            return _cache[name];
-        else {
-            if (typeof setupFn === "function")
-                Cache.setObject(setupFn());
-            return _cache[name];
-        }
-    }
-
     Cache.setObject = function (name, object) {
         _cache[name] = object;
     }
 
-    Cache.hasObject = function (name) {
-        return !!_cache[name];
-    }
-
-    Cache.withObject = function (name, handler) {
-        if (typeof handler === "function")
-            _cache[name] = handler(_cache[name]);
-        else
-            return _cache[name];
+    Cache.getObject = function (name) {
+        return _cache[name];
     }
 
     Cache.setCookie = function (key, jsonData, options) {
@@ -51,6 +34,24 @@ define("default/js/lib/cache", [
 
     Cache.getFromLocalStorage = function (key) {
         return JSON.parse(localStorage.getItem(key));
+    }
+
+    Cache.set = function (key, data) {
+        if (localStorage && localStorage.setItem)
+            Cache.saveInLocalStorage(key, data);
+        else if ($.cookie)
+            Cache.setCookie(key, data);
+        else
+            Cache.setObject(key, data);
+    }
+
+    Cache.get = function (key) {
+        if (localStorage && localStorage.setItem)
+            return Cache.getFromLocalStorage(key);
+        else if ($.cookie)
+            return Cache.getCookie(key);
+        else
+            return Cache.getObject(key);
     }
 
     return Cache;

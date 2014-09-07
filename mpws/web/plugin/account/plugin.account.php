@@ -454,9 +454,6 @@ class pluginAccount extends objectPlugin {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        // global $PHP_INPUT;
-        // var_dump($req);
-        // var_dump($PHP_INPUT);
         if (!empty($req->get['id'])) {
             $AccountID = intval($req->get['id']);
             $resp = $this->_disableAccountByID($AccountID);

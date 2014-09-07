@@ -136,6 +136,7 @@ class pluginShop extends objectPlugin {
 
         return $dataList;
     }
+
     public function createProduct ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
             return glWrap("AccessDenied");
@@ -190,16 +191,18 @@ class pluginShop extends objectPlugin {
             return null;
 
         $category['ID'] = intval($category['ID']);
-        $category['RootID'] = intval($category['RootID']);
-        $category['ParentID'] = intval($category['ParentID']);
+        // $category['RootID'] = is_null($category['RootID']) ? null : intval($category['RootID']);
+        $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
         // $category['CustomerID'] = intval($category['CustomerID']);
 
         return $category;
     }
 
-    public function getCategories_All () {
-        $config = configurationShopDataSource::jsapiShopGetCategoryList();
-        $config['limit'] = 0;
+    public function getCategories_Tree ($req) {
+        $withRemoved = false;
+        if (isset($req->get['removed']))
+            $withRemoved = $req->get['removed'];
+        $config = configurationShopDataSource::jsapiShopGetCategoryTree($withRemoved);
         $categoryIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($categoryIDs)) {
@@ -210,8 +213,9 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    public function getCategories_List () {
+    public function getCategories_List ($req) {
         $config = configurationShopDataSource::jsapiShopGetCategoryList();
+
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -222,10 +226,6 @@ class pluginShop extends objectPlugin {
             }
         );
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
-
-        // if (isset($req->get['_pStats']))
-        //     $dataList['stats'] = $this->getStats_ProductsOverview();
-
         return $dataList;
     }
 
@@ -234,13 +234,121 @@ class pluginShop extends objectPlugin {
             return glWrap("AccessDenied");
         }
 
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'ParentID' => array('int', 'skipIfUnset'),
+            'Description' => array('string', 'skipIfUnset', 'max' => 300)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+
+                $configCreateCategory = configurationShopDataSource::jsapiShopCreateCategory($validatedValues);
+                $CategoryID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
+
+                if (empty($CategoryID))
+                    throw new Exception('CategoryCreateError');
+
+                $this->getCustomerDataBase()->commit();
+
+                $result = $this->getCategoryByID($CategoryID);
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
-    public function updateCategory ($reqData) {
+    public function updateCategory ($CategoryID, $reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("AccessDenied");
         }
 
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
+            'ParentID' => array('int', 'null', 'skipIfUnset'),
+            'Description' => array('string', 'skipIfUnset', 'max' => 300),
+            'Status' => array('string', 'skipIfUnset')
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateCategory($CategoryID, $validatedValues);
+                $this->getCustomer()->fetch($configCreateCategory) ?: null;
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result = $this->getCategoryByID($CategoryID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function disableCategory ($CategoryID) {
+        // check permissions
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+
+        $errors = array();
+        $success = false;
+
+        try {
+
+            $this->getCustomerDataBase()->beginTransaction();
+
+            $config = configurationShopDataSource::jsapiShopDeleteCategory($CategoryID);
+            $this->getCustomer()->fetch($config);
+
+            $this->getCustomerDataBase()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = 'OrderUpdateError';
+        }
+
+        $result = $this->getCategoryByID($CategoryID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
     }
 
     // -----------------------------------------------
@@ -375,7 +483,8 @@ class pluginShop extends objectPlugin {
 
         return $dataList;
     }
-    public function _createOrder ($reqData) {
+
+    public function createOrder ($reqData) {
 
         $result = array();
         $errors = array();
@@ -559,7 +668,7 @@ class pluginShop extends objectPlugin {
         return $result;
     }
 
-    public function _updateOrder ($OrderID, $reqData) {
+    public function updateOrder ($OrderID, $reqData) {
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("error", "AccessDenied");
@@ -605,15 +714,34 @@ class pluginShop extends objectPlugin {
         return $result;
     }
 
-    public function _disableOrderByID ($OrderID) {
+    public function disableOrderByID ($OrderID) {
         // check permissions
-        if ($this->getCustomer()->ifYouCan('Admin') && $this->getCustomer()->ifYouCan('Edit')) {
-            $config = configurationShopDataSource::jsapiShopDisableOrder($OrderID);
-            $this->getCustomer()->fetch($config);
-            return glWrap("ok", true);
-        } else {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("error", "AccessDenied");
         }
+
+        $errors = array();
+        $success = false;
+
+        try {
+
+            $this->getCustomerDataBase()->beginTransaction();
+
+            $config = configurationShopDataSource::jsapiShopDisableOrder($OrderID);
+            $this->getCustomer()->fetch($config);
+
+            $this->getCustomerDataBase()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = 'OrderUpdateError';
+        }
+
+        $result = $this->getOrderByID($OrderID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
     }
 
     // -----------------------------------------------
@@ -1113,8 +1241,8 @@ class pluginShop extends objectPlugin {
     public function get_shop_categories (&$resp, $req) {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
-                case "all":
-                    $resp["items"] = $this->getCategories_All();
+                case "tree":
+                    $resp["items"] = $this->getCategories_Tree($req);
                     break;
                 case "list":
                     $resp["items"] = $this->getCategories_List();
@@ -1125,6 +1253,37 @@ class pluginShop extends objectPlugin {
 
         $resp['error'] = "MissedParameter_type";
     }
+
+    public function post_shop_category (&$resp, $req) {
+        $resp = $this->createCategory($req->data);
+    }
+
+    public function patch_shop_category (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->updateCategory($CategoryID, $req->data);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
+    }
+
+    public function delete_shop_category (&$resp, $req) {
+        if (!glIsToolbox()) {
+            $resp['error'] = 'AccessDenied';
+            return;
+        }
+        if (!empty($req->get['id'])) {
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->disableCategory($CategoryID);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
+    }
+
+
+
+
+
 
     public function get_shop_wish (&$resp) {
         $resp['items'] = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
@@ -1141,7 +1300,6 @@ class pluginShop extends objectPlugin {
             }
         } else
             $resp['error'] = "MissedParameter_productID";
-        // $resp['req'] = $req;
     }
 
     public function delete_shop_wish (&$resp, $req) {
@@ -1236,7 +1394,7 @@ class pluginShop extends objectPlugin {
 
     // create new order
     public function post_shop_order (&$resp, $req) {
-        $resp = $this->_createOrder($req->data);
+        $resp = $this->createOrder($req->data);
     }
 
     // modify existent order status or
@@ -1252,7 +1410,7 @@ class pluginShop extends objectPlugin {
         if (!$isTemp && glIsToolbox()) {
             // if ($this->getCustomer()->ifYouCan('Admin')) {
                 // here we're gonna change order's status only
-            $resp = $this->_updateOrder($req->get['id'], $req->data);
+            $resp = $this->updateOrder($req->get['id'], $req->data);
             // } else {
                 // $resp['error'] = 'AccessDenied';
             // }
@@ -1294,12 +1452,9 @@ class pluginShop extends objectPlugin {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        // global $PHP_INPUT;
-        // var_dump($req);
-        // var_dump($PHP_INPUT);
         if (!empty($req->get['id'])) {
             $OrderID = intval($req->get['id']);
-            $resp = $this->_disableOrderByID($OrderID);
+            $resp = $this->disableOrderByID($OrderID);
             return;
         }
         $resp['error'] = 'MissedParameter_id';

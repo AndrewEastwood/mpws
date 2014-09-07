@@ -44,71 +44,55 @@ class libraryValidate {
         $values = array();
         $errors = array();
         $totalErrors = 0;
-        $dataTypes = array('string', 'int', 'null', 'bool', 'numeric', 'notNull');
 
         foreach ($dataRules as $keyToValidate => $rules) {
 
             $values[$keyToValidate] = isset($dataArray[$keyToValidate]) ? $dataArray[$keyToValidate] : null;
             $errors[$keyToValidate] = array();
 
-            $wrongTypeCount = 0;
-            $acceptedTypes = array_intersect($dataTypes, $rules);
-            $acceptedTypesCount = count($acceptedTypes);
+            $wrongType = false;
 
             // string
             if (in_array("string", $rules) && is_numeric($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNoString";
-                $wrongTypeCount++;
+                $wrongType = true;
             }
 
             // numeric
             if (in_array("numeric", $rules) && !is_numeric($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotNumeric";
-                $wrongTypeCount++;
+                $wrongType = true;
             }
 
             // int
             if (in_array("int", $rules) && !is_int($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotInt";
-                $wrongTypeCount++;
+                $wrongType = true;
             }
 
             // bool
             if (in_array("bool", $rules) && !is_bool($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
-                $wrongTypeCount++;
+                $wrongType = true;
             }
 
             // null
-            if (in_array("null", $rules) && !is_null($values[$keyToValidate])) {
+            if (in_array("null", $rules) && is_null($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotBoolean";
-                $wrongTypeCount++;
-            } else if (in_array("notNull", $rules) && is_null($values[$keyToValidate])) {
-                // notnull
-                $errors[$keyToValidate][] = $keyToValidate . "IsNull";
-                $wrongTypeCount++;
+                $wrongType = true;
             }
 
-            // var_dump($keyToValidate);
-            // var_dump($values[$keyToValidate]);
-            // var_dump($wrongTypeCount);
-            // var_dump($acceptedTypesCount);
-
-            // we clear type errors when value type is acceptable
-            if ($wrongTypeCount < $acceptedTypesCount)
-                $errors[$keyToValidate] = array();
-
-            // var_dump($errors);
-            // var_dump($dataArray);
-            // var_dump('isset:'.$keyToValidate . ':' . (isset($dataArray[$keyToValidate]) ? 1:0));
+            // notnull
+            if (in_array("notNull", $rules) && is_null($values[$keyToValidate])) {
+                $errors[$keyToValidate][] = $keyToValidate . "IsNull";
+            }
 
             // exists
-            if (!array_key_exists($keyToValidate, $dataArray)) {
+            if (!isset($dataArray[$keyToValidate])) {
                 if (in_array("skipIfUnset", $rules)) {
                     if (isset($rules["defaultValueIfUnset"]))
                         $values[$keyToValidate] = $rules["defaultValueIfUnset"];
                     else {
-                        // var_dump('unset: '. $keyToValidate);
                         unset($values[$keyToValidate]);
                         unset($errors[$keyToValidate]);
                     }

@@ -279,7 +279,7 @@ class configurationShopDataSource extends objectConfiguration {
             "condition" => array(
                 "Status" => self::jsapiCreateDataSourceCondition("ACTIVE")
             ),
-            "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Status"),
+            "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
     }
     // <<<< Shop catalog tree
@@ -291,7 +291,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(),
-            "fields" => array("ID", "RootID", "ParentID", "ExternalKey", "Name", "Description", "Status", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Description", "Status", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -315,6 +315,57 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
+    static function jsapiShopGetCategoryTree ($includeRemoved = false) {
+        $config = self::jsapiShopGetCategoryList();
+        $config['limit'] = 0;
+        if (!$includeRemoved) {
+            $config['condition']['Status'] = self::jsapiCreateDataSourceCondition('ACTIVE');
+        }
+        return $config;
+    }
+
+    static function jsapiShopCreateCategory ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        $data["ExternalKey"] = libraryUtils::url_slug($data['Name']);
+        $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_categories",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopUpdateCategory ($CategoryID, $data) {
+        $data["DateUpdated"] = self::getDate();
+        if (isset($data['Name']))
+            $data["ExternalKey"] = libraryUtils::url_slug($data['Name']);
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_categories",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($CategoryID)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopDeleteCategory ($CategoryID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_categories",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($CategoryID)
+            ),
+            "data" => array(
+                "Status" => 'REMOVED',
+                "DateUpdated" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
 
 
 

@@ -34,6 +34,11 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             this.viewList.render();
             this.viewCatergoriesTree = new ViewCategoriesTree();
             this.viewCatergoriesTree.collection.fetch({reset: true});
+
+            this.viewCatergoriesTree.on('changed:category', function (activeCategoryID) {
+                self.collection.setCustomQueryField("CategoryID", activeCategoryID);
+                self.collection.fetch({reset: true});
+            }, this);
         },
         setOptions: function (options) {
             // merge with defaults
@@ -53,14 +58,17 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
         render: function () {
             // TODO:
             // add expired and todays products
-            var self = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+
+            // permanent layout and some elements
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$('.tree').html(this.viewCatergoriesTree.$el);
+            }
+
+            // render/refresh product list
             var currentStatus = this.collection.getCustomQueryField("Status");
-            // debugger;
-            self.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
-            // show sub-view
-            self.$('.tab-pane').html(this.viewList.$el);
-            self.$('.tree').html(this.viewCatergoriesTree.$el);
+            this.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
+            this.$('.tab-pane').html(this.viewList.$el);
             return this;
         }
     });

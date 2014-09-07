@@ -1,46 +1,25 @@
 <h4>{{lang.pluginMenu_Categories_Tree_Title}}</h4>
-<div id="jstree_categories-ID">
-    <!-- in this example the tree is populated from inline HTML -->
-    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-    {{#each data }}
-        {{#compare childrenCount ">" 0 }}
-        <li class="dropdown-submenu">
-            <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-            <ul class="dropdown-menu">
-            {{#each children }}
-                {{#compare childrenCount ">" 0 }}
-                <li class="dropdown-submenu">
-                    <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-                    <ul class="dropdown-menu">
-                    {{#each children }}
-                        <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
-                    {{/each}}
+<div class="checkbox">
+    <label>
+        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked{{/if}}> Показуати видалені
+    </label>
+</div>
+<div id="categoryTree">
+    <ul>
+        <li data-jstree='{ "id": "{{ID}}" }' class="jstree-open" data-id="0" data-childcount="{{data.length}}">
+            Всі категорії
+            <ul>
+            {{#recursive extras.tree}}
+                <li data-parent="{{ParentID}}" data-id="{{ID}}" data-childcount="{{childCount}}" id="{{ID}}" data-status="{{Status}}" data-jstree='{ "id": "{{ID}}", "type" : "{{Status}}" }'>
+                    {{Name}}
+                    {{#if childCount}}
+                    <ul>
+                        {{{recursive childItems}}}
                     </ul>
+                    {{/if}}
                 </li>
-                {{else}}
-                <li>
-                    <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-                </li>
-                {{/compare}}
-            {{/each}}
+            {{/recursive}}
             </ul>
         </li>
-        {{else}}
-        <li>
-            <a href="/#shop/catalog/{{ID}}">{{Name}}</a>
-        </li>
-        {{/compare}}
-    {{/each}}
     </ul>
-</div>
-
-<div id="html1">
-  <ul>
-    <li>Всі категорії
-      <ul>
-        <li>Child node 1</li>
-        <li><a href="#">Child node 2</a></li>
-      </ul>
-    </li>
-  </ul>
 </div>
