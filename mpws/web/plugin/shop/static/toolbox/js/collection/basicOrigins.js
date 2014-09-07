@@ -4,7 +4,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
     'default/js/lib/backbone-paginator'
 ], function (_, ModelOrigin, PageableCollection) {
 
-    var ListProducts = PageableCollection.extend({
+    var ListOrigins = PageableCollection.extend({
 
         model: ModelOrigin,
 
@@ -16,7 +16,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
 
         // Initial pagination states
         state: {
-            pageSize: 15,
+            pageSize: 5,
             order: 1
         },
 
@@ -53,11 +53,10 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
         },
 
         parseRecords: function (resp) {
-            var origins = resp && resp.items || [];
-            return origins;
+            return resp.items;
         }
 
     });
 
-    return ListProducts;
+    return ListOrigins;
 });

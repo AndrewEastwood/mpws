@@ -2,16 +2,14 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/basicProducts',
     'plugin/shop/toolbox/js/view/listProducts',
     'plugin/shop/toolbox/js/view/categoriesTree',
-    'plugin/shop/toolbox/js/collection/basicOrigins',
-    'plugin/shop/toolbox/js/view/listOrigins'.
+    'plugin/shop/toolbox/js/view/listOrigins',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerProducts',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, CollectionProducts, ViewListOrders, ViewCategoriesTree, CollectionOrigins, ViewListOrigins, tpl, lang) {
+], function (Sandbox, Backbone, Utils, ViewListProducts, ViewCategoriesTree, ViewListOrigins, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -20,32 +18,31 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
         initialize: function (options) {
             var self = this;
             // debugger;
+
             // set options
             this.setOptions(options);
-            // create collection and viewList
-            this.collection = new CollectionProducts();
-            this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
-            this.collection.setCustomQueryParam("Stats", true);
-            this.listenTo(this.collection, 'reset', this.render);
-            this.listenTo(this.collection, 'sync', function (collection, resp, options) {
+
+            this.viewProductsList = new ViewListProducts();
+            this.viewProductsList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            this.viewProductsList.collection.setCustomQueryParam("Stats", true);
+            this.listenTo(this.viewProductsList.collection, 'reset', this.render);
+            this.listenTo(this.viewProductsList.collection, 'sync', function (collection, resp, options) {
                 if (resp && resp.stats)
                     self.refreshBadges(resp.stats);
             });
-            this.viewList = new ViewListOrders({collection: this.collection});
-            this.viewList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
-            this.viewList.render();
+            this.viewProductsList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
+            this.viewProductsList.render();
+
             this.viewCatergoriesTree = new ViewCategoriesTree();
             this.viewCatergoriesTree.collection.fetch({reset: true});
-
             this.viewCatergoriesTree.on('changed:category', function (activeCategoryID) {
-                self.collection.setCustomQueryField("CategoryID", activeCategoryID);
-                self.collection.fetch({reset: true});
+                self.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
+                self.viewProductsList.collection.fetch({reset: true});
             }, this);
 
-            this.collectionOrigins = new CollectionOrigins();
-            this.viewListOrigins = new ViewListOrigins({collection: this.collectionOrigins});
+            this.viewListOrigins = new ViewListOrigins();
             this.viewListOrigins.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
-            this.viewListOrigins.render();
+            this.viewListOrigins.collection.fetch({reset: true});
         },
         setOptions: function (options) {
             // merge with defaults
@@ -58,7 +55,7 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
         },
         refreshBadges: function (stats) {
             this.$('.tab-link .badge').html("0");
-            _(stats).each(function(count, status){
+            _(stats).each(function(count, status) {
                 this.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
         },
@@ -70,12 +67,13 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
+                this.$('.products').html(this.viewProductsList.$el);
+                this.$('.origins').html(this.viewListOrigins.$el);
             }
 
             // render/refresh product list
-            var currentStatus = this.collection.getCustomQueryField("Status");
+            var currentStatus = this.viewProductsList.collection.getCustomQueryField("Status");
             this.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
-            this.$('.tab-pane').html(this.viewList.$el);
             return this;
         }
     });

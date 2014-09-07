@@ -3,6 +3,8 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     "default/js/lib/backgrid",
+    /* collection */
+    "plugin/shop/toolbox/js/collection/basicOrders",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOrderListItem',
     /* lang */
@@ -11,7 +13,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, tplBtnMenuMainItem, lang) {
+], function (Sandbox, Backbone, Utils, Backgrid, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns () {
         // we show following statuses only
@@ -19,6 +21,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
         var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
 
         var columnActions = {
+            className: "custom-row-context-menu",
             name: "Actions",
             label: lang.pluginMenu_Orders_Grid_Column_Actions,
             cell: "html",
@@ -158,21 +161,20 @@ define("plugin/shop/toolbox/js/view/listOrders", [
 
     var ListOrders = Backbone.View.extend({
         initialize: function (options) {
-            this.options = options;
-            if (this.collection) {
-                this.listenTo(this.collection, 'reset', this.render);
-                var columns = getColumns();
-                if (this.options.adjustColumns)
-                    columns = this.options.adjustColumns(columns);
-                this.grid = new Backgrid.Grid({
-                    className: "backgrid table table-responsive",
-                    columns: _(columns).values(),
-                    collection: this.collection
-                });
-                this.paginator = new Backgrid.Extension.Paginator({
-                    collection: this.collection
-                });
-            }
+            this.options = options || {};
+            this.collection = this.collection || new CollectionOrders();
+            this.listenTo(this.collection, 'reset', this.render);
+            var columns = getColumns();
+            if (this.options.adjustColumns)
+                columns = this.options.adjustColumns(columns);
+            this.grid = new Backgrid.Grid({
+                className: "backgrid table table-responsive",
+                columns: _(columns).values(),
+                collection: this.collection
+            });
+            this.paginator = new Backgrid.Extension.Paginator({
+                collection: this.collection
+            });
         },
         render: function () {
             // console.log('listOrders: render');

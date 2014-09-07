@@ -1,18 +1,25 @@
 define('plugin/shop/toolbox/js/collection/statsProductsNonPopular', [
     'plugin/shop/toolbox/js/collection/basicProducts'
-], function (ListOrders) {
+], function (ListProducts) {
 
-    var StatsListOrdersTodays = ListOrders.extend({
+    var StatsListProductsTodays = ListProducts.extend({
         initialize: function () {
-            ListOrders.prototype.initialize.apply(this);
+            ListProducts.prototype.initialize.apply(this);
             this.url = APP.getApiLink({
                 source: 'shop',
                 fn: 'stats',
                 type: 'products_list_non_popular'
             });
         },
-        mode: "client"
+        mode: "client",
+        parseState: function (resp) {
+            var state = {
+                totalRecords: parseInt(resp && resp.items && resp.items.length || 0, 10),
+                currentPage: 1
+            };
+            return state;
+        }
     });
 
-    return StatsListOrdersTodays;
+    return StatsListProductsTodays;
 });

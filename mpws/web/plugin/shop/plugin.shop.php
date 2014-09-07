@@ -97,9 +97,11 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopStat_NonPopularProducts();
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
-        if (!empty($productIDs))
-            foreach ($productIDs as $val)
+        if (!empty($productIDs)) {
+            foreach ($productIDs as $val) {
                 $data[] = $this->getProductByID($val['ID']);
+            }
+        }
         return $data;
     }
 
@@ -108,13 +110,14 @@ class pluginShop extends objectPlugin {
         $config = configurationShopDataSource::jsapiShopStat_PopularProducts();
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
-        if (!empty($productIDs))
+        if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
                 $product = $this->getProductByID($val['ProductID']);
                 $product['SoldTotal'] = floatval($val['SoldTotal']);
                 $product['SumTotal'] = floatval($val['SumTotal']);
                 $data[] = $product;
             }
+        }
         return $data;
     }
 
@@ -124,8 +127,9 @@ class pluginShop extends objectPlugin {
         $callbacks = array(
             "parse" => function ($items) use($self) {
                 $_items = array();
-                foreach ($items as $key => $orderRawItem)
+                foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID']);
+                }
                 return $_items;
             }
         );
@@ -611,7 +615,7 @@ class pluginShop extends objectPlugin {
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
         if (isset($req->get['_pStats']))
-            $dataList['stats'] = $this->getStats_Orders_StatsOverview();
+            $dataList['stats'] = $this->getStats_OrdersOverview();
 
         return $dataList;
     }
@@ -881,7 +885,7 @@ class pluginShop extends objectPlugin {
     // STATISTIC
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getStats_Orders_StatsOverview () {
+    public function getStats_OrdersOverview () {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
@@ -1427,10 +1431,10 @@ class pluginShop extends objectPlugin {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
                 case "all":
-                    $resp["items"] = $this->getOrigins_All($req);
+                    $resp = $this->getOrigins_All($req);
                     break;
                 case "list":
-                    $resp["items"] = $this->getOrigins_List();
+                    $resp = $this->getOrigins_List($req);
                     break;
             }
             return;
@@ -1439,11 +1443,11 @@ class pluginShop extends objectPlugin {
         $resp['error'] = "MissedParameter_type";
     }
 
-    public function post_shop_category (&$resp, $req) {
+    public function post_shop_origin (&$resp, $req) {
         $resp = $this->createOrigin($req->data);
     }
 
-    public function patch_shop_category (&$resp, $req) {
+    public function patch_shop_origin (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $CategoryID = intval($req->get['id']);
             $resp = $this->updateOrigin($CategoryID, $req->data);
@@ -1452,7 +1456,7 @@ class pluginShop extends objectPlugin {
         $resp['error'] = 'MissedParameter_id';
     }
 
-    public function delete_shop_category (&$resp, $req) {
+    public function delete_shop_origin (&$resp, $req) {
         if (!glIsToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;

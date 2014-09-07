@@ -2,9 +2,9 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/product',
     'default/js/lib/backbone-paginator'
-], function (_, ModelProduct, PageableCollection, lang) {
+], function (_, ModelProduct, PageableCollection) {
 
-    var ListOrders = PageableCollection.extend({
+    var ListProducts = PageableCollection.extend({
 
         model: ModelProduct,
 
@@ -15,7 +15,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
         // Initial pagination states
         state: {
-            pageSize: 10,
+            pageSize: 25,
             order: 1
         },
 
@@ -57,6 +57,6 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
     });
 
-    return ListOrders;
+    return ListProducts;
 
 });

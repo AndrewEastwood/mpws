@@ -2,14 +2,12 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/basicOrders',
     'plugin/shop/toolbox/js/view/listOrders',
-    'plugin/shop/toolbox/js/model/statsOrdersOverview',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerOrders',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, ModelOrdersOverview, tpl, lang) {
+], function (Sandbox, Backbone, Utils, ViewOrdersListOrders, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -20,18 +18,17 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             // debugger;
             // set options
             this.setOptions(options);
-            // create collection and viewList
-            this.collection = new CollectionOrders();
-            this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
-            this.collection.setCustomQueryParam("Stats", true);
-            this.listenTo(this.collection, 'reset', this.render);
-            this.listenTo(this.collection, 'sync', function (collection, resp, options) {
+            // create collection and viewOrdersList
+            this.viewOrdersList = new ViewOrdersListOrders();
+            this.viewOrdersList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            this.viewOrdersList.collection.setCustomQueryParam("Stats", true);
+            this.listenTo(this.viewOrdersList.collection, 'reset', this.render);
+            this.listenTo(this.viewOrdersList.collection, 'sync', function (collection, resp, options) {
                 if (resp && resp.stats)
                     self.refreshBadges(resp.stats);
             });
-            this.viewList = new ViewListOrders({collection: this.collection});
-            this.viewList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
-            this.viewList.render();
+            this.viewOrdersList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
+            this.viewOrdersList.render();
         },
         setOptions: function (options) {
             // merge with defaults
@@ -51,12 +48,13 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         render: function () {
             // TODO:
             // add expired and todays orders
-            var self = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            var currentStatus = this.collection.getCustomQueryField("Status");
-            self.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
-            // show sub-view
-            self.$('.tab-pane').html(self.viewList.$el);
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                // show sub-view
+                this.$('.tab-pane').html(this.viewOrdersList.$el);
+            }
+            var currentStatus = this.viewOrdersList.collection.getCustomQueryField("Status");
+            this.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
             return this;
         }
     });

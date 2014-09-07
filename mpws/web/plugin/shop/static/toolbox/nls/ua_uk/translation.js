@@ -25,9 +25,9 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Offers: 'Акції та Розпродаж',
         pluginMenu_Reports: 'Звіти',
         //
-        pluginMenu_ProductManager_Button_Create_Product: "Товар",
-        pluginMenu_ProductManager_Button_Create_Category: "Категорія",
-        pluginMenu_ProductManager_Button_Create_Origin: "Виробник",
+        productManager_Button_Create_Product: "Товар",
+        productManager_Button_Create_Category: "Категорія",
+        productManager_Button_Create_Origin: "Виробник",
         // Order list
         pluginMenu_Orders_Grid_Column_ID: "#",
         pluginMenu_Orders_Grid_Column_Shipping: "Доставка",
@@ -67,11 +67,13 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_category_button_Close: "Закрити",
         // Origin list
         pluginMenu_Origins_Grid_Title: "Виробники",
-        pluginMenu_Origins_Grid_Search_placeholder: "Пошук у виробниках",
         pluginMenu_Origins_Grid_Column_Name: "Назва",
+        pluginMenu_Origins_Grid_Column_HomePage: "Сторінка",
         pluginMenu_Origins_Grid_Column_Status: "Статус",
+        pluginMenu_Origins_Grid_Column_DateUpdated: "Оновлений",
+        pluginMenu_Origins_Grid_Column_DateCreated: "Створений",
         pluginMenu_Origins_Grid_Column_Actions: "",
-        pluginMenu_Origins_Grid_link_Edit: "Ред.",
+        pluginMenu_Origins_Grid_noData: "Список виробників порожній",
         // Origin popup
         popup_origin_title_new: "Створення виробника",
         popup_origin_title_edit: "Редагування виробника",
@@ -86,6 +88,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_origin_button_Save: "Зберегти",
         // popup_origin_button_Update: "Обновити",
         // Product list
+        pluginMenu_Products_Grid_Title: "Менеджер товарів",
         pluginMenu_Products_Grid_Column_Name: "Назва",
         pluginMenu_Products_Grid_Column_Model: "Модель",
         pluginMenu_Products_Grid_Column_SKU: "SKU",
@@ -96,14 +99,6 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Products_Grid_Column_Actions: "",
         pluginMenu_Products_Grid_Column_SellMode: "Продаж",
         pluginMenu_Products_Grid_noData_ByStatus: "Немає товарів в цьому списку",
-        // Origin list
-        pluginMenu_Origins_Grid_Column_Name: "Назва",
-        pluginMenu_Origins_Grid_Column_HomePage: "Сторінка",
-        pluginMenu_Origins_Grid_Column_Status: "Статус",
-        pluginMenu_Origins_Grid_Column_DateUpdated: "Оновлений",
-        pluginMenu_Origins_Grid_Column_DateCreated: "Створений",
-        pluginMenu_Origins_Grid_Column_Actions: "",
-        pluginMenu_Origins_Grid_noData: "Список виробників порожній",
         product_type_Active: "Активні",
         product_type_Inactive: "Неактивні",
         product_type_Uncompleted: "Незаповнені",
@@ -112,13 +107,15 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_type_Popular: "Популярні",
         product_type_NotPopular: "Непопулярні",
         product_type_Archived: "Архівні",
-        origin_status_status_ACTIVE: "Активний",
-        origin_status_status_REMOVED: "Неактивний",
+        origin_status_ACTIVE: "Активний",
+        origin_status_REMOVED: "Неактивний",
         product_status_ACTIVE: 'Активний',
         product_status_ARCHIVED: 'Архівний',
         product_status_DISCOUNT: 'Знижка',
         product_status_DEFECT: 'З дефектом',
         product_status_WAITING: 'Очікування',
-        product_status_PREORDER: 'Під замовлення'
+        product_status_PREORDER: 'Під замовлення',
+
+        categoryTree_Title: 'Дерево категорії'
     }, CustomerPluginShop);
 });

@@ -23,6 +23,7 @@ define("plugin/shop/toolbox/js/router", [
         // "shop/stats": "stats",
         "shop/products": "productsList",
         "shop/products/:status": "productsListPage",
+        "shop/product/new": "productCreate",
         "shop/product/edit/:id": "productEdit",
         "shop/orders": "ordersList",
         "shop/orders/:status": "ordersListPage",
@@ -30,6 +31,10 @@ define("plugin/shop/toolbox/js/router", [
         "shop/order/print/:id": "orderPrint",
         "shop/order/email_tracking/:id": "orderEmailTracking",
         "shop/order/email_reciept/:id": "orderEmailReceipt",
+        "shop/origin/new": "originCreate",
+        "shop/origin/edit/:id": "originEdit",
+        "shop/category/new": "categoryCreate",
+        "shop/category/edit/:id": "categoryEdit",
         "shop/reports": "reports"
     };
 
@@ -59,6 +64,9 @@ define("plugin/shop/toolbox/js/router", [
                 });
             });
         },
+        productCreate: function (productID) {
+
+        },
         productEdit: function (productID) {
 
         },
@@ -71,7 +79,7 @@ define("plugin/shop/toolbox/js/router", [
                 // create new view
                 var options = status ? {status: status} : {};
                 var managerProducts = new ManagerProducts(options);
-                managerProducts.collection.fetch({reset: true});
+                managerProducts.viewProductsList.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
@@ -116,11 +124,37 @@ define("plugin/shop/toolbox/js/router", [
                 var options = status ? {status: status} : {};
 
                 var managerOrders = new ManagerOrders(options);
-                managerOrders.collection.fetch({reset: true});
+                managerOrders.viewOrdersList.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: managerOrders.$el
+                });
+            });
+        },
+
+        categoryEdit: function (id) {
+
+        },
+        categoryCreate: function () {
+
+        },
+        originEdit: function (originID) {
+            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (PopupOriginEntry) {
+                var popupOrigin = new PopupOriginEntry();
+                popupOrigin.model.set('ID', originID);
+                popupOrigin.model.fetch();
+                popupOrigin.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
+        },
+        originCreate: function () {
+            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (PopupOriginEntry) {
+                var popupOrigin = new PopupOriginEntry();
+                popupOrigin.render();
+                popupOrigin.$dialog.onHide(function () {
+                    Backbone.history.history.back();
                 });
             });
         },

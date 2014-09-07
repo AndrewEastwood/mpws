@@ -1,9 +1,8 @@
 define('plugin/shop/toolbox/js/collection/basicOrders', [
-    'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/order',
     'default/js/lib/backbone-paginator'
-], function (Sandbox, _, ModelOrder, PageableCollection, lang) {
+], function (_, ModelOrder, PageableCollection) {
 
     var ListOrders = PageableCollection.extend({
 

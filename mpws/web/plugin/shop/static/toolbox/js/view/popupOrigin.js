@@ -2,91 +2,70 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'plugin/shop/toolbox/js/model/origin',
-    'plugin/shop/common/js/lib/utils',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
+    'default/js/lib/bootstrap-alert',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupOrigin',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable'
-], function (Sandbox, Backbone, ModelOriginItem, ShopUtils, Utils, BootstrapDialog, tpl, lang) {
+], function (Sandbox, Backbone, ModelOrigin, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    var OriginItem = Backbone.View.extend({
+    function _getTitle (isEdit) {
+        if (isEdit) {
+            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_origin_title_edit);
+        } else {
+            return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_origin_title_new);
+        }
+    }
+
+    var OrderItem = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        initialize: function () {
-            // MView.prototype.initialize.call(this);
-            var self = this;
-            // debugger;
-            this.model = new ModelOriginItem();
-
-            this.listenTo(this.model, "sync", function () {
-                self.render();
-            });
-            // this.model.on("request", function () {
-            //     debugger;
-            // });
-            this.model.on("error", function () {
-                self.renderError();
-            });
-        },
-        render: function () {
-            var self = this;
-            var dlg = new BootstrapDialog({
-                cssClass: 'shop-toolbox-origin-edit',
+        initialize: function (data) {
+            this.model = new ModelOrigin(data);
+            if (data) {
+                if (_.isArray(data.Status))
+                    data.Status = data.Status[0];
+                this.model.set(data);
+            }
+            this.listenTo(this.model, 'change', this.render);
+            this.$title = $('<span/>');
+            this.$dialog = new BootstrapDialog({
+                title: this.$title,
+                message: this.$el,
+                cssClass: 'pluginShopOriginPopup',
+                // onhide: function () {
+                //     self.dialogIsShown = false;
+                // },
                 buttons: [{
-                    id: "save",
-                    label: lang.popup_origin_button_Save,
+                    label: lang.popup_origin_button_Close,
+                    cssClass: 'btn-warning',
                     action: function (dialog) {
-                        // debugger;
-                        var _data = self.$el.find('form').serializeArray();
-                        var data = _.object(_(_data).pluck('name'), _(_data).pluck('value'));
-                        self.model.set(data);
-                        // dialogIsShown = false;
-                        // if (self.model.isNew())
-                        //     self.model.updateItem(self.options.originID, data);
-                        // else
-                        self.model.save().done(function(){
-                            Sandbox.eventNotify("plugin:shop:origin:item:changed");
-                        });
+                        dialog.close();
+                    }
+                }, {
+                    label: lang.popup_origin_button_Save,
+                    cssClass: 'btn-success',
+                    action: function (dialog) {
                         dialog.close();
                     }
                 }]
             });
-            if (self.model.isNew())
-                dlg.setTitle(lang.popup_origin_title_new);
-            else
-                dlg.setTitle(lang.popup_origin_title_edit);
+        },
+        render: function () {
+            var self = this;
+
+            this.$title.html(_getTitle(!!self.model.id));
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
-            dlg.setMessage(this.$el);
-
-            if (!dlg.isOpened())
-                dlg.open();
-            // debugger;
-            Utils.ActivateButtonWhenFormChanges(self.$('form'), dlg.getButton("save"));
-            // self.$('.helper').tooltip();
-            self.stopListening();
-        },
-        renderError: function () {
-            BootstrapDialog.error("Unexpected error");
-        },
-        renderCreate: function () {
-            var self = this;
-            this.model.fetch();
-        },
-        renderEdit: function (ID) {
-            var self = this;
-            this.model.fetch({
-                data: {
-                    ID: ID
-                }
-            });
+            if (!this.$dialog.isOpened())
+                this.$dialog.open();
         }
     });
 
-    return OriginItem;
+    return OrderItem;
 
 });
