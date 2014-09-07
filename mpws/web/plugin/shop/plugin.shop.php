@@ -749,7 +749,7 @@ class pluginShop extends objectPlugin {
     // STATISTIC
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getStats_OrdersOverview () {
+    public function getStats_Orders_StatsOverview () {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }

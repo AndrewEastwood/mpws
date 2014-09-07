@@ -11,7 +11,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
     'default/js/lib/jstree'
 ], function (Sandbox, Backbone, Utils, CollectionCategoriesTree, tpl, lang) {
     var CategoriesTree = Backbone.View.extend({
-        className: 'shop-toolbox-categories',
+        className: 'panel panel-default shop-toolbox-categories',
         template: tpl,
         lang: lang,
         events: {
