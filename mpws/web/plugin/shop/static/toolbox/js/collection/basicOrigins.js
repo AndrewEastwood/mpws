@@ -1,33 +1,31 @@
 define('plugin/shop/toolbox/js/collection/basicOrigins', [
-    'default/js/lib/sandbox',
     'default/js/lib/underscore',
+    'plugin/shop/toolbox/js/model/origin',
     'default/js/lib/backbone-paginator'
-], function (Sandbox, _, PageableCollection) {
+], function (_, ModelOrigin, PageableCollection) {
 
     var ListProducts = PageableCollection.extend({
 
+        model: ModelOrigin,
+
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'shop_manage_origins',
-            // action: 'list'
+            fn: 'origins',
+            type: 'list'
         }),
 
         // Initial pagination states
         state: {
             pageSize: 15,
-            // sortKey: "updated",
             order: 1
         },
-
-        mode: "client",
 
         // You can remap the query parameters from `state` keys from
         // the default to those your server supports
         queryParams: {
             totalPages: null,
             totalRecords: null,
-            sortKey: "sort",
-            // q: "state:closed repo:jashkenas/backbone"
+            sortKey: "sort"
         },
 
         setCustomQueryField: function (field, value) {
@@ -51,7 +49,6 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
                 totalRecords: parseInt(resp && resp.info.total_entries || 0, 10),
                 currentPage: parseInt(resp && resp.info.page || 1, 10)
             };
-            Sandbox.eventNotify('plugin:shop:originList:parseState', {collection: this, state: state});
             return state;
         },
 
@@ -63,5 +60,4 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
     });
 
     return ListProducts;
-
 });

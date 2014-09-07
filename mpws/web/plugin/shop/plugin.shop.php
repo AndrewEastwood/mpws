@@ -158,7 +158,33 @@ class pluginShop extends objectPlugin {
     // -----------------------------------------------
 
     public function getOriginByID ($originID) {
+        if (empty($originID) || !is_numeric($originID))
+            return null;
 
+        $config = configurationShopDataSource::jsapiShopGetOriginItem($originID);
+        $origin = $this->getCustomer()->fetch($config);
+
+        if (empty($origin))
+            return null;
+
+        $origin['ID'] = intval($origin['ID']);
+        return $origin;
+    }
+
+    public function getOrigins_List ($req) {
+        $config = configurationShopDataSource::jsapiShopGetOriginList();
+
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $val)
+                    $_items[] = $self->getOriginByID($val['ID']);
+                return $_items;
+            }
+        );
+        $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
+        return $dataList;
     }
 
     public function createOrigin ($reqData) {
@@ -166,13 +192,119 @@ class pluginShop extends objectPlugin {
             return glWrap("AccessDenied");
         }
 
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'Description' => array('int', 'skipIfUnset'),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+
+                $configCreateCategory = configurationShopDataSource::jsapiShopCreateOrigin($validatedValues);
+                $OriginID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
+
+                if (empty($OriginID))
+                    throw new Exception('OriginCreateError');
+
+                $this->getCustomerDataBase()->commit();
+
+                $result = $this->getOriginByID($OriginID);
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
-    public function updateOrigin ($reqData) {
+    public function updateOrigin ($OriginID, $reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("AccessDenied");
         }
 
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
+            'Description' => array('int', 'skipIfUnset'),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateOrigin($OriginID, $validatedValues);
+                $this->getCustomer()->fetch($configCreateCategory) ?: null;
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result = $this->getOriginByID($OriginID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function disableOrigin ($OriginID) {
+        // check permissions
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+
+        $errors = array();
+        $success = false;
+
+        try {
+
+            $this->getCustomerDataBase()->beginTransaction();
+
+            $config = configurationShopDataSource::jsapiShopDeleteOrigin($OriginID);
+            $this->getCustomer()->fetch($config);
+
+            $this->getCustomerDataBase()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = 'OriginUpdateError';
+        }
+
+        $result = $this->getCategoryByID($OriginID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
     }
 
     // -----------------------------------------------
@@ -342,7 +474,7 @@ class pluginShop extends objectPlugin {
             $success = true;
         } catch (Exception $e) {
             $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'OrderUpdateError';
+            $errors[] = 'CategoryUpdateError';
         }
 
         $result = $this->getCategoryByID($CategoryID);
@@ -1238,6 +1370,13 @@ class pluginShop extends objectPlugin {
         $resp['error'] = "MissedParameter_type";
     }
 
+
+
+
+
+
+
+
     public function get_shop_categories (&$resp, $req) {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
@@ -1275,6 +1414,52 @@ class pluginShop extends objectPlugin {
         if (!empty($req->get['id'])) {
             $CategoryID = intval($req->get['id']);
             $resp = $this->disableCategory($CategoryID);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
+    }
+
+
+
+
+
+    public function get_shop_origins (&$resp, $req) {
+        if (!empty($req->get['type'])) {
+            switch ($req->get['type']) {
+                case "all":
+                    $resp["items"] = $this->getOrigins_All($req);
+                    break;
+                case "list":
+                    $resp["items"] = $this->getOrigins_List();
+                    break;
+            }
+            return;
+        }
+
+        $resp['error'] = "MissedParameter_type";
+    }
+
+    public function post_shop_category (&$resp, $req) {
+        $resp = $this->createOrigin($req->data);
+    }
+
+    public function patch_shop_category (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->updateOrigin($CategoryID, $req->data);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
+    }
+
+    public function delete_shop_category (&$resp, $req) {
+        if (!glIsToolbox()) {
+            $resp['error'] = 'AccessDenied';
+            return;
+        }
+        if (!empty($req->get['id'])) {
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->disableOrigin($CategoryID);
             return;
         }
         $resp['error'] = 'MissedParameter_id';

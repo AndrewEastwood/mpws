@@ -4,18 +4,16 @@ define('plugin/shop/toolbox/js/model/origin', [
 
     var Origin = Backbone.Model.extend({
         idAttribute: "ID",
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'shop_manage_origin'
-        }),
-        parse: function (resp) {
-            var origin = resp.origin || {};
-            if (resp.statuses)
-                origin.statuses = resp.statuses;
-            return origin;
+        url: function () {
+            var _params =  {
+                source: 'shop',
+                fn: 'origin'
+            };
+            if (!this.isNew())
+                _params.id = this.id;
+            return APP.getApiLink(_params);
         }
     });
 
     return Origin;
-
 });

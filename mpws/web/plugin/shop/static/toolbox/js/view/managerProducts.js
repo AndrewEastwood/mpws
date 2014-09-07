@@ -5,11 +5,13 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
     'plugin/shop/toolbox/js/collection/basicProducts',
     'plugin/shop/toolbox/js/view/listProducts',
     'plugin/shop/toolbox/js/view/categoriesTree',
+    'plugin/shop/toolbox/js/collection/basicOrigins',
+    'plugin/shop/toolbox/js/view/listOrigins'.
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerProducts',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, CollectionOrders, ViewListOrders, ViewCategoriesTree, tpl, lang) {
+], function (Sandbox, Backbone, Utils, CollectionProducts, ViewListOrders, ViewCategoriesTree, CollectionOrigins, ViewListOrigins, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -21,7 +23,7 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             // set options
             this.setOptions(options);
             // create collection and viewList
-            this.collection = new CollectionOrders();
+            this.collection = new CollectionProducts();
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.collection, 'reset', this.render);
@@ -39,6 +41,11 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
                 self.collection.setCustomQueryField("CategoryID", activeCategoryID);
                 self.collection.fetch({reset: true});
             }, this);
+
+            this.collectionOrigins = new CollectionOrigins();
+            this.viewListOrigins = new ViewListOrigins({collection: this.collectionOrigins});
+            this.viewListOrigins.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
+            this.viewListOrigins.render();
         },
         setOptions: function (options) {
             // merge with defaults

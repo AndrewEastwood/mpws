@@ -286,6 +286,19 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     static function jsapiShopGetCategoryItem ($id = null) {
         $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
@@ -366,6 +379,95 @@ class configurationShopDataSource extends objectConfiguration {
             "options" => null
         ));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    static function jsapiShopGetOriginItem ($id = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_origins",
+            "condition" => array(),
+            "fields" => array("ID", "ExternalKey", "Name", "Description", "HomePage", "Status", "DateCreated", "DateUpdated"),
+            "options" => array(
+                "expandSingleRecord" => true
+            ),
+            "limit" => 1
+        ));
+
+        if (!is_null($id)) {
+            $config["condition"] = array(
+                "shop_categories.ID" => self::jsapiCreateDataSourceCondition($id)
+            );
+        }
+
+        return $config;
+    }
+
+    static function jsapiShopGetOriginList () {
+        $config = self::jsapiShopGetOriginItem();
+        $config['fields'] = array("ID");
+        $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        return $config;
+    }
+
+    static function jsapiShopCreateOrigin ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        $data["ExternalKey"] = libraryUtils::url_slug($data['Name']);
+        $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_categories",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopUpdateOrigin ($OriginID, $data) {
+        $data["DateUpdated"] = self::getDate();
+        if (isset($data['Name']))
+            $data["ExternalKey"] = libraryUtils::url_slug($data['Name']);
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_origins",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($OriginID)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopDeleteOrigin ($OriginID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_origins",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($OriginID)
+            ),
+            "data" => array(
+                "Status" => 'REMOVED',
+                "DateUpdated" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
+
+
+
+
+
+
 
 
 

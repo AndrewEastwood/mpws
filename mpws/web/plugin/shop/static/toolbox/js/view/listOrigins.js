@@ -1,115 +1,125 @@
 define("plugin/shop/toolbox/js/view/listOrigins", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
+    'default/js/lib/backbone',
+    'default/js/lib/utils',
     "default/js/lib/backgrid",
-    'plugin/shop/toolbox/js/collection/listOrigins',
-    "plugin/shop/common/js/lib/utils",
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/listOrigins',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOriginListItem',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
     "default/js/lib/backgrid-paginator",
-    "default/js/lib/backgrid-htmlcell",
-    'default/js/lib/backgrid-filter',
-], function (Sandbox, MView, Backgrid, CollectionListOrigins, ShopUtils, tpl, lang) {
+    "default/js/lib/backgrid-select-all",
+    "default/js/lib/backgrid-htmlcell"
+], function (Sandbox, Backbone, Utils, Backgrid, tplBtnMenuMainItem, lang) {
 
-    var columnActions = {
-        name: "Actions",
-        label: lang.pluginMenu_Products_Grid_Column_Actions,
-        cell: "html",
-        editable: false,
-        sortable: false,
-        formatter: {
-            fromRaw: function (value, model) {
-                // debugger;
-                var _link = $('<a>').attr({
-                    href: "javascript://",
-                    "data-oid": model.get('ID'),
-                    "data-action": "plugin:shop:origin:edit"
-                }).text(lang.pluginMenu_Origins_Grid_link_Edit);
-                // debugger;
-                return _link;
+    function getColumns () {
+        // TODO: do smth to fetch states from server
+        var statuses = ["ACTIVE", "REMOVED"];
+        var orderStatusValues = _(statuses).map(function (status){ return [lang["origin_status_" + status] || status, status]; });
+
+        var columnActions = {
+            name: "Actions",
+            label: "",
+            cell: "html",
+            editable: false,
+            sortable: false,
+            formatter: {
+                fromRaw: function (value, model) {
+                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
+                    return btn;
+                }
             }
-        }
-    };
+        };
 
-    var columnName = {
-        name: "Name",
-        label: lang.pluginMenu_Origins_Grid_Column_Name,
-        cell: "string"
-    };
+        var columnName = {
+            name: "Name",
+            label: lang.pluginMenu_Origins_Grid_Column_Name,
+            cell: "string"
+        };
 
-    var columnStatus = {
-        name: "Status",
-        label: lang.pluginMenu_Origins_Grid_Column_Status,
-        cell: "boolean",
-        editable: true,
-        formatter: {
-            fromRaw: function (value) {
-                return value === "ACTIVE";
-            },
-            toRaw: function (value) {
-                return value ? "ACTIVE" : "REMOVED";
-            }
-        }
-    };
+        var columnHomePage = {
+            name: "HomePage",
+            label: lang.pluginMenu_Origins_Grid_Column_HomePage,
+            cell: "string"
+        };
 
-    var columns = [columnActions, columnName, columnStatus];
-
-    var ListOrigins = MView.extend({
-        className: 'shop-toolbox-origins well',
-        template: tpl,
-        lang: lang,
-        initialize: function () {
-            var self = this;
-            MView.prototype.initialize.call(this);
-
-            var collection = new CollectionListOrigins();
-
-            var Grid = new Backgrid.Grid({
-                className: "backgrid table table-responsive",
-                columns: columns,
-                collection: collection
-            });
-
-            collection.on('change', function(changedModel) {
-                // debugger;
-                for (var fieldName in changedModel.changed)
-                    ShopUtils.updateOriginField(changedModel.get('ID'), fieldName, changedModel.changed[fieldName]);
+        var columnStatus = {
+            name: "Status",
+            label: lang.pluginMenu_Origins_Grid_Column_Status,
+            cell: Backgrid.SelectCell.extend({
+                // It's possible to render an option group or use a
+                // function to provide option values too.
+                optionValues: orderStatusValues,
+                initialize: function (options) {
+                    Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+                    this.listenTo(this.model, "change:Status", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                        });
+                    });
+                }
             })
+        };
 
-            var Paginator = new Backgrid.Extension.Paginator({
-                collection: collection
-            });
-            // ClientSideFilter performs a case-insensitive regular
-            // expression search on the client side by OR-ing the keywords in
-            // the search box together.
-            var clientSideFilter = new Backgrid.Extension.ClientSideFilter({
-                collection: collection,
-                placeholder: lang.pluginMenu_Origins_Grid_Search_placeholder,
-                // The model fields to search for matches
-                fields: ['Name'],
-                // How long to wait after typing has stopped before searching can start
-                wait: 150
-            });
+        var columnDateUpdated = {
+            name: "DateUpdated",
+            label: lang.pluginMenu_Origins_Grid_Column_DateUpdated,
+            cell: "string",
+            editable: false
+        };
 
-            // inject all lists into tabPages
-            this.on('mview:renderComplete', function () {
-                var $placeholder = self.$('.shop-list-origin');
-                var $placeholderSearch = self.$('.shop-list-origin-search');
-                $placeholder.empty();
-                $placeholder.append(Grid.render().el);
-                $placeholder.append(Paginator.render().el);
-                $placeholderSearch.html(clientSideFilter.render().el);
-                collection.fetch({reset: true});
-            });
+        var columnDateCreated = {
+            name: "DateCreated",
+            label: lang.pluginMenu_Origins_Grid_Column_DateCreated,
+            cell: "string",
+            editable: false
+        };
 
-            Sandbox.eventSubscribe("plugin:shop:origin:item:changed", function(){
-                collection.fetch({reset: true});
-            });
+        return _.extend({}, {
+            columnActions: columnActions,
+            columnName: columnName,
+            columnHomePage: columnHomePage,
+            columnStatus: columnStatus,
+            columnDateUpdated: columnDateUpdated,
+            columnDateCreated: columnDateCreated
+        });
+    }
+
+    var ListOrders = Backbone.View.extend({
+        initialize: function (options) {
+            this.options = options;
+            if (this.collection) {
+                this.listenTo(this.collection, 'reset', this.render);
+                var columns = getColumns();
+                if (this.options.adjustColumns)
+                    columns = this.options.adjustColumns(columns);
+                this.grid = new Backgrid.Grid({
+                    className: "backgrid table table-responsive",
+                    columns: _(columns).values(),
+                    collection: this.collection
+                });
+                this.paginator = new Backgrid.Extension.Paginator({
+                    collection: this.collection
+                });
+            }
+        },
+        render: function () {
+            // console.log('listOrders: render');
+            // debugger;
+            this.$el.off().empty();
+            if (this.collection.length) {
+                this.$el.append(this.grid.render().$el);
+                this.$el.append(this.paginator.render().$el);
+            } else {
+                this.$el.html(this.grid.emptyText);
+            }
+            return this;
         }
     });
 
-    return ListOrigins;
+    return ListOrders;
 });
