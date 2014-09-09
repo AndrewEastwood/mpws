@@ -39,8 +39,13 @@ class objectPlugin implements IPlugin {
     //     return $this->getCustomer()->ifYouCan($action);
     // }
 
+    public function beforeRun () {}
+    public function afterRun () {}
+
     public function run () {
+        $this->beforeRun();
         libraryRequest::processRequest($this);
+        $this->afterRun();
     }
 }
 

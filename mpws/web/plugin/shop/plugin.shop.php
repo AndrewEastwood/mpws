@@ -8,6 +8,42 @@ class pluginShop extends objectPlugin {
     private $_listKey_Cart = 'shop:cart';
     private $_listKey_Promo = 'shop:promo';
 
+    public function beforeRun () {
+        $this->_getTableStatuses();
+    }
+
+    private function _getTableStatuses ($tableName = null, $force = false) {
+        $statusDump = array ();
+        $mkTimeDiff = 0;
+        if (isset($_SESSION['shop:statuses:last_update'])) {
+            $mkTimeDiff = mktime() - intval($_SESSION['shop:statuses:last_update']);
+        }
+        // daily update
+        if ($force || $mkTimeDiff > 24 * 60 * 60 || empty($_SESSION['shop:statuses:last_update'])) {
+            $statusDump[configurationShopDataSource::$Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrders);
+            $statusDump[configurationShopDataSource::$Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
+            $statusDump[configurationShopDataSource::$Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins);
+            $statusDump[configurationShopDataSource::$Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopCategories);
+            $statusDump[configurationShopDataSource::$Table_ShopProductAttr] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProductAttr);
+            $statusDump[configurationShopDataSource::$Table_ShopDeliveryAgency] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopDeliveryAgency);
+            // $statusDump[configurationShopDataSource::$Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopSettings);
+            $_SESSION['shop:statuses:list'] = $statusDump;
+            $_SESSION['shop:statuses:last_update'] = mktime();
+        } else {
+            $statusDump = $_SESSION['shop:statuses:last_update'];
+        }
+        if (!empty($tableName)) {
+            if (isset($statusDump[$tableName])) {
+                return $statusDump[$tableName];
+            } else {
+                throw new Exception("Unknown table name for status list dump", 1);
+            }
+        }
+        // var_dump($statusDump);
+        // var_dump($mkTimeDiff);
+        // var_dump($_SESSION['shop:statuses:last_update']);
+    }
+
     // product standalone item (short or full)
     // -----------------------------------------------
     public function getProductByID ($productID, $saveIntoRecent = false, $skipRelations = false) {

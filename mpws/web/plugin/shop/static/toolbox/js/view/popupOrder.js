@@ -35,13 +35,8 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
     var OrderItem = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        initialize: function (orderData) {
-            this.model = new ModelOrder(orderData);
-            if (orderData) {
-                if (_.isArray(orderData.Status))
-                    orderData.Status = orderData.Status[0];
-                this.model.set(orderData);
-            }
+        initialize: function () {
+            this.model = new ModelOrder();
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
             this.$dialog = new BootstrapDialog({

@@ -5,6 +5,9 @@ class configurationShopDataSource extends objectConfiguration {
     static $Table_ShopOrders = "shop_orders";
     static $Table_ShopProducts = "shop_products";
     static $Table_ShopOrigins = "shop_origins";
+    static $Table_ShopCategories = "shop_categories";
+    static $Table_ShopProductAttr = "shop_productAttributes";
+    static $Table_ShopDeliveryAgency = "shop_deliveryAgencies";
     static $Table_ShopSettings = "shop_settings";
 
     // Product base configuration >>>>>

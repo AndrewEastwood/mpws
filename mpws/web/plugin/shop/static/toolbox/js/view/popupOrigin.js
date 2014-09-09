@@ -23,13 +23,8 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
     var OrderItem = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        initialize: function (data) {
-            this.model = new ModelOrigin(data);
-            if (data) {
-                if (_.isArray(data.Status))
-                    data.Status = data.Status[0];
-                this.model.set(data);
-            }
+        initialize: function () {
+            this.model = new ModelOrigin();
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
             this.$dialog = new BootstrapDialog({

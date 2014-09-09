@@ -328,7 +328,7 @@ CREATE TABLE `shop_deliveryAgencies` (
   `CustomerID` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `WebSite` varchar(300) NOT NULL,
-  `State` enum('ACTIVE','REMOVED','','') NOT NULL DEFAULT 'ACTIVE',
+  `Status` enum('ACTIVE','REMOVED') NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -832,4 +832,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-09-08  1:37:20
+-- Dump completed on 2014-09-10  0:43:15
