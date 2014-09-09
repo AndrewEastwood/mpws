@@ -30,7 +30,7 @@ class pluginShop extends objectPlugin {
             $_SESSION['shop:statuses:list'] = $statusDump;
             $_SESSION['shop:statuses:last_update'] = mktime();
         } else {
-            $statusDump = $_SESSION['shop:statuses:last_update'];
+            $statusDump = $_SESSION['shop:statuses:list'];
         }
         if (!empty($tableName)) {
             if (isset($statusDump[$tableName])) {
@@ -114,6 +114,7 @@ class pluginShop extends objectPlugin {
         // is available
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
 
+        $product['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopProducts);
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
@@ -208,6 +209,7 @@ class pluginShop extends objectPlugin {
             return null;
 
         $origin['ID'] = intval($origin['ID']);
+        $origin['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
         return $origin;
     }
 
@@ -366,6 +368,7 @@ class pluginShop extends objectPlugin {
         // $category['RootID'] = is_null($category['RootID']) ? null : intval($category['RootID']);
         $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
         // $category['CustomerID'] = intval($category['CustomerID']);
+        $category['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopCategories);
 
         return $category;
     }
@@ -544,6 +547,10 @@ class pluginShop extends objectPlugin {
 
         $order['ID'] = intval($order['ID']);
         $this->__attachOrderDetails($order);
+
+        if ($this->getCustomer()->ifYouCan('Admin')) {
+            $order['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopOrders);
+        }
         return $order;
     }
 
@@ -1318,7 +1325,12 @@ class pluginShop extends objectPlugin {
     // -----------------------------------------------
 
     public function get_shop_product (&$resp, $req) {
-        $resp = $this->getProductByID($req->get['id']);
+        if (!empty($req->get['id'])) {
+            $ProductID = intval($req->get['id']);
+            $resp = $this->getProductByID($ProductID);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
     }
 
     public function get_shop_stats (&$resp, $req) {
@@ -1433,6 +1445,15 @@ class pluginShop extends objectPlugin {
         $resp['error'] = "MissedParameter_type";
     }
 
+    public function get_shop_category (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->getCategoryByID($CategoryID);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
+    }
+
     public function post_shop_category (&$resp, $req) {
         $resp = $this->createCategory($req->data);
     }
@@ -1477,6 +1498,15 @@ class pluginShop extends objectPlugin {
         }
 
         $resp['error'] = "MissedParameter_type";
+    }
+
+    public function get_shop_origin (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $OriginID = intval($req->get['id']);
+            $resp = $this->getOriginByID($OriginID);
+            return;
+        }
+        $resp['error'] = 'MissedParameter_id';
     }
 
     public function post_shop_origin (&$resp, $req) {
