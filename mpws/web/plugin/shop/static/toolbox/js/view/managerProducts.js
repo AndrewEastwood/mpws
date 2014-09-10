@@ -17,11 +17,8 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
         className: 'shop-toolbox-products',
         initialize: function (options) {
             var self = this;
-            // debugger;
-
             // set options
             this.setOptions(options);
-
             this.viewProductsList = new ViewListProducts();
             this.viewProductsList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.viewProductsList.collection.setCustomQueryParam("Stats", true);
@@ -62,7 +59,6 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
         render: function () {
             // TODO:
             // add expired and todays products
-
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
@@ -70,7 +66,6 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
                 this.$('.products').html(this.viewProductsList.$el);
                 this.$('.origins').html(this.viewListOrigins.$el);
             }
-
             // render/refresh product list
             var currentStatus = this.viewProductsList.collection.getCustomQueryField("Status");
             this.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');

@@ -17,7 +17,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
 
     function getColumns () {
         // we show following statuses only
-        var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED"];
+        var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED", "CUSTOMER_CANCELED", "SHOP_REFUNDED"];
         var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
 
         var columnActions = {

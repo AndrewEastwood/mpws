@@ -30,7 +30,9 @@
                     <span class="prefix">Статус:</span>
                     <span class="editable">
                         <select class="form-control hide" id="order-status-control-ID">
-                            {{> website/hbs/partials/selectboxItemsOrderStatus . }}
+                            {{#each data._statuses}}
+                            <option value="{{this}}">{{mpwsGetValueByKey ../lang this "order_status_" }}</option>
+                            {{/each}}
                         </select>
                         <a href="javascript://" id="order-status-ID" class="editable">{{>website/hbs/partials/orderStatusType . }}</a>
                     </span>

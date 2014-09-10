@@ -4,6 +4,13 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
     'website/nls/ua_uk/plugin_shop'
 ], function (_, CustomerPluginShop) {
     return _.extend({}, {
+        order_status_NEW: 'Прийняте',
+        order_status_ACTIVE: 'В процесі виконання',
+        order_status_LOGISTIC_DELIVERING: 'Відправлено',
+        order_status_LOGISTIC_DELIVERED: 'Вантаж прибув',
+        order_status_SHOP_CLOSED: 'Виконано',
+        order_status_CUSTOMER_CANCELED: "Відмова покупця",
+        order_status_SHOP_REFUNDED: "Відшкодування",
         // orderEntry_Popup_field_firstName: "Імя",
         // orderEntry_Popup_field_lastName: "Прізвище",
         // orderEntry_Popup_field_email: "Ел.пошта",
@@ -115,7 +122,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_status_DEFECT: 'З дефектом',
         product_status_WAITING: 'Очікування',
         product_status_PREORDER: 'Під замовлення',
-
+        orders_manager_listTitle: "Менеджер замовлень",
         categoryTree_Title: 'Дерево категорії'
     }, CustomerPluginShop);
 });

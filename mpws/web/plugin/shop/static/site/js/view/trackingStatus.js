@@ -33,6 +33,55 @@ define("plugin/shop/site/js/view/trackingStatus", [
         render: function () {
             // debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            var $timeline = this.$('.order-status-timeline-completion');
+            switch (this.model.get('Status')) {
+                case "NEW": {
+                    $timeline.addClass('c0');
+                    this.$('.image-order-status-new').removeClass('disabled');
+                    break;
+                }
+                case "ACTIVE": {
+                    $timeline.addClass('c1');
+                    this.$('.image-order-status-new').removeClass('disabled');
+                    this.$('.image-order-status-active').removeClass('disabled');
+                    break;
+                }
+                case "LOGISTIC_DELIVERING": {
+                    $timeline.addClass('c2');
+                    this.$('.image-order-status-new').removeClass('disabled');
+                    this.$('.image-order-status-active').removeClass('disabled');
+                    this.$('.image-order-status-intransit').removeClass('disabled');
+                    break;
+                }
+                case "LOGISTIC_DELIVERED": {
+                    this.$('.image-order-status-new').removeClass('disabled');
+                    this.$('.image-order-status-active').removeClass('disabled');
+                    this.$('.image-order-status-intransit').removeClass('disabled');
+                    this.$('.image-order-status-delivered').removeClass('disabled');
+                    $timeline.addClass('c3');
+                    break;
+                }
+                case "SHOP_CLOSED": {
+                    $timeline.addClass('c4');
+                    this.$('.image-order-status').removeClass('disabled');
+                    this.$('.image-order-status-completed .closed').removeClass('hidden');
+                    break;
+                }
+                case "SHOP_REFUNDED": {
+                    $timeline.addClass('c4');
+                    this.$('.image-order-status-new').removeClass('disabled');
+                    this.$('.image-order-status-completed').removeClass('disabled');
+                    this.$('.image-order-status-completed .refunded').removeClass('hidden');
+                    break;
+                }
+                case "CUSTOMER_CANCELED": {
+                    $timeline.addClass('c4');
+                    this.$('.image-order-status-new').removeClass('disabled');
+                    this.$('.image-order-status-completed').removeClass('disabled');
+                    this.$('.image-order-status-completed .canceled').removeClass('hidden');
+                    break;
+                }
+            }
             return this;
         }
     });

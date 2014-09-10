@@ -14,12 +14,12 @@ class pluginShop extends objectPlugin {
 
     private function _getTableStatuses ($tableName = null, $force = false) {
         $statusDump = array ();
-        $mkTimeDiff = 0;
-        if (isset($_SESSION['shop:statuses:last_update'])) {
-            $mkTimeDiff = mktime() - intval($_SESSION['shop:statuses:last_update']);
+        $isExpired = 0;
+        if (isset($_SESSION['shop:statuses:expire'])) {
+            $isExpired = mktime() > intval($_SESSION['shop:statuses:expire']);
         }
         // daily update
-        if ($force || $mkTimeDiff > 24 * 60 * 60 || empty($_SESSION['shop:statuses:last_update'])) {
+        if ($force || $isExpired || empty($_SESSION['shop:statuses:list'])) {
             $statusDump[configurationShopDataSource::$Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrders);
             $statusDump[configurationShopDataSource::$Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
             $statusDump[configurationShopDataSource::$Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins);
@@ -28,7 +28,7 @@ class pluginShop extends objectPlugin {
             $statusDump[configurationShopDataSource::$Table_ShopDeliveryAgency] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopDeliveryAgency);
             // $statusDump[configurationShopDataSource::$Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopSettings);
             $_SESSION['shop:statuses:list'] = $statusDump;
-            $_SESSION['shop:statuses:last_update'] = mktime();
+            $_SESSION['shop:statuses:expire'] = mktime() + 24 * 60 * 60;
         } else {
             $statusDump = $_SESSION['shop:statuses:list'];
         }
@@ -39,6 +39,7 @@ class pluginShop extends objectPlugin {
                 throw new Exception("Unknown table name for status list dump", 1);
             }
         }
+        setcookie("shop:statuses:list", json_encode($statusDump), $_SESSION['shop:statuses:expire'], "/");
         // var_dump($statusDump);
         // var_dump($mkTimeDiff);
         // var_dump($_SESSION['shop:statuses:last_update']);

@@ -87,144 +87,31 @@
                 </ul>
 
                 <div class="order-status">
-
                     <div class="order-status-timeline">
-                        {{#if_eq data.Status "NEW" }}
-                        <div class="order-status-timeline-completion c0"></div>
-                        {{/if_eq}}
-                        {{#if_eq data.Status "ACTIVE" }}
-                        <div class="order-status-timeline-completion c1"></div>
-                        {{/if_eq}}
-                        {{#if_eq data.Status "LOGISTIC_DELIVERING" }}
-                        <div class="order-status-timeline-completion c2"></div>
-                        {{/if_eq}}
-                        {{#if_eq data.Status "LOGISTIC_DELIVERED" }}
-                        <div class="order-status-timeline-completion c3"></div>
-                        {{/if_eq}}
-                        {{#if_eq data.Status "SHOP_CLOSED" }}
-                        <div class="order-status-timeline-completion c4"></div>
-                        {{/if_eq}}
+                        <div class="order-status-timeline-completion"></div>
                     </div>
-
-                    {{#if_eq data.Status "NEW" }}
-                        <div class="image-order-status image-order-status-new active img-circle">
-                            <span class="status">Прийняте</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-active disabled img-circle">
-                            <span class="status">В процеси виконання</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-intransit disabled img-circle">
-                            <span class="status">Відправлено</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-delivered disabled img-circle">
-                            <span class="status">Вантаж прибув</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-completed disabled img-circle">
-                            <span class="status">Виконано</span>
-                            <div class="icon"></div>
-                        </div>
-                    {{/if_eq}}
-
-
-                    {{#if_eq data.Status "ACTIVE" }}
-                        <div class="image-order-status image-order-status-new active img-circle">
-                            <span class="status">Прийняте</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-active active img-circle">
-                            <span class="status">В процеси виконання</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-intransit disabled img-circle">
-                            <span class="status">Відправлено</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-delivered disabled img-circle">
-                            <span class="status">Вантаж прибув</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-completed disabled img-circle">
-                            <span class="status">Виконано</span>
-                            <div class="icon"></div>
-                        </div>
-                    {{/if_eq}}
-
-
-                    {{#if_eq data.Status "LOGISTIC_DELIVERING" }}
-                        <div class="image-order-status image-order-status-new active img-circle">
-                            <span class="status">Прийняте</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-active active img-circle">
-                            <span class="status">В процеси виконання</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-intransit active img-circle">
-                            <span class="status">Відправлено</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-delivered disabled img-circle">
-                            <span class="status">Вантаж прибув</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-completed disabled img-circle">
-                            <span class="status">Виконано</span>
-                            <div class="icon"></div>
-                        </div>
-                    {{/if_eq}}
-
-
-                    {{#if_eq data.Status "LOGISTIC_DELIVERED" }}
-                        <div class="image-order-status image-order-status-new active img-circle">
-                            <span class="status">Прийняте</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-active active img-circle">
-                            <span class="status">В процеси виконання</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-intransit active img-circle">
-                            <span class="status">Відправлено</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-delivered active img-circle">
-                            <span class="status">Вантаж прибув</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-completed disabled img-circle">
-                            <span class="status">Виконано</span>
-                            <div class="icon"></div>
-                        </div>
-                    {{/if_eq}}
-
-
-                    {{#if_eq data.Status "SHOP_CLOSED" }}
-                        <div class="image-order-status image-order-status-new active img-circle">
-                            <span class="status">Прийняте</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-active active img-circle">
-                            <span class="status">В процеси виконання</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-intransit active img-circle">
-                            <span class="status">Відправлено</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-delivered active img-circle">
-                            <span class="status">Вантаж прибув</span>
-                            <div class="icon"></div>
-                        </div>
-                        <div class="image-order-status image-order-status-completed active img-circle">
-                            <span class="status">Виконано</span>
-                            <div class="icon"></div>
-                        </div>
-                    {{/if_eq}}
-
+                    <div class="image-order-status image-order-status-new disabled img-circle">
+                        <span class="status">Прийняте</span>
+                        <div class="icon"></div>
+                    </div>
+                    <div class="image-order-status image-order-status-active disabled img-circle">
+                        <span class="status">В процеси виконання</span>
+                        <div class="icon"></div>
+                    </div>
+                    <div class="image-order-status image-order-status-intransit disabled img-circle">
+                        <span class="status">Відправлено</span>
+                        <div class="icon"></div>
+                    </div>
+                    <div class="image-order-status image-order-status-delivered disabled img-circle">
+                        <span class="status">Вантаж прибув</span>
+                        <div class="icon"></div>
+                    </div>
+                    <div class="image-order-status image-order-status-completed disabled img-circle">
+                        <span class="status closed hidden">Виконано</span>
+                        <span class="status refunded hidden">Відшкодовано кошти</span>
+                        <span class="status canceled hidden">Відмова покупця</span>
+                        <div class="icon"></div>
+                    </div>
                 </div>
 
             {{/if}}
@@ -232,21 +119,3 @@
         {{/unless}}
     </div>
 </div>
-
-{{!-- 
-ACTIVE
-SHOP_REVIEWING
-SHOP_PACKAGE
-LOGISTIC_DELIVERING
-CUSTOMER_POSTPONE
-CUSTOMER_CANCELED
-CUSTOMER_CHANGED
-SHOP_WAITING_CUSTOMER_APPROVAL
-CUSTOMER_APPROVED
-LOGISTIC_DELIVERED
-SHOP_CLOSED
-CUSTOMER_REOPENED
-CUSTOMER_CLOSED
-CUSTOMER_WAITNG_REFUND
-SHOP_REFUNDED
-REMOVE --}}

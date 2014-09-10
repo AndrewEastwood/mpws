@@ -29,6 +29,12 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
             case 'SHOP_CLOSED': {
                 return $('<span/>').addClass('fa fa-check').append(' ', lang.order_status_SHOP_CLOSED);
             }
+            case 'CUSTOMER_CANCELED': {
+                return $('<span/>').addClass('fa fa-times').append(' ', lang.order_status_CUSTOMER_CANCELED);
+            }
+            case 'SHOP_REFUNDED': {
+                return $('<span/>').addClass('fa fa-dollar').append(' ', lang.order_status_SHOP_REFUNDED);
+            }
         }
     }
 

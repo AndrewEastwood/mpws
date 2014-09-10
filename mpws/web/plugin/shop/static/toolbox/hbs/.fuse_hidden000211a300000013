@@ -36,8 +36,8 @@
           <label class="col-md-4 control-label" for="selectbasic">{{lang.popup_origin_section_details_filed_status}}</label>
           <div class="col-md-4">
             <select id="selectbasic" name="Status" class="form-control">
-              {{#each extras.statuses }}
-              <option value="{{this}}" {{#if_eq ../data.Status this}}selected{{/if_eq}}>{{mpwsGetValueByKey ../lang this "origin_status_"}}</option>
+              {{#each data.statuses }}
+              <option value="{{this}}" {{#if_eq ../data.Status this}}selected{{/if_eq}}>{{mpwsGetValueByKey ../lang this "origin_field_status_"}}</option>
               {{/each}}
             </select>
           </div>
