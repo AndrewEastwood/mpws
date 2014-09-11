@@ -22,9 +22,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             MView.prototype.initialize.call(this);
             var self = this;
             var dialogIsShown = false;
-            // this.updateUrl({
-            //     orderID: orderID
-            // });
+
             this.on('mview:renderComplete', function () {
 
                 var orderID = this.model.get('order').ID;

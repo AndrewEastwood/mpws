@@ -14,7 +14,6 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         lang: lang,
         className: 'shop-toolbox-orders',
         initialize: function (options) {
-            var self = this;
             // debugger;
             // set options
             this.setOptions(options);
@@ -23,12 +22,10 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             this.viewOrdersList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.viewOrdersList.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.viewOrdersList.collection, 'reset', this.render);
-            this.listenTo(this.viewOrdersList.collection, 'sync', function (collection, resp, options) {
+            this.listenTo(this.viewOrdersList.collection, 'sync', $.proxy(function (collection, resp, options) {
                 if (resp && resp.stats)
-                    self.refreshBadges(resp.stats);
-            });
-            this.viewOrdersList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
-            this.viewOrdersList.render();
+                    this.refreshBadges(resp.stats);
+            }, this));
         },
         setOptions: function (options) {
             // merge with defaults
@@ -49,6 +46,8 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
             // TODO:
             // add expired and todays orders
             if (this.$el.is(':empty')) {
+                this.viewOrdersList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
+                this.viewOrdersList.render();
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 // show sub-view
                 this.$('.tab-pane').html(this.viewOrdersList.$el);

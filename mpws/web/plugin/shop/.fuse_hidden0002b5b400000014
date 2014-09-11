@@ -14,9 +14,9 @@ class pluginShop extends objectPlugin {
 
     private function _getTableStatuses ($tableName = null, $force = false) {
         $statusDump = array ();
-        $isExpired = true;
+        $isExpired = 0;
         if (isset($_SESSION['shop:statuses:expire'])) {
-            //$isExpired = mktime() > intval($_SESSION['shop:statuses:expire']);
+            $isExpired = mktime() > intval($_SESSION['shop:statuses:expire']);
         }
         // daily update
         if ($force || $isExpired || empty($_SESSION['shop:statuses:list'])) {
@@ -1516,12 +1516,11 @@ class pluginShop extends objectPlugin {
 
     public function patch_shop_origin (&$resp, $req) {
         if (!empty($req->get['id'])) {
-            $OriginID = intval($req->get['id']);
-            $resp = $this->updateOrigin($OriginID);
-        } else {
-            $resp['error'] = 'MissedParameter_id';
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->updateOrigin($CategoryID, $req->data);
+            return;
         }
-        $resp['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
+        $resp['error'] = 'MissedParameter_id';
     }
 
     public function delete_shop_origin (&$resp, $req) {
@@ -1530,8 +1529,8 @@ class pluginShop extends objectPlugin {
             return;
         }
         if (!empty($req->get['id'])) {
-            $OriginID = intval($req->get['id']);
-            $resp = $this->disableOrigin($OriginID);
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->disableOrigin($CategoryID);
             return;
         }
         $resp['error'] = 'MissedParameter_id';

@@ -13,9 +13,6 @@ define("plugin/shop/toolbox/js/view/statsOrdersExpired", [
         className: 'panel panel-danger',
         lang: lang,
         template: tpl,
-        events: {
-            'click .refresh': 'refresh'
-        },
         initialize: function () {
             this.collection = new CollectionOrdersExpired();
             this.viewList = new ViewListOrders({
@@ -29,16 +26,14 @@ define("plugin/shop/toolbox/js/view/statsOrdersExpired", [
                     return columns;
                 }
             });
-            this.viewList.grid.emptyText = "Немає протермінованих замовлень";
-            this.render();
-        },
-        refresh: function () {
-            this.collection.fetch({reset: true});
         },
         render: function () {
             // render into panel body
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            this.$('.panel-body').html(this.viewList.$el);
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.viewList.grid.emptyText = "Немає протермінованих замовлень";
+                this.$('.panel-body').html(this.viewList.$el);
+            }
             return this;
         }
     });

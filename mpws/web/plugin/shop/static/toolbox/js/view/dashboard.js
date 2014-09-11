@@ -42,6 +42,7 @@ define("plugin/shop/toolbox/js/view/dashboard", [
             wgtProductsNonPopular.collection.fetch({reset: true});
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+
             this.$('.ordersPending').html(wgtOrdersPending.$el);
             this.$('.ordersExpired').html(wgtOrdersExpired.$el);
             this.$('.ordersOverview').html(wgtOrdersOverview.$el);

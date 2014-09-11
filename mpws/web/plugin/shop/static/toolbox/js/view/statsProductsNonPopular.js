@@ -23,12 +23,13 @@ define("plugin/shop/toolbox/js/view/statsProductsNonPopular", [
                     return columns;
                 }
             });
-            this.viewList.grid.emptyText = "Немає не популярних товарів";
-            this.render();
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            this.$('.panel-body').html(this.viewList.$el);
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.$('.panel-body').html(this.viewList.$el);
+                this.viewList.grid.emptyText = "Немає не популярних товарів";
+            }
             return this;
         }
     });

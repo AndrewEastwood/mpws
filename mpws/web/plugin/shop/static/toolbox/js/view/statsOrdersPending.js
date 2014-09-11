@@ -13,9 +13,6 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
         className: 'panel panel-success',
         lang: lang,
         template: tpl,
-        events: {
-            'click .refresh': 'refresh'
-        },
         initialize: function () {
             this.collection = new CollectionOrdersTodays();
             this.viewList = new ViewListOrders({
@@ -29,16 +26,14 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
                     return columns;
                 }
             });
-            this.viewList.grid.emptyText = "Всі замовлення оброблені";
-            this.render();
-        },
-        refresh: function () {
-            this.collection.fetch({reset: true});
         },
         render: function () {
             // render into panel body
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            this.$('.panel-body').html(this.viewList.$el);
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.viewList.grid.emptyText = "Всі замовлення оброблені";
+                this.$('.panel-body').html(this.viewList.$el);
+            }
             return this;
         }
     });

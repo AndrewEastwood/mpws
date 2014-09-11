@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/view/managerProducts', [
+define('plugin/shop/toolbox/js/view/managerContent', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
@@ -6,7 +6,7 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
     'plugin/shop/toolbox/js/view/categoriesTree',
     'plugin/shop/toolbox/js/view/listOrigins',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerProducts',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
 ], function (Sandbox, Backbone, Utils, ViewListProducts, ViewCategoriesTree, ViewListOrigins, tpl, lang) {
@@ -16,30 +16,29 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
         lang: lang,
         className: 'shop-toolbox-products',
         initialize: function (options) {
-            var self = this;
             // set options
             this.setOptions(options);
+
+            // ini sub-views
             this.viewProductsList = new ViewListProducts();
+            this.viewOriginsList = new ViewListOrigins();
+            this.viewCatergoriesTree = new ViewCategoriesTree();
+
+            // subscribe on events
             this.viewProductsList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.viewProductsList.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.viewProductsList.collection, 'reset', this.render);
-            this.listenTo(this.viewProductsList.collection, 'sync', function (collection, resp, options) {
-                if (resp && resp.stats)
-                    self.refreshBadges(resp.stats);
-            });
-            this.viewProductsList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
-            this.viewProductsList.render();
+            this.listenTo(this.viewProductsList.collection, 'sync', $.proxy(function (collection, resp, options) {
+                if (this && resp.stats)
+                    this.refreshBadges(resp.stats);
+            }, this));
 
-            this.viewCatergoriesTree = new ViewCategoriesTree();
-            this.viewCatergoriesTree.collection.fetch({reset: true});
             this.viewCatergoriesTree.on('changed:category', function (activeCategoryID) {
-                self.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
-                self.viewProductsList.collection.fetch({reset: true});
+                this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
+                // temporary solution
+                this.viewProductsList.collection.fetch({reset: true});
             }, this);
 
-            this.viewListOrigins = new ViewListOrigins();
-            this.viewListOrigins.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
-            this.viewListOrigins.collection.fetch({reset: true});
         },
         setOptions: function (options) {
             // merge with defaults
@@ -61,10 +60,13 @@ define('plugin/shop/toolbox/js/view/managerProducts', [
             // add expired and todays products
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
+                this.viewOriginsList.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
+                this.viewProductsList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
+                this.viewProductsList.render();
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);
-                this.$('.origins').html(this.viewListOrigins.$el);
+                this.$('.origins').html(this.viewOriginsList.$el);
             }
             // render/refresh product list
             var currentStatus = this.viewProductsList.collection.getCustomQueryField("Status");

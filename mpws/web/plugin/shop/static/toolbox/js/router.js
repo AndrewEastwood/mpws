@@ -21,8 +21,8 @@ define("plugin/shop/toolbox/js/router", [
 
     var routes = {
         // "shop/stats": "stats",
-        "shop/products": "productsList",
-        "shop/products/:status": "productsListPage",
+        "shop/content": "contentList",
+        "shop/content/:status": "contentListPage",
         "shop/product/new": "productCreate",
         "shop/product/edit/:id": "productEdit",
         "shop/orders": "ordersList",
@@ -70,20 +70,22 @@ define("plugin/shop/toolbox/js/router", [
         productEdit: function (productID) {
 
         },
-        productsList: function () {
-            this.productsListPage();
+        contentList: function () {
+            this.contentListPage();
         },
-        productsListPage: function (status) {
+        contentListPage: function (status) {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-products');
-            require(['plugin/shop/toolbox/js/view/managerProducts'], function (ManagerProducts) {
+            require(['plugin/shop/toolbox/js/view/managerContent'], function (ManagerContent) {
                 // create new view
                 var options = status ? {status: status} : {};
-                var managerProducts = new ManagerProducts(options);
-                managerProducts.viewProductsList.collection.fetch({reset: true});
+                var managerContent = new ManagerContent(options);
+                managerContent.viewProductsList.collection.fetch({reset: true});
+                managerContent.viewCatergoriesTree.collection.fetch({reset: true});
+                managerContent.viewOriginsList.collection.fetch({reset: true});
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
-                    el: managerProducts.$el
+                    el: managerContent.$el
                 });
 
                 // set page title
@@ -152,7 +154,7 @@ define("plugin/shop/toolbox/js/router", [
         originCreate: function () {
             require(['plugin/shop/toolbox/js/view/popupOrigin'], function (PopupOriginEntry) {
                 var popupOrigin = new PopupOriginEntry();
-                popupOrigin.render();
+                popupOrigin.model.fetch();
                 popupOrigin.$dialog.onHide(function () {
                     Backbone.history.history.back();
                 });

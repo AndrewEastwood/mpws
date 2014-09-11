@@ -40,12 +40,13 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
                     return columns;
                 }
             });
-            this.viewList.grid.emptyText = "Немає популярних товарів";
-            this.render();
         },
         render: function () {
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            this.$('.panel-body').html(this.viewList.$el);
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                this.viewList.grid.emptyText = "Немає популярних товарів";
+                this.$('.panel-body').html(this.viewList.$el);
+            }
             return this;
         }
     });
