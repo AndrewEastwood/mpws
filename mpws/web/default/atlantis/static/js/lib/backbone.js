@@ -1554,6 +1554,7 @@
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
   var extend = function(protoProps, staticProps) {
+    // debugger;
     var parent = this;
     var child;
 

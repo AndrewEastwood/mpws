@@ -10,10 +10,32 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
+    "default/js/lib/spin",
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionProducts, tplBtnMenuMainItem, lang) {
+], function (Sandbox, Backbone, Utils, Backgrid, CollectionProducts, tplBtnMenuMainItem, lang, Spinner) {
+
+    var opts = {
+        lines: 9, // The number of lines to draw
+        length: 5, // The length of each line
+        width: 8, // The line thickness
+        radius: 15, // The radius of the inner circle
+        corners: 0.9, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000', // #rgb or #rrggbb or array of colors
+        speed: 1.1, // Rounds per second
+        trail: 58, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: '10%', // Top position relative to parent
+        left: '50%' // Left position relative to parent
+    };
+
+    var spinner = new Spinner(opts).spin();
 
     function getColumns () {
         // TODO: do smth to fetch states from server
@@ -122,6 +144,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             this.options = options || {};
             this.collection = this.collection || new CollectionProducts();
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'request', this.showLoading);
             var columns = getColumns();
             if (this.options.adjustColumns)
                 columns = this.options.adjustColumns(columns);
@@ -133,6 +156,14 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             this.paginator = new Backgrid.Extension.Paginator({
                 collection: this.collection
             });
+            _.bindAll(this, 'showLoading', 'render');
+        },
+        showLoading: function () {
+            var self = this;
+            setTimeout(function(){
+                console.log('adding spinner');
+                self.$el.append(spinner.el);
+            }, 0);
         },
         render: function () {
             // console.log('listOrders: render');

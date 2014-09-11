@@ -2,7 +2,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/view/listProducts',
+    'plugin/shop/toolbox/js/view/managerContent_Products',
     'plugin/shop/toolbox/js/view/categoriesTree',
     'plugin/shop/toolbox/js/view/listOrigins',
     /* template */
@@ -33,12 +33,11 @@ define('plugin/shop/toolbox/js/view/managerContent', [
                     this.refreshBadges(resp.stats);
             }, this));
 
-            this.viewCatergoriesTree.on('changed:category', function (activeCategoryID) {
+            this.viewCatergoriesTree.on('changed:category', _.debounce(function (activeCategoryID) {
                 this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
                 // temporary solution
                 this.viewProductsList.collection.fetch({reset: true});
-            }, this);
-
+            }, 1000), this);
         },
         setOptions: function (options) {
             // merge with defaults
@@ -62,15 +61,11 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             if (this.$el.is(':empty')) {
                 this.viewOriginsList.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
                 this.viewProductsList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
-                this.viewProductsList.render();
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);
                 this.$('.origins').html(this.viewOriginsList.$el);
             }
-            // render/refresh product list
-            var currentStatus = this.viewProductsList.collection.getCustomQueryField("Status");
-            this.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
             return this;
         }
     });
