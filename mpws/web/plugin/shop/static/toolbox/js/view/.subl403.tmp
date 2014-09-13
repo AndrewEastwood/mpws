@@ -168,15 +168,14 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         render: function () {
             console.log('listOrders: render');
             // debugger;
-            // if (this.$el.is(':empty')) {
-                // this.$el.off().empty();
-                if (this.collection.length) {
-                    this.$el.append(this.grid.render().$el);
-                    this.$el.append(this.paginator.render().$el);
-                } else {
-                    this.$el.html(this.grid.emptyText);
-                }
-            // }
+            this.$el.off().empty();
+            if (this.collection.length) {
+                this.$el.append(this.grid.render().$el);
+                this.$el.append(this.paginator.render().$el);
+            } else {
+                this.$el.html(this.grid.emptyText);
+            }
+            this.trigger('render:complete');
             return this;
         }
     });
