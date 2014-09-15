@@ -19,6 +19,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             // set options
 
             // ini sub-views
+            // debugger;
             this.viewProductsList = new ViewListProducts(options);
             this.viewOriginsList = new ViewListOrigins(options);
             this.viewCatergoriesTree = new ViewCategoriesTree(options);
@@ -26,19 +27,21 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             // subscribe on events
             this.listenTo(this.viewProductsList.collection, 'reset', this.render);
 
-            this.viewCatergoriesTree.on('changed:category', _.debounce(function (activeCategoryID) {
-                this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
-                // temporary solution
-                this.viewProductsList.collection.fetch({reset: true});
-            }, 1000), this);
+            this.viewCatergoriesTree.on('categoryTree:changed:category', _.debounce(function (activeCategoryID) {
+                var self = this;
+                // self.viewProductsList.trigger('categoryTree:changed:category');
+                // setTimeout(function() {
+                    self.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
+                    // temporary solution
+                    self.viewProductsList.collection.fetch({reset: true});
+                // }, 5000);
+            }, 200), this);
         },
         render: function () {
             // TODO:
             // add expired and todays products
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
-                // this.viewOriginsList.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
-                // this.viewProductsList.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);

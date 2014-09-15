@@ -13,11 +13,18 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
         className: 'panel panel-default shop_managerContent_Products',
         template: tpl,
         lang: lang,
-        intialize: function (options) {
+        initialize: function (options) {
             // _.bindAll(this);
-            debugger;
+            ViewListProducts.prototype.initialize.call(this);
+
             this.setOptions(options);
 
+            // this.on('categoryTree:changed:category', $.proxy(function () {
+            //     this.showLoading();
+            // }));
+
+            // this.viewOriginsList.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
+            this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp, options) {
@@ -36,17 +43,21 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
         },
         refreshBadges: function (stats) {
             var self = this;
-            // debugger;
             this.$('.tab-link .badge').html("0");
+            this.$('.tab-link.products-' + this.options.status.toLowerCase()).addClass('active');
             _(stats).each(function(count, status) {
                 self.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
         },
         showLoading: function () {
-            this.$('.fa-plus').addClass('fa-spin');
+            var self = this;
+            setTimeout(function(){
+                console.log('adding spinner');
+                self.$('.fa-plus').addClass('fa-spin');
+            }, 0);
         },
         render: function () {
-            this.$('.fa-plus').removeClass('fa-spin');
+            // this.$('.fa-plus').removeClass('fa-spin');
             console.log('ManagerContent_Products render');
             // debugger;
             // if (this.$el.is(':empty')) {

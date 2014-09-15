@@ -173,7 +173,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                 }
             }).on('activate_node.jstree', function (e, data) {
                 var id = parseInt(data.node.data.id, 10) || null;
-                self.trigger('changed:category', id);
+                self.trigger('categoryTree:changed:category', id);
             });
 
             return this;

@@ -10,6 +10,7 @@ class pluginShop extends objectPlugin {
 
     public function beforeRun () {
         $this->_getTableStatuses();
+        // sleep(5);
     }
 
     private function _getTableStatuses ($tableName = null, $force = false) {
