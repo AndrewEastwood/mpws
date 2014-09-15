@@ -644,7 +644,7 @@ CREATE TABLE `shop_origins` (
   UNIQUE KEY `ID` (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_origins_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -653,7 +653,7 @@ CREATE TABLE `shop_origins` (
 
 LOCK TABLES `shop_origins` WRITE;
 /*!40000 ALTER TABLE `shop_origins` DISABLE KEYS */;
-INSERT INTO `shop_origins` VALUES (1,1,'','SONY','SONY','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(2,1,'','DELL','DELL','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(3,1,'hp','HP','HP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:10:59'),(4,1,'samsung','Samsung','Samsung','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 22:02:21'),(5,1,'lg','LG','LG','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 22:02:16'),(6,1,'toshibagfdg','Toshibagfdg','Toshiba','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 03:55:59'),(7,1,'sharp','SHARP','SHARP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-19 10:19:54'),(8,1,'','Apple','Apple','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(9,1,'dex','DEX','DEX','www.dex.com','ACTIVE','2014-05-18 23:19:01','2014-05-19 09:13:02'),(10,1,'microsoft','Microsoft','Microsoft','www.microsoft.com','ACTIVE','2014-05-18 23:28:13','2014-05-18 23:28:23'),(11,1,'','WEST','WEST','west.com','ACTIVE','2014-05-22 03:23:18','2014-05-22 03:23:18'),(12,1,'bosch','BOSCH','BOSCH','BOSCH.com','ACTIVE','2014-05-22 03:24:44','2014-05-22 03:24:44');
+INSERT INTO `shop_origins` VALUES (1,1,'','SONY','SONY','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(2,1,'','DELL','DELL','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(3,1,'hp','HP','HP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-18 23:10:59'),(4,1,'samsung','Samsung','Samsung','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 22:02:21'),(5,1,'lg','LG','LG','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 22:02:16'),(6,1,'toshibagfdg','Toshibagfdg','Toshiba','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-22 03:55:59'),(7,1,'sharp','SHARP','SHARP','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2014-05-19 10:19:54'),(8,1,'','Apple','Apple','http://www.sony.com','ACTIVE','2013-08-27 02:26:41','2013-08-27 02:26:41'),(9,1,'dex','DEX','DEX','www.dex.com','ACTIVE','2014-05-18 23:19:01','2014-05-19 09:13:02'),(10,1,'microsoft','Microsoft','Microsoft','www.microsoft.com','ACTIVE','2014-05-18 23:28:13','2014-05-18 23:28:23'),(11,1,'','WEST','WEST','west.com','ACTIVE','2014-05-22 03:23:18','2014-05-22 03:23:18'),(12,1,'bosch','BOSCH','BOSCH','BOSCH.com','ACTIVE','2014-05-22 03:24:44','2014-05-22 03:24:44'),(13,1,'dex','DEX','DEX','www.dex.com.ua','ACTIVE','2014-09-16 01:24:25','2014-09-16 01:24:25'),(14,1,'dex','DEX','DEX','www.dex.com.ua','ACTIVE','2014-09-16 01:24:25','2014-09-16 01:24:25'),(15,1,'dex','DEX','DEX','www.dex.com.ua','ACTIVE','2014-09-16 01:24:25','2014-09-16 01:24:25'),(16,1,'dex','DEX','DEX','www.dex.com.ua','ACTIVE','2014-09-16 01:24:25','2014-09-16 01:24:25'),(17,1,'asdf','asdf','asdf','asdf','ACTIVE','2014-09-16 01:24:50','2014-09-16 01:24:50'),(18,1,'asdf','asdf','asdf','asdf','ACTIVE','2014-09-16 01:24:50','2014-09-16 01:24:50'),(19,1,'asdf','asdf','asdf','asdf','ACTIVE','2014-09-16 01:24:50','2014-09-16 01:24:50'),(20,1,'asdf','asdf','asdf','asdf','ACTIVE','2014-09-16 01:24:50','2014-09-16 01:24:50');
 /*!40000 ALTER TABLE `shop_origins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1086,4 +1086,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-09-16  1:23:56
+-- Dump completed on 2014-09-16  1:32:00

@@ -53,6 +53,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                         tmp.remove._disabled = function (data) {
                             return data.reference.parent().data('childcount') > 0;
                         }
+                        tmp.remove.icon = "fa fa-times";
                         tmp.rename._disabled = function (data) {
                             return data.reference.parent().data('type') === "root";
                         }
@@ -69,6 +70,18 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                                 setTimeout(function () { inst.edit(new_node); },0);
                             });
                         }
+                        tmp.createProduct = {
+                            label: "Додати товар",
+                            "separator_after"  : true,
+                            "separator_before"  : true,
+                            "icon"              : "fa fa-plus",
+                            action: function (data) {
+                                var inst = $.jstree.reference(data.reference),
+                                    node = inst.get_node(data.reference),
+                                    categoryID = parseInt(node.id, 10);
+                                Backbone.history.navigate(APP.instances.shop.urls.productCreate.replace(':id', categoryID), true);
+                            }
+                        };
                         tmp.restore = {
                             _disabled: function (data) {
                                 return data.reference.parent().data('status') === "ACTIVE";
