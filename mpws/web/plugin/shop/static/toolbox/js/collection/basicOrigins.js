@@ -16,7 +16,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
 
         // Initial pagination states
         state: {
-            pageSize: 5,
+            pageSize: 30,
             order: 1
         },
 

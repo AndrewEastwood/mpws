@@ -15,7 +15,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
         // Initial pagination states
         state: {
-            pageSize: 25,
+            pageSize: 30,
             order: 1
         },
 

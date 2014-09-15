@@ -142,6 +142,7 @@ define("default/js/lib/utils", [
             },
             data: _tplData,
             extras: _tplExtras,
+            queryParams: Utils.isCollectionView(obj) && obj.collection.queryParams || {},
             displayItems: obj && obj.displayItems || [],
             instances: APP.instances
         }

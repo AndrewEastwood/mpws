@@ -16,5 +16,4 @@ define('plugin/shop/toolbox/js/model/order', [
     });
 
     return Order;
-
 });

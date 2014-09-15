@@ -37,8 +37,14 @@ class libraryDataBase {
             return false;
         if ($this->transactionIsActive)
             return false;
-        $this->getDBLink()->beginTransaction();
+        // echo 3;
+        try {
+            $this->getDBLink()->beginTransaction();
+        } catch (Exception $e) {
+            var_dump($e);
+        }
         $this->transactionIsActive = true;
+        // echo 4;
     }
 
     public function commit () {

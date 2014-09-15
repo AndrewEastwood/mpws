@@ -6,11 +6,9 @@
 </div>
 <!-- /.panel-heading -->
 <div class="panel-body ">
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked{{/if}}> Показуати видалені
-        </label>
-    </div>
+    <label>
+        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked{{/if}}> Враховувати видалені
+    </label>
     <div id="categoryTree">
         <ul>
             <li data-jstree='{ "id": "{{ID}}" }' class="jstree-open" data-id="0" data-childcount="{{data.length}}">

@@ -17,8 +17,8 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
 
     function getColumns () {
         // TODO: do smth to fetch states from server
-        var statuses = ["ACTIVE", "REMOVED"];
-        var orderStatusValues = _(statuses).map(function (status){ return [lang["origin_status_" + status] || status, status]; });
+        // var statuses = ["ACTIVE", "REMOVED"];
+        // var orderStatusValues = _(statuses).map(function (status){ return [lang["origin_status_" + status] || status, status]; });
 
         var columnActions = {
             className: "custom-row-context-menu",
@@ -47,26 +47,26 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
             cell: "string"
         };
 
-        var columnStatus = {
-            name: "Status",
-            label: lang.pluginMenu_Origins_Grid_Column_Status,
-            cell: Backgrid.SelectCell.extend({
-                // It's possible to render an option group or use a
-                // function to provide option values too.
-                optionValues: orderStatusValues,
-                initialize: function (options) {
-                    Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Status", function(model) {
-                        model.save(model.changed, {
-                            patch: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
-                            }
-                        });
-                    });
-                }
-            })
-        };
+        // var columnStatus = {
+        //     name: "Status",
+        //     label: lang.pluginMenu_Origins_Grid_Column_Status,
+        //     cell: Backgrid.SelectCell.extend({
+        //         // It's possible to render an option group or use a
+        //         // function to provide option values too.
+        //         optionValues: orderStatusValues,
+        //         initialize: function (options) {
+        //             Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
+        //             this.listenTo(this.model, "change:Status", function(model) {
+        //                 model.save(model.changed, {
+        //                     patch: true,
+        //                     success: function() {
+        //                         model.collection.fetch({reset: true});
+        //                     }
+        //                 });
+        //             });
+        //         }
+        //     })
+        // };
 
         var columnDateUpdated = {
             name: "DateUpdated",
@@ -86,7 +86,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
             columnActions: columnActions,
             columnName: columnName,
             columnHomePage: columnHomePage,
-            columnStatus: columnStatus,
+            // columnStatus: columnStatus,
             columnDateUpdated: columnDateUpdated,
             columnDateCreated: columnDateCreated
         });

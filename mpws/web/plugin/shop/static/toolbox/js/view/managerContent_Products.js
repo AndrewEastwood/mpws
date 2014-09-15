@@ -1,5 +1,6 @@
 define("plugin/shop/toolbox/js/view/managerContent_Products", [
     'default/js/lib/sandbox',
+    'default/js/lib/cache',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
@@ -7,7 +8,7 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent_Products',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, _, Backbone, Utils, ViewListProducts, tpl, lang) {
+], function (Sandbox, Cache, _, Backbone, Utils, ViewListProducts, tpl, lang) {
 
     var ManagerContent_Products = ViewListProducts.extend({
         className: 'panel panel-default shop_managerContent_Products',
@@ -19,18 +20,26 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
 
             this.setOptions(options);
 
+            this.collection.queryParams = _.extend({}, this.collection.queryParams, Cache.get('shop:contentProducts:request') || {});
+
             // this.on('categoryTree:changed:category', $.proxy(function () {
             //     this.showLoading();
             // }));
 
-            // this.viewOriginsList.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.collection.setCustomQueryParam("Stats", true);
-            this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp, options) {
-                if (this && resp.stats)
+            this.listenTo(this.collection, 'request', $.proxy(function () {
+                Cache.set('shop:contentProducts:request', this.collection.queryParams);
+            }));
+            this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp) {
+                if (this && resp.stats) {
                     this.refreshBadges(resp.stats);
+                }
             }, this));
+        },
+        setTitle: function () {
+            this.$('.title').text(lang.pluginMenu_Products_Grid_Title);
         },
         setOptions: function (options) {
             // merge with defaults
@@ -60,7 +69,7 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
             // this.$('.fa-plus').removeClass('fa-spin');
             console.log('ManagerContent_Products render');
             // debugger;
-            // if (this.$el.is(':empty')) {
+            if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 if (this.collection.length) {
                     this.$('.products').append(this.grid.render().$el);
@@ -68,56 +77,10 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
                 } else {
                     this.$('.products').html(this.grid.emptyText);
                 }
-            // }
+            }
             return this;
         }
     });
-
-    // var _parent = new ViewListProducts();
-
-    // // debugger;
-    // _parent.render = function () {
-    //     debugger;
-    //     _parent.render.call(_parent);
-    //     this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-    //     this.$('.products').html(_parent.$el);
-    //     return this;
-    // }
-
-    // ManagerContent_Products.prototype = _parent;
-
-    // this.render = function () {
-    //     console.log('ManagerContent_Products.render()');
-    //     // debugger;
-    //     // if (!this.isRendered) {
-    //     //     ViewListProducts.prototype.render.call(ViewListProducts.prototype);
-    //     //     this.isRendered = true;
-    //     // }
-    //     // debugger;
-    //     //     this.$('.products').html(ViewListProducts.prototype.$el);
-    //     // // render/refresh product list
-    //     // var currentStatus = this.collection.getCustomQueryField("Status");
-    //     // this.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
-    //     return this;
-    // }
-    //     lang: lang,
-    //     template: tpl,
-    //     isRendered: false,
-    //     render: function () {
-    //         console.log('ManagerContent_Products.render()');
-    //         if (!this.isRendered) {
-    //             ViewListProducts.prototype.render.call(ViewListProducts.prototype);
-    //             this.isRendered = true;
-    //         }
-    //         debugger;
-    //             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-    //             this.$('.products').html(ViewListProducts.prototype.$el);
-    //         // render/refresh product list
-    //         var currentStatus = this.collection.getCustomQueryField("Status");
-    //         this.$('.tab-link.products-' + currentStatus.toLowerCase()).addClass('active');
-    //         return this;
-    //     }
-    // });
 
     return ManagerContent_Products;
 

@@ -3,13 +3,13 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'plugin/shop/toolbox/js/view/managerContent_Products',
+    'plugin/shop/toolbox/js/view/managerContent_Origins',
     'plugin/shop/toolbox/js/view/categoriesTree',
-    'plugin/shop/toolbox/js/view/listOrigins',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Backbone, Utils, ViewListProducts, ViewCategoriesTree, ViewListOrigins, tpl, lang) {
+], function (Sandbox, Backbone, Utils, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -17,7 +17,6 @@ define('plugin/shop/toolbox/js/view/managerContent', [
         className: 'shop-toolbox-products',
         initialize: function (options) {
             // set options
-
             // ini sub-views
             // debugger;
             this.viewProductsList = new ViewListProducts(options);
@@ -27,14 +26,9 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             // subscribe on events
             this.listenTo(this.viewProductsList.collection, 'reset', this.render);
 
-            this.viewCatergoriesTree.on('categoryTree:changed:category', _.debounce(function (activeCategoryID) {
-                var self = this;
-                // self.viewProductsList.trigger('categoryTree:changed:category');
-                // setTimeout(function() {
-                    self.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategoryID);
-                    // temporary solution
-                    self.viewProductsList.collection.fetch({reset: true});
-                // }, 5000);
+            this.viewCatergoriesTree.on('categoryTree:changed:category', _.debounce(function (activeCategory) {
+                this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.id);
+                this.viewProductsList.collection.fetch({reset: true});
             }, 200), this);
         },
         render: function () {

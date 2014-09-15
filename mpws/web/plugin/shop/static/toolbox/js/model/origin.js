@@ -1,7 +1,6 @@
 define('plugin/shop/toolbox/js/model/origin', [
-    'default/js/lib/backbone',
-    'default/js/lib/cache'
-], function (Backbone, Cache) {
+    'default/js/lib/backbone'
+], function (Backbone) {
 
     var Origin = Backbone.Model.extend({
         idAttribute: "ID",
@@ -15,12 +14,11 @@ define('plugin/shop/toolbox/js/model/origin', [
             return APP.getApiLink(_params);
         },
         initialize: function () {
-            var _statuses = Cache.getCookie('shop:statuses:list');
-            if (_statuses && _statuses['shop_origins']) {
-                this.extras = {
-                    statuses: _statuses['shop_origins']
-                }
-            }
+            this.on('change:Name change:Description change:HomePage', function () {
+                this.save(this.changed, {
+                    patch: true
+                });
+            }, this);
         }
     });
 

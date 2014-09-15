@@ -9,7 +9,7 @@ class pluginShop extends objectPlugin {
     private $_listKey_Promo = 'shop:promo';
 
     public function beforeRun () {
-        $this->_getTableStatuses();
+        // $this->_getTableStatuses();
         // sleep(5);
     }
 
@@ -174,22 +174,26 @@ class pluginShop extends objectPlugin {
         );
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
-        if (isset($req->get['_pStats']))
-            $dataList['stats'] = $this->getStats_ProductsOverview();
+        if (isset($req->get['_pStats'])) {
+            $filter = array();
+            if (isset($req->get['_fCategoryID']))
+                $filter['_fCategoryID'] = $req->get['_fCategoryID'];
+            $dataList['stats'] = $this->getStats_ProductsOverview($filter);
+        }
 
         return $dataList;
     }
 
     public function createProduct ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
 
     }
 
     public function updateProduct ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
 
     }
@@ -233,16 +237,17 @@ class pluginShop extends objectPlugin {
 
     public function createOrigin ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
 
         $result = array();
         $errors = array();
         $success = false;
+        $OriginID = null;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
-            'Description' => array('int', 'skipIfUnset'),
+            'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
 
@@ -251,19 +256,18 @@ class pluginShop extends objectPlugin {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
-
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateCategory = configurationShopDataSource::jsapiShopCreateOrigin($validatedValues);
-                $OriginID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
+                $configCreateOrigin = configurationShopDataSource::jsapiShopCreateOrigin($validatedValues);
+
+                $this->getCustomerDataBase()->beginTransaction();
+                $OriginID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                // var_dump($OriginID);
 
                 if (empty($OriginID))
                     throw new Exception('OriginCreateError');
 
                 $this->getCustomerDataBase()->commit();
-
-                $result = $this->getOriginByID($OriginID);
 
                 $success = true;
             } catch (Exception $e) {
@@ -273,6 +277,8 @@ class pluginShop extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
+        if ($success && !empty($OriginID))
+            $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -281,7 +287,7 @@ class pluginShop extends objectPlugin {
 
     public function updateOrigin ($OriginID, $reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
 
         $result = array();
@@ -290,7 +296,7 @@ class pluginShop extends objectPlugin {
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'Description' => array('int', 'skipIfUnset'),
+            'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
 
@@ -408,12 +414,13 @@ class pluginShop extends objectPlugin {
 
     public function createCategory ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
 
         $result = array();
         $errors = array();
         $success = false;
+        $CategoryID = null;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
@@ -438,8 +445,6 @@ class pluginShop extends objectPlugin {
 
                 $this->getCustomerDataBase()->commit();
 
-                $result = $this->getCategoryByID($CategoryID);
-
                 $success = true;
             } catch (Exception $e) {
                 $this->getCustomerDataBase()->rollBack();
@@ -448,6 +453,8 @@ class pluginShop extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
+        if ($success && !empty($CategoryID))
+            $result = $this->getCategoryByID($CategoryID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -456,7 +463,7 @@ class pluginShop extends objectPlugin {
 
     public function updateCategory ($CategoryID, $reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
 
         $result = array();
@@ -474,7 +481,6 @@ class pluginShop extends objectPlugin {
             try {
 
                 $validatedValues = $validatedDataObj['values'];
-
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -962,12 +968,12 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    public function getStats_ProductsOverview () {
+    public function getStats_ProductsOverview ($filter = null) {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
         // get shop products overview:
-        $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
+        $config = configurationShopDataSource::jsapiShopStat_ProductsOverview($filter);
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
         $res = array();
@@ -1276,13 +1282,13 @@ class pluginShop extends objectPlugin {
 
     public function _createPromo ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
     }
 
     public function _updatePromo ($reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("AccessDenied");
+            return glWrap("error", "AccessDenied");
         }
     }
 
@@ -1518,7 +1524,7 @@ class pluginShop extends objectPlugin {
     public function patch_shop_origin (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $OriginID = intval($req->get['id']);
-            $resp = $this->updateOrigin($OriginID);
+            $resp = $this->updateOrigin($OriginID, $req->data);
         } else {
             $resp['error'] = 'MissedParameter_id';
         }

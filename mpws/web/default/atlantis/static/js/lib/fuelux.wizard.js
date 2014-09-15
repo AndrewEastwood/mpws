@@ -2,9 +2,7 @@
 
 define("default/js/lib/fuelux.wizard", [
     /* import dep packages */
-    'cmn_jquery',
-    // 'lib/backbone',
-    // 'lib/jquery_ui',
+    'cmn_jquery'
 
     /* component implementation */
 ], function ($) {

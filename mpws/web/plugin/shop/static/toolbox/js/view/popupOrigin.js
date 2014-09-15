@@ -24,6 +24,7 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
         template: tpl,
         lang: lang,
         initialize: function () {
+            var self = this;
             this.model = new ModelOrigin();
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
@@ -36,15 +37,28 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
                 // },
                 buttons: [{
                     label: lang.popup_origin_button_Close,
-                    cssClass: 'btn-warning',
+                    cssClass: 'btn-default btn-link',
                     action: function (dialog) {
                         dialog.close();
                     }
                 }, {
                     label: lang.popup_origin_button_Save,
-                    cssClass: 'btn-success',
+                    cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        dialog.close();
+                        self.model.save({
+                            Name: self.$('#name').val(),
+                            Description: self.$('#description').val(),
+                            HomePage: self.$('#homepage').val()
+                        }, {
+                            patch: true,
+                            success: function (model, response) {
+                                if (!response || !response.success) {
+                                    self.render();
+                                } else {
+                                    dialog.close();
+                                }
+                            }
+                        });
                     }
                 }]
             });

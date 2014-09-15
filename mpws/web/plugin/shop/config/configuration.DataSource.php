@@ -627,7 +627,7 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopStat_ProductsOverview () {
+    static function jsapiShopStat_ProductsOverview ($filter = null) {
         $config = self::jsapiShopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
@@ -638,8 +638,13 @@ class configurationShopDataSource extends objectConfiguration {
                 'values' => 'ItemsCount'
             )
         );
-        unset($config['condition']);
+        $config['condition'] = array();
         unset($config['additional']);
+        // var_dump($requestGetData);
+        if (!empty($filter)) {
+            if (isset($filter['_fCategoryID']))
+                $config['condition']['CategoryID'] = self::jsapiCreateDataSourceCondition($filter['_fCategoryID']);
+        }
         return $config;
     }
 
@@ -654,7 +659,7 @@ class configurationShopDataSource extends objectConfiguration {
                 'values' => 'ItemsCount'
             )
         );
-        unset($config['condition']);
+        $config['condition'] = array();
         unset($config['additional']);
         return $config;
     }
