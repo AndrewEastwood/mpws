@@ -135,11 +135,23 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
 
-        categoryEdit: function (id) {
-
+        categoryEdit: function (categoryID) {
+            require(['plugin/shop/toolbox/js/view/popupCategory'], function (PopupCategoryEntry) {
+                var popupCategory = new PopupCategoryEntry();
+                popupCategory.model.fetch({ data: { id: categoryID} });
+                popupCategory.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
         },
         categoryCreate: function () {
-
+            require(['plugin/shop/toolbox/js/view/popupCategory'], function (PopupCategoryEntry) {
+                var popupCategory = new PopupCategoryEntry();
+                popupCategory.model.fetch();
+                popupCategory.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
         },
         originEdit: function (originID) {
             require(['plugin/shop/toolbox/js/view/popupOrigin'], function (PopupOriginEntry) {
@@ -163,7 +175,7 @@ define("plugin/shop/toolbox/js/router", [
 
         reports: function () {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
-        },
+        }
 
     });
 

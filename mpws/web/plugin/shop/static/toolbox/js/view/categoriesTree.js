@@ -97,6 +97,15 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                                 }
                             }
                         };
+                        tmp.properties = {
+                            label: "Властивості",
+                            action: function (data) {
+                                var inst = $.jstree.reference(data.reference),
+                                    node = inst.get_node(data.reference),
+                                    categoryID = parseInt(node.id, 10);
+                                Backbone.history.navigate(APP.instances.shop.urls.categoryEdit.replace(':id', categoryID), true);
+                            }
+                        };
                         return tmp;
                     }
                 }

@@ -1,105 +1,96 @@
 define("plugin/shop/toolbox/js/view/popupCategory", [
     'default/js/lib/sandbox',
-    'default/js/view/mView',
-    'plugin/shop/toolbox/js/model/popupCategory',
-    'plugin/shop/common/js/lib/utils',
+    'default/js/lib/backbone',
+    'plugin/shop/toolbox/js/model/category',
+    'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
+    'default/js/lib/bootstrap-alert',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupCategory',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    'default/js/lib/bootstrap-editable'
-], function (Sandbox, MView, ModelCategoryItem, ShopUtils, BootstrapDialog, tpl, lang) {
+    'default/js/lib/select2/select2'
+], function (Sandbox, Backbone, ModelCategory, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    var orderItemModel = new ModelCategoryItem();
-    var OrderItem = MView.extend({
-        // tagName: 'div',
-        // className: 'shop-order-entry',
+    function _getTitle (isEdit) {
+        if (isEdit) {
+            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_category_title_edit);
+        } else {
+            return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_category_title_new);
+        }
+    }
+
+    var OrderItem = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        model: orderItemModel,
-        events: {
-            'click .category-props-add': 'propAdd',
-            'click .category-props-del': 'propDel'
-        },
-        propAdd: function () {
-            var tpl = this.$('#property-template').html();
-            this.$('.list-category-properties').append(tpl);
-        },
-        propDel: function (event) {
-            $(event.target).parents('li').remove();
-        },
         initialize: function () {
-            MView.prototype.initialize.call(this);
             var self = this;
-            var dialogIsShown = false;
-            // this.updateUrl({
-            //     orderID: orderID
-            // });
-            this.on('mview:renderComplete', function () {
-
-                var orderID = "fff";//this.model.get('order').ID;
-
-                if (!dialogIsShown)
-                    BootstrapDialog.show({
-                        title: lang.popup_category_title + orderID,
-                        message: self.$el,
-                        cssClass: 'shop-popup-category',
-                        onhidden: function(dialogRef){
-                            dialogIsShown = false;
-                        },
-                        buttons: [{
-                            label: lang.popup_category_button_Close,
-                            action: function (dialog) {
-                                dialogIsShown = false;
-                                dialog.close();
-                            }
-                        }]
-                    });
-                dialogIsShown = true;
-
-                var source = self.$('#order-status-control-ID option').map(function(idx, option){
-                    return {
-                        value: $(option).attr('value'),
-                        text: $(option).text()
+            this.model = new ModelCategory();
+            this.listenTo(this.model, 'change', this.render);
+            this.$title = $('<span/>');
+            this.$dialog = new BootstrapDialog({
+                title: this.$title,
+                message: this.$el,
+                cssClass: 'pluginShopCategoryPopup',
+                buttons: [{
+                    label: lang.popup_category_button_Close,
+                    cssClass: 'btn-default btn-link',
+                    action: function (dialog) {
+                        dialog.close();
                     }
-                });
-                // debugger;
-                // var $controlOrderStatus = self.$('#order-status-ID');
-                // $controlOrderStatus.editable({
-                //     mode: 'inline',
-                //     name: "Status",
-                //     title: lang.orderEntry_Popup_control_status,
-                //     type: "select",
-                //     value: this.model.get('order').Status,
-                //     pk: this.model.get('order').ID,
-                //     // url: self.model.getUrl({
-                //     //     action: "orderUpdate"
-                //     // }),
-                //     source: $.makeArray(source),
-                //     // success: function (data) {
-                //     //     // debugger;
-                //     //     self.model.set(self.model.parse.call(self.model, data));
-                //     //     self.render();
-                //     //     Sandbox.eventNotify('plugin:shop:orderList:refresh');
-                //     // }
-                // });
-                // $controlOrderStatus.on('save', function(event, editData) {
-                //     // debugger;
-                //     // var _select = this;
-                //     // var _editable = ;
-                //     var dfd = OrderItem.updateOrderStatus(orderID, editData.newValue);
-                //     dfd.done(function(data){
-                //         // debugger;
-                //         // $controlOrderStatus.removeClass($controlOrderStatus.data('editable').options.unsavedclass)
-                //         self.model.set(self.model.parse.call(self.model, data));
-                //         self.render();
-                //     });
-                // })
-                // self.$('select').select2();
-                self.$('.helper').tooltip();
+                }, {
+                    label: lang.popup_category_button_Save,
+                    cssClass: 'btn-success btn-outline',
+                    action: function (dialog) {
+                        self.model.save({
+                            Name: self.$('#name').val(),
+                            Description: self.$('#description').val(),
+                            ParentID: parseInt(self.$('#parent').val(), 10)
+                        }, {
+                            patch: true,
+                            success: function (model, response) {
+                                if (!response || !response.success) {
+                                    self.render();
+                                } else {
+                                    dialog.close();
+                                }
+                            }
+                        });
+                    }
+                }]
             });
-            // order-status-ID
+        },
+        render: function () {
+            var self = this;
+            this.$title.html(_getTitle(!self.model.isNew()));
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            if (!this.$dialog.isOpened())
+                this.$dialog.open();
+            Backbone.ajax({
+                dataType: 'json',
+                url: APP.getApiLink({
+                    source: 'shop',
+                    fn: 'categories',
+                    type: 'tree'
+                }),
+                success: function (data, page, query) {
+                    // debugger;
+                    var _results = _(data.items).map(function(item){
+                        return {
+                            id: item.ID,
+                            text: item.Name
+                        };
+                    });
+                    var _select = self.$('#parent').select2({
+                        placeholder: "Без батьківської категорії",
+                        data: _results
+                    });
+                    // debugger;
+                    if (!self.model.isNew()) {
+                        _select.val(self.model.get('ParentID'), 10);
+                    }
+                }
+            });
         }
     });
 

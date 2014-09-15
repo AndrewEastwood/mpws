@@ -472,8 +472,8 @@ class pluginShop extends objectPlugin {
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'ParentID' => array('int', 'null', 'skipIfUnset'),
             'Description' => array('string', 'skipIfUnset', 'max' => 300),
+            'ParentID' => array('int', 'null', 'skipIfUnset'),
             'Status' => array('string', 'skipIfUnset')
         ));
 
@@ -1444,7 +1444,7 @@ class pluginShop extends objectPlugin {
                     $resp["items"] = $this->getCategories_Tree($req);
                     break;
                 case "list":
-                    $resp["items"] = $this->getCategories_List();
+                    $resp["items"] = $this->getCategories_List($req);
                     break;
             }
             return;

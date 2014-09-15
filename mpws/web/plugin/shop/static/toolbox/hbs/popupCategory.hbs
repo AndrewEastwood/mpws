@@ -1,55 +1,47 @@
 <div class="panel">
+    <form class="form-horizontal">
 
-
-    <div class="row">
-        <div class="col-md-6 category-details">
-            <h4>{{lang.popup_category_section_details_title}}</h4>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <span class="prefix">{{lang.popup_category_section_details_filed_parentCategory}}</span>
-                    <span><strong>{{data.order.DateCreated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">{{lang.popup_category_section_details_filed_name}}</span>
-                    <span><strong>{{data.order.DateCreated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">{{lang.popup_category_section_details_filed_status}}</span>
-                    <span><strong>{{data.order.DateCreated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">{{lang.popup_category_section_details_filed_description}}</span>
-                    <span><strong>{{data.order.DateUpdated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">{{lang.popup_category_section_details_filed_dateUpdated}}</span>
-                    <span><strong>{{data.order.DateUpdated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">{{lang.popup_category_section_details_filed_dateCreated}}</span>
-                    <span><strong>{{data.order.DateUpdated}}</strong></span>
-                </li>
-            </ul>
+        {{#mpwsIsNotEmpty data.errors }}
+        <div id="msg" class="alert alert-danger">
+            {{lang.shopping_cart_error_title}}
+            <ol class="errors">
+            {{#each data.errors}}
+                {{#each this}}
+                    <li>{{mpwsGetValueByKey ../../lang this "shopping_cart_error_"}}</li>
+                {{/each}}
+            {{/each}}
+            </ol>
         </div>
-        
-        <div class="col-md-6 category-props">
-            <h4>{{lang.popup_category_section_props_title}}</h4>
-            <button id="category-property-add-btn-ID" class="btn btn-primary category-props-add">
-                <i class="fa fa-plus-circle"></i>
-                {{lang.popup_category_button_addProp}}
-            </button>
-            <ul class="list-group list-category-properties"></ul>
+        {{/mpwsIsNotEmpty}}
+
+        {{#if data.ID }}
+        <input name="ID" type="hidden" value="{{data.ID}}">
+        {{/if}}
+
+        <fieldset>
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="parent">{{lang.popup_category_section_details_filed_parentCategory}}</label>
+          <div class="col-md-6">
+            <input id="parent" name="parent" type="hidden" class="form-control input-md" value="{{data.ParentID}}">
+          </div>
         </div>
-    </div>
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
+          <div class="col-md-6">
+            <input id="name" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
+          </div>
+        </div>
 
-    <script id="property-template" type="text/x-handlebars-template">
-        <li class="list-group-item">
-            <a href="javascript://" class="category-props-del">
-                <i class="fa fa-trash-o"></i>
-            </a>
-            <span class="prefix">{{lang.popup_category_section_details_filed_dateCreated}}</span>
-            <span><strong>{{data.order.DateUpdated}}</strong></span>
-        </li>
-    </script>
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_description}}</label>
+          <div class="col-md-6">
+            <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
+          </div>
+        </div>
 
+        </fieldset>
+    </form>
 </div>
