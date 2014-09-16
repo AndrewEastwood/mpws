@@ -4,7 +4,6 @@ define("default/js/lib/bootstrap-tagsinput", [
 ], function (jQuery) {
 
 
-(function ($) {
   "use strict";
 
   var defaultOptions = {
@@ -506,6 +505,5 @@ define("default/js/lib/bootstrap-tagsinput", [
   $(function() {
     $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
   });
-})(jQuery);
 
 });

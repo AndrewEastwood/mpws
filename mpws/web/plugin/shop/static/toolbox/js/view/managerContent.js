@@ -8,13 +8,14 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
+    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
+    'default/js/lib/bootstrap-tagsinput'
 ], function (Sandbox, Backbone, Utils, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
         lang: lang,
-        className: 'shop-toolbox-products',
+        className: 'shop-managerContent',
         initialize: function (options) {
             // set options
             // ini sub-views
@@ -40,6 +41,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);
                 this.$('.origins').html(this.viewOriginsList.$el);
+                this.$('.summary input').tagsinput();
             }
             return this;
         }

@@ -52,6 +52,12 @@ define("customer/js/router", [
         _ifNotAuthorizedNavigateToSignin();
     });
 
+    Sandbox.eventSubscribe('global:page:signin', function () {
+        if (Auth.getAccountID()) {
+            Backbone.history.navigate("", true);
+        }
+    });
+
     Sandbox.eventSubscribe('global:route', function () {
         _ifNotAuthorizedNavigateToSignin();
     });

@@ -49,9 +49,6 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                 title: this.$title,
                 message: this.$el,
                 cssClass: 'pluginShopOrderPopup',
-                // onhide: function () {
-                //     self.dialogIsShown = false;
-                // },
                 buttons: [{
                     label: "Надіслати фактуру",
                     action: function (dialog) {

@@ -32,9 +32,6 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
                 title: this.$title,
                 message: this.$el,
                 cssClass: 'pluginShopOriginPopup',
-                // onhide: function () {
-                //     self.dialogIsShown = false;
-                // },
                 buttons: [{
                     label: lang.popup_origin_button_Close,
                     cssClass: 'btn-default btn-link',

@@ -4,4 +4,17 @@
     </a>
     {{lang.pluginMenu_Origins_Grid_Title}}
 </div>
-<div class="panel-body origins"></div>
+<div class="panel-body">
+    <label>
+        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked{{/if}}>
+        Враховувати видалені
+    </label>
+    <div class="origins">
+        {{#each data}}
+        <div class="checkbox">
+            <label> <input type="checkbox" class="shop-filter-origin" id="{{ID}}">{{Name}}</label>
+            {{{contextButton}}}
+        </div>
+        {{/each}}
+    </div>
+</div>

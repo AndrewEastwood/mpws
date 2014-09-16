@@ -64,11 +64,23 @@ define("plugin/shop/toolbox/js/router", [
                 });
             });
         },
-        productCreate: function (productID) {
-
+        productCreate: function () {
+            require(['plugin/shop/toolbox/js/view/popupProduct'], function (PopupProductEntry) {
+                var popupProduct = new PopupProductEntry();
+                popupProduct.model.fetch();
+                popupProduct.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
         },
         productEdit: function (productID) {
-
+            require(['plugin/shop/toolbox/js/view/popupProduct'], function (PopupProductEntry) {
+                var popupProduct = new PopupProductEntry();
+                popupProduct.model.fetch({ data: { id: productID} });
+                popupProduct.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
         },
         contentList: function () {
             this.contentListPage();

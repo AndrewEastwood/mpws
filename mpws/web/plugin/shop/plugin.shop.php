@@ -9,7 +9,7 @@ class pluginShop extends objectPlugin {
     private $_listKey_Promo = 'shop:promo';
 
     public function beforeRun () {
-        // $this->_getTableStatuses();
+        $this->_getTableStatuses();
         // sleep(5);
     }
 
@@ -189,13 +189,91 @@ class pluginShop extends objectPlugin {
             return glWrap("error", "AccessDenied");
         }
 
+        $result = array();
+        $errors = array();
+        $success = false;
+        $ProductID = null;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'ParentID' => array('int', 'skipIfUnset'),
+            'Description' => array('string', 'skipIfUnset', 'max' => 300)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+
+                $configCreateCategory = configurationShopDataSource::jsapiShopCreateCategory($validatedValues);
+                $ProductID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
+
+                if (empty($ProductID))
+                    throw new Exception('CategoryCreateError');
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        if ($success && !empty($ProductID))
+            $result = $this->getCategoryByID($ProductID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
-    public function updateProduct ($reqData) {
+    public function updateProduct ($ProductID, $reqData) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
             return glWrap("error", "AccessDenied");
         }
 
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
+            'Description' => array('string', 'skipIfUnset', 'max' => 300),
+            'ParentID' => array('int', 'null', 'skipIfUnset'),
+            'Status' => array('string', 'skipIfUnset')
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $this->getCustomerDataBase()->beginTransaction();
+
+                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateCategory($ProductID, $validatedValues);
+                $this->getCustomer()->fetch($configCreateCategory) ?: null;
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result = $this->getCategoryByID($ProductID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
     // -----------------------------------------------

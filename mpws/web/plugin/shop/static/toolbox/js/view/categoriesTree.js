@@ -87,6 +87,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                                 return data.reference.parent().data('status') === "ACTIVE";
                             },
                             label: "Відновити",
+                            "icon"              : "fa fa-undo",
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
@@ -112,6 +113,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                         };
                         tmp.properties = {
                             label: "Властивості",
+                            "icon"              : "fa fa-undo",
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),

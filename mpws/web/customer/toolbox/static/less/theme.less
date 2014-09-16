@@ -18,6 +18,7 @@
 @import "bootstrap-editable";
 @import "select2";
 @import "jsTreeStyle";
+@import "bootstrap-tagsinput";
 
 body {
     background-image: none;
@@ -173,7 +174,7 @@ body {
     }
 }
 
-.shop-toolbox-products {
+.shop-managerContent {
     .tab-pane {
         padding-top: 15px;
     }
@@ -181,4 +182,32 @@ body {
 
 .html-cell.custom-row-context-menu {
     overflow: visible;
+}
+
+.shop_managerContent_Origins {
+    .origins {
+        overflow-y: auto;
+        height: 500px;
+        div.checkbox {
+            .btn-group {
+                .btn {
+                    font-size: 12px;
+                    line-height: normal;
+                    padding: 0px;
+                    .fa-cog {
+                        display: none;
+                    }
+                }
+                display: none;
+            }
+            .btn-group.open {
+                display: inline-block;
+            }
+            &:focus, &:hover {
+                .btn-group {
+                    display: inline-block;
+                }
+            }
+        }
+    }
 }

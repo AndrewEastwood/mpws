@@ -1,55 +1,44 @@
 define("plugin/shop/toolbox/js/view/managerContent_Origins", [
     'default/js/lib/sandbox',
-    'default/js/lib/cache',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/view/listOrigins',
+    'plugin/shop/toolbox/js/collection/originsFilter',
+    /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent_Origins',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOriginListItem',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
-], function (Sandbox, Cache, _, Backbone, Utils, ViewListOrigins, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, CollectionOriginsFilter, tpl, tplBtnMenuMainItem, lang) {
 
-    var ManagerContent_Products = ViewListOrigins.extend({
+    var ManagerContent_Origins = Backbone.View.extend({
         className: 'panel panel-default shop_managerContent_Origins',
         template: tpl,
         lang: lang,
-        initialize: function (options) {
-            ViewListOrigins.prototype.initialize.call(this);
-            this.setOptions(options);
-            this.grid.emptyText = lang.pluginMenu_Origins_Grid_noData;
+        events: {
+            'click #show_removed': 'showRemoved'
         },
-        setOptions: function (options) {
-            // merge with defaults
-            this.options = _.defaults({}, options, {
-                status: "ACTIVE"
-            });
-            // and adjust thme
-            if (!this.options.status)
-                this.options.status = "ACTIVE";
+        showRemoved: function (event) {
+            this.collection.requestData.removed = $(event.target).is(':checked') ? true : null;
+            this.collection.fetch({reset: true});
         },
-        showLoading: function () {
-            var self = this;
-            setTimeout(function(){
-                console.log('adding spinner');
-                self.$('.fa-plus').addClass('fa-spin');
-            }, 0);
+        initialize: function () {
+            this.collection = new CollectionOriginsFilter();
+            this.listenTo(this.collection, 'reset', this.render);
         },
         render: function () {
             // debugger;
-            if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                if (this.collection.length) {
-                    this.$('.origins').append(this.grid.render().$el);
-                    this.$('.origins').append(this.paginator.render().$el);
-                } else {
-                    this.$('.origins').html(this.grid.emptyText);
-                }
-            }
+            // var self = this;
+            var _data = Utils.getHBSTemplateData(this);
+            _(_data.data).each(function(item) {
+                item.contextButton = tplBtnMenuMainItem(Utils.getHBSTemplateData(item));
+            });
+            this.$el.html(tpl(_data));
+            this.$('.dropdown-toggle').addClass('btn-link');
             return this;
         }
     });
 
-    return ManagerContent_Products;
+    return ManagerContent_Origins;
 
 });
