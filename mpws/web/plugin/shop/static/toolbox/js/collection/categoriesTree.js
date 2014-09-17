@@ -20,7 +20,7 @@ define('plugin/shop/toolbox/js/collection/categoriesTree', [
             var urlOptions = {
                 source: 'shop',
                 fn: 'categories',
-                type: 'tree'
+                type: 'all'
             };
 
             if (this.requestData.removed)

@@ -66,31 +66,24 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (!this.$dialog.isOpened())
                 this.$dialog.open();
-            Backbone.ajax({
-                dataType: 'json',
-                url: APP.getApiLink({
-                    source: 'shop',
-                    fn: 'categories',
-                    type: 'tree'
-                }),
-                success: function (data, page, query) {
-                    // debugger;
-                    var _results = _(data.items).map(function(item){
-                        return {
-                            id: item.ID,
-                            text: item.Name
-                        };
-                    });
-                    var _select = self.$('#parent').select2({
-                        placeholder: "Без батьківської категорії",
-                        data: _results
-                    });
-                    // debugger;
-                    if (!self.model.isNew()) {
-                        _select.val(self.model.get('ParentID'), 10);
-                    }
-                }
+
+            var _items = self.model.get('_items');
+            var _results = _(_items).map(function(item){
+                return {
+                    id: item.ID,
+                    text: item.Name
+                };
             });
+
+            var _select = self.$('#parent').select2({
+                placeholder: "Без батьківської категорії",
+                data: _results
+            });
+
+            if (!self.model.isNew()) {
+                _select.val(self.model.get('ParentID'), true);
+            }
+
         }
     });
 

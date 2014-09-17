@@ -331,7 +331,7 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopGetCategoryTree ($includeRemoved = false) {
+    static function jsapiShopGetCategoryAll ($includeRemoved = false) {
         $config = self::jsapiShopGetCategoryList();
         $config['limit'] = 0;
         if (!$includeRemoved) {
@@ -420,6 +420,15 @@ class configurationShopDataSource extends objectConfiguration {
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
+        return $config;
+    }
+
+    static function jsapiShopGetOriginAll ($includeRemoved = false) {
+        $config = self::jsapiShopGetOriginList();
+        $config['limit'] = 0;
+        if (!$includeRemoved) {
+            $config['condition']['Status'] = self::jsapiCreateDataSourceCondition('ACTIVE');
+        }
         return $config;
     }
 

@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/backbone',
     'plugin/shop/toolbox/js/model/product',
     'default/js/lib/utils',
+    'default/js/lib/cache',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
     /* template */
@@ -10,7 +11,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/select2/select2'
-], function (Sandbox, Backbone, ModelProduct, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitle (isEdit) {
         if (isEdit) {
@@ -69,56 +70,46 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
 
             if (!this.$dialog.isOpened())
                 this.$dialog.open();
-            Backbone.ajax({
-                dataType: 'json',
-                url: APP.getApiLink({
-                    source: 'shop',
-                    fn: 'categories',
-                    type: 'tree'
-                }),
-                success: function (data, page, query) {
-                    // debugger;
-                    var _results = _(data.items).map(function(item){
-                        return {
-                            id: item.ID,
-                            text: item.Name
-                        };
-                    });
-                    var _select = self.$('#category').select2({
-                        placeholder: "Без батьківської категорії",
-                        data: _results
-                    });
-                    // debugger;
-                    if (!self.model.isNew()) {
-                        _select.val(self.model.get('CategoryID'), 10);
-                    }
-                }
+
+            var _categories = self.model.get('_categories');
+            var _origins = self.model.get('_origins');
+            var _resultsCategories = _(_categories).map(function(item){
+                return {
+                    id: item.ID,
+                    text: item.Name
+                };
             });
-            Backbone.ajax({
-                dataType: 'json',
-                url: APP.getApiLink({
-                    source: 'shop',
-                    fn: 'categories',
-                    type: 'tree'
-                }),
-                success: function (data, page, query) {
-                    // debugger;
-                    var _results = _(data.items).map(function(item){
-                        return {
-                            id: item.ID,
-                            text: item.Name
-                        };
-                    });
-                    var _select = self.$('#origin').select2({
-                        placeholder: "Без батьківської категорії",
-                        data: _results
-                    });
-                    // debugger;
-                    if (!self.model.isNew()) {
-                        _select.val(self.model.get('OriginID'), 10);
-                    }
-                }
+            var _resultsOrigins = _(_origins).map(function(item){
+                return {
+                    id: item.ID,
+                    text: item.Name
+                };
             });
+
+            var _selectCategory = self.$('#category').select2({
+                placeholder: "Виберіть категорію",
+                data: _resultsCategories
+            });
+            var _selectOrigins = self.$('#origin').select2({
+                placeholder: "Виберіть виробника",
+                data: _resultsOrigins
+            });
+
+            var _initCategoryID = null;
+            var _initOriginID = null;
+
+            if (!self.model.isNew()) {
+                _initCategoryID = self.model.get('CategoryID');
+                _initOriginID = self.model.get('OriginID');
+            } else {
+                _initCategoryID = Cache.getOnce('mpwsShopPopupProductCategoryID');
+                _initOriginID = Cache.getOnce('mpwsShopPopupProductOriginID');
+            }
+
+            if (_initCategoryID)
+                _selectCategory.select2("val", _initCategoryID).val(_initCategoryID);
+            if (_initOriginID)
+                _selectOrigins.select2("val", _initCategoryID).val(_initOriginID);
         }
     });
 

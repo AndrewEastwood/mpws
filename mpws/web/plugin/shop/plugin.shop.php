@@ -297,6 +297,21 @@ class pluginShop extends objectPlugin {
         return $origin;
     }
 
+    public function getOrigins_All ($req) {
+        $withRemoved = false;
+        if (isset($req->get['removed']))
+            $withRemoved = $req->get['removed'];
+        $config = configurationShopDataSource::jsapiShopGetOriginAll($withRemoved);
+        $originIDs = $this->getCustomer()->fetch($config);
+        $data = array();
+        if (!empty($originIDs)) {
+            foreach ($originIDs as $val) {
+                $data[] = $this->getOriginByID($val['ID']);
+            }
+        }
+        return $data;
+    }
+
     public function getOrigins_List ($req) {
         $config = configurationShopDataSource::jsapiShopGetOriginList();
 
@@ -459,11 +474,11 @@ class pluginShop extends objectPlugin {
         return $category;
     }
 
-    public function getCategories_Tree ($req) {
+    public function getCategories_All ($req) {
         $withRemoved = false;
         if (isset($req->get['removed']))
             $withRemoved = $req->get['removed'];
-        $config = configurationShopDataSource::jsapiShopGetCategoryTree($withRemoved);
+        $config = configurationShopDataSource::jsapiShopGetCategoryAll($withRemoved);
         $categoryIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($categoryIDs)) {
@@ -1414,9 +1429,12 @@ class pluginShop extends objectPlugin {
         if (!empty($req->get['id'])) {
             $ProductID = intval($req->get['id']);
             $resp = $this->getProductByID($ProductID);
-            return;
+        } else {
+            $resp['error'] = 'MissedParameter_id';
         }
-        $resp['error'] = 'MissedParameter_id';
+        $resp["_categories"] = $this->getCategories_All($req);
+        $resp["_origins"] = $this->getOrigins_All($req);
+        $resp["_statuses"] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopProducts);
     }
 
     public function get_shop_stats (&$resp, $req) {
@@ -1515,11 +1533,21 @@ class pluginShop extends objectPlugin {
 
 
 
+    public function get_shop_category (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $CategoryID = intval($req->get['id']);
+            $resp = $this->getCategoryByID($CategoryID);
+        } else {
+            $resp['error'] = 'MissedParameter_id';
+        }
+        $resp["_items"] = $this->getCategories_All($req);
+    }
+
     public function get_shop_categories (&$resp, $req) {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
-                case "tree":
-                    $resp["items"] = $this->getCategories_Tree($req);
+                case "all":
+                    $resp["items"] = $this->getCategories_All($req);
                     break;
                 case "list":
                     $resp["items"] = $this->getCategories_List($req);
@@ -1529,15 +1557,6 @@ class pluginShop extends objectPlugin {
         }
 
         $resp['error'] = "MissedParameter_type";
-    }
-
-    public function get_shop_category (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            $CategoryID = intval($req->get['id']);
-            $resp = $this->getCategoryByID($CategoryID);
-            return;
-        }
-        $resp['error'] = 'MissedParameter_id';
     }
 
     public function post_shop_category (&$resp, $req) {
@@ -1570,6 +1589,16 @@ class pluginShop extends objectPlugin {
 
 
 
+    public function get_shop_origin (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $OriginID = intval($req->get['id']);
+            $resp = $this->getOriginByID($OriginID);
+        } else {
+            $resp['error'] = 'MissedParameter_id';
+        }
+        $resp['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
+    }
+
     public function get_shop_origins (&$resp, $req) {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
@@ -1583,16 +1612,6 @@ class pluginShop extends objectPlugin {
             return;
         }
         $resp['error'] = "MissedParameter_type";
-    }
-
-    public function get_shop_origin (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            $OriginID = intval($req->get['id']);
-            $resp = $this->getOriginByID($OriginID);
-        } else {
-            $resp['error'] = 'MissedParameter_id';
-        }
-        $resp['_statuses'] = $this->_getTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
     }
 
     public function post_shop_origin (&$resp, $req) {

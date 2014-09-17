@@ -2,6 +2,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
+    'default/js/lib/cache',
     'plugin/shop/toolbox/js/collection/categoriesTree',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/categoriesTree',
@@ -9,7 +10,7 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
     'default/js/lib/jstree'
-], function (Sandbox, Backbone, Utils, CollectionCategoriesTree, tpl, lang) {
+], function (Sandbox, Backbone, Utils, Cache, CollectionCategoriesTree, tpl, lang) {
     var CategoriesTree = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
         template: tpl,
@@ -79,7 +80,8 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
                                     categoryID = parseInt(node.id, 10);
-                                Backbone.history.navigate(APP.instances.shop.urls.productCreate.replace(':id', categoryID), true);
+                                Cache.set('mpwsShopPopupProductCategoryID', categoryID);
+                                Backbone.history.navigate(APP.instances.shop.urls.productCreate, true);
                             }
                         };
                         tmp.restore = {
@@ -113,7 +115,6 @@ define("plugin/shop/toolbox/js/view/categoriesTree", [
                         };
                         tmp.properties = {
                             label: "Властивості",
-                            "icon"              : "fa fa-undo",
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
