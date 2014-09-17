@@ -6,8 +6,12 @@
 </div>
 <!-- /.panel-heading -->
 <div class="panel-body ">
-    <label>
-        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked{{/if}}> Враховувати видалені
+    <p class="text-muted">
+        <small>Виберіть категорію для фільтрування списку товарів</small>
+    </p>
+    <label class="text-danger">
+        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked="checked"{{/if}}>
+        <small>Враховувати видалені</small>
     </label>
     <div id="categoryTree">
         <ul>

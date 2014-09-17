@@ -19,44 +19,130 @@
         {{/if}}
 
         <fieldset>
-        <!-- Select Basic -->
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="category">{{lang.popup_category_section_details_filed_parentCategory}}</label>
-          <div class="col-md-6">
-            <input id="category" name="category" type="hidden" class="form-control input-md" value="{{data.ParentID}}">
-          </div>
-        </div>
-        <!-- Select Basic -->
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="origin">{{lang.popup_category_section_details_filed_parentCategory}}</label>
-          <div class="col-md-6">
-            <input id="origin" name="origin" type="hidden" class="form-control input-md" value="{{data.ParentID}}">
-          </div>
-        </div>
 
-        <!-- Text input-->
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
-          <div class="col-md-6">
-            <input id="name" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
-          </div>
-        </div>
+            <ul class="nav nav-pills">
+                <li class="active"><a href="#general" data-toggle="tab">Основні</a></li>
+                <li><a href="#specs" data-toggle="tab">Характеристики</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active general" id="general">
 
-        <!-- Textarea -->
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_description}}</label>
-          <div class="col-md-6">
-            <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
-          </div>
-        </div>
 
-        <!-- Text input-->
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_url}}</label>
-          <div class="col-md-6">
-            <input id="homepage" name="HomePage" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.HomePage}}">
-          </div>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="category">{{lang.popup_category_section_details_filed_parentCategory}}</label>
+                      <div class="col-md-6">
+                        <input id="category" name="category" type="hidden" class="form-control input-md" value="{{data.ParentID}}">
+                      </div>
+                    </div>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="origin">{{lang.popup_category_section_details_filed_parentCategory}}</label>
+                      <div class="col-md-6">
+                        <input id="origin" name="origin" type="hidden" class="form-control input-md" value="{{data.ParentID}}">
+                      </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
+                      <div class="col-md-6">
+                        <input id="name" name="Name" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Name}}">
+                      </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
+                      <div class="col-md-6">
+                        <input id="price" name="Price" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Price}}">
+                      </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="textinput">{{lang.popup_origin_section_details_filed_name}}</label>
+                      <div class="col-md-6">
+                        <input id="model" name="Model" type="text" placeholder="" class="form-control input-md" required="required" value="{{data.Model}}">
+                      </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_description}}</label>
+                      <div class="col-md-6">
+                        <textarea class="form-control" id="description" name="Description">{{data.Description}}</textarea>
+                      </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="textinput">
+                        {{lang.popup_origin_section_details_filed_name}}</label>
+                      <div class="col-md-6">
+                        <input id="price" name="Price" type="checkbox" placeholder="" class="form-control checkbox"
+                         required="required" {{#if data.isPromo}}checked="checked"{{/if}}>
+                      </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                      <label class="col-md-4 control-label" for="textarea">{{lang.popup_origin_section_details_filed_description}}</label>
+                      <div class="col-md-6">
+                        <textarea class="form-control" id="description" name="Description">{{data.SCU}}</textarea>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade specs" id="specs">
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Атрибути
+            </div>
+            <div class="panel-body">
+                <!-- Text input-->
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <input id="tags" name="Tags" type="text" placeholder="tags" class="form-control input-md">
+                  </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <input id="isbn" name="ISBN" type="text" placeholder="ISBN" class="form-control input-md">
+                  </div>
+                </div>
+            </div>
+            <!-- /.panel-body -->
         </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-plus"></i> Технічні дані
+            </div>
+            <div class="panel-body">
+                <!-- Text input-->
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <input id="isbn" name="ISBN" type="text" placeholder="ISBN" class="form-control input-md">
+                    <input id="isbn" name="ISBN" type="text" placeholder="ISBN" class="form-control input-md">
+                  </div>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+</div>
+
+
+
+
+                </div>
+            </div>
 
         </fieldset>
     </form>

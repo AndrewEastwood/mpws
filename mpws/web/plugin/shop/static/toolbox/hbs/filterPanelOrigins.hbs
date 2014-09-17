@@ -5,9 +5,12 @@
     {{lang.pluginMenu_Origins_Grid_Title}}
 </div>
 <div class="panel-body">
-    <label>
-        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked{{/if}}>
-        Враховувати видалені
+    <p class="text-muted">
+        <small>Виберіть виробника для фільтрування списку товарів</small>
+    </p>
+    <label class="text-danger">
+        <input type="checkbox" id="show_removed" {{#if extras.withRemoved }}checked="checked"{{/if}}>
+        <small>Враховувати видалені</small>
     </label>
     <div class="filter-list-origins">
         {{#each data}}

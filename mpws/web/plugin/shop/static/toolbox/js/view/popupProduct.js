@@ -32,7 +32,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             this.$dialog = new BootstrapDialog({
                 title: this.$title,
                 message: this.$el,
-                cssClass: 'pluginShopProductPopup',
+                cssClass: 'shop-popup-product',
                 buttons: [{
                     label: lang.popup_product_button_Close,
                     cssClass: 'btn-default btn-link',
@@ -106,7 +106,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             if (_initCategoryID)
                 _selectCategory.select2("val", _initCategoryID).val(_initCategoryID);
             if (_initOriginID)
-                _selectOrigins.select2("val", _initCategoryID).val(_initOriginID);
+                _selectOrigins.select2("val", _initOriginID).val(_initOriginID);
         }
     });
 

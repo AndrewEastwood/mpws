@@ -43,19 +43,16 @@ define('plugin/shop/toolbox/js/view/managerContent', [
         saveLayout: function () {
             console.log('saving layout manager content');
             Cache.set("shopManagerContentLayoutRD", {
-                activeFilterTabID: this.$('.shop-managerContent-filters li.active a').attr('href').substr(1),
-                scrollTopFilterOrigins: this.$('.filter-list-origins').scrollTop()
+                activeFilterTabID: this.$('.shop-managerContent-filters li.active a').attr('href').substr(1)
             });
         },
         restoreLayout: function () {
             var layoutConfig = Cache.get("shopManagerContentLayoutRD");
             layoutConfig = _.defaults({}, layoutConfig || {}, {
-                activeFilterTabID: 'tree',
-                scrollTopFilterOrigins: 0
+                activeFilterTabID: 'tree'
             });
             this.$('.nav a[href="#' + layoutConfig.activeFilterTabID + '"]').parent().addClass('active');
             this.$('.tab-pane.' + layoutConfig.activeFilterTabID).addClass('in active');
-            this.$('.filter-list-origins').scrollTop(layoutConfig.scrollTopFilterOrigins);
             this.interval_saveLayout = setInterval(this.saveLayout, 800);
         },
         render: function () {
