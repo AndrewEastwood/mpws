@@ -57,7 +57,6 @@ define("plugin/shop/toolbox/js/router", [
                 // create new view
                 var dashboard = new ViewDashboard();
                 dashboard.render();
-
                 Sandbox.eventNotify('global:content:render', {
                     name: 'DashboardForPlugin_shop',
                     el: dashboard.$el
@@ -65,8 +64,8 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         productCreate: function () {
-            require(['plugin/shop/toolbox/js/view/popupProduct'], function (PopupProductEntry) {
-                var popupProduct = new PopupProductEntry();
+            require(['plugin/shop/toolbox/js/view/popupProduct'], function (ViewPopupProduct) {
+                var popupProduct = new ViewPopupProduct();
                 popupProduct.model.fetch();
                 popupProduct.$dialog.onHide(function () {
                     Backbone.history.history.back();
@@ -74,8 +73,8 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         productEdit: function (productID) {
-            require(['plugin/shop/toolbox/js/view/popupProduct'], function (PopupProductEntry) {
-                var popupProduct = new PopupProductEntry();
+            require(['plugin/shop/toolbox/js/view/popupProduct'], function (ViewPopupProduct) {
+                var popupProduct = new ViewPopupProduct();
                 popupProduct.model.fetch({ data: { id: productID} });
                 popupProduct.$dialog.onHide(function () {
                     Backbone.history.history.back();
@@ -111,8 +110,8 @@ define("plugin/shop/toolbox/js/router", [
         orderEmailTracking: function (orderID) {},
         orderEmailReceipt: function (orderID) {},
         orderEdit: function (orderID) {
-            require(['plugin/shop/toolbox/js/view/popupOrder'], function (PopupOrderEntry) {
-                var popupOrder = new PopupOrderEntry();
+            require(['plugin/shop/toolbox/js/view/popupOrder'], function (ViewPopupOrder) {
+                var popupOrder = new ViewPopupOrder();
                 popupOrder.model.set('ID', orderID);
                 popupOrder.model.fetch();
                 popupOrder.$dialog.onHide(function () {
@@ -126,17 +125,8 @@ define("plugin/shop/toolbox/js/router", [
         ordersListPage: function (status) {
             // set active menu
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-orders');
-            // // set page title
-            // Sandbox.eventNotify('global:content:render', {
-            //     name: 'CustomerPageName',
-            //     el: "Замовлення"
-            // });
-            // activeTabPage = activeTabPage || 'new';
             require(['plugin/shop/toolbox/js/view/managerOrders'], function (ManagerOrders) {
-                // create new view
-                // debugger;
                 var options = status ? {status: status} : {};
-
                 var managerOrders = new ManagerOrders(options);
                 managerOrders.viewOrdersList.collection.fetch({reset: true});
 
@@ -148,8 +138,8 @@ define("plugin/shop/toolbox/js/router", [
         },
 
         categoryEdit: function (categoryID) {
-            require(['plugin/shop/toolbox/js/view/popupCategory'], function (PopupCategoryEntry) {
-                var popupCategory = new PopupCategoryEntry();
+            require(['plugin/shop/toolbox/js/view/popupCategory'], function (ViewPopupCategory) {
+                var popupCategory = new ViewPopupCategory();
                 popupCategory.model.fetch({ data: { id: categoryID} });
                 popupCategory.$dialog.onHide(function () {
                     Backbone.history.history.back();
@@ -157,8 +147,8 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         categoryCreate: function () {
-            require(['plugin/shop/toolbox/js/view/popupCategory'], function (PopupCategoryEntry) {
-                var popupCategory = new PopupCategoryEntry();
+            require(['plugin/shop/toolbox/js/view/popupCategory'], function (ViewPopupCategory) {
+                var popupCategory = new ViewPopupCategory();
                 popupCategory.model.fetch();
                 popupCategory.$dialog.onHide(function () {
                     Backbone.history.history.back();
@@ -166,8 +156,8 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         originEdit: function (originID) {
-            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (PopupOriginEntry) {
-                var popupOrigin = new PopupOriginEntry();
+            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (ViewPopupOrigin) {
+                var popupOrigin = new ViewPopupOrigin();
                 popupOrigin.model.set('ID', originID);
                 popupOrigin.model.fetch();
                 popupOrigin.$dialog.onHide(function () {
@@ -176,8 +166,8 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
         originCreate: function () {
-            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (PopupOriginEntry) {
-                var popupOrigin = new PopupOriginEntry();
+            require(['plugin/shop/toolbox/js/view/popupOrigin'], function (ViewPopupOrigin) {
+                var popupOrigin = new ViewPopupOrigin();
                 popupOrigin.model.fetch();
                 popupOrigin.$dialog.onHide(function () {
                     Backbone.history.history.back();

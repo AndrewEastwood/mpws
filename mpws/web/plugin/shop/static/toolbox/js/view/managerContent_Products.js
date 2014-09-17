@@ -22,10 +22,6 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
 
             this.collection.queryParams = _.extend({}, this.collection.queryParams, Cache.get('shop:contentProducts:request') || {});
 
-            // this.on('categoryTree:changed:category', $.proxy(function () {
-            //     this.showLoading();
-            // }));
-
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.collection.setCustomQueryParam("Stats", true);

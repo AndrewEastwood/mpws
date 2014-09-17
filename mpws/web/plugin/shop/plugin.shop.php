@@ -9,7 +9,7 @@ class pluginShop extends objectPlugin {
     private $_listKey_Promo = 'shop:promo';
 
     public function beforeRun () {
-        $this->_getTableStatuses();
+        // $this->_getTableStatuses();
         // sleep(5);
     }
 

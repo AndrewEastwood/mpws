@@ -12,15 +12,15 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
     'default/js/lib/select2/select2'
 ], function (Sandbox, Backbone, ModelCategory, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle (isEdit) {
-        if (isEdit) {
-            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_category_title_edit);
-        } else {
+    function _getTitle (isNew) {
+        if (isNew) {
             return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_category_title_new);
+        } else {
+            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_category_title_edit);
         }
     }
 
-    var OrderItem = Backbone.View.extend({
+    var PopupCategory = Backbone.View.extend({
         template: tpl,
         lang: lang,
         initialize: function () {
@@ -61,13 +61,12 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             });
         },
         render: function () {
-            var self = this;
-            this.$title.html(_getTitle(!self.model.isNew()));
+            this.$title.html(_getTitle(this.model.isNew()));
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (!this.$dialog.isOpened())
                 this.$dialog.open();
 
-            var _items = self.model.get('_items');
+            var _items = this.model.get('_items');
             var _results = _(_items).map(function(item){
                 return {
                     id: item.ID,
@@ -75,18 +74,18 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
                 };
             });
 
-            var _select = self.$('#parent').select2({
+            var _select = this.$('#parent').select2({
                 placeholder: "Без батьківської категорії",
                 data: _results
             });
 
-            if (!self.model.isNew()) {
-                _select.val(self.model.get('ParentID'), true);
+            if (!this.model.isNew()) {
+                _select.val(this.model.get('ParentID'), true);
             }
 
         }
     });
 
-    return OrderItem;
+    return PopupCategory;
 
 });

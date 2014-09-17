@@ -38,7 +38,7 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
         }
     }
 
-    var OrderItem = Backbone.View.extend({
+    var PopupOrder = Backbone.View.extend({
         template: tpl,
         lang: lang,
         initialize: function () {
@@ -131,6 +131,6 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
         }
     });
 
-    return OrderItem;
+    return PopupOrder;
 
 });

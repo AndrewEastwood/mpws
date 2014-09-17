@@ -23,8 +23,9 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
                 type: 'all'
             };
 
-            if (this.requestData.removed)
+            if (this.requestData.removed) {
                 urlOptions.removed = true;
+            }
 
             Cache.set('shopCategoriesTreeRD', this.requestData);
 
@@ -55,6 +56,11 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
             this.extras.tree = tree;
             this.extras.withRemoved = this.requestData.removed;
             return data.items;
+        },
+
+        fetchWithRemoved: function (includeRemoved, fetchOptions) {
+            this.requestData.removed = includeRemoved;
+            this.fetch(fetchOptions);
         }
 
     });

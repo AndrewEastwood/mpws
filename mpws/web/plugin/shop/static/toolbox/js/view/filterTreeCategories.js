@@ -10,8 +10,8 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
     'default/js/lib/jstree'
-], function (Sandbox, Backbone, Utils, Cache, CollectionCategoriesTree, tpl, lang) {
-    var CategoriesTree = Backbone.View.extend({
+], function (Sandbox, Backbone, Utils, Cache, CollectionFilterTreeCategories, tpl, lang) {
+    var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
         template: tpl,
         lang: lang,
@@ -19,12 +19,11 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
             'click #show_removed': 'showRemoved'
         },
         initialize: function () {
-            this.collection = new CollectionCategoriesTree();
+            this.collection = new CollectionFilterTreeCategories();
             this.listenTo(this.collection, 'reset', this.render);
         },
         showRemoved: function (event) {
-            this.collection.requestData.removed = $(event.target).is(':checked') ? true : null;
-            this.collection.fetch({reset: true});
+            this.collection.fetchWithRemoved($(event.target).is(':checked'), {reset: true});
         },
         render: function () {
             var self = this;
@@ -208,5 +207,5 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
         }
     });
 
-    return CategoriesTree;
+    return FilterTreeCategories;
 });

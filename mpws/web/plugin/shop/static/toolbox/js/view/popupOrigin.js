@@ -12,15 +12,15 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, Backbone, ModelOrigin, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle (isEdit) {
-        if (isEdit) {
-            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_origin_title_edit);
-        } else {
+    function _getTitle (isNew) {
+        if (isNew) {
             return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_origin_title_new);
+        } else {
+            return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_origin_title_edit);
         }
     }
 
-    var OrderItem = Backbone.View.extend({
+    var PopupOrigin = Backbone.View.extend({
         template: tpl,
         lang: lang,
         initialize: function () {
@@ -42,13 +42,16 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
                     label: lang.popup_origin_button_Save,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
+                        // debugger;
                         self.model.save({
                             Name: self.$('#name').val(),
                             Description: self.$('#description').val(),
                             HomePage: self.$('#homepage').val()
                         }, {
+                            wait: true,
                             patch: true,
                             success: function (model, response) {
+                                // debugger;
                                 if (!response || !response.success) {
                                     self.render();
                                 } else {
@@ -61,17 +64,15 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
             });
         },
         render: function () {
-            var self = this;
-
-            this.$title.html(_getTitle(!!self.model.id));
-
+            // debugger;
+            this.$title.html(_getTitle(this.model.isNew()));
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-
-            if (!this.$dialog.isOpened())
+            if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
+            }
         }
     });
 
-    return OrderItem;
+    return PopupOrigin;
 
 });

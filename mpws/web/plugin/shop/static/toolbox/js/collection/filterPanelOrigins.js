@@ -21,8 +21,9 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
                 type: 'list'
             };
 
-            if (this.requestData.removed)
+            if (this.requestData.removed) {
                 urlOptions.removed = true;
+            }
 
             Cache.set('shopOriginsFilterRD', this.requestData);
 
@@ -32,6 +33,11 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
         parse: function (data) {
             this.extras.withRemoved = this.requestData.removed;
             return data.items;
+        },
+
+        fetchWithRemoved: function (includeRemoved, fetchOptions) {
+            this.requestData.removed = includeRemoved;
+            this.fetch(fetchOptions);
         }
 
     });

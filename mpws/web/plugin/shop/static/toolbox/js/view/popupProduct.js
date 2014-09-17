@@ -21,7 +21,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
         }
     }
 
-    var OrderItem = Backbone.View.extend({
+    var PopupProduct = Backbone.View.extend({
         template: tpl,
         lang: lang,
         initialize: function () {
@@ -62,17 +62,14 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             });
         },
         render: function () {
-            var self = this;
-
-            this.$title.html(_getTitle(!!self.model.id));
-
+            this.$title.html(_getTitle(this.model.id));
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-
-            if (!this.$dialog.isOpened())
+            if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
+            }
 
-            var _categories = self.model.get('_categories');
-            var _origins = self.model.get('_origins');
+            var _categories = this.model.get('_categories');
+            var _origins = this.model.get('_origins');
             var _resultsCategories = _(_categories).map(function(item){
                 return {
                     id: item.ID,
@@ -86,11 +83,11 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 };
             });
 
-            var _selectCategory = self.$('#category').select2({
+            var _selectCategory = this.$('#category').select2({
                 placeholder: "Виберіть категорію",
                 data: _resultsCategories
             });
-            var _selectOrigins = self.$('#origin').select2({
+            var _selectOrigins = this.$('#origin').select2({
                 placeholder: "Виберіть виробника",
                 data: _resultsOrigins
             });
@@ -98,9 +95,9 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             var _initCategoryID = null;
             var _initOriginID = null;
 
-            if (!self.model.isNew()) {
-                _initCategoryID = self.model.get('CategoryID');
-                _initOriginID = self.model.get('OriginID');
+            if (!this.model.isNew()) {
+                _initCategoryID = this.model.get('CategoryID');
+                _initOriginID = this.model.get('OriginID');
             } else {
                 _initCategoryID = Cache.getOnce('mpwsShopPopupProductCategoryID');
                 _initOriginID = Cache.getOnce('mpwsShopPopupProductOriginID');
@@ -113,6 +110,6 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
         }
     });
 
-    return OrderItem;
+    return PopupProduct;
 
 });

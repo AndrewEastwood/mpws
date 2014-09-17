@@ -202,11 +202,10 @@ body {
     overflow: visible;
 }
 
-.shop_filterPanelOrigins {
-    .filter-list-origins {
+.shop_managerContent_Origins {
+    .origins {
         overflow-y: auto;
         height: 500px;
-        padding-right: 15px;
         div.checkbox {
             .btn-group {
                 .btn {
@@ -226,21 +225,6 @@ body {
                 .btn-group {
                     display: inline-block;
                 }
-            }
-        }
-        .label-datecreated {
-            color: #333;
-            opacity: 0.4;
-            filter: alpha(opacity=40); /* For IE8 and earlier */
-            font-size: 0.69em;
-            padding-right: 10px;
-        }
-        .origin-homepage {
-            opacity: 0.3;
-            filter: alpha(opacity=30); /* For IE8 and earlier */
-            &:hover {
-                opacity: 1;
-                filter: alpha(opacity=100); /* For IE8 and earlier */
             }
         }
     }

@@ -1,7 +1,9 @@
 define('plugin/shop/toolbox/js/view/managerContent', [
     'default/js/lib/sandbox',
+    'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
+    'default/js/lib/cache',
     'plugin/shop/toolbox/js/view/managerContent_Products',
     'plugin/shop/toolbox/js/view/filterPanelOrigins',
     'plugin/shop/toolbox/js/view/filterTreeCategories',
@@ -10,7 +12,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-tagsinput'
-], function (Sandbox, Backbone, Utils, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
         template: tpl,
@@ -31,6 +33,30 @@ define('plugin/shop/toolbox/js/view/managerContent', [
                 this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.id);
                 this.viewProductsList.collection.fetch({reset: true});
             }, 200), this);
+
+            _.bindAll(this, 'saveLayout');
+
+            Sandbox.eventSubscribe('global:route', $.proxy(function () {
+                clearInterval(this.interval_saveLayout);
+            }, this));
+        },
+        saveLayout: function () {
+            console.log('saving layout manager content');
+            Cache.set("shopManagerContentLayoutRD", {
+                activeFilterTabID: this.$('.shop-managerContent-filters li.active a').attr('href').substr(1),
+                scrollTopFilterOrigins: this.$('.filter-list-origins').scrollTop()
+            });
+        },
+        restoreLayout: function () {
+            var layoutConfig = Cache.get("shopManagerContentLayoutRD");
+            layoutConfig = _.defaults({}, layoutConfig || {}, {
+                activeFilterTabID: 'tree',
+                scrollTopFilterOrigins: 0
+            });
+            this.$('.nav a[href="#' + layoutConfig.activeFilterTabID + '"]').parent().addClass('active');
+            this.$('.tab-pane.' + layoutConfig.activeFilterTabID).addClass('in active');
+            this.$('.filter-list-origins').scrollTop(layoutConfig.scrollTopFilterOrigins);
+            this.interval_saveLayout = setInterval(this.saveLayout, 800);
         },
         render: function () {
             // TODO:
@@ -43,6 +69,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
                 this.$('.origins').html(this.viewOriginsList.$el);
                 this.$('.summary input').tagsinput();
             }
+            this.restoreLayout();
             return this;
         }
     });
