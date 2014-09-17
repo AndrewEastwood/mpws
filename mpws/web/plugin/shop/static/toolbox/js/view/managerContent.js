@@ -3,8 +3,8 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'plugin/shop/toolbox/js/view/managerContent_Products',
-    'plugin/shop/toolbox/js/view/managerContent_Origins',
-    'plugin/shop/toolbox/js/view/categoriesTree',
+    'plugin/shop/toolbox/js/view/filterPanelOrigins',
+    'plugin/shop/toolbox/js/view/filterTreeCategories',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent',
     /* lang */

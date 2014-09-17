@@ -1,11 +1,11 @@
-define("plugin/shop/toolbox/js/view/categoriesTree", [
+define("plugin/shop/toolbox/js/view/filterTreeCategories", [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'default/js/lib/cache',
-    'plugin/shop/toolbox/js/collection/categoriesTree',
+    'plugin/shop/toolbox/js/collection/filterTreeCategories',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/categoriesTree',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/filterTreeCategories',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */

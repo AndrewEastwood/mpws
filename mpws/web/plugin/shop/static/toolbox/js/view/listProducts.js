@@ -69,6 +69,12 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             cell: "string"
         };
 
+        var columnOriginName = {
+            name: "OriginName",
+            label: lang.pluginMenu_Products_Grid_Column_OriginName,
+            cell: "string"
+        };
+
         var columnSKU = {
             name: "SKU",
             label: lang.pluginMenu_Products_Grid_Column_SKU,
@@ -131,6 +137,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             columnActions: columnActions,
             columnName: columnName,
             columnModel: columnModel,
+            columnOriginName: columnOriginName,
             columnSKU: columnSKU,
             columnPrice: columnPrice,
             columnStatus: columnStatus,

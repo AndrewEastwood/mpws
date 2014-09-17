@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/originsFilter', [
+define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',

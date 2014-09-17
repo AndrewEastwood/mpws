@@ -178,6 +178,24 @@ body {
     .tab-pane {
         padding-top: 15px;
     }
+    .nav-pills {
+        li {
+            background: none;
+            a {
+                text-decoration: none;
+                background: none;
+                color: #428BCA;
+                padding: 0px 10px 0px 0px;
+            }
+            &.active {
+                a, a:hover {
+                    background: none;
+                    color: #428BCA;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
 }
 
 .html-cell.custom-row-context-menu {

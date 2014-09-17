@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/categoriesTree', [
+define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',

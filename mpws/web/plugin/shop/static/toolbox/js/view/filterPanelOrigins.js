@@ -1,11 +1,11 @@
-define("plugin/shop/toolbox/js/view/managerContent_Origins", [
+define("plugin/shop/toolbox/js/view/filterPanelOrigins", [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
-    'plugin/shop/toolbox/js/collection/originsFilter',
+    'plugin/shop/toolbox/js/collection/filterPanelOrigins',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent_Origins',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/filterPanelOrigins',
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOriginListItem',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
