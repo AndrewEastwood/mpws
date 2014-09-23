@@ -32,11 +32,12 @@ cp /lib64/libnss_dns.so.2  /var/www/lib64/libnss_dns.so.2 // x64
 ```
 
 **create mpws.conf**
+
 Create empty config:
 ```
 sudo nano /etc/nginx/sites-enabled/mpws.conf
 ```
-and put this contfiguration.
+and put the following contfiguration.
 ```
 server {
     listen 5001;
