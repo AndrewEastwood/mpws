@@ -79,7 +79,7 @@ server {
 
 }
 ```
-You might change paths to log files according to your project's location.
+You may change paths to log files according to your project's location.
 When you complete working on configuration file then the nginx's folder will probably look like this:
 
 ```
