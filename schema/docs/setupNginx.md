@@ -31,10 +31,10 @@ nano /etc/nginx/sites-enabled/mpws.conf
 
 server {
     listen 5001;
-    root   /home/andrew/github/web/mpws;
+    root   /var/www/mpws;
     server_name pb.com.ua www.pb.com.ua;
-    access_log /home/andrew/github/web/mpws/nginx.access.log;
-    error_log /home/andrew/github/web/mpws/nginx.error.log;
+    access_log /var/www/mpws/nginx.access.log;
+    error_log /var/www/mpws/nginx.error.log;
     index /engine/controller/controller.display.php;
 
     location ~ \.php$ {
