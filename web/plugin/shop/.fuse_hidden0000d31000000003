@@ -162,7 +162,9 @@ class pluginShop extends objectPlugin {
     }
 
     public function createProduct ($reqData) {
-
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+            return glWrap("error", "AccessDenied");
+        }
 
         $result = array();
         $errors = array();
@@ -360,6 +362,10 @@ class pluginShop extends objectPlugin {
     }
 
     public function updateOrigin ($OriginID, $reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+
         $result = array();
         $errors = array();
         $success = false;
@@ -399,6 +405,9 @@ class pluginShop extends objectPlugin {
 
     public function disableOrigin ($OriginID) {
         // check permissions
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
 
         $errors = array();
         $success = false;
@@ -480,6 +489,9 @@ class pluginShop extends objectPlugin {
     }
 
     public function createCategory ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+            return glWrap("error", "AccessDenied");
+        }
 
         $result = array();
         $errors = array();
@@ -526,6 +538,10 @@ class pluginShop extends objectPlugin {
     }
 
     public function updateCategory ($CategoryID, $reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+
         $result = array();
         $errors = array();
         $success = false;
@@ -565,6 +581,11 @@ class pluginShop extends objectPlugin {
     }
 
     public function disableCategory ($CategoryID) {
+        // check permissions
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+
         $errors = array();
         $success = false;
 
@@ -957,6 +978,11 @@ class pluginShop extends objectPlugin {
     }
 
     public function disableOrderByID ($OrderID) {
+        // check permissions
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+
         $errors = array();
         $success = false;
 
@@ -1442,20 +1468,28 @@ class pluginShop extends objectPlugin {
             }
         }
         setcookie("shop:statuses:list", json_encode($statusDump), $_SESSION['shop:statuses:expire'], "/");
+        // var_dump($statusDump);
+        // var_dump($mkTimeDiff);
+        // var_dump($_SESSION['shop:statuses:last_update']);
     }
-
-
-
-
-
-
-
 
     // -----------------------------------------------
     // -----------------------------------------------
     // REQUESTS
     // -----------------------------------------------
     // -----------------------------------------------
+
+    public function get_shop_product (&$resp, $req) {
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $ProductID = intval($req->get['id']);
+            $resp = $this->getProductByID($ProductID);
+        }
+        $resp["_origins"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
+        $resp["_categories"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
+        $resp["_statuses"] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
+    }
 
     public function get_shop_stats (&$resp, $req) {
 
@@ -1526,6 +1560,10 @@ class pluginShop extends objectPlugin {
         $resp['location'] = $this->_getCatalogLocation(libraryRequest::fromGET('productID'), libraryRequest::fromGET('categoryID'));
     }
 
+    public function get_shop_products (&$resp, $req) {
+        $resp = $this->getProducts_List($req);
+    }
+
     public function get_shop_catalog (&$resp, $req) {
         if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
@@ -1549,67 +1587,6 @@ class pluginShop extends objectPlugin {
 
 
 
-
-    public function get_shop_product (&$resp, $req) {
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $ProductID = intval($req->get['id']);
-            $resp = $this->getProductByID($ProductID);
-        }
-        $resp["_origins"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
-        $resp["_categories"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
-        $resp["_statuses"] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
-    }
-
-    public function get_shop_products (&$resp, $req) {
-        $resp = $this->getProducts_List($req);
-    }
-
-    public function post_shop_product (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-
-        $resp = $this->createProduct($req->data);
-        $this->_states['changed:product'] = true;
-    }
-    public function patch_shop_product (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-
-        $resp = $this->updateProduct($req->data);
-        $this->_states['changed:product'] = true;
-    }
-
-    public function delete_shop_product (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-
-        $resp = $this->archiveProduct($req->data);
-        $this->_states['changed:product'] = true;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function get_shop_category (&$resp, $req) {
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
@@ -1620,9 +1597,7 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_categories (&$resp, $req) {
-        if (empty($req->get['type'])) {
-            $resp['error'] = "MissedParameter_type";
-        } else {
+        if (!empty($req->get['type'])) {
             switch ($req->get['type']) {
                 case "all":
                     $resp["items"] = $this->getCategories_All($req->get);
@@ -1631,45 +1606,37 @@ class pluginShop extends objectPlugin {
                     $resp["items"] = $this->getCategories_List($req);
                     break;
             }
+            return;
         }
+        $resp['error'] = "MissedParameter_type";
     }
 
     public function post_shop_category (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-
         $resp = $this->createCategory($req->data);
         $this->_states['changed:category'] = true;
     }
 
     public function patch_shop_category (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
+        if (!empty($req->get['id'])) {
             $CategoryID = intval($req->get['id']);
             $resp = $this->updateCategory($CategoryID, $req->data);
             $this->_states['changed:category'] = true;
+        } else {
+            $resp['error'] = 'MissedParameter_id';
         }
     }
 
     public function delete_shop_category (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        if (!glIsToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
+        if (!empty($req->get['id'])) {
             $CategoryID = intval($req->get['id']);
             $resp = $this->disableCategory($CategoryID);
             $this->_states['changed:category'] = true;
+        } else {
+            $resp['error'] = 'MissedParameter_id';
         }
     }
 
@@ -1678,12 +1645,13 @@ class pluginShop extends objectPlugin {
 
 
     public function get_shop_origin (&$resp, $req) {
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
+        if (!empty($req->get['id'])) {
             $OriginID = intval($req->get['id']);
             $resp = $this->getOriginByID($OriginID);
+        } else {
+            $resp['error'] = 'MissedParameter_id';
         }
+        // $resp['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
     }
 
     public function get_shop_origins (&$resp, $req) {
@@ -1702,39 +1670,29 @@ class pluginShop extends objectPlugin {
     }
 
     public function post_shop_origin (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
         $resp = $this->createOrigin($req->data);
-        $this->_states['changed:origin'] = true;
     }
 
     public function patch_shop_origin (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
+        if (!empty($req->get['id'])) {
             $OriginID = intval($req->get['id']);
             $resp = $this->updateOrigin($OriginID, $req->data);
-            $this->_states['changed:origin'] = true;
+        } else {
+            $resp['error'] = 'MissedParameter_id';
         }
+        // $resp['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
     }
 
     public function delete_shop_origin (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        if (!glIsToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;
         }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
+        if (!empty($req->get['id'])) {
             $OriginID = intval($req->get['id']);
             $resp = $this->disableOrigin($OriginID);
-            $this->_states['changed:origin'] = true;
+        } else {
+            $resp['error'] = 'MissedParameter_id';
         }
     }
 
@@ -1851,14 +1809,12 @@ class pluginShop extends objectPlugin {
     }
 
     // create new order
-    // public useres do that
     public function post_shop_order (&$resp, $req) {
         $resp = $this->createOrder($req->data);
     }
 
     // modify existent order status or
     // product quantity in the shopping cart list of temporary order
-    // both admin can update any order and public uses as well
     public function patch_shop_order (&$resp, $req) {
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
@@ -1907,7 +1863,7 @@ class pluginShop extends objectPlugin {
     }
 
     // removes particular product or clears whole shopping cart
-    public function delete_shop_cart (&$resp, $req) { // ????? we must keep all orders
+    public function delete_shop_cart (&$resp, $req) {
         if (!glIsToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;

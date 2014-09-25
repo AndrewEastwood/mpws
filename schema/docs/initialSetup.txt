@@ -5,9 +5,9 @@ Configure apache site /etc/apache2/sites-available/default:
 ServerName toolbox.mpws.com
 Options FollowSymLinks
 
-<VirtualHost *:81>
+<VirtualHost *:80>
 	ServerAdmin webmaster@localhost
-	DocumentRoot /var/www/web/mpws/
+	DocumentRoot /var/www/mpws/
 	ServerName toolbox.mpws.com
 	Options +FollowSymLinks
 	<Directory />
@@ -15,7 +15,7 @@ Options FollowSymLinks
 		Options FollowSymLinks
 		AllowOverride All
 	</Directory>
-	<Directory /var/www/web/mpws/>
+	<Directory /var/www/mpws/>
 		RewriteEngine On
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride All

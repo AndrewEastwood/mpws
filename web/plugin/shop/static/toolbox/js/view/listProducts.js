@@ -72,7 +72,8 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         var columnOriginName = {
             name: "OriginName",
             label: lang.pluginMenu_Products_Grid_Column_OriginName,
-            cell: "string"
+            cell: "string",
+            editable: false
         };
 
         var columnSKU = {
