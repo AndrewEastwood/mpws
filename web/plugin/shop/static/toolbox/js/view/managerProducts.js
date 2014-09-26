@@ -1,19 +1,24 @@
-define("plugin/shop/toolbox/js/view/managerContent_Products", [
+define("plugin/shop/toolbox/js/view/managerProducts", [
     'default/js/lib/sandbox',
     'default/js/lib/cache',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'plugin/shop/toolbox/js/view/listProducts',
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent_Products',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerProducts',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
+    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
+    'default/js/lib/bootstrap-tagsinput'
 ], function (Sandbox, Cache, _, Backbone, Utils, ViewListProducts, tpl, lang) {
 
     var ManagerContent_Products = ViewListProducts.extend({
-        className: 'panel panel-default shop_managerContent_Products',
+        className: 'panel panel-default shop_managerProducts',
         template: tpl,
         lang: lang,
+        events: {
+            'itemAdded .search': 'search',
+            'itemRemoved .search': 'search'
+        },
         initialize: function (options) {
             // _.bindAll(this);
             ViewListProducts.prototype.initialize.call(this);
@@ -67,14 +72,19 @@ define("plugin/shop/toolbox/js/view/managerContent_Products", [
             // debugger;
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                if (this.collection.length) {
-                    this.$('.products').append(this.grid.render().$el);
-                    this.$('.products').append(this.paginator.render().$el);
-                } else {
-                    this.$('.products').html(this.grid.emptyText);
-                }
+                // if (this.collection.length) {
+                this.$('.products').append(this.grid.render().$el);
+                this.$('.products').append(this.paginator.render().$el);
+                // } else {
+                    // this.$('.products').html(this.grid.emptyText);
+                // }
+                this.$('.search').tagsinput();
             }
             return this;
+        },
+        search: function () {
+            this.collection.setCustomQueryParam("Search", $(".search").tagsinput('items'));
+            this.collection.fetch();
         }
     });
 

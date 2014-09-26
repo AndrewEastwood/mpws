@@ -65,7 +65,11 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Product base configuration
 
     // Product base list configuration >>>>>
-    static function jsapiShopGetProductList ($useFeatures = true) {
+    static function jsapiShopGetProductList ($options = array()) {
+        $options = array_merge(array(
+            "useFeatures" => true,
+            "search" => false
+        ), $options);
         $config = self::jsapiShopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
@@ -87,8 +91,13 @@ class configurationShopDataSource extends objectConfiguration {
         );
         unset($config['options']);
 
-        if (!$useFeatures)
+        if (!$options['useFeatures']) {
             unset($config['additional']['shop_productFeatures']);
+        }
+
+        if (!empty($options['search'])) {
+            $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+        }
 
         return $config;
     }

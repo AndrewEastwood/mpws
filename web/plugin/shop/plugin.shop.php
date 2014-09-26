@@ -138,8 +138,16 @@ class pluginShop extends objectPlugin {
     }
 
     public function getProducts_List ($req) {
-        $config = configurationShopDataSource::jsapiShopGetProductList();
+        $options = array();
+
+        if (isset($req->get['_pSearch'])) {
+            $options['search'] = $req->get['_pSearch'][0];
+        }
+
+        $config = configurationShopDataSource::jsapiShopGetProductList($options);
         $self = $this;
+
+
         $callbacks = array(
             "parse" => function ($items) use($self) {
                 $_items = array();
@@ -162,8 +170,6 @@ class pluginShop extends objectPlugin {
     }
 
     public function createProduct ($reqData) {
-
-
         $result = array();
         $errors = array();
         $success = false;
@@ -215,10 +221,6 @@ class pluginShop extends objectPlugin {
     }
 
     public function updateProduct ($ProductID, $reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("error", "AccessDenied");
-        }
-
         $result = array();
         $errors = array();
         $success = false;
@@ -255,6 +257,10 @@ class pluginShop extends objectPlugin {
         $result['success'] = $success;
 
         return $result;
+    }
+
+    public function archiveProduct ($ProductID) {
+
     }
 
     // -----------------------------------------------
@@ -1527,7 +1533,9 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_catalog (&$resp, $req) {
-        if (!empty($req->get['type'])) {
+        if (empty($req->get['type'])) {
+            $resp['error'] = "MissedParameter_type";
+        } else {
             switch ($req->get['type']) {
                 case "tree":
                     $resp['tree'] = $this->_getCatalogTree();
@@ -1536,10 +1544,7 @@ class pluginShop extends objectPlugin {
                     $resp['browse'] = $this->_getCatalogBrowse();
                     break;
             }
-            return;
         }
-
-        $resp['error'] = "MissedParameter_type";
     }
 
 
@@ -1687,7 +1692,9 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_origins (&$resp, $req) {
-        if (!empty($req->get['type'])) {
+        if (empty($req->get['type'])) {
+            $resp['error'] = "MissedParameter_type";
+        } else {
             switch ($req->get['type']) {
                 case "all":
                     $resp = $this->getOrigins_All($req->get);
@@ -1696,9 +1703,7 @@ class pluginShop extends objectPlugin {
                     $resp = $this->getOrigins_List($req);
                     break;
             }
-            return;
         }
-        $resp['error'] = "MissedParameter_type";
     }
 
     public function post_shop_origin (&$resp, $req) {

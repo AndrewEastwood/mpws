@@ -4,14 +4,13 @@ define('plugin/shop/toolbox/js/view/managerContent', [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'default/js/lib/cache',
-    'plugin/shop/toolbox/js/view/managerContent_Products',
+    'plugin/shop/toolbox/js/view/managerProducts',
     'plugin/shop/toolbox/js/view/filterPanelOrigins',
     'plugin/shop/toolbox/js/view/filterTreeCategories',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/managerContent',
     /* lang */
-    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    'default/js/lib/bootstrap-tagsinput'
+    'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
 
     var ManagerOrders = Backbone.View.extend({
@@ -64,7 +63,6 @@ define('plugin/shop/toolbox/js/view/managerContent', [
                 this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.products').html(this.viewProductsList.$el);
                 this.$('.origins').html(this.viewOriginsList.$el);
-                this.$('.summary input').tagsinput();
             }
             this.restoreLayout();
             return this;
