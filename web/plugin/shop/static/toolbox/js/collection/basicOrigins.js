@@ -30,6 +30,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
+            return this;
         },
 
         getCustomQueryField: function (field) {
@@ -38,6 +39,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
+            return this;
         },
 
         getCustomQueryParam: function (param) {

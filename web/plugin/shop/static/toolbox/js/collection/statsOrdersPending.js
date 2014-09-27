@@ -2,7 +2,7 @@ define('plugin/shop/toolbox/js/collection/statsOrdersPending', [
     'plugin/shop/toolbox/js/collection/basicOrders'
 ], function (ListOrders) {
 
-    var StatsListOrdersTodays = ListOrders.extend({
+    var StatsListOrdersPending = ListOrders.extend({
         initialize: function () {
             ListOrders.prototype.initialize.apply(this);
             this.url = APP.getApiLink({
@@ -13,5 +13,5 @@ define('plugin/shop/toolbox/js/collection/statsOrdersPending', [
         }
     });
 
-    return StatsListOrdersTodays;
+    return StatsListOrdersPending;
 });

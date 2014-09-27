@@ -25,7 +25,7 @@ class configurationShopDataSource extends objectConfiguration {
             )
         ));
     }
-    static function jsapiShopGetProductItem ($productID = null) {
+    static function jsapiShopGetProductItem ($ProductID = null) {
         $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
@@ -55,14 +55,64 @@ class configurationShopDataSource extends objectConfiguration {
             )
         ));
 
-        if (!is_null($productID))
+        if (!is_null($ProductID))
             $config["condition"] = array(
-                "shop_products.ID" => self::jsapiCreateDataSourceCondition($productID)
+                "shop_products.ID" => self::jsapiCreateDataSourceCondition($ProductID)
             );
 
         return $config;
     }
     // <<<< Product base configuration
+
+    static function jsapiShopCreateProduct ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        $data["ExternalKey"] = libraryUtils::url_slug($data['Name'] . '_' . $data['Model'] . '_' . $data['SKU']);
+        $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_products",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopUpdateProduct ($ProductID, $data) {
+        $data["DateUpdated"] = self::getDate();
+        $ExternalKey = array();
+        if (isset($data['Name']))
+            $ExternalKey[] = $data['Name'];
+        if (isset($data['Model']))
+            $ExternalKey[] = $data['Model'];
+        if (isset($data['SKU']))
+            $ExternalKey[] = $data['SKU'];
+        if (!empty($ExternalKey))
+            $data["ExternalKey"] = libraryUtils::url_slug(implode('_', $ExternalKey));
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_products",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($ProductID)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopDeleteProduct ($ProductID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_products",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($ProductID)
+            ),
+            "data" => array(
+                "Status" => 'ARCHIVED',
+                "DateUpdated" => self::getDate()
+            ),
+            "options" => null
+        ));
+    }
 
     // Product base list configuration >>>>>
     static function jsapiShopGetProductList ($options = array()) {
@@ -96,7 +146,17 @@ class configurationShopDataSource extends objectConfiguration {
         }
 
         if (!empty($options['search'])) {
-            $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+            if (is_string($options['search'])) {
+                $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["Model"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+            } elseif (is_array($options['search'])) {
+                foreach ($options['search'] as $value) {
+                    $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    // $config['condition']["Model"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                }
+            }
         }
 
         return $config;
@@ -229,7 +289,18 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
-
+    static function jsapiShopAddProductPrice ($ProductID, $price) {
+        $data["ProductID"] = $ProductID;
+        $data["Price"] = $price;
+        $data["DateCreated"] = self::getDate();
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_productPrices",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+    
 
 
 
@@ -535,7 +606,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
     static function jsapiGetShopOrderList_Expired () {
         $config = self::jsapiGetShopOrderList();
-        $config['condition']['Status'] = self::jsapiCreateDataSourceCondition("SHOP_CLOSED", "!=");
+        $config['condition']['Status'] = self::jsapiCreateDataSourceCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
         $config['condition']['DateCreated'] = self::jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
         return $config;
     }

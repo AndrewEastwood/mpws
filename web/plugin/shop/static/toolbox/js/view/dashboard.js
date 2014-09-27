@@ -43,14 +43,14 @@ define("plugin/shop/toolbox/js/view/dashboard", [
 
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
-            this.$('.ordersPending').html(wgtOrdersPending.$el);
-            this.$('.ordersExpired').html(wgtOrdersExpired.$el);
+            this.$('.ordersPending').html(wgtOrdersPending.render().$el);
+            this.$('.ordersExpired').html(wgtOrdersExpired.render().$el);
             this.$('.ordersOverview').html(wgtOrdersOverview.$el);
             this.$('.productsOverview').html(wgtProductsOverview.$el);
             this.$('.ordersIntensityLastMonth').html(wgtOrdersIntensityLastMonth.$el);
             this.$('.productsIntensityLastMonth').html(wgtProductsIntensityLastMonth.$el);
-            this.$('.productsPopular').html(wgtProductsPopular.$el);
-            this.$('.productsNonPopular').html(wgtProductsNonPopular.$el);
+            this.$('.productsPopular').html(wgtProductsPopular.render().$el);
+            this.$('.productsNonPopular').html(wgtProductsNonPopular.render().$el);
             
             // self.$('select').select2();
             // this.$('.helper').tooltip();

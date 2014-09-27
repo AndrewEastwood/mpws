@@ -141,7 +141,7 @@ class pluginShop extends objectPlugin {
         $options = array();
 
         if (isset($req->get['_pSearch'])) {
-            $options['search'] = $req->get['_pSearch'][0];
+            $options['search'] = $req->get['_pSearch'];
         }
 
         $config = configurationShopDataSource::jsapiShopGetProductList($options);
@@ -159,10 +159,14 @@ class pluginShop extends objectPlugin {
         );
         $dataList = $this->getCustomer()->getDataList($config, $req, $callbacks);
 
+        $dataList['_category'] = null;
+
         if (isset($req->get['_pStats'])) {
             $filter = array();
-            if (isset($req->get['_fCategoryID']))
+            if (isset($req->get['_fCategoryID'])) {
                 $filter['_fCategoryID'] = $req->get['_fCategoryID'];
+                $dataList['_category'] = $this->getCategoryByID($req->get['_fCategoryID']);
+            }
             $dataList['stats'] = $this->getStats_ProductsOverview($filter);
         }
 
@@ -196,8 +200,8 @@ class pluginShop extends objectPlugin {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateCategory = configurationShopDataSource::jsapiShopCreateCategory($validatedValues);
-                $ProductID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
+                $config = configurationShopDataSource::jsapiShopCreateProduct($validatedValues);
+                $ProductID = $this->getCustomer()->fetch($config) ?: null;
 
                 if (empty($ProductID))
                     throw new Exception('CategoryCreateError');
@@ -213,7 +217,7 @@ class pluginShop extends objectPlugin {
             $errors = $validatedDataObj["errors"];
 
         if ($success && !empty($ProductID))
-            $result = $this->getCategoryByID($ProductID);
+            $result = $this->getProductByID($ProductID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -226,9 +230,14 @@ class pluginShop extends objectPlugin {
         $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'Description' => array('string', 'skipIfUnset', 'max' => 300),
-            'ParentID' => array('int', 'null', 'skipIfUnset'),
+            'CategoryID' => array('int', 'skipIfUnset'),
+            'OriginID' => array('int', 'skipIfUnset'),
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100, 'skipIfUnset'),
+            'Description' => array('string', 'skipIfUnset', 'max' => 500),
+            'Model' => array('string', 'skipIfUnset'),
+            'SKU' => array('string', 'skipIfUnset'),
+            'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
+            'IsPromo' => array('bool', 'skipIfUnset'),
             'Status' => array('string', 'skipIfUnset')
         ));
 
@@ -239,8 +248,10 @@ class pluginShop extends objectPlugin {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateCategory($ProductID, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory) ?: null;
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+
+                $config = configurationShopDataSource::jsapiShopUpdateProduct($ProductID, $validatedValues);
+                $this->getCustomer()->fetch($config);
 
                 $this->getCustomerDataBase()->commit();
 
@@ -252,7 +263,7 @@ class pluginShop extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->getCategoryByID($ProductID);
+        $result = $this->getProductByID($ProductID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -1586,8 +1597,13 @@ class pluginShop extends objectPlugin {
             return;
         }
 
-        $resp = $this->updateProduct($req->data);
-        $this->_states['changed:product'] = true;
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $ProductID = intval($req->get['id']);
+            $resp = $this->updateProduct($ProductID, $req->data);
+            $this->_states['changed:product'] = true;
+        }
     }
 
     public function delete_shop_product (&$resp, $req) {

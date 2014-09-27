@@ -29,7 +29,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         trail: 58, // Afterglow percentage
         shadow: false, // Whether to render a shadow
         hwaccel: false, // Whether to use hardware acceleration
-        className: 'spinner', // The CSS class to assign to the spinner
+        className: 'mpwsDataSpinner', // The CSS class to assign to the spinner
         zIndex: 2e9, // The z-index (defaults to 2000000000)
         top: '10%', // Top position relative to parent
         left: '50%' // Left position relative to parent
@@ -60,13 +60,39 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         var columnName = {
             name: "Name",
             label: lang.pluginMenu_Products_Grid_Column_Name,
-            cell: "string"
+            cell: Backgrid.StringCell.extend({
+                initialize: function (options) {
+                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
+                    this.listenTo(this.model, "change:Name", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
+                            silent: true,
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                        });
+                    });
+                }
+            })
         };
 
         var columnModel = {
             name: "Model",
             label: lang.pluginMenu_Products_Grid_Column_Model,
-            cell: "string"
+            cell: Backgrid.StringCell.extend({
+                initialize: function (options) {
+                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
+                    this.listenTo(this.model, "change:Model", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
+                            silent: true,
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                        });
+                    });
+                }
+            })
         };
 
         var columnOriginName = {
@@ -79,16 +105,42 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         var columnSKU = {
             name: "SKU",
             label: lang.pluginMenu_Products_Grid_Column_SKU,
-            cell: "string"
+            cell: Backgrid.StringCell.extend({
+                initialize: function (options) {
+                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
+                    this.listenTo(this.model, "change:SKU", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
+                            silent: true,
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                        });
+                    });
+                }
+            })
         };
 
         var columnPrice = {
             name: "Price",
             label: lang.pluginMenu_Products_Grid_Column_Price,
-            cell: "number",
+            cell: Backgrid.NumberCell.extend({
+                initialize: function (options) {
+                    Backgrid.StringCell.prototype.initialize.apply(this, arguments);
+                    this.listenTo(this.model, "change:Price", function(model) {
+                        model.save(model.changed, {
+                            patch: true,
+                            silent: true,
+                            success: function() {
+                                model.collection.fetch({reset: true});
+                            }
+                        });
+                    });
+                }
+            }),
             formatter: {
                 fromRaw: function (value) {
-                    return value;
+                    return parseFloat(value, 10).toFixed(2);
                 },
                 toRaw: function (value) {
                     var matches = value.match(/^([0-9\.]+)/)
@@ -152,7 +204,8 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             this.options = options || {};
             this.collection = this.collection || new CollectionProducts();
             this.listenTo(this.collection, 'reset', this.render);
-            this.listenTo(this.collection, 'request', this.showLoading);
+            this.listenTo(this.collection, 'request', this.startLoadingAnim);
+            this.listenTo(this.collection, 'sync error', this.stopLoadingAnim);
             var columns = getColumns();
             if (this.options.adjustColumns)
                 columns = this.options.adjustColumns(columns);
@@ -164,14 +217,17 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             this.paginator = new Backgrid.Extension.Paginator({
                 collection: this.collection
             });
-            _.bindAll(this, 'showLoading', 'render');
+            _.bindAll(this, 'startLoadingAnim', 'stopLoadingAnim', 'render');
         },
-        showLoading: function () {
+        startLoadingAnim: function () {
             var self = this;
             setTimeout(function(){
                 console.log('adding spinner');
                 self.$el.append(spinner.el);
             }, 0);
+        },
+        stopLoadingAnim: function () {
+            this.$('.mpwsDataSpinner').remove();
         },
         render: function () {
             console.log('listOrders: render');

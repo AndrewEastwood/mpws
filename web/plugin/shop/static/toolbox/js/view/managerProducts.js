@@ -25,14 +25,10 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
 
             this.setOptions(options);
 
-            this.collection.queryParams = _.extend({}, this.collection.queryParams, Cache.get('shop:contentProducts:request') || {});
-
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.collection.setCustomQueryParam("Stats", true);
-            this.listenTo(this.collection, 'request', $.proxy(function () {
-                Cache.set('shop:contentProducts:request', this.collection.queryParams);
-            }));
+
             this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp) {
                 if (this && resp.stats) {
                     this.refreshBadges(resp.stats);
@@ -59,26 +55,30 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
                 self.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
         },
-        showLoading: function () {
+        startLoadingAnim: function () {
             var self = this;
             setTimeout(function(){
                 console.log('adding spinner');
                 self.$('.fa-plus').addClass('fa-spin');
             }, 0);
         },
+        stopLoadingAnim: function () {
+            this.$('.fa-plus').removeClass('fa-spin');
+        },
         render: function () {
-            // this.$('.fa-plus').removeClass('fa-spin');
             console.log('ManagerContent_Products render');
             // debugger;
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                // if (this.collection.length) {
                 this.$('.products').append(this.grid.render().$el);
                 this.$('.products').append(this.paginator.render().$el);
-                // } else {
-                    // this.$('.products').html(this.grid.emptyText);
-                // }
                 this.$('.search').tagsinput();
+            }
+            if (this.collection.extras._category) {
+                this.$('.category-title').removeClass('hidden');
+                this.$('.category-title .text').text(this.collection.extras._category.Name);
+            } else {
+                this.$('.category-title').addClass('hidden');
             }
             return this;
         },

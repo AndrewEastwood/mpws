@@ -20,6 +20,8 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
                 adjustColumns: function (columns) {
                     delete columns.columnDateUpdated;
                     delete columns.columnDateCreated;
+                    delete columns.columnSKU;
+                    delete columns.columnModel;
                     columns.SoldTotal = {
                         name: "SoldTotal",
                         label: "Продано",
@@ -40,13 +42,11 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
                     return columns;
                 }
             });
+            this.viewList.grid.emptyText = "Немає популярних товарів";
         },
         render: function () {
-            if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                this.viewList.grid.emptyText = "Немає популярних товарів";
-                this.$('.panel-body').html(this.viewList.$el);
-            }
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
     });

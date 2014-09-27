@@ -12,7 +12,7 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
 
         extras: {},
 
-        requestData: Cache.get('shopCategoriesTreeRD') || {},
+        queryParams: Cache.get('shopCategoriesTreeRD') || {},
 
         model: ModelCategory,
 
@@ -23,11 +23,11 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
                 type: 'all'
             };
 
-            if (this.requestData.removed) {
+            if (this.queryParams.removed) {
                 urlOptions.removed = true;
             }
 
-            Cache.set('shopCategoriesTreeRD', this.requestData);
+            Cache.set('shopCategoriesTreeRD', this.queryParams);
 
             return APP.getApiLink(urlOptions);
         },
@@ -54,12 +54,12 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
                 }
             })
             this.extras.tree = tree;
-            this.extras.withRemoved = this.requestData.removed;
+            this.extras.withRemoved = this.queryParams.removed;
             return data.items;
         },
 
         fetchWithRemoved: function (includeRemoved, fetchOptions) {
-            this.requestData.removed = includeRemoved;
+            this.queryParams.removed = includeRemoved;
             this.fetch(fetchOptions);
         }
 

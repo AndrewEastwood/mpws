@@ -1,17 +1,26 @@
 define('plugin/shop/toolbox/js/collection/basicProducts', [
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/product',
-    'default/js/lib/backbone-paginator'
-], function (_, ModelProduct, PageableCollection) {
+    'default/js/lib/backbone-paginator',
+    'default/js/lib/cache'
+], function (_, ModelProduct, PageableCollection, Cache) {
 
     var ListProducts = PageableCollection.extend({
 
         model: ModelProduct,
 
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'products'
-        }),
+        url: function () {
+            var url = APP.getApiLink({
+                source: 'shop',
+                fn: 'products'
+            });
+
+            Cache.set('shopProductsListRD', this.queryParams);
+
+            return url;
+        },
+
+        extras: {},
 
         // Initial pagination states
         state: {
@@ -21,7 +30,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
         // You can remap the query parameters from `state` keys from
         // the default to those your server supports
-        queryParams: {
+        queryParams: Cache.get('shopProductsListRD') || {
             totalPages: null,
             totalRecords: null,
             sortKey: "sort"
@@ -29,6 +38,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
+            return this;
         },
 
         getCustomQueryField: function (field) {
@@ -37,6 +47,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
+            return this;
         },
 
         getCustomQueryParam: function (param) {
@@ -45,9 +56,17 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
 
         parseState: function (resp, queryParams, state, options) {
             var state = {
-                totalRecords: parseInt(resp && resp.info.total_entries || 0, 10),
-                currentPage: parseInt(resp && resp.info.page || 1, 10)
+                totalRecords: 0,
+                currentPage: 1
             };
+
+            if (resp) {
+                if (resp.info) {
+                    state.totalRecords = parseInt(resp.items.length, 10) || 0;
+                    state.currentPage = parseInt(resp.info.page, 10) || 1;
+                }
+                this.extras._category = resp._category || null;
+            }
             return state;
         },
 

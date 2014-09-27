@@ -10,7 +10,7 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
 
         extras: {},
 
-        requestData: Cache.get('shopOriginsFilterRD') || {},
+        queryParams: Cache.get('shopOriginsFilterRD') || {},
 
         model: ModelOrigin,
 
@@ -21,22 +21,22 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
                 type: 'list'
             };
 
-            if (this.requestData.removed) {
+            if (this.queryParams.removed) {
                 urlOptions.removed = true;
             }
 
-            Cache.set('shopOriginsFilterRD', this.requestData);
+            Cache.set('shopOriginsFilterRD', this.queryParams);
 
             return APP.getApiLink(urlOptions);
         },
 
         parse: function (data) {
-            this.extras.withRemoved = this.requestData.removed;
+            this.extras.withRemoved = this.queryParams.removed;
             return data.items;
         },
 
         fetchWithRemoved: function (includeRemoved, fetchOptions) {
-            this.requestData.removed = includeRemoved;
+            this.queryParams.removed = includeRemoved;
             this.fetch(fetchOptions);
         }
 

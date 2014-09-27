@@ -29,7 +29,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             this.listenTo(this.viewProductsList.collection, 'reset', this.render);
 
             this.viewCatergoriesTree.on('categoryTree:changed:category', _.debounce(function (activeCategory) {
-                this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.id);
+                this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.id >= 0 ? activeCategory.id : void(0));
                 this.viewProductsList.collection.fetch({reset: true});
             }, 200), this);
 

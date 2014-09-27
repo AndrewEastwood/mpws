@@ -29,6 +29,7 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
+            return this;
         },
 
         getCustomQueryField: function (field) {
@@ -37,6 +38,7 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
+            return this;
         },
 
         getCustomQueryParam: function (param) {

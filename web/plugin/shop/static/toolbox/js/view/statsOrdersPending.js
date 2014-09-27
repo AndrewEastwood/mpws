@@ -26,14 +26,12 @@ define("plugin/shop/toolbox/js/view/statsOrdersPending", [
                     return columns;
                 }
             });
+            this.viewList.grid.emptyText = "Всі замовлення оброблені";
         },
         render: function () {
             // render into panel body
-            if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                this.viewList.grid.emptyText = "Всі замовлення оброблені";
-                this.$('.panel-body').html(this.viewList.$el);
-            }
+            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.$('.panel-body').html(this.viewList.$el);
             return this;
         }
     });

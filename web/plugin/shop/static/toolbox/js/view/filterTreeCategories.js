@@ -51,7 +51,8 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                         tmp.rename.label = "Переіменувати";
                         tmp.remove.label = "Видалити";
                         tmp.remove._disabled = function (data) {
-                            return data.reference.parent().data('childcount') > 0;
+                            return data.reference.parent().data('childcount') > 0 ||
+                                data.reference.parent().data('type') === "root";
                         }
                         tmp.remove.icon = "fa fa-times";
                         tmp.rename._disabled = function (data) {
@@ -85,7 +86,8 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                         };
                         tmp.restore = {
                             _disabled: function (data) {
-                                return data.reference.parent().data('status') === "ACTIVE";
+                                return data.reference.parent().data('status') === "ACTIVE" ||
+                                    data.reference.parent().data('type') === "root";
                             },
                             label: "Відновити",
                             "icon"              : "fa fa-undo",
@@ -114,6 +116,9 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                         };
                         tmp.properties = {
                             label: "Властивості",
+                            _disabled: function (data) {
+                                return data.reference.parent().data('type') === "root";
+                            },
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
@@ -196,7 +201,7 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                     });
                 }
             }).on('activate_node.jstree', function (e, data) {
-                var id = parseInt(data.node.data.id, 10) || null;
+                var id = parseInt(data.node.data.id, 10) || void(0);
                 self.trigger('categoryTree:changed:category', {
                     id: id,
                     text: data.node.text.trim()
