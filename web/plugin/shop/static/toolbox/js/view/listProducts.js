@@ -37,10 +37,12 @@ define("plugin/shop/toolbox/js/view/listProducts", [
 
     var spinner = new Spinner(opts).spin();
 
-    function getColumns () {
+    function getColumns() {
         // TODO: do smth to fetch states from server
         var statuses = ["ACTIVE", "ARCHIVED", "DISCOUNT", "DEFECT", "WAITING", "PREORDER"];
-        var orderStatusValues = _(statuses).map(function (status){ return [lang["product_status_" + status] || status, status]; });
+        var orderStatusValues = _(statuses).map(function (status) {
+            return [lang["product_status_" + status] || status, status];
+        });
 
         var columnActions = {
             className: "custom-row-context-menu",
@@ -63,12 +65,14 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Name", function(model) {
+                    this.listenTo(this.model, "change:Name", function (model) {
                         model.save(model.changed, {
                             patch: true,
                             silent: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
+                            success: function () {
+                                model.collection.fetch({
+                                    reset: true
+                                });
                             }
                         });
                     });
@@ -82,12 +86,14 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Model", function(model) {
+                    this.listenTo(this.model, "change:Model", function (model) {
                         model.save(model.changed, {
                             patch: true,
                             silent: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
+                            success: function () {
+                                model.collection.fetch({
+                                    reset: true
+                                });
                             }
                         });
                     });
@@ -108,12 +114,14 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             cell: Backgrid.StringCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:SKU", function(model) {
+                    this.listenTo(this.model, "change:SKU", function (model) {
                         model.save(model.changed, {
                             patch: true,
                             silent: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
+                            success: function () {
+                                model.collection.fetch({
+                                    reset: true
+                                });
                             }
                         });
                     });
@@ -127,12 +135,14 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             cell: Backgrid.NumberCell.extend({
                 initialize: function (options) {
                     Backgrid.StringCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Price", function(model) {
+                    this.listenTo(this.model, "change:Price", function (model) {
                         model.save(model.changed, {
                             patch: true,
                             silent: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
+                            success: function () {
+                                model.collection.fetch({
+                                    reset: true
+                                });
                             }
                         });
                     });
@@ -160,11 +170,13 @@ define("plugin/shop/toolbox/js/view/listProducts", [
                 optionValues: orderStatusValues,
                 initialize: function (options) {
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Status", function(model) {
+                    this.listenTo(this.model, "change:Status", function (model) {
                         model.save(model.changed, {
                             patch: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
+                            success: function () {
+                                model.collection.fetch({
+                                    reset: true
+                                });
                             }
                         });
                     });
@@ -221,7 +233,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
         },
         startLoadingAnim: function () {
             var self = this;
-            setTimeout(function(){
+            setTimeout(function () {
                 console.log('adding spinner');
                 self.$el.append(spinner.el);
             }, 0);

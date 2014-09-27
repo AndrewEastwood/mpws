@@ -189,57 +189,29 @@ class pluginShop extends objectPlugin {
             'SKU' => array('string', 'skipIfUnset'),
             'Price' => array('numeric', 'notEmpty'),
             'IsPromo' => array('bool'),
-            'Status' => array('string', 'skipIfUnset'),
-            'Tags' => array('string', 'skipIfUnset'),
-            'Features' =>  array('string', 'notEmpty')
+            'Status' => array('string', 'skipIfUnset')
         ));
-
-        var_dump($validatedDataObj['values']);
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+
                 $this->getCustomerDataBase()->beginTransaction();
-                $CustomerID = $this->getCustomer()->getCustomerID();
-                $attrTags = $validatedValues['Tags'];
-                $features = $validatedValues['Features'];
-                $productFeaturesIDs = array();
 
-                unset($validatedValues['Tags']);
-                unset($validatedValues['Features']);
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                // add new features
-                foreach ($features as $value) {
-                    $data["FieldName"] = $value;
-                    $data["CustomerID"] = $CustomerID;
-                    $config = configurationShopDataSource::jsapiShopCreateProduct($data);
-                    $featureID = $this->getCustomer()->fetch($config) ?: null;
-                    if (isset($featureID) && $featureID >= 0) {
-                        $productFeaturesIDs[] = $featureID;
-                    }
-                }
-                // if feature exists then featureID is empty => new product have only new features and 
-                // already defined features will be missed
-
-                // create product
-                $validatedValues["CustomerID"] = $CustomerID;
                 $config = configurationShopDataSource::jsapiShopCreateProduct($validatedValues);
                 $ProductID = $this->getCustomer()->fetch($config) ?: null;
-                if (empty($ProductID)) {
+
+                if (empty($ProductID))
                     throw new Exception('ProductCreateError');
-                }
-                // jsapiShopAddFeatureToProduct
-                // append features
-
-                // add attributes
-
-
 
 
                 // add attributes
 
-                // jsapiShopCreateFeature
+
+                // add features
 
 
 

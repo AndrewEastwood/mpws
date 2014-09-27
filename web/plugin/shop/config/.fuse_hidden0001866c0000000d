@@ -290,9 +290,25 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
-    static function jsapiShopCreateFeature ($data) {
+    static function jsapiShopCreateFeature ($featureName) {
         $data["DateUpdated"] = self::getDate();
         $data["DateCreated"] = self::getDate();
+        $data["FieldName"] = $featureName;
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_features",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null,
+            "saveOptions" => array(
+                "useInsertIgnore" => true
+            )
+        ));
+    }
+
+    static function jsapiShopAddFeatureToProduct ($featureName) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        $data["FieldName"] = $featureName;
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_features",
             "action" => "insert",
@@ -319,16 +335,6 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopAddFeatureToProduct ($data) {
-        $data["DateUpdated"] = self::getDate();
-        $data["DateCreated"] = self::getDate();
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "shop_productFeatures",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
-    }
 
 
 

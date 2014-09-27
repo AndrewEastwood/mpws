@@ -112,6 +112,7 @@ class libraryDataBase {
 
         $action = $config['action'];
         $source = $config['source'];
+        $saveOptions = isset($config['saveOptions']) ? $config['saveOptions'] : array();
         $fieldsToSelectFromDB = $config['fields'] ?: array();
 
         // prepend ID column
@@ -252,14 +253,14 @@ class libraryDataBase {
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
                 $this->dbo->set($config['data']);
                 // echo 'libraryDataObject update DB';
-                $this->dbo->save();
+                $this->dbo->save($saveOptions);
                 break;
             case 'delete':
                 $this->dbo->delete_many();
                 break;
             case 'insert':
                 $this->dbo->create($config['data']);
-                $this->dbo->save();
+                $this->dbo->save($saveOptions);
                 break;
             case 'select':
             default:

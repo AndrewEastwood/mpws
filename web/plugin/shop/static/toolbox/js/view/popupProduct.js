@@ -10,10 +10,13 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupProduct',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
+    'default/js/lib/select2/select2',
+    'default/js/lib/jquery.maskMoney',
+    'default/js/lib/bootstrap-tagsinput',
     'default/js/lib/select2/select2'
 ], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle (isEdit) {
+    function _getTitle(isEdit) {
         if (isEdit) {
             return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_product_title_edit);
         } else {
@@ -44,9 +47,15 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
                         self.model.save({
+                            CategoryID: parseInt(self.$('#category').select2('val'), 10),
+                            OriginID: parseInt(self.$('#origin').select2('val'), 10),
                             Name: self.$('#name').val(),
-                            Description: self.$('#description').val(),
-                            HomePage: self.$('#homepage').val()
+                            Model: self.$('#price').val(),
+                            Price: parseFloat(self.$('#price').val(), 10),
+                            Description: self.$('#description').text(),
+                            IsPromo: self.$('#IsPromo').is(':checked'),
+                            Tags: self.$('#price').val(),
+                            Features: self.$(".features-list").select2('val')
                         }, {
                             patch: true,
                             success: function (model, response) {
@@ -64,25 +73,31 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
         render: function () {
             this.$title.html(_getTitle(this.model.id));
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
             }
 
+            var _initCategoryID = null;
+            var _initOriginID = null;
             var _categories = this.model.get('_categories');
             var _origins = this.model.get('_origins');
-            var _resultsCategories = _(_categories).map(function(item){
+            var _features = this.model.get('_features');
+            var _resultsCategories = _(_categories).map(function (item) {
                 return {
                     id: item.ID,
                     text: item.Name
                 };
             });
-            var _resultsOrigins = _(_origins).map(function(item){
+            var _resultsOrigins = _(_origins).map(function (item) {
                 return {
                     id: item.ID,
                     text: item.Name
                 };
             });
-
+            var _resultsFeatures = _(_features).map(function (item, id) {
+                return item;
+            });
             var _selectCategory = this.$('#category').select2({
                 placeholder: "Виберіть категорію",
                 data: _resultsCategories
@@ -91,10 +106,6 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 placeholder: "Виберіть виробника",
                 data: _resultsOrigins
             });
-
-            var _initCategoryID = null;
-            var _initOriginID = null;
-
             if (!this.model.isNew()) {
                 _initCategoryID = this.model.get('CategoryID');
                 _initOriginID = this.model.get('OriginID');
@@ -107,9 +118,21 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 _selectCategory.select2("val", _initCategoryID).val(_initCategoryID);
             if (_initOriginID)
                 _selectOrigins.select2("val", _initOriginID).val(_initOriginID);
+
+            this.$('#price').maskMoney({
+                suffix: 'грн.',
+                thousands: ' ',
+                decimal: ','
+            });
+
+            this.$('#tags').tagsinput();
+
+            this.$(".features-list").select2({
+                tags: _resultsFeatures,
+                maximumInputLength: 10
+            });
         }
     });
 
     return PopupProduct;
-
 });
