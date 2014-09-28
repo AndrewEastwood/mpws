@@ -1,10 +1,11 @@
 /* Simple native bridge to 3dp template engine
  * --------
  */
-define("default/js/lib/handlebars_helpers", [
+define("default/js/lib/handlebarsHelpers", [
+    'default/js/lib/handlebars',
     'default/js/lib/underscore',
     'default/js/lib/extend.string'
-], function (_) {
+], function (Handlebars, _) {
     // The module to be exported
     var helpers = {
         contains: function (str, pattern, options) {
@@ -396,10 +397,10 @@ define("default/js/lib/handlebars_helpers", [
             console.log(optionalValue);
         }
     }
-    helpers.toLowerCase = function(str) {
-      return str.toLowerCase();
+    helpers.toLowerCase = function (str) {
+        return str.toLowerCase();
     }
-    helpers.mpwsGetValueByKey = function(dictionary, key, prefix, suffix, getFirstPartSplittedBy, context) {
+    helpers.mpwsGetValueByKey = function (dictionary, key, prefix, suffix, getFirstPartSplittedBy, context) {
         // debugger;
         if (!context && suffix && suffix.hash) {
             context = {
@@ -411,51 +412,58 @@ define("default/js/lib/handlebars_helpers", [
         return dictionary[_key];
     }
     // Warning: untested code
-    helpers.each_upto = function(ary, max, options) {
-        if(!ary || ary.length == 0)
+    helpers.each_upto = function (ary, max, options) {
+        if (!ary || ary.length == 0)
             return options.inverse(this);
 
-        var result = [ ];
-        for(var i = 0; i < max && i < ary.length; ++i)
+        var result = [];
+        for (var i = 0; i < max && i < ary.length; ++i)
             result.push(options.fn(ary[i]));
         return result.join('');
     }
     var audaciousFn;
-    helpers.recursive = function(children, options) {
+    helpers.recursive = function (children, options) {
         var out = '';
         if (typeof options.fn !== "undefined") {
             audaciousFn = options.fn;
         }
-        _(children).each(function(child){
+        _(children).each(function (child) {
             out = out + audaciousFn(child);
         });
         return out;
     }
-    helpers.currency = function(amount, options) {
-        if (typeof(amount) === 'string') { amount = options.contexts[0].get(amount); }
+    helpers.currency = function (amount, options) {
+        if (typeof (amount) === 'string') {
+            amount = options.contexts[0].get(amount);
+        }
         var rounded = Math.round(amount * 100);
         var dec = rounded % 100;
         var whole = Math.round(rounded / 100 - dec / 100);
         var decStr = '' + dec;
-        return /*'$' + */whole + '.' + decStr + ( decStr.length < 2 ? '0' : '');
+        return /*'$' + */ whole + '.' + decStr + (decStr.length < 2 ? '0' : '');
     }
-    helpers.array_length = function(value) {
+    helpers.array_length = function (value) {
         if (_.isArray(value))
             return value.length;
         return 0;
     }
-    helpers.default_value = function(value, defaultValue) {
+    helpers.default_value = function (value, defaultValue) {
         return _.isEmpty(value) ? defaultValue : value;
     }
-    helpers.bb_link = function(url, options) {
+    helpers.bb_link = function (url, options) {
         if (options.hash.asRoot) {
             url = "/#" + url.replace(/^(\/#)|^#|^\//, '');
         }
-        _(options.hash).each(function(v, k){
+        _(options.hash).each(function (v, k) {
             url = url.replace(":" + k, v);
         });
         return url;
     }
+
+    // Export helpers
+    for (var helper in helpers)
+        Handlebars.registerHelper(helper, helpers[helper]);
+
     return helpers;
 
 });

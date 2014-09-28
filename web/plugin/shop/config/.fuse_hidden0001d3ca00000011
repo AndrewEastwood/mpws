@@ -363,8 +363,8 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopClearProductAttributes ($ProductID, $attributeType = false) {
-        $config = self::jsapiGetDataSourceConfig(array(
+    static function jsapiShopClearProductAttributes ($ProductID) {
+        return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_productAttributes",
             "action" => "delete",
             "condition" => array(
@@ -372,10 +372,6 @@ class configurationShopDataSource extends objectConfiguration {
             ),
             "options" => null
         ));
-        if (!empty($attributeType)) {
-            $config['condition']['Attribute'] = self::jsapiCreateDataSourceCondition(strtoupper($attributeType));
-        }
-        return $config;
     }
 
     // Product category (catalog) >>>>>

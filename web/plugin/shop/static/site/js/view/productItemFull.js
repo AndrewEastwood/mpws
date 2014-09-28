@@ -27,12 +27,11 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         render: function () {
             ViewProductItemShort.prototype.render.call(this);
-            
-            // this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            // show lense over product
             this.$('.shop-product-image-main img').magnify();
             // show price chart (powered by http://omnipotent.net/jquery.sparkline)
-            var _prices = (this.model.get('Prices') || []).filter(function(p) { return parseFloat(p); });
+            var _prices = (this.model.get('Prices') || []).filter(function (p) {
+                return parseFloat(p);
+            });
             if (_prices.length) {
                 this.$("#sparkline").sparkline(_prices, {
                     type: 'bar',
@@ -44,17 +43,9 @@ define("plugin/shop/site/js/view/productItemFull", [
                 });
             }
 
-            Sandbox.eventSubscribe("plugin:shop:product:open", function(data){
+            Sandbox.eventSubscribe("plugin:shop:product:open", function (data) {
                 Backbone.history.navigate(data.page, true);
             });
-            
-            // shop pulse animation for cart button badge
-            // debugger;
-            // if (this.model.hasChanged('_viewExtras') && this.model.previous('_viewExtras') && this.model.get('_viewExtras').InCartCount !== this.model.previous('_viewExtras').InCartCount)
-            //     this.$('.btn.withNotificationBadge .badge').addClass("pulse").delay(1000).queue(function(){
-            //         $(this).removeClass("pulse").dequeue();
-            //     });
-            // this.$('data-toggle="tooltip"').tooltip();
             return this;
         }
     });

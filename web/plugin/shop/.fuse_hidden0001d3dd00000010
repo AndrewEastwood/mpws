@@ -49,7 +49,10 @@ class pluginShop extends objectPlugin {
         $product['ID'] = intval($product['ID']);
         $product['CategoryID'] = intval($product['CategoryID']);
         $product['OriginID'] = intval($product['OriginID']);
-        $product['Attributes'] = $product['Attributes']['ProductAttributes'];
+        $product['Attributes'] = array();
+        if (isset($product['Attributes']['ProductAttributes'])) {
+            $product['Attributes'] = $product['Attributes']['ProductAttributes'];
+        }
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
         $product['Price'] = floatval($product['Price']);
         $product['Prices'] = array_map(function($price) { return floatval($price); }, $product['Prices']['PriceArchive'] ?: array());
@@ -185,35 +188,79 @@ class pluginShop extends objectPlugin {
             'OriginID' => array('int'),
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
             'Description' => array('string', 'skipIfUnset', 'max' => 500),
-            'Model' => array('string', 'skipIfUnset'),
+            'Model' => array('string', 'int', 'skipIfUnset'),
             'SKU' => array('string', 'skipIfUnset'),
             'Price' => array('numeric', 'notEmpty'),
             'IsPromo' => array('bool'),
-            'Status' => array('string', 'skipIfUnset')
+            'Status' => array('string', 'skipIfUnset'),
+            'Tags' => array('string', 'skipIfUnset'),
+            'Features' =>  array('string', 'notEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+                $CustomerID = $this->getCustomer()->getCustomerID();
+                $attrTags = array();
+                $features = $validatedValues['Features'];
+                $productFeaturesIDs = array();
+
+                if (isset($validatedValues['Tags'])) {
+                    $attrTags = $validatedValues['Tags'];
+                    unset($validatedValues['Tags']);
+                }
+                unset($validatedValues['Features']);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                // add new features
+                foreach ($features as $value) {
+                    if (is_numeric($value)) {
+                        $productFeaturesIDs[] = $value;
+                    } else {
+                        $data["FieldName"] = $value;
+                        $data["CustomerID"] = $CustomerID;
+                        $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                        $featureID = $this->getCustomer()->fetch($config) ?: null;
+                        if (isset($featureID) && $featureID >= 0) {
+                            $productFeaturesIDs[] = $featureID;
+                            $this->_getOrSetCachedState('changed:features', true);
+                        }
+                    }
+                }
 
+                // create product
+                $validatedValues["CustomerID"] = $CustomerID;
+                if (isset($validatedValues["IsPromo"])) {
+                    $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
+                }
                 $config = configurationShopDataSource::jsapiShopCreateProduct($validatedValues);
                 $ProductID = $this->getCustomer()->fetch($config) ?: null;
-
-                if (empty($ProductID))
+                if (empty($ProductID)) {
                     throw new Exception('ProductCreateError');
+                }
 
+                // append features
+                $featureData['ProductID'] = $ProductID;
+                $featureData['CustomerID'] = $CustomerID;
+                foreach ($productFeaturesIDs as $value) {
+                    $featureData['FeatureID'] = $value;
+                    $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
+                    $this->getCustomer()->fetch($config);
+                }
 
                 // add attributes
-
-
-                // add features
-
-
+                $attrData['ProductID'] = $ProductID;
+                $attrData['CustomerID'] = $CustomerID;
+                // -- IMAGE
+                // -- ISBN
+                // -- EXPIRE
+                // -- TAGS
+                $attrData['Attribute'] = 'TAGS';
+                $attrData['Value'] = $attrTags;
+                $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
+                $this->getCustomer()->fetch($config);
 
                 $this->getCustomerDataBase()->commit();
 
@@ -247,19 +294,78 @@ class pluginShop extends objectPlugin {
             'SKU' => array('string', 'skipIfUnset'),
             'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
             'IsPromo' => array('bool', 'skipIfUnset'),
-            'Status' => array('string', 'skipIfUnset')
+            'Status' => array('string', 'skipIfUnset'),
+            'Tags' => array('string', 'skipIfUnset'),
+            'Features' =>  array('string', 'notEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+                $CustomerID = $this->getCustomer()->getCustomerID();
+                $attrTags = array();
+                $features = $validatedValues['Features'];
+                $productFeaturesIDs = array();
+
+                if (isset($validatedValues['Tags'])) {
+                    $attrTags = $validatedValues['Tags'];
+                    unset($validatedValues['Tags']);
+                }
+                unset($validatedValues['Features']);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                // add new features
+                foreach ($features as $value) {
+                    if (is_numeric($value)) {
+                        $productFeaturesIDs[] = $value;
+                    } else {
+                        $data["FieldName"] = $value;
+                        $data["CustomerID"] = $CustomerID;
+                        $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                        $featureID = $this->getCustomer()->fetch($config) ?: null;
+                        if (isset($featureID) && $featureID >= 0) {
+                            $productFeaturesIDs[] = $featureID;
+                            $this->_getOrSetCachedState('changed:features', true);
+                        }
+                    }
+                }
 
+                // update product
+                $validatedValues["CustomerID"] = $CustomerID;
+                if (isset($validatedValues["IsPromo"])) {
+                    $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
+                }
                 $config = configurationShopDataSource::jsapiShopUpdateProduct($ProductID, $validatedValues);
+                $this->getCustomer()->fetch($config);
+
+                // clear existed features before adding new
+                $config = configurationShopDataSource::jsapiShopClearProductFeatures($ProductID);
+                $this->getCustomer()->fetch($config);
+                // clear existed attributes before adding new
+                $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID);
+                $this->getCustomer()->fetch($config);
+
+                // append features
+                $featureData['ProductID'] = $ProductID;
+                $featureData['CustomerID'] = $CustomerID;
+                foreach ($productFeaturesIDs as $value) {
+                    $featureData['FeatureID'] = $value;
+                    $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
+                    $this->getCustomer()->fetch($config);
+                }
+
+                // add attributes
+                $attrData['ProductID'] = $ProductID;
+                $attrData['CustomerID'] = $CustomerID;
+                // -- IMAGE
+                // -- ISBN
+                // -- EXPIRE
+                // -- TAGS
+                $attrData['Attribute'] = 'TAGS';
+                $attrData['Value'] = $attrTags;
+                $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                 $this->getCustomer()->fetch($config);
 
                 $this->getCustomerDataBase()->commit();
@@ -1103,7 +1209,8 @@ class pluginShop extends objectPlugin {
 
         if ($productID) {
             // get product entry
-            $configProduct = configurationShopDataSource::jsapiShopProductSingleInfoGet($productID);
+            $configProduct = configurationShopDataSource::jsapiShopGetProductItemInfo($productID);
+
             $productDataEntry = $this->getCustomer()->fetch($configProduct);
             if (isset($productDataEntry['CategoryID'])) {
                 $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
@@ -1441,20 +1548,21 @@ class pluginShop extends objectPlugin {
         }
         if ($tableName === configurationShopDataSource::$Table_ShopFeatures) {
             $stateKey = 'features';
+            // var_dump($this->_states);
             $fn = function () use ($self) {
                 return $self->getFeatures_All();
             };
         }
 
         if (!empty($tableName)) {
-            $refreshFromDB = !isset($_SESSION[$tableName]) || $this->_states['changed:' . $stateKey];
+            $refreshFromDB = !isset($_SESSION[$tableName]) || $this->_getOrSetCachedState('changed:' . $stateKey);
             if ($refreshFromDB) {
                 $list = $fn();
             } else {
                 $list = $_SESSION[$tableName];
             }
             $_SESSION[$tableName] = $list;
-            $this->_states['changed:' . $stateKey] = false;
+            $this->_getOrSetCachedState('changed:' . $stateKey, false);
         }
 
         return $list;
@@ -1490,7 +1598,22 @@ class pluginShop extends objectPlugin {
     }
 
 
-
+    private function _getOrSetCachedState ($key = null, $value = null) {
+        if (!isset($_SESSION['shop:states'])) {
+            $_SESSION['shop:states'] = $this->_states;
+        }
+        $_states = $_SESSION['shop:states'];
+        if (is_null($key)) {
+            return;
+        } else {
+            if (is_null($value)) {
+                return $_states[$key];
+            } else {
+                $_states[$key] = $value;
+                $_SESSION['shop:states'] = $_states;
+            }
+        }
+    }
 
 
 
@@ -1618,7 +1741,7 @@ class pluginShop extends objectPlugin {
         }
 
         $resp = $this->createProduct($req->data);
-        $this->_states['changed:product'] = true;
+        $this->_getOrSetCachedState('changed:product', true);
     }
     public function patch_shop_product (&$resp, $req) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
@@ -1631,7 +1754,7 @@ class pluginShop extends objectPlugin {
         } else {
             $ProductID = intval($req->get['id']);
             $resp = $this->updateProduct($ProductID, $req->data);
-            $this->_states['changed:product'] = true;
+            $this->_getOrSetCachedState('changed:product', true);
         }
     }
 
@@ -1642,7 +1765,7 @@ class pluginShop extends objectPlugin {
         }
 
         $resp = $this->archiveProduct($req->data);
-        $this->_states['changed:product'] = true;
+        $this->_getOrSetCachedState('changed:product', true);
     }
 
 
@@ -1691,7 +1814,7 @@ class pluginShop extends objectPlugin {
         }
 
         $resp = $this->createCategory($req->data);
-        $this->_states['changed:category'] = true;
+        $this->_getOrSetCachedState('changed:category', true);
     }
 
     public function patch_shop_category (&$resp, $req) {
@@ -1705,7 +1828,7 @@ class pluginShop extends objectPlugin {
         } else {
             $CategoryID = intval($req->get['id']);
             $resp = $this->updateCategory($CategoryID, $req->data);
-            $this->_states['changed:category'] = true;
+            $this->_getOrSetCachedState('changed:category', true);
         }
     }
 
@@ -1719,7 +1842,7 @@ class pluginShop extends objectPlugin {
         } else {
             $CategoryID = intval($req->get['id']);
             $resp = $this->disableCategory($CategoryID);
-            $this->_states['changed:category'] = true;
+            $this->_getOrSetCachedState('changed:category', true);
         }
     }
 
@@ -1757,7 +1880,7 @@ class pluginShop extends objectPlugin {
             return;
         }
         $resp = $this->createOrigin($req->data);
-        $this->_states['changed:origin'] = true;
+        $this->_getOrSetCachedState('changed:origin', true);
     }
 
     public function patch_shop_origin (&$resp, $req) {
@@ -1770,7 +1893,7 @@ class pluginShop extends objectPlugin {
         } else {
             $OriginID = intval($req->get['id']);
             $resp = $this->updateOrigin($OriginID, $req->data);
-            $this->_states['changed:origin'] = true;
+            $this->_getOrSetCachedState('changed:origin', true);
         }
     }
 
@@ -1784,7 +1907,7 @@ class pluginShop extends objectPlugin {
         } else {
             $OriginID = intval($req->get['id']);
             $resp = $this->disableOrigin($OriginID);
-            $this->_states['changed:origin'] = true;
+            $this->_getOrSetCachedState('changed:origin', true);
         }
     }
 

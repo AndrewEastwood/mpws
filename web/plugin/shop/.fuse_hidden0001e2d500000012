@@ -49,6 +49,7 @@ class pluginShop extends objectPlugin {
         $product['ID'] = intval($product['ID']);
         $product['CategoryID'] = intval($product['CategoryID']);
         $product['OriginID'] = intval($product['OriginID']);
+        $product['Attributes'] = array();
         if (isset($product['Attributes']['ProductAttributes'])) {
             $product['Attributes'] = $product['Attributes']['ProductAttributes'];
         }
@@ -187,13 +188,12 @@ class pluginShop extends objectPlugin {
             'OriginID' => array('int'),
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
             'Description' => array('string', 'skipIfUnset', 'max' => 500),
-            'Model' => array('skipIfUnset'),
-            'SKU' => array('skipIfUnset'),
+            'Model' => array('string', 'int', 'skipIfUnset'),
+            'SKU' => array('string', 'skipIfUnset'),
             'Price' => array('numeric', 'notEmpty'),
             'IsPromo' => array('bool'),
             'Status' => array('string', 'skipIfUnset'),
             'Tags' => array('string', 'skipIfUnset'),
-            'ISBN' => array('skipIfUnset'),
             'Features' =>  array('string', 'notEmpty')
         ));
 
@@ -202,24 +202,15 @@ class pluginShop extends objectPlugin {
 
                 $validatedValues = $validatedDataObj['values'];
                 $CustomerID = $this->getCustomer()->getCustomerID();
-                $attributes = array();
-                $features = array();
+                $attrTags = array();
+                $features = $validatedValues['Features'];
                 $productFeaturesIDs = array();
 
-                // extract attributes
                 if (isset($validatedValues['Tags'])) {
-                    $attributes["TAGS"] = $validatedValues['Tags'];
+                    $attrTags = $validatedValues['Tags'];
                     unset($validatedValues['Tags']);
                 }
-                if (isset($validatedValues['ISBN'])) {
-                    $attributes["ISBN"] = $validatedValues['ISBN'];
-                    unset($validatedValues['ISBN']);
-                }
-                // extract features
-                if (isset($validatedValues['Features'])) {
-                    $features = $validatedValues['Features'];
-                    unset($validatedValues['Features']);
-                }
+                unset($validatedValues['Features']);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -250,36 +241,26 @@ class pluginShop extends objectPlugin {
                     throw new Exception('ProductCreateError');
                 }
 
-                // append features (actually this condition must return always true)
-                if (!empty($features)) {
-                    $featureData['ProductID'] = $ProductID;
-                    $featureData['CustomerID'] = $CustomerID;
-                    foreach ($productFeaturesIDs as $value) {
-                        $featureData['FeatureID'] = $value;
-                        $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
-                        $this->getCustomer()->fetch($config);
-                    }
+                // append features
+                $featureData['ProductID'] = $ProductID;
+                $featureData['CustomerID'] = $CustomerID;
+                foreach ($productFeaturesIDs as $value) {
+                    $featureData['FeatureID'] = $value;
+                    $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
+                    $this->getCustomer()->fetch($config);
                 }
 
                 // add attributes
-                if (!empty($attributes)) {
-                    $initAttrData = new ArrayObject(array(
-                        'ProductID' => $ProductID,
-                        'CustomerID' => $CustomerID
-                    ));
-                    // -- IMAGE
-                    // -- ISBN
-                    // -- EXPIRE
-                    // -- TAGS
-                    foreach ($attributes as $key => $value) {
-                        $this->getCustomer()->fetch($config);
-                        $attrData = $initAttrData->getArrayCopy();
-                        $attrData['Attribute'] = $key;
-                        $attrData['Value'] = $value;
-                        $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
-                        $this->getCustomer()->fetch($config);
-                    }
-                }
+                $attrData['ProductID'] = $ProductID;
+                $attrData['CustomerID'] = $CustomerID;
+                // -- IMAGE
+                // -- ISBN
+                // -- EXPIRE
+                // -- TAGS
+                $attrData['Attribute'] = 'TAGS';
+                $attrData['Value'] = $attrTags;
+                $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
+                $this->getCustomer()->fetch($config);
 
                 $this->getCustomerDataBase()->commit();
 
@@ -309,13 +290,12 @@ class pluginShop extends objectPlugin {
             'OriginID' => array('int', 'skipIfUnset'),
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100, 'skipIfUnset'),
             'Description' => array('string', 'skipIfUnset', 'max' => 500),
-            'Model' => array('skipIfUnset'),
-            'SKU' => array('skipIfUnset'),
+            'Model' => array('string', 'skipIfUnset'),
+            'SKU' => array('string', 'skipIfUnset'),
             'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
             'IsPromo' => array('bool', 'skipIfUnset'),
             'Status' => array('string', 'skipIfUnset'),
             'Tags' => array('string', 'skipIfUnset'),
-            'ISBN' => array('skipIfUnset'),
             'Features' =>  array('string', 'notEmpty', 'skipIfUnset')
         ));
 
@@ -328,16 +308,10 @@ class pluginShop extends objectPlugin {
                 $features = array();
                 $productFeaturesIDs = array();
 
-                // extract attributes
                 if (isset($validatedValues['Tags'])) {
                     $attributes["TAGS"] = $validatedValues['Tags'];
                     unset($validatedValues['Tags']);
                 }
-                if (isset($validatedValues['ISBN'])) {
-                    $attributes["ISBN"] = $validatedValues['ISBN'];
-                    unset($validatedValues['ISBN']);
-                }
-                // extract features
                 if (isset($validatedValues['Features'])) {
                     $features = $validatedValues['Features'];
                     unset($validatedValues['Features']);
@@ -369,11 +343,11 @@ class pluginShop extends objectPlugin {
                 $config = configurationShopDataSource::jsapiShopUpdateProduct($ProductID, $validatedValues);
                 $this->getCustomer()->fetch($config);
 
-                // set new features
                 if (!empty($features)) {
                     // clear existed features before adding new
                     $config = configurationShopDataSource::jsapiShopClearProductFeatures($ProductID);
                     $this->getCustomer()->fetch($config);
+                    // set new features
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
@@ -382,28 +356,22 @@ class pluginShop extends objectPlugin {
                         $this->getCustomer()->fetch($config);
                     }
                 }
-                // set new attributes
                 if (!empty($attributes)) {
-                    $initAttrData = new ArrayObject(array(
-                        'ProductID' => $ProductID,
-                        'CustomerID' => $CustomerID
-                    ));
+                    // add attributes
+                    $attrData['ProductID'] = $ProductID;
+                    $attrData['CustomerID'] = $CustomerID;
                     // -- IMAGE
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    foreach ($attributes as $key => $value) {
-                        // clear existed tags before adding new ones
-                        $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID, $key);
-                        $this->getCustomer()->fetch($config);
-                        $attrData = $initAttrData->getArrayCopy();
-                        $attrData['Attribute'] = $key;
-                        $attrData['Value'] = $value;
+                    if ($attributes['TAGS']) {
+                        $attrData['Attribute'] = 'TAGS';
+                        $attrData['Value'] = $attrTags;
                         $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
-                }
 
+                }
                 $this->getCustomerDataBase()->commit();
 
                 $success = true;

@@ -54,7 +54,8 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             formatter: {
                 fromRaw: function (value, model) {
                     var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
-                    return btn;
+                    var dnd = $('<span class="dndrow"><i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i></span>');
+                    return [dnd, btn];
                 }
             }
         };
@@ -150,7 +151,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             }),
             formatter: {
                 fromRaw: function (value) {
-                    return parseFloat(value, 10).toFixed(2);
+                    return parseInt(value, 10).toFixed(0);
                 },
                 toRaw: function (value) {
                     var matches = value.match(/^([0-9\.]+)/)

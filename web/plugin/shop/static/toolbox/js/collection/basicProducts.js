@@ -15,8 +15,6 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
                 fn: 'products'
             });
 
-            Cache.set('shopProductsListRD', this.queryParams);
-
             return url;
         },
 
@@ -34,6 +32,11 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
             totalPages: null,
             totalRecords: null,
             sortKey: "sort"
+        },
+
+        fetch: function (options) {
+            Cache.set('shopProductsListRD', this.queryParams);
+            return PageableCollection.prototype.fetch.call(this, options);
         },
 
         setCustomQueryField: function (field, value) {

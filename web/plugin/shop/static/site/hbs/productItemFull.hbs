@@ -87,21 +87,30 @@
                         <span class="value-prefix">Код товару:</span>
                         <strong>#{{data.ID}}</strong>
                     </div>
+                    {{#if data.Attributes.ISBN}}
+                    <div class="shop-component shop-product-attr shop-product-attr-code">
+                        <span class="value-prefix">ISBN:</span>
+                        <strong>{{data.Attributes.ISBN}}</strong>
+                    </div>
+                    {{/if}}
                     <div class="shop-component shop-product-attr shop-product-attr-price">
-                        <span class="value-prefix">
                         {{#if data._promoIsApplied }}
+                        <span class="value-prefix">
                             Ціна зі знижкою {{data.promo.Discount}}%
-                        {{else}}
-                            Ціна:
-                        {{/if}}
                         </span>
-                        <strong>{{currency data.DiscountPrice}} грн.</strong>
+                        <strong>{{currency data.DiscountPrice}}грн.</strong>
+                        {{else}}
+                        <span class="value-prefix">
+                            Ціна:
+                        </span>
+                        <strong>{{currency data.Price}}грн.</strong>
+                        {{/if}}
                         {{#if data._promoIsApplied }}
                         <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b></sub>
                         {{/if}}
                     </div>
                     {{#mpwsIsNotEmpty data.Prices }}
-                    <div class="shop-component shop-product-attr shop-product-attr-price">
+                    <div class="shop-component shop-product-attr shop-product-attr-price hidden">
                         <span class="value-prefix">Діаграма ціни:</span>
                         <span id="sparkline" class="productSparkline"></span>
                     </div>

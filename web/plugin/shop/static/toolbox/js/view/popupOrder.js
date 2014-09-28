@@ -12,27 +12,34 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, Backbone, ModelOrder, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitleByStatus (status) {
+    function _getTitleByStatus(status) {
         switch (status) {
-            case 'NEW': {
+        case 'NEW':
+            {
                 return $('<span/>').addClass('fa fa-dot-circle-o').append(' ', lang.order_status_NEW);
             }
-            case 'ACTIVE': {
+        case 'ACTIVE':
+            {
                 return $('<span/>').addClass('fa fa-clock-o').append(' ', lang.order_status_ACTIVE);
             }
-            case 'LOGISTIC_DELIVERING': {
+        case 'LOGISTIC_DELIVERING':
+            {
                 return $('<span/>').addClass('fa fa-plane').append(' ', lang.order_status_LOGISTIC_DELIVERING);
             }
-            case 'LOGISTIC_DELIVERED': {
+        case 'LOGISTIC_DELIVERED':
+            {
                 return $('<span/>').addClass('fa fa-gift').append(' ', lang.order_status_LOGISTIC_DELIVERED);
             }
-            case 'SHOP_CLOSED': {
+        case 'SHOP_CLOSED':
+            {
                 return $('<span/>').addClass('fa fa-check').append(' ', lang.order_status_SHOP_CLOSED);
             }
-            case 'CUSTOMER_CANCELED': {
+        case 'CUSTOMER_CANCELED':
+            {
                 return $('<span/>').addClass('fa fa-times').append(' ', lang.order_status_CUSTOMER_CANCELED);
             }
-            case 'SHOP_REFUNDED': {
+        case 'SHOP_REFUNDED':
+            {
                 return $('<span/>').addClass('fa fa-dollar').append(' ', lang.order_status_SHOP_REFUNDED);
             }
         }
@@ -78,11 +85,16 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
 
             this.$title.html(_getTitleByStatus(self.model.get('Status')));
 
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            // debugger;
+            var tplData = Utils.getHBSTemplateData(this);
+            tplData.data.isToolbox = tplData.isToolbox;
+            tplData.data.urls = tplData.instances.shop.urls;
+            console.log(tplData);
+            this.$el.html(tpl(tplData));
 
             var orderID = this.model.id;
             // if (!dialogIsShown)
-            var source = this.$('#order-status-control-ID option').map(function(idx, option){
+            var source = this.$('#order-status-control-ID option').map(function (idx, option) {
                 return {
                     value: $(option).attr('value'),
                     text: $(option).text()
@@ -98,7 +110,7 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                 pk: this.model.id,
                 source: $.makeArray(source),
             });
-            $controlOrderStatus.on('save', function(event, editData) {
+            $controlOrderStatus.on('save', function (event, editData) {
                 self.model.save({
                     Status: editData.newValue
                 }, {

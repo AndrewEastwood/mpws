@@ -43,7 +43,12 @@
                     {{/if}}
                 </a>
             </div>
-            <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
+            {{#if ../isToolbox}}
+                <a href="{{bb_link ../../urls.productEdit id=ID asRoot=true}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a>
+            {{else}}
+                <a href="/#shop/product/{{ID}}" target="_blank" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a>
+            {{/if}}
+            </span>
             <span class="label label-warning product-price">{{currency Price}}<span class="moneyType">грн.</span></span>
             {{#if _promoIsApplied}}
             <span class="label label-success">- {{promo.Discount}}%</span>

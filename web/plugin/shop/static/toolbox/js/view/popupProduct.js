@@ -53,8 +53,9 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             Model: self.$('#model').val(),
                             Price: parseFloat(self.$('#price').val(), 10),
                             Description: self.$('#description').val(),
-                            IsPromo: self.$('#IsPromo').is(':checked'),
+                            IsPromo: self.$('#ispromo').is(':checked'),
                             Tags: self.$('#tags').val(),
+                            ISBN: self.$('#isbn').val(),
                             Features: self.$(".features-list").select2('val')
                         }, {
                             silent: true,
@@ -127,7 +128,8 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             this.$('#price').maskMoney({
                 suffix: 'грн.',
                 thousands: ' ',
-                decimal: '.'
+                decimal: '.',
+                precision: 0
             });
             this.$('#price').maskMoney('mask');
 

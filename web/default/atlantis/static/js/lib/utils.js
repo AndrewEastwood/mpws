@@ -5,10 +5,10 @@ define("default/js/lib/utils", [
     /* component implementation */
 ], function ($, _, Backbone) {
 
-    function Utils () {}
+    function Utils() {}
 
     // cross-browser log function
-    function log (s) {
+    function log(s) {
         var args = [].slice.call(arguments);
         var isDebugMsg = (args.length >= 2 && typeof args[0] === 'boolean');
 
@@ -22,21 +22,21 @@ define("default/js/lib/utils", [
 
         if (window.console && console.log && !console.log.isDummy) {
             if (document.all) {
-                console.log(msg);  // Internet Explorer 8+
+                console.log(msg); // Internet Explorer 8+
             } else {
-                console.log.apply(console, args);  // Firefox, Safari, Chrome
+                console.log.apply(console, args); // Firefox, Safari, Chrome
             }
         } else if (window.Debug && Debug.writeln) {
-            Debug.writeln(msg);  // Internet Explorer 6, 7
+            Debug.writeln(msg); // Internet Explorer 6, 7
         } else if (window.opera && opera.postError) {
-            opera.postError(msg);  // Opera
+            opera.postError(msg); // Opera
         }
     }
 
     // creates dummy log object to avoid execptions related to console.log access
     if (typeof console === "undefined") {
         console = {};
-        console.log = function() {}
+        console.log = function () {}
         console.log.isDummy = true;
     }
 
@@ -46,12 +46,13 @@ define("default/js/lib/utils", [
     // source: http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
     Utils.getTreeByJson = function (nodes, idKey, parentKey) {
         // app.log(true, 'Utils.getTreeByJson', nodes, idKey, parentKey); // <-- there's your tree
-        var map = {}, node, roots = {};
+        var map = {},
+            node, roots = {};
         // for (var i = 0; i < nodes.length; i += 1) {
         for (var i in nodes) {
             node = nodes[i];
             node.children = {};
-            node.childrenCount =0;
+            node.childrenCount = 0;
             map[node[idKey]] = node[idKey]; // use map to look-up the parents
             // app.log(true, '--- current node = ', node);
             // app.log(true, '--- current map = ', map);
@@ -72,12 +73,13 @@ define("default/js/lib/utils", [
 
     Utils.getTreeByArray = function (nodes, idKey, parentKey) {
         // app.log(true, 'Utils.getTreeByArray', nodes, idKey, parentKey); // <-- there's your tree
-        var map = {}, node, roots = [];
+        var map = {},
+            node, roots = [];
         for (var i = 0; i < nodes.length; i += 1) {
-        // for (var i in nodes) {
+            // for (var i in nodes) {
             node = nodes[i];
             node.children = [];
-            map[node[idKey]] = i;//node[idKey]; // use map to look-up the parents
+            map[node[idKey]] = i; //node[idKey]; // use map to look-up the parents
             // app.log(true, '--- current node = ', node);
             // app.log(true, '--- current map = ', map);
             // app.log(true, '--- current node[parentKey] = ', node[parentKey]);
@@ -95,7 +97,7 @@ define("default/js/lib/utils", [
 
     Utils.ActivateButtonWhenFormChanges = function (form, buttons) {
         $(form).data('form', $(form).serialize());
-        return setInterval(function(){
+        return setInterval(function () {
             var current = $(form).serialize();
             if ($(form).data('form') === current)
                 $(buttons).addClass('disabled');
@@ -144,7 +146,8 @@ define("default/js/lib/utils", [
             extras: _tplExtras,
             queryParams: Utils.isCollectionView(obj) && obj.collection.queryParams || {},
             displayItems: obj && obj.displayItems || [],
-            instances: APP.instances
+            instances: APP.instances,
+            isToolbox: APP.config.ISTOOLBOX
         }
     }
 
