@@ -69,10 +69,14 @@
                 <li class="list-group-item">
                     <div class="shop-component shop-product-attr shop-product-attr-availability">
                         <span class="value-prefix">Цей товар:</span>
-                        {{#if data._available }}
-                        <span class="label label-success">є в наявності</span>
+                        {{#if data._archived}}
+                            <span class="label label-default">архівний</strong>
                         {{else}}
-                        <span class="label label-danger">немає в наявності</strong>
+                            {{#if data._available }}
+                            <span class="label label-success">є в наявності</span>
+                            {{else}}
+                            <span class="label label-danger">немає в наявності</strong>
+                            {{/if}}
                         {{/if}}
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-origin">
@@ -93,6 +97,8 @@
                         <strong>{{data.Attributes.ISBN}}</strong>
                     </div>
                     {{/if}}
+
+                    {{#unless data._archived}}
                     <div class="shop-component shop-product-attr shop-product-attr-price">
                         {{#if data._promoIsApplied }}
                         <span class="value-prefix">
@@ -115,6 +121,7 @@
                         <span id="sparkline" class="productSparkline"></span>
                     </div>
                     {{/mpwsIsNotEmpty}}
+                    {{/unless}}
                 </li>
 
                 <li class="list-group-item">
@@ -190,6 +197,7 @@
                 </li>
                 {{/if}}
 
+                {{#unless data._archived}}
                 <li class="list-group-item">
                     <div class="shop-component shop-product-buttons-addto">
                         {{#if data._viewExtras.InCartCount }}
@@ -226,6 +234,7 @@
                         {{/if}}
                     </div>
                 </li>
+                {{/unless}}
 
                 <li class="list-group-item">
                     <div class="shop-product-social"></div>

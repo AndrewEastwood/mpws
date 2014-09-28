@@ -84,7 +84,7 @@ class pluginShop extends objectPlugin {
         // promo
         $promo = $this->_getSessionPromo();
         $product['_promoIsApplied'] = false;
-        if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount'])&& $promo['Discount'] > 0) {
+        if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
             $product['_promoIsApplied'] = true;
             $product['DiscountPrice'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
             $product['promo'] = $promo;
@@ -95,6 +95,7 @@ class pluginShop extends objectPlugin {
 
         // is available
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
+        $product['_archived'] = in_array($product['Status'], array("ARCHIVED"));
 
         $product['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
         // save product into recently viewed list

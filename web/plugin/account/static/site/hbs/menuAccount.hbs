@@ -1,15 +1,15 @@
 <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
-   {{#mpwsIsNotEmpty data }}
+   {{#if data.FirstName }}
       {{lang.profile_menu_welcome}} <strong>{{data.FirstName}} {{data.LastName}}</strong>
    {{else}}
       {{lang.form_signin_menu_title}}
-   {{/mpwsIsNotEmpty}}
+   {{/if}}
 <b class="caret"></b></a>
 <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
    <li>
       <div class="row">
          <div class="col-md-12">
-            {{#mpwsIsNotEmpty data }}
+            {{#if data.FirstName }}
             <ul class="nav nav-list plugin-account-menu"></ul>
             <ul class="nav nav-list">
                <li><a href="/#account/summary">{{lang.profile_menu_profile}}</a></li>
@@ -37,7 +37,7 @@
                   <button type="submit" class="btn btn-success btn-block btn-signin">{{lang.form_signin_button_signin}}</button>
                </div>
             </form>
-            {{/mpwsIsNotEmpty}}
+            {{/if}}
          </div>
       </div>
    </li>

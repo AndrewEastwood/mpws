@@ -38,6 +38,7 @@
                 </a>
             </div>
         </div>
+        {{#unless data._archived}}
         <div class="shop-component shop-product-attr shop-product-attr-price">
             <div class="value-prefix">
             {{#if data._promoIsApplied }}
@@ -53,8 +54,8 @@
             <strong>{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></strong>
             {{/if}}
         </div>
-        <div class="buttons">
 
+        <div class="buttons">
             {{#if data._viewExtras.InCartCount }}
                 <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
@@ -92,10 +93,13 @@
                     <i class="fa fa-files-o"></i>
                 </button>
             {{/if}}
-
         </div>
+        {{/unless}}
+
         <p>
-            <a href="/#shop/product/{{data.ID}}" class="btn btn-success btn-block btn-warning">Детальніше <span class="fa fa-chevron-right"></span></a>
+            <a href="/#shop/product/{{data.ID}}" class="btn btn-success btn-block btn-warning">
+            Детальніше <span class="fa fa-chevron-right"></span>
+            </a>
         </p>
     </div>
 </div>

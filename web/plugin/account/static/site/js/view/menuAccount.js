@@ -23,7 +23,10 @@ define("plugin/account/site/js/view/menuAccount", [
         },
         doSignIn: function () {
             var authData = this.collectCredentials();
-            Auth.signin(authData.email, authData.password, authData.remember);
+            Auth.signin(authData.email, authData.password, authData.remember, $.proxy(function (authID, response) {
+                // this.render();
+                this.model.set(response);
+            }, this));
             return false;
         },
         doSignOut: function () {
