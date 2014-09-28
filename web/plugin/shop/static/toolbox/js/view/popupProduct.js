@@ -50,13 +50,14 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             CategoryID: parseInt(self.$('#category').select2('val'), 10),
                             OriginID: parseInt(self.$('#origin').select2('val'), 10),
                             Name: self.$('#name').val(),
-                            Model: self.$('#price').val(),
+                            Model: self.$('#model').val(),
                             Price: parseFloat(self.$('#price').val(), 10),
-                            Description: self.$('#description').text(),
+                            Description: self.$('#description').val(),
                             IsPromo: self.$('#IsPromo').is(':checked'),
-                            Tags: self.$('#price').val(),
+                            Tags: self.$('#tags').val(),
                             Features: self.$(".features-list").select2('val')
                         }, {
+                            silent: true,
                             patch: true,
                             success: function (model, response) {
                                 if (!response || !response.success) {
@@ -96,7 +97,11 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 };
             });
             var _resultsFeatures = _(_features).map(function (item, id) {
-                return item;
+                return {
+                    id: id,
+                    text: item
+                };
+                // return item;
             });
             var _selectCategory = this.$('#category').select2({
                 placeholder: "Виберіть категорію",
@@ -122,15 +127,34 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             this.$('#price').maskMoney({
                 suffix: 'грн.',
                 thousands: ' ',
-                decimal: ','
+                decimal: '.'
             });
+            this.$('#price').maskMoney('mask');
 
             this.$('#tags').tagsinput();
 
             this.$(".features-list").select2({
                 tags: _resultsFeatures,
                 maximumInputLength: 10
+            }).on('change', function (event) {
+                if (event.removed) {
+                    return;
+                }
+                var element = _(_resultsFeatures).findWhere({
+                    text: event.added.text
+                });
+
+                if (element && element.id && element.id !== event.added.id) {
+                    var values = $(this).select2('val');
+                    values.pop();
+                    $(this).select2('val', values);
+                }
             });
+
+            var features = this.model.get('Features');
+            if (features) {
+                this.$(".features-list").select2('val', _(features).keys());
+            }
         }
     });
 

@@ -68,8 +68,15 @@ class configurationShopDataSource extends objectConfiguration {
     static function jsapiShopCreateProduct ($data) {
         $data["DateUpdated"] = self::getDate();
         $data["DateCreated"] = self::getDate();
-        $data["ExternalKey"] = libraryUtils::url_slug($data['Name'] . '_' . $data['Model'] . '_' . $data['SKU']);
-        $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        $ExternalKey = array();
+        if (isset($data['Name']))
+            $ExternalKey[] = $data['Name'];
+        if (isset($data['Model']))
+            $ExternalKey[] = $data['Model'];
+        if (isset($data['SKU']))
+            $ExternalKey[] = $data['SKU'];
+        if (!empty($ExternalKey))
+            $data["ExternalKey"] = libraryUtils::url_slug(implode('_', $ExternalKey));
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_products",
             "action" => "insert",
@@ -330,8 +337,37 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
+    static function jsapiShopAddAttributeToProduct ($data) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_productAttributes",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
 
 
+    static function jsapiShopClearProductFeatures ($ProductID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_productFeatures",
+            "action" => "delete",
+            "condition" => array(
+                "ProductID" => self::jsapiCreateDataSourceCondition($ProductID)
+            ),
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopClearProductAttributes ($ProductID) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_productAttributes",
+            "action" => "delete",
+            "condition" => array(
+                "ProductID" => self::jsapiCreateDataSourceCondition($ProductID)
+            ),
+            "options" => null
+        ));
+    }
 
     // Product category (catalog) >>>>>
     static function jsapiShopCategoryAndSubCategoriesAllBrandsGet ($categoryID) {

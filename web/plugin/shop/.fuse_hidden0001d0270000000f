@@ -194,22 +194,20 @@ class pluginShop extends objectPlugin {
             'Features' =>  array('string', 'notEmpty')
         ));
 
+        var_dump($validatedDataObj['values']['Features']);
+
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+                $this->getCustomerDataBase()->beginTransaction();
                 $CustomerID = $this->getCustomer()->getCustomerID();
-                $attrTags = array();
+                $attrTags = $validatedValues['Tags'];
                 $features = $validatedValues['Features'];
                 $productFeaturesIDs = array();
 
-                if (isset($validatedValues['Tags'])) {
-                    $attrTags = $validatedValues['Tags'];
-                    unset($validatedValues['Tags']);
-                }
+                unset($validatedValues['Tags']);
                 unset($validatedValues['Features']);
-
-                $this->getCustomerDataBase()->beginTransaction();
 
                 // add new features
                 foreach ($features as $value) {
@@ -222,42 +220,35 @@ class pluginShop extends objectPlugin {
                         $featureID = $this->getCustomer()->fetch($config) ?: null;
                         if (isset($featureID) && $featureID >= 0) {
                             $productFeaturesIDs[] = $featureID;
-                            $this->_states['changed:features'] = true;
                         }
                     }
                 }
 
+                var_dump($productFeaturesIDs);
+                // if feature exists then featureID is empty => new product have only new features and 
+                // already defined features will be missed
+
                 // create product
                 $validatedValues["CustomerID"] = $CustomerID;
-                if (isset($validatedValues["IsPromo"])) {
-                    $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
-                }
+                $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 $config = configurationShopDataSource::jsapiShopCreateProduct($validatedValues);
                 $ProductID = $this->getCustomer()->fetch($config) ?: null;
                 if (empty($ProductID)) {
                     throw new Exception('ProductCreateError');
                 }
-
+                // jsapiShopAddFeatureToProduct
                 // append features
-                $featureData['ProductID'] = $ProductID;
-                $featureData['CustomerID'] = $CustomerID;
-                foreach ($productFeaturesIDs as $value) {
-                    $featureData['FeatureID'] = $value;
-                    $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
-                    $this->getCustomer()->fetch($config);
-                }
 
                 // add attributes
-                $attrData['ProductID'] = $ProductID;
-                $attrData['CustomerID'] = $CustomerID;
-                // -- IMAGE
-                // -- ISBN
-                // -- EXPIRE
-                // -- TAGS
-                $attrData['Attribute'] = 'TAGS';
-                $attrData['Value'] = $attrTags;
-                $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
-                $this->getCustomer()->fetch($config);
+
+
+
+
+                // add attributes
+
+                // jsapiShopCreateFeature
+
+
 
                 $this->getCustomerDataBase()->commit();
 
@@ -291,78 +282,19 @@ class pluginShop extends objectPlugin {
             'SKU' => array('string', 'skipIfUnset'),
             'Price' => array('numeric', 'notEmpty', 'skipIfUnset'),
             'IsPromo' => array('bool', 'skipIfUnset'),
-            'Status' => array('string', 'skipIfUnset'),
-            'Tags' => array('string', 'skipIfUnset'),
-            'Features' =>  array('string', 'notEmpty')
+            'Status' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
-                $CustomerID = $this->getCustomer()->getCustomerID();
-                $attrTags = array();
-                $features = $validatedValues['Features'];
-                $productFeaturesIDs = array();
-
-                if (isset($validatedValues['Tags'])) {
-                    $attrTags = $validatedValues['Tags'];
-                    unset($validatedValues['Tags']);
-                }
-                unset($validatedValues['Features']);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                // add new features
-                foreach ($features as $value) {
-                    if (is_numeric($value)) {
-                        $productFeaturesIDs[] = $value;
-                    } else {
-                        $data["FieldName"] = $value;
-                        $data["CustomerID"] = $CustomerID;
-                        $config = configurationShopDataSource::jsapiShopCreateFeature($data);
-                        $featureID = $this->getCustomer()->fetch($config) ?: null;
-                        if (isset($featureID) && $featureID >= 0) {
-                            $productFeaturesIDs[] = $featureID;
-                            $this->_states['changed:features'] = true;
-                        }
-                    }
-                }
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                // update product
-                $validatedValues["CustomerID"] = $CustomerID;
-                if (isset($validatedValues["IsPromo"])) {
-                    $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
-                }
                 $config = configurationShopDataSource::jsapiShopUpdateProduct($ProductID, $validatedValues);
-                $this->getCustomer()->fetch($config);
-
-                // clear existed features before adding new
-                $config = configurationShopDataSource::jsapiShopClearProductFeatures($ProductID);
-                $this->getCustomer()->fetch($config);
-                // clear existed attributes before adding new
-                $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID);
-                $this->getCustomer()->fetch($config);
-
-                // append features
-                $featureData['ProductID'] = $ProductID;
-                $featureData['CustomerID'] = $CustomerID;
-                foreach ($productFeaturesIDs as $value) {
-                    $featureData['FeatureID'] = $value;
-                    $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
-                    $this->getCustomer()->fetch($config);
-                }
-
-                // add attributes
-                $attrData['ProductID'] = $ProductID;
-                $attrData['CustomerID'] = $CustomerID;
-                // -- IMAGE
-                // -- ISBN
-                // -- EXPIRE
-                // -- TAGS
-                $attrData['Attribute'] = 'TAGS';
-                $attrData['Value'] = $attrTags;
-                $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                 $this->getCustomer()->fetch($config);
 
                 $this->getCustomerDataBase()->commit();
@@ -1544,7 +1476,6 @@ class pluginShop extends objectPlugin {
         }
         if ($tableName === configurationShopDataSource::$Table_ShopFeatures) {
             $stateKey = 'features';
-            // var_dump($this->_states);
             $fn = function () use ($self) {
                 return $self->getFeatures_All();
             };
