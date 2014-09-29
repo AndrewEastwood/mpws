@@ -20,7 +20,7 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
             var urlOptions = {
                 source: 'shop',
                 fn: 'categories',
-                type: 'all'
+                limit: 0
             };
 
             if (this.queryParams.removed) {
@@ -33,22 +33,23 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
         },
 
         parse: function (data) {
-            var map = {}, tree = {};
+            var map = {},
+                tree = {};
             // create map
-            _(data.items).each(function(item){
+            _(data.items).each(function (item) {
                 map[item.ID] = item;
                 map[item.ID].childItems = {};
                 map[item.ID].childCount = 0;
             });
             // link each item to it's own parent node
-            _(map).each(function(item){
+            _(map).each(function (item) {
                 if (map[item.ParentID]) {
                     map[item.ParentID].childItems[item.ID] = item;
                     map[item.ParentID].childCount++;
                 }
             });
             // collect roots
-            _(map).each(function(item){
+            _(map).each(function (item) {
                 if (item.ParentID === null) {
                     tree[item.ID] = item;
                 }

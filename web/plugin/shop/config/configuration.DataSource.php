@@ -158,13 +158,13 @@ class configurationShopDataSource extends objectConfiguration {
             unset($config['additional']['shop_productFeatures']);
         }
 
-        if (!empty($options['search'])) {
-            if (is_string($options['search'])) {
-                $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+        if (!empty($options['_pSearch'])) {
+            if (is_string($options['_pSearch'])) {
+                $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $options['_pSearch'] . '%', 'like');
                 // $config['condition']["Model"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
                 // $config['condition']["SKU"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
-            } elseif (is_array($options['search'])) {
-                foreach ($options['search'] as $value) {
+            } elseif (is_array($options['_pSearch'])) {
+                foreach ($options['_pSearch'] as $value) {
                     $config['condition']["Name"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["Model"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["SKU"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
@@ -474,18 +474,12 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopGetCategoryList () {
+    static function jsapiShopGetCategoryList (array $options = array()) {
         $config = self::jsapiShopGetCategoryItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
-        return $config;
-    }
-
-    static function jsapiShopGetCategoryAll ($includeRemoved = false) {
-        $config = self::jsapiShopGetCategoryList();
-        $config['limit'] = 0;
-        if (!$includeRemoved) {
+        if (!empty($options['removed'])) {
             $config['condition']['Status'] = self::jsapiCreateDataSourceCondition('ACTIVE');
         }
         return $config;
@@ -566,18 +560,12 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
-    static function jsapiShopGetOriginList () {
+    static function jsapiShopGetOriginList (array $options = array()) {
         $config = self::jsapiShopGetOriginItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
-        return $config;
-    }
-
-    static function jsapiShopGetOriginAll ($includeRemoved = false) {
-        $config = self::jsapiShopGetOriginList();
-        $config['limit'] = 0;
-        if (!$includeRemoved) {
+        if (!empty($options['removed'])) {
             $config['condition']['Status'] = self::jsapiCreateDataSourceCondition('ACTIVE');
         }
         return $config;

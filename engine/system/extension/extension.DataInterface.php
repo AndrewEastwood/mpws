@@ -2,7 +2,7 @@
 
 class extensionDataInterface extends objectExtension {
 
-    public function getDataList ($dsConfig, $req = null, $callbacks = array()) {
+    public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
         $limit = $dsConfig['limit'];
         $page = 1;
         $items = array();
@@ -11,8 +11,8 @@ class extensionDataInterface extends objectExtension {
             throw new Exception("ErrorProcessingDataListMethod", 1);
 
         // grab other fields
-        if (is_object($req))
-            foreach ($req->get as $key => $value) {
+        if (is_object($options))
+            foreach ($options as $key => $value) {
                 $matches = array();
                 if (preg_match("/^_f(\w+)$/", $key, $matches)) {
                     // $matches
@@ -42,16 +42,16 @@ class extensionDataInterface extends objectExtension {
         $countData = $this->getCustomer()->fetch($configCount);
         $count = intval($countData["ItemsCount"]);
 
-        if (!empty($req) && is_object($req)) {
-            if (isset($req->get['sort']))
-                $dsConfig['order']['field'] = $req->get['sort'];
-            if (isset($req->get['order']))
-                $dsConfig['order']['ordering'] = $req->get['order'];
+        if (!empty($options) && is_object($options)) {
+            if (isset($options['sort']))
+                $dsConfig['order']['field'] = $options['sort'];
+            if (isset($options['order']))
+                $dsConfig['order']['ordering'] = $options['order'];
 
-            if (isset($req->get['page']))
-                $page = intval($req->get['page']);
-            if (isset($req->get['per_page']))
-                $limit = intval($req->get['per_page']);
+            if (isset($options['page']))
+                $page = intval($options['page']);
+            if (isset($options['per_page']))
+                $limit = intval($options['per_page']);
 
             if ($count > 0) {
                 if ($limit >= 1)
