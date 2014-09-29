@@ -14,8 +14,8 @@
     </label>
     <div class="filter-list-origins">
         {{#each data}}
-        <div class="checkbox">
-            <label> <input type="checkbox" class="shop-filter-origin" id="{{ID}}">{{Name}}</label>
+        <div class="checkbox origin-item{{#if _isRemoved}} removed{{/if}}">
+            <label class="{{#if _isRemoved}}text-danger{{/if}}"> <input type="checkbox" class="shop-filter-origin" id="{{ID}}">{{Name}}</label>
             {{{contextButton}}}
             {{#if HomePage}}
             <span class="pull-right">

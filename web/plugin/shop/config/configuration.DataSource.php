@@ -479,7 +479,7 @@ class configurationShopDataSource extends objectConfiguration {
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
-        if (!empty($options['removed'])) {
+        if (empty($options['removed'])) {
             $config['condition']['Status'] = self::jsapiCreateDataSourceCondition('ACTIVE');
         }
         return $config;
@@ -565,7 +565,7 @@ class configurationShopDataSource extends objectConfiguration {
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
-        if (!empty($options['removed'])) {
+        if (empty($options['removed'])) {
             $config['condition']['Status'] = self::jsapiCreateDataSourceCondition('ACTIVE');
         }
         return $config;

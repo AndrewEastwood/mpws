@@ -450,6 +450,7 @@ class pluginShop extends objectPlugin {
             return null;
 
         $origin['ID'] = intval($origin['ID']);
+        $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
         $origin['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
         return $origin;
     }
@@ -527,7 +528,8 @@ class pluginShop extends objectPlugin {
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
             'Description' => array('string', 'skipIfUnset'),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
+            'Status' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -538,7 +540,7 @@ class pluginShop extends objectPlugin {
                 $this->getCustomerDataBase()->beginTransaction();
 
                 $configCreateCategory = configurationShopDataSource::jsapiShopUpdateOrigin($OriginID, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory) ?: null;
+                $this->getCustomer()->fetch($configCreateCategory);
 
                 $this->getCustomerDataBase()->commit();
 
@@ -558,13 +560,10 @@ class pluginShop extends objectPlugin {
     }
 
     public function disableOrigin ($OriginID) {
-        // check permissions
-
         $errors = array();
         $success = false;
 
         try {
-
             $this->getCustomerDataBase()->beginTransaction();
 
             $config = configurationShopDataSource::jsapiShopDeleteOrigin($OriginID);
@@ -578,7 +577,7 @@ class pluginShop extends objectPlugin {
             $errors[] = 'OriginUpdateError';
         }
 
-        $result = $this->getCategoryByID($OriginID);
+        $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;
         $result['success'] = $success;
         return $result;
@@ -1789,11 +1788,7 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_categories (&$resp, $req) {
-        if (empty($req->get['type'])) {
-            $resp['error'] = "MissedParameter_type";
-        } else {
-            $resp = $this->getCategories_List($req->get);
-        }
+        $resp = $this->getCategories_List($req->get);
     }
 
     public function post_shop_category (&$resp, $req) {
@@ -1849,11 +1844,7 @@ class pluginShop extends objectPlugin {
     }
 
     public function get_shop_origins (&$resp, $req) {
-        if (empty($req->get['type'])) {
-            $resp['error'] = "MissedParameter_type";
-        } else {
-            $resp = $this->getOrigins_List($req->get);
-        }
+        $resp = $this->getOrigins_List($req->get);
     }
 
     public function post_shop_origin (&$resp, $req) {

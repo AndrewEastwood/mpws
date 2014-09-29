@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'default/js/lib/cache',
+    'default/js/lib/bootstrap-dialog',
     'plugin/shop/toolbox/js/collection/filterTreeCategories',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/filterTreeCategories',
@@ -10,7 +11,7 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     /* extensions */
     'default/js/lib/jstree'
-], function (Sandbox, Backbone, Utils, Cache, CollectionFilterTreeCategories, tpl, lang) {
+], function (Sandbox, Backbone, Utils, Cache, BootstrapDialog, CollectionFilterTreeCategories, tpl, lang) {
     var FilterTreeCategories = Backbone.View.extend({
         className: 'panel panel-default plugin-shop-tree',
         template: tpl,
@@ -23,7 +24,9 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
             this.listenTo(this.collection, 'reset', this.render);
         },
         showRemoved: function (event) {
-            this.collection.fetchWithRemoved($(event.target).is(':checked'), {reset: true});
+            this.collection.fetchWithRemoved($(event.target).is(':checked'), {
+                reset: true
+            });
         },
         render: function () {
             var self = this;
@@ -68,14 +71,16 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                                     text: tmp.create.label
                                 };
                             inst.create_node(parentNode, nodeData, "last", function (new_node) {
-                                setTimeout(function () { inst.edit(new_node); },0);
+                                setTimeout(function () {
+                                    inst.edit(new_node);
+                                }, 0);
                             });
                         }
                         tmp.createProduct = {
                             label: "Додати товар",
-                            "separator_after"  : true,
-                            "separator_before"  : true,
-                            "icon"              : "fa fa-plus",
+                            "separator_after": true,
+                            "separator_before": true,
+                            "icon": "fa fa-plus",
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
@@ -90,7 +95,7 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                                     data.reference.parent().data('type') === "root";
                             },
                             label: "Відновити",
-                            "icon"              : "fa fa-undo",
+                            "icon": "fa fa-undo",
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
@@ -105,7 +110,9 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                                             // if (resp && resp.Status) {
                                             //     node.type = resp.Status;
                                             // }
-                                            self.collection.fetch({reset: true});
+                                            self.collection.fetch({
+                                                reset: true
+                                            });
                                         },
                                         error: function () {
                                             inst.refresh();
@@ -174,7 +181,9 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                             //     data.node.type = resp.Status;
                             // }
                             // data.instance.refresh();
-                            self.collection.fetch({reset: true});
+                            self.collection.fetch({
+                                reset: true
+                            });
                         },
                         error: function () {
                             data.instance.refresh();
@@ -193,7 +202,9 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                         patch: true,
                         success: function (model, resp, options) {
                             // data.instance.refresh();
-                            self.collection.fetch({reset: true});
+                            self.collection.fetch({
+                                reset: true
+                            });
                         },
                         error: function () {
                             data.instance.refresh();

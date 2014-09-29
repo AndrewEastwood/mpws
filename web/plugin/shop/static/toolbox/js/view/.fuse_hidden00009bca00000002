@@ -54,20 +54,13 @@ define("plugin/shop/toolbox/js/view/filterPanelOrigins", [
         },
         removeOrigin: function (event) {
             var id = $(event.target).data('id'),
-                model = this.collection.get(id),
-                self = this;
+                model = this.collection.get(id);
             if (!model) {
                 return;
             }
             BootstrapDialog.confirm("Видалити цього виробника?", function (rez) {
                 if (rez) {
-                    model.destroy({
-                        success: function () {
-                            self.collection.fetch({
-                                reset: true
-                            });
-                        }
-                    });
+                    model.destroy();
                 }
             });
         },
@@ -82,12 +75,7 @@ define("plugin/shop/toolbox/js/view/filterPanelOrigins", [
                     model.save({
                         Status: 'ACTIVE'
                     }, {
-                        patch: true,
-                        success: function () {
-                            model.collection.fetch({
-                                reset: true
-                            });
-                        }
+                        patch: true
                     });
                 }
             });

@@ -246,6 +246,16 @@ body {
                     display: inline-block;
                 }
             }
+            .dropdown-menu{
+                position:fixed;
+            }
+        }
+        .origin-item {
+            &.removed {
+                label {
+                    text-decoration: line-through;
+                }
+            }
         }
         .label-datecreated {
             color: #333;
@@ -309,4 +319,8 @@ body {
     display: inline-block;
     margin-left: -5px;
     margin-right: 5px;
+}
+.backgrid .select-cell.editor select {
+    height: 38px;
+    padding: 8px 5px;
 }

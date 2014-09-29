@@ -30,7 +30,9 @@ define('plugin/shop/toolbox/js/view/managerContent', [
 
             this.viewCatergoriesTree.on('categoryTree:changed:category', _.debounce(function (activeCategory) {
                 this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.id >= 0 ? activeCategory.id : void(0));
-                this.viewProductsList.collection.fetch({reset: true});
+                this.viewProductsList.collection.fetch({
+                    reset: true
+                });
             }, 200), this);
 
             _.bindAll(this, 'saveLayout');
@@ -40,7 +42,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             }, this));
         },
         saveLayout: function () {
-            console.log('saving layout manager content');
+            // console.log('saving layout manager content');
             Cache.set("shopManagerContentLayoutRD", {
                 activeFilterTabID: this.$('.shop-managerContent-filters li.active a').attr('href').substr(1)
             });

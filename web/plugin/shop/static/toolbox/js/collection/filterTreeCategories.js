@@ -20,7 +20,7 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
             var urlOptions = {
                 source: 'shop',
                 fn: 'categories',
-                limit: 0
+                limit: "0"
             };
 
             if (this.queryParams.removed) {
