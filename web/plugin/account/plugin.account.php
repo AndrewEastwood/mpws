@@ -318,10 +318,6 @@ class pluginAccount extends objectPlugin {
             'City' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100)
         ));
 
-        // if ($validatedDataObj["totalErrors"] > 0) {
-        //     return glWrap("errors", $validatedDataObj["errors"]);
-        // }
-
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
@@ -374,41 +370,11 @@ class pluginAccount extends objectPlugin {
         }
         $config = configurationCustomerDataSource::jsapiStat_AccountsIntensityLastMonth($status);
         $data = $this->getCustomer()->fetch($config) ?: array();
-        // var_dump($config);
         return $data;
     }
 
-    // private function _getStats_OrdersIntensityLastMonth ($status) {
-    //     if (!$this->getCustomer()->ifYouCan('Admin')) {
-    //         return null;
-    //     }
-    //     $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status);
-    //     $data = $this->getCustomer()->fetch($config) ?: array();
-    //     // var_dump($config);
-    //     return $data;
-    // }
-
-    // private function _getStats_ProductsOverview () {
-    //     if (!$this->getCustomer()->ifYouCan('Admin')) {
-    //         return null;
-    //     }
-    //     // get shop products overview:
-    //     $config = configurationShopDataSource::jsapiShopStat_ProductsOverview();
-    //     $data = $this->getCustomer()->fetch($config) ?: array();
-    //     return $data;
-    // }
-
     public function get_account_overview (&$resp) {
         $resp['overview_accounts'] = $this->_getStats_AccountsOverview();
-        // $resp['all_orders'] = $this->_getStats_OrdersOverview();
-        // $resp['products_todays'] = $this->_getProducts_Todays();
-        // $resp['products_popular'] = $this->_getProducts_TopPopular();
-        // $resp['products_non_popular'] = $this->_getProducts_TopNonPopular();
-        // $resp['orders_all_new'] = $this->_getOrders_ByStatus('NEW');
-        // $resp['orders_todays'] = $this->_getOrders_Todays();
-        // $resp['orders_expired'] = $this->_getOrders_Expired();
-        // $resp['orders_intensity_new_last_month'] = $this->_getStats_OrdersIntensityLastMonth('NEW');
-        // $resp['orders_intensity_closed_last_month'] = $this->_getStats_OrdersIntensityLastMonth('SHOP_CLOSED');
         $resp['accounts_intensity_last_month_active'] = $this->_getStats_AccountsIntensityLastMonth('ACTIVE');
         $resp['accounts_intensity_last_month_temp'] = $this->_getStats_AccountsIntensityLastMonth('TEMP');
         $resp['accounts_intensity_last_month_removed'] = $this->_getStats_AccountsIntensityLastMonth('REMOVED');
@@ -433,14 +399,10 @@ class pluginAccount extends objectPlugin {
     }
 
     public function post_account_account (&$resp, $req) {
-        // $data = libraryRequest::getObjectFromREQUEST("FirstName", "LastName", "EMail", "Phone", "Password", "ConfirmPassword");
         $resp = $this->createAccount($req->data);
     }
 
     public function patch_account_account (&$resp, $req) {
-        // var_dump($req);
-        // var_dump($_SERVER['REQUEST_METHOD']);
-        // var_dump(file_get_contents('php://input'));
         if (!empty($req->get['id'])) {
             $AccountID = intval($req->get['id']);
             $resp = $this->_updateAccountByID($AccountID, $req->data);

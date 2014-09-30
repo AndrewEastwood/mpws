@@ -19,7 +19,7 @@
                 Всі категорії
                 <ul>
                 {{#recursive extras.tree}}
-                    <li data-parent="{{ParentID}}" data-id="{{ID}}" data-childcount="{{childCount}}" id="{{ID}}" data-status="{{Status}}" data-jstree='{ "id": "{{ID}}", "type" : "{{Status}}" }'>{{Name}}{{#if childCount}}<ul>{{{recursive childItems}}}</ul>{{/if}}</li>
+                    <li {{#if _isRemoved}}data-removed="1" {{/if}}data-parent="{{ParentID}}" data-id="{{ID}}" data-childcount="{{childCount}}" id="{{ID}}" data-status="{{Status}}" data-jstree='{ "id": "{{ID}}", "type" : "{{Status}}" }'>{{Name}}{{#if childCount}}<ul>{{{recursive childItems}}}</ul>{{/if}}</li>
                 {{/recursive}}
                 </ul>
             </li>

@@ -1,10 +1,10 @@
-define("plugin/account/toolbox/js/view/stats", [
+define("plugin/account/toolbox/js/view/dashboard", [
     'default/js/lib/backbone',
     'default/js/lib/underscore',
-    'plugin/account/toolbox/js/model/stats',
+    'plugin/account/toolbox/js/model/dashboard',
     'default/js/lib/utils',
     /* template */
-    'default/js/plugin/hbs!plugin/account/toolbox/hbs/stats',
+    'default/js/plugin/hbs!plugin/account/toolbox/hbs/dashboard',
     /* lang */
     'default/js/plugin/i18n!plugin/account/toolbox/nls/translation',
     /* charts */
@@ -29,9 +29,11 @@ define("plugin/account/toolbox/js/view/stats", [
             // debugger;
             if (google) {
 
-                var usersByStatus = this.model.get('all_accounts');
+                var usersByStatus = this.model.get('overview_accounts');
 
-                var dounutData = [['Статус', 'К-сть']];
+                var dounutData = [
+                    ['Статус', 'К-сть']
+                ];
 
                 _(usersByStatus).each(function (count, status) {
                     dounutData.push([status, parseInt(count, 10)]);
@@ -40,8 +42,8 @@ define("plugin/account/toolbox/js/view/stats", [
                 var data = google.visualization.arrayToDataTable(dounutData);
 
                 var optionsPie = {
-                  title: 'Співвідношення користувачів',
-                  pieHole: 0.4,
+                    title: 'Співвідношення користувачів',
+                    pieHole: 0.4,
                 };
 
                 var chart = new google.visualization.PieChart(this.$('.chart-users-interrelation').get(0));
@@ -69,7 +71,9 @@ define("plugin/account/toolbox/js/view/stats", [
                     mergedOrdersDataOfIntensity[date]['removed'] = parseInt(count, 10);
                 });
 
-                var dataOrders = [['Дата', 'Активні', 'Видалені', 'Тимчасові']];
+                var dataOrders = [
+                    ['Дата', 'Активні', 'Видалені', 'Тимчасові']
+                ];
 
                 _(mergedOrdersDataOfIntensity).each(function (values, date) {
                     dataOrders.push([date, values.active || 0, values.removed || 0, values.temp || 0]);

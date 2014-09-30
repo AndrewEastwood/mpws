@@ -63,15 +63,15 @@ define("plugin/account/toolbox/js/router", [
         },
 
         dashboard: function () {
-            require(['plugin/account/toolbox/js/view/stats'], function (Stats) {
+            require(['plugin/account/toolbox/js/view/dashboard'], function (Dashboard) {
                 // debugger;
                 // create new view
-                var stats = new Stats();
-                stats.model.fetch();
+                var dashboard = new Dashboard();
+                dashboard.model.fetch();
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'DashboardForPlugin_account',
-                    el: stats.$el
+                    el: dashboard.$el
                 });
             });
         },

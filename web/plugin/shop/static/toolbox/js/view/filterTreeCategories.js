@@ -55,7 +55,8 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                         tmp.remove.label = "Видалити";
                         tmp.remove._disabled = function (data) {
                             return data.reference.parent().data('childcount') > 0 ||
-                                data.reference.parent().data('type') === "root";
+                                data.reference.parent().data('type') === "root" ||
+                                data.reference.parent().data('removed');
                         }
                         tmp.remove.icon = "fa fa-times";
                         tmp.rename._disabled = function (data) {

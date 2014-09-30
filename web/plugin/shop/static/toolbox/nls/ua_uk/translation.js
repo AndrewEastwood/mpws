@@ -31,6 +31,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Orders: 'Замовлення',
         pluginMenu_Offers: 'Акції та Розпродаж',
         pluginMenu_Reports: 'Звіти',
+        pluginMenu_Settings: 'Налаштування',
+        pluginMenu_Promo: 'Промо-коди',
         //
         productManager_Button_Create_Product: "Товар",
         productManager_Button_Create_Category: "Категорія",
@@ -143,6 +145,12 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_status_WAITING: 'Очікування',
         product_status_PREORDER: 'Під замовлення',
         orders_manager_listTitle: "Менеджер замовлень",
-        categoryTree_Title: 'Дерево категорії'
+        categoryTree_Title: 'Дерево категорії',
+        listPromos_Column_Actions: '',
+        listPromos_Column_Code: 'Код',
+        listPromos_Column_DateStart: 'Початок акції',
+        listPromos_Column_DateExpire: 'Завершення акції',
+        listPromos_Column_Discount: 'Знижка (%)',
+        manager_promoCodes_listTitle: 'Промо-коди'
     }, CustomerPluginShop);
 });

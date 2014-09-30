@@ -200,7 +200,7 @@ define("plugin/shop/toolbox/js/router", [
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
             require(['plugin/shop/toolbox/js/view/managerPromoCodes'], function (ManagerPromoCodes) {
                 var managerPromoCodes = new ManagerPromoCodes();
-                managerPromoCodes.viewPromosList.collection.fetch({
+                managerPromoCodes.collection.fetch({
                     reset: true
                 });
                 Sandbox.eventNotify('global:content:render', {

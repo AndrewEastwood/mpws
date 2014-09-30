@@ -741,6 +741,17 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Shop order
 
 
+
+
+
+
+
+
+
+
+
+
+
     // >>>> Shop statistics
     static function jsapiShopStat_PopularProducts () {
         return self::jsapiGetDataSourceConfig(array(
@@ -854,6 +865,23 @@ class configurationShopDataSource extends objectConfiguration {
     // <<<< Shop statistics
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // <<<< Promo area
     static function jsapiShopGetPromoByHash ($hash, $activeOnly) {
         $config = self::jsapiGetDataSourceConfig(array(
@@ -868,25 +896,41 @@ class configurationShopDataSource extends objectConfiguration {
         ));
 
         if ($activeOnly) {
-            $config['condition']['DateExpire'] = self::jsapiCreateDataSourceCondition(self::getDate(), '>=');
             $config['condition']['DateStart'] = self::jsapiCreateDataSourceCondition(self::getDate(), '<=');
+            $config['condition']['DateExpire'] = self::jsapiCreateDataSourceCondition(self::getDate(), '>=');
         }
 
         return $config;
     }
 
-    static function jsapiShopGetPromoByID ($promoID) {
-        return self::jsapiGetDataSourceConfig(array(
+    static function jsapiShopGetPromoByID ($promoID = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_promo",
-            "condition" => array(
-                "ID" => self::jsapiCreateDataSourceCondition($promoID)
-            ),
+            "condition" => array(),
             "fields" => array("ID", "Code", "DateStart", "DateExpire", "Discount", "DateCreated"),
             "options" => array(
                 "expandSingleRecord" => true
             )
         ));
+
+        if (!is_null($promoID))
+            $config["condition"] = array(
+                "ID" => self::jsapiCreateDataSourceCondition($promoID)
+            );
+        return $config;
+    }
+
+    static function jsapiShopGetPromoList (array $options = array()) {
+        $config = self::jsapiShopGetPromoByID();
+        $config['fields'] = array("ID");
+        $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        if (empty($options['expired'])) {
+            $config['condition']['DateStart'] = self::jsapiCreateDataSourceCondition(self::getDate(), '<=');
+            $config['condition']['DateExpire'] = self::jsapiCreateDataSourceCondition(self::getDate(), '>=');
+        }
+        return $config;
     }
 
     static function jsapiShopCreatePromo ($data) {

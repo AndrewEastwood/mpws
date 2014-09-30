@@ -11,34 +11,34 @@ class extensionDataInterface extends objectExtension {
             throw new Exception("ErrorProcessingDataListMethod", 1);
 
         // grab other fields
-        if (is_object($options))
-            foreach ($options as $key => $value) {
-                $matches = array();
-                if (preg_match("/^_f(\w+)$/", $key, $matches)) {
-                    // $matches
-                    $field = $matches[1];
-                    // parse value
-                    $parsedValue = array();
-                    preg_match("/([0-9A-Za-z\,_-]+):(\w+)$/", $value, $parsedValue);
-                    // var_dump($field);
-                    $count = count($parsedValue);
-                    // var_dump($parsedValue[2]);
-                    // var_dump($count);
-                    if ($count === 0)
-                        $dsConfig['condition'][$field] = configurationDefaultDataSource::jsapiCreateDataSourceCondition($value);
-                    elseif ($count === 3) {
-                        $value = $parsedValue[1];
-                        $comparator = $parsedValue[2];
-                        if (strtolower($comparator) === 'in')
-                            $value = explode(',', $parsedValue[1]);
-                        $dsConfig['condition'][$field] = configurationDefaultDataSource::jsapiCreateDataSourceCondition($value, $comparator);
-                    }
+        foreach ($options as $key => $value) {
+            $matches = array();
+            if (preg_match("/^_f(\w+)$/", $key, $matches)) {
+                // $matches
+                $field = $matches[1];
+                // parse value
+                $parsedValue = array();
+                preg_match("/([0-9A-Za-z\,_-]+):(\w+)$/", $value, $parsedValue);
+                // var_dump($field);
+                $count = count($parsedValue);
+                // var_dump($parsedValue[2]);
+                // var_dump($count);
+                if ($count === 0)
+                    $dsConfig['condition'][$field] = configurationDefaultDataSource::jsapiCreateDataSourceCondition($value);
+                elseif ($count === 3) {
+                    $value = $parsedValue[1];
+                    $comparator = $parsedValue[2];
+                    if (strtolower($comparator) === 'in')
+                        $value = explode(',', $parsedValue[1]);
+                    $dsConfig['condition'][$field] = configurationDefaultDataSource::jsapiCreateDataSourceCondition($value, $comparator);
                 }
             }
+        }
 
         // var_dump($dsConfig['condition']);
         // get data total records
         $configCount = configurationDefaultDataSource::jsapiUtil_GetTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
+        
         $countData = $this->getCustomer()->fetch($configCount);
         $count = intval($countData["ItemsCount"]);
 

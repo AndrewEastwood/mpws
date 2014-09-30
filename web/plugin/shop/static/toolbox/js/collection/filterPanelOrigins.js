@@ -18,16 +18,16 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
             var urlOptions = {
                 source: 'shop',
                 fn: 'origins',
-                type: 'list'
+                type: 'list',
+                removed: !!this.queryParams.removed
             };
 
-            if (this.queryParams.removed) {
-                urlOptions.removed = true;
-            }
-
-            Cache.set('shopOriginsFilterRD', this.queryParams);
-
             return APP.getApiLink(urlOptions);
+        },
+
+        fetch: function (options) {
+            Cache.set('shopOriginsFilterRD', this.queryParams);
+            return Backbone.Collection.prototype.fetch.call(this, options);
         },
 
         parse: function (data) {

@@ -20,16 +20,16 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
             var urlOptions = {
                 source: 'shop',
                 fn: 'categories',
-                limit: "0"
+                limit: "0",
+                removed: !!this.queryParams.removed
             };
 
-            if (this.queryParams.removed) {
-                urlOptions.removed = true;
-            }
-
-            Cache.set('shopCategoriesTreeRD', this.queryParams);
-
             return APP.getApiLink(urlOptions);
+        },
+
+        fetch: function (options) {
+            Cache.set('shopCategoriesTreeRD', this.queryParams);
+            return Backbone.Collection.prototype.fetch.call(this, options);
         },
 
         parse: function (data) {
