@@ -4,7 +4,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     'default/js/lib/utils',
     "default/js/lib/backgrid",
     /* collection */
-    "plugin/shop/toolbox/js/collection/basicOrigins",
+    "plugin/shop/toolbox/js/collection/listOrigins",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOriginListItem',
     /* lang */
@@ -15,7 +15,7 @@ define("plugin/shop/toolbox/js/view/listOrigins", [
     "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, Backbone, Utils, Backgrid, CollectionOrigins, tplBtnMenuMainItem, lang) {
 
-    function getColumns () {
+    function getColumns() {
         // TODO: do smth to fetch states from server
         // var statuses = ["ACTIVE", "REMOVED"];
         // var orderStatusValues = _(statuses).map(function (status){ return [lang["origin_status_" + status] || status, status]; });

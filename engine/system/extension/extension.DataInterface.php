@@ -18,10 +18,10 @@ class extensionDataInterface extends objectExtension {
                 $field = $matches[1];
                 // parse value
                 $parsedValue = array();
-                preg_match("/([0-9A-Za-z\,_-]+):(\w+)$/", $value, $parsedValue);
+                preg_match("/([0-9A-Za-z\,_-]+):(\w+|\!\=|\=)$/", $value, $parsedValue);
                 // var_dump($field);
                 $count = count($parsedValue);
-                // var_dump($parsedValue[2]);
+                // var_dump($parsedValue);
                 // var_dump($count);
                 if ($count === 0)
                     $dsConfig['condition'][$field] = configurationDefaultDataSource::jsapiCreateDataSourceCondition($value);
@@ -50,8 +50,8 @@ class extensionDataInterface extends objectExtension {
 
             if (isset($options['page']))
                 $page = intval($options['page']);
-            if (isset($options['per_page']))
-                $limit = intval($options['per_page']);
+            if (isset($options['limit']))
+                $limit = intval($options['limit']);
 
             if ($count > 0) {
                 if ($limit >= 1)
@@ -80,7 +80,7 @@ class extensionDataInterface extends objectExtension {
 
         $listInfo = array(
             "page" => $page,
-            "per_page" => $limit,
+            "limit" => $limit,
             "total_pages" => round($count / $limit + 0.49),
             "total_entries" => $count
         );

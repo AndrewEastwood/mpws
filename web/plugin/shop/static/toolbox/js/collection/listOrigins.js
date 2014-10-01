@@ -1,21 +1,21 @@
-define('plugin/shop/toolbox/js/collection/listPromos', [
+define('plugin/shop/toolbox/js/collection/listOrigins', [
     'default/js/lib/underscore',
-    'plugin/shop/toolbox/js/model/promo',
+    'plugin/shop/toolbox/js/model/origin',
     'default/js/lib/backbone-paginator'
 ], function (_, ModelOrigin, PageableCollection) {
 
-    var ListPromos = PageableCollection.extend({
+    var ListOrigins = PageableCollection.extend({
 
         model: ModelOrigin,
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'promocodes'
+            fn: 'origins'
         }),
 
         // Initial pagination states
         state: {
-            pageSize: 100,
+            pageSize: 30,
             order: 1
         },
 
@@ -60,5 +60,5 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
 
     });
 
-    return ListPromos;
+    return ListOrigins;
 });

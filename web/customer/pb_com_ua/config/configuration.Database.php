@@ -31,7 +31,7 @@ class configurationCustomerDatabase extends configurationDefaultDatabase {
             "driver_options" => array(
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
                 PDO::ATTR_AUTOCOMMIT => false,
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
             )
         );
 

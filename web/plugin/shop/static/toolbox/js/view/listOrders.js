@@ -4,7 +4,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     'default/js/lib/utils',
     "default/js/lib/backgrid",
     /* collection */
-    "plugin/shop/toolbox/js/collection/basicOrders",
+    "plugin/shop/toolbox/js/collection/listOrders",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuOrderListItem',
     /* lang */
@@ -15,10 +15,12 @@ define("plugin/shop/toolbox/js/view/listOrders", [
     "default/js/lib/backgrid-htmlcell"
 ], function (Sandbox, Backbone, Utils, Backgrid, CollectionOrders, tplBtnMenuMainItem, lang) {
 
-    function getColumns () {
+    function getColumns() {
         // we show following statuses only
         var statuses = ["NEW", "ACTIVE", "LOGISTIC_DELIVERING", "LOGISTIC_DELIVERED", "SHOP_CLOSED", "CUSTOMER_CANCELED", "SHOP_REFUNDED"];
-        var orderStatusValues = _(statuses).map(function (status){ return [lang["order_status_" + status] || status, status]; });
+        var orderStatusValues = _(statuses).map(function (status) {
+            return [lang["order_status_" + status] || status, status];
+        });
 
         var columnActions = {
             className: "custom-row-context-menu",
@@ -96,11 +98,13 @@ define("plugin/shop/toolbox/js/view/listOrders", [
                 optionValues: orderStatusValues,
                 initialize: function (options) {
                     Backgrid.SelectCell.prototype.initialize.apply(this, arguments);
-                    this.listenTo(this.model, "change:Status", function(model) {
+                    this.listenTo(this.model, "change:Status", function (model) {
                         model.save(model.changed, {
                             patch: true,
-                            success: function() {
-                                model.collection.fetch({reset: true});
+                            success: function () {
+                                model.collection.fetch({
+                                    reset: true
+                                });
                             }
                         });
                     });

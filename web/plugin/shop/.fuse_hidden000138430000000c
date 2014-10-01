@@ -97,7 +97,7 @@ class pluginShop extends objectPlugin {
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
         $product['_archived'] = in_array($product['Status'], array("ARCHIVED"));
 
-        $product['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
+        // $product['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
@@ -451,7 +451,7 @@ class pluginShop extends objectPlugin {
 
         $origin['ID'] = intval($origin['ID']);
         $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
-        $origin['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
+        // $origin['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
         return $origin;
     }
 
@@ -1198,7 +1198,7 @@ class pluginShop extends objectPlugin {
 
         if ($productID) {
             // get product entry
-            $configProduct = configurationShopDataSource::jsapiShopGetProductItemInfo($productID);
+            $configProduct = configurationShopDataSource::jsapiShopGetProductItem($productID, false);
 
             $productDataEntry = $this->getCustomer()->fetch($configProduct);
             if (isset($productDataEntry['CategoryID'])) {
@@ -1466,18 +1466,6 @@ class pluginShop extends objectPlugin {
         return $data;
     }
 
-    public function _createPromo ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("error", "AccessDenied");
-        }
-    }
-
-    public function _updatePromo ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("error", "AccessDenied");
-        }
-    }
-
     public function getPromoCodes_List (array $options = array()) {
         $config = configurationShopDataSource::jsapiShopGetPromoList($options);
         $self = $this;
@@ -1492,6 +1480,71 @@ class pluginShop extends objectPlugin {
         $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
+
+    public function createPromo ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+            return glWrap("error", "AccessDenied");
+        }
+    }
+
+    public function updatePromo ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+    }
+
+    public function closePromo ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+    }
+
+
+    // -----------------------------------------------
+    // -----------------------------------------------
+    // DELIVERY AGENCIES
+    // -----------------------------------------------
+    // -----------------------------------------------
+    public function getDeliveryAgencyByID ($agencyID) {
+        $config = configurationShopDataSource::jsapiShopGetDeliveryAgencyByID($agencyID);
+        $data = $this->getCustomer()->fetch($config);
+        $data['ID'] = intval($data['ID']);
+        return $data;
+    }
+
+    public function getDeliveries_List (array $options = array()) {
+        $config = configurationShopDataSource::jsapiShopGetDeliveriesList($options);
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $val)
+                    $_items[] = $self->getDeliveryAgencyByID($val['ID']);
+                return $_items;
+            }
+        );
+        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        return $dataList;
+    }
+
+    public function createDeliveryAgency ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+            return glWrap("error", "AccessDenied");
+        }
+    }
+
+    public function updateDeliveryAgency ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+    }
+
+    public function deleteDeliveryAgency ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
+    }
+
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -1796,6 +1849,14 @@ class pluginShop extends objectPlugin {
 
 
 
+
+
+
+
+
+
+
+
     public function get_shop_category (&$resp, $req) {
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
@@ -1906,6 +1967,70 @@ class pluginShop extends objectPlugin {
             $this->_getOrSetCachedState('changed:origin', true);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function get_shop_delivery (&$resp, $req) {
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $agencyID = intval($req->get['id']);
+            $resp = $this->getDeliveryAgencyByID($agencyID);
+        }
+    }
+
+    public function get_shop_deliveries (&$resp, $req) {
+        $resp = $this->getDeliveries_List($req->get);
+    }
+
+    public function post_shop_delivery (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        $resp = $this->createDeliveryAgency($req->data);
+        $this->_getOrSetCachedState('changed:agency', true);
+    }
+
+    public function patch_shop_delivery (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $agencyID = intval($req->get['id']);
+            $resp = $this->updateDeliveryAgency($agencyID, $req->data);
+            $this->_getOrSetCachedState('changed:agency', true);
+        }
+    }
+
+    public function delete_shop_delivery (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            $resp['error'] = 'AccessDenied';
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $agencyID = intval($req->get['id']);
+            $resp = $this->deleteDeliveryAgency($agencyID);
+            $this->_getOrSetCachedState('changed:agency', true);
+        }
+    }
+
+
 
 
 

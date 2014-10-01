@@ -1,4 +1,4 @@
-define('plugin/shop/toolbox/js/collection/basicProducts', [
+define('plugin/shop/toolbox/js/collection/listProducts', [
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/product',
     'default/js/lib/backbone-paginator',
@@ -31,6 +31,7 @@ define('plugin/shop/toolbox/js/collection/basicProducts', [
         queryParams: Cache.get('shopProductsListRD') || {
             totalPages: null,
             totalRecords: null,
+            pageSize: "limit",
             sortKey: "sort"
         },
 

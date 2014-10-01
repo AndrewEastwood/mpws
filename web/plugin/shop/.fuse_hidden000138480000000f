@@ -13,8 +13,7 @@ class pluginShop extends objectPlugin {
         'changed:order' => false,
         'changed:product' => false,
         'changed:promo' => false,
-        'changed:features' => false,
-        'changed:agencies' => false
+        'changed:features' => false
     );
 
     public function beforeRun () {
@@ -1536,66 +1535,16 @@ class pluginShop extends objectPlugin {
         }
     }
 
-    public function updateDeliveryAgency ($id, $reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
-            'Status' => array('string', 'skipIfUnset')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateDeliveryAgent($id, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
-
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        $result = $this->getDeliveryAgencyByID($id);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
+    public function updateDeliveryAgency ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
+        }
     }
 
-    public function deleteDeliveryAgency ($id) {
-        $errors = array();
-        $success = false;
-
-        try {
-            $this->getCustomerDataBase()->beginTransaction();
-
-            $config = configurationShopDataSource::jsapiShopDeleteDeliveryAgent($id);
-            $this->getCustomer()->fetch($config);
-
-            $this->getCustomerDataBase()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'OriginUpdateError';
+    public function deleteDeliveryAgency ($reqData) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            return glWrap("error", "AccessDenied");
         }
-
-        $result = $this->getDeliveryAgencyByID($id);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
     }
 
 
@@ -1666,13 +1615,6 @@ class pluginShop extends objectPlugin {
                 return $self->getAllAvailableFeatures($options);
             };
         }
-        if ($tableName === configurationShopDataSource::$Table_ShopDeliveryAgencies) {
-            $stateKey = 'agencies';
-            // var_dump($this->_states);
-            $fn = function ($options) use ($self) {
-                return $self->getDeliveries_List($options);
-            };
-        }
 
         if (!empty($tableName)) {
             $refreshFromDB = !isset($_SESSION[$tableName]) || $this->_getOrSetCachedState('changed:' . $stateKey);
@@ -1700,7 +1642,7 @@ class pluginShop extends objectPlugin {
             $statusDump[configurationShopDataSource::$Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
             $statusDump[configurationShopDataSource::$Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins);
             $statusDump[configurationShopDataSource::$Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopCategories);
-            $statusDump[configurationShopDataSource::$Table_ShopDeliveryAgencies] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopDeliveryAgencies);
+            $statusDump[configurationShopDataSource::$Table_ShopDeliveryAgency] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopDeliveryAgency);
             // $statusDump[configurationShopDataSource::$Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopSettings);
             $_SESSION['shop:statuses:list'] = $statusDump;
             $_SESSION['shop:statuses:expire'] = mktime() + 24 * 60 * 60;
@@ -2059,7 +2001,7 @@ class pluginShop extends objectPlugin {
             return;
         }
         $resp = $this->createDeliveryAgency($req->data);
-        $this->_getOrSetCachedState('changed:agencies', true);
+        $this->_getOrSetCachedState('changed:agency', true);
     }
 
     public function patch_shop_delivery (&$resp, $req) {
@@ -2072,7 +2014,7 @@ class pluginShop extends objectPlugin {
         } else {
             $agencyID = intval($req->get['id']);
             $resp = $this->updateDeliveryAgency($agencyID, $req->data);
-            $this->_getOrSetCachedState('changed:agencies', true);
+            $this->_getOrSetCachedState('changed:agency', true);
         }
     }
 
@@ -2086,7 +2028,7 @@ class pluginShop extends objectPlugin {
         } else {
             $agencyID = intval($req->get['id']);
             $resp = $this->deleteDeliveryAgency($agencyID);
-            $this->_getOrSetCachedState('changed:agencies', true);
+            $this->_getOrSetCachedState('changed:agency', true);
         }
     }
 

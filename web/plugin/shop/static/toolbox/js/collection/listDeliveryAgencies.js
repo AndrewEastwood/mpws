@@ -1,21 +1,21 @@
-define('plugin/shop/toolbox/js/collection/basicOrders', [
+define('plugin/shop/toolbox/js/collection/listDeliveryAgencies', [
     'default/js/lib/underscore',
-    'plugin/shop/toolbox/js/model/order',
+    'plugin/shop/toolbox/js/model/deliveryAgency',
     'default/js/lib/backbone-paginator'
-], function (_, ModelOrder, PageableCollection) {
+], function (_, ModelDeliveryAgency, PageableCollection) {
 
-    var ListOrders = PageableCollection.extend({
+    var ListDeliveryAgencies = PageableCollection.extend({
 
-        model: ModelOrder,
+        model: ModelDeliveryAgency,
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'orders'
+            fn: 'deliveries'
         }),
 
         // Initial pagination states
         state: {
-            pageSize: 10,
+            pageSize: 30,
             order: 1
         },
 
@@ -24,12 +24,12 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
         queryParams: {
             totalPages: null,
             totalRecords: null,
+            pageSize: "limit",
             sortKey: "sort"
         },
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
-            return this;
         },
 
         getCustomQueryField: function (field) {
@@ -38,7 +38,6 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
-            return this;
         },
 
         getCustomQueryParam: function (param) {
@@ -54,22 +53,11 @@ define('plugin/shop/toolbox/js/collection/basicOrders', [
         },
 
         parseRecords: function (resp, options) {
-            // debugger;
-            var _orders = resp.items;
-            _(_orders).map(function (orderEntry) {
-                // debugger;
-                orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
-                orderEntry.AccountPhone = orderEntry.account.Phone;
-                orderEntry.InfoTotal = orderEntry.info.total;
-                orderEntry.HasPromo = !!orderEntry.promo;
-                orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;
-                return orderEntry;
-            });
-            return _orders;
+            return resp.items;
         }
 
     });
 
-    return ListOrders;
+    return ListDeliveryAgencies;
 
 });

@@ -1,5 +1,5 @@
 define('plugin/shop/toolbox/js/collection/statsProductsPopular', [
-    'plugin/shop/toolbox/js/collection/basicProducts'
+    'plugin/shop/toolbox/js/collection/listProducts'
 ], function (ListProducts) {
 
     var StatsListProductsTodays = ListProducts.extend({

@@ -216,6 +216,9 @@ define("plugin/shop/toolbox/js/router", [
                 var pluginSettings = new Settings();
                 // delivery agencies
                 // 
+                pluginSettings.viewDeliveriesList.collection.fetch({
+                    reset: true
+                });
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: pluginSettings.$el

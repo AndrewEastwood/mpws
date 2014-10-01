@@ -1,3 +1,16 @@
 <div class="panel-heading">
-    
+    <i class="fa fa-plus fa-fw"></i> Варіанти доставки
 </div>
+<!-- /.panel-heading -->
+<div class="panel-body">
+    <div class="list-group">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item">
+            <i class="fa fa-times fa-fw text-danger remove-delivery" data-id="{{ID}}"></i>
+            <span class="editable">{{Name}}</span>
+            <input type="checkbox" name="" value="{{ID}}" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
+        </a>
+    {{/each}}
+    </div>
+</div>
+<!-- /.panel-body -->

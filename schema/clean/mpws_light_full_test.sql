@@ -441,9 +441,9 @@ DROP TABLE IF EXISTS `shop_deliveryAgencies`;
 CREATE TABLE `shop_deliveryAgencies` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Name` varchar(100) NOT NULL,
-  `WebSite` varchar(300) NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') NOT NULL DEFAULT 'ACTIVE',
+  `Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `HomePage` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','DISABLED','REMOVED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -457,7 +457,7 @@ CREATE TABLE `shop_deliveryAgencies` (
 
 LOCK TABLES `shop_deliveryAgencies` WRITE;
 /*!40000 ALTER TABLE `shop_deliveryAgencies` DISABLE KEYS */;
-INSERT INTO `shop_deliveryAgencies` VALUES (1,2,'wwww','wwwwee','ACTIVE','2014-08-08 01:47:24','2014-08-08 00:00:00'),(2,0,'gunsel','www.gunsel.com.ua','ACTIVE','2014-08-09 19:32:18','2014-08-09 00:00:00'),(3,1,'gunsel','www.gunsel.com.ua','ACTIVE','2014-08-09 19:32:30','2014-08-09 00:00:00');
+INSERT INTO `shop_deliveryAgencies` VALUES (1,2,'wwww','wwwwee','ACTIVE','2014-08-08 01:47:24','2014-08-08 00:00:00'),(2,0,'gunsel','www.gunsel.com.ua','ACTIVE','2014-08-09 19:32:18','2014-08-09 00:00:00'),(3,1,'gunsel','www.gunsel.com.ua','REMOVED','2014-08-09 19:32:30','2014-10-02 02:25:40');
 /*!40000 ALTER TABLE `shop_deliveryAgencies` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1101,4 +1101,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-01  2:22:20
+-- Dump completed on 2014-10-02  2:26:19

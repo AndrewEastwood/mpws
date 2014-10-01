@@ -82,6 +82,7 @@ class libraryDataBase {
     public function getTableStatusFieldOptions($table) {
         $config = objectConfiguration::jsapiUtil_GetTableStatusFieldOptions($table);
         $data = $this->getData($config);
+        // var_dump($data);
         preg_match('#^enum\((.*?)\)$#ism', $data['Type'], $matches);
         $enum = str_getcsv($matches[1], ",", "'");
         return $enum;

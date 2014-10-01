@@ -1,5 +1,5 @@
 define('plugin/shop/toolbox/js/collection/statsOrdersExpired', [
-    'plugin/shop/toolbox/js/collection/basicOrders'
+    'plugin/shop/toolbox/js/collection/listOrders'
 ], function (ListOrders) {
 
     var StatsListOrdersExpired = ListOrders.extend({

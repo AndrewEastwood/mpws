@@ -1,21 +1,21 @@
-define('plugin/shop/toolbox/js/collection/basicOrigins', [
+define('plugin/shop/toolbox/js/collection/listOrders', [
     'default/js/lib/underscore',
-    'plugin/shop/toolbox/js/model/origin',
+    'plugin/shop/toolbox/js/model/order',
     'default/js/lib/backbone-paginator'
-], function (_, ModelOrigin, PageableCollection) {
+], function (_, ModelOrder, PageableCollection) {
 
-    var ListOrigins = PageableCollection.extend({
+    var ListOrders = PageableCollection.extend({
 
-        model: ModelOrigin,
+        model: ModelOrder,
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'origins'
+            fn: 'orders'
         }),
 
         // Initial pagination states
         state: {
-            pageSize: 30,
+            pageSize: 10,
             order: 1
         },
 
@@ -24,6 +24,7 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
         queryParams: {
             totalPages: null,
             totalRecords: null,
+            pageSize: "limit",
             sortKey: "sort"
         },
 
@@ -53,11 +54,23 @@ define('plugin/shop/toolbox/js/collection/basicOrigins', [
             return state;
         },
 
-        parseRecords: function (resp) {
-            return resp.items;
+        parseRecords: function (resp, options) {
+            // debugger;
+            var _orders = resp.items;
+            _(_orders).map(function (orderEntry) {
+                // debugger;
+                orderEntry.AccountFullName = orderEntry.account.FirstName + ' ' + orderEntry.account.LastName;
+                orderEntry.AccountPhone = orderEntry.account.Phone;
+                orderEntry.InfoTotal = orderEntry.info.total;
+                orderEntry.HasPromo = !!orderEntry.promo;
+                orderEntry.Discount = orderEntry.promo && orderEntry.promo.Discount || 0;
+                return orderEntry;
+            });
+            return _orders;
         }
 
     });
 
-    return ListOrigins;
+    return ListOrders;
+
 });

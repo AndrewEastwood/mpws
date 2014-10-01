@@ -4,7 +4,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
     'default/js/lib/utils',
     "default/js/lib/backgrid",
     /* collection */
-    "plugin/shop/toolbox/js/collection/basicProducts",
+    "plugin/shop/toolbox/js/collection/listProducts",
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/buttonMenuProductListItem',
     /* lang */

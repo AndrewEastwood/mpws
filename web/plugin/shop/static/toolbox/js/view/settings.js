@@ -5,16 +5,15 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/utils',
     'default/js/lib/cache',
     'plugin/shop/toolbox/js/view/managerProducts',
-    'plugin/shop/toolbox/js/view/filterPanelOrigins',
+    'plugin/shop/toolbox/js/view/settingsDeliveryAgencies',
     'plugin/shop/toolbox/js/view/filterTreeCategories',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable',
-    'default/js/lib/bootstrap-switch',
     'default/js/lib/jquery.maskedinput'
-], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewListOrigins, ViewCategoriesTree, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewSettingsDeiveryAgencies, ViewCategoriesTree, tpl, lang) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -25,7 +24,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             // ini sub-views
             // debugger;
             // this.viewProductsList = new ViewListProducts(options);
-            // this.viewOriginsList = new ViewListOrigins(options);
+            this.viewDeliveriesList = new ViewSettingsDeiveryAgencies();
             // this.viewCatergoriesTree = new ViewCategoriesTree(options);
 
             // // subscribe on events
@@ -36,25 +35,21 @@ define('plugin/shop/toolbox/js/view/settings', [
             // TODO:
             // add expired and todays products
             // permanent layout and some elements
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            // if (this.$el.is(':empty')) {
-            //     this.$('.tree').html(this.viewCatergoriesTree.$el);
-            //     this.$('.products').html(this.viewProductsList.$el);
-            //     this.$('.origins').html(this.viewOriginsList.$el);
-            // }
-            this.$('.switcher').bootstrapSwitch({
-                size: 'mini',
-                wrapperClass: 'delivery'
-            });
+            if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                // this.$('.tree').html(this.viewCatergoriesTree.$el);
+                this.$('.delivery-agencies').html(this.viewDeliveriesList.$el);
+                // this.$('.origins').html(this.viewOriginsList.$el);
 
-            this.$('.editable').editable({
-                mode: 'inline'
-            });
+                this.$('.editable').editable({
+                    mode: 'inline'
+                });
 
-            this.$('.myeditable_phone').on('shown', function () {
-                // debugger;
-                $(this).data('editable').input.$input.mask('(999) 999-99-99');
-            });
+                this.$('.myeditable_phone').on('shown', function () {
+                    // debugger;
+                    $(this).data('editable').input.$input.mask('(999) 999-99-99');
+                });
+            }
             return this;
         }
     });

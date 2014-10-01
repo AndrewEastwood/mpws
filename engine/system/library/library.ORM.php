@@ -2085,6 +2085,7 @@
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $rows[] = $row;
             }
+            $statement->closeCursor();
 
             if ($caching_enabled) {
                 self::_cache_query_result($cache_key, $rows, $this->_connection_name);
