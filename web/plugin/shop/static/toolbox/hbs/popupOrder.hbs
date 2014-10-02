@@ -18,7 +18,7 @@
                 </li>
                 <li class="list-group-item">
                     <span class="prefix">Тип доставки:</span>
-                    <span><strong>{{>website/hbs/partials/orderShippingType . }}</strong></span>
+                    <span><strong>{{data.delivery.Name}}</strong></span>
                 </li>
                 {{#if data.Warehouse }}
                 <li class="list-group-item">
@@ -34,7 +34,7 @@
                             <option value="{{this}}">{{mpwsGetValueByKey ../lang this "order_status_" }}</option>
                             {{/each}}
                         </select>
-                        <a href="javascript://" id="order-status-ID" class="editable">{{>website/hbs/partials/orderStatusType . }}</a>
+                        <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang data.order.Status "order_status_" }}</a>
                     </span>
                 </li>
                 {{#if data.Comment }}

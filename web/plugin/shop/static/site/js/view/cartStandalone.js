@@ -24,7 +24,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
         id: 'shop-cart-standalone-ID',
         template: tpl,
         lang: lang,
-        initialize: function() {
+        initialize: function () {
             this.listenTo(this.model, 'change', this.render);
         },
         updateProductQuantity: function (event) {
@@ -37,7 +37,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             // collect user info
             // debugger;
             var _userInfo = {};
-            this.$('input,textarea,select').not('disable').each(function(){
+            this.$('input,textarea,select').not('disable').each(function () {
                 if (!/^shopCart/.test($(this).attr('name')))
                     return;
                 if ($(this).is(':checkbox'))
@@ -71,17 +71,17 @@ define("plugin/shop/site/js/view/cartStandalone", [
             this.$el.on('click', 'input[type="checkbox"]', _userInfoChanged);
             this.$el.on('change', 'select', _userInfoChanged);
             this.$el.on('change', 'input.quantity', _productQunatityChanged);
-            this.$el.on('click', '.btn-promo-submit', function() {
+            this.$el.on('click', '.btn-promo-submit', function () {
                 self.model.applyPromo(self.$('#shop-order-promo-ID').val());
             });
-            this.$el.on('click', '.btn-promo-cancel', function() {
+            this.$el.on('click', '.btn-promo-cancel', function () {
                 self.model.applyPromo(false);
             });
             this.$('[data-toggle="tooltip"]').tooltip();
             // restore user info
             var _shopUser = Cache.getCookie("shopUser");
-            if (_shopUser)
-                _(_shopUser).each(function(val, key){
+            if (_shopUser) {
+                _(_shopUser).each(function (val, key) {
                     // debugger;
                     var _input = self.$('[name="' + key + '"]');
 
@@ -90,6 +90,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
                     else
                         _input.val(val);
                 });
+            }
 
             this.$('select').select2();
             this.$('input[name="shopCartUserPhone"]').mask('(999) 999-99-99');
@@ -110,11 +111,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
             }
 
             this.$('#shopping-cart-logistic-ID').on('change', function (event) {
-                if ($(this).val())
+                if ($(this).val() !== "")
                     self.$('.form-group-warehouse').prop('disable', false).removeClass('hide');
                 else
                     self.$('.form-group-warehouse').prop('disable', true).addClass('hide');
-            });
+            }).trigger('change');
 
             var $form = this.$('.form-order-create');
             var $formPreview = this.$('.form-order-preview');
@@ -123,19 +124,19 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 return false;
             })
 
-            this.$('.button-order-back').click(function(){
+            this.$('.button-order-back').click(function () {
                 self.$('.wizard').wizard('previous');
             });
 
-            this.$('.steps > li').click(function(){
+            this.$('.steps > li').click(function () {
                 return false;
             });
 
-            this.$('.button-order-preview').click(function(){
+            this.$('.button-order-preview').click(function () {
                 var formValidator = $form.data('bootstrapValidator');
                 formValidator.validate();
                 if (formValidator.isValid()) {
-                    self.$('form.form-order-create .form-control').each(function(){
+                    self.$('form.form-order-create .form-control').each(function () {
                         var fldName = $(this).attr('name');
                         var value = $(this).find('option:selected').text() || $(this).text() || $(this).val();
                         if (fldName)
@@ -145,11 +146,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 }
             });
 
-                // _(​formDataArray).each();
-            this.$('.button-order-save').click(function(){
+            // _(​formDataArray).each();
+            this.$('.button-order-save').click(function () {
                 var result = {};
                 var formDataArray = $form.serializeArray();
-                _(formDataArray).each(function(item){
+                _(formDataArray).each(function (item) {
                     result[item.name] = item.value;
                 });
                 self.model.saveOrder(result);
@@ -224,7 +225,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
                         }
                     }
                 }
-             });
+            });
 
 
             return this;

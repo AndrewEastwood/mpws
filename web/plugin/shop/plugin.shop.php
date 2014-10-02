@@ -1531,9 +1531,47 @@ class pluginShop extends objectPlugin {
     }
 
     public function createDeliveryAgency ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("error", "AccessDenied");
-        }
+        $result = array();
+        $errors = array();
+        $success = false;
+        $deliveryID = null;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+
+                $configCreateOrigin = configurationShopDataSource::jsapiShopCreateDeliveryAgent($validatedValues);
+
+                $this->getCustomerDataBase()->beginTransaction();
+                $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+
+                if (empty($deliveryID))
+                    throw new Exception('DeliveryCreateError');
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        if ($success && !empty($deliveryID))
+            $result = $this->getDeliveryAgencyByID($deliveryID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
     public function updateDeliveryAgency ($id, $reqData) {
@@ -1973,11 +2011,6 @@ class pluginShop extends objectPlugin {
 
 
 
-
-
-
-
-
     public function get_shop_origin (&$resp, $req) {
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
@@ -2297,6 +2330,7 @@ class pluginShop extends objectPlugin {
         $order['promo'] = null;
         $order['account'] = null;
         $order['address'] = null;
+        $order['delivery'] = null;
         $productItems = array();
         // var_dump($order);
         // if orderID is set then the order is saved
@@ -2313,6 +2347,8 @@ class pluginShop extends objectPlugin {
             // get promo
             if (!empty($order['PromoID']))
                 $order['promo'] = $this->getPromoByID($order['PromoID']);
+            if (!empty($order['DeliveryID']))
+                $order['delivery'] = $this->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
             $configBoughts = configurationShopDataSource::jsapiShopGetOrderBoughts($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
@@ -2366,13 +2402,18 @@ class pluginShop extends objectPlugin {
             }
         }
         // append info
+        $deliveries = $this->getDeliveries_List(array(
+            "limit" => 0,
+            "_fStatus" => "ACTIVE"
+        ));
         $info = array(
             "subTotal" => 0.0,
             "total" => 0.0,
             "productCount" => 0,
             "productUniqueCount" => count($productItems),
             "hasPromo" => isset($order['promo']['Discount']) && $order['promo']['Discount'] > 0,
-            "allProductsWithPromo" => true
+            "allProductsWithPromo" => true,
+            "deliveries" => $deliveries['items']
         );
         // calc order totals
         foreach ($productItems as $product) {

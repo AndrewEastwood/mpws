@@ -19,6 +19,7 @@
 @import "jsTreeStyle";
 @import "bootstrap-tagsinput";
 @import "bootstrap-switch";
+@import "bootstrap-alert";
 
 body {
     background-image: none;
@@ -305,8 +306,25 @@ body {
     padding: 8px 5px;
 }
 
-
-
-.bootstrap-switch-delivery {
-    float: right;
+.delivery-agencies {
+    .add-delivery {
+        cursor: pointer;
+    }
+    .list-group-item.agency {
+        .bootstrap-switch {
+            display: inline-block;
+            float: right;
+        }
+        .create-delivery {
+            display: none;
+        }
+        &.is-new {
+            .switcher, .bootstrap-switch {
+                display: none;
+            }
+            .create-delivery {
+                display: inline-block;
+            }
+        }
+    }
 }

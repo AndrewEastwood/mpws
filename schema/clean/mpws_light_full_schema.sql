@@ -324,13 +324,13 @@ CREATE TABLE `shop_deliveryAgencies` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
   `Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `HomePage` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `HomePage` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `Status` enum('ACTIVE','DISABLED','REMOVED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -426,7 +426,7 @@ CREATE TABLE `shop_orders` (
   `CustomerID` int(11) NOT NULL,
   `AccountID` int(11) DEFAULT NULL,
   `AccountAddressesID` int(11) NOT NULL,
-  `Shipping` varchar(200) COLLATE utf8_bin DEFAULT NULL,
+  `DeliveryID` int(11) DEFAULT NULL,
   `Warehouse` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
   `InternalComment` varchar(300) COLLATE utf8_bin DEFAULT NULL,
@@ -441,6 +441,8 @@ CREATE TABLE `shop_orders` (
   KEY `Hash` (`Hash`),
   KEY `CustomerID` (`CustomerID`),
   KEY `AccountAddressesID` (`AccountAddressesID`),
+  KEY `DeliveryID` (`DeliveryID`),
+  CONSTRAINT `shop_orders_ibfk_4` FOREIGN KEY (`DeliveryID`) REFERENCES `shop_deliveryAgencies` (`ID`),
   CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_accountAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -638,8 +640,9 @@ DROP TABLE IF EXISTS `shop_settings`;
 CREATE TABLE `shop_settings` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `Property` varchar(50) NOT NULL,
-  `Value` varchar(150) NOT NULL,
+  `Property` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Value` varchar(150) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','DISABLED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
@@ -846,4 +849,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-02  2:34:08
+-- Dump completed on 2014-10-03  2:42:19

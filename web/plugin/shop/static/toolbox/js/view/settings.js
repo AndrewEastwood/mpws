@@ -12,7 +12,8 @@ define('plugin/shop/toolbox/js/view/settings', [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable',
-    'default/js/lib/jquery.maskedinput'
+    'default/js/lib/jquery.maskedinput',
+    'default/js/lib/bootstrap-switch'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewSettingsDeiveryAgencies, ViewCategoriesTree, tpl, lang) {
 
     var Settings = Backbone.View.extend({
@@ -40,12 +41,14 @@ define('plugin/shop/toolbox/js/view/settings', [
                 // this.$('.tree').html(this.viewCatergoriesTree.$el);
                 this.$('.delivery-agencies').html(this.viewDeliveriesList.$el);
                 // this.$('.origins').html(this.viewOriginsList.$el);
-
-                this.$('.editable').editable({
+                this.$('.shop-settings .switcher').bootstrapSwitch({
+                    size: 'mini',
+                    wrapperClass: 'delivery'
+                });
+                this.$('.shop-address .editable').editable({
                     mode: 'inline'
                 });
-
-                this.$('.myeditable_phone').on('shown', function () {
+                this.$('.shop-address .myeditable_phone').on('shown', function () {
                     // debugger;
                     $(this).data('editable').input.$input.mask('(999) 999-99-99');
                 });

@@ -724,7 +724,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "Shipping", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "DeliveryID", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
