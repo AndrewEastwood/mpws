@@ -8,12 +8,19 @@ define("plugin/shop/site/js/router", [
     'plugin/shop/site/js/model/order',
     'plugin/shop/site/js/view/siteMenu',
     'plugin/shop/site/js/view/siteWidgets',
-], function (Sandbox, $, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets) {
+    'plugin/shop/common/js/collection/settings'
+], function (Sandbox, $, _, Backbone, Cache, Auth, SiteOrder, SiteMenu, SiteWidgets, SiteSettings) {
 
     var order = new SiteOrder({
         ID: "temp"
     });
-    order.url = APP.getApiLink({source: 'shop', fn: 'order'});
+    var settings = new SiteSettings();
+
+    // why it's here?
+    order.url = APP.getApiLink({
+        source: 'shop',
+        fn: 'order'
+    });
 
     SiteMenu({
         order: order
@@ -24,6 +31,7 @@ define("plugin/shop/site/js/router", [
     });
 
     order.fetch();
+    settings.fetch();
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -72,7 +80,9 @@ define("plugin/shop/site/js/router", [
                 var listProductLatest = new ListProductLatest();
                 // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
                 // debugger;
-                listProductLatest.collection.fetch({reset: true});
+                listProductLatest.collection.fetch({
+                    reset: true
+                });
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
@@ -98,7 +108,9 @@ define("plugin/shop/site/js/router", [
                     categoryID: categoryID
                 });
                 // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
-                listProductCatalog.collection.fetch({reset: true});
+                listProductCatalog.collection.fetch({
+                    reset: true
+                });
 
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
@@ -181,7 +193,8 @@ define("plugin/shop/site/js/router", [
                     order.set('account', _accountModel.toJSON());
                 // create new view
                 var cartStandalone = new CartStandalone({
-                    model: order
+                    model: order,
+                    settings: settings
                 });
                 // cartStandalone.collection.fetch({merge:true});
                 cartStandalone.render();
@@ -247,22 +260,22 @@ define("plugin/shop/site/js/router", [
 
             require(['plugin/shop/site/js/view/profileOrders'], function (ProfileOrders) {
                 // Cache.withObject('ProfileOrders', function (cachedView) {
-                    // debugger;
-                    // remove previous view
-                    // if (cachedView && cachedView.remove)
-                    //     cachedView.remove();
+                // debugger;
+                // remove previous view
+                // if (cachedView && cachedView.remove)
+                //     cachedView.remove();
 
-                    // create new view
-                    var profileOrders = new ProfileOrders();
-                    // view.setPagePlaceholder(profileOrders.$el);
-                    profileOrders.fetchAndRender({
-                        profileID: Cache.getObject('AccountProfileID')
-                    });
+                // create new view
+                var profileOrders = new ProfileOrders();
+                // view.setPagePlaceholder(profileOrders.$el);
+                profileOrders.fetchAndRender({
+                    profileID: Cache.getObject('AccountProfileID')
+                });
 
-                    Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
+                Sandbox.eventNotify('plugin:account:profile:show', profileOrders.$el);
 
-                    // return view object to pass it into this function at next invocation
-                    // return profileOrders;
+                // return view object to pass it into this function at next invocation
+                // return profileOrders;
                 // });
             });
         }

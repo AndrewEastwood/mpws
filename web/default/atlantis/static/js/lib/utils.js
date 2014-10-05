@@ -123,13 +123,13 @@ define("default/js/lib/utils", [
         var _tplExtras = null;
         if (Utils.isCollectionView(obj)) {
             _tplData = obj.collection.toJSON();
-            _tplExtras = obj.collection.extras;
+            _tplExtras = obj.collection.extras || {};
         } else if (Utils.isModelView(obj)) {
             _tplData = obj.model.toJSON();
-            _tplExtras = obj.model.extras;
+            _tplExtras = obj.model.extras || {};
         } else if (Utils.isView(obj)) {
             _tplData = obj.options;
-            _tplExtras = obj.extras;
+            _tplExtras = obj.extras || {};
         }
         // debugger;
         return {

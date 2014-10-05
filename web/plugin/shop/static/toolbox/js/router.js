@@ -219,7 +219,11 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewDeliveriesList.collection.fetch({
                     reset: true
                 });
+                pluginSettings.viewDeliveriesList.modelSelfService.fetch();
                 pluginSettings.viewAlerts.collection.fetch({
+                    reset: true
+                });
+                pluginSettings.viewWebsiteFormOrder.collection.fetch({
                     reset: true
                 });
                 Sandbox.eventNotify('global:content:render', {

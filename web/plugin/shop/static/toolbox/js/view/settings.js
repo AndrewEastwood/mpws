@@ -6,7 +6,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/cache',
     'plugin/shop/toolbox/js/view/settingsAlerts',
     'plugin/shop/toolbox/js/view/settingsDeliveryAgencies',
-    'plugin/shop/toolbox/js/view/filterTreeCategories',
+    'plugin/shop/toolbox/js/view/settingsWebsiteFormOrder',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
@@ -14,7 +14,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/bootstrap-editable',
     'default/js/lib/jquery.maskedinput',
     'default/js/lib/bootstrap-switch'
-], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts, ViewSettingsDeiveryAgencies, ViewCategoriesTree, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts, ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, tpl, lang) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -26,7 +26,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             // debugger;
             this.viewAlerts = new ViewSettingsAlerts(options);
             this.viewDeliveriesList = new ViewSettingsDeiveryAgencies();
-            // this.viewCatergoriesTree = new ViewCategoriesTree(options);
+            this.viewWebsiteFormOrder = new ViewSettingsWebsiteFormOrder();
 
             // // subscribe on events
             // this.listenTo(this.viewProductsList.collection, 'reset', this.render);
@@ -40,18 +40,18 @@ define('plugin/shop/toolbox/js/view/settings', [
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 this.$('.shop-settings-alerts').html(this.viewAlerts.$el);
                 this.$('.delivery-agencies').html(this.viewDeliveriesList.$el);
-                // this.$('.origins').html(this.viewOriginsList.$el);
-                this.$('.shop-settings .switcher').bootstrapSwitch({
-                    size: 'mini',
-                    wrapperClass: 'delivery'
-                });
-                this.$('.shop-address .editable').editable({
-                    mode: 'inline'
-                });
-                this.$('.shop-address .myeditable_phone').on('shown', function () {
-                    // debugger;
-                    $(this).data('editable').input.$input.mask('(999) 999-99-99');
-                });
+                this.$('.website-form-order').html(this.viewWebsiteFormOrder.$el);
+                // this.$('.shop-settings .switcher').bootstrapSwitch({
+                //     size: 'mini',
+                //     wrapperClass: 'delivery'
+                // });
+                // this.$('.shop-address .editable').editable({
+                //     mode: 'inline'
+                // });
+                // this.$('.shop-address .myeditable_phone').on('shown', function () {
+                //     // debugger;
+                //     $(this).data('editable').input.$input.mask('(999) 999-99-99');
+                // });
             }
             return this;
         }

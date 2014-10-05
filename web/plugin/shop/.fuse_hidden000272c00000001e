@@ -110,9 +110,9 @@ class pluginShop extends objectPlugin {
             $errors = $validatedDataObj["errors"];
 
         if (is_numeric($nameOrID)) {
-            $result = $this->getSettingByID($nameOrID);
+            $result = $this->getSettingByID($id);
         } else {
-            $result = $this->getSettingByName($nameOrID);
+            $result = $this->getSettingByName($id);
         }
         $result['errors'] = $errors;
         $result['success'] = $success;
@@ -1879,7 +1879,7 @@ class pluginShop extends objectPlugin {
     public function get_shop_setting (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $resp = $this->getSettingByID($req->get['id']);
-        } else if (!empty($req->get['name'])) {
+        } else if (!empty($req->get['name'])) { {
             $resp = $this->getSettingByName($req->get['name']);
         } else {
             $resp['error'] = 'MissedParameter_id_or_name';

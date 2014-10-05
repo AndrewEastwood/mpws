@@ -739,6 +739,13 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
+    static function jsapiShopGetSettingByName ($name = null) {
+        $config = self::jsapiShopGetSettingByID();
+        unset($config['condition']['ID']);
+        $config['condition']['Property'] = self::jsapiCreateDataSourceCondition($name);
+        return $config;
+    }
+
     static function jsapiShopGetSettingsList (array $options = array()) {
         $config = self::jsapiShopGetSettingByID();
         $config['fields'] = array("ID");
@@ -758,6 +765,13 @@ class configurationShopDataSource extends objectConfiguration {
             "data" => $data,
             "options" => null
         ));
+    }
+
+    static function jsapiShopUpdateSettingByName ($id, $data) {
+        $config = self::jsapiShopUpdateSetting($id, $data);
+        unset($config['condition']['ID']);
+        $config['condition']['Property'] = self::jsapiCreateDataSourceCondition($id);
+        return $config;
     }
     // <<<<< shop delivery agencies
 

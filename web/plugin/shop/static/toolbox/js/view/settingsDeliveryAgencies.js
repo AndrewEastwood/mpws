@@ -1,6 +1,7 @@
 define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
     'default/js/lib/backbone',
     'plugin/shop/toolbox/js/collection/listDeliveryAgencies',
+    'plugin/shop/common/js/model/setting',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
@@ -10,7 +11,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable',
     'default/js/lib/bootstrap-switch'
-], function (Backbone, CollectionOrdersExpired, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
+], function (Backbone, CollectionOrdersExpired, ModelSetting, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
         className: 'panel panel-default',
@@ -18,6 +19,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
         template: tpl,
         events: {
             'switchChange.bootstrapSwitch .switcher': 'setAgencyState',
+            'switchChange.bootstrapSwitch .switcher-config-self-pickup': 'setSelfPickupMode',
             'click .add-delivery': 'addAgency',
             'click .create-delivery': 'createAgency',
             'click .remove-delivery': 'deleteAgency',
@@ -27,7 +29,11 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
             this.collection = new CollectionOrdersExpired();
             this.collection.queryParams.limit = 0;
             this.collection.setCustomQueryField('Status', 'REMOVED:!=');
+            this.modelSelfService = new ModelSetting({
+                name: 'DeliveryAllowSelfPickup'
+            });
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.modelSelfService, 'change', this.renderSelfServiceSwitcher);
             this.options = {};
             this.options.switchOptions = {
                 size: 'mini'
@@ -54,6 +60,24 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                 .on('hidden', this.showSaveButton);
             this.delegateEvents();
             return this;
+        },
+        setSelfPickupMode: function (event, state, skip) {
+            var self = this;
+            this.modelSelfService.save({
+                Status: !!state ? 'ACTIVE' : 'DISABLED'
+            }, {
+                patch: true,
+                success: function (model) {
+                    self.$('.switcher-config-self-pickup').bootstrapSwitch('state', model.get('_isActive'), true);
+                },
+                error: function (model) {
+                    BSAlerts.danger('Помилка оновлення параметру');
+                    self.$('.switcher-config-self-pickup').bootstrapSwitch('state', !state, true);
+                }
+            });
+        },
+        renderSelfServiceSwitcher: function () {
+            this.$('.switcher-config-self-pickup').bootstrapSwitch('state', this.modelSelfService.get('_isActive'), true);
         },
         hideSaveButton: function (event) {
             var $item = $(event.target).closest('.list-group-item');

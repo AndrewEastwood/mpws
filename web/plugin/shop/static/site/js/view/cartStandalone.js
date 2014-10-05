@@ -24,7 +24,11 @@ define("plugin/shop/site/js/view/cartStandalone", [
         id: 'shop-cart-standalone-ID',
         template: tpl,
         lang: lang,
-        initialize: function () {
+        initialize: function (options) {
+            this.modelSettings = options && options.settings || null;
+            if (this.modelSettings) {
+                this.listenTo(this.modelSettings, 'change', this.render);
+            }
             this.listenTo(this.model, 'change', this.render);
         },
         updateProductQuantity: function (event) {
@@ -48,12 +52,16 @@ define("plugin/shop/site/js/view/cartStandalone", [
             return _userInfo;
         },
         clearUserInfo: function () {
-            Cache.setCookie("shopUser", null);
+            Cache.set("shopUser", null);
         },
         render: function () {
             var self = this;
-            // debugger;
             var data = Utils.getHBSTemplateData(this);
+
+            if (this.modelSettings) {
+                data.extras.settings = this.modelSettings.toSettings();
+            }
+
             this.$el.off().empty().html(this.template(data));
 
             // debugger;
@@ -62,7 +70,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
 
             // save user info
             var _userInfoChanged = _.debounce(function () {
-                Cache.setCookie("shopUser", self.collectUserInfo.call(self));
+                Cache.set("shopUser", self.collectUserInfo.call(self));
             }, 100);
             var _productQunatityChanged = _.debounce(function (event) {
                 self.updateProductQuantity.call(self, event);
@@ -79,7 +87,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             });
             this.$('[data-toggle="tooltip"]').tooltip();
             // restore user info
-            var _shopUser = Cache.getCookie("shopUser");
+            var _shopUser = Cache.get("shopUser");
             if (_shopUser) {
                 _(_shopUser).each(function (val, key) {
                     // debugger;

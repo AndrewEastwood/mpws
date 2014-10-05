@@ -13,7 +13,7 @@ define("plugin/shop/site/js/view/cartEmbedded", [
         id: 'shop-cart-embedded-ID',
         template: tpl,
         lang: lang,
-        initialize: function() {
+        initialize: function () {
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {

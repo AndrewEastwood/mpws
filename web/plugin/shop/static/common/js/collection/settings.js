@@ -8,13 +8,16 @@ define('plugin/shop/common/js/collection/settings', [
         queryParams: {},
         model: ModelSetting,
         url: function () {
-            debugger;
             var _params = _.extend({
                 source: 'shop',
                 fn: 'settings'
             }, this.queryParams);
 
             return APP.getApiLink(_params);
+        },
+
+        parse: function (data) {
+            return data.items;
         },
 
         setCustomQueryField: function (field, value) {
@@ -31,6 +34,18 @@ define('plugin/shop/common/js/collection/settings', [
 
         getCustomQueryParam: function (param) {
             return this.queryParams["_p" + param];
+        },
+
+        getPropertyByName: function (name) {
+            return this.findWhere('Property', name);
+        },
+
+        toSettings: function () {
+            var settings = {};
+            this.each(function (model) {
+                settings[model.get('Property')] = model.toJSON();
+            });
+            return settings;
         }
     });
 

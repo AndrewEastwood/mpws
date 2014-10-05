@@ -30,9 +30,98 @@ class pluginShop extends objectPlugin {
     // SETTINGS
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getSettings ($type = null) {
-        
+    public function getSettingByID ($id) {
+        if (empty($id) || !is_numeric($id))
+            return null;
+
+        $config = configurationShopDataSource::jsapiShopGetSettingByID($id);
+        $setting = $this->getCustomer()->fetch($config);
+
+        if (empty($setting))
+            return null;
+
+        $setting['ID'] = intval($setting['ID']);
+        $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
+        $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
+        return $setting;
     }
+
+    public function getSettingByName ($name) {
+        $config = configurationShopDataSource::jsapiShopGetSettingByName($name);
+        $setting = $this->getCustomer()->fetch($config);
+
+        if (empty($setting))
+            return null;
+
+        $setting['ID'] = intval($setting['ID']);
+        $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
+        $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
+        return $setting;
+    }
+
+    public function getSettings_List (array $options = array()) {
+        $config = configurationShopDataSource::jsapiShopGetSettingsList($options);
+        $self = $this;
+
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $settingItem) {
+                    $_items[] = $self->getSettingByID($settingItem['ID']);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+
+        return $dataList;
+    }
+
+    public function updateSetting ($nameOrID, $reqData) {
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'Value' => array('string', 'skipIfUnset'),
+            'Status' => array('string', 'skipIfUnset')
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+                if (!empty($validatedValues)) {
+                    $this->getCustomerDataBase()->beginTransaction();
+                    if (is_numeric($nameOrID)) {
+                        $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSetting($nameOrID, $validatedValues);
+                    } else {
+                        $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
+                    }
+                    $this->getCustomer()->fetch($configSettingUpdate);
+                    $this->getCustomerDataBase()->commit();
+                }
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        if (is_numeric($nameOrID)) {
+            $result = $this->getSettingByID($nameOrID);
+        } else {
+            $result = $this->getSettingByName($nameOrID);
+        }
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+
+
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -1786,6 +1875,48 @@ class pluginShop extends objectPlugin {
     // REQUESTS
     // -----------------------------------------------
     // -----------------------------------------------
+
+    public function get_shop_setting (&$resp, $req) {
+        if (!empty($req->get['id'])) {
+            $resp = $this->getSettingByID($req->get['id']);
+        } else if (!empty($req->get['name'])) {
+            $resp = $this->getSettingByName($req->get['name']);
+        } else {
+            $resp['error'] = 'MissedParameter_id_or_name';
+        }
+    }
+
+    public function get_shop_settings (&$resp, $req) {
+        $resp = $this->getSettings_List($req->get);
+    }
+
+    public function patch_shop_setting (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $settingID = intval($req->get['id']);
+            if (!isset($req->get['id']) && isset($req->get['name'])) {
+                $settingID = $req->get['name'];
+            }
+            $resp = $this->updateSetting($settingID, $req->data);
+            // $this->_getOrSetCachedState('changed:setting', true);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public function get_shop_stats (&$resp, $req) {
 

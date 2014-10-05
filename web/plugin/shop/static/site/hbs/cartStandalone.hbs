@@ -48,12 +48,14 @@
                                             <input type="hidden" name="shopCartAccountLastName" value="{{data.account.LastName}}">
                                             <input type="hidden" name="shopCartAccountEMail" value="{{data.account.EMail}}">
                                             <input type="hidden" name="shopCartAccountPhone" value="{{data.account.Phone}}">
+                                            {{#if extras.settings.ShowName._isActive}}
                                             <div class="form-group required">
                                                 <label class="control-label col-md-3">{{lang.shopping_cart_field_firstName}}</label>
                                                 <div class="col-md-6">
                                                     <span class="form-control">{{data.account.FirstName}}</span>
                                                 </div>
                                             </div>
+                                            {{/if}}
                                             <div class="form-group required">
                                                 <label class="control-label col-md-3">{{lang.shopping_cart_field_lastName}}</label>
                                                 <div class="col-md-6">
@@ -99,6 +101,7 @@
                                                 </div>
                                             </div>
                                         {{else}}
+                                            {{#if extras.settings.ShowName._isActive}}
                                             <!-- Name -->
                                             <div class="form-group required form-group-firstName">
                                                 <label class="control-label col-md-3" for="shopping-cart-name-ID">{{lang.shopping_cart_field_firstName}}</label>
@@ -106,6 +109,8 @@
                                                     <input type="text" name="shopCartUserName" class="form-control" id="shopping-cart-name-ID">
                                                 </div>
                                             </div>
+                                            {{/if}}
+                                            {{#if extras.settings.ShowEMail._isActive}}
                                             <!-- Email -->
                                             <div class="form-group required form-group-email">
                                                 <label class="control-label col-md-3" for="shopping-cart-email-ID">{{lang.shopping_cart_field_email}}</label>
@@ -113,6 +118,8 @@
                                                     <input type="text" name="shopCartUserEmail" class="form-control" id="shopping-cart-email-ID">
                                                 </div>
                                             </div>
+                                            {{/if}}
+                                            {{#if extras.settings.ShowPhone._isActive}}
                                             <!-- Phone -->
                                             <div class="form-group required form-group-phone">
                                                 <label class="control-label col-md-3" for="shopping-cart-phone-ID">{{lang.shopping_cart_field_phone}}</label>
@@ -120,8 +127,10 @@
                                                     <input type="text" name="shopCartUserPhone" class="form-control" id="shopping-cart-phone-ID">
                                                 </div>
                                             </div>
+                                            {{/if}}
                                         {{/if}}
 
+                                        {{#if extras.settings.ShowAddress._isActive}}
                                         <!-- Address -->
                                         <div class="form-group required form-group-address">
                                             <label class="control-label col-md-3" for="shopping-cart-address-ID">{{lang.shopping_cart_field_address}}</label>
@@ -129,7 +138,9 @@
                                                 <textarea name="shopCartUserAddress" class="form-control" id="shopping-cart-address-ID"></textarea>
                                             </div>
                                         </div>
+                                        {{/if}}
 
+                                        {{#if extras.settings.ShowPOBox._isActive}}
                                         <!-- POBox -->
                                         <div class="form-group required form-group-pobox">
                                             <label class="control-label col-md-3" for="shopping-cart-pobox-ID">{{lang.shopping_cart_field_pobox}}</label>
@@ -137,7 +148,9 @@
                                                 <input type="text" name="shopCartUserPOBox" class="form-control" id="shopping-cart-pobox-ID"/>
                                             </div>
                                         </div>
+                                        {{/if}}
 
+                                        {{#if extras.settings.ShowCountry._isActive}}
                                         <!-- Country -->
                                         <div class="form-group required form-group-country">
                                             <label class="control-label col-md-3" for="shopping-cart-country-ID">{{lang.shopping_cart_field_country}}</label>
@@ -145,20 +158,27 @@
                                                 <input type="text" name="shopCartUserCountry" class="form-control" id="shopping-cart-country-ID">
                                             </div>
                                         </div>
+                                        {{/if}}
 
-                                        <!-- Country -->
+                                        {{#if extras.settings.ShowCity._isActive}}
+                                        <!-- City -->
                                         <div class="form-group required form-group-city">
                                             <label class="control-label col-md-3" for="shopping-cart-city-ID">{{lang.shopping_cart_field_city}}</label>
                                             <div class="col-md-6">
                                                 <input type="text" name="shopCartUserCity" class="form-control" id="shopping-cart-city-ID">
                                             </div>
                                         </div>
+                                        {{/if}}
+
+                                        {{#if extras.settings.ShowDeliveryAganet._isActive}}
                                         <!-- Delivery method -->
                                         <div class="form-group form-group-logistic">
                                             <label class="control-label col-md-3" for="shopping-cart-logistic-ID">{{lang.shopping_cart_field_logistic}}</label>
                                             <div class="col-md-6">
                                                 <select name="shopCartLogistic" class="form-control" id="shopping-cart-logistic-ID">
+                                                    {{#if extras.settings.DeliveryAllowSelfPickup._isActive}}
                                                     <option value="">Самовивіз</option>
+                                                    {{/if}}
                                                     {{#each data.info.deliveries}}
                                                     <option value="{{ID}}">{{Name}}</option>
                                                     {{/each}}
@@ -172,6 +192,9 @@
                                                 <input type="text" name="shopCartWarehouse" class="form-control" id="shopping-cart-warehouse-ID">
                                             </div>
                                         </div>
+                                        {{/if}}
+
+                                        {{#if extras.settings.ShowComment._isActive}}
                                         <!-- Comment -->
                                         <div class="form-group form-group-comment">
                                             <label class="control-label col-md-3" for="shopping-cart-comment-ID">{{lang.shopping_cart_field_comment}}</label>
@@ -179,6 +202,7 @@
                                                 <textarea name="shopCartComment" class="form-control" id="shopping-cart-comment-ID"></textarea>
                                             </div>
                                         </div>
+                                        {{/if}}
                                     </form>
                                 </div>
                             </div>

@@ -1,18 +1,18 @@
-define("plugin/shop/toolbox/js/view/settingsAlerts", [
+define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
     'default/js/lib/backbone',
     'plugin/shop/common/js/collection/settings',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
     'default/js/lib/bootstrap-alert',
     /* template */
-    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settingsAlerts',
+    'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settingsWebsiteFormOrder',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-switch'
 ], function (Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-yellow shop-settings-alerts",
+        className: "panel panel-green shop-settings-website-form-order",
         template: tpl,
         lang: lang,
         events: {
@@ -24,17 +24,12 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
                 size: 'mini'
             };
             this.collection = new CollectionSettings();
-            this.collection.setCustomQueryField('Type', 'ALERTS');
+            this.collection.setCustomQueryField('Type', 'FORMORDER');
             this.listenTo(this.collection, 'reset', this.render);
         },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            var alertsEnabled = this.$('.shop-property-AllowAlerts .switcher').is('chekced');
-            this.$('.switcher-main').html(this.$('.panel-body .shop-property-AllowAlerts').clone(true));
-            this.$('.panel-body .shop-property-AllowAlerts').remove();
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
-            this.$('.panel-body .list-group-item').toggleClass('disabled', !alertsEnabled);
-            this.$('.panel-body .switcher').bootstrapSwitch('disabled', !alertsEnabled);
             return this;
         },
         setSettingState: function (event, state, skip) {
@@ -53,10 +48,6 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
                     patch: true,
                     success: function (model) {
                         $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                        if (model.get('Property') === 'AllowAlerts') {
-                            self.$('.panel-body .list-group-item').toggleClass('disabled', !model.get('_isActive'));
-                            self.$('.panel-body .switcher').bootstrapSwitch('disabled', !model.get('_isActive'));
-                        }
                     },
                     error: function (model) {
                         BSAlerts.danger('Помилка оновлення параметру');

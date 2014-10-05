@@ -151,6 +151,22 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         listPromos_Column_DateStart: 'Початок акції',
         listPromos_Column_DateExpire: 'Завершення акції',
         listPromos_Column_Discount: 'Знижка (%)',
-        manager_promoCodes_listTitle: 'Промо-коди'
+        manager_promoCodes_listTitle: 'Промо-коди',
+        setting_property_AddedNewCategory: 'додався новий товар(и)',
+        setting_property_AddedNewDiscountedProduct: 'ціна товару(ів) знизилася',
+        setting_property_AddedNewOrigin: 'почалася промо акція',
+        setting_property_NewProductAdded: 'зявився новий виробник',
+        setting_property_ProductPriceGoesDown: 'зявилася нова категорія',
+        setting_property_PromoIsStarted: 'зявився вживаний/бракований товар',
+        setting_property_AllowAlerts: 'Дозволити сповіщення',
+        setting_property_ShowAddress: 'адреса доставки',
+        setting_property_ShowCity: 'місто',
+        setting_property_ShowComment: 'побажання',
+        setting_property_ShowCountry: 'країна',
+        setting_property_ShowDeliveryAganet: 'перевізник',
+        setting_property_ShowEMail: 'ел.пошта',
+        setting_property_ShowName: 'імя',
+        setting_property_ShowPOBox: 'поштовий індекс',
+        setting_property_ShowPhone: 'контактний телефон'
     }, CustomerPluginShop);
 });

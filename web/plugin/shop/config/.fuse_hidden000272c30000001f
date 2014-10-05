@@ -726,7 +726,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_settings",
             "condition" => array(),
-            "fields" => array("ID", "Name", "HomePage", "Status", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "Property", "Value", "Status", "Type", "DateCreated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -739,29 +739,25 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
+    static function jsapiShopGetSettingByName ($name = null) {
+        $config = self::jsapiShopGetSettingByID();
+        unset($config['condition']['ID']);
+        $config['condition']['Property'] = self::jsapiCreateDataSourceCondition($name);
+        return $config;
+    }
+
     static function jsapiShopGetSettingsList (array $options = array()) {
-        $config = self::jsapiShopGetDeliveryAgencyByID();
+        $config = self::jsapiShopGetSettingByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    static function jsapiShopCreateDeliveryAgent ($data) {
-        $data["DateUpdated"] = self::getDate();
-        $data["DateCreated"] = self::getDate();
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "shop_deliveryAgencies",
-            "action" => "insert",
-            "data" => $data,
-            "options" => null
-        ));
-    }
-
-    static function jsapiShopUpdateDeliveryAgent ($id, $data) {
+    static function jsapiShopUpdateSetting ($id, $data) {
         $data["DateUpdated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
-            "source" => "shop_deliveryAgencies",
+            "source" => "shop_settings",
             "action" => "update",
             "condition" => array(
                 "ID" => self::jsapiCreateDataSourceCondition($id)
@@ -771,19 +767,11 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopDeleteDeliveryAgent ($id) {
-        return self::jsapiGetDataSourceConfig(array(
-            "source" => "shop_deliveryAgencies",
-            "action" => "update",
-            "condition" => array(
-                "ID" => self::jsapiCreateDataSourceCondition($id)
-            ),
-            "data" => array(
-                "Status" => 'REMOVED',
-                "DateUpdated" => self::getDate()
-            ),
-            "options" => null
-        ));
+    static function jsapiShopUpdateSettingByName ($id, $data) {
+        $config = self::jsapiShopUpdateSetting($id, $data);
+        unset($config['condition']['ID']);
+        $config['condition']['Property'] = self::jsapiCreateDataSourceCondition($id);
+        return $config;
     }
     // <<<<< shop delivery agencies
 

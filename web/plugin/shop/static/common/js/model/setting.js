@@ -4,11 +4,16 @@ define('plugin/shop/common/js/model/setting', [
 ], function (Backbone, _) {
 
     return Backbone.Model.extend({
+        idAttribute: "ID",
         url: function () {
             var _params = {
                 source: 'shop',
                 fn: 'setting'
             };
+            if (!this.isNew())
+                _params.id = this.id;
+            if (this.isNew() && this.get('name'))
+                _params.name = this.get('name');
             return APP.getApiLink(_params);
         }
     });
