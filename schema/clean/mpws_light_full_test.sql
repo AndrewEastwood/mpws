@@ -887,8 +887,10 @@ CREATE TABLE `shop_settings` (
   `CustomerID` int(11) NOT NULL,
   `Property` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `Value` varchar(150) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','DISABLED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Status` enum('ACTIVE','DISABLED','REMOVED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Type` enum('ADDRESS','ALERTS','EXCHANAGERATES','OPENHOURS','FORMORDER','WEBSITE','MISC') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'MISC',
   `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -901,7 +903,7 @@ CREATE TABLE `shop_settings` (
 
 LOCK TABLES `shop_settings` WRITE;
 /*!40000 ALTER TABLE `shop_settings` DISABLE KEYS */;
-INSERT INTO `shop_settings` VALUES (1,1,'UsePromo','1','ACTIVE','2014-07-06 00:00:00');
+INSERT INTO `shop_settings` VALUES (1,1,'UsePromo','1','ACTIVE','WEBSITE','2014-07-06 00:00:00','0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `shop_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1104,4 +1106,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-03  2:42:19
+-- Dump completed on 2014-10-05 19:33:55

@@ -726,7 +726,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_settings",
             "condition" => array(),
-            "fields" => array("ID", "Property", "Value", "Status", "Type", "DateCreated"),
+            "fields" => array("ID", "Name", "HomePage", "Status", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -740,22 +740,48 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopGetSettingsList (array $options = array()) {
-        $config = self::jsapiShopGetSettingByID();
+        $config = self::jsapiShopGetDeliveryAgencyByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    static function jsapiShopUpdateSetting ($id, $data) {
+    static function jsapiShopCreateDeliveryAgent ($data) {
+        $data["DateUpdated"] = self::getDate();
+        $data["DateCreated"] = self::getDate();
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_deliveryAgencies",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopUpdateDeliveryAgent ($id, $data) {
         $data["DateUpdated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
-            "source" => "shop_settings",
+            "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
                 "ID" => self::jsapiCreateDataSourceCondition($id)
             ),
             "data" => $data,
+            "options" => null
+        ));
+    }
+
+    static function jsapiShopDeleteDeliveryAgent ($id) {
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_deliveryAgencies",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($id)
+            ),
+            "data" => array(
+                "Status" => 'REMOVED',
+                "DateUpdated" => self::getDate()
+            ),
             "options" => null
         ));
     }

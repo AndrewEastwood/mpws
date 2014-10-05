@@ -4,7 +4,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'default/js/lib/cache',
-    'plugin/shop/toolbox/js/view/managerProducts',
+    'plugin/shop/toolbox/js/view/settingsAlerts',
     'plugin/shop/toolbox/js/view/settingsDeliveryAgencies',
     'plugin/shop/toolbox/js/view/filterTreeCategories',
     /* template */
@@ -14,7 +14,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/bootstrap-editable',
     'default/js/lib/jquery.maskedinput',
     'default/js/lib/bootstrap-switch'
-], function (Sandbox, _, Backbone, Utils, Cache, ViewListProducts, ViewSettingsDeiveryAgencies, ViewCategoriesTree, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts, ViewSettingsDeiveryAgencies, ViewCategoriesTree, tpl, lang) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -24,7 +24,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             // set options
             // ini sub-views
             // debugger;
-            // this.viewProductsList = new ViewListProducts(options);
+            this.viewAlerts = new ViewSettingsAlerts(options);
             this.viewDeliveriesList = new ViewSettingsDeiveryAgencies();
             // this.viewCatergoriesTree = new ViewCategoriesTree(options);
 
@@ -38,7 +38,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             // permanent layout and some elements
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                // this.$('.tree').html(this.viewCatergoriesTree.$el);
+                this.$('.shop-settings-alerts').html(this.viewAlerts.$el);
                 this.$('.delivery-agencies').html(this.viewDeliveriesList.$el);
                 // this.$('.origins').html(this.viewOriginsList.$el);
                 this.$('.shop-settings .switcher').bootstrapSwitch({

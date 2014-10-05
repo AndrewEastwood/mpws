@@ -14,8 +14,7 @@ class pluginShop extends objectPlugin {
         'changed:product' => false,
         'changed:promo' => false,
         'changed:features' => false,
-        'changed:agencies' => false,
-        'changed:settings' => false
+        'changed:agencies' => false
     );
 
     public function beforeRun () {
@@ -30,77 +29,9 @@ class pluginShop extends objectPlugin {
     // SETTINGS
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getSettingByID ($id) {
-        if (empty($id) || !is_numeric($id))
-            return null;
+    public function getCatalogLocation ($productID = null, $categoryID = null) {
 
-        $config = configurationShopDataSource::jsapiShopGetSettingByID($id);
-        $setting = $this->getCustomer()->fetch($config);
-
-        if (empty($setting))
-            return null;
-
-        $setting['ID'] = intval($setting['ID']);
-        $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
-        $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
-        return $setting;
     }
-
-    public function getSettings_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetSettingsList($options);
-        $self = $this;
-
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $settingItem) {
-                    $_items[] = $self->getSettingByID($settingItem['ID']);
-                }
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
-
-        return $dataList;
-    }
-
-    public function updateSetting ($id, $reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Value' => array('string', 'skipIfUnset'),
-            'Status' => array('string', 'skipIfUnset')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-                if (!empty($validatedValues)) {
-                    $this->getCustomerDataBase()->beginTransaction();
-                    $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSetting($id, $validatedValues);
-                    $this->getCustomer()->fetch($configSettingUpdate);
-                    $this->getCustomerDataBase()->commit();
-                }
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        $result = $this->getSettingByID($OriginID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-
-
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -513,6 +444,7 @@ class pluginShop extends objectPlugin {
     // ORIGINS
     // -----------------------------------------------
     // -----------------------------------------------
+
     public function getOriginByID ($originID) {
         if (empty($originID) || !is_numeric($originID))
             return null;
@@ -1854,35 +1786,6 @@ class pluginShop extends objectPlugin {
     // REQUESTS
     // -----------------------------------------------
     // -----------------------------------------------
-
-    public function get_shop_settings (&$resp, $req) {
-        $resp = $this->getSettings_List($req->get);
-    }
-
-    public function patch_shop_setting (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $settingID = intval($req->get['id']);
-            $resp = $this->updateSetting($settingID, $req->data);
-            // $this->_getOrSetCachedState('changed:setting', true);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
 
     public function get_shop_stats (&$resp, $req) {
 
