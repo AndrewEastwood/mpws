@@ -23,6 +23,11 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
     var PopupSettingsAddress = Backbone.View.extend({
         template: tpl,
         lang: lang,
+        events: {
+            'click .btn-add': 'addFormGroup',
+            'click .btn-remove': 'removeFormGroup',
+            'click .dropdown-menu a': 'selectFormGroup'
+        },
         initialize: function () {
             var self = this;
             this.collection = new CollectionSettings();
@@ -69,18 +74,16 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
-
-(function ($) {
-    $(function () {
-
-        var addFormGroup = function (event) {
+            }
+        },
+        addFormGroup: function (event) {
             event.preventDefault();
 
-            var $formGroup = $(this).closest('.form-group');
+            var $formGroup = $(event.target).closest('.form-group');
             var $multipleFormGroup = $formGroup.closest('.multiple-form-group');
             var $formGroupClone = $formGroup.clone();
 
-            $(this)
+            $(event.target)
                 .toggleClass('btn-success btn-add btn-danger btn-remove')
                 .html('–');
 
@@ -92,12 +95,11 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             if ($multipleFormGroup.data('max') <= countFormGroup($multipleFormGroup)) {
                 $lastFormGroupLast.find('.btn-add').attr('disabled', true);
             }
-        };
-
-        var removeFormGroup = function (event) {
+        },
+        removeFormGroup: function (event) {
             event.preventDefault();
 
-            var $formGroup = $(this).closest('.form-group');
+            var $formGroup = $(event.target).closest('.form-group');
             var $multipleFormGroup = $formGroup.closest('.multiple-form-group');
 
             var $lastFormGroupLast = $multipleFormGroup.find('.form-group:last');
@@ -106,34 +108,21 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             }
 
             $formGroup.remove();
-        };
-
-        var selectFormGroup = function (event) {
+        },
+        selectFormGroup: function (event) {
             event.preventDefault();
 
-            var $selectGroup = $(this).closest('.input-group-select');
-            var param = $(this).attr("href").replace("#","");
-            var concept = $(this).text();
+            var $formGroup = $(event.target).closest('.form-group');
+            var $selectGroup = $(event.target).closest('.input-group-select');
+            var type = $(event.target).data("type");
+            var concept = $(event.target).text();
 
+            $formGroup.find('.custom-contact-type-label').toggleClass('hidden', type !== 'custom');
             $selectGroup.find('.concept').text(concept);
-            $selectGroup.find('.input-group-select-val').val(param);
-
-        }
-
-        var countFormGroup = function ($form) {
+            $selectGroup.find('.input-group-select-type').val(type === 'custom' ? type : '');
+        },
+        countFormGroup: function ($form) {
             return $form.find('.form-group').length;
-        };
-
-        $(document).on('click', '.btn-add', addFormGroup);
-        $(document).on('click', '.btn-remove', removeFormGroup);
-        $(document).on('click', '.dropdown-menu a', selectFormGroup);
-
-    });
-})(jQuery);
-
-
-                
-            }
         }
     });
 

@@ -46,18 +46,18 @@
                 <span class="concept">Телефон</span> <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="#phone">Телефон</a></li>
-                <li><a href="#fax">Факс</a></li>
-                <li><a href="#skype">Skype</a></li>
-                <li><a href="#email">E-mail</a></li>
-                <li><a href="#www">Web</a></li>
-                <li><a href="#map">Map</a></li>
-                <li><a href="#custom">Свій тип</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="phone">Телефон</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="fax">Факс</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="skype">Skype</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="email">E-mail</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="www">Web</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="map">Map</a></li>
+                <li><a href="javascript://" class="contact-type" data-type="custom">Свій тип</a></li>
             </ul>
-            <input type="hidden" class="input-group-select-val" name="contacts['type'][]" value="phone">
+            <input type="hidden" class="input-group-select-type" name="contactType" value="phone">
         </div>
-        <span class="editable custom-contact-label"></span>
-        <input type="text" name="contacts['value'][]" class="form-control">
+        <span class="editable custom-contact-type-label hidden">свій тип</span>
+        <input type="text" name="contactValue" class="form-control">
         <span class="input-group-btn">
             <button type="button" class="btn btn-success btn-add">+</button>
         </span>
