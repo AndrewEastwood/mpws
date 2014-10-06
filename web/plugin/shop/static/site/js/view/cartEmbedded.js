@@ -17,6 +17,7 @@ define("plugin/shop/site/js/view/cartEmbedded", [
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
+            var data = Utils.getHBSTemplateData(this);
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
         }
     });

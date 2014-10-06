@@ -5,15 +5,17 @@ define('plugin/shop/common/js/collection/settings', [
 ], function (Backbone, _, ModelSetting) {
 
     return Backbone.Collection.extend({
-        queryParams: {},
         model: ModelSetting,
         url: function () {
             var _params = _.extend({
                 source: 'shop',
                 fn: 'settings'
             }, this.queryParams);
-
             return APP.getApiLink(_params);
+        },
+
+        initialize: function () {
+            this.queryParams = {};
         },
 
         parse: function (data) {

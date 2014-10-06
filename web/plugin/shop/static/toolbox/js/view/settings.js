@@ -24,7 +24,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             // set options
             // ini sub-views
             // debugger;
-            this.viewAlerts = new ViewSettingsAlerts(options);
+            this.viewAlerts = new ViewSettingsAlerts();
             this.viewDeliveriesList = new ViewSettingsDeiveryAgencies();
             this.viewWebsiteFormOrder = new ViewSettingsWebsiteFormOrder();
 
