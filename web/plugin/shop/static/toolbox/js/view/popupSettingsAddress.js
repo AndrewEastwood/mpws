@@ -12,7 +12,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle (isNew) {
+    function _getTitle(isNew) {
         if (isNew) {
             return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_settingAddress_title_new);
         } else {
@@ -24,30 +24,56 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         template: tpl,
         lang: lang,
         events: {
-            'click .btn-add': 'addFormGroup',
-            'click .btn-remove': 'removeFormGroup',
-            'click .dropdown-menu a': 'selectFormGroup'
+            'click .add-contact': 'addFormGroup',
+            'click .remove-contact': 'removeFormGroup',
+            'click .contact-types a': 'selectFormGroup',
+            'click .tab-contacts': 'showContactsButton',
+            'click .button-label': 'setCustomType',
+            'click .tab:not(.tab-contacts)': 'hideContactsButton'
+        },
+        setCustomType: function (event) {
+            if ($(event.target).hasClass('custom-type')) {
+                this.$('.custom-type').editable('activate');
+            }
+        },
+        showContactsButton: function () {
+            this.$('.add-contact').parent().removeClass('hidden');
+        },
+        hideContactsButton: function () {
+            this.$('.add-contact').parent().addClass('hidden');
         },
         initialize: function () {
-            var self = this;
+            var self = this,
+                buttons = [];
             this.collection = new CollectionSettings();
-            this.listenTo(this.collection, 'reset', this.render);
-            this.$title = $('<span/>');
-            this.$dialog = new BootstrapDialog({
-                title: this.$title,
-                message: this.$el,
-                cssClass: 'popup-settings-address',
-                buttons: [{
-                    label: lang.popup_origin_button_Close,
-                    cssClass: 'btn-default btn-link',
-                    action: function (dialog) {
-                        dialog.close();
+            this.options = {};
+            this.options.editableOptions = {
+                mode: 'popup',
+                name: 'Name',
+                savenochange: true,
+                unsavedclass: '',
+                validate: function (value) {
+                    if ($.trim(value) === '') {
+                        return 'Введіть назву перевізника';
                     }
-                //}//, {
-                    //label: lang.popup_origin_button_Save,
-                    //cssClass: 'btn-success btn-outline',
-                    //action: function (dialog) {
-                        // debugger;
+                }
+            };
+            buttons.push({
+                label: lang.popup_origin_button_Close,
+                cssClass: 'btn-default btn-link',
+                action: function (dialog) {
+                    dialog.close();
+                }
+            });
+            if (this.collection.isEmpty()) {
+                buttons.push({
+                    label: lang.popup_origin_button_Save,
+                    cssClass: 'btn-success btn-outline',
+                    action: function (dialog) {
+                        debugger;
+                        self.collection.create({
+
+                        });
                         // self.model.save({
                         //     Property: self.$('#name').val(),
                         //     Value: self.$('#description').val(),
@@ -64,8 +90,16 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                         //         }
                         //     }
                         // });
-                    //}
-                }]
+                    }
+                });
+            }
+            this.listenTo(this.collection, 'reset', this.render);
+            this.$title = $('<span/>');
+            this.$dialog = new BootstrapDialog({
+                title: this.$title,
+                message: this.$el,
+                cssClass: 'popup-settings-address',
+                buttons: buttons
             });
         },
         render: function () {
@@ -78,51 +112,35 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         },
         addFormGroup: function (event) {
             event.preventDefault();
-
-            var $formGroup = $(event.target).closest('.form-group');
-            var $multipleFormGroup = $formGroup.closest('.multiple-form-group');
-            var $formGroupClone = $formGroup.clone();
-
-            $(event.target)
-                .toggleClass('btn-success btn-add btn-danger btn-remove')
-                .html('–');
-
-            $formGroupClone.find('input').val('');
-            $formGroupClone.find('.concept').text('Phone');
-            $formGroupClone.insertAfter($formGroup);
-
-            var $lastFormGroupLast = $multipleFormGroup.find('.form-group:last');
-            if ($multipleFormGroup.data('max') <= countFormGroup($multipleFormGroup)) {
-                $lastFormGroupLast.find('.btn-add').attr('disabled', true);
-            }
+            var $tpl = this.$('.hidden .contact-template').clone();
+            $tpl.removeClass('.contact-template');
+            this.$('.fields').append($tpl);
         },
         removeFormGroup: function (event) {
             event.preventDefault();
-
-            var $formGroup = $(event.target).closest('.form-group');
-            var $multipleFormGroup = $formGroup.closest('.multiple-form-group');
-
-            var $lastFormGroupLast = $multipleFormGroup.find('.form-group:last');
-            if ($multipleFormGroup.data('max') >= countFormGroup($multipleFormGroup)) {
-                $lastFormGroupLast.find('.btn-add').attr('disabled', false);
-            }
-
-            $formGroup.remove();
+            var $contactItem = $(event.target).closest('.contact-item');
+            $contactItem.remove();
         },
         selectFormGroup: function (event) {
             event.preventDefault();
 
-            var $formGroup = $(event.target).closest('.form-group');
-            var $selectGroup = $(event.target).closest('.input-group-select');
+            var $formGroup = $(event.target).closest('.contact-item');
             var type = $(event.target).data("type");
             var concept = $(event.target).text();
 
-            $formGroup.find('.custom-contact-type-label').toggleClass('hidden', type !== 'custom');
-            $selectGroup.find('.concept').text(concept);
-            $selectGroup.find('.input-group-select-type').val(type === 'custom' ? type : '');
-        },
-        countFormGroup: function ($form) {
-            return $form.find('.form-group').length;
+            $formGroup.find('.address-type').val(type);
+            $formGroup.find('.button-label').toggleClass('custom-type', type === 'custom');
+            $formGroup.find('.button-label').text(concept);
+            if (type === 'custom') {
+                $formGroup.find('.address-label').val(concept);
+                $formGroup.find('.button-label').editable(this.options.editableOptions)
+                    .on('save', function (e, params) {
+                        $(event.target).text(params.newValue);
+                        $formGroup.find('.address-label').val(params.newValue);
+                    });
+            } else {
+                $formGroup.find('.button-label').editable('destroy');
+            }
         }
     });
 

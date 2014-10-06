@@ -1,75 +1,71 @@
-<div class="row">
-    <div class="col-md-12">
-      <form class="form-horizontal" role="form">
-        <fieldset>
-
-          <!-- Form Name -->
-          <legend>Основна інформація</legend>
-
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="textinput">Назва відділу</label>
-            <div class="col-sm-10">
-              <input type="text" id="shopName" class="form-control" value="{{data.Address1_ShopName}}">
-            </div>
-          </div>
-
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="textinput">Адреса 1</label>
-            <div class="col-sm-10">
-              <input type="text" id="shopAddress_Line1" class="form-control" value="{{data.Address1_AddressLine1}}">
-            </div>
-          </div>
-
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="textinput">Адреса 2</label>
-            <div class="col-sm-10">
-              <input type="text" id="shopAddress_Line2" class="form-control" value="{{data.Address1_AddressLine2}}">
-            </div>
-          </div>
-
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="textinput">Адреса 3</label>
-            <div class="col-sm-10">
-              <input type="text" id="shopAddress_Line3" class="form-control" value="{{data.Address1_AddressLine3}}">
-            </div>
-          </div>
-
-        </fieldset>
-      </form>
-    <div class="form-group multiple-form-group input-group">
-        <div class="input-group-btn input-group-select">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <span class="concept">Телефон</span> <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="javascript://" class="contact-type" data-type="phone">Телефон</a></li>
-                <li><a href="javascript://" class="contact-type" data-type="fax">Факс</a></li>
-                <li><a href="javascript://" class="contact-type" data-type="skype">Skype</a></li>
-                <li><a href="javascript://" class="contact-type" data-type="email">E-mail</a></li>
-                <li><a href="javascript://" class="contact-type" data-type="www">Web</a></li>
-                <li><a href="javascript://" class="contact-type" data-type="map">Map</a></li>
-                <li><a href="javascript://" class="contact-type" data-type="custom">Свій тип</a></li>
-            </ul>
-            <input type="hidden" class="input-group-select-type" name="contactType" value="phone">
-        </div>
-        <span class="editable custom-contact-type-label hidden">свій тип</span>
-        <input type="text" name="contactValue" class="form-control">
-        <span class="input-group-btn">
-            <button type="button" class="btn btn-success btn-add">+</button>
-        </span>
+<ul class="nav nav-pills">
+    <li class="tab tab-general active"><a href="#general" data-toggle="tab">Основні</a></li>
+    <li class="tab tab-contacts"><a href="#contacts" data-toggle="tab">Контакти</a></li>
+    <li class="tab tab-openhours"><a href="#openhours" data-toggle="tab">Графік роботи</a></li>
+    <li class="hidden pull-right"><i class="fa fa-plus fa-fw add-contact text-success"></i></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="general">
+        <form class="form-horizontal" role="form">
+            <fieldset>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Назва відділу</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="shopName" class="form-control" value="{{data.Address1_ShopName}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Адреса 1</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="shopAddress_Line1" class="form-control" value="{{data.Address1_AddressLine1}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Адреса 2</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="shopAddress_Line2" class="form-control" value="{{data.Address1_AddressLine2}}">
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="textinput">Адреса 3</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="shopAddress_Line3" class="form-control" value="{{data.Address1_AddressLine3}}">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
     </div>
-  </div>
-</div><!-- /.row -->
-
-
-{{#each data}}
-    <a href="javascript://" class="list-group-item address" data-id="{{ID}}">
-        <i class="fa fa-times fa-fw text-danger remove-delivery"></i>
-        <span class="editable">{{Value}}</span>
-        <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
-    </a>
-{{/each}}
+    <div class="tab-pane fade fields" id="contacts"></div>
+    <div class="tab-pane fade" id="openhours">
+        <h4>Messages Tab</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+</div>
+<div class="hidden">
+    <div class="form-group contact-template multiple-form-group input-group contact-item">
+        <i class="fa fa-times text-danger fa-fw remove-contact"></i>
+        <div class="input-group-btn">
+            <div class="wrapper">
+                <button type="button" class="btn btn-link button-label"><span class="concept">Телефон</span></button>
+                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu contact-types" role="menu">
+                    <li><a href="javascript://" class="contact-type" data-type="phone">Телефон</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="fax">Факс</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="skype">Skype</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="email">E-mail</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="www">Web</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="map">Map</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript://" class="contact-type" data-type="custom">Свій тип</a></li>
+                </ul>
+            </div>
+        </div>
+        <input type="hidden" class="form-control address-type" value="phone">
+        <input type="hidden" class="form-control address-label">
+        <input type="text" class="form-control address-value">
+    </div>
+</div>
