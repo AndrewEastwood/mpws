@@ -226,6 +226,9 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewWebsiteFormOrder.collection.fetch({
                     reset: true
                 });
+                pluginSettings.viewAddress.collection.fetch({
+                    reset: true
+                });
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: pluginSettings.$el

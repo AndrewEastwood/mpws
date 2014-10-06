@@ -894,7 +894,7 @@ CREATE TABLE `shop_settings` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -903,7 +903,7 @@ CREATE TABLE `shop_settings` (
 
 LOCK TABLES `shop_settings` WRITE;
 /*!40000 ALTER TABLE `shop_settings` DISABLE KEYS */;
-INSERT INTO `shop_settings` VALUES (1,1,'UsePromo','1','ACTIVE','WEBSITE','2014-07-06 00:00:00','0000-00-00 00:00:00'),(2,1,'NewProductAdded','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:02'),(3,1,'ProductPriceGoesDown','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:01'),(4,1,'PromoIsStarted','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:27:59'),(5,1,'AddedNewOrigin','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:03'),(6,1,'AddedNewCategory','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:03'),(7,1,'AddedNewDiscountedProduct','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:04'),(8,1,'AllowAlerts','','ACTIVE','ALERTS','2014-07-06 00:00:00','2014-10-06 03:27:58'),(9,1,'ShowName','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:35:19'),(10,1,'ShowEMail','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:37'),(11,1,'ShowPhone','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 00:04:36'),(12,1,'ShowAddress','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 00:04:36'),(13,1,'ShowPOBox','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:38'),(14,1,'ShowCountry','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:35:21'),(15,1,'ShowCity','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:35:21'),(16,1,'ShowDeliveryAganet','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:40'),(17,1,'ShowComment','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:41'),(18,1,'DeliveryAllowSelfPickup','','DISABLED','MISC','2014-07-06 00:00:00','2014-10-06 03:31:55');
+INSERT INTO `shop_settings` VALUES (1,1,'UsePromo','1','ACTIVE','WEBSITE','2014-07-06 00:00:00','0000-00-00 00:00:00'),(2,1,'NewProductAdded','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:02'),(3,1,'ProductPriceGoesDown','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:01'),(4,1,'PromoIsStarted','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:27:59'),(5,1,'AddedNewOrigin','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:03'),(6,1,'AddedNewCategory','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:03'),(7,1,'AddedNewDiscountedProduct','','DISABLED','ALERTS','2014-07-06 00:00:00','2014-10-06 03:28:04'),(8,1,'AllowAlerts','','ACTIVE','ALERTS','2014-07-06 00:00:00','2014-10-06 03:27:58'),(9,1,'ShowName','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:35:19'),(10,1,'ShowEMail','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:37'),(11,1,'ShowPhone','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 00:04:36'),(12,1,'ShowAddress','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 00:04:36'),(13,1,'ShowPOBox','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:38'),(14,1,'ShowCountry','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:35:21'),(15,1,'ShowCity','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:35:21'),(16,1,'ShowDeliveryAganet','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:40'),(17,1,'ShowComment','','ACTIVE','FORMORDER','2014-07-06 00:00:00','2014-10-06 03:27:41'),(18,1,'DeliveryAllowSelfPickup','','DISABLED','MISC','2014-07-06 00:00:00','2014-10-06 03:31:55'),(19,1,'Address1_ShopName','Mikser','DISABLED','ADDRESS','2014-07-06 00:00:00','2014-10-06 11:37:59'),(20,1,'Address1_AddressLine1','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(21,1,'Address1_AddressLine2','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(22,1,'Address1_AddressLine3','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(23,1,'Address1_OpenHours_Workdays','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(24,1,'Address1_OpenHours_Saturday','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(25,1,'Address1_OpenHours_Sunday','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(26,1,'Address1_MapURL','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55'),(27,1,'Phone_Hotline','','ACTIVE','ADDRESS','2014-07-06 00:00:00','2014-10-06 03:31:55');
 /*!40000 ALTER TABLE `shop_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -931,7 +931,7 @@ BEGIN
          AND o.Status = 'ACTIVE'
          AND p.CategoryID = catid
   GROUP  BY o.Name; 
--- SELECT o.ID, o.Name FROM shop_products AS `p` LEFT JOIN shop_origins AS `o` ON p.OriginID = o.ID WHERE p.Enabled = 1 AND o.Enabled = 1 AND p.CategoryID = catid GROUP BY o.Name;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -976,7 +976,7 @@ BEGIN
          AND c.Status = 'ACTIVE'
          AND c.ParentID = catid
   GROUP  BY c.Name; 
--- SELECT c.ID, c.ParentID, c.Name FROM shop_categories AS `c` WHERE c.ParentID = catid AND c.Enabled = 1 GROUP BY c.Name;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1106,4 +1106,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-06  3:36:03
+-- Dump completed on 2014-10-06 12:50:35

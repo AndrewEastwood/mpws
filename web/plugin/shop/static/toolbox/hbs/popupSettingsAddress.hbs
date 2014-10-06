@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-md-12">
+      <form class="form-horizontal" role="form">
+        <fieldset>
+
+          <!-- Form Name -->
+          <legend>Основна інформація</legend>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">Назва відділу</label>
+            <div class="col-sm-10">
+              <input type="text" id="shopName" class="form-control" value="{{data.Address1_ShopName}}">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">Адреса 1</label>
+            <div class="col-sm-10">
+              <input type="text" id="shopAddress_Line1" class="form-control" value="{{data.Address1_AddressLine1}}">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">Адреса 2</label>
+            <div class="col-sm-10">
+              <input type="text" id="shopAddress_Line2" class="form-control" value="{{data.Address1_AddressLine2}}">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">Адреса 3</label>
+            <div class="col-sm-10">
+              <input type="text" id="shopAddress_Line3" class="form-control" value="{{data.Address1_AddressLine3}}">
+            </div>
+          </div>
+
+        </fieldset>
+      </form>
+    <div class="form-group multiple-form-group input-group">
+        <div class="input-group-btn input-group-select">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="concept">Телефон</span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#phone">Телефон</a></li>
+                <li><a href="#fax">Факс</a></li>
+                <li><a href="#skype">Skype</a></li>
+                <li><a href="#email">E-mail</a></li>
+                <li><a href="#www">Web</a></li>
+                <li><a href="#map">Map</a></li>
+                <li><a href="#custom">Свій тип</a></li>
+            </ul>
+            <input type="hidden" class="input-group-select-val" name="contacts['type'][]" value="phone">
+        </div>
+        <span class="editable custom-contact-label"></span>
+        <input type="text" name="contacts['value'][]" class="form-control">
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-success btn-add">+</button>
+        </span>
+    </div>
+  </div>
+</div><!-- /.row -->
+
+
+{{#each data}}
+    <a href="javascript://" class="list-group-item address" data-id="{{ID}}">
+        <i class="fa fa-times fa-fw text-danger remove-delivery"></i>
+        <span class="editable">{{Value}}</span>
+        <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
+    </a>
+{{/each}}

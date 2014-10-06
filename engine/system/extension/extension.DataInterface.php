@@ -18,8 +18,9 @@ class extensionDataInterface extends objectExtension {
                 $field = $matches[1];
                 // parse value
                 $parsedValue = array();
-                preg_match("/([0-9A-Za-z\,_-]+):(\w+|\!\=|\=)$/", $value, $parsedValue);
+                preg_match("/([0-9A-Za-z%\,_-]+)\:(.*)$/", $value, $parsedValue);
                 // var_dump($field);
+                // var_dump($value);
                 $count = count($parsedValue);
                 // var_dump($parsedValue);
                 // var_dump($count);

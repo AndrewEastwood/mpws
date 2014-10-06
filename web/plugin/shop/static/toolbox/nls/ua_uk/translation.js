@@ -167,6 +167,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_ShowEMail: 'ел.пошта',
         setting_property_ShowName: 'імя',
         setting_property_ShowPOBox: 'поштовий індекс',
-        setting_property_ShowPhone: 'контактний телефон'
+        setting_property_ShowPhone: 'контактний телефон',
+        popup_settingAddress_title_new: 'Створення адреси',
+        popup_settingAddress_title_edit: 'Редагування адреси'
     }, CustomerPluginShop);
 });

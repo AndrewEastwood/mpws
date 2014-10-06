@@ -57,7 +57,7 @@
             <input type="number" class="form-control quantity input-sm" min="1" data-id="{{ID}}" value="{{_orderQuantity}}">
             <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
             <span class="label label-default">=</span>
-            <strong>{{currency _orderProductTotal}}<span class="moneyType">грн.</span></strong>
+            <strong class="product-total">{{currency _orderProductTotal}}<span class="moneyType">грн.</span></strong>
         </div>
     </div>
 {{/each}}

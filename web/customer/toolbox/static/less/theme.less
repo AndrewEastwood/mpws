@@ -3,6 +3,7 @@
 @textForegroundColor: #fff;
 @buttonTextColor: #333;
 @buttonColorHover: darken(@mainColor, 10%);
+
 @import "base";
 @import "sb-admin2";
 @import "metisMenu";
@@ -345,6 +346,18 @@ body {
         }
         .property-label {
             display: none;
+        }
+    }
+}
+
+.shop-settings-addresses {
+    .add-address {
+        cursor: pointer;
+    }
+    .list-group-item.address {
+        .bootstrap-switch {
+            display: inline-block;
+            float: right;
         }
     }
 }

@@ -7,6 +7,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'plugin/shop/toolbox/js/view/settingsAlerts',
     'plugin/shop/toolbox/js/view/settingsDeliveryAgencies',
     'plugin/shop/toolbox/js/view/settingsWebsiteFormOrder',
+    'plugin/shop/toolbox/js/view/settingsAddress',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
@@ -14,7 +15,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/bootstrap-editable',
     'default/js/lib/jquery.maskedinput',
     'default/js/lib/bootstrap-switch'
-], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts, ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts, ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress, tpl, lang) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -27,6 +28,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             this.viewAlerts = new ViewSettingsAlerts();
             this.viewDeliveriesList = new ViewSettingsDeiveryAgencies();
             this.viewWebsiteFormOrder = new ViewSettingsWebsiteFormOrder();
+            this.viewAddress = new ViewSettingsAddress();
 
             // // subscribe on events
             // this.listenTo(this.viewProductsList.collection, 'reset', this.render);
@@ -41,6 +43,7 @@ define('plugin/shop/toolbox/js/view/settings', [
                 this.$('.shop-settings-alerts').html(this.viewAlerts.$el);
                 this.$('.delivery-agencies').html(this.viewDeliveriesList.$el);
                 this.$('.website-form-order').html(this.viewWebsiteFormOrder.$el);
+                this.$('.shop-address').html(this.viewAddress.$el);
                 // this.$('.shop-settings .switcher').bootstrapSwitch({
                 //     size: 'mini',
                 //     wrapperClass: 'delivery'

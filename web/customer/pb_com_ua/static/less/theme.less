@@ -674,6 +674,16 @@ i.fa {cursor: pointer;}
   .dropdown-menu {
     width: 300px;
     margin-left: -110px;
+    &:before {
+      content: '';
+      display: block;
+      border: 10px solid rgba(0, 0, 0, 0);
+      width: 0px;
+      border-bottom: 10px solid #FFF;
+      position: absolute;
+      top: -18px;
+      right: 27px;
+    }
   }
   .shop-widget-productlist {
     .discount-availability {
@@ -684,37 +694,44 @@ i.fa {cursor: pointer;}
     }
     .wrapper {
       text-align: left;
+      padding: 10px;
       .shop-product-image-main {
         width: 32px;
         height: 32px;
-        margin-top: 8px;
+        margin-right: 10px;
+        vertical-align: middle;
         a {
           display: block;
         }
       }
       .product-row {
         display: block;
-        text-align: right;
         position: relative;
         right: 0px;
-        margin-top: -40px;
         .productimage {
           max-height: 36px;
           height: 36px;
           margin: 0px auto;
         }
       }
-      .shop-product-remove {z-index: 99; position: relative;}
+      .shop-product-remove {
+        z-index: 99; position: relative; vertical-align: middle; margin-right: 10px;
+        &:hover {
+          text-decoration: none;
+        }
+      }
       .product-name {display: block;}
-      .product-price {width: 50px;}
-      .product-quantity {width: 25px;}
-      .product-total {width: 50px;}
+      .product-price {width: 50px; display: none;}
+      .product-quantity {width: 25px; display: none;}
+      .product-total {width: 50px; display: none;}
+      .label-default {display: none;}
       .productQuantityAction {display: none;}
       input.quantity {display: none;}
     }
   }
   .cartInfo {
     margin-bottom: 0px;
+    margin-top: 0px;
     padding: 5px;
     & > div:not(.shopPropmoCode) {
       margin-bottom: 5px;
