@@ -36,7 +36,9 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
             this.listenTo(this.modelSelfService, 'change', this.renderSelfServiceSwitcher);
             this.options = {};
             this.options.switchOptions = {
-                size: 'mini'
+                size: 'mini',
+                onText: '<i class="fa fa-check fa-fw"></i>',
+                offText: '<i class="fa fa-times fa-fw"></i>'
             };
             this.options.editableOptions = {
                 mode: 'inline',

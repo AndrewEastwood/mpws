@@ -21,7 +21,9 @@ define("plugin/shop/toolbox/js/view/settingsWebsiteFormOrder", [
         initialize: function () {
             this.options = {};
             this.options.switchOptions = {
-                size: 'mini'
+                size: 'mini',
+                onText: '<i class="fa fa-check fa-fw"></i>',
+                offText: '<i class="fa fa-times fa-fw"></i>'
             };
             this.collection = new CollectionSettings();
             this.collection.setCustomQueryField('Type', 'FORMORDER');
