@@ -31,7 +31,7 @@ define("plugin/shop/toolbox/js/view/settingsAlerts", [
         },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            var alertsEnabled = this.$('.shop-property-AllowAlerts .switcher').is('chekced');
+            var alertsEnabled = this.$('.shop-property-AllowAlerts .switcher').is(':checked');
             this.$('.switcher-main').html(this.$('.panel-body .shop-property-AllowAlerts').clone(true));
             this.$('.panel-body .shop-property-AllowAlerts').remove();
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
