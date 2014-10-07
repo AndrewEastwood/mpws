@@ -19,13 +19,7 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
             this.setOptions(options);
             // create collection and viewPromosList
             this.viewPromosList = new ViewOrdersListPromos();
-            // this.viewPromosList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
-            // this.viewPromosList.collection.setCustomQueryParam("Stats", true);
             this.listenTo(this.viewPromosList.collection, 'reset', this.render);
-            // this.listenTo(this.viewPromosList.collection, 'sync', $.proxy(function (collection, resp, options) {
-            //     if (resp && resp.stats)
-            //         this.refreshBadges(resp.stats);
-            // }, this));
         },
         setOptions: function (options) {
             // merge with defaults
@@ -52,8 +46,6 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
                 // show sub-view
                 this.$('.promo-list').html(this.viewPromosList.$el);
             }
-            // var currentStatus = this.viewPromosList.collection.getCustomQueryField("Status");
-            // this.$('.tab-link.orders-' + currentStatus.toLowerCase()).addClass('active');
             return this;
         }
     });

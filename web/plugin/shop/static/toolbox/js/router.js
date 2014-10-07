@@ -39,6 +39,8 @@ define("plugin/shop/toolbox/js/router", [
         "shop/reports": "reports",
         "shop/settings": "settings",
         "shop/promo": "promo",
+        "shop/promo/edit/:id": "promoEdit",
+        "shop/promo/new": "promoCreate"
     };
 
     var Router = Backbone.Router.extend({
@@ -198,7 +200,7 @@ define("plugin/shop/toolbox/js/router", [
 
         promo: function () {
             // set active menu
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
             require(['plugin/shop/toolbox/js/view/managerPromoCodes'], function (ManagerPromoCodes) {
                 var managerPromoCodes = new ManagerPromoCodes();
                 managerPromoCodes.viewPromosList.collection.fetch({
@@ -211,8 +213,33 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
 
+        promoEdit: function (promoID) {
+            // set active menu
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
+            require(['plugin/shop/toolbox/js/view/popupPromo'], function (ViewPopupPromo) {
+                var viewPopupPromo = new ViewPopupPromo();
+                viewPopupPromo.model.set('ID', promoID);
+                viewPopupPromo.model.fetch();
+                viewPopupPromo.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
+        },
+
+        promoCreate: function () {
+            // set active menu
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-promo');
+            require(['plugin/shop/toolbox/js/view/popupPromo'], function (ViewPopupPromo) {
+                var viewPopupPromo = new ViewPopupPromo();
+                viewPopupPromo.render();
+                viewPopupPromo.$dialog.onHide(function () {
+                    Backbone.history.history.back();
+                });
+            });
+        },
+
         settings: function () {
-            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-settings');
             require(['plugin/shop/toolbox/js/view/settings'], function (Settings) {
                 var pluginSettings = new Settings();
                 // delivery agencies

@@ -44,7 +44,7 @@ class libraryValidate {
         $values = array();
         $errors = array();
         $totalErrors = 0;
-        $dataTypes = array('string', 'int', 'null', 'bool', 'numeric', 'notNull');
+        $dataTypes = array('string', 'int', 'float', 'null', 'bool', 'numeric', 'notNull');
 
         foreach ($dataRules as $keyToValidate => $rules) {
 
@@ -70,6 +70,12 @@ class libraryValidate {
             // int
             if (in_array("int", $rules) && !is_int($values[$keyToValidate])) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNotInt";
+                $wrongTypeCount++;
+            }
+
+            // float
+            if (in_array("float", $rules) && !is_float($values[$keyToValidate])) {
+                $errors[$keyToValidate][] = $keyToValidate . "IsNotFloat";
                 $wrongTypeCount++;
             }
 

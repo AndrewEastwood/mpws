@@ -169,6 +169,12 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_ShowPOBox: 'поштовий індекс',
         setting_property_ShowPhone: 'контактний телефон',
         popup_settingAddress_title_new: 'Створення адреси',
-        popup_settingAddress_title_edit: 'Редагування адреси'
+        popup_settingAddress_title_edit: 'Редагування адреси',
+        popup_promo_title_new: 'Створення промо-акції',
+        popup_promo_title_edit: 'Редагування промо-акції',
+        popup_promo_filed_Code: 'Промо-код',
+        popup_promo_filed_DateStart: 'Початок акції',
+        popup_promo_filed_DateExpire: 'Кінець акції',
+        popup_promo_filed_Discount: 'Знижка %',
     }, CustomerPluginShop);
 });

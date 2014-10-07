@@ -1,0 +1,36 @@
+<div class="panel">
+    <form class="form-horizontal">
+        <fieldset>
+            {{#if data.Code}}
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">{{lang.popup_promo_filed_Code}}</label>
+                <div class="col-md-4">
+                    <span>{{data.Code}}</span>
+                </div>
+            </div>
+            {{/if}}
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">{{lang.popup_promo_filed_DateStart}}</label>
+                <div class="col-md-4">
+                    <span id="datestart" class="date" data-type="combodate">{{data.DateStart}}</span>
+                </div>
+            </div>
+            <!-- Text input -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textarea">{{lang.popup_promo_filed_DateExpire}}</label>
+                <div class="col-md-4">
+                    <span id="dateexpire" class="date" data-type="combodate">{{data.DateExpire}}</span>
+                </div>
+            </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">{{lang.popup_promo_filed_Discount}}</label>
+                <div class="col-md-4">
+                    <input id="discount" type="text" class="form-control input-md" value="{{data.Discount}}">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

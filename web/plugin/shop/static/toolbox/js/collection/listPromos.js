@@ -10,7 +10,7 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'promocodes'
+            fn: 'promos'
         }),
 
         // Initial pagination states

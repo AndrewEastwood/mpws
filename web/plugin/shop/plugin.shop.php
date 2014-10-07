@@ -637,10 +637,6 @@ class pluginShop extends objectPlugin {
     }
 
     public function createOrigin ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("error", "AccessDenied");
-        }
-
         $result = array();
         $errors = array();
         $success = false;
@@ -703,12 +699,12 @@ class pluginShop extends objectPlugin {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateOrigin($OriginID, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
-
-                $this->getCustomerDataBase()->commit();
+                if (count($validatedValues)) {
+                    $this->getCustomerDataBase()->beginTransaction();
+                    $configCreateCategory = configurationShopDataSource::jsapiShopUpdateOrigin($OriginID, $validatedValues);
+                    $this->getCustomer()->fetch($configCreateCategory);
+                    $this->getCustomerDataBase()->commit();
+                }
 
                 $success = true;
             } catch (Exception $e) {
@@ -1648,21 +1644,108 @@ class pluginShop extends objectPlugin {
     }
 
     public function createPromo ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            return glWrap("error", "AccessDenied");
-        }
+        $result = array();
+        $errors = array();
+        $success = false;
+        $promoID = null;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'DateStart' => array('string'),
+            'DateExpire' => array('string'),
+            'Discount' => array('numeric')
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+                $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
+                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+
+                $configCreatePromo = configurationShopDataSource::jsapiShopCreatePromo($validatedValues);
+
+                $this->getCustomerDataBase()->beginTransaction();
+                $promoID = $this->getCustomer()->fetch($configCreatePromo) ?: null;
+
+                if (empty($promoID))
+                    throw new Exception('PromoCreateError');
+
+                $this->getCustomerDataBase()->commit();
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        if ($success && !empty($promoID))
+            $result = $this->getOriginByID($promoID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
-    public function updatePromo ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("error", "AccessDenied");
-        }
+    public function updatePromo ($promoID, $reqData) {
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+            'DateStart' => array('string', 'skipIfUnset'),
+            'DateExpire' => array('string', 'skipIfUnset'),
+            'Discount' => array('numeric')
+        ));
+
+        if ($validatedDataObj["totalErrors"] == 0)
+            try {
+
+                $validatedValues = $validatedDataObj['values'];
+
+                if (count($validatedValues)) {
+                    $this->getCustomerDataBase()->beginTransaction();
+                    $configCreateCategory = configurationShopDataSource::jsapiShopUpdatePromo($promoID, $validatedValues);
+                    $this->getCustomer()->fetch($configCreateCategory);
+                    $this->getCustomerDataBase()->commit();
+                }
+
+                $success = true;
+            } catch (Exception $e) {
+                $this->getCustomerDataBase()->rollBack();
+                $errors[] = $e->getMessage();
+            }
+        else
+            $errors = $validatedDataObj["errors"];
+
+        $result = $this->getPromoByID($promoID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
-    public function closePromo ($reqData) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            return glWrap("error", "AccessDenied");
+    public function expirePromo ($promoID) {
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        try {
+            $this->getCustomerDataBase()->beginTransaction();
+            $config = configurationShopDataSource::jsapiShopExpirePromo($promoID);
+            $this->getCustomer()->fetch($config);
+            $this->getCustomerDataBase()->commit();
+            $success = true;
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = $e->getMessage();
         }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
     }
 
 
@@ -2098,13 +2181,80 @@ class pluginShop extends objectPlugin {
     }
 
 
-    public function get_shop_promocodes (&$resp, $req) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function get_shop_promo (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $promoID = intval($req->get['id']);
+            $resp = $this->getPromoByID($promoID);
+        }
+    }
+
+    public function get_shop_promos (&$resp, $req) {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             $resp['error'] = "AccessDenied";
             return;
         }
         $resp = $this->getPromoCodes_List($req->get);
     }
+
+    public function post_shop_promo (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        $resp = $this->createPromo($req->data);
+    }
+
+    public function patch_shop_promo (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $promoID = intval($req->get['id']);
+            $resp = $this->updatePromo($promoID, $req->data);
+        }
+    }
+
+    public function delete_shop_promo (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $promoID = intval($req->get['id']);
+            $resp = $this->expirePromo($promoID);
+        }
+    }
+
+
+
+
+
+
+
 
 
 
@@ -2439,6 +2589,12 @@ class pluginShop extends objectPlugin {
         $this->get_shop_compare($list);
         return isset($list['items'][$id]);
     }
+
+
+
+
+
+
 
 
 

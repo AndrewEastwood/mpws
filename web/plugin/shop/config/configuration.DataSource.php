@@ -1121,6 +1121,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
 
     static function jsapiShopCreatePromo ($data) {
+        $data["DateCreated"] = self::getDate();
         return self::jsapiGetDataSourceConfig(array(
             "action" => "insert",
             "source" => "shop_promo",
@@ -1141,7 +1142,7 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopClosePromo ($promoID) {
+    static function jsapiShopExpirePromo ($promoID) {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "update",
             "source" => "shop_promo",
