@@ -29,15 +29,16 @@ define("plugin/shop/toolbox/js/view/listPromos", [
             formatter: {
                 fromRaw: function (value, model) {
                     var btn = [];
-
-
                     if (model.get('_isExpired')) {
-                        btn.push($('<i/>').addClass('fa fa-ellipsis-v text-danger fa-fw'));
+                        btn.push($('<i/>').addClass('fa fa-ellipsis-v text-danger'));
+                        btn.push($('<i/>').addClass('fa fa-ellipsis-v text-danger'));
                     } else {
                         if (model.get('_isFuture')) {
-                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-warning fa-fw'));
+                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-warning'));
+                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-warning'));
                         } else {
-                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-success fa-fw'));
+                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-success'));
+                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-success'));
                         }
                         btn.push(tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON())));
                     }

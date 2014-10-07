@@ -82,21 +82,21 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
 
             var _initCategoryID = null;
             var _initOriginID = null;
-            var _categories = this.model.get('_categories');
-            var _origins = this.model.get('_origins');
+            // var _categories = this.model.get('_categories');
+            // var _origins = this.model.get('_origins');
             var _features = this.model.get('_features');
-            var _resultsCategories = _(_categories).map(function (item) {
-                return {
-                    id: item.ID,
-                    text: item.Name
-                };
-            });
-            var _resultsOrigins = _(_origins).map(function (item) {
-                return {
-                    id: item.ID,
-                    text: item.Name
-                };
-            });
+            // var _resultsCategories = _(_categories).map(function (item) {
+            //     return {
+            //         id: item.ID,
+            //         text: item.Name
+            //     };
+            // });
+            // var _resultsOrigins = _(_origins).map(function (item) {
+            //     return {
+            //         id: item.ID,
+            //         text: item.Name
+            //     };
+            // });
             var _resultsFeatures = _(_features).map(function (item, id) {
                 return {
                     id: id,
@@ -106,11 +106,43 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             });
             var _selectCategory = this.$('#category').select2({
                 placeholder: "Виберіть категорію",
-                data: _resultsCategories
+                ajax: {
+                    url: APP.getApiLink({
+                        source: 'shop',
+                        fn: 'categories'
+                    }),
+                    results: function (data, page) {
+                        var _results = _(data.items).map(function (item) {
+                            return {
+                                id: item.ID,
+                                text: item.Name
+                            };
+                        });
+                        return {
+                            results: _results
+                        };
+                    }
+                }
             });
             var _selectOrigins = this.$('#origin').select2({
                 placeholder: "Виберіть виробника",
-                data: _resultsOrigins
+                ajax: {
+                    url: APP.getApiLink({
+                        source: 'shop',
+                        fn: 'origins'
+                    }),
+                    results: function (data, page) {
+                        var _results = _(data.items).map(function (item) {
+                            return {
+                                id: item.ID,
+                                text: item.Name
+                            };
+                        });
+                        return {
+                            results: _results
+                        };
+                    }
+                }
             });
             if (!this.model.isNew()) {
                 _initCategoryID = this.model.get('CategoryID');

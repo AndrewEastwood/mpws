@@ -12,7 +12,7 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
     'default/js/lib/select2/select2'
 ], function (Sandbox, Backbone, ModelCategory, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle (isNew) {
+    function _getTitle(isNew) {
         if (isNew) {
             return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_category_title_new);
         } else {
@@ -66,17 +66,25 @@ define("plugin/shop/toolbox/js/view/popupCategory", [
             if (!this.$dialog.isOpened())
                 this.$dialog.open();
 
-            var _items = this.model.get('_items');
-            var _results = _(_items).map(function(item){
-                return {
-                    id: item.ID,
-                    text: item.Name
-                };
-            });
-
             var _select = this.$('#parent').select2({
                 placeholder: "Без батьківської категорії",
-                data: _results
+                ajax: {
+                    url: APP.getApiLink({
+                        source: 'shop',
+                        fn: 'categories'
+                    }),
+                    results: function (data, page) {
+                        var _results = _(data.items).map(function (item) {
+                            return {
+                                id: item.ID,
+                                text: item.Name
+                            };
+                        });
+                        return {
+                            results: _results
+                        };
+                    }
+                }
             });
 
             if (!this.model.isNew()) {

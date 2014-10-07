@@ -94,12 +94,9 @@ define("plugin/shop/toolbox/js/view/filterPanelOrigins", [
         },
         dropDownFixPosition: function (event) {
             var $btnGroup = $(event.target).closest('.btn-group');
-            console.log($btnGroup.find('button'), $btnGroup.find('.dropdown-menu'));
             dropDownFixPosition($btnGroup.find('button'), $btnGroup.find('.dropdown-menu'));
         },
         render: function () {
-            // debugger;
-            // var self = this;
             var _data = Utils.getHBSTemplateData(this);
             _(_data.data).each(function (item) {
                 item.contextButton = tplBtnMenuMainItem(Utils.getHBSTemplateData(item));
@@ -107,15 +104,6 @@ define("plugin/shop/toolbox/js/view/filterPanelOrigins", [
             this.$el.html(tpl(_data));
             this.$('.dropdown-toggle').addClass('btn-link');
             this.restoreLayout();
-            // $('body').scroll(function () {
-            //     debugger;
-            //     console.log('1111111111111');
-            //     var button = $('.origin-item .open button');
-            //     if (button.length) {
-            //         var dropDownTop = button.offset().top + button.outerHeight() - $('body').scrollTop();
-            //         $('.origin-item .open .dropdown-toggle').css('top', dropDownTop + "px");
-            //     }
-            // });
             return this;
         }
     });

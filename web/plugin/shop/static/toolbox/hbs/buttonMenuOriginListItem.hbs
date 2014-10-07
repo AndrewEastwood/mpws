@@ -5,7 +5,9 @@
     </button>
     <ul class="dropdown-menu" role="menu">
         <li><a href="{{bb_link instances.shop.urls.originEdit id=data.ID asRoot=true}}"><i class="fa fa-pencil fa-fw"></i> Редагувати</a></li>
+        {{#unless data._isRemoved}}
         <li><a href="javascript://" class="remove" data-id="{{data.ID}}"><i class="fa fa-times fa-fw"></i> Видалити</a></li>
+        {{/unless}}
         {{#if data._isRemoved}}
         <li class="divider"></li>
         <li><a href="javascript://" class="restore" data-id="{{data.ID}}"><i class="fa fa-undo fa-fw"></i> Відновити</a></li>
