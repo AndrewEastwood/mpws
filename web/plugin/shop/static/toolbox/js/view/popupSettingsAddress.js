@@ -28,13 +28,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             'click .remove-contact': 'removeFormGroup',
             'click .contact-types a': 'selectFormGroup',
             'click .tab-contacts': 'showContactsButton',
-            'click .button-label': 'setCustomType',
             'click .tab:not(.tab-contacts)': 'hideContactsButton'
-        },
-        setCustomType: function (event) {
-            if ($(event.target).hasClass('custom-type')) {
-                this.$('.custom-type').editable('activate');
-            }
         },
         showContactsButton: function () {
             this.$('.add-contact').parent().removeClass('hidden');
@@ -42,11 +36,27 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         hideContactsButton: function () {
             this.$('.add-contact').parent().addClass('hidden');
         },
+        getPropertyName: function (Name) {
+            if (this.options.isNew) {
+                return 'Address_' + this.options.newID + '_' + Name;
+            } else {
+                var model = self.collection.at(0),
+                    property = model && model.get('Property') || "",
+                    addressMatch = property.match(/\w+_([0-9]+)_\w+/),
+                    addressUID = addressMatch && addressMatch[1];
+                if (addressUID) {
+                    return 'Address_' + addressUID + '_' + Name;
+                } else {
+                    throw 'Cannot find address uid in the property: ' + property + ' with collection len ' + self.collection.length;
+                }
+            }
+        },
         initialize: function () {
             var self = this,
                 buttons = [];
             this.collection = new CollectionSettings();
             this.options = {};
+            this.options.newID = (new Date()).getTime();
             this.options.editableOptions = {
                 mode: 'popup',
                 name: 'Name',
@@ -70,26 +80,16 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                     label: lang.popup_origin_button_Save,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        debugger;
-                        self.collection.create({
-
+                        self.$('.tab-content .form-control').each(function () {
+                            self.collection.create({
+                                Property: self.getPropertyName($(this).data('property')),
+                                Label: $(this).data('label') || null,
+                                Value: $(this).val(),
+                                Type: 'ADDRESS'
+                            });
                         });
-                        // self.model.save({
-                        //     Property: self.$('#name').val(),
-                        //     Value: self.$('#description').val(),
-                        //     Type: 'ADDRESS'
-                        // }, {
-                        //     wait: true,
-                        //     patch: true,
-                        //     success: function (model, response) {
-                        //         // debugger;
-                        //         if (!response || !response.success) {
-                        //             self.render();
-                        //         } else {
-                        //             dialog.close();
-                        //         }
-                        //     }
-                        // });
+                        dialog.close();
+                        self.trigger('close');
                     }
                 });
             }
@@ -104,7 +104,8 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         },
         render: function () {
             // debugger;
-            this.$title.html(_getTitle(this.collection.isEmpty()));
+            this.options.isNew = this.collection.isEmpty();
+            this.$title.html(_getTitle(this.options.isNew));
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
@@ -124,22 +125,27 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         selectFormGroup: function (event) {
             event.preventDefault();
 
-            var $formGroup = $(event.target).closest('.contact-item');
-            var type = $(event.target).data("type");
-            var concept = $(event.target).text();
+            var $menuItem = $(event.target);
+            var $formGroup = $menuItem.closest('.contact-item');
+            var $control = $formGroup.find('.form-control');
+            var $buttonLabel = $formGroup.find('.button-label');
+            var type = $menuItem.data("type");
+            var concept = $menuItem.text();
+            var isCustom = type.toLowerCase() === 'custom';
 
-            $formGroup.find('.address-type').val(type);
-            $formGroup.find('.button-label').toggleClass('custom-type', type === 'custom');
-            $formGroup.find('.button-label').text(concept);
-            if (type === 'custom') {
-                $formGroup.find('.address-label').val(concept);
-                $formGroup.find('.button-label').editable(this.options.editableOptions)
+            $control.data('property', type).attr('data-property', type);
+            $control.data('label', concept).attr('data-label', concept);
+            $buttonLabel.text(concept);
+
+            $buttonLabel.toggleClass('custom-type', isCustom);
+            if (isCustom) {
+                $buttonLabel.editable(this.options.editableOptions)
                     .on('save', function (e, params) {
-                        $(event.target).text(params.newValue);
-                        $formGroup.find('.address-label').val(params.newValue);
+                        $menuItem.text(params.newValue);
+                        $control.data('label', params.newValue).attr('data-label', params.newValue);
                     });
             } else {
-                $formGroup.find('.button-label').editable('destroy');
+                $buttonLabel.editable('destroy');
             }
         }
     });

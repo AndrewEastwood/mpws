@@ -762,10 +762,7 @@ class configurationShopDataSource extends objectConfiguration {
             "source" => "shop_settings",
             "action" => "insert",
             "data" => $data,
-            "options" => null,
-            "saveOptions" => array(
-                "useInsertIgnore" => true
-            )
+            "options" => null
         ));
     }
 

@@ -35,22 +35,44 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
         render: function () {
             var data = Utils.getHBSTemplateData(this);
             data.extras.shopNames = _(data.data).filter(function (item) {
-                return  /ShopName$/.test(item.Property);
+                return /ShopName$/.test(item.Property);
             });
             this.$el.html(tpl(data));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             return this;
         },
         addAddress: function () {
-            var popup = new PopupSettingsAddress();
+            var self = this,
+                popup = new PopupSettingsAddress();
             popup.render();
+            popup.on('close', function () {
+                self.collection.fetch({
+                    reset: true
+                });
+            });
         },
         editAddress: function () {
-            var popup = new PopupSettingsAddress();
-            popup.collection.setCustomQueryField('Property', 'Address1_%:LIKE');
+            var self = this,
+                $item = $(event.target).closest('.list-group-item'),
+                id = $item.data('id'),
+                model = this.collection.get(id),
+                popup = new PopupSettingsAddress(),
+                addressMatch = model.get('Property').match(/\w+_([0-9]+)_\w+/),
+                addressUID = addressMatch && addressMatch[1];
+
+            if (!addressUID) {
+                return;
+            }
+
+            popup.collection.setCustomQueryField('Property', 'Address_' + addressUID + '_%:LIKE');
             popup.collection.setCustomQueryField('Type', 'ADDRESS');
             popup.collection.fetch({
                 reset: true
+            });
+            popup.on('close', function () {
+                self.collection.fetch({
+                    reset: true
+                });
             });
         },
         setSettingState: function (event, state, skip) {

@@ -12,28 +12,28 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Назва відділу</label>
                     <div class="col-sm-10">
-                        <input type="text" id="shopName" class="form-control" value="{{data.Address1_ShopName}}">
+                        <input type="text" data-property="ShopName" class="form-control" value="{{data.Address1_ShopName}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 1</label>
                     <div class="col-sm-10">
-                        <input type="text" id="shopAddress_Line1" class="form-control" value="{{data.Address1_AddressLine1}}">
+                        <input type="text" data-property="AddressLine1" class="form-control" value="{{data.Address1_AddressLine1}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 2</label>
                     <div class="col-sm-10">
-                        <input type="text" id="shopAddress_Line2" class="form-control" value="{{data.Address1_AddressLine2}}">
+                        <input type="text" data-property="AddressLine2" class="form-control" value="{{data.Address1_AddressLine2}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 3</label>
                     <div class="col-sm-10">
-                        <input type="text" id="shopAddress_Line3" class="form-control" value="{{data.Address1_AddressLine3}}">
+                        <input type="text" data-property="AddressLine3" class="form-control" value="{{data.Address1_AddressLine3}}">
                     </div>
                 </div>
             </fieldset>
@@ -53,19 +53,17 @@
                 <button type="button" class="btn btn-link button-label"><span class="concept">Телефон</span></button>
                 <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu contact-types" role="menu">
-                    <li><a href="javascript://" class="contact-type" data-type="phone">Телефон</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="fax">Факс</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="skype">Skype</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="email">E-mail</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="www">Web</a></li>
-                    <li><a href="javascript://" class="contact-type" data-type="map">Map</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Phone">Телефон</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Fax">Факс</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Skype">Skype</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Email">E-mail</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Www">Web</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Map">Map</a></li>
                     <li class="divider"></li>
-                    <li><a href="javascript://" class="contact-type" data-type="custom">Свій тип</a></li>
+                    <li><a href="javascript://" class="contact-type" data-type="Custom">Свій тип</a></li>
                 </ul>
             </div>
         </div>
-        <input type="hidden" class="form-control address-type" value="phone">
-        <input type="hidden" class="form-control address-label">
-        <input type="text" class="form-control address-value">
+        <input type="text" class="form-control" data-property="Phone" data-label="Телефон" value="">
     </div>
 </div>

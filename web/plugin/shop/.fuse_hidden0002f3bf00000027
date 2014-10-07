@@ -85,8 +85,8 @@ class pluginShop extends objectPlugin {
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Property' => array('string'),
-            'Value' => array('skipIfUnset'),
-            'Label' => array('skipIfUnset')
+            'Value' => array('string', 'skipIfUnset'),
+            'Label' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
