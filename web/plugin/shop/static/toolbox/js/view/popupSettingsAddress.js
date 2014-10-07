@@ -40,14 +40,12 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             if (this.options.isNew) {
                 return 'Address_' + this.options.newID + '_' + Name;
             } else {
-                var model = self.collection.at(0),
-                    property = model && model.get('Property') || "",
-                    addressMatch = property.match(/\w+_([0-9]+)_\w+/),
-                    addressUID = addressMatch && addressMatch[1];
+                var model = this.collection.at(0),
+                    addressUID = model && model.getAddressUID();
                 if (addressUID) {
                     return 'Address_' + addressUID + '_' + Name;
                 } else {
-                    throw 'Cannot find address uid in the property: ' + property + ' with collection len ' + self.collection.length;
+                    throw 'Cannot find address uid in the model: ' + model.toJSON() + '; with collection len ' + this.collection.length;
                 }
             }
         },
@@ -64,7 +62,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                 unsavedclass: '',
                 validate: function (value) {
                     if ($.trim(value) === '') {
-                        return 'Введіть назву перевізника';
+                        return 'Введіть значення';
                     }
                 }
             };
@@ -80,13 +78,37 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                     label: lang.popup_origin_button_Save,
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
-                        self.$('.tab-content .form-control').each(function () {
-                            self.collection.create({
-                                Property: self.getPropertyName($(this).data('property')),
-                                Label: $(this).data('label') || null,
-                                Value: $(this).val(),
-                                Type: 'ADDRESS'
-                            });
+                        var modelID = null,
+                            model = null;
+                        self.$('.tab-content .setting').each(function () {
+                            modelID = $(this).attr('id');
+                            if (modelID) {
+                                // update each field
+                                model = self.collection.get(modelID);
+                                // don't use wrong ids
+                                if (!model) {
+                                    return;
+                                }
+                                if ($(this).data('remove') === 1) {
+                                    model.destroy();
+                                } else {
+                                    model.save({
+                                        Property: self.getPropertyName($(this).data('property')),
+                                        Label: $(this).data('label') || null,
+                                        Value: $(this).val() || $(this).text()
+                                    }, {
+                                        patch: true
+                                    });
+                                }
+                            } else {
+                            // create new bunch of fields
+                                self.collection.create({
+                                    Property: self.getPropertyName($(this).data('property')),
+                                    Label: $(this).data('label') || null,
+                                    Value: $(this).val() || $(this).text(),
+                                    Type: 'ADDRESS'
+                                });
+                            }
                         });
                         dialog.close();
                         self.trigger('close');
@@ -104,9 +126,41 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         },
         render: function () {
             // debugger;
+            var data = Utils.getHBSTemplateData(this),
+                tmpAddressFieldsName = null,
+                tmpModelData = null;
             this.options.isNew = this.collection.isEmpty();
             this.$title.html(_getTitle(this.options.isNew));
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+
+            data.extras.contactFields = [];
+            data.extras.addressFields = {};
+            data.extras.openHoursFields = {};
+            this.collection.each(function (model) {
+                tmpAddressFieldsName = model.getAddressFieldName();
+                tmpModelData = model.toJSON();
+                tmpModelData._viewUID = model.getAddressUID();
+                tmpModelData._viewFieldName = tmpAddressFieldsName;
+                if (/ShopName|^Address/.test(tmpAddressFieldsName)) {
+                    data.extras.addressFields[tmpAddressFieldsName] = tmpModelData;
+                } else if (/.*OpenHours.*/.test(tmpAddressFieldsName)) {
+                    data.extras.openHoursFields[tmpAddressFieldsName] = tmpModelData;
+                } else {
+                    data.extras.contactFields.push(tmpModelData);
+                }
+            });
+            this.$el.html(tpl(data));
+            this.$('#openhours .ediatble').editable(_.defaults({
+                emptytext: '00:00 - 00:00',
+                mode: 'inline'
+            }, this.options.editableOptions));
+            this.$('.button-label.custom-type').editable(this.options.editableOptions)
+                .on('save', function (event, params) {
+                    var $formGroup = $(event.target).closest('.contact-item'),
+                        $control = $formGroup.find('.form-control'),
+                        $menuCustomItem = $formGroup.find('.custom-contact-type');
+                    $menuCustomItem.text(params.newValue);
+                    $control.data('label', params.newValue).attr('data-label', params.newValue);
+                });
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
             }
@@ -119,8 +173,10 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         },
         removeFormGroup: function (event) {
             event.preventDefault();
-            var $contactItem = $(event.target).closest('.contact-item');
-            $contactItem.remove();
+            var $formGroup = $(event.target).closest('.contact-item');
+            var $control = $formGroup.find('.form-control');
+            $control.data('remove', 1).addAttribute('data-remove', 1);
+            $formGroup.addClass('hidden').hide();
         },
         selectFormGroup: function (event) {
             event.preventDefault();

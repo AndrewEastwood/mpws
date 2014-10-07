@@ -4,7 +4,8 @@ define("plugin/shop/toolbox/js/router", [
     'cmn_jquery',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
-    'default/js/lib/cache'
+    'default/js/lib/cache',
+    'default/js/lib/handlebarsHelpers'
 ], function (require, Sandbox, $, _, Backbone, Cache) {
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {

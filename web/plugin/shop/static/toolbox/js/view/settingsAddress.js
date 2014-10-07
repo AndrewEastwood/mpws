@@ -19,6 +19,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
         events: {
             'click .add-address': 'addAddress',
             'click .edit-address': 'editAddress',
+            'click .remove-address': 'deleteAddress',
             'switchChange.bootstrapSwitch .switcher': 'setSettingState'
         },
         initialize: function () {
@@ -30,6 +31,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
             };
             this.collection = new CollectionSettings();
             this.collection.setCustomQueryField('Type', 'ADDRESS');
+            this.collection.setCustomQueryField('Status', 'REMOVED:!=');
             this.listenTo(this.collection, 'reset', this.render);
         },
         render: function () {
@@ -57,8 +59,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 id = $item.data('id'),
                 model = this.collection.get(id),
                 popup = new PopupSettingsAddress(),
-                addressMatch = model.get('Property').match(/\w+_([0-9]+)_\w+/),
-                addressUID = addressMatch && addressMatch[1];
+                addressUID = model.getAddressUID();
 
             if (!addressUID) {
                 return;
@@ -66,6 +67,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
 
             popup.collection.setCustomQueryField('Property', 'Address_' + addressUID + '_%:LIKE');
             popup.collection.setCustomQueryField('Type', 'ADDRESS');
+            popup.collection.setCustomQueryField('Status', 'REMOVED:!=');
             popup.collection.fetch({
                 reset: true
             });
@@ -73,6 +75,26 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 self.collection.fetch({
                     reset: true
                 });
+            });
+        },
+        deleteAddress: function (event) {
+            var self = this,
+                $item = $(event.target).closest('.list-group-item'),
+                id = $item.data('id'),
+                model = this.collection.get(id),
+                addressUID = model.getAddressUID();
+
+            BootstrapDialog.confirm("Видалити цю адресу?", function (rez) {
+                if (rez) {
+                    self.collection.each(function (collectionModel) {
+                        if (collectionModel.getAddressUID() === addressUID) {
+                            collectionModel.destroy({
+                                wait: true
+                            });
+                        }
+                    });
+                    self.collection.fetch({reset: true});
+                }
             });
         },
         setSettingState: function (event, state, skip) {

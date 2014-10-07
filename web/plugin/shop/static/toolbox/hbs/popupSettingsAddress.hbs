@@ -12,37 +12,96 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Назва відділу</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="ShopName" class="form-control" value="{{data.Address1_ShopName}}">
+                        <input type="text" data-property="ShopName" class="form-control setting" id="{{extras.addressFields.ShopName.ID}}" value="{{extras.addressFields.ShopName.Value}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 1</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="AddressLine1" class="form-control" value="{{data.Address1_AddressLine1}}">
+                        <input type="text" data-property="AddressLine1" class="form-control setting" id="{{extras.addressFields.AddressLine1.ID}}" value="{{extras.addressFields.AddressLine1.Value}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 2</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="AddressLine2" class="form-control" value="{{data.Address1_AddressLine2}}">
+                        <input type="text" data-property="AddressLine2" class="form-control setting" id="{{extras.addressFields.AddressLine2.ID}}" value="{{extras.addressFields.AddressLine2.Value}}">
                     </div>
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="textinput">Адреса 3</label>
                     <div class="col-sm-10">
-                        <input type="text" data-property="AddressLine3" class="form-control" value="{{data.Address1_AddressLine3}}">
+                        <input type="text" data-property="AddressLine3" class="form-control setting" id="{{extras.addressFields.AddressLine3.ID}}" value="{{extras.addressFields.AddressLine3.Value}}">
                     </div>
                 </div>
             </fieldset>
         </form>
     </div>
-    <div class="tab-pane fade fields" id="contacts"></div>
+    <div class="tab-pane fade fields" id="contacts">
+        {{#each extras.contactFields}}
+        <div class="form-group contact-template multiple-form-group input-group contact-item">
+            <i class="fa fa-times text-danger fa-fw remove-contact"></i>
+            <div class="input-group-btn">
+                <div class="wrapper">
+                    <button type="button" class="btn btn-link button-label{{#if_eq _viewFieldName 'Custom'}} custom-type{{/if_eq}}"><span class="concept">{{Label}}</span></button>
+                    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                    <ul class="dropdown-menu contact-types" role="menu">
+                        <li><a href="javascript://" class="contact-type" data-type="Phone">Телефон</a></li>
+                        <li><a href="javascript://" class="contact-type" data-type="Fax">Факс</a></li>
+                        <li><a href="javascript://" class="contact-type" data-type="Skype">Skype</a></li>
+                        <li><a href="javascript://" class="contact-type" data-type="Email">E-mail</a></li>
+                        <li><a href="javascript://" class="contact-type" data-type="Www">Web</a></li>
+                        <li><a href="javascript://" class="contact-type" data-type="Map">Map</a></li>
+                        <li class="divider"></li>
+                        {{#if_eq _viewFieldName 'Custom'}}
+                        <li><a href="javascript://" class="contact-type custom-contact-type" data-type="Custom">{{Label}}</a></li>
+                        {{else}}
+                        <li><a href="javascript://" class="contact-type custom-contact-type" data-type="Custom">Свій тип</a></li>
+                        {{/if_eq}}
+                    </ul>
+                </div>
+            </div>
+            <input type="text" id="{{ID}}" class="form-control setting" data-property="{{_viewFieldName}}" data-label="{{Label}}" value="{{Value}}">
+        </div>
+        {{/each}}
+    </div>
     <div class="tab-pane fade" id="openhours">
-        <h4>Messages Tab</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <table class="table table-striped">
+            <tr>
+                <th>День</th>
+                <th>Графік</th>
+            </tr>
+            <tr>
+                <td>Понеділок</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnMon.ID}}" data-property="OpenHoursOnMon">{{extras.openHoursFields.OpenHoursOnMon.Value}}</span></td>
+            </tr>
+            <tr>
+                <td>Вівторок</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnTue.ID}}" data-property="OpenHoursOnTue">{{extras.openHoursFields.OpenHoursOnTue.Value}}</span></td>
+            </tr>
+            <tr>
+                <td>Середа</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnWed.ID}}" data-property="OpenHoursOnWed">{{extras.openHoursFields.OpenHoursOnWed.Value}}</span></td>
+            </tr>
+            <tr>
+                <td>Четвер</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnThu.ID}}" data-property="OpenHoursOnThu">{{extras.openHoursFields.OpenHoursOnThu.Value}}</span></td>
+            </tr>
+            <tr>
+                <td>Пятниця</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnFri.ID}}" data-property="OpenHoursOnFri">{{extras.openHoursFields.OpenHoursOnFri.Value}}</span></td>
+            </tr>
+            <tr>
+                <td>Субота</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnSat.ID}}" data-property="OpenHoursOnSat">{{extras.openHoursFields.OpenHoursOnSat.Value}}</span></td>
+            </tr>
+            <tr>
+                <td>Неділя</td>
+                <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnSun.ID}}" data-property="OpenHoursOnSun">{{extras.openHoursFields.OpenHoursOnSun.Value}}</span></td>
+            </tr>
+        </table>
     </div>
 </div>
 <div class="hidden">
@@ -64,6 +123,6 @@
                 </ul>
             </div>
         </div>
-        <input type="text" class="form-control" data-property="Phone" data-label="Телефон" value="">
+        <input type="text" class="form-control setting" data-property="Phone" data-label="Телефон" value="">
     </div>
 </div>

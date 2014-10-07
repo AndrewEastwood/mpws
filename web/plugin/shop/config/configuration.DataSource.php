@@ -726,7 +726,7 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_settings",
             "condition" => array(),
-            "fields" => array("ID", "Property", "Value", "Status", "Type", "DateCreated"),
+            "fields" => array("ID", "Property", "Label", "Value", "Status", "Type", "DateCreated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -787,6 +787,20 @@ class configurationShopDataSource extends objectConfiguration {
         unset($config['condition']['ID']);
         $config['condition']['Property'] = self::jsapiCreateDataSourceCondition($id);
         return $config;
+    }
+
+    static function jsapiShopRemoveSetting ($id) {
+        $data["DateUpdated"] = self::getDate();
+        $data["Status"] = 'REMOVED';
+        return self::jsapiGetDataSourceConfig(array(
+            "source" => "shop_settings",
+            "action" => "update",
+            "condition" => array(
+                "ID" => self::jsapiCreateDataSourceCondition($id)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
     }
     // <<<<< shop delivery agencies
 

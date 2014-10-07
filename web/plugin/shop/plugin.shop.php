@@ -86,7 +86,8 @@ class pluginShop extends objectPlugin {
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
             'Property' => array('string'),
             'Value' => array('skipIfUnset'),
-            'Label' => array('skipIfUnset')
+            'Label' => array('skipIfUnset'),
+            'Type' => array('string')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -129,8 +130,9 @@ class pluginShop extends objectPlugin {
         $success = false;
 
         $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Value' => array('string', 'skipIfUnset'),
-            'Status' => array('string', 'skipIfUnset')
+            'Value' => array('skipIfUnset'),
+            'Label' => array('skipIfUnset'),
+            'Status' => array('skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -165,6 +167,29 @@ class pluginShop extends objectPlugin {
 
         return $result;
     }
+
+    public function removeSetting ($settingID) {
+        $result = array();
+        $errors = array();
+        $success = false;
+
+        try {
+            $this->getCustomerDataBase()->beginTransaction();
+            $config = configurationShopDataSource::jsapiShopRemoveSetting($settingID);
+            $this->getCustomer()->fetch($config);
+            $this->getCustomerDataBase()->commit();
+            $success = true;
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
 
 
 
@@ -1961,6 +1986,21 @@ class pluginShop extends objectPlugin {
             // $this->_getOrSetCachedState('changed:setting', true);
         }
     }
+
+    public function delete_shop_setting (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
+        if (empty($req->get['id'])) {
+            $resp['error'] = 'MissedParameter_id';
+        } else {
+            $settingID = intval($req->get['id']);
+            $resp = $this->removeSetting($settingID);
+            // $this->_getOrSetCachedState('changed:setting', true);
+        }
+    }
+
 
 
 
