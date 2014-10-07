@@ -1617,6 +1617,9 @@ class pluginShop extends objectPlugin {
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
+        $data['_isExpired'] = strtotime(configurationShopDataSource::getDate()) > strtotime($data['DateExpire']);
+        $data['_isFuture'] = strtotime(configurationShopDataSource::getDate()) < strtotime($data['DateStart']);
+        $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
         return $data;
     }
 
@@ -1681,7 +1684,7 @@ class pluginShop extends objectPlugin {
             $errors = $validatedDataObj["errors"];
 
         if ($success && !empty($promoID))
-            $result = $this->getOriginByID($promoID);
+            $result = $this->getPromoByID($promoID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 

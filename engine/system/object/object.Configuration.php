@@ -6,7 +6,11 @@ class objectConfiguration implements IConfiguration {
     static $DEFAULT_COMPARATOR = '=';
     static $DEFAULT_CONCATENATE = '+';
 
-    static function getDate () {
+    static function getDate ($strDate = '') {
+        if (!empty($strDate)) {
+            $time = strtotime($strDate);
+            return date(self::$DATE_FORMAT, $time);
+        }
         return date(self::$DATE_FORMAT);
     }
 

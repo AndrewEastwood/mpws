@@ -13,13 +13,17 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
         template: tpl,
         lang: lang,
         className: 'shop-toolbox-promos',
+        events: {
+            'click #show_expired': 'showExpired'
+        },
         initialize: function (options) {
             // debugger;
             // set options
             this.setOptions(options);
             // create collection and viewPromosList
             this.viewPromosList = new ViewOrdersListPromos();
-            this.listenTo(this.viewPromosList.collection, 'reset', this.render);
+            this.collection = this.viewPromosList.collection;
+            this.listenTo(this.collection, 'reset', this.render);
         },
         setOptions: function (options) {
             // merge with defaults
@@ -36,13 +40,18 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
                 this.$('.tab-link.orders-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
         },
+        showExpired: function (event) {
+            this.viewPromosList.collection.fetchWithExpired($(event.target).is(':checked'), {
+                reset: true
+            });
+        },
         render: function () {
             // TODO:
             // add expired and todays orders
             if (this.$el.is(':empty')) {
+                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 this.viewPromosList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
                 this.viewPromosList.render();
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
                 // show sub-view
                 this.$('.promo-list').html(this.viewPromosList.$el);
             }

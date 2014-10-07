@@ -3,7 +3,7 @@ var APP = {
     commonElements: [],
     instances: {},
     isCompleted: false,
-    getModulesToDownload: function() {
+    getModulesToDownload: function () {
         var modules = [
             'default/js/lib/sandbox',
             'cmn_jquery',
@@ -62,7 +62,7 @@ var APP = {
 
 APP.init();
 
-require(["default/js/lib/url"], function(JSUrl) {
+require(["default/js/lib/url"], function (JSUrl) {
     APP.getApiLink = function (extraOptions) {
         var _url = new JSUrl(APP.config.URL_API);
         _url.query.token = APP.config.TOKEN;
@@ -83,7 +83,7 @@ require(["default/js/lib/url"], function(JSUrl) {
     }
 })
 
-require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */) {
+require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */ ) {
 
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
 
@@ -108,11 +108,13 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     }
 
     var xhrPool = [];
-    $(document).ajaxSend(function(e, jqXHR, options){
+    $(document).ajaxSend(function (e, jqXHR, options) {
         xhrPool.push(jqXHR);
     });
-    $(document).ajaxComplete(function(event, jqXHR, data) {
-        xhrPool = $.grep(xhrPool, function(x){return x!=jqXHR});
+    $(document).ajaxComplete(function (event, jqXHR, data) {
+        xhrPool = $.grep(xhrPool, function (x) {
+            return x != jqXHR
+        });
         if (!jqXHR.responseText)
             return;
         // debugger;
@@ -122,8 +124,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // }
         Sandbox.eventNotify("global:ajax:responce", response);
     });
-    APP.xhrAbortAll = function() {
-        $.each(xhrPool, function(idx, jqXHR) {
+    APP.xhrAbortAll = function () {
+        $.each(xhrPool, function (idx, jqXHR) {
             jqXHR.abort();
         });
     };
@@ -168,7 +170,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     Sandbox.eventSubscribe('global:content:render', function (options) {
         // debugger;
         if (_.isArray(options))
-            _(options).each(function(option){
+            _(options).each(function (option) {
                 renderFn(option);
             });
         else
@@ -177,7 +179,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         Sandbox.eventNotify('global:menu:set-active');
     });
 
-    $(window).on('hashchange', function() {
+    $(window).on('hashchange', function () {
         // set page name
         var fragment = Backbone.history.getFragment();
         var _hashTags = fragment.split('/');
@@ -239,7 +241,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         },
         signout: function () {
             // debugger;
-            Auth.signout(function(){
+            Auth.signout(function () {
                 Sandbox.eventNotify('global:page:signout', 'signout');
             });
         }
@@ -247,7 +249,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
     var defaultRouter = new Router();
 
-    require([APP.config.ROUTER], function(CustomerRouter){
+    require([APP.config.ROUTER], function (CustomerRouter) {
         if (_.isFunction(CustomerRouter)) {
             var customerRouter = new CustomerRouter();
             APP.instances['CustomerRouter'] = customerRouter;
@@ -255,11 +257,13 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
         var releasePluginsFn = function () {
             var pluginList = APP.getPluginRoutersToDownload();
-            var pluginNames = _(pluginList).map(function(pluginListItem){ return pluginListItem.match(/^plugin\/(\w+)\//)[1]; });
-            require(pluginList, function(){
+            var pluginNames = _(pluginList).map(function (pluginListItem) {
+                return pluginListItem.match(/^plugin\/(\w+)\//)[1];
+            });
+            require(pluginList, function () {
                 var _pluginsObjects = [].slice.call(arguments);
                 // initialize plugins
-                _(_pluginsObjects).each(function(plugin, key){
+                _(_pluginsObjects).each(function (plugin, key) {
                     if (_.isFunction(plugin)) {
                         var plg = new plugin();
                         APP.instances[pluginNames[key]] = plg;

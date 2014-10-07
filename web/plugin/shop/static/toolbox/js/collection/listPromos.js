@@ -1,17 +1,24 @@
 define('plugin/shop/toolbox/js/collection/listPromos', [
     'default/js/lib/underscore',
     'plugin/shop/toolbox/js/model/promo',
-    'default/js/lib/backbone-paginator'
-], function (_, ModelOrigin, PageableCollection) {
+    'default/js/lib/backbone-paginator',
+    'default/js/lib/cache'
+], function (_, ModelOrigin, PageableCollection, Cache) {
 
     var ListPromos = PageableCollection.extend({
+        extras: {},
 
         model: ModelOrigin,
 
-        url: APP.getApiLink({
-            source: 'shop',
-            fn: 'promos'
-        }),
+        url: function () {
+            var urlOptions = {
+                source: 'shop',
+                fn: 'promos',
+                expired: !!this.queryParams.expired
+            };
+
+            return APP.getApiLink(urlOptions);
+        },
 
         // Initial pagination states
         state: {
@@ -21,11 +28,16 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
 
         // You can remap the query parameters from `state` keys from
         // the default to those your server supports
-        queryParams: {
+        queryParams: Cache.get('shopPromosListRD') || {
             totalPages: null,
             totalRecords: null,
             pageSize: "limit",
             sortKey: "sort"
+        },
+
+        fetch: function (options) {
+            Cache.set('shopPromosListRD', this.queryParams);
+            return Backbone.Collection.prototype.fetch.call(this, options);
         },
 
         setCustomQueryField: function (field, value) {
@@ -55,7 +67,13 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
         },
 
         parseRecords: function (resp) {
+            this.extras.withExpired = this.queryParams.expired;
             return resp.items;
+        },
+
+        fetchWithExpired: function (includeExpired, fetchOptions) {
+            this.queryParams.expired = includeExpired;
+            this.fetch(fetchOptions);
         }
 
     });

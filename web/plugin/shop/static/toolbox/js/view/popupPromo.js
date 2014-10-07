@@ -10,10 +10,11 @@ define("plugin/shop/toolbox/js/view/popupPromo", [
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
     'default/js/lib/bootstrap-editable',
-    'default/js/lib/moment'
+    'default/js/lib/moment/moment',
+    'default/js/lib/moment/locale/uk'
 ], function (Sandbox, Backbone, ModelPromo, Utils, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle (isNew) {
+    function _getTitle(isNew) {
         if (isNew) {
             return $('<span/>').addClass('fa fa-asterisk').append(' ', lang.popup_promo_title_new);
         } else {
@@ -33,6 +34,7 @@ define("plugin/shop/toolbox/js/view/popupPromo", [
                 title: this.$title,
                 message: this.$el,
                 cssClass: 'popup-promo',
+                closable: false,
                 buttons: [{
                     label: lang.popup_origin_button_Close,
                     cssClass: 'btn-default btn-link',
@@ -70,11 +72,13 @@ define("plugin/shop/toolbox/js/view/popupPromo", [
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             this.$('.date').editable({
                 format: 'YYYY-MM-DD',
-                viewformat: 'DD.MM.YYYY',
+                viewformat: 'YYYY-MM-DD',
                 template: 'D / MMMM / YYYY',
+                container: 'body',
+                mode: 'inline',
+                emptytext: '0000-00-00',
                 combodate: {
-                    minYear: 2000,
-                    maxYear: 9015,
+                    minYear: 2014,
                     minuteStep: 1
                 }
             });

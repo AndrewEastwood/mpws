@@ -3,6 +3,7 @@ define("plugin/shop/toolbox/js/view/listPromos", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     "default/js/lib/backgrid",
+    'default/js/lib/bootstrap-dialog',
     /* collection */
     "plugin/shop/toolbox/js/collection/listPromos",
     /* template */
@@ -12,8 +13,9 @@ define("plugin/shop/toolbox/js/view/listPromos", [
     /* extensions */
     "default/js/lib/backgrid-paginator",
     "default/js/lib/backgrid-select-all",
+    'default/js/lib/moment/moment',
     "default/js/lib/backgrid-htmlcell"
-], function (Sandbox, Backbone, Utils, Backgrid, CollectionOrders, tplBtnMenuMainItem, lang) {
+], function (Sandbox, Backbone, Utils, Backgrid, BootstrapDialog, CollectionOrders, tplBtnMenuMainItem, lang) {
 
     function getColumns() {
 
@@ -26,7 +28,20 @@ define("plugin/shop/toolbox/js/view/listPromos", [
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var btn = tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON()));
+                    var btn = [];
+
+
+                    if (model.get('_isExpired')) {
+                        btn.push($('<i/>').addClass('fa fa-ellipsis-v text-danger fa-fw'));
+                    } else {
+                        if (model.get('_isFuture')) {
+                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-warning fa-fw'));
+                        } else {
+                            btn.push($('<i/>').addClass('fa fa-ellipsis-v text-success fa-fw'));
+                        }
+                        btn.push(tplBtnMenuMainItem(Utils.getHBSTemplateData(model.toJSON())));
+                    }
+
                     return btn;
                 }
             }
@@ -43,14 +58,24 @@ define("plugin/shop/toolbox/js/view/listPromos", [
             name: "DateStart",
             label: lang.listPromos_Column_DateStart,
             cell: "string",
-            editable: false
+            editable: false,
+            formatter: {
+                fromRaw: function (value) {
+                    return moment(value).format('YYYY-MM-DD');
+                }
+            }
         };
 
         var columnDateExpire = {
             name: "DateExpire",
             label: lang.listPromos_Column_DateExpire,
             cell: "string",
-            editable: false
+            editable: false,
+            formatter: {
+                fromRaw: function (value) {
+                    return moment(value).format('YYYY-MM-DD');
+                }
+            }
         };
 
         var columnDiscount = {
@@ -84,6 +109,9 @@ define("plugin/shop/toolbox/js/view/listPromos", [
     }
 
     var ListOrders = Backbone.View.extend({
+        events: {
+            'click .expire-promo': 'expirePromo'
+        },
         initialize: function (options) {
             this.options = options || {};
             this.collection = this.collection || new CollectionOrders();
@@ -109,7 +137,22 @@ define("plugin/shop/toolbox/js/view/listPromos", [
             } else {
                 this.$el.html(this.grid.emptyText);
             }
+            this.delegateEvents();
             return this;
+        },
+        expirePromo: function (event) {
+            var id = $(event.target).data('id'),
+                model = this.collection.get(id);
+
+            if (!model) {
+                return;
+            }
+
+            BootstrapDialog.confirm("Запинити цю промо-акцію?", function (rez) {
+                if (rez) {
+                    model.destroy();
+                }
+            });
         }
     });
 

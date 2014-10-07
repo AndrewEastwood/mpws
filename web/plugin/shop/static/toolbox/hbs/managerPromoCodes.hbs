@@ -3,9 +3,13 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a href="{{bb_link instances.shop.urls.promoCreate asRoot=true}}">
-                    <i class="fa fa-plus"></i>
+                    <i class="fa fa-plus fa-fw"></i>
                 </a>
                 {{lang.manager_promoCodes_listTitle}}
+                <label class="text-danger pull-right">
+                    <small>завершені</small>
+                    <input type="checkbox" id="show_expired" {{#if extras.withExpired }}checked="checked"{{/if}}>
+                </label>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body promo-list">

@@ -1114,9 +1114,11 @@ class configurationShopDataSource extends objectConfiguration {
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['expired'])) {
-            $config['condition']['DateStart'] = self::jsapiCreateDataSourceCondition(self::getDate(), '<=');
             $config['condition']['DateExpire'] = self::jsapiCreateDataSourceCondition(self::getDate(), '>=');
         }
+        // if (empty($options['future'])) {
+            // $config['condition']['DateStart'] = self::jsapiCreateDataSourceCondition(self::getDate(), '<=');
+        // }
         return $config;
     }
 
