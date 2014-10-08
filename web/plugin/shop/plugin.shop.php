@@ -2272,9 +2272,9 @@ class pluginShop extends objectPlugin {
             $ProductID = intval($req->get['id']);
             $resp = $this->getProductByID($ProductID);
         }
-        $resp["_origins"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
-        $resp["_categories"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
-        $resp["_statuses"] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
+        // $resp["_origins"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
+        // $resp["_categories"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
+        // $resp["_statuses"] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
         $resp["_features"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopFeatures);
     }
 

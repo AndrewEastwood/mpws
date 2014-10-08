@@ -80,32 +80,50 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 this.$dialog.open();
             }
 
-            var _initCategoryID = null;
-            var _initOriginID = null;
-            // var _categories = this.model.get('_categories');
-            // var _origins = this.model.get('_origins');
+            var _initCategory = {};
+            var _initOrigin = {};
+            if (!this.model.isNew()) {
+                _initCategory = {
+                    ID: this.model.get('CategoryID'),
+                    Text: this.model.get('CategoryName')
+                };
+                _initOrigin = {
+                    ID: this.model.get('OriginID'),
+                    Text: this.model.get('OriginName')
+                };
+            } else {
+                _initCategory = Cache.getOnce('mpwsShopPopupProductInitCategory') || _initCategory;
+                _initOrigin = Cache.getOnce('mpwsShopPopupProductInitOrigin') || _initOrigin;
+
+                if (_.isString(_initCategory)) {
+                    _initCategory = _initCategory.split(';;');
+                    if (_initCategory.length === 2) {
+                        _initCategory = {
+                            ID: parseInt(_initCategory[0], 10),
+                            Text: _initCategory[1]
+                        };
+                    }
+                }
+                if (_.isString(_initOrigin)) {
+                    _initOrigin = _initOrigin.split(';;');
+                    if (_initOrigin.length === 2) {
+                        _initOrigin = {
+                            ID: parseInt(_initOrigin[0], 10),
+                            Text: _initOrigin[1]
+                        };
+                    }
+                }
+            }
             var _features = this.model.get('_features');
-            // var _resultsCategories = _(_categories).map(function (item) {
-            //     return {
-            //         id: item.ID,
-            //         text: item.Name
-            //     };
-            // });
-            // var _resultsOrigins = _(_origins).map(function (item) {
-            //     return {
-            //         id: item.ID,
-            //         text: item.Name
-            //     };
-            // });
+
             var _resultsFeatures = _(_features).map(function (item, id) {
                 return {
                     id: id,
                     text: item
                 };
-                // return item;
             });
             var _selectCategory = this.$('#category').select2({
-                placeholder: "Виберіть категорію",
+                placeholder: _initCategory.ID ? false : 'Виберіть категорію',
                 ajax: {
                     url: APP.getApiLink({
                         source: 'shop',
@@ -122,10 +140,18 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             results: _results
                         };
                     }
+                },
+                initSelection: function (element, callback) {
+                    if (_initCategory.ID >= 0) {
+                        callback({
+                            id: _initCategory.ID,
+                            text: _initCategory.Text
+                        });
+                    }
                 }
             });
             var _selectOrigins = this.$('#origin').select2({
-                placeholder: "Виберіть виробника",
+                placeholder: _initOrigin.ID ? false : 'Виберіть виробника',
                 ajax: {
                     url: APP.getApiLink({
                         source: 'shop',
@@ -142,20 +168,23 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             results: _results
                         };
                     }
+                },
+                initSelection: function (element, callback) {
+                    if (_initOrigin.ID >= 0) {
+                        callback({
+                            id: _initOrigin.ID,
+                            text: _initOrigin.Text
+                        });
+                    }
                 }
             });
-            if (!this.model.isNew()) {
-                _initCategoryID = this.model.get('CategoryID');
-                _initOriginID = this.model.get('OriginID');
-            } else {
-                _initCategoryID = Cache.getOnce('mpwsShopPopupProductCategoryID');
-                _initOriginID = Cache.getOnce('mpwsShopPopupProductOriginID');
-            }
 
-            if (_initCategoryID)
-                _selectCategory.select2("val", _initCategoryID).val(_initCategoryID);
-            if (_initOriginID)
-                _selectOrigins.select2("val", _initOriginID).val(_initOriginID);
+            if (_initOrigin.ID >= 0) {
+                this.$('#origin').select2('val', _initOrigin.ID);
+            }
+            if (_initCategory.ID >= 0) {
+                this.$('#category').select2('val', _initCategory.ID);
+            }
 
             this.$('#price').maskMoney({
                 suffix: 'грн.',

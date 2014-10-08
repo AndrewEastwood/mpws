@@ -85,8 +85,9 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                             action: function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     node = inst.get_node(data.reference),
-                                    categoryID = parseInt(node.id, 10);
-                                Cache.set('mpwsShopPopupProductCategoryID', categoryID);
+                                    categoryID = parseInt(node.id, 10),
+                                    categoryText = node.text;
+                                Cache.set('mpwsShopPopupProductInitCategory', categoryID + ';;' + categoryText);
                                 Backbone.history.navigate(APP.instances.shop.urls.productCreate, true);
                             }
                         };
@@ -107,10 +108,6 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                                     }, {
                                         patch: true,
                                         success: function (model, resp, options) {
-                                            // debugger;
-                                            // if (resp && resp.Status) {
-                                            //     node.type = resp.Status;
-                                            // }
                                             self.collection.fetch({
                                                 reset: true
                                             });
