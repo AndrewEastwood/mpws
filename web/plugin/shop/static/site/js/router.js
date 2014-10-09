@@ -31,24 +31,36 @@ define("plugin/shop/site/js/router", [
     });
 
     order.fetch();
-    settings.fetch();
+    var $dfdSettings = settings.fetch();
+
+    var routes = {
+        "shop": "home",
+        "shop/catalog/:category": "shop_catalog_category",
+        "shop/catalog/": "shop_catalog",
+        "shop/product/:product": "shop_product",
+        "shop/cart": "shop_cart",
+        "shop/wishlist": "shop_wishlist",
+        "shop/compare": "shop_compare",
+        "shop/tracking(/)(:id)": "shop_tracking",
+        "shop/profile/orders": "shop_profile_orders"
+    };
 
     var Router = Backbone.Router.extend({
-        routes: {
-            "shop": "home",
-            "shop/catalog/:category": "shop_catalog_category",
-            "shop/catalog/": "shop_catalog",
-            "shop/product/:product": "shop_product",
-            "shop/cart": "shop_cart",
-            "shop/wishlist": "shop_wishlist",
-            "shop/compare": "shop_compare",
-            "shop/tracking(/)(:id)": "shop_tracking",
-            "shop/profile/orders": "shop_profile_orders"
-        },
+
+        settings: null,
+
+        routes: routes,
+
+        urls: _(routes).invert(),
 
         initialize: function () {
 
             var self = this;
+
+            $dfdSettings.done(function () {
+                self.settings = settings.toSettings();
+                console.log(self.settings);
+            });
 
             Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();
@@ -193,8 +205,7 @@ define("plugin/shop/site/js/router", [
                     order.set('account', _accountModel.toJSON());
                 // create new view
                 var cartStandalone = new CartStandalone({
-                    model: order,
-                    settings: settings
+                    model: order
                 });
                 // cartStandalone.collection.fetch({merge:true});
                 cartStandalone.render();

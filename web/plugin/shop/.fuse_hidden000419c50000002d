@@ -2045,9 +2045,10 @@ class pluginShop extends objectPlugin {
 
     public function get_shop_settings (&$resp, $req) {
         $data = $req->get;
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $data['_fStatus'] = "ACTIVE";
-        }
+        // if (!$this->getCustomer()->ifYouCan('Admin')) {
+        //     $data['_fStatus'] = "ACTIVE";
+        //     return;
+        // }
         $resp = $this->getSettings_List($data);
     }
 

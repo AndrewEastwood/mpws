@@ -115,18 +115,125 @@
                         <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b></sub>
                         {{/if}}
                     </div>
+                    {{#if instances.shop.settings.ShowPriceChart._isActive}}
                     {{#mpwsIsNotEmpty data.Prices }}
-                    <div class="shop-component shop-product-attr shop-product-attr-price hidden">
-                        <span class="value-prefix">Діаграма ціни:</span>
-                        <span id="sparkline" class="productSparkline"></span>
-                    </div>
+                        <div class="shop-component shop-product-attr shop-product-attr-price">
+                            <span class="value-prefix">Діаграма ціни:</span>
+                            <span id="sparkline" class="productSparkline"></span>
+                        </div>
                     {{/mpwsIsNotEmpty}}
+                    {{/if}}
                     {{/unless}}
                 </li>
 
                 <li class="list-group-item">
                     <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
                 </li>
+
+                {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowPhone._isActive }}
+                <li class="list-group-item list-group-item-service-info">
+
+                    {{#if instances.shop.settings.ShowDeliveryInfo._isActive}}
+                    <span class="product-info product-info-delivery">
+                        <a href="javascript://" class="link dashed" data-toggle="modal" data-target="#shop-delivery">
+                            <i class="fa fa-truck fa-fw"></i> Доставка
+                        </a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="shop-delivery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Закрити</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Варіанти доставки</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                    ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    {{/if}}
+
+                    {{#if instances.shop.settings.ShowPaymentInfo._isActive}}
+                    <span class="product-info product-info-payment">
+                        <a href="javascript://" class="link dashed" data-toggle="modal" data-target="#shop-delivery">
+                            <i class="fa fa-btc fa-fw"></i> Оплата товару
+                        </a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="shop-delivery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Закрити</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Оплата товару</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                    ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    {{/if}}
+
+                    {{#if instances.shop.settings.ShowOpenHours._isActive}}
+                    <span class="product-info product-info-openhours">
+                        <a href="javascript://" class="link dashed" data-toggle="modal" data-target="#shop-delivery">
+                            <i class="fa fa-clock-o fa-fw"></i>Графік роботи
+                        </a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="shop-delivery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Закрити</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Графік роботи</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                    ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    {{/if}}
+
+                    {{#if instances.shop.settings.ShowPhone._isActive}}
+                    <span class="product-info product-info-contacts">
+                        <a href="javascript://" class="link dashed" data-toggle="modal" data-target="#shop-delivery">
+                            <i class="fa fa-phone-square fa-fw"></i> Телефони
+                        </a>
+                        <!-- Modal -->
+                        <div class="modal fade" id="shop-delivery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Закрити</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Графік роботи</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                    ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    {{/if}}
+                </li>
+                {{/ifAny}}
 
                 {{#if data.Relations }}
                 <li class="list-group-item">

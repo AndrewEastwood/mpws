@@ -459,6 +459,21 @@ define("default/js/lib/handlebarsHelpers", [
         });
         return url;
     }
+    helpers.ifAny = function ( /* arg1, arg2, argn, options*/ ) {
+        var rez = false,
+            args = [].slice.call(arguments),
+            options = args.pop();
+
+        _(args).each(function (predicate) {
+            rez = rez || predicate;
+        });
+
+        if (rez) {
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+    }
 
     // Export helpers
     for (var helper in helpers)

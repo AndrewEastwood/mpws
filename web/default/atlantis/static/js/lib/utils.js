@@ -134,10 +134,10 @@ define("default/js/lib/utils", [
         // debugger;
         return {
             lang: obj.lang || {},
-            options: APP.options || {},
-            plugins: APP.config.PLUGINS,
+            // options: APP.options || {},
+            // plugins: APP.config.PLUGINS,
             app: {
-                config: APP.options,
+                // config: APP.options,
                 location: {
                     fragment: Backbone.history.fragment
                 }
@@ -145,7 +145,7 @@ define("default/js/lib/utils", [
             data: _tplData,
             extras: _tplExtras,
             queryParams: Utils.isCollectionView(obj) && obj.collection.queryParams || {},
-            displayItems: obj && obj.displayItems || [],
+            // displayItems: obj && obj.displayItems || [],
             instances: APP.instances,
             isToolbox: APP.config.ISTOOLBOX
         }

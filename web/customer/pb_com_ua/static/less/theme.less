@@ -159,6 +159,16 @@ select, select option {cursor: pointer;}
   background-color: #fff;
 }
 
+.link {
+    &.dashed {
+        border-bottom: 1px dashed @mainColor;
+        text-decoration: none;
+        &:hover  {
+            text-decoration: none;
+        }
+    }
+}
+
 /* navbar */
 
 .MPWSPageHeader {
@@ -377,6 +387,14 @@ i.fa {cursor: pointer;}
       line-height: normal;
       margin-bottom: 5px;
     }
+  }
+  .list-group-item-service-info {
+    span.product-info {
+        display: inline-block;
+        margin-right: 15px;
+    }
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
 
@@ -1218,7 +1236,7 @@ i.fa {cursor: pointer;}
 }
 
 .MPWSWidgetsTop {
-  height: 100px;
+  height: 120px;
 }
 
 .alert-not-all-products-promo {
