@@ -104,21 +104,34 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
             var self = this,
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
-                model = this.collection.get(id);
+                model = this.collection.get(id),
+                addressUID = model.getAddressUID(),
+                allSuccess = true;
 
-            if (model) {
-                model.save({
-                    Status: !!state ? 'ACTIVE' : 'DISABLED'
-                }, {
-                    patch: true,
-                    success: function (model) {
-                        $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                    },
-                    error: function (model) {
-                        BSAlerts.danger('Помилка оновлення параметру');
-                        $item.find('.switcher').bootstrapSwitch('state', !state, true);
+            if (addressUID) {
+                this.collection.each(function (collectionModel) {
+                    if (collectionModel.getAddressUID() === addressUID) {
+                        collectionModel.save({
+                            Status: !!state ? 'ACTIVE' : 'DISABLED'
+                        }, {
+                            wait: true,
+                            patch: true,
+                            success: function (model) {
+                                allSuccess &= true;
+                            },
+                            error: function (model) {
+                                allSuccess &= false;
+                            }
+                        });
                     }
                 });
+
+                if (allSuccess) {
+                    $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
+                } else {
+                    BSAlerts.danger('Помилка оновлення параметру');
+                    $item.find('.switcher').bootstrapSwitch('state', !state, true);
+                }
             }
         }
     });

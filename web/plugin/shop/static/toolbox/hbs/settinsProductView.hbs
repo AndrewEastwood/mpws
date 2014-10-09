@@ -1,0 +1,16 @@
+<div class="panel-heading">
+    <i class="fa fa-plus fa-fw add-address"></i>
+    Відображення товару
+    <span class="switcher-main pull-right"></span>
+</div>
+<div class="panel-body">
+    <div class="list-group">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item shop-property-{{Property}} alert" data-id="{{ID}}">
+            <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
+            <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
+        </a>
+    {{/each}}
+    </div>
+</div>
+<!-- /.panel-body -->
