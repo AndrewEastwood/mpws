@@ -176,5 +176,11 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_promo_filed_DateStart: 'Початок акції',
         popup_promo_filed_DateExpire: 'Кінець акції',
         popup_promo_filed_Discount: 'Знижка %',
+        setting_property_ContactUID: 'контакт для товару',
+        setting_property_ShowOpenHours: 'показувати графік роботи',
+        setting_property_ShowDeliveryInfo: 'показувати інформацію про доставку',
+        setting_property_ShowPaymentInfo: 'показувати інформацію про оплату',
+        setting_property_ShowSocialSharing: 'дозволити розміщення в соц. мережах',
+        setting_property_ShowPriceChart: 'показувати статистику цін'
     }, CustomerPluginShop);
 });
