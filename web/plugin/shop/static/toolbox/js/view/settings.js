@@ -13,11 +13,15 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
+    // >>> upload test >>>
+    'default/js/plugin/hbs!default/hbs/mpwsFileUpload',
+    'default/js/lib/mpwsFileUpload',
+    // <<< upload test <<<
     'default/js/lib/bootstrap-editable',
     'default/js/lib/jquery.maskedinput',
     'default/js/lib/bootstrap-switch'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts,
-    ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress, ViewSettingsProduct, tpl, lang) {
+    ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress, ViewSettingsProduct, tpl, lang, _testUploadTpl, _testUploadInitFn) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -48,6 +52,10 @@ define('plugin/shop/toolbox/js/view/settings', [
                 this.$('.website-form-order').html(this.viewWebsiteFormOrder.$el);
                 this.$('.shop-address').html(this.viewAddress.$el);
                 this.$('.shop-product').html(this.viewProduct.$el);
+
+
+                this.$el.append(_testUploadTpl());
+                _testUploadInitFn(this);
                 // this.$('.shop-settings .switcher').bootstrapSwitch({
                 //     size: 'mini',
                 //     wrapperClass: 'delivery'

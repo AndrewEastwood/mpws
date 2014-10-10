@@ -10,12 +10,4 @@ RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/stati
 # API
 RewriteRule ^api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
 RewriteRule ^auth\.js?(.*) /engine/controller/controller.auth.php?$1 [QSA,L]
-
-# TOOLBOX:
-#RewriteRule ^toolbox/api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
-#RewriteRule ^toolbox/?(.*) /engine/controller/controller.display.php?$1 [QSA,L]
-
-#RewriteRule upload/[temp|archive]-(.*)/(.*) /data/$1/$2/$3 [QSA]
-#RewriteRule storage/(....)-(..)-(..)-(.*)/(.*)? /data/uploads/$1-$2-$3/$4/$5 [QSA]
-#RewriteRule service/internal/(.*).php?(.*) /tooling/$1/index.php?$2 [QSA]
-#RewriteRule service/public/(.*).php?(.*) /tooling/public/$1.php?$2 [QSA]
+RewriteRule ^upload\.js?(.*) /engine/controller/controller.upload.php?$1 [QSA,L]
