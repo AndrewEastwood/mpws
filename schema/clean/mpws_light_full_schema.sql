@@ -138,6 +138,7 @@ CREATE TABLE `mpws_permissions` (
   `CanAdmin` tinyint(1) NOT NULL,
   `CanCreate` tinyint(1) NOT NULL,
   `CanEdit` tinyint(1) NOT NULL,
+  `CanUpload` tinyint(1) NOT NULL DEFAULT '0',
   `CanViewReports` tinyint(1) NOT NULL,
   `CanAddUsers` tinyint(1) NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -853,4 +854,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-12 17:45:58
+-- Dump completed on 2014-10-13  1:50:38

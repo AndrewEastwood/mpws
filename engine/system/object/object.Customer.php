@@ -119,6 +119,37 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
     public function runAsAUTH () {
         libraryRequest::processRequest($this->getExtension('Auth'));
     }
+    public function runAsUPLOAD () {
+        /*
+         * jQuery File Upload Plugin PHP Example 5.14
+         * https://github.com/blueimp/jQuery-File-Upload
+         *
+         * Copyright 2010, Sebastian Tschan
+         * https://blueimp.net
+         *
+         * Licensed under the MIT license:
+         * http://www.opensource.org/licenses/MIT
+         */
+
+        // error_reporting(E_ALL | E_STRICT);
+        // require('libraryUploadHandler.php');
+        $options = array(
+            'script_url' => '/upload.js?',
+            'download_via_php' => true,
+            'upload_dir' => DR . 'uploads/temp/',
+            'block_response' => true
+            // 'upload_url' => '/contents.js?',
+            // 'correct_image_extensions' => true
+        );
+        // var_dump($options);
+        $upload_handler = new libraryUploadHandler($options);
+
+        libraryResponse::$_RESPONSE = $upload_handler->get_response();
+        // var_dump($upload_handler);
+        // libraryRequest::processRequest($this->getExtension('Auth'));
+        $authID = $this->getAuthID();
+        libraryResponse::$_RESPONSE['auth_id'] = $authID;
+    }
 
 }
 

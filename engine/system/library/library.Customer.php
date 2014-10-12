@@ -23,8 +23,11 @@ class libraryCustomer {
             case 'AUTH':
                 $customer->runAsAUTH();
                 break;
+            case 'UPLOAD':
+                $customer->runAsUPLOAD();
+                break;
             default:
-                throw new Exception("Error Processing Request: Umknown request type", 1);
+                throw new Exception("Error Processing Request: Unknown request type", 1);
         }
     }
 }

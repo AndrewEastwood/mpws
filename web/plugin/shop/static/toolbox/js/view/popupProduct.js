@@ -228,13 +228,21 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             }
 
             // init uploads
-            var url = '/upload.js';
-            this.$('.product-image').fileupload({
-                url: url,
+            // this.$('.uploads').html(_testUploadTpl());
+            // _testUploadInitFn(this);
+            this.setupFileUploadItem(this.$('.product-image'));
+        },
+        setupFileUploadItem: function ($items) {
+            var self = this;
+            $items.fileupload({
+                url: APP.getUploadUrl({
+                    source: 'shop',
+                    realm: 'products'
+                }),
                 dataType: 'json',
                 autoUpload: true,
                 limitMultiFileUploads: 1,
-                maxNumberOfFiles: 1,
+                maxNumberOfFiles: 2,
                 acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
                 maxFileSize: 5000000, // 5 MB
                 // Enable image resizing, except for Android and Opera,
@@ -242,57 +250,79 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 // send Blob objects via XHR requests:
                 disableImageResize: /Android(?!.*Chrome)|Opera/
                     .test(window.navigator.userAgent),
-                previewMaxWidth: 100,
-                previewMaxHeight: 100,
+                previewMaxWidth: 75,
+                previewMaxHeight: 75,
                 previewCrop: true
             }).on('fileuploadadd', function (e, data) {
-                var $btn = $(this).parent();
+                var $btnWrapper = $(this).parents('.upload-wrapper'),
+                    $btn = $(this).parent();
+                $btn.removeClass('preview error');
+                $btnWrapper.find('del-image').remove();
                 $btn.find('.fa-plus').addClass('hidden');
                 data.context = $btn.find('.preview');
                 data.context.removeClass('hidden');
             }).on('fileuploadprogressall', function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
-                self.$('#progress .progress-bar').css(
-                    'width',
-                    progress + '%'
-                );
+                self.$('#progress .progress-bar').css('width', progress + '%');
             }).on('fileuploadprocessalways', function (e, data) {
-                var index = data.index,
+                var $btn = $(this).parent(),
+                    index = data.index,
                     file = data.files[index],
                     node = $(data.context);
                 if (file.preview) {
+                    $btn.addClass('preview');
                     node.html(file.preview);
                 }
                 if (file.error) {
-                    node.html($('<span class="text-danger"/>').text(file.error));
+                    $btn.addClass('error');
+                    node.html($('<i/>').addClass('fa fa-warning text-danger'));
+                    node.append($('<span/>').addClass('message').text(file.error));
                 }
-                // if (index + 1 === data.files.length) {
-                //     data.context.find('button')
-                //         .text('Upload')
-                //         .prop('disabled', !!data.files.error);
-                // }
             }).on('fileuploaddone', function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                self.$('#progress .progress-bar').css(
-                    'width', '0%'
-                );
-                // $.each(data.result.files, function (index, file) {
-                //     if (file.url) {
-                //         var link = $('<a>')
-                //             .attr('target', '_blank')
-                //             .prop('href', file.url);
-                //         $(data.context.children()[index])
-                //             .wrap(link);
-                //     } else if (file.error) {
-                //         var error = $('<span class="text-danger"/>').text(file.error);
-                //         $(data.context.children()[index])
-                //             .append('<br>')
-                //             .append(error);
-                //     }
-                // });
+                var $btnWrapper = $(this).parents('.upload-wrapper'),
+                    $btn = $(this).parent(),
+                    node = $(data.context),
+                    progress = parseInt(data.loaded / data.total * 100, 10),
+                    $delBtn = $('<i>').attr('class', 'fa fa-times fa-fw text-danger del-image');
+                $btn.removeClass('preview error');
+                self.$('#progress .progress-bar').css('width', '0%');
+                console.log('done');
+                $.each(data.result.files, function (index, file) {
+                    if (file.url) {
+                        $btn.addClass('uploaded');
+                        $delBtn.on('click', function () {
+                            $.ajax({
+                                type: 'DELETE',
+                                url: file.deleteUrl
+                            }).done(function () {
+                                $btn.removeClass('preview error');
+                                node.empty().addClass('hidden');
+                                $btn.find('.fa-plus').removeClass('hidden');
+                                var $input = $btn.find('input').clone();
+                                $btn.find('input').remove();
+                                $delBtn.remove();
+                                self.setupFileUploadItem($input);
+                                $btn.append($input);
+                            });
+                        });
+                    } else if (file.error) {
+                        $btn.addClass('error');
+                        node.html($('<i/>').addClass('fa fa-warning text-danger'));
+                        node.append($('<span/>').addClass('message').text(file.error));
+                        $delBtn.on('click', function () {
+                            $(this).remove();
+                            $btn.removeClass('preview error');
+                            node.empty().addClass('hidden');
+                            $btn.find('.fa-plus').removeClass('hidden');
+                            var $input = $btn.find('input').clone();
+                            $btn.find('input').remove();
+                            $btn.append($input);
+                            self.setupFileUploadItem($input);
+                        });
+                    }
+                    $btnWrapper.append($delBtn);
+                });
             });
-            // this.$('.uploads').html(_testUploadTpl());
-            // _testUploadInitFn(this);
         }
     });
 

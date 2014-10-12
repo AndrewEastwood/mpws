@@ -84,7 +84,7 @@
             </form>
         </div>
         <div class="col-md-6">
-            <div class="form-horizontal">
+            <form class="form-horizontal">
                 <fieldset>
                     <!-- Select Basic -->
                     <div class="form-group">
@@ -151,13 +151,20 @@
                     <div class="form-group">
                         <div class="col-md-11">
                             <div class="input-group">
+                                ЗАВАНТАЖЕННЯ КАРТИНГК ТУТ (3шт МАКС)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group">
                                 <span class="input-group-addon">{{lang.popup_product_section_details_filed_Features}}</span>
                                 <input type="text" name="Tags" class="form-control features-list" value="">
                             </div>
                         </div>
                     </div>
                 </fieldset>
-            </div>
+            </form>
         </div>
     </div>
 </div>

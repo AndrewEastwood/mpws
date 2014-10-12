@@ -261,7 +261,7 @@ body {
 }
 .shop-popup-product {
     .modal-dialog {
-        width: 60%;
+        width: 50%;
     }
     .nav-pills {
         li {
@@ -310,6 +310,26 @@ body {
                 box-shadow: none;
             }
         }
+        .upload-wrapper {
+            display: inline-block;
+            position: relative;
+            .del-image {
+                position: absolute;
+                left: -4px;
+                top: -11px;
+                width: 16px;
+                height: 16px;
+                display: block;
+                font-size: 1.2rem;
+                color: #CA4541;
+                line-height: normal;
+                white-space: normal;
+                cursor: pointer;
+                &:hover {
+                    text-shadow: 0 0 2px #DA5C5C;
+                }
+            }
+        }
         .fileinput-button {
             position: relative;
             overflow: hidden;
@@ -317,9 +337,9 @@ body {
             border-style: dashed;
             color: #5CB85C;
             display: inline-block;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
+            width: 75px;
+            height: 75px;
+            line-height: 75px;
             font-size: 2em;
             margin: 0px;
             padding: 0px;
@@ -327,10 +347,44 @@ body {
                 margin: 0px;
                 padding: 0px;
                 display: block;
+                position: relative;
+                .fa {
+                    position: relative;
+                    top: -15px;
+                }
+                .message {
+                    display: block;
+                    font-size: 1.2rem;
+                    margin-top: -35px;
+                    color: #CA4541;
+                    width: 75px;
+                    line-height: normal;
+                    white-space: normal;
+                }
             }
             &:hover {
                 color: #fff;
                 background: #5CB85C;
+            }
+            &.error {
+                border-color: #CA4541;
+                &:hover {
+                    background-color: #CA4541;
+                    * {
+                        color: #fff;
+                    }
+                }
+            }
+            &.preview {
+                border-color: #fff;
+                background: transparent;
+                &:hover {
+                    border-color: #fff;
+                    background: transparent;
+                }
+            }
+            input {
+                z-index: 99999;
             }
         }
     }

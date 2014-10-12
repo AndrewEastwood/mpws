@@ -81,6 +81,15 @@ require(["default/js/lib/url"], function (JSUrl) {
             });
         return _url.toString();
     }
+    APP.getUploadUrl = function (extraOptions) {
+        var _url = new JSUrl(APP.config.URL_UPLOAD);
+        _url.query.token = APP.config.TOKEN;
+        if (!_.isEmpty(extraOptions))
+            _(extraOptions).each(function (v, k) {
+                _url.query[k] = !!v ? v : "";
+            });
+        return _url.toString();
+    }
 })
 
 require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */ ) {

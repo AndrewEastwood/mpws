@@ -147,7 +147,8 @@ class libraryUploadHandler
                     'max_width' => 80,
                     'max_height' => 80
                 )
-            )
+            ),
+            'block_response' => false,
         );
         if ($options) {
             $this->options = $options + $this->options;
@@ -1244,6 +1245,10 @@ class libraryUploadHandler
         $this->send_content_type_header();
     }
 
+    public function get_response () {
+        return $this->response;
+    }
+
     public function get($print_response = true) {
         if ($print_response && isset($_GET['download'])) {
             return $this->download();
@@ -1257,6 +1262,10 @@ class libraryUploadHandler
             $response = array(
                 $this->options['param_name'] => $this->get_file_objects()
             );
+        }
+        $this->response = $response;
+        if ($this->options['block_response']) {
+            return;
         }
         return $this->generate_response($response, $print_response);
     }
@@ -1310,10 +1319,12 @@ class libraryUploadHandler
                 $content_range
             );
         }
-        return $this->generate_response(
-            array($this->options['param_name'] => $files),
-            $print_response
-        );
+        $response = array($this->options['param_name'] => $files);
+        $this->response = $response;
+        if ($this->options['block_response']) {
+            return;
+        }
+        return $this->generate_response($response, $print_response);
     }
 
     public function delete($print_response = true) {
@@ -1336,6 +1347,10 @@ class libraryUploadHandler
                 }
             }
             $response[$file_name] = $success;
+        }
+        $this->response = $response;
+        if ($this->options['block_response']) {
+            return;
         }
         return $this->generate_response($response, $print_response);
     }

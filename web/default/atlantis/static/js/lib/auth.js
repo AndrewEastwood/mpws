@@ -7,13 +7,13 @@ define("default/js/lib/auth", [
 
     var Auth = {};
 
-    Sandbox.eventSubscribe("global:ajax:responce", function(response) {
+    Sandbox.eventSubscribe("global:ajax:responce", function (response) {
         Auth.setStatus(response);
     });
 
     Auth = {
         setStatus: function (response) {
-            var auth_id = response && response.auth_id;
+            var auth_id = response && response.auth_id || null;
             // console.log('Auth set auth_id', auth_id);
             if (Auth.auth_id === auth_id)
                 return;
@@ -24,8 +24,7 @@ define("default/js/lib/auth", [
 
             if (Auth.auth_id === null) {
                 Sandbox.eventNotify("global:auth:status:inactive");
-            }
-            else
+            } else
                 Sandbox.eventNotify("global:auth:status:active");
         },
         getAccountID: function () {
@@ -35,7 +34,7 @@ define("default/js/lib/auth", [
             var query = {
                 fn: 'status'
             };
-            return $.get(APP.getAuthLink(query), function(response){
+            return $.get(APP.getAuthLink(query), function (response) {
                 Auth.setStatus(response);
                 if (_.isFunction(callback))
                     callback(Auth.getAccountID(), response);
@@ -49,7 +48,7 @@ define("default/js/lib/auth", [
                 email: email,
                 password: password,
                 remember: remember,
-            }, function(response){
+            }, function (response) {
                 Auth.setStatus(response);
                 if (_.isFunction(callback))
                     callback(Auth.getAccountID(), response);
@@ -59,7 +58,7 @@ define("default/js/lib/auth", [
             var query = {
                 fn: 'signout'
             };
-            return $.post(APP.getAuthLink(query), function(response){
+            return $.post(APP.getAuthLink(query), function (response) {
                 Auth.setStatus(response);
                 if (_.isFunction(callback))
                     callback(Auth.getAccountID(), response);

@@ -53,6 +53,7 @@
         URL_PUBLIC_TITLE: '" . configurationCustomerDisplay::$Title . "',
         URL_API: '/api.js',
         URL_AUTH: '/auth.js',
+        URL_UPLOAD: '/upload.js',
         URL_STATIC_CUSTOMER: '/" . glGetPath($staticPath, 'customer', $displayCustomer) . "',
         URL_STATIC_WEBSITE: '/" . glGetPath($staticPath, 'customer', MPWS_CUSTOMER) . "',
         URL_STATIC_PLUGIN: '/" . glGetPath($staticPath, 'plugin') . "',
