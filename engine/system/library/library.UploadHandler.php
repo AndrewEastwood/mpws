@@ -1137,6 +1137,10 @@ class libraryUploadHandler
         return $content;
     }
 
+    public function get_response () {
+        return $this->response;
+    }
+
     protected function get_version_param() {
         return isset($_GET['version']) ? basename(stripslashes($_GET['version'])) : null;
     }
@@ -1244,10 +1248,6 @@ class libraryUploadHandler
             $this->send_access_control_headers();
         }
         $this->send_content_type_header();
-    }
-
-    public function get_response () {
-        return $this->response;
     }
 
     public function get($print_response = true) {
