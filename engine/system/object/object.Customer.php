@@ -137,7 +137,7 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
             'script_url' => '/upload.js?',
             'download_via_php' => true,
             'upload_dir' => DR . 'uploads/temp/',
-            'print_response' => false
+            'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
             // 'upload_url' => '/contents.js?',
             // 'correct_image_extensions' => true
         );
