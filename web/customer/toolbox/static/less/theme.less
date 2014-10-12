@@ -296,6 +296,44 @@ body {
     .features-list {
         width: 100%;
     }
+    .bootstrap-dialog-message {
+        #progress {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            height: 2px;
+            background: none;
+            box-shadow: none;
+            .progress-bar {
+                height: 2px;
+                box-shadow: none;
+            }
+        }
+        .fileinput-button {
+            position: relative;
+            overflow: hidden;
+            background: none;
+            border-style: dashed;
+            color: #5CB85C;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            font-size: 2em;
+            margin: 0px;
+            padding: 0px;
+            .preview {
+                margin: 0px;
+                padding: 0px;
+                display: block;
+            }
+            &:hover {
+                color: #fff;
+                background: #5CB85C;
+            }
+        }
+    }
 }
 .dndrow {
     color: #ddd;

@@ -108,10 +108,10 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     }
 
     var xhrPool = [];
-    $(document).ajaxSend(function (e, jqXHR, options) {
+    $(document).ajaxSend(function (e, jqXHR) {
         xhrPool.push(jqXHR);
     });
-    $(document).ajaxComplete(function (event, jqXHR, data) {
+    $(document).ajaxComplete(function (event, jqXHR) {
         xhrPool = $.grep(xhrPool, function (x) {
             return x != jqXHR
         });
@@ -198,33 +198,6 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
             Cache.saveInLocalStorage("location", fragment);
     });
 
-    // Backbone.Router.prototype.before = function () {};
-    // Backbone.Router.prototype.after = function () {};
-
-    // Backbone.Router.prototype.route = function (route, name, callback) {
-    //   if (!_.isRegExp(route)) route = this._routeToRegExp(route);
-    //   if (_.isFunction(name)) {
-    //     callback = name;
-    //     name = '';
-    //   }
-    //   if (!callback) callback = this[name];
-
-    //   var router = this;
-
-    //   Backbone.history.route(route, function(fragment) {
-    //     var args = router._extractParameters(route, fragment);
-
-    //     router.before.apply(router, arguments);
-    //     callback && callback.apply(router, args);
-    //     router.after.apply(router, arguments);
-
-    //     router.trigger.apply(router, ['route:' + name].concat(args));
-    //     router.trigger('route', name, args);
-    //     Backbone.history.trigger('route', router, name, args);
-    //   });
-    //   return this;
-    // };
-
     var Router = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -248,44 +221,58 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     });
 
     var defaultRouter = new Router();
+    var $dfd = $.Deferred();
+    var pluginList = APP.getPluginRoutersToDownload();
+    var pluginNames = _(pluginList).map(function (pluginListItem) {
+        return pluginListItem.match(/^plugin\/(\w+)\//)[1];
+    });
+    // initialize plugins
+    $dfd.done(function () {
+        // start HTML5 History push
+        Backbone.history.start();
+        // notify all that loader completed its tasks
+        Sandbox.eventNotify('global:loader:complete');
+        // return Site;
+        $(window).trigger('hashchange');
+        // get auth status
+        Auth.getStatus();
+        // set completion state
+        APP.isCompleted = true;
+    });
+
+    var addPliginInstanceFn = function (pluginClass, key, preInitFn, isLast) {
+        if (_.isFunction(preInitFn)) {
+            preInitFn(addPliginInstanceFn(pluginClass, key, null));
+        } else {
+            if (_.isFunction(pluginClass)) {
+                APP.instances[key] = new pluginClass();
+            }
+            if (isLast) {
+                $dfd.resolve();
+            }
+        }
+        return addPliginInstanceFn;
+    }
+
+    var releasePluginsFn = function () {
+        require(pluginList, function () {
+            var _pluginsObjects = [].slice.call(arguments);
+            _(_pluginsObjects).each(function (pluginClass, key) {
+                addPliginInstanceFn(pluginClass, pluginNames[key], pluginClass && pluginClass.initialize, key === _pluginsObjects.length - 1);
+            });
+        });
+    }
 
     require([APP.config.ROUTER], function (CustomerRouter) {
         if (_.isFunction(CustomerRouter)) {
             var customerRouter = new CustomerRouter();
             APP.instances['CustomerRouter'] = customerRouter;
         }
-
-        var releasePluginsFn = function () {
-            var pluginList = APP.getPluginRoutersToDownload();
-            var pluginNames = _(pluginList).map(function (pluginListItem) {
-                return pluginListItem.match(/^plugin\/(\w+)\//)[1];
-            });
-            require(pluginList, function () {
-                var _pluginsObjects = [].slice.call(arguments);
-                // initialize plugins
-                _(_pluginsObjects).each(function (plugin, key) {
-                    if (_.isFunction(plugin)) {
-                        var plg = new plugin();
-                        APP.instances[pluginNames[key]] = plg;
-                    }
-                });
-                // start HTML5 History push
-                Backbone.history.start();
-                // notify all that loader completed its tasks
-                Sandbox.eventNotify('global:loader:complete');
-                // return Site;
-                $(window).trigger('hashchange');
-                // get auth status
-                Auth.getStatus();
-                // set completion state
-                APP.isCompleted = true;
-            });
-        }
-
-        if (_.isObject(CustomerRouter) && CustomerRouter.releasePlugins)
+        if (CustomerRouter && _.isFunction(CustomerRouter.releasePlugins)) {
             CustomerRouter.releasePlugins(releasePluginsFn);
-        else
+        } else {
             releasePluginsFn();
+        }
     });
 
 });

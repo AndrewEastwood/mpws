@@ -19,7 +19,9 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define(['./load-image'], factory);
+        define('default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image-ios', [
+            'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image'
+        ], factory);
     } else {
         // Browser globals:
         factory(window.loadImage);

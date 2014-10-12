@@ -11,33 +11,33 @@ define("default/js/lib/mpwsFileUpload", [
     'use strict';
 
     return function (view) {
-        $(document).bind('dragover', function (e) {
-            var dropZone = view.$('#dropzone'),
-                timeout = window.dropZoneTimeout;
-            if (!timeout) {
-                dropZone.addClass('in');
-            } else {
-                clearTimeout(timeout);
-            }
-            var found = false,
-                node = e.target;
-            do {
-                if (node === dropZone[0]) {
-                    found = true;
-                    break;
-                }
-                node = node.parentNode;
-            } while (node != null);
-            if (found) {
-                dropZone.addClass('hover');
-            } else {
-                dropZone.removeClass('hover');
-            }
-            window.dropZoneTimeout = setTimeout(function () {
-                window.dropZoneTimeout = null;
-                dropZone.removeClass('in hover');
-            }, 100);
-        });
+        // $(document).bind('dragover', function (e) {
+        //     var dropZone = view.$('#dropzone'),
+        //         timeout = window.dropZoneTimeout;
+        //     if (!timeout) {
+        //         dropZone.addClass('in');
+        //     } else {
+        //         clearTimeout(timeout);
+        //     }
+        //     var found = false,
+        //         node = e.target;
+        //     do {
+        //         if (node === dropZone[0]) {
+        //             found = true;
+        //             break;
+        //         }
+        //         node = node.parentNode;
+        //     } while (node != null);
+        //     if (found) {
+        //         dropZone.addClass('hover');
+        //     } else {
+        //         dropZone.removeClass('hover');
+        //     }
+        //     window.dropZoneTimeout = setTimeout(function () {
+        //         window.dropZoneTimeout = null;
+        //         dropZone.removeClass('in hover');
+        //     }, 100);
+        // });
         // Change this to the location of your server-side upload handler:
         var url = '/upload.js';
         // view.$('#fileupload').fileupload({

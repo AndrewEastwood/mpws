@@ -1,3 +1,6 @@
+<div id="progress" class="progress">
+    <div class="progress-bar progress-bar-success"></div>
+</div>
 <div class="panel">
     {{#mpwsIsNotEmpty data.errors }}
     <div id="msg" class="alert alert-danger">
@@ -83,6 +86,35 @@
         <div class="col-md-6">
             <form class="form-horizontal">
                 <fieldset>
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <div class="col-md-11 uploads">
+                            <span class="btn btn-success fileinput-button">
+                                <i class="fa fa-plus"></i>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="product-image-1" class="product-image" type="file" name="shop-product-image[]" value="{{data.Attributes.IMAGE.[0]}}">
+                                <span class="preview hidden"></span>
+                            </span>
+                            <span class="btn btn-success fileinput-button">
+                                <i class="fa fa-plus"></i>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="product-image-1" class="product-image" type="file" name="shop-product-image[]" value="{{data.Attributes.IMAGE.[1]}}">
+                                <span class="preview hidden"></span>
+                            </span>
+                            <span class="btn btn-success fileinput-button">
+                                <i class="fa fa-plus"></i>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="product-image-1" class="product-image" type="file" name="shop-product-image[]" value="{{data.Attributes.IMAGE.[2]}}">
+                                <span class="preview hidden"></span>
+                            </span>
+                            <span class="btn btn-success fileinput-button">
+                                <i class="fa fa-plus"></i>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="product-image-1" class="product-image" type="file" name="shop-product-image[]" value="{{data.Attributes.IMAGE.[3]}}">
+                                <span class="preview hidden"></span>
+                            </span>
+                        </div>
+                    </div>
                     <!-- Select Basic -->
                     <div class="form-group">
                         <div class="col-md-11">

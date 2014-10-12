@@ -13,7 +13,14 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/select2/select2',
     'default/js/lib/jquery.maskMoney',
     'default/js/lib/bootstrap-tagsinput',
-    'default/js/lib/select2/select2'
+    'default/js/lib/select2/select2',
+    'default/js/lib/jquery.fileupload/jquery.fileupload',
+    'default/js/lib/jquery.fileupload/vendor/canvas-to-blob',
+    'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image',
+    'default/js/lib/jquery.fileupload/vendor/jquery.ui.widget',
+    'default/js/lib/jquery.fileupload/jquery.iframe-transport',
+    'default/js/lib/jquery.fileupload/jquery.fileupload-validate',
+    'default/js/lib/jquery.fileupload/jquery.fileupload-image',
 ], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitle(isEdit) {
@@ -73,6 +80,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             });
         },
         render: function () {
+            var self = this;
             this.$title.html(_getTitle(this.model.id));
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
 
@@ -218,6 +226,73 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             if (features) {
                 this.$(".features-list").select2('val', _(features).keys());
             }
+
+            // init uploads
+            var url = '/upload.js';
+            this.$('.product-image').fileupload({
+                url: url,
+                dataType: 'json',
+                autoUpload: true,
+                limitMultiFileUploads: 1,
+                maxNumberOfFiles: 1,
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                maxFileSize: 5000000, // 5 MB
+                // Enable image resizing, except for Android and Opera,
+                // which actually support image resizing, but fail to
+                // send Blob objects via XHR requests:
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                previewMaxWidth: 100,
+                previewMaxHeight: 100,
+                previewCrop: true
+            }).on('fileuploadadd', function (e, data) {
+                var $btn = $(this).parent();
+                $btn.find('.fa-plus').addClass('hidden');
+                data.context = $btn.find('.preview');
+                data.context.removeClass('hidden');
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                self.$('#progress .progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }).on('fileuploadprocessalways', function (e, data) {
+                var index = data.index,
+                    file = data.files[index],
+                    node = $(data.context);
+                if (file.preview) {
+                    node.html(file.preview);
+                }
+                if (file.error) {
+                    node.html($('<span class="text-danger"/>').text(file.error));
+                }
+                // if (index + 1 === data.files.length) {
+                //     data.context.find('button')
+                //         .text('Upload')
+                //         .prop('disabled', !!data.files.error);
+                // }
+            }).on('fileuploaddone', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                self.$('#progress .progress-bar').css(
+                    'width', '0%'
+                );
+                // $.each(data.result.files, function (index, file) {
+                //     if (file.url) {
+                //         var link = $('<a>')
+                //             .attr('target', '_blank')
+                //             .prop('href', file.url);
+                //         $(data.context.children()[index])
+                //             .wrap(link);
+                //     } else if (file.error) {
+                //         var error = $('<span class="text-danger"/>').text(file.error);
+                //         $(data.context.children()[index])
+                //             .append('<br>')
+                //             .append(error);
+                //     }
+                // });
+            });
+            // this.$('.uploads').html(_testUploadTpl());
+            // _testUploadInitFn(this);
         }
     });
 

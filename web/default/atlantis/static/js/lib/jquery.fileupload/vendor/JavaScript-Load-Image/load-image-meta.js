@@ -20,13 +20,17 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define(['./load-image'], factory);
+        define('default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image-meta', [
+            'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image'
+        ], factory);
     } else {
         // Browser globals:
         factory(window.loadImage);
     }
 }(function (loadImage) {
     'use strict';
+
+    console.log('loading load-image-meta.js');
 
     var hasblobSlice = window.Blob && (Blob.prototype.slice ||
         Blob.prototype.webkitSlice || Blob.prototype.mozSlice);

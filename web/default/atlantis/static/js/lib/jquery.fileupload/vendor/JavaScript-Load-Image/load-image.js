@@ -290,7 +290,8 @@
     };
 
     if (typeof define === 'function' && define.amd) {
-        define(function () {
+        define('default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image', function () {
+            console.log('loading load-image.js');
             return loadImage;
         });
     } else {

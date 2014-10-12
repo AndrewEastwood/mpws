@@ -18,13 +18,17 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define(['./load-image', './load-image-exif'], factory);
+        define('default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image-exif-map', [
+            'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image',
+            'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image-exif'
+        ], factory);
     } else {
         // Browser globals:
         factory(window.loadImage);
     }
 }(function (loadImage) {
     'use strict';
+    console.log('loading load-image-exif-map.js');
 
     loadImage.ExifMap.prototype.tags = {
         // =================

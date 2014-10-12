@@ -16,10 +16,10 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define([
-            'jquery',
-            './vendor/JavaScript-Load-Image/load-image',
-            './jquery.fileupload-process'
+        define('default/js/lib/jquery.fileupload/jquery.fileupload-audio', [
+            'cmn_jquery',
+            'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image',
+            'default/js/lib/jquery.fileupload/jquery.fileupload-process'
         ], factory);
     } else {
         // Browser globals:

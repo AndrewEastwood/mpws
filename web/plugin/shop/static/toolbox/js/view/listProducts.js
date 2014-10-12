@@ -109,6 +109,13 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             editable: false
         };
 
+        var columnCategoryName = {
+            name: "CategoryName",
+            label: lang.pluginMenu_Products_Grid_Column_CategoryName,
+            cell: "string",
+            editable: false
+        };
+
         var columnSKU = {
             name: "SKU",
             label: lang.pluginMenu_Products_Grid_Column_SKU,
@@ -204,6 +211,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             columnName: columnName,
             columnModel: columnModel,
             columnOriginName: columnOriginName,
+            columnCategoryName: columnCategoryName,
             columnSKU: columnSKU,
             columnPrice: columnPrice,
             columnStatus: columnStatus,

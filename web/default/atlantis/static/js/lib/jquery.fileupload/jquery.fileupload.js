@@ -16,9 +16,9 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define([
+        define('default/js/lib/jquery.fileupload/jquery.fileupload', [
             'cmn_jquery',
-            './vendor/jquery.ui.widget'
+            'default/js/lib/jquery.fileupload/vendor/jquery.ui.widget'
         ], factory);
     } else {
         // Browser globals:

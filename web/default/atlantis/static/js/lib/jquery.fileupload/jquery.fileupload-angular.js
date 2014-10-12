@@ -16,13 +16,13 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define([
+        define('default/js/lib/jquery.fileupload/jquery.fileupload-angular', [
             'cmn_jquery',
             'angular',
-            './jquery.fileupload-image',
-            './jquery.fileupload-audio',
-            './jquery.fileupload-video',
-            './jquery.fileupload-validate'
+            'default/js/lib/jquery.fileupload/jquery.fileupload-image',
+            'default/js/lib/jquery.fileupload/jquery.fileupload-audio',
+            'default/js/lib/jquery.fileupload/jquery.fileupload-video',
+            'default/js/lib/jquery.fileupload/jquery.fileupload-validate'
         ], factory);
     } else {
         factory();

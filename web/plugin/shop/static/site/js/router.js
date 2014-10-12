@@ -57,11 +57,6 @@ define("plugin/shop/site/js/router", [
 
             var self = this;
 
-            $dfdSettings.done(function () {
-                self.settings = settings.toSettings();
-                console.log(self.settings);
-            });
-
             Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();
             });
@@ -291,6 +286,14 @@ define("plugin/shop/site/js/router", [
             });
         }
 
+    }, {
+        initialize: function (callback) {
+            $dfdSettings.done(function () {
+                debugger;
+                self.settings = settings.toSettings();
+                callback();
+            });
+        }
     });
 
     return Router;

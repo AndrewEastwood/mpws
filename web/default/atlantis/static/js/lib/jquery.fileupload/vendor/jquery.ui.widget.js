@@ -7,7 +7,7 @@
     if (typeof define === "function" && define.amd) {
 
         // AMD. Register as an anonymous module.
-        define(["cmn_jquery"], factory);
+        define('default/js/lib/jquery.fileupload/vendor/jquery.ui.widget', ["cmn_jquery"], factory);
     } else {
 
         // Browser globals

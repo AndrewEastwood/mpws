@@ -15,7 +15,7 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define(['cmn_jquery'], factory);
+        define('default/js/lib/jquery.fileupload/jquery.iframe-transport', ['cmn_jquery'], factory);
     } else {
         // Browser globals:
         factory(window.jQuery);
