@@ -149,7 +149,7 @@ class libraryUploadHandler
                     'max_height' => 80
                 )
             ),
-            'block_response' => false
+            'print_response' => true
         );
         if ($options) {
             $this->options = $options + $this->options;
@@ -169,15 +169,15 @@ class libraryUploadHandler
                 $this->head();
                 break;
             case 'GET':
-                $this->get();
+                $this->get($this->options['print_response']);
                 break;
             case 'PATCH':
             case 'PUT':
             case 'POST':
-                $this->post();
+                $this->post($this->options['print_response']);
                 break;
             case 'DELETE':
-                $this->delete();
+                $this->delete($this->options['print_response']);
                 break;
             default:
                 $this->header('HTTP/1.1 405 Method Not Allowed');
@@ -1265,9 +1265,6 @@ class libraryUploadHandler
             );
         }
         $this->response = $response;
-        if ($this->options['block_response']) {
-            return;
-        }
         return $this->generate_response($response, $print_response);
     }
 
@@ -1322,9 +1319,6 @@ class libraryUploadHandler
         }
         $response = array($this->options['param_name'] => $files);
         $this->response = $response;
-        if ($this->options['block_response']) {
-            return;
-        }
         return $this->generate_response($response, $print_response);
     }
 
@@ -1350,9 +1344,6 @@ class libraryUploadHandler
             $response[$file_name] = $success;
         }
         $this->response = $response;
-        if ($this->options['block_response']) {
-            return;
-        }
         return $this->generate_response($response, $print_response);
     }
 
