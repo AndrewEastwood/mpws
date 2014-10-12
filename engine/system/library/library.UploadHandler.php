@@ -41,6 +41,7 @@ class libraryUploadHandler
     protected $image_objects = array();
 
     function __construct($options = null, $initialize = true, $error_messages = null) {
+        $this->response = array();
         $this->options = array(
             'script_url' => $this->get_full_url().'/',
             'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/',
@@ -148,7 +149,7 @@ class libraryUploadHandler
                     'max_height' => 80
                 )
             ),
-            'block_response' => false,
+            'block_response' => false
         );
         if ($options) {
             $this->options = $options + $this->options;
