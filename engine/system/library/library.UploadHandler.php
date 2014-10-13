@@ -128,13 +128,13 @@ class libraryUploadHandler
                     'auto_orient' => true
                 ),
                 // Uncomment the following to create medium sized images:
-                /*
-                'medium' => array(
+                
+                'sm' => array(
                     'max_width' => 800,
                     'max_height' => 600
                 ),
-                */
-                'thumbnail' => array(
+                
+                'xs' => array(
                     // Uncomment the following to use a defined directory for the thumbnails
                     // instead of a subdirectory based on the version identifier.
                     // Make sure that this directory doesn't allow execution of files if you

@@ -8,6 +8,10 @@ class objectPlugin implements IPlugin {
         $this->customer = $customer;
     }
 
+    public function getName() {
+        return 'base';
+    }
+
     public function getCustomer() {
         return $this->customer;
     }
@@ -41,6 +45,21 @@ class objectPlugin implements IPlugin {
 
     public function beforeRun () {}
     public function afterRun () {}
+
+    public function getUploadDirectory ($reaml = null) {
+        if (empty($reaml)) {
+            return libraryUtils::getUploadDirectory($this->getName());
+        }
+        return libraryUtils::getUploadDirectory($this->getName() . DS . $realm);
+    }
+
+    public function moveTempFileToPluginUploads ($tmpImageName, $realm) {
+        libraryUtils::moveTemporaryFile($tmpImageName, $this->getName() . DS . $realm, mktime());
+    }
+
+    public function clearPluginUploadsInRealm ($realm) {
+        // libraryUtils::moveTemporaryFile($tmpImageName, $this->getUploadDirectory($realm));
+    }
 
     public function run () {
         $this->beforeRun();

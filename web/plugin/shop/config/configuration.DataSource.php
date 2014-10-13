@@ -257,13 +257,11 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopGetProductAttributes ($id) {
-        return self::jsapiGetDataSourceConfig(array(
+    static function jsapiShopGetProductAttributes ($id = null, $type = null) {
+        $config = self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_productAttributes",
-            "condition" => array(
-                "ProductID" => self::jsapiCreateDataSourceCondition($id)
-            ),
+            "condition" => array(),
             "fields" => array(
                 "ProductID",
                 "@GROUP_CONCAT(Attribute SEPARATOR \"#EXPLODE#\") AS `Attributes`",
@@ -284,6 +282,15 @@ class configurationShopDataSource extends objectConfiguration {
                 )
             )
         ));
+
+        if (!empty($id)) {
+            $config['condition']['ProductID'] = self::jsapiCreateDataSourceCondition($id);
+        }
+        if (!empty($type)) {
+            $config['condition']['Attribute'] = self::jsapiCreateDataSourceCondition($type);
+        }
+
+        return $config;
     }
 
     static function jsapiShopCreateFeature ($data) {

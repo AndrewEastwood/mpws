@@ -85,5 +85,7 @@
     define("DIR_CUSTOMER", 'customer');
     define("DIR_DEFAULT", 'default');
     define("DIR_PLUGIN", 'plugin');
+    define("DIR_UPLOADS", 'uploads');
+    define("DIR_TMP_UPLOADS", 'uploads/temp');
 
 ?>

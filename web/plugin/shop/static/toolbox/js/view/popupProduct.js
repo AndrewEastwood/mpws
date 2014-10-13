@@ -63,7 +63,12 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             IsPromo: self.$('#ispromo').is(':checked'),
                             Tags: self.$('#tags').val(),
                             ISBN: self.$('#isbn').val(),
-                            Features: self.$(".features-list").select2('val')
+                            Features: self.$(".features-list").select2('val'),
+                            file1: self.$('#file1').val(),
+                            file2: self.$('#file2').val(),
+                            file3: self.$('#file3').val(),
+                            file4: self.$('#file4').val(),
+                            file5: self.$('#file5').val()
                         }, {
                             silent: true,
                             patch: true,
@@ -290,6 +295,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 $.each(data.result.files, function (index, file) {
                     if (file.url) {
                         $btn.addClass('uploaded');
+                        $btn.find('.file-name').val(file.name);
                         $delBtn.on('click', function () {
                             $.ajax({
                                 type: 'DELETE',
@@ -298,8 +304,8 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                                 $btn.removeClass('preview error');
                                 node.empty().addClass('hidden');
                                 $btn.find('.fa-plus').removeClass('hidden');
-                                var $input = $btn.find('input').clone();
-                                $btn.find('input').remove();
+                                var $input = $btn.find('.product-image').clone();
+                                $btn.find('.product-image').remove();
                                 $delBtn.remove();
                                 self.setupFileUploadItem($input);
                                 $btn.append($input);
@@ -314,8 +320,8 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             $btn.removeClass('preview error');
                             node.empty().addClass('hidden');
                             $btn.find('.fa-plus').removeClass('hidden');
-                            var $input = $btn.find('input').clone();
-                            $btn.find('input').remove();
+                            var $input = $btn.find('.product-image').clone();
+                            $btn.find('.product-image').remove();
                             $btn.append($input);
                             self.setupFileUploadItem($input);
                         });

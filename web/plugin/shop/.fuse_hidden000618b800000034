@@ -555,15 +555,6 @@ class pluginShop extends objectPlugin {
                         $this->getCustomer()->fetch($config);
                     }
                 }
-
-                // get previous attributes
-                // we need this to re-adjust images for the product
-                $previousAttributesConfig = configurationShopDataSource::jsapiShopGetProductAttributes($ProductID);
-                $previousAttributes = $this->getCustomer()->fetch($previousAttributesConfig);
-                if (isset($previousAttributes['ProductAttributes'])) {
-                    $previousAttributes = $previousAttributes['ProductAttributes'];
-                }
-
                 // set new attributes
                 if (!empty($attributes)) {
                     $initAttrData = new ArrayObject(array(
@@ -581,19 +572,6 @@ class pluginShop extends objectPlugin {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
-                        if (is_array($value) && $key === 'IMAGE') {
-
-                            $productImagePath = 'products' . DS . $data['Name'] . '-' . $data['Model'];
-
-                            // here we do the following:
-                            // 1. remove image + (sm and xs) from disk whenever it's removed by user
-                            // 2. relocate image + (sm and xs) according to new product name and model
-                            // 
-
-                            $this->moveTempFileToPluginUploads('sm' . DS . $tmpImageName, $productImagePath);
-                            $this->moveTempFileToPluginUploads('xs' . DS . $tmpImageName, $productImagePath);
-                            $attrData['Value'] = $this->moveTempFileToPluginUploads($tmpImageName, $productImagePath);
-                        }
                         $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
