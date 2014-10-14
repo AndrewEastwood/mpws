@@ -634,9 +634,14 @@ class pluginShop extends objectPlugin {
 
                 $uploadedPaths = array();
                 foreach ($filesToUpload as $fileName) {
-                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $productImagePathNew);
-                    $this->saveUploadedFile('xs' . DS . $fileName, $productImagePathNew, $uploadInfo['basename']);
+                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $productImagePathNew . DS . 'sm');
+                    $this->saveUploadedFile('xs' . DS . $fileName, $productImagePathNew . DS . 'xs', $uploadInfo['basename']);
                     $uploadedPaths = $this->saveUploadedFile($fileName, $productImagePathNew, $uploadInfo['basename']);
+                }
+                foreach ($filesToDelete as $fileName) {
+                    $this->deleteUploadedFile('sm' . DS . $fileName, $productImagePathPrevious . DS . 'sm');
+                    $this->deleteUploadedFile('xs' . DS . $fileName, $productImagePathPrevious . DS . 'xs');
+                    $this->deleteUploadedFile($fileName, $productImagePathPrevious);
                 }
 
                 throw new Exception("Error Processing Request", 1);
