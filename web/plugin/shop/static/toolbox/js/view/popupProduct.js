@@ -34,6 +34,10 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     var PopupProduct = Backbone.View.extend({
         template: tpl,
         lang: lang,
+        events: {
+            'click .del-image': 'removeImage',
+            'click .restore-image': 'restoreImage'
+        },
         initialize: function () {
             var self = this;
             this.model = new ModelProduct();
@@ -235,10 +239,93 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             // init uploads
             // this.$('.uploads').html(_testUploadTpl());
             // _testUploadInitFn(this);
-            this.setupFileUploadItem(this.$('.product-image'));
+            this.setupFileUploadItem(this.$('.temp-upload-image'));
+        },
+        restoreImage: function (event) {
+            var $btn = $(event.target).parents('.upload-wrapper'),
+                // $delBtn = $btn.find('.del-image'),
+                // $restoreBtn = $btn.find('.restore-image'),
+                // $prevImage = $btn.find('.uploaded-image'),
+                $fileName = $btn.find('.file-name');
+            // $btn.removeClass('original temp preview error');
+            // if ($prevImage.length && $fileName.data('original') === $prevImage.attr('src')) {
+            $fileName.val($fileName.data('original'));
+            // }
+
+            // $delBtn.removeClass('hidden');
+            // $restoreBtn.addClass('hidden');
+            this.refreshUploadButton(event.target);
+        },
+        removeImage: function (event) {
+            var self = this,
+                $btn = $(event.target).parents('.upload-wrapper'),
+                // $delBtn = $btn.find('.del-image'),
+                $prevTemp = $btn.find('.preview-image'),
+                // $prevImage = $btn.find('.uploaded-image'),
+                $fileName = $btn.find('.file-name'),
+                delUrlForTempImage = $prevTemp.data('delete-url');
+            // $btn.removeClass('original temp preview error');
+            if (delUrlForTempImage) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: delUrlForTempImage
+                }).always(function () {
+                    // after temp image is removed we restore original image
+                    // if ($prevImage.length) {
+                    //     $btn.addClass('original');
+                    //     $prevImage.removeClass('hidden');
+                    // } else {
+                    //     // or just hide close button
+                    //     $delBtn.addClass('hidden');
+                    // }
+                    $prevTemp.empty();
+                    $prevTemp.data('delete-url', null);
+                    $fileName.val($fileName.data('original'));
+                    self.refreshUploadButton(event.target);
+                });
+            } else {
+                // $prevImage.addClass('hidden');
+                $fileName.val('');
+                self.refreshUploadButton(event.target);
+                // $delBtn.addClass('hidden');
+            }
+        },
+        refreshUploadButton: function (el) {
+            var $btn = $(el).parents('.upload-wrapper'),
+                $delBtn = $btn.find('.del-image'),
+                $restoreBtn = $btn.find('.restore-image'),
+                $prevTemp = $btn.find('.preview-image'),
+                $prevImage = $btn.find('.uploaded-image'),
+                $fileName = $btn.find('.file-name'),
+                $uploadFile = $btn.find('.temp-upload-image');
+            $btn.removeClass('none restore original temp preview error');
+            // show restore button
+            if ($fileName.val() === '' && $fileName.data('original')) {
+                $btn.addClass('restore');
+            }
+            if ($prevTemp.data('delete-url') && $fileName.val() && $fileName.val() !== $fileName.data('original')) {
+                $btn.addClass('temp');
+            }
+            if ($fileName.val() && $fileName.val() === $fileName.data('original')) {
+                $btn.addClass('original');
+            }
+            if ($uploadFile.val() !== '') {
+                $btn.addClass('changed');
+            }
+            if (!$prevTemp.data('delete-url') && $uploadFile.val() === '' && $fileName.val() === '' && !$fileName.data('original')) {
+                $btn.addClass('none');
+            }
+
+            // clear errors
+            // this.$('.upload-errors').empty();
+
+            return $btn;
         },
         setupFileUploadItem: function ($items) {
             var self = this;
+            $items.each(function () {
+                self.refreshUploadButton($(this));
+            });
             $items.fileupload({
                 url: APP.getUploadUrl({
                     source: 'shop',
@@ -259,75 +346,72 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 previewMaxHeight: 75,
                 previewCrop: true
             }).on('fileuploadadd', function (e, data) {
-                var $btnWrapper = $(this).parents('.upload-wrapper'),
-                    $btn = $(this).parent();
-                $btn.removeClass('preview error');
-                $btnWrapper.find('del-image').remove();
-                $btn.find('.fa-plus').addClass('hidden');
-                data.context = $btn.find('.preview');
-                data.context.removeClass('hidden');
+                // var $btn = $(this).parents('.upload-wrapper'),
+                //     $prevTemp = $btn.find('.preview-image'),
+                //     $prevImage = $btn.find('.uploaded-image');
+                // $btn.removeClass('preview error');
+                // $prevTemp.addClass('hidden');
+                // $prevImage.addClass('hidden');
+                self.refreshUploadButton($(this));
             }).on('fileuploadprogressall', function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
                 self.$('#progress .progress-bar').css('width', progress + '%');
             }).on('fileuploadprocessalways', function (e, data) {
-                var $btn = $(this).parent(),
+                var $btn = self.refreshUploadButton($(this)),
+                    $prevTemp = $btn.find('.preview-image'),
+                    $fileName = $btn.find('.file-name'),
                     index = data.index,
-                    file = data.files[index],
-                    node = $(data.context);
+                    file = data.files[index];
+
+                // var $btn = $(this).parents('.upload-wrapper'),
                 if (file.preview) {
-                    $btn.addClass('preview');
-                    node.html(file.preview);
-                }
-                if (file.error) {
+                    // $btn.addClass('preview');
+                    // $prevTemp.removeClass('hidden');
+                    $prevTemp.html(file.preview);
+                } else {
+                    /*if (file.error) {*/
                     $btn.addClass('error');
-                    node.html($('<i/>').addClass('fa fa-warning text-danger'));
-                    node.append($('<span/>').addClass('message').text(file.error));
+                    $prevTemp.empty();
+                    $prevTemp.data('delete-url', null);
+                    $fileName.val($fileName.data('original'));
+                    // $prevTemp.addClass('hidden');
+                    // $prevTemp.empty();
+                    // self.$('.upload-errors').text(file.error);
                 }
             }).on('fileuploaddone', function (e, data) {
-                var $btnWrapper = $(this).parents('.upload-wrapper'),
-                    $btn = $(this).parent(),
-                    node = $(data.context),
-                    progress = parseInt(data.loaded / data.total * 100, 10),
-                    $delBtn = $('<i>').attr('class', 'fa fa-times fa-fw text-danger del-image');
-                $btn.removeClass('preview error');
+                var $btn = $(this).parents('.upload-wrapper'),
+                    // $delBtn = $btn.find('.del-image'),
+                    $fileName = $btn.find('.file-name'),
+                    $prevTemp = $btn.find('.preview-image'),
+                    // $prevImage = $btn.find('.uploaded-image'),
+                    progress = parseInt(data.loaded / data.total * 100, 10);
+                // $btn.removeClass('preview error');
                 self.$('#progress .progress-bar').css('width', '0%');
-                console.log('done');
+                // console.log('done');
+                // $delBtn.removeClass('hidden');
                 $.each(data.result.files, function (index, file) {
                     if (file.url) {
-                        $btn.addClass('uploaded');
-                        $btn.find('.file-name').val(file.name);
-                        $delBtn.on('click', function () {
-                            $.ajax({
-                                type: 'DELETE',
-                                url: file.deleteUrl
-                            }).done(function () {
-                                $btn.removeClass('preview error');
-                                node.empty().addClass('hidden');
-                                $btn.find('.fa-plus').removeClass('hidden');
-                                var $input = $btn.find('.product-image').clone();
-                                $btn.find('.product-image').remove();
-                                $delBtn.remove();
-                                self.setupFileUploadItem($input);
-                                $btn.append($input);
-                            });
-                        });
-                    } else if (file.error) {
-                        $btn.addClass('error');
-                        node.html($('<i/>').addClass('fa fa-warning text-danger'));
-                        node.append($('<span/>').addClass('message').text(file.error));
-                        $delBtn.on('click', function () {
-                            $(this).remove();
-                            $btn.removeClass('preview error');
-                            node.empty().addClass('hidden');
-                            $btn.find('.fa-plus').removeClass('hidden');
-                            var $input = $btn.find('.product-image').clone();
-                            $btn.find('.product-image').remove();
-                            $btn.append($input);
-                            self.setupFileUploadItem($input);
-                        });
+                        // $btn.addClass('temp');
+                        $prevTemp.data('delete-url', file.deleteUrl);
+                        // set new uploaded file name and delete url
+                        $fileName.val(file.name);
+                    } else { /*if (file.error)*/
+                        // $btn.addClass('error');
+                        // $prevTemp.addClass('hidden');
+                        $prevTemp.empty();
+                        $prevTemp.data('delete-url', null);
+                        $fileName.val($fileName.data('original'));
+                        // self.$('.upload-errors').text(file.error);
+                        // var prevImage = ;
+                        // if (preview) {
+                        // $prevImage.removeClass('hidden');
+                        // } else {
+                        // $fileName.val('');
+                        // $delBtn.addClass('hidden');
+                        // }
                     }
-                    $btnWrapper.append($delBtn);
                 });
+                self.refreshUploadButton($(this));
             });
         }
     });

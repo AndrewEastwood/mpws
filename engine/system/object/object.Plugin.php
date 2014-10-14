@@ -46,20 +46,42 @@ class objectPlugin implements IPlugin {
     public function beforeRun () {}
     public function afterRun () {}
 
-    public function getUploadDirectory ($reaml = null) {
-        if (empty($reaml)) {
+    public function getUploadDirectory ($realm = null) {
+        if (empty($realm)) {
             return libraryUtils::getUploadDirectory($this->getName());
         }
         return libraryUtils::getUploadDirectory($this->getName() . DS . $realm);
     }
 
-    public function moveTempFileToPluginUploads ($tmpImageName, $realm) {
-        libraryUtils::moveTemporaryFile($tmpImageName, $this->getName() . DS . $realm, mktime());
+    public function saveUploadedFile ($tmpFilePath, $targetDir, $name = false) {
+        $uniqueName = empty($name) ? mktime() : $name;
+        $uploadedFileInfo = libraryUtils::moveTemporaryFile($tmpFilePath, $this->getName() . DS . $targetDir, $uniqueName);
+        // $uploadedFileInfo['name'] = $uniqueName;
+        return $uploadedFileInfo;
     }
 
-    public function clearPluginUploadsInRealm ($realm) {
-        // libraryUtils::moveTemporaryFile($tmpImageName, $this->getUploadDirectory($realm));
-    }
+    // public function deleteFile ($filePath) {
+    //     $filePath = $this->getUploadDirectory($filePath);
+    //     if (file_exists($filePath)) {
+    //         return unlink($filePath);
+    //     }
+    //     return false;
+    // }
+    
+    // public function moveFile ($filePath, $newDir) {
+    //     $filePath = $this->getUploadDirectory($filePath);
+    //     $fileNewDir = $this->getUploadDirectory($newDir);
+    //     $fileInfo = pathinfo($filePath);
+    //     if (!file_exists($fileNewDir)) {
+    //         mkdir($fileNewDir, 0777, true);
+    //     }
+    //     $fileNewPath = $fileNewDir . DS . $fileInfo['basename'];
+    //     rename($filePath, $fileNewPath);
+    // }
+
+    // public function clearPluginUploadsInRealm ($realm) {
+    //     // libraryUtils::moveTemporaryFile($tmpImageName, $this->getUploadDirectory($realm));
+    // }
 
     public function run () {
         $this->beforeRun();

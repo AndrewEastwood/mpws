@@ -313,9 +313,10 @@ body {
         .upload-wrapper {
             display: inline-block;
             position: relative;
+            margin-right: 20px;
             .del-image {
                 position: absolute;
-                left: -4px;
+                left: -10px;
                 top: -11px;
                 width: 16px;
                 height: 16px;
@@ -329,63 +330,118 @@ body {
                     text-shadow: 0 0 2px #DA5C5C;
                 }
             }
-        }
-        .fileinput-button {
-            position: relative;
-            overflow: hidden;
-            background: none;
-            border-style: dashed;
-            color: #5CB85C;
-            display: inline-block;
-            width: 75px;
-            height: 75px;
-            line-height: 75px;
-            font-size: 2em;
-            margin: 0px;
-            padding: 0px;
-            .preview {
+            .restore-image {
+                position: absolute;
+                left: -10px;
+                top: -11px;
+                width: 16px;
+                height: 16px;
+                display: block;
+                font-size: 1.2rem;
+                color: #FFA100;
+                line-height: normal;
+                white-space: normal;
+                cursor: pointer;
+                &:hover {
+                    text-shadow: 0 0 2px #DAA100;
+                }
+            }
+            .fileinput-button {
+                position: relative;
+                overflow: hidden;
+                background: none;
+                border-style: dashed;
+                // color: #5CB85C;
+                display: inline-block;
+                width: 60px;
+                height: 60px;
+                // line-height: 75px;
+                // font-size: 2em;
                 margin: 0px;
                 padding: 0px;
-                display: block;
-                position: relative;
-                .fa {
-                    position: relative;
-                    top: -15px;
+
+                &:hover {
+                    // color: #fff;
+                    background: #eee;
                 }
-                .message {
-                    display: block;
-                    font-size: 1.2rem;
-                    margin-top: -35px;
-                    color: #CA4541;
-                    width: 75px;
-                    line-height: normal;
-                    white-space: normal;
+
+                // .preview {
+                //     margin: 0px;
+                //     padding: 0px;
+                //     display: block;
+                //     position: relative;
+                //     .fa {
+                //         position: relative;
+                //         top: -15px;
+                //     }
+                //     .message {
+                //         display: block;
+                //         font-size: 1.2rem;
+                //         margin-top: -35px;
+                //         color: #CA4541;
+                //         width: 75px;
+                //         line-height: normal;
+                //         white-space: normal;
+                //     }
+                // }
+                // &.error {
+                //     border-color: #CA4541;
+                //     &:hover {
+                //         background-color: #CA4541;
+                //         * {
+                //             color: #fff;
+                //         }
+                //     }
+                // }
+                // &.preview {
+                //     border-color: #fff;
+                //     background: transparent;
+                //     &:hover {
+                //         border-color: #fff;
+                //         background: transparent;
+                //     }
+                // }
+                input {
+                    z-index: 99999;
                 }
             }
-            &:hover {
-                color: #fff;
-                background: #5CB85C;
+            .uploaded-image {
+                display: block;
+                max-height: 75px;
+                max-width: 75px;
+                position: absolute;
+                left: -5px;
+                top: -5px;
+            }
+            &.none {
+                .fa-plus {display: block;}
+            }
+            &.original {
+                .del-image {display: block;}
+            }
+            &.temp {
+                .preview-image {display: block;}
+                .uploaded-image {display: none;}
+                .del-image {display: block;}
             }
             &.error {
-                border-color: #CA4541;
-                &:hover {
-                    background-color: #CA4541;
-                    * {
-                        color: #fff;
-                    }
-                }
+                .fa-plus {display: none;}
+                .fa-warning {display: block;}
             }
-            &.preview {
-                border-color: #fff;
-                background: transparent;
-                &:hover {
-                    border-color: #fff;
-                    background: transparent;
-                }
+            &.restore {
+                .restore-image {display: block;}
+                .uploaded-image {display: none;}
+                .preview-image {display: none;}
+                .fa-plus {display: block;}
             }
-            input {
-                z-index: 99999;
+            .restore-image, .del-image {display: none;}
+            .fa-plus, .fa-warning {
+                display: none;
+                font-size: 1.5em;
+                position: relative;
+                top: 30%;
             }
+            .preview-image {display: none;}
         }
     }
 }

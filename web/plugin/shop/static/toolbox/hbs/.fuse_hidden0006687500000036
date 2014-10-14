@@ -91,69 +91,60 @@
                         <div class="col-md-12 uploads">
                             <div class="upload-errors"></div>
                             <div class="upload-wrapper">
-                                <span class="btn fileinput-button">
-                                    <i class="fa fa-plus text-success"></i>
-                                    <i class="fa fa-warning text-danger"></i>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fa fa-plus"></i>
                                     <!-- The file input field used as target for the file upload widget -->
                                     <input id="file1" type="hidden" class="file-name" value="{{data.Attributes.IMAGE.[0]}}" data-original="{{data.Attributes.IMAGE.[0]}}">
-                                    <input id="product-image-1" class="temp-upload-image" type="file" name="files">
+                                    <input id="product-image-1" class="product-image" type="file" name="files">
                                     {{#if data.Attributes.IMAGE.[0]}}<img src="{{data.Attributes.IMAGE.[0]}}" class="uploaded-image" alt="{{Name}}">{{/if}}
-                                    <span class="preview-image"></span>
+                                    <span class="preview-image hidden"></span>
                                 </span>
-                                <i class="fa fa-times fa-fw text-danger del-image"></i>
-                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <i class="fa fa-times fa-fw text-danger del-image{{#unless data.Attributes.IMAGE.[0]}}hidden{{/unless}}"></i>
                             </div>
                             <div class="upload-wrapper">
-                                <span class="btn fileinput-button">
-                                    <i class="fa fa-plus text-success"></i>
-                                    <i class="fa fa-warning text-danger"></i>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fa fa-plus"></i>
                                     <!-- The file input field used as target for the file upload widget -->
                                     <input id="file2" type="hidden" class="file-name" value="{{data.Attributes.IMAGE.[1]}}" data-original="{{data.Attributes.IMAGE.[1]}}">
-                                    <input id="product-image-2" class="temp-upload-image" type="file" name="files">
+                                    <input id="product-image-2" class="product-image" type="file" name="files">
                                     {{#if data.Attributes.IMAGE.[1]}}<img src="{{data.Attributes.IMAGE.[1]}}" class="uploaded-image" alt="{{Name}}">{{/if}}
-                                    <span class="preview-image"></span>
+                                    <span class="preview-image hidden"></span>
                                 </span>
-                                <i class="fa fa-times fa-fw text-danger del-image"></i>
-                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <i class="fa fa-times fa-fw text-danger del-image{{#unless data.Attributes.IMAGE.[1]}}hidden{{/unless}}"></i>
+                                <i class="fa fa-undo fa-fw text-warn restore-image hidden"></i>
                             </div>
                             <div class="upload-wrapper">
-                                <span class="btn fileinput-button">
-                                    <i class="fa fa-plus text-success"></i>
-                                    <i class="fa fa-warning text-danger"></i>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fa fa-plus"></i>
                                     <!-- The file input field used as target for the file upload widget -->
                                     <input id="file3" type="hidden" class="file-name" value="{{data.Attributes.IMAGE.[2]}}" data-original="{{data.Attributes.IMAGE.[2]}}">
-                                    <input id="product-image-3" class="temp-upload-image" type="file" name="files">
+                                    <input id="product-image-3" class="product-image" type="file" name="files">
                                     {{#if data.Attributes.IMAGE.[2]}}<img src="{{data.Attributes.IMAGE.[2]}}" class="uploaded-image" alt="{{Name}}">{{/if}}
-                                    <span class="preview-image"></span>
+                                    <span class="preview-image hidden"></span>
                                 </span>
-                                <i class="fa fa-times fa-fw text-danger del-image"></i>
-                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <i class="fa fa-times fa-fw text-danger del-image{{#unless data.Attributes.IMAGE.[2]}}hidden{{/unless}}"></i>
                             </div>
                             <div class="upload-wrapper">
-                                <span class="btn fileinput-button">
-                                    <i class="fa fa-plus text-success"></i>
-                                    <i class="fa fa-warning text-danger"></i>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fa fa-plus"></i>
                                     <!-- The file input field used as target for the file upload widget -->
                                     <input id="file4" type="hidden" class="file-name" value="{{data.Attributes.IMAGE.[3]}}" data-original="{{data.Attributes.IMAGE.[3]}}">
-                                    <input id="product-image-4" class="temp-upload-image" type="file" name="files">
+                                    <input id="product-image-4" class="product-image" type="file" name="files">
                                     {{#if data.Attributes.IMAGE.[3]}}<img src="{{data.Attributes.IMAGE.[3]}}" class="uploaded-image" alt="{{Name}}">{{/if}}
-                                    <span class="preview-image"></span>
+                                    <span class="preview-image hidden"></span>
                                 </span>
-                                <i class="fa fa-times fa-fw text-danger del-image"></i>
-                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <i class="fa fa-times fa-fw text-danger del-image{{#unless data.Attributes.IMAGE.[3]}}hidden{{/unless}}"></i>
                             </div>
                             <div class="upload-wrapper">
-                                <span class="btn fileinput-button">
-                                    <i class="fa fa-plus text-success"></i>
-                                    <i class="fa fa-warning text-danger"></i>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fa fa-plus"></i>
                                     <!-- The file input field used as target for the file upload widget -->
                                     <input id="file5" type="hidden" class="file-name" value="{{data.Attributes.IMAGE.[4]}}" data-original="{{data.Attributes.IMAGE.[4]}}">
-                                    <input id="product-image-5" class="temp-upload-image" type="file" name="files">
+                                    <input id="product-image-5" class="product-image" type="file" name="files">
                                     {{#if data.Attributes.IMAGE.[4]}}<img src="{{data.Attributes.IMAGE.[4]}}" class="uploaded-image" alt="{{Name}}">{{/if}}
-                                    <span class="preview-image"></span>
+                                    <span class="preview-image hidden"></span>
                                 </span>
-                                <i class="fa fa-times fa-fw text-danger del-image"></i>
-                                <i class="fa fa-undo fa-fw text-warning restore-image"></i>
+                                <i class="fa fa-times fa-fw text-danger del-image{{#unless data.Attributes.IMAGE.[4]}}hidden{{/unless}}"></i>
                             </div>
                         </div>
                     </div>

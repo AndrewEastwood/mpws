@@ -347,9 +347,9 @@ class pluginShop extends objectPlugin {
                 $validatedValues = $validatedDataObj['values'];
                 $CustomerID = $this->getCustomer()->getCustomerID();
                 $attributes = array();
+                $attributes["IMAGE"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
-                $attributes["IMAGE"] = array();
 
                 // extract attributes
                 if (isset($validatedValues['Tags'])) {
@@ -443,9 +443,9 @@ class pluginShop extends objectPlugin {
                         $attrData['Value'] = $value;
                         if (is_array($value) && $key === 'IMAGE') {
                             $productImagePath = 'products' . DS . $data['Name'] . '-' . $data['Model'];
-                            $this->moveTempFileToPluginUploads('sm' . DS . $tmpImageName, $productImagePath);
-                            $this->moveTempFileToPluginUploads('xs' . DS . $tmpImageName, $productImagePath);
-                            $attrData['Value'] = $this->moveTempFileToPluginUploads($tmpImageName, $productImagePath);
+                            $this->saveUploadedFile('sm' . DS . $tmpImageName, $productImagePath);
+                            $this->saveUploadedFile('xs' . DS . $tmpImageName, $productImagePath);
+                            $attrData['Value'] = $this->saveUploadedFile($tmpImageName, $productImagePath);
                         }
                         $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
@@ -489,7 +489,12 @@ class pluginShop extends objectPlugin {
             'Status' => array('string', 'skipIfUnset'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
-            'Features' =>  array('string', 'notEmpty', 'skipIfUnset')
+            'Features' =>  array('string', 'notEmpty', 'skipIfUnset'),
+            'file1' => array('string', 'skipIfUnset'),
+            'file2' => array('string', 'skipIfUnset'),
+            'file3' => array('string', 'skipIfUnset'),
+            'file4' => array('string', 'skipIfUnset'),
+            'file5' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -498,6 +503,7 @@ class pluginShop extends objectPlugin {
                 $validatedValues = $validatedDataObj['values'];
                 $CustomerID = $this->getCustomer()->getCustomerID();
                 $attributes = array();
+                $attributes["IMAGE"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
 
@@ -514,6 +520,27 @@ class pluginShop extends objectPlugin {
                 if (isset($validatedValues['Features'])) {
                     $features = $validatedValues['Features'];
                     unset($validatedValues['Features']);
+                }
+                // I don't think loop for 5 items is better for perfomance
+                if (isset($validatedValues['file1'])) {
+                    $attributes["IMAGE"][] = $validatedValues['file1'];
+                    unset($validatedValues['file1']);
+                }
+                if (isset($validatedValues['file2'])) {
+                    $attributes["IMAGE"][] = $validatedValues['file2'];
+                    unset($validatedValues['file2']);
+                }
+                if (isset($validatedValues['file3'])) {
+                    $attributes["IMAGE"][] = $validatedValues['file3'];
+                    unset($validatedValues['file3']);
+                }
+                if (isset($validatedValues['file4'])) {
+                    $attributes["IMAGE"][] = $validatedValues['file4'];
+                    unset($validatedValues['file4']);
+                }
+                if (isset($validatedValues['file5'])) {
+                    $attributes["IMAGE"][] = $validatedValues['file5'];
+                    unset($validatedValues['file5']);
                 }
 
                 $this->getCustomerDataBase()->beginTransaction();
@@ -556,14 +583,63 @@ class pluginShop extends objectPlugin {
                     }
                 }
 
-                // get previous attributes
+                // get previous product data
                 // we need this to re-adjust images for the product
-                $previousAttributesConfig = configurationShopDataSource::jsapiShopGetProductAttributes($ProductID);
-                $previousAttributes = $this->getCustomer()->fetch($previousAttributesConfig);
-                if (isset($previousAttributes['ProductAttributes'])) {
-                    $previousAttributes = $previousAttributes['ProductAttributes'];
+                $previousProductConfig = configurationShopDataSource::jsapiShopGetProductItem($ProductID, false);
+                $previousAttributesConfig = configurationShopDataSource::jsapiShopGetProductAttributes($ProductID, 'IMAGE');
+                $previousAttributesImages = $this->getCustomer()->fetch($previousAttributesConfig);
+                $previousProduct = $this->getCustomer()->fetch($previousProductConfig);
+                if (isset($previousAttributesImages['ProductAttributes']['IMAGE'])) {
+                    $previousAttributesImages = $previousAttributesImages['ProductAttributes']['IMAGE'];
                 }
 
+                $filesToDelete = array();
+                $filesToKeep = array();
+                $filesToUpload = array();
+
+                var_dump($previousAttributesImages);
+                var_dump($attributes["IMAGE"]);
+
+
+                foreach ($attributes["IMAGE"] as $uploadingImageName) {
+                    if (in_array($uploadingImageName, $previousAttributesImages)) {
+                        $filesToKeep[] = $uploadingImageName;
+                    } else {
+                        if (!empty($uploadingImageName)) {
+                            $filesToUpload[] = $uploadingImageName;
+                        }
+                    }
+                }
+
+                $filesToDelete = array_diff($previousAttributesImages, $filesToKeep);
+
+                var_dump('delete>>>>>>>');
+                var_dump($filesToDelete);
+                var_dump('keep>>>>>>>');
+                var_dump($filesToKeep);
+                var_dump('upload>>>>>>>');
+                var_dump($filesToUpload);
+
+                if (!isset($data['Name'])) {
+                    $data['Name'] = $previousProduct['Name'];
+                }
+                if (!isset($data['Model'])) {
+                    $data['Model'] = $previousProduct['Model'];
+                }
+
+                $productImagePathPrevious = 'products' . DS . $previousProduct['Name'] . '-' . $previousProduct['Model'];
+                $productImagePathNew = 'products' . DS . $data['Name'] . '-' . $data['Model'];
+                $productImagePathPrevious = str_replace(' ', '_', $productImagePathPrevious);
+                $productImagePathNew = str_replace(' ', '_', $productImagePathNew);
+
+                $uploadedPaths = array();
+                foreach ($filesToUpload as $fileName) {
+                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $productImagePathNew);
+                    $this->saveUploadedFile('xs' . DS . $fileName, $productImagePathNew, $uploadInfo['basename']);
+                    $uploadedPaths = $this->saveUploadedFile($fileName, $productImagePathNew, $uploadInfo['basename']);
+                }
+
+                throw new Exception("Error Processing Request", 1);
                 // set new attributes
                 if (!empty($attributes)) {
                     $initAttrData = new ArrayObject(array(
@@ -590,9 +666,9 @@ class pluginShop extends objectPlugin {
                             // 2. relocate image + (sm and xs) according to new product name and model
                             // 
 
-                            $this->moveTempFileToPluginUploads('sm' . DS . $tmpImageName, $productImagePath);
-                            $this->moveTempFileToPluginUploads('xs' . DS . $tmpImageName, $productImagePath);
-                            $attrData['Value'] = $this->moveTempFileToPluginUploads($tmpImageName, $productImagePath);
+                            $this->saveUploadedFile('sm' . DS . $tmpImageName, $productImagePath);
+                            $this->saveUploadedFile('xs' . DS . $tmpImageName, $productImagePath);
+                            $attrData['Value'] = $this->saveUploadedFile($tmpImageName, $productImagePath);
                         }
                         $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
