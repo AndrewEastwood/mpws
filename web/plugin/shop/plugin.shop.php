@@ -286,6 +286,21 @@ class pluginShop extends objectPlugin {
         return $product;
     }
 
+    public function getProductImages ($productID) {
+        $images = array();
+        $configProductsAttr = configurationShopDataSource::jsapiShopGetProductAttributes($productID, 'IMAGE');
+        $attr = $this->getCustomer()->fetch($configProductsAttr);
+        if (isset($attr['Attributes']['IMAGE'])) {
+            foreach ($attr['Attributes']['IMAGE'] as $imgName)
+            $this->getUploadedFile($imgName, 'products' . DS . $productID);
+        }
+        return $images;
+    }
+
+    public function getProductAttributes ($productID) {
+
+    }
+
     public function getProducts_List (array $options = array()) {
         $config = configurationShopDataSource::jsapiShopGetProductList($options);
         $self = $this;
@@ -442,7 +457,7 @@ class pluginShop extends objectPlugin {
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
                         if (is_array($value) && $key === 'IMAGE') {
-                            $productImagePath = 'products' . DS . $data['Name'] . '-' . $data['Model'];
+                            $productImagePath = 'products' . DS . $ProductID;
                             $this->saveUploadedFile('sm' . DS . $tmpImageName, $productImagePath);
                             $this->saveUploadedFile('xs' . DS . $tmpImageName, $productImagePath);
                             $attrData['Value'] = $this->saveUploadedFile($tmpImageName, $productImagePath);
@@ -600,7 +615,6 @@ class pluginShop extends objectPlugin {
                 var_dump($previousAttributesImages);
                 var_dump($attributes["IMAGE"]);
 
-
                 foreach ($attributes["IMAGE"] as $uploadingImageName) {
                     if (in_array($uploadingImageName, $previousAttributesImages)) {
                         $filesToKeep[] = $uploadingImageName;
@@ -620,28 +634,17 @@ class pluginShop extends objectPlugin {
                 var_dump('upload>>>>>>>');
                 var_dump($filesToUpload);
 
-                if (!isset($data['Name'])) {
-                    $data['Name'] = $previousProduct['Name'];
-                }
-                if (!isset($data['Model'])) {
-                    $data['Model'] = $previousProduct['Model'];
-                }
-
-                $productImagePathPrevious = 'products' . DS . $previousProduct['Name'] . '-' . $previousProduct['Model'];
-                $productImagePathNew = 'products' . DS . $data['Name'] . '-' . $data['Model'];
-                $productImagePathPrevious = str_replace(' ', '_', $productImagePathPrevious);
-                $productImagePathNew = str_replace(' ', '_', $productImagePathNew);
 
                 $uploadedPaths = array();
                 foreach ($filesToUpload as $fileName) {
-                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $productImagePathNew . DS . 'sm');
-                    $this->saveUploadedFile('xs' . DS . $fileName, $productImagePathNew . DS . 'xs', $uploadInfo['basename']);
-                    $uploadedPaths = $this->saveUploadedFile($fileName, $productImagePathNew, $uploadInfo['basename']);
+                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $ProductID . DS . 'sm');
+                    $this->saveUploadedFile('xs' . DS . $fileName, $ProductID . DS . 'xs', $uploadInfo['basename']);
+                    $uploadedPaths = $this->saveUploadedFile($fileName, $ProductID, $uploadInfo['basename']);
                 }
                 foreach ($filesToDelete as $fileName) {
-                    $this->deleteUploadedFile('sm' . DS . $fileName, $productImagePathPrevious . DS . 'sm');
-                    $this->deleteUploadedFile('xs' . DS . $fileName, $productImagePathPrevious . DS . 'xs');
-                    $this->deleteUploadedFile($fileName, $productImagePathPrevious);
+                    $this->deleteUploadedFile('sm' . DS . $ProductID, $productImagePathPrevious . DS . 'sm');
+                    $this->deleteUploadedFile('xs' . DS . $ProductID, $productImagePathPrevious . DS . 'xs');
+                    $this->deleteUploadedFile($ProductID, $productImagePathPrevious);
                 }
 
                 throw new Exception("Error Processing Request", 1);
@@ -664,7 +667,7 @@ class pluginShop extends objectPlugin {
                         $attrData['Value'] = $value;
                         if (is_array($value) && $key === 'IMAGE') {
 
-                            $productImagePath = 'products' . DS . $data['Name'] . '-' . $data['Model'];
+                            $productImagePath = 'products' . DS . $ProductID;
 
                             // here we do the following:
                             // 1. remove image + (sm and xs) from disk whenever it's removed by user

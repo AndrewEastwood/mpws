@@ -77,6 +77,10 @@ server {
       rewrite ^/auth\.js(.*) /engine/controller/controller.auth.php?$1 last;
     }
 
+    location /upload {
+      rewrite ^/upload\.js(.*) /engine/controller/controller.upload.php?$1 last;
+    }
+
 }
 ```
 You may change paths to log files according to your project's location.

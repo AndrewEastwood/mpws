@@ -46,11 +46,16 @@ class objectPlugin implements IPlugin {
     public function beforeRun () {}
     public function afterRun () {}
 
-    public function getUploadDirectory ($realm = null) {
-        if (empty($realm)) {
+    public function getUploadDirectory ($targetDir = null) {
+        if (empty($targetDir)) {
             return libraryUtils::getUploadDirectory($this->getName());
         }
-        return libraryUtils::getUploadDirectory($this->getName() . DS . $realm);
+        return libraryUtils::getUploadDirectory($this->getName() . DS . $targetDir);
+    }
+
+    public function getUploadedFile ($name, $targetDir = null) {
+        $dir = $this->getUploadDirectory($targetDir);
+        return $dir . DS . $name;
     }
 
     public function saveUploadedFile ($tmpFilePath, $targetDir, $name = false) {
@@ -60,7 +65,7 @@ class objectPlugin implements IPlugin {
         return $uploadedFileInfo;
     }
 
-    public function deleteUploadedFile ($targetDir, $name) {
+    public function deleteUploadedFile ($name, $targetDir) {
         $dir = $this->getUploadDirectory($targetDir);
         $filePath = $dir . DS . $name;
         if (file_exists($filePath)) {
