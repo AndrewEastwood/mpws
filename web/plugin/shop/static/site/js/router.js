@@ -289,7 +289,6 @@ define("plugin/shop/site/js/router", [
     }, {
         initialize: function (callback) {
             $dfdSettings.done(function () {
-                debugger;
                 self.settings = settings.toSettings();
                 callback();
             });

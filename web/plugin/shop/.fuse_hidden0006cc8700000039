@@ -215,24 +215,49 @@ class pluginShop extends objectPlugin {
         if (empty($product))
             return null;
 
+        // $configProductsAttr = configurationShopDataSource::jsapiShopGetProductAttributes($productID);
+        // $configProductsPrice = configurationShopDataSource::jsapiShopGetProductPriceStats($productID);
+        $configProductsFeatures = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
+        $configProductsRelations = configurationShopDataSource::jsapiShopGetProductRelations($productID);
+
+        // $product['Attributes'] = $this->getCustomer()->fetch($configProductsAttr);
+        $product['Prices'] = $this->getProductPriceHistory($productID);
+        $product['Features'] = $this->getCustomer()->fetch($configProductsFeatures);
+
         // adjusting
         $product['ID'] = intval($product['ID']);
         $product['CategoryID'] = intval($product['CategoryID']);
         $product['OriginID'] = intval($product['OriginID']);
         $product['Attributes'] = $this->getProductAttributes($productID);
+        // if (isset($product['Attributes']['ProductAttributes'])) {
+        //     $product['Attributes'] = $product['Attributes']['ProductAttributes'];
+        // }
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
         $product['Price'] = floatval($product['Price']);
+        // $product['Prices'] = array_map(function($price) { return floatval($price); }, $product['Prices']['PriceArchive'] ?: array());
 
-        // misc data
+        if (!is_array($product['Features']))
+            $product['Features'] = array();
+
+        $relations = array();
         if (!$skipRelations) {
-            $product['Relations'] = $this->getProductRelations($productID);
+            $relatedItemsIDs = $this->getCustomer()->fetch($configProductsRelations);
+            if (isset($relatedItemsIDs)) {
+                foreach ($relatedItemsIDs as $relationItem) {
+                    $relatedProductID = intval($relationItem['ProductB_ID']);
+                    if ($relatedProductID === $productID)
+                        continue;
+                    $relatedProduct = $this->getProductByID($relatedProductID, $saveIntoRecent, true);
+                    if (isset($relatedProduct))
+                        $relations[] = $relatedProduct;
+                }
+            }
         }
-        $product['Prices'] = $this->getProductPriceHistory($productID);
-        $product['Features'] = $this->getProductFeatures($productID);
+        $product['Relations'] = $relations;
 
         // media
-        $product['Images'] = $this->getProductImages($productID);
-        $product['Videos'] = $this->getProductVideos($productID);
+        $product['_images'] = $this->getProductImages($productID);
+        $product['_videos'] = $this->getProductVideos($productID);
 
         // Utils
         $product['_viewExtras'] = array();
@@ -272,12 +297,7 @@ class pluginShop extends objectPlugin {
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
-                $images[] = array(
-                    'name' => $item['Value'],
-                    'normal' => $this->getUploadedFileForWeb($item['Value'], $this->getProductUploadDir($productID)),
-                    'sm' => $this->getUploadedFileForWeb($item['Value'], $this->getProductUploadDir($productID, 'sm')),
-                    'xs' => $this->getUploadedFileForWeb($item['Value'], $this->getProductUploadDir($productID, 'xs'))
-                );
+                $this->getUploadedFile($item['Value'], 'products' . DS . $productID);
             }
         }
         return $images;
@@ -310,16 +330,6 @@ class pluginShop extends objectPlugin {
         return $attr;
     }
 
-    public function getProductFeatures ($productID) {
-        $features = array();
-        $config = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
-        $data = $this->getCustomer()->fetch($config);
-        if (!empty($data)) {
-            $features = $data;
-        }
-        return $features;
-    }
-
     public function getProductPriceHistory ($productID) {
         $prices = array();
         $config = configurationShopDataSource::jsapiShopGetProductPriceStats($productID);
@@ -330,29 +340,6 @@ class pluginShop extends objectPlugin {
             }
         }
         return $prices;
-    }
-
-    public function getProductRelations ($productID) {
-        $relations = array();
-        $configProductsRelations = configurationShopDataSource::jsapiShopGetProductRelations($productID);
-        $relatedItemsIDs = $this->getCustomer()->fetch($configProductsRelations);
-        if (isset($relatedItemsIDs)) {
-            foreach ($relatedItemsIDs as $relationItem) {
-                $relatedProductID = intval($relationItem['ProductB_ID']);
-                if ($relatedProductID === $productID)
-                    continue;
-                $relatedProduct = $this->getProductByID($relatedProductID, false, true);
-                if (isset($relatedProduct))
-                    $relations[] = $relatedProduct;
-            }
-        }
-        return $relations;
-    }
-
-    public function getProductUploadDir ($productID, $mode = false) {
-        if (!empty($mode))
-            return 'products' . DS . $productID . DS . $mode;
-        return 'products' . DS . $productID;
     }
 
     public function getProducts_List (array $options = array()) {
@@ -430,26 +417,26 @@ class pluginShop extends objectPlugin {
                     unset($validatedValues['ISBN']);
                 }
                 // I don't think loop for 5 items is better for perfomance
-                if (!empty($validatedValues['file1'])) {
+                if (isset($validatedValues['file1'])) {
                     $attributes["IMAGE"][] = $validatedValues['file1'];
+                    unset($validatedValues['file1']);
                 }
-                unset($validatedValues['file1']);
-                if (!empty($validatedValues['file2'])) {
+                if (isset($validatedValues['file2'])) {
                     $attributes["IMAGE"][] = $validatedValues['file2'];
+                    unset($validatedValues['file2']);
                 }
-                unset($validatedValues['file2']);
-                if (!empty($validatedValues['file3'])) {
+                if (isset($validatedValues['file3'])) {
                     $attributes["IMAGE"][] = $validatedValues['file3'];
+                    unset($validatedValues['file3']);
                 }
-                unset($validatedValues['file3']);
-                if (!empty($validatedValues['file4'])) {
+                if (isset($validatedValues['file4'])) {
                     $attributes["IMAGE"][] = $validatedValues['file4'];
+                    unset($validatedValues['file4']);
                 }
-                unset($validatedValues['file4']);
-                if (!empty($validatedValues['file5'])) {
+                if (isset($validatedValues['file5'])) {
                     $attributes["IMAGE"][] = $validatedValues['file5'];
+                    unset($validatedValues['file5']);
                 }
-                unset($validatedValues['file5']);
                 // extract features
                 if (isset($validatedValues['Features'])) {
                     $features = $validatedValues['Features'];
@@ -496,7 +483,6 @@ class pluginShop extends objectPlugin {
                     }
                 }
 
-
                 // add attributes
                 if (!empty($attributes)) {
                     $initAttrData = new ArrayObject(array(
@@ -504,30 +490,19 @@ class pluginShop extends objectPlugin {
                         'CustomerID' => $CustomerID
                     ));
                     // -- IMAGE
-                    if (isset($attributes["IMAGE"])) {
-                        foreach ($attributes["IMAGE"] as $fileName) {
-                            $newFileName = $ProductID . uniqid(time());
-                            $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                            $this->saveUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
-                            $this->saveUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
-                            $attrData = $initAttrData->getArrayCopy();
-                            $attrData['Attribute'] = 'IMAGE';
-                            $attrData['Value'] = $uploadInfo['filename'];
-                            $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
-                            $this->getCustomer()->fetch($config);
-                        }
-                    }
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS');
-                    foreach ($commonAttributeKeys as $key) {
-                        if (!isset($attributes[$key])) {
-                            continue;
-                        }
+                    foreach ($attributes as $key => $value) {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
+                        if (is_array($value) && $key === 'IMAGE') {
+                            $productImagePath = 'products' . DS . $ProductID;
+                            $this->saveUploadedFile('sm' . DS . $tmpImageName, $productImagePath);
+                            $this->saveUploadedFile('xs' . DS . $tmpImageName, $productImagePath);
+                            $attrData['Value'] = $this->saveUploadedFile($tmpImageName, $productImagePath);
+                        }
                         $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
@@ -603,26 +578,26 @@ class pluginShop extends objectPlugin {
                     unset($validatedValues['Features']);
                 }
                 // I don't think loop for 5 items is better for perfomance
-                if (!empty($validatedValues['file1'])) {
+                if (isset($validatedValues['file1'])) {
                     $attributes["IMAGE"][] = $validatedValues['file1'];
+                    unset($validatedValues['file1']);
                 }
-                unset($validatedValues['file1']);
-                if (!empty($validatedValues['file2'])) {
+                if (isset($validatedValues['file2'])) {
                     $attributes["IMAGE"][] = $validatedValues['file2'];
+                    unset($validatedValues['file2']);
                 }
-                unset($validatedValues['file2']);
-                if (!empty($validatedValues['file3'])) {
+                if (isset($validatedValues['file3'])) {
                     $attributes["IMAGE"][] = $validatedValues['file3'];
+                    unset($validatedValues['file3']);
                 }
-                unset($validatedValues['file3']);
-                if (!empty($validatedValues['file4'])) {
+                if (isset($validatedValues['file4'])) {
                     $attributes["IMAGE"][] = $validatedValues['file4'];
+                    unset($validatedValues['file4']);
                 }
-                unset($validatedValues['file4']);
-                if (!empty($validatedValues['file5'])) {
+                if (isset($validatedValues['file5'])) {
                     $attributes["IMAGE"][] = $validatedValues['file5'];
+                    unset($validatedValues['file5']);
                 }
-                unset($validatedValues['file5']);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -666,55 +641,54 @@ class pluginShop extends objectPlugin {
 
                 // get previous product data
                 // we need this to re-adjust images for the product
-                $currentImages = $this->getProductImages($ProductID);
-                $filesUploaded = array();
+                $previousProductConfig = configurationShopDataSource::jsapiShopGetProductItem($ProductID, false);
+                $previousAttributesConfig = configurationShopDataSource::jsapiShopGetProductAttributes($ProductID, 'IMAGE');
+                $previousAttributesImages = $this->getCustomer()->fetch($previousAttributesConfig);
+                $previousProduct = $this->getCustomer()->fetch($previousProductConfig);
+                if (isset($previousAttributesImages['ProductAttributes']['IMAGE'])) {
+                    $previousAttributesImages = $previousAttributesImages['ProductAttributes']['IMAGE'];
+                }
+
                 $filesToDelete = array();
                 $filesToKeep = array();
                 $filesToUpload = array();
 
-                foreach ($currentImages as $currentImageItem) {
-                    $filesUploaded[] = $currentImageItem['name'];
+                var_dump($previousAttributesImages);
+                var_dump($attributes["IMAGE"]);
+
+                foreach ($attributes["IMAGE"] as $uploadingImageName) {
+                    if (in_array($uploadingImageName, $previousAttributesImages)) {
+                        $filesToKeep[] = $uploadingImageName;
+                    } else {
+                        if (!empty($uploadingImageName)) {
+                            $filesToUpload[] = $uploadingImageName;
+                        }
+                    }
                 }
 
-                $filesToKeep = array_intersect($filesUploaded, $attributes["IMAGE"]);
-                $filesToDelete = array_diff($filesUploaded, $attributes["IMAGE"]);
-                $filesToUpload = array_diff($attributes["IMAGE"], $filesUploaded);
+                $filesToDelete = array_diff($previousAttributesImages, $filesToKeep);
 
-                // // var_dump($previousAttributesImages);
-                // var_dump($attributes["IMAGE"]);
+                var_dump('delete>>>>>>>');
+                var_dump($filesToDelete);
+                var_dump('keep>>>>>>>');
+                var_dump($filesToKeep);
+                var_dump('upload>>>>>>>');
+                var_dump($filesToUpload);
 
-                // foreach ($currentImages as $currentImageItem) {
-                //     if (in_array($currentImageItem['name'], $attributes["IMAGE"])) {
-                //         $filesToKeep[] = $currentImageItem['name'];
-                //     } else {
-                //         $filesToDelete[] = $currentImageItem['name'];
-                //     }
-                // }
 
-                // var_dump('delete>>>>>>>');
-                // var_dump($filesToDelete);
-                // var_dump('keep>>>>>>>');
-                // var_dump($filesToKeep);
-                // var_dump('upload>>>>>>>');
-                // var_dump($filesToUpload);
-
-                $uploadedFileNames = array();
+                $uploadedPaths = array();
                 foreach ($filesToUpload as $fileName) {
-                    $newFileName = $ProductID . uniqid(time());
-                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                    $this->saveUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
-                    $this->saveUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
-                    $uploadedFileNames[] = $uploadInfo['filename'];
+                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $ProductID . DS . 'sm');
+                    $this->saveUploadedFile('xs' . DS . $fileName, $ProductID . DS . 'xs', $uploadInfo['basename']);
+                    $uploadedPaths = $this->saveUploadedFile($fileName, $ProductID, $uploadInfo['basename']);
                 }
                 foreach ($filesToDelete as $fileName) {
-                    $this->deleteUploadedFile($fileName, $this->getProductUploadDir($ProductID, 'sm'));
-                    $this->deleteUploadedFile($fileName, $this->getProductUploadDir($ProductID, 'xs'));
-                    $this->deleteUploadedFile($fileName, $this->getProductUploadDir($ProductID));
+                    $this->deleteUploadedFile('sm' . DS . $ProductID, $productImagePathPrevious . DS . 'sm');
+                    $this->deleteUploadedFile('xs' . DS . $ProductID, $productImagePathPrevious . DS . 'xs');
+                    $this->deleteUploadedFile($ProductID, $productImagePathPrevious);
                 }
 
-                $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
-
-                // throw new Exception("Error Processing Request", 1);
+                throw new Exception("Error Processing Request", 1);
                 // set new attributes
                 if (!empty($attributes)) {
                     $initAttrData = new ArrayObject(array(
@@ -722,31 +696,29 @@ class pluginShop extends objectPlugin {
                         'CustomerID' => $CustomerID
                     ));
                     // -- IMAGE
-                    if (isset($attributes["IMAGE"])) {
-                        $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID, 'IMAGE');
-                        $this->getCustomer()->fetch($config);
-                        foreach ($attributes["IMAGE"] as $imageName) {
-                            $attrData = $initAttrData->getArrayCopy();
-                            $attrData['Attribute'] = 'IMAGE';
-                            $attrData['Value'] = $imageName;
-                            $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
-                            $this->getCustomer()->fetch($config);
-                        }
-                    }
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS');
-                    foreach ($commonAttributeKeys as $key) {
-                        if (!isset($attributes[$key])) {
-                            continue;
-                        }
+                    foreach ($attributes as $key => $value) {
                         // clear existed tags before adding new ones
                         $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID, $key);
                         $this->getCustomer()->fetch($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
-                        $attrData['Value'] = $attributes[$key];
+                        $attrData['Value'] = $value;
+                        if (is_array($value) && $key === 'IMAGE') {
+
+                            $productImagePath = 'products' . DS . $ProductID;
+
+                            // here we do the following:
+                            // 1. remove image + (sm and xs) from disk whenever it's removed by user
+                            // 2. relocate image + (sm and xs) according to new product name and model
+                            // 
+
+                            $this->saveUploadedFile('sm' . DS . $tmpImageName, $productImagePath);
+                            $this->saveUploadedFile('xs' . DS . $tmpImageName, $productImagePath);
+                            $attrData['Value'] = $this->saveUploadedFile($tmpImageName, $productImagePath);
+                        }
                         $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }

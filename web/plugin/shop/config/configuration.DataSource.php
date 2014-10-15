@@ -186,22 +186,14 @@ class configurationShopDataSource extends objectConfiguration {
             "condition" => array(
                 "ProductID" => self::jsapiCreateDataSourceCondition($id)
             ),
-            "fields" => array(
-                "ID",
-                "ProductID",
-                "@GROUP_CONCAT(DISTINCT Price ORDER BY DateCreated ASC SEPARATOR \"#EXPLODE#\") AS PriceArchive"
-            ),
+            "fields" => array("ID", "ProductID", "Price", "DateCreated"),
             "offset" => 0,
-            "limit" => 10,
-            "group" => "ProductID",
+            "limit" => 50,
             "order" => array(
                 "field" => "shop_productPrices.DateCreated",
                 "ordering" => "ASC"
             ),
-            "options" => array(
-                "expandSingleRecord" => true,
-                "transformToArray" => array("PriceArchive")
-            )
+            "options" => array()
         ));
     }
     // <<<< Product price stats
@@ -262,24 +254,11 @@ class configurationShopDataSource extends objectConfiguration {
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(),
-            "fields" => array(
-                "ProductID",
-                "@GROUP_CONCAT(Attribute SEPARATOR \"#EXPLODE#\") AS `Attributes`",
-                "@GROUP_CONCAT(Value SEPARATOR \"#EXPLODE#\") AS `Values`"
-            ),
+            "fields" => array("ProductID", "Attribute", "Value"),
             "offset" => 0,
-            "limit" => 10,
-            "group" => "ProductID",
+            "limit" => 20,
             "options" => array(
-                "expandSingleRecord" => true,
-                "combineDataByKeys" => array(
-                    "mapKeysToCombine" => array(
-                        "ProductAttributes" => array(
-                            "keys" => "Attributes",
-                            "values" => "Values"
-                        )
-                    )
-                )
+                "expandSingleRecord" => false
             )
         ));
 

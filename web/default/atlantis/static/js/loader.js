@@ -155,25 +155,25 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     });
 
     // find links and set them active accordint to current route
-    Sandbox.eventSubscribe('global:menu:set-active', function (selector) {
-        // debugger;
-        // _setActiveMenuItemsFn();
-        // debugger;
-        if (selector) {
-            $('[rel="menu"]').removeClass('active');
-            $(selector + '[rel="menu"]').addClass('active');
-        } else {
-            $('a.auto-active').removeClass('active');
-            $('a.auto-active').parents('.panel-collapse').removeClass('in');
-            $('a.auto-active').parents('li').removeClass('active');
-            // debugger;
-            var hash = !!window.location.hash ? window.location.hash : '#';
-            $('a.auto-active[href="' + hash + '"]').addClass('active');
-            $('a.auto-active[href="' + hash + '"]').parents('.panel-collapse').addClass('in');
-            $('a.auto-active[href="' + hash + '"]').parents('li').addClass('active');
-        }
+    // Sandbox.eventSubscribe('global:menu:set-active', function (selector) {
+    //     // debugger;
+    //     // _setActiveMenuItemsFn();
+    //     // debugger;
+    //     if (selector) {
+    //         $('[rel="menu"]').removeClass('active');
+    //         $(selector + '[rel="menu"]').addClass('active');
+    //     } else {
+    //         $('a.auto-active').removeClass('active');
+    //         $('a.auto-active').parents('.panel-collapse').removeClass('in');
+    //         $('a.auto-active').parents('li').removeClass('active');
+    //         // debugger;
+    //         var hash = !!window.location.hash ? window.location.hash : '#';
+    //         $('a.auto-active[href="' + hash + '"]').addClass('active');
+    //         $('a.auto-active[href="' + hash + '"]').parents('.panel-collapse').addClass('in');
+    //         $('a.auto-active[href="' + hash + '"]').parents('li').addClass('active');
+    //     }
 
-    });
+    // });
 
     // debugger;
     Sandbox.eventSubscribe('global:content:render', function (options) {
@@ -185,7 +185,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         else
             renderFn(options);
         // refresh links (make them active)
-        Sandbox.eventNotify('global:menu:set-active');
+        // Sandbox.eventNotify('global:menu:set-active');
     });
 
     $(window).on('hashchange', function () {
@@ -197,7 +197,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
             $('body').addClass("Page" + _hashTags[0].ucWords());
 
         // set active links
-        Sandbox.eventNotify('global:menu:set-active');
+        // Sandbox.eventNotify('global:menu:set-active');
 
         // notify all subscribers that we have changed our route
         Sandbox.eventNotify('global:route', fragment);
@@ -215,6 +215,9 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         },
         index: function () {
             // debugger;
+            if (location.pathname !== '/') {
+                window.location.href = '/';
+            }
             Sandbox.eventNotify('global:page:index', '');
         },
         signin: function () {

@@ -119,6 +119,13 @@ class libraryUtils
         }
         return $pluginUploadPath;
     }
+    static public function getUploadWebPath ($realm = null) {
+        $pluginUploadPath = DS . DIR_UPLOADS;
+        if (!empty($realm)) {
+            return $pluginUploadPath . DS . $realm;
+        }
+        return $pluginUploadPath;
+    }
 
     static function moveTemporaryFile ($tmpFilePath, $targetDir, $customFileName = null) {
         $tmpFile = self::getUploadDirectory('temp' . DS . $tmpFilePath);

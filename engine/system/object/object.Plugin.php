@@ -52,9 +52,20 @@ class objectPlugin implements IPlugin {
         }
         return libraryUtils::getUploadDirectory($this->getName() . DS . $targetDir);
     }
+    public function getUploadWebPath ($targetDir = null) {
+        if (empty($targetDir)) {
+            return libraryUtils::getUploadWebPath($this->getName());
+        }
+        return libraryUtils::getUploadWebPath($this->getName() . DS . $targetDir);
+    }
 
     public function getUploadedFile ($name, $targetDir = null) {
         $dir = $this->getUploadDirectory($targetDir);
+        return $dir . DS . $name;
+    }
+
+    public function getUploadedFileForWeb ($name, $targetDir = null) {
+        $dir = $this->getUploadWebPath($targetDir);
         return $dir . DS . $name;
     }
 

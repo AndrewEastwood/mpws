@@ -42,7 +42,8 @@ define("customer/js/router", [
             APP.xhrAbortAll();
             if (!/signin/.test(Backbone.history.getHash())) {
                 Backbone.history.fragment = false;
-                Backbone.history.navigate('signin', true);
+                window.location.href = '/#signin';
+                // Backbone.history.navigate('signin', true);
                 window.location.reload();
             }
         }

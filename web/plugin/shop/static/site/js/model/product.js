@@ -8,7 +8,7 @@ define('plugin/shop/site/js/model/product', [
     return Backbone.Model.extend({
         idAttribute: "ID",
         url: function () {
-            var _params =  {
+            var _params = {
                 source: 'shop',
                 fn: 'product'
             };
@@ -17,8 +17,9 @@ define('plugin/shop/site/js/model/product', [
             return APP.getApiLink(_params);
         },
         parse: function (data) {
+            return data;
             // debugger;
-            return ShopUtils.adjustProductItem(data);
+            // return ShopUtils.adjustProductItem(data);
         },
         getFeatures: function (compatibilityList) {
             var _features = {};
@@ -26,7 +27,7 @@ define('plugin/shop/site/js/model/product', [
             var k = null;
             // debugger;
             if (compatibilityList instanceof Backbone.Collection) {
-                compatibilityList.each(function(model){
+                compatibilityList.each(function (model) {
                     var f = model.getFeatures();
                     for (k in f)
                         if (!_features[k]) {
@@ -41,8 +42,8 @@ define('plugin/shop/site/js/model/product', [
                         _features[k].active = false;
                     }
 
-            // transform features
-            _(this.get('Features')).each(function(fName, fKey){
+                    // transform features
+            _(this.get('Features')).each(function (fName, fKey) {
                 _features[fName] = {
                     key: fKey,
                     name: fName,

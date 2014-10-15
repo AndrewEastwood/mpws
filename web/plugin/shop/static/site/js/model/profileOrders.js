@@ -11,10 +11,10 @@ define('plugin/shop/site/js/model/profileOrders', [
             var _data = data && data.shop;
 
             // debugger;
-            if (_data.orders)
-                for (var key in _data.orders)
-                    _data.orders[key].boughts = ShopUtils.adjustProductItems(_data.orders[key].boughts);
-            return _data;
+            // if (_data.orders)
+            //     for (var key in _data.orders)
+            //         _data.orders[key].boughts = ShopUtils.adjustProductItems(_data.orders[key].boughts);
+            // return _data;
         }
     });
 

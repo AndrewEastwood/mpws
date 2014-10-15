@@ -6,59 +6,59 @@ define("plugin/shop/common/js/lib/utils", [
 
     function Utils () {};
 
-    Utils.adjustProductItems = function (products) {
-        if (!products)
-            return false;
+    // Utils.adjustProductItems = function (products) {
+    //     if (!products)
+    //         return false;
 
-        _(products).each(function(product) {
-            Utils.adjustProductItem(product);
-            if (product.Relations)
-                _(products.Relations).each(function(relatedProduct) {
-                    Utils.adjustProductItem(relatedProduct);
-                });
-        });
+    //     _(products).each(function(product) {
+    //         Utils.adjustProductItem(product);
+    //         if (product.Relations)
+    //             _(products.Relations).each(function(relatedProduct) {
+    //                 Utils.adjustProductItem(relatedProduct);
+    //             });
+    //     });
 
-        return products;
-    }
+    //     return products;
+    // }
 
-    Utils.adjustProductItem = function (product) {
+    // Utils.adjustProductItem = function (product) {
 
-        product.Attributes = product.Attributes || {};
-        product.Features = product.Features || {};
+    //     product.Attributes = product.Attributes || {};
+    //     product.Features = product.Features || {};
 
-        // get product attributes
-        var _attr = product.Attributes;
+    //     // get product attributes
+    //     var _attr = product.Attributes;
 
-        // setup images
-        var _images = {
-            HAS_MAIN: false,
-            HAS_ADDITIONAL: false,
-            MAIN: false,
-            ADDITIONAL : false
-        }
+    //     // setup images
+    //     var _images = {
+    //         HAS_MAIN: false,
+    //         HAS_ADDITIONAL: false,
+    //         MAIN: false,
+    //         ADDITIONAL : false
+    //     }
 
-        // adjust product images
-        if (_attr.IMAGE) {
-            if (_.isString(_attr.IMAGE)) {
-                _images.HAS_MAIN = true;
-                _images.MAIN = _attr.IMAGE;
-            }
-            if (_.isArray(_attr.IMAGE)) {
-                _images.HAS_MAIN = true;
-                _images.MAIN = _attr.IMAGE.shift();
-                if (_attr.IMAGE.length) {
-                    _images.HAS_ADDITIONAL = true;
-                    _images.ADDITIONAL = _attr.IMAGE;
-                }
-            }
-        } else {
-            _images.MAIN = _images.EMPTY;
-        }
+    //     // adjust product images
+    //     if (_attr.IMAGE) {
+    //         if (_.isString(_attr.IMAGE)) {
+    //             _images.HAS_MAIN = true;
+    //             _images.MAIN = _attr.IMAGE;
+    //         }
+    //         if (_.isArray(_attr.IMAGE)) {
+    //             _images.HAS_MAIN = true;
+    //             _images.MAIN = _attr.IMAGE.shift();
+    //             if (_attr.IMAGE.length) {
+    //                 _images.HAS_ADDITIONAL = true;
+    //                 _images.ADDITIONAL = _attr.IMAGE;
+    //             }
+    //         }
+    //     } else {
+    //         _images.MAIN = _images.EMPTY;
+    //     }
 
-        _attr.IMAGES = _images;
+    //     _attr.IMAGES = _images;
 
-        return product;
-    }
+    //     return product;
+    // }
 
     // Utils.updateOrderStatus = function (orderID, status) {
     //     // debugger;

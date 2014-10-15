@@ -9,7 +9,7 @@
 
     <div class="row">
 
-        {{#if data.Attributes.IMAGES.HAS_MAIN}}
+        {{#if data.Images}}
         <div class="col-md-5">
             <div class="shop-component shop-product-images">
                 <div class="shop-product-image shop-product-image-main">
@@ -20,9 +20,9 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{data.Attributes.IMAGES.MAIN}}" class="link" data-lightbox="shop-product-image-main">
+                    <a href="{{data.Images.[0].normal}}" class="link" data-lightbox="shop-product-image-main">
                         <div class="image productimage noimage image_{{data.ID}}">
-                            {{#if data.Attributes.IMAGES.MAIN}}
+                            {{#if data.Images.[0].sm}}
                             <div id="facebookG">
                                 <div id="blockG_1" class="facebook_blockG"></div>
                                 <div id="blockG_2" class="facebook_blockG"></div>
@@ -30,10 +30,10 @@
                             </div>
                             {{/if}}
                         </div>
-                        {{#if data.Attributes.IMAGES.MAIN}}
+                        {{#if data.Images.[0].sm}}
                         <script>
                         (function() {
-                            require(["default/js/plugin/image!{{data.Attributes.IMAGES.MAIN}}"], function(img){
+                            require(["default/js/plugin/image!{{data.Images.[0].sm}}"], function(img){
                                 img.title = "{{data.Name}}";
                                 img.className = "image img-responsive";
                                 $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
@@ -43,20 +43,20 @@
                         {{/if}}
                     </a>
                 </div>
-                {{#if data.Attributes.IMAGES.ADDITIONAL}}
+                {{#gt data.Images.length 1}}
                 <div class="shop-product-image shop-product-image-additional">
                     <h4>Додаткові зображення:</h4>
                     <div class="row">
-                        {{#each data.Attributes.IMAGES.ADDITIONAL}}
+                        {{#each data.Images}}
                         <div class="col-xs-3 col-md-2 shop-product-image-additional-entry">
-                            <a href="{{this}}" class="link" data-lightbox="shop-product-image-additional">
-                                <img src="{{this}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
+                            <a href="{{normal}}" class="link" data-lightbox="shop-product-image-additional">
+                                <img src="{{xs}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
                             </a>
                         </div>
                         {{/each}}
                     </div>
                 </div>
-                {{/if}}
+                {{/gt}}
             </div>
         </div>
         <div class="col-md-7">
@@ -95,6 +95,12 @@
                     <div class="shop-component shop-product-attr shop-product-attr-code">
                         <span class="value-prefix">ISBN:</span>
                         <strong>{{data.Attributes.ISBN}}</strong>
+                    </div>
+                    {{/if}}
+                    {{#if data.Attributes.TAGS}}
+                    <div class="shop-component shop-product-attr shop-product-attr-code">
+                        <span class="value-prefix">Теги:</span>
+                        <strong>{{data.Attributes.TAGS}}</strong>
                     </div>
                     {{/if}}
 
