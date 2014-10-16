@@ -10,7 +10,26 @@
         </a>
         <div class="shop-product-image shop-product-image-main">
             <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
-                <img src="{{Attributes.IMAGES.MAIN}}" onerror="this.src='{{Attributes.IMAGES.EMPTY}}'" class="image img-responsive" alt="{{OriginName}} - {{Name}}" title="{{OriginName}} - {{Name}}" />
+                <div class="image productimage noimage image_{{ID}}">
+                    {{#if Images.[0].sm}}
+                    <div id="facebookG">
+                        <div id="blockG_1" class="facebook_blockG"></div>
+                        <div id="blockG_2" class="facebook_blockG"></div>
+                        <div id="blockG_3" class="facebook_blockG"></div>
+                    </div>
+                    {{/if}}
+                </div>
+                {{#if Images.[0].sm}}
+                <script>
+                (function() {
+                    require(["default/js/plugin/image!{{Images.[0].sm}}"], function(img){
+                        img.title = "{{Name}}";
+                        img.className = "image img-responsive";
+                        $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                    }, function () { $('.image_{{data.ID}} #facebookG').remove(); });
+                })();
+                </script>
+                {{/if}}
             </a>
         </div>
         <div class="product-row">

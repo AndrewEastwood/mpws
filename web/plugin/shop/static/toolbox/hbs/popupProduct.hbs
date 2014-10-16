@@ -183,8 +183,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-11">
-                            <div class="input-group features">
+                        <div class="col-md-11 features">
+                            <fieldset>
+                                <legend>
+                                    <i class="fa fa-plus text-success fa-fw add-feature"></i>
+                                    Властивості
+                                </legend>
+                                fdfsdf<br>
+                                fdfsdf<br>
+                                fdfsdf<br>
                                 {{#each extras.contactFields}}
                                 <div class="form-group feature-template multiple-form-group input-group feature-item">
                                     <i class="fa fa-times text-danger fa-fw remove-feature"></i>
@@ -208,10 +215,10 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <input type="text" id="{{ID}}" class="form-control setting" data-property="{{_viewFieldName}}" data-label="{{Label}}" value="{{Value}}">
+                                    <input type="text" id="{{ID}}" class="form-control feature" data-property="{{_viewFieldName}}" data-label="{{Label}}" value="{{Value}}">
                                 </div>
                                 {{/each}}
-                            </div>
+                            </fieldset>
                         </div>
                     </div>
                 </fieldset>

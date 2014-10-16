@@ -22,7 +22,7 @@
             <div class="shop-product-image shop-product-image-main">
                 <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
                     <div class="image productimage noimage image_{{ID}}">
-                        {{#if Attributes.IMAGES.MAIN}}
+                        {{#if Images.[0].sm}}
                         <div id="facebookG">
                             <div id="blockG_1" class="facebook_blockG"></div>
                             <div id="blockG_2" class="facebook_blockG"></div>
@@ -30,14 +30,14 @@
                         </div>
                         {{/if}}
                     </div>
-                    {{#if Attributes.IMAGES.MAIN}}
+                    {{#if Images.[0].sm}}
                     <script>
                     (function() {
-                        require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
+                        require(["default/js/plugin/image!{{Images.[0].sm}}"], function(img){
                             img.title = "{{Name}}";
                             img.className = "image img-responsive";
                             $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
-                        });
+                        }, function () { $('.image_{{data.ID}} #facebookG').remove(); });
                     })();
                     </script>
                     {{/if}}

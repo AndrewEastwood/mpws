@@ -37,7 +37,7 @@
                                 img.title = "{{data.Name}}";
                                 img.className = "image img-responsive";
                                 $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
-                            });
+                            }, function () { $('.image_{{data.ID}} #facebookG').remove(); });
                         })();
                         </script>
                         {{/if}}
