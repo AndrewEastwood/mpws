@@ -204,6 +204,14 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
+
+
+
+
+
+
+
+
     // Product relations >>>>>
     static function jsapiShopGetProductRelations ($id) {
         return self::jsapiGetDataSourceConfig(array(
@@ -224,6 +232,13 @@ class configurationShopDataSource extends objectConfiguration {
 
 
 
+
+
+
+
+
+
+
     // product features & attributes >>>>>
     static function jsapiShopGetProductFeatures ($id) {
         return self::jsapiGetDataSourceConfig(array(
@@ -233,19 +248,14 @@ class configurationShopDataSource extends objectConfiguration {
             'additional' => array(
                 "shop_features" => array(
                     "constraint" => array("shop_productFeatures.FeatureID", "=", "shop_features.ID"),
-                    "fields" => array("FieldName")
+                    "fields" => array("FieldName", "FieldType")
                 )
             ),
             "condition" => array(
                 "ProductID" => self::jsapiCreateDataSourceCondition($id)
             ),
             "limit" => 0,
-            "options" => array(
-                "asDict" => array(
-                    "keys" => "FeatureID",
-                    "values" => "FieldName"
-                )
-            )
+            "options" => array()
         ));
     }
 
@@ -286,18 +296,13 @@ class configurationShopDataSource extends objectConfiguration {
         ));
     }
 
-    static function jsapiShopGetAllFeatures () {
+    static function jsapiShopGetFeatures () {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_features",
-            "fields" => array("ID", "FieldName"),
+            "fields" => array("ID", "FieldName", "FieldType"),
             "limit" => 0,
-            "options" => array(
-                "asDict" => array(
-                    "keys" => "ID",
-                    "values" => "FieldName"
-                )
-            )
+            "options" => array()
         ));
     }
 

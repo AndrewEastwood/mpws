@@ -178,12 +178,63 @@
                         <div class="col-md-11">
                             <div class="input-group">
                                 <span class="input-group-addon">{{lang.popup_product_section_details_filed_Features}}</span>
-                                <input type="text" name="Tags" class="form-control features-list" value="">
+                                <input type="text" name="Features" class="form-control features-list" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-11">
+                            <div class="input-group features">
+                                {{#each extras.contactFields}}
+                                <div class="form-group feature-template multiple-form-group input-group feature-item">
+                                    <i class="fa fa-times text-danger fa-fw remove-feature"></i>
+                                    <div class="input-group-btn">
+                                        <div class="wrapper">
+                                            <button type="button" class="btn btn-link button-label{{#if_eq _viewFieldName 'Custom'}} custom-type{{/if_eq}}"><span class="concept">{{Label}}</span></button>
+                                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu feature-types" role="menu">
+                                                <li><a href="javascript://" class="feature-type" data-type="Phone">Телефон</a></li>
+                                                <li><a href="javascript://" class="feature-type" data-type="Fax">Факс</a></li>
+                                                <li><a href="javascript://" class="feature-type" data-type="Skype">Skype</a></li>
+                                                <li><a href="javascript://" class="feature-type" data-type="Email">E-mail</a></li>
+                                                <li><a href="javascript://" class="feature-type" data-type="Www">Web</a></li>
+                                                <li><a href="javascript://" class="feature-type" data-type="Map">Map</a></li>
+                                                <li class="divider"></li>
+                                                {{#if_eq _viewFieldName 'Custom'}}
+                                                <li><a href="javascript://" class="feature-type custom-feature-type" data-type="Custom">{{Label}}</a></li>
+                                                {{else}}
+                                                <li><a href="javascript://" class="feature-type custom-feature-type" data-type="Custom">Свій тип</a></li>
+                                                {{/if_eq}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="{{ID}}" class="form-control setting" data-property="{{_viewFieldName}}" data-label="{{Label}}" value="{{Value}}">
+                                </div>
+                                {{/each}}
                             </div>
                         </div>
                     </div>
                 </fieldset>
             </div>
         </div>
+    </div>
+</div>
+<div class="hidden">
+    <div class="form-group feature-template multiple-form-group input-group feature-item">
+        <i class="fa fa-times text-danger fa-fw remove-feature"></i>
+        <div class="input-group-btn">
+            <div class="wrapper">
+                <button type="button" class="btn btn-link button-label"><span class="concept">немає</span></button>
+                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu feature-types" role="menu">
+                    {{#each extras.featureTypes}}
+                    <li><a href="javascript://" class="feature-type" data-type="{{this}}">{{this}}</a></li>
+                    {{/each}}
+                    <li class="divider"></li>
+                    <li><a href="javascript://" class="feature-type" data-type="Custom">Свій тип</a></li>
+                </ul>
+            </div>
+        </div>
+        <input type="text" class="form-control setting" data-property="" data-label="" value="">
     </div>
 </div>

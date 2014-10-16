@@ -311,13 +311,18 @@ class pluginShop extends objectPlugin {
     }
 
     public function getProductFeatures ($productID) {
-        $features = array();
+        $featuresGroups = array();
         $config = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
-            $features = $data;
+            foreach ($data as $value) {
+                if (!isset($featuresGroups[$value['FieldType']])) {
+                    $featuresGroups[$value['FieldType']] = array();
+                }
+                $featuresGroups[$value['FieldType']][] = $value['FieldName'];
+            }
         }
-        return $features;
+        return $featuresGroups;
     }
 
     public function getProductPriceHistory ($productID) {
@@ -807,11 +812,23 @@ class pluginShop extends objectPlugin {
     // FEATURES
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getAllAvailableFeatures () {
-        $config = configurationShopDataSource::jsapiShopGetAllFeatures();
-        $features = $this->getCustomer()->fetch($config);
-        return $features;
+    public function getFeatures_Tree ($reqData) {
+        $tree = array();
+        $config = configurationShopDataSource::jsapiShopGetFeatures();
+        $data = $this->getCustomer()->fetch($config);
+        if (!empty($data)) {
+            foreach ($data as $value) {
+                if (!isset($tree[$value['FieldType']])) {
+                    $tree[$value['FieldType']] = array();
+                }
+                $tree[$value['FieldType']][] = $value['FieldName'];
+            }
+        }
+        return $tree;
     }
+
+
+
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -2492,7 +2509,7 @@ class pluginShop extends objectPlugin {
         // $resp["_origins"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
         // $resp["_categories"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
         // $resp["_statuses"] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
-        $resp["_features"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopFeatures);
+        // $resp["_features"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopFeatures);
     }
 
     public function get_shop_products (&$resp, $req) {
@@ -2542,6 +2559,10 @@ class pluginShop extends objectPlugin {
 
 
 
+
+    public function get_shop_features (&$resp, $req) {
+        $resp = $this->getFeatures_Tree($req->get);
+    }
 
 
 

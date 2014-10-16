@@ -175,7 +175,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             event.preventDefault();
             var $formGroup = $(event.target).closest('.contact-item');
             var $control = $formGroup.find('.form-control');
-            $control.data('remove', 1).addAttribute('data-remove', 1);
+            $control.data('remove', 1).attr('data-remove', 1);
             $formGroup.addClass('hidden').hide();
         },
         selectFormGroup: function (event) {
