@@ -65,10 +65,15 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             _filterOptions[_targetFilterName] = this.collection.getFilter(_targetFilterName);
             // debugger;
 
+            var filterValue = $(event.target).val();
+            if (_targetFilterName === 'filter_commonFeatures') {
+                filterValue = parseInt(filterValue, 10);
+            }
+
             if ($(event.target).is(':checked'))
-                _filterOptions[_targetFilterName].push($(event.target).val());
+                _filterOptions[_targetFilterName].push(filterValue);
             else
-                _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], $(event.target).val());
+                _filterOptions[_targetFilterName] = _.without(_filterOptions[_targetFilterName], filterValue);
 
             this.collection.setFilter('filter_viewPageNum', 0);
             this.collection.setFilter(_targetFilterName, _filterOptions[_targetFilterName]);
@@ -108,7 +113,12 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         },
         filterProducts_ListItemClicked: function (event) {
             var $el = $(event.target);
-            var _innerCheckbox = $el.find('input[type="checkbox"]');
+            var _innerCheckbox = null;
+            if ($el.is(':checkbox')) {
+                _innerCheckbox = $el;
+            } else {
+                _innerCheckbox = $el.find('input[type="checkbox"]');
+            }
             _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
             _innerCheckbox.trigger('change');
             if (event && event.stopPropagation)

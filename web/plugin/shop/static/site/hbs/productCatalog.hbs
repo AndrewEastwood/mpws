@@ -127,33 +127,37 @@
                     <span class="helptext">К-ість товарів за характеристиками<i class="fa fa-level-down"></i></span>
                     <div class="list-group list-group-category-brands">
                     {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
-                        {{#if ProductCount }}
-                            {{#in_array ../../filter.filterOptionsApplied.filter_commonFeatures @key }}
-                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
-                                <label>
-                                    <input type="checkbox" value="{{@key}}" name="filter_commonFeatures" checked="checked"> 
-                                    {{Name}}
-                                </label>
-                                <span class="badge label-success product-count">{{ProductCount}}</span>
-                            </a>
+                        <h4>{{@key}}</h4>
+                        
+                        {{#each this }}
+                            {{#if Count }}
+                                {{#in_array ../../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
+                                <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
+                                    <label>
+                                        <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked"> 
+                                        {{Name}}
+                                    </label>
+                                    <span class="badge label-success product-count">{{Count}}</span>
+                                </a>
+                                {{else}}
+                                <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
+                                    <label>
+                                        <input type="checkbox" value="{{ID}}" name="filter_commonFeatures"> 
+                                        {{Name}}
+                                    </label>
+                                    <span class="badge label-success product-count">{{Count}}</span>
+                                </a>
+                                {{/in_array}}
                             {{else}}
-                            <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
+                            <a class="list-group-item disabled" href="javascript://" rel="feature" title="{{Name}}">
                                 <label>
-                                    <input type="checkbox" value="{{@key}}" name="filter_commonFeatures"> 
+                                    <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" disabled="disabled">
                                     {{Name}}
                                 </label>
-                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                                <span class="badge product-count">{{Count}}</span>
                             </a>
-                            {{/in_array}}
-                        {{else}}
-                        <a class="list-group-item disabled" href="javascript://" rel="status" title="{{Name}}">
-                            <label>
-                                <input type="checkbox" value="{{@key}}" name="filter_commonFeatures" disabled="disabled">
-                                {{Name}}
-                            </label>
-                            <span class="badge product-count">{{ProductCount}}</span>
-                        </a>
-                        {{/if}}
+                            {{/if}}
+                        {{/each}}
                     {{/each}}
                     </div>
                 {{/mpwsIsNotEmpty}}

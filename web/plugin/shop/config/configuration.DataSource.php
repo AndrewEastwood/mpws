@@ -68,11 +68,11 @@ class configurationShopDataSource extends objectConfiguration {
             "shop_origins" => array(
                 "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
                 "fields" => array("Status")
-            )//,
-            // "shop_productFeatures" => array(
-            //     "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
-            //     "fields" => array("FeatureID")
-            // )
+            ),
+            "shop_productFeatures" => array(
+                "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
+                "fields" => array("FeatureID")
+            )
         );
         unset($config['options']);
 

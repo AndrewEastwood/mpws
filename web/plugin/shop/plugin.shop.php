@@ -793,7 +793,7 @@ class pluginShop extends objectPlugin {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->getProductByID($ProductID);
+        $result = $this->getProductByID($ProductID, false, false);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -811,7 +811,7 @@ class pluginShop extends objectPlugin {
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
-                $data[] = $this->getProductByID($val['ID']);
+                $data[] = $this->getProductByID($val['ID'], false, false);
             }
         }
         return $data;
@@ -824,7 +824,7 @@ class pluginShop extends objectPlugin {
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
-                $product = $this->getProductByID($val['ProductID']);
+                $product = $this->getProductByID($val['ProductID'], false, false);
                 $product['SoldTotal'] = floatval($val['SoldTotal']);
                 $product['SumTotal'] = floatval($val['SumTotal']);
                 $data[] = $product;
@@ -1712,11 +1712,18 @@ class pluginShop extends objectPlugin {
             if (is_string($filterOptionsApplied[$key])) {
                 if ($key == "filter_commonStatus" || $key == "filter_categoryBrands")
                     $filterOptionsApplied[$key] = explode(',', $filterOptionsApplied[$key]);
-                if ($key == "filter_categorySubCategories" || $key == "filter_commonFeatures")
-                    $filterOptionsApplied[$key] = explode(',', $filterOptionsApplied[$key]);
+                if ($key == "filter_categorySubCategories" || $key == "filter_commonFeatures") {
+                    $IDs = explode(',', $filterOptionsApplied[$key]);
+                    $filterOptionsApplied[$key] = array();
+                    foreach ($IDs as $filterOptionID) {
+                        $filterOptionsApplied[$key][] = intval($filterOptionID);
+                    }
+                }
             }
             // var_dump($filterOptionsApplied[$key]);
         }
+
+        // var_dump($filterOptionsApplied['filter_commonFeatures']);
 
         $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
         $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet($categoryID);
@@ -1799,12 +1806,12 @@ class pluginShop extends objectPlugin {
         $products = array();
         if (!empty($dataProducts))
             foreach ($dataProducts as $val)
-                $products[] = $this->getProductByID($val['ID']);
+                $products[] = $this->getProductByID($val['ID'], false, false);
 
         $productsInfo = array();
         if (!empty($dataCategoryInfo))
             foreach ($dataCategoryInfo as $val)
-                $productsInfo[] = $this->getProductByID($val['ID']);
+                $productsInfo[] = $this->getProductByID($val['ID'], false, false);
 
         // adjust brands, categories and features
         $brands = array();
@@ -1835,12 +1842,23 @@ class pluginShop extends objectPlugin {
                     $brands[$OriginID]['ProductCount']++;
                 if (isset($categories[$CategoryID]))
                     $categories[$CategoryID]['ProductCount']++;
-                foreach ($obj['Features'] as $featureKey => $feature) {
-                    if (isset($features[$featureKey]))
-                        $features[$featureKey]['ProductCount']++;
-                    else {
-                        $features[$featureKey]['Name'] = $feature;
-                        $features[$featureKey]['ProductCount'] = 1;
+                foreach ($obj['Features'] as $featureGroup => $featureList) {
+                    if (!isset($features[$featureGroup])) {
+                        $features[$featureGroup] = array();
+                    }
+                    foreach ($featureList as $key => $featureName) {
+                        if (!isset($features[$featureGroup][$key]['Count'])) {
+                            $features[$featureGroup][$key] = array(
+                                'Name' => $featureName,
+                                'Count' => 1,
+                                'ID' => $key
+                            );
+                        }
+                        else {
+                            // $features[$featureGroup][$key]['Name'] = $featureName
+                            $features[$featureGroup][$key]['Count']++;
+                            // $features[$featureGroup][$key]['ID'] = $featureID;
+                        }
                     }
                 }
             }
@@ -2790,7 +2808,7 @@ class pluginShop extends objectPlugin {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($resp['items'][$productID])) {
-                $product = $this->getProductByID($productID);
+                $product = $this->getProductByID($productID, false, false);
                 $resp['items'][$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $resp['items'];
             }
@@ -2831,7 +2849,7 @@ class pluginShop extends objectPlugin {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($resp['items'][$productID])) {
-                $product = $this->getProductByID($productID);
+                $product = $this->getProductByID($productID, false, false);
                 $resp['items'][$productID] = $product;
                 $_SESSION[$this->_listKey_Compare] = $resp['items'];
             }
@@ -3008,7 +3026,7 @@ class pluginShop extends objectPlugin {
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
-                    $product = $this->getProductByID($soldItem['ProductID']);
+                    $product = $this->getProductByID($soldItem['ProductID'], false, false);
                     // save current product info
                     $product["CurrentIsPromo"] = $product['IsPromo'];
                     $product["CurrentPrice"] = $product['Price'];
@@ -3044,7 +3062,7 @@ class pluginShop extends objectPlugin {
             }
             // get prodcut items
             foreach ($sessionOrderProducts as $purchasingProduct) {
-                $product = $this->getProductByID($purchasingProduct['ID']);
+                $product = $this->getProductByID($purchasingProduct['ID'], false, false);
                 // actual price (with discount if promo is active)
                 // set product gross and net totals
                 // get purchased product quantity
