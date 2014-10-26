@@ -68,11 +68,11 @@ class configurationShopDataSource extends objectConfiguration {
             "shop_origins" => array(
                 "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
                 "fields" => array("Status")
-            ),
-            "shop_productFeatures" => array(
-                "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
-                "fields" => array("FeatureID")
-            )
+            )//,
+            // "shop_productFeatures" => array(
+            //     "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
+            //     "fields" => array("FeatureID")
+            // )
         );
         unset($config['options']);
 
@@ -248,7 +248,7 @@ class configurationShopDataSource extends objectConfiguration {
             'additional' => array(
                 "shop_features" => array(
                     "constraint" => array("shop_productFeatures.FeatureID", "=", "shop_features.ID"),
-                    "fields" => array("FieldName", "FieldType")
+                    "fields" => array("ID", "FieldName", "GroupName")
                 )
             ),
             "condition" => array(
@@ -289,10 +289,7 @@ class configurationShopDataSource extends objectConfiguration {
             "source" => "shop_features",
             "action" => "insert",
             "data" => $data,
-            "options" => null,
-            "saveOptions" => array(
-                "useInsertIgnore" => true
-            )
+            "options" => null
         ));
     }
 
@@ -300,7 +297,7 @@ class configurationShopDataSource extends objectConfiguration {
         return self::jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_features",
-            "fields" => array("ID", "FieldName", "FieldType"),
+            "fields" => array("ID", "FieldName", "GroupName"),
             "limit" => 0,
             "options" => array()
         ));

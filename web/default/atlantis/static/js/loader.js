@@ -139,6 +139,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         });
     };
 
+    APP.Cache = Cache;
+
     // Sandbox message handler
     $('body').on('click', '[data-action]', function (event) {
         // debugger;

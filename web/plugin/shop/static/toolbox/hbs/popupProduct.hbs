@@ -189,33 +189,21 @@
                                     <i class="fa fa-plus text-success fa-fw add-feature"></i>
                                     Властивості
                                 </legend>
-                                fdfsdf<br>
-                                fdfsdf<br>
-                                fdfsdf<br>
-                                {{#each extras.contactFields}}
-                                <div class="form-group feature-template multiple-form-group input-group feature-item">
+                                {{#each data.Features}}
+                                <div class="feature-template multiple-form-group input-group feature-item">
                                     <i class="fa fa-times text-danger fa-fw remove-feature"></i>
                                     <div class="input-group-btn">
                                         <div class="wrapper">
-                                            <button type="button" class="btn btn-link button-label{{#if_eq _viewFieldName 'Custom'}} custom-type{{/if_eq}}"><span class="concept">{{Label}}</span></button>
-                                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                                            <ul class="dropdown-menu feature-types" role="menu">
-                                                <li><a href="javascript://" class="feature-type" data-type="Phone">Телефон</a></li>
-                                                <li><a href="javascript://" class="feature-type" data-type="Fax">Факс</a></li>
-                                                <li><a href="javascript://" class="feature-type" data-type="Skype">Skype</a></li>
-                                                <li><a href="javascript://" class="feature-type" data-type="Email">E-mail</a></li>
-                                                <li><a href="javascript://" class="feature-type" data-type="Www">Web</a></li>
-                                                <li><a href="javascript://" class="feature-type" data-type="Map">Map</a></li>
-                                                <li class="divider"></li>
-                                                {{#if_eq _viewFieldName 'Custom'}}
-                                                <li><a href="javascript://" class="feature-type custom-feature-type" data-type="Custom">{{Label}}</a></li>
-                                                {{else}}
-                                                <li><a href="javascript://" class="feature-type custom-feature-type" data-type="Custom">Свій тип</a></li>
-                                                {{/if_eq}}
+                                            <button type="button" class="btn btn-link button-label"><span class="concept">{{@key}}</span></button>
+                                            <button type="button" class="btn btn-link dropdown-toggle{{#unless ../extras.featureTypes}} hidden{{/unless}}" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu feature-types{{#unless ../extras.featureTypes}} hidden{{/unless}}" role="menu">
+                                                {{#each ../extras.featureTypes}}
+                                                <li><a href="javascript://" class="feature-type">{{this}}</a></li>
+                                                {{/each}}
                                             </ul>
                                         </div>
                                     </div>
-                                    <input type="text" id="{{ID}}" class="form-control feature" data-property="{{_viewFieldName}}" data-label="{{Label}}" value="{{Value}}">
+                                    <input type="text" class="form-control features-list typeahead" name="{{@key}}">
                                 </div>
                                 {{/each}}
                             </fieldset>
@@ -227,21 +215,19 @@
     </div>
 </div>
 <div class="hidden">
-    <div class="form-group feature-template multiple-form-group input-group feature-item">
+    <div class="feature-template multiple-form-group input-group feature-item">
         <i class="fa fa-times text-danger fa-fw remove-feature"></i>
         <div class="input-group-btn">
             <div class="wrapper">
                 <button type="button" class="btn btn-link button-label"><span class="concept">немає</span></button>
-                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                <ul class="dropdown-menu feature-types" role="menu">
+                <button type="button" class="btn btn-link dropdown-toggle{{#unless extras.featureTypes}} hidden{{/unless}}" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu feature-types{{#unless extras.featureTypes}} hidden{{/unless}}" role="menu">
                     {{#each extras.featureTypes}}
-                    <li><a href="javascript://" class="feature-type" data-type="{{this}}">{{this}}</a></li>
+                    <li><a href="javascript://" class="feature-type">{{this}}</a></li>
                     {{/each}}
-                    <li class="divider"></li>
-                    <li><a href="javascript://" class="feature-type" data-type="Custom">Свій тип</a></li>
                 </ul>
             </div>
         </div>
-        <input type="text" class="form-control setting" data-property="" data-label="" value="">
+        <input type="text" class="form-control features-list typeahead" name="" value="">
     </div>
 </div>

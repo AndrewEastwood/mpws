@@ -25,6 +25,7 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
 
             this.setOptions(options);
 
+            // debugger;
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
             this.collection.setCustomQueryParam("Stats", true);

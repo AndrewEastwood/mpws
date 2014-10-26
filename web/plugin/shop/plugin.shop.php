@@ -255,6 +255,7 @@ class pluginShop extends objectPlugin {
         // is available
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
         $product['_archived'] = in_array($product['Status'], array("ARCHIVED"));
+        $product['_featuresTree'] = $this->getFeatures_Tree();
 
         // $product['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
         // save product into recently viewed list
@@ -316,10 +317,10 @@ class pluginShop extends objectPlugin {
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $value) {
-                if (!isset($featuresGroups[$value['FieldType']])) {
-                    $featuresGroups[$value['FieldType']] = array();
+                if (!isset($featuresGroups[$value['GroupName']])) {
+                    $featuresGroups[$value['GroupName']] = array();
                 }
-                $featuresGroups[$value['FieldType']][] = $value['FieldName'];
+                $featuresGroups[$value['GroupName']][$value['ID']] = $value['FieldName'];
             }
         }
         return $featuresGroups;
@@ -631,21 +632,45 @@ class pluginShop extends objectPlugin {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
+                // adjust features
+                foreach ($features as $groupName => $value) {
+                    $features[$groupName] = explode(',', $value);
+                }
+
                 // add new features
-                foreach ($features as $value) {
-                    if (is_numeric($value)) {
-                        $productFeaturesIDs[] = $value;
+                $featureMap = $this->getFeatures_Tree();
+                foreach ($features as $groupName => $featureList) {
+                    if (isset($featureMap[$groupName])) {
+                        foreach ($featureList as $featureName) {
+                            $featureID = array_search($featureName, $featureMap[$groupName]);
+                            if ($featureID === false) {
+                                $data = array();
+                                $data["CustomerID"] = $CustomerID;
+                                $data["FieldName"] = $featureName;
+                                $data["GroupName"] = $groupName;
+                                $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                                $featureID = $this->getCustomer()->fetch($config);
+                                $productFeaturesIDs[] = intval($featureID);
+                            } else {
+                                $productFeaturesIDs[] = $featureID;
+                            }
+                        }
                     } else {
-                        $data["FieldName"] = $value;
-                        $data["CustomerID"] = $CustomerID;
-                        $config = configurationShopDataSource::jsapiShopCreateFeature($data);
-                        $featureID = $this->getCustomer()->fetch($config) ?: null;
-                        if (isset($featureID) && $featureID >= 0) {
+                        foreach ($featureList as $featureName) {
+                            $data = array();
+                            $data["CustomerID"] = $CustomerID;
+                            $data["FieldName"] = $featureName;
+                            $data["GroupName"] = $groupName;
+                            $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                            $featureID = $this->getCustomer()->fetch($config);
                             $productFeaturesIDs[] = $featureID;
-                            $this->_getOrSetCachedState('changed:features', true);
                         }
                     }
                 }
+
+                // var_dump($features);
+                // var_dump($featureMap);
+                // var_dump($productFeaturesIDs);
 
                 // update product
                 $validatedValues["CustomerID"] = $CustomerID;
@@ -656,7 +681,7 @@ class pluginShop extends objectPlugin {
                 $this->getCustomer()->fetch($config);
 
                 // set new features
-                if (!empty($features)) {
+                if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
                     $config = configurationShopDataSource::jsapiShopClearProductFeatures($ProductID);
                     $this->getCustomer()->fetch($config);
@@ -664,6 +689,7 @@ class pluginShop extends objectPlugin {
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
+                        // var_dump($featureData);
                         $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
                         $this->getCustomer()->fetch($config);
                     }
@@ -812,16 +838,16 @@ class pluginShop extends objectPlugin {
     // FEATURES
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getFeatures_Tree ($reqData) {
+    public function getFeatures_Tree () {
         $tree = array();
         $config = configurationShopDataSource::jsapiShopGetFeatures();
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $value) {
-                if (!isset($tree[$value['FieldType']])) {
-                    $tree[$value['FieldType']] = array();
+                if (!isset($tree[$value['GroupName']])) {
+                    $tree[$value['GroupName']] = array();
                 }
-                $tree[$value['FieldType']][] = $value['FieldName'];
+                $tree[$value['GroupName']][$value['ID']] = $value['FieldName'];
             }
         }
         return $tree;
@@ -2561,7 +2587,7 @@ class pluginShop extends objectPlugin {
 
 
     public function get_shop_features (&$resp, $req) {
-        $resp = $this->getFeatures_Tree($req->get);
+        $resp = $this->getFeatures_Tree();
     }
 
 

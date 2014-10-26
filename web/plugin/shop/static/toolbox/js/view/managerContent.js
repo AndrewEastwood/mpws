@@ -48,6 +48,7 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             });
         },
         restoreLayout: function () {
+            // debugger;
             var layoutConfig = Cache.get("shopManagerContentLayoutRD");
             layoutConfig = _.defaults({}, layoutConfig || {}, {
                 activeFilterTabID: 'tree'

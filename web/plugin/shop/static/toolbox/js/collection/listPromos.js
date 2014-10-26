@@ -6,7 +6,6 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
 ], function (_, ModelOrigin, PageableCollection, Cache) {
 
     var ListPromos = PageableCollection.extend({
-        extras: {},
 
         model: ModelOrigin,
 
@@ -26,22 +25,21 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
             order: 1
         },
 
-        // You can remap the query parameters from `state` keys from
-        // the default to those your server supports
-        queryParams: Cache.get('shopPromosListRD') || {
-            totalPages: null,
-            totalRecords: null,
-            pageSize: "limit",
-            sortKey: "sort"
-        },
-
-        fetch: function (options) {
-            Cache.set('shopPromosListRD', this.queryParams);
-            return Backbone.Collection.prototype.fetch.call(this, options);
+        initialize: function () {
+            this.extras = {};
+            // You can remap the query parameters from `state` keys from
+            // the default to those your server supports
+            this.queryParams = Cache.get('shopPromosListRD') || {
+                totalPages: null,
+                totalRecords: null,
+                pageSize: "limit",
+                sortKey: "sort"
+            };
         },
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
+            Cache.set('shopPromosListRD', this.queryParams);
             return this;
         },
 
@@ -51,6 +49,7 @@ define('plugin/shop/toolbox/js/collection/listPromos', [
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
+            Cache.set('shopPromosListRD', this.queryParams);
             return this;
         },
 

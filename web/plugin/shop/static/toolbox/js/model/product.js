@@ -12,6 +12,12 @@ define('plugin/shop/toolbox/js/model/product', [
             if (!this.isNew())
                 _params.id = this.id;
             return APP.getApiLink(_params);
+        },
+        parse: function (data) {
+            this.extras = {};
+            this.extras.featureTypes = _(data._featuresTree).keys();
+            this.extras.featureItems = _(data._featuresTree).reduce(function (memo, list) { var items = _(list).values(); return _(memo.concat(items)).uniq(); }, []);
+            return data;
         }
     });
 

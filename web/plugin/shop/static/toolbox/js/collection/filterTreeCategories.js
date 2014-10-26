@@ -10,10 +10,6 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
 
     var CategoriesTree = Backbone.Collection.extend({
 
-        extras: {},
-
-        queryParams: Cache.get('shopCategoriesTreeRD') || {},
-
         model: ModelCategory,
 
         url: function () {
@@ -25,6 +21,11 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
             };
 
             return APP.getApiLink(urlOptions);
+        },
+
+        initialize: function () {
+            this.extras = {};
+            this.queryParams = Cache.get('shopCategoriesTreeRD') || {};
         },
 
         fetch: function (options) {

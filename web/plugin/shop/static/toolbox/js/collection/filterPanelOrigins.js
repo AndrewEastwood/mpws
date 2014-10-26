@@ -8,10 +8,6 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
 
     var OriginsFilter = Backbone.Collection.extend({
 
-        extras: {},
-
-        queryParams: Cache.get('shopOriginsFilterRD') || {},
-
         model: ModelOrigin,
 
         url: function () {
@@ -23,6 +19,11 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
             };
 
             return APP.getApiLink(urlOptions);
+        },
+
+        initialize: function () {
+            this.extras = {};
+            this.queryParams = Cache.get('shopOriginsFilterRD') || {};
         },
 
         fetch: function (options) {

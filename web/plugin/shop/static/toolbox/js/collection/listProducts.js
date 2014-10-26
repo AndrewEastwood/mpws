@@ -18,30 +18,27 @@ define('plugin/shop/toolbox/js/collection/listProducts', [
             return url;
         },
 
-        extras: {},
-
         // Initial pagination states
         state: {
             pageSize: 30,
             order: 1
         },
 
-        // You can remap the query parameters from `state` keys from
-        // the default to those your server supports
-        queryParams: Cache.get('shopProductsListRD') || {
-            totalPages: null,
-            totalRecords: null,
-            pageSize: "limit",
-            sortKey: "sort"
-        },
-
-        fetch: function (options) {
-            Cache.set('shopProductsListRD', this.queryParams);
-            return PageableCollection.prototype.fetch.call(this, options);
+        initialize: function () {
+            this.extras = {};
+            // You can remap the query parameters from `state` keys from
+            // the default to those your server supports
+            this.queryParams = Cache.get('shopProductsListRD') || {
+                totalPages: null,
+                totalRecords: null,
+                pageSize: "limit",
+                sortKey: "sort"
+            };
         },
 
         setCustomQueryField: function (field, value) {
             this.queryParams['_f' + field] = value;
+            Cache.set('shopProductsListRD', this.queryParams);
             return this;
         },
 
@@ -51,6 +48,7 @@ define('plugin/shop/toolbox/js/collection/listProducts', [
 
         setCustomQueryParam: function (param, value) {
             this.queryParams['_p' + param] = value;
+            Cache.set('shopProductsListRD', this.queryParams);
             return this;
         },
 

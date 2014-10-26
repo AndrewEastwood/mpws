@@ -21,6 +21,8 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/jquery.fileupload/jquery.iframe-transport',
     'default/js/lib/jquery.fileupload/jquery.fileupload-validate',
     'default/js/lib/jquery.fileupload/jquery.fileupload-image',
+    'default/js/lib/typeahead.jquery',
+    'default/js/lib/bootstrap-editable'
 ], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, tpl, lang) {
 
     function _getTitle(isEdit) {
@@ -39,6 +41,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             'click .restore-image': 'restoreImage',
             'click .add-feature': 'addFeature',
             'click .remove-feature': 'removeFeature',
+            'click .feature-types a': 'selectFeatureGroup',
         },
         initialize: function () {
             var self = this;
@@ -69,7 +72,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             IsPromo: self.$('#ispromo').is(':checked'),
                             Tags: self.$('#tags').val(),
                             ISBN: self.$('#isbn').val(),
-                            Features: self.$(".features-list").select2('val'),
+                            Features: self.getFeaturesMap(),
                             file1: self.$('#file1').val(),
                             file2: self.$('#file2').val(),
                             file3: self.$('#file3').val(),
@@ -89,6 +92,18 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                     }
                 }]
             });
+            this.options = {};
+            this.options.editableOptions = {
+                mode: 'popup',
+                name: 'Name',
+                savenochange: true,
+                unsavedclass: '',
+                validate: function (value) {
+                    if ($.trim(value) === '') {
+                        return 'Введіть значення';
+                    }
+                }
+            };
         },
         render: function () {
             var self = this;
@@ -133,14 +148,6 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                     }
                 }
             }
-            var _features = this.model.get('_features');
-
-            var _resultsFeatures = _(_features).map(function (item, id) {
-                return {
-                    id: id,
-                    text: item
-                };
-            });
             var _selectCategory = this.$('#category').select2({
                 placeholder: _initCategory.ID ? false : 'Виберіть категорію',
                 ajax: {
@@ -215,27 +222,16 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
 
             this.$('#tags').tagsinput();
 
-            this.$(".features-list").select2({
-                tags: _resultsFeatures,
-                maximumInputLength: 10
-            }).on('change', function (event) {
-                if (event.removed) {
-                    return;
-                }
-                var element = _(_resultsFeatures).findWhere({
-                    text: event.added.text
-                });
-
-                if (element && element.id && element.id !== event.added.id) {
-                    var values = $(this).select2('val');
-                    values.pop();
-                    $(this).select2('val', values);
-                }
-            });
-
             var features = this.model.get('Features');
             if (features) {
-                this.$(".features-list").select2('val', _(features).keys());
+                this.$('.features .features-list').each(function () {
+                    var groupFeatureItems = features[$(this).attr('name')];
+                    if (groupFeatureItems) {
+                        $(this).val(_(groupFeatureItems).values().join(','));
+                        // debugger;
+                        $(this).tagsinput();
+                    }
+                });
             }
 
             // init uploads
@@ -243,18 +239,77 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             // _testUploadInitFn(this);
             this.setupFileUploadItem(this.$('.temp-upload-image'));
         },
+        getFeaturesMap: function () {
+            var map = {};
+            this.$('.features .feature-item .form-control').each(function () {
+                map[$(this).attr('name')] = $(this).val();
+            });
+            return map;
+        },
         addFeature: function (event) {
             event.preventDefault();
+            var that = this;
             var $tpl = this.$('.hidden .feature-template').clone();
             $tpl.removeClass('.feature-template');
             this.$('.features').append($tpl);
+            var $buttonLabel = $tpl.find('.button-label');
+            var $control = $tpl.find('.form-control');
+            $buttonLabel.editable(this.options.editableOptions)
+                .on('save', function (e, params) {
+                    $control.attr('name', params.newValue);
+                    that.updateFeatureGroupNames();
+                });
+
+            $tpl.find('.features-list').tagsinput();
         },
         removeFeature: function (event) {
             event.preventDefault();
-            var $formGroup = $(event.target).closest('.feature-item');
-            var $control = $formGroup.find('.form-control');
-            $control.data('remove', 1).attr('data-remove', 1);
-            $formGroup.addClass('hidden').hide();
+            var $featureItem = $(event.target).closest('.feature-item');
+            $featureItem.remove();
+        },
+        updateFeatureGroupNames: _.debounce(function () {
+            var $allGroupsMenuItems = this.$('.features .feature-item .feature-types .feature-type');
+            var $allCurrentNames = this.$('.features .feature-item .button-label');
+            var names = [];
+            $allCurrentNames.each(function () {
+                names.push($(this).text());
+            });
+            $allGroupsMenuItems.each(function () {
+                names.push($(this).text());
+            });
+
+            names = _(names).uniq();
+
+            this.$('.feature-item .feature-types').empty();
+            this.$('.feature-item .feature-types').each(function () {
+                var $featureMenu = $(this);
+                _(names).each(function (v) {
+                    $featureMenu.append($('<li>').append($('<a>').attr({
+                        href: 'javascript://'
+                    }).addClass('feature-type').text(v)));
+                });
+            });
+
+            if (names.length) {
+                this.$('.dropdown-toggle').removeClass('hidden');
+                this.$('.feature-types').removeClass('hidden');
+            }
+        }, 200),
+        selectFeatureGroup: function (event) {
+            event.preventDefault();
+
+            var $menuItem = $(event.target);
+            var $featureItem = $menuItem.closest('.feature-item');
+            var $control = $featureItem.find('.form-control');
+            var $buttonLabel = $featureItem.find('.button-label');
+            var concept = $menuItem.text();
+            $control.attr('name', concept);
+            $buttonLabel.text(concept);
+            $buttonLabel.editable(this.options.editableOptions)
+                .on('save', function (e, params) {
+                    $menuItem.text(params.newValue);
+                    $control.attr('name', params.newValue);
+                });
         },
         restoreImage: function (event) {
             var $btn = $(event.target).parents('.upload-wrapper'),
