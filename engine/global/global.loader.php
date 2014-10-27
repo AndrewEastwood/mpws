@@ -75,6 +75,23 @@
 
                     break;
                 }
+                case 'api': {
+                    $libName = $pieces[2];
+                    $len = count($pieces);
+
+                    // var_dump($pieces);
+
+                    if ($len > 3)
+                        for ($i = 3; $i < $len; $i++)
+                            $libName .= $pieces[$i];
+
+                    if (strcasecmp($pieces[1], OBJECT_T_CUSTOMER) === 0)
+                        $libPath = '/web/customer/' . MPWS_CUSTOMER . '/api/';
+                    elseif (strcasecmp($pieces[1], OBJECT_T_DEFAULT) === 0)
+                        $libPath = '/web/default/' . MPWS_VERSION . '/api/';
+                    else
+                        $libPath = '/web/plugin/' . strtolower($pieces[1]) . '/api/';
+                }
                 case 'extension': {
                     //echo 'Including extension ' . $libName;
                     $libPath = '/engine/system/extension/extension.';

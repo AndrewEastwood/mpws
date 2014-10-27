@@ -16,6 +16,7 @@
                     <span class="prefix"><i title="Код відстеження вантажу дає можливість покупцям дізнаватися поточний статус замовлення" class="fa fa-question-circle helper helper-left"></i> Код відстеження:</span>
                     <span><strong>{{data.Hash}}</strong></span>
                 </li>
+                {{#if instances.shop.settings.ShowDeliveryAganet._isActive}}
                 <li class="list-group-item">
                     <span class="prefix">Тип доставки:</span>
                     <span><strong>{{data.delivery.Name}}</strong></span>
@@ -25,6 +26,7 @@
                     <span class="prefix">Номер складу:</span>
                     <span><strong>{{data.Warehouse}}</strong></span>
                 </li>
+                {{/if}}
                 {{/if}}
                 <li class="list-group-item list-group-item-status_{{data.Status}}">
                     <span class="prefix">Статус:</span>
@@ -37,11 +39,13 @@
                         <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang data.order.Status "order_status_" }}</a>
                     </span>
                 </li>
+                {{#if instances.shop.settings.ShowComment._isActive}}
                 {{#if data.Comment }}
                 <li class="list-group-item">
                     <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i> Коментар:</span>
                     <span><strong>{{data.Comment}}</strong></span>
                 </li>
+                {{/if}}
                 {{/if}}
             </ul>
         </div>
@@ -49,10 +53,13 @@
         <div class="col-md-6">
             <h4>Покупець:</h4>
             <ul class="list-group">
+                {{#if instances.shop.settings.ShowName._isActive}}
                 <li class="list-group-item">
                     <span class="prefix">Імя:</span>
                     <span><strong>{{data.account.FirstName}} {{data.account.LastName}}</strong></span>
                 </li>
+                {{/if}}
+                {{#if instances.shop.settings.ShowEMail._isActive}}
                 <li class="list-group-item">
                     <span class="prefix">Ел.адреса:</span>
                     {{#if data.account.EMail}}
@@ -60,30 +67,43 @@
                     {{/if}}
                     <span><strong>{{data.account.EMail}}</strong></span>
                 </li>
+                {{/if}}
+                {{#if instances.shop.settings.ShowPhone._isActive}}
                 <li class="list-group-item">
                     <span class="prefix">Телефон:</span>
                     <span><strong>{{data.account.Phone}}</strong></span>
                 </li>
+                {{/if}}
             </ul>
+            {{#ifAny instances.shop.settings.ShowAddress._isActive instances.shop.settings.ShowCity._isActive instances.shop.settings.ShowPOBox._isActive instances.shop.settings.ShowCountry._isActive }}
             <h4>Адреса доставки:</h4>
             <ul class="list-group">
+                {{#if instances.shop.settings.ShowAddress._isActive}}
                 <li class="list-group-item">
                     <span class="prefix">Адреса:</span>
                     <span><strong>{{data.address.Address}}</strong></span>
                 </li>
-                <li class="list-group-item">
-                    <span class="prefix">Місто:</span>
-                    <span><strong>{{data.address.City}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">Поштовий індекс:</span>
-                    <span><strong>{{data.address.POBox}}</strong></span>
-                </li>
+                {{/if}}
+                {{#if instances.shop.settings.ShowCountry._isActive}}
                 <li class="list-group-item">
                     <span class="prefix">Країна:</span>
                     <span><strong>{{data.address.Country}}</strong></span>
                 </li>
+                {{/if}}
+                {{#if instances.shop.settings.ShowCity._isActive}}
+                <li class="list-group-item">
+                    <span class="prefix">Місто:</span>
+                    <span><strong>{{data.address.City}}</strong></span>
+                </li>
+                {{/if}}
+                {{#if instances.shop.settings.ShowPOBox._isActive}}
+                <li class="list-group-item">
+                    <span class="prefix">Поштовий індекс:</span>
+                    <span><strong>{{data.address.POBox}}</strong></span>
+                </li>
+                {{/if}}
             </ul>
+            {{/ifAny}}
         </div>
     </div>
 

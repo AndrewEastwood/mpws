@@ -13,6 +13,13 @@ class libraryValidate {
         return ($format === self::$FORMAT_PHONE) ? true : false;
     }
 
+    public static function getEmptyPhoneNumber () {
+        return str_replace('#', 0, self::$FORMAT_PHONE);
+    }
+    public static function getEmptyEmail () {
+        return 'temp@temp.com';
+    }
+
     public static function validatePassword ($password) {
         $uppercase = preg_match('/[A-Z]/', $password);
         $lowercase = preg_match('/[a-z]/', $password);

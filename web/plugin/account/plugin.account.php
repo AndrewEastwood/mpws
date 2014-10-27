@@ -7,6 +7,10 @@ class pluginAccount extends objectPlugin {
     //     return $this->getCustomer()->fetch($config);
     // }
 
+    public function getEmptyUserName () {
+        return 'No Name';
+    }
+
     private function __attachAccountDetails ($account) {
         $AccountID = $account['ID'];
         // get account info

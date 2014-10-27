@@ -59,6 +59,19 @@ define("plugin/shop/toolbox/js/view/listProducts", [
                 }
             }
         };
+        var columnID = {
+            name: "ID",
+            label: lang.pluginMenu_Products_Grid_Column_ID,
+            cell: 'html',
+            editable: false,
+            sortable: false,
+            formatter: {
+                fromRaw: function (value, model) {
+                    var id = $('<span>').addClass('label label-primary').text(value);
+                    return id;
+                }
+            }
+        };
 
         var columnName = {
             name: "Name",
@@ -208,6 +221,7 @@ define("plugin/shop/toolbox/js/view/listProducts", [
 
         return _.extend({}, {
             columnActions: columnActions,
+            columnID: columnID,
             columnName: columnName,
             columnModel: columnModel,
             columnOriginName: columnOriginName,

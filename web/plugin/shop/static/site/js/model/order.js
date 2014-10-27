@@ -34,14 +34,14 @@ define('plugin/shop/site/js/model/order', [
         isSaved: function () {
             return this.get('Hash') && this.get('success');
         },
-        parse: function (data) {
-            if (data && data.items)
-                data.items = _(data.items).reduce(function(target, productData){
-                    target[productData.ID] = ShopUtils.adjustProductItem(productData);
-                    return target;
-                }, {});
-            return data;
-        },
+        // parse: function (data) {
+        //     if (data && data.items)
+        //         data.items = _(data.items).reduce(function(target, productData){
+        //             target[productData.ID] = ShopUtils.adjustProductItem(productData);
+        //             return target;
+        //         }, {});
+        //     return data;
+        // },
         getProductCount: function () {
             return Object.getOwnPropertyNames(this.get('items') || {}).length;
         },

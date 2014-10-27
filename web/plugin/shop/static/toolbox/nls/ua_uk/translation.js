@@ -117,6 +117,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_product_button_Save: "Зберегти",
         // Product list
         pluginMenu_Products_Grid_Title: "Товари",
+        pluginMenu_Products_Grid_Column_ID: '#',
         pluginMenu_Products_Grid_Column_Name: "Назва",
         pluginMenu_Products_Grid_Column_Model: "Модель",
         pluginMenu_Products_Grid_Column_OriginName: "Виробник",

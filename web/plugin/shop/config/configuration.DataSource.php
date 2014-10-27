@@ -734,10 +734,18 @@ class configurationShopDataSource extends objectConfiguration {
         return $config;
     }
 
+    static function jsapiShopGetSettingByType ($type = null) {
+        $config = self::jsapiShopGetSettingByID();
+        unset($config['condition']['ID']);
+        $config['limit'] = 0;
+        $config['condition']['Type'] = self::jsapiCreateDataSourceCondition($type);
+        return $config;
+    }
+
     static function jsapiShopGetSettingsList (array $options = array()) {
         $config = self::jsapiShopGetSettingByID();
         $config['fields'] = array("ID");
-        $config['limit'] = 64;
+        $config['limit'] = -1;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }

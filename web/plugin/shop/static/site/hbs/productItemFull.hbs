@@ -367,10 +367,13 @@
                             </div>
                             <div class="tab-pane" id="shop-product-overview-technical-ID">
                                 <p>
-                                    <ul>
-                                    {{#each data.Features}}
-                                        <li>{{this}}</li>
-                                    {{/each}}
+                                    <ul class="list-group feature-list">
+                                        {{#each data.Features}}
+                                        <li class="list-group-item title">{{@key}}</li>
+                                        {{#each this}}
+                                        <li class="list-group-item sub">{{this}}</li>
+                                        {{/each}}
+                                        {{/each}}
                                     </ul>
                                 </p>
                             </div>

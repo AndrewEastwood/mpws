@@ -52,21 +52,31 @@ class libraryRequest {
 
     static function processRequest ($context) {
         $_REQ = self::getRequestData();
-
-        $requestFnElements = array(strtolower($_SERVER['REQUEST_METHOD']));
+        $_source = self::fromGET('source');
+        $_fn = self::fromGET('fn');
+        $_method = strtolower($_SERVER['REQUEST_METHOD']);
+        $requestFnElements = array($_method);
 
         if (self::hasInGet('source'))
-            $requestFnElements[] = self::fromGET('source');
+            $requestFnElements[] = $_source;
         
         if (self::hasInGet('fn'))
-            $requestFnElements[] = self::fromGET('fn');
+            $requestFnElements[] = $_fn;
 
         $fn = join("_", $requestFnElements);
+        // var_dump($context);
         // echo $fn;
         // var_dump($requestFnElements);
         // var_dump($_REQ);
-        if (!empty($context) && method_exists($context, $fn))
-            $context->$fn(libraryResponse::$_RESPONSE, $_REQ);
+        // var_dump(isset($context->api->$_fn));
+        if (!empty($context)) {
+            if (isset($context->api->$_fn) && method_exists($context->api->$_fn, $_method)) {
+                $context->api->$_fn->$_method(libraryResponse::$_RESPONSE, $_REQ);
+                // var_dump(libraryResponse::$_RESPONSE);
+            } elseif (method_exists($context, $fn)) {
+                $context->$fn(libraryResponse::$_RESPONSE, $_REQ);
+            }
+        }
     }
 
     /* state grabbers */

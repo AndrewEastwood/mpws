@@ -3,9 +3,27 @@
 class objectPlugin implements IPlugin {
 
     private $customer;
+    public $api;
 
-    function __construct ($customer) {
+    function __construct ($customer, $pluginName) {
         $this->customer = $customer;
+        // init apis
+        $api = array();
+        $_pluginPath = glGetFullPath('web', 'plugin', $pluginName, 'api');
+        $_apiFiles = glob($_pluginPath . '*.php');
+        foreach ($_apiFiles as $apiFilePath) {
+
+            $path_parts = pathinfo($apiFilePath);
+            $apiFileName = $path_parts['filename'];
+
+            // load plugin
+            include $apiFilePath;
+            $apiObjectName = 'api'.ucfirst($pluginName).ucfirst($apiFileName);
+
+            // save plugin instance
+            $api[$apiFileName] = new $apiObjectName($customer, $this, $pluginName);
+        }
+        $this->api = (object)$api;
     }
 
     public function getName() {
@@ -20,28 +38,10 @@ class objectPlugin implements IPlugin {
         return $this->customer->getDataBase();
     }
 
-    public function getPlugin ($pluginName) {
+    public function getAnotherPlugin ($pluginName) {
         $anotherPlugin = $this->getCustomer()->getPlugin($pluginName);
         return $anotherPlugin;
     }
-
-    // public function getExtension ($extensionName) {
-    //     return $this->getCustomer()->getExtension($extensionName);
-    // }
-
-    // public function getSessionAccountID () {
-    //     // $extAuth = $this->getExtension('Auth');
-    //     // if (empty($extAuth))
-    //     //     throw new Exception("Auth extension is missing for plugin", 1);
-    //     return $this->getCustomer()->getAuthID();
-    // }
-
-    // public function ifYouCan ($action) {
-    //     // $extAuth = $this->getExtension('Auth');
-    //     // if (empty($extAuth))
-    //     //     throw new Exception("Auth extension is missing for plugin", 1);
-    //     return $this->getCustomer()->ifYouCan($action);
-    // }
 
     public function beforeRun () {}
     public function afterRun () {}
@@ -96,29 +96,6 @@ class objectPlugin implements IPlugin {
         rename($filePathOld, $filePathNew);
         return false;
     }
-
-    // public function deleteFile ($filePath) {
-    //     $filePath = $this->getUploadDirectory($filePath);
-    //     if (file_exists($filePath)) {
-    //         return unlink($filePath);
-    //     }
-    //     return false;
-    // }
-    
-    // public function moveFile ($filePath, $newDir) {
-    //     $filePath = $this->getUploadDirectory($filePath);
-    //     $fileNewDir = $this->getUploadDirectory($newDir);
-    //     $fileInfo = pathinfo($filePath);
-    //     if (!file_exists($fileNewDir)) {
-    //         mkdir($fileNewDir, 0777, true);
-    //     }
-    //     $fileNewPath = $fileNewDir . DS . $fileInfo['basename'];
-    //     rename($filePath, $fileNewPath);
-    // }
-
-    // public function clearPluginUploadsInRealm ($realm) {
-    //     // libraryUtils::moveTemporaryFile($tmpImageName, $this->getUploadDirectory($realm));
-    // }
 
     public function run () {
         $this->beforeRun();

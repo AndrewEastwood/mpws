@@ -35,7 +35,11 @@
                 {{#if data._isFuture}}
                 <input id="discount" type="text" class="form-control input-md" value="{{data.Discount}}">
                 {{else}}
-                <input id="discount" type="text" class="form-control input-md disabled" value="{{data.Discount}}" disabled>
+                    {{#if data.ID}}
+                    <input id="discount" type="text" class="form-control input-md disabled" value="{{data.Discount}}" disabled>
+                    {{else}}
+                    <input id="discount" type="text" class="form-control input-md" value="{{data.Discount}}">
+                    {{/if}}
                 {{/if}}
             </div>
         </div>

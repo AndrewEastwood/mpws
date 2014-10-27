@@ -37,7 +37,7 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
             $pluginObjectName = trim($matches[1]).trim($matches[2]);
 
             // save plugin instance
-            $this->plugins[$pluginName] = new $pluginObjectName($this);
+            $this->plugins[$pluginName] = new $pluginObjectName($this, $pluginName);
         }
         $this->customerInfo = $this->getCustomerInfo();
     }

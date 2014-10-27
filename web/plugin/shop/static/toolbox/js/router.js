@@ -5,8 +5,12 @@ define("plugin/shop/toolbox/js/router", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/cache',
+    'plugin/shop/common/js/collection/settings',
     'default/js/lib/handlebarsHelpers'
-], function (require, Sandbox, $, _, Backbone, Cache) {
+], function (require, Sandbox, $, _, Backbone, Cache, SiteSettings) {
+
+    var settings = new SiteSettings();
+    var $dfdSettings = settings.fetch();
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
         require(['plugin/shop/toolbox/js/view/menu'], function (ViewMenu) {
@@ -267,6 +271,13 @@ define("plugin/shop/toolbox/js/router", [
             });
         }
 
+    }, {
+        initialize: function (callback) {
+            $dfdSettings.done(function () {
+                Router.prototype.settings = settings.toSettings();
+                callback();
+            });
+        }
     });
 
     return Router;

@@ -29,174 +29,6 @@ class pluginShop extends objectPlugin {
         $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
     }
 
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // SETTINGS
-    // -----------------------------------------------
-    // -----------------------------------------------
-    public function getSettingByID ($id) {
-        if (empty($id) || !is_numeric($id))
-            return null;
-
-        $config = configurationShopDataSource::jsapiShopGetSettingByID($id);
-        $setting = $this->getCustomer()->fetch($config);
-
-        if (empty($setting))
-            return null;
-
-        $setting['ID'] = intval($setting['ID']);
-        $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
-        $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
-        return $setting;
-    }
-
-    public function getSettingByName ($name) {
-        $config = configurationShopDataSource::jsapiShopGetSettingByName($name);
-        $setting = $this->getCustomer()->fetch($config);
-
-        if (empty($setting))
-            return null;
-
-        $setting['ID'] = intval($setting['ID']);
-        $setting['_isActive'] = $setting['Status'] === 'ACTIVE';
-        $setting['_isRemoved'] = $setting['Status'] === 'REMOVED';
-        return $setting;
-    }
-
-    public function getSettings_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetSettingsList($options);
-        $self = $this;
-
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $settingItem) {
-                    $_items[] = $self->getSettingByID($settingItem['ID']);
-                }
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
-
-        return $dataList;
-    }
-
-    public function createSetting ($reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-        $settingID = null;
-
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Property' => array('string'),
-            'Value' => array('skipIfUnset'),
-            'Label' => array('skipIfUnset'),
-            'Type' => array('string')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-                $CustomerID = $this->getCustomer()->getCustomerID();
-                $validatedValues["CustomerID"] = $CustomerID;
-
-                $config = configurationShopDataSource::jsapiShopCreateSetting($validatedValues);
-
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $settingID = $this->getCustomer()->fetch($config) ?: null;
-
-                if (empty($settingID)) {
-                    throw new Exception('ProductCreateError');
-                }
-
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        $result = $this->getSettingByID($settingID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function updateSetting ($nameOrID, $reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Value' => array('skipIfUnset'),
-            'Label' => array('skipIfUnset'),
-            'Status' => array('skipIfUnset')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-                if (!empty($validatedValues)) {
-                    $this->getCustomerDataBase()->beginTransaction();
-                    if (is_numeric($nameOrID)) {
-                        $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSetting($nameOrID, $validatedValues);
-                    } else {
-                        $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
-                    }
-                    $this->getCustomer()->fetch($configSettingUpdate);
-                    $this->getCustomerDataBase()->commit();
-                }
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        if (is_numeric($nameOrID)) {
-            $result = $this->getSettingByID($nameOrID);
-        } else {
-            $result = $this->getSettingByName($nameOrID);
-        }
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function removeSetting ($settingID) {
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        try {
-            $this->getCustomerDataBase()->beginTransaction();
-            $config = configurationShopDataSource::jsapiShopRemoveSetting($settingID);
-            $this->getCustomer()->fetch($config);
-            $this->getCustomerDataBase()->commit();
-            $success = true;
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-            $errors[] = $e->getMessage();
-        }
-
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-
-
-
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -1306,11 +1138,14 @@ class pluginShop extends objectPlugin {
         if (!empty($reqData['form']['shopCartAccountValidationString']))
             $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
-        $pluginAccount = $this->getPlugin('account');
+        $pluginAccount = $this->getAnotherPlugin('account');
+
+        $formSettings = $this->api->settings->getSettingsMapFormOrder();
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
             $this->getCustomerDataBase()->disableTransactions();
+
 
             // check if matches
             if ($accountToken !== $formAccountToken)
@@ -1326,9 +1161,9 @@ class pluginShop extends objectPlugin {
                 $new_password = librarySecure::generateStrongPassword();
 
                 $account = $pluginAccount->createAccount(array(
-                    "FirstName" => $reqData['form']['shopCartUserName'],
-                    "EMail" => $reqData['form']['shopCartUserEmail'],
-                    "Phone" => $reqData['form']['shopCartUserPhone'],
+                    "FirstName" => $formSettings['ShowName']['_isActive'] ? $reqData['form']['shopCartUserName'] : $pluginAccount->getEmptyUserName(),
+                    "EMail" => $formSettings['ShowEMail']['_isActive'] ? $reqData['form']['shopCartUserEmail'] : libraryValidate::getEmptyEmail(),
+                    "Phone" => $formSettings['ShowPhone']['_isActive'] ? $reqData['form']['shopCartUserPhone'] : libraryValidate::getEmptyPhoneNumber(),
                     "Password" => $new_password,
                     "ConfirmPassword" => $new_password
                 ));
@@ -1369,10 +1204,10 @@ class pluginShop extends objectPlugin {
 
                 // create account address
                 $accountAddress = $pluginAccount->createAddress($accountID, array(
-                    "Address" => $reqData['form']['shopCartUserAddress'],
-                    "POBox" => $reqData['form']['shopCartUserPOBox'],
-                    "Country" => $reqData['form']['shopCartUserCountry'],
-                    "City" => $reqData['form']['shopCartUserCity']
+                    "Address" => $formSettings['ShowAddress']['_isActive'] ? $reqData['form']['shopCartUserAddress'] : 'n/a',
+                    "POBox" => $formSettings['ShowPOBox']['_isActive'] ? $reqData['form']['shopCartUserPOBox'] : 'n/a',
+                    "Country" => $formSettings['ShowCountry']['_isActive'] ? $reqData['form']['shopCartUserCountry'] : 'n/a',
+                    "City" => $formSettings['ShowCity']['_isActive'] ? $reqData['form']['shopCartUserCity'] : 'n/a'
                 ), true); // <= this allows creating unliked addresses or add new address to account when it's possible
 
                 if (count($accountAddress['errors']))
@@ -1406,9 +1241,9 @@ class pluginShop extends objectPlugin {
             $dataOrder["AccountID"] = $accountID;
             $dataOrder["AccountAddressesID"] = $addressID;
             $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
-            $dataOrder["Shipping"] = $reqData['form']['shopCartLogistic'];
-            $dataOrder["Warehouse"] = $reqData['form']['shopCartWarehouse'];
-            $dataOrder["Comment"] = $reqData['form']['shopCartComment'];
+            $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
+            $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : '';
+            $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
             $dataOrder["PromoID"] = $orderPromoID;
 
             $configOrder = configurationShopDataSource::jsapiShopCreateOrder($dataOrder);
@@ -1431,7 +1266,7 @@ class pluginShop extends objectPlugin {
                 $dataBought["Price"] = $productItem["Price"];
                 $dataBought["SellingPrice"] = $productItem["SellingPrice"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
-                $dataBought["IsPromo"] = $productItem["IsPromo"];
+                $dataBought["IsPromo"] = empty($productItem["IsPromo"]) ? 0 : 1;
                 $configBought = configurationShopDataSource::jsapiShopCreateOrderBought($dataBought);
                 $boughtID = $this->getCustomer()->fetch($configBought);
 
@@ -2301,70 +2136,6 @@ class pluginShop extends objectPlugin {
 
 
 
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // REQUESTS
-    // -----------------------------------------------
-    // -----------------------------------------------
-
-    public function get_shop_setting (&$resp, $req) {
-        if (!empty($req->get['id'])) {
-            $resp = $this->getSettingByID($req->get['id']);
-        } else if (!empty($req->get['name'])) {
-            $resp = $this->getSettingByName($req->get['name']);
-        } else {
-            $resp['error'] = 'MissedParameter_id_or_name';
-        }
-    }
-
-    public function get_shop_settings (&$resp, $req) {
-        $data = $req->get;
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $data['_fStatus'] = "ACTIVE";
-        }
-        $resp = $this->getSettings_List($data);
-    }
-
-    public function post_shop_setting (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $resp = $this->createSetting($req->data);
-        // $this->_getOrSetCachedState('changed:settings', true);
-    }
-
-    public function patch_shop_setting (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $settingID = intval($req->get['id']);
-            if (!isset($req->get['id']) && isset($req->get['name'])) {
-                $settingID = $req->get['name'];
-            }
-            $resp = $this->updateSetting($settingID, $req->data);
-            // $this->_getOrSetCachedState('changed:setting', true);
-        }
-    }
-
-    public function delete_shop_setting (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $settingID = intval($req->get['id']);
-            $resp = $this->removeSetting($settingID);
-            // $this->_getOrSetCachedState('changed:setting', true);
-        }
-    }
-
 
 
 
@@ -3010,9 +2781,9 @@ class pluginShop extends objectPlugin {
             // attach account and address
             if ($this->getCustomer()->hasPlugin('account')) {
                 if (isset($order['AccountAddressesID']))
-                    $order['address'] = $this->getCustomer()->getPlugin('account')->getAddressByID($order['AccountAddressesID']);
+                    $order['address'] = $this->getAnotherPlugin('account')->getAddressByID($order['AccountAddressesID']);
                 if (isset($order['AccountID']))
-                    $order['account'] = $this->getCustomer()->getPlugin('account')->getAccountByID($order['AccountID']);
+                    $order['account'] = $this->getAnotherPlugin('account')->getAccountByID($order['AccountID']);
                 unset($order['AccountID']);
                 unset($order['AccountAddressesID']);
             }

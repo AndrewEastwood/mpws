@@ -8,7 +8,7 @@ define('plugin/shop/common/js/model/setting', [
         url: function () {
             var _params = {
                 source: 'shop',
-                fn: 'setting'
+                fn: 'settings'
             };
             if (!this.isNew())
                 _params.id = this.id;
