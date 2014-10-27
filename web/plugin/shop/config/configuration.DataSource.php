@@ -856,6 +856,13 @@ class configurationShopDataSource extends objectConfiguration {
         $data["DateUpdated"] = self::getDate();
         $data["DateCreated"] = self::getDate();
         $data["Hash"] = md5(time() . md5(time()));
+        // adjust values
+        if (is_string($data["DeliveryID"])) {
+            $data["DeliveryID"] = null;
+        }
+        if (is_string($data["Warehouse"])) {
+            $data["Warehouse"] = null;
+        }
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_orders",
             "action" => "insert",
@@ -865,6 +872,7 @@ class configurationShopDataSource extends objectConfiguration {
     }
     static function jsapiShopCreateOrderBought ($data) {
         $data["DateCreated"] = self::getDate();
+        $data["IsPromo"] = empty($data["IsPromo"]) ? 0 : 1;
         return self::jsapiGetDataSourceConfig(array(
             "source" => "shop_boughts",
             "action" => "insert",

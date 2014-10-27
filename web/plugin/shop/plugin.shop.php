@@ -1242,7 +1242,7 @@ class pluginShop extends objectPlugin {
             $dataOrder["AccountAddressesID"] = $addressID;
             $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
             $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
-            $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : '';
+            $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : null;
             $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
             $dataOrder["PromoID"] = $orderPromoID;
 
@@ -1266,7 +1266,7 @@ class pluginShop extends objectPlugin {
                 $dataBought["Price"] = $productItem["Price"];
                 $dataBought["SellingPrice"] = $productItem["SellingPrice"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
-                $dataBought["IsPromo"] = empty($productItem["IsPromo"]) ? 0 : 1;
+                $dataBought["IsPromo"] = $productItem["IsPromo"];
                 $configBought = configurationShopDataSource::jsapiShopCreateOrderBought($dataBought);
                 $boughtID = $this->getCustomer()->fetch($configBought);
 
@@ -1573,8 +1573,11 @@ class pluginShop extends objectPlugin {
                 $cetagorySubIDs[] = $value['ID'];
 
         //filter: get category price edges
-        $filterOptionsAvailable['filter_commonPriceMax'] = floatval($dataCategoryPriceEdges['PriceMax'] ?: 0);
-        $filterOptionsAvailable['filter_commonPriceMin'] = floatval($dataCategoryPriceEdges['PriceMin'] ?: 0);
+        $filterOptionsAvailable['filter_commonPriceMax'] = floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10;
+        $filterOptionsAvailable['filter_commonPriceMin'] = floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10;
+        if ($filterOptionsAvailable['filter_commonPriceMin'] < 0) {
+            $filterOptionsAvailable['filter_commonPriceMin'] = 0;
+        }
 
         // get all brands for both current category and sub-categories
         $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAndSubCategoriesAllBrandsGet(implode(',', $cetagorySubIDs));

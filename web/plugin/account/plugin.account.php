@@ -93,8 +93,8 @@ class pluginAccount extends objectPlugin {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
-                    throw new Exception("EmailAlreadyInUse", 1);
+                // if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
+                //     throw new Exception("EmailAlreadyInUse", 1);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
