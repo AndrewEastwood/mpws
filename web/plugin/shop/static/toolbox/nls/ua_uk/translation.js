@@ -39,6 +39,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         productManager_Button_Create_Origin: "Виробник",
         // Order list
         pluginMenu_Orders_Grid_Column_ID: "#",
+        pluginMenu_Orders_Grid_Column_ShortHash: '#',
         pluginMenu_Orders_Grid_Column_Shipping: "Доставка",
         pluginMenu_Orders_Grid_Column_Status: "Статус",
         pluginMenu_Orders_Grid_Column_Warehouse: "Склад",
@@ -183,6 +184,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_ShowDeliveryInfo: 'показувати інформацію про доставку',
         setting_property_ShowPaymentInfo: 'показувати інформацію про оплату',
         setting_property_ShowSocialSharing: 'дозволити розміщення в соц. мережах',
-        setting_property_ShowPriceChart: 'показувати статистику цін'
+        setting_property_ShowPriceChart: 'показувати статистику цін',
+        productManager_Button_Upload_ProductFeed: 'Імпортувати',
+        productManager_Button_Download_ProductFeed: 'Завантажити'
     }, CustomerPluginShop);
 });

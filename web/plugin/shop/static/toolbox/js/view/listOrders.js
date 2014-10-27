@@ -37,6 +37,20 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             }
         };
 
+        var columnShortHash = {
+            name: "Hash",
+            label: lang.pluginMenu_Orders_Grid_Column_ShortHash,
+            cell: "html",
+            editable: false,
+            sortable: false,
+            formatter: {
+                fromRaw: function (value, model) {
+                    var shortHash = $('<span>').addClass('label label-primary').text(value.substring(0, 5));
+                    return shortHash;
+                }
+            }
+        };
+
         var columnAccountFullName = {
             name: "AccountFullName",
             label: lang.pluginMenu_Orders_Grid_Column_AccountFullName,
@@ -150,6 +164,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
 
         return _.extend({}, {
             columnActions: columnActions,
+            columnShortHash: columnShortHash,
             columnAccountFullName: columnAccountFullName,
             columnAccountPhone: columnAccountPhone,
             columnInfoTotal: columnInfoTotal,
