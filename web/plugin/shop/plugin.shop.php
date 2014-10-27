@@ -1863,143 +1863,6 @@ class pluginShop extends objectPlugin {
         return $result;
     }
 
-
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // DELIVERY AGENCIES
-    // -----------------------------------------------
-    // -----------------------------------------------
-    public function getDeliveryAgencyByID ($agencyID) {
-        $config = configurationShopDataSource::jsapiShopGetDeliveryAgencyByID($agencyID);
-        $data = $this->getCustomer()->fetch($config);
-        $data['ID'] = intval($data['ID']);
-        $data['_isRemoved'] = $data['Status'] === 'REMOVED';
-        $data['_isActive'] = $data['Status'] === 'ACTIVE';
-        return $data;
-    }
-
-    public function getDeliveries_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetDeliveriesList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $val)
-                    $_items[] = $self->getDeliveryAgencyByID($val['ID']);
-                return $_items;
-            }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
-        return $dataList;
-    }
-
-    public function createDeliveryAgency ($reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-        $deliveryID = null;
-
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
-
-                $configCreateOrigin = configurationShopDataSource::jsapiShopCreateDeliveryAgent($validatedValues);
-
-                $this->getCustomerDataBase()->beginTransaction();
-                $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
-
-                if (empty($deliveryID))
-                    throw new Exception('DeliveryCreateError');
-
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        if ($success && !empty($deliveryID))
-            $result = $this->getDeliveryAgencyByID($deliveryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function updateDeliveryAgency ($id, $reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
-            'Status' => array('string', 'skipIfUnset')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateDeliveryAgent($id, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
-
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        $result = $this->getDeliveryAgencyByID($id);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function deleteDeliveryAgency ($id) {
-        $errors = array();
-        $success = false;
-
-        try {
-            $this->getCustomerDataBase()->beginTransaction();
-
-            $config = configurationShopDataSource::jsapiShopDeleteDeliveryAgent($id);
-            $this->getCustomer()->fetch($config);
-
-            $this->getCustomerDataBase()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'OriginUpdateError';
-        }
-
-        $result = $this->getDeliveryAgencyByID($id);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
-    }
-
-
     // -----------------------------------------------
     // -----------------------------------------------
     // SESSION DATA
@@ -2324,10 +2187,6 @@ class pluginShop extends objectPlugin {
             $ProductID = intval($req->get['id']);
             $resp = $this->getProductByID($ProductID);
         }
-        // $resp["_origins"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
-        // $resp["_categories"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
-        // $resp["_statuses"] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
-        // $resp["_features"] = $this->_getCachedTableData(configurationShopDataSource::$Table_ShopFeatures);
     }
 
     public function get_shop_products (&$resp, $req) {
@@ -2513,55 +2372,6 @@ class pluginShop extends objectPlugin {
 
 
 
-    public function get_shop_delivery (&$resp, $req) {
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->getDeliveryAgencyByID($agencyID);
-        }
-    }
-
-    public function get_shop_deliveries (&$resp, $req) {
-        $resp = $this->getDeliveries_List($req->get);
-    }
-
-    public function post_shop_delivery (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $resp = $this->createDeliveryAgency($req->data);
-        $this->_getOrSetCachedState('changed:agencies', true);
-    }
-
-    public function patch_shop_delivery (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->updateDeliveryAgency($agencyID, $req->data);
-            $this->_getOrSetCachedState('changed:agencies', true);
-        }
-    }
-
-    public function delete_shop_delivery (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = 'AccessDenied';
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->deleteDeliveryAgency($agencyID);
-            $this->_getOrSetCachedState('changed:agencies', true);
-        }
-    }
 
 
 
@@ -2794,7 +2604,7 @@ class pluginShop extends objectPlugin {
             if (!empty($order['PromoID']))
                 $order['promo'] = $this->getPromoByID($order['PromoID']);
             if (!empty($order['DeliveryID']))
-                $order['delivery'] = $this->getDeliveryAgencyByID($order['DeliveryID']);
+                $order['delivery'] = $this->api->delivery->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
             $configBoughts = configurationShopDataSource::jsapiShopGetOrderBoughts($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
@@ -2848,10 +2658,6 @@ class pluginShop extends objectPlugin {
             }
         }
         // append info
-        $deliveries = $this->getDeliveries_List(array(
-            "limit" => 0,
-            "_fStatus" => "ACTIVE"
-        ));
         $info = array(
             "subTotal" => 0.0,
             "total" => 0.0,
@@ -2859,7 +2665,7 @@ class pluginShop extends objectPlugin {
             "productUniqueCount" => count($productItems),
             "hasPromo" => isset($order['promo']['Discount']) && $order['promo']['Discount'] > 0,
             "allProductsWithPromo" => true,
-            "deliveries" => $deliveries['items']
+            "deliveries" => $this->api->delivery->getActiveDeliveryList()
         );
         // calc order totals
         foreach ($productItems as $product) {

@@ -832,7 +832,7 @@ class configurationShopDataSource extends objectConfiguration {
     static function jsapiGetShopOrderList (array $options = array()) {
         $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("ID");
-        $config['limit'] = 64;
+        $config['limit'] = $options['limit'] ?: 64;
         $config['options']['expandSingleRecord'] = false;
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {

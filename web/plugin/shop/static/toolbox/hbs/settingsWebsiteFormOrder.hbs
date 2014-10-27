@@ -5,7 +5,7 @@
 </div>
 <div class="panel-body">
     <div class="list-group">
-        <h5>
+        <h5 class="hidden">
             Значення, котрі будуть використовуватися для відключених полів
             <i class="fa fa-level-down"></i></span>
         </h5>
@@ -13,7 +13,9 @@
         <a href="javascript://" class="list-group-item shop-property-{{Property}} alert" data-id="{{ID}}">
             <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
             <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
-            <span class="property-value text-info">{{Value}}</span>
+            {{#doesNotMatchAll Property 'ShowDeliveryAganet' 'ShowPhone'}}
+            <span class="property-value text-info hidden">{{Value}}</span>
+            {{/doesNotMatchAll}}
         </a>
     {{/each}}
     </div>

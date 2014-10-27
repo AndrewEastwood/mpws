@@ -333,6 +333,24 @@ define("default/js/lib/handlebarsHelpers", [
             } else {
                 return content.inverse(this);
             }
+        },
+        doesNotMatchAll: function () {
+            var argLength = arguments.length - 2;
+            var content = arguments[argLength + 1];
+            var matchAny = false;
+            var i = 1;
+            while (i <= argLength) {
+                if (arguments[0] === arguments[i]) {
+                    matchAny = true;
+                    break;
+                }
+                i += 1;
+            }
+            if (matchAny) {
+                return content.inverse(this);
+            } else {
+                return content.fn(this);
+            }
         }
     };
     // Aliases

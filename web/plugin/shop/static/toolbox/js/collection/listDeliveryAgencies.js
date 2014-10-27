@@ -10,7 +10,7 @@ define('plugin/shop/toolbox/js/collection/listDeliveryAgencies', [
 
         url: APP.getApiLink({
             source: 'shop',
-            fn: 'deliveries'
+            fn: 'delivery'
         }),
 
         // Initial pagination states

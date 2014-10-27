@@ -17,7 +17,9 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         lang: lang,
         events: {
             'itemAdded .search': 'search',
-            'itemRemoved .search': 'search'
+            'itemRemoved .search': 'search',
+            'click .import-feed-products': 'downloadProducts',
+            'click .export-feed-products': 'uploadProducts'
         },
         initialize: function (options) {
             // _.bindAll(this);
@@ -42,15 +44,6 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         setTitle: function () {
             this.$('.title').text(lang.pluginMenu_Products_Grid_Title);
         },
-        // setOptions: function (options) {
-        //     // merge with defaults
-        //     this.options = _.defaults({}, options, {
-        //         status: "ACTIVE"
-        //     });
-        //     // and adjust thme
-        //     if (!this.options.status)
-        //         this.options.status = "ACTIVE";
-        // },
         getDisplayStatus: function () {
             var status = this.options && this.options.status || 'all';
             return status.toLowerCase();
@@ -74,7 +67,6 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             this.$('.fa-plus').removeClass('fa-spin');
         },
         render: function () {
-            // console.log('ManagerContent_Products render');
             // debugger;
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
@@ -93,7 +85,9 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         search: function () {
             this.collection.setCustomQueryParam("Search", $(".search").tagsinput('items'));
             this.collection.fetch();
-        }
+        },
+        downloadProducts: function () {},
+        uploadProducts: function () {}
     });
 
     return ManagerContent_Products;
