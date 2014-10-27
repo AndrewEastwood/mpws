@@ -47,7 +47,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                 unsavedclass: '',
                 validate: function (value) {
                     if ($.trim(value) === '') {
-                        return 'Введіть назву перевізника';
+                        return lang.settings_validation_emptyDeliveryAgentName;
                     }
                 }
             };
@@ -73,7 +73,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                     self.$('.switcher-config-self-pickup').bootstrapSwitch('state', model.get('_isActive'), true);
                 },
                 error: function (model) {
-                    BSAlerts.danger('Помилка оновлення параметру');
+                    BSAlerts.danger(lang.settings_error_save);
                     self.$('.switcher-config-self-pickup').bootstrapSwitch('state', !state, true);
                 }
             });
@@ -109,7 +109,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                         $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
                     },
                     error: function (model) {
-                        BSAlerts.danger('Помилка оновлення параметру');
+                        BSAlerts.danger(lang.settings_error_save);
                         $item.find('.switcher').bootstrapSwitch('state', !state, true);
                     }
                 });
@@ -157,7 +157,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                 }, {
                     patch: true,
                     error: function (model) {
-                        BSAlerts.danger('Помилка оновлення параметру');
+                        BSAlerts.danger(lang.settings_error_save);
                         self.collection.fetch({
                             reset: true
                         });
@@ -178,7 +178,7 @@ define("plugin/shop/toolbox/js/view/settingsDeliveryAgencies", [
                 return;
             }
 
-            BootstrapDialog.confirm("Видалити цей сервіс?", function (rez) {
+            BootstrapDialog.confirm(lang.settings_msg_confirmation_delete_delivery, function (rez) {
                 if (rez) {
                     model.destroy({
                         success: function () {

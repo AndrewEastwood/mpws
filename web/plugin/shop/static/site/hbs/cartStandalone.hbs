@@ -384,10 +384,11 @@
                         <!-- List group -->
                         <div class="list-group">
                             <div class="list-group-item">
-                                Якщо в нас виникнуть додаткові запитання то ми неодмінно вам подзвонимо.
+                                Якщо в нас виникнуть додаткові запитання то ми неодмінно Вам подзвонимо.
                             </div>
                             <div class="list-group-item">
-                                Номер замовлення: <span class="label label-success">{{data.ID}}</span>
+                                Код замовлення: <span class="label label-info">{{data.ShortHash}}</span>
+                                <sub class="text-danger">Збережіть будьласка собі цей код. У разі виникнення запитань необхідно буде цей код нам повідомити.</sub>
                             </div>
                             <div class="list-group-item">
                                 Дізнатися поточний статус замовлення Ви можете у своєму акаунті або за допомогою наступного посилання: <a href="{{app.location.origin}}/#shop/tracking/{{data.Hash}}">{{app.location.origin}}/#shop/tracking/{{data.Hash}}</a>

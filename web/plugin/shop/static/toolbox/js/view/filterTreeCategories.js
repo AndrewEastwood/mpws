@@ -211,8 +211,14 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                 }
             }).on('activate_node.jstree', function (e, data) {
                 var id = parseInt(data.node.data.id, 10) || void(0);
+                // debugger;
+                var ids = [id];
+                _(data.node.children).each(function (subCategoryID) {
+                    ids.push(parseInt(subCategoryID, 10))
+                });
                 self.trigger('categoryTree:changed:category', {
                     id: id,
+                    allIDs: ids,
                     text: data.node.text.trim()
                 });
             });

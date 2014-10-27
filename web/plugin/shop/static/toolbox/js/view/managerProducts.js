@@ -23,11 +23,14 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             // _.bindAll(this);
             ViewListProducts.prototype.initialize.call(this);
 
-            this.setOptions(options);
+            // this.setOptions(options);
+            this.options = options || {};
 
             // debugger;
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
-            this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            if (this.options.status) {
+                this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            }
             this.collection.setCustomQueryParam("Stats", true);
 
             this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp) {
@@ -39,19 +42,23 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         setTitle: function () {
             this.$('.title').text(lang.pluginMenu_Products_Grid_Title);
         },
-        setOptions: function (options) {
-            // merge with defaults
-            this.options = _.defaults({}, options, {
-                status: "ACTIVE"
-            });
-            // and adjust thme
-            if (!this.options.status)
-                this.options.status = "ACTIVE";
+        // setOptions: function (options) {
+        //     // merge with defaults
+        //     this.options = _.defaults({}, options, {
+        //         status: "ACTIVE"
+        //     });
+        //     // and adjust thme
+        //     if (!this.options.status)
+        //         this.options.status = "ACTIVE";
+        // },
+        getDisplayStatus: function () {
+            var status = this.options && this.options.status || 'all';
+            return status.toLowerCase();
         },
         refreshBadges: function (stats) {
             var self = this;
             this.$('.tab-link .badge').html("0");
-            this.$('.tab-link.products-' + this.options.status.toLowerCase()).addClass('active');
+            this.$('.tab-link.products-' + this.getDisplayStatus()).addClass('active');
             _(stats).each(function(count, status) {
                 self.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
             });
@@ -59,7 +66,7 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         startLoadingAnim: function () {
             var self = this;
             setTimeout(function(){
-                console.log('adding spinner');
+                // console.log('adding spinner');
                 self.$('.fa-plus').addClass('fa-spin');
             }, 0);
         },
@@ -67,7 +74,7 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             this.$('.fa-plus').removeClass('fa-spin');
         },
         render: function () {
-            console.log('ManagerContent_Products render');
+            // console.log('ManagerContent_Products render');
             // debugger;
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));

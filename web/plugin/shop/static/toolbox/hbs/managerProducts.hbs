@@ -16,6 +16,12 @@
     <div class="table-responsive">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs nav-tabs-plugin-shop-products">
+            <li class="tab-link products-all">
+                <a href="{{bb_link instances.shop.urls.contentList asRoot=true}}">
+                    <i class="fa fa-bolt"></i>
+                    {{lang.product_search}}
+                </a>
+            </li>
             <li class="tab-link products-active">
                 <a href="{{bb_link instances.shop.urls.contentList asRoot=true}}/active">
                     <i class="fa fa-bolt"></i>

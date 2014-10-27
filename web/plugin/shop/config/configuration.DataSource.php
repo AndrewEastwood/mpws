@@ -829,11 +829,24 @@ class configurationShopDataSource extends objectConfiguration {
 
         return $config;
     }
-    static function jsapiGetShopOrderList () {
+    static function jsapiGetShopOrderList (array $options = array()) {
         $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
+        if (!empty($options['_pSearch'])) {
+            if (is_string($options['_pSearch'])) {
+                $config['condition']["Hash"] = self::jsapiCreateDataSourceCondition($options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = self::jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+            } elseif (is_array($options['_pSearch'])) {
+                foreach ($options['_pSearch'] as $value) {
+                    $config['condition']["Hash"] = self::jsapiCreateDataSourceCondition($value . '%', 'like');
+                    // $config['condition']["Model"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = self::jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                }
+            }
+        }
         return $config;
     }
     static function jsapiGetShopOrderList_Pending () {

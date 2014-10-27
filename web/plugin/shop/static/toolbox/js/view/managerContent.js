@@ -29,7 +29,13 @@ define('plugin/shop/toolbox/js/view/managerContent', [
             this.listenTo(this.viewProductsList.collection, 'reset', this.render);
 
             this.viewCatergoriesTree.on('categoryTree:changed:category', _.debounce(function (activeCategory) {
-                this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.id >= 0 ? activeCategory.id : void(0));
+                if (activeCategory.id < 0) {
+                    // show all categories
+                    this.viewProductsList.collection.setCustomQueryField("CategoryID", void(0));
+                    
+                } else {
+                    this.viewProductsList.collection.setCustomQueryField("CategoryID", activeCategory.allIDs.join(',') + ':IN');
+                }
                 this.viewProductsList.collection.fetch({
                     reset: true
                 });

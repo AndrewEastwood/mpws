@@ -7,7 +7,11 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{lang.orders_manager_listTitle}}
+                <span class="title">{{lang.orders_manager_listTitle}}</span>
+                <div class="search-block">
+                    <i class="fa fa-search"></i>
+                    <input type="text" class="search" value="" data-role="tagsinput" />
+                </div>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -15,6 +19,12 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs nav-tabs-plugin-shop-orders">
+                        <li class="tab-link orders-all">
+                            <a href="/#shop/orders">
+                                <i class="fa fa-search"></i>
+                                {{lang.order_search}}
+                            </a>
+                        </li>
                         <li class="tab-link orders-new">
                             <a href="/#shop/orders/new">
                                 <i class="fa fa-dot-circle-o"></i>

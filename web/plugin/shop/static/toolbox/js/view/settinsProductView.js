@@ -52,7 +52,7 @@ define("plugin/shop/toolbox/js/view/settinsProductView", [
                         $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
                     },
                     error: function (model) {
-                        BSAlerts.danger('Помилка оновлення параметру');
+                        BSAlerts.danger(lang.settings_error_save);
                         $item.find('.switcher').bootstrapSwitch('state', !state, true);
                     }
                 });

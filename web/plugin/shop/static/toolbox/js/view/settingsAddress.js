@@ -84,7 +84,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 model = this.collection.get(id),
                 addressUID = model.getAddressUID();
 
-            BootstrapDialog.confirm("Видалити цю адресу?", function (rez) {
+            BootstrapDialog.confirm(lang.settings_msg_confirmation_delete_address, function (rez) {
                 if (rez) {
                     self.collection.each(function (collectionModel) {
                         if (collectionModel.getAddressUID() === addressUID) {
@@ -129,7 +129,7 @@ define("plugin/shop/toolbox/js/view/settingsAddress", [
                 if (allSuccess) {
                     $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
                 } else {
-                    BSAlerts.danger('Помилка оновлення параметру');
+                    BSAlerts.danger(lang.settings_error_save);
                     $item.find('.switcher').bootstrapSwitch('state', !state, true);
                 }
             }

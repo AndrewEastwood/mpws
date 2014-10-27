@@ -11,6 +11,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         order_status_SHOP_CLOSED: 'Виконано',
         order_status_CUSTOMER_CANCELED: "Відмова покупця",
         order_status_SHOP_REFUNDED: "Відшкодування",
+        order_search: "Пошук",
         // orderEntry_Popup_field_firstName: "Імя",
         // orderEntry_Popup_field_lastName: "Прізвище",
         // orderEntry_Popup_field_email: "Ел.пошта",
@@ -147,6 +148,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         product_status_DEFECT: 'З дефектом',
         product_status_WAITING: 'Очікування',
         product_status_PREORDER: 'Під замовлення',
+        product_search: 'Пошук',
         orders_manager_listTitle: "Менеджер замовлень",
         categoryTree_Title: 'Дерево категорії',
         listPromos_Column_Actions: '',
@@ -186,6 +188,11 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_ShowSocialSharing: 'дозволити розміщення в соц. мережах',
         setting_property_ShowPriceChart: 'показувати статистику цін',
         productManager_Button_Upload_ProductFeed: 'Імпортувати',
-        productManager_Button_Download_ProductFeed: 'Завантажити'
+        productManager_Button_Download_ProductFeed: 'Завантажити',
+        settings_value_editable_emptytext: 'пусто',
+        settings_error_save: 'Помилка оновлення параметру',
+        settings_validation_emptyDeliveryAgentName: 'Введіть назву перевізника',
+        settings_msg_confirmation_delete_delivery: 'Видалити цей сервіс?',
+        settings_msg_confirmation_delete_address: 'Видалити цю адресу?',
     }, CustomerPluginShop);
 });

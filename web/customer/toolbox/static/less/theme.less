@@ -157,6 +157,22 @@ body {
     .tab-pane {
         padding-top: 15px;
     }
+    .panel-heading {
+        overflow: hidden;
+    }
+    .search-block {
+        float: right;
+        .fa-search {
+            margin-right: -25px;
+            position: relative;
+            color: #dedede;
+        }
+        .bootstrap-tagsinput {
+            margin: 0px;
+            padding-left: 30px;
+            width: 400px;
+        }
+    }
 }
 .shop-managerContent {
     .tab-pane {
@@ -611,5 +627,13 @@ input[type="radio"], input[type="checkbox"] {
     & + small {
         vertical-align: middle;
         cursor: pointer;
+    }
+}
+
+
+.shop-settings.website-form-order {
+    .property-value {
+        display: inline-block;
+        float: right;
     }
 }

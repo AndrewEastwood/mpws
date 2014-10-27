@@ -1093,7 +1093,7 @@ class pluginShop extends objectPlugin {
 
     public function getOrders_List (array $options = array()) {
         // get all orders
-        $config = configurationShopDataSource::jsapiGetShopOrderList();
+        $config = configurationShopDataSource::jsapiGetShopOrderList($options);
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());

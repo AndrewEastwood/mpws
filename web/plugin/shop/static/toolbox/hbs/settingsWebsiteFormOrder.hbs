@@ -5,10 +5,15 @@
 </div>
 <div class="panel-body">
     <div class="list-group">
+        <h5>
+            Значення, котрі будуть використовуватися для відключених полів
+            <i class="fa fa-level-down"></i></span>
+        </h5>
     {{#each data}}
         <a href="javascript://" class="list-group-item shop-property-{{Property}} alert" data-id="{{ID}}">
             <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
             <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
+            <span class="property-value text-info">{{Value}}</span>
         </a>
     {{/each}}
     </div>
