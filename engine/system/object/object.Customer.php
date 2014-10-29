@@ -108,12 +108,11 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
         // libraryResponse::$_RESPONSE['authenticated'] = $this->getPlugin('account')->isAuthenticated();
         // libraryResponse::$_RESPONSE['script'] = libraryRequest::getScriptName();
 
-        $authID = $this->getAuthID();
-
+        $this->updateSessionAuth();
         foreach ($this->plugins as $plugin)
             $plugin->run();
 
-        libraryResponse::$_RESPONSE['auth_id'] = $authID;
+        // libraryResponse::$_RESPONSE['auth_id'] = $authID;
     }
 
     public function runAsAUTH () {
@@ -130,29 +129,20 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
          * Licensed under the MIT license:
          * http://www.opensource.org/licenses/MIT
          */
-
-        // error_reporting(E_ALL | E_STRICT);
-        // require('libraryUploadHandler.php');
         $options = array(
-            'script_url' => '/upload.js?',
+            'script_url' => configurationDefaultUrl::$upload,
             'download_via_php' => true,
             'upload_dir' => libraryUtils::getUploadTemporaryDirectory(),
             'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
-            // 'upload_url' => '/contents.js?',
-            // 'correct_image_extensions' => true
         );
-        // var_dump($options);
         $upload_handler = new libraryUploadHandler($options);
-
         libraryResponse::$_RESPONSE = $upload_handler->get_response();
-        // var_dump($upload_handler);
-        // libraryRequest::processRequest($this->getExtension('Auth'));
-        $authID = $this->getAuthID();
-
+        // get auth id
+        $this->updateSessionAuth();
+        // bypass response to all plugins
         foreach ($this->plugins as $plugin)
             $plugin->run();
-
-        libraryResponse::$_RESPONSE['auth_id'] = $authID;
+        // libraryResponse::$_RESPONSE['auth_id'] = $authID;
     }
 
 }

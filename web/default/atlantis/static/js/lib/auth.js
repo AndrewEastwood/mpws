@@ -8,24 +8,22 @@ define("default/js/lib/auth", [
     var Auth = {};
 
     Sandbox.eventSubscribe("global:ajax:responce", function (response) {
-        Auth.setStatus(response);
+        Auth.verifyStatus(response);
     });
 
     Auth = {
-        setStatus: function (response) {
-            var auth_id = response && response.auth_id || null;
-            // console.log('Auth set auth_id', auth_id);
-            if (Auth.auth_id === auth_id)
-                return;
+        verifyStatus: function () {
             // debugger;
-
+            var auth_id = Auth.getAccountID();
+            if (Auth.auth_id === auth_id) {
+                return;
+            }
             Auth.auth_id = auth_id;
-            Cache.setCookie('auth_id', auth_id);
-
-            if (Auth.auth_id === null) {
-                Sandbox.eventNotify("global:auth:status:inactive");
-            } else
+            if (Auth.auth_id) {
                 Sandbox.eventNotify("global:auth:status:active");
+            } else {
+                Sandbox.eventNotify("global:auth:status:inactive");
+            }
         },
         getAccountID: function () {
             return Cache.getCookie('auth_id') || null;
@@ -35,7 +33,6 @@ define("default/js/lib/auth", [
                 fn: 'status'
             };
             return $.get(APP.getAuthLink(query), function (response) {
-                Auth.setStatus(response);
                 if (_.isFunction(callback))
                     callback(Auth.getAccountID(), response);
             });
@@ -49,7 +46,6 @@ define("default/js/lib/auth", [
                 password: password,
                 remember: remember,
             }, function (response) {
-                Auth.setStatus(response);
                 if (_.isFunction(callback))
                     callback(Auth.getAccountID(), response);
             });
@@ -59,7 +55,6 @@ define("default/js/lib/auth", [
                 fn: 'signout'
             };
             return $.post(APP.getAuthLink(query), function (response) {
-                Auth.setStatus(response);
                 if (_.isFunction(callback))
                     callback(Auth.getAccountID(), response);
             });

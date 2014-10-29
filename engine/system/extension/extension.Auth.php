@@ -36,10 +36,16 @@ class extensionAuth extends objectExtension {
             $configPermissions = configurationCustomerDataSource::jsapiGetPermissions($_SESSION['AccountID']);
             $permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
             $this->_setPermissions($permissions);
-            if (glIsToolbox() && !$this->ifYouCan('Admin'))
+            if (glIsToolbox() && !$this->ifYouCan('Admin')) {
                 return $this->clearAuthID();
+            }
         }
         return $_SESSION['AccountID'];
+    }
+
+    public function updateSessionAuth () {
+        $authID = $this->getAuthID();
+        setcookie('auth_id', $authID, time() + 3600, '/');
     }
 
     public function clearAuthID () {
@@ -54,6 +60,7 @@ class extensionAuth extends objectExtension {
 
     public function get_status (&$resp) {
         $resp['auth_id'] = $this->getAuthID();
+        $this->updateSessionAuth();
     }
 
     public function post_signin (&$resp, $req) {
@@ -110,11 +117,13 @@ class extensionAuth extends objectExtension {
 
         // $resp['account_id'] = $AccountID;
         $resp['auth_id'] = $this->getAuthID();
+        $this->updateSessionAuth();
     }
 
 
     public function post_signout (&$resp) {
         $resp['auth_id'] = $this->clearAuthID();
+        $this->updateSessionAuth();
         // $this->getAuthID();
         // $resp['authenticated'] = false;
     }

@@ -43,7 +43,7 @@ class extensionDataInterface extends objectExtension {
         $countData = $this->getCustomer()->fetch($configCount);
         $count = intval($countData["ItemsCount"]);
 
-        if (!empty($options) && is_object($options)) {
+        if (!empty($options)) {
             if (isset($options['sort']))
                 $dsConfig['order']['field'] = $options['sort'];
             if (isset($options['order']))
@@ -82,7 +82,7 @@ class extensionDataInterface extends objectExtension {
         $listInfo = array(
             "page" => $page,
             "limit" => $limit,
-            "total_pages" => round($count / $limit + 0.49),
+            "total_pages" => empty($limit) ? 1 : round($count / $limit + 0.49),
             "total_entries" => $count
         );
 

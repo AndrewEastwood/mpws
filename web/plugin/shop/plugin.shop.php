@@ -389,8 +389,6 @@ class pluginShop extends objectPlugin {
         return $result;
     }
 
-
-
     public function updateProduct ($ProductID, $reqData) {
         $result = array();
         $errors = array();
