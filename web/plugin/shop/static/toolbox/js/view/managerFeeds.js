@@ -2,6 +2,7 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
     'default/js/lib/sandbox',
     'default/js/lib/backbone',
     'default/js/lib/utils',
+    'default/js/lib/bootstrap-dialog',
     /* collection */
     "plugin/shop/toolbox/js/collection/feeds",
     /* template */
@@ -12,14 +13,15 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
     'default/js/lib/jquery.fileupload/jquery.iframe-transport',
     'default/js/lib/jquery.fileupload/jquery.fileupload-validate',
     'default/js/lib/jquery.fileupload/jquery.fileupload',
-], function (Sandbox, Backbone, Utils, CollectionFeeds, tpl, lang) {
+], function (Sandbox, Backbone, Utils, BootstrapDialog, CollectionFeeds, tpl, lang) {
 
     var ManagerFeeds = Backbone.View.extend({
         template: tpl,
         lang: lang,
         className: 'shop-manager-feeds',
         events: {
-            'click .upload-feed': 'uploadFeed'
+            'click .start-import': 'importFeed',
+            'click .generate': 'generateFeed'
         },
         initialize: function (options) {
             this.options = options || {};
@@ -50,8 +52,27 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
             });
             return this;
         },
-        uploadFeed: function () {
-
+        generateFeed: function (event) {
+            var that = this;
+            BootstrapDialog.confirm('Generate new feed?', function (rez) {
+                if (rez) {
+                    that.collection.generateNewProductFeed();
+                }
+            });
+        },
+        importFeed: function (event) {
+            var that = this,
+                $feedItem = $(event.target).closest('.feed-item'),
+                feedID = $feedItem.length && $feedItem.data('id'),
+                feedModel = this.collection.get(feedID);
+            if (!feedModel) {
+                return;
+            }
+            BootstrapDialog.confirm('Import ' + feedModel.get('name') + ' feed?', function (rez) {
+                if (rez) {
+                    feedModel.importUploadedProductFeed();
+                }
+            });
         }
     });
 

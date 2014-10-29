@@ -2,20 +2,24 @@
 
 class apiShopFeeds extends objectApi {
 
-    public function getPathFeeds () {
+    public function getDirNameFeeds () {
         return 'feeds';
     }
 
+    public function getUploadedFeedName () {
+        return 'import_' . date('YmdHis');
+    }
+
     public function getGeneratedFeedDownloadLink ($name) {
-        return $this->getPlugin()->getOwnUploadedFileWeb($name, $this->getPathFeeds());
+        return $this->getPlugin()->getOwnUploadedFileWeb($name, $this->getDirNameFeeds());
     }
 
     public function getGeneratedFeedsPaths () {
-        return glob($this->getPlugin()->getOwnUploadDirectory($this->getPathFeeds()) . DS . 'gen_*\.xls');
+        return glob($this->getPlugin()->getOwnUploadDirectory($this->getDirNameFeeds()) . DS . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsPaths () {
-        return glob(libraryUtils::getUploadTemporaryDirectory() . DS . '*.xls');
+        return glob($this->getPlugin()->getOwnUploadDirectory($this->getDirNameFeeds()) . DS . 'import_*\.xls');
     }
 
     public function getFeeds () {
@@ -28,6 +32,16 @@ class apiShopFeeds extends objectApi {
             $feeds[] = array(
                 'ID' => md5($pInfo['filename']),
                 'type' => 'generated',
+                'time' => date('Y-m-d H:i:s', filectime($value)),
+                'name' => $pInfo['filename'],
+                'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
+            );
+        }
+        foreach ($listFeedsUploaded as $value) {
+            $pInfo = pathinfo($value);
+            $feeds[] = array(
+                'ID' => md5($pInfo['filename']),
+                'type' => 'uploaded',
                 'time' => date('Y-m-d H:i:s', filectime($value)),
                 'name' => $pInfo['filename'],
                 'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
@@ -50,7 +64,11 @@ class apiShopFeeds extends objectApi {
     }
 
     public function post (&$resp, $req) {
-        var_dump($resp);
+        if (isset($resp['files'])) {
+            foreach ($resp['files'] as $tempFileItem) {
+                $this->getPlugin()->saveOwnTemporaryUploadedFile($tempFileItem->name, $this->getDirNameFeeds(), $this->getUploadedFeedName());
+            }
+        }
     }
 }
 

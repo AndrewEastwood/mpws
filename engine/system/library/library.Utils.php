@@ -113,42 +113,42 @@ class libraryUtils
     }
 
     static public function getUploadTemporaryDirectory () {
-        return self::getUploadDirectory(DIR_TEMP);
+        return self::getUploadDirectory(DIR_TEMP) . DS;
     }
 
     static public function getUploadDirectory ($realm = null) {
         $pluginUploadPath = DR . DIR_UPLOADS;
         if (!empty($realm)) {
-            return $pluginUploadPath . DS . $realm;
+            return $pluginUploadPath . DS . $realm .DS;
         }
-        return $pluginUploadPath;
+        return $pluginUploadPath . DS;
     }
     static public function getUploadWebPath ($realm = null) {
         $pluginUploadPath = DS . DIR_UPLOADS;
         if (!empty($realm)) {
-            return $pluginUploadPath . DS . $realm;
+            return $pluginUploadPath . DS . $realm . DS;
         }
-        return $pluginUploadPath;
+        return $pluginUploadPath . DS;
     }
 
-    static function moveTemporaryFile ($tmpFilePath, $targetDir, $customFileName = null) {
-        $tmpFile = self::getUploadDirectory(DIR_TEMP . DS . $tmpFilePath);
-        if (file_exists($tmpFile)) {
+    static function moveTemporaryFile ($tmpFileName, $targetDir, $customFileName = null) {
+        $tmpFilePath = self::getUploadTemporaryDirectory() . $tmpFileName;
+        if (file_exists($tmpFilePath)) {
             $info = array();
             $targetDirFullPath = self::getUploadDirectory($targetDir);
             if (!file_exists($targetDirFullPath)) {
                 mkdir($targetDirFullPath, 0777, true);
             }
-            $tempFileInfo = pathinfo($tmpFilePath);
+            $tempFileInfo = pathinfo($tmpFileName);
             $_fileBaseName = basename(!empty($customFileName) ? $customFileName : $tempFileInfo['filename']);
             $_fileExtension = $tempFileInfo['extension'];
             $_fileName = strtolower($_fileBaseName . '.' . $_fileExtension);
-            rename($tmpFile, $targetDirFullPath . DS . $_fileName);
+            rename($tmpFilePath, $targetDirFullPath . $_fileName);
             $info['basename'] = $_fileBaseName;
             $info['extension'] = $_fileExtension;
             $info['filename'] = $_fileName;
             $info['uploadDir'] = $targetDir;
-            $info['uploadPath'] = $targetDir . DS . $_fileName;
+            $info['uploadPath'] = $targetDir . $_fileName;
             return $info;
         }
         return false;

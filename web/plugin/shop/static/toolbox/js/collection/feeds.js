@@ -8,18 +8,17 @@ define('plugin/shop/toolbox/js/collection/feeds', [
 ], function ($, _, Backbone, ModelFeed, Utils, Cache) {
 
     var Feeds = Backbone.Collection.extend({
-
         model: ModelFeed,
-
         url: APP.getApiLink({
             source: 'shop',
             fn: 'feeds'
         }),
-
         parse: function (data) {
             return data.feeds;
+        },
+        generateNewProductFeed: function () {
+            alert('generating feed');
         }
-
     });
 
     return Feeds;

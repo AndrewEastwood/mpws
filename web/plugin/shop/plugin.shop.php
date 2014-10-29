@@ -345,9 +345,9 @@ class pluginShop extends objectPlugin {
                     if (isset($attributes["IMAGE"])) {
                         foreach ($attributes["IMAGE"] as $fileName) {
                             $newFileName = $ProductID . uniqid(time());
-                            $uploadInfo = $this->saveOwnUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                            $this->saveOwnUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
-                            $this->saveOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
+                            $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
+                            $this->saveOwnTemporaryUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
+                            $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
@@ -564,9 +564,9 @@ class pluginShop extends objectPlugin {
                 $uploadedFileNames = array();
                 foreach ($filesToUpload as $fileName) {
                     $newFileName = $ProductID . uniqid(time());
-                    $uploadInfo = $this->saveOwnUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                    $this->saveOwnUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
-                    $this->saveOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
+                    $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
+                    $this->saveOwnTemporaryUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
+                    $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
                     $uploadedFileNames[] = $uploadInfo['filename'];
                 }
                 foreach ($filesToDelete as $fileName) {

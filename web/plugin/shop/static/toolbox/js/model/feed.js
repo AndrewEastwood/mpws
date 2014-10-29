@@ -10,6 +10,9 @@ define('plugin/shop/toolbox/js/model/feed', [
                 fn: 'feeds'
             };
             return APP.getApiLink(_params);
+        },
+        importUploadedProductFeed: function () {
+            alert('importing feed');
         }
     });
 

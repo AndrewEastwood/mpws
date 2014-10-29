@@ -58,41 +58,40 @@ class objectPlugin implements IPlugin {
 
     public function getOwnUploadedFile ($name, $targetDir = null) {
         $dir = $this->getOwnUploadDirectory($targetDir);
-        return $dir . DS . $name;
+        return $dir . $name;
     }
 
     public function getOwnUploadedFileWeb ($name, $targetDir = null) {
         $dir = $this->getOwnUploadPathWeb($targetDir);
-        return $dir . DS . $name;
+        return $dir . $name;
     }
 
-    public function saveOwnUploadedFile ($tmpFilePath, $targetDir, $name = false) {
+    public function saveOwnTemporaryUploadedFile ($tmpFileName, $targetDir, $name = false) {
         $uniqueName = empty($name) ? mktime() : $name;
-        $uploadedFileInfo = libraryUtils::moveTemporaryFile($tmpFilePath, $this->getName() . DS . $targetDir, $uniqueName);
-        // $uploadedFileInfo['name'] = $uniqueName;
+        $uploadedFileInfo = libraryUtils::moveTemporaryFile($tmpFileName, $this->getName() . DS . $targetDir, $uniqueName);
         return $uploadedFileInfo;
     }
 
     public function deleteOwnUploadedFile ($name, $targetDir) {
         $dir = $this->getOwnUploadDirectory($targetDir);
-        $filePath = $dir . DS . $name;
+        $filePath = $dir . $name;
         if (file_exists($filePath)) {
             return unlink($filePath);
         }
         return false;
     }
 
-    public function moveUploadedFile ($sourceDir, $targetDir, $name) {
-        $dirSrc = $this->getUploadDirectory($sourceDir);
-        $dirTarget = $this->getUploadDirectory($targetDir);
-        $filePathOld = $dirSrc . DS . $name;
-        $filePathNew = $dirTarget . DS . $name;
-        if (file_exists($dirTarget)) {
-            mkdir($dirTarget, 0777, true);
-        }
-        rename($filePathOld, $filePathNew);
-        return false;
-    }
+    // public function moveUploadedFile ($sourceDir, $targetDir, $name) {
+    //     $dirSrc = $this->getUploadDirectory($sourceDir);
+    //     $dirTarget = $this->getUploadDirectory($targetDir);
+    //     $filePathOld = $dirSrc . DS . $name;
+    //     $filePathNew = $dirTarget . DS . $name;
+    //     if (file_exists($dirTarget)) {
+    //         mkdir($dirTarget, 0777, true);
+    //     }
+    //     rename($filePathOld, $filePathNew);
+    //     return false;
+    // }
 
     public function run () {
         $this->beforeRun();
