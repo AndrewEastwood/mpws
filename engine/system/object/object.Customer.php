@@ -148,6 +148,10 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
         // var_dump($upload_handler);
         // libraryRequest::processRequest($this->getExtension('Auth'));
         $authID = $this->getAuthID();
+
+        foreach ($this->plugins as $plugin)
+            $plugin->run();
+
         libraryResponse::$_RESPONSE['auth_id'] = $authID;
     }
 

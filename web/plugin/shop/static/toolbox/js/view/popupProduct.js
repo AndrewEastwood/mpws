@@ -13,7 +13,6 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/select2/select2',
     'default/js/lib/jquery.maskMoney',
     'default/js/lib/bootstrap-tagsinput',
-    'default/js/lib/select2/select2',
     'default/js/lib/jquery.fileupload/jquery.fileupload',
     'default/js/lib/jquery.fileupload/vendor/canvas-to-blob',
     'default/js/lib/jquery.fileupload/vendor/JavaScript-Load-Image/load-image',

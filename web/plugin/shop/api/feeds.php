@@ -48,6 +48,10 @@ class apiShopFeeds extends objectApi {
     public function get (&$resp, $req) {
         $resp['feeds'] = $this->getFeeds();
     }
+
+    public function post (&$resp, $req) {
+        var_dump($resp);
+    }
 }
 
 ?>
