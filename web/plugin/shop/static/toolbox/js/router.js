@@ -44,7 +44,8 @@ define("plugin/shop/toolbox/js/router", [
         "shop/settings": "settings",
         "shop/promo": "promo",
         "shop/promo/edit/:id": "promoEdit",
-        "shop/promo/new": "promoCreate"
+        "shop/promo/new": "promoCreate",
+        "shop/feeds": "feeds"
     };
 
     var Router = Backbone.Router.extend({
@@ -200,6 +201,21 @@ define("plugin/shop/toolbox/js/router", [
 
         reports: function () {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-reports');
+        },
+
+        feeds: function () {
+            // set active menu
+            Sandbox.eventNotify('global:menu:set-active', '.menu-shop-feeds');
+            require(['plugin/shop/toolbox/js/view/managerFeeds'], function (ManagerFeeds) {
+                var managerFeeds = new ManagerFeeds();
+                managerFeeds.collection.fetch({
+                    reset: true
+                });
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: managerFeeds.$el
+                });
+            });
         },
 
         promo: function () {

@@ -9,8 +9,9 @@ define('plugin/shop/toolbox/js/model/basicStats', [
                 source: 'shop',
                 fn: 'stats'
             };
-            if (this.type)
+            if (this.type) {
                 _params.type = this.type;
+            }
             return APP.getApiLink(_params);
         }
     });

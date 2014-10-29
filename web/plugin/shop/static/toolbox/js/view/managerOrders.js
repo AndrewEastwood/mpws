@@ -21,9 +21,6 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
         initialize: function (options) {
             // debugger;
             this.options = options || {};
-            // set options
-            // this.setOptions(options);
-            // create collection and viewOrdersList
             this.viewOrdersList = new ViewOrdersListOrders();
             if (this.options.status) {
                 this.viewOrdersList.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
@@ -35,15 +32,6 @@ define('plugin/shop/toolbox/js/view/managerOrders', [
                     this.refreshBadges(resp.stats);
             }, this));
         },
-        // setOptions: function (options) {
-        //     // merge with defaults
-        //     this.options = _.defaults({}, options, {
-        //         status: "NEW"
-        //     });
-        //     // and adjust them
-        //     if (!this.options.Status)
-        //         this.options.Status = "NEW";
-        // },
         getDisplayStatus: function () {
             var status = this.options && this.options.status || 'all';
             return status.toLowerCase();

@@ -5,7 +5,6 @@ define('plugin/shop/toolbox/js/collection/filterTreeCategories', [
     'plugin/shop/toolbox/js/model/category',
     'default/js/lib/utils',
     'default/js/lib/cache'
-    // 'default/js/lib/backbone-pageable',
 ], function ($, _, Backbone, ModelCategory, Utils, Cache) {
 
     var CategoriesTree = Backbone.Collection.extend({

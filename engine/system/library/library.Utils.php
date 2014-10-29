@@ -112,6 +112,10 @@ class libraryUtils
         return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
     }
 
+    static public function getUploadTemporaryDirectory () {
+        return self::getUploadDirectory(DIR_TEMP);
+    }
+
     static public function getUploadDirectory ($realm = null) {
         $pluginUploadPath = DR . DIR_UPLOADS;
         if (!empty($realm)) {
@@ -128,7 +132,7 @@ class libraryUtils
     }
 
     static function moveTemporaryFile ($tmpFilePath, $targetDir, $customFileName = null) {
-        $tmpFile = self::getUploadDirectory('temp' . DS . $tmpFilePath);
+        $tmpFile = self::getUploadDirectory(DIR_TEMP . DS . $tmpFilePath);
         if (file_exists($tmpFile)) {
             $info = array();
             $targetDirFullPath = self::getUploadDirectory($targetDir);

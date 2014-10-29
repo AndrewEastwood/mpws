@@ -12,14 +12,11 @@ class objectPlugin implements IPlugin {
         $_pluginPath = glGetFullPath('web', 'plugin', $pluginName, 'api');
         $_apiFiles = glob($_pluginPath . '*.php');
         foreach ($_apiFiles as $apiFilePath) {
-
             $path_parts = pathinfo($apiFilePath);
             $apiFileName = $path_parts['filename'];
-
             // load plugin
             include $apiFilePath;
-            $apiObjectName = 'api'.ucfirst($pluginName).ucfirst($apiFileName);
-
+            $apiObjectName = 'api' . ucfirst($pluginName) . ucfirst($apiFileName);
             // save plugin instance
             $api[$apiFileName] = new $apiObjectName($customer, $this, $pluginName);
         }
@@ -46,38 +43,38 @@ class objectPlugin implements IPlugin {
     public function beforeRun () {}
     public function afterRun () {}
 
-    public function getUploadDirectory ($targetDir = null) {
+    public function getOwnUploadDirectory ($targetDir = null) {
         if (empty($targetDir)) {
             return libraryUtils::getUploadDirectory($this->getName());
         }
         return libraryUtils::getUploadDirectory($this->getName() . DS . $targetDir);
     }
-    public function getUploadWebPath ($targetDir = null) {
+    public function getOwnUploadPathWeb ($targetDir = null) {
         if (empty($targetDir)) {
             return libraryUtils::getUploadWebPath($this->getName());
         }
         return libraryUtils::getUploadWebPath($this->getName() . DS . $targetDir);
     }
 
-    public function getUploadedFile ($name, $targetDir = null) {
-        $dir = $this->getUploadDirectory($targetDir);
+    public function getOwnUploadedFile ($name, $targetDir = null) {
+        $dir = $this->getOwnUploadDirectory($targetDir);
         return $dir . DS . $name;
     }
 
-    public function getUploadedFileForWeb ($name, $targetDir = null) {
-        $dir = $this->getUploadWebPath($targetDir);
+    public function getOwnUploadedFileWeb ($name, $targetDir = null) {
+        $dir = $this->getOwnUploadPathWeb($targetDir);
         return $dir . DS . $name;
     }
 
-    public function saveUploadedFile ($tmpFilePath, $targetDir, $name = false) {
+    public function saveOwnUploadedFile ($tmpFilePath, $targetDir, $name = false) {
         $uniqueName = empty($name) ? mktime() : $name;
         $uploadedFileInfo = libraryUtils::moveTemporaryFile($tmpFilePath, $this->getName() . DS . $targetDir, $uniqueName);
         // $uploadedFileInfo['name'] = $uniqueName;
         return $uploadedFileInfo;
     }
 
-    public function deleteUploadedFile ($name, $targetDir) {
-        $dir = $this->getUploadDirectory($targetDir);
+    public function deleteOwnUploadedFile ($name, $targetDir) {
+        $dir = $this->getOwnUploadDirectory($targetDir);
         $filePath = $dir . DS . $name;
         if (file_exists($filePath)) {
             return unlink($filePath);

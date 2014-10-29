@@ -34,6 +34,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Reports: 'Звіти',
         pluginMenu_Settings: 'Налаштування',
         pluginMenu_Promo: 'Промо-коди',
+        pluginMenu_Feeds: 'Імпорт/Експорт',
         //
         productManager_Button_Create_Product: "Товар",
         productManager_Button_Create_Category: "Категорія",
@@ -194,5 +195,9 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         settings_validation_emptyDeliveryAgentName: 'Введіть назву перевізника',
         settings_msg_confirmation_delete_delivery: 'Видалити цей сервіс?',
         settings_msg_confirmation_delete_address: 'Видалити цю адресу?',
+        managerFeeds: {
+            titleImport: 'Згенеровані фіди',
+            titleExport: 'Завантажені фіди'
+        }
     }, CustomerPluginShop);
 });

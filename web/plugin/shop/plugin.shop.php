@@ -107,9 +107,9 @@ class pluginShop extends objectPlugin {
             foreach ($data as $item) {
                 $images[] = array(
                     'name' => $item['Value'],
-                    'normal' => $this->getUploadedFileForWeb($item['Value'], $this->getProductUploadDir($productID)),
-                    'sm' => $this->getUploadedFileForWeb($item['Value'], $this->getProductUploadDir($productID, 'sm')),
-                    'xs' => $this->getUploadedFileForWeb($item['Value'], $this->getProductUploadDir($productID, 'xs'))
+                    'normal' => $this->getOwnUploadedFileWeb($item['Value'], $this->getProductUploadDir($productID)),
+                    'sm' => $this->getOwnUploadedFileWeb($item['Value'], $this->getProductUploadDir($productID, 'sm')),
+                    'xs' => $this->getOwnUploadedFileWeb($item['Value'], $this->getProductUploadDir($productID, 'xs'))
                 );
             }
         }
@@ -345,9 +345,9 @@ class pluginShop extends objectPlugin {
                     if (isset($attributes["IMAGE"])) {
                         foreach ($attributes["IMAGE"] as $fileName) {
                             $newFileName = $ProductID . uniqid(time());
-                            $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                            $this->saveUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
-                            $this->saveUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
+                            $uploadInfo = $this->saveOwnUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
+                            $this->saveOwnUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
+                            $this->saveOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
@@ -564,15 +564,15 @@ class pluginShop extends objectPlugin {
                 $uploadedFileNames = array();
                 foreach ($filesToUpload as $fileName) {
                     $newFileName = $ProductID . uniqid(time());
-                    $uploadInfo = $this->saveUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                    $this->saveUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
-                    $this->saveUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
+                    $uploadInfo = $this->saveOwnUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
+                    $this->saveOwnUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
+                    $this->saveOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
                     $uploadedFileNames[] = $uploadInfo['filename'];
                 }
                 foreach ($filesToDelete as $fileName) {
-                    $this->deleteUploadedFile($fileName, $this->getProductUploadDir($ProductID, 'sm'));
-                    $this->deleteUploadedFile($fileName, $this->getProductUploadDir($ProductID, 'xs'));
-                    $this->deleteUploadedFile($fileName, $this->getProductUploadDir($ProductID));
+                    $this->deleteOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID, 'sm'));
+                    $this->deleteOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID, 'xs'));
+                    $this->deleteOwnUploadedFile($fileName, $this->getProductUploadDir($ProductID));
                 }
 
                 $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);

@@ -9,8 +9,9 @@ define('plugin/shop/toolbox/js/model/product', [
                 source: 'shop',
                 fn: 'product'
             };
-            if (!this.isNew())
+            if (!this.isNew()) {
                 _params.id = this.id;
+            }
             return APP.getApiLink(_params);
         },
         parse: function (data) {

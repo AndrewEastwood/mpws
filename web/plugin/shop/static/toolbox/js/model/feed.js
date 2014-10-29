@@ -1,20 +1,17 @@
-define('plugin/shop/toolbox/js/model/order', [
+define('plugin/shop/toolbox/js/model/feed', [
     'default/js/lib/backbone'
 ], function (Backbone) {
 
-    var Order = Backbone.Model.extend({
+    var Feed = Backbone.Model.extend({
         idAttribute: "ID",
         url: function () {
             var _params =  {
                 source: 'shop',
-                fn: 'order'
+                fn: 'feeds'
             };
-            if (!this.isNew()) {
-                _params.id = this.id;
-            }
             return APP.getApiLink(_params);
         }
     });
 
-    return Order;
+    return Feed;
 });

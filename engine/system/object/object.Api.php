@@ -16,7 +16,7 @@ class objectApi implements IApi {
     public function getCustomerDataBase () {
         return $this->customer->getDataBase();
     }
-    public function getPlugin ($pluginName) {
+    public function getPlugin () {
         return $this->plugin;
     }
     public function getAnotherPlugin ($pluginName) {

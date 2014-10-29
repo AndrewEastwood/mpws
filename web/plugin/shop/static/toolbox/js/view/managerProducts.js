@@ -1,3 +1,4 @@
+// this is a part of managerContent so it's better to move all into manager
 define("plugin/shop/toolbox/js/view/managerProducts", [
     'default/js/lib/sandbox',
     'default/js/lib/cache',
@@ -17,17 +18,11 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         lang: lang,
         events: {
             'itemAdded .search': 'search',
-            'itemRemoved .search': 'search',
-            'click .import-feed-products': 'downloadProducts',
-            'click .export-feed-products': 'uploadProducts'
+            'itemRemoved .search': 'search'
         },
         initialize: function (options) {
-            // _.bindAll(this);
-            ViewListProducts.prototype.initialize.call(this);
-
-            // this.setOptions(options);
             this.options = options || {};
-
+            ViewListProducts.prototype.initialize.call(this, options);
             // debugger;
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             if (this.options.status) {
@@ -85,9 +80,7 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         search: function () {
             this.collection.setCustomQueryParam("Search", $(".search").tagsinput('items'));
             this.collection.fetch();
-        },
-        downloadProducts: function () {},
-        uploadProducts: function () {}
+        }
     });
 
     return ManagerContent_Products;

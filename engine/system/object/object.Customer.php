@@ -136,7 +136,7 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
         $options = array(
             'script_url' => '/upload.js?',
             'download_via_php' => true,
-            'upload_dir' => DR . DIR_TMP_UPLOADS . DS,
+            'upload_dir' => libraryUtils::getUploadTemporaryDirectory(),
             'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
             // 'upload_url' => '/contents.js?',
             // 'correct_image_extensions' => true
