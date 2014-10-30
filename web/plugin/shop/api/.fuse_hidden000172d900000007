@@ -1,0 +1,106 @@
+<?php
+
+class apiShopFeeds extends objectApi {
+
+    public function getDirNameFeeds () {
+        return 'feeds';
+    }
+
+    public function getUploadedFeedName () {
+        return 'import_' . date('YmdHis');
+    }
+
+    public function getGeneratedFeedName () {
+        return 'gen_' . date('YmdHis');
+    }
+
+    public function getGeneratedFeedDownloadLink ($name) {
+        return $this->getPlugin()->getOwnUploadedFileWeb($name, $this->getDirNameFeeds());
+    }
+
+    public function getFeedsPath () {
+        return $this->getPlugin()->getOwnUploadDirectory($this->getDirNameFeeds());
+    }
+
+    public function getGeneratedFeedsFilesList () {
+        return glob($this->getFeedsPath() . DS . 'gen_*\.xls');
+    }
+
+    public function getUploadedFeedsFilesList () {
+        return glob($this->getFeedsPath() . DS . 'import_*\.xls');
+    }
+
+    public function getFeeds () {
+        $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
+        $listFeedsUploaded = $this->getUploadedFeedsFilesList();
+        $feeds = array();
+
+        foreach ($listFeedsGenerated as $value) {
+            $pInfo = pathinfo($value);
+            $ftime = filectime($value);
+            $feeds[] = array(
+                'ID' => md5($pInfo['filename']),
+                'type' => 'generated',
+                'time' => $ftime,
+                'timeFormatted' => date('Y-m-d H:i:s', $ftime),
+                'name' => $pInfo['filename'],
+                'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
+            );
+        }
+        foreach ($listFeedsUploaded as $value) {
+            $pInfo = pathinfo($value);
+            $ftime = filectime($value);
+            $feeds[] = array(
+                'ID' => md5($pInfo['filename']),
+                'type' => 'uploaded',
+                'time' => $ftime,
+                'timeFormatted' => date('Y-m-d H:i:s', $ftime),
+                'name' => $pInfo['filename'],
+                'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
+            );
+        }
+
+        return $feeds;
+    }
+
+    public function importProductFeed () {
+
+    }
+
+    public function generateProductFeed () {
+        $options = array('limit' => 0);
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+            ->setLastModifiedBy("Maarten Balliauw")
+            ->setTitle("PHPExcel Test Document")
+            ->setSubject("PHPExcel Test Document")
+            ->setDescription("Test document for PHPExcel, generated using PHP classes.")
+            ->setKeywords("office PHPExcel php")
+            ->setCategory("Test result file");
+        $dataList = $this->getPlugin()->getProducts_List($options, false, false);
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Hello')
+            ->setCellValue('B2', 'world!')
+            ->setCellValue('C1', 'Hello')
+            ->setCellValue('D2', 'world!');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save($this->getFeedsPath() . $this->getGeneratedFeedName() . '.xls');
+        return $dataList;
+    }
+
+    public function get (&$resp, $req) {
+        $resp = $this->getFeeds();
+    }
+
+    public function post (&$resp, $req) {
+        if (isset($req->get['generate'])) {
+            $resp = $this->generateProductFeed();
+        } elseif (isset($resp['files'])) {
+            foreach ($resp['files'] as $tempFileItem) {
+                $this->getPlugin()->saveOwnTemporaryUploadedFile($tempFileItem->name, $this->getDirNameFeeds(), $this->getUploadedFeedName());
+            }
+        }
+    }
+}
+
+?>
