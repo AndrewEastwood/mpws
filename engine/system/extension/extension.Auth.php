@@ -81,41 +81,17 @@ class extensionAuth extends objectExtension {
         $config["fields"] = array("ID");
         $config["condition"]["Status"] = configurationCustomerDataSource::jsapiCreateDataSourceCondition('REMOVED', '!=');
         $account = $this->getCustomer()->fetch($config);
-
         $AccountID = null;
-
         // var_dump($config);
-
         if (empty($account))
             $resp['error'] = 'WrongCredentials';
         else {
             $AccountID = intval($account['ID']);
-            // $accountObj->setData('profile', $account);
-            // var_dump($account);
-            // if (glIsToolbox() && empty($account['IsAdmin']))
-            //     return $this->post_signout($resp);
-
-            // keep user logged in
-            // if (!empty($remember)) {
-            //     /* Set cookie to last 1 year */
-            //     // setcookie('username', $email, time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
-            //     // setcookie('password', $account['Password'], time()+60*60*24*365, '/', $_SERVER['SERVER_NAME']);
-            
-            // } else {
-            //     /* Cookie expires when browser closes */
-            //     // setcookie('username', $email, false, '/', $_SERVER['SERVER_NAME']);
-            //     // setcookie('password', $account['Password'], false, '/', $_SERVER['SERVER_NAME']);
-            // }
-
             $_SESSION['AccountID'] = $AccountID;
-
             // set online state for account
             $configOnline = configurationCustomerDataSource::jsapiSetOnlineAccount($AccountID);
             $this->getCustomer()->fetch($configOnline);
-
         }
-
-        // $resp['account_id'] = $AccountID;
         $resp['auth_id'] = $this->getAuthID();
         $this->updateSessionAuth();
     }
@@ -124,8 +100,6 @@ class extensionAuth extends objectExtension {
     public function post_signout (&$resp) {
         $resp['auth_id'] = $this->clearAuthID();
         $this->updateSessionAuth();
-        // $this->getAuthID();
-        // $resp['authenticated'] = false;
     }
 }
 

@@ -13,10 +13,8 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
         $this->dbo = new libraryDataBase(configurationCustomerDatabase::$DBOini);
 
         // init extensions
-        // $this->extensions['Auth'] = new extensionAuth($this);
-        // $this->extensions['DataInterface'] = new extensionDataInterface($this);
-        $this->addExtension(new extensionAuth($this));
-        $this->addExtension(new extensionDataInterface($this));
+        $this->addExtension(new extensionAuth($this)); // move to middleware
+        $this->addExtension(new extensionDataInterface($this)); // thinnk to optmize
 
         // init plugins
         $_pluginPath = glGetFullPath('web', 'plugin');
@@ -108,11 +106,10 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
         // libraryResponse::$_RESPONSE['authenticated'] = $this->getPlugin('account')->isAuthenticated();
         // libraryResponse::$_RESPONSE['script'] = libraryRequest::getScriptName();
 
+        // refresh auth
         $this->updateSessionAuth();
         foreach ($this->plugins as $plugin)
             $plugin->run();
-
-        // libraryResponse::$_RESPONSE['auth_id'] = $authID;
     }
 
     public function runAsAUTH () {
@@ -130,19 +127,18 @@ class objectCustomer extends objectMultiExtendable implements ICustomer {
          * http://www.opensource.org/licenses/MIT
          */
         $options = array(
-            'script_url' => configurationDefaultUrl::$upload,
+            'script_url' => configurationDefaultUrls::$upload,
             'download_via_php' => true,
             'upload_dir' => libraryUtils::getUploadTemporaryDirectory(),
             'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
         );
         $upload_handler = new libraryUploadHandler($options);
         libraryResponse::$_RESPONSE = $upload_handler->get_response();
-        // get auth id
+        // refresh auth
         $this->updateSessionAuth();
         // bypass response to all plugins
         foreach ($this->plugins as $plugin)
             $plugin->run();
-        // libraryResponse::$_RESPONSE['auth_id'] = $authID;
     }
 
 }

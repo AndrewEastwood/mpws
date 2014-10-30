@@ -13,11 +13,19 @@ define('plugin/shop/toolbox/js/collection/feeds', [
             source: 'shop',
             fn: 'feeds'
         }),
-        parse: function (data) {
-            return data.feeds;
+        comparator: function (model) {
+            return -model.get('time');
         },
         generateNewProductFeed: function () {
-            alert('generating feed');
+            var that = this,
+                jobUrl = APP.getApiLink({
+                    source: 'shop',
+                    fn: 'feeds',
+                    generate: true
+                });
+            Backbone.$.post(jobUrl, function () {
+                that.fetch({reset: true});
+            });
         }
     });
 

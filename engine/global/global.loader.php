@@ -26,7 +26,7 @@
 
         if (count($pieces) <= 1) {
             //throw new Exception('Wrong loading library name: ' . $className);
-            $libPath = '/engine/system/class/' . $className;
+            $libPath = '/engine/system/library/' . $className;
         } else {
             switch ($pieces[0]) {
                 case 'controller': {
@@ -98,34 +98,15 @@
                     break;
                 }
                 default: {
-                    $libPath = '/engine/system/class/' . $pieces[0];
+                    $libPath = '/engine/system/library/' . $pieces[0];
                     break;
                 }
             }
 
-            require_once $_SERVER['DOCUMENT_ROOT'] . $libPath . $libName . EXT_SCRIPT;
-
-            // _import($libPath . $libName . '.php');
+            $libPath = $_SERVER['DOCUMENT_ROOT'] . $libPath . $libName . EXT_SCRIPT;
+            if (file_exists($libPath))
+                require_once $libPath;
         }
-    }
-    
-    function _import ($path) {
-        $DR = $_SERVER['DOCUMENT_ROOT'];
-        // if (startsWith($path, 'extension@')) {
-        //     $extPkg = explode('@', $path);
-        //     $extLibPath = '/engine/system/extension/';
-        //     $extMap = parse_ini_file($DR . $extLibPath . 'extension_map.ini', true);
-        //     //var_dump($extMap);
-        //     // set extension path
-        //     if (!empty($extMap[$extPkg[1]]))
-        //         $path = $extLibPath . $extMap[$extPkg[1]];
-        // }
-        $libPath = $DR . $path;
-        //echo '<br> |+++++ ' . $libPath;
-        // if (!file_exists($libPath))
-            // ;//throw new Exception('Requested library ('.$libPath.') does not exist.');
-        if (file_exists($libPath))
-            require_once $libPath;
     }
 
 ?>

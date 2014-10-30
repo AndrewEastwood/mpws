@@ -87,6 +87,7 @@ class pluginShop extends objectPlugin {
         // is available
         $product['_available'] = in_array($product['Status'], array("ACTIVE", "DISCOUNT", "PREORDER", "DEFECT"));
         $product['_archived'] = in_array($product['Status'], array("ARCHIVED"));
+        // need to use as separate request
         $product['_featuresTree'] = $this->getFeatures_Tree();
 
         // $product['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
@@ -193,15 +194,15 @@ class pluginShop extends objectPlugin {
         return 'products' . DS . $productID;
     }
 
-    public function getProducts_List (array $options = array()) {
+    public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
         $config = configurationShopDataSource::jsapiShopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
-            "parse" => function ($items) use($self) {
+            "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID']);
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], $saveIntoRecent, $skipRelations);
                 }
                 return $_items;
             }
