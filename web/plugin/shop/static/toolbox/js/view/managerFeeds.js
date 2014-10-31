@@ -21,7 +21,8 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
         className: 'shop-manager-feeds',
         events: {
             'click .start-import': 'importFeed',
-            'click .generate': 'generateFeed'
+            'click .generate': 'generateFeed',
+            'click .delete-uploaded': 'deleteUploadedFeed'
         },
         initialize: function (options) {
             this.options = options || {};
@@ -48,7 +49,7 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
                 self.$('#progress .progress-bar').css('width', progress + '%');
             }).on('fileuploadprocessalways', function (e, data) {
             }).on('fileuploaddone', function (e, data) {
-                that.collection.fetch({reset: true})
+                that.collection.fetch({reset: true});
             });
             return this;
         },
@@ -70,7 +71,30 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
             }
             BootstrapDialog.confirm('Import ' + feedModel.get('name') + ' feed?', function (rez) {
                 if (rez) {
-                    feedModel.importUploadedProductFeed();
+                    feedModel.importUploadedProductFeed({
+                        patch: true,
+                        success: function () {
+                            that.collection.fetch({reset: true});
+                        }
+                    });
+                }
+            });
+        },
+        deleteUploadedFeed: function (event) {
+            var that = this,
+                $feedItem = $(event.target).closest('.feed-item'),
+                feedID = $feedItem.length && $feedItem.data('id'),
+                feedModel = this.collection.get(feedID);
+            if (!feedModel) {
+                return;
+            }
+            BootstrapDialog.confirm('Delete ' + feedModel.get('name') + ' feed?', function (rez) {
+                if (rez) {
+                    feedModel.destroy({
+                        success: function () {
+                            that.collection.fetch({reset: true});
+                        }
+                    });
                 }
             });
         }

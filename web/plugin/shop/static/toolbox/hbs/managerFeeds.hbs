@@ -10,7 +10,7 @@
                 {{#each data}}
                     {{#if_eq type 'generated'}}
                     <a class="list-group-item feed-item" href="{{link}}" target="_blank" title="{{name}}" data-id="{{ID}}">
-                        <span class="time badge pull-left">{{timeFormatted}}</span>
+                        <span class="time badge pull-left">{{fromNowHumanized}}</span>
                         <span class="name">{{name}}</span>
                         <i class="fa fa-download pull-right text-info"></i>
                     </a>
@@ -34,7 +34,8 @@
                 {{#each data}}
                     {{#if_eq type 'uploaded'}}
                     <a class="list-group-item feed-item" href="javascript://" target="_blank" title="{{name}}" data-id="{{ID}}">
-                        <span class="time badge pull-left">{{timeFormatted}}</span>
+                        <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
+                        <span class="time badge pull-left">{{fromNowHumanized}}</span>
                         <span class="name">{{name}}</span>
                         <i class="fa fa-play pull-right text-info start-import"></i>
                     </a>

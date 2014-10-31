@@ -7,11 +7,11 @@ class apiShopFeeds extends objectApi {
     }
 
     public function getUploadedFeedName () {
-        return 'import_' . date('YmdHis');
+        return 'import_' . date('Ymd_His');
     }
 
     public function getGeneratedFeedName () {
-        return 'gen_' . date('YmdHis');
+        return 'gen_' . date('Ymd_His');
     }
 
     public function getGeneratedFeedDownloadLink ($name) {
@@ -22,18 +22,38 @@ class apiShopFeeds extends objectApi {
         return $this->getPlugin()->getOwnUploadDirectory($this->getDirNameFeeds());
     }
 
+    public function getFeedFilePathByName ($feedName) {
+        return $this->getFeedsPath() . $feedName . '.xls';
+    }
+
     public function getGeneratedFeedsFilesList () {
-        return glob($this->getFeedsPath() . DS . 'gen_*\.xls');
+        return glob($this->getFeedsPath() . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsFilesList () {
-        return glob($this->getFeedsPath() . DS . 'import_*\.xls');
+        return glob($this->getFeedsPath() . 'import_*\.xls');
     }
 
     public function getFeeds () {
-        $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
-        $listFeedsUploaded = $this->getUploadedFeedsFilesList();
+        $attempts = 20;
         $feeds = array();
+
+        do {
+            $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
+            if (count($listFeedsGenerated) > 10) {
+                unlink($listFeedsGenerated[0]);
+            }
+            $attempts--;
+        } while (count($listFeedsGenerated) > 10 && $attempts > 0);
+
+        $attempts = 20;
+        do {
+            $listFeedsUploaded = $this->getUploadedFeedsFilesList();
+            if (count($listFeedsUploaded) > 10) {
+                unlink($listFeedsUploaded[0]);
+            }
+            $attempts--;
+        } while (count($listFeedsUploaded) > 10 && $attempts > 0);
 
         foreach ($listFeedsGenerated as $value) {
             $pInfo = pathinfo($value);
@@ -64,7 +84,12 @@ class apiShopFeeds extends objectApi {
     }
 
     public function importProductFeed () {
-
+        $url = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
+        $urlInfo = pathinfo($url);
+        $ext = $urlInfo['extension'];
+        $img = libraryUtils::getUploadTemporaryDirectory() . time() . '.' . $ext;
+        file_put_contents($img, file_get_contents($url));
+        var_dump($url . ' ==>' . $img);
     }
 
     public function generateProductFeed () {
@@ -90,11 +115,32 @@ class apiShopFeeds extends objectApi {
             ->setCellValue('I1', 'TAGS')
             ->setCellValue('J1', 'Description')
             ->setCellValue('K1', 'Features');
+        $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);
         for ($i = 0, $j = 2, $len = count($dataList['items']); $i < $len; $i++, $j++) {
             $images = array();
+            $features = array();
+            $tags = '';
+            // $expire = '';
+            // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
                     $images[] = 'http://' . $_SERVER['HTTP_HOST'] . $value['normal'];
+                }
+            }
+            if (isset($dataList['items'][$i]['Attributes'])) {
+                if (isset($dataList['items'][$i]['Attributes']['TAGS'])) {
+                    $tags = $dataList['items'][$i]['Attributes']['TAGS'];
+                }
+                // if (isset($dataList['items'][$i]['Attributes']['EXPIRE'])) {
+                //     $expire = $dataList['items'][$i]['Attributes']['EXPIRE'];
+                // }
+                // if (isset($dataList['items'][$i]['Attributes']['ISBN'])) {
+                //     $isbn = $dataList['items'][$i]['Attributes']['ISBN'];
+                // }
+            }
+            if (isset($dataList['items'][$i]['Features'])) {
+                foreach ($dataList['items'][$i]['Features'] as $featureGroupName => $featureGroupItems) {
+                    $features[] = $featureGroupName . '=' . join(',', array_values($featureGroupItems));
                 }
             }
             $objPHPExcel->getActiveSheet()->setCellValue('A' . $j, $dataList['items'][$i]['Name']);
@@ -105,9 +151,9 @@ class apiShopFeeds extends objectApi {
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $j, $dataList['items'][$i]['Status']);
             $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo']);
             $objPHPExcel->getActiveSheet()->setCellValue('H' . $j, implode(PHP_EOL, $images));
-            $objPHPExcel->getActiveSheet()->setCellValue('I' . $j, '');//$dataList['items'][$i]['TAGS']);
+            $objPHPExcel->getActiveSheet()->setCellValue('I' . $j, $tags);
             $objPHPExcel->getActiveSheet()->setCellValue('J' . $j, $dataList['items'][$i]['Description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, '');//$dataList['items'][$i]['Features']);
+            $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
         }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save($this->getFeedsPath() . $this->getGeneratedFeedName() . '.xls');
@@ -126,6 +172,22 @@ class apiShopFeeds extends objectApi {
                 $this->getPlugin()->saveOwnTemporaryUploadedFile($tempFileItem->name, $this->getDirNameFeeds(), $this->getUploadedFeedName());
             }
         }
+    }
+    public function patch (&$resp, $req) {
+        if (isset($req->data['import']) && isset($req->get['name'])) {
+            $resp = $this->importProductFeed($req->get['name']);
+        }
+    }
+
+    public function delete (&$resp, $req) {
+        $success = false;
+        if (isset($req->get['name'])) {
+            $feedPath = $this->getFeedFilePathByName($req->get['name']);
+            if (file_exists($feedPath)) {
+                $success = unlink($feedPath);
+            }
+        }
+        $resp['success'] = $success;
     }
 }
 
