@@ -1350,7 +1350,7 @@ class libraryUploadHandler
         return $this->generate_response($response, $print_response);
     }
 
-    public function importFromUrl ($url, $print_response = true) {
+    public function importFromUrl ($urls, $print_response = true) {
         $files = array();
         $content_range = $this->get_server_var('HTTP_CONTENT_RANGE') ?
             preg_split('/[^0-9]+/', $this->get_server_var('HTTP_CONTENT_RANGE')) : null;
@@ -1358,33 +1358,18 @@ class libraryUploadHandler
         if (!is_dir($web_import_dir)) {
             mkdir($web_import_dir, $this->options['mkdir_mode'], true);
         }
-        if (is_array($url)) {
-            foreach ($url as $value) {
-                $pInfo = pathinfo($value);
-                $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($pInfo['extension']);
-                $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
-                $content = file_get_contents($value);
-                $size = file_put_contents($tmpFile, $content);
-                $files[] = $this->handle_file_upload(
-                    $tmpFile,
-                    $pInfo['basename'],
-                    $size,
-                    $this->get_server_var('CONTENT_TYPE'),
-                    null,
-                    null,
-                    $content_range,
-                    true
-                );
-            }
-        } else {
-            $pInfo = pathinfo($url);
+        if (!is_array($urls)) {
+            $urls = array($urls);
+        }
+        foreach ($urls as $fileUrl) {
+            $pInfo = pathinfo($fileUrl);
             $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($pInfo['extension']);
             $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
-            $content = file_get_contents($url);
+            $content = file_get_contents($fileUrl);
             $size = file_put_contents($tmpFile, $content);
             $files[] = $this->handle_file_upload(
                 $tmpFile,
-                $fileName,
+                $pInfo['basename'],
                 $size,
                 $this->get_server_var('CONTENT_TYPE'),
                 null,
