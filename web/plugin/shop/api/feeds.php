@@ -84,12 +84,19 @@ class apiShopFeeds extends objectApi {
     }
 
     public function importProductFeed () {
-        $url = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
-        $urlInfo = pathinfo($url);
-        $ext = $urlInfo['extension'];
-        $img = libraryUtils::getUploadTemporaryDirectory() . time() . '.' . $ext;
-        file_put_contents($img, file_get_contents($url));
-        var_dump($url . ' ==>' . $img);
+        $urls = array();
+        $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
+        $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
+        $options = array(
+            'script_url' => configurationDefaultUrls::$upload,
+            'download_via_php' => true,
+            'web_import_temp_dir' => libraryUtils::getAppTemporaryDirectory(),
+            'upload_dir' => libraryUtils::getUploadTemporaryDirectory(),
+            'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
+        );
+        $upload_handler = new libraryUploadHandler($options, false);
+        $rez = $upload_handler->importFromUrl($urls, false);
+        return $rez;
     }
 
     public function generateProductFeed () {

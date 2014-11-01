@@ -44,7 +44,6 @@ class libraryUploadHandler
         $this->response = array();
         $this->options = array(
             'script_url' => $this->get_full_url().'/',
-            'web_import_temp_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/web_imports/',
             'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/',
             'upload_url' => $this->get_full_url().'/files/',
             'user_dirs' => false,
@@ -210,18 +209,18 @@ class libraryUploadHandler
         return '';
     }
 
-    protected function get_upload_path($file_name = null, $version = null, $type = 'upload_dir') {
+    protected function get_upload_path($file_name = null, $version = null) {
         $file_name = $file_name ? $file_name : '';
         if (empty($version)) {
             $version_path = '';
         } else {
-            $version_dir = @$this->options['image_versions'][$version][$type];
+            $version_dir = @$this->options['image_versions'][$version]['upload_dir'];
             if ($version_dir) {
                 return $version_dir.$this->get_user_path().$file_name;
             }
             $version_path = $version.'/';
         }
-        return $this->options[$type].$this->get_user_path()
+        return $this->options['upload_dir'].$this->get_user_path()
             .$version_path.$file_name;
     }
 
@@ -284,6 +283,10 @@ class libraryUploadHandler
                 clearstatcache();
             }
         }
+        var_dump('get file size >>>>>>');
+        var_dump($file_path);
+        var_dump(filesize($file_path));
+        var_dump('<<<< get file size');
         return $this->fix_integer_overflow(filesize($file_path));
     }
 
@@ -1034,7 +1037,7 @@ class libraryUploadHandler
     }
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
-            $index = null, $content_range = null, $isUrlImport = false) {
+            $index = null, $content_range = null) {
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1060,8 +1063,6 @@ class libraryUploadHandler
                 } else {
                     move_uploaded_file($uploaded_file, $file_path);
                 }
-            } elseif ($isUrlImport) {
-                rename($uploaded_file, $file_path);
             } else {
                 // Non-multipart uploads (PUT method support)
                 file_put_contents(
@@ -1071,6 +1072,11 @@ class libraryUploadHandler
                 );
             }
             $file_size = $this->get_file_size($file_path, $append_file);
+            var_dump($file_path);
+            var_dump($append_file);
+            var_dump($file_size);
+            var_dump($file->size);
+            var_dump($size);
             if ($file_size === $file->size) {
                 $file->url = $this->get_download_url($file->name);
                 if ($this->is_valid_image_file($file_path)) {
@@ -1354,15 +1360,13 @@ class libraryUploadHandler
         $files = array();
         $content_range = $this->get_server_var('HTTP_CONTENT_RANGE') ?
             preg_split('/[^0-9]+/', $this->get_server_var('HTTP_CONTENT_RANGE')) : null;
-        $web_import_dir = $this->get_upload_path(null, null, 'web_import_temp_dir');
-        if (!is_dir($web_import_dir)) {
-            mkdir($web_import_dir, $this->options['mkdir_mode'], true);
-        }
         if (is_array($url)) {
+            var_dump('START IMAGES ARRAY IMPORT FROM WEB');
             foreach ($url as $value) {
                 $pInfo = pathinfo($value);
-                $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($pInfo['extension']);
-                $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
+                $tmpFile = $this->get_upload_path(time() . '.' . $pInfo['extension']);
+                // $tempFile = tempnam(sys_get_temp_dir(), 'webuploads');
+                var_dump($tmpFile);
                 $content = file_get_contents($value);
                 $size = file_put_contents($tmpFile, $content);
                 $files[] = $this->handle_file_upload(
@@ -1372,14 +1376,16 @@ class libraryUploadHandler
                     $this->get_server_var('CONTENT_TYPE'),
                     null,
                     null,
-                    $content_range,
-                    true
+                    $content_range
                 );
             }
         } else {
+            var_dump('START ONE IMAGE IMPORT FROM WEB');
             $pInfo = pathinfo($url);
-            $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($pInfo['extension']);
-            $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
+            $fileName = time() . '.' . $pInfo['extension'];
+            $tmpFile = $this->get_upload_path($fileName);
+            // $tempFile = tempnam(sys_get_temp_dir(), 'webuploads');
+            var_dump($tmpFile);
             $content = file_get_contents($url);
             $size = file_put_contents($tmpFile, $content);
             $files[] = $this->handle_file_upload(
@@ -1389,8 +1395,7 @@ class libraryUploadHandler
                 $this->get_server_var('CONTENT_TYPE'),
                 null,
                 null,
-                $content_range,
-                true
+                $content_range
             );
         }
         $response = array('web' => $files);

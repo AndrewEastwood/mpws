@@ -116,6 +116,10 @@ class libraryUtils
         return self::getUploadDirectory(DIR_TEMP) . DS;
     }
 
+    static public function getAppTemporaryDirectory () {
+        return self::getUploadDirectory('_tmp_' . date('Ymd_H')) . DS;
+    }
+
     static public function getUploadDirectory ($realm = null) {
         $pluginUploadPath = DR . DIR_UPLOADS;
         if (!empty($realm)) {
