@@ -12,8 +12,8 @@ include $DR . '/engine/bootstrap.php';
 $globals = glob($DR . '/engine/global/global.*.php');
 foreach ($globals as $globalFile)
     require_once $globalFile;
-//librarySecurity::wwwAuth();
-if (!librarySecurity::cookieAuth()) {
+//\engine\lib\security::wwwAuth();
+if (!\engine\lib\security::cookieAuth()) {
     echo '<form method="post" action="">
         <input type="text" name="user" value=""/>
         <input type="text" name="pwd" value=""/>

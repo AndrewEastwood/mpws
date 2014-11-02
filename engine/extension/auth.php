@@ -76,7 +76,7 @@ class auth extends \engine\object\extension {
             return;
         }
 
-        $password = librarySecure::EncodeAccountPassword($password);
+        $password = \engine\lib\secure::EncodeAccountPassword($password);
 
         $config = configurationCustomerDataSource::jsapiGetAccountByCredentials($email, $password);
         // avoid removed account

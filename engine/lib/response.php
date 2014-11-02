@@ -14,7 +14,7 @@ class response {
     }
 
     static function sendResponse () {
-        $output = new libraryDataObject(self::$_RESPONSE);
+        $output = new \engine\lib\dataobject(self::$_RESPONSE);
         $_out = $output->toJSON();
         if ($_out === "null")
             echo "{}";

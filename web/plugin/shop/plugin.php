@@ -1161,7 +1161,7 @@ class plugin extends basePlugin {
                 $formAddressID = null;
 
                 // create new account
-                $new_password = librarySecure::generateStrongPassword();
+                $new_password = \engine\lib\secure::generateStrongPassword();
 
                 $account = $pluginAccount->createAccount(array(
                     "FirstName" => $formSettings['ShowName']['_isActive'] ? $reqData['form']['shopCartUserName'] : $pluginAccount->getEmptyUserName(),

@@ -12,8 +12,8 @@ include $DR . '/engine/bootstrap.php';
 $globals = glob($DR . '/engine/global/global.*.php');
 foreach ($globals as $globalFile)
     require_once $globalFile;
-//librarySecurity::wwwAuth();
-if (!librarySecurity::cookieAuth()) {
+//\engine\lib\security::wwwAuth();
+if (!\engine\lib\security::cookieAuth()) {
     echo '<form method="post" action="">
         <input type="text" name="user" value=""/>
         <input type="text" name="pwd" value=""/>
@@ -28,7 +28,7 @@ if (!librarySecurity::cookieAuth()) {
 //echo '<pre>' . print_r($_GET, true) . '</pre>';
 // remove single directory
 if (!empty($_GET['remove']) && is_dir($_GET['remove']) && file_exists($_GET['remove']))
-    libraryFileManager::rrmdir($_GET['remove'], null, true);
+    \engine\lib\filemanager::rrmdir($_GET['remove'], null, true);
 
 // get temp files
 $TEMP = glob(DR . DS . 'data'.DS.'temp'.DS.'*');

@@ -98,7 +98,7 @@ class feeds extends \engine\object\api {
         // $upload_handler = new \engine\lib\uploadHandler($options, false);
         // $rez = $upload_handler->importFromUrl($urls, false);
         var_dump(DR);
-        \engine\system\library\utilphp\util::var_dump(1);
+        \engine\lib\util::var_dump(1);
         return $rez;
     }
 

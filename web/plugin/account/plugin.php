@@ -108,8 +108,8 @@ class plugin extends basePlugin {
                 $data["LastName"] = $validatedValues['LastName'];
                 $data["EMail"] = $validatedValues['EMail'];
                 $data["Phone"] = $validatedValues['Phone'];
-                $data["Password"] = librarySecure::EncodeAccountPassword($validatedValues['Password']);
-                $data["ValidationString"] = librarySecure::EncodeAccountPassword(time());
+                $data["Password"] = \engine\lib\secure::EncodeAccountPassword($validatedValues['Password']);
+                $data["ValidationString"] = \engine\lib\secure::EncodeAccountPassword(time());
                 $configCreateAccount = configurationDefaultDataSource::jsapiAddAccount($data);
                 $AccountID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
 
@@ -182,7 +182,7 @@ class plugin extends basePlugin {
 
                 if (count($dataAccount)) {
                     if (isset($dataAccount['Password'])) {
-                        $dataAccount['Password'] = librarySecure::EncodeAccountPassword($validatedValues['Password']);
+                        $dataAccount['Password'] = \engine\lib\secure::EncodeAccountPassword($validatedValues['Password']);
                         unset($dataAccount['ConfirmPassword']);
                     }
                     $configUpdateAccount = configurationDefaultDataSource::jsapiUpdateAccount($AccountID, $dataAccount);
