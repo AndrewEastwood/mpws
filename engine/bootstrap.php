@@ -1,4 +1,5 @@
 <?php
+    namespace engine;
 
     // detect running customer name
     define('DR', glGetDocumentRoot());
@@ -19,7 +20,7 @@
     $PHP_INPUT = file_get_contents('php://input');
 
     // include global files
-    $globals = glob(DR . '/engine/global/global.*.php');
+    $globals = glob(DR . '/engine/global/*.php');
     foreach ($globals as $globalFile)
         require_once $globalFile;
 
@@ -54,6 +55,11 @@
     function glIsToolbox () {
         return preg_match("/^" . MPWS_TOOLBOX . "\./", $_SERVER['HTTP_HOST']) > 0;
         // return preg_match("/^\/toolbox\//", $_SERVER['REQUEST_URI']) > 0;
+    }
+
+    function startApplication () {
+        \engine\lib\customer::runCustomer();
+        \engine\lib\response::sendResponse();
     }
 
 ?>

@@ -45,7 +45,7 @@ server {
     server_name pb.com.ua www.pb.com.ua;
     access_log /var/www/mpws/nginx.access.log;
     error_log /var/www/mpws/nginx.error.log;
-    index /engine/controller/controller.display.php;
+    index /engine/controller/display.php;
 
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -60,25 +60,25 @@ server {
 
 
     location /static {
-      rewrite ^/static/customer/([\.a-z_-]+)/nls/(.*) /engine/controller/controller.nls.php?customer=$1&lang=$2 last;
+      rewrite ^/static/customer/([\.a-z_-]+)/nls/(.*) /engine/controller/nls.php?customer=$1&lang=$2 last;
       rewrite ^/static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
     }
 
     location /toolbox {
-        rewrite ^/toolbox/api\.js?(.*) /engine/controller/controller.api.php?$1 last;
-        rewrite ^/toolbox/?(.*) /engine/controller/controller.display.php?$1 last;
+        rewrite ^/toolbox/api\.js?(.*) /engine/controller/api.php?$1 last;
+        rewrite ^/toolbox/?(.*) /engine/controller/display.php?$1 last;
     }
 
     location /api {
-      rewrite ^/api\.js(.*) /engine/controller/controller.api.php?$1 last;
+      rewrite ^/api\.js(.*) /engine/controller/api.php?$1 last;
     }
 
     location /auth {
-      rewrite ^/auth\.js(.*) /engine/controller/controller.auth.php?$1 last;
+      rewrite ^/auth\.js(.*) /engine/controller/auth.php?$1 last;
     }
 
     location /upload {
-      rewrite ^/upload\.js(.*) /engine/controller/controller.upload.php?$1 last;
+      rewrite ^/upload\.js(.*) /engine/controller/upload.php?$1 last;
     }
 
 }

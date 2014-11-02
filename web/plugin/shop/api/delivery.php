@@ -1,6 +1,7 @@
 <?php
+namespace web\plugin\shop\api;
 
-class apiShopDelivery extends objectApi {
+class delivery extends \engine\object\api {
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -37,7 +38,7 @@ class apiShopDelivery extends objectApi {
         $success = false;
         $deliveryID = null;
 
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
@@ -80,7 +81,7 @@ class apiShopDelivery extends objectApi {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
             'Status' => array('string', 'skipIfUnset')

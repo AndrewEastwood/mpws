@@ -1,13 +1,13 @@
 Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
-DirectoryIndex /engine/controller/controller.display.php
+DirectoryIndex /engine/controller/display.php
 
 # STATIC:
-RewriteRule ^static/customer/(.*)/nls/(.*) /engine/controller/controller.nls.php?customer=$1&lang=$2 [L]
+RewriteRule ^static/customer/(.*)/nls/(.*) /engine/controller/nls.php?customer=$1&lang=$2 [L]
 RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
 
 # API
-RewriteRule ^api\.js?(.*) /engine/controller/controller.api.php?$1 [QSA,L]
-RewriteRule ^auth\.js?(.*) /engine/controller/controller.auth.php?$1 [QSA,L]
-RewriteRule ^upload\.js?(.*) /engine/controller/controller.upload.php?$1 [QSA,L]
+RewriteRule ^api\.js?(.*) /engine/controller/api.php?$1 [QSA,L]
+RewriteRule ^auth\.js?(.*) /engine/controller/auth.php?$1 [QSA,L]
+RewriteRule ^upload\.js?(.*) /engine/controller/upload.php?$1 [QSA,L]

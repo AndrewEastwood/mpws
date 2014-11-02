@@ -27,11 +27,11 @@ if (!librarySecurity::cookieAuth()) {
 
 // get pages
 /*
-$pages = libraryUtils::crawl_page('http://' . MPWS_CUSTOMER, array('action' => 'buy'));
+$pages = \engine\lib\utils::crawl_page('http://' . MPWS_CUSTOMER, array('action' => 'buy'));
 $msg = false;
 
 // save sitemap
-if (libraryRequest::isPostFormAction('save sitemap')) {
+if (\engine\lib\request::isPostFormAction('save sitemap')) {
     $gxml = new libraryGsgXml('http://' . MPWS_CUSTOMER);
     foreach ($pages as $pageLink => $state)
         $gxml->addUrl($pageLink);
@@ -43,7 +43,7 @@ if (libraryRequest::isPostFormAction('save sitemap')) {
 
 $sitemap_path = DR . DS . "sitemap.xml";
 
-if (libraryRequest::isPostFormAction('upload sitemap')) {
+if (\engine\lib\request::isPostFormAction('upload sitemap')) {
     //var_dump($_FILES);
     if(move_uploaded_file($_FILES["sitemap"]['tmp_name'], $sitemap_path))
         $msg[] = date('Y-m-d H:i:s') . ': sitemap.xml is uploaded';

@@ -1,6 +1,7 @@
 <?php
+namespace web\plugin\shop\api;
 
-class apiShopSettings extends objectApi {
+class settings extends \engine\object\api {
 
     function __construct ($customer, $plugin, $pluginName) {
         parent::__construct($customer, $plugin, $pluginName);
@@ -75,7 +76,7 @@ class apiShopSettings extends objectApi {
         $success = false;
         $settingID = null;
 
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
             'Property' => array('string'),
             'Value' => array('skipIfUnset'),
             'Label' => array('skipIfUnset'),
@@ -121,7 +122,7 @@ class apiShopSettings extends objectApi {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = libraryValidate::getValidData($reqData, array(
+        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
             'Value' => array('skipIfUnset'),
             'Label' => array('skipIfUnset'),
             'Status' => array('skipIfUnset')

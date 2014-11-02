@@ -6,7 +6,7 @@ class pluginAccount extends objectPlugin {
 
     // public function get_auth () {
     //     $data = new libraryDataObject();
-    //     $do = libraryRequest::fromGET('action');
+    //     $do = \engine\lib\request::fromGET('action');
     //     switch($do) {
     //         case "status": {
     //             $data = $this->_custom_api_status();
@@ -18,7 +18,7 @@ class pluginAccount extends objectPlugin {
 
     // public function post_auth () {
     //     $data = new libraryDataObject();
-    //     $do = libraryRequest::fromGET('action');
+    //     $do = \engine\lib\request::fromGET('action');
     //     switch($do) {
     //         case "signin": {
     //             $data = $this->_custom_api_signin();
@@ -62,7 +62,7 @@ class pluginAccount extends objectPlugin {
 
         $errors = array();
 
-        $credentials = libraryRequest::fromREQUEST('credentials');
+        $credentials = \engine\lib\request::fromREQUEST('credentials');
 
         if (empty($credentials['email']))
             $errors['email'] = 'Empty';
@@ -107,7 +107,7 @@ class pluginAccount extends objectPlugin {
 
         $errors = array();
 
-        $credentials = libraryRequest::fromPOST('credentials');
+        $credentials = \engine\lib\request::fromPOST('credentials');
 
         if (empty($credentials['email']))
             $errors['email'] = 'Empty';
@@ -211,9 +211,9 @@ class pluginAccount extends objectPlugin {
 
         $errors = array();
 
-        $email = libraryRequest::fromREQUEST('email');
-        $password = libraryRequest::fromREQUEST('password');
-        $remember = libraryRequest::fromREQUEST('remember');
+        $email = \engine\lib\request::fromREQUEST('email');
+        $password = \engine\lib\request::fromREQUEST('password');
+        $remember = \engine\lib\request::fromREQUEST('remember');
 
         if (empty($email))
             $errors['email'] = 'Empty';
@@ -287,13 +287,13 @@ class pluginAccount extends objectPlugin {
 
         $data = new libraryDataObject();
 
-        switch(libraryRequest::fromGET('fn')) {
+        switch(\engine\lib\request::fromGET('fn')) {
             case "create": {
                 $data = $this->_custom_api_createAccount();
                 break;
             }
             case "profile": {
-                $do = libraryRequest::fromGET('action');
+                $do = \engine\lib\request::fromGET('action');
                 switch($do) {
                     case "signin": {
                         $data = $this->_custom_api_signin();
@@ -320,7 +320,7 @@ class pluginAccount extends objectPlugin {
                         break;
                     }
                     case "removeAddress": {
-                        $AddressID = libraryRequest::fromPOST('AddressID');
+                        $AddressID = \engine\lib\request::fromPOST('AddressID');
                         $data = $this->_custom_api_removeAddress($AddressID);
                         break;
                     }
@@ -340,7 +340,7 @@ class pluginAccount extends objectPlugin {
 
 
     private function _custom_api_createAccount () {
-        $dataAccount = libraryRequest::fromPOST('account');
+        $dataAccount = \engine\lib\request::fromPOST('account');
 
         $accountObj = new libraryDataObject();
         $errors = array();
@@ -383,7 +383,7 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _custom_api_edit () {
-        $account = libraryRequest::fromPOST('account');
+        $account = \engine\lib\request::fromPOST('account');
         $accountObj = new libraryDataObject();
         $errors = array();
 
@@ -442,7 +442,7 @@ class pluginAccount extends objectPlugin {
             return $accountObj;
         }
 
-        $dataAddress = libraryRequest::fromPOST('address');
+        $dataAddress = \engine\lib\request::fromPOST('address');
 
         $dataAddress['AccountID'] = $this->_getSessionAccountID();
 
@@ -506,8 +506,8 @@ class pluginAccount extends objectPlugin {
     }
 
     private function _custom_api_updatePassword () {
-        $dataAccount['Password'] = libraryRequest::fromPOST('Password');
-        $dataAccount['ConfirmPassword'] = libraryRequest::fromPOST('ConfirmPassword');
+        $dataAccount['Password'] = \engine\lib\request::fromPOST('Password');
+        $dataAccount['ConfirmPassword'] = \engine\lib\request::fromPOST('ConfirmPassword');
 
         $accountObj = new libraryDataObject();
         $errors = array();

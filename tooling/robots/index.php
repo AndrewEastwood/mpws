@@ -29,8 +29,8 @@ $robots = DR . DS . 'robots.txt';
 $msg = false;
 
 
-if (libraryRequest::isPostFormAction('save robots')) {
-    $data = libraryRequest::fromPOST('robots_content');
+if (\engine\lib\request::isPostFormAction('save robots')) {
+    $data = \engine\lib\request::fromPOST('robots_content');
     file_put_contents($robots, $data);
     $msg[] = date('Y-m-d H:i:s') . ': Robots.txt is saved';
 } else

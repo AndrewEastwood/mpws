@@ -1,6 +1,7 @@
 <?php
+namespace web\plugin\shop\api;
 
-class apiShopFeeds extends objectApi {
+class feeds extends \engine\object\api {
 
     public function getDirNameFeeds () {
         return 'feeds';
@@ -84,24 +85,26 @@ class apiShopFeeds extends objectApi {
     }
 
     public function importProductFeed () {
-        $urls = array();
-        $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
-        $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
-        $options = array(
-            'script_url' => configurationDefaultUrls::$upload,
-            'download_via_php' => true,
-            'web_import_temp_dir' => libraryUtils::getAppTemporaryDirectory(),
-            'upload_dir' => libraryUtils::getUploadTemporaryDirectory(),
-            'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
-        );
-        $upload_handler = new libraryUploadHandler($options, false);
-        $rez = $upload_handler->importFromUrl($urls, false);
+        // $urls = array();
+        // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
+        // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
+        // $options = array(
+        //     'script_url' => configurationDefaultUrls::$upload,
+        //     'download_via_php' => true,
+        //     'web_import_temp_dir' => \engine\lib\utils::getAppTemporaryDirectory(),
+        //     'upload_dir' => \engine\lib\utils::getUploadTemporaryDirectory(),
+        //     'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
+        // );
+        // $upload_handler = new \engine\lib\uploadHandler($options, false);
+        // $rez = $upload_handler->importFromUrl($urls, false);
+        var_dump(DR);
+        \engine\system\library\utilphp\util::var_dump(1);
         return $rez;
     }
 
     public function generateProductFeed () {
         $options = array('limit' => 0);
-        $objPHPExcel = new PHPExcel();
+        $objPHPExcel = new \engine\lib\PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
             ->setLastModifiedBy("Maarten Balliauw")
             ->setTitle("PHPExcel Test Document")
