@@ -3,11 +3,13 @@
 namespace web\plugin\account;
 
 use \engine\object\plugin as basePlugin;
+use \engine\lib\secure as Secure;
+use \engine\lib\validate as Validate;
 
 class plugin extends basePlugin {
 
     // private function _getAddress ($AddressID) {
-    //     $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
+    //     $config = $this->getCustomerConfiguration()->data->jsapiGetAddress($AddressID);
     //     return $this->getCustomer()->fetch($config);
     // }
 
@@ -19,10 +21,10 @@ class plugin extends basePlugin {
         $AccountID = $account['ID'];
         // get account info
         // get account addresses
-        $configAddresses = configurationCustomerDataSource::jsapiGetAccountAddresses($AccountID);
+        $configAddresses = $this->getCustomerConfiguration()->data->jsapiGetAccountAddresses($AccountID);
         $account['Addresses'] = $this->getCustomer()->fetch($configAddresses) ?: array();
         
-        $configPermissions = configurationCustomerDataSource::jsapiGetPermissions($AccountID);
+        $configPermissions = $this->getCustomerConfiguration()->data->jsapiGetPermissions($AccountID);
         $account['Permissions'] = $this->getCustomer()->fetch($configPermissions, true) ?: array();
 
         // adjust values
@@ -51,7 +53,7 @@ class plugin extends basePlugin {
     }
 
     public function getAccountByValidationString ($ValidationString) {
-        $config = configurationCustomerDataSource::jsapiGetAccountByValidationString($ValidationString);
+        $config = $this->getCustomerConfiguration()->data->jsapiGetAccountByValidationString($ValidationString);
         $account = $this->getCustomer()->fetch($config);
         // var_dump('getAccountByValidationString', $config);
         if (is_null($account)) {
@@ -64,7 +66,7 @@ class plugin extends basePlugin {
     }
 
     public function getAccountByID ($AccountID) {
-        $config = configurationCustomerDataSource::jsapiGetAccountByID($AccountID);
+        $config = $this->getCustomerConfiguration()->data->jsapiGetAccountByID($AccountID);
         $account = $this->getCustomer()->fetch($config);
         // var_dump('getAccountByID', $AccountID);
         if (!is_null($account))
@@ -73,7 +75,7 @@ class plugin extends basePlugin {
     }
 
     public function isEmailAllowedToRegister ($email) {
-        $config = configurationCustomerDataSource::jsapiGetAccountByEMail($email);
+        $config = $this->getCustomerConfiguration()->data->jsapiGetAccountByEMail($email);
         $accountWithEmail = $this->getCustomer()->fetch($config);
         return empty($accountWithEmail);
     }
@@ -83,7 +85,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('skipIfUnset', 'string', "defaultValueIfUnset" => ""),
             'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
@@ -108,18 +110,18 @@ class plugin extends basePlugin {
                 $data["LastName"] = $validatedValues['LastName'];
                 $data["EMail"] = $validatedValues['EMail'];
                 $data["Phone"] = $validatedValues['Phone'];
-                $data["Password"] = \engine\lib\secure::EncodeAccountPassword($validatedValues['Password']);
-                $data["ValidationString"] = \engine\lib\secure::EncodeAccountPassword(time());
-                $configCreateAccount = configurationDefaultDataSource::jsapiAddAccount($data);
+                $data["Password"] = Secure::EncodeAccountPassword($validatedValues['Password']);
+                $data["ValidationString"] = Secure::EncodeAccountPassword(time());
+                $configCreateAccount = $this->getCustomerConfiguration()->data->jsapiAddAccount($data);
                 $AccountID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
 
                 if (empty($AccountID))
                     throw new Exception('AccountCreateError');
 
                 // create permission
-                $data = configurationDefaultDataSource::jsapiGetNewPermission();
+                $data = $this->getCustomerConfiguration()->data->jsapiGetNewPermission();
                 $data['AccountID'] = $AccountID;
-                $configCreatePermission = configurationDefaultDataSource::jsapiAddPermissions($data);
+                $configCreatePermission = $this->getCustomerConfiguration()->data->jsapiAddPermissions($data);
                 $PermissionID = $this->getCustomer()->fetch($configCreatePermission) ?: null;
 
                 if (empty($PermissionID))
@@ -148,7 +150,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'FirstName' => array('skipIfUnset', 'string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('skipIfUnset', 'string'),
             'Phone' => array('skipIfUnset', 'isPhone'),
@@ -182,10 +184,10 @@ class plugin extends basePlugin {
 
                 if (count($dataAccount)) {
                     if (isset($dataAccount['Password'])) {
-                        $dataAccount['Password'] = \engine\lib\secure::EncodeAccountPassword($validatedValues['Password']);
+                        $dataAccount['Password'] = Secure::EncodeAccountPassword($validatedValues['Password']);
                         unset($dataAccount['ConfirmPassword']);
                     }
-                    $configUpdateAccount = configurationDefaultDataSource::jsapiUpdateAccount($AccountID, $dataAccount);
+                    $configUpdateAccount = $this->getCustomerConfiguration()->data->jsapiUpdateAccount($AccountID, $dataAccount);
                     $this->getCustomer()->fetch($configUpdateAccount);
                     // var_dump($configUpdateAccount);
                 }
@@ -194,7 +196,7 @@ class plugin extends basePlugin {
                     // foreach ($dataPermission as $key => $value) {
                     //     $dataPermission[$key] = $value ? 1: 0;
                     // }
-                    $configUpdatePermissions = configurationDefaultDataSource::jsapiUpdatePermissions($AccountID, $dataPermission);
+                    $configUpdatePermissions = $this->getCustomerConfiguration()->data->jsapiUpdatePermissions($AccountID, $dataPermission);
                     // var_dump($configUpdatePermissions);
                     $this->getCustomer()->fetch($configUpdatePermissions, true);
                 }
@@ -222,7 +224,7 @@ class plugin extends basePlugin {
     private function _activateAccountByValidationStyring ($ValidationString) {
         $account = $this->getAccountByValidationString($ValidationString);
         if ($account['Status'] === "TEMP" || glIsToolbox()) {
-            $config = configurationCustomerDataSource::jsapiActivateAccount($ValidationString);
+            $config = $this->getCustomerConfiguration()->data->jsapiActivateAccount($ValidationString);
             $this->getCustomer()->fetch($config);
             $account = $this->getAccountByValidationString($ValidationString);
             if ($account['Status'] === 'ACTIVE')
@@ -233,7 +235,7 @@ class plugin extends basePlugin {
     }
 
     private function _disableAccountByID ($AccountID) {
-        $config = configurationCustomerDataSource::jsapiDisableAccount($AccountID);
+        $config = $this->getCustomerConfiguration()->data->jsapiDisableAccount($AccountID);
         $this->getCustomer()->fetch($config);
         // disable all related addresses
         $account = $this->getAccountByID($AccountID);
@@ -245,7 +247,7 @@ class plugin extends basePlugin {
     }
 
     public function getAddressByID ($AddressID) {
-        $config = configurationCustomerDataSource::jsapiGetAddress($AddressID);
+        $config = $this->getCustomerConfiguration()->data->jsapiGetAddress($AddressID);
         $address = $this->getCustomer()->fetch($config);
         // adjust values
         $address['ID'] = intval($address['ID']);
@@ -258,7 +260,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Address' => array('string', 'notEmpty', 'min' => 2, 'max' => 100),
             'POBox' => array('notEmpty', 'min' => 2, 'max' => 100),
             'Country' => array('string', 'min' => 2, 'max' => 100),
@@ -292,7 +294,7 @@ class plugin extends basePlugin {
                 $data["Country"] = $validatedValues['Country'];
                 $data["City"] = $validatedValues['City'];
 
-                $configCreateAccount = configurationDefaultDataSource::jsapiAddAddress($data);
+                $configCreateAccount = $this->getCustomerConfiguration()->data->jsapiAddAddress($data);
 
                 $AddressID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
 
@@ -319,7 +321,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Address' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
             'POBox' => array('skipIfUnset', 'min' => 2, 'max' => 100),
             'Country' => array('skipIfUnset', 'string', 'min' => 2, 'max' => 100),
@@ -333,7 +335,7 @@ class plugin extends basePlugin {
 
                 $data = $validatedDataObj['values'];
 
-                $configUpdateAddress = configurationDefaultDataSource::jsapiUpdateAddress($AddressID, $data);
+                $configUpdateAddress = $this->getCustomerConfiguration()->data->jsapiUpdateAddress($AddressID, $data);
 
                 $this->getCustomer()->fetch($configUpdateAddress);
 
@@ -356,7 +358,7 @@ class plugin extends basePlugin {
     }
 
     private function _disableAddressByID ($AddressID) {
-        $config = configurationCustomerDataSource::jsapiDisableAddress($AddressID);
+        $config = $this->getCustomerConfiguration()->data->jsapiDisableAddress($AddressID);
         $this->getCustomer()->fetch($config);
         return glWrap("ok", true);
     }
@@ -367,7 +369,7 @@ class plugin extends basePlugin {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = configurationCustomerDataSource::jsapiStat_AccountsOverview();
+        $config = $this->getCustomerConfiguration()->data->jsapiStat_AccountsOverview();
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }
@@ -376,7 +378,7 @@ class plugin extends basePlugin {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = configurationCustomerDataSource::jsapiStat_AccountsIntensityLastMonth($status);
+        $config = $this->getCustomerConfiguration()->data->jsapiStat_AccountsIntensityLastMonth($status);
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }

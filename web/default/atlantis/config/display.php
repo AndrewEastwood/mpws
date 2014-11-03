@@ -7,7 +7,7 @@ use \engine\object\configuration as baseConfig;
 class display extends baseConfig {
 
     // general
-    var $Version = MPWS_VERSION;
+    var $Version = 'atlantis';
     var $Homepage = 'localhost';
 
     // session

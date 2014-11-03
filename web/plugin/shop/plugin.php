@@ -3,6 +3,8 @@
 namespace web\plugin\shop;
 
 use \engine\object\plugin as basePlugin;
+use \engine\lib\validate as Validate;
+use \engine\lib\secure as Secure;
 
 class plugin extends basePlugin {
 
@@ -29,8 +31,8 @@ class plugin extends basePlugin {
     public function beforeRun () {
         $this->_getCachedTableStatuses();
         // sleep(5);
-        $this->_getCachedTableData(configurationShopDataSource::$Table_ShopCategories);
-        $this->_getCachedTableData(configurationShopDataSource::$Table_ShopOrigins);
+        $this->_getCachedTableData($this->getConfiguration()->data->Table_ShopCategories);
+        $this->_getCachedTableData($this->getConfiguration()->data->Table_ShopOrigins);
     }
 
 
@@ -45,7 +47,7 @@ class plugin extends basePlugin {
         if (empty($productID) || !is_numeric($productID))
             return null;
 
-        $config = configurationShopDataSource::jsapiShopGetProductItem($productID);
+        $config = $this->getConfiguration()->data->jsapiShopGetProductItem($productID);
         $product = $this->getCustomer()->fetch($config);
 
         if (empty($product))
@@ -94,7 +96,7 @@ class plugin extends basePlugin {
         // need to use as separate request
         $product['_featuresTree'] = $this->getFeatures_Tree();
 
-        // $product['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
+        // $product['_statuses'] = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopProducts);
         // save product into recently viewed list
         if ($saveIntoRecent && !glIsToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
@@ -106,7 +108,7 @@ class plugin extends basePlugin {
 
     public function getProductImages ($productID) {
         $images = array();
-        $config = configurationShopDataSource::jsapiShopGetProductAttributes($productID, 'IMAGE');
+        $config = $this->getConfiguration()->data->jsapiShopGetProductAttributes($productID, 'IMAGE');
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -123,7 +125,7 @@ class plugin extends basePlugin {
 
     public function getProductVideos ($productID) {
         $videos = array();
-        $config = configurationShopDataSource::jsapiShopGetProductAttributes($productID, 'VIDEO');
+        $config = $this->getConfiguration()->data->jsapiShopGetProductAttributes($productID, 'VIDEO');
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -135,7 +137,7 @@ class plugin extends basePlugin {
 
     public function getProductAttributes ($productID) {
         $attr = array();
-        $config = configurationShopDataSource::jsapiShopGetProductAttributes($productID);
+        $config = $this->getConfiguration()->data->jsapiShopGetProductAttributes($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -150,7 +152,7 @@ class plugin extends basePlugin {
 
     public function getProductFeatures ($productID) {
         $featuresGroups = array();
-        $config = configurationShopDataSource::jsapiShopGetProductFeatures($productID);
+        $config = $this->getConfiguration()->data->jsapiShopGetProductFeatures($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $value) {
@@ -165,7 +167,7 @@ class plugin extends basePlugin {
 
     public function getProductPriceHistory ($productID) {
         $prices = array();
-        $config = configurationShopDataSource::jsapiShopGetProductPriceStats($productID);
+        $config = $this->getConfiguration()->data->jsapiShopGetProductPriceStats($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -177,7 +179,7 @@ class plugin extends basePlugin {
 
     public function getProductRelations ($productID) {
         $relations = array();
-        $configProductsRelations = configurationShopDataSource::jsapiShopGetProductRelations($productID);
+        $configProductsRelations = $this->getConfiguration()->data->jsapiShopGetProductRelations($productID);
         $relatedItemsIDs = $this->getCustomer()->fetch($configProductsRelations);
         if (isset($relatedItemsIDs)) {
             foreach ($relatedItemsIDs as $relationItem) {
@@ -199,7 +201,7 @@ class plugin extends basePlugin {
     }
 
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
-        $config = configurationShopDataSource::jsapiShopGetProductList($options);
+        $config = $this->getConfiguration()->data->jsapiShopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
@@ -233,7 +235,7 @@ class plugin extends basePlugin {
         $success = false;
         $ProductID = null;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'CategoryID' => array('int'),
             'OriginID' => array('int'),
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
@@ -308,7 +310,7 @@ class plugin extends basePlugin {
                     } else {
                         $data["FieldName"] = $value;
                         $data["CustomerID"] = $CustomerID;
-                        $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                        $config = $this->getConfiguration()->data->jsapiShopCreateFeature($data);
                         $featureID = $this->getCustomer()->fetch($config) ?: null;
                         if (isset($featureID) && $featureID >= 0) {
                             $productFeaturesIDs[] = $featureID;
@@ -322,7 +324,7 @@ class plugin extends basePlugin {
                 if (isset($validatedValues["IsPromo"])) {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
-                $config = configurationShopDataSource::jsapiShopCreateProduct($validatedValues);
+                $config = $this->getConfiguration()->data->jsapiShopCreateProduct($validatedValues);
                 $ProductID = $this->getCustomer()->fetch($config) ?: null;
                 if (empty($ProductID)) {
                     throw new Exception('ProductCreateError');
@@ -334,7 +336,7 @@ class plugin extends basePlugin {
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
-                        $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
+                        $config = $this->getConfiguration()->data->jsapiShopAddFeatureToProduct($featureData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -356,7 +358,7 @@ class plugin extends basePlugin {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
+                            $config = $this->getConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
                             $this->getCustomer()->fetch($config);
                         }
                     }
@@ -371,7 +373,7 @@ class plugin extends basePlugin {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
-                        $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
+                        $config = $this->getConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -399,7 +401,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'CategoryID' => array('int', 'skipIfUnset'),
             'OriginID' => array('int', 'skipIfUnset'),
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100, 'skipIfUnset'),
@@ -483,7 +485,7 @@ class plugin extends basePlugin {
                                 $data["CustomerID"] = $CustomerID;
                                 $data["FieldName"] = $featureName;
                                 $data["GroupName"] = $groupName;
-                                $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                                $config = $this->getConfiguration()->data->jsapiShopCreateFeature($data);
                                 $featureID = $this->getCustomer()->fetch($config);
                                 $productFeaturesIDs[] = intval($featureID);
                             } else {
@@ -496,7 +498,7 @@ class plugin extends basePlugin {
                             $data["CustomerID"] = $CustomerID;
                             $data["FieldName"] = $featureName;
                             $data["GroupName"] = $groupName;
-                            $config = configurationShopDataSource::jsapiShopCreateFeature($data);
+                            $config = $this->getConfiguration()->data->jsapiShopCreateFeature($data);
                             $featureID = $this->getCustomer()->fetch($config);
                             $productFeaturesIDs[] = $featureID;
                         }
@@ -512,20 +514,20 @@ class plugin extends basePlugin {
                 if (isset($validatedValues["IsPromo"])) {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
-                $config = configurationShopDataSource::jsapiShopUpdateProduct($ProductID, $validatedValues);
+                $config = $this->getConfiguration()->data->jsapiShopUpdateProduct($ProductID, $validatedValues);
                 $this->getCustomer()->fetch($config);
 
                 // set new features
                 if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
-                    $config = configurationShopDataSource::jsapiShopClearProductFeatures($ProductID);
+                    $config = $this->getConfiguration()->data->jsapiShopClearProductFeatures($ProductID);
                     $this->getCustomer()->fetch($config);
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         // var_dump($featureData);
-                        $config = configurationShopDataSource::jsapiShopAddFeatureToProduct($featureData);
+                        $config = $this->getConfiguration()->data->jsapiShopAddFeatureToProduct($featureData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -589,13 +591,13 @@ class plugin extends basePlugin {
                     ));
                     // -- IMAGE
                     if (isset($attributes["IMAGE"])) {
-                        $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID, 'IMAGE');
+                        $config = $this->getConfiguration()->data->jsapiShopClearProductAttributes($ProductID, 'IMAGE');
                         $this->getCustomer()->fetch($config);
                         foreach ($attributes["IMAGE"] as $imageName) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $imageName;
-                            $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
+                            $config = $this->getConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
                             $this->getCustomer()->fetch($config);
                         }
                     }
@@ -608,12 +610,12 @@ class plugin extends basePlugin {
                             continue;
                         }
                         // clear existed tags before adding new ones
-                        $config = configurationShopDataSource::jsapiShopClearProductAttributes($ProductID, $key);
+                        $config = $this->getConfiguration()->data->jsapiShopClearProductAttributes($ProductID, $key);
                         $this->getCustomer()->fetch($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = configurationShopDataSource::jsapiShopAddAttributeToProduct($attrData);
+                        $config = $this->getConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -641,7 +643,7 @@ class plugin extends basePlugin {
 
     public function getProducts_TopNonPopular () {
         // get non-popuplar 15 products
-        $config = configurationShopDataSource::jsapiShopStat_NonPopularProducts();
+        $config = $this->getConfiguration()->data->jsapiShopStat_NonPopularProducts();
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($productIDs)) {
@@ -654,7 +656,7 @@ class plugin extends basePlugin {
 
     public function getProducts_TopPopular () {
         // get top 15 products
-        $config = configurationShopDataSource::jsapiShopStat_PopularProducts();
+        $config = $this->getConfiguration()->data->jsapiShopStat_PopularProducts();
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($productIDs)) {
@@ -675,7 +677,7 @@ class plugin extends basePlugin {
     // -----------------------------------------------
     public function getFeatures_Tree () {
         $tree = array();
-        $config = configurationShopDataSource::jsapiShopGetFeatures();
+        $config = $this->getConfiguration()->data->jsapiShopGetFeatures();
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $value) {
@@ -700,7 +702,7 @@ class plugin extends basePlugin {
         if (empty($originID) || !is_numeric($originID))
             return null;
 
-        $config = configurationShopDataSource::jsapiShopGetOriginItem($originID);
+        $config = $this->getConfiguration()->data->jsapiShopGetOriginItem($originID);
         $origin = $this->getCustomer()->fetch($config);
 
         if (empty($origin))
@@ -708,12 +710,12 @@ class plugin extends basePlugin {
 
         $origin['ID'] = intval($origin['ID']);
         $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
-        // $origin['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrigins);
+        // $origin['_statuses'] = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopOrigins);
         return $origin;
     }
 
     public function getOrigins_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetOriginList($options);
+        $config = $this->getConfiguration()->data->jsapiShopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -733,7 +735,7 @@ class plugin extends basePlugin {
         $success = false;
         $OriginID = null;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
             'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
@@ -746,7 +748,7 @@ class plugin extends basePlugin {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = configurationShopDataSource::jsapiShopCreateOrigin($validatedValues);
+                $configCreateOrigin = $this->getConfiguration()->data->jsapiShopCreateOrigin($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $OriginID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
@@ -778,7 +780,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
             'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
@@ -792,7 +794,7 @@ class plugin extends basePlugin {
 
                 if (count($validatedValues)) {
                     $this->getCustomerDataBase()->beginTransaction();
-                    $configCreateCategory = configurationShopDataSource::jsapiShopUpdateOrigin($OriginID, $validatedValues);
+                    $configCreateCategory = $this->getConfiguration()->data->jsapiShopUpdateOrigin($OriginID, $validatedValues);
                     $this->getCustomer()->fetch($configCreateCategory);
                     $this->getCustomerDataBase()->commit();
                 }
@@ -819,7 +821,7 @@ class plugin extends basePlugin {
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = configurationShopDataSource::jsapiShopDeleteOrigin($OriginID);
+            $config = $this->getConfiguration()->data->jsapiShopDeleteOrigin($OriginID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -842,7 +844,7 @@ class plugin extends basePlugin {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getCategoryByID ($categoryID) {
-        $config = configurationShopDataSource::jsapiShopGetCategoryItem($categoryID);
+        $config = $this->getConfiguration()->data->jsapiShopGetCategoryItem($categoryID);
         $category = $this->getCustomer()->fetch($config);
 
         if (empty($category))
@@ -853,13 +855,13 @@ class plugin extends basePlugin {
         $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
         $category['_isRemoved'] = $category['Status'] === 'REMOVED';
         // $category['CustomerID'] = intval($category['CustomerID']);
-        // $category['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopCategories);
+        // $category['_statuses'] = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopCategories);
 
         return $category;
     }
 
     public function getCategories_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetCategoryList($options);
+        $config = $this->getConfiguration()->data->jsapiShopGetCategoryList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -879,7 +881,7 @@ class plugin extends basePlugin {
         $success = false;
         $CategoryID = null;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
             'ParentID' => array('int', 'skipIfUnset'),
             'Description' => array('string', 'skipIfUnset', 'max' => 300)
@@ -894,7 +896,7 @@ class plugin extends basePlugin {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateCategory = configurationShopDataSource::jsapiShopCreateCategory($validatedValues);
+                $configCreateCategory = $this->getConfiguration()->data->jsapiShopCreateCategory($validatedValues);
                 $CategoryID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
@@ -923,7 +925,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
             'Description' => array('string', 'skipIfUnset', 'max' => 300),
             'ParentID' => array('int', 'null', 'skipIfUnset'),
@@ -937,7 +939,7 @@ class plugin extends basePlugin {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateCategory($CategoryID, $validatedValues);
+                $configCreateCategory = $this->getConfiguration()->data->jsapiShopUpdateCategory($CategoryID, $validatedValues);
                 $this->getCustomer()->fetch($configCreateCategory);
 
                 $this->getCustomerDataBase()->commit();
@@ -965,7 +967,7 @@ class plugin extends basePlugin {
 
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = configurationShopDataSource::jsapiShopDeleteCategory($CategoryID);
+            $config = $this->getConfiguration()->data->jsapiShopDeleteCategory($CategoryID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -988,12 +990,12 @@ class plugin extends basePlugin {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
-        $config = configurationShopDataSource::jsapiShopGetOrderItem($orderID);
+        $config = $this->getConfiguration()->data->jsapiShopGetOrderItem($orderID);
         $order = null;
         // if ($this->getCustomer()->ifYouCan('Admin')) {
             $order = $this->getCustomer()->fetch($config);
         // } else {
-        //     $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+        //     $config['condition']['AccountID'] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
         //     $order = $this->getCustomer()->fetch($config);
         // }
 
@@ -1005,13 +1007,13 @@ class plugin extends basePlugin {
         $this->__attachOrderDetails($order);
 
         if ($this->getCustomer()->ifYouCan('Admin')) {
-            $order['_statuses'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrders);
+            $order['_statuses'] = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopOrders);
         }
         return $order;
     }
 
     public function getOrderByHash ($orderHash) {
-        $config = configurationShopDataSource::jsapiGetShopOrderByHash($orderHash);
+        $config = $this->getConfiguration()->data->jsapiGetShopOrderByHash($orderHash);
         $order = $this->getCustomer()->fetch($config);
 
         if (empty($order)) {
@@ -1036,10 +1038,10 @@ class plugin extends basePlugin {
 
     public function getOrders_ListExpired (array $options = array()) {
         // get expired orders
-        $config = configurationShopDataSource::jsapiGetShopOrderList_Expired();
+        $config = $this->getConfiguration()->data->jsapiGetShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -1056,10 +1058,10 @@ class plugin extends basePlugin {
 
     public function getOrders_ListTodays (array $options = array()) {
         // get todays orders
-        $config = configurationShopDataSource::jsapiGetShopOrderList_Todays();
+        $config = $this->getConfiguration()->data->jsapiGetShopOrderList_Todays();
         // set permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -1076,10 +1078,10 @@ class plugin extends basePlugin {
 
     public function getOrders_ListPending (array $options = array()) {
         // get expired orders
-        $config = configurationShopDataSource::jsapiGetShopOrderList_Pending();
+        $config = $this->getConfiguration()->data->jsapiGetShopOrderList_Pending();
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -1096,10 +1098,10 @@ class plugin extends basePlugin {
 
     public function getOrders_List (array $options = array()) {
         // get all orders
-        $config = configurationShopDataSource::jsapiGetShopOrderList($options);
+        $config = $this->getConfiguration()->data->jsapiGetShopOrderList($options);
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -1161,12 +1163,12 @@ class plugin extends basePlugin {
                 $formAddressID = null;
 
                 // create new account
-                $new_password = \engine\lib\secure::generateStrongPassword();
+                $new_password = Secure::generateStrongPassword();
 
                 $account = $pluginAccount->createAccount(array(
                     "FirstName" => $formSettings['ShowName']['_isActive'] ? $reqData['form']['shopCartUserName'] : $pluginAccount->getEmptyUserName(),
-                    "EMail" => $formSettings['ShowEMail']['_isActive'] ? $reqData['form']['shopCartUserEmail'] : \engine\lib\validate::getEmptyEmail(),
-                    "Phone" => $formSettings['ShowPhone']['_isActive'] ? $reqData['form']['shopCartUserPhone'] : \engine\lib\validate::getEmptyPhoneNumber(),
+                    "EMail" => $formSettings['ShowEMail']['_isActive'] ? $reqData['form']['shopCartUserEmail'] : Validate::getEmptyEmail(),
+                    "Phone" => $formSettings['ShowPhone']['_isActive'] ? $reqData['form']['shopCartUserPhone'] : Validate::getEmptyPhoneNumber(),
                     "Password" => $new_password,
                     "ConfirmPassword" => $new_password
                 ));
@@ -1249,7 +1251,7 @@ class plugin extends basePlugin {
             $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
             $dataOrder["PromoID"] = $orderPromoID;
 
-            $configOrder = configurationShopDataSource::jsapiShopCreateOrder($dataOrder);
+            $configOrder = $this->getConfiguration()->data->jsapiShopCreateOrder($dataOrder);
             $orderID = $this->getCustomer()->fetch($configOrder);
 
             if (empty($orderID))
@@ -1270,7 +1272,7 @@ class plugin extends basePlugin {
                 $dataBought["SellingPrice"] = $productItem["SellingPrice"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
-                $configBought = configurationShopDataSource::jsapiShopCreateOrderBought($dataBought);
+                $configBought = $this->getConfiguration()->data->jsapiShopCreateOrderBought($dataBought);
                 $boughtID = $this->getCustomer()->fetch($configBought);
 
                 // check for created bought
@@ -1310,7 +1312,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Status' => array('skipIfUnset', 'string', 'notEmpty'),
             'InternalComment' => array('skipIfUnset', 'string')
         ));
@@ -1326,7 +1328,7 @@ class plugin extends basePlugin {
 
                     $validatedValues = $validatedDataObj['values'];
 
-                    $configUpdateOrder = configurationShopDataSource::jsapiShopUpdateOrder($OrderID, $validatedValues);
+                    $configUpdateOrder = $this->getConfiguration()->data->jsapiShopUpdateOrder($OrderID, $validatedValues);
 
                     $this->getCustomer()->fetch($configUpdateOrder, true);
 
@@ -1355,7 +1357,7 @@ class plugin extends basePlugin {
 
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = configurationShopDataSource::jsapiShopDisableOrder($OrderID);
+            $config = $this->getConfiguration()->data->jsapiShopDisableOrder($OrderID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -1382,11 +1384,11 @@ class plugin extends basePlugin {
             return null;
         }
         // get orders count for each states
-        $config = configurationShopDataSource::jsapiShopStat_OrdersOverview();
+        $config = $this->getConfiguration()->data->jsapiShopStat_OrdersOverview();
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
         $res = array();
-        $availableStatuses = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopOrders);
+        $availableStatuses = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopOrders);
         foreach ($availableStatuses as $key) {
             if (isset($data[$key])) {
                 $res[$key] = intval($data[$key]);
@@ -1403,7 +1405,7 @@ class plugin extends basePlugin {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = configurationShopDataSource::jsapiShopStat_OrdersIntensityLastMonth($status, $comparator);
+        $config = $this->getConfiguration()->data->jsapiShopStat_OrdersIntensityLastMonth($status, $comparator);
         $data = $this->getCustomer()->fetch($config) ?: array();
         // var_dump($config);
         return $data;
@@ -1414,11 +1416,11 @@ class plugin extends basePlugin {
             return null;
         }
         // get shop products overview:
-        $config = configurationShopDataSource::jsapiShopStat_ProductsOverview($filter);
+        $config = $this->getConfiguration()->data->jsapiShopStat_ProductsOverview($filter);
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
         $res = array();
-        $availableStatuses = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
+        $availableStatuses = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopProducts);
         foreach ($availableStatuses as $key) {
             if (isset($data[$key])) {
                 $res[$key] = intval($data[$key]);
@@ -1435,7 +1437,7 @@ class plugin extends basePlugin {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = configurationShopDataSource::jsapiShopStat_ProductsIntensityLastMonth($status);
+        $config = $this->getConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth($status);
         $data = $this->getCustomer()->fetch($config) ?: array();
         // var_dump($config);
         return $data;
@@ -1454,16 +1456,16 @@ class plugin extends basePlugin {
 
         if ($productID) {
             // get product entry
-            $configProduct = configurationShopDataSource::jsapiShopGetProductItem($productID, false);
+            $configProduct = $this->getConfiguration()->data->jsapiShopGetProductItem($productID, false);
 
             $productDataEntry = $this->getCustomer()->fetch($configProduct);
             if (isset($productDataEntry['CategoryID'])) {
-                $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
+                $configLocation = $this->getConfiguration()->data->jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
                 $location['items'] = $this->getCustomer()->fetch($configLocation);
                 $location['product'] = $productDataEntry;
             }
         } else {
-            $configLocation = configurationShopDataSource::jsapiShopCategoryLocationGet($categoryID);
+            $configLocation = $this->getConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
             $location['items'] = $this->getCustomer()->fetch($configLocation);
         }
         return $location;
@@ -1494,7 +1496,7 @@ class plugin extends basePlugin {
             return $branch;
         }
 
-        $config = configurationShopDataSource::jsapiShopCatalogTree();
+        $config = $this->getConfiguration()->data->jsapiShopCatalogTree();
         $categories = $this->getCustomer()->fetch($config);
         $map = array();
         foreach ($categories as $key => $value)
@@ -1538,7 +1540,7 @@ class plugin extends basePlugin {
         $filterOptionsAvailable = new ArrayObject($filterOptions);
 
         // get all product available statuses
-        $filterOptionsAvailable['filter_commonStatus'] = $this->_getCachedTableStatuses(configurationShopDataSource::$Table_ShopProducts);
+        $filterOptionsAvailable['filter_commonStatus'] = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopProducts);
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
@@ -1563,8 +1565,8 @@ class plugin extends basePlugin {
 
         // var_dump($filterOptionsApplied['filter_commonFeatures']);
 
-        $dataConfigCategoryPriceEdges = configurationShopDataSource::jsapiShopCategoryPriceEdgesGet($categoryID);
-        $dataConfigCategoryAllSubCategories = configurationShopDataSource::jsapiShopCategoryAllSubCategoriesGet($categoryID);
+        $dataConfigCategoryPriceEdges = $this->getConfiguration()->data->jsapiShopCategoryPriceEdgesGet($categoryID);
+        $dataConfigCategoryAllSubCategories = $this->getConfiguration()->data->jsapiShopCategoryAllSubCategoriesGet($categoryID);
 
         // get category sub-categories and origins
         $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
@@ -1583,7 +1585,7 @@ class plugin extends basePlugin {
         }
 
         // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = configurationShopDataSource::jsapiShopCategoryAndSubCategoriesAllBrandsGet(implode(',', $cetagorySubIDs));
+        $dataConfigCategoryAllBrands = $this->getConfiguration()->data->jsapiShopCategoryAndSubCategoriesAllBrandsGet(implode(',', $cetagorySubIDs));
         $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
 
         // set categories and brands
@@ -1592,8 +1594,8 @@ class plugin extends basePlugin {
 
         // set data source
         // ---
-        $dataConfigCategoryInfo = configurationShopDataSource::jsapiGetShopCategoryProductInfo($cetagorySubIDs);
-        $dataConfigProducts = configurationShopDataSource::jsapiGetShopCategoryProductList($cetagorySubIDs);
+        $dataConfigCategoryInfo = $this->getConfiguration()->data->jsapiGetShopCategoryProductInfo($cetagorySubIDs);
+        $dataConfigProducts = $this->getConfiguration()->data->jsapiGetShopCategoryProductList($cetagorySubIDs);
 
         // filter: display intems count
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -1615,25 +1617,25 @@ class plugin extends basePlugin {
 
         // filter: price 
         if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMax'] <= $filterOptionsAvailable['filter_commonPriceMax'])
-            $dataConfigProducts['condition']['Price'][] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
+            $dataConfigProducts['condition']['Price'][] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
         else
             $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
 
         if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMin'] >= $filterOptionsAvailable['filter_commonPriceMin'])
-            $dataConfigProducts['condition']['Price'][] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
+            $dataConfigProducts['condition']['Price'][] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
         else
             $filterOptionsApplied['filter_commonPriceMin'] = $filterOptionsAvailable['filter_commonPriceMin'];
 
         // var_dump($filterOptionsApplied);
         if (count($filterOptionsApplied['filter_commonFeatures']))
-            $dataConfigProducts['condition']["FeatureID"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
+            $dataConfigProducts['condition']["FeatureID"] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
 
         if (count($filterOptionsApplied['filter_commonStatus']))
-            $dataConfigProducts['condition']["shop_products.Status"] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
+            $dataConfigProducts['condition']["shop_products.Status"] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
 
         // filter: brands
         if (count($filterOptionsApplied['filter_categoryBrands']))
-            $dataConfigProducts['condition']['OriginID'] = configurationShopDataSource::jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
+            $dataConfigProducts['condition']['OriginID'] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
 
         // var_dump($dataConfigProducts);
         // get products
@@ -1657,7 +1659,7 @@ class plugin extends basePlugin {
         // adjust brands, categories and features
         $brands = array();
         $categories = array();
-        $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
+        $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopProducts);
         $features = array();
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
             $brands[$brand['ID']] = $brand;
@@ -1728,18 +1730,18 @@ class plugin extends basePlugin {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getPromoByID ($promoID) {
-        $config = configurationShopDataSource::jsapiShopGetPromoByID($promoID);
+        $config = $this->getConfiguration()->data->jsapiShopGetPromoByID($promoID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
-        $data['_isExpired'] = strtotime(configurationShopDataSource::getDate()) > strtotime($data['DateExpire']);
-        $data['_isFuture'] = strtotime(configurationShopDataSource::getDate()) < strtotime($data['DateStart']);
+        $data['_isExpired'] = strtotime($this->getConfiguration()->data->getDate()) > strtotime($data['DateExpire']);
+        $data['_isFuture'] = strtotime($this->getConfiguration()->data->getDate()) < strtotime($data['DateStart']);
         $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
         return $data;
     }
 
     public function getPromoByHash ($hash, $activeOnly = false) {
-        $config = configurationShopDataSource::jsapiShopGetPromoByHash($hash, $activeOnly);
+        $config = $this->getConfiguration()->data->jsapiShopGetPromoByHash($hash, $activeOnly);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
@@ -1747,7 +1749,7 @@ class plugin extends basePlugin {
     }
 
     public function getPromoCodes_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetPromoList($options);
+        $config = $this->getConfiguration()->data->jsapiShopGetPromoList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -1767,7 +1769,7 @@ class plugin extends basePlugin {
         $success = false;
         $promoID = null;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'DateStart' => array('string'),
             'DateExpire' => array('string'),
             'Discount' => array('numeric')
@@ -1780,7 +1782,7 @@ class plugin extends basePlugin {
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreatePromo = configurationShopDataSource::jsapiShopCreatePromo($validatedValues);
+                $configCreatePromo = $this->getConfiguration()->data->jsapiShopCreatePromo($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $promoID = $this->getCustomer()->fetch($configCreatePromo) ?: null;
@@ -1811,7 +1813,7 @@ class plugin extends basePlugin {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'DateStart' => array('string', 'skipIfUnset'),
             'DateExpire' => array('string', 'skipIfUnset'),
             'Discount' => array('numeric')
@@ -1824,7 +1826,7 @@ class plugin extends basePlugin {
 
                 if (count($validatedValues)) {
                     $this->getCustomerDataBase()->beginTransaction();
-                    $configCreateCategory = configurationShopDataSource::jsapiShopUpdatePromo($promoID, $validatedValues);
+                    $configCreateCategory = $this->getConfiguration()->data->jsapiShopUpdatePromo($promoID, $validatedValues);
                     $this->getCustomer()->fetch($configCreateCategory);
                     $this->getCustomerDataBase()->commit();
                 }
@@ -1851,7 +1853,7 @@ class plugin extends basePlugin {
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
-            $config = configurationShopDataSource::jsapiShopExpirePromo($promoID);
+            $config = $this->getConfiguration()->data->jsapiShopExpirePromo($promoID);
             $this->getCustomer()->fetch($config);
             $this->getCustomerDataBase()->commit();
             $success = true;
@@ -1914,26 +1916,26 @@ class plugin extends basePlugin {
             'limit' => 0
         );
 
-        if ($tableName === configurationShopDataSource::$Table_ShopCategories) {
+        if ($tableName === $this->getConfiguration()->data->Table_ShopCategories) {
             $stateKey = 'category';
             $fn = function ($options) use ($self) {
                 return $self->getCategories_List($options);
             };
         }
-        if ($tableName === configurationShopDataSource::$Table_ShopOrigins) {
+        if ($tableName === $this->getConfiguration()->data->Table_ShopOrigins) {
             $stateKey = 'origin';
             $fn = function ($options) use ($self) {
                 return $self->getOrigins_List($options);
             };
         }
-        if ($tableName === configurationShopDataSource::$Table_ShopFeatures) {
+        if ($tableName === $this->getConfiguration()->data->Table_ShopFeatures) {
             $stateKey = 'features';
             // var_dump($this->_states);
             $fn = function ($options) use ($self) {
                 return $self->getAllAvailableFeatures($options);
             };
         }
-        if ($tableName === configurationShopDataSource::$Table_ShopDeliveryAgencies) {
+        if ($tableName === $this->getConfiguration()->data->Table_ShopDeliveryAgencies) {
             $stateKey = 'agencies';
             // var_dump($this->_states);
             $fn = function ($options) use ($self) {
@@ -1963,12 +1965,12 @@ class plugin extends basePlugin {
         }
         // daily update
         if ($force || $isExpired || empty($_SESSION['shop:statuses:list'])) {
-            $statusDump[configurationShopDataSource::$Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrders);
-            $statusDump[configurationShopDataSource::$Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopProducts);
-            $statusDump[configurationShopDataSource::$Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopOrigins);
-            $statusDump[configurationShopDataSource::$Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopCategories);
-            $statusDump[configurationShopDataSource::$Table_ShopDeliveryAgencies] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopDeliveryAgencies);
-            // $statusDump[configurationShopDataSource::$Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions(configurationShopDataSource::$Table_ShopSettings);
+            $statusDump[$this->getConfiguration()->data->Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrders);
+            $statusDump[$this->getConfiguration()->data->Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopProducts);
+            $statusDump[$this->getConfiguration()->data->Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrigins);
+            $statusDump[$this->getConfiguration()->data->Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopCategories);
+            $statusDump[$this->getConfiguration()->data->Table_ShopDeliveryAgencies] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopDeliveryAgencies);
+            // $statusDump[$this->getConfiguration()->data->Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopSettings);
             $_SESSION['shop:statuses:list'] = $statusDump;
             $_SESSION['shop:statuses:expire'] = mktime() + 24 * 60 * 60;
         } else {
@@ -2609,7 +2611,7 @@ class plugin extends basePlugin {
             if (!empty($order['DeliveryID']))
                 $order['delivery'] = $this->api->delivery->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
-            $configBoughts = configurationShopDataSource::jsapiShopGetOrderBoughts($orderID);
+            $configBoughts = $this->getConfiguration()->data->jsapiShopGetOrderBoughts($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {

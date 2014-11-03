@@ -9,7 +9,7 @@ class delivery extends \engine\object\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getDeliveryAgencyByID ($agencyID) {
-        $config = configurationShopDataSource::jsapiShopGetDeliveryAgencyByID($agencyID);
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveryAgencyByID($agencyID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['_isRemoved'] = $data['Status'] === 'REMOVED';
@@ -18,7 +18,7 @@ class delivery extends \engine\object\api {
     }
 
     public function getDeliveries_List (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetDeliveriesList($options);
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveriesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -50,7 +50,7 @@ class delivery extends \engine\object\api {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = configurationShopDataSource::jsapiShopCreateDeliveryAgent($validatedValues);
+                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateDeliveryAgent($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
@@ -94,7 +94,7 @@ class delivery extends \engine\object\api {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $configCreateCategory = configurationShopDataSource::jsapiShopUpdateDeliveryAgent($id, $validatedValues);
+                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateDeliveryAgent($id, $validatedValues);
                 $this->getCustomer()->fetch($configCreateCategory);
 
                 $this->getCustomerDataBase()->commit();
@@ -121,7 +121,7 @@ class delivery extends \engine\object\api {
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = configurationShopDataSource::jsapiShopDeleteDeliveryAgent($id);
+            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteDeliveryAgent($id);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();

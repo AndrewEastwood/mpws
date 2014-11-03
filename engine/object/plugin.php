@@ -1,39 +1,67 @@
 <?php
 namespace engine\object;
 
+use \engine\lib\utils as Utils;
+use \engine\lib\path as Path;
+use \engine\lib\request as Request;
+
 class plugin implements \engine\interface\IPlugin {
 
+    private $api;
     private $customer;
-    public $api;
+    private $configuration;
+    private $app;
 
-    function __construct ($customer, $pluginName) {
+    function __construct ($customer, $pluginName, $app) {
         $this->customer = $customer;
+        $this->app = $app;
+
+        // init configuration
+        $configuration = array();
+        $pluginConfigs = Path::getPluginConfigurationFilesMap($pluginName);
+        foreach ($pluginConfigs as $configName => $configFilePath) {
+            $configClass = '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
+            $configuration[$configName] = new $configClass();
+        }
+        $this->configuration = (object)$configuration;
+
         // init apis
         $api = array();
-        $_pluginPath = glGetFullPath('web', 'plugin', $pluginName, 'api');
-        $_apiFiles = glob($_pluginPath . '*.php');
-        foreach ($_apiFiles as $apiFilePath) {
-            $path_parts = pathinfo($apiFilePath);
-            $apiFileName = $path_parts['filename'];
-            // load plugin
-            include $apiFilePath;
-            $apiObjectName = 'api' . ucfirst($pluginName) . ucfirst($apiFileName);
+        $pluginApis = Path::getPluginApiFilesMap($pluginName);
+        foreach ($pluginApis as $apiName => $apiFilePath) {
+            $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
             // save plugin instance
-            $api[$apiFileName] = new $apiObjectName($customer, $this, $pluginName);
+            $api[$apiFileName] = new $apiClass($customer, $this, $pluginName, $app);
         }
         $this->api = (object)$api;
     }
 
-    public function getName() {
+    public function getName () {
         return 'base';
     }
 
-    public function getCustomer() {
+    public function getConfiguration () {
+        return $this->configuration;
+    }
+
+    public function getAPI () {
+        return $this->api;
+    }
+
+    public function getApp () {
+        return $this->app;
+    }
+
+    public function getCustomer () {
         return $this->customer;
     }
 
     public function getCustomerDataBase () {
         return $this->customer->getDataBase();
+    }
+
+    public function getCustomerConfiguration () {
+        return $this->customer->getConfiguration();
     }
 
     public function getAnotherPlugin ($pluginName) {
@@ -46,15 +74,15 @@ class plugin implements \engine\interface\IPlugin {
 
     public function getOwnUploadDirectory ($targetDir = null) {
         if (empty($targetDir)) {
-            return \engine\lib\utils::getUploadDirectory($this->getName());
+            return Path::getUploadDirectory($this->getName());
         }
-        return \engine\lib\utils::getUploadDirectory($this->getName() . DS . $targetDir);
+        return Path::getUploadDirectory($this->getName() . DS . $targetDir);
     }
     public function getOwnUploadPathWeb ($targetDir = null) {
         if (empty($targetDir)) {
-            return \engine\lib\utils::getUploadWebPath($this->getName());
+            return Path::getUploadWebPath($this->getName());
         }
-        return \engine\lib\utils::getUploadWebPath($this->getName() . DS . $targetDir);
+        return Path::getUploadWebPath($this->getName() . DS . $targetDir);
     }
 
     public function getOwnUploadedFile ($name, $targetDir = null) {
@@ -69,7 +97,7 @@ class plugin implements \engine\interface\IPlugin {
 
     public function saveOwnTemporaryUploadedFile ($tmpFileName, $targetDir, $name = false) {
         $uniqueName = empty($name) ? mktime() : $name;
-        $uploadedFileInfo = \engine\lib\utils::moveTemporaryFile($tmpFileName, $this->getName() . DS . $targetDir, $uniqueName);
+        $uploadedFileInfo = Path::moveTemporaryFile($tmpFileName, $this->getName() . DS . $targetDir, $uniqueName);
         return $uploadedFileInfo;
     }
 
@@ -96,7 +124,7 @@ class plugin implements \engine\interface\IPlugin {
 
     public function run () {
         $this->beforeRun();
-        \engine\lib\request::processRequest($this);
+        Request::processRequest($this);
         $this->afterRun();
     }
 }

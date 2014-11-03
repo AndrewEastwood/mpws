@@ -1,5 +1,6 @@
 <?php
 namespace engine\object;
+use Utils as Utils;
 
 class configuration implements \engine\interface\IConfiguration {
 
@@ -10,21 +11,21 @@ class configuration implements \engine\interface\IConfiguration {
     public function getDate ($strDate = '') {
         if (!empty($strDate)) {
             $time = strtotime($strDate);
-            return date($this->$DATE_FORMAT, $time);
+            return date($this->DATE_FORMAT, $time);
         }
-        return date($this->$DATE_FORMAT);
+        return date($this->DATE_FORMAT);
     }
 
-    public function jsapiCreateDataSourceCondition($value, $comparator = null, $concatenate = null) {
+    public function jsapiCreateDataSourceCondition ($value, $comparator = null, $concatenate = null) {
         $condition = array(
             "comparator" => $comparator,
             "value" => $value,
             "concatenate" => $concatenate
         );
         if (!is_string($condition['comparator']))
-            $condition['comparator'] = $this->$DEFAULT_COMPARATOR;
+            $condition['comparator'] = $this->DEFAULT_COMPARATOR;
         if (!is_string($condition['concatenate']))
-            $condition['concatenate'] = $this->$DEFAULT_CONCATENATE;
+            $condition['concatenate'] = $this->DEFAULT_CONCATENATE;
         return $condition;
     }
 
@@ -90,8 +91,8 @@ class configuration implements \engine\interface\IConfiguration {
         return $this->extendConfigs($configDefault, $configExtend, true);
     }
 
-    public function extendConfigs ($configA, $configB = null, $useRecursiveMerge = false) {
-        return \engine\lib\utils::array_merge_recursive_distinct($configA, $configB);
+    public function extendConfigs ($configA, $configB = null) {
+        return Utils::array_merge_recursive_distinct($configA, $configB);
     }
 
     public function jsapiUtil_GetTableRecordsCount ($table, $condition = array()) {

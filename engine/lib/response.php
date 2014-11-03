@@ -6,6 +6,10 @@ class response {
 
     static $_RESPONSE = array();
 
+    static function setResponse ($resp) {
+        self::$_RESPONSE = $resp;
+    }
+
     static function setError ($errorMsg, $headerMsg = false) {
         if (!empty($errorMsg))
             self::$_RESPONSE['error'] = $errorMsg;

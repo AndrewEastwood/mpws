@@ -1,34 +1,45 @@
 <?php
-
 namespace web\default\atlantis\config;
 
 use \engine\object\configuration as baseConfig;
 
 class db extends baseConfig {
 
-    var $DEV = array(
-        'HOST' => 'localhost',
-        'USER' => 'root',
-        'PWD' => '1111',
-        'DB' => 'mpws_default',
-        'CHARSET' => 'utf8',
-        'STRING' => sprintf("mysql:dbname=%s;host=%s", $this->$DEV['DB'], $this->$DEV['HOST']),
-        'DBOini' => array()
+    var $debug = array(
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '1111',
+        'db' => 'mpws_default',
+        "id_column" => 'ID',
+        'charset' => 'utf8',
+        'connection_string' => "mysql:dbname=mpws_default;host=localhost;charset=utf8",
+        "driver_options" => array(
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
+            PDO::ATTR_AUTOCOMMIT => false,
+            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+        )
     );
 
-    var $PROD = array(
-        'HOST' => '',
-        'USER' => '',
-        'PWD' => '',
-        'DB' => '',
-        'CHARSET' => 'utf8',
-        'STRING' => sprintf("mysql:dbname=%s;host=%s", $this->$PROD['DB'], $this->$PROD['HOST']),
-        'DBOini' => array()
+    var $live = array(
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '1111',
+        'db' => 'mpws_default',
+        "id_column" => 'ID',
+        'charset' => 'utf8',
+        'connection_string' => "mysql:dbname=mpws_default;host=localhost;charset=utf8",
+        "driver_options" => array(
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
+            PDO::ATTR_AUTOCOMMIT => false,
+            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+        )
     );
 
-    public function getConnectionParams () {
-        $env = MPWS_ENV;
-        return $this->$env;
+    public function getConnectionParams ($isDebug) {
+        if (is_bool($isDebug))
+            return $isDebug ? $this->debug : $this->live;
+        else if (is_string($isDebug))
+            return $this->$isDebug;
     }
 
 }

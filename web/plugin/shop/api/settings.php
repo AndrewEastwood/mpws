@@ -25,19 +25,19 @@ class settings extends \engine\object\api {
     public function findByID ($id) {
         if (empty($id) || !is_numeric($id))
             return null;
-        $config = configurationShopDataSource::jsapiShopGetSettingByID($id);
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingByID($id);
         $setting = $this->getCustomer()->fetch($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function findByName ($name) {
-        $config = configurationShopDataSource::jsapiShopGetSettingByName($name);
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingByName($name);
         $setting = $this->getCustomer()->fetch($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function getSettingsByType ($type) {
-        $config = configurationShopDataSource::jsapiShopGetSettingByType($type);
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingByType($type);
         $settings = $this->getCustomer()->fetch($config);
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->__adjustSettingItem($value);
@@ -55,7 +55,7 @@ class settings extends \engine\object\api {
     }
 
     public function toList (array $options = array()) {
-        $config = configurationShopDataSource::jsapiShopGetSettingsList($options);
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingsList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -90,7 +90,7 @@ class settings extends \engine\object\api {
                 $CustomerID = $this->getCustomer()->getCustomerID();
                 $validatedValues["CustomerID"] = $CustomerID;
 
-                $config = configurationShopDataSource::jsapiShopCreateSetting($validatedValues);
+                $config = $this->getPluginConfiguration()->data->jsapiShopCreateSetting($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -135,9 +135,9 @@ class settings extends \engine\object\api {
                 if (!empty($validatedValues)) {
                     $this->getCustomerDataBase()->beginTransaction();
                     if (is_numeric($nameOrID)) {
-                        $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSetting($nameOrID, $validatedValues);
+                        $configSettingUpdate = $this->getPluginConfiguration()->data->jsapiShopUpdateSetting($nameOrID, $validatedValues);
                     } else {
-                        $configSettingUpdate = configurationShopDataSource::jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
+                        $configSettingUpdate = $this->getPluginConfiguration()->data->jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
                     }
                     $this->getCustomer()->fetch($configSettingUpdate);
                     $this->getCustomerDataBase()->commit();
@@ -168,7 +168,7 @@ class settings extends \engine\object\api {
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
-            $config = configurationShopDataSource::jsapiShopRemoveSetting($settingID);
+            $config = $this->getPluginConfiguration()->data->jsapiShopRemoveSetting($settingID);
             $this->getCustomer()->fetch($config);
             $this->getCustomerDataBase()->commit();
             $success = true;

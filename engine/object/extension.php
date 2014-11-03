@@ -17,6 +17,10 @@ class extension {
         return $this->customer->getDataBase();
     }
 
+    public function getCustomerConfiguration () {
+        return $this->customer->getDataBase();
+    }
+
 }
 
 ?>

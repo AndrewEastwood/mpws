@@ -2,7 +2,15 @@
 
 namespace engine\lib;
 
+use \engine\lib\response as Response;
+
 class request {
+
+    private static $PHP_INPUT = false;
+
+    static function setPhpInput ($data) {
+        self::$PHP_INPUT = $data;
+    }
 
     static function getScriptName () {
         $name = $_SERVER['REDIRECT_URL'];
@@ -10,11 +18,10 @@ class request {
     }
 
     static function getRequestData () {
-        global $PHP_INPUT;
         return (object) array(
             "get" => $_GET,
             "post" => $_POST,
-            "data" => json_decode($PHP_INPUT, true)
+            "data" => json_decode($self::$PHP_INPUT, true)
         );
     }
 
@@ -73,10 +80,10 @@ class request {
         // var_dump(isset($context->api->$_fn));
         if (!empty($context)) {
             if (isset($context->api->$_fn) && method_exists($context->api->$_fn, $_method)) {
-                $context->api->$_fn->$_method(\engine\lib\response::$_RESPONSE, $_REQ);
+                $context->api->$_fn->$_method(Response::$_RESPONSE, $_REQ);
                 // var_dump(\engine\lib\response::$_RESPONSE);
             } elseif (method_exists($context, $fn)) {
-                $context->$fn(\engine\lib\response::$_RESPONSE, $_REQ);
+                $context->$fn(Response::$_RESPONSE, $_REQ);
             }
         }
     }
