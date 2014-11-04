@@ -8,6 +8,7 @@ class multiExtendable {
     public function addExtension ($extension) {
         // echo 'adding Extension: ' . get_class($extension) . PHP_EOL;
         // var_dump($extension);
+        var_dump(basename(get_class($extension)));
         $this->extensions[get_class($extension)] = $extension;
     }
 

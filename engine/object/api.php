@@ -1,14 +1,14 @@
 <?php
 namespace engine\object;
 
-class api implements \engine\interface\IApi {
+class api {
 
     private $app;
     private $customer;
     private $plugin;
 
     function __construct ($customer, $plugin, $pluginName, $app) {
-        $this->customer = $app;
+        $this->app = $app;
         $this->customer = $customer;
         $this->plugin = $plugin;
     }

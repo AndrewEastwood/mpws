@@ -1,11 +1,12 @@
 <?php
-namespace web\default\atlantis\config;
+namespace web\base\atlantis\config;
 
 use \engine\object\configuration as baseConfig;
+use PDO;
 
 class db extends baseConfig {
 
-    var $debug = array(
+    public $debug = array(
         'host' => 'localhost',
         'username' => 'root',
         'password' => '1111',
@@ -20,7 +21,7 @@ class db extends baseConfig {
         )
     );
 
-    var $live = array(
+    public $live = array(
         'host' => 'localhost',
         'username' => 'root',
         'password' => '1111',

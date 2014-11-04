@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 
             var _srcLessCustomer = '../customer/' + customer + '/' + _dirAppLess + '/';
             // var _srcLessCustomerCommon = '../customer/' + customer + '/' + _dirCommonLess + '/';
-            var _srcLessDefault = '../default/' + version + '/' + _dirDefaultLess;
+            var _srcLessDefault = '../base/' + version + '/' + _dirDefaultLess;
 
             var _devLessCustomer = '../customer/' + customer + '/' + _dirAppCss + '/';
             var _buildLessCustomer = '../customer/' + customer + '/' + _dirAppBuild + '/' + _dirAppLess + '/';

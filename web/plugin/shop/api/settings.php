@@ -1,10 +1,11 @@
 <?php
 namespace web\plugin\shop\api;
 
+use \engine\lib\validate as Validate;
 class settings extends \engine\object\api {
 
-    function __construct ($customer, $plugin, $pluginName) {
-        parent::__construct($customer, $plugin, $pluginName);
+    function __construct ($customer, $plugin, $pluginName, $app) {
+        parent::__construct($customer, $plugin, $pluginName, $app);
         $this->SETTING_TYPE = (object) array(
             'ADDRESS' => 'ADDRESS',
             'ALERTS' => 'ALERTS',
@@ -76,7 +77,7 @@ class settings extends \engine\object\api {
         $success = false;
         $settingID = null;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Property' => array('string'),
             'Value' => array('skipIfUnset'),
             'Label' => array('skipIfUnset'),
@@ -122,7 +123,7 @@ class settings extends \engine\object\api {
         $errors = array();
         $success = false;
 
-        $validatedDataObj = \engine\lib\validate::getValidData($reqData, array(
+        $validatedDataObj = Validate::getValidData($reqData, array(
             'Value' => array('skipIfUnset'),
             'Label' => array('skipIfUnset'),
             'Status' => array('skipIfUnset')

@@ -5,6 +5,7 @@ namespace web\plugin\shop;
 use \engine\object\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
+use \engine\lib\path as Path;
 
 class plugin extends basePlugin {
 
@@ -196,8 +197,8 @@ class plugin extends basePlugin {
 
     public function getProductUploadDir ($productID, $mode = false) {
         if (!empty($mode))
-            return 'products' . DS . $productID . DS . $mode;
-        return 'products' . DS . $productID;
+            return 'products' . Path::getDirectorySeparator() . $productID . Path::getDirectorySeparator() . $mode;
+        return 'products' . Path::getDirectorySeparator() . $productID;
     }
 
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
@@ -352,8 +353,8 @@ class plugin extends basePlugin {
                     if (isset($attributes["IMAGE"])) {
                         foreach ($attributes["IMAGE"] as $fileName) {
                             $newFileName = $ProductID . uniqid(time());
-                            $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                            $this->saveOwnTemporaryUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
+                            $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
+                            $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
                             $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
@@ -569,8 +570,8 @@ class plugin extends basePlugin {
                 $uploadedFileNames = array();
                 foreach ($filesToUpload as $fileName) {
                     $newFileName = $ProductID . uniqid(time());
-                    $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . DS . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
-                    $this->saveOwnTemporaryUploadedFile('xs' . DS . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
+                    $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadDir($ProductID, 'sm'), $newFileName);
+                    $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadDir($ProductID, 'xs'), $newFileName);
                     $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadDir($ProductID), $newFileName);
                     $uploadedFileNames[] = $uploadInfo['filename'];
                 }
@@ -1145,7 +1146,7 @@ class plugin extends basePlugin {
 
         $pluginAccount = $this->getAnotherPlugin('account');
 
-        $formSettings = $this->api->settings->getSettingsMapFormOrder();
+        $formSettings = $this->getAPI()->settings->getSettingsMapFormOrder();
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
@@ -1965,11 +1966,11 @@ class plugin extends basePlugin {
         }
         // daily update
         if ($force || $isExpired || empty($_SESSION['shop:statuses:list'])) {
-            $statusDump[$this->getConfiguration()->data->Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrders);
-            $statusDump[$this->getConfiguration()->data->Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopProducts);
-            $statusDump[$this->getConfiguration()->data->Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrigins);
-            $statusDump[$this->getConfiguration()->data->Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopCategories);
-            $statusDump[$this->getConfiguration()->data->Table_ShopDeliveryAgencies] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopDeliveryAgencies);
+            // $statusDump[$this->getConfiguration()->data->Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrders);
+            // $statusDump[$this->getConfiguration()->data->Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopProducts);
+            // $statusDump[$this->getConfiguration()->data->Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrigins);
+            // $statusDump[$this->getConfiguration()->data->Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopCategories);
+            // $statusDump[$this->getConfiguration()->data->Table_ShopDeliveryAgencies] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopDeliveryAgencies);
             // $statusDump[$this->getConfiguration()->data->Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopSettings);
             $_SESSION['shop:statuses:list'] = $statusDump;
             $_SESSION['shop:statuses:expire'] = mktime() + 24 * 60 * 60;
@@ -2609,7 +2610,7 @@ class plugin extends basePlugin {
             if (!empty($order['PromoID']))
                 $order['promo'] = $this->getPromoByID($order['PromoID']);
             if (!empty($order['DeliveryID']))
-                $order['delivery'] = $this->api->delivery->getDeliveryAgencyByID($order['DeliveryID']);
+                $order['delivery'] = $this->getAPI()->delivery->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
             $configBoughts = $this->getConfiguration()->data->jsapiShopGetOrderBoughts($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
@@ -2670,7 +2671,7 @@ class plugin extends basePlugin {
             "productUniqueCount" => count($productItems),
             "hasPromo" => isset($order['promo']['Discount']) && $order['promo']['Discount'] > 0,
             "allProductsWithPromo" => true,
-            "deliveries" => $this->api->delivery->getActiveDeliveryList()
+            "deliveries" => $this->getAPI()->delivery->getActiveDeliveryList()
         );
         // calc order totals
         foreach ($productItems as $product) {

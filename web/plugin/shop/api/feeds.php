@@ -1,6 +1,10 @@
 <?php
 namespace web\plugin\shop\api;
 
+use \engine\lib\uploadHandler as JqUploadLib;
+use \engine\lib\path as Path;
+use \engine\lib\PHPExcel as PHPExcel;
+
 class feeds extends \engine\object\api {
 
     public function getDirNameFeeds () {
@@ -89,22 +93,20 @@ class feeds extends \engine\object\api {
         // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
         // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
         // $options = array(
-        //     'script_url' => configurationDefaultUrls::$upload,
+        //     'script_url' =>  $this->getCustomer()->getConfiguration()->urls->upload,
         //     'download_via_php' => true,
-        //     'web_import_temp_dir' => \engine\lib\utils::getAppTemporaryDirectory(),
-        //     'upload_dir' => \engine\lib\utils::getUploadTemporaryDirectory(),
+        //     'web_import_temp_dir' => Path::getAppTemporaryDirectory(),
+        //     'upload_dir' => Path::getUploadTemporaryDirectory(),
         //     'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
         // );
-        // $upload_handler = new \engine\lib\uploadHandler($options, false);
+        // $upload_handler = new JqUploadLib($options, false);
         // $rez = $upload_handler->importFromUrl($urls, false);
-        var_dump(DR);
-        \engine\lib\util::var_dump(1);
         return $rez;
     }
 
     public function generateProductFeed () {
         $options = array('limit' => 0);
-        $objPHPExcel = new \engine\lib\PHPExcel();
+        $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
             ->setLastModifiedBy("Maarten Balliauw")
             ->setTitle("PHPExcel Test Document")

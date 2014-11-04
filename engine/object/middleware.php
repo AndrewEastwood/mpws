@@ -1,7 +1,7 @@
 <?php
 namespace engine\object;
 
-class extension {
+class middleware {
 
     private $customer;
 
@@ -18,7 +18,7 @@ class extension {
     }
 
     public function getCustomerConfiguration () {
-        return $this->customer->getDataBase();
+        return $this->customer->getConfiguration();
     }
 
 }

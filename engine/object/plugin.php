@@ -5,7 +5,7 @@ use \engine\lib\utils as Utils;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
 
-class plugin implements \engine\interface\IPlugin {
+class plugin {
 
     private $api;
     private $customer;
@@ -31,7 +31,7 @@ class plugin implements \engine\interface\IPlugin {
         foreach ($pluginApis as $apiName => $apiFilePath) {
             $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
             // save plugin instance
-            $api[$apiFileName] = new $apiClass($customer, $this, $pluginName, $app);
+            $api[$apiName] = new $apiClass($customer, $this, $pluginName, $app);
         }
         $this->api = (object)$api;
     }
@@ -76,13 +76,13 @@ class plugin implements \engine\interface\IPlugin {
         if (empty($targetDir)) {
             return Path::getUploadDirectory($this->getName());
         }
-        return Path::getUploadDirectory($this->getName() . DS . $targetDir);
+        return Path::getUploadDirectory($this->getName() . Path::getDirectorySeparator() . $targetDir);
     }
     public function getOwnUploadPathWeb ($targetDir = null) {
         if (empty($targetDir)) {
             return Path::getUploadWebPath($this->getName());
         }
-        return Path::getUploadWebPath($this->getName() . DS . $targetDir);
+        return Path::getUploadWebPath($this->getName() . Path::getDirectorySeparator() . $targetDir);
     }
 
     public function getOwnUploadedFile ($name, $targetDir = null) {
@@ -97,7 +97,7 @@ class plugin implements \engine\interface\IPlugin {
 
     public function saveOwnTemporaryUploadedFile ($tmpFileName, $targetDir, $name = false) {
         $uniqueName = empty($name) ? mktime() : $name;
-        $uploadedFileInfo = Path::moveTemporaryFile($tmpFileName, $this->getName() . DS . $targetDir, $uniqueName);
+        $uploadedFileInfo = Path::moveTemporaryFile($tmpFileName, $this->getName() . Path::getDirectorySeparator() . $targetDir, $uniqueName);
         return $uploadedFileInfo;
     }
 

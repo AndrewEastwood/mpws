@@ -1,16 +1,14 @@
 <?php
-    // namespace engine\controller;
 
-    // use \engine\bootstrap as App;
+    namespace engine\controller;
 
-    // header('Content-Type: application/json; charset=utf-8');
-    // // set request realm
-    // define ('MPWS_REQUEST', 'API');
-    // // start session
-    // session_start();
-    // // bootstrap
-    // include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
+    include $_SERVER['DOCUMENT_ROOT'] . 'app.php';
 
-    // $app = new App();
-    // $app->startApplication('api');
+    use \engine\app as App;
+
+    $app = new App('api', 'Content-Type: application/json; charset=utf-8');
+
+    $app->startApplication();
+
+    echo $app->getJSONResponse();
 ?>

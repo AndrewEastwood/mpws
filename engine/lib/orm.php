@@ -2,6 +2,13 @@
 
 namespace engine\lib;
 
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
+use Serializable;
+use Exception;
+use PDO;
+
     /**
      *
      * Idiorm

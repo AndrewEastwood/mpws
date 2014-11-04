@@ -12,7 +12,11 @@ spl_autoload_register(function ($className) {
     }
     $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
+    // if (file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . $fileName)) {
     require $fileName;
+    //     return true;
+    // }
+    // return false;
 });
 
 use \engine\lib\response as Response;
@@ -42,7 +46,7 @@ class app {
     private $isDebug = true;
     private $isToolbox = false;
     private $customerName = false;
-    private $displayCustoner = false;
+    private $displayCustomer = false;
     private $runMode = false;
     private $customer = false;
     private $header = false;
@@ -66,7 +70,7 @@ class app {
             $this->customerName = $h;
         $this->customerName = str_replace('.', '_', $this->customerName);
         // get display customer
-        $this->displayCustoner = $this->isToolbox() ? 'toolbox' : $this->customerName();
+        $this->displayCustomer = $this->isToolbox() ? 'toolbox' : $this->customerName();
         // get build version
         $this->buildVersion = file_get_contents(Path::createPathWithRoot('version.txt'));
         $PHP_INPUT = file_get_contents('php://input');
@@ -88,8 +92,8 @@ class app {
         return $this->customerName;
     }
 
-    public function displayCustoner () {
-        return $this->displayCustoner;
+    public function displayCustomer () {
+        return $this->displayCustomer;
     }
 
     public function runMode () {
@@ -101,7 +105,11 @@ class app {
     }
 
     public function getResponse () {
-        return Response::sendResponse();
+        return Response::getResponse();
+    }
+
+    public function getJSONResponse () {
+        return Response::getJSONResponse();
     }
 
     public function startApplication () {

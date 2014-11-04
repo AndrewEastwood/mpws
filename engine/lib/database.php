@@ -81,14 +81,15 @@ class database {
         return json_encode($this->_fetchData($config));
     }
 
-    public function getTableStatusFieldOptions($table) {
-        $config = \engine\object\configuration::jsapiUtil_GetTableStatusFieldOptions($table);
-        $data = $this->getData($config);
-        // var_dump($data);
-        preg_match('#^enum\((.*?)\)$#ism', $data['Type'], $matches);
-        $enum = str_getcsv($matches[1], ",", "'");
-        return $enum;
-    }
+    // public function getTableStatusFieldOptions($table) {
+    //     ObjectConfiguration
+    //     $config = ::jsapiUtil_GetTableStatusFieldOptions($table);
+    //     $data = $this->getData($config);
+    //     // var_dump($data);
+    //     preg_match('#^enum\((.*?)\)$#ism', $data['Type'], $matches);
+    //     $enum = str_getcsv($matches[1], ",", "'");
+    //     return $enum;
+    // }
 
     public function getLastInsertId () {
         return $this->dbo->mpwsGetLastInsertId();
@@ -280,14 +281,6 @@ class database {
         if (!empty($config['options']))
             foreach ($config['options'] as $key => $_options)
                 switch ($key) {
-                    case 'transformToArray':
-                        // optimize values
-                        $dbData = $this->_mpwsOptimizeDataValues($dbData, $_options ?: array());
-                        break;
-                    case 'combineDataByKeys':
-                        // var_dump($dbData);
-                        $dbData = $this->_mpwsCombineDataByKeys($dbData, $_options['mapKeysToCombine'], isset($_options['doOptimization']) ?: true, isset($_options['keysToForceTransformToArray']) ? $_options['keysToForceTransformToArray'] : array());
-                        break;
                     case 'expandSingleRecord':
                         if (is_bool($_options))
                             $_opt_expandSingleRecord = $_options;
@@ -340,77 +333,6 @@ class database {
         return $data;
     }
 
-    public function _mpwsOptimizeDataValues ($dataArray, $keysToForceTransformToArray) {
-        $keysToForceTransformToArray = is_array($keysToForceTransformToArray) ? $keysToForceTransformToArray : array();
-        // optimize values:
-        // 1. values like: 1#EXPLODE#2#EXPLODE#....
-        //    will be converted to array [1, 2, n]
-        foreach ($dataArray as $key => $value) {
-            if (is_array($value))
-                $dataArray[$key] = $this->_mpwsOptimizeDataValues($value, $keysToForceTransformToArray);
-            else if (strstr($value, EXPLODE) || in_array($key, $keysToForceTransformToArray))
-                $dataArray[$key] = explode(EXPLODE, $value);
-        }
-        return $dataArray;
-
-    }
-    public function _mpwsCombineDataByKeys ($dataArray, $mapKeysToCombine, $doOptimization, $keysToForceTransformToArray) {
-        // $newArray = array();
-
-        if ($doOptimization)
-            $dataArray = $this->_mpwsOptimizeDataValues($dataArray, $keysToForceTransformToArray);
-
-        // var_dump($mapKeysToCombine);
-        // var_dump($dataArray);
-        // values will be combinet into 
-        foreach ($mapKeysToCombine as $destKey => $keyMap) {
-
-            if (!isset($dataArray[$keyMap['keys']]) || !isset($dataArray[$keyMap['values']])) {
-                foreach ($dataArray as $key => $value)
-                    if (is_array($value))
-                        $dataArray[$key] = $this->_mpwsCombineDataByKeys($dataArray[$key], $mapKeysToCombine, $doOptimization, $keysToForceTransformToArray);
-                continue;
-            }
-
-            $_keys = $dataArray[$keyMap['keys']];
-            $_values = $dataArray[$keyMap['values']];
-
-            if (!empty($_keys) && !is_array($_keys))
-                $_keys = array($_keys);
-
-            if (!empty($_values) && !is_array($_values))
-                $_values = array($_values);
-
-            if (!is_array($_keys) || !is_array($_values))
-                continue;
-
-            $_combinedData = array();
-
-            // var_dump($_keys);
-            // var_dump($_values);
-            for ($_idx = 0, $_len = count($_keys); $_idx < $_len; $_idx++) {
-                if (isset($_combinedData[$_keys[$_idx]])) {
-                    if (is_array($_combinedData[$_keys[$_idx]]))
-                        $_combinedData[$_keys[$_idx]][] = $_values[$_idx];
-                    else
-                        $_combinedData[$_keys[$_idx]] = array($_combinedData[$_keys[$_idx]], $_values[$_idx]);
-                } else
-                    $_combinedData[$_keys[$_idx]] = $_values[$_idx];
-            }
-
-            // $dataArray[$destKey] = array_combine($_keys, $_values);
-            $dataArray[$destKey] = $_combinedData;
-
-            if (isset($keyMap['keepOriginal']))
-                continue;
-
-            // remove orignial sources
-            unset($dataArray[$keyMap['keys']]);
-            unset($dataArray[$keyMap['values']]);
-
-        }
-        return $dataArray;
-    }
 }
 
 ?>

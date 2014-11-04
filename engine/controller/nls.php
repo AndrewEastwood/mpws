@@ -1,21 +1,26 @@
 <?php
-    // namespace engine\controller;
+    namespace engine\controller;
+    include $_SERVER['DOCUMENT_ROOT'] . 'app.php';
 
+    use \engine\app as App;
+    use \engine\lib\request as Request;
+    use \engine\lib\path as Path;
     // header('Content-Type: application/json; charset=utf-8');
 
+    $app = new App('nls', 'Content-Type: application/json; charset=utf-8');
     // include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
-    // $customer = \engine\lib\request::fromGET('customer');
-    // $langfile = \engine\lib\request::fromGET('lang');
+    $customer = Request::fromGET('customer');
+    $langFileName = Request::fromGET('lang');
 
-    // if (MPWS_ENV === 'DEV')
-    //     $layoutCustomer = glGetFullPath('web', 'customer', $customer, 'static', 'nls', $langfile);
-    // else
-    //     $layoutCustomer = glGetFullPath('web', 'build', 'customer', $customer, 'static', 'nls', $langfile);
+    if ($app->isDebug())
+        $langFilePath = Path::createPathWithRoot('web', 'customer', $customer, 'static', 'nls', $langFileName);
+    else
+        $langFilePath = Path::createPathWithRoot('web', 'build', 'customer', $customer, 'static', 'nls', $langFileName);
 
-    // if (file_exists($layoutCustomer))
-    //     echo file_get_contents($layoutCustomer);
-    // else
-    //     echo "{}";
+    if (file_exists($langFilePath))
+        echo file_get_contents($langFilePath);
+    else
+        echo "{}";
 
 ?>

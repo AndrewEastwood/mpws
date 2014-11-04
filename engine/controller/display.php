@@ -8,9 +8,7 @@
 
     $app = new App();
 
-    // var_dump($app);
-
     $app->startApplication();
 
-    // echo $app->getResponse();
+    echo $app->getResponse();
 ?>

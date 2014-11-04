@@ -5,7 +5,7 @@ DirectoryIndex /engine/controller/display.php
 
 # STATIC:
 RewriteRule ^static/customer/(.*)/nls/(.*) /engine/controller/nls.php?customer=$1&lang=$2 [L]
-RewriteRule ^static/(customer|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
+RewriteRule ^static/(customer|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
 
 # API
 RewriteRule ^api\.js?(.*) /engine/controller/api.php?$1 [QSA,L]

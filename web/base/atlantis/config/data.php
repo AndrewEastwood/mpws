@@ -1,12 +1,12 @@
 <?php
 
-namespace web\default\atlantis\config;
+namespace web\base\atlantis\config;
 
 use \engine\object\configuration as baseConfig;
 
 class data extends baseConfig {
 
-    var $Table_SystemAccounts = "mpws_accounts";
+    public $Table_SystemAccounts = "mpws_accounts";
 
     public function jsapiGetNewPermission () {
         $perms = array(
@@ -19,7 +19,7 @@ class data extends baseConfig {
         return $perms;
     }
 
-    public function jsapiGetCustomer ($ExternalKey = MPWS_CUSTOMER) {
+    public function jsapiGetCustomer ($ExternalKey) {
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "mpws_customer",
             "fields" => array("*"),

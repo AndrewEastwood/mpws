@@ -7,10 +7,12 @@ use \engine\lib\request as Request;
 use \engine\lib\response as Response;
 use \engine\lib\database as DB;
 use \engine\lib\uploadHandler as JqUploadLib;
+use \engine\lib\validate as Validate;
+use \engine\lib\secure as Secure;
 // use \engine\interfaces\ICustomer as ICustomer;
-use \engine\object\multiExtendable as MultiExtendable;
+// use \engine\object\multiExtendable as MultiExtendable;
 
-class customer extends MultiExtendable {
+class customer {
 
     private $version = 'atlantis';
     private $app;
@@ -20,6 +22,7 @@ class customer extends MultiExtendable {
     // private $extensions;
     private $customerInfo;
     private $htmlPage;
+    private $permissions;
 
     function __construct($app) {
 
@@ -31,9 +34,9 @@ class customer extends MultiExtendable {
         $customerConfigs = Path::getCustomerConfigurationFilesMap($this->getApp()->customerName());
         foreach ($defaultConfigs as $configName => $configFilePath) {
             if (isset($customerConfigs[$configName])) {
-                $configClass = '\\web\\plugin\\' . $pluginName . '\\config\\' . $pInfo['filename'];
+                $configClass = '\\web\\customer\\' . $this->customerName() . '\\config\\' . $configName;
             } else {
-                $configClass = '\\web\\plugin\\' . $this->getVersion() . '\\config\\' . $pInfo['filename'];
+                $configClass = '\\web\\base\\' . $this->getVersion() . '\\config\\' . $configName;
             }
             $configuration[$configName] = new $configClass();
         }
@@ -43,8 +46,8 @@ class customer extends MultiExtendable {
         $this->dbo = new DB($this->getConfiguration()->db->getConnectionParams($this->getApp()->isDebug()));
 
         // init extensions
-        $this->addExtension(new \engine\extension\auth($this)); // move to middleware
-        $this->addExtension(new \engine\extension\dataInterface($this)); // thinnk to optmize
+        // $this->addExtension(new \engine\extension\auth($this)); // move to middleware
+        // $this->addExtension(new \engine\extension\dataInterface($this)); // thinnk to optmize
 
         // init plugins
         $_pluginPath = Path::createPathWithRoot('web', 'plugin');
@@ -62,6 +65,10 @@ class customer extends MultiExtendable {
         return $this->app;
     }
 
+    public function customerName () {
+        return $this->getApp()->customerName();
+    }
+
     public function getConfiguration () {
         return $this->configuration;
     }
@@ -71,29 +78,17 @@ class customer extends MultiExtendable {
     }
 
     public function getHtmlPage () {
-        $displayCustomer = $this->getApp()->displayCustoner();
-        $layout = 'layout.hbs';
-        $layoutBody = 'layoutBody.hbs';
+        $displayCustomer = $this->getApp()->displayCustomer();
+        $layout = $this->getConfiguration()->display->Layout;
+        $layoutBody = $this->getConfiguration()->display->LayoutBody;
 
-        // get customer or default index layout
-        if ($this->getApp()->isDebug()) {
-            // get layout
-            $layoutCustomer = Path::createPathWithRoot('web', 'customer', $displayCustomer, 'static', 'hbs', $layout);
-            $layoutDefault = Path::createPathWithRoot('web', 'default', $this->getVersion(), 'static', 'hbs', $layout);
-            // get layout body
-            $layoutBodyCustomer = Path::createPathWithRoot('web', 'customer', $displayCustomer, 'static', 'hbs', $layoutBody);
-            $layoutBodyDefault = Path::createPathWithRoot('web', 'default', $this->getVersion(), 'static', 'hbs', $layoutBody);
-        } else {
-            // get layout
-            $layoutCustomer = Path::createPathWithRoot('web', 'build', 'customer', $displayCustomer, 'static', 'hbs', $layout);
-            $layoutDefault = Path::createPathWithRoot('web', 'build', 'default', $this->getVersion(), 'static', 'hbs', $layout);
-            // get layout body
-            $layoutBodyCustomer = Path::createPathWithRoot('web', 'build', 'customer', $displayCustomer, 'static', 'hbs', $layoutBody);
-            $layoutBodyDefault = Path::createPathWithRoot('web', 'build', 'default', $this->getVersion(), 'static', 'hbs', $layoutBody);
-        }
+        $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $this->getVersion(), $layout, $this->getApp()->isDebug());
+        $layoutBodyCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $this->getVersion(), $layoutBody, $this->getApp()->isDebug());
 
-        debug($layoutCustomer, 'layoutCustomer');
-        debug($layoutDefault, 'layoutDefault');
+        // var_dump($displayCustomer);
+        // var_dump($this->getVersion());
+        // var_dump($layoutCustomer, 'layoutCustomer');
+        // var_dump($layoutDefault, 'layoutDefault');
 
         $staticPath = 'static';
         $initialJS = "{
@@ -114,25 +109,13 @@ class customer extends MultiExtendable {
             URL_STATIC_CUSTOMER: '/" . Path::createPath($staticPath, 'customer', $displayCustomer, true) . "',
             URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, 'customer', $displayCustomer, true) . "',
             URL_STATIC_PLUGIN: '/" . Path::createPath($staticPath, 'plugin', true) . "',
-            URL_STATIC_DEFAULT: '/" . Path::createPath($staticPath, 'default', $this->getVersion(), true) . "',
+            URL_STATIC_DEFAULT: '/" . Path::createPath($staticPath, 'base', $this->getVersion(), true) . "',
             ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
 
-        $html = '';
-        $layoutBodyContent = '';
-
-        // init html with layout content
-        if (file_exists($layoutCustomer))
-            $html = file_get_contents($layoutCustomer);
-        else if (file_exists($layoutDefault))
-            $html = file_get_contents($layoutDefault);
-
-        // get layout body content
-        if (file_exists($layoutBodyCustomer))
-            $layoutBodyContent = file_get_contents($layoutBodyCustomer);
-        else if (file_exists($layoutBodyDefault))
-            $layoutBodyContent = file_get_contents($layoutBodyDefault);
+        $html = file_get_contents($layoutCustomer);
+        $layoutBodyContent = file_get_contents($layoutBodyCustomer);
 
         // add system data
         $html = str_replace("{{BODY}}", $layoutBodyContent, $html);
@@ -141,6 +124,7 @@ class customer extends MultiExtendable {
         $html = str_replace("{{MPWS_VERSION}}", $this->getVersion(), $html);
         $html = str_replace("{{MPWS_CUSTOMER}}", $displayCustomer, $html);
         $html = str_replace("{{PATH_STATIC}}", $staticPath, $html);
+
         return $html;
     }
 
@@ -151,7 +135,7 @@ class customer extends MultiExtendable {
 
     public function getCustomerInfo () {
         if (empty($this->customerInfo)) {
-            $config = $this->getConfiguration()->data->jsapiGetCustomer();
+            $config = $this->getConfiguration()->data->jsapiGetCustomer($this->customerName());
             $this->customerInfo = $this->getDataBase()->getData($config);
         }
         return $this->customerInfo;
@@ -218,7 +202,7 @@ class customer extends MultiExtendable {
     }
 
     public function runAsAUTH () {
-        Request::processRequest($this->getExtension('Auth'));
+        Request::processRequest($this);
     }
     public function runAsUPLOAD () {
         /*
@@ -232,7 +216,7 @@ class customer extends MultiExtendable {
          * http://www.opensource.org/licenses/MIT
          */
         $options = array(
-            'script_url' => configurationDefaultUrls::$upload,
+            'script_url' => $this->getConfiguration()->urls->upload,
             'download_via_php' => true,
             'upload_dir' => Utils::getUploadTemporaryDirectory(),
             'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
@@ -246,6 +230,196 @@ class customer extends MultiExtendable {
             $plugin->run();
     }
 
+    public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
+        $limit = $dsConfig['limit'];
+        $page = 1;
+        $items = array();
+
+        if ($dsConfig['action'] !== "select")
+            throw new Exception("ErrorProcessingDataListMethod", 1);
+
+        // grab other fields
+        foreach ($options as $key => $value) {
+            $matches = array();
+            if (preg_match("/^_f(\w+)$/", $key, $matches)) {
+                // $matches
+                $field = $matches[1];
+                // parse value
+                $parsedValue = array();
+                preg_match("/([0-9A-Za-z%\,_-]+)\:(.*)$/", $value, $parsedValue);
+                // var_dump($field);
+                // var_dump($value);
+                $count = count($parsedValue);
+                // var_dump($parsedValue);
+                // var_dump($count);
+                if ($count === 0)
+                    $dsConfig['condition'][$field] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($value);
+                elseif ($count === 3) {
+                    $value = $parsedValue[1];
+                    $comparator = $parsedValue[2];
+                    if (strtolower($comparator) === 'in')
+                        $value = explode(',', $parsedValue[1]);
+                    $dsConfig['condition'][$field] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($value, $comparator);
+                }
+            }
+        }
+
+        // var_dump($dsConfig['condition']);
+        // get data total records
+        $configCount = $this->getConfiguration()->data->jsapiUtil_GetTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
+        
+        $countData = $this->fetch($configCount);
+        $count = intval($countData["ItemsCount"]);
+
+        if (!empty($options)) {
+            if (isset($options['sort']))
+                $dsConfig['order']['field'] = $options['sort'];
+            if (isset($options['order']))
+                $dsConfig['order']['ordering'] = $options['order'];
+
+            if (isset($options['page']))
+                $page = intval($options['page']);
+            if (isset($options['limit']))
+                $limit = intval($options['limit']);
+
+            if ($count > 0) {
+                if ($limit >= 1)
+                    $dsConfig['limit'] = $limit;
+                if ($page >= 1 && $limit >= 1) {
+                    if ($page > round($count / $limit + 0.49)) {
+                        $page = round($count / $limit + 0.49);
+                    }
+                    $dsConfig['offset'] = ($page - 1) * $limit;
+                } elseif ($page === 0)
+                    $page = 1;
+            }
+        }
+
+        // var_dump($dsConfig);
+        // get data
+        $items = $this->fetch($dsConfig) ?: array();
+        // var_dump($items);
+
+        if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
+            $parseFn = $callbacks['parse'];
+            $items = $parseFn($items) ?: array();
+        }
+
+        $rez = array();
+
+        $listInfo = array(
+            "page" => $page,
+            "limit" => $limit,
+            "total_pages" => empty($limit) ? 1 : round($count / $limit + 0.49),
+            "total_entries" => $count
+        );
+
+        if (isset($dsConfig['order']['field'])) {
+            $listInfo["order_by"] = $dsConfig['order']['field'];
+        }
+
+        if (isset($dsConfig['order']['ordering'])) {
+            $listInfo["order"] = $dsConfig['order']['ordering'];
+        }
+
+        $rez["info"] = $listInfo;
+        $rez["items"] = $items ?: array();
+
+        return $rez;
+    }
+
+    private function _setPermissions ($perms) {
+        $listOfDOs = array();
+        // adjust permission values
+        foreach ($perms as $field => $value) {
+            if (preg_match("/^Can/", $field) === 1)
+                $listOfDOs[$field] = intval($value) === 1;
+        }
+        $this->permissions = $listOfDOs;
+    }
+
+    public function getPermissions () {
+        return $this->permissions;
+    }
+
+    public function ifYouCan ($action) {
+        $permissions = $this->getPermissions();
+        if (!isset($permissions['Can' . $action]))
+            return false;
+        return $this->permissions['Can' . $action];
+    }
+
+    public function getAuthID () {
+        if (!isset($_SESSION['AccountID']))
+            $_SESSION['AccountID'] = null;
+        if (isset($_SESSION['AccountID'])) {
+            $configPermissions = $this->getConfiguration()->data->jsapiGetPermissions($_SESSION['AccountID']);
+            $permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
+            $this->_setPermissions($permissions);
+            if ($this->getCustomer()->getApp()->isToolbox() && !$this->ifYouCan('Admin')) {
+                return $this->clearAuthID();
+            }
+        }
+        return $_SESSION['AccountID'];
+    }
+
+    public function updateSessionAuth () {
+        $authID = $this->getAuthID();
+        setcookie('auth_id', $authID, time() + 3600, '/');
+    }
+
+    public function clearAuthID () {
+        if (!empty($_SESSION['AccountID'])) {
+            $configOffline = $this->getConfiguration()->data->jsapiSetOnlineAccount($_SESSION['AccountID']);
+            $this->getCustomer()->fetch($configOffline);
+        }
+        $_SESSION['AccountID'] = null;
+        $this->_setPermissions(array());
+        return null;
+    }
+
+    public function get_status (&$resp) {
+        $resp['auth_id'] = $this->getAuthID();
+        $this->updateSessionAuth();
+    }
+
+    public function post_signin (&$resp, $req) {
+
+        $password = $req->post['password'];
+        $email = $req->post['email'];
+        $remember = $req->post['remember'];
+
+        if (empty($email) || empty($password)) {
+            $resp['error'] = 'WrongCredentials';
+            return;
+        }
+
+        $password = Secure::EncodeAccountPassword($password);
+
+        $config = $this->getConfiguration()->data->jsapiGetAccountByCredentials($email, $password);
+        // avoid removed account
+        $config["fields"] = array("ID");
+        $config["condition"]["Status"] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition('REMOVED', '!=');
+        $account = $this->getCustomer()->fetch($config);
+        $AccountID = null;
+        // var_dump($config);
+        if (empty($account))
+            $resp['error'] = 'WrongCredentials';
+        else {
+            $AccountID = intval($account['ID']);
+            $_SESSION['AccountID'] = $AccountID;
+            // set online state for account
+            $configOnline = $this->getConfiguration()->data->jsapiSetOnlineAccount($AccountID);
+            $this->getCustomer()->fetch($configOnline);
+        }
+        $resp['auth_id'] = $this->getAuthID();
+        $this->updateSessionAuth();
+    }
+
+    public function post_signout (&$resp) {
+        $resp['auth_id'] = $this->clearAuthID();
+        $this->updateSessionAuth();
+    }
 }
 
 ?>

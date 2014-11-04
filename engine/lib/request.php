@@ -8,10 +8,6 @@ class request {
 
     private static $PHP_INPUT = false;
 
-    static function test () {
-        echo 'I AM TEST';
-    }
-
     static function setPhpInput ($data) {
         self::$PHP_INPUT = $data;
     }
@@ -25,7 +21,7 @@ class request {
         return (object) array(
             "get" => $_GET,
             "post" => $_POST,
-            "data" => json_decode($self::$PHP_INPUT, true)
+            "data" => json_decode(self::$PHP_INPUT, true)
         );
     }
 
@@ -77,14 +73,14 @@ class request {
             $requestFnElements[] = $_fn;
 
         $fn = join("_", $requestFnElements);
-        // var_dump($context);
-        // echo $fn;
+        // var_dump($context->api);
+        // echo $_fn;
         // var_dump($requestFnElements);
         // var_dump($_REQ);
         // var_dump(isset($context->api->$_fn));
         if (!empty($context)) {
-            if (isset($context->api->$_fn) && method_exists($context->api->$_fn, $_method)) {
-                $context->api->$_fn->$_method(Response::$_RESPONSE, $_REQ);
+            if (method_exists($context, 'getAPI') && isset($context->getAPI()->$_fn) && method_exists($context->getAPI()->$_fn, $_method)) {
+                $context->getAPI()->$_fn->$_method(Response::$_RESPONSE, $_REQ);
                 // var_dump(\engine\lib\response::$_RESPONSE);
             } elseif (method_exists($context, $fn)) {
                 $context->$fn(Response::$_RESPONSE, $_REQ);
@@ -93,23 +89,23 @@ class request {
     }
 
     /* state grabbers */
-    static function isJsApiRequest () {
-        //echo 'RequestAction is ' . self::getAction();
-        // return self::getAction() === 'api';
-        return MPWS_REQUEST === "API";
-    }
+    // static function isJsApiRequest () {
+    //     //echo 'RequestAction is ' . self::getAction();
+    //     // return self::getAction() === 'api';
+    //     return MPWS_REQUEST === "API";
+    // }
 
     public static function getOrValidatePageSecurityToken($privateKey, $publicKey = '') {
-        if (!empty($publicKey)) {
-            if (!empty($_SESSION['MPWS_SESSION_TOKEN']))
-                return $_SESSION['MPWS_SESSION_TOKEN'] === $publicKey;
-            return $publicKey === self::getOrValidatePageSecurityToken($privateKey);
-        }
-        if (!self::isJsApiRequest()) {
-            // make token
-            $_SESSION['MPWS_SESSION_TOKEN'] = md5($privateKey . date('Y-m-d'));
-            // echo 'MPWS_SESSION_TOKEN=' . $_SESSION['MPWS_SESSION_TOKEN'];
-        }
+        // if (!empty($publicKey)) {
+        //     if (!empty($_SESSION['MPWS_SESSION_TOKEN']))
+        //         return $_SESSION['MPWS_SESSION_TOKEN'] === $publicKey;
+        //     return $publicKey === self::getOrValidatePageSecurityToken($privateKey);
+        // }
+        // if (!self::isJsApiRequest()) {
+        //     // make token
+        //     $_SESSION['MPWS_SESSION_TOKEN'] = md5($privateKey . date('Y-m-d'));
+        //     // echo 'MPWS_SESSION_TOKEN=' . $_SESSION['MPWS_SESSION_TOKEN'];
+        // }
         return isset($_SESSION['MPWS_SESSION_TOKEN']) ? $_SESSION['MPWS_SESSION_TOKEN'] : null;
     }
 
