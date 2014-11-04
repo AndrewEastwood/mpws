@@ -354,9 +354,9 @@ class customer {
             $_SESSION['AccountID'] = null;
         if (isset($_SESSION['AccountID'])) {
             $configPermissions = $this->getConfiguration()->data->jsapiGetPermissions($_SESSION['AccountID']);
-            $permissions = $this->getCustomer()->fetch($configPermissions, true) ?: array();
+            $permissions = $this->fetch($configPermissions, true) ?: array();
             $this->_setPermissions($permissions);
-            if ($this->getCustomer()->getApp()->isToolbox() && !$this->ifYouCan('Admin')) {
+            if ($this->getApp()->isToolbox() && !$this->ifYouCan('Admin')) {
                 return $this->clearAuthID();
             }
         }
@@ -371,7 +371,7 @@ class customer {
     public function clearAuthID () {
         if (!empty($_SESSION['AccountID'])) {
             $configOffline = $this->getConfiguration()->data->jsapiSetOnlineAccount($_SESSION['AccountID']);
-            $this->getCustomer()->fetch($configOffline);
+            $this->fetch($configOffline);
         }
         $_SESSION['AccountID'] = null;
         $this->_setPermissions(array());
@@ -400,7 +400,7 @@ class customer {
         // avoid removed account
         $config["fields"] = array("ID");
         $config["condition"]["Status"] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition('REMOVED', '!=');
-        $account = $this->getCustomer()->fetch($config);
+        $account = $this->fetch($config);
         $AccountID = null;
         // var_dump($config);
         if (empty($account))
@@ -410,7 +410,7 @@ class customer {
             $_SESSION['AccountID'] = $AccountID;
             // set online state for account
             $configOnline = $this->getConfiguration()->data->jsapiSetOnlineAccount($AccountID);
-            $this->getCustomer()->fetch($configOnline);
+            $this->fetch($configOnline);
         }
         $resp['auth_id'] = $this->getAuthID();
         $this->updateSessionAuth();

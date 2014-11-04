@@ -21,7 +21,7 @@ class plugin extends basePlugin {
         $AccountID = $account['ID'];
         // get account info
         // get account addresses
-        $configAddresses = $this->getCustomerConfiguration()->data->jsapiGetAccountAddresses($AccountID);
+        $configAddresses = $this->getCustomerConfiguration()->data->jsapiGetAccountAddresses($AccountID, $this->getCustomer()->getApp()->isToolbox());
         $account['Addresses'] = $this->getCustomer()->fetch($configAddresses) ?: array();
         
         $configPermissions = $this->getCustomerConfiguration()->data->jsapiGetPermissions($AccountID);

@@ -1,6 +1,8 @@
 <?php
 namespace engine;
 
+define('MPWS_ROOT', dirname(__FILE__) . '/');
+
 spl_autoload_register(function ($className) {
     $className = ltrim($className, '\\');
     $fileName  = '';
@@ -12,11 +14,19 @@ spl_autoload_register(function ($className) {
     }
     $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
-    // if (file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . $fileName)) {
-    require $fileName;
-    //     return true;
-    // }
-    // return false;
+    if (file_exists(MPWS_ROOT . DIRECTORY_SEPARATOR . $fileName)) {
+        require $fileName;
+    }
+    return false;
+});
+
+spl_autoload_register(function ($className) {
+    $fileName = MPWS_ROOT . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
+    $fileName .= $className . '.php';
+    if (file_exists($fileName)) {
+        require $fileName;
+    }
+    return false;
 });
 
 use \engine\lib\response as Response;

@@ -3,7 +3,8 @@ namespace web\plugin\shop\api;
 
 use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\path as Path;
-use \engine\lib\PHPExcel as PHPExcel;
+use PHPExcel as PHPExcel;
+use PHPExcel_IOFactory as PHPExcel_IOFactory;
 
 class feeds extends \engine\object\api {
 

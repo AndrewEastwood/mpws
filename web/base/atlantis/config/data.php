@@ -202,7 +202,7 @@ class data extends baseConfig {
         ));
     }
 
-    public function jsapiGetAccountAddresses ($AccountID) {
+    public function jsapiGetAccountAddresses ($AccountID, $withRemoved = false) {
         $config = $this->jsapiGetDataSourceConfig(array(
             "source" => "mpws_accountAddresses",
             "fields" => array("ID", "AccountID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
@@ -213,7 +213,7 @@ class data extends baseConfig {
                 "asDict" => "ID"
             )
         ));
-        if (!glIsToolbox())
+        if (!$withRemoved)
             $config['condition']["Status"] = $this->jsapiCreateDataSourceCondition("ACTIVE");
         return $config;
     }

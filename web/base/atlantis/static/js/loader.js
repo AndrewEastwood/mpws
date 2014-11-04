@@ -249,7 +249,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         // return Site;
         $(window).trigger('hashchange');
         // get auth status
-        Auth.getStatus();
+        // Auth.getStatus();
         // set completion state
         APP.isCompleted = true;
     });

@@ -6,6 +6,7 @@ use \engine\object\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use Exception;
 
 class plugin extends basePlugin {
 
@@ -30,7 +31,7 @@ class plugin extends basePlugin {
     }
 
     public function beforeRun () {
-        $this->_getCachedTableStatuses();
+        // $this->_getCachedTableStatuses();
         // sleep(5);
         $this->_getCachedTableData($this->getConfiguration()->data->Table_ShopCategories);
         $this->_getCachedTableData($this->getConfiguration()->data->Table_ShopOrigins);
@@ -99,7 +100,7 @@ class plugin extends basePlugin {
 
         // $product['_statuses'] = $this->_getCachedTableStatuses($this->getConfiguration()->data->Table_ShopProducts);
         // save product into recently viewed list
-        if ($saveIntoRecent && !glIsToolbox()) {
+        if ($saveIntoRecent && !$this->getApp()->isToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[$productID] = $product;
             $_SESSION[$this->_listKey_Recent] = $recentProducts;
@@ -1959,32 +1960,14 @@ class plugin extends basePlugin {
     }
 
     private function _getCachedTableStatuses ($tableName = null, $force = false) {
-        $statusDump = array ();
-        $isExpired = true;
-        if (isset($_SESSION['shop:statuses:expire'])) {
-            //$isExpired = mktime() > intval($_SESSION['shop:statuses:expire']);
-        }
-        // daily update
-        if ($force || $isExpired || empty($_SESSION['shop:statuses:list'])) {
-            // $statusDump[$this->getConfiguration()->data->Table_ShopOrders] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrders);
-            // $statusDump[$this->getConfiguration()->data->Table_ShopProducts] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopProducts);
-            // $statusDump[$this->getConfiguration()->data->Table_ShopOrigins] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopOrigins);
-            // $statusDump[$this->getConfiguration()->data->Table_ShopCategories] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopCategories);
-            // $statusDump[$this->getConfiguration()->data->Table_ShopDeliveryAgencies] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopDeliveryAgencies);
-            // $statusDump[$this->getConfiguration()->data->Table_ShopSettings] = $this->getCustomerDataBase()->getTableStatusFieldOptions($this->getConfiguration()->data->Table_ShopSettings);
-            $_SESSION['shop:statuses:list'] = $statusDump;
-            $_SESSION['shop:statuses:expire'] = mktime() + 24 * 60 * 60;
-        } else {
-            $statusDump = $_SESSION['shop:statuses:list'];
-        }
-        if (!empty($tableName)) {
-            if (isset($statusDump[$tableName])) {
-                return $statusDump[$tableName];
-            } else {
-                throw new Exception("Unknown table name for status list dump", 1);
-            }
-        }
-        setcookie("shop:statuses:list", json_encode($statusDump), $_SESSION['shop:statuses:expire'], "/");
+        $statuses = array();
+
+        $config = $this->getConfiguration()->data->jsapiUtil_GetTableStatusFieldOptions($tableName);
+        $data = $this->getCustomer()->fetch($config);
+        preg_match('#^enum\((.*?)\)$#ism', $data['Type'], $matches);
+        $statuses = str_getcsv($matches[1], ",", "'");
+
+        return $statuses;
     }
 
     private function _getOrSetCachedState ($key = null, $value = null) {
@@ -2519,7 +2502,7 @@ class plugin extends basePlugin {
         // $options = array();
         $isTemp = !isset($req->get['id']);
 
-        if (!$isTemp && glIsToolbox()) {
+        if (!$isTemp && $this->getApp()->isToolbox()) {
             // if ($this->getCustomer()->ifYouCan('Admin')) {
                 // here we're gonna change order's status only
         // check permissions
@@ -2565,7 +2548,7 @@ class plugin extends basePlugin {
 
     // removes particular product or clears whole shopping cart
     public function delete_shop_cart (&$resp, $req) { // ????? we must keep all orders
-        if (!glIsToolbox()) {
+        if (!$this->getApp()->isToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;
         }

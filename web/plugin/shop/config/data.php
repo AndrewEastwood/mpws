@@ -1031,7 +1031,7 @@ class data extends \engine\object\configuration {
 
     public function jsapiShopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
         if (!is_string($comparator))
-            $comparator = $this->$DEFAULT_COMPARATOR;
+            $comparator = $this->DEFAULT_COMPARATOR;
         $config = $this->jsapiShopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
