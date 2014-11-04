@@ -118,7 +118,7 @@ class path {
     }
 
     public static function getDirWeb () {
-        return DR . 'web' . self::getDirectorySeparator();
+        return self::createPathWithRoot('web' . self::getDirectorySeparator());
     }
 
     public static function getDefaultDir ($version) {
@@ -140,7 +140,7 @@ class path {
     }
 
     public static function getDefaultConfigurationFiles ($customer) {
-        return glob(self::getCustomerDir($custome) . 'config' . self::getDirectorySeparator() . '*.php');
+        return glob(self::getCustomerDir($customer) . 'config' . self::getDirectorySeparator() . '*.php');
     }
 
     public static function getPluginConfigurationFiles ($name) {

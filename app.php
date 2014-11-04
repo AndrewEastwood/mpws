@@ -1,6 +1,22 @@
 <?php
 namespace engine;
+
+spl_autoload_register(function ($className) {
+    $className = ltrim($className, '\\');
+    $fileName  = '';
+    $namespace = '';
+    if ($lastNsPos = strrpos($className, '\\')) {
+        $namespace = substr($className, 0, $lastNsPos);
+        $className = substr($className, $lastNsPos + 1);
+        $fileName  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+    }
+    $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+
+    require $fileName;
+});
+
 use \engine\lib\response as Response;
+use \engine\lib\path as Path;
 
 // detect running customer name
 // define('DR', glGetDocumentRoot());
@@ -32,7 +48,7 @@ class app {
     private $header = false;
     private $buildVersion = false;
 
-    function _construct ($runMode = 'display', $header = 'Content-Type: text/html; charset=utf-8') {
+    function __construct ($runMode = 'display', $header = 'Content-Type: text/html; charset=utf-8') {
         // header data
         $this->header = $header;
         // request type
@@ -52,12 +68,12 @@ class app {
         // get display customer
         $this->displayCustoner = $this->isToolbox() ? 'toolbox' : $this->customerName();
         // get build version
-        $this->buildVersion = file_get_contents(DR . DS . 'version.txt');
+        $this->buildVersion = file_get_contents(Path::createPathWithRoot('version.txt'));
         $PHP_INPUT = file_get_contents('php://input');
     }
 
     public function getBuildVersion () {
-        return this->buildVersion;
+        return $this->buildVersion;
     }
 
     public function isDebug () {

@@ -7,8 +7,10 @@ use \engine\lib\request as Request;
 use \engine\lib\response as Response;
 use \engine\lib\database as DB;
 use \engine\lib\uploadHandler as JqUploadLib;
+// use \engine\interfaces\ICustomer as ICustomer;
+use \engine\object\multiExtendable as MultiExtendable;
 
-class customer extends \engine\object\multiExtendable implements \engine\interface\ICustomer {
+class customer extends MultiExtendable {
 
     private $version = 'atlantis';
     private $app;

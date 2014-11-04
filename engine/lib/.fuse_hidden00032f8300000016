@@ -8,10 +8,6 @@ class request {
 
     private static $PHP_INPUT = false;
 
-    static function test () {
-        echo 'I AM TEST';
-    }
-
     static function setPhpInput ($data) {
         self::$PHP_INPUT = $data;
     }
