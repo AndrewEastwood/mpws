@@ -8,31 +8,41 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class delivery extends \engine\object\api {
+class promos extends \engine\object\api {
 
-    private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
+    private $_listKey_Promo = 'shop:promo';
     // -----------------------------------------------
     // -----------------------------------------------
-    // DELIVERY AGENCIES
+    // PROMO
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getDeliveryAgencyByID ($agencyID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveryAgencyByID($agencyID);
+    public function getPromoByID ($promoID) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetPromoByID($promoID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
-        $data['_isRemoved'] = $data['Status'] === 'REMOVED';
-        $data['_isActive'] = $data['Status'] === 'ACTIVE';
+        $data['Discount'] = floatval($data['Discount']);
+        $data['_isExpired'] = strtotime($this->getPluginConfiguration()->data->getDate()) > strtotime($data['DateExpire']);
+        $data['_isFuture'] = strtotime($this->getPluginConfiguration()->data->getDate()) < strtotime($data['DateStart']);
+        $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
         return $data;
     }
 
-    public function getDeliveries_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveriesList($options);
+    public function getPromoByHash ($hash, $activeOnly = false) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetPromoByHash($hash, $activeOnly);
+        $data = $this->getCustomer()->fetch($config);
+        $data['ID'] = intval($data['ID']);
+        $data['Discount'] = floatval($data['Discount']);
+        return $data;
+    }
+
+    public function getPromoCodes_List (array $options = array()) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetPromoList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $val)
-                    $_items[] = $self->getDeliveryAgencyByID($val['ID']);
+                    $_items[] = $self->getPromoByID($val['ID']);
                 return $_items;
             }
         );
@@ -40,31 +50,32 @@ class delivery extends \engine\object\api {
         return $dataList;
     }
 
-    public function createDeliveryAgency ($reqData) {
+    public function createPromo ($reqData) {
         $result = array();
         $errors = array();
         $success = false;
-        $deliveryID = null;
+        $promoID = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
+            'DateStart' => array('string'),
+            'DateExpire' => array('string'),
+            'Discount' => array('numeric')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
-
+                $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateDeliveryAgent($validatedValues);
+                $configCreatePromo = $this->getPluginConfiguration()->data->jsapiShopCreatePromo($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
-                $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                $promoID = $this->getCustomer()->fetch($configCreatePromo) ?: null;
 
-                if (empty($deliveryID))
-                    throw new Exception('DeliveryCreateError');
+                if (empty($promoID))
+                    throw new Exception('PromoCreateError');
 
                 $this->getCustomerDataBase()->commit();
 
@@ -76,23 +87,23 @@ class delivery extends \engine\object\api {
         else
             $errors = $validatedDataObj["errors"];
 
-        if ($success && !empty($deliveryID))
-            $result = $this->getDeliveryAgencyByID($deliveryID);
+        if ($success && !empty($promoID))
+            $result = $this->getPromoByID($promoID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
         return $result;
     }
 
-    public function updateDeliveryAgency ($id, $reqData) {
+    public function updatePromo ($promoID, $reqData) {
         $result = array();
         $errors = array();
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
-            'Status' => array('string', 'skipIfUnset')
+            'DateStart' => array('string', 'skipIfUnset'),
+            'DateExpire' => array('string', 'skipIfUnset'),
+            'Discount' => array('numeric')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -100,12 +111,12 @@ class delivery extends \engine\object\api {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateDeliveryAgent($id, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
-
-                $this->getCustomerDataBase()->commit();
+                if (count($validatedValues)) {
+                    $this->getCustomerDataBase()->beginTransaction();
+                    $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdatePromo($promoID, $validatedValues);
+                    $this->getCustomer()->fetch($configCreateCategory);
+                    $this->getCustomerDataBase()->commit();
+                }
 
                 $success = true;
             } catch (Exception $e) {
@@ -115,63 +126,61 @@ class delivery extends \engine\object\api {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->getDeliveryAgencyByID($id);
+        $result = $this->getPromoByID($promoID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
         return $result;
     }
 
-    public function deleteDeliveryAgency ($id) {
+    public function expirePromo ($promoID) {
+        $result = array();
         $errors = array();
         $success = false;
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
-
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteDeliveryAgent($id);
+            $config = $this->getPluginConfiguration()->data->jsapiShopExpirePromo($promoID);
             $this->getCustomer()->fetch($config);
-
             $this->getCustomerDataBase()->commit();
-
             $success = true;
         } catch (Exception $e) {
             $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'OriginUpdateError';
+            $errors[] = $e->getMessage();
         }
 
-        $result = $this->getDeliveryAgencyByID($id);
         $result['errors'] = $errors;
         $result['success'] = $success;
+
         return $result;
     }
 
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // WRAPPERS
-    // -----------------------------------------------
-    // -----------------------------------------------
 
-    public function getActiveDeliveryList () {
-        $deliveries = $this->getDeliveries_List(array(
-            "limit" => 0,
-            "_fStatus" => "ACTIVE"
-        ));
-        return $deliveries;
+    public function setSessionPromo ($promo) {
+        $_SESSION[$this->_listKey_Promo] = $promo;
     }
 
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // REQUESTS
-    // -----------------------------------------------
-    // -----------------------------------------------
+    public function getSessionPromo () {
+        if (!isset($_SESSION[$this->_listKey_Promo]))
+            $_SESSION[$this->_listKey_Promo] = null;
+        return $_SESSION[$this->_listKey_Promo];
+    }
+
+    public function resetSessionPromo () {
+        $_SESSION[$this->_listKey_Promo] = null;
+    }
+
 
     public function get (&$resp, $req) {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            $resp['error'] = "AccessDenied";
+            return;
+        }
         if (empty($req->get['id'])) {
-            $resp = $this->getDeliveries_List($req->get);
+            $resp = $this->getPromoCodes_List($req->get);
         } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->getDeliveryAgencyByID($agencyID);
+            $promoID = intval($req->get['id']);
+            $resp = $this->getPromoByID($promoID);
         }
     }
 
@@ -180,8 +189,7 @@ class delivery extends \engine\object\api {
             $resp['error'] = "AccessDenied";
             return;
         }
-        $resp = $this->createDeliveryAgency($req->data);
-        // $this->_getOrSetCachedState('changed:agencies', true);
+        $resp = $this->createPromo($req->data);
     }
 
     public function patch (&$resp, $req) {
@@ -192,25 +200,30 @@ class delivery extends \engine\object\api {
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->updateDeliveryAgency($agencyID, $req->data);
-            // $this->_getOrSetCachedState('changed:agencies', true);
+            $promoID = intval($req->get['id']);
+            $resp = $this->updatePromo($promoID, $req->data);
         }
     }
 
     public function delete (&$resp, $req) {
         if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = 'AccessDenied';
+            $resp['error'] = "AccessDenied";
             return;
         }
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->deleteDeliveryAgency($agencyID);
-            // $this->_getOrSetCachedState('changed:agencies', true);
+            $promoID = intval($req->get['id']);
+            $resp = $this->expirePromo($promoID);
         }
     }
+
+
+
+
+
+
 }
+
 
 ?>

@@ -8,31 +8,39 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class delivery extends \engine\object\api {
+class origins extends \engine\object\api {
 
-    private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
+
+    private $_statuses = array('ACTIVE', 'REMOVED');
     // -----------------------------------------------
     // -----------------------------------------------
-    // DELIVERY AGENCIES
+    // ORIGINS
     // -----------------------------------------------
     // -----------------------------------------------
-    public function getDeliveryAgencyByID ($agencyID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveryAgencyByID($agencyID);
-        $data = $this->getCustomer()->fetch($config);
-        $data['ID'] = intval($data['ID']);
-        $data['_isRemoved'] = $data['Status'] === 'REMOVED';
-        $data['_isActive'] = $data['Status'] === 'ACTIVE';
-        return $data;
+    public function getOriginByID ($originID) {
+        if (empty($originID) || !is_numeric($originID))
+            return null;
+
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginItem($originID);
+        $origin = $this->getCustomer()->fetch($config);
+
+        if (empty($origin))
+            return null;
+
+        $origin['ID'] = intval($origin['ID']);
+        $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
+        // $origin['_statuses'] = $this->_getCachedTableStatuses($this->getPluginConfiguration()->data->Table_ShopOrigins);
+        return $origin;
     }
 
-    public function getDeliveries_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveriesList($options);
+    public function getOrigins_List (array $options = array()) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
                 $_items = array();
                 foreach ($items as $val)
-                    $_items[] = $self->getDeliveryAgencyByID($val['ID']);
+                    $_items[] = $self->getOriginByID($val['ID']);
                 return $_items;
             }
         );
@@ -40,14 +48,15 @@ class delivery extends \engine\object\api {
         return $dataList;
     }
 
-    public function createDeliveryAgency ($reqData) {
+    public function createOrigin ($reqData) {
         $result = array();
         $errors = array();
         $success = false;
-        $deliveryID = null;
+        $OriginID = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
 
@@ -58,13 +67,14 @@ class delivery extends \engine\object\api {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateDeliveryAgent($validatedValues);
+                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateOrigin($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
-                $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                $OriginID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                // var_dump($OriginID);
 
-                if (empty($deliveryID))
-                    throw new Exception('DeliveryCreateError');
+                if (empty($OriginID))
+                    throw new Exception('OriginCreateError');
 
                 $this->getCustomerDataBase()->commit();
 
@@ -76,21 +86,22 @@ class delivery extends \engine\object\api {
         else
             $errors = $validatedDataObj["errors"];
 
-        if ($success && !empty($deliveryID))
-            $result = $this->getDeliveryAgencyByID($deliveryID);
+        if ($success && !empty($OriginID))
+            $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
         return $result;
     }
 
-    public function updateDeliveryAgency ($id, $reqData) {
+    public function updateOrigin ($OriginID, $reqData) {
         $result = array();
         $errors = array();
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
+            'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
             'Status' => array('string', 'skipIfUnset')
         ));
@@ -100,12 +111,12 @@ class delivery extends \engine\object\api {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateDeliveryAgent($id, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
-
-                $this->getCustomerDataBase()->commit();
+                if (count($validatedValues)) {
+                    $this->getCustomerDataBase()->beginTransaction();
+                    $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateOrigin($OriginID, $validatedValues);
+                    $this->getCustomer()->fetch($configCreateCategory);
+                    $this->getCustomerDataBase()->commit();
+                }
 
                 $success = true;
             } catch (Exception $e) {
@@ -115,21 +126,21 @@ class delivery extends \engine\object\api {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->getDeliveryAgencyByID($id);
+        $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
         return $result;
     }
 
-    public function deleteDeliveryAgency ($id) {
+    public function disableOrigin ($OriginID) {
         $errors = array();
         $success = false;
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteDeliveryAgent($id);
+            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteOrigin($OriginID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -140,38 +151,18 @@ class delivery extends \engine\object\api {
             $errors[] = 'OriginUpdateError';
         }
 
-        $result = $this->getDeliveryAgencyByID($id);
+        $result = $this->getOriginByID($OriginID);
         $result['errors'] = $errors;
         $result['success'] = $success;
         return $result;
     }
 
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // WRAPPERS
-    // -----------------------------------------------
-    // -----------------------------------------------
-
-    public function getActiveDeliveryList () {
-        $deliveries = $this->getDeliveries_List(array(
-            "limit" => 0,
-            "_fStatus" => "ACTIVE"
-        ));
-        return $deliveries;
-    }
-
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // REQUESTS
-    // -----------------------------------------------
-    // -----------------------------------------------
-
     public function get (&$resp, $req) {
         if (empty($req->get['id'])) {
-            $resp = $this->getDeliveries_List($req->get);
+            $resp = $this->getOrigins_List($req->get);
         } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->getDeliveryAgencyByID($agencyID);
+            $OriginID = intval($req->get['id']);
+            $resp = $this->getOriginByID($OriginID);
         }
     }
 
@@ -180,8 +171,8 @@ class delivery extends \engine\object\api {
             $resp['error'] = "AccessDenied";
             return;
         }
-        $resp = $this->createDeliveryAgency($req->data);
-        // $this->_getOrSetCachedState('changed:agencies', true);
+        $resp = $this->createOrigin($req->data);
+        // $this->_getOrSetCachedState('changed:origin', true);
     }
 
     public function patch (&$resp, $req) {
@@ -192,9 +183,9 @@ class delivery extends \engine\object\api {
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->updateDeliveryAgency($agencyID, $req->data);
-            // $this->_getOrSetCachedState('changed:agencies', true);
+            $OriginID = intval($req->get['id']);
+            $resp = $this->updateOrigin($OriginID, $req->data);
+            // $this->_getOrSetCachedState('changed:origin', true);
         }
     }
 
@@ -206,11 +197,12 @@ class delivery extends \engine\object\api {
         if (empty($req->get['id'])) {
             $resp['error'] = 'MissedParameter_id';
         } else {
-            $agencyID = intval($req->get['id']);
-            $resp = $this->deleteDeliveryAgency($agencyID);
-            // $this->_getOrSetCachedState('changed:agencies', true);
+            $OriginID = intval($req->get['id']);
+            $resp = $this->disableOrigin($OriginID);
+            // $this->_getOrSetCachedState('changed:origin', true);
         }
     }
 }
+
 
 ?>

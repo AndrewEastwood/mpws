@@ -21,24 +21,24 @@ class data extends \engine\object\configuration {
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
-            "additional" => array(
-                "shop_categories" => array(
-                    "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
-                    "fields" => array(
-                        "CategoryName" => "Name",
-                        "CategoryDescription" => "Description",
-                        "CategoryStatus" => "Status"
-                    )
-                ),
-                "shop_origins" => array(
-                    "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
-                    "fields" => array(
-                        "OriginName" => "Name",
-                        "OriginDescription" => "Description",
-                        "OriginStatus" => "Status"
-                    )
-                )
-            ),
+            // "additional" => array(
+            //     "shop_categories" => array(
+            //         "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
+            //         "fields" => array(
+            //             "CategoryName" => "Name",
+            //             "CategoryDescription" => "Description",
+            //             "CategoryStatus" => "Status"
+            //         )
+            //     ),
+            //     "shop_origins" => array(
+            //         "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
+            //         "fields" => array(
+            //             "OriginName" => "Name",
+            //             "OriginDescription" => "Description",
+            //             "OriginStatus" => "Status"
+            //         )
+            //     )
+            // ),
             "options" => array(
                 "expandSingleRecord" => true
             )

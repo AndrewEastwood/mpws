@@ -1,7 +1,13 @@
 <?php
 namespace web\plugin\shop\api;
 
+use \engine\object\plugin as basePlugin;
 use \engine\lib\validate as Validate;
+use \engine\lib\secure as Secure;
+use \engine\lib\path as Path;
+use Exception;
+use ArrayObject;
+
 class settings extends \engine\object\api {
 
     function __construct ($customer, $plugin, $pluginName, $app) {

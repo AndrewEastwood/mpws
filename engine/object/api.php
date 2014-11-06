@@ -35,6 +35,9 @@ class api {
     public function getCustomerConfiguration () {
         return $this->customer->getConfiguration();
     }
+    public function getAPI () {
+        return $this->getPlugin()->getAPI();
+    }
 
     // public function getList() {}
     // public function getItem() {}

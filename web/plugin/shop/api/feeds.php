@@ -115,7 +115,7 @@ class feeds extends \engine\object\api {
             ->setDescription("Test document for PHPExcel, generated using PHP classes.")
             ->setKeywords("office PHPExcel php")
             ->setCategory("Test result file");
-        $dataList = $this->getPlugin()->getProducts_List($options, false, false);
+        $dataList = $this->getAPI()->products->getProducts_List($options, false, false);
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'Name')
             ->setCellValue('B1', 'Model')

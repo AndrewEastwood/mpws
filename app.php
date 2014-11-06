@@ -29,6 +29,7 @@ spl_autoload_register(function ($className) {
     return false;
 });
 
+use \engine\lib\request as Request;
 use \engine\lib\response as Response;
 use \engine\lib\path as Path;
 
@@ -50,6 +51,8 @@ use \engine\lib\path as Path;
 //error_reporting(E_ERROR | E_WARNING | E_PARSE);
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
+
+Request::setPhpInput(file_get_contents('php://input'));
 
 class app {
 
@@ -83,7 +86,6 @@ class app {
         $this->displayCustomer = $this->isToolbox() ? 'toolbox' : $this->customerName();
         // get build version
         $this->buildVersion = file_get_contents(Path::createPathWithRoot('version.txt'));
-        $PHP_INPUT = file_get_contents('php://input');
     }
 
     public function getBuildVersion () {

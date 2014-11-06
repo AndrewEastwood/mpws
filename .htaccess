@@ -3,6 +3,7 @@ RewriteEngine On
 RewriteBase /
 DirectoryIndex /engine/controller/display.php
 
+
 # STATIC:
 RewriteRule ^static/customer/(.*)/nls/(.*) /engine/controller/nls.php?customer=$1&lang=$2 [L]
 RewriteRule ^static/(customer|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
@@ -11,3 +12,8 @@ RewriteRule ^static/(customer|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$
 RewriteRule ^api\.js?(.*) /engine/controller/api.php?$1 [QSA,L]
 RewriteRule ^auth\.js?(.*) /engine/controller/auth.php?$1 [QSA,L]
 RewriteRule ^upload\.js?(.*) /engine/controller/upload.php?$1 [QSA,L]
+
+
+# NEW API
+RewriteRule ^static/(.*) /resources/$1 [QSA,L]
+RewriteRule ^api/(\w+)/?(.*) /engine/controller/_api.php?name=$1$2 [QSA,L]
