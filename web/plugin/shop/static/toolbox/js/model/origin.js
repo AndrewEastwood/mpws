@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/model/origin', [
         url: function () {
             var _params =  {
                 source: 'shop',
-                fn: 'origin'
+                fn: 'origins'
             };
             if (!this.isNew()) {
                 _params.id = this.id;

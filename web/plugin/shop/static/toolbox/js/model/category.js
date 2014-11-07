@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/model/category', [
         url: function () {
             var _params =  {
                 source: 'shop',
-                fn: 'category'
+                fn: 'categories'
             };
             if (!this.isNew()) {
                 _params.id = this.id;

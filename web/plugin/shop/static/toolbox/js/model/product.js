@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/model/product', [
         url: function () {
             var _params =  {
                 source: 'shop',
-                fn: 'product'
+                fn: 'products'
             };
             if (!this.isNew()) {
                 _params.id = this.id;

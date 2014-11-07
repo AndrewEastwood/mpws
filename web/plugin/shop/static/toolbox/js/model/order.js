@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/model/order', [
         url: function () {
             var _params =  {
                 source: 'shop',
-                fn: 'order'
+                fn: 'orders'
             };
             if (!this.isNew()) {
                 _params.id = this.id;

@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/model/promo', [
         url: function () {
             var _params = {
                 source: 'shop',
-                fn: 'promo'
+                fn: 'promos'
             };
             if (!this.isNew()) {
                 _params.id = this.id;
