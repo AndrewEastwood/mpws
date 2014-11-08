@@ -142,6 +142,22 @@ class path {
         return $p;
     }
 
+    public function createDirPath () {
+        $args = func_get_args();
+        if (!is_bool(end($args))) {
+            $args[] = true;
+        }
+        return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
+    }
+
+    public function createFilePath () {
+        $args = func_get_args();
+        if (is_bool(end($args))) {
+            array_pop($args);
+        }
+        return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
+    }
+
     public static function getDirWeb () {
         return self::createPathWithRoot(self::getDirNameWeb() . self::getDirectorySeparator());
     }
@@ -201,34 +217,56 @@ class path {
         return $map;
     }
 
+
+
+
+
+
+    public static function getUploadDirectory (/* args */) {
+        $args = func_get_args();
+        $path = Path::getDirNameUploads() . self::getDirectorySeparator();
+        if (!empty($args)) {
+            return $path . join(self::getDirectorySeparator(), $args);
+        }
+        //  .  self::getDirectorySeparator() . join(self::getDirectorySeparator(), func_get_args());
+        // if ($path[strlen($path) - 1] !== self::getDirectorySeparator())
+        //     $path .= self::getDirectorySeparator();
+        return $path;
+    }
+
     public static function getUploadTemporaryDirectory () {
-        return self::getUploadDirectory(self::getDirNameTemp()) . self::getDirectorySeparator();
+        return self::getUploadDirectory() . self::getDirectorySeparator() . self::getDirNameTemp();
     }
 
     public static function getAppTemporaryDirectory () {
-        return self::getUploadDirectory('_tmp_' . date('Ymd_H')) . self::getDirectorySeparator();
+        return self::getUploadDirectory() . self::getDirectorySeparator() . '_tmp_' . date('Ymd_H');
     }
 
-    public static function getUploadDirectory ($realm = null) {
-        $pluginUploadPath = self::rootPath() . self::getDirNameUploads();
-        if (!empty($realm)) {
-            return $pluginUploadPath . self::getDirectorySeparator() . $realm .self::getDirectorySeparator();
-        }
-        return $pluginUploadPath . self::getDirectorySeparator();
-    }
-    public static function getUploadWebPath ($realm = null) {
-        $pluginUploadPath = self::getDirectorySeparator() . self::getDirNameUploads();
-        if (!empty($realm)) {
-            return $pluginUploadPath . self::getDirectorySeparator() . $realm . self::getDirectorySeparator();
-        }
-        return $pluginUploadPath . self::getDirectorySeparator();
+
+    public static function getUploadedFile ($name) {
+        // $args = func_get_args();
+        // $fName = array_pop($args);
+        // $path = call_user_func_array(array(__NAMESPACE__ .'\Path::getUploadDirectory'), $args);
+        // $dir = $this->getOwnUploadDirectory($targetDir);
+        return $this->getUploadDirectory() . self::getDirectorySeparator() . $name;
+        // return $path . $fName;
     }
 
-    public static function moveTemporaryFile ($tmpFileName, $targetDir, $customFileName = null) {
+    // public static function getUploadWebPath (/* args */) {
+    //     $args = func_get_args();
+    //     $pluginUploadPath = self::getDirectorySeparator() . self::getDirNameUploads();
+    //     if (!empty($args)) {
+    //         return $pluginUploadPath . self::getDirectorySeparator() . join(self::getDirectorySeparator(), $args);
+    //     }
+    //     return $pluginUploadPath . self::getDirectorySeparator();
+    // }
+
+
+    public static function moveTemporaryFile ($tmpFileName, $innerUploadTargetDir, $customFileName = null) {
         $tmpFilePath = self::getUploadTemporaryDirectory() . $tmpFileName;
         if (file_exists($tmpFilePath)) {
             $info = array();
-            $targetDirFullPath = self::getUploadDirectory($targetDir);
+            $targetDirFullPath = self::getUploadDirectory() . $innerUploadTargetDir . self::getDirectorySeparator();
             if (!file_exists($targetDirFullPath)) {
                 mkdir($targetDirFullPath, 0777, true);
             }
@@ -240,12 +278,60 @@ class path {
             $info['basename'] = $_fileBaseName;
             $info['extension'] = $_fileExtension;
             $info['filename'] = $_fileName;
-            $info['uploadDir'] = $targetDir;
-            $info['uploadPath'] = $targetDir . $_fileName;
+            $info['uploadDir'] = $innerUploadTargetDir;
+            $info['uploadPath'] = $innerUploadTargetDir . $_fileName;
             return $info;
         }
         return false;
     }
+
+    public function deleteUploadedFile ($pathToFile) {
+        $filePath = self::getUploadDirectory() . $pathToFile;
+        if (file_exists($filePath)) {
+            return unlink($filePath);
+        }
+        return false;
+    }
+
+
+
+    // public function getOwnUploadDirectory ($targetDir = null) {
+    //     if (empty($targetDir)) {
+    //         return Path::getUploadDirectory($this->getName());
+    //     }
+    //     return Path::getUploadDirectory($this->getName() . Path::getDirectorySeparator() . $targetDir);
+    // }
+    // public function getOwnUploadPathWeb ($targetDir = null) {
+    //     if (empty($targetDir)) {
+    //         return Path::getUploadWebPath($this->getName());
+    //     }
+    //     return Path::getUploadWebPath($this->getName() . Path::getDirectorySeparator() . $targetDir);
+    // }
+
+    // public function getOwnUploadedFileWeb ($name, $targetDir = null) {
+    //     $dir = $this->getOwnUploadPathWeb($targetDir);
+    //     return $dir . $name;
+    // }
+
+    // public function saveOwnTemporaryUploadedFile ($tmpFileName, $targetDir, $name = false) {
+    //     $uniqueName = empty($name) ? mktime() : $name;
+    //     $uploadedFileInfo = Path::moveTemporaryFile($tmpFileName, $this->getName() . Path::getDirectorySeparator() . $targetDir, $uniqueName);
+    //     return $uploadedFileInfo;
+    // }
+
+    // public function deleteOwnUploadedFile ($name, $targetDir) {
+    //     $dir = $this->getOwnUploadDirectory($targetDir);
+    //     $filePath = $dir . $name;
+    //     if (file_exists($filePath)) {
+    //         return unlink($filePath);
+    //     }
+    //     return false;
+    // }
+
+
+
+
+
 
     public static function getWebStaticTemplateFilePath ($displayCustomer, $version, $templateName, $isDebug) {
         if ($isDebug) {
@@ -262,6 +348,9 @@ class path {
             return $templateDefault;
         return false;
     }
+
+
+
 
 }
 

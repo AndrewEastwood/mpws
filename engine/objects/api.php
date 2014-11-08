@@ -22,12 +22,11 @@ class api {
     public function getCustomerDataBase () {
         return $this->customer->getDataBase();
     }
-    public function getPlugin () {
-        return $this->plugin;
-    }
-    public function getAnotherPlugin ($pluginName) {
-        $anotherPlugin = $this->customer->getPlugin($pluginName);
-        return $anotherPlugin;
+    public function getPlugin ($pluginName = false) {
+        if (empty($pluginName))
+            return $this->plugin;
+        return $this->customer->getPlugin($pluginName);
+        
     }
     public function getPluginConfiguration () {
         return $this->plugin->getConfiguration();

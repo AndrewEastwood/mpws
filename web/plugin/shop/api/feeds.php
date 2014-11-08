@@ -21,23 +21,24 @@ class feeds extends \engine\objects\api {
     }
 
     public function getGeneratedFeedDownloadLink ($name) {
-        return $this->getPlugin()->getOwnUploadedFileWeb($name, $this->getDirNameFeeds());
+        return $this->getFeedsUploadInnerDir() . $name;
     }
 
-    public function getFeedsPath () {
-        return $this->getPlugin()->getOwnUploadDirectory($this->getDirNameFeeds());
+    public function getFeedsUploadInnerDir () {
+        $path = Path::createDirPath('shop', $this->getDirNameFeeds());
+        return Path::getUploadDirectory($path);
     }
 
     public function getFeedFilePathByName ($feedName) {
-        return $this->getFeedsPath() . $feedName . '.xls';
+        return $this->getFeedsUploadInnerDir() . $feedName . '.xls';
     }
 
     public function getGeneratedFeedsFilesList () {
-        return glob($this->getFeedsPath() . 'gen_*\.xls');
+        return glob($this->getFeedsUploadInnerDir() . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsFilesList () {
-        return glob($this->getFeedsPath() . 'import_*\.xls');
+        return glob($this->getFeedsUploadInnerDir() . 'import_*\.xls');
     }
 
     public function getFeeds () {
@@ -169,7 +170,7 @@ class feeds extends \engine\objects\api {
             $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
         }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save($this->getFeedsPath() . $this->getGeneratedFeedName() . '.xls');
+        $objWriter->save($this->getFeedsUploadInnerDir() . $this->getGeneratedFeedName() . '.xls');
         // return $dataList;
     }
 
@@ -182,7 +183,8 @@ class feeds extends \engine\objects\api {
             $resp = $this->generateProductFeed();
         } elseif (isset($resp['files'])) {
             foreach ($resp['files'] as $tempFileItem) {
-                $this->getPlugin()->saveOwnTemporaryUploadedFile($tempFileItem->name, $this->getDirNameFeeds(), $this->getUploadedFeedName());
+                Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
+                // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
             }
         }
     }

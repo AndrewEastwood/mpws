@@ -15,16 +15,16 @@ class products extends \engine\objects\api {
     private $_statuses = array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
 
 
-    public function getProductUploadInnerDir ($productID, $subDir) {
+    public function getProductInnerUploadDir ($productID, $subDir) {
         $path = '';
-        if (empty($subDir))
-            $path = Path::createDirPath('shop', 'products', $productID);
+        if (!empty($subDir))
+            $path = Path::createDirPath('shop', 'products', $productID, $subDir):
         else
-            $path = Path::createDirPath('shop', 'products', $productID, $subDir);
+            $path = Path::createDirPath('shop', 'products', $productID):
         return Path::getUploadDirectory($path);
     }
-    public function getProductUploadedImagePath ($name,$productID, $subDir = false) {
-        $path = $this->getProductUploadInnerDir($productID, $subDir);
+    public function getProductUploadedImagePath ($name,$productID, $subDir) {
+        $path = $this->getProductInnerUploadDir($productID, $subDir);
         return $path . $name;
     }
     public function getProductStatuses () {
@@ -347,12 +347,12 @@ class products extends \engine\objects\api {
                     if (isset($attributes["IMAGE"])) {
                         foreach ($attributes["IMAGE"] as $fileName) {
 
-                            // $uploadInfo = $this->saveOwnTemporaryUploadedFile(, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
+                            // $uploadInfo = $this->saveOwnTemporaryUploadedFile(, $this->getProductInnerUploadDir($ProductID, 'sm'), $newFileName);
 
                             // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, 
-                            //     $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
+                            //     $this->getProductInnerUploadDir($ProductID, 'xs'), $newFileName);
 
-                            // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                            // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductInnerUploadDir($ProductID), $newFileName);
 
 
                             $newFileName = $ProductID . uniqid(time());
@@ -360,9 +360,9 @@ class products extends \engine\objects\api {
                             $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
                             $normalImagePath = $fileName;
 
-                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductInnerUploadDir($ProductID, 'sm'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductInnerUploadDir($ProductID, 'xs'), $newFileName);
+                            $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductInnerUploadDir($ProductID), $newFileName);
 
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
@@ -581,9 +581,9 @@ class products extends \engine\objects\api {
                     $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
                     $normalImagePath = $fileName;
 
-                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductInnerUploadDir($ProductID, 'sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductInnerUploadDir($ProductID, 'xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductInnerUploadDir($ProductID), $newFileName);
 
                     // $attrData = $initAttrData->getArrayCopy();
                     // $attrData['Attribute'] = 'IMAGE';
@@ -592,9 +592,9 @@ class products extends \engine\objects\api {
                     // $this->getCustomer()->fetch($config);
 
                     // $newFileName = $ProductID . uniqid(time());
-                    // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
-                    // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
-                    // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID), $newFileName);
+                    // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductInnerUploadDir($ProductID, 'sm'), $newFileName);
+                    // $this->saveOwnTemporaryUploadedFile('xs' . Path::getDirectorySeparator() . $fileName, $this->getProductInnerUploadDir($ProductID, 'xs'), $newFileName);
+                    // $this->saveOwnTemporaryUploadedFile($fileName, $this->getProductInnerUploadDir($ProductID), $newFileName);
                     $uploadedFileNames[] = $uploadInfo['filename'];
                 }
                 foreach ($filesToDelete as $fileName) {
@@ -603,9 +603,9 @@ class products extends \engine\objects\api {
                     Path::deleteUploadedFile($this->getProductUploadedImagePath($fileName, $ProductID, 'xs'));
                     Path::deleteUploadedFile($this->getProductUploadedImagePath($fileName, $ProductID));
 
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'xs'));
-                    // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID));
+                    // $this->deleteOwnUploadedFile($fileName, $this->getProductInnerUploadDir($ProductID, 'sm'));
+                    // $this->deleteOwnUploadedFile($fileName, $this->getProductInnerUploadDir($ProductID, 'xs'));
+                    // $this->deleteOwnUploadedFile($fileName, $this->getProductInnerUploadDir($ProductID));
                 }
 
                 $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);

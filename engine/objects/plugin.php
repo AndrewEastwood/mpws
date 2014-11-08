@@ -65,51 +65,15 @@ class plugin {
         return $this->customer->getConfiguration();
     }
 
-    public function getAnotherPlugin ($pluginName) {
-        $anotherPlugin = $this->getCustomer()->getPlugin($pluginName);
-        return $anotherPlugin;
+    public function getPlugin ($pluginName = false) {
+        if (empty($pluginName))
+            return $this->plugin;
+        return $this->customer->getPlugin($pluginName);
+        
     }
 
     public function beforeRun () {}
     public function afterRun () {}
-
-    public function getOwnUploadDirectory ($targetDir = null) {
-        if (empty($targetDir)) {
-            return Path::getUploadDirectory($this->getName());
-        }
-        return Path::getUploadDirectory($this->getName() . Path::getDirectorySeparator() . $targetDir);
-    }
-    public function getOwnUploadPathWeb ($targetDir = null) {
-        if (empty($targetDir)) {
-            return Path::getUploadWebPath($this->getName());
-        }
-        return Path::getUploadWebPath($this->getName() . Path::getDirectorySeparator() . $targetDir);
-    }
-
-    public function getOwnUploadedFile ($name, $targetDir = null) {
-        $dir = $this->getOwnUploadDirectory($targetDir);
-        return $dir . $name;
-    }
-
-    public function getOwnUploadedFileWeb ($name, $targetDir = null) {
-        $dir = $this->getOwnUploadPathWeb($targetDir);
-        return $dir . $name;
-    }
-
-    public function saveOwnTemporaryUploadedFile ($tmpFileName, $targetDir, $name = false) {
-        $uniqueName = empty($name) ? mktime() : $name;
-        $uploadedFileInfo = Path::moveTemporaryFile($tmpFileName, $this->getName() . Path::getDirectorySeparator() . $targetDir, $uniqueName);
-        return $uploadedFileInfo;
-    }
-
-    public function deleteOwnUploadedFile ($name, $targetDir) {
-        $dir = $this->getOwnUploadDirectory($targetDir);
-        $filePath = $dir . $name;
-        if (file_exists($filePath)) {
-            return unlink($filePath);
-        }
-        return false;
-    }
 
     // public function moveUploadedFile ($sourceDir, $targetDir, $name) {
     //     $dirSrc = $this->getUploadDirectory($sourceDir);

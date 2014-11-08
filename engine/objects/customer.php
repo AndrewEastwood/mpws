@@ -110,7 +110,7 @@ class customer {
             URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_PLUGIN: '/" . Path::createPath($staticPath, 'plugin', true) . "',
             URL_STATIC_DEFAULT: '/" . Path::createPath($staticPath, 'base', $this->getVersion(), true) . "',
-            ROUTER: '" . join(Path::getDirectorySeparator(), array(Path::getDirNameCustomer(), 'js', 'router')) . "'
+            ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
 
@@ -219,7 +219,7 @@ class customer {
             'script_url' => $this->getConfiguration()->urls->upload,
             'download_via_php' => true,
             'upload_dir' => Utils::getUploadTemporaryDirectory(),
-            'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
+            'print_response' => Request::isGET()
         );
         $upload_handler = new JqUploadLib($options);
         Response::setResponse($upload_handler->get_response());

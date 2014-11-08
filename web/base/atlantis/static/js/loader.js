@@ -44,13 +44,13 @@ var APP = {
                 // application
                 // application: this.config.URL_STATIC_DEFAULT + "js/app",
                 // default paths
-                default: this.config.URL_STATIC_DEFAULT.slice(0,-1),
+                default: this.config.URL_STATIC_DEFAULT,
                 // website (origin customer)
-                website: this.config.URL_STATIC_WEBSITE.slice(0,-1),
+                website: this.config.URL_STATIC_WEBSITE,
                 // customer paths (current running customer)
-                customer: this.config.URL_STATIC_CUSTOMER.slice(0,-1),
+                customer: this.config.URL_STATIC_CUSTOMER,
                 // plugin paths
-                plugin: this.config.URL_STATIC_PLUGIN.slice(0,-1),
+                plugin: this.config.URL_STATIC_PLUGIN,
                 // version suppress
                 cmn_jquery: this.config.URL_STATIC_DEFAULT + 'js/lib/jquery-1.9.1'
             },

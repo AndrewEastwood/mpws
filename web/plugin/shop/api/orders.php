@@ -158,7 +158,7 @@ class orders extends \engine\objects\api {
         if (!empty($reqData['form']['shopCartAccountValidationString']))
             $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
-        $pluginAccount = $this->getAnotherPlugin('account');
+        $pluginAccount = $this->getPlugin('account');
 
         $formSettings = $this->getAPI()->settings->getSettingsMapFormOrder();
 
@@ -406,9 +406,9 @@ class orders extends \engine\objects\api {
             // attach account and address
             if ($this->getCustomer()->hasPlugin('account')) {
                 if (isset($order['AccountAddressesID']))
-                    $order['address'] = $this->getAnotherPlugin('account')->getAddressByID($order['AccountAddressesID']);
+                    $order['address'] = $this->getPlugin('account')->getAddressByID($order['AccountAddressesID']);
                 if (isset($order['AccountID']))
-                    $order['account'] = $this->getAnotherPlugin('account')->getAccountByID($order['AccountID']);
+                    $order['account'] = $this->getPlugin('account')->getAccountByID($order['AccountID']);
                 unset($order['AccountID']);
                 unset($order['AccountAddressesID']);
             }
