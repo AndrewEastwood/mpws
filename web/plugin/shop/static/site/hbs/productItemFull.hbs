@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="product-name">
-                <h3>{{data.OriginName}} - {{data.Name}} ({{data.Model}})</h3>
+                <h3>{{data._origin.Name}} - {{data.Name}} ({{data.Model}})</h3>
             </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-origin">
                         <span class="value-prefix">Виробник:</span>
-                        <strong>{{data.OriginName}}</strong>
+                        <strong>{{data._origin.Name}}</strong>
                     </div>
                     <div class="shop-component shop-product-attr shop-product-attr-model">
                         <span class="value-prefix">Модель:</span>
@@ -286,7 +286,7 @@
                                             </script>
                                             {{/if}}
                                         </div>
-                                        <div class="carousel-caption">{{OriginName}} - {{Name}} ({{Model}})</div>
+                                        <div class="carousel-caption">{{_origin.Name}} - {{Name}} ({{Model}})</div>
                                         <div class="carousel-caption price">
                                             Всього за:
                                             <span class="label label-warning moneyType">{{Price}} грн.</span>

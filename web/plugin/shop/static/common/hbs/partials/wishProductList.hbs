@@ -9,7 +9,7 @@
             <i class="fa fa-shopping-cart"></i>
         </a>
         <div class="shop-product-image shop-product-image-main">
-            <a href="/#shop/product/{{ID}}" class="link" title="{{OriginName}} - {{Name}}">
+            <a href="/#shop/product/{{ID}}" class="link" title="{{_origin.Name}} - {{Name}}">
                 <div class="image productimage noimage image_{{ID}}">
                     {{#if Images.[0].sm}}
                     <div id="facebookG">
@@ -33,7 +33,7 @@
             </a>
         </div>
         <div class="product-row">
-            <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{OriginName}} - {{Name}}">{{OriginName}} - {{Name}}</a></span>
+            <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a></span>
             <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
         </div>
     </div>

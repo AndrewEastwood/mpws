@@ -67,10 +67,6 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                     BSAlert.danger(lang.list_wish_alert_clear);
                 }
             });
-        },
-        parse: function (data) {
-            // debugger;
-            return _(data.items).map(function(item){ return item; });
         }
     });
 

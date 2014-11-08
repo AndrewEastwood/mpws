@@ -22,12 +22,13 @@ class wishlists extends \engine\objects\api {
     }
 
     public function get (&$resp) {
-        $resp = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
+        $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
+        $resp = array_values($items);
     }
 
     public function post (&$resp, $req) { 
-        $resp = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
-        if (count($resp) >= $this->getProductsLimit()) {
+        $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
+        if (count($items) >= $this->getProductsLimit()) {
             $resp['error'] = "ProductLimitExceeded";
             return;
         }
@@ -35,15 +36,16 @@ class wishlists extends \engine\objects\api {
             $productID = $req->data['productID'];
             if (!isset($resp[$productID])) {
                 $product = $this->getAPI()->products->getProductByID($productID);
-                $resp[$productID] = $product;
+                $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $resp;
             }
+            $resp = array_values($items);
         } else
             $resp['error'] = "MissedParameter_productID";
     }
 
     public function delete (&$resp, $req) {
-        $resp = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
+        $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
             if ($productID === "*") {
@@ -51,14 +53,14 @@ class wishlists extends \engine\objects\api {
             } elseif (isset($resp[$productID])) {
                 unset($resp[$productID]);
             }
-            $_SESSION[$this->_listKey_Wish] = $resp;
+            $_SESSION[$this->_listKey_Wish] = $items;
         }
+        $resp = array_values($items);
     }
 
     public function productIsInWishList ($id) {
-        $list = array();
-        $this->get($list);
-        return isset($list[$id]);
+        $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
+        return isset($items[$id]);
     }
 
 }

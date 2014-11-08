@@ -86,8 +86,8 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             // adjust products
             // debugger;
             // adjust filtering
-            var filter = data.browse.filter;
-            var productItems = _(data.browse.items).map(function(item){ return item; });
+            var filter = data.filter;
+            var productItems = _(data.items).map(function(item){ return item; });
 
             // join category/origin info
             // _(filter.filterOptionsAvailable.filter_categoryBrands).each(function(brand){

@@ -18,7 +18,7 @@ define('plugin/shop/site/js/collection/listProductWish', [
                 fn: 'wishlists'}));
         },
         initialize: function () {
-            listProductWish = this;
+            // listProductWish = this;
             _.bindAll(this, 'removeProductByID', 'addNew', 'removeAll');
             Sandbox.eventSubscribe('plugin:shop:list_wish:add', this.addNew);
             Sandbox.eventSubscribe('plugin:shop:list_wish:remove', this.removeProductByID);
@@ -65,10 +65,6 @@ define('plugin/shop/site/js/collection/listProductWish', [
                     BSAlert.danger(lang.list_compare_alert_clear);
                 }
             });
-        },
-        parse: function (data) {
-            // debugger;
-            return _(data.items).map(function(item){ return item; });
         }
     });
 

@@ -19,7 +19,7 @@ define("plugin/shop/site/js/router", [
     // why it's here?
     order.url = APP.getApiLink({
         source: 'shop',
-        fn: 'order'
+        fn: 'orders'
     });
 
     SiteMenu({
@@ -77,7 +77,7 @@ define("plugin/shop/site/js/router", [
 
             Sandbox.eventNotify('global:breadcrumb:show', {
                 source: 'shop',
-                fn: 'location',
+                fn: 'categories',
                 productID: null,
                 categoryID: null
             });

@@ -7,7 +7,7 @@ define("plugin/shop/site/js/model/menuCatalog", [
             return APP.getApiLink({
                 source: 'shop',
                 fn: 'categories',
-                type: 'tree'
+                tree: true
             })
         }
     });

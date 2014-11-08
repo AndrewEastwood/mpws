@@ -443,7 +443,7 @@ class orders extends \engine\objects\api {
                 }
         } else {
             // $productItems = !empty($order['items']) ? $order['items'] : array();
-            $sessionPromo = $this->getSessionPromo();
+            $sessionPromo = $this->getAPI()->promos->getSessionPromo();
             $sessionOrderProducts = $this->_getSessionOrderProducts();
             // re-validate promo
             if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
@@ -452,7 +452,7 @@ class orders extends \engine\objects\api {
                     $this->getAPI()->promos->setSessionPromo($sessionPromo);
                     $order['promo'] = $sessionPromo;
                 } else {
-                    $this->_resetSessionPromo();
+                    $this->getAPI()->promos->resetSessionPromo();
                     $order['promo'] = null;
                 }
             }
@@ -498,7 +498,7 @@ class orders extends \engine\objects\api {
     }
 
     private function _resetOrderTemp () {
-        $this->_resetSessionPromo();
+        $this->getAPI()->promos->resetSessionPromo();
         $this->_resetSessionOrderProducts();
     }
 

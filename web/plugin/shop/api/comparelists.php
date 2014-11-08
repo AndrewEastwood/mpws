@@ -18,43 +18,45 @@ class comparelists extends \engine\objects\api {
     }
 
     public function get (&$resp) {
-        $resp = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
-        // $resp['limit'] = 10;
+        $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        $resp = array_values($items);
     }
 
     public function post (&$resp, $req) {
-        $resp = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
-        if (count($resp) >= $this->getProductsLimit()) {
-            $resp['error'] = "ProductLimitExceeded";
+        $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        if (count($items) >= $this->getProductsLimit()) {
+            $items['error'] = "ProductLimitExceeded";
             return;
         }
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
-            if (!isset($resp[$productID])) {
+            if (!isset($items[$productID])) {
                 $product = $this->getAPI()->products->getProductByID($productID);
-                $resp[$productID] = $product;
-                $_SESSION[$this->_listKey_Compare] = $resp;
+                $items[$productID] = $product;
+                $_SESSION[$this->_listKey_Compare] = $items;
             }
-        }
+            $resp = array_values($items);
+        } else
+            $resp['error'] = "MissedParameter_productID";
     }
 
     public function delete (&$resp, $req) {
-        $resp = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
             if ($productID === "*") {
-                $resp = array();
-            } elseif (isset($resp[$productID])) {
-                unset($resp[$productID]);
+                $items = array();
+            } elseif (isset($items[$productID])) {
+                unset($items[$productID]);
             }
-            $_SESSION[$this->_listKey_Compare] = $resp;
+            $_SESSION[$this->_listKey_Compare] = $items;
+            $resp = array_values($items);
         }
     }
 
     public function productIsInCompareList ($id) {
-        $list = array();
-        $this->get($list);
-        return isset($list[$id]);
+        $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
+        return isset($items[$id]);
     }
 }
 

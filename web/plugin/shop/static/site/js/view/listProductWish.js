@@ -19,6 +19,7 @@ define("plugin/shop/site/js/view/listProductWish", [
             this.listenTo(this.collection, 'sync', this.render);
         },
         render: function() {
+            debugger;
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             return this;
         }
