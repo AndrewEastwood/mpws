@@ -127,7 +127,7 @@ class app {
     public function startApplication () {
         header($this->header);
         session_start();
-        $_customerScript = '\\web\\customer\\' . $this->customerName() . '\\customer';
+        $_customerScript = '\\web\\customers\\' . $this->customerName() . '\\customer';
         // glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);
         // $_customerClass = OBJECT_T_CUSTOMER . BS . MPWS_CUSTOMER;
         // include_once $_customerScript;

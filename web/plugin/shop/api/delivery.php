@@ -1,14 +1,14 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class delivery extends \engine\object\api {
+class delivery extends \engine\objects\api {
 
     private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
     // -----------------------------------------------

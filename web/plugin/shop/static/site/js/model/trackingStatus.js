@@ -7,7 +7,7 @@ define('plugin/shop/site/js/model/trackingStatus', [
         url: function () {
             var _params =  {
                 source: 'shop',
-                fn: 'order',
+                fn: 'orders',
                 hash: this.get('Hash')
             };
             return APP.getApiLink(_params);

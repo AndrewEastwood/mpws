@@ -1,7 +1,7 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
@@ -9,7 +9,7 @@ use \engine\lib\request as Request;
 use Exception;
 use ArrayObject;
 
-class categories extends \engine\object\api {
+class categories extends \engine\objects\api {
 
     private $_statuses = array('ACTIVE', 'REMOVED');
     // -----------------------------------------------
@@ -388,12 +388,12 @@ class categories extends \engine\object\api {
         $products = array();
         if (!empty($dataProducts))
             foreach ($dataProducts as $val)
-                $products[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
+                $products[] = $this->getAPI()->products->getProductByID($val['ID']);
 
         $productsInfo = array();
         if (!empty($dataCategoryInfo))
             foreach ($dataCategoryInfo as $val)
-                $productsInfo[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
+                $productsInfo[] = $this->getAPI()->products->getProductByID($val['ID']);
 
         // adjust brands, categories and features
         $brands = array();
@@ -465,12 +465,12 @@ class categories extends \engine\object\api {
 
 
     public function get (&$resp, $req) {
-        if (empty($req->get['id'])) {
-            $resp = $this->getCategories_List($req->get);
-        } else if (isset($req->get['browse'])) {
+        if (isset($req->get['browse'])) {
             $resp = $this->getCatalogBrowse();
         } else if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
+        } else if (empty($req->get['id'])) {
+            $resp = $this->getCategories_List($req->get);
         } else {
             $CategoryID = intval($req->get['id']);
             $resp = $this->getCategoryByID($CategoryID);

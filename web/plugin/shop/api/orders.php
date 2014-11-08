@@ -1,14 +1,14 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class orders extends \engine\object\api {
+class orders extends \engine\objects\api {
 
     private $_listKey_Cart = 'shop:cart';
     private $_statuses = array(
@@ -422,7 +422,7 @@ class orders extends \engine\object\api {
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
-                    $product = $this->getAPI()->products->getProductByID($soldItem['ProductID'], false, false);
+                    $product = $this->getAPI()->products->getProductByID($soldItem['ProductID']);
                     // save current product info
                     $product["CurrentIsPromo"] = $product['IsPromo'];
                     $product["CurrentPrice"] = $product['Price'];
@@ -458,7 +458,7 @@ class orders extends \engine\object\api {
             }
             // get prodcut items
             foreach ($sessionOrderProducts as $purchasingProduct) {
-                $product = $this->getAPI()->products->getProductByID($purchasingProduct['ID'], false, false);
+                $product = $this->getAPI()->products->getProductByID($purchasingProduct['ID']);
                 // actual price (with discount if promo is active)
                 // set product gross and net totals
                 // get purchased product quantity
@@ -502,7 +502,7 @@ class orders extends \engine\object\api {
         $this->_resetSessionOrderProducts();
     }
 
-    private function productCountInCart ($id) {
+    public function productCountInCart ($id) {
         // $order = $this->_getOrderTemp();
         $sessionOrderProducts = $this->_getSessionOrderProducts();
         return isset($sessionOrderProducts[$id]) ? $sessionOrderProducts[$id]['_orderQuantity'] : 0;

@@ -1,14 +1,14 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class delivery extends \engine\object\api {
+class comparelists extends \engine\objects\api {
 
     private $_productsLimit = 10;
     private $_listKey_Compare = 'shop:listCompare';
@@ -31,7 +31,7 @@ class delivery extends \engine\object\api {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($resp[$productID])) {
-                $product = $this->getAPI()->products->getProductByID($productID, false, false);
+                $product = $this->getAPI()->products->getProductByID($productID);
                 $resp[$productID] = $product;
                 $_SESSION[$this->_listKey_Compare] = $resp;
             }

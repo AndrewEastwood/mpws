@@ -1,6 +1,6 @@
 <?php
 namespace web\plugin\account\config;
 
-class data extends \engine\object\configuration {}
+class data extends \engine\objects\configuration {}
 
 ?>

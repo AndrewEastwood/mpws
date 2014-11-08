@@ -2,6 +2,8 @@
 
 namespace engine\lib;
 
+use engine\lib\path as Path;
+
 class utils {
     
     /**
@@ -114,6 +116,30 @@ class utils {
         return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
     }
 
+    static function getCustomerNS ($customerName) {
+        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNameCustomer() . '\\' . $customerName;
+    }
+    static function getDefaultNS ($version) {
+        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNameDefault() . '\\' . $version;
+    }
+    static function getCustomerConfigClassName ($configName, $customerName = 'customer') {
+        return self::getCustomerNS($customerName) . '\\' . Path::getDirNameConfig() . '\\' . $configName;
+    }
+    static function getDefaultConfigClassName ($configName, $version) {
+        return self::getDefaultNS($version) . '\\' . Path::getDirNameConfig() . '\\' . $configName;
+    }
+    static function getPluginClassName ($pluginName, $pluginClassName = 'plugin') {
+        // $pluginClass = '\\web\\plugin\\' . $pluginName . '\\plugin';
+        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . $pluginClassName;
+    }
+    static function getPluginConfigClassName ($configName, $pluginName) {
+        // $configClass = '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
+        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameConfig() . '\\' . $configName;
+    }
+    static function getApiClassName ($apiName, $pluginName) {
+        // $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
+        return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameApi() . '\\' . $apiName;
+    }
 
 }
 ?>

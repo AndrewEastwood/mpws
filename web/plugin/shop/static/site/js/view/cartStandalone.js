@@ -62,10 +62,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 data.extras.settings = this.modelSettings.toSettings();
             }
 
-            if (data.data.Hash) {
-                data.data.ShortHash = data.data.Hash.substring(0, 5);
-            }
-
             this.$el.off().empty().html(this.template(data));
 
             // debugger;

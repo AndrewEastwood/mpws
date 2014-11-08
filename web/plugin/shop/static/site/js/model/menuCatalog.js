@@ -6,12 +6,9 @@ define("plugin/shop/site/js/model/menuCatalog", [
         url: function () {
             return APP.getApiLink({
                 source: 'shop',
-                fn: 'catalog',
+                fn: 'categories',
                 type: 'tree'
             })
-        },
-        parse: function (data) {
-            return data.tree;
         }
     });
 

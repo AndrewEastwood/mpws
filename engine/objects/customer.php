@@ -1,5 +1,5 @@
 <?php
-namespace engine\object;
+namespace engine\objects;
 
 use \engine\lib\utils as Utils;
 use \engine\lib\path as Path;
@@ -34,9 +34,9 @@ class customer {
         $customerConfigs = Path::getCustomerConfigurationFilesMap($this->getApp()->customerName());
         foreach ($defaultConfigs as $configName => $configFilePath) {
             if (isset($customerConfigs[$configName])) {
-                $configClass = '\\web\\customer\\' . $this->customerName() . '\\config\\' . $configName;
+                $configClass = Utils::getCustomerConfigClassName($configName, $this->customerName());
             } else {
-                $configClass = '\\web\\base\\' . $this->getVersion() . '\\config\\' . $configName;
+                $configClass = Utils::getDefaultConfigClassName($configName, $this->getVersion());
             }
             $configuration[$configName] = new $configClass();
         }
@@ -53,7 +53,7 @@ class customer {
         $_pluginPath = Path::createPathWithRoot('web', 'plugin');
         foreach ($this->getConfiguration()->display->Plugins as $pluginName) {
             // load plugin
-            $pluginClass = '\\web\\plugin\\' . $pluginName . '\\plugin';
+            $pluginClass = Utils::getPluginClassName($pluginName);// '\\web\\plugin\\' . $pluginName . '\\plugin';
             // save plugin instance
             $this->plugins[$pluginName] = new $pluginClass($this, $pluginName, $app);
         }
@@ -106,11 +106,11 @@ class customer {
             URL_API: '/api.js',
             URL_AUTH: '/auth.js',
             URL_UPLOAD: '/upload.js',
-            URL_STATIC_CUSTOMER: '/" . Path::createPath($staticPath, 'customer', $displayCustomer, true) . "',
-            URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, 'customer', $displayCustomer, true) . "',
+            URL_STATIC_CUSTOMER: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
+            URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_PLUGIN: '/" . Path::createPath($staticPath, 'plugin', true) . "',
             URL_STATIC_DEFAULT: '/" . Path::createPath($staticPath, 'base', $this->getVersion(), true) . "',
-            ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
+            ROUTER: '" . join(Path::getDirectorySeparator(), array(Path::getDirNameCustomer(), 'js', 'router')) . "'
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
 

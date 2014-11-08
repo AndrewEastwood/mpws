@@ -1,5 +1,5 @@
 <?php
-namespace engine\object;
+namespace engine\objects;
 
 use \engine\lib\utils as Utils;
 use \engine\lib\path as Path;
@@ -20,7 +20,7 @@ class plugin {
         $configuration = array();
         $pluginConfigs = Path::getPluginConfigurationFilesMap($pluginName);
         foreach ($pluginConfigs as $configName => $configFilePath) {
-            $configClass = '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
+            $configClass = Utils::getPluginConfigClassName($configName, $pluginName);// '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
             $configuration[$configName] = new $configClass();
         }
         $this->configuration = (object)$configuration;
@@ -29,7 +29,8 @@ class plugin {
         $api = array();
         $pluginApis = Path::getPluginApiFilesMap($pluginName);
         foreach ($pluginApis as $apiName => $apiFilePath) {
-            $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
+            $apiClass = Utils::getApiClassName($apiName, $pluginName);
+            // $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
             // save plugin instance
             $api[$apiName] = new $apiClass($customer, $this, $pluginName, $app);
         }

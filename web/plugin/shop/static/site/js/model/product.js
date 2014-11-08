@@ -10,10 +10,11 @@ define('plugin/shop/site/js/model/product', [
         url: function () {
             var _params = {
                 source: 'shop',
-                fn: 'product'
+                fn: 'products',
+                id: this.id
             };
-            if (!this.isNew())
-                _params.id = this.id;
+            // if (!this.isNew())
+            //     _params.id = this.id;
             return APP.getApiLink(_params);
         },
         getFeatures: function (compatibilityList) {

@@ -48,7 +48,7 @@ define('plugin/shop/site/js/model/order', [
         getProductByID: function (productID) {
             return this.get('items')[productID] || null;
         },
-        setProductQuantity:  function (event, productID, quantity) {
+        setProductQuantity:  function (event, productID, quantity, isNew) {
             var self = this;
             this.sync("patch", this, {
                 attrs: {
@@ -58,7 +58,11 @@ define('plugin/shop/site/js/model/order', [
                 parse: true,
                 success: function (response) {
                     self.set(self.parse(response));
-                    BSAlert.warning(lang.list_cart_alert_updated);
+                    if (isNew) {
+                        BSAlert.success(lang.list_cart_alert_add);
+                    } else {
+                        BSAlert.warning(lang.list_cart_alert_updated);
+                    }
                     Sandbox.eventNotify('plugin:shop:order:changed', event);
                 }
             });
@@ -69,7 +73,7 @@ define('plugin/shop/site/js/model/order', [
             if (product)
                 this.setProductQuantity(event, event.id, product._orderQuantity + 1);
             else
-                this.setProductQuantity(event, event.id, 1);
+                this.setProductQuantity(event, event.id, 1, true);
         },
         productRemove: function (event) {
             var self = this;

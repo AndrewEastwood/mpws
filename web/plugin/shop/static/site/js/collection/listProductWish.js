@@ -12,9 +12,10 @@ define('plugin/shop/site/js/collection/listProductWish', [
     var ListProductWish = Backbone.Collection.extend({
         model: ModelProduct,
         url: function (options) {
-            return APP.getApiLink(_.extend({
+            options = options || {};
+            return APP.getApiLink(_.extend({}, options, {
                 source: 'shop',
-                fn: 'wish'}, options));
+                fn: 'wishlists'}));
         },
         initialize: function () {
             listProductWish = this;

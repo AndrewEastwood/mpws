@@ -2,7 +2,7 @@
 
 namespace web\plugin\shop\config;
 
-class data extends \engine\object\configuration {
+class data extends \engine\objects\configuration {
 
     var $Table_ShopOrders = "shop_orders";
     var $Table_ShopProducts = "shop_products";
@@ -870,7 +870,7 @@ class data extends \engine\object\configuration {
     public function jsapiShopCreateOrder ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        $data["Hash"] = md5(time() . md5(time()));
+        $data["Hash"] = substr(md5(time() . md5(time())), 0, 5);
         // adjust values
         if (is_string($data["DeliveryID"])) {
             $data["DeliveryID"] = null;

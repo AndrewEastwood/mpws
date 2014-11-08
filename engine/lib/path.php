@@ -101,7 +101,7 @@ class path {
         return 'base';
     }
     public static function getDirNameCustomer () {
-        return 'customer';
+        return 'customers';
     }
     public static function getDirNamePlugin () {
         return 'plugin';

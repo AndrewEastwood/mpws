@@ -1,14 +1,14 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class wishlists extends \engine\object\api {
+class wishlists extends \engine\objects\api {
 
     private $_productsLimit = 10;
     private $_listKey_Wish = 'shop:wishList';
@@ -34,7 +34,7 @@ class wishlists extends \engine\object\api {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($resp[$productID])) {
-                $product = $this->getAPI()->products->getProductByID($productID, false, false);
+                $product = $this->getAPI()->products->getProductByID($productID);
                 $resp[$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $resp;
             }
@@ -55,7 +55,7 @@ class wishlists extends \engine\object\api {
         }
     }
 
-    private function productIsInWishList ($id) {
+    public function productIsInWishList ($id) {
         $list = array();
         $this->get($list);
         return isset($list[$id]);

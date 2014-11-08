@@ -1,14 +1,15 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\request as Request;
 use Exception;
 use ArrayObject;
 
-class products extends \engine\object\api {
+class products extends \engine\objects\api {
 
     private $_listKey_Recent = 'shop:listRecent';
     private $_statuses = array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
@@ -30,7 +31,7 @@ class products extends \engine\object\api {
     // -----------------------------------------------
     // product standalone item (short or full)
     // -----------------------------------------------
-    public function getProductByID ($productID, $saveIntoRecent = false, $skipRelations = false) {
+    public function getProductByID ($productID, $skipRelations = false) {
         if (empty($productID) || !is_numeric($productID))
             return null;
 
@@ -42,9 +43,10 @@ class products extends \engine\object\api {
 
         // adjusting
         $product['ID'] = intval($product['ID']);
-        $product['Category'] = $this->getAPI()->categories->getCategoryByID($product['CategoryID']);
-        $product['Origin'] = $this->getAPI()->origins->getOriginByID($product['CategoryID']);
-        // $product['OriginID'] = intval($product['OriginID']);
+        $product['OriginID'] = intval($product['OriginID']);
+        $product['CategoryID'] = intval($product['CategoryID']);
+        $product['_category'] = $this->getAPI()->categories->getCategoryByID($product['CategoryID']);
+        $product['_origin'] = $this->getAPI()->origins->getOriginByID($product['OriginID']);
         $product['Attributes'] = $this->getProductAttributes($productID);
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
         $product['Price'] = floatval($product['Price']);
@@ -72,7 +74,7 @@ class products extends \engine\object\api {
         if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
             $product['_promoIsApplied'] = true;
             $product['DiscountPrice'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
-            $product['promo'] = $promo;
+            $product['_promo'] = $promo;
         }
 
         $product['SellingPrice'] = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
@@ -86,7 +88,7 @@ class products extends \engine\object\api {
 
         // $product['_statuses'] = $this->_getCachedTableStatuses($this->getPluginConfiguration()->data->Table_ShopProducts);
         // save product into recently viewed list
-        if ($saveIntoRecent && !$this->getApp()->isToolbox()) {
+        if (Request::isGET() && !$this->getApp()->isToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[$productID] = $product;
             $_SESSION[$this->_listKey_Recent] = $recentProducts;
@@ -174,7 +176,7 @@ class products extends \engine\object\api {
                 $relatedProductID = intval($relationItem['ProductB_ID']);
                 if ($relatedProductID === $productID)
                     continue;
-                $relatedProduct = $this->getProductByID($relatedProductID, false, true);
+                $relatedProduct = $this->getProductByID($relatedProductID, true);
                 if (isset($relatedProduct))
                     $relations[] = $relatedProduct;
             }
@@ -196,7 +198,7 @@ class products extends \engine\object\api {
             "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], $saveIntoRecent, $skipRelations);
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
                 }
                 return $_items;
             }
@@ -616,7 +618,7 @@ class products extends \engine\object\api {
         else
             $errors = $validatedDataObj["errors"];
 
-        $result = $this->getProductByID($ProductID, false, false);
+        $result = $this->getProductByID($ProductID);
         $result['errors'] = $errors;
         $result['success'] = $success;
 
@@ -634,7 +636,7 @@ class products extends \engine\object\api {
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
-                $data[] = $this->getProductByID($val['ID'], false, false);
+                $data[] = $this->getProductByID($val['ID']);
             }
         }
         return $data;
@@ -647,7 +649,7 @@ class products extends \engine\object\api {
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
-                $product = $this->getProductByID($val['ProductID'], false, false);
+                $product = $this->getProductByID($val['ProductID']);
                 $product['SoldTotal'] = floatval($val['SoldTotal']);
                 $product['SumTotal'] = floatval($val['SumTotal']);
                 $data[] = $product;

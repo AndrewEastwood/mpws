@@ -1,14 +1,14 @@
 <?php
 namespace web\plugin\shop\api;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class prductfeatures extends \engine\object\api {
+class prductfeatures extends \engine\objects\api {
 
     public function createFeature ($itemData) {
         $data = array();

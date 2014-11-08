@@ -1,5 +1,5 @@
 <?php
-namespace web\customer\mikser_ho_ua;
+namespace web\customers\mikser_ho_ua;
 /*
  * Customer: PB.COM.UA
  */

@@ -6,7 +6,7 @@ use \engine\lib\path as Path;
 use PHPExcel as PHPExcel;
 use PHPExcel_IOFactory as PHPExcel_IOFactory;
 
-class feeds extends \engine\object\api {
+class feeds extends \engine\objects\api {
 
     public function getDirNameFeeds () {
         return 'feeds';

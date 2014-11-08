@@ -77,10 +77,10 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
                     _options[key] = item;
             });
             console.log(_options);
-            return APP.getApiLink(_.extend({
+            return APP.getApiLink(_.extend({}, _options, {
                 source: 'shop',
-                fn: 'catalog',
-                type: 'browse'}, _options));
+                fn: 'categories',
+                browse: ''}));
         },
         parse: function (data) {
             // adjust products

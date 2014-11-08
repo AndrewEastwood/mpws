@@ -1,7 +1,7 @@
 <?php
-namespace web\customer\toolbox;
+namespace web\customers\toolbox;
 
-use \engine\object\customer as parent;
+use \engine\objects\customer as parent;
 /*
  * Customer: PB.COM.UA
  */

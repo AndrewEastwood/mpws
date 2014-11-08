@@ -37,16 +37,16 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             }
         };
 
-        var columnShortHash = {
+        var columnHash = {
             name: "Hash",
-            label: lang.pluginMenu_Orders_Grid_Column_ShortHash,
+            label: lang.pluginMenu_Orders_Grid_Column_Hash,
             cell: "html",
             editable: false,
             sortable: false,
             formatter: {
                 fromRaw: function (value, model) {
-                    var shortHash = $('<span>').addClass('label label-primary').text(value.substring(0, 5));
-                    return shortHash;
+                    var hash = $('<span>').addClass('label label-primary').text(value);
+                    return hash;
                 }
             }
         };
@@ -164,7 +164,7 @@ define("plugin/shop/toolbox/js/view/listOrders", [
 
         return _.extend({}, {
             columnActions: columnActions,
-            columnShortHash: columnShortHash,
+            columnHash: columnHash,
             columnAccountFullName: columnAccountFullName,
             columnAccountPhone: columnAccountPhone,
             columnInfoTotal: columnInfoTotal,

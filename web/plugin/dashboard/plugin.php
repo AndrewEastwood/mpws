@@ -2,7 +2,7 @@
 
 namespace web\plugin\dashboard;
 
-use \engine\object\plugin as basePlugin;
+use \engine\objects\plugin as basePlugin;
 
 class plugin extends basePlugin {}
 

@@ -1,5 +1,5 @@
 <?php
-namespace engine\object;
+namespace engine\objects;
 use \engine\lib\utils as Utils;
 
 class configuration {

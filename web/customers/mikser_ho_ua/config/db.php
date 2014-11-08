@@ -1,5 +1,5 @@
 <?php
-namespace web\customer\mikser_ho_ua\config;
+namespace web\customers\mikser_ho_ua\config;
 
 class db extends \web\default\atlantis\config\db {
 

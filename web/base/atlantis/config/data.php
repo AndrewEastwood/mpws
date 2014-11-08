@@ -2,7 +2,7 @@
 
 namespace web\base\atlantis\config;
 
-use \engine\object\configuration as baseConfig;
+use \engine\objects\configuration as baseConfig;
 
 class data extends baseConfig {
 

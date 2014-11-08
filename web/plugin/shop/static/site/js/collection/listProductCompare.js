@@ -12,9 +12,10 @@ define('plugin/shop/site/js/collection/listProductCompare', [
     var ListProductCompare = Backbone.Collection.extend({
         model: ModelProduct,
         url: function (options) {
-            return APP.getApiLink(_.extend({
+            options = options || {};
+            return APP.getApiLink(_.extend({}, options, {
                 source: 'shop',
-                fn: 'compare'}, options));
+                fn: 'comparelists'}));
         },
         initialize: function () {
             listProductCompare = this;

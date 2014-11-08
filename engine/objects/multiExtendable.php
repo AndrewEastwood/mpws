@@ -1,5 +1,5 @@
 <?php
-namespace engine\object;
+namespace engine\objects;
 
 class multiExtendable {
 

@@ -41,7 +41,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         productManager_Button_Create_Origin: "Виробник",
         // Order list
         pluginMenu_Orders_Grid_Column_ID: "#",
-        pluginMenu_Orders_Grid_Column_ShortHash: '#',
+        pluginMenu_Orders_Grid_Column_Hash: '#',
         pluginMenu_Orders_Grid_Column_Shipping: "Доставка",
         pluginMenu_Orders_Grid_Column_Status: "Статус",
         pluginMenu_Orders_Grid_Column_Warehouse: "Склад",

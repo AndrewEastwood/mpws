@@ -1,7 +1,7 @@
 <?php
 namespace web\base\atlantis\config;
 
-use \engine\object\configuration as baseConfig;
+use \engine\objects\configuration as baseConfig;
 use PDO;
 
 class db extends baseConfig {
