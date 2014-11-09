@@ -153,6 +153,7 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategoryLocation ($categoryID) {
+        var_dump($categoryID);
         $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
         $location = $this->getCustomer()->fetch($configLocation);
         return $location;
