@@ -124,7 +124,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         pluginMenu_Products_Grid_Column_Name: "Назва",
         pluginMenu_Products_Grid_Column_Model: "Модель",
         pluginMenu_Products_Grid_Column_OriginName: "Виробник",
-        pluginMenu_Products_Grid_Column_columnCategoryName: "Категорія",
+        pluginMenu_Products_Grid_Column_CategoryName: "Категорія",
         pluginMenu_Products_Grid_Column_SKU: "SKU",
         pluginMenu_Products_Grid_Column_Price: "Ціна",
         pluginMenu_Products_Grid_Column_Status: "Статус",

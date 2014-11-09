@@ -31,6 +31,9 @@ define("plugin/account/common/js/model/account", [
                 ConfirmPassword: confirmation
             };
             this.save(data, {patch: true});
+        },
+        isSaved: function () {
+            return this.get('success');
         }
 
     });

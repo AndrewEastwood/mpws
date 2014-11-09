@@ -8,7 +8,7 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class prductfeatures extends \engine\objects\api {
+class productfeatures extends \engine\objects\api {
 
     public function createFeature ($itemData) {
         $data = array();

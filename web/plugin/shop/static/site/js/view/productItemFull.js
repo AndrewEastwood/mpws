@@ -41,9 +41,12 @@ define("plugin/shop/site/js/view/productItemFull", [
                 });
             }
 
-            Sandbox.eventSubscribe("plugin:shop:product:open", function (data) {
-                Backbone.history.navigate(data.page, true);
+            var data = this.model.toJSON();
+            APP.getCustomer().setBreadcrumb({
+                categories: data._category && data._category._location,
+                product: data
             });
+
             return this;
         }
     });

@@ -89,7 +89,7 @@ class plugin extends basePlugin {
             'FirstName' => array('string', 'notEmpty', 'min' => 2, 'max' => 40),
             'LastName' => array('skipIfUnset', 'string', "defaultValueIfUnset" => ""),
             'EMail' => array('isEmail', 'min' => 5, 'max' => 100),
-            'Phone' => array('isPhone'),
+            'Phone' => array('isPhone', 'skipIfUnset', 'defaultValueIfUnset' => Validate::getEmptyPhoneNumber()),
             'Password' => array('isPassword', 'min' => 8, 'max' => 30),
             'ConfirmPassword' => array('equalTo' => 'Password', 'notEmpty')
         ));

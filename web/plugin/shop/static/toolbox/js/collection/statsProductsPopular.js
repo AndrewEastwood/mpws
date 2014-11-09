@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/collection/statsProductsPopular', [
             ListProducts.prototype.initialize.apply(this);
             this.url = APP.getApiLink({
                 source: 'shop',
-                fn: 'stats',
+                fn: 'shopstats',
                 type: 'products_list_popular'
             });
         },

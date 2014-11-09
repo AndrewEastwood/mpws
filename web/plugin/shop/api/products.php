@@ -720,19 +720,30 @@ class products extends \engine\objects\api {
         return $res;
     }
 
-    public function getStats_ProductsIntensityLastMonth ($status) {
+    public function getStats_ProductsIntensityActiveLastMonth () {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth($status);
+        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth('ACTIVE');
         $data = $this->getCustomer()->fetch($config) ?: array();
-        // var_dump($config);
         return $data;
     }
-
-
-
-
+    public function getStats_ProductsIntensityPreorderLastMonth () {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            return null;
+        }
+        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth('PREORDER');
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        return $data;
+    }
+    public function getStats_ProductsIntensityDiscountLastMonth () {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            return null;
+        }
+        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth('DISCOUNT');
+        $data = $this->getCustomer()->fetch($config) ?: array();
+        return $data;
+    }
 
     public function get (&$resp, $req) {
         if (empty($req->get['id'])) {

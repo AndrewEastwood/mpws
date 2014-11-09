@@ -234,6 +234,9 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 }
             });
 
+            if (_shopUser) {
+                formValidator.validate();
+            }
 
             return this;
         }

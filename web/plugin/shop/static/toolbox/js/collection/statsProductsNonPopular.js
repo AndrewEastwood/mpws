@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/collection/statsProductsNonPopular', [
             ListProducts.prototype.initialize.apply(this);
             this.url = APP.getApiLink({
                 source: 'shop',
-                fn: 'stats',
+                fn: 'shopstats',
                 type: 'products_list_non_popular'
             });
         },

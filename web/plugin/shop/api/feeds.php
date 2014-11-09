@@ -34,11 +34,11 @@ class feeds extends \engine\objects\api {
     }
 
     public function getGeneratedFeedsFilesList () {
-        return glob($this->getFeedsUploadInnerDir() . 'gen_*\.xls');
+        return glob(Path::rootPath() . $this->getFeedsUploadInnerDir() . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsFilesList () {
-        return glob($this->getFeedsUploadInnerDir() . 'import_*\.xls');
+        return glob(Path::rootPath() . $this->getFeedsUploadInnerDir() . 'import_*\.xls');
     }
 
     public function getFeeds () {
@@ -159,8 +159,8 @@ class feeds extends \engine\objects\api {
             }
             $objPHPExcel->getActiveSheet()->setCellValue('A' . $j, $dataList['items'][$i]['Name']);
             $objPHPExcel->getActiveSheet()->setCellValue('B' . $j, $dataList['items'][$i]['Model']);
-            $objPHPExcel->getActiveSheet()->setCellValue('C' . $j, $dataList['items'][$i]['CategoryName']);
-            $objPHPExcel->getActiveSheet()->setCellValue('D' . $j, $dataList['items'][$i]['OriginName']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $j, $dataList['items'][$i]['_category']['Name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $j, $dataList['items'][$i]['_origin']['Name']);
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $j, $dataList['items'][$i]['Price']);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $j, $dataList['items'][$i]['Status']);
             $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo']);
@@ -170,7 +170,7 @@ class feeds extends \engine\objects\api {
             $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
         }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save($this->getFeedsUploadInnerDir() . $this->getGeneratedFeedName() . '.xls');
+        $objWriter->save(Path::rootPath() . $this->getFeedsUploadInnerDir() . $this->getGeneratedFeedName() . '.xls');
         // return $dataList;
     }
 
@@ -183,7 +183,7 @@ class feeds extends \engine\objects\api {
             $resp = $this->generateProductFeed();
         } elseif (isset($resp['files'])) {
             foreach ($resp['files'] as $tempFileItem) {
-                Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
+                Path::moveTemporaryFile($tempFileItem->name, Path::rootPath() . $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
             }
         }

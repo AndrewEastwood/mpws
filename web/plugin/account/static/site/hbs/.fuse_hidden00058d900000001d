@@ -20,11 +20,11 @@
                     {{#each data.errors}}
                         <li>
                             <strong>
-                                {{mpwsGetValueByKey ../lang @key "profile_page_edit_error_atField_"}}
+                                {{mpwsGetValueByKey ../lang @key "form_register_error_atField_"}}
                             </strong>
                             <ul>
                             {{#each this}}
-                                <li>{{mpwsGetValueByKey ../../lang this "profile_page_edit_error_"}}</li>
+                                <li>{{mpwsGetValueByKey ../../lang this "form_register_error_"}}</li>
                             {{/each}}
                             </ul>
                         </li>
@@ -38,20 +38,35 @@
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
                                 <input type="text" name="FirstName" value="{{data.values.FirstName}}" class="form-control input-lg" placeholder="{{lang.form_register_field_FirstName}}" required />
+                                {{#if data.error.FirstName }}
+                                <div class="error-message FirstName_Error"></div>
+                                {{/if}}
                             </div>
                             <div class="col-xs-6 col-md-6">
-                                <input type="text" name="LastName" value="{{data.values.LastName}}" class="form-control input-lg" placeholder="{{lang.form_register_field_LastName}}" />
+                                <input type="text" name="LastName" value="{{data.values.LastName}}" class="form-control input-lg" placeholder="{{lang.form_register_field_LastName}}" required />
+                                {{#if data.error.LastName }}
+                                <div class="error-message LastName_Error"></div>
+                                {{/if}}
                             </div>
                         </div>
                     </div>
                     <div class="form-group has-error">
                         <input type="email" name="EMail" value="{{data.values.EMail}}" class="form-control input-lg" placeholder="{{lang.form_register_field_EMail}}" required />
+                        {{#if data.error.EMail }}
+                        <div class="error-message EMail_Error">{{lang.form_register_error_FirstName_Empty}}</div>
+                        {{/if}}
                     </div>
                     <div class="form-group has-error">
                         <input type="password" name="Password" value="" class="form-control input-lg" placeholder="{{lang.form_register_field_Password}}" required />
+                        {{#if data.error.Password }}
+                        <div class="error-message Password_Error"></div>
+                        {{/if}}
                     </div>
                     <div class="form-group has-error">
                         <input type="password" name="ConfirmPassword" value="" class="form-control input-lg" placeholder="{{lang.form_register_field_ConfirmPassword}}" required />
+                        {{#if data.error.ConfirmPassword }}
+                        <div class="error-message ConfirmPassword_Error"></div>
+                        {{/if}}
                     </div>
                     <span class="help-block">{{lang.form_register_message_bottom}}</span>
                     <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">{{lang.form_register_button_create}}</button>

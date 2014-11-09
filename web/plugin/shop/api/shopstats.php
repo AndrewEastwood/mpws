@@ -28,8 +28,8 @@ class shopstats extends \engine\objects\api {
         };
         $sources['orders_intensity_last_month'] = function ($req) use ($self) {
             $res = array();
-            $res['OPEN'] = $self->getAPI()->orders->getStats_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
-            $res['CLOSED'] = $self->getAPI()->orders->getStats_OrdersIntensityLastMonth('SHOP_CLOSED');
+            $res['OPEN'] = $self->getAPI()->orders->getStats_OrdersIntensityAliveLastMonth();
+            $res['CLOSED'] = $self->getAPI()->orders->getStats_OrdersIntensityClosedLastMonth();
             return $res;
         };
         $sources['overview_orders'] = function () use ($self) {
@@ -50,9 +50,9 @@ class shopstats extends \engine\objects\api {
         };
         $sources['products_intensity_last_month'] = function () use ($self) {
             $res = array();
-            $res['ACTIVE'] = $self->getAPI()->products->getStats_ProductsIntensityLastMonth('ACTIVE');
-            $res['PREORDER'] = $self->getAPI()->products->getStats_ProductsIntensityLastMonth('PREORDER');
-            $res['DISCOUNT'] = $self->getAPI()->products->getStats_ProductsIntensityLastMonth('DISCOUNT');
+            $res['ACTIVE'] = $self->getAPI()->products->getStats_ProductsIntensityActiveLastMonth();
+            $res['PREORDER'] = $self->getAPI()->products->getStats_ProductsIntensityPreorderLastMonth();
+            $res['DISCOUNT'] = $self->getAPI()->products->getStats_ProductsIntensityDiscountLastMonth();
             return $res;
         };
 
@@ -66,6 +66,5 @@ class shopstats extends \engine\objects\api {
             $resp['error'] = 'WrongType';
     }
 }
-
 
 ?>

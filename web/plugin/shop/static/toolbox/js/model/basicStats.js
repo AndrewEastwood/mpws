@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/model/basicStats', [
         url: function () {
             var _params = {
                 source: 'shop',
-                fn: 'stats'
+                fn: 'shopstats'
             };
             if (this.type) {
                 _params.type = this.type;

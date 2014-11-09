@@ -153,30 +153,8 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategoryLocation ($categoryID) {
-        // if (!isset($req->get['productID']) && !isset($req->get['categoryID'])) {
-        //     $resp['error'] = 'The request must contain at least one of parameters: "productID" or "categoryID"';
-        //     return;
-        // }
-        // $resp['location'] = $this->_getCategoryLocation(Request::fromGET('productID'), Request::fromGET('categoryID'));
-        // $location = null;
-
-        // if (empty($productID) && empty($categoryID))
-        //     return $location;
-
-        // if ($productID) {
-        //     // get product entry
-        //     $configProduct = $this->getPluginConfiguration()->data->jsapiShopGetProductItem($productID, false);
-
-        //     $productDataEntry = $this->getCustomer()->fetch($configProduct);
-        //     if (isset($productDataEntry['CategoryID'])) {
-        //         $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
-        //         $location['items'] = $this->getCustomer()->fetch($configLocation);
-        //         $location['product'] = $productDataEntry;
-        //     }
-        // } else {
-            $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
-            $location = $this->getCustomer()->fetch($configLocation);
-        // }
+        $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
+        $location = $this->getCustomer()->fetch($configLocation);
         return $location;
     }
 
@@ -186,28 +164,7 @@ class categories extends \engine\objects\api {
     // BREADCRUMB
     // -----------------------------------------------
     // -----------------------------------------------
-    // public function _getCategoryLocation ($productID = null, $categoryID = null) {
-    //     $location = null;
 
-    //     if (empty($productID) && empty($categoryID))
-    //         return $location;
-
-    //     if ($productID) {
-    //         // get product entry
-    //         $configProduct = $this->getPluginConfiguration()->data->jsapiShopGetProductItem($productID, false);
-
-    //         $productDataEntry = $this->getCustomer()->fetch($configProduct);
-    //         if (isset($productDataEntry['CategoryID'])) {
-    //             $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($productDataEntry['CategoryID']);
-    //             $location['items'] = $this->getCustomer()->fetch($configLocation);
-    //             $location['product'] = $productDataEntry;
-    //         }
-    //     } else {
-    //         $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
-    //         $location['items'] = $this->getCustomer()->fetch($configLocation);
-    //     }
-    //     return $location;
-    // }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -459,6 +416,7 @@ class categories extends \engine\objects\api {
                 "count" => count($dataCategoryInfo)
             )
         );
+        $data['_location'] = $this->getCategoryLocation($categoryID);
         // return data object
         return $data;
     }

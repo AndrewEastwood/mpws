@@ -289,4 +289,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         }
     });
 
+    APP.getCustomer = function () {
+        return APP.instances['CustomerRouter'];
+    };
+
 });

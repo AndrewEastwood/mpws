@@ -14,7 +14,6 @@ define('plugin/shop/toolbox/js/collection/filterPanelOrigins', [
             var urlOptions = {
                 source: 'shop',
                 fn: 'origins',
-                type: 'list',
                 removed: !!this.queryParams.removed
             };
 

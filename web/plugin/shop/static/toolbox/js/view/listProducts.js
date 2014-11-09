@@ -119,14 +119,24 @@ define("plugin/shop/toolbox/js/view/listProducts", [
             name: "OriginName",
             label: lang.pluginMenu_Products_Grid_Column_OriginName,
             cell: "string",
-            editable: false
+            editable: false,
+            formatter: {
+                fromRaw: function (value, model) {
+                    return model.get('_origin').Name
+                }
+            }
         };
 
         var columnCategoryName = {
             name: "CategoryName",
             label: lang.pluginMenu_Products_Grid_Column_CategoryName,
             cell: "string",
-            editable: false
+            editable: false,
+            formatter: {
+                fromRaw: function (value, model) {
+                    return model.get('_category').Name
+                }
+            }
         };
 
         var columnSKU = {

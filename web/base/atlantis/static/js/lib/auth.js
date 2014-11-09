@@ -2,16 +2,11 @@ define("default/js/lib/auth", [
     "default/js/lib/sandbox",
     "cmn_jquery",
     "default/js/lib/underscore",
+    'default/js/lib/backbone',
     "default/js/lib/cache"
-], function (Sandbox, $, _, Cache) {
+], function (Sandbox, $, _, Backbone, Cache) {
 
-    var Auth = {};
-
-    Sandbox.eventSubscribe("global:ajax:responce", function (response) {
-        Auth.verifyStatus(response);
-    });
-
-    Auth = {
+    var Auth = _.extend({
         verifyStatus: function () {
             // debugger;
             var auth_id = Auth.getAccountID();
@@ -20,8 +15,10 @@ define("default/js/lib/auth", [
             }
             Auth.auth_id = auth_id;
             if (Auth.auth_id) {
+                this.trigger('registered');
                 Sandbox.eventNotify("global:auth:status:active");
             } else {
+                this.trigger('guest');
                 Sandbox.eventNotify("global:auth:status:inactive");
             }
         },
@@ -59,7 +56,11 @@ define("default/js/lib/auth", [
                     callback(Auth.getAccountID(), response);
             });
         }
-    };
+    }, Backbone.Events);
+
+    Sandbox.eventSubscribe("global:ajax:responce", function () {
+        Auth.verifyStatus();
+    });
 
     return Auth;
 

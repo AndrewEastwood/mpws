@@ -26,7 +26,7 @@ class validate {
         $uppercase = preg_match('/[A-Z]/', $password);
         $lowercase = preg_match('/[a-z]/', $password);
         $number    = preg_match('/[0-9]/', $password);
-        $special   = preg_match('/[!@#$%&*?]/', $password);
+        $special   = preg_match('/[!@#$%&*?\)\(]/', $password);
 
         $errors = array();
 
@@ -120,12 +120,12 @@ class validate {
             // exists
             if (!array_key_exists($keyToValidate, $dataArray)) {
                 if (in_array("skipIfUnset", $rules)) {
+                    unset($errors[$keyToValidate]);
                     if (isset($rules["defaultValueIfUnset"]))
                         $values[$keyToValidate] = $rules["defaultValueIfUnset"];
                     else {
                         // var_dump('unset: '. $keyToValidate);
                         unset($values[$keyToValidate]);
-                        unset($errors[$keyToValidate]);
                     }
                     continue;
                 } else {

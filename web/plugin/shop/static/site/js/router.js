@@ -61,9 +61,9 @@ define("plugin/shop/site/js/router", [
                 self.home();
             });
 
-            Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
-                self.offers();
-            });
+            // Sandbox.eventSubscribe('plugin:shop:offers:get', function () {
+            //     self.offers();
+            // });
         },
 
         offers: function () {
@@ -74,14 +74,7 @@ define("plugin/shop/site/js/router", [
         },
 
         home: function () {
-
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'categories',
-                productID: null,
-                categoryID: null
-            });
-
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/shop/site/js/view/listProductLatest'], function (ListProductLatest) {
                 // create new view
                 var listProductLatest = new ListProductLatest();
@@ -100,21 +93,11 @@ define("plugin/shop/site/js/router", [
         },
 
         shop_catalog_category: function (categoryID) {
-
-            // debugger;
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: categoryID
-            });
-
             require(['plugin/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
                 // create new view
                 var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
                 });
-                // Site.placeholders.shop.productListCatalog.html(listProductCatalog.el);
                 listProductCatalog.collection.fetch({
                     reset: true
                 });
@@ -126,26 +109,7 @@ define("plugin/shop/site/js/router", [
             });
         },
 
-        shop_catalog: function (categoryID) {
-
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: categoryID
-            });
-
-        },
-
         shop_product: function (productID) {
-
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: productID,
-                categoryID: null
-            });
-
             require(['plugin/shop/site/js/view/productItemFull'], function (ViewProductItemFull) {
                 // create new view
                 var viewProductItemFull = new ViewProductItemFull({
@@ -160,13 +124,7 @@ define("plugin/shop/site/js/router", [
         },
 
         shop_compare: function () {
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: null
-            });
-
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/shop/site/js/view/listProductCompare'], function (ListProductCompare) {
                 // create new view
                 var listProductCompare = new ListProductCompare();
@@ -179,13 +137,7 @@ define("plugin/shop/site/js/router", [
         },
 
         shop_cart: function () {
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: null
-            });
-
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/shop/site/js/view/cartStandalone'], function (CartStandalone) {
                 // debugger;
                 var _accountModel = Cache.getObject('account:model');
@@ -212,13 +164,7 @@ define("plugin/shop/site/js/router", [
         },
 
         shop_wishlist: function () {
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: null
-            });
-
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/shop/site/js/view/listProductWish'], function (ListProductWish) {
                 // create new view
                 var listProductWish = new ListProductWish();
@@ -231,13 +177,7 @@ define("plugin/shop/site/js/router", [
         },
 
         shop_tracking: function (orderHash) {
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: null
-            });
-
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/shop/site/js/view/trackingStatus'], function (TrackingStatus) {
                 // create new view
                 var trackingStatus = new TrackingStatus();
@@ -251,19 +191,11 @@ define("plugin/shop/site/js/router", [
 
         //
         shop_profile_orders: function () {
-
+            APP.getCustomer().setBreadcrumb();
             if (!Site.hasPlugin('account') || !Auth.getAccountID()) {
                 Backbone.history.navigate("", true);
                 return;
             }
-
-            Sandbox.eventNotify('global:breadcrumb:show', {
-                source: 'shop',
-                fn: 'location',
-                productID: null,
-                categoryID: null
-            });
-
             require(['plugin/shop/site/js/view/profileOrders'], function (ProfileOrders) {
                 // Cache.withObject('ProfileOrders', function (cachedView) {
                 // debugger;

@@ -28,7 +28,8 @@ class orders extends \engine\objects\api {
         $order = null;
         $order = $this->getCustomer()->fetch($config);
         if (empty($order)) {
-            return glWrap('error', 'OrderDoesNotExist');
+            return null;
+            // return glWrap('error', 'OrderDoesNotExist');
         }
         $order['ID'] = intval($order['ID']);
         $this->__attachOrderDetails($order);
@@ -43,7 +44,8 @@ class orders extends \engine\objects\api {
         $order = $this->getCustomer()->fetch($config);
 
         if (empty($order)) {
-            return glWrap('error', 'OrderDoesNotExist');
+            return null;
+            // return glWrap('error', 'OrderDoesNotExist');
         }
 
         $order['ID'] = intval($order['ID']);
@@ -550,13 +552,21 @@ class orders extends \engine\objects\api {
         return $res;
     }
 
-    public function getStats_OrdersIntensityLastMonth ($status, $comparator = null) {
+    public function getStats_OrdersIntensityClosedLastMonth () {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_OrdersIntensityLastMonth($status, $comparator);
+        $config = $this->getPluginConfiguration()->data->jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
         $data = $this->getCustomer()->fetch($config) ?: array();
-        // var_dump($config);
+        return $data;
+    }
+
+    public function getStats_OrdersIntensityAliveLastMonth () {
+        if (!$this->getCustomer()->ifYouCan('Admin')) {
+            return null;
+        }
+        $config = $this->getPluginConfiguration()->data->jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
+        $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }
 

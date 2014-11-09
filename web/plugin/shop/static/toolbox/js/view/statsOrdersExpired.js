@@ -19,6 +19,7 @@ define("plugin/shop/toolbox/js/view/statsOrdersExpired", [
                 collection: this.collection,
                 adjustColumns: function (columns) {
                     // adjust columns
+                    delete columns.columnHash;
                     delete columns.columnShipping;
                     delete columns.columnWarehouse;
                     delete columns.columnDateUpdated;

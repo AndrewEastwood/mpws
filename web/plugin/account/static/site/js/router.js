@@ -16,13 +16,33 @@ define("plugin/account/site/js/router", [
 
     Cache.setObject('account:model', account);
 
-    account.on('change', function () {
-        Sandbox.eventNotify('plugin:account:model:change', account);
+    // account.on('change', function () {
+    //     Sandbox.eventNotify('plugin:account:model:change', account);
+    // });
+
+    Auth.on('registered', function () {
+        _navigateToAccountIfAuthorizedFn();
+    });
+
+    Auth.on('guest', function () {
+        _navigateToHomeIfNotAuthorizedFn();
     });
 
     var _navigateToHomeIfNotAuthorizedFn = function () {
-        if (!Auth.getAccountID() && /^account/.test(Backbone.history.fragment)) {
+        var isAccountPage = /^account/.test(Backbone.history.fragment);
+        var isSignUp = /^account\/create/.test(Backbone.history.fragment);
+        if (!Auth.getAccountID() && !isSignUp && isAccountPage) {
             Backbone.history.navigate("", true);
+            return true;
+        }
+        return false;
+    }
+
+    var _navigateToAccountIfAuthorizedFn = function () {
+        var isAccountPage = /^account/.test(Backbone.history.fragment);
+        var isSignUp = /^account\/create/.test(Backbone.history.fragment);
+        if (Auth.getAccountID() && isSignUp) {
+            Backbone.history.navigate("account/summary", true);
             return true;
         }
         return false;
@@ -59,16 +79,17 @@ define("plugin/account/site/js/router", [
         },
 
         create: function () {
-            if (_navigateToHomeIfNotAuthorizedFn())
+            if (_navigateToAccountIfAuthorizedFn())
                 return;
-
-            Sandbox.eventNotify('global:breadcrumb:show');
-
+            // Sandbox.eventNotify('global:breadcrumb:show');
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountCreate'], function (AccountCreate) {
                 // create new view
-                var accountCreate = new AccountCreate();
+                var accountCreate = new AccountCreate({
+                    model: account
+                });
                 Sandbox.eventNotify('global:content:render', {
-                    name: 'AccountProfileCreate',
+                    name: 'CommonBodyCenter',
                     el: accountCreate.el
                 });
                 accountCreate.render();
@@ -79,8 +100,9 @@ define("plugin/account/site/js/router", [
         summary: function () {
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            Sandbox.eventNotify('global:breadcrumb:show');
+            // Sandbox.eventNotify('global:breadcrumb:show');
             var self = this;
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountSummary'], function (AccountSummary) {
                 var accountSummary = new AccountSummary({
                     model: account
@@ -93,8 +115,9 @@ define("plugin/account/site/js/router", [
         password: function () {
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            Sandbox.eventNotify('global:breadcrumb:show');
+            // Sandbox.eventNotify('global:breadcrumb:show');
             var self = this;
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountProfilePassword'], function (AccountProfilePassword) {
                 // create new view
                 var accountProfilePassword = new AccountProfilePassword({
@@ -108,8 +131,9 @@ define("plugin/account/site/js/router", [
         edit: function () {
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
-            Sandbox.eventNotify('global:breadcrumb:show');
+            // Sandbox.eventNotify('global:breadcrumb:show');
             var self = this;
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountEdit'], function (AccountEdit) {
                 // create new view
                 var accountEdit = new AccountEdit({
@@ -125,7 +149,8 @@ define("plugin/account/site/js/router", [
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
             var self = this;
-            Sandbox.eventNotify('global:breadcrumb:show');
+            // Sandbox.eventNotify('global:breadcrumb:show');
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountProfileAddresses'], function (AccountProfileAddresses) {
                 // create new view
                 var accountProfileAddresses = new AccountProfileAddresses({
@@ -141,7 +166,8 @@ define("plugin/account/site/js/router", [
             if (_navigateToHomeIfNotAuthorizedFn())
                 return;
             var self = this;
-            Sandbox.eventNotify('global:breadcrumb:show');
+            // Sandbox.eventNotify('global:breadcrumb:show');
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountProfileDelete'], function (AccountProfileDelete) {
                 // create new viewl
                 var accountProfileDelete = new AccountProfileDelete();
@@ -154,6 +180,7 @@ define("plugin/account/site/js/router", [
         },
 
         showProfileToolbar: function (pageContent) {
+            APP.getCustomer().setBreadcrumb();
             require(['plugin/account/site/js/view/accountHolder'], function (ViewAccountHolder) {
                 // create new view
                 var viewAccountHolder = new ViewAccountHolder({

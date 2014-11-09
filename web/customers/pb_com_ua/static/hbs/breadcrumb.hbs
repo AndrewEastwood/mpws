@@ -50,7 +50,7 @@
     <li class="active">Реєстрація</li>
     {{/srtStartsWith}}
 
-    {{#srtStartsWith app.location.fragment "shop/profile/orders" }}
+    {{#srtStartsWith app.location.fragment "shop/account/orders" }}
     <li><a href="/#">Головна</a></li>
     <li><a href="/#account/summary">Профіль</a></li>
     <li class="active">Мої замовлення</li>
@@ -87,7 +87,7 @@
 
     {{#srtStartsWith app.location.fragment "shop/catalog/" }}
         <li><a href="/#">Головна</a></li>
-        {{#foreach data.location.items}}
+        {{#foreach data.categories}}
             {{#if $last}}
                 <li class="active">{{Name}}</li>
             {{else}}
@@ -98,11 +98,11 @@
 
     {{#srtStartsWith app.location.fragment "shop/product/" }}
         <li><a href="/#">Головна</a></li>
-        {{#foreach data.location.items}}
+        {{#foreach data.categories}}
         <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
         {{/foreach}}
-        {{#if data.location.product}}
-        <li class="active">{{data.location.product.Name}}</li>
+        {{#if data.product}}
+        <li class="active">{{data.product.Name}}</li>
         {{/if}}
     {{/srtStartsWith}}
 </ol>

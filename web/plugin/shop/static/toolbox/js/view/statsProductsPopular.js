@@ -18,6 +18,7 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
             this.viewList = new ViewListProducts({
                 collection: this.collection,
                 adjustColumns: function (columns) {
+                    delete columns.columnID;
                     delete columns.columnDateUpdated;
                     delete columns.columnDateCreated;
                     delete columns.columnSKU;

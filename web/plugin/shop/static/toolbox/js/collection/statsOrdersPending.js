@@ -7,7 +7,7 @@ define('plugin/shop/toolbox/js/collection/statsOrdersPending', [
             ListOrders.prototype.initialize.apply(this);
             this.url = APP.getApiLink({
                 source: 'shop',
-                fn: 'stats',
+                fn: 'shopstats',
                 type: 'orders_list_pending'
             });
         }

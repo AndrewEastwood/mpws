@@ -4,7 +4,7 @@ define('plugin/shop/toolbox/js/model/promo', [
 
     var Promo = Backbone.Model.extend({
         idAttribute: "ID",
-        url: function () {
+        urlRoot: function () {
             var _params = {
                 source: 'shop',
                 fn: 'promos'

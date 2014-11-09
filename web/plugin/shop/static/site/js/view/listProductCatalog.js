@@ -51,6 +51,10 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             // debugger;
             var _filterPrice = this.$('.slider').slider();
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
+
+            APP.getCustomer().setBreadcrumb({
+                categories: this.collection._location
+            });
             return this;
         },
         filterProducts_Other: function (event) {

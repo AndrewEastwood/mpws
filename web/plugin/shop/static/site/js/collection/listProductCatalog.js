@@ -109,6 +109,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
 
             // debugger;
             this.filter = filter;
+            this._location = data._location;
             // debugger;
             this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
 

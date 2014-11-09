@@ -16,9 +16,7 @@ define("plugin/account/site/nls/ua_uk/translation", [
         form_register_message_success_line1: "На Вашу ел. скриньку надійде повідомлення з підтвредженням Вашї реєстрації.",
         form_register_message_success_line2: "Для успішного завершення реєстрації Вам необхідно виконати інструкції в отриманому листі",
         form_register_button_create: "Сворити профіль",
-        form_register_error_FirstName_Empty: 'Імя є порожнє',
-        form_register_error_LastName_Empty: 'Прізвище є порожнє',
-        form_register_error_ConfirmPassword_WrongConfirmPassword: 'Паролі не співпадають',
+        form_register_commonError: "Помилка під час створення профілю",
         /* form signin */
         form_signin_menu_title: "Увійти",
         form_signin_field_Email: "Ел.адреса",
@@ -87,6 +85,8 @@ define("plugin/account/site/nls/ua_uk/translation", [
         profile_page_edit_error_PasswordDoesNotContainAnyNumber: "Потрібно ввести хоча б одину цифру",
         profile_page_edit_error_PasswordLengthIsLowerThan_8: "Мінімальна довжина паролю 8 символів",
         profile_page_edit_error_atField_ConfirmPassword: "Пароль підтвердження:",
+        profile_page_edit_error_atField_EMail: "Помилка в полі 'електронна адреса'",
+        profile_page_edit_error_EMailIsNotEmail: "Введено не електронну адресу",
         profile_page_edit_error_ConfirmPasswordIsNotEqualTo_Password: 'Пароль підтвердження не співпадає з основним паролем',
         /* profile addresses */
         profile_page_editAddress_destroySuccess: "Адресу успішно видалено",
