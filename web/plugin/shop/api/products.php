@@ -211,16 +211,16 @@ class products extends \engine\objects\api {
         );
         $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
 
-        $dataList['_category'] = null;
+        // $dataList['_category'] = null;
 
-        if (isset($options['_pStats'])) {
-            $filter = array();
-            if (isset($options['_fCategoryID'])) {
-                $filter['_fCategoryID'] = $options['_fCategoryID'];
-                $dataList['_category'] = $this->getAPI()->categories->getCategoryByID($options['_fCategoryID']);
-            }
-            $dataList['stats'] = $this->getStats_ProductsOverview($filter);
-        }
+        // if (isset($options['_pStats'])) {
+        //     $filter = array();
+        //     if (isset($options['_fCategoryID'])) {
+        //         $filter['_fCategoryID'] = $options['_fCategoryID'];
+        //         $dataList['_category'] = $this->getAPI()->categories->getCategoryByID($options['_fCategoryID']);
+        //     }
+        //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
+        // }
 
         return $dataList;
     }
@@ -665,9 +665,19 @@ class products extends \engine\objects\api {
         return $result;
     }
 
-    public function archiveProduct ($ProductID) {
-
+    public function getProductIDByNameAndModel ($name, $model) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
+        $config['fields'] = array('ID');
+        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($name);
+        $config['condition']['Model'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($name);
+        $product = $this->getCustomer()->fetch($config);
+        if (empty($product))
+            return null;
+        return $product['ID'];
     }
+    // public function archiveProduct ($ProductID) {
+
+    // }
 
     public function getProducts_TopNonPopular () {
         // get non-popuplar 15 products

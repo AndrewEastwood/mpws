@@ -140,16 +140,30 @@ define("plugin/shop/site/js/router", [
             APP.getCustomer().setBreadcrumb();
             require(['plugin/shop/site/js/view/cartStandalone'], function (CartStandalone) {
                 // debugger;
-                var _accountModel = Cache.getObject('account:model');
-                Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
-                    // debugger;
-                    if (accountModel.has('ID'))
-                        order.set('account', accountModel.toJSON());
-                    else
-                        order.unset('account');
-                });
-                if (_accountModel && _accountModel.has('ID'))
-                    order.set('account', _accountModel.toJSON());
+                var plgAccount = APP.instances.account;
+                var accountModel = null;
+                if (plgAccount) {
+                    accountModel = plgAccount.constructor.account;
+                    accountModel.on('change', function () {
+                        console.log('account model changed');
+                        if (accountModel.has('ID'))
+                            order.set('account', accountModel.toJSON());
+                        else
+                            order.unset('account');
+                    });
+                }
+                // var accountModel = Cache.getObject('account:model');
+                // Sandbox.eventSubscribe('plugin:account:model:change', function (accountModel) {
+                //     // debugger;
+                //     if (accountModel.has('ID'))
+                //         order.set('account', accountModel.toJSON());
+                //     else
+                //         order.unset('account');
+                // });
+                if (accountModel && accountModel.has('ID')) {
+                    console.log('account model has data');
+                    order.set('account', accountModel.toJSON());
+                }
                 // create new view
                 var cartStandalone = new CartStandalone({
                     model: order

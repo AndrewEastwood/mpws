@@ -14,7 +14,7 @@ class data extends \engine\objects\configuration {
     var $Table_ShopSettings = "shop_settings";
 
     // products >>>>>
-    public function jsapiShopGetProductItem ($ProductID = null, $fullInfo = true) {
+    public function jsapiShopGetProductItem ($ProductID = null/*, $fullInfo = true*/) {
         $config = $this->jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
@@ -49,9 +49,9 @@ class data extends \engine\objects\configuration {
                 "shop_products.ID" => $this->jsapiCreateDataSourceCondition($ProductID)
             );
 
-        if (!$fullInfo) {
-            unset($config['additional']);
-        }
+        // if (!$fullInfo) {
+        //     unset($config['additional']);
+        // }
 
         return $config;
     }
@@ -84,12 +84,12 @@ class data extends \engine\objects\configuration {
 
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["Name"] = $this->jsapiCreateDataSourceCondition('%' . $options['_pSearch'] . '%', 'like');
+                $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $options['_pSearch'] . '%', 'like');
                 // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
                 // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
-                    $config['condition']["Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                 }

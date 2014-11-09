@@ -194,6 +194,8 @@ define("plugin/account/site/js/router", [
             });
         }
 
+    }, {
+        account: account
     });
 
     return Router;

@@ -57,6 +57,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
         render: function () {
             var self = this;
             var data = Utils.getHBSTemplateData(this);
+            var formValidator = null;
 
             if (this.modelSettings) {
                 data.extras.settings = this.modelSettings.toSettings();
@@ -141,7 +142,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
             });
 
             this.$('.button-order-preview').click(function () {
-                var formValidator = $form.data('bootstrapValidator');
+                // var formValidator = $form.data('bootstrapValidator');
                 formValidator.validate();
                 if (formValidator.isValid()) {
                     self.$('form.form-order-create .form-control').each(function () {
@@ -233,10 +234,10 @@ define("plugin/shop/site/js/view/cartStandalone", [
                     }
                 }
             });
-
-            if (_shopUser) {
-                formValidator.validate();
-            }
+            formValidator = $form.data('bootstrapValidator');
+            // if (_shopUser) {
+            //     formValidator.validate();
+            // }
 
             return this;
         }

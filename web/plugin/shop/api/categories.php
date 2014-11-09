@@ -153,7 +153,7 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategoryLocation ($categoryID) {
-        var_dump($categoryID);
+        // var_dump($categoryID);
         $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
         $location = $this->getCustomer()->fetch($configLocation);
         return $location;
@@ -203,10 +203,10 @@ class categories extends \engine\objects\api {
         return $tree;
     }
 
-    public function getCatalogBrowse () {
+    public function getCatalogBrowse (array $options) {
 
         $data = array();
-        $categoryID = Request::fromGET('id', null);
+        $categoryID = isset($options['id']) ? $options['id'] : null;
 
         if (!is_numeric($categoryID)) {
             $data['error'] = '"id" parameter is missed';
@@ -240,7 +240,7 @@ class categories extends \engine\objects\api {
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
-            $filterOptionsApplied[$key] = Request::fromGET($key, $filterOptions[$key]);
+            $filterOptionsApplied[$key] = $options[$key] ?: $filterOptions[$key];// Request::fromGET($key, $filterOptions[$key]);
             if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
                 $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
             if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")
@@ -425,7 +425,7 @@ class categories extends \engine\objects\api {
 
     public function get (&$resp, $req) {
         if (isset($req->get['browse'])) {
-            $resp = $this->getCatalogBrowse();
+            $resp = $this->getCatalogBrowse($req->get);
         } else if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
         } else if (empty($req->get['id'])) {
