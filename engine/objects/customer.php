@@ -30,10 +30,12 @@ class customer {
 
         // init configuration
         $configuration = array();
-        $defaultConfigs = Path::getDefaultConfigurationFilesMap($this->getVersion());
-        $customerConfigs = Path::getCustomerConfigurationFilesMap($this->getApp()->customerName());
-        foreach ($defaultConfigs as $configName => $configFilePath) {
-            if (isset($customerConfigs[$configName])) {
+        $defaultConfigs = Path::getDefaultConfigNames($this->getVersion());
+        $customerConfigs = Path::getCustomerConfigNames($this->getApp()->customerName());
+        // var_dump($defaultConfigs);
+        // var_dump($customerConfigs);
+        foreach ($defaultConfigs as $configName) {
+            if (in_array($configName, $customerConfigs)) {
                 $configClass = Utils::getCustomerConfigClassName($configName, $this->customerName());
             } else {
                 $configClass = Utils::getDefaultConfigClassName($configName, $this->getVersion());
@@ -41,6 +43,8 @@ class customer {
             $configuration[$configName] = new $configClass();
         }
         $this->configuration = (object)$configuration;
+
+        // var_dump($this->configuration);
 
         // init dbo
         $this->dbo = new DB($this->getConfiguration()->db->getConnectionParams($this->getApp()->isDebug()));

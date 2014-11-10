@@ -17,83 +17,6 @@ class path {
     public static function getDirectorySeparator () {
         return '/';
     }
-
-    // public static function getPathData () {
-    //     return DR . "data";
-    // }
-    
-    // public static function getPathDataObject ($owner) {
-    //     return self::getPathData() . DS . 'custom' . DS . $owner;
-    // }
-    
-    // public static function getStandartDataPathWithDBR ($dataBaseRecord, $pathAppend = false, $mkdir = false) {
-    //     // $dataBaseRecord - it is dataBase record that:
-    //     // - contains DataPath field
-    //     // - contains ExternalKey field
-    //     // Please not that one of them must be defined
-    //     // DataPath field has higher priority than ExternalKey
-        
-    //     $path = false;
-    //     if (!empty($dataBaseRecord['DataPath']))
-    //         $path = $dataBaseRecord['DataPath'] . DS . $pathAppend;
-
-    //     //var_dump($dataBaseRecord);
-    //     //echo 'CHECK IS = ' . $path;
-
-    //     if (!empty($path) && file_exists($path))
-    //         return $path;
-        
-    //     // create file if it does not exists
-    //     if ($mkdir) {
-    //         $dir = dirname($path);
-    //         if(!file_exists($dir))
-    //             mkdir ($dir, 0777, true);
-    //         file_put_contents($path, '/* mpws autocreated empty file*/');
-    //         return $path;
-    //     }
-        
-    //     // try to resolve path with ExternalKey
-    //     if (empty($dataBaseRecord['ExternalKey']))
-    //         throw new Exception('libraryPath => getStandartDataPathWithDBR: Can not resolve standart data path with DataPath nor ExternalKey');
-        
-    //     $path = self::getPathDataObject($dataBaseRecord['ExternalKey']) . DS . $pathAppend;
-
-    //     if (!empty($path) && file_exists($path))
-    //         return $path;
-
-    //     throw new Exception('libraryPath => getStandartDataPathWithDBR: Wrong dataBaseRecord value passed. Expected path is: ' . $path);
-    // }
-
-    // function glWrap ($key, $value) {
-    //   $rez = array();
-    //   $rez[$key] = $value;
-    //   return $rez;
-    // }
-
-    // function fromGET ($value, $default = '') {
-    //     if (isset($value))
-    //         return $value;
-    //     return $default;
-    // }
-
-    // function glGetFullPath () {
-    //     return DR . call_user_func_array('glGetPath', func_get_args());
-    // }
-    // function glGetPath () {
-    //     // debug (func_get_args());
-    //     // var_dump(debug_backtrace());
-    //     $numargs = func_num_args();
-    //     $_isFile = strrpos(func_get_arg($numargs - 1), '.') > 1;
-    //     if ($_isFile)
-    //         return join(DS, func_get_args());
-    //     else
-    //         return join(DS, func_get_args()) . DS;
-    // }
-
-    // // get debug level
-    // function glGetDebugLevel (){
-    //     return MPWS_LOG_LEVEL;
-    // }
     public static function getDirNameWeb () {
         return 'web';
     }
@@ -111,6 +34,9 @@ class path {
     }
     public static function getDirNameApi () {
         return 'api';
+    }
+    public static function getDirNameTask () {
+        return 'task';
     }
     public static function getDirNameTemp () {
         return 'temp';
@@ -143,17 +69,7 @@ class path {
     }
 
     public function createDirPath () {
-    //     $args = func_get_args();
-    //     if (!is_bool(end($args))) {
-    //         $args[] = true;
-    //     }
-    //     return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
         $args = func_get_args();
-        // $asDirectory = false;
-        // if (is_bool(end($args))) {
-        //     $asDirectory = array_pop($args);
-        // }
-        // var_dump($args);
         $p = join(self::getDirectorySeparator(), $args);
         if ($p[strlen($p) - 1] != self::getDirectorySeparator())
             $p .= self::getDirectorySeparator();
@@ -161,11 +77,6 @@ class path {
     }
 
     public function createFilePath () {
-        // $args = func_get_args();
-        // if (is_bool(end($args))) {
-        //     array_pop($args);
-        // }
-        // return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
         $args = func_get_args();
         $p = join(self::getDirectorySeparator(), $args);
         return $p;
@@ -189,65 +100,87 @@ class path {
         return self::getDirWeb() . self::getDirNamePlugin() . self::getDirectorySeparator();
     }
 
-    public static function getCustomerConfigurationFiles ($customer) {
-        return glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+    // public static function getCustomerConfigurationFiles ($customer) {
+    //     return glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+    // }
+
+    // public static function getDefaultConfigurationFiles ($customer) {
+    //     return glob(self::getDefaultDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+    // }
+
+    // public static function getPluginConfigurationFiles ($name) {
+    //     return glob(self::getPluginDir($name) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+    // }
+
+    // public static function getPluginApiFiles ($name) {
+    //     return glob(self::getPluginDir($name) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php');
+    // }
+
+    // public static function getCustomerConfigurationFilesMap ($customer) {
+    //     return self::listWithPathsToNamePathMap(self::getCustomerConfigurationFiles($customer));
+    // }
+
+    // public static function getDefaultConfigurationFilesMap ($version) {
+    //     return self::listWithPathsToNamePathMap(self::getDefaultConfigurationFiles($version));
+    // }
+
+    // public static function getPluginConfigurationFilesMap ($name) {
+    //     return self::listWithPathsToNamePathMap(self::getPluginConfigurationFiles($name));
+    // }
+
+    // public static function getPluginApiFilesMap ($name) {
+    //     return self::listWithPathsToNamePathMap(self::getPluginApiFiles($name));
+    // }
+
+    // public static function getPluginApiFilesMap ($name) {
+    //     return self::listWithPathsToNamePathMap(self::getPluginApiFiles($name));
+    // }
+
+    // public static function listWithPathsToNamePathMap (array $listWithPaths) {
+    //     $map = array();
+    //     foreach ($listWithPaths as $value) {
+    //         $pInfo = pathinfo($value);
+    //         $map[$pInfo['filename']] = $value;
+    //     }
+    //     return $map;
+    // }
+
+    public static function getCustomerConfigNames ($customer) {
+        $files = glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+        return self::getFileNamesFromFileList($files);
+    }
+    public static function getDefaultConfigNames ($version) {
+        $files = glob(self::getDefaultDir($version) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+        return self::getFileNamesFromFileList($files);
+    }
+    public static function getPluginConfigNames ($plugin) {
+        $files = glob(self::getPluginDir($plugin) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+        return self::getFileNamesFromFileList($files);
+    }
+    public static function getPluginApiNames ($plugin) {
+        $files = glob(self::getPluginDir($plugin) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php');
+        return self::getFileNamesFromFileList($files);
+    }
+    public static function getPluginTaskNames ($plugin) {
+        $files = glob(self::getPluginDir($plugin) . self::getDirNameTask() . self::getDirectorySeparator() . '*.php');
+        return self::getFileNamesFromFileList($files);
     }
 
-    public static function getDefaultConfigurationFiles ($customer) {
-        return glob(self::getDefaultDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
-    }
-
-    public static function getPluginConfigurationFiles ($name) {
-        return glob(self::getPluginDir($name) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
-    }
-
-    public static function getPluginApiFiles ($name) {
-        return glob(self::getPluginDir($name) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php');
-    }
-
-    public static function getCustomerConfigurationFilesMap ($customer) {
-        return self::listWithPathsToNamePathMap(self::getCustomerConfigurationFiles($customer));
-    }
-
-    public static function getDefaultConfigurationFilesMap ($version) {
-        return self::listWithPathsToNamePathMap(self::getDefaultConfigurationFiles($version));
-    }
-
-    public static function getPluginConfigurationFilesMap ($name) {
-        return self::listWithPathsToNamePathMap(self::getPluginConfigurationFiles($name));
-    }
-
-    public static function getPluginApiFilesMap ($name) {
-        return self::listWithPathsToNamePathMap(self::getPluginApiFiles($name));
-    }
-
-    public static function listWithPathsToNamePathMap (array $listWithPaths) {
-        $map = array();
-        foreach ($listWithPaths as $value) {
+    public static function getFileNamesFromFileList (array $list) {
+        $names = array();
+        foreach ($list as $value) {
             $pInfo = pathinfo($value);
-            $map[$pInfo['filename']] = $value;
+            $names[] = $pInfo['filename'];
         }
-        return $map;
+        return $names;
     }
-
-
-
 
 
 
     public static function getUploadDirectory (/* args */) {
         $args = func_get_args();
         array_unshift($args, Path::getDirNameUploads());
-        // $path = ;
-        // if (!empty($args)) {
-        // return $path . self::getDirectorySeparator() . join(self::getDirectorySeparator(), $args);
-        // }
-        //  .  self::getDirectorySeparator() . join(self::getDirectorySeparator(), func_get_args());
-        // if ($path[strlen($path) - 1] !== self::getDirectorySeparator())
-        //     $path .= self::getDirectorySeparator();
-        // return $path . self::getDirectorySeparator();
         return call_user_func_array(__NAMESPACE__ .'\Path::createDirPath', $args);
-        // return self::createDirPath($args);
     }
 
     public static function getUploadTemporaryDirectory () {
@@ -260,23 +193,8 @@ class path {
 
 
     public static function getUploadedFile ($name) {
-        // $args = func_get_args();
-        // $fName = array_pop($args);
-        // $path = call_user_func_array(array(__NAMESPACE__ .'\Path::getUploadDirectory'), $args);
-        // $dir = $this->getOwnUploadDirectory($targetDir);
         return $this->getUploadDirectory() . self::getDirectorySeparator() . $name;
-        // return $path . $fName;
     }
-
-    // public static function getUploadWebPath (/* args */) {
-    //     $args = func_get_args();
-    //     $pluginUploadPath = self::getDirectorySeparator() . self::getDirNameUploads();
-    //     if (!empty($args)) {
-    //         return $pluginUploadPath . self::getDirectorySeparator() . join(self::getDirectorySeparator(), $args);
-    //     }
-    //     return $pluginUploadPath . self::getDirectorySeparator();
-    // }
-
 
     public static function moveTemporaryFile ($tmpFileName, $innerUploadTargetDir, $customFileName = null) {
         // var_dump(func_get_args());
@@ -314,46 +232,6 @@ class path {
         return false;
     }
 
-
-
-    // public function getOwnUploadDirectory ($targetDir = null) {
-    //     if (empty($targetDir)) {
-    //         return Path::getUploadDirectory($this->getName());
-    //     }
-    //     return Path::getUploadDirectory($this->getName() . Path::getDirectorySeparator() . $targetDir);
-    // }
-    // public function getOwnUploadPathWeb ($targetDir = null) {
-    //     if (empty($targetDir)) {
-    //         return Path::getUploadWebPath($this->getName());
-    //     }
-    //     return Path::getUploadWebPath($this->getName() . Path::getDirectorySeparator() . $targetDir);
-    // }
-
-    // public function getOwnUploadedFileWeb ($name, $targetDir = null) {
-    //     $dir = $this->getOwnUploadPathWeb($targetDir);
-    //     return $dir . $name;
-    // }
-
-    // public function saveOwnTemporaryUploadedFile ($tmpFileName, $targetDir, $name = false) {
-    //     $uniqueName = empty($name) ? mktime() : $name;
-    //     $uploadedFileInfo = Path::moveTemporaryFile($tmpFileName, $this->getName() . Path::getDirectorySeparator() . $targetDir, $uniqueName);
-    //     return $uploadedFileInfo;
-    // }
-
-    // public function deleteOwnUploadedFile ($name, $targetDir) {
-    //     $dir = $this->getOwnUploadDirectory($targetDir);
-    //     $filePath = $dir . $name;
-    //     if (file_exists($filePath)) {
-    //         return unlink($filePath);
-    //     }
-    //     return false;
-    // }
-
-
-
-
-
-
     public static function getWebStaticTemplateFilePath ($displayCustomer, $version, $templateName, $isDebug) {
         if ($isDebug) {
             $templateCustomer = Path::createPathWithRoot(self::getDirNameWeb(), self::getDirNameCustomer(), $displayCustomer, 'static', 'hbs', $templateName);
@@ -369,9 +247,6 @@ class path {
             return $templateDefault;
         return false;
     }
-
-
-
 
 }
 

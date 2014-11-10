@@ -4,6 +4,7 @@ namespace engine\objects;
 use \engine\lib\utils as Utils;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
+use \engine\lib\response as Response;
 
 class plugin {
 
@@ -19,8 +20,8 @@ class plugin {
 
         // init configuration
         $configuration = array();
-        $pluginConfigs = Path::getPluginConfigurationFilesMap($pluginName);
-        foreach ($pluginConfigs as $configName => $configFilePath) {
+        $pluginConfigs = Path::getPluginConfigNames($pluginName);
+        foreach ($pluginConfigs as $configName) {
             $configClass = Utils::getPluginConfigClassName($configName, $pluginName);// '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
             $configuration[$configName] = new $configClass();
         }
@@ -28,8 +29,8 @@ class plugin {
 
         // init apis
         $api = array();
-        $pluginApis = Path::getPluginApiFilesMap($pluginName);
-        foreach ($pluginApis as $apiName => $apiFilePath) {
+        $pluginApis = Path::getPluginApiNames($pluginName);
+        foreach ($pluginApis as $apiName) {
             $apiClass = Utils::getApiClassName($apiName, $pluginName);
             // $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
             // save plugin instance
@@ -39,8 +40,8 @@ class plugin {
 
         // init tasks
         $task = array();
-        $pluginApis = Path::getPluginTasksFilesMap($pluginName);
-        foreach ($pluginApis as $taskName => $apiFilePath) {
+        $pluginApis = Path::getPluginTaskNames($pluginName);
+        foreach ($pluginApis as $taskName) {
             $taskClass = '\\web\\plugin\\' . $pluginName . '\\task\\' . $taskName;
             // save plugin instance
             $task[$taskName] = new $taskClass($customer, $this, $pluginName, $app);
@@ -56,8 +57,8 @@ class plugin {
         return $this->configuration;
     }
 
-    public function getAPI ($key) {
-        if (isset($key))
+    public function getAPI ($key = false) {
+        if (isset($key) && isset($this->api->$key))
             return $this->api->$key;
         return $this->api;
     }
@@ -107,16 +108,16 @@ class plugin {
     // }
 
     public function run () {
-        $_REQ = self::getRequestData();
-        $_source = self::fromGET('source');
-        $_fn = self::fromGET('fn');
+        $_REQ = Request::getRequestData();
+        $_source = Request::fromGET('source');
+        $_fn = Request::fromGET('fn');
         $_method = strtolower($_SERVER['REQUEST_METHOD']);
         $requestFnElements = array($_method);
 
-        if (self::hasInGet('source'))
+        if (Request::hasInGet('source'))
             $requestFnElements[] = $_source;
         
-        if (self::hasInGet('fn'))
+        if (Request::hasInGet('fn'))
             $requestFnElements[] = $_fn;
 
         $fn = join("_", $requestFnElements);
