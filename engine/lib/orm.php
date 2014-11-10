@@ -1005,21 +1005,21 @@ use PDO;
         /**
          * Internal method to add a WHERE condition to the query
          */
-        protected function _add_where($fragment, $values=array()) {
-            return $this->_add_condition('where', $fragment, $values);
+        protected function _add_where($fragment, $values=array(), $joinAs = 'AND') {
+            return $this->_add_condition('where', $fragment, $values, $joinAs);
         }
 
         /**
          * Internal method to add a WHERE condition to the query
          */
-        protected function _add_simple_where($column_name, $separator, $value) {
-            return $this->_add_simple_condition('where', $column_name, $separator, $value);
+        protected function _add_simple_where($column_name, $separator, $value, $joinAs = 'AND') {
+            return $this->_add_simple_condition('where', $column_name, $separator, $value, $joinAs);
         }
 
         /**
          * Internal method to add a HAVING or WHERE condition to the query
          */
-        protected function _add_condition($type, $fragment, $values=array()) {
+        protected function _add_condition($type, $fragment, $values=array(), $joinAs = 'AND') {
             $conditions_class_property_name = "_{$type}_conditions";
             if (!is_array($values)) {
                 $values = array($values);
@@ -1027,6 +1027,7 @@ use PDO;
             array_push($this->$conditions_class_property_name, array(
                 self::CONDITION_FRAGMENT => $fragment,
                 self::CONDITION_VALUES => $values,
+                'joinType' => $joinAs
             ));
             // echo '$this->$conditions_class_property_name';
             // var_dump($this->$conditions_class_property_name);
@@ -1039,7 +1040,7 @@ use PDO;
          * be passed to the _add_condition method. Avoids duplication
          * of the call to _quote_identifier
          */
-        protected function _add_simple_condition($type, $column_name, $separator, $value) {
+        protected function _add_simple_condition($type, $column_name, $separator, $value, $joinAs) {
             // Add the table name in case of ambiguous columns
             if (count($this->_join_sources) > 0 && strpos($column_name, '.') === false) {
                 $table = $this->_table_name;
@@ -1050,7 +1051,7 @@ use PDO;
                 $column_name = "{$table}.{$column_name}";
             }
             $column_name = $this->_quote_identifier($column_name);
-            return $this->_add_condition($type, "{$column_name} {$separator} ?", $value);
+            return $this->_add_condition($type, "{$column_name} {$separator} ?", $value, $joinAs);
         } 
 
         /**
@@ -1078,108 +1079,108 @@ use PDO;
          * added, and these will be ANDed together when the final query
          * is built.
          */
-        public function where($column_name, $value) {
-            return $this->where_equal($column_name, $value);
+        public function where($column_name, $value, $joinAs = 'AND') {
+            return $this->where_equal($column_name, $value, $joinAs);
         }
 
         /**
          * More explicitly named version of for the where() method.
          * Can be used if preferred.
          */
-        public function where_equal($column_name, $value) {
+        public function where_equal($column_name, $value, $joinAs = 'AND') {
             // echo '<br>where_equal', $column_name, $value;
-            return $this->_add_simple_where($column_name, '=', $value);
+            return $this->_add_simple_where($column_name, '=', $value, $joinAs);
         }
 
         /**
          * Add a WHERE column != value clause to your query.
          */
-        public function where_not_equal($column_name, $value) {
-            return $this->_add_simple_where($column_name, '!=', $value);
+        public function where_not_equal($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, '!=', $value, $joinAs);
         }
 
         /**
          * Special method to query the table by its primary key
          */
-        public function where_id_is($id) {
-            return $this->where($this->_get_id_column_name(), $id);
+        public function where_id_is($id, $joinAs = 'AND') {
+            return $this->where($this->_get_id_column_name(), $id, $joinAs);
         }
 
         /**
          * Add a WHERE ... LIKE clause to your query.
          */
-        public function where_like($column_name, $value) {
-            return $this->_add_simple_where($column_name, 'LIKE', $value);
+        public function where_like($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, 'LIKE', $value, $joinAs);
         }
 
         /**
          * Add where WHERE ... NOT LIKE clause to your query.
          */
-        public function where_not_like($column_name, $value) {
-            return $this->_add_simple_where($column_name, 'NOT LIKE', $value);
+        public function where_not_like($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, 'NOT LIKE', $value, $joinAs);
         }
 
         /**
          * Add a WHERE ... > clause to your query
          */
-        public function where_gt($column_name, $value) {
-            return $this->_add_simple_where($column_name, '>', $value);
+        public function where_gt($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, '>', $value, $joinAs);
         }
 
         /**
          * Add a WHERE ... < clause to your query
          */
-        public function where_lt($column_name, $value) {
-            return $this->_add_simple_where($column_name, '<', $value);
+        public function where_lt($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, '<', $value, $joinAs);
         }
 
         /**
          * Add a WHERE ... >= clause to your query
          */
-        public function where_gte($column_name, $value) {
-            return $this->_add_simple_where($column_name, '>=', $value);
+        public function where_gte($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, '>=', $value, $joinAs);
         }
 
         /**
          * Add a WHERE ... <= clause to your query
          */
-        public function where_lte($column_name, $value) {
-            return $this->_add_simple_where($column_name, '<=', $value);
+        public function where_lte($column_name, $value, $joinAs = 'AND') {
+            return $this->_add_simple_where($column_name, '<=', $value, $joinAs);
         }
 
         /**
          * Add a WHERE ... IN clause to your query
          */
-        public function where_in($column_name, $values) {
+        public function where_in($column_name, $values, $joinAs = 'AND') {
             $column_name = $this->_quote_identifier($column_name);
             $placeholders = $this->_create_placeholders($values);
             // var_dump($values)
-            return $this->_add_where("{$column_name} IN ({$placeholders})", $values);
+            return $this->_add_where("{$column_name} IN ({$placeholders})", $values, $joinAs);
         }
 
         /**
          * Add a WHERE ... NOT IN clause to your query
          */
-        public function where_not_in($column_name, $values) {
+        public function where_not_in($column_name, $values, $joinAs = 'AND') {
             $column_name = $this->_quote_identifier($column_name);
             $placeholders = $this->_create_placeholders($values);
-            return $this->_add_where("{$column_name} NOT IN ({$placeholders})", $values);
+            return $this->_add_where("{$column_name} NOT IN ({$placeholders})", $values, $joinAs);
         }
 
         /**
          * Add a WHERE column IS NULL clause to your query
          */
-        public function where_null($column_name) {
+        public function where_null($column_name, $joinAs = 'AND') {
             $column_name = $this->_quote_identifier($column_name);
-            return $this->_add_where("{$column_name} IS NULL");
+            return $this->_add_where("{$column_name} IS NULL", array(), $joinAs);
         }
 
         /**
          * Add a WHERE column IS NOT NULL clause to your query
          */
-        public function where_not_null($column_name) {
+        public function where_not_null($column_name, $joinAs = 'AND') {
             $column_name = $this->_quote_identifier($column_name);
-            return $this->_add_where("{$column_name} IS NOT NULL");
+            return $this->_add_where("{$column_name} IS NOT NULL", array(), $joinAs);
         }
 
         /**
@@ -1187,8 +1188,8 @@ use PDO;
          * contain question mark placeholders, which will be bound
          * to the parameters supplied in the second argument.
          */
-        public function where_raw($clause, $parameters=array()) {
-            return $this->_add_where($clause, $parameters);
+        public function where_raw($clause, $parameters=array(), $joinAs = 'AND') {
+            return $this->_add_where($clause, $parameters, $joinAs);
         }
 
         /**
@@ -1473,16 +1474,25 @@ use PDO;
                 return '';
             }
 
+            $conditionString = strtoupper($type) . " ";
+
+            // var_dump($type);
+
             $conditions = array();
             foreach ($this->$conditions_class_property_name as $condition) {
-                $conditions[] = $condition[self::CONDITION_FRAGMENT];
+                // $conditions[] = $condition[self::CONDITION_FRAGMENT];
+                $conditionString .= $condition[self::CONDITION_FRAGMENT] . " " . $condition['joinType'] . " ";
                 $this->_values = array_merge($this->_values, $condition[self::CONDITION_VALUES]);
             }
 
             // echo '_build_conditions values';
             // print_r($this->_values);
+            $conditionString = rtrim($conditionString, ' AND ');
+            $conditionString = rtrim($conditionString, ' OR ');
+            // var_dump();
 
-            return strtoupper($type) . " " . join(" AND ", $conditions);
+            return $conditionString;
+            // return join(" AND ", $conditions);
         }
 
         /**

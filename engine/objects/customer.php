@@ -218,7 +218,7 @@ class customer {
         $options = array(
             'script_url' => $this->getConfiguration()->urls->upload,
             'download_via_php' => true,
-            'upload_dir' => Utils::getUploadTemporaryDirectory(),
+            'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
             'print_response' => Request::isGET()
         );
         $upload_handler = new JqUploadLib($options);

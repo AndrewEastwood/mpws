@@ -33,11 +33,12 @@
                 <ul class="list-group feeds feeds-uploaded">
                 {{#each data}}
                     {{#if_eq type 'uploaded'}}
-                    <a class="list-group-item feed-item" href="javascript://" target="_blank" title="{{name}}" data-id="{{ID}}">
+                    <a class="list-group-item feed-item" href="javascript://" title="{{name}}" data-id="{{ID}}">
                         <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
                         <span class="time badge pull-left">{{fromNowHumanized}}</span>
                         <span class="name">{{name}}</span>
-                        <i class="fa fa-play pull-right text-info start-import"></i>
+                        <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
+                        <i class="fa fa-play fa-fw pull-right text-success start-import"></i>
                     </a>
                     {{/if_eq}}
                 {{/each}}

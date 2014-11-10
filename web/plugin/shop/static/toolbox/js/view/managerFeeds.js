@@ -22,7 +22,8 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
         events: {
             'click .start-import': 'importFeed',
             'click .generate': 'generateFeed',
-            'click .delete-uploaded': 'deleteUploadedFeed'
+            'click .delete-uploaded': 'deleteUploadedFeed',
+            'click .download-import': 'downloadImportFeed'
         },
         initialize: function (options) {
             this.options = options || {};
@@ -97,6 +98,12 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
                     });
                 }
             });
+        },
+        downloadImportFeed: function (event) {
+            var $el = $(event.target);
+            if ($el.data('href')) {
+                location.href = $el.data('href');
+            }
         }
     });
 

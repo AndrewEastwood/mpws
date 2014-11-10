@@ -141,5 +141,29 @@ class utils {
         return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameApi() . '\\' . $apiName;
     }
 
+    static function getExistsArrayValueByKey (/* args */) {
+        $args = func_get_args();
+        $len = count($args);
+        if ($len < 2) {
+            throw 'Wrong arguments passed';
+        }
+        $arr = $args[0];
+        $value = null;
+        for ($i = 1; $i < $len; $i++) {
+            if (isset($arr[$args[$i]])) {
+                $value = $arr[$args[$i]];
+                break;
+            }
+        }
+        return $value;
+    }
+
+    static function array_get_value (array $array, $key, $defaultValue) {
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
+        return $defaultValue;
+    }
+
 }
 ?>

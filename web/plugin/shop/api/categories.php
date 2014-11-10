@@ -6,6 +6,7 @@ use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
+use \engine\lib\utils as Utils;
 use Exception;
 use ArrayObject;
 
@@ -240,7 +241,7 @@ class categories extends \engine\objects\api {
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
-            $filterOptionsApplied[$key] = $options[$key] ?: $filterOptions[$key];// Request::fromGET($key, $filterOptions[$key]);
+            $filterOptionsApplied[$key] = Utils::array_get_value($options, $key, $filterOptions[$key]);// Request::fromGET($key, $filterOptions[$key]);
             if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
                 $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
             if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")

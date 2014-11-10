@@ -5,7 +5,6 @@ use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\path as Path;
 use PHPExcel as PHPExcel;
 use PHPExcel_IOFactory as PHPExcel_IOFactory;
-use PHPExcel_Cell_DataValidation as PHPExcel_Cell_DataValidation;
 
 class feeds extends \engine\objects\api {
 
@@ -22,28 +21,25 @@ class feeds extends \engine\objects\api {
     }
 
     public function getGeneratedFeedDownloadLink ($name) {
-        return $this->getFeedsUploadDir() . $name;
+        return $this->getFeedsUploadInnerDir() . $name;
     }
 
     public function getFeedsUploadInnerDir () {
         $path = Path::createDirPath('shop', $this->getDirNameFeeds());
         return $path;
-    }
-
-    public function getFeedsUploadDir () {
-        return Path::getUploadDirectory($this->getFeedsUploadInnerDir());
+        // return Path::getUploadDirectory($path);
     }
 
     public function getFeedFilePathByName ($feedName) {
-        return $this->getFeedsUploadDir() . $feedName . '.xls';
+        return $this->getFeedsUploadInnerDir() . $feedName . '.xls';
     }
 
     public function getGeneratedFeedsFilesList () {
-        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'gen_*\.xls');
+        return glob(Path::rootPath() . $this->getFeedsUploadInnerDir() . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsFilesList () {
-        return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*\.xls');
+        return glob(Path::rootPath() . $this->getFeedsUploadInnerDir() . 'import_*\.xls');
     }
 
     public function getFeeds () {
@@ -95,40 +91,7 @@ class feeds extends \engine\objects\api {
         return $feeds;
     }
 
-    public function importProductFeed ($name) {
-        $feedPath = Path::rootPath() . $this->getFeedFilePathByName($name);
-        // $objPHPExcel = new PHPExcel();
-        $objPHPExcel = new PHPExcel();
-        $objPHPExcel = PHPExcel_IOFactory::load($feedPath);
-        // $objPHPExcel->setReadDataOnly(true);
-        $objWorksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $highestRow = $objWorksheet->getHighestRow();
-        $highestColumn = $objWorksheet->getHighestColumn();
-
-        $headingsArray = $objWorksheet->rangeToArray('A1:'.$highestColumn.'1',null, true, true, true);
-        $headingsArray = $headingsArray[1];
-
-        $r = -1;
-        $namedDataArray = array();
-        for ($row = 2; $row <= $highestRow; ++$row) {
-            $dataRow = $objWorksheet->rangeToArray('A'.$row.':'.$highestColumn.$row,null, true, true, true);
-            if ((isset($dataRow[$row]['A'])) && ($dataRow[$row]['A'] > '')) {
-                ++$r;
-                foreach($headingsArray as $columnKey => $columnHeading) {
-                    $namedDataArray[$r][$columnHeading] = $dataRow[$row][$columnKey];
-                }
-            }
-        }
-
-        $rez = array(
-            'data' => $namedDataArray,
-            'readCount' => count($namedDataArray)
-        );
-        // echo '<pr>';
-        // var_dump($namedDataArray);
-        // echo '</pre><hr />';
-        // var_dump($objPHPExcel);
-        // var_dump($feedPath);
+    public function importProductFeed () {
         // $urls = array();
         // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
         // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
@@ -201,29 +164,14 @@ class feeds extends \engine\objects\api {
             $objPHPExcel->getActiveSheet()->setCellValue('D' . $j, $dataList['items'][$i]['_origin']['Name']);
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $j, $dataList['items'][$i]['Price']);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $j, $dataList['items'][$i]['Status']);
-            $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo'] ? '+' : '');
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo']);
             $objPHPExcel->getActiveSheet()->setCellValue('H' . $j, implode(PHP_EOL, $images));
             $objPHPExcel->getActiveSheet()->setCellValue('I' . $j, $tags);
             $objPHPExcel->getActiveSheet()->setCellValue('J' . $j, $dataList['items'][$i]['Description']);
             $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
-
-            // add dropdown to status field
-            $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $j)->getDataValidation();
-            $objValidation->setType( PHPExcel_Cell_DataValidation::TYPE_LIST );
-            $objValidation->setErrorStyle( PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
-            $objValidation->setAllowBlank(false);
-            $objValidation->setShowInputMessage(true);
-            $objValidation->setShowErrorMessage(true);
-            $objValidation->setShowDropDown(true);
-            $objValidation->setErrorTitle('Input error');
-            $objValidation->setError('Value is not in list.');
-            $objValidation->setPromptTitle('Pick from list');
-            $objValidation->setPrompt('Please pick a value from the drop-down list.');
-            $objValidation->setFormula1('"' . join(',', $this->getAPI()->products->getProductStatuses()) . '"'); //note this!
         }
-        foreach($objPHPExcel->getActiveSheet()->getRowDimensions() as $rd) { $rd->setRowHeight(-1); }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save(Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '.xls');
+        $objWriter->save(Path::rootPath() . $this->getFeedsUploadInnerDir() . $this->getGeneratedFeedName() . '.xls');
         // return $dataList;
     }
 
@@ -235,7 +183,7 @@ class feeds extends \engine\objects\api {
         if (isset($req->get['generate'])) {
             $resp = $this->generateProductFeed();
         } elseif (isset($resp['files'])) {
-            // var_dump($resp['files']);
+            var_dump($resp['files']);
             foreach ($resp['files'] as $tempFileItem) {
                 Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
@@ -251,7 +199,7 @@ class feeds extends \engine\objects\api {
     public function delete (&$resp, $req) {
         $success = false;
         if (isset($req->get['name'])) {
-            $feedPath = Path::rootPath() . $this->getFeedFilePathByName($req->get['name']);
+            $feedPath = $this->getFeedFilePathByName($req->get['name']);
             if (file_exists($feedPath)) {
                 $success = unlink($feedPath);
             }

@@ -6,7 +6,7 @@ class configuration {
 
     public $DATE_FORMAT = 'Y-m-d H:i:s';
     public $DEFAULT_COMPARATOR = '=';
-    public $DEFAULT_CONCATENATE = '+';
+    public $DEFAULT_CONCATENATE = 'AND';
 
     public function getDate ($strDate = '') {
         if (!empty($strDate)) {

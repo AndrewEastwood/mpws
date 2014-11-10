@@ -7,6 +7,7 @@ define("plugin/account/site/js/router", [
     'default/js/lib/cache'
 ], function (Sandbox, Backbone, SiteMenu, Auth, Account, Cache, $, _) {
 
+    return false;
     // this is the account instance
     var account = new Account();
 

@@ -167,34 +167,34 @@ class database {
         $_fieldOptionsWorkerFn = function ($context, $fieldName, $fieldOptions) {
             switch (strtolower($fieldOptions['comparator'])) {
                 case '>':
-                    $context->dbo->where_gt($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_gt($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '>=':
-                    $context->dbo->where_gte($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_gte($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '<':
-                    $context->dbo->where_lt($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_lt($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '<=':
-                    $context->dbo->where_lte($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_lte($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'is null':
-                    $context->dbo->where_null($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_null($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'is not null':
-                    $context->dbo->where_not_null($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_not_null($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '=':
-                    $context->dbo->where_equal($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_equal($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case '!=':
-                    $context->dbo->where_not_equal($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_not_equal($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'like':
-                    $context->dbo->where_like($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_like($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'not like':
-                    $context->dbo->where_not_like($fieldName, $fieldOptions['value']);
+                    $context->dbo->where_not_like($fieldName, $fieldOptions['value'], $fieldOptions['concatenate']);
                     break;
                 case 'in':
                     // var_dump('using WHERE_IN', $fieldOptions['value']);

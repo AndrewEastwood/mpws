@@ -89,7 +89,11 @@ class data extends \engine\objects\configuration {
                 // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
-                    $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    $config['condition']["shop_products.ID"] = $this->jsapiCreateDataSourceCondition($value);
+                    // $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.Description"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.SKU"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
                     // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                 }

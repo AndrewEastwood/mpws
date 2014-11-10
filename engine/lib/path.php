@@ -143,19 +143,32 @@ class path {
     }
 
     public function createDirPath () {
+    //     $args = func_get_args();
+    //     if (!is_bool(end($args))) {
+    //         $args[] = true;
+    //     }
+    //     return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
         $args = func_get_args();
-        if (!is_bool(end($args))) {
-            $args[] = true;
-        }
-        return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
+        // $asDirectory = false;
+        // if (is_bool(end($args))) {
+        //     $asDirectory = array_pop($args);
+        // }
+        // var_dump($args);
+        $p = join(self::getDirectorySeparator(), $args);
+        if ($p[strlen($p) - 1] != self::getDirectorySeparator())
+            $p .= self::getDirectorySeparator();
+        return $p;
     }
 
     public function createFilePath () {
+        // $args = func_get_args();
+        // if (is_bool(end($args))) {
+        //     array_pop($args);
+        // }
+        // return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
         $args = func_get_args();
-        if (is_bool(end($args))) {
-            array_pop($args);
-        }
-        return call_user_func_array(__NAMESPACE__ .'\Path::createPath', $args);
+        $p = join(self::getDirectorySeparator(), $args);
+        return $p;
     }
 
     public static function getDirWeb () {
@@ -224,18 +237,21 @@ class path {
 
     public static function getUploadDirectory (/* args */) {
         $args = func_get_args();
-        $path = Path::getDirNameUploads() . self::getDirectorySeparator();
-        if (!empty($args)) {
-            return $path . join(self::getDirectorySeparator(), $args);
-        }
+        array_unshift($args, Path::getDirNameUploads());
+        // $path = ;
+        // if (!empty($args)) {
+        // return $path . self::getDirectorySeparator() . join(self::getDirectorySeparator(), $args);
+        // }
         //  .  self::getDirectorySeparator() . join(self::getDirectorySeparator(), func_get_args());
         // if ($path[strlen($path) - 1] !== self::getDirectorySeparator())
         //     $path .= self::getDirectorySeparator();
-        return $path;
+        // return $path . self::getDirectorySeparator();
+        return call_user_func_array(__NAMESPACE__ .'\Path::createDirPath', $args);
+        // return self::createDirPath($args);
     }
 
     public static function getUploadTemporaryDirectory () {
-        return self::getUploadDirectory() . self::getDirectorySeparator() . self::getDirNameTemp();
+        return self::getUploadDirectory(self::getDirNameTemp());
     }
 
     public static function getAppTemporaryDirectory () {
@@ -263,10 +279,12 @@ class path {
 
 
     public static function moveTemporaryFile ($tmpFileName, $innerUploadTargetDir, $customFileName = null) {
-        $tmpFilePath = self::getUploadTemporaryDirectory() . $tmpFileName;
+        // var_dump(func_get_args());
+        $tmpFilePath = self::rootPath() . self::getUploadTemporaryDirectory() . $tmpFileName;
+        // var_dump($tmpFilePath);
         if (file_exists($tmpFilePath)) {
             $info = array();
-            $targetDirFullPath = self::getUploadDirectory() . $innerUploadTargetDir . self::getDirectorySeparator();
+            $targetDirFullPath = self::rootPath() . self::getUploadDirectory($innerUploadTargetDir);
             if (!file_exists($targetDirFullPath)) {
                 mkdir($targetDirFullPath, 0777, true);
             }
@@ -274,6 +292,9 @@ class path {
             $_fileBaseName = basename(!empty($customFileName) ? $customFileName : $tempFileInfo['filename']);
             $_fileExtension = $tempFileInfo['extension'];
             $_fileName = strtolower($_fileBaseName . '.' . $_fileExtension);
+            // var_dump($tmpFilePath);
+            // var_dump($targetDirFullPath);
+            // var_dump($_fileName);
             rename($tmpFilePath, $targetDirFullPath . $_fileName);
             $info['basename'] = $_fileBaseName;
             $info['extension'] = $_fileExtension;
