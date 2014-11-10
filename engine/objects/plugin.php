@@ -11,6 +11,7 @@ class plugin {
     private $customer;
     private $configuration;
     private $app;
+    private $task;
 
     function __construct ($customer, $pluginName, $app) {
         $this->customer = $customer;
@@ -35,6 +36,16 @@ class plugin {
             $api[$apiName] = new $apiClass($customer, $this, $pluginName, $app);
         }
         $this->api = (object)$api;
+
+        // init tasks
+        $task = array();
+        $pluginApis = Path::getPluginTasksFilesMap($pluginName);
+        foreach ($pluginApis as $taskName => $apiFilePath) {
+            $taskClass = '\\web\\plugin\\' . $pluginName . '\\task\\' . $taskName;
+            // save plugin instance
+            $task[$taskName] = new $taskClass($customer, $this, $pluginName, $app);
+        }
+        $this->task = (object)$task;
     }
 
     public function getName () {
@@ -45,9 +56,17 @@ class plugin {
         return $this->configuration;
     }
 
-    public function getAPI () {
+    public function getAPI ($key) {
+        if (isset($key))
+            return $this->api->$key;
         return $this->api;
     }
+
+    // public function getTASK ($key) {
+    //     if (isset($key))
+    //         return $this->task->$key;
+    //     return $this->task;
+    // }
 
     public function getApp () {
         return $this->app;
@@ -72,8 +91,8 @@ class plugin {
         
     }
 
-    public function beforeRun () {}
-    public function afterRun () {}
+    // public function beforeRun () {}
+    // public function afterRun () {}
 
     // public function moveUploadedFile ($sourceDir, $targetDir, $name) {
     //     $dirSrc = $this->getUploadDirectory($sourceDir);
@@ -88,9 +107,31 @@ class plugin {
     // }
 
     public function run () {
-        $this->beforeRun();
-        Request::processRequest($this);
-        $this->afterRun();
+        $_REQ = self::getRequestData();
+        $_source = self::fromGET('source');
+        $_fn = self::fromGET('fn');
+        $_method = strtolower($_SERVER['REQUEST_METHOD']);
+        $requestFnElements = array($_method);
+
+        if (self::hasInGet('source'))
+            $requestFnElements[] = $_source;
+        
+        if (self::hasInGet('fn'))
+            $requestFnElements[] = $_fn;
+
+        $fn = join("_", $requestFnElements);
+        if (isset($this->getAPI()->$_fn) && method_exists($this->getAPI()->$_fn, $_method)) {
+            $this->getAPI()->$_fn->$_method(Response::$_RESPONSE, $_REQ);
+            // var_dump(\engine\lib\response::$_RESPONSE);
+        } elseif (method_exists($this, $fn)) {
+            $this->$fn(Response::$_RESPONSE, $_REQ);
+        }
+    }
+
+    public function task ($task) {
+        foreach ($this->task as $task) {
+            $task->exec();
+        }
     }
 }
 
