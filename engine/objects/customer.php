@@ -202,7 +202,18 @@ class customer {
     }
 
     public function runAsAUTH () {
-        Request::processRequest($this);
+        // Request::processRequest($this);
+        $_REQ = self::getRequestData();
+        $_source = self::fromGET('source');
+        $_fn = self::fromGET('fn');
+        $_method = strtolower($_SERVER['REQUEST_METHOD']);
+        $requestFnElements = array($_method);
+        if (self::hasInGet('source'))
+            $requestFnElements[] = $_source;
+        if (self::hasInGet('fn'))
+            $requestFnElements[] = $_fn;
+        $fn = join("_", $requestFnElements);
+        $this->$fn(Response::$_RESPONSE, $_REQ);
     }
     public function runAsUPLOAD () {
         /*
@@ -228,6 +239,11 @@ class customer {
         // bypass response to all plugins
         foreach ($this->plugins as $plugin)
             $plugin->run();
+    }
+    public function runAsTASK () {
+        foreach ($this->plugins as $plugin) {
+            $plugin->task();
+        }
     }
 
     public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {

@@ -59,34 +59,34 @@ class request {
         return $_SERVER['REQUEST_METHOD'] === "DELETE";
     }
 
-    static function processRequest ($context) {
-        $_REQ = self::getRequestData();
-        $_source = self::fromGET('source');
-        $_fn = self::fromGET('fn');
-        $_method = strtolower($_SERVER['REQUEST_METHOD']);
-        $requestFnElements = array($_method);
+    // static function processRequest ($context) {
+    //     $_REQ = self::getRequestData();
+    //     $_source = self::fromGET('source');
+    //     $_fn = self::fromGET('fn');
+    //     $_method = strtolower($_SERVER['REQUEST_METHOD']);
+    //     $requestFnElements = array($_method);
 
-        if (self::hasInGet('source'))
-            $requestFnElements[] = $_source;
+    //     if (self::hasInGet('source'))
+    //         $requestFnElements[] = $_source;
         
-        if (self::hasInGet('fn'))
-            $requestFnElements[] = $_fn;
+    //     if (self::hasInGet('fn'))
+    //         $requestFnElements[] = $_fn;
 
-        $fn = join("_", $requestFnElements);
-        // var_dump($context->api);
-        // echo $_fn;
-        // var_dump($requestFnElements);
-        // var_dump($_REQ);
-        // var_dump(isset($context->api->$_fn));
-        if (!empty($context)) {
-            if (method_exists($context, 'getAPI') && isset($context->getAPI()->$_fn) && method_exists($context->getAPI()->$_fn, $_method)) {
-                $context->getAPI()->$_fn->$_method(Response::$_RESPONSE, $_REQ);
-                // var_dump(\engine\lib\response::$_RESPONSE);
-            } elseif (method_exists($context, $fn)) {
-                $context->$fn(Response::$_RESPONSE, $_REQ);
-            }
-        }
-    }
+    //     $fn = join("_", $requestFnElements);
+    //     // var_dump($context->api);
+    //     // echo $_fn;
+    //     // var_dump($requestFnElements);
+    //     // var_dump($_REQ);
+    //     // var_dump(isset($context->api->$_fn));
+    //     if (!empty($context)) {
+    //         if (method_exists($context, 'getAPI') && isset($context->getAPI()->$_fn) && method_exists($context->getAPI()->$_fn, $_method)) {
+    //             $context->getAPI()->$_fn->$_method(Response::$_RESPONSE, $_REQ);
+    //             // var_dump(\engine\lib\response::$_RESPONSE);
+    //         } elseif (method_exists($context, $fn)) {
+    //             $context->$fn(Response::$_RESPONSE, $_REQ);
+    //         }
+    //     }
+    // }
 
     /* state grabbers */
     // static function isJsApiRequest () {

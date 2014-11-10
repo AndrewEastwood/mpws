@@ -133,18 +133,22 @@ class app {
         // include_once $_customerScript;
         // $customer = new $_customerClass();
         $this->customer = new $_customerScript($this);
+        $options = func_get_args();
         switch ($this->runMode()) {
             case 'api':
-                $this->customer->runAsAPI();
+                $this->customer->runAsAPI($options);
                 break;
             case 'auth':
-                $this->customer->runAsAUTH();
+                $this->customer->runAsAUTH($options);
                 break;
             case 'upload':
-                $this->customer->runAsUPLOAD();
+                $this->customer->runAsUPLOAD($options);
                 break;
             case 'display':
-                $this->customer->runAsDISPLAY();
+                $this->customer->runAsDISPLAY($options);
+                break;
+            case 'task':
+                $this->customer->runAsTASK($options);
                 break;
             // default:
             //     throw new Exception("Error Processing Request: Unknown request type", 1);
