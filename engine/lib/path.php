@@ -146,23 +146,23 @@ class path {
     // }
 
     public static function getCustomerConfigNames ($customer) {
-        $files = glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+        $files = glob(self::getCustomerDir($customer) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php') ?: array();
         return self::getFileNamesFromFileList($files);
     }
     public static function getDefaultConfigNames ($version) {
-        $files = glob(self::getDefaultDir($version) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+        $files = glob(self::getDefaultDir($version) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php') ?: array();
         return self::getFileNamesFromFileList($files);
     }
     public static function getPluginConfigNames ($plugin) {
-        $files = glob(self::getPluginDir($plugin) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php');
+        $files = glob(self::getPluginDir($plugin) . self::getDirNameConfig() . self::getDirectorySeparator() . '*.php') ?: array();
         return self::getFileNamesFromFileList($files);
     }
     public static function getPluginApiNames ($plugin) {
-        $files = glob(self::getPluginDir($plugin) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php');
+        $files = glob(self::getPluginDir($plugin) . self::getDirNameApi() . self::getDirectorySeparator() . '*.php') ?: array();
         return self::getFileNamesFromFileList($files);
     }
     public static function getPluginTaskNames ($plugin) {
-        $files = glob(self::getPluginDir($plugin) . self::getDirNameTask() . self::getDirectorySeparator() . '*.php');
+        $files = glob(self::getPluginDir($plugin) . self::getDirNameTask() . self::getDirectorySeparator() . '*.php') ?: array();
         return self::getFileNamesFromFileList($files);
     }
 

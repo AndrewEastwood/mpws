@@ -1,8 +1,8 @@
 <?php
     namespace engine\controller;
-    include $_SERVER['DOCUMENT_ROOT'] . 'app.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/app.php';
 
-    use \engine\app as App;
+    use \app as App;
     use \engine\lib\request as Request;
     use \engine\lib\path as Path;
     // header('Content-Type: application/json; charset=utf-8');

@@ -23,12 +23,12 @@ module.exports = function(grunt) {
 
             var _dirDefaultLess = 'static/less';
 
-            var _srcLessCustomer = '../customer/' + customer + '/' + _dirAppLess + '/';
+            var _srcLessCustomer = '../customers/' + customer + '/' + _dirAppLess + '/';
             // var _srcLessCustomerCommon = '../customer/' + customer + '/' + _dirCommonLess + '/';
             var _srcLessDefault = '../base/' + version + '/' + _dirDefaultLess;
 
-            var _devLessCustomer = '../customer/' + customer + '/' + _dirAppCss + '/';
-            var _buildLessCustomer = '../customer/' + customer + '/' + _dirAppBuild + '/' + _dirAppLess + '/';
+            var _devLessCustomer = '../customers/' + customer + '/' + _dirAppCss + '/';
+            var _buildLessCustomer = '../customers/' + customer + '/' + _dirAppBuild + '/' + _dirAppLess + '/';
 
             return {
                 dirAppBuild : _dirAppBuild,

@@ -1,5 +1,4 @@
 <?php
-namespace engine;
 
 define('MPWS_ROOT', dirname(__FILE__) . '/');
 
