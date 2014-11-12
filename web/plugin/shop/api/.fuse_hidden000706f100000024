@@ -10,204 +10,22 @@ use \engine\lib\utils as Utils;
 use Exception;
 use ArrayObject;
 
-class categories extends \engine\objects\api {
+class catalog extends \engine\objects\api {
 
-    private $_statuses = array('ACTIVE', 'REMOVED');
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // CATEGORIES
-    // -----------------------------------------------
-    // -----------------------------------------------
-    public function getCategoryByID ($categoryID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem($categoryID);
-        $category = $this->getCustomer()->fetch($config);
-        if (empty($category))
-            return null;
-        $category['ID'] = intval($category['ID']);
-        $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
-        $category['_isRemoved'] = $category['Status'] === 'REMOVED';
-        $category['_location'] = $this->getCategoryLocation($categoryID);
-        return $category;
-    }
-
-    public function getCategories_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryList($options);
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $val)
-                    $_items[] = $self->getCategoryByID($val['ID']);
-                return $_items;
+    private function getCategoriesFromCategoryTree ($categoryTree, $selectedCategoryID, &$list = array(), $inSelectedNode = false) {
+        foreach ($categoryTree as $key => $node) {
+            $this->getCategoriesFromCategoryTree($node['childNodes'], $selectedCategoryID, $list, $key === $selectedCategoryID);
+            if ($inSelectedNode || $key === $selectedCategoryID) {
+                $list[] = $key;
             }
-        );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
-        return $dataList;
-    }
-
-    public function createCategory ($reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-        $CategoryID = null;
-
-        $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
-            'ParentID' => array('int', 'skipIfUnset'),
-            'Description' => array('string', 'skipIfUnset', 'max' => 300)
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
-
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopCreateCategory($validatedValues);
-                $CategoryID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
-
-                if (empty($CategoryID))
-                    throw new Exception('CategoryCreateError');
-
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        if ($success && !empty($CategoryID))
-            $result = $this->getCategoryByID($CategoryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function updateCategory ($CategoryID, $reqData) {
-        $result = array();
-        $errors = array();
-        $success = false;
-
-        $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'Description' => array('string', 'skipIfUnset', 'max' => 300),
-            'ParentID' => array('int', 'null', 'skipIfUnset'),
-            'Status' => array('string', 'skipIfUnset')
-        ));
-
-        if ($validatedDataObj["totalErrors"] == 0)
-            try {
-
-                $validatedValues = $validatedDataObj['values'];
-
-                $this->getCustomerDataBase()->beginTransaction();
-
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateCategory($CategoryID, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
-
-                $this->getCustomerDataBase()->commit();
-
-                $success = true;
-            } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
-                $errors[] = $e->getMessage();
-            }
-        else
-            $errors = $validatedDataObj["errors"];
-
-        $result = $this->getCategoryByID($CategoryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-
-        return $result;
-    }
-
-    public function disableCategory ($CategoryID) {
-        $errors = array();
-        $success = false;
-
-        try {
-            $this->getCustomerDataBase()->beginTransaction();
-
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteCategory($CategoryID);
-            $this->getCustomer()->fetch($config);
-
-            $this->getCustomerDataBase()->commit();
-
-            $success = true;
-        } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'CategoryUpdateError';
         }
-
-        $result = $this->getCategoryByID($CategoryID);
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
+        return $list;
     }
 
-    public function getCategoryLocation ($categoryID) {
-        // var_dump($categoryID);
-        $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
-        $location = $this->getCustomer()->fetch($configLocation);
-        return $location;
-    }
-
-
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // BREADCRUMB
-    // -----------------------------------------------
-    // -----------------------------------------------
-
-
-    // -----------------------------------------------
-    // -----------------------------------------------
-    // SHOP CATALOG TREE
-    // -----------------------------------------------
-    // -----------------------------------------------
-    public function getCatalogTree ($selectedCategoryID = false) {
-
-        function getTree (array &$elements, $parentId = null) {
-            $branch = array();
-            // echo "#######Looking for element where parentid ==", $parentId, PHP_EOL;
-            foreach ($elements as $key => $element) {
-                // echo "~~~Current element ID = ", $element['ParentID'], PHP_EOL;
-                if ($element['ParentID'] == $parentId) {
-                    // echo "Element is found".PHP_EOL;
-                    // echo "Looking for element child nodes wherer ParentID = ", $key,PHP_EOL;
-                    $element['childNodes'] = getTree($elements, $key);
-                    $branch[$key] = $element;
-                    // unset($elements[$key]);
-                }
-            }
-            // echo PHP_EOL . "-=-=-=-=-=-=--=--Results for element where parentid ==", $parentId. PHP_EOL;
-            // var_dump($branch);
-            return $branch;
-        }
-
-        $config = $this->getPluginConfiguration()->data->jsapiShopCatalogTree($selectedCategoryID);
-        $categories = $this->getCustomer()->fetch($config);
-        $map = array();
-        foreach ($categories as $key => $value)
-            $map[$value['ID']] = $value;
-
-        $tree = getTree($map);
-
-        return $tree;
-    }
-
-    public function getCatalogBrowse (array $options) {
+    public function getCatalogBrowse () {
 
         $data = array();
-        $categoryID = isset($options['id']) ? $options['id'] : null;
+        $categoryID = Request::fromGET('id', null);
 
         if (!is_numeric($categoryID)) {
             $data['error'] = '"id" parameter is missed';
@@ -218,7 +36,6 @@ class categories extends \engine\objects\api {
 
         $filterOptions = array(
             /* common options */
-            "id" => $categoryID,
             "filter_viewSortBy" => null,
             "filter_viewItemsOnPage" => 16,
             "filter_viewPageNum" => 1,
@@ -241,7 +58,7 @@ class categories extends \engine\objects\api {
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
-            $filterOptionsApplied[$key] = Utils::array_get_value($options, $key, $filterOptions[$key]);// Request::fromGET($key, $filterOptions[$key]);
+            $filterOptionsApplied[$key] = Request::fromGET($key, $filterOptions[$key]);
             if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
                 $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
             if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")
@@ -260,7 +77,20 @@ class categories extends \engine\objects\api {
             // var_dump($filterOptionsApplied[$key]);
         }
 
+        $filterOptionsApplied["id"] = $categoryID;
+        $filterOptionsAvailable["id"] = $categoryID;
+
         // var_dump($filterOptionsApplied['filter_commonFeatures']);
+
+
+        $activeTree = $this->getAPI()->categories->getCatalogTree();
+        $cetegoriesIDs = $this->getCategoriesFromCategoryTree($activeTree, $categoryID);
+
+        // var_dump($activeTree);
+        var_dump($cetegoriesIDs);
+
+        return;
+
 
         $dataConfigCategoryPriceEdges = $this->getPluginConfiguration()->data->jsapiShopCategoryPriceEdgesGet($categoryID);
         $dataConfigCategoryAllSubCategories = $this->getPluginConfiguration()->data->jsapiShopCategoryAllSubCategoriesGet($categoryID);
@@ -268,6 +98,8 @@ class categories extends \engine\objects\api {
         // get category sub-categories and origins
         $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
         $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
+
+        // var_dump($dataCategoryAllSubCategories);
 
         $cetagorySubIDs = array($categoryID);
         if (!empty($dataCategoryAllSubCategories))
@@ -291,7 +123,6 @@ class categories extends \engine\objects\api {
 
         // set data source
         // ---
-        $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo($cetagorySubIDs);
         $dataConfigProducts = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductList($cetagorySubIDs);
 
         // filter: display intems count
@@ -338,21 +169,21 @@ class categories extends \engine\objects\api {
         // get products
         $dataProducts = $this->getCustomer()->fetch($dataConfigProducts);
         // get category info according to product filter
-        if (isset($dataConfigProducts['condition']['Price']))
-            $dataConfigCategoryInfo['condition']['Price'] = $dataConfigProducts['condition']['Price'];
-        // $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-        $dataCategoryInfo = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+        // if (isset($dataConfigProducts['condition']['Price']))
+        //     $dataConfigCategoryInfo['condition']['Price'] = $dataConfigProducts['condition']['Price'];
+        // // $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+        // $dataCategoryInfo = $this->getCustomer()->fetch($dataConfigCategoryInfo);
 
         // TODO smth with this
         $products = array();
         if (!empty($dataProducts))
             foreach ($dataProducts as $val)
-                $products[] = $this->getAPI()->products->getProductByID($val['ID']);
+                $products[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
 
-        $productsInfo = array();
-        if (!empty($dataCategoryInfo))
-            foreach ($dataCategoryInfo as $val)
-                $productsInfo[] = $this->getAPI()->products->getProductByID($val['ID']);
+        // $productsInfo = array();
+        // if (!empty($dataCategoryInfo))
+        //     foreach ($dataCategoryInfo as $val)
+        //         $productsInfo[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
 
         // adjust brands, categories and features
         $brands = array();
@@ -360,20 +191,49 @@ class categories extends \engine\objects\api {
         $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions($this->getPluginConfiguration()->data->Table_ShopProducts);
         $features = array();
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
+            $count = 0;
+            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo($cetagorySubIDs);
+            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+            $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($brand['ID']);
+            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            if (isset($filterData) && isset($filterData['ItemsCount'])) {
+                $count = $filterData['ItemsCount'];
+            }
             $brands[$brand['ID']] = $brand;
-            $brands[$brand['ID']]['ProductCount'] = 0;
+            $brands[$brand['ID']]['ProductCount'] = $count;
         }
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $category) {
+            $count = 0;
+            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo($cetagorySubIDs);
+            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($category['ID']);
+            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            if (isset($filterData) && isset($filterData['ItemsCount'])) {
+                $count = $filterData['ItemsCount'];
+            }
             $categories[$category['ID']] = $category;
-            $categories[$category['ID']]['ProductCount'] = 0;
+            $categories[$category['ID']]['ProductCount'] = $count;
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
+            $count = 0;
+            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo($cetagorySubIDs);
+            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+            $arrValues = array($status);
+            if (!empty($filterOptionsApplied['filter_commonStatus'])) {
+                $arrValues = array_merge($filterOptionsApplied['filter_commonStatus'], $arrValues);
+            }
+            // var_dump($arrValues);
+            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            if (isset($filterData) && isset($filterData['ItemsCount'])) {
+                $count = intval($filterData['ItemsCount']);
+            }
             $statuses[$status]['ID'] = $status;
-            $statuses[$status]['ProductCount'] = 0;
+            $statuses[$status]['ProductCount'] = $count;
         }
 
-        if ($productsInfo)
-            foreach ($productsInfo as $obj) {
+        if ($products)
+            foreach ($products as $obj) {
                 $OriginID = $obj['OriginID'];
                 $CategoryID = $obj['CategoryID'];
                 $status = $obj['Status'];
@@ -415,66 +275,18 @@ class categories extends \engine\objects\api {
             'filterOptionsAvailable' => $filterOptionsAvailable,
             'filterOptionsApplied' => $filterOptionsApplied,
             'info' => array(
-                "count" => count($dataCategoryInfo)
+                "count" => count($products),
+                "cetagorySubIDs" => $cetagorySubIDs
             )
         );
-        $data['_location'] = $this->getCategoryLocation($categoryID);
         // return data object
         return $data;
     }
 
-
     public function get (&$resp, $req) {
-        if (isset($req->get['browse'])) {
-            $resp = $this->getCatalogBrowse($req->get);
-        } else if (isset($req->get['tree'])) {
-            $resp = $this->getCatalogTree();
-        } else if (empty($req->get['id'])) {
-            $resp = $this->getCategories_List($req->get);
-        } else {
-            $CategoryID = intval($req->get['id']);
-            $resp = $this->getCategoryByID($CategoryID);
-        }
-    }
-
-    public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        $resp = $this->createCategory($req->data);
-        // $this->_getOrSetCachedState('changed:category', true);
-    }
-
-    public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = "AccessDenied";
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $CategoryID = intval($req->get['id']);
-            $resp = $this->updateCategory($CategoryID, $req->data);
-            // $this->_getOrSetCachedState('changed:category', true);
-        }
-    }
-
-    public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
-            $resp['error'] = 'AccessDenied';
-            return;
-        }
-        if (empty($req->get['id'])) {
-            $resp['error'] = 'MissedParameter_id';
-        } else {
-            $CategoryID = intval($req->get['id']);
-            $resp = $this->disableCategory($CategoryID);
-            // $this->_getOrSetCachedState('changed:category', true);
-        }
+        $resp = $this->getCatalogBrowse($req->data);
     }
 
 }
-
 
 ?>

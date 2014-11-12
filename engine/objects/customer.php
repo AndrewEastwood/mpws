@@ -151,8 +151,17 @@ class customer {
 
     public function fetch ($config, $skipCustomerID = false) {
         $customerInfo = $this->getCustomerInfo();
-        if (!isset($config["condition"]["CustomerID"]) && !$skipCustomerID)
-            $config["condition"]["CustomerID"] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($customerInfo['ID']);
+        $source = $config["source"];
+        $key = $source . '.CustomerID';
+        $addCustomerID = false;
+        if (!$skipCustomerID) {
+            if (isset($config["condition"]["CustomerID"])) {
+                $config["condition"][$key] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($customerInfo['ID']);
+                unset($config["condition"]["CustomerID"]);
+            } else if (!isset($config["condition"][$key])) {
+                $config["condition"][$key] = $this->getConfiguration()->data->jsapiCreateDataSourceCondition($customerInfo['ID']);
+            }
+        }
         return $this->dbo->getData($config);
     }
 

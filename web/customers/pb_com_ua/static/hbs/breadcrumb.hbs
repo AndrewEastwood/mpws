@@ -1,0 +1,108 @@
+{{!
+{
+  "name" : "customer breadcrumb",
+  "description" : "A nice template."
+}
+}}
+
+<ol class="breadcrumb shop-breadcrumb">
+
+    {{#compare app.location.fragment "==" "" }}
+    <li class="active">Головна</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop" }}
+    <li class="active">Головна</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop/cart" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Кошик</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop/wishlist" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Мій список</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop/cart/checkout" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Оформлення</li>
+    {{/compare}}
+
+    {{#compare app.location.fragment "==" "shop/compare" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Порівняння</li>
+    {{/compare}}
+
+    {{#srtStartsWith app.location.fragment "shop/tracking" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Відстеження вантажу</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/login" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Вхід</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/create" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Реєстрація</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "shop/account/orders" }}
+    <li><a href="/#">Головна</a></li>
+    <li><a href="/#account/summary">Профіль</a></li>
+    <li class="active">Мої замовлення</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/summary" }}
+    <li><a href="/#">Головна</a></li>
+    <li class="active">Профіль</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/password" }}
+    <li><a href="/#">Головна</a></li>
+    <li><a href="/#account/summary">Профіль</a></li>
+    <li class="active">Зміна паролю</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/edit" }}
+    <li><a href="/#">Головна</a></li>
+    <li><a href="/#account/summary">Профіль</a></li>
+    <li class="active">Редагування</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/delete" }}
+    <li><a href="/#">Головна</a></li>
+    <li><a href="/#account/summary">Профіль</a></li>
+    <li class="active">Видалення</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "account/addresses" }}
+    <li><a href="/#">Головна</a></li>
+    <li><a href="/#account/summary">Профіль</a></li>
+    <li class="active">Мої адреси</li>
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "shop/catalog/" }}
+        <li><a href="/#">Головна</a></li>
+        {{#foreach data.categories}}
+            {{#if $last}}
+                <li class="active">{{Name}}</li>
+            {{else}}
+                <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+            {{/if}}
+        {{/foreach}}
+    {{/srtStartsWith}}
+
+    {{#srtStartsWith app.location.fragment "shop/product/" }}
+        <li><a href="/#">Головна</a></li>
+        {{#foreach data.categories}}
+        <li><a href="/#shop/catalog/{{ID}}">{{Name}}</a></li>
+        {{/foreach}}
+        {{#if data.product}}
+        <li class="active">{{data.product.Name}}</li>
+        {{/if}}
+    {{/srtStartsWith}}
+</ol>

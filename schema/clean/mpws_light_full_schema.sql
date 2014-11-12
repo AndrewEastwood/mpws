@@ -667,7 +667,7 @@ CREATE TABLE `shop_settings` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN catid INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllShopCategoryBrands`(IN `cat_ids` VARCHAR(100))
 BEGIN
   SELECT o.ID,
          o.Name
@@ -676,7 +676,8 @@ BEGIN
                 ON p.OriginID = o.ID
   WHERE  p.Status = 'ACTIVE'
          AND o.Status = 'ACTIVE'
-         AND p.CategoryID = catid
+         -- AND p.CategoryID = catid
+         FIND_IN_SET (o.CategoryID, cat_ids)
   GROUP  BY o.Name; 
 
 END ;;
@@ -834,9 +835,10 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN catid INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCategoryPriceEdges`(IN `cat_ids` VARCHAR(100))
 BEGIN
-SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
+-- SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE p.CategoryID = catid;
+SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS  `p` WHERE FIND_IN_SET (p.CategoryID, cat_ids);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

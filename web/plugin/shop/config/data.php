@@ -163,16 +163,9 @@ class data extends \engine\objects\configuration {
 
 
     // Product category (catalog)
-    public function jsapiGetShopCategoryProductList ($ids) {
+    public function jsapiGetShopCatalogProductList ($ids) {
         $config = $this->jsapiShopGetProductList();
         $config['condition']["shop_products.CategoryID"] = $this->jsapiCreateDataSourceCondition($ids, "IN");
-        return $config;
-    }
-
-    public function jsapiGetShopCategoryProductInfo ($ids) {
-        $config = $this->jsapiGetShopCategoryProductList($ids);
-        $config["fields"] = array("ID", "CategoryID", "OriginID");
-        $config['limit'] = 0;
         return $config;
     }
 
@@ -183,15 +176,22 @@ class data extends \engine\objects\configuration {
     //     return $config;
     // }
 
-    // public function jsapiGetShopCategoryProductInfo () {
-    //     $config = $this->jsapiShopGetProductList();
-    //     $config['fields'] = array("@COUNT(*) AS ItemsCount");
+    // public function jsapiGetShopCategoryProductInfo ($ids) {
+    //     $config = $this->jsapiGetShopCategoryProductList($ids);
+    //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
-    //     $config['options'] = array(
-    //         "expandSingleRecord" => true
-    //     );
     //     return $config;
     // }
+
+    public function jsapiGetShopCategoryProductInfo () {
+        $config = $this->jsapiShopGetProductList();
+        $config['fields'] = array("@COUNT(*) AS ItemsCount");
+        $config['limit'] = 1;
+        $config['options'] = array(
+            "expandSingleRecord" => true
+        );
+        return $config;
+    }
 
 
 
@@ -379,31 +379,31 @@ class data extends \engine\objects\configuration {
 
 
     // Product category (catalog) >>>>>
-    public function jsapiShopCategoryAndSubCategoriesAllBrandsGet ($categoryID) {
+    public function jsapiShopCatalogBrands ($categoryID) {
         return $this->jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
-                "name" => "getAllShopCategoryBrandsWithSubCategories",
+                "name" => "getCatalogBrands",
                 "parameters" => array($categoryID)
             )
         ));
     }
 
-    public function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
-        return $this->jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getAllShopCategorySubCategories",
-                "parameters" => array($categoryID)
-            )
-        ));
-    }
+    // public function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
+    //     return $this->jsapiGetDataSourceConfig(array(
+    //         "action" => "call",
+    //         "procedure" => array(
+    //             "name" => "getAllShopCategorySubCategories",
+    //             "parameters" => array($categoryID)
+    //         )
+    //     ));
+    // }
 
-    public function jsapiShopCategoryPriceEdgesGet ($categoryID) {
+    public function jsapiGetShopCatalogPriceEdges ($categoryID) {
         return $this->jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
-                "name" => "getShopCategoryPriceEdges",
+                "name" => "getShopCatalogPriceEdges",
                 "parameters" => array($categoryID)
             ),
             "options" => array(
@@ -437,8 +437,8 @@ class data extends \engine\objects\configuration {
 
 
     // Shop catalog tree >>>>>
-    public function jsapiShopCatalogTree () {
-        return $this->jsapiGetDataSourceConfig(array(
+    public function jsapiShopCatalogTree ($selectedCategoryID = false) {
+        $config = $this->jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(
@@ -446,6 +446,10 @@ class data extends \engine\objects\configuration {
             ),
             "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
+        if ($selectedCategoryID !== false) {
+            $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($selectedCategoryID);
+        }
+        return $config;
     }
     // <<<< Shop catalog tree
 

@@ -12,6 +12,16 @@ use ArrayObject;
 
 class catalog extends \engine\objects\api {
 
+    private function getCategoriesFromCategoryTree ($categoryTree, $selectedCategoryID, &$list = array(), $inSelectedNode = false) {
+        foreach ($categoryTree as $key => $node) {
+            $this->getCategoriesFromCategoryTree($node['childNodes'], $selectedCategoryID, $list, $key === $selectedCategoryID);
+            if ($inSelectedNode || $key === $selectedCategoryID) {
+                $list[] = $node;
+            }
+        }
+        return $list;
+    }
+
     public function getCatalogBrowse () {
 
         $data = array();
@@ -26,7 +36,6 @@ class catalog extends \engine\objects\api {
 
         $filterOptions = array(
             /* common options */
-            "id" => $categoryID,
             "filter_viewSortBy" => null,
             "filter_viewItemsOnPage" => 16,
             "filter_viewPageNum" => 1,
@@ -68,19 +77,57 @@ class catalog extends \engine\objects\api {
             // var_dump($filterOptionsApplied[$key]);
         }
 
+        $filterOptionsApplied["id"] = $categoryID;
+        $filterOptionsAvailable["id"] = $categoryID;
+
         // var_dump($filterOptionsApplied['filter_commonFeatures']);
 
-        $dataConfigCategoryPriceEdges = $this->getPluginConfiguration()->data->jsapiShopCategoryPriceEdgesGet($categoryID);
-        $dataConfigCategoryAllSubCategories = $this->getPluginConfiguration()->data->jsapiShopCategoryAllSubCategoriesGet($categoryID);
 
-        // get category sub-categories and origins
+        $activeTree = $this->getAPI()->categories->getCatalogTree();
+        $cetegories = $this->getCategoriesFromCategoryTree($activeTree, $categoryID);
+        $cetegoriesIDs = array();
+        $cetegoriesNodes = array();
+
+        // var_dump($cetegories);
+
+        foreach ($cetegories as $categoryItem) {
+            $cetegoriesIDs[] = intval($categoryItem['ID']);
+            $cetegoriesNodes[$categoryItem['ID']] = array(
+                'ID' => intval($categoryItem['ID']),
+                'Name' => $categoryItem['Name']
+            );
+        }
+
+        // var_dump($activeTree);
+        $dataConfigCategoryPriceEdges = $this->getPluginConfiguration()->data->jsapiGetShopCatalogPriceEdges(implode(',', $cetegoriesIDs));
         $dataCategoryPriceEdges = $this->getCustomer()->fetch($dataConfigCategoryPriceEdges);
-        $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
+        // var_dump($dataConfigCategoryPriceEdges);
 
-        $cetagorySubIDs = array($categoryID);
-        if (!empty($dataCategoryAllSubCategories))
-            foreach ($dataCategoryAllSubCategories as $value)
-                $cetagorySubIDs[] = $value['ID'];
+        // get all brands for both current category and sub-categories
+        $dataConfigCategoryAllBrands = $this->getPluginConfiguration()->data->jsapiShopCatalogBrands(implode(',', $cetegoriesIDs));
+        $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
+        // var_dump($dataCategoryPriceEdges);
+        // var_dump($dataCategoryAllBrands);
+
+        // return;
+
+        foreach ($dataCategoryAllBrands as $key => $brandItem) {
+            $dataCategoryAllBrands[$key]['ID'] = intval($brandItem['ID']);
+        }
+
+
+        // $dataConfigCategoryAllSubCategories = $this->getPluginConfiguration()->data->jsapiShopCategoryAllSubCategoriesGet($categoryID);
+
+        // $dataConfigCategoryAllSubCategories = array();
+        // get category sub-categories and origins
+        // $dataCategoryAllSubCategories = $this->getCustomer()->fetch($dataConfigCategoryAllSubCategories);
+
+        // var_dump($dataCategoryAllSubCategories);
+
+        // $cetagorySubIDs = array($categoryID);
+        // if (!empty($dataCategoryAllSubCategories))
+        //     foreach ($dataCategoryAllSubCategories as $value)
+        //         $cetagorySubIDs[] = $value['ID'];
 
         //filter: get category price edges
         $filterOptionsAvailable['filter_commonPriceMax'] = floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10;
@@ -89,17 +136,14 @@ class catalog extends \engine\objects\api {
             $filterOptionsAvailable['filter_commonPriceMin'] = 0;
         }
 
-        // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = $this->getPluginConfiguration()->data->jsapiShopCategoryAndSubCategoriesAllBrandsGet(implode(',', $cetagorySubIDs));
-        $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
 
         // set categories and brands
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
-        $filterOptionsAvailable['filter_categorySubCategories'] = $dataCategoryAllSubCategories ?: array();
+        $filterOptionsAvailable['filter_categorySubCategories'] = $cetegoriesNodes ?: array();
 
         // set data source
         // ---
-        $dataConfigProducts = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductList($cetagorySubIDs);
+        $dataConfigProducts = $this->getPluginConfiguration()->data->jsapiGetShopCatalogProductList($cetegoriesIDs);
 
         // filter: display intems count
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -156,10 +200,12 @@ class catalog extends \engine\objects\api {
             foreach ($dataProducts as $val)
                 $products[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
 
-        $productsInfo = array();
-        if (!empty($dataCategoryInfo))
-            foreach ($dataCategoryInfo as $val)
-                $productsInfo[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
+        $currentProductCount = count($products);
+
+        // $productsInfo = array();
+        // if (!empty($dataCategoryInfo))
+        //     foreach ($dataCategoryInfo as $val)
+        //         $productsInfo[] = $this->getAPI()->products->getProductByID($val['ID'], false, false);
 
         // adjust brands, categories and features
         $brands = array();
@@ -167,53 +213,95 @@ class catalog extends \engine\objects\api {
         $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions($this->getPluginConfiguration()->data->Table_ShopProducts);
         $features = array();
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
-            $brands[$brand['ID']] = $brand;
-
-            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo($cetagorySubIDs);
+            $count = 0;
+            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+            $arrValues = array($brand['ID']);
+            if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
+                $arrValues = array_merge($filterOptionsApplied['filter_categoryBrands'], $brand['ID']);
+            }
+            $arrValues = array_unique($arrValues);
+            $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
-            $brands[$brand['ID']]['ProductCount'] = 0;
+            if (isset($filterData) && isset($filterData['ItemsCount'])) {
+                $count = $filterData['ItemsCount'];
+            }
+            $brands[$brand['ID']] = $brand;
+            $brands[$brand['ID']]['ProductCount'] = intval($count) - $currentProductCount;
         }
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $category) {
+            $count = 0;
+            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo();
+            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+            $arrValues = array($category['ID']);
+            if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
+                $arrValues = array_merge($filterOptionsApplied['filter_categorySubCategories'], $category['ID']);
+            }
+            $arrValues = array_unique($arrValues);
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            if (isset($filterData) && isset($filterData['ItemsCount'])) {
+                $count = $filterData['ItemsCount'];
+            }
             $categories[$category['ID']] = $category;
-            $categories[$category['ID']]['ProductCount'] = 0;
+            $categories[$category['ID']]['ProductCount'] = intval($count) - $currentProductCount;
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
+            $count = 0;
+            $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo();
+            $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
+            $arrValues = array($status);
+            if (!empty($filterOptionsApplied['filter_commonStatus'])) {
+                $arrValues = array_merge($filterOptionsApplied['filter_commonStatus'], $arrValues);
+            }
+            $arrValues = array_unique($arrValues);
+            // var_dump($arrValues);
+            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            if (isset($filterData) && isset($filterData['ItemsCount'])) {
+                $count = $filterData['ItemsCount'];
+            }
+            // var_dump($filterData);
+            // var_dump($dataConfigCategoryInfo);
+            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+            // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
             $statuses[$status]['ID'] = $status;
-            $statuses[$status]['ProductCount'] = 0;
+            $statuses[$status]['ProductCount'] = intval($count) - $currentProductCount;
         }
 
-        if ($productsInfo)
-            foreach ($productsInfo as $obj) {
-                $OriginID = $obj['OriginID'];
-                $CategoryID = $obj['CategoryID'];
-                $status = $obj['Status'];
-                if (isset($statuses[$status]))
-                    $statuses[$status]['ProductCount']++;
-                if (isset($brands[$OriginID]))
-                    $brands[$OriginID]['ProductCount']++;
-                if (isset($categories[$CategoryID]))
-                    $categories[$CategoryID]['ProductCount']++;
-                foreach ($obj['Features'] as $featureGroup => $featureList) {
-                    if (!isset($features[$featureGroup])) {
-                        $features[$featureGroup] = array();
-                    }
-                    foreach ($featureList as $key => $featureName) {
-                        if (!isset($features[$featureGroup][$key]['Count'])) {
-                            $features[$featureGroup][$key] = array(
-                                'Name' => $featureName,
-                                'Count' => 1,
-                                'ID' => $key
-                            );
-                        }
-                        else {
-                            // $features[$featureGroup][$key]['Name'] = $featureName
-                            $features[$featureGroup][$key]['Count']++;
-                            // $features[$featureGroup][$key]['ID'] = $featureID;
-                        }
-                    }
-                }
-            }
+        // if ($products)
+        //     foreach ($products as $obj) {
+        //         $OriginID = $obj['OriginID'];
+        //         $CategoryID = $obj['CategoryID'];
+        //         $status = $obj['Status'];
+        //         if (isset($statuses[$status]))
+        //             $statuses[$status]['ProductCount']++;
+        //         if (isset($brands[$OriginID]))
+        //             $brands[$OriginID]['ProductCount']++;
+        //         if (isset($categories[$CategoryID]))
+        //             $categories[$CategoryID]['ProductCount']++;
+        //         foreach ($obj['Features'] as $featureGroup => $featureList) {
+        //             if (!isset($features[$featureGroup])) {
+        //                 $features[$featureGroup] = array();
+        //             }
+        //             foreach ($featureList as $key => $featureName) {
+        //                 if (!isset($features[$featureGroup][$key]['Count'])) {
+        //                     $features[$featureGroup][$key] = array(
+        //                         'Name' => $featureName,
+        //                         'Count' => 1,
+        //                         'ID' => $key
+        //                     );
+        //                 }
+        //                 else {
+        //                     // $features[$featureGroup][$key]['Name'] = $featureName
+        //                     $features[$featureGroup][$key]['Count']++;
+        //                     // $features[$featureGroup][$key]['ID'] = $featureID;
+        //                 }
+        //             }
+        //         }
+        //     }
 
         $filterOptionsAvailable['filter_categoryBrands'] = $brands;
         $filterOptionsAvailable['filter_categorySubCategories'] = $categories;
@@ -226,11 +314,15 @@ class catalog extends \engine\objects\api {
             'filterOptionsAvailable' => $filterOptionsAvailable,
             'filterOptionsApplied' => $filterOptionsApplied,
             'info' => array(
-                "count" => count($dataCategoryInfo)
+                "count" => $currentProductCount
             )
         );
         // return data object
         return $data;
+    }
+
+    public function get (&$resp, $req) {
+        $resp = $this->getCatalogBrowse($req->data);
     }
 
 }
