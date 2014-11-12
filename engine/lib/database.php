@@ -23,6 +23,10 @@ class database {
         return orm::get_db();
     }
 
+    public function get_last_query () {
+        return orm::get_last_query();
+    }
+
     public function getLastErrorCode () {
         return $this->getDBLink()->errorCode();
     }
@@ -157,6 +161,8 @@ class database {
                             // $fieldsToSelect[$key] = substr($value, 1);
                         elseif (!strstr($value, '.'))
                             $fieldsToSelectClear[$key] = sprintf("%s.%s", $addSource, $value);
+                        else
+                            $fieldsToSelectClear[$key] = $value;
                     }
 
                     $this->dbo->select_many($fieldsToSelectClear);

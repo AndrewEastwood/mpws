@@ -68,12 +68,13 @@ define("plugin/shop/site/js/view/listProductCatalog", [
 
             _filterOptions[_targetFilterName] = this.collection.getFilter(_targetFilterName);
             // debugger;
-
+            var idValuesHolders = ['filter_categorySubCategories', 'filter_commonFeatures', 'filter_categoryBrands'];
             var filterValue = $(event.target).val();
-            if (_targetFilterName === 'filter_commonFeatures') {
+            if (_(idValuesHolders).indexOf(_targetFilterName) >= 0) {
                 filterValue = parseInt(filterValue, 10);
             }
 
+            // debugger;
             if ($(event.target).is(':checked'))
                 _filterOptions[_targetFilterName].push(filterValue);
             else

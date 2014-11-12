@@ -573,9 +573,11 @@ i.fa {cursor: pointer;}
 
 .shop-component-catalog-filtering {
   margin-bottom: 20px;
-  &:not(.applied) {
+  &.applied {
     .product-count {
-      display: none;
+      &:before {
+        content: '+';
+      }
     }
   }
   .title {
@@ -611,11 +613,11 @@ i.fa {cursor: pointer;}
     font-weight: bold;
   }
   // >>> temporary
-  .list-group-item {
-    .product-count {
-      display: none;
-    }
-  }
+  // .list-group-item {
+  //   .product-count {
+  //     display: none;
+  //   }
+  // }
   // <<< temporary section
   // >>> uncomment following when product counter is implemented
   // &.applied {

@@ -79,8 +79,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             console.log(_options);
             return APP.getApiLink(_.extend({}, _options, {
                 source: 'shop',
-                fn: 'categories',
-                browse: ''}));
+                fn: 'catalog'}));
         },
         parse: function (data) {
             // adjust products
