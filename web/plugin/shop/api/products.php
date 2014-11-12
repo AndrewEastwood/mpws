@@ -676,6 +676,13 @@ class products extends \engine\objects\api {
         return $product['ID'];
     }
 
+    public function updateOrInsertProduct ($data) {
+        if (isset($data['ID'])) {
+            $id = $data['ID'];
+            $this->updateProduct();
+        }
+    }
+
     public function archiveProduct ($ProductID) {
         $result = array();
         $errors = array();
@@ -687,6 +694,7 @@ class products extends \engine\objects\api {
             $this->getCustomerDataBase()->beginTransaction();
 
             $data = array(
+                'CustomerID' => $CustomerID,
                 'Status' => 'ARCHIVED'
             );
 
@@ -702,6 +710,39 @@ class products extends \engine\objects\api {
         }
 
         $result = $this->getProductByID($ProductID);
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function archiveAllProducts () {
+        $result = array();
+        $errors = array();
+        $success = false;
+        try {
+
+            $CustomerID = $this->getCustomer()->getCustomerID();
+
+            $this->getCustomerDataBase()->beginTransaction();
+
+            $data = array(
+                'CustomerID' => $CustomerID,
+                'Status' => 'ARCHIVED'
+            );
+
+            $config = $this->getPluginConfiguration()->data->jsapiShopUpdateProduct(null, $data);
+            $config['condition'] = null;
+            $this->getCustomer()->fetch($config);
+
+            $this->getCustomerDataBase()->commit();
+
+            $success = true;
+        } catch (Exception $e) {
+            $this->getCustomerDataBase()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+
         $result['errors'] = $errors;
         $result['success'] = $success;
 

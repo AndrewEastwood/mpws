@@ -121,7 +121,7 @@ class feeds extends \engine\objects\api {
         }
 
         // disable all products
-        $this->getAPI()->products->archiveProduct('*');
+        $this->getAPI()->products->archiveAllProducts();
 
         $rez = array(
             'data' => $namedDataArray,
