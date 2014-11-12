@@ -202,6 +202,8 @@ class catalog extends \engine\objects\api {
 
         $currentProductCount = count($products);
 
+        // var_dump($currentProductCount);
+
         // $productsInfo = array();
         // if (!empty($dataCategoryInfo))
         //     foreach ($dataCategoryInfo as $val)
@@ -221,13 +223,18 @@ class catalog extends \engine\objects\api {
                 $arrValues = array_merge($filterOptionsApplied['filter_categoryBrands'], $brand['ID']);
             }
             $arrValues = array_unique($arrValues);
+            // var_dump($arrValues);
             $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            // var_dump($filterData);
             if (isset($filterData) && isset($filterData['ItemsCount'])) {
                 $count = $filterData['ItemsCount'];
             }
             $brands[$brand['ID']] = $brand;
-            $brands[$brand['ID']]['ProductCount'] = intval($count) - $currentProductCount;
+            $brands[$brand['ID']]['ProductCount'] = intval($count);
+            // if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
+            //     $brands[$brand['ID']]['ProductCount'] -= $currentProductCount;
+            // }
         }
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $category) {
             $count = 0;
@@ -238,13 +245,21 @@ class catalog extends \engine\objects\api {
                 $arrValues = array_merge($filterOptionsApplied['filter_categorySubCategories'], $category['ID']);
             }
             $arrValues = array_unique($arrValues);
+            // var_dump(">>> values >>>>>>");
+            // var_dump($arrValues);
             $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
+            // var_dump(">>>>results>>>>>>>");
+            // var_dump($filterData);
+            // var_dump("-=-=-=-=-=-=-=-=-=-=-=-=-");
             if (isset($filterData) && isset($filterData['ItemsCount'])) {
                 $count = $filterData['ItemsCount'];
             }
             $categories[$category['ID']] = $category;
-            $categories[$category['ID']]['ProductCount'] = intval($count) - $currentProductCount;
+            $categories[$category['ID']]['ProductCount'] = intval($count);
+            // if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
+            //     $categories[$category['ID']]['ProductCount'] -= $currentProductCount;
+            // }
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
             $count = 0;
@@ -268,7 +283,11 @@ class catalog extends \engine\objects\api {
             // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
             // var_dump('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
             $statuses[$status]['ID'] = $status;
-            $statuses[$status]['ProductCount'] = intval($count) - $currentProductCount;
+            $statuses[$status]['ProductCount'] = intval($count);
+            // var_dump($filterData);
+            // if (!empty($filterOptionsApplied['filter_commonStatus'])) {
+            //     $statuses[$status]['ProductCount'] -= $currentProductCount;
+            // }
         }
 
         // if ($products)

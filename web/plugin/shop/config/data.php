@@ -65,11 +65,11 @@ class data extends \engine\objects\configuration {
         $config['additional'] = array(
             "shop_categories" => array(
                 "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
-                "fields" => array("Status")
+                "fields" => array("shop_categories.Status as CategoryStatus")
             ),
             "shop_origins" => array(
                 "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
-                "fields" => array("Status")
+                "fields" => array("shop_origins.Status AS OriginStatus")
             ),
             "shop_productFeatures" => array(
                 "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
