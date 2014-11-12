@@ -216,14 +216,14 @@ class customer {
 
     public function runAsAUTH () {
         // Request::processRequest($this);
-        $_REQ = self::getRequestData();
-        $_source = self::fromGET('source');
-        $_fn = self::fromGET('fn');
+        $_REQ = Request::getRequestData();
+        $_source = Request::fromGET('source');
+        $_fn = Request::fromGET('fn');
         $_method = strtolower($_SERVER['REQUEST_METHOD']);
         $requestFnElements = array($_method);
-        if (self::hasInGet('source'))
+        if (Request::hasInGet('source'))
             $requestFnElements[] = $_source;
-        if (self::hasInGet('fn'))
+        if (Request::hasInGet('fn'))
             $requestFnElements[] = $_fn;
         $fn = join("_", $requestFnElements);
         $this->$fn(Response::$_RESPONSE, $_REQ);

@@ -120,6 +120,9 @@ class feeds extends \engine\objects\api {
             }
         }
 
+        // disable all products
+        $this->getAPI()->products->archiveProduct('*');
+
         $rez = array(
             'data' => $namedDataArray,
             'readCount' => count($namedDataArray)
