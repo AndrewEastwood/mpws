@@ -15,7 +15,7 @@ class productfeatures extends \engine\objects\api {
         $data["CustomerID"] = $itemData["CustomerID"];
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
-        var_dump($data);
+        // var_dump($data);
         $config = $this->getPluginConfiguration()->data->jsapiShopCreateFeature($data);
         $featureID = $this->getCustomer()->fetch($config);
         return $featureID;

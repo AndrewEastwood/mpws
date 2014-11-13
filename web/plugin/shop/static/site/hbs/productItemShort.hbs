@@ -54,7 +54,9 @@
             <strong>{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></strong>
             {{/if}}
         </div>
-
+        {{/unless}}
+    </div>
+    <div class="panel-footer">
         <div class="buttons">
             {{#if data._viewExtras.InCartCount }}
                 <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
@@ -93,13 +95,11 @@
                     <i class="fa fa-files-o"></i>
                 </button>
             {{/if}}
+            <p class="button-details">
+                <a href="/#shop/product/{{data.ID}}" class="btn btn-success btn-block btn-warning">
+                Детальніше <span class="fa fa-chevron-right"></span>
+                </a>
+            </p>
         </div>
-        {{/unless}}
-
-        <p>
-            <a href="/#shop/product/{{data.ID}}" class="btn btn-success btn-block btn-warning">
-            Детальніше <span class="fa fa-chevron-right"></span>
-            </a>
-        </p>
     </div>
 </div>

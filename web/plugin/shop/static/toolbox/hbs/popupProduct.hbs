@@ -187,8 +187,8 @@
                                     <div class="input-group-btn">
                                         <div class="wrapper">
                                             <button type="button" class="btn btn-link button-label"><span class="concept">{{@key}}</span></button>
-                                            <button type="button" class="btn btn-link dropdown-toggle{{#unless ../extras.featureTypes}} hidden{{/unless}}" data-toggle="dropdown"><span class="caret"></span></button>
-                                            <ul class="dropdown-menu feature-types{{#unless ../extras.featureTypes}} hidden{{/unless}}" role="menu">
+                                            <button type="button" class="btn btn-link dropdown-toggle hidden" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu feature-types hidden" role="menu">
                                                 {{#each ../extras.featureTypes}}
                                                 <li><a href="javascript://" class="feature-type">{{this}}</a></li>
                                                 {{/each}}
@@ -212,8 +212,8 @@
         <div class="input-group-btn">
             <div class="wrapper">
                 <button type="button" class="btn btn-link button-label"><span class="concept">немає</span></button>
-                <button type="button" class="btn btn-link dropdown-toggle{{#unless extras.featureTypes}} hidden{{/unless}}" data-toggle="dropdown"><span class="caret"></span></button>
-                <ul class="dropdown-menu feature-types{{#unless extras.featureTypes}} hidden{{/unless}}" role="menu">
+                <button type="button" class="btn btn-link dropdown-toggle hidden" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu feature-types hidden" role="menu">
                     {{#each extras.featureTypes}}
                     <li><a href="javascript://" class="feature-type">{{this}}</a></li>
                     {{/each}}

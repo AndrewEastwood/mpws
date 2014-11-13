@@ -403,6 +403,11 @@ i.fa {cursor: pointer;}
 }
 
 .shop-product-item-short {
+  min-height: 450px;
+  & > .panel {
+    min-height: 450px;
+    position: relative;
+  }
   .panel-heading {
     h4 {
       white-space: nowrap;
@@ -432,8 +437,16 @@ i.fa {cursor: pointer;}
       width: auto;
     }
   }
+  .panel-footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 5px;
+  }
   .buttons {
-    margin: 15px 0px 10px;
+    .button-details {
+      margin: 5px 0 0;
+    }
   }
   .promocode {
     bottom: 0px;

@@ -222,33 +222,31 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             this.$('#tags').tagsinput();
 
             var features = this.model.get('Features');
+            // debugger;
             if (features) {
                 self.$('.features .features-list').each(function () {
                     var groupFeatureItems = features[$(this).attr('name')];
                     if (groupFeatureItems) {
                         $(this).val(_(groupFeatureItems).values().join(','));
+                        // debugger;
                         $(this).tagsinput();
                     }
                 });
             }
 
-            // >> let's govnokod begin
             $.get(APP.getApiLink({
                 source: 'shop',
                 fn: 'productfeatures'
             }), function (allfeatures) {
                 var featureTypes = _(allfeatures).keys();
-                // var featureItems = _(allfeatures).reduce(function (memo, list) { var items = _(list).values(); return _(memo.concat(items)).uniq(); }, []);
-                if (featureTypes && featureTypes.length) {
-                    self.$('.feature-item .dropdown-toggle').removeClass('hidden');
-                    self.$('.feature-item .feature-types').removeClass('hidden');
-                    _(featureTypes).each(function (groupName) {
-                        self.$('.feature-item .feature-types').append('<li><a href="javascript://" class="feature-type">' + groupName + '</a></li>');
-                    })
-                }
+                var featureItems = _(allfeatures).reduce(function (memo, list) { var items = _(list).values(); return _(memo.concat(items)).uniq(); }, []);
+                $('.feature-item .dropdown-toggle').removeClass('hidden');
+                $('.feature-item .feature-types').removeClass('hidden');
             });
-            // too much govna at this point
 
+            // init uploads
+            // this.$('.uploads').html(_testUploadTpl());
+            // _testUploadInitFn(this);
             this.setupFileUploadItem(this.$('.temp-upload-image'));
         },
         getFeaturesMap: function () {
