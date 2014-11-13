@@ -15,15 +15,15 @@ class products extends \engine\objects\api {
     private $_statuses = array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
 
 
-    public function getProductUploadInnerDir ($productID, $subDir) {
+    public function getProductUploadInnerDir ($productID, $subDir = '') {
         $path = '';
         if (empty($subDir))
             $path = Path::createDirPath('shop', 'products', $productID);
         else
             $path = Path::createDirPath('shop', 'products', $productID, $subDir);
-        return Path::getUploadDirectory($path);
+        return $path;
     }
-    public function getProductUploadedImagePath ($name,$productID, $subDir = false) {
+    public function getProductUploadInnerImagePath ($name,$productID, $subDir = false) {
         $path = $this->getProductUploadInnerDir($productID, $subDir);
         return $path . $name;
     }
@@ -112,13 +112,14 @@ class products extends \engine\objects\api {
         $images = array();
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductAttributes($productID, 'IMAGE');
         $data = $this->getCustomer()->fetch($config);
+        // var_dump($data);
         if (!empty($data)) {
             foreach ($data as $item) {
                 $images[] = array(
                     'name' => $item['Value'],
-                    'normal' => $this->getProductUploadedImagePath($item['Value'], $productID),
-                    'sm' => $this->getProductUploadedImagePath($item['Value'], $productID, 'sm'),
-                    'xs' => $this->getProductUploadedImagePath($item['Value'], $productID, 'xs')
+                    'normal' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
+                    'sm' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'sm'),
+                    'xs' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'xs')
                 );
             }
         }
@@ -299,21 +300,55 @@ class products extends \engine\objects\api {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
+                // adjust features
+                foreach ($features as $groupName => $value) {
+                    $features[$groupName] = explode(',', $value);
+                }
+
                 // add new features
-                foreach ($features as $value) {
-                    if (is_numeric($value)) {
-                        $productFeaturesIDs[] = $value;
+                $featureMap = $this->getAPI()->productfeatures->getFeatures();
+                foreach ($features as $groupName => $featureList) {
+                    if (isset($featureMap[$groupName])) {
+                        foreach ($featureList as $featureName) {
+                            $featureID = array_search($featureName, $featureMap[$groupName]);
+                            if ($featureID === false) {
+                                $data = array();
+                                $data["CustomerID"] = $CustomerID;
+                                $data["FieldName"] = $featureName;
+                                $data["GroupName"] = $groupName;
+                                $featureID = $this->getAPI()->productfeatures->createFeature($data);
+                                $productFeaturesIDs[] = intval($featureID);
+                            } else {
+                                $productFeaturesIDs[] = $featureID;
+                            }
+                        }
                     } else {
-                        $data["FieldName"] = $value;
-                        $data["CustomerID"] = $CustomerID;
-                        $config = $this->getPluginConfiguration()->data->jsapiShopCreateFeature($data);
-                        $featureID = $this->getCustomer()->fetch($config) ?: null;
-                        if (isset($featureID) && $featureID >= 0) {
+                        foreach ($featureList as $featureName) {
+                            $data = array();
+                            $data["CustomerID"] = $CustomerID;
+                            $data["FieldName"] = $featureName;
+                            $data["GroupName"] = $groupName;
+                            $featureID = $this->getAPI()->productfeatures->createFeature($data);
                             $productFeaturesIDs[] = $featureID;
-                            // $this->_getOrSetCachedState('changed:features', true);
                         }
                     }
                 }
+
+                // // add new features
+                // foreach ($features as $value) {
+                //     if (is_numeric($value)) {
+                //         $productFeaturesIDs[] = $value;
+                //     } else {
+                //         $data["FieldName"] = $value;
+                //         $data["CustomerID"] = $CustomerID;
+                //         $config = $this->getPluginConfiguration()->data->jsapiShopCreateFeature($data);
+                //         $featureID = $this->getCustomer()->fetch($config) ?: null;
+                //         if (isset($featureID) && $featureID >= 0) {
+                //             $productFeaturesIDs[] = $featureID;
+                //             // $this->_getOrSetCachedState('changed:features', true);
+                //         }
+                //     }
+                // }
 
                 // create product
                 $validatedValues["CustomerID"] = $CustomerID;
@@ -326,8 +361,8 @@ class products extends \engine\objects\api {
                     throw new Exception('ProductCreateError');
                 }
 
-                // append features (actually this condition must return always true)
-                if (!empty($features)) {
+                // set new features (actually this condition must return always true)
+                if (count($productFeaturesIDs)) {
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
@@ -585,6 +620,7 @@ class products extends \engine\objects\api {
                     $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir($ProductID, 'xs'), $newFileName);
                     $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getProductUploadInnerDir($ProductID), $newFileName);
 
+                    // var_dump($uploadInfo);
                     // $attrData = $initAttrData->getArrayCopy();
                     // $attrData['Attribute'] = 'IMAGE';
                     // $attrData['Value'] = $uploadInfo['filename'];
@@ -599,9 +635,9 @@ class products extends \engine\objects\api {
                 }
                 foreach ($filesToDelete as $fileName) {
 
-                    Path::deleteUploadedFile($this->getProductUploadedImagePath($fileName, $ProductID, 'sm'));
-                    Path::deleteUploadedFile($this->getProductUploadedImagePath($fileName, $ProductID, 'xs'));
-                    Path::deleteUploadedFile($this->getProductUploadedImagePath($fileName, $ProductID));
+                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'sm'));
+                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID, 'xs'));
+                    Path::deleteUploadedFile($this->getProductUploadInnerImagePath($fileName, $ProductID));
 
                     // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'sm'));
                     // $this->deleteOwnUploadedFile($fileName, $this->getProductUploadInnerDir($ProductID, 'xs'));
@@ -609,6 +645,8 @@ class products extends \engine\objects\api {
                 }
 
                 $attributes["IMAGE"] = array_merge($filesToKeep, $uploadedFileNames);
+
+                // var_dump($attributes["IMAGE"]);
 
                 // throw new Exception("Error Processing Request", 1);
                 // set new attributes

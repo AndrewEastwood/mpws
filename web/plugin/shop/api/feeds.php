@@ -179,7 +179,7 @@ class feeds extends \engine\objects\api {
             // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
-                    $images[] = 'http://' . $_SERVER['HTTP_HOST'] . $value['normal'];
+                    $images[] = $this->getCustomerConfiguration()->display->Host . '/' . $value['normal'];
                 }
             }
             if (isset($dataList['items'][$i]['Attributes'])) {

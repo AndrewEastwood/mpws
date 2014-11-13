@@ -76,7 +76,7 @@ define("plugin/shop/toolbox/js/router", [
         productCreate: function () {
             require(['plugin/shop/toolbox/js/view/popupProduct'], function (ViewPopupProduct) {
                 var popupProduct = new ViewPopupProduct();
-                popupProduct.model.fetch();
+                popupProduct.render();
                 popupProduct.$dialog.onHide(function () {
                     Backbone.history.history.back();
                 });
