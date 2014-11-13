@@ -23,14 +23,12 @@
                         {{#if ProductCount }}
                         <a class="list-group-item" href="#/shop/catalog/{{ID}}" rel="category" title="{{Name}}">
                             {{Name}}
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
+                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                         </a>
                         {{else}}
                         <a class="list-group-item disabled" href="javascript://" rel="category" title="{{Name}}">
                             {{Name}}
-                            {{#if ProductCount}}
-                            <span class="badge product-count">{{ProductCount}}</span>
-                            {{/if}}
+                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                         </a>
                         {{/if}}
                     {{/each}}
@@ -59,9 +57,7 @@
                                 <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
                                 {{Name}}
                             </label>
-                            {{#if ProductCount}}
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                            {{/if}}
+                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                         </a>
                         {{else}}
                         <a class="list-group-item" href="javascript://" rel="brand" title="{{Name}}">
@@ -69,9 +65,7 @@
                                 <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
                                 {{Name}}
                             </label>
-                            {{#if ProductCount}}
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                            {{/if}}
+                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                         </a>
                         {{/in_array}}
                     {{/each}}
@@ -131,9 +125,7 @@
                                     <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked">
                                     {{Name}}
                                 </label>
-                                {{#if ProductCount}}
-                                <span class="badge label-success product-count">{{ProductCount}}</span>
-                                {{/if}}
+                                <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                             </a>
                             {{else}}
                             <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
@@ -141,9 +133,7 @@
                                     <input type="checkbox" value="{{ID}}" name="filter_commonFeatures">
                                     {{Name}}
                                 </label>
-                                {{#if ProductCount}}
-                                <span class="badge label-success product-count">{{ProductCount}}</span>
-                                {{/if}}
+                                <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                             </a>
                             {{/in_array}}
                         {{/each}}
@@ -173,9 +163,7 @@
                                 <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
                                 {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
                             </label>
-                            {{#if ProductCount}}
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                            {{/if}}
+                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                         </a>
                         {{else}}
                         <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
@@ -183,9 +171,7 @@
                                 <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
                                 {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
                             </label>
-                            {{#if ProductCount}}
-                            <span class="badge label-success product-count">{{ProductCount}}</span>
-                            {{/if}}
+                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                         </a>
                         {{/in_array}}
                     {{/each}}

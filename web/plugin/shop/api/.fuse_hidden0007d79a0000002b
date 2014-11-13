@@ -301,10 +301,6 @@ class catalog extends \engine\objects\api {
                 $categories[$category['ID']]['ProductCount'] -= $currentProductCount;
                 $categories[$category['ID']]['Active'] = true;
             }
-
-            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($category['ID']);
-            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
-            $categories[$category['ID']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
             // $count = 0;
@@ -336,10 +332,6 @@ class catalog extends \engine\objects\api {
                 $statuses[$status]['ProductCount'] -= $currentProductCount;
                 $statuses[$status]['Active'] = true;
             }
-
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($status);
-            $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
-            $statuses[$status]['Total'] = $this->getUniqueProductsCount($filterData);
         }
         foreach ($filterOptionsAvailable['filter_commonFeatures'] as $featureGroup => $featureList) {
             $group = array();
@@ -365,9 +357,6 @@ class catalog extends \engine\objects\api {
                     $group[$key]['ProductCount'] -= $currentProductCount;
                     $group[$key]['Active'] = true;
                 }
-                $dataConfigCategoryInfo['condition']['FeatureID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition(array($key), 'IN');
-                $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
-                $group[$key]['Total'] = $this->getUniqueProductsCount($filterData);
             }
             $features[$featureGroup] = $group;
         }
