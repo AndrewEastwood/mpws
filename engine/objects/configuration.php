@@ -91,22 +91,22 @@ class configuration {
         ));
     }
 
-    public function jsapiUtil_GetTableStatusFieldOptions ($table) {
-        return $this->jsapiUtil_GetFieldOptions($table, 'Status');
-    }
+    // public function jsapiUtil_GetTableStatusFieldOptions ($table) {
+    //     return $this->jsapiUtil_GetFieldOptions($table, 'Status');
+    // }
 
-    public function jsapiUtil_GetFieldOptions ($table, $field) {
-        return $this->jsapiGetDataSourceConfig(array(
-            "action" => "call",
-            "procedure" => array(
-                "name" => "getFieldOptions",
-                "parameters" => array($table, $field)
-            ),
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
+    // public function jsapiUtil_GetFieldOptions ($table, $field) {
+    //     return $this->jsapiGetDataSourceConfig(array(
+    //         "action" => "call",
+    //         "procedure" => array(
+    //             "name" => "getFieldOptions",
+    //             "parameters" => array($table, $field)
+    //         ),
+    //         "options" => array(
+    //             "expandSingleRecord" => true
+    //         )
+    //     ));
+    // }
 
 }
 

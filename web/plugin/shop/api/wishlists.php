@@ -34,10 +34,10 @@ class wishlists extends \engine\objects\api {
         }
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
-            if (!isset($resp[$productID])) {
+            if (!isset($items[$productID])) {
                 $product = $this->getAPI()->products->getProductByID($productID);
                 $items[$productID] = $product;
-                $_SESSION[$this->_listKey_Wish] = $resp;
+                $_SESSION[$this->_listKey_Wish] = $items;
             }
             $resp = array_values($items);
         } else
@@ -49,13 +49,13 @@ class wishlists extends \engine\objects\api {
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
             if ($productID === "*") {
-                $resp = array();
-            } elseif (isset($resp[$productID])) {
-                unset($resp[$productID]);
+                $items = array();
+            } elseif (isset($items[$productID])) {
+                unset($items[$productID]);
             }
             $_SESSION[$this->_listKey_Wish] = $items;
+            $resp = array_values($items);
         }
-        $resp = array_values($items);
     }
 
     public function productIsInWishList ($id) {

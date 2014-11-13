@@ -65,11 +65,11 @@ class data extends \engine\objects\configuration {
         $config['additional'] = array(
             "shop_categories" => array(
                 "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
-                "fields" => array("Status")
+                "fields" => array("@shop_categories.Status AS CategoryStatus")
             ),
             "shop_origins" => array(
                 "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
-                "fields" => array("Status")
+                "fields" => array("@shop_origins.Status AS OriginStatus")
             ),
             "shop_productFeatures" => array(
                 "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
@@ -190,9 +190,10 @@ class data extends \engine\objects\configuration {
         $config['limit'] = 0;
         $config['group'] = null;
         // $config['group'] = "shop_products.ID";
-        $config['options'] = array(
-            "expandSingleRecord" => true
-        );
+        $config['options'] = null;
+        // array(
+        //     "expandSingleRecord" => true
+        // );
         return $config;
     }
 
@@ -386,7 +387,7 @@ class data extends \engine\objects\configuration {
         return $this->jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
-                "name" => "getCatalogBrands",
+                "name" => "getShopCatalogBrands",
                 "parameters" => array($categoryID)
             )
         ));
@@ -426,7 +427,7 @@ class data extends \engine\objects\configuration {
         return $this->jsapiGetDataSourceConfig(array(
             "action" => "call",
             "procedure" => array(
-                "name" => "getShopCategoryLocation",
+                "name" => "getShopCatalogLocation",
                 "parameters" => array($id)
             )
         ));

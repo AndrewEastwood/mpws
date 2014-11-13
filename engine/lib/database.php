@@ -145,6 +145,8 @@ class database {
         if (!empty($fieldsToSelectFromDBClear))
             $this->dbo->select_many($fieldsToSelectFromDBClear);
 
+        // var_dump($fieldsToSelectFromDBClear);
+
         if (!empty($config['additional']))
             foreach ($config['additional'] as $addSource => $addConfig) {
                 if (empty($addConfig['fields']))

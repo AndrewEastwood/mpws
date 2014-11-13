@@ -121,39 +121,34 @@
                 <div class="spacer"></div>
                 {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
                     <span class="helptext">К-ість товарів за характеристиками<i class="fa fa-level-down"></i></span>
-                    <div class="list-group list-group-category-brands">
+                    <div class="list-group list-group-category-features">
                     {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
                         <h4>{{@key}}</h4>
-                        
                         {{#each this }}
-                            {{#if Count }}
-                                {{#in_array ../../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
-                                <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
-                                    <label>
-                                        <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked"> 
-                                        {{Name}}
-                                    </label>
-                                    <span class="badge label-success product-count">{{Count}}</span>
-                                </a>
-                                {{else}}
-                                <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
-                                    <label>
-                                        <input type="checkbox" value="{{ID}}" name="filter_commonFeatures"> 
-                                        {{Name}}
-                                    </label>
-                                    <span class="badge label-success product-count">{{Count}}</span>
-                                </a>
-                                {{/in_array}}
-                            {{else}}
-                            <a class="list-group-item disabled" href="javascript://" rel="feature" title="{{Name}}">
+                            {{#in_array ../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
+                            <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
                                 <label>
-                                    <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" disabled="disabled">
+                                    <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked">
                                     {{Name}}
                                 </label>
-                                <span class="badge product-count">{{Count}}</span>
+                                {{#if ProductCount}}
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                                {{/if}}
                             </a>
-                            {{/if}}
+                            {{else}}
+                            <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
+                                <label>
+                                    <input type="checkbox" value="{{ID}}" name="filter_commonFeatures">
+                                    {{Name}}
+                                </label>
+                                {{#if ProductCount}}
+                                <span class="badge label-success product-count">{{ProductCount}}</span>
+                                {{/if}}
+                            </a>
+                            {{/in_array}}
                         {{/each}}
+
+
                     {{/each}}
                     </div>
                 {{/mpwsIsNotEmpty}}
