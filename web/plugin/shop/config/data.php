@@ -89,7 +89,34 @@ class data extends \engine\objects\configuration {
                 // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
-                    $config['condition']["shop_products.ID"] = $this->jsapiCreateDataSourceCondition($value);
+                    $chunks = explode('=', $value);
+                    // var_dump($chunks);
+                    if (count($chunks) === 2) {
+                        $keyToSearch = strtolower($chunks[0]);
+                        $valToSearch = $chunks[1];
+                        $conditionField = '';
+                        $conditionOp = '=';
+                        switch ($keyToSearch) {
+                            case 'id':
+                                $conditionField = "shop_products.ID";
+                                $valToSearch = intval($valToSearch);
+                                break;
+                            case 'n':
+                                $conditionField = "shop_products.Name";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
+                            case 'd':
+                                $conditionField = "shop_products.Description";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
+                        }
+                        if (!empty($conditionField))
+                            $config['condition'][$conditionField] = $this->jsapiCreateDataSourceCondition($valToSearch, $conditionOp);
+                    }
+
+
                     // $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["shop_products.Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
                     // $config['condition']["shop_products.Description"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
@@ -100,6 +127,7 @@ class data extends \engine\objects\configuration {
             }
         }
 
+        // var_dump($config['condition']);
         return $config;
     }
 

@@ -120,12 +120,32 @@ class feeds extends \engine\objects\api {
             }
         }
 
+        $errors = array();
+
+        $nativeData = array();
+        // convert to native structure
+        foreach ($namedDataArray as &$rawProductData) {
+            $featureChunks = explode('|', $rawProductData['Features']);
+            $features = array();
+            foreach ($featureChunks as $featureChunkItem) {
+                $featureKeyValue = explode('=', $featureChunkItem);
+                if (count($featureKeyValue) !== 2) {
+                    $errors[] = 'Unable to parse feature chunk: ' . $featureChunkItem;
+                } else {
+                    $features[$featureKeyValue[0]] = $featureKeyValue[1];
+                }
+            }
+            $rawProductData['Features'] = $features;
+        }
+
         // disable all products
         $this->getAPI()->products->archiveAllProducts();
 
         $rez = array(
             'data' => $namedDataArray,
-            'readCount' => count($namedDataArray)
+            'readCount' => count($namedDataArray),
+            'success' => empty($errors),
+            'errors' => $errors
         );
         // echo '<pr>';
         // var_dump($namedDataArray);

@@ -715,7 +715,6 @@ class products extends \engine\objects\api {
     }
 
     public function updateOrInsertProduct ($data) {
-        $result = array();
         $id = null;
         // we have the product item already in db
         if (isset($data['ID'])) {
@@ -724,17 +723,7 @@ class products extends \engine\objects\api {
         } elseif (isset($data['Name']) && isset($data['Model'])) {
             $id = $this->getProductIDByNameAndModel($data['Name'], $data['Model']);
         }
-        // update or create category
-        // update or create origin
-        // downlod images
-        if ($id === null) {
-            $result = $this->updateProduct($id, $data);
-        } else {
-            $result = $this->createProduct($data);
-        }
-        $result['created'] = $result['success'] && $id === null;
-        $result['updated'] = $result['success'] && $id !== null;
-        return $result;
+        $this->updateProduct();
     }
 
     public function archiveProduct ($ProductID) {
