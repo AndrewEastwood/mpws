@@ -17,20 +17,30 @@ class origins extends \engine\objects\api {
     // ORIGINS
     // -----------------------------------------------
     // -----------------------------------------------
+
+    private function __adjustOrigin (&$origin) {
+        $origin['ID'] = intval($origin['ID']);
+        $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
+        return $origin;
+    }
+
     public function getOriginByID ($originID) {
         if (empty($originID) || !is_numeric($originID))
             return null;
-
         $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginItem($originID);
         $origin = $this->getCustomer()->fetch($config);
-
         if (empty($origin))
             return null;
+        return $this->__adjustOrigin($origin);
+    }
 
-        $origin['ID'] = intval($origin['ID']);
-        $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
-        // $origin['_statuses'] = $this->_getCachedTableStatuses($this->getPluginConfiguration()->data->Table_ShopOrigins);
-        return $origin;
+    public function getOriginByName ($originName) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
+        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($originName);
+        $origin = $this->getCustomer()->fetch($config);
+        if (empty($origin))
+            return null;
+        return $this->__adjustOrigin($origin);
     }
 
     public function getOrigins_List (array $options = array()) {

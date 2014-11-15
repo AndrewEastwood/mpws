@@ -121,8 +121,6 @@ class feeds extends \engine\objects\api {
         }
 
         $errors = array();
-
-        $nativeData = array();
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
             $featureChunks = explode('|', $rawProductData['Features']);
@@ -135,7 +133,20 @@ class feeds extends \engine\objects\api {
                     $features[$featureKeyValue[0]] = $featureKeyValue[1];
                 }
             }
-            $rawProductData['Features'] = $features;
+            $productItem = array();
+            $productItem['Name'] = trim($rawProductData['Name']);
+            $productItem['Model'] = trim($rawProductData['Model']);
+            $productItem['CategoryName'] = trim($rawProductData['CategoryName']);
+            $productItem['OriginName'] = trim($rawProductData['OriginName']);
+            $productItem['Price'] = floatval($rawProductData['Price']);
+            $productItem['Status'] = $rawProductData['Status'];
+            $productItem['IsPromo'] = $rawProductData['IsPromo'] === '+';
+            $productItem['Images'] = explode(PHP_EOL, $rawProductData['Images']);
+            $productItem['TAGS'] = $rawProductData['TAGS'];
+            $productItem['Description'] = trim($rawProductData['Description']);
+            $productItem['Features'] = $features;
+            $rez = $this->getAPI()->products->updateOrInsertProduct($productItem);
+            $errors = array_merge($errors, $rez['errors']);
         }
 
         // disable all products

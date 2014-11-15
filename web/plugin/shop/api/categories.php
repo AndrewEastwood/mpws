@@ -18,16 +18,31 @@ class categories extends \engine\objects\api {
     // CATEGORIES
     // -----------------------------------------------
     // -----------------------------------------------
+
+    private function __adjustCategory (&$category) {
+        $category['ID'] = intval($category['ID']);
+        $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
+        $category['_isRemoved'] = $category['Status'] === 'REMOVED';
+        $category['_location'] = $this->getCategoryLocation($category['ID']);
+        return $category;
+    }
+
     public function getCategoryByID ($categoryID) {
+        if (empty($categoryID) || !is_numeric($categoryID))
+            return null;
         $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem($categoryID);
         $category = $this->getCustomer()->fetch($config);
         if (empty($category))
             return null;
-        $category['ID'] = intval($category['ID']);
-        $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
-        $category['_isRemoved'] = $category['Status'] === 'REMOVED';
-        $category['_location'] = $this->getCategoryLocation($categoryID);
-        return $category;
+        return $this->__adjustCategory($category);
+    }
+    public function getCategoryByName ($categoryName) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
+        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($categoryName);
+        $category = $this->getCustomer()->fetch($config);
+        if (empty($category))
+            return null;
+        return $this->__adjustCategory($category);
     }
 
     public function getCategories_List (array $options = array()) {
