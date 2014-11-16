@@ -16,16 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `mpws_light`
---
-
-/*!40000 DROP DATABASE IF EXISTS `mpws_light`*/;
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `mpws_light` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `mpws_light`;
-
---
 -- Table structure for table `mpws_accountAddresses`
 --
 
@@ -579,7 +569,7 @@ CREATE TABLE `shop_products` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `backupProductPrice` BEFORE UPDATE ON `shop_products` FOR EACH ROW IF NEW.Price != OLD.Price THEN
+/*!50003 CREATE*/ /*!50017 DEFINER=CURRENT_USER*/ /*!50003 TRIGGER `backupProductPrice` BEFORE UPDATE ON `shop_products` FOR EACH ROW IF NEW.Price != OLD.Price THEN
     INSERT INTO shop_productPrices SET CustomerID = NEW.CustomerID, ProductID = NEW.ID, Price = OLD.Price, DateCreated = NOW();
 END IF */;;
 DELIMITER ;
@@ -667,7 +657,7 @@ CREATE TABLE `shop_settings` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCatalogBrands`(IN `cat_ids` VARCHAR(500))
+CREATE DEFINER=CURRENT_USER PROCEDURE `getShopCatalogBrands`(IN `cat_ids` VARCHAR(500))
 BEGIN
   SELECT o.ID,
          o.Name
@@ -692,7 +682,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCatalogLocation`(IN `catid` INT)
+CREATE DEFINER=CURRENT_USER PROCEDURE `getShopCatalogLocation`(IN `catid` INT)
 BEGIN
 SELECT T2.ID, T2.Name
 FROM (
@@ -723,7 +713,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getShopCatalogPriceEdges`(IN `cat_ids` VARCHAR(100))
+CREATE DEFINER=CURRENT_USER PROCEDURE `getShopCatalogPriceEdges`(IN `cat_ids` VARCHAR(100))
 BEGIN
 SELECT MAX( p.Price ) AS 'PriceMax' , MIN( p.price ) AS 'PriceMin' FROM shop_products AS `p` WHERE FIND_IN_SET (p.CategoryID, cat_ids);
 END ;;
