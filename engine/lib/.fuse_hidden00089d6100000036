@@ -153,7 +153,7 @@ class uploadHandler
                 )
             ),
             'print_response' => true,
-            'use_unique_hash_for_names' => false
+            'use_time_for_names' => false
         );
         if ($options) {
             $this->options = $options + $this->options;
@@ -1373,7 +1373,7 @@ class uploadHandler
             // var_dump($tmpFile);
             $files[] = $this->handle_file_upload(
                 $tmpFile,
-                $this->options['use_unique_hash_for_names'] ? $fileName : $pInfo['basename'],
+                $this->options['use_time_for_names'] ? time() . '.' . $pInfo['extension'] : $pInfo['basename'],
                 $size,
                 $this->get_server_var('CONTENT_TYPE'),
                 null,

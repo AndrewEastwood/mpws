@@ -42,7 +42,7 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
                 autoUpload: true,
                 limitMultiFileUploads: 1,
                 maxNumberOfFiles: 1,
-                acceptFileTypes: /(\.|\/)(xlsx)$/i,
+                acceptFileTypes: /(\.|\/)(xls)$/i,
                 maxFileSize: 15 * 1024 * 1024, // 15 MB
             }).on('fileuploadadd', function (e, data) {
             }).on('fileuploadprogressall', function (e, data) {

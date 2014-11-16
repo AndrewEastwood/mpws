@@ -124,6 +124,25 @@ class feeds extends \engine\objects\api {
         $parsedProducts = array();
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
+
+            $productItem = array();
+            $productItem['Name'] = trim($rawProductData['Name']);
+            $productItem['Model'] = trim($rawProductData['Model']);
+            $productItem['CategoryName'] = trim($rawProductData['CategoryName']) ?: 'noname';
+            $productItem['OriginName'] = trim($rawProductData['OriginName']);
+            $productItem['Price'] = floatval($rawProductData['Price']);
+            $productItem['Status'] = $rawProductData['Status'];
+            $productItem['IsPromo'] = $rawProductData['IsPromo'] === '+';
+            $productItem['TAGS'] = $rawProductData['TAGS'];
+            $productItem['Description'] = trim($rawProductData['Description']);
+            $productItem['Features'] = null;
+            $productItem['Warranty'] = $rawProductData['Warranty'];
+
+            if (empty($productItem['OriginName'])) {
+                $errors[] = 'No OriginName for ' . $productItem['Name'] . ' ' . $productItem['Model'];
+                continue;
+            }
+
             $featureChunks = explode('|', $rawProductData['Features']);
             $features = array();
             foreach ($featureChunks as $featureChunkItem) {
@@ -134,16 +153,23 @@ class feeds extends \engine\objects\api {
                     $features[$featureKeyValue[0]] = $featureKeyValue[1];
                 }
             }
+            $productItem['Features'] = $features;
 
-            $images = explode(PHP_EOL, $rawProductData['Images']);
+
+            // var_dump($rawProductData['Images']);
+            $images = array();
+            $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
             $imagesToDownload = array();
-
-            foreach ($images as $imgUrl) {
+            foreach ($imagesUrls as $imgUrl) {
                 $urlInfo = parse_url($imgUrl);
+                $pInfo = pathinfo($urlInfo['path']);
                 if ($urlInfo['host'] !== $this->getCustomerConfiguration()->display->Host) {
                     $imagesToDownload[] = $imgUrl;
+                } else {
+                    $images[] = $pInfo['basename'];
                 }
             }
+            // var_dump($imagesToDownload);
             // download image here
             // $urls = array();
             // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
@@ -151,31 +177,30 @@ class feeds extends \engine\objects\api {
             $options = array(
                 'script_url' =>  $this->getCustomer()->getConfiguration()->urls->upload,
                 'download_via_php' => true,
-                'web_import_temp_dir' => Path::getAppTemporaryDirectory(),
-                'upload_dir' => Path::getUploadTemporaryDirectory(),
-                'print_response' => false
+                'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
+                'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
+                'print_response' => false,
+                'use_unique_hash_for_names' => true,
+                'correct_image_extensions' => true
             );
             $upload_handler = new JqUploadLib($options, false);
             $rez = $upload_handler->importFromUrl($imagesToDownload, false);
+            // var_dump($rez);
+            foreach ($rez['web'] as $impageUploadInfo) {
+                $images[] = $impageUploadInfo->name;
+            }
+            for ($i = 0, $cnt = count($images); $i < $cnt; $i++) {
+                $productItem['file' . ($i + 1)] = $images[$i];
+                
+            }
+            // // $productItem['Images'] = $images;
+            // var_dump($productItem);
+            // return;
 
-            var_dump($rez);
-            return;
-
-            $productItem = array();
-            $productItem['Name'] = trim($rawProductData['Name']);
-            $productItem['Model'] = trim($rawProductData['Model']);
-            $productItem['CategoryName'] = trim($rawProductData['CategoryName']);
-            $productItem['OriginName'] = trim($rawProductData['OriginName']);
-            $productItem['Price'] = floatval($rawProductData['Price']);
-            $productItem['Status'] = $rawProductData['Status'];
-            $productItem['IsPromo'] = $rawProductData['IsPromo'] === '+';
-            $productItem['Images'] = ;
-            $productItem['TAGS'] = $rawProductData['TAGS'];
-            $productItem['Description'] = trim($rawProductData['Description']);
-            $productItem['Features'] = $features;
             $rez = $this->getAPI()->products->updateOrInsertProduct($productItem);
             $errors = array_merge($errors, $rez['errors']);
             $parsedProducts[] = $productItem;
+            break;
         }
 
         // disable all products

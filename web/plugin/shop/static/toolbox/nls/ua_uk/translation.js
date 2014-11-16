@@ -103,6 +103,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_product_section_details_filed_Status: "Статус:",
         popup_product_section_details_filed_Tags: "Теги",
         popup_product_section_details_filed_ISBN: "ISBN",
+        popup_product_section_details_filed_Warranty: 'Гарантія',
         popup_product_section_details_filed_Features: "Властивості",
         popup_product_error_atField_CategoryID: 'Не вибрано категорію',
         popup_product_error_CategoryIDIsNotInt: 'Код категорії не правильний',

@@ -46,6 +46,7 @@ class products extends \engine\objects\api {
 
     private function __adjustProduct (&$product, $skipRelations = false) {
         // adjusting
+        $productID = intval($product['ID']);
         $product['ID'] = intval($product['ID']);
         $product['OriginID'] = intval($product['OriginID']);
         $product['CategoryID'] = intval($product['CategoryID']);
@@ -282,6 +283,7 @@ class products extends \engine\objects\api {
             'Status' => array('string', 'skipIfUnset'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
+            'Warranty' => array('skipIfUnset'),
             'Features' =>  array('string', 'notEmpty'),
             'file1' => array('string', 'skipIfUnset'),
             'file2' => array('string', 'skipIfUnset'),
@@ -308,6 +310,10 @@ class products extends \engine\objects\api {
                 if (isset($validatedValues['ISBN'])) {
                     $attributes["ISBN"] = $validatedValues['ISBN'];
                     unset($validatedValues['ISBN']);
+                }
+                if (isset($validatedValues['Warranty'])) {
+                    $attributes["WARRANTY"] = $validatedValues['Warranty'];
+                    unset($validatedValues['Warranty']);
                 }
                 // I don't think loop for 5 items is better for perfomance
                 if (!empty($validatedValues['file1'])) {
@@ -447,7 +453,7 @@ class products extends \engine\objects\api {
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS');
+                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'Warranty');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
                             continue;
@@ -495,6 +501,7 @@ class products extends \engine\objects\api {
             'Status' => array('string', 'skipIfUnset'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
+            'Warranty' => array('skipIfUnset'),
             'Features' =>  array('string', 'notEmpty', 'skipIfUnset'),
             'file1' => array('string', 'skipIfUnset'),
             'file2' => array('string', 'skipIfUnset'),
@@ -521,6 +528,10 @@ class products extends \engine\objects\api {
                 if (isset($validatedValues['ISBN'])) {
                     $attributes["ISBN"] = $validatedValues['ISBN'];
                     unset($validatedValues['ISBN']);
+                }
+                if (isset($validatedValues['Warranty'])) {
+                    $attributes["WARRANTY"] = $validatedValues['Warranty'];
+                    unset($validatedValues['Warranty']);
                 }
                 // extract features
                 if (isset($validatedValues['Features'])) {
@@ -708,7 +719,7 @@ class products extends \engine\objects\api {
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS');
+                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'Warranty');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
                             continue;
@@ -767,13 +778,15 @@ class products extends \engine\objects\api {
             $category = $this->getAPI()->categories->createCategory(array(
                 'Name' => $data['CategoryName']
             ));
+            unset($data['CategoryName']);
         }
         if ($origin === null) {
             $origin = $this->getAPI()->origins->createOrigin(array(
                 'Name' => $data['OriginName']
             ));
+            unset($data['OriginName']);
         }
-        if ($category['success'] && $origin['success']) {
+        if (isset($category['ID']) && isset($origin['ID'])) {
             // we have the product item already in db
             if (isset($data['ID'])) {
                 $product = $this->getProductByID($data['ID']);
@@ -796,10 +809,12 @@ class products extends \engine\objects\api {
             $result['created'] = $result['success'] && $productID === null;
             $result['updated'] = $result['success'] && $productID !== null;
         } else {
-            if (!$category['success'])
+            if (!isset($category['success']))
                 $errors[] = 'Unable to create category';
-            if (!$origin['success'])
+            if (!isset($origin['success']))
                 $errors[] = 'Unable to create origin';
+            // var_dump($origin);
+            // var_dump($category);
         }
         $result['errors'] = $errors;
         return $result;

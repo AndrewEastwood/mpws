@@ -71,6 +71,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             IsPromo: self.$('#ispromo').is(':checked'),
                             Tags: self.$('#tags').val(),
                             ISBN: self.$('#isbn').val(),
+                            Warranty: self.$('#warranty').val(),
                             Features: self.getFeaturesMap(),
                             file1: self.$('#file1').val(),
                             file2: self.$('#file2').val(),

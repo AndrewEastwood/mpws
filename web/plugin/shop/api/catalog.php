@@ -126,9 +126,10 @@ class catalog extends \engine\objects\api {
         // get all brands for both current category and sub-categories
         $dataConfigCategoryAllBrands = $this->getPluginConfiguration()->data->jsapiShopCatalogBrands(implode(',', $cetegoriesIDs));
         $dataCategoryAllBrands = $this->getCustomer()->fetch($dataConfigCategoryAllBrands);
-        foreach ($dataCategoryAllBrands as $key => $brandItem) {
-            $dataCategoryAllBrands[$key]['ID'] = intval($brandItem['ID']);
-        }
+        if ($dataCategoryAllBrands)
+            foreach ($dataCategoryAllBrands as $key => $brandItem) {
+                $dataCategoryAllBrands[$key]['ID'] = intval($brandItem['ID']);
+            }
 
         // set categories and brands
         $filterOptionsAvailable['filter_categoryBrands'] = $dataCategoryAllBrands ?: array();
