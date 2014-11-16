@@ -134,7 +134,7 @@ class customer {
 
     public function getCustomerID () {
         $info = $this->getCustomerInfo();
-        return isset($info['ID']) ? $info['ID'] : null;
+        return isset($info['ID']) ? intval($info['ID']) : null;
     }
 
     public function getCustomerInfo () {

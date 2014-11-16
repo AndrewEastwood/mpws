@@ -155,7 +155,6 @@ class feeds extends \engine\objects\api {
             }
             $productItem['Features'] = $features;
 
-
             // var_dump($rawProductData['Images']);
             $images = array();
             $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
@@ -198,6 +197,7 @@ class feeds extends \engine\objects\api {
             // return;
 
             $rez = $this->getAPI()->products->updateOrInsertProduct($productItem);
+            // var_dump($rez);
             $errors = array_merge($errors, $rez['errors']);
             $parsedProducts[] = $productItem;
             break;

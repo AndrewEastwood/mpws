@@ -46,3 +46,5 @@ Pwd: 1234
 INSERT INTO `mpws_customer` (`ID`, `ExternalKey`, `Name`, `Status`, `HomePage`, `DateCreated`, `DateUpdated`) VALUES (NULL, 'leogroup_com_ua', 'leogroup_com_ua', 'ACTIVE', '', NOW(), NOW());
 
 INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsOnline`, `FirstName`, `LastName`, `EMail`, `Phone`, `Password`, `ValidationString`, `Status`, `DateLastAccess`, `DateCreated`, `DateUpdated`) VALUES (NULL, 1, 1, 'Super','Admin','admin@leogroup.com.ua','(546) 565-65-65','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE', NOW(), NOW(), NOW());
+
+INSERT INTO `mpws_permissions` VALUES (NULL,1,1,1,1,0,1,0,NOW(), NOW());
