@@ -16,12 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `mpws_light`
---
-
-USE `mpws_light`;
-
---
 -- Table structure for table `mpws_accountAddresses`
 --
 
@@ -738,4 +732,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-16 13:14:51
+-- Dump completed on 2014-11-16 13:16:23
