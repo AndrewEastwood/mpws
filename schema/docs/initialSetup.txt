@@ -42,4 +42,7 @@ Add Demo User:
 Login: testuser
 Pwd: 1234
 
-INSERT INTO `mpws_light`.`mpws_users` (`Name`, `Password`, `Active`, `IsOnline`, `Permisions`, `Role`, `DateLastAccess`, `DateCreated`, `DateUpdated`) VALUES ('testuser', '5cf52c7d3cd918c35b2326a3ab702cf4', '1', '0', '*.*', 'SUPERADMIN', '2012-11-14 00:00:00', '2012-11-14 00:00:00', '2012-11-14 00:00:00');
+
+INSERT INTO `mpws_customer` (`ID`, `ExternalKey`, `Name`, `Status`, `HomePage`, `DateCreated`, `DateUpdated`) VALUES (NULL, 'leogroup_com_ua', 'leogroup_com_ua', 'ACTIVE', '', NOW(), NOW());
+
+INSERT INTO `mpws_accounts` (`ID`, `CustomerID`, `IsOnline`, `FirstName`, `LastName`, `EMail`, `Phone`, `Password`, `ValidationString`, `Status`, `DateLastAccess`, `DateCreated`, `DateUpdated`) VALUES (NULL, 1, 1, 'Super','Admin','admin@leogroup.com.ua','(546) 565-65-65','b2cff1386ea9cb5744731ac8e0d299dd','8de111e04ec15fc171c7723caa5342e2','ACTIVE', NOW(), NOW(), NOW());

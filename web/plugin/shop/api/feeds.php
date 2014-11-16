@@ -134,6 +134,33 @@ class feeds extends \engine\objects\api {
                     $features[$featureKeyValue[0]] = $featureKeyValue[1];
                 }
             }
+
+            $images = explode(PHP_EOL, $rawProductData['Images']);
+            $imagesToDownload = array();
+
+            foreach ($images as $imgUrl) {
+                $urlInfo = parse_url($imgUrl);
+                if ($urlInfo['host'] !== $this->getCustomerConfiguration()->display->Host) {
+                    $imagesToDownload[] = $imgUrl;
+                }
+            }
+            // download image here
+            // $urls = array();
+            // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
+            // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
+            $options = array(
+                'script_url' =>  $this->getCustomer()->getConfiguration()->urls->upload,
+                'download_via_php' => true,
+                'web_import_temp_dir' => Path::getAppTemporaryDirectory(),
+                'upload_dir' => Path::getUploadTemporaryDirectory(),
+                'print_response' => false
+            );
+            $upload_handler = new JqUploadLib($options, false);
+            $rez = $upload_handler->importFromUrl($imagesToDownload, false);
+
+            var_dump($rez);
+            return;
+
             $productItem = array();
             $productItem['Name'] = trim($rawProductData['Name']);
             $productItem['Model'] = trim($rawProductData['Model']);
@@ -142,7 +169,7 @@ class feeds extends \engine\objects\api {
             $productItem['Price'] = floatval($rawProductData['Price']);
             $productItem['Status'] = $rawProductData['Status'];
             $productItem['IsPromo'] = $rawProductData['IsPromo'] === '+';
-            $productItem['Images'] = explode(PHP_EOL, $rawProductData['Images']);
+            $productItem['Images'] = ;
             $productItem['TAGS'] = $rawProductData['TAGS'];
             $productItem['Description'] = trim($rawProductData['Description']);
             $productItem['Features'] = $features;
@@ -212,7 +239,7 @@ class feeds extends \engine\objects\api {
             // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
-                    $images[] = $this->getCustomerConfiguration()->display->Host . '/' . $value['normal'];
+                    $images[] = $this->getCustomerConfiguration()->display->Scheme . '//' . $this->getCustomerConfiguration()->display->Host . '/' . $value['normal'];
                 }
             }
             if (isset($dataList['items'][$i]['Attributes'])) {
