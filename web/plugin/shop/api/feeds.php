@@ -121,6 +121,7 @@ class feeds extends \engine\objects\api {
         }
 
         $errors = array();
+        $parsedProducts = array();
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
             $featureChunks = explode('|', $rawProductData['Features']);
@@ -147,14 +148,15 @@ class feeds extends \engine\objects\api {
             $productItem['Features'] = $features;
             $rez = $this->getAPI()->products->updateOrInsertProduct($productItem);
             $errors = array_merge($errors, $rez['errors']);
+            $parsedProducts[] = $productItem;
         }
 
         // disable all products
-        $this->getAPI()->products->archiveAllProducts();
+        // $this->getAPI()->products->archiveAllProducts();
 
         $rez = array(
-            'data' => $namedDataArray,
-            'readCount' => count($namedDataArray),
+            'data' => $parsedProducts,
+            'readCount' => count($parsedProducts),
             'success' => empty($errors),
             'errors' => $errors
         );

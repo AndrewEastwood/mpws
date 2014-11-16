@@ -765,12 +765,12 @@ class products extends \engine\objects\api {
         // create non-existent category and/or origin
         if ($category === null) {
             $category = $this->getAPI()->categories->createCategory(array(
-                'Name' = $data['CategoryName']
+                'Name' => $data['CategoryName']
             ));
         }
         if ($origin === null) {
             $origin = $this->getAPI()->origins->createOrigin(array(
-                'Name' = $data['OriginName']
+                'Name' => $data['OriginName']
             ));
         }
         if ($category['success'] && $origin['success']) {
