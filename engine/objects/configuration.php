@@ -113,19 +113,43 @@ class configuration {
             "source" => "mpws_tasks",
             "action" => "insert",
             "data" => array(
+                'CustomerID' => $data['CustomerID'],
+                'Group' => $data['Group'],
                 'Name' => $data['Name'],
-                'PrcPath' => $data['PrcPath'],
-                'PID' => $data['PID']
+                'PrcPath' => isset($data['PrcPath']) ? $data['PrcPath'] : '',
+                'PID' => isset($data['PID']) ? $data['PID'] : '',
+                'Params' => isset($data['Params']) ? $data['Params'] : ''
             ),
             "options" => null
         ));
     }
-    public function jsapiRemoveTask ($id) {
+    public function jsapiGetGroupTasks ($groupName, $active = false, $completed = false) {
+        $config = $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "select",
+            'condition' => array(
+                'Group' => $this->jsapiCreateDataSourceCondition($groupName)
+            ),
+            "options" => null
+        ));
+        if ($active) {
+            $config['condition']['IsRunning'] = $this->jsapiCreateDataSourceCondition(1);
+        }
+        if ($completed) {
+            $config['condition']['Complete'] = $this->jsapiCreateDataSourceCondition(1);
+        }
+        return $config;
+    }
+    public function jsapiStopTask ($id) {
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "mpws_tasks",
-            "action" => "delete",
+            "action" => "update",
             'condition' => array(
                 'ID' => $this->jsapiCreateDataSourceCondition($id)
+            ),
+            "data" => array(
+                'IsRunning' => 0,
+                'Complete' => 1
             ),
             "options" => null
         ));

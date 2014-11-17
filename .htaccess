@@ -12,6 +12,7 @@ RewriteRule ^static/(customers|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/
 RewriteRule ^api\.js?(.*) /engine/controllers/api.php?$1 [QSA,L]
 RewriteRule ^auth\.js?(.*) /engine/controllers/auth.php?$1 [QSA,L]
 RewriteRule ^upload\.js?(.*) /engine/controllers/upload.php?$1 [QSA,L]
+RewriteRule ^background/?(.*) /engine/controllers/background.php?$1 [QSA,L]
 
 
 # NEW API

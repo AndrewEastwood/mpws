@@ -259,7 +259,7 @@ class categories extends \engine\objects\api {
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
-            $filterOptionsApplied[$key] = Utils::array_get_value($options, $key, $filterOptions[$key]);// Request::fromGET($key, $filterOptions[$key]);
+            $filterOptionsApplied[$key] = Utils::array_get_value($options, $key, $filterOptions[$key]);// Request::pickFromGET($key, $filterOptions[$key]);
             if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
                 $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
             if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")

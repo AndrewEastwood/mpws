@@ -80,24 +80,45 @@ class feeds extends \engine\objects\api {
                     'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
                 );
             }
-        if ($listFeedsUploaded)
+        if ($listFeedsUploaded) {
+            $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
+            $completeTasks = $this->getCustomer()->getCompletedTasksByGroupName('shop');
+            $runningNames = array();
+            $completeNames = array();
+            if ($activeTasks)
+                foreach ($activeTasks as $taskItem) {
+                    $runningNames[] = $taskItem['Params'];
+                }
+            if ($completeTasks)
+                foreach ($completeTasks as $taskItem) {
+                    $completeNames[] = $taskItem['Params'];
+                }
+            // var_dump($runningNames);
             foreach ($listFeedsUploaded as $value) {
                 $pInfo = pathinfo($value);
                 $ftime = filectime($value);
+                $isActive = in_array($pInfo['filename'], $runningNames);
+                $isCompleted = in_array($pInfo['filename'], $completeNames);
                 $feeds[] = array(
                     'ID' => md5($pInfo['filename']),
                     'type' => 'uploaded',
                     'time' => $ftime,
                     'timeFormatted' => date('Y-m-d H:i:s', $ftime),
                     'name' => $pInfo['filename'],
+                    'running' => $isActive,
+                    'complete' => $isCompleted,
+                    'canStart' => count($activeTasks) === 0,
+                    'status' => $isActive ? 'active' : ($isCompleted ? 'done' : 'new'),
                     'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
                 );
             }
-
+        }
+            // $feeds['active'] = $activeTasks;
         return $feeds;
     }
 
     public function importProductFeed ($name) {
+        if (ob_get_level() == 0) ob_start();
         $feedPath = Path::rootPath() . $this->getFeedFilePathByName($name);
         // $objPHPExcel = new PHPExcel();
         $objPHPExcel = new PHPExcel();
@@ -129,6 +150,10 @@ class feeds extends \engine\objects\api {
         $errorCount = 0;
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
+
+            echo "udating product " . $rawProductData['Name'];
+            ob_flush();
+            flush();
 
             $productItem = array();
             $productItem['Name'] = trim($rawProductData['Name']);
@@ -186,7 +211,8 @@ class feeds extends \engine\objects\api {
                 'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
                 'print_response' => false,
                 'use_unique_hash_for_names' => true,
-                'correct_image_extensions' => true
+                'correct_image_extensions' => true,
+                'mkdir_mode' => 0766
             );
             $upload_handler = new JqUploadLib($options, false);
             $rez = $upload_handler->importFromUrl($imagesToDownload, false);
@@ -213,6 +239,7 @@ class feeds extends \engine\objects\api {
             }
             $errors = array_merge($errors, $rez['errors']);
             // $parsedProducts[] = $productItem;
+            break;
         }
 
         // disable all products
@@ -226,6 +253,11 @@ class feeds extends \engine\objects\api {
             'success' => empty($errors),
             'errors' => $errors
         );
+
+        ob_end_flush();
+        // if (ob_get_length()) ob_end_clean();
+        // ob_end_clean();
+        // if (ob_get_level() == 0) ob_start();
         // echo '<pr>';
         // var_dump($namedDataArray);
         // echo '</pre><hr />';
@@ -278,7 +310,7 @@ class feeds extends \engine\objects\api {
             // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
-                    $images[] = $this->getCustomerConfiguration()->display->Scheme . '//' . $this->getCustomerConfiguration()->display->Host . '/' . $value['normal'];
+                    $images[] = $this->getCustomerConfiguration()->display->Scheme . '//' . $this->getCustomerConfiguration()->display->Host . $value['normal'];
                 }
             }
             if (isset($dataList['items'][$i]['Attributes'])) {
@@ -346,7 +378,8 @@ class feeds extends \engine\objects\api {
     }
     public function patch (&$resp, $req) {
         if (isset($req->data['import']) && isset($req->get['name'])) {
-            $resp = $this->importProductFeed($req->get['name']);
+            // $resp = $this->importProductFeed($req->get['name']);
+            $resp = $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
         }
     }
 

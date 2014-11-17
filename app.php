@@ -31,6 +31,7 @@ spl_autoload_register(function ($className) {
 use \engine\lib\request as Request;
 use \engine\lib\response as Response;
 use \engine\lib\path as Path;
+use \engine\lib\utils as Utils;
 
 // detect running customer name
 // define('DR', glGetDocumentRoot());
@@ -126,7 +127,7 @@ class app {
     public function startApplication () {
         header($this->header);
         session_start();
-        $_customerScript = '\\web\\customers\\' . $this->customerName() . '\\customer';
+        $_customerScript = Utils::getCustomerClassName($this->customerName());// '\\web\\customers\\' . $this->customerName() . '\\customer';
         // glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);
         // $_customerClass = OBJECT_T_CUSTOMER . BS . MPWS_CUSTOMER;
         // include_once $_customerScript;
@@ -146,13 +147,34 @@ class app {
             case 'display':
                 $this->customer->runAsDISPLAY($options);
                 break;
-            case 'task':
-                $this->customer->runAsTASK($options);
-                break;
+            // case 'background':
+            //     $this->customer->runAsBACKGROUND($options);
+            //     // $this->startBackgroundTask($options);
+            //     break;
             // default:
             //     throw new Exception("Error Processing Request: Unknown request type", 1);
         }
     }
+
+    // public function startBackgroundTask ($name = false) {
+    //     echo 'start background task here';
+    //     // exec('php test.php', $output, $return);
+    //     // // Return will return non-zero upon an error
+    //     // if (!$return) {
+    //     //     echo "PDF Created Successfully";
+    //     // } else {
+    //     //     echo "PDF not created";
+    //     // }
+    //     $pid = pcntl_fork();
+    //     if ($pid == -1) {
+    //          die('could not fork');
+    //     } else if ($pid) {
+    //          // we are the parent
+    //          pcntl_wait($status); //Protect against Zombie children
+    //     } else {
+    //          // we are the child
+    //     }
+    // }
 }
 
 ?>

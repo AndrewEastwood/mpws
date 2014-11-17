@@ -598,6 +598,10 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .shop-manager-feeds {
+    .feed-item.done {
+        cursor: default;
+        color: @brand-success;
+    }
     .generate {
         cursor: pointer;
     }
@@ -612,5 +616,18 @@ input[type="radio"], input[type="checkbox"] {
         overflow: hidden;
         height: 1em;
         width: 1em;
+    }
+    .active {
+        height: 40px;
+        .label {
+            margin: 4px;
+        }
+        .progress-bar {
+            padding: 10px 15px;
+            text-align: left;
+        }
+        .cancel-import {
+            margin-top: -5px;
+        }
     }
 }

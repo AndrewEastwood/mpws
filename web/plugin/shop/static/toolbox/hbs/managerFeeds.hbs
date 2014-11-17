@@ -10,7 +10,7 @@
                 {{#each data}}
                     {{#if_eq type 'generated'}}
                     <a class="list-group-item feed-item" href="{{link}}" target="_blank" title="{{name}}" data-id="{{ID}}">
-                        <span class="time badge pull-left">{{fromNowHumanized}}</span>
+                        <span class="time label label-default pull-left">{{fromNowHumanized}}</span>
                         <span class="name">{{name}}</span>
                         <i class="fa fa-download pull-right text-info"></i>
                     </a>
@@ -33,13 +33,33 @@
                 <ul class="list-group feeds feeds-uploaded">
                 {{#each data}}
                     {{#if_eq type 'uploaded'}}
-                    <a class="list-group-item feed-item" href="javascript://" title="{{name}}" data-id="{{ID}}">
+                    {{#if running}}
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 100%;">
+                            <span class="sr-only"></span>
+                            <span class="time label label-warning pull-left">{{fromNowHumanized}}</span>
+                            <span class="name">{{name}}</span>
+                            <i class="btn fa fa-times pull-right text-warning cancel-import"></i>
+                        </div>
+                    <div>
+                    {{else}}
+                    <a class="list-group-item feed-item {{status}}" href="javascript://" title="{{name}}" data-id="{{ID}}">
+                        {{#unless complete}}
                         <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
-                        <span class="time badge pull-left">{{fromNowHumanized}}</span>
+                        <span class="time label label-default pull-left">{{fromNowHumanized}}</span>
+                        {{else}}
+                        <i class="fa fa-check-circle fa-fw pull-left text-success"></i>
+                        <span class="time label label-success pull-left">{{fromNowHumanized}}</span>
+                        {{/unless}}
                         <span class="name">{{name}}</span>
+                        {{#unless complete}}
                         <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
+                        {{#if canStart}}
                         <i class="fa fa-play fa-fw pull-right text-success start-import"></i>
+                        {{/if}}
+                        {{/unless}}
                     </a>
+                    {{/if}}
                     {{/if_eq}}
                 {{/each}}
                 </ul>

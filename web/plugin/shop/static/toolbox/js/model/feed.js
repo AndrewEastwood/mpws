@@ -28,6 +28,11 @@ define('plugin/shop/toolbox/js/model/feed', [
         importUploadedProductFeed: function (ajaxOptions) {
             var that = this;
             if (this.isUploaded()) {
+                // APP.triggerBackgroundTask('importProductFeed', this.get('name')).done(function (rez) {
+                //     if (rez) {
+                        
+                //     }
+                // });
                 this.save({
                     import: true
                 }, ajaxOptions);

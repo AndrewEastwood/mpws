@@ -38,7 +38,7 @@ class catalog extends \engine\objects\api {
     public function getCatalogBrowse () {
 
         $data = array();
-        $categoryID = Request::fromGET('id', null);
+        $categoryID = Request::pickFromGET('id', null);
 
         if (!is_numeric($categoryID)) {
             $data['error'] = '"id" parameter is missed';
@@ -71,7 +71,7 @@ class catalog extends \engine\objects\api {
 
         // init filter
         foreach ($filterOptionsApplied as $key => $value) {
-            $filterOptionsApplied[$key] = Request::fromGET($key, $filterOptions[$key]);
+            $filterOptionsApplied[$key] = Request::pickFromGET($key, $filterOptions[$key]);
             if ($key == "filter_viewItemsOnPage" || $key == "filter_viewPageNum")
                 $filterOptionsApplied[$key] = intval($filterOptionsApplied[$key]);
             if ($key === "filter_commonPriceMax" || $key == "filter_commonPriceMin")

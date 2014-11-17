@@ -10,8 +10,8 @@
     $app = new App('nls', 'Content-Type: application/json; charset=utf-8');
     // include $_SERVER['DOCUMENT_ROOT'] . '/engine/bootstrap.php';
 
-    $customer = Request::fromGET('customer');
-    $langFileName = Request::fromGET('lang');
+    $customer = Request::pickFromGET('customer');
+    $langFileName = Request::pickFromGET('lang');
 
     if ($app->isDebug())
         $langFilePath = Path::createPathWithRoot('web', 'customer', $customer, 'static', 'nls', $langFileName);

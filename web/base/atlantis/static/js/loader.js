@@ -57,12 +57,13 @@ var APP = {
             waitSeconds: 20,
             urlArgs: "mpws_bust=" + (this.config.ISDEV ? (new Date()).getTime() : this.config.BUILD)
         });
-    }
+    },
+    backgroundTaskIds: {}
 };
 
 APP.init();
 
-require(["default/js/lib/url"], function (JSUrl) {
+require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/underscore", "default/js/lib/cache"], function (Sandbox, JSUrl, _, Cache) {
     APP.getApiLink = function (extraOptions) {
         var _url = new JSUrl(APP.config.URL_API);
         // _url.query.token = APP.config.TOKEN;
@@ -89,6 +90,27 @@ require(["default/js/lib/url"], function (JSUrl) {
                 _url.query[k] = !!v ? v : "";
             });
         return _url.toString();
+    }
+    APP.triggerBackgroundTask = function (name, params) {
+        var _url = new JSUrl(APP.config.URL_TASK);
+        _url.query.name = name;
+        if (params) {
+            if (_.isString(params))
+                _url.query.name = params;
+            if (_.isArray(params))
+                _url.query.params = params.join(',');
+        }
+        if (APP.backgroundTaskIds[name] === null) {
+            APP.backgroundTaskId[name] = setInterval(function () {
+                var bgtask = Cache.getCookie('bgtask');
+                if (!!!bgtask) {
+                    Sandbox.eventNotify('backgroundtask:complete', name);
+                }
+                clearInterval(APP.backgroundTaskId[name]);
+                APP.backgroundTaskId[name] = null;
+            }, 5000);
+        }
+        return $.post(_url.toString());
     }
 })
 

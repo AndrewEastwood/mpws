@@ -109,8 +109,8 @@ class plugin {
 
     public function run () {
         $_REQ = Request::getRequestData();
-        $_source = Request::fromGET('source');
-        $_fn = Request::fromGET('fn');
+        $_source = Request::pickFromGET('source');
+        $_fn = Request::pickFromGET('fn');
         $_method = strtolower($_SERVER['REQUEST_METHOD']);
         $requestFnElements = array($_method);
 

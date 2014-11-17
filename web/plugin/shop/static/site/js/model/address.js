@@ -5,14 +5,14 @@ define('plugin/shop/site/js/model/address', [
 
     return Backbone.Model.extend({
         defaults: {
-            OrganizationName: 'Twitter, Inc.',
-            AddressLine1: '795 Folsom Ave, Suite 600',
-            AddressLine2: 'San Francisco, CA 94107',
-            Phone1: '(123) 456-7890',
-            Phone2: '(123) 456-7890',
+            OrganizationName: 'Leogroup',
+            // AddressLine1: '795 Folsom Ave, Suite 600',
+            // AddressLine2: 'San Francisco, CA 94107',
+            Phone1: '(050) 1000-430',
+            Phone2: '(096) 677-70-97',
             OpenHoursWeekdays: 'Робочі дні: 10:00 - 19:00',
-            OpenHoursSaturday: 'Субота: 9:00 - 18:00',
-            OpenHoursSunday: 'Неділя: 9:00 - 16:00',
+            OpenHoursSaturday: 'Субота: 10:00 - 18:00',
+            OpenHoursSunday: 'Неділя: вихідний',
         }
         // idAttribute: "ID",
         // url: function () {

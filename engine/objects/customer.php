@@ -36,9 +36,9 @@ class customer {
         // var_dump($customerConfigs);
         foreach ($defaultConfigs as $configName) {
             if (in_array($configName, $customerConfigs)) {
-                $configClass = Utils::getCustomerConfigClassName($configName, $this->customerName());
+                $configClass = Utils::getCustomerConfigClassName($this->customerName(), $configName);
             } else {
-                $configClass = Utils::getDefaultConfigClassName($configName, $this->getVersion());
+                $configClass = Utils::getDefaultConfigClassName($this->getVersion(), $configName);
             }
             $configuration[$configName] = new $configClass();
         }
@@ -99,7 +99,6 @@ class customer {
             LOCALE: '" . $this->getConfiguration()->display->Locale . "',
             BUILD: " . ($this->getApp()->isDebug() ? 'null' : $this->getApp()->getBuildVersion()) . ",
             ISDEV: " . ($this->getApp()->isDebug() ? 'true' : 'false') . ",
-            TOKEN: '" . Request::getOrValidatePageSecurityToken($this->getConfiguration()->display->MasterJsApiKey) . "',
             ISTOOLBOX: " . ($this->getApp()->isToolbox() ? 'true' : 'false') . ",
             PLUGINS: ['" . implode("', '", $this->getConfiguration()->display->Plugins) . "'],
             MPWS_VERSION: '" . $this->getVersion() . "',
@@ -109,6 +108,7 @@ class customer {
             URL_PUBLIC_TITLE: '" . $this->getConfiguration()->display->Title . "',
             URL_API: '/api.js',
             URL_AUTH: '/auth.js',
+            URL_TASK: '/background/',
             URL_UPLOAD: '/upload.js',
             URL_STATIC_CUSTOMER: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
@@ -186,7 +186,7 @@ class customer {
         // if (glIsToolbox()) {
         //     $publicKey = "";
         //     if (Request::hasInGet('token'))
-        //         $publicKey = Request::fromGET('token');
+        //         $publicKey = Request::pickFromGET('token');
 
         // // // check page token
         // // if (empty($publicKey)) {
@@ -217,8 +217,8 @@ class customer {
     public function runAsAUTH () {
         // Request::processRequest($this);
         $_REQ = Request::getRequestData();
-        $_source = Request::fromGET('source');
-        $_fn = Request::fromGET('fn');
+        $_source = Request::pickFromGET('source');
+        $_fn = Request::pickFromGET('fn');
         $_method = strtolower($_SERVER['REQUEST_METHOD']);
         $requestFnElements = array($_method);
         if (Request::hasInGet('source'))
@@ -253,11 +253,11 @@ class customer {
         foreach ($this->plugins as $plugin)
             $plugin->run();
     }
-    public function runAsTASK () {
-        foreach ($this->plugins as $plugin) {
-            $plugin->task();
-        }
-    }
+    // public function runAsBACKGROUND () {
+    //     foreach ($this->plugins as $plugin) {
+    //         $plugin->task();
+    //     }
+    // }
 
     public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
         $limit = $dsConfig['limit'];
@@ -448,6 +448,47 @@ class customer {
     public function post_signout (&$resp) {
         $resp['auth_id'] = $this->clearAuthID();
         $this->updateSessionAuth();
+    }
+
+    public function startTask ($group, $name, $params) {
+        $result = array();
+        $success = false;
+        $errors = array();
+        // echo 1111;
+        $config = $this->getConfiguration()->data->jsapiAddTask(array(
+            'CustomerID' => $this->getCustomerID(),
+            'Group' => $group,
+            'Name' => $name,
+            'Params' => $params
+        ));
+        // var_dump($config);
+        try {
+            $this->getDataBase()->beginTransaction();
+            $this->fetch($config);
+            $this->getDataBase()->commit();
+            $success = true;
+        } catch (Exception $e) {
+            $this->getDataBase()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function getActiveTasksByGroupName ($groupName) {
+        $result = array();
+        $config = $this->getConfiguration()->data->jsapiGetGroupTasks($groupName, true, false);
+        $result = $this->fetch($config);
+        return $result;
+    }
+
+    public function getCompletedTasksByGroupName ($groupName) {
+        $result = array();
+        $config = $this->getConfiguration()->data->jsapiGetGroupTasks($groupName, false, true);
+        $result = $this->fetch($config);
+        return $result;
     }
 }
 

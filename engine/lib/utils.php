@@ -122,10 +122,13 @@ class utils {
     static function getDefaultNS ($version) {
         return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNameDefault() . '\\' . $version;
     }
-    static function getCustomerConfigClassName ($configName, $customerName = 'customer') {
+    static function getCustomerClassName ($customerName, $customerClassName = 'customer') {
+        return self::getCustomerNS($customerName) . '\\' . $customerClassName;
+    }
+    static function getCustomerConfigClassName ($customerName, $configName) {
         return self::getCustomerNS($customerName) . '\\' . Path::getDirNameConfig() . '\\' . $configName;
     }
-    static function getDefaultConfigClassName ($configName, $version) {
+    static function getDefaultConfigClassName ($version, $configName) {
         return self::getDefaultNS($version) . '\\' . Path::getDirNameConfig() . '\\' . $configName;
     }
     static function getPluginClassName ($pluginName, $pluginClassName = 'plugin') {
