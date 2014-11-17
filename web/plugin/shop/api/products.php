@@ -434,7 +434,7 @@ class products extends \engine\objects\api {
                 try {
                     $ProductID = $this->getCustomer()->fetch($config) ?: null;
                 } catch (Exception $ep) {
-                    $errors[] = $e->getMessage();
+                    $errors[] = $ep->getMessage();
                 }
                 // var_dump($productID);
                 // var_dump($this->getCustomerDataBase()->get_last_query());
@@ -648,7 +648,7 @@ class products extends \engine\objects\api {
                 try {
                     $this->getCustomer()->fetch($config);
                 } catch (Exception $ep) {
-                    $errors[] = $e->getMessage();
+                    $errors[] = $ep->getMessage();
                 }
 
                 // set new features

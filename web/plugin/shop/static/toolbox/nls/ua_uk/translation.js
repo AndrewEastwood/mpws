@@ -158,6 +158,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         listPromos_Column_DateStart: 'Початок акції',
         listPromos_Column_DateExpire: 'Завершення акції',
         listPromos_Column_Discount: 'Знижка (%)',
+        listPromos_Promo_Grid_noData: 'Немає промо-кодів',
         manager_promoCodes_listTitle: 'Промо-коди',
         setting_property_AddedNewCategory: 'додався новий товар(и)',
         setting_property_AddedNewDiscountedProduct: 'ціна товару(ів) знизилася',

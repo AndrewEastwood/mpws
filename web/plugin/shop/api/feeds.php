@@ -67,30 +67,32 @@ class feeds extends \engine\objects\api {
             $attempts--;
         } while (count($listFeedsUploaded) > 10 && $attempts > 0);
 
-        foreach ($listFeedsGenerated as $value) {
-            $pInfo = pathinfo($value);
-            $ftime = filectime($value);
-            $feeds[] = array(
-                'ID' => md5($pInfo['filename']),
-                'type' => 'generated',
-                'time' => $ftime,
-                'timeFormatted' => date('Y-m-d H:i:s', $ftime),
-                'name' => $pInfo['filename'],
-                'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
-            );
-        }
-        foreach ($listFeedsUploaded as $value) {
-            $pInfo = pathinfo($value);
-            $ftime = filectime($value);
-            $feeds[] = array(
-                'ID' => md5($pInfo['filename']),
-                'type' => 'uploaded',
-                'time' => $ftime,
-                'timeFormatted' => date('Y-m-d H:i:s', $ftime),
-                'name' => $pInfo['filename'],
-                'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
-            );
-        }
+        if ($listFeedsGenerated)
+            foreach ($listFeedsGenerated as $value) {
+                $pInfo = pathinfo($value);
+                $ftime = filectime($value);
+                $feeds[] = array(
+                    'ID' => md5($pInfo['filename']),
+                    'type' => 'generated',
+                    'time' => $ftime,
+                    'timeFormatted' => date('Y-m-d H:i:s', $ftime),
+                    'name' => $pInfo['filename'],
+                    'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
+                );
+            }
+        if ($listFeedsUploaded)
+            foreach ($listFeedsUploaded as $value) {
+                $pInfo = pathinfo($value);
+                $ftime = filectime($value);
+                $feeds[] = array(
+                    'ID' => md5($pInfo['filename']),
+                    'type' => 'uploaded',
+                    'time' => $ftime,
+                    'timeFormatted' => date('Y-m-d H:i:s', $ftime),
+                    'name' => $pInfo['filename'],
+                    'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
+                );
+            }
 
         return $feeds;
     }
@@ -122,6 +124,9 @@ class feeds extends \engine\objects\api {
 
         $errors = array();
         $parsedProducts = array();
+        $addedCount = 0;
+        $updatedCount = 0;
+        $errorCount = 0;
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
 
@@ -140,6 +145,7 @@ class feeds extends \engine\objects\api {
 
             if (empty($productItem['OriginName'])) {
                 $errors[] = 'No OriginName for ' . $productItem['Name'] . ' ' . $productItem['Model'];
+                $errorCount++;
                 continue;
             }
 
@@ -198,17 +204,25 @@ class feeds extends \engine\objects\api {
 
             $rez = $this->getAPI()->products->updateOrInsertProduct($productItem);
             // var_dump($rez);
+            if ($rez['created']) {
+                $addedCount++;
+            } elseif ($rez['updated']) {
+                $updatedCount++;
+            } else {
+                $errorCount++;
+            }
             $errors = array_merge($errors, $rez['errors']);
-            $parsedProducts[] = $productItem;
-            break;
+            // $parsedProducts[] = $productItem;
         }
 
         // disable all products
         // $this->getAPI()->products->archiveAllProducts();
 
         $rez = array(
-            'data' => $parsedProducts,
-            'readCount' => count($parsedProducts),
+            'total' => count($parsedProducts),
+            'productsAdded' => $addedCount,
+            'productsUpdated' => $updatedCount,
+            'productsInvalid' => $errorCount,
             'success' => empty($errors),
             'errors' => $errors
         );

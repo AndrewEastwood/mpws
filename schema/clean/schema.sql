@@ -162,6 +162,21 @@ CREATE TABLE `mpws_subscribers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mpws_tasks`
+--
+
+DROP TABLE IF EXISTS `mpws_tasks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_tasks` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `PrcPath` varchar(300) NOT NULL,
+  `PID` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `mpws_uploads`
 --
 
@@ -732,4 +747,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-17  1:41:42
+-- Dump completed on 2014-11-17  3:15:32

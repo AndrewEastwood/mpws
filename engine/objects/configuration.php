@@ -108,6 +108,28 @@ class configuration {
     //     ));
     // }
 
+    public function jsapiAddTask ($data) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "insert",
+            "data" => array(
+                'Name' => $data['Name'],
+                'PrcPath' => $data['PrcPath'],
+                'PID' => $data['PID']
+            ),
+            "options" => null
+        ));
+    }
+    public function jsapiRemoveTask ($id) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "delete",
+            'condition' => array(
+                'ID' => $this->jsapiCreateDataSourceCondition($id)
+            ),
+            "options" => null
+        ));
+    }
 }
 
 ?>

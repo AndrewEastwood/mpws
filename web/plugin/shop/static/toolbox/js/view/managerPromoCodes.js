@@ -50,7 +50,7 @@ define('plugin/shop/toolbox/js/view/managerPromoCodes', [
             // add expired and todays orders
             if (this.$el.is(':empty')) {
                 this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-                this.viewPromosList.grid.emptyText = lang.pluginMenu_Orders_Grid_noData_ByStatus;
+                this.viewPromosList.grid.emptyText = lang.listPromos_Promo_Grid_noData;
                 this.viewPromosList.render();
                 // show sub-view
                 this.$('.promo-list').html(this.viewPromosList.$el);

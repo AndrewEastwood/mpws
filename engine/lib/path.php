@@ -44,6 +44,9 @@ class path {
     public static function getDirNameUploads () {
         return 'uploads';
     }
+    // public static function getDirNameWebUploads () {
+    //     return 'u';
+    // }
 
     public static function rootPath () {
         $_dr = strtolower($_SERVER['DOCUMENT_ROOT']);
@@ -68,7 +71,7 @@ class path {
         return $p;
     }
 
-    public function createDirPath () {
+    public static function createDirPath () {
         $args = func_get_args();
         $p = join(self::getDirectorySeparator(), $args);
         if ($p[strlen($p) - 1] != self::getDirectorySeparator())
@@ -76,7 +79,7 @@ class path {
         return $p;
     }
 
-    public function createFilePath () {
+    public static function createFilePath () {
         $args = func_get_args();
         $p = join(self::getDirectorySeparator(), $args);
         return $p;
@@ -177,6 +180,12 @@ class path {
 
 
 
+    // public static function getUploadWebDirectory (/* args */) {
+    //     $args = func_get_args();
+    //     array_unshift($args, Path::getDirNameWebUploads());
+    //     return call_user_func_array(__NAMESPACE__ .'\Path::createDirPath', $args);
+    // }
+
     public static function getUploadDirectory (/* args */) {
         $args = func_get_args();
         array_unshift($args, Path::getDirNameUploads());
@@ -224,7 +233,7 @@ class path {
         return false;
     }
 
-    public function deleteUploadedFile ($pathToFile) {
+    public static function deleteUploadedFile ($pathToFile) {
         $filePath = self::getUploadDirectory() . $pathToFile;
         if (file_exists($filePath)) {
             return unlink($filePath);
