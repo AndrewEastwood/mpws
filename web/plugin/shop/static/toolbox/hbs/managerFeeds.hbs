@@ -34,7 +34,7 @@
                 {{#each data}}
                     {{#if_eq type 'uploaded'}}
                     {{#if running}}
-                    <div class="progress progress-striped active">
+                    <div class="progress progress-striped active feed-item" data-id="{{ID}}">
                         <div class="progress-bar" style="width: 100%;">
                             <span class="sr-only"></span>
                             <span class="time label label-warning pull-left">{{fromNowHumanized}}</span>
@@ -52,10 +52,14 @@
                         <span class="time label label-success pull-left">{{fromNowHumanized}}</span>
                         {{/unless}}
                         <span class="name">{{name}}</span>
-                        {{#unless complete}}
                         <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
+                        {{#unless complete}}
                         {{#if canStart}}
                         <i class="fa fa-play fa-fw pull-right text-success start-import"></i>
+                        {{else}}
+                        {{#if added}}
+                        <i class="fa fa-spinner fa-spin fa-fw pull-right text-info"></i>
+                        {{/if}}
                         {{/if}}
                         {{/unless}}
                     </a>

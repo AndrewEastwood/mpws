@@ -37,6 +37,19 @@ define('plugin/shop/toolbox/js/model/feed', [
                     import: true
                 }, ajaxOptions);
             }
+        },
+        cancelActiveImportProductFeed: function (ajaxOptions) {
+            var that = this;
+            if (this.isUploaded()) {
+                // APP.triggerBackgroundTask('importProductFeed', this.get('name')).done(function (rez) {
+                //     if (rez) {
+                        
+                //     }
+                // });
+                this.save({
+                    cancel: true
+                }, ajaxOptions);
+            }
         }
     });
 

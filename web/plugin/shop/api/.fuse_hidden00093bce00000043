@@ -123,7 +123,7 @@ class feeds extends \engine\objects\api {
                     'running' => $isActive,
                     'complete' => $isCompleted,
                     'canceled' => $isCanceled,
-                    'canStart' => count($activeTasks) === 0,
+                    'canStart' => count($activeTasks) === 0 && !$isAdded && !$isCompleted && !$isCanceled,
                     'status' => $isActive ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : 'new')),
                     'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
                 );
@@ -394,7 +394,10 @@ class feeds extends \engine\objects\api {
     }
     public function patch (&$resp, $req) {
         $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
-        if (isset($req->data['import']) && isset($req->get['name'])) {
+        if (count($activeTasks)) {
+            $this->getFeeds();
+            $resp['error'] = 'ActiveImportFound';
+        } else if (isset($req->data['import']) && isset($req->get['name'])) {
             // $resp = $this->importProductFeed($req->get['name']);
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
             if (empty($task)) {
@@ -407,17 +410,20 @@ class feeds extends \engine\objects\api {
             }
         } else if (isset($req->data['cancel']) && isset($req->get['name'])) {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
-            if (isset($task['Hash'])) {
-                $this->getCustomer()->cancelTask($task['ID']);
-                $this->getFeeds();
-                $resp['success'] = true;
-            } else {
+            if (empty($task)) {
                 $this->getFeeds();
                 $resp['error'] = 'UnknownTask';
+            } else {
+                if (isset($task['Hash'])) {
+                    $this->getCustomer()->cancelTask($task['ID']);
+                    $this->getFeeds();
+                    $resp['success'] = true;
+                } else {
+                    $this->getFeeds();
+                    $resp['error'] = 'TaskIsNotStartedYet';
+                }
             }
-        } else if (count($activeTasks)) {
-            $this->getFeeds();
-            $resp['error'] = 'ActiveImportFound';
+            
         }
     }
 
@@ -425,6 +431,7 @@ class feeds extends \engine\objects\api {
         $success = false;
         if (isset($req->get['name'])) {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
+            var_dump(expression)
             if (isset($taks) && $task['IsRunning']) {
                 $resp['error'] = 'UnableToRemoveActiveTask';
             } else {

@@ -109,6 +109,8 @@ class configuration {
     // }
 
     public function jsapiAddTask ($data) {
+        $data["DateCreated"] = $this->getDate();
+        $params = isset($data['Params']) ? $data['Params'] : '';
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "mpws_tasks",
             "action" => "insert",
@@ -116,14 +118,16 @@ class configuration {
                 'CustomerID' => $data['CustomerID'],
                 'Group' => $data['Group'],
                 'Name' => $data['Name'],
+                'Hash' => md5($data['Group'] . $data['Name'] . $params),
                 'PrcPath' => isset($data['PrcPath']) ? $data['PrcPath'] : '',
                 'PID' => isset($data['PID']) ? $data['PID'] : '',
-                'Params' => isset($data['Params']) ? $data['Params'] : ''
+                'Params' => $params,
+                'DateCreated' => $data["DateCreated"]
             ),
             "options" => null
         ));
     }
-    public function jsapiGetGroupTasks ($groupName, $active = false, $completed = false) {
+    public function jsapiGetGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
         $config = $this->jsapiGetDataSourceConfig(array(
             "source" => "mpws_tasks",
             "action" => "select",
@@ -138,6 +142,9 @@ class configuration {
         if ($completed) {
             $config['condition']['Complete'] = $this->jsapiCreateDataSourceCondition(1);
         }
+        if ($canceled) {
+            $config['condition']['ManualCancel'] = $this->jsapiCreateDataSourceCondition(1);
+        }
         return $config;
     }
     public function jsapiStopTask ($id) {
@@ -149,11 +156,53 @@ class configuration {
             ),
             "data" => array(
                 'IsRunning' => 0,
-                'Complete' => 1
+                'Complete' => 0,
+                'ManualCancel' => 1
             ),
             "options" => null
         ));
     }
+    public function jsapiGetTaskByHash ($hash) {
+        $config = $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "select",
+            'condition' => array(
+                'Hash' => $this->jsapiCreateDataSourceCondition($hash)
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+        return $config;
+    }
+    public function jsapiDeleteTaskByHash ($hash) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "delete",
+            'condition' => array(
+                'Hash' => $this->jsapiCreateDataSourceCondition($hash)
+            ),
+            "options" => null
+        ));
+    }
+    public function jsapiGetNextTaskToProcess ($group, $name) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "select",
+            'condition' => array(
+                'Group' => $this->jsapiCreateDataSourceCondition($group),
+                'Name' => $this->jsapiCreateDataSourceCondition($name)
+            ),
+            "order" => array(
+                "field" => "DateCreated",
+                "ordering" => "ASC"
+            ),
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
 }
 
 ?>

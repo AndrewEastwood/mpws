@@ -23,7 +23,8 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
             'click .start-import': 'importFeed',
             'click .generate': 'generateFeed',
             'click .delete-uploaded': 'deleteUploadedFeed',
-            'click .download-import': 'downloadImportFeed'
+            'click .download-import': 'downloadImportFeed',
+            'click .cancel-import': 'cancelImportFeed'
         },
         initialize: function (options) {
             this.options = options || {};
@@ -73,6 +74,26 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
             BootstrapDialog.confirm('Import ' + feedModel.get('name') + ' feed?', function (rez) {
                 if (rez) {
                     feedModel.importUploadedProductFeed({
+                        patch: true,
+                        success: function () {
+                            that.collection.fetch({reset: true});
+                        }
+                    });
+                }
+            });
+        },
+        cancelImportFeed: function (event) {
+            var that = this,
+                $feedItem = $(event.target).closest('.feed-item'),
+                feedID = $feedItem.length && $feedItem.data('id'),
+                feedModel = this.collection.get(feedID);
+            if (!feedModel) {
+                return;
+            }
+            debugger;
+            BootstrapDialog.confirm('Cancel active import ' + feedModel.get('name') + ' feed?', function (rez) {
+                if (rez) {
+                    feedModel.cancelActiveImportProductFeed({
                         patch: true,
                         success: function () {
                             that.collection.fetch({reset: true});

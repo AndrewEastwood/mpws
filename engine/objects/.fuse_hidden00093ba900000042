@@ -477,32 +477,13 @@ class customer {
         return $result;
     }
 
-    public function cancelTask ($id) {
-        $result = array();
-        $success = false;
-        $errors = array();
-        $config = $this->getConfiguration()->data->jsapiStopTask($id);
-        try {
-            $this->getDataBase()->beginTransaction();
-            $this->fetch($config);
-            $this->getDataBase()->commit();
-            $success = true;
-        } catch (Exception $e) {
-            $this->getDataBase()->rollBack();
-            $errors[] = $e->getMessage();
-        }
-        $result['errors'] = $errors;
-        $result['success'] = $success;
-        return $result;
-    }
-
     public function isTaskAdded ($group, $name, $params) {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetTaskByHash(md5($group . $name . $params));
         $result = $this->fetch($config);
-        $this->__adjustTask($result);
         return $result;
     }
+
 
     public function deleteTask ($group, $name, $params) {
         return $this->deleteTaskByHash(md5($group . $name . $params));
@@ -510,20 +491,8 @@ class customer {
 
     public function deleteTaskByHash ($hash) {
         $result = array();
-        $success = false;
-        $errors = array();
-        $config = $this->getConfiguration()->data->jsapiDeleteTaskByHash($hash);
-        try {
-            $this->getDataBase()->beginTransaction();
-            $result = $this->fetch($config);
-            $this->getDataBase()->commit();
-            $success = true;
-        } catch (Exception $e) {
-            $this->getDataBase()->rollBack();
-            $errors[] = $e->getMessage();
-        }
-        $result['errors'] = $errors;
-        $result['success'] = $success;
+        $config = $this->getConfiguration()->data->jsapiDeleteTaskByHash(md5($hash));
+        $result = $this->fetch($config);
         return $result;
     }
 
@@ -531,11 +500,6 @@ class customer {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetGroupTasks($groupName, true, false, false);
         $result = $this->fetch($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
         return $result;
     }
 
@@ -543,11 +507,6 @@ class customer {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetGroupTasks($groupName, false, true, false);
         $result = $this->fetch($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
         return $result;
     }
 
@@ -555,11 +514,6 @@ class customer {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetGroupTasks($groupName, false, false, false);
         $result = $this->fetch($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
         return $result;
     }
 
@@ -567,11 +521,6 @@ class customer {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetGroupTasks($groupName, false, false, true);
         $result = $this->fetch($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
         return $result;
     }
 
@@ -579,22 +528,7 @@ class customer {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetNextTaskToProcess($group, $name);
         $result = $this->fetch($config);
-        if ($result) {
-            foreach ($result as &$value) {
-                $this->__adjustTask($value);
-            }
-        }
         return $result;
-    }
-
-    private function __adjustTask (&$task) {
-        if (empty($task))
-            return null;
-        $task['ID'] = intval($task['ID']);
-        $task['CustomerID'] = intval($task['CustomerID']);
-        $task['IsRunning'] = intval($task['IsRunning']) === 1;
-        $task['Complete'] = intval($task['Complete']) === 1;
-        $task['ManualCancel'] = intval($task['ManualCancel']) === 1;
     }
 }
 

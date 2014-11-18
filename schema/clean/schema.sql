@@ -170,6 +170,7 @@ DROP TABLE IF EXISTS `mpws_tasks`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_tasks` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Hash` varchar(32) NOT NULL,
   `CustomerID` int(11) NOT NULL,
   `Group` varchar(100) NOT NULL,
   `Name` varchar(100) NOT NULL,
@@ -179,9 +180,12 @@ CREATE TABLE `mpws_tasks` (
   `Result` varchar(10000) DEFAULT NULL,
   `IsRunning` tinyint(1) NOT NULL DEFAULT '0',
   `Complete` tinyint(1) NOT NULL DEFAULT '0',
+  `ManualCancel` tinyint(1) NOT NULL DEFAULT '0',
+  `DateCreated` datetime NOT NULL,
   UNIQUE KEY `ID_2` (`ID`),
   KEY `ID` (`ID`),
   KEY `CustomerID` (`CustomerID`),
+  KEY `Hash` (`Hash`),
   CONSTRAINT `mpws_tasks_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -757,4 +761,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-17 13:46:35
+-- Dump completed on 2014-11-18  2:23:18
