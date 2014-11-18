@@ -23,6 +23,13 @@ class database {
         return orm::get_db();
     }
 
+    public function quote ($str) {
+        if (!is_string($str))
+            return $str;
+        $link = orm::get_db();
+        return $link->quote($str);
+    }
+
     public function get_last_query () {
         return orm::get_last_query();
     }

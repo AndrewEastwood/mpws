@@ -35,7 +35,7 @@ class origins extends \engine\objects\api {
     }
 
     public function getOriginByName ($originName) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginItem();
         $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($originName);
         $origin = $this->getCustomer()->fetch($config);
         if (empty($origin))

@@ -53,3 +53,10 @@ SET @last_account_id = LAST_INSERT_ID();
 
 INSERT INTO `mpws_permissions` (`ID`, `AccountID`, `CanAdmin`, `CanCreate`, `CanEdit`, `CanUpload`, `CanViewReports`, `CanAddUsers`, `DateUpdated`, `DateCreated`) VALUES (NULL, @last_account_id, 1, 1, 1, 0, 1, 0, NOW(), NOW());
 
+
+
+truncate shop_productPrices;
+truncate shop_productFeatures;
+truncate shop_productAttributes;
+truncate shop_relations;
+DELETE FROM shop_products;

@@ -328,6 +328,12 @@ class products extends \engine\objects\api {
                 $features = array();
                 $productFeaturesIDs = array();
 
+                foreach ($validatedValues as $key => $value) {
+                    $validatedValues[$key] = $this->getCustomerDataBase()->quote($value);
+                }
+
+                var_dump($validatedValues);
+
                 // extract attributes
                 if (isset($validatedValues['Tags'])) {
                     $attributes["TAGS"] = $validatedValues['Tags'];
@@ -556,6 +562,10 @@ class products extends \engine\objects\api {
                 $attributes["IMAGE"] = array();
                 $features = array();
                 $productFeaturesIDs = array();
+
+                foreach ($validatedValues as $key => $value) {
+                    $validatedValues[$key] = $this->getCustomerDataBase()->quote($value);
+                }
 
                 // extract attributes
                 if (isset($validatedValues['Tags'])) {

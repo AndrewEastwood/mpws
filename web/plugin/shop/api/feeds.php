@@ -183,7 +183,7 @@ class feeds extends \engine\objects\api {
         foreach ($namedDataArray as &$rawProductData) {
 
             echo "processing product " . $rawProductData['Name'];
-            $results = "processing product " . $rawProductData['Name'];
+            $results[] = "processing product " . $rawProductData['Name'] . PHP_EOL;
             ob_flush();
             flush();
 
@@ -231,7 +231,7 @@ class feeds extends \engine\objects\api {
                     $images[] = $pInfo['basename'];
                 }
             }
-            // var_dump($imagesToDownload);
+            var_dump($imagesToDownload);
             // download image here
             // $urls = array();
             // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
@@ -244,7 +244,7 @@ class feeds extends \engine\objects\api {
                 'print_response' => false,
                 'use_unique_hash_for_names' => true,
                 'correct_image_extensions' => true,
-                'mkdir_mode' => 0766
+                'mkdir_mode' => 0777
             );
             $upload_handler = new JqUploadLib($options, false);
             $res = $upload_handler->importFromUrl($imagesToDownload, false);
@@ -260,8 +260,11 @@ class feeds extends \engine\objects\api {
             // var_dump($productItem);
             // return;
 
+            var_dump("[[[[[[[[[[[[[[ inpuda data >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            var_dump($productItem);
             $res = $this->getAPI()->products->updateOrInsertProduct($productItem);
-            // var_dump($res);
+            var_dump("***************** result *****************");
+            var_dump($res);
             if ($res['created']) {
                 $addedCount++;
             } elseif ($res['updated']) {
@@ -270,26 +273,35 @@ class feeds extends \engine\objects\api {
                 $errorCount++;
             }
             if ($res['errors']) {
-                $results = "[FEILED] " . $rawProductData['Name'];
-                echo "[FEILED] " . $rawProductData['Name'];
+                $results[] = "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
+                echo "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
             }
             if ($res['success']) {
-                $results = "[SUCCESS] " . $rawProductData['Name'];
-                echo "[SUCCESS] " . $rawProductData['Name'];
+                $results[] = "[SUCCESS] " . $rawProductData['Name'] . PHP_EOL;
+                echo "[SUCCESS] " . $rawProductData['Name'] . PHP_EOL;
+                ob_flush();
+                flush();
+            } else {
+                $results[] = "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
+                echo "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
             }
             $errors = array_merge($errors, $res['errors']);
-            // $parsedProducts[] = $productItem;
-            break;
+            $parsedProducts[] = $productItem;
+            var_dump("********************************************");
+            if (count($parsedProducts) > 2) {
+                break;
+            }
         }
 
         // disable all products
         // $this->getAPI()->products->archiveAllProducts();
 
         $res = array(
+            'parsedProducts' => $parsedProducts,
             'total' => count($parsedProducts),
             'productsAdded' => $addedCount,
             'productsUpdated' => $updatedCount,
@@ -299,7 +311,9 @@ class feeds extends \engine\objects\api {
             'results' => $results
         );
 
-        $this->getCustomer()->setTaskResult($task['ID'], json_encode($results));
+        // var_dump($task);
+        // $this->getCustomer()->setTaskResult($task['ID'], json_encode($results));
+        $this->getCustomer()->setTaskResult($task['ID'], "parsedProducts: ".$parsedProducts);
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
@@ -430,10 +444,10 @@ class feeds extends \engine\objects\api {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
             if (!empty($task)) {
                 if (!$task['Scheduled']) {
-                    $this->getCustomer()->scheduleTask('shop', 'importProductFeed', $req->get['name']);
+                    // $this->getCustomer()->scheduleTask('shop', 'importProductFeed', $req->get['name']);
                     // this part must be moved into separated process >>>>
-                    // $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
-                    // $resp = $this->importProductFeed($req->get['name']);
+                    $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
+                    $resp = $this->importProductFeed($req->get['name']);
                     $resp = $this->getFeeds();
                     // <<<< this part must be moved into separated process
                     $resp['success'] = true;

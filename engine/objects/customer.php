@@ -543,6 +543,7 @@ class customer {
         $config = $this->getConfiguration()->data->jsapiSetTaskResult($id, $taskResult);
         try {
             $this->getDataBase()->beginTransaction();
+            var_dump($config);
             $this->fetch($config);
             $this->getDataBase()->commit();
             $success = true;

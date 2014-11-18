@@ -11,7 +11,7 @@ Array
     [SCRIPT_FILENAME] => /home/andrew/github/mpws/test.php
     [PATH_TRANSLATED] => /home/andrew/github/mpws/test.php
     [DOCUMENT_ROOT] => 
-    [REQUEST_TIME] => 1416325801
+    [REQUEST_TIME] => 1416341521
     [argv] => Array
         (
             [0] => /home/andrew/github/mpws/test.php
