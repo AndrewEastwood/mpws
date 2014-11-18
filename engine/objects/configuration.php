@@ -127,6 +127,38 @@ class configuration {
             "options" => null
         ));
     }
+    public function jsapiScheduleTask ($hash) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "update",
+            'condition' => array(
+                'Hash' => $this->jsapiCreateDataSourceCondition($hash)
+            ),
+            "data" => array(
+                'Scheduled' => 1,
+                'IsRunning' => 0,
+                'Complete' => 0,
+                'ManualCancel' => 0
+            ),
+            "options" => null
+        ));
+    }
+    public function jsapiStartTask ($hash) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "update",
+            'condition' => array(
+                'Hash' => $this->jsapiCreateDataSourceCondition($hash)
+            ),
+            "data" => array(
+                'Scheduled' => 0,
+                'IsRunning' => 1,
+                'Complete' => 0,
+                'ManualCancel' => 0
+            ),
+            "options" => null
+        ));
+    }
     public function jsapiGetGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
         $config = $this->jsapiGetDataSourceConfig(array(
             "source" => "mpws_tasks",
@@ -155,9 +187,27 @@ class configuration {
                 'ID' => $this->jsapiCreateDataSourceCondition($id)
             ),
             "data" => array(
+                'Scheduled' => 0,
                 'IsRunning' => 0,
                 'Complete' => 0,
                 'ManualCancel' => 1
+            ),
+            "options" => null
+        ));
+    }
+    public function jsapiSetTaskResult ($id, $result) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "mpws_tasks",
+            "action" => "update",
+            'condition' => array(
+                'ID' => $this->jsapiCreateDataSourceCondition($id)
+            ),
+            "data" => array(
+                'Scheduled' => 0,
+                'IsRunning' => 0,
+                'Complete' => 1,
+                'ManualCancel' => 0,
+                'Result' => $result
             ),
             "options" => null
         ));

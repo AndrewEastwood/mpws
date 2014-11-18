@@ -170,14 +170,15 @@ DROP TABLE IF EXISTS `mpws_tasks`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_tasks` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Hash` varchar(32) NOT NULL,
+  `Hash` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `CustomerID` int(11) NOT NULL,
-  `Group` varchar(100) NOT NULL,
-  `Name` varchar(100) NOT NULL,
-  `PrcPath` varchar(300) DEFAULT NULL,
-  `Params` varchar(1000) DEFAULT NULL,
-  `PID` varchar(100) DEFAULT NULL,
-  `Result` varchar(10000) DEFAULT NULL,
+  `Group` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf16 COLLATE utf16_bin NOT NULL,
+  `PrcPath` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `Params` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `PID` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `Result` varchar(10000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `Scheduled` tinyint(1) NOT NULL DEFAULT '0',
   `IsRunning` tinyint(1) NOT NULL DEFAULT '0',
   `Complete` tinyint(1) NOT NULL DEFAULT '0',
   `ManualCancel` tinyint(1) NOT NULL DEFAULT '0',
@@ -761,4 +762,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-18  2:23:18
+-- Dump completed on 2014-11-18 10:50:01

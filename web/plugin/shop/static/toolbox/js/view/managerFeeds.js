@@ -90,7 +90,6 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
             if (!feedModel) {
                 return;
             }
-            debugger;
             BootstrapDialog.confirm('Cancel active import ' + feedModel.get('name') + ' feed?', function (rez) {
                 if (rez) {
                     feedModel.cancelActiveImportProductFeed({

@@ -450,7 +450,7 @@ class customer {
         $this->updateSessionAuth();
     }
 
-    public function startTask ($group, $name, $params) {
+    public function addTask ($group, $name, $params) {
         $result = array();
         $success = false;
         $errors = array();
@@ -462,6 +462,46 @@ class customer {
             'Params' => $params
         ));
         // var_dump($config);
+        try {
+            $this->getDataBase()->beginTransaction();
+            $this->fetch($config);
+            $this->getDataBase()->commit();
+            $success = true;
+        } catch (Exception $e) {
+            $this->getDataBase()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function startTask ($group, $name, $params) {
+        $result = array();
+        $success = false;
+        $errors = array();
+        $config = $this->getConfiguration()->data->jsapiStartTask(md5($group.$name.$params));
+        try {
+            $this->getDataBase()->beginTransaction();
+            $this->fetch($config);
+            $this->getDataBase()->commit();
+            $success = true;
+        } catch (Exception $e) {
+            $this->getDataBase()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+
+        return $result;
+    }
+
+    public function scheduleTask ($group, $name, $params) {
+        $result = array();
+        $success = false;
+        $errors = array();
+        $config = $this->getConfiguration()->data->jsapiScheduleTask(md5($group.$name.$params));
         try {
             $this->getDataBase()->beginTransaction();
             $this->fetch($config);
@@ -496,6 +536,25 @@ class customer {
         return $result;
     }
 
+    public function setTaskResult ($id, $taskResult) {
+        $result = array();
+        $success = false;
+        $errors = array();
+        $config = $this->getConfiguration()->data->jsapiSetTaskResult($id, $taskResult);
+        try {
+            $this->getDataBase()->beginTransaction();
+            $this->fetch($config);
+            $this->getDataBase()->commit();
+            $success = true;
+        } catch (Exception $e) {
+            $this->getDataBase()->rollBack();
+            $errors[] = $e->getMessage();
+        }
+        $result['errors'] = $errors;
+        $result['success'] = $success;
+        return $result;
+    }
+
     public function isTaskAdded ($group, $name, $params) {
         $result = array();
         $config = $this->getConfiguration()->data->jsapiGetTaskByHash(md5($group . $name . $params));
@@ -504,7 +563,7 @@ class customer {
         return $result;
     }
 
-    public function deleteTask ($group, $name, $params) {
+    public function deleteTaskByParams ($group, $name, $params) {
         return $this->deleteTaskByHash(md5($group . $name . $params));
     }
 
@@ -595,6 +654,7 @@ class customer {
         $task['IsRunning'] = intval($task['IsRunning']) === 1;
         $task['Complete'] = intval($task['Complete']) === 1;
         $task['ManualCancel'] = intval($task['ManualCancel']) === 1;
+        $task['Scheduled'] = intval($task['Scheduled']) === 1;
     }
 }
 

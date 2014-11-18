@@ -34,7 +34,7 @@ define('plugin/shop/toolbox/js/model/feed', [
                 //     }
                 // });
                 this.save({
-                    import: true
+                    schedule: true
                 }, ajaxOptions);
             }
         },

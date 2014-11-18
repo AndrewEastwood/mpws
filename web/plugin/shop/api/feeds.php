@@ -53,7 +53,10 @@ class feeds extends \engine\objects\api {
         do {
             $listFeedsGenerated = $this->getGeneratedFeedsFilesList();
             if (count($listFeedsGenerated) > 10) {
-                unlink($listFeedsGenerated[0]);
+                $pInfo = pathinfo($listFeedsGenerated[0]);
+                $success = unlink($listFeedsGenerated[0]);
+                if ($success)
+                    $this->getCustomer()->deleteTaskByParams('shop', 'importProductFeed', $pInfo['filename']);
             }
             $attempts--;
         } while (count($listFeedsGenerated) > 10 && $attempts > 0);
@@ -81,50 +84,57 @@ class feeds extends \engine\objects\api {
                 );
             }
         if ($listFeedsUploaded) {
-            $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
-            $completeTasks = $this->getCustomer()->getCompletedTasksByGroupName('shop');
-            $newTasks = $this->getCustomer()->getNewTasksByGroupName('shop');
-            $canceledTasks = $this->getCustomer()->getCanceledTasksByGroupName('shop');
-            $runningFeedNames = array();
-            $completeFeedNames = array();
-            $newFeedNames = array();
-            $canceledFeedNames = array();
-            if ($activeTasks)
-                foreach ($activeTasks as $taskItem) {
-                    $runningFeedNames[] = $taskItem['Params'];
-                }
-            if ($completeTasks)
-                foreach ($completeTasks as $taskItem) {
-                    $completeFeedNames[] = $taskItem['Params'];
-                }
-            if ($newTasks)
-                foreach ($newTasks as $taskItem) {
-                    $newFeedNames[] = $taskItem['Params'];
-                }
-            if ($canceledTasks)
-                foreach ($canceledTasks as $taskItem) {
-                    $canceledFeedNames[] = $taskItem['Params'];
-                }
+            // $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
+            // $completeTasks = $this->getCustomer()->getCompletedTasksByGroupName('shop');
+            // $newTasks = $this->getCustomer()->getNewTasksByGroupName('shop');
+            // $canceledTasks = $this->getCustomer()->getCanceledTasksByGroupName('shop');
+            // $runningFeedNames = array();
+            // $completeFeedNames = array();
+            // $newFeedNames = array();
+            // $canceledFeedNames = array();
+            // if ($activeTasks)
+            //     foreach ($activeTasks as $taskItem) {
+            //         $runningFeedNames[] = $taskItem['Params'];
+            //     }
+            // if ($completeTasks)
+            //     foreach ($completeTasks as $taskItem) {
+            //         $completeFeedNames[] = $taskItem['Params'];
+            //     }
+            // if ($newTasks)
+            //     foreach ($newTasks as $taskItem) {
+            //         $newFeedNames[] = $taskItem['Params'];
+            //     }
+            // if ($canceledTasks)
+            //     foreach ($canceledTasks as $taskItem) {
+            //         $canceledFeedNames[] = $taskItem['Params'];
+            //     }
             // var_dump($runningFeedNames);
             foreach ($listFeedsUploaded as $value) {
                 $pInfo = pathinfo($value);
                 $ftime = filectime($value);
-                $isActive = in_array($pInfo['filename'], $runningFeedNames);
-                $isCompleted = in_array($pInfo['filename'], $completeFeedNames);
-                $isAdded = in_array($pInfo['filename'], $newFeedNames);
-                $isCanceled = in_array($pInfo['filename'], $canceledFeedNames);
+                $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $pInfo['filename']);
+                // $isActive = in_array($pInfo['filename'], $runningFeedNames);
+                // $isCompleted = in_array($pInfo['filename'], $completeFeedNames);
+                // $isAdded = in_array($pInfo['filename'], $newFeedNames);
+                // $isCanceled = in_array($pInfo['filename'], $canceledFeedNames);
+                $isScheduled = $task['Scheduled'];
+                $isRunning = $task['IsRunning'];
+                $isCompleted = $task['Complete'];
+                $isCanceled = $task['ManualCancel'];
                 $feeds[] = array(
                     'ID' => md5($pInfo['filename']),
                     'type' => 'uploaded',
                     'time' => $ftime,
                     'timeFormatted' => date('Y-m-d H:i:s', $ftime),
                     'name' => $pInfo['filename'],
-                    'added' => $isAdded,
-                    'running' => $isActive,
-                    'complete' => $isCompleted,
-                    'canceled' => $isCanceled,
-                    'canStart' => count($activeTasks) === 0,
-                    'status' => $isActive ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : 'new')),
+                    'new' => !$isScheduled && !$isRunning && !$isCompleted && !$isCanceled,
+                    'scheduled' => $task['Scheduled'],
+                    'running' => $task['IsRunning'],
+                    'complete' => $task['Complete'],
+                    'canceled' => $task['ManualCancel'],
+                    'results' => $task['Result'],
+                    // 'canBeScheduled' => !$task['scheduled'],
+                    'status' => $isRunning ? 'active' : ($isCompleted ? 'done' : ($isCanceled ? 'canceled' : ($isScheduled ? 'scheduled' : 'new'))),
                     'link' => $this->getGeneratedFeedDownloadLink($pInfo['basename'])
                 );
             }
@@ -134,7 +144,12 @@ class feeds extends \engine\objects\api {
     }
 
     public function importProductFeed ($name) {
+
+        $results = array();
+        $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $name);
+
         if (ob_get_level() == 0) ob_start();
+
         $feedPath = Path::rootPath() . $this->getFeedFilePathByName($name);
         // $objPHPExcel = new PHPExcel();
         $objPHPExcel = new PHPExcel();
@@ -167,7 +182,8 @@ class feeds extends \engine\objects\api {
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
 
-            echo "udating product " . $rawProductData['Name'];
+            echo "processing product " . $rawProductData['Name'];
+            $results = "processing product " . $rawProductData['Name'];
             ob_flush();
             flush();
 
@@ -231,9 +247,9 @@ class feeds extends \engine\objects\api {
                 'mkdir_mode' => 0766
             );
             $upload_handler = new JqUploadLib($options, false);
-            $rez = $upload_handler->importFromUrl($imagesToDownload, false);
-            // var_dump($rez);
-            foreach ($rez['web'] as $impageUploadInfo) {
+            $res = $upload_handler->importFromUrl($imagesToDownload, false);
+            // var_dump($res);
+            foreach ($res['web'] as $impageUploadInfo) {
                 $images[] = $impageUploadInfo->name;
             }
             for ($i = 0, $cnt = count($images); $i < $cnt; $i++) {
@@ -244,16 +260,28 @@ class feeds extends \engine\objects\api {
             // var_dump($productItem);
             // return;
 
-            $rez = $this->getAPI()->products->updateOrInsertProduct($productItem);
-            // var_dump($rez);
-            if ($rez['created']) {
+            $res = $this->getAPI()->products->updateOrInsertProduct($productItem);
+            // var_dump($res);
+            if ($res['created']) {
                 $addedCount++;
-            } elseif ($rez['updated']) {
+            } elseif ($res['updated']) {
                 $updatedCount++;
             } else {
                 $errorCount++;
             }
-            $errors = array_merge($errors, $rez['errors']);
+            if ($res['errors']) {
+                $results = "[FEILED] " . $rawProductData['Name'];
+                echo "[FEILED] " . $rawProductData['Name'];
+                ob_flush();
+                flush();
+            }
+            if ($res['success']) {
+                $results = "[SUCCESS] " . $rawProductData['Name'];
+                echo "[SUCCESS] " . $rawProductData['Name'];
+                ob_flush();
+                flush();
+            }
+            $errors = array_merge($errors, $res['errors']);
             // $parsedProducts[] = $productItem;
             break;
         }
@@ -261,14 +289,17 @@ class feeds extends \engine\objects\api {
         // disable all products
         // $this->getAPI()->products->archiveAllProducts();
 
-        $rez = array(
+        $res = array(
             'total' => count($parsedProducts),
             'productsAdded' => $addedCount,
             'productsUpdated' => $updatedCount,
             'productsInvalid' => $errorCount,
             'success' => empty($errors),
-            'errors' => $errors
+            'errors' => $errors,
+            'results' => $results
         );
+
+        $this->getCustomer()->setTaskResult($task['ID'], json_encode($results));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
@@ -290,8 +321,8 @@ class feeds extends \engine\objects\api {
         //     'print_response' => $_SERVER['REQUEST_METHOD'] === 'GET'
         // );
         // $upload_handler = new JqUploadLib($options, false);
-        // $rez = $upload_handler->importFromUrl($urls, false);
-        return $rez;
+        // $res = $upload_handler->importFromUrl($urls, false);
+        return $res;
     }
 
     public function generateProductFeed () {
@@ -387,23 +418,32 @@ class feeds extends \engine\objects\api {
         } elseif (isset($resp['files'])) {
             // var_dump($resp['files']);
             foreach ($resp['files'] as $tempFileItem) {
-                Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
+                $res = Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
+                $this->getCustomer()->addTask('shop', 'importProductFeed', $res['basename']);
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
             }
         }
     }
     public function patch (&$resp, $req) {
         $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
-        if (isset($req->data['import']) && isset($req->get['name'])) {
-            // $resp = $this->importProductFeed($req->get['name']);
+        if (isset($req->data['schedule']) && isset($req->get['name'])) {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
-            if (empty($task)) {
-                $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
-                $this->getFeeds();
-                $resp['success'] = true;
+            if (!empty($task)) {
+                if (!$task['Scheduled']) {
+                    $this->getCustomer()->scheduleTask('shop', 'importProductFeed', $req->get['name']);
+                    // this part must be moved into separated process >>>>
+                    // $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
+                    // $resp = $this->importProductFeed($req->get['name']);
+                    $resp = $this->getFeeds();
+                    // <<<< this part must be moved into separated process
+                    $resp['success'] = true;
+                } else {
+                    $this->getFeeds();
+                    $resp['error'] = 'CanNotBeStarted';
+                }
             } else {
                 $this->getFeeds();
-                $resp['error'] = 'AlreadyAdded';
+                $resp['error'] = 'UnknownTask';
             }
         } else if (isset($req->data['cancel']) && isset($req->get['name'])) {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
