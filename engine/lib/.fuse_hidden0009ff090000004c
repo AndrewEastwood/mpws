@@ -751,27 +751,19 @@ class uploadHandler
                 imagesavealpha($new_img, true);
                 break;
         }
-        $success = false;
-
-        try {
-            $success = imagecopyresampled(
-                $new_img,
-                $src_img,
-                $dst_x,
-                $dst_y,
-                0,
-                0,
-                $new_width,
-                $new_height,
-                $img_width,
-                $img_height
-            ) && $write_func($new_img, $new_file_path, $image_quality);
-        } catch (Exception $ex) {
-            $success = false;
-        }
-        if ($success) {
-            $this->gd_set_image_object($file_path, $new_img);
-        }
+        $success = imagecopyresampled(
+            $new_img,
+            $src_img,
+            $dst_x,
+            $dst_y,
+            0,
+            0,
+            $new_width,
+            $new_height,
+            $img_width,
+            $img_height
+        ) && $write_func($new_img, $new_file_path, $image_quality);
+        $this->gd_set_image_object($file_path, $new_img);
         return $success;
     }
 

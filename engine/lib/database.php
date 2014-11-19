@@ -270,7 +270,7 @@ class database {
                 break;
             case 'update':
                 // var_dump(array_combine($config['data']['fields'], $config['data']['values']));
-                $this->dbo->set($config['data']);
+                $this->dbo->update($config['data']);
                 // echo 'libraryDataObject update DB';
                 $this->dbo->save($saveOptions);
                 break;

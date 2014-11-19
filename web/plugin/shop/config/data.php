@@ -142,7 +142,9 @@ class data extends \engine\objects\configuration {
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
         if (!empty($ExternalKey))
-            $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey));
+            $data["ExternalKey"] = \engine\lib\util::slugify(implode('_', $ExternalKey));
+        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_products",
             "action" => "insert",
@@ -161,7 +163,9 @@ class data extends \engine\objects\configuration {
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
         if (!empty($ExternalKey))
-            $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey));
+            $data["ExternalKey"] = \engine\lib\util::slugify(implode('_', $ExternalKey));
+        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_products",
             "action" => "update",
@@ -338,6 +342,8 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateFeature ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
+        $data["FieldName"] = substr($data["FieldName"], 0, 200);
+        $data["GroupName"] = substr($data["GroupName"], 0, 100);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_features",
             "action" => "insert",
@@ -536,8 +542,10 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateCategory ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name']);
+        $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_categories",
             "action" => "insert",
@@ -549,7 +557,9 @@ class data extends \engine\objects\configuration {
     public function jsapiShopUpdateCategory ($CategoryID, $data) {
         $data["DateUpdated"] = $this->getDate();
         if (isset($data['Name']))
-            $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name']);
+            $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
+        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_categories",
             "action" => "update",
@@ -624,8 +634,10 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateOrigin ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name']);
+        $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_origins",
             "action" => "insert",
@@ -637,7 +649,9 @@ class data extends \engine\objects\configuration {
     public function jsapiShopUpdateOrigin ($OriginID, $data) {
         $data["DateUpdated"] = $this->getDate();
         if (isset($data['Name']))
-            $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name']);
+            $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
+        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_origins",
             "action" => "update",

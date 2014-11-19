@@ -65,7 +65,7 @@ class origins extends \engine\objects\api {
         $OriginID = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
             'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
@@ -110,7 +110,7 @@ class origins extends \engine\objects\api {
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 200),
             'Description' => array('string', 'skipIfUnset'),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
             'Status' => array('string', 'skipIfUnset')

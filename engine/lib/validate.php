@@ -65,8 +65,12 @@ class validate {
             $acceptedTypesCount = count($acceptedTypes);
 
             // string
-            if (in_array("string", $rules) && is_numeric($values[$keyToValidate])) {
+            if (in_array("string", $rules) && (!is_string($values[$keyToValidate]) || is_numeric($values[$keyToValidate]))) {
                 $errors[$keyToValidate][] = $keyToValidate . "IsNoString";
+                $wrongTypeCount++;
+            }
+            if (in_array("array", $rules) && !is_array($values[$keyToValidate])) {
+                $errors[$keyToValidate][] = $keyToValidate . "IsNotArray";
                 $wrongTypeCount++;
             }
 
@@ -104,6 +108,17 @@ class validate {
                 $wrongTypeCount++;
             }
 
+            if (in_array("skipIfNull", $rules) && is_null($values[$keyToValidate])) {
+                unset($errors[$keyToValidate]);
+                unset($values[$keyToValidate]);
+                continue;
+            }
+
+            if (in_array("skipIfEmpty", $rules) && empty($values[$keyToValidate])) {
+                unset($errors[$keyToValidate]);
+                unset($values[$keyToValidate]);
+                continue;
+            }
             // var_dump($keyToValidate);
             // var_dump($values[$keyToValidate]);
             // var_dump($wrongTypeCount);

@@ -67,9 +67,9 @@ class categories extends \engine\objects\api {
         $CategoryID = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
             'ParentID' => array('int', 'skipIfUnset'),
-            'Description' => array('string', 'skipIfUnset', 'max' => 300)
+            'Description' => array('string', 'skipIfUnset', 'max' => 5000)
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -111,8 +111,8 @@ class categories extends \engine\objects\api {
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'Description' => array('string', 'skipIfUnset', 'max' => 300),
+            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 200),
+            'Description' => array('string', 'skipIfUnset', 'max' => 5000),
             'ParentID' => array('int', 'null', 'skipIfUnset'),
             'Status' => array('string', 'skipIfUnset')
         ));

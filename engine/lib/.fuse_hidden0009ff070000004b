@@ -555,14 +555,6 @@ use PDO;
             return $this;
         }
 
-        public function update($data=null) {
-            $this->_is_new = false;
-            if (!is_null($data)) {
-                return $this->hydrate($data)->force_all_dirty();
-            }
-            return $this;
-        }
-
         /**
          * Specify the ID column to use for this instance or array of instances only.
          * This overrides the id_column and id_column_overrides settings.

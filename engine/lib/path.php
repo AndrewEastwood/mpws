@@ -234,7 +234,7 @@ class path {
     }
 
     public static function deleteUploadedFile ($pathToFile) {
-        $filePath = self::getUploadDirectory() . $pathToFile;
+        $filePath = self::rootPath() . self::getUploadDirectory() . $pathToFile;
         if (file_exists($filePath)) {
             return unlink($filePath);
         }

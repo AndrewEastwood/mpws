@@ -47,7 +47,7 @@ class delivery extends \engine\objects\api {
         $deliveryID = null;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 100),
+            'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
             'HomePage' => array('string', 'skipIfUnset', 'max' => 300)
         ));
 

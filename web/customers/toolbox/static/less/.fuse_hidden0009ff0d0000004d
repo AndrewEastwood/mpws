@@ -630,12 +630,6 @@ input[type="radio"], input[type="checkbox"] {
             margin-top: -5px;
         }
     }
-    .list-group {
-        margin-bottom: 0px;
-    }
-    .panel-group {
-        margin-bottom: 0px;
-    }
     #uploaded-feeds {
         .list-group-item {
             padding: 0px;

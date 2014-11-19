@@ -55,6 +55,7 @@ INSERT INTO `mpws_permissions` (`ID`, `AccountID`, `CanAdmin`, `CanCreate`, `Can
 
 
 
+truncate mpws_tasks;
 truncate shop_productPrices;
 truncate shop_productFeatures;
 truncate shop_productAttributes;
