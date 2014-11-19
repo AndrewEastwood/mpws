@@ -195,7 +195,7 @@ define("plugin/shop/toolbox/js/view/filterTreeCategories", [
                 var model = self.collection.get(id);
                 if (model && model.save) {
                     model.save({
-                        ParentID: newParentNode.data.id || null
+                        ParentID: newParentNode.data.id >= 0 ? newParentNode.data.id : null
                     }, {
                         patch: true,
                         success: function (model, resp, options) {

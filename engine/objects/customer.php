@@ -312,8 +312,12 @@ class customer {
                 $limit = intval($options['limit']);
 
             if ($count > 0) {
-                if ($limit >= 1)
+                if ($limit >= 1) {
                     $dsConfig['limit'] = $limit;
+                }
+                if ($limit === 0) {
+                    unset($dsConfig['limit']);
+                }
                 if ($page >= 1 && $limit >= 1) {
                     if ($page > round($count / $limit + 0.49)) {
                         $page = round($count / $limit + 0.49);

@@ -162,9 +162,10 @@ class data extends \engine\objects\configuration {
             $ExternalKey[] = $data['Model'];
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
-        if (!empty($ExternalKey))
+        if (!empty($ExternalKey)) {
             $data["ExternalKey"] = \engine\lib\util::slugify(implode('_', $ExternalKey));
-        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+            $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        }
         $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_products",
@@ -556,10 +557,12 @@ class data extends \engine\objects\configuration {
 
     public function jsapiShopUpdateCategory ($CategoryID, $data) {
         $data["DateUpdated"] = $this->getDate();
-        if (isset($data['Name']))
+        if (isset($data['Name'])) {
             $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
-        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
-        $data["Name"] = substr($data["Name"], 0, 300);
+            $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+            $data["Name"] = substr($data["Name"], 0, 300);
+        }
+        // var_dump($data);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_categories",
             "action" => "update",
@@ -648,10 +651,13 @@ class data extends \engine\objects\configuration {
 
     public function jsapiShopUpdateOrigin ($OriginID, $data) {
         $data["DateUpdated"] = $this->getDate();
-        if (isset($data['Name']))
+        if (isset($data['Name'])) {
             $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
-        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
-        $data["Name"] = substr($data["Name"], 0, 300);
+            $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        }
+        if (isset($data["Name"])) {
+            $data["Name"] = substr($data["Name"], 0, 300);
+        }
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_origins",
             "action" => "update",

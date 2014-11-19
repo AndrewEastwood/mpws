@@ -387,7 +387,7 @@ class catalog extends \engine\objects\api {
                 "count" => $currentProductCount
             )
         );
-        $data['_location'] = $this->getAPI()->categories->getCategoryLocation($categoryID);
+        $data['_location'] = $this->getAPI()->categories->getCategoryLocationByCategoryID($categoryID);
         // return data object
         return $data;
     }
