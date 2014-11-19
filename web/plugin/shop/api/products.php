@@ -150,7 +150,7 @@ class products extends \engine\objects\api {
     public function getProductIDByModelAndOriginName ($productName, $originName) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productName);
+        $config['condition']['Model'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productName);
         $config['condition']['shop_origins.Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
@@ -310,7 +310,7 @@ class products extends \engine\objects\api {
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfEmpty'),
             'ISBN' => array('skipIfEmpty'),
-            'Warranty' => array('skipIfEmpty'),
+            'WARRANTY' => array('skipIfEmpty'),
             'Features' =>  array('array', 'notEmpty'),
             'file1' => array('string', 'skipIfEmpty'),
             'file2' => array('string', 'skipIfEmpty'),
@@ -344,8 +344,8 @@ class products extends \engine\objects\api {
                 if (isset($validatedValues['ISBN'])) {
                     $attributes["ISBN"] = $validatedValues['ISBN'];
                 }
-                if (isset($validatedValues['Warranty'])) {
-                    $attributes["WARRANTY"] = $validatedValues['Warranty'];
+                if (isset($validatedValues['WARRANTY'])) {
+                    $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
                 }
                 // extract features
                 if (isset($validatedValues['Features'])) {
@@ -371,7 +371,7 @@ class products extends \engine\objects\api {
                 // cleanup fields
                 unset($validatedValues['Tags']);
                 unset($validatedValues['ISBN']);
-                unset($validatedValues['Warranty']);
+                unset($validatedValues['WARRANTY']);
                 unset($validatedValues['Features']);
                 unset($validatedValues['file2']);
                 unset($validatedValues['file1']);
@@ -499,7 +499,7 @@ class products extends \engine\objects\api {
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'Warranty');
+                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
                             continue;
@@ -547,7 +547,7 @@ class products extends \engine\objects\api {
             'Status' => array('string', 'skipIfEmpty'),
             'Tags' => array('string', 'skipIfUnset'),
             'ISBN' => array('skipIfUnset'),
-            'Warranty' => array('skipIfEmpty'),
+            'WARRANTY' => array('skipIfEmpty'),
             'Features' =>  array('array', 'notEmpty', 'skipIfUnset'),
             'file1' => array('string', 'skipIfUnset'),
             'file2' => array('string', 'skipIfUnset'),
@@ -579,8 +579,8 @@ class products extends \engine\objects\api {
                 if (isset($validatedValues['ISBN'])) {
                     $attributes["ISBN"] = $validatedValues['ISBN'];
                 }
-                if (isset($validatedValues['Warranty'])) {
-                    $attributes["WARRANTY"] = $validatedValues['Warranty'];
+                if (isset($validatedValues['WARRANTY'])) {
+                    $attributes["WARRANTY"] = $validatedValues['WARRANTY'];
                 }
                 // extract features
                 if (isset($validatedValues['Features'])) {
@@ -606,7 +606,7 @@ class products extends \engine\objects\api {
                 // cleanup fields
                 unset($validatedValues['Tags']);
                 unset($validatedValues['ISBN']);
-                unset($validatedValues['Warranty']);
+                unset($validatedValues['WARRANTY']);
                 unset($validatedValues['Features']);
                 unset($validatedValues['file1']);
                 unset($validatedValues['file2']);
@@ -780,7 +780,7 @@ class products extends \engine\objects\api {
                     // -- ISBN
                     // -- EXPIRE
                     // -- TAGS
-                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'Warranty');
+                    $commonAttributeKeys = array('ISBN', 'EXPIRE', 'TAGS', 'WARRANTY');
                     foreach ($commonAttributeKeys as $key) {
                         if (!isset($attributes[$key])) {
                             continue;
@@ -838,10 +838,12 @@ class products extends \engine\objects\api {
         if (isset($category['ID']) && isset($origin['ID'])) {
             // we have the product item already in db
             if (isset($data['ID'])) {
+                echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
                 $productID = $this->getProductIDByID($data['ID']);
                 // try to get product item by name and model
-            } elseif (isset($data['Name']) && isset($data['OriginName'])) {
-                $productID = $this->getProductIDByModelAndOriginName($data['Name'], $data['OriginName']);
+            } elseif (isset($data['Model']) && isset($data['OriginName'])) {
+                echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
+                $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
             }
             // var_dump($category);
             // var_dump($origin);

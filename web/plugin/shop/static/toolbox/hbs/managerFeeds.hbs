@@ -48,7 +48,7 @@
                     {{/if}}
                     {{#if complete}}
                     <div class="list-group-item {{status}}">
-                        <div class="panel-heading" role="tab" id="headingOne">
+                        <div class="panel-heading" role="tab" id="heading{{ID}}">
                             <a data-toggle="collapse" data-parent="#uploaded-feeds" data-id="{{ID}}" href="#{{ID}}" aria-expanded="true" aria-controls="{{ID}}">
                                 <i class="fa fa-check-circle fa-fw pull-left text-success"></i>
                                 <span class="time label label-success pull-left">{{fromNowHumanized}}</span>
@@ -56,8 +56,8 @@
                                 <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
                             </a>
                         </div>
-                        <div id="{{ID}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                            <div class="panel-body">{{results}}</div>
+                        <div id="{{ID}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ID}}">
+                            <div class="panel-body feed-results"><pre>{{results}}</pre></div>
                         </div>
                     </div>
                     {{/if}}

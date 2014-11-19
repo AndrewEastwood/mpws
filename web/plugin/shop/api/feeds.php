@@ -182,7 +182,7 @@ class feeds extends \engine\objects\api {
         $processed = 0;
 
         $keysToEncode = array('Name', 'Model', 'CategoryName', 'OriginName',
-            'Description', 'Features', 'TAGS', 'Warranty');
+            'Description', 'Features', 'TAGS', 'WARRANTY');
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
 
@@ -202,10 +202,10 @@ class feeds extends \engine\objects\api {
             $productItem['TAGS'] = $rawProductData['TAGS'];
             $productItem['Description'] = trim($rawProductData['Description']);
             $productItem['Features'] = null;
-            $productItem['Warranty'] = $rawProductData['Warranty'];
+            $productItem['WARRANTY'] = $rawProductData['WARRANTY'];
 
 
-            $results[] = "[INFO] " . "set encoding";
+            // $results[] = "[INFO] " . "set encoding";
             echo "[INFO] " . "set encoding" . PHP_EOL;
             foreach ($keysToEncode as $key) {
                 $productItem[$key] = mb_convert_encoding((string)$productItem[$key], 'UTF-8', mb_list_encodings());
@@ -219,7 +219,7 @@ class feeds extends \engine\objects\api {
                 continue;
             }
 
-            $results[] = "[INFO] " . "adjusting features";
+            // $results[] = "[INFO] " . "adjusting features";
             echo "[INFO] " . "adjusting features" . PHP_EOL;
             $featureChunks = explode('|', $rawProductData['Features']);
             $features = array();
@@ -233,7 +233,7 @@ class feeds extends \engine\objects\api {
             }
             $productItem['Features'] = $features;
 
-            $results[] = "[INFO] " . "downloading images";
+            // $results[] = "[INFO] " . "downloading images";
             echo "[INFO] " . "downloading images" . PHP_EOL;
             // var_dump($rawProductData['Images']);
             $images = array();
@@ -255,7 +255,7 @@ class feeds extends \engine\objects\api {
                 $pInfo = pathinfo($urlInfo['path']);
                 if ($urlInfo['host'] !== $this->getCustomerConfiguration()->display->Host) {
                     // $imagesToDownload[] = $imgUrl;
-                    $results[] = "[INFO] " . "downloading image: " . $imgUrl;
+                    // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
                     echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
                     $res = $upload_handler->importFromUrl($imgUrl, false);
                     foreach ($res['web'] as $impageUploadInfo) {
@@ -285,21 +285,27 @@ class feeds extends \engine\objects\api {
 
             // var_dump("[[[[[[[[[[[[[[ inpuda data >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             // var_dump($productItem);
-            $results[] = "[INFO] " . "saving product";
-            echo "[INFO] " . "saving product" . PHP_EOL;
+            // $results[] = "[INFO] " . "saving product";
+            // echo "[INFO] " . "saving product" . PHP_EOL;
             $res = $this->getAPI()->products->updateOrInsertProduct($productItem);
             // var_dump("***************** result *****************");
             // var_dump($res);
             if ($res['created']) {
+                echo "[INFO] new product created" . PHP_EOL;
+                $results[] = "[INFO] new product created";
                 $addedCount++;
             } elseif ($res['updated']) {
+                echo "[INFO] updating existent product " . $res['ID'] . PHP_EOL;
+                $results[] = "[INFO] updating existent product " . $res['ID'];
                 $updatedCount++;
             } else {
                 $errorCount++;
             }
             if (!empty($res['errors'])) {
                 $results[] = "[FAILED] " . $rawProductData['Name'];
+                $results[] = print_r($res['errors'], true);
                 echo "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
+                var_dump($res['errors']);
                 ob_flush();
                 flush();
             }
@@ -314,17 +320,15 @@ class feeds extends \engine\objects\api {
                 ob_flush();
                 flush();
             }
-            if (!empty($res['errors']))
-                var_dump($res['errors']);
             $errors = array_merge($errors, $res['errors']);
             // $parsedProducts[] = $productItem;
-            // var_dump("********************************************");
             // if (count($parsedProducts) > 1) {
             //     break;
             // }
             $processed++;
             echo "[INFO] " . "parsed products count " . $processed . " of " . $total . PHP_EOL;
             set_time_limit(30);
+            var_dump("********************************************");
         }
 
         // disable all products
@@ -338,7 +342,7 @@ class feeds extends \engine\objects\api {
             'productsUpdated' => $updatedCount,
             'productsInvalid' => $errorCount,
             'success' => empty($errors),
-            'errors' => $errors,
+            // 'errors' => $errors,
             'results' => $results
         );
 
@@ -389,25 +393,30 @@ class feeds extends \engine\objects\api {
             ->setCellValue('E1', 'Price')
             ->setCellValue('F1', 'Status')
             ->setCellValue('G1', 'IsPromo')
-            ->setCellValue('H1', 'Images')
+            ->setCellValue('H1', 'WARRANTY')
             ->setCellValue('I1', 'TAGS')
-            ->setCellValue('J1', 'Description')
-            ->setCellValue('K1', 'Features');
+            ->setCellValue('J1', 'Features')
+            ->setCellValue('K1', 'Description')
+            ->setCellValue('L1', 'Images');
         $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);
         for ($i = 0, $j = 2, $len = count($dataList['items']); $i < $len; $i++, $j++) {
             $images = array();
             $features = array();
+            $warranty = '';
             $tags = '';
             // $expire = '';
             // $isbn = '';
             if (!empty($dataList['items'][$i]['Images'])) {
                 foreach ($dataList['items'][$i]['Images'] as $value) {
-                    $images[] = $this->getCustomerConfiguration()->display->Scheme . '//' . $this->getCustomerConfiguration()->display->Host . $value['normal'];
+                    $images[] = $this->getCustomerConfiguration()->display->Scheme . '://' . $this->getCustomerConfiguration()->display->Host . $value['normal'];
                 }
             }
             if (isset($dataList['items'][$i]['Attributes'])) {
                 if (isset($dataList['items'][$i]['Attributes']['TAGS'])) {
                     $tags = $dataList['items'][$i]['Attributes']['TAGS'];
+                }
+                if (isset($dataList['items'][$i]['Attributes']['WARRANTY'])) {
+                    $warranty = $dataList['items'][$i]['Attributes']['WARRANTY'];
                 }
                 // if (isset($dataList['items'][$i]['Attributes']['EXPIRE'])) {
                 //     $expire = $dataList['items'][$i]['Attributes']['EXPIRE'];
@@ -421,17 +430,18 @@ class feeds extends \engine\objects\api {
                     $features[] = $featureGroupName . '=' . join(',', array_values($featureGroupItems));
                 }
             }
-            $objPHPExcel->getActiveSheet()->setCellValue('A' . $j, $dataList['items'][$i]['Name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('B' . $j, $dataList['items'][$i]['Model']);
-            $objPHPExcel->getActiveSheet()->setCellValue('C' . $j, $dataList['items'][$i]['_category']['Name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('D' . $j, $dataList['items'][$i]['_origin']['Name']);
+            $objPHPExcel->getActiveSheet()->setCellValueExplicit('A' . $j, $dataList['items'][$i]['Name']);
+            $objPHPExcel->getActiveSheet()->setCellValueExplicit('B' . $j, $dataList['items'][$i]['Model']);
+            $objPHPExcel->getActiveSheet()->setCellValueExplicit('C' . $j, $dataList['items'][$i]['_category']['Name']);
+            $objPHPExcel->getActiveSheet()->setCellValueExplicit('D' . $j, $dataList['items'][$i]['_origin']['Name']);
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $j, $dataList['items'][$i]['Price']);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $j, $dataList['items'][$i]['Status']);
             $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo'] ? '+' : '');
-            $objPHPExcel->getActiveSheet()->setCellValue('H' . $j, implode(PHP_EOL, $images));
+            $objPHPExcel->getActiveSheet()->setCellValueExplicit('H' . $j, $warranty);//$dataList['items'][$i]['Features']);
             $objPHPExcel->getActiveSheet()->setCellValue('I' . $j, $tags);
-            $objPHPExcel->getActiveSheet()->setCellValue('J' . $j, $dataList['items'][$i]['Description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J' . $j, implode('|', $features));//$dataList['items'][$i]['Features']);
+            $objPHPExcel->getActiveSheet()->setCellValue('K' . $j, $dataList['items'][$i]['Description']);
+            $objPHPExcel->getActiveSheet()->setCellValue('L' . $j, implode(PHP_EOL, $images));
 
             // add dropdown to status field
             $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $j)->getDataValidation();
@@ -447,7 +457,19 @@ class feeds extends \engine\objects\api {
             $objValidation->setPrompt('Please pick a value from the drop-down list.');
             $objValidation->setFormula1('"' . join(',', $this->getAPI()->products->getProductStatuses()) . '"'); //note this!
         }
-        foreach($objPHPExcel->getActiveSheet()->getRowDimensions() as $rd) { $rd->setRowHeight(-1); }
+        // foreach($objPHPExcel->getActiveSheet()->getRowDimensions() as $rd) { $rd->setRowHeight(-1); }
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(12);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(12);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(10);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(150);
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save(Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '.xls');
         // return $dataList;

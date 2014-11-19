@@ -91,6 +91,12 @@
                         <span class="value-prefix">Код товару:</span>
                         <strong>#{{data.ID}}</strong>
                     </div>
+                    {{#if data.Attributes.WARRANTY}}
+                    <div class="shop-component shop-product-attr shop-product-attr-code">
+                        <span class="value-prefix">Гарантія:</span>
+                        <strong>{{data.Attributes.WARRANTY}}</strong>
+                    </div>
+                    {{/if}}
                     {{#if data.Attributes.ISBN}}
                     <div class="shop-component shop-product-attr shop-product-attr-code">
                         <span class="value-prefix">ISBN:</span>
