@@ -198,7 +198,7 @@ CREATE TABLE `mpws_tasks` (
   KEY `CustomerID` (`CustomerID`),
   KEY `Hash` (`Hash`),
   CONSTRAINT `mpws_tasks_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -416,7 +416,7 @@ CREATE TABLE `shop_features` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_features_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -520,7 +520,7 @@ CREATE TABLE `shop_productAttributes` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_productAttributes_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productAttributes_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=682 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=1917 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -545,7 +545,7 @@ CREATE TABLE `shop_productFeatures` (
   CONSTRAINT `shop_productFeatures_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productFeatures_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productFeatures_ibfk_3` FOREIGN KEY (`FeatureID`) REFERENCES `shop_features` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=347 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=964 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -682,7 +682,7 @@ CREATE TABLE `shop_settings` (
   UNIQUE KEY `Property` (`Property`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_settings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -773,4 +773,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-19 14:59:03
+-- Dump completed on 2014-11-20  7:16:26
