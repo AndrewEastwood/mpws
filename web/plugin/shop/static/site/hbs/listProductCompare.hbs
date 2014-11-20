@@ -16,7 +16,7 @@
                     <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
                         <i class="fa fa-trash-o"></i>
                     </a>
-                    <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
+                    <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:order:add" data-id="{{ID}}">
                         <i class="fa fa-shopping-cart"></i>
                     </a>
                 </td>
@@ -28,9 +28,9 @@
                 <td>
                     <div class="shop-component shop-product-images">
                         <div class="shop-product-image shop-product-image-main">
-                            <a href="/#shop/product/{{ID}}" class="link">
+                            <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link">
                                 <div class="image productimage noimage image_{{ID}}">
-                                    {{#if Attributes.IMAGES.MAIN}}
+                                    {{#if Images.[0].sm}}
                                     <div id="facebookG">
                                         <div id="blockG_1" class="facebook_blockG"></div>
                                         <div id="blockG_2" class="facebook_blockG"></div>
@@ -38,10 +38,10 @@
                                     </div>
                                     {{/if}}
                                 </div>
-                                {{#if Attributes.IMAGES.MAIN}}
+                                {{#if Images.[0].sm}}
                                 <script>
                                 (function() {
-                                    require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
+                                    require(["default/js/plugin/image!{{Images.[0].sm}}"], function (img) {
                                         img.title = "{{Name}}";
                                         img.className = "image img-responsive";
                                         $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
@@ -58,19 +58,19 @@
             <tr>
                 <td><strong>Назва</strong></td>
                 {{#each data }}
-                <td>{{OriginName}} - {{Name}}</td>
+                <td>{{_origin.Name}} - {{Name}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><strong>Виробник</strong></td>
                 {{#each data }}
-                <td>{{OriginName}}</td>
+                <td>{{_origin.Name}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td><strong>Категорія</strong></td>
                 {{#each data }}
-                <td>{{CategoryName}}</td>
+                <td>{{_category.Name}}</td>
                 {{/each}}
             </tr>
             <tr>
@@ -91,20 +91,24 @@
                 <td>{{Description}}</td>
                 {{/each}}
             </tr>
-            {{#each productFeatues }}
+{{!--             {{#each productFeatues }}
             <tr>
                 <td><strong>{{ @key }}</strong></td>
-                {{#each this }}
-                <td>
-                    {{#if this.active }}
-                        <i class="fa fa-check text-success"></i>
-                    {{else}}
-                        <i class="fa fa-minus text-danger"></i>
-                    {{/if}}
-                </td>
-                {{/each}}
+                {{#each this }}<td></td>{{/each}}
             </tr>
-            {{/each}}
+                {{#each this }}
+                <tr>
+                    <td><strong>{{ @key }}</strong></td>
+                    <td>
+                        {{#if this }}
+                            <i class="fa fa-check text-success"></i>
+                        {{else}}
+                            <i class="fa fa-minus text-danger"></i>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            {{/each}} --}}
             <tr>
                 <td><strong>Додаткові зображення</strong></td>
                 {{#each data }}
@@ -118,7 +122,7 @@
                     <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_compare:remove" data-id="{{ID}}">
                         <i class="fa fa-trash-o"></i>
                     </a>
-                    <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:list_cart:add" data-id="{{ID}}">
+                    <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:order:add" data-id="{{ID}}">
                         <i class="fa fa-shopping-cart"></i>
                     </a>
                 </td>

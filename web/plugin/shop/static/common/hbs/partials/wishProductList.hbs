@@ -4,12 +4,11 @@
         <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_wish:remove" data-id="{{ID}}">
             <i class="fa fa-trash-o"></i>
         </a>
-        |
-        <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:order:add" data-id="{{ID}}">
+        <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:order:add" data-id="{{ID}}">
             <i class="fa fa-shopping-cart"></i>
         </a>
         <div class="shop-product-image shop-product-image-main">
-            <a href="/#shop/product/{{ID}}" class="link" title="{{_origin.Name}} - {{Name}}">
+            <a href="/#shop/product/{{ExternalKey}}" class="link" title="{{_origin.Name}} - {{Name}}">
                 <div class="image productimage noimage image_{{ID}}">
                     {{#if Images.[0].sm}}
                     <div id="facebookG">
@@ -33,7 +32,7 @@
             </a>
         </div>
         <div class="product-row">
-            <span class="product-name"><a href="/#shop/product/{{ID}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a></span>
+            <span class="product-name"><a href="/#shop/product/{{ExternalKey}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a></span>
             <span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span>
         </div>
     </div>

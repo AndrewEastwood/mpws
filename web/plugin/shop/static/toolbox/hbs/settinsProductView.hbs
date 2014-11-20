@@ -9,6 +9,8 @@
         <a href="javascript://" class="list-group-item shop-property-{{Property}} alert" data-id="{{ID}}">
             <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
             <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
+            {{#is Property "ShowDeliveryInfo"}}<span class="edit">ред.<span/>{{/is}}
+            {{#is Property "ShowPaymentInfo"}}<span class="edit">ред.<span/>{{/is}}
         </a>
     {{/each}}
     </div>

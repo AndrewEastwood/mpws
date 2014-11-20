@@ -7,6 +7,6 @@
 $DR = dirname(__FILE__) . '/';
 
 echo 'test.php is running';
-file_put_contents($DR . 'results.txt', print_r($_SERVER, true));
+// file_put_contents($DR . 'results.txt', print_r($_SERVER, true));
 
 ?>

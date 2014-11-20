@@ -14,31 +14,13 @@ class data extends \engine\objects\configuration {
     var $Table_ShopSettings = "shop_settings";
 
     // products >>>>>
-    public function jsapiShopGetProductItem ($ProductID = null/*, $fullInfo = true*/) {
+    public function jsapiShopGetProductItem ($ProductID = null) {
         $config = $this->jsapiGetDataSourceConfig(array(
             "action" => "select",
             "source" => "shop_products",
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
             "offset" => 0,
             "limit" => 1,
-            // "additional" => array(
-            //     "shop_categories" => array(
-            //         "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
-            //         "fields" => array(
-            //             "CategoryName" => "Name",
-            //             "CategoryDescription" => "Description",
-            //             "CategoryStatus" => "Status"
-            //         )
-            //     ),
-            //     "shop_origins" => array(
-            //         "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
-            //         "fields" => array(
-            //             "OriginName" => "Name",
-            //             "OriginDescription" => "Description",
-            //             "OriginStatus" => "Status"
-            //         )
-            //     )
-            // ),
             "options" => array(
                 "expandSingleRecord" => true
             )
@@ -49,10 +31,12 @@ class data extends \engine\objects\configuration {
                 "shop_products.ID" => $this->jsapiCreateDataSourceCondition($ProductID)
             );
 
-        // if (!$fullInfo) {
-        //     unset($config['additional']);
-        // }
+        return $config;
+    }
 
+    public function jsapiShopGetProductItemByExternalKey ($externalKey) {
+        $config = $this->jsapiShopGetProductItem();
+        $config['condition']["shop_products.ExternalKey"] = $this->jsapiCreateDataSourceCondition($externalKey);
         return $config;
     }
 
@@ -141,9 +125,10 @@ class data extends \engine\objects\configuration {
             $ExternalKey[] = $data['Model'];
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
-        if (!empty($ExternalKey))
-            $data["ExternalKey"] = \engine\lib\util::slugify(implode('_', $ExternalKey));
-        $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        if (!empty($ExternalKey)) {
+            $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
+            $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
+        }
         $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_products",
@@ -163,7 +148,7 @@ class data extends \engine\objects\configuration {
         if (isset($data['SKU']))
             $ExternalKey[] = $data['SKU'];
         if (!empty($ExternalKey)) {
-            $data["ExternalKey"] = \engine\lib\util::slugify(implode('_', $ExternalKey));
+            $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
         $data["Name"] = substr($data["Name"], 0, 300);
@@ -543,8 +528,8 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateCategory ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
@@ -558,7 +543,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopUpdateCategory ($CategoryID, $data) {
         $data["DateUpdated"] = $this->getDate();
         if (isset($data['Name'])) {
-            $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
+            $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
             $data["Name"] = substr($data["Name"], 0, 300);
         }
@@ -637,8 +622,8 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateOrigin ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
+        $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
@@ -652,7 +637,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopUpdateOrigin ($OriginID, $data) {
         $data["DateUpdated"] = $this->getDate();
         if (isset($data['Name'])) {
-            $data["ExternalKey"] = \engine\lib\util::slugify($data['Name']);
+            $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
         if (isset($data["Name"])) {

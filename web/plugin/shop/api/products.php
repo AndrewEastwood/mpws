@@ -111,6 +111,14 @@ class products extends \engine\objects\api {
         return $this->__adjustProduct($product, $skipRelations);
     }
 
+    public function getProductByExternalKey ($productExternalKey, $skipRelations = false) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItemByExternalKey($productExternalKey);
+        $product = $this->getCustomer()->fetch($config);
+        if (empty($product))
+            return null;
+        return $this->__adjustProduct($product, $skipRelations);
+    }
+
     public function getProductByName ($productName, $skipRelations = false) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
         $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productName);
@@ -1025,8 +1033,12 @@ class products extends \engine\objects\api {
         if (empty($req->get['id'])) {
             $resp = $this->getProducts_List($req->get);
         } else {
-            $ProductID = intval($req->get['id']);
-            $resp = $this->getProductByID($ProductID);
+            if (is_numeric($req->get['id'])) {
+                $ProductID = intval($req->get['id']);
+                $resp = $this->getProductByID($ProductID);
+            } else {
+                $resp = $this->getProductByExternalKey($req->get['id']);
+            }
         }
     }
 

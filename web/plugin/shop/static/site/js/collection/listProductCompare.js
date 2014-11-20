@@ -31,8 +31,8 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                 if (model) {
                     model.destroy({
                         url: this.url({productID: data.id}),
-                        success: function (collection, resp) {
-                            self.reset(self.parse(resp));
+                        success: function (model, resp) {
+                            self.reset(resp);
                             Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
                             BSAlert.warning(lang.list_wish_alert_remove);
                         }
@@ -46,7 +46,7 @@ define('plugin/shop/site/js/collection/listProductCompare', [
                 this.create({productID: data.id}, {
                     url: this.url(),
                     success: function (model, resp) {
-                        self.reset(self.parse(resp));
+                        self.reset(resp);
                         if (resp.error) {
                             BSAlert.danger(lang['list_compare_alert_' + resp.error]);
                         } else {
@@ -61,8 +61,8 @@ define('plugin/shop/site/js/collection/listProductCompare', [
             var self = this;
             this.sync("delete", this, {
                 url: this.url({productID: "*"}),
-                success: function (collection, resp) {
-                    self.reset(self.parse(resp));
+                success: function (resp) {
+                    self.reset(resp);
                     Sandbox.eventNotify('plugin:shop:list_compare:changed', data);
                     BSAlert.danger(lang.list_wish_alert_clear);
                 }

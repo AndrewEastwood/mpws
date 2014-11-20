@@ -348,7 +348,7 @@ class feeds extends \engine\objects\api {
 
         // var_dump($task);
         // $this->getCustomer()->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
-        $this->getCustomer()->setTaskResult($task['ID'], print_r($res, true));
+        // $this->getCustomer()->setTaskResult($task['ID'], print_r($res, true));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();

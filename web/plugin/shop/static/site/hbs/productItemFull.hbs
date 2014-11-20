@@ -247,6 +247,20 @@
                 </li>
                 {{/ifAny}}
 
+                {{#if instances.shop.settings.ShowSocialSharing._isActive}}
+                <li class="list-group-item list-group-item-service-info">
+                    <div id="fb-root"></div>
+                    <script>(function(d, s, id) {
+                      var js, fjs = d.getElementsByTagName(s)[0];
+                      if (d.getElementById(id)) return;
+                      js = d.createElement(s); js.id = id;
+                      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.0";
+                      fjs.parentNode.insertBefore(js, fjs);
+                    }(document, 'script', 'facebook-jssdk'));</script>
+                    <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" data-layout="icon"></div>
+                </li>
+                {{/if}}
+
                 {{#if data.Relations }}
                 <li class="list-group-item">
                     <div class="panel panel-default">
@@ -262,7 +276,7 @@
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
                                 {{#each data.Relations }}
-                                    <div class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="#shop/product/{{ID}}">
+                                    <div class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}">
                                         <div class="shop-product-image shop-product-image-main">
                                             <div class="productBadge {{Status}}">
                                                <div class="ribbon-wrapper">
@@ -272,7 +286,7 @@
                                                 </div>
                                             </div>
                                             <div class="image productimage noimage image_{{ID}}">
-                                                {{#if Attributes.IMAGES.MAIN}}
+                                                {{#if Images.[0].xs}}
                                                 <div id="facebookG">
                                                     <div id="blockG_1" class="facebook_blockG"></div>
                                                     <div id="blockG_2" class="facebook_blockG"></div>
@@ -280,10 +294,10 @@
                                                 </div>
                                                 {{/if}}
                                             </div>
-                                            {{#if Attributes.IMAGES.MAIN}}
+                                            {{#if Images.[0].xs}}
                                             <script>
                                             (function() {
-                                                require(["default/js/plugin/image!{{Attributes.IMAGES.MAIN}}"], function(img){
+                                                require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
                                                     img.title = "{{Name}}";
                                                     img.className = "image img-responsive";
                                                     $('.image_{{ID}}').removeClass('noimage').html($(img).clone());

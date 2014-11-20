@@ -23,19 +23,22 @@ define("plugin/shop/site/js/view/listProductCompare", [
             var tplData = Utils.getHBSTemplateData(this);
 
             // get all product features
-            var _productFeatures= [];
-            this.collection.each(function(model){
-                // debugger;
-                _productFeatures.push(model.getFeatures(self.collection));
-            });
+            // var _productFeatures= [];
+            // this.collection.each(function(model){
+            //     // debugger;
+            //     _productFeatures.push(model.getFeatures(self.collection));
+            // });
 
             // transform collection to object with array values
-            var productFeatuesTable = {};
-            _(_productFeatures[0]).each(function(v, k){
-                productFeatuesTable[k] = _(_productFeatures).pluck(k);
-            });
+            // var productFeatuesTable = {};
+            // _(_productFeatures[0]).each(function(v, k){
+            //     productFeatuesTable[k] = _(_productFeatures).pluck(k);
+            // });
 
-            tplData.productFeatues = productFeatuesTable;
+            // tplData.productFeatues = productFeatuesTable;
+            // tplData.productFeatues = _productFeatures;
+            // debugger;
+            window.coll = this.collection;
             this.$el.html(this.template(tplData));
 
             return this;

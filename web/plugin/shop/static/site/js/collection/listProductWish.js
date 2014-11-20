@@ -33,7 +33,7 @@ define('plugin/shop/site/js/collection/listProductWish', [
                     model.destroy({
                         url: this.url({productID: data.id}),
                         success: function (collection, resp) {
-                            self.reset(self.parse(resp));
+                            self.reset(resp);
                             Sandbox.eventNotify('plugin:shop:list_wish:changed', data);
                             BSAlert.warning(lang.list_wish_alert_remove);
                         }
@@ -48,7 +48,7 @@ define('plugin/shop/site/js/collection/listProductWish', [
                 this.create({productID: data.id}, {
                     url: this.url(),
                     success: function (model, resp) {
-                        self.reset(self.parse(resp));
+                        self.reset(resp);
                         Sandbox.eventNotify('plugin:shop:list_wish:changed', data);
                         BSAlert.success(lang.list_compare_alert_add);
                     }
@@ -59,8 +59,8 @@ define('plugin/shop/site/js/collection/listProductWish', [
             var self = this;
             this.sync("delete", this, {
                 url: this.url({productID: "*"}),
-                success: function (collection, resp) {
-                    self.reset(self.parse(resp));
+                success: function (resp, status) {
+                    self.reset(resp);
                     Sandbox.eventNotify('plugin:shop:list_wish:changed', data);
                     BSAlert.danger(lang.list_compare_alert_clear);
                 }

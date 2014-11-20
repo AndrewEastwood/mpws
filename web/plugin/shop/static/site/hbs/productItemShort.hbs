@@ -8,13 +8,13 @@
     </div>
     <div class="panel panel-heading">
         <h4 class="text-center">
-            <a href="/#shop/product/{{data.ID}}">{{data._origin.Name}} - {{data.Name}}</a>
+            <a href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}">{{data._origin.Name}} - {{data.Name}}</a>
         </h4>
     </div>
     <div class="panel-body">
         <div class="shop-component shop-product-images">
             <div class="shop-product-image shop-product-image-main">
-                <a href="/#shop/product/{{data.ID}}" class="link">
+                <a href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" class="link">
                     <div class="image productimage noimage image_{{data.ID}}">
                         {{#if data.Images.[0].sm}}
                         <div id="facebookG">
@@ -58,6 +58,7 @@
     </div>
     <div class="panel-footer">
         <div class="buttons">
+            <p class="button-actions">
             {{#if data._viewExtras.InCartCount }}
                 <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i> +1 в кошик
@@ -95,8 +96,9 @@
                     <i class="fa fa-files-o"></i>
                 </button>
             {{/if}}
+            </p>
             <p class="button-details">
-                <a href="/#shop/product/{{data.ID}}" class="btn btn-success btn-block btn-warning">
+                <a href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" class="btn btn-success btn-block btn-warning">
                 Детальніше <span class="fa fa-chevron-right"></span>
                 </a>
             </p>
