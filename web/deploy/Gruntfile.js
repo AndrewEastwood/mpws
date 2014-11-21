@@ -96,7 +96,7 @@ module.exports = function(grunt) {
         var _getConfigWatch = function () {
             var _paths = _getPaths();
 
-            _baseConfigWatch['styles'] = {
+            _baseConfigWatch['less'] = {
                 // Which files to watch (all .less files recursively in the less directory)
                 files: [
                     _paths.srcLessCustomer + '*.less',

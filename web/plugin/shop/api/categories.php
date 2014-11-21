@@ -46,6 +46,15 @@ class categories extends \engine\objects\api {
         return $this->__adjustCategory($category);
     }
 
+    public function getCategoryByExternalKey ($externalKey) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
+        $config['condition']['ExternalKey'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($externalKey);
+        $category = $this->getCustomer()->fetch($config);
+        if (empty($category))
+            return null;
+        return $this->__adjustCategory($category);
+    }
+
     public function getCategories_List (array $options = array()) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryList($options);
         $self = $this;
@@ -221,15 +230,17 @@ class categories extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
-        if (isset($req->get['browse'])) {
-            $resp = $this->getCatalogBrowse($req->get);
-        } else if (isset($req->get['tree'])) {
+        if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
         } else if (empty($req->get['id'])) {
             $resp = $this->getCategories_List($req->get);
         } else {
-            $CategoryID = intval($req->get['id']);
-            $resp = $this->getCategoryByID($CategoryID);
+            if (is_numeric($req->get['id'])) {
+                $CategoryID = intval($req->get['id']);
+                $resp = $this->getCategoryByID($CategoryID);
+            } else {
+                $resp = $this->getCategoryByExternalKey($req->get['id']);
+            }
         }
     }
 

@@ -21,7 +21,7 @@
                     <div class="list-group">
                     {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="#/shop/catalog/{{ID}}" rel="category" title="{{Name}}">
+                        <a class="list-group-item" href="#/shop/catalog/{{ExternalKey}}" rel="category" title="{{Name}}">
                             {{Name}}
                             <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                         </a>

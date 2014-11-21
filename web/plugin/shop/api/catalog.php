@@ -35,18 +35,8 @@ class catalog extends \engine\objects\api {
         return $currentProductsIDs;
     }
 
-    public function getCatalogBrowse () {
-
+    public function getCatalogBrowse ($categoryID) {
         $data = array();
-        $categoryID = Request::pickFromGET('id', null);
-
-        if (!is_numeric($categoryID)) {
-            $data['error'] = '"id" parameter is missed';
-            return $data;
-        }
-
-        $categoryID = intval($categoryID);
-
         $filterOptions = array(
             /* common options */
             "filter_viewSortBy" => null,
@@ -108,7 +98,8 @@ class catalog extends \engine\objects\api {
             $cetegoriesIDs[] = intval($categoryItem['ID']);
             $cetegoriesNodes[$categoryItem['ID']] = array(
                 'ID' => intval($categoryItem['ID']),
-                'Name' => $categoryItem['Name']
+                'Name' => $categoryItem['Name'],
+                'ExternalKey' => $categoryItem['ExternalKey']
             );
         }
 
@@ -275,11 +266,11 @@ class catalog extends \engine\objects\api {
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $brands[$brand['ID']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
-        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $category) {
+        foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $categoryID => $categoryItem) {
             // $count = 0;
             $dataConfigCategoryInfo = $this->getPluginConfiguration()->data->jsapiGetShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
-            $arrValues = array($category['ID']);
+            $arrValues = array($categoryID);
             if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
                 $arrValues = array_merge($filterOptionsApplied['filter_categorySubCategories'], $arrValues);
             }
@@ -295,17 +286,17 @@ class catalog extends \engine\objects\api {
             // if (isset($filterData) && isset($filterData['ItemsCount'])) {
             //     $count = $filterData['ItemsCount'];
             // }
-            $categories[$category['ID']] = $category;
-            $categories[$category['ID']]['ProductCount'] = $count;
-            $categories[$category['ID']]['Active'] = false;
+            $categories[$categoryItem['ExternalKey']] = $categoryItem;
+            $categories[$categoryItem['ExternalKey']]['ProductCount'] = $count;
+            $categories[$categoryItem['ExternalKey']]['Active'] = false;
             if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
-                $categories[$category['ID']]['ProductCount'] -= $currentProductCount;
-                $categories[$category['ID']]['Active'] = true;
+                $categories[$categoryItem['ExternalKey']]['ProductCount'] -= $currentProductCount;
+                $categories[$categoryItem['ExternalKey']]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($category['ID']);
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($categoryID);
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
-            $categories[$category['ID']]['Total'] = $this->getUniqueProductsCount($filterData);
+            $categories[$categoryItem['ExternalKey']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
             // $count = 0;
@@ -393,7 +384,21 @@ class catalog extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
-        $resp = $this->getCatalogBrowse($req->data);
+        if (isset($req->get['id'])) {
+            if (is_numeric($req->get['id'])) {
+                $CategoryID = intval($req->get['id']);
+                $resp = $this->getCatalogBrowse($CategoryID);
+            } else {
+                $category = $this->getAPI()->categories->getCategoryByExternalKey($req->get['id']);
+                if (isset($category['ID'])) {
+                    $resp = $this->getCatalogBrowse($category['ID']);
+                } else {
+                    $resp['error'] = 'UnknownCategory';
+                }
+            }
+        } else {
+            $resp['error'] = '"id" parameter is missed';
+        }
     }
 
 }
