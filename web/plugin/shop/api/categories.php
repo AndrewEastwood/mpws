@@ -187,8 +187,8 @@ class categories extends \engine\objects\api {
         // var_dump($categoryID);
         $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
         $location = $this->getCustomer()->fetch($configLocation);
-        if (isset($location['ID'])) {
-            $location['ID'] = intval($location['ID']);
+        foreach ($location as &$categoryItem) {
+            $categoryItem['ID'] = intval($categoryItem['ID']);
         }
         return $location;
     }
