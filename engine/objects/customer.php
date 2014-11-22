@@ -9,6 +9,7 @@ use \engine\lib\database as DB;
 use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
+use Exception;
 // use \engine\interfaces\ICustomer as ICustomer;
 // use \engine\object\multiExtendable as MultiExtendable;
 
@@ -28,6 +29,11 @@ class customer {
 
         $this->app = $app;
 
+        $this->metadata = Path::getCustomerMetaData($this->getApp()->customerName());
+        if (empty($this->metadata)) {
+            throw new Exception("Customer metadata file is missing", 1);
+        }
+
         // init configuration
         $configuration = array();
         $defaultConfigs = Path::getDefaultConfigNames($this->getVersion());
@@ -40,7 +46,7 @@ class customer {
             } else {
                 $configClass = Utils::getDefaultConfigClassName($this->getVersion(), $configName);
             }
-            $configuration[$configName] = new $configClass();
+            $configuration[$configName] = new $configClass($this);
         }
         $this->configuration = (object)$configuration;
 
@@ -147,6 +153,10 @@ class customer {
 
     public function getDataBase () {
         return $this->dbo;
+    }
+
+    public function getMetaData () {
+        return $this->metadata;
     }
 
     public function fetch ($config, $skipCustomerID = false) {

@@ -2,6 +2,7 @@
 
 namespace engine\lib;
 
+use \Exception;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -178,7 +179,13 @@ class path {
         return $names;
     }
 
-
+    static function getCustomerMetaData ($customer) {
+        $dir = self::getCustomerDir($customer);
+        $metadata = null;
+        if (file_exists($dir . '/.metadata'))
+            $metadata = parse_ini_file($dir . '/.metadata', true);
+        return $metadata;
+    }
 
     // public static function getUploadWebDirectory (/* args */) {
     //     $args = func_get_args();

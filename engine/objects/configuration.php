@@ -4,9 +4,18 @@ use \engine\lib\utils as Utils;
 
 class configuration {
 
+    private $customer;
     public $DATE_FORMAT = 'Y-m-d H:i:s';
     public $DEFAULT_COMPARATOR = '=';
     public $DEFAULT_CONCATENATE = 'AND';
+
+    function __construct ($customer) {
+        $this->customer = $customer;
+    }
+
+    public function getCustomer () {
+        return $this->customer;
+    }
 
     public function getDate ($strDate = '') {
         if (!empty($strDate)) {
