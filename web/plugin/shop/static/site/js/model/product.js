@@ -16,52 +16,52 @@ define('plugin/shop/site/js/model/product', [
             // if (!this.isNew())
             //     _params.id = this.id;
             return APP.getApiLink(_params);
-        },
-        getFeatures: function (compatibilityList) {
-            var self = this, features = {};
-            // debugger;
-            // var groupName = null;
-            // debugger;
-            if (compatibilityList instanceof Backbone.Collection) {
-                compatibilityList.each(function (model) {
-                    var featuresGroups = model.getFeatures();
-                    // debugger;
-                    _(featuresGroups).each(function (groupFeatures, groupName) {
-                        features[groupName] = features[groupName] || {};
-                        // debugger;
-                        _(groupFeatures).each(function (v, featureName) {
-                            // debugger;
-                            features[groupName][featureName] = features[groupName][featureName] || {};
-                            features[groupName][featureName][model.id] = false;
-                        });
-                        // features[groupName][featureName] = features[groupName][featureName] || {};
-                        // if (!features[groupName]) {
-                        //     features[groupName] = {};
-                        //     _(groupFeatures).each(function (compatibilityList, featureName) {
-                        //         features[groupName][featureName] = false;
-                        //     });
-                        // } else {
-                        //     _(groupFeatures).each(function (v, featureName) {
-                        //         if (!features[groupName][featureName]) {
-                        //             features[groupName][featureName] = false;
-                        //         }
-                        //     });
-                        // }
-                    });
-                })
-            }
+        }//,
+        // getFeatures: function (compatibilityList) {
+        //     var self = this, features = {};
+        //     // debugger;
+        //     // var groupName = null;
+        //     // debugger;
+        //     if (compatibilityList instanceof Backbone.Collection) {
+        //         compatibilityList.each(function (model) {
+        //             var featuresGroups = model.getFeatures();
+        //             // debugger;
+        //             _(featuresGroups).each(function (groupFeatures, groupName) {
+        //                 features[groupName] = features[groupName] || {};
+        //                 // debugger;
+        //                 _(groupFeatures).each(function (v, featureName) {
+        //                     // debugger;
+        //                     features[groupName][featureName] = features[groupName][featureName] || {};
+        //                     features[groupName][featureName][model.id] = false;
+        //                 });
+        //                 // features[groupName][featureName] = features[groupName][featureName] || {};
+        //                 // if (!features[groupName]) {
+        //                 //     features[groupName] = {};
+        //                 //     _(groupFeatures).each(function (compatibilityList, featureName) {
+        //                 //         features[groupName][featureName] = false;
+        //                 //     });
+        //                 // } else {
+        //                 //     _(groupFeatures).each(function (v, featureName) {
+        //                 //         if (!features[groupName][featureName]) {
+        //                 //             features[groupName][featureName] = false;
+        //                 //         }
+        //                 //     });
+        //                 // }
+        //             });
+        //         })
+        //     }
 
-            _(this.get('Features')).each(function (groupFeatures, groupName) {
-                features[groupName] = features[groupName] || {};
-                _(groupFeatures).each(function (featureName) {
-                    features[groupName][featureName] = features[groupName][featureName] || {};
-                    features[groupName][featureName][self.id] = true;
-                });
-            });
-            // debugger;
+        //     _(this.get('Features')).each(function (groupFeatures, groupName) {
+        //         features[groupName] = features[groupName] || {};
+        //         _(groupFeatures).each(function (featureName) {
+        //             features[groupName][featureName] = features[groupName][featureName] || {};
+        //             features[groupName][featureName][self.id] = true;
+        //         });
+        //     });
+        //     // debugger;
 
-            return features;
-        }
+        //     return features;
+        // }
     });
 
 });

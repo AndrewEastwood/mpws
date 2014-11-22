@@ -14,34 +14,58 @@ define("plugin/shop/site/js/view/listProductCompare", [
         id: 'shop-products-compare-ID',
         template: tpl,
         lang: lang,
+        events: {
+            'click .compare-mode': 'toggleCompareMode'
+        },
         initialize: function () {
             this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.collection, 'sync', this.render);
+            _.bindAll(this, 'toggleCompareMode');
         },
         render: function() {
             var self = this;
             var tplData = Utils.getHBSTemplateData(this);
-
-            // get all product features
-            var _productFeatures= [];
+            var features = {};
+            var productIDs = [];
+            // merge all features
             this.collection.each(function(model){
                 // debugger;
-                _productFeatures.push(model.getFeatures(self.collection));
+                var f = model.get('Features');
+                _(f).each(function (groupFeatures, groupName) {
+                    features[groupName] = features[groupName] || {};
+                    _(groupFeatures).each(function (featureName) {
+                        features[groupName][featureName] = features[groupName][featureName] || [];
+                        features[groupName][featureName].push(model.id);
+                    });
+                });
+                productIDs.push(model.id);
             });
-
-            // transform collection to object with array values
-            // var productFeatuesTable = {};
-            // _(_productFeatures[0]).each(function(v, k){
-            //     productFeatuesTable[k] = _(_productFeatures).pluck(k);
-            // });
-
-            // tplData.productFeatues = productFeatuesTable;
-            tplData.productFeatues = _productFeatures;
-            debugger;
-            window.coll = this.collection;
+            tplData.productFeatues = features;
+            tplData.productIDs = productIDs;
+            tplData.showCompareModeLink = this.collection.length > 1;
             this.$el.html(this.template(tplData));
 
             return this;
+        },
+        toggleCompareMode: function (event) {
+            var that = this,
+                $el = $(event.target).parents('.compare-mode');
+            $el.toggleClass('all');
+            if (!$el.hasClass('all')) {
+                this.$('.can-toggle').each(function () {
+                    var values = $(this).find('.product-param').map(function () { return $(this).text(); }).get();
+                    var hasDiff = that.collection.length > 1 && _(values).uniq().length > 1;
+                    $(this).toggleClass('hidden', !hasDiff);
+                });
+                this.$('.feature-group').each(function () {
+                    var groupName = $(this).data('name');
+                    var all = that.$('.feature-item.owner-' + groupName).length;
+                    var hidden = that.$('.feature-item.hidden.owner-' + groupName).length;
+                    $(this).toggleClass('hidden', all === hidden);
+                });
+            } else {
+                this.$('.can-toggle, .feature-group').removeClass('hidden');
+            }
         }
     });
 

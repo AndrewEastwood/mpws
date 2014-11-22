@@ -575,6 +575,30 @@ i.fa {cursor: pointer;}
 }
 
 .shop-products-compare {
+  .actions {
+    a {
+      margin-right: 15px;
+    }
+    .compare-mode {
+      span {
+        cursor: pointer;
+      }
+      &.all {
+        .for-diff {
+          display: none;
+        }
+        .for-all {
+          display: inline;
+        }
+      }
+      .for-diff {
+        display: inline;
+      }
+      .for-all {
+        display: none;
+      }
+    }
+  }
   .productimage {
     max-height: 150px;
     height: 150px;
@@ -587,6 +611,15 @@ i.fa {cursor: pointer;}
   }
   .shop-product-buy {
     margin-left: 5px;
+  }
+  .feature-group {
+    font-size: 0.8em;
+  }
+  .feature-item {
+    font-size: 1em;
+    strong {
+      padding-left: 40px;
+    }
   }
 }
 

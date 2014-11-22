@@ -65,6 +65,8 @@ define("plugin/shop/site/nls/ua_uk/translation", [
         list_wish_alert_remove: "Товар видалений з списоку бажань",
         list_wish_alert_clear: "Список бажань очищено",
         list_compare_link_clear: "Видалити всі товари з списку",
+        list_compare_link_only_diff: "Тільки розбіжності",
+        list_compare_link_all: "Всі параметри",
         list_compare_empty: "Немає товарів до порівняння",
         list_compare_alert_add: "Товар доданий в список порівнянь",
         list_compare_alert_remove: "Товар видалений з списоку порівнянь",
