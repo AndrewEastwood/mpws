@@ -2,7 +2,8 @@ define('plugin/shop/common/js/collection/settings', [
     'default/js/lib/backbone',
     'default/js/lib/underscore',
     'default/js/lib/moment/moment',
-    'plugin/shop/common/js/model/setting'
+    'plugin/shop/common/js/model/setting',
+    'default/js/lib/moment/locale/uk'
 ], function (Backbone, _, moment, ModelSetting) {
 
     return Backbone.Collection.extend({
@@ -66,14 +67,14 @@ define('plugin/shop/common/js/collection/settings', [
                     if (openHoursData && openHoursData.length === 2) {
                         // set day open hours value
                         addresses[uid].OpenHoursDaysMap[openHoursData[1]] = {
-                            day: moment(openHoursData[1], 'ddd').format('dddd'),
-                            dayShort: openHoursData[1],
+                            day: moment(openHoursData[1], 'ddd', 'en').locale('uk').format('dddd'),
+                            dayShort: moment(openHoursData[1], 'ddd', 'en').locale('uk').format('ddd'),
                             hours: model.get('Value')
                         };
                     }
                     // get todays open hours
                     if (!addresses[uid].OpenHoursToday) {
-                        addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().format('ddd')];
+                        addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().locale('en').format('ddd')];
                     }
                 }
             });
