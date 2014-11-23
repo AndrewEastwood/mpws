@@ -18,7 +18,7 @@ define("plugin/shop/site/js/view/siteWidgets", [
         cartEmbedded.render();
 
         var addr = new Address();
-        addr.render();
+        addr.collection.fetch({reset: true});
 
         Sandbox.eventSubscribe('global:loader:complete', function () {
             Sandbox.eventNotify('global:content:render', [

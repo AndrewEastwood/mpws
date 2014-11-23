@@ -34,9 +34,8 @@ var APP = {
     getApiLink: function (options) {
         throw "Implment function getApiLink";
     },
-    init: function () {
-        // set requirejs configuration
-        require.config({
+    getRJConfig: function () {
+        return {
             locale: this.config.LOCALE,
             baseUrl: this.config.PATH_STATIC_BASE,
             // mpws: this.config,
@@ -56,7 +55,11 @@ var APP = {
             },
             waitSeconds: 20,
             urlArgs: "mpws_bust=" + (this.config.ISDEV ? (new Date()).getTime() : this.config.BUILD)
-        });
+        };
+    },
+    init: function () {
+        // set requirejs configuration
+        require.config(this.getRJConfig());
     },
     backgroundTaskIds: {}
 };
@@ -115,7 +118,19 @@ require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/undersc
 })
 
 require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */ ) {
-
+    // simple extend function
+    // from: http://andrewdupont.net/2009/08/28/deep-extending-objects-in-javascript/
+    Object.deepExtend = function (destination, source) {
+        for (var property in source) {
+            if (source[property] && source[property].constructor && source[property].constructor === Object) {
+                destination[property] = destination[property] || {};
+                Object.deepExtend(destination[property], source[property]);
+            } else {
+                destination[property] = source[property];
+            }
+        }
+        return destination;
+    };
     APP.commonElements = $('div[name^="Common"]:not(:has(*))');
 
     Backbone.Model.prototype.isEmpty = function () {
@@ -315,4 +330,9 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         return APP.instances['CustomerRouter'];
     };
 
+    APP.getRequireJS = function (options) {
+        // deep copy
+        var defaultConfig = JSON.parse(JSON.stringify(APP.getRJConfig()));
+        return require.config(Object.deepExtend(defaultConfig, options));
+    };
 });

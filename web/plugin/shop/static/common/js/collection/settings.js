@@ -1,8 +1,9 @@
 define('plugin/shop/common/js/collection/settings', [
     'default/js/lib/backbone',
     'default/js/lib/underscore',
+    'default/js/lib/moment/moment',
     'plugin/shop/common/js/model/setting'
-], function (Backbone, _, ModelSetting) {
+], function (Backbone, _, moment, ModelSetting) {
 
     return Backbone.Collection.extend({
         model: ModelSetting,
@@ -43,10 +44,41 @@ define('plugin/shop/common/js/collection/settings', [
         },
 
         toSettings: function () {
-            var settings = {};
+            var uid = null;
+                property = null,
+                openHoursData = null,
+                settings = {},
+                addresses = {},
+                openHoursReg = /.*OpenHoursOn(.*)/;
             this.each(function (model) {
-                settings[model.get('Property')] = model.toJSON();
+                property = model.get('Property');
+                settings[property] = model.toJSON();
+                // get addresses map
+                if (model.isAddress()) {
+                    uid = model.getAddressUID();
+                    addresses[uid] = addresses[uid] || {
+                        uid: uid,
+                        OpenHoursDaysMap: {},
+                        OpenHoursToday: null
+                    };
+                    addresses[uid][model.getAddressFieldName()] = model.toJSON();
+                    openHoursData = property.match(openHoursReg);
+                    if (openHoursData && openHoursData.length === 2) {
+                        // set day open hours value
+                        addresses[uid].OpenHoursDaysMap[openHoursData[1]] = {
+                            day: moment(openHoursData[1], 'ddd').format('dddd'),
+                            dayShort: openHoursData[1],
+                            hours: model.get('Value')
+                        };
+                    }
+                    // get todays open hours
+                    if (!addresses[uid].OpenHoursToday) {
+                        addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().format('ddd')];
+                    }
+                }
             });
+            settings.addresses = addresses
+            settings.addressCount = Object.getOwnPropertyNames(addresses).length;
             return settings;
         }
     });

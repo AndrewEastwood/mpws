@@ -9,8 +9,9 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupSettingsAddress',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    'default/js/lib/bootstrap-editable'
-], function (Sandbox, Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlert, tpl, lang) {
+    'default/js/lib/bootstrap-editable',
+    'default/js/components/x-bootstrap-wysihtml5'
+], function (Sandbox, Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlert, tpl, lang, x, dfdXEditWysi) {
 
     function _getTitle(isNew) {
         if (isNew) {
@@ -79,9 +80,16 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                     cssClass: 'btn-success btn-outline',
                     action: function (dialog) {
                         var modelID = null,
-                            model = null;
+                            model = null,
+                            property = null,
+                            value = null;
                         self.$('.tab-content .setting').each(function () {
                             modelID = $(this).attr('id');
+                            property = $(this).data('property');
+                            value = $(this).val() || $(this).text();
+                            if (/Shipping|Payment/.test(property)) {
+                                value = $(this).editable('getValue', true);
+                            }
                             if (modelID) {
                                 // update each field
                                 model = self.collection.get(modelID);
@@ -93,9 +101,9 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                                     model.destroy();
                                 } else {
                                     model.save({
-                                        Property: self.getPropertyName($(this).data('property')),
+                                        Property: self.getPropertyName(property),
                                         Label: $(this).data('label') || null,
-                                        Value: $(this).val() || $(this).text()
+                                        Value: value
                                     }, {
                                         patch: true
                                     });
@@ -103,9 +111,9 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                             } else {
                             // create new bunch of fields
                                 self.collection.create({
-                                    Property: self.getPropertyName($(this).data('property')),
+                                    Property: self.getPropertyName(property),
                                     Label: $(this).data('label') || null,
-                                    Value: $(this).val() || $(this).text(),
+                                    Value: value,
                                     Type: 'ADDRESS'
                                 });
                             }
@@ -126,7 +134,8 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
         },
         render: function () {
             // debugger;
-            var data = Utils.getHBSTemplateData(this),
+            var that = this,
+                data = Utils.getHBSTemplateData(this),
                 tmpAddressFieldsName = null,
                 tmpModelData = null;
             this.options.isNew = this.collection.isEmpty();
@@ -135,15 +144,19 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             data.extras.contactFields = [];
             data.extras.addressFields = {};
             data.extras.openHoursFields = {};
+            data.extras.information = {};
             this.collection.each(function (model) {
                 tmpAddressFieldsName = model.getAddressFieldName();
                 tmpModelData = model.toJSON();
                 tmpModelData._viewUID = model.getAddressUID();
                 tmpModelData._viewFieldName = tmpAddressFieldsName;
+                console.log(tmpAddressFieldsName);
                 if (/ShopName|^Address/.test(tmpAddressFieldsName)) {
                     data.extras.addressFields[tmpAddressFieldsName] = tmpModelData;
                 } else if (/.*OpenHours.*/.test(tmpAddressFieldsName)) {
                     data.extras.openHoursFields[tmpAddressFieldsName] = tmpModelData;
+                } else if (/Shipping|Payment/.test(tmpAddressFieldsName)) {
+                    data.extras.information[tmpAddressFieldsName] = tmpModelData;
                 } else {
                     data.extras.contactFields.push(tmpModelData);
                 }
@@ -161,6 +174,11 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                     $menuCustomItem.text(params.newValue);
                     $control.data('label', params.newValue).attr('data-label', params.newValue);
                 });
+            dfdXEditWysi.done(function () {
+                that.$('.wysihtml5').editable(_.defaults({
+                    mode: 'inline'
+                }, that.options.editableOptions));
+            });
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
             }

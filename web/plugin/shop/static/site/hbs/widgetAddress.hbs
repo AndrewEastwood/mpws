@@ -1,24 +1,45 @@
-<strong class="title">{{data.OrganizationName}}</strong>
-<div class="block addresses">
-{{#if data.AddressLine1}}<div class="addressLine addressLine1">{{data.AddressLine1}}</div>{{/if}}
-{{#if data.AddressLine2}}<div class="addressLine addressLine2">{{data.AddressLine2}}</div>{{/if}}
-</div>
-<div class="block phones">
-{{#if data.Phone1}}<div class="phone phone1"><abbr title="Phone">P:</abbr>{{data.Phone1}}</div>{{/if}}
-{{#if data.Phone2}}<div class="phone phone2"><abbr title="Phone">P:</abbr>{{data.Phone2}}</div>{{/if}}
-{{#if data.Fax}}<div class="fax"><abbr title="Phone">P:</abbr>{{data.Fax}}</div>{{/if}}
-</div>
-<div class="block openHours">
-{{#if data.OpenHoursWeekdays}}<div class="openHours weekdays">{{data.OpenHoursWeekdays}}</div>{{/if}}
-{{#if data.OpenHoursSaturday}}<div class="openHours saturday">{{data.OpenHoursSaturday}}</div>{{/if}}
-{{#if data.OpenHoursSunday}}<div class="openHours sunday">{{data.OpenHoursSunday}}</div>{{/if}}
-</div>
-<div class="dropdown shop-openhours-dropdown hidden">
-    <span type="button" class="dropdown-toggle" data-toggle="dropdown">
-        Сьогодні: 8:00 - 19:00
+{{#gt extras.addressCount 1}}
+<div class="btn-group address-switcher">
+    <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="shoptitle">{{extras.activeAddress.ShopName.Value}}</span>
         <span class="caret"></span>
     </span>
     <ul class="dropdown-menu" role="menu">
-        <li>dsgdfgdgdfg</li>
+        {{#each extras.addresses}}
+        <li class="address-option" data-ref="{{uid}}"><a href="javascript://">{{ShopName.Value}}</a></li>
+        {{/each}}
     </ul>
 </div>
+{{/gt}}
+{{#each extras.addresses}}
+<span class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{uid}}">
+    {{#is extras.addressCount 1}}
+    <strong class="title">{{ShopName.Value}}</strong>
+    {{/is}}
+    <div class="block addresses">
+    {{#if AddressLine1.Value}}<div class="addressLine addressLine1">{{AddressLine1.Value}}</div>{{/if}}
+    {{#if AddressLine2.Value}}<div class="addressLine addressLine2">{{AddressLine2.Value}}</div>{{/if}}
+    {{#if AddressLine3.Value}}<div class="addressLine addressLine3">{{AddressLine3.Value}}</div>{{/if}}
+    </div>
+    <div class="block phones">
+    {{#if Phone1}}<div class="phone phone1"><abbr title="Phone">P:</abbr>{{Phone1}}</div>{{/if}}
+    {{#if Phone2}}<div class="phone phone2"><abbr title="Phone">P:</abbr>{{Phone2}}</div>{{/if}}
+    {{#if Fax}}<div class="fax"><abbr title="Phone">P:</abbr>{{Fax}}</div>{{/if}}
+    </div>
+    <div class="block openHours btn-group">
+        <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Сьогодні: {{OpenHoursToday.hours}}
+            <span class="caret"></span>
+        </span>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Mon.dayShort}}:</span> {{OpenHoursDaysMap.Mon.hours}}</a></li>
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Tue.dayShort}}:</span> {{OpenHoursDaysMap.Tue.hours}}</a></li>
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Wed.dayShort}}:</span> {{OpenHoursDaysMap.Wed.hours}}</a></li>
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Thu.dayShort}}:</span> {{OpenHoursDaysMap.Thu.hours}}</a></li>
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Fri.dayShort}}:</span> {{OpenHoursDaysMap.Fri.hours}}</a></li>
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Sat.dayShort}}:</span> {{OpenHoursDaysMap.Sat.hours}}</a></li>
+            <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Sun.dayShort}}:</span> {{OpenHoursDaysMap.Sun.hours}}</a></li>
+        </ul>
+    </div>
+</span>
+{{/each}}

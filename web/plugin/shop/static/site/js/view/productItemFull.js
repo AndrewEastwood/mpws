@@ -5,6 +5,7 @@ define("plugin/shop/site/js/view/productItemFull", [
     'plugin/shop/site/js/view/productItemShort',
     'plugin/shop/site/js/model/product',
     'default/js/lib/utils',
+    'default/js/lib/bootstrap-dialog',
     'default/js/plugin/hbs!plugin/shop/site/hbs/productItemFull',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
@@ -12,12 +13,18 @@ define("plugin/shop/site/js/view/productItemFull", [
     'default/js/lib/bootstrap-magnify',
     'default/js/lib/lightbox',
     'default/js/lib/jquery.sparkline'
-], function (Sandbox, Backbone, _, ViewProductItemShort, ModelProduct, Utils, tpl, lang) {
+], function (Sandbox, Backbone, _, ViewProductItemShort, ModelProduct, Utils, BootstrapDialog, tpl, lang) {
 
     var ProductItemFull = ViewProductItemShort.extend({
         className: 'shop-product-item shop-product-item-full',
         template: tpl,
         lang: lang,
+        events: {
+            'click .open-popup-shipping': 'openPopupShipping',
+            'click .open-popup-payments': 'openPopupPayments',
+            'click .open-popup-openhours': 'openPopupOpenHours',
+            'click .open-popup-phones': 'openPopupPhones',
+        },
         initialize: function (options) {
             this.model = new ModelProduct({
                 ID: options.productID
@@ -48,6 +55,46 @@ define("plugin/shop/site/js/view/productItemFull", [
             });
 
             return this;
+        },
+        openPopupShipping: function (event) {
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: $(event.target).html().trim(),
+                message: APP.instances.shop.settings._activeAddress.Shipping.Value
+            });
+        },
+        openPopupPayments: function (event) {
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: $(event.target).html().trim(),
+                message: APP.instances.shop.settings._activeAddress.Payment.Value
+            });
+        },
+        openPopupOpenHours: function (event) {
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: $(event.target).html().trim(),
+                message: function () {
+                    var $openHoursList = $('<ul>').addClass('list-group'),
+                        today = APP.instances.shop.settings._activeAddress.OpenHoursToday;
+                    _(APP.instances.shop.settings._activeAddress.OpenHoursDaysMap).each(function (item) {
+                        $openHoursList.append($('<li>').addClass('list-group-item ' + (today.day === item.day ? 'active' : '')).append([
+                            $('<span>').addClass('badge').text(item.hours),
+                            item.day
+                        ]));
+                    });
+                    return $openHoursList;
+                }
+            });
+        },
+        openPopupPhones: function (event) {
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: $(event.target).html().trim(),
+                message: function () {
+                    
+                }
+            });
         }
     });
 

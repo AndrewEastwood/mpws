@@ -104,7 +104,7 @@ class settings extends \engine\objects\api {
                 $settingID = $this->getCustomer()->fetch($config) ?: null;
 
                 if (empty($settingID)) {
-                    throw new Exception('ProductCreateError');
+                    throw new Exception('SettingCreateError');
                 }
 
                 $this->getCustomerDataBase()->commit();

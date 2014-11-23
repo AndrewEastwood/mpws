@@ -1,0 +1,30 @@
+{{#if data.extras.addressCount}}
+<div class="dropdown shop-openhours-dropdown hidden">
+    <span type="button" class="dropdown-toggle" data-toggle="dropdown">
+        Сьогодні: 8:00 - 19:00
+        <span class="caret"></span>
+    </span>
+    <ul class="dropdown-menu" role="menu">
+        <li>dsgdfgdgdfg</li>
+    </ul>
+</div>
+{{/if}}
+
+{{each data.extras.addresses}}
+<span class="address-item{{#unless isActive}} hidden{{/unless}}">
+<strong class="title">{{data.extras.ShopName}}</strong>
+<div class="block addresses">
+{{#if data.AddressLine1}}<div class="addressLine addressLine1">{{data.AddressLine1}}</div>{{/if}}
+{{#if data.AddressLine2}}<div class="addressLine addressLine2">{{data.AddressLine2}}</div>{{/if}}
+</div>
+<div class="block phones">
+{{#if data.Phone1}}<div class="phone phone1"><abbr title="Phone">P:</abbr>{{data.Phone1}}</div>{{/if}}
+{{#if data.Phone2}}<div class="phone phone2"><abbr title="Phone">P:</abbr>{{data.Phone2}}</div>{{/if}}
+{{#if data.Fax}}<div class="fax"><abbr title="Phone">P:</abbr>{{data.Fax}}</div>{{/if}}
+</div>
+<div class="block openHours">
+{{#if data.OpenHoursWeekdays}}<div class="openHours weekdays">{{data.OpenHoursWeekdays}}</div>{{/if}}
+{{#if data.OpenHoursSaturday}}<div class="openHours saturday">{{data.OpenHoursSaturday}}</div>{{/if}}
+{{#if data.OpenHoursSunday}}<div class="openHours sunday">{{data.OpenHoursSunday}}</div>{{/if}}
+</div>
+{{/each}}

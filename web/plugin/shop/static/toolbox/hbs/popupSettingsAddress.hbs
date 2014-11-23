@@ -2,6 +2,8 @@
     <li class="tab tab-general active"><a href="#general" data-toggle="tab">Основні</a></li>
     <li class="tab tab-contacts"><a href="#contacts" data-toggle="tab">Контакти</a></li>
     <li class="tab tab-openhours"><a href="#openhours" data-toggle="tab">Графік роботи</a></li>
+    <li class="tab tab-shipping"><a href="#shipping" data-toggle="tab">Доставка</a></li>
+    <li class="tab tab-payments"><a href="#payments" data-toggle="tab">Оплата</a></li>
     <li class="hidden pull-right"><i class="fa fa-plus fa-fw add-contact text-success"></i></li>
 </ul>
 <div class="tab-content">
@@ -102,6 +104,12 @@
                 <td><span class="ediatble setting" id="{{extras.openHoursFields.OpenHoursOnSun.ID}}" data-property="OpenHoursOnSun">{{extras.openHoursFields.OpenHoursOnSun.Value}}</span></td>
             </tr>
         </table>
+    </div>
+    <div class="tab-pane fade" id="shipping">
+        <div id="{{extras.information.Shipping.ID}}" data-type="wysihtml5" data-property="Shipping" class="setting shipping wysihtml5">{{{extras.information.Shipping.Value}}}</div>
+    </div>
+    <div class="tab-pane fade" id="payments">
+        <div id="{{extras.information.Payment.ID}}" data-type="wysihtml5" data-property="Payment" class="setting payments wysihtml5">{{{extras.information.Payment.Value}}}</div>
     </div>
 </div>
 <div class="hidden">
