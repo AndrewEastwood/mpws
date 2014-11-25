@@ -12,19 +12,14 @@
 </div>
 {{/gt}}
 {{#each extras.addresses}}
-<span class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{uid}}">
-    {{#is extras.addressCount 1}}
-    <strong class="title">{{ShopName.Value}}</strong>
+<div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{uid}}">
+    {{#is ../extras.addressCount 1}}
+    <b>{{ShopName.Value}}</b>
     {{/is}}
     <div class="block addresses">
-    {{#if AddressLine1.Value}}<div class="addressLine addressLine1">{{AddressLine1.Value}}</div>{{/if}}
-    {{#if AddressLine2.Value}}<div class="addressLine addressLine2">{{AddressLine2.Value}}</div>{{/if}}
-    {{#if AddressLine3.Value}}<div class="addressLine addressLine3">{{AddressLine3.Value}}</div>{{/if}}
-    </div>
-    <div class="block phones">
-    {{#if Phone1}}<div class="phone phone1"><abbr title="Phone">P:</abbr>{{Phone1}}</div>{{/if}}
-    {{#if Phone2}}<div class="phone phone2"><abbr title="Phone">P:</abbr>{{Phone2}}</div>{{/if}}
-    {{#if Fax}}<div class="fax"><abbr title="Phone">P:</abbr>{{Fax}}</div>{{/if}}
+    {{#if AddressLine1.Value}}<span class="addressLine addressLine1">{{AddressLine1.Value}}</span>{{/if}}
+    {{#if AddressLine2.Value}}<span class="addressLine addressLine2">{{AddressLine2.Value}}</span>{{/if}}
+    {{#if AddressLine3.Value}}<span class="addressLine addressLine3">{{AddressLine3.Value}}</span>{{/if}}
     </div>
     <div class="block openHours btn-group">
         <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -41,5 +36,20 @@
             <li><a href="javascript://"><span class="dayname">{{OpenHoursDaysMap.Sun.dayShort}}:</span> {{OpenHoursDaysMap.Sun.hours}}</a></li>
         </ul>
     </div>
-</span>
+</div>
+{{#if Contacts}}
+<div class="button-phones btn-group">
+    <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        {{#each_upto Contacts 1}}
+        <span class="preffix">{{label}}:</span> <span class="contact">{{contact}}</span>
+        {{/each_upto}}
+        <span class="caret"></span>
+    </span>
+    <ul class="dropdown-menu" role="menu">
+        {{#each Contacts}}
+        <li><a href="javascript://"><span class="preffix">{{label}}:</span> <span class="contact">{{contact}}</span></a></li>
+        {{/each}}
+    </ul>
+</div>
+{{/if}}
 {{/each}}

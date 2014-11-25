@@ -41,7 +41,7 @@ define("plugin/shop/toolbox/js/router", [
         "shop/category/new": "categoryCreate",
         "shop/category/edit/:id": "categoryEdit",
         "shop/reports": "reports",
-        "shop/settings": "settings",
+        "shop/settings": "shopSettings",
         "shop/promo": "promo",
         "shop/promo/edit/:id": "promoEdit",
         "shop/promo/new": "promoCreate",
@@ -49,6 +49,8 @@ define("plugin/shop/toolbox/js/router", [
     };
 
     var Router = Backbone.Router.extend({
+
+        settings: null,
 
         routes: routes,
 
@@ -258,7 +260,7 @@ define("plugin/shop/toolbox/js/router", [
             });
         },
 
-        settings: function () {
+        shopSettings: function () {
             Sandbox.eventNotify('global:menu:set-active', '.menu-shop-settings');
             require(['plugin/shop/toolbox/js/view/settings'], function (Settings) {
                 var pluginSettings = new Settings();
@@ -288,9 +290,10 @@ define("plugin/shop/toolbox/js/router", [
         }
 
     }, {
-        initialize: function (callback) {
+        preload: function (callback) {
             $dfdSettings.done(function () {
                 Router.prototype.settings = settings.toSettings();
+                // console.log('shop settings ready: calling callback');
                 callback();
             });
         }

@@ -6,6 +6,7 @@ use \engine\lib\path as Path;
 use PHPExcel as PHPExcel;
 use PHPExcel_IOFactory as PHPExcel_IOFactory;
 use PHPExcel_Cell_DataValidation as PHPExcel_Cell_DataValidation;
+use PHPExcel_Shared_File as PHPExcel_Shared_File;
 
 class feeds extends \engine\objects\api {
 
@@ -472,6 +473,7 @@ class feeds extends \engine\objects\api {
         $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(150);
         $fileName = Path::rootPath() . $this->getFeedsUploadDir() . $this->getGeneratedFeedName() . '.xls';
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        PHPExcel_Shared_File::setUseUploadTempDirectory(true);
         $objWriter->save($fileName);
         // chmod($fileName, 0644);
         // return $dataList;

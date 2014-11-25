@@ -280,6 +280,8 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     // initialize plugins
     $dfd.done(function () {
         // start HTML5 History push
+        // console.log('LOADER COMPLETE');
+        // debugger;
         Backbone.history.start();
         // notify all that loader completed its tasks
         Sandbox.eventNotify('global:loader:complete');
@@ -291,33 +293,58 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         APP.isCompleted = true;
     });
 
-    var addPliginInstanceFn = function (pluginClass, key, preInitFn, isLast) {
-        if (_.isFunction(preInitFn)) {
-            preInitFn(addPliginInstanceFn(pluginClass, key, null));
-        } else {
+    var addPliginInstanceFn = function (pluginClass, key, preInitFn, totalPluginCount) {
+        var initFn = function () {
+            // console.log('calling: initFn for key ' + key + ' ||| instances count: ' + Object.getOwnPropertyNames(APP.instances).length);
             if (_.isFunction(pluginClass)) {
                 APP.instances[key] = new pluginClass();
+            } else {
+                APP.instances[key] = pluginClass;
             }
-            if (isLast) {
+            var _loadedPlugins = _.omit(APP.instances, 'CustomerRouter');
+            // console.log('totalPluginCount: ' + totalPluginCount);
+            if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {
+                // console.log('!!!!!!!!!!!! ALL PLUGINS READY !!!!!!!');
                 $dfd.resolve();
             }
+        };
+        // console.log('preInitFn:');
+        // console.log(preInitFn);
+        if (_.isFunction(preInitFn)) {
+            // console.log('calling: preInitFn for key ' + key);
+            preInitFn(initFn);
+        } else {
+            // console.log('regular plugin init for key ' + key);
+            initFn();
         }
-        return addPliginInstanceFn;
     }
 
     var releasePluginsFn = function () {
+        // console.log(pluginList);
         require(pluginList, function () {
             var _pluginsObjects = [].slice.call(arguments);
             _(_pluginsObjects).each(function (pluginClass, key) {
-                addPliginInstanceFn(pluginClass, pluginNames[key], pluginClass && pluginClass.initialize, key === _pluginsObjects.length - 1);
+                // console.log('calling: addPliginInstanceFn for key [[[[[' + pluginNames[key]);
+                // console.log(pluginClass);
+                // console.log('=====================');
+                addPliginInstanceFn(pluginClass, pluginNames[key], pluginClass && pluginClass.preload, _pluginsObjects.length);
             });
         });
     }
 
     require([APP.config.ROUTER], function (CustomerRouter) {
         if (_.isFunction(CustomerRouter)) {
-            var customerRouter = new CustomerRouter();
-            APP.instances['CustomerRouter'] = customerRouter;
+                    // console.log('INIT customer');
+            // if (!!CustomerRouter.waitPlugins) {
+                // Sandbox.eventSubscribe('global:loader:complete', function () {
+                    var customerRouter = new CustomerRouter();
+                    APP.instances['CustomerRouter'] = customerRouter;
+                    // console.log(customerRouter);
+                // });
+            // } else {
+            //     var customerRouter = new CustomerRouter();
+            //     APP.instances['CustomerRouter'] = customerRouter;
+            // }
         }
         if (CustomerRouter && _.isFunction(CustomerRouter.releasePlugins)) {
             CustomerRouter.releasePlugins(releasePluginsFn);

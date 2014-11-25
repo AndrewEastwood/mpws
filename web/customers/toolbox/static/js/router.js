@@ -76,4 +76,10 @@ define("customer/js/router", [
         $('#side-menu').metisMenu();
     });
 
+    // function CustomerClass () {}
+
+    // CustomerClass.waitPlugins = true;
+
+    // return CustomerClass;
+
 });

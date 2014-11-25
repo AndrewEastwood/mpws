@@ -187,6 +187,15 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             event.preventDefault();
             var $tpl = this.$('.hidden .contact-template').clone();
             $tpl.removeClass('.contact-template');
+            var puid = (new Date()).getTime();
+            $tpl.find('.contact-types a.contact-type').each(function () {
+                var type = $(this).data('type') + '_contact' + puid;
+                $(this).data('type', type).attr('data-type', type);
+            });
+            $tpl.find('.setting').each(function () {
+                var property = $(this).data('property') + '_contact' + puid;
+                $(this).data('property', property).attr('data-property', property);
+            });
             this.$('.fields').append($tpl);
         },
         removeFormGroup: function (event) {

@@ -142,6 +142,7 @@
                     <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
                 </li>
 
+                {{#if instances.shop.settings.addressCount }}
                 {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowPhone._isActive }}
                 <li class="list-group-item list-group-item-service-info">
 
@@ -178,6 +179,7 @@
                     {{/if}}
                 </li>
                 {{/ifAny}}
+                {{/if}}
 
                 {{#if instances.shop.settings.ShowSocialSharing._isActive}}
                 <li class="list-group-item list-group-item-service-info">

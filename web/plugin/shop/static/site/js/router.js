@@ -22,15 +22,6 @@ define("plugin/shop/site/js/router", [
         fn: 'orders'
     });
 
-    SiteMenu({
-        order: order
-    });
-
-    SiteWidgets({
-        order: order
-    });
-
-    order.fetch();
     var $dfdSettings = settings.fetch();
 
     var routes = {
@@ -56,6 +47,16 @@ define("plugin/shop/site/js/router", [
         initialize: function () {
 
             var self = this;
+
+            SiteMenu({
+                order: order
+            });
+
+            SiteWidgets({
+                order: order
+            });
+
+            order.fetch();
 
             Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();
@@ -233,14 +234,14 @@ define("plugin/shop/site/js/router", [
         }
 
     }, {
-        initialize: function (callback) {
+        preload: function (callback) {
             $dfdSettings.done(function () {
                 Router.prototype.settings = settings.toSettings();
+                // console.log('shop settings ready: calling callback');
                 callback();
             });
         }
     });
 
     return Router;
-
 });
