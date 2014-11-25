@@ -143,7 +143,7 @@
                 </li>
 
                 {{#if instances.shop.settings.addressCount }}
-                {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowPhone._isActive }}
+                {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowWarrantyInfo._isActive instances.shop.settings.ShowContacts._isActive }}
                 <li class="list-group-item list-group-item-service-info">
 
                     {{#if instances.shop.settings.ShowDeliveryInfo._isActive}}
@@ -170,10 +170,18 @@
                     </span>
                     {{/if}}
 
-                    {{#if instances.shop.settings.ShowPhone._isActive}}
+                    {{#if instances.shop.settings.ShowContacts._isActive}}
                     <span class="product-info product-info-contacts">
                         <a href="javascript://" class="link dashed open-popup-phones">
                             <i class="fa fa-phone-square fa-fw"></i> Телефони
+                        </a>
+                    </span>
+                    {{/if}}
+
+                    {{#if instances.shop.settings.ShowWarrantyInfo._isActive}}
+                    <span class="product-info product-info-contacts">
+                        <a href="javascript://" class="link dashed open-popup-warranty">
+                            <i class="fa fa-phone-square fa-fw"></i> Гарантії
                         </a>
                     </span>
                     {{/if}}

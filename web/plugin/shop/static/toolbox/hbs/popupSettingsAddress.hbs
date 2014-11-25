@@ -4,6 +4,7 @@
     <li class="tab tab-openhours"><a href="#openhours" data-toggle="tab">Графік роботи</a></li>
     <li class="tab tab-shipping"><a href="#shipping" data-toggle="tab">Доставка</a></li>
     <li class="tab tab-payments"><a href="#payments" data-toggle="tab">Оплата</a></li>
+    <li class="tab tab-warranty"><a href="#warranty" data-toggle="tab">Гарантії</a></li>
     <li class="hidden pull-right"><i class="fa fa-plus fa-fw add-contact text-success"></i></li>
 </ul>
 <div class="tab-content">
@@ -110,6 +111,9 @@
     </div>
     <div class="tab-pane fade" id="payments">
         <div id="{{extras.information.Payment.ID}}" data-type="wysihtml5" data-property="Payment" class="setting payments wysihtml5">{{{extras.information.Payment.Value}}}</div>
+    </div>
+    <div class="tab-pane fade" id="warranty">
+        <div id="{{extras.information.Warranty.ID}}" data-type="wysihtml5" data-property="Warranty" class="setting warranty wysihtml5">{{{extras.information.Warranty.Value}}}</div>
     </div>
 </div>
 <div class="hidden">

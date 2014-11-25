@@ -24,6 +24,7 @@ define("plugin/shop/site/js/view/productItemFull", [
             'click .open-popup-payments': 'openPopupPayments',
             'click .open-popup-openhours': 'openPopupOpenHours',
             'click .open-popup-phones': 'openPopupPhones',
+            'click .open-popup-warranty': 'openPopupWarranty'
         },
         initialize: function (options) {
             this.model = new ModelProduct({
@@ -101,6 +102,13 @@ define("plugin/shop/site/js/view/productItemFull", [
                     });
                     return $contactsList;
                 }
+            });
+        },
+        openPopupWarranty: function (event) {
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: $(event.target).html().trim(),
+                message: APP.instances.shop.settings._activeAddress.Warranty.Value
             });
         }
     });

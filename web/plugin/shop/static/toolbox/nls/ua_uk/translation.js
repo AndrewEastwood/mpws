@@ -190,6 +190,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_ShowPaymentInfo: 'показувати інформацію про оплату',
         setting_property_ShowSocialSharing: 'дозволити розміщення в соц. мережах',
         setting_property_ShowPriceChart: 'показувати статистику цін',
+        setting_property_ShowWarrantyInfo: 'показувати інформацію про гарантії',
         productManager_Button_Upload_ProductFeed: 'Імпортувати',
         productManager_Button_Download_ProductFeed: 'Завантажити',
         settings_value_editable_emptytext: 'пусто',
