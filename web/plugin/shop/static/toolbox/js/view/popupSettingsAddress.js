@@ -155,7 +155,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                     data.extras.addressFields[tmpAddressFieldsName] = tmpModelData;
                 } else if (/.*OpenHours.*/.test(tmpAddressFieldsName)) {
                     data.extras.openHoursFields[tmpAddressFieldsName] = tmpModelData;
-                } else if (/Shipping|Payment/.test(tmpAddressFieldsName)) {
+                } else if (/Shipping|Payment|Warranty/.test(tmpAddressFieldsName)) {
                     data.extras.information[tmpAddressFieldsName] = tmpModelData;
                 } else {
                     data.extras.contactFields.push(tmpModelData);
@@ -176,7 +176,8 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                 });
             dfdXEditWysi.done(function () {
                 that.$('.wysihtml5').editable(_.defaults({
-                    mode: 'inline'
+                    mode: 'inline',
+                    emptytext: 'введіть текст'
                 }, that.options.editableOptions));
             });
             if (!this.$dialog.isOpened()) {
