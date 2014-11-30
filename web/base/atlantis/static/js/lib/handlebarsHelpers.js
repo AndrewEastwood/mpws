@@ -469,8 +469,9 @@ define("default/js/lib/handlebarsHelpers", [
         return _.isEmpty(value) ? defaultValue : value;
     }
     helpers.bb_link = function (url, options) {
+        url = url || "";
         if (options.hash.asRoot) {
-            url = "/#" + url.replace(/^(\/#)|^#|^\//, '');
+            url = "/#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
         }
         _(options.hash).each(function (v, k) {
             url = url.replace(":" + k, v);

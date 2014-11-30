@@ -249,8 +249,9 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     var Router = Backbone.Router.extend({
         routes: {
             "": "index",
-            "signin": "signin",
-            "signout": "signout"
+            "!/": "index",
+            "!/signin": "signin",
+            "!/signout": "signout"
         },
         index: function () {
             // debugger;
@@ -301,6 +302,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
             } else {
                 APP.instances[key] = pluginClass;
             }
+            Backbone.trigger('appinstance:added', key, APP.instances[key], APP.instances);
             var _loadedPlugins = _.omit(APP.instances, 'CustomerRouter');
             // console.log('totalPluginCount: ' + totalPluginCount);
             if (Object.getOwnPropertyNames(_loadedPlugins).length === totalPluginCount) {

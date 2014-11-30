@@ -25,18 +25,20 @@ define("plugin/shop/site/js/router", [
     var $dfdSettings = settings.fetch();
 
     var routes = {
-        "shop": "home",
-        "shop/catalog/:category": "shop_catalog_category",
-        "shop/catalog/": "shop_catalog",
-        "shop/product/:product": "shop_product",
-        "shop/cart": "shop_cart",
-        "shop/wishlist": "shop_wishlist",
-        "shop/compare": "shop_compare",
-        "shop/tracking(/)(:id)": "shop_tracking",
-        "shop/profile/orders": "shop_profile_orders"
+        "!/shop": "home",
+        "!/shop/catalog/:category": "shop_catalog_category",
+        "!/shop/catalog/": "shop_catalog",
+        "!/shop/product/:product": "shop_product",
+        "!/shop/cart": "shop_cart",
+        "!/shop/wishlist": "shop_wishlist",
+        "!/shop/compare": "shop_compare",
+        "!/shop/tracking(/)(:id)": "shop_tracking",
+        "!/shop/profile/orders": "shop_profile_orders"
     };
 
     var Router = Backbone.Router.extend({
+
+        name: "shop",
 
         settings: null,
 
@@ -48,15 +50,23 @@ define("plugin/shop/site/js/router", [
 
             var self = this;
 
-            SiteMenu({
-                order: order
+            Backbone.on('appinstance:added', function (key) {
+                debugger;
+                if (key !== self.name) {
+                    return;
+                }
+
+                SiteMenu({
+                    order: order
+                });
+
+                SiteWidgets({
+                    order: order
+                });
+
+                order.fetch();
             });
 
-            SiteWidgets({
-                order: order
-            });
-
-            order.fetch();
 
             Sandbox.eventSubscribe('global:page:index', function () {
                 self.home();

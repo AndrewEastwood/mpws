@@ -1,6 +1,3 @@
-define('wysihtml5', ['rangy', 'rangy-selectionsaverestore'], function (rangy) {
-                window.rangy = rangy;
-
 // TODO: in future try to replace most inline compability checks with polyfills for code readability 
 
 // element.textContent polyfill.
@@ -76,7 +73,7 @@ var wysihtml5 = {
 (function(factory, global) {
     if (typeof define == "function" && define.amd) {
         // AMD. Register as an anonymous module.
-        define(factory);
+        define("rangy", factory);
 /*
     TODO: look into this properly.
     
@@ -14141,10 +14138,7 @@ wysihtml5.views.View = Base.extend(
 
   });
 })(wysihtml5);
-
-
-return wysihtml5;
-});/*!
+/*!
 
  handlebars v1.3.0
 
@@ -14170,499 +14164,7 @@ THE SOFTWARE.
 
 @license
 */
-
-define(
-  'handlebars/safe-string',["exports"],
-  function(__exports__) {
-    
-    // Build out our basic SafeString type
-    function SafeString(string) {
-      this.string = string;
-    }
-
-    SafeString.prototype.toString = function() {
-      return "" + this.string;
-    };
-
-    __exports__["default"] = SafeString;
-  });
-define(
-  'handlebars/utils',["./safe-string","exports"],
-  function(__dependency1__, __exports__) {
-    
-    /*jshint -W004 */
-    var SafeString = __dependency1__["default"];
-
-    var escape = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#x27;",
-      "`": "&#x60;"
-    };
-
-    var badChars = /[&<>"'`]/g;
-    var possible = /[&<>"'`]/;
-
-    function escapeChar(chr) {
-      return escape[chr] || "&amp;";
-    }
-
-    function extend(obj, value) {
-      for(var key in value) {
-        if(Object.prototype.hasOwnProperty.call(value, key)) {
-          obj[key] = value[key];
-        }
-      }
-    }
-
-    __exports__.extend = extend;var toString = Object.prototype.toString;
-    __exports__.toString = toString;
-    // Sourced from lodash
-    // https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
-    var isFunction = function(value) {
-      return typeof value === 'function';
-    };
-    // fallback for older versions of Chrome and Safari
-    if (isFunction(/x/)) {
-      isFunction = function(value) {
-        return typeof value === 'function' && toString.call(value) === '[object Function]';
-      };
-    }
-    var isFunction;
-    __exports__.isFunction = isFunction;
-    var isArray = Array.isArray || function(value) {
-      return (value && typeof value === 'object') ? toString.call(value) === '[object Array]' : false;
-    };
-    __exports__.isArray = isArray;
-
-    function escapeExpression(string) {
-      // don't escape SafeStrings, since they're already safe
-      if (string instanceof SafeString) {
-        return string.toString();
-      } else if (!string && string !== 0) {
-        return "";
-      }
-
-      // Force a string conversion as this will be done by the append regardless and
-      // the regex test will do this transparently behind the scenes, causing issues if
-      // an object's to string has escaped characters in it.
-      string = "" + string;
-
-      if(!possible.test(string)) { return string; }
-      return string.replace(badChars, escapeChar);
-    }
-
-    __exports__.escapeExpression = escapeExpression;function isEmpty(value) {
-      if (!value && value !== 0) {
-        return true;
-      } else if (isArray(value) && value.length === 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    __exports__.isEmpty = isEmpty;
-  });
-define(
-  'handlebars/exception',["exports"],
-  function(__exports__) {
-    
-
-    var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
-
-    function Exception(message, node) {
-      var line;
-      if (node && node.firstLine) {
-        line = node.firstLine;
-
-        message += ' - ' + line + ':' + node.firstColumn;
-      }
-
-      var tmp = Error.prototype.constructor.call(this, message);
-
-      // Unfortunately errors are not enumerable in Chrome (at least), so `for prop in tmp` doesn't work.
-      for (var idx = 0; idx < errorProps.length; idx++) {
-        this[errorProps[idx]] = tmp[errorProps[idx]];
-      }
-
-      if (line) {
-        this.lineNumber = line;
-        this.column = node.firstColumn;
-      }
-    }
-
-    Exception.prototype = new Error();
-
-    __exports__["default"] = Exception;
-  });
-define(
-  'handlebars/base',["./utils","./exception","exports"],
-  function(__dependency1__, __dependency2__, __exports__) {
-    
-    var Utils = __dependency1__;
-    var Exception = __dependency2__["default"];
-
-    var VERSION = "1.3.0";
-    __exports__.VERSION = VERSION;var COMPILER_REVISION = 4;
-    __exports__.COMPILER_REVISION = COMPILER_REVISION;
-    var REVISION_CHANGES = {
-      1: '<= 1.0.rc.2', // 1.0.rc.2 is actually rev2 but doesn't report it
-      2: '== 1.0.0-rc.3',
-      3: '== 1.0.0-rc.4',
-      4: '>= 1.0.0'
-    };
-    __exports__.REVISION_CHANGES = REVISION_CHANGES;
-    var isArray = Utils.isArray,
-        isFunction = Utils.isFunction,
-        toString = Utils.toString,
-        objectType = '[object Object]';
-
-    function HandlebarsEnvironment(helpers, partials) {
-      this.helpers = helpers || {};
-      this.partials = partials || {};
-
-      registerDefaultHelpers(this);
-    }
-
-    __exports__.HandlebarsEnvironment = HandlebarsEnvironment;HandlebarsEnvironment.prototype = {
-      constructor: HandlebarsEnvironment,
-
-      logger: logger,
-      log: log,
-
-      registerHelper: function(name, fn, inverse) {
-        if (toString.call(name) === objectType) {
-          if (inverse || fn) { throw new Exception('Arg not supported with multiple helpers'); }
-          Utils.extend(this.helpers, name);
-        } else {
-          if (inverse) { fn.not = inverse; }
-          this.helpers[name] = fn;
-        }
-      },
-
-      registerPartial: function(name, str) {
-        if (toString.call(name) === objectType) {
-          Utils.extend(this.partials,  name);
-        } else {
-          this.partials[name] = str;
-        }
-      }
-    };
-
-    function registerDefaultHelpers(instance) {
-      instance.registerHelper('helperMissing', function(arg) {
-        if(arguments.length === 2) {
-          return undefined;
-        } else {
-          throw new Exception("Missing helper: '" + arg + "'");
-        }
-      });
-
-      instance.registerHelper('blockHelperMissing', function(context, options) {
-        var inverse = options.inverse || function() {}, fn = options.fn;
-
-        if (isFunction(context)) { context = context.call(this); }
-
-        if(context === true) {
-          return fn(this);
-        } else if(context === false || context == null) {
-          return inverse(this);
-        } else if (isArray(context)) {
-          if(context.length > 0) {
-            return instance.helpers.each(context, options);
-          } else {
-            return inverse(this);
-          }
-        } else {
-          return fn(context);
-        }
-      });
-
-      instance.registerHelper('each', function(context, options) {
-        var fn = options.fn, inverse = options.inverse;
-        var i = 0, ret = "", data;
-
-        if (isFunction(context)) { context = context.call(this); }
-
-        if (options.data) {
-          data = createFrame(options.data);
-        }
-
-        if(context && typeof context === 'object') {
-          if (isArray(context)) {
-            for(var j = context.length; i<j; i++) {
-              if (data) {
-                data.index = i;
-                data.first = (i === 0);
-                data.last  = (i === (context.length-1));
-              }
-              ret = ret + fn(context[i], { data: data });
-            }
-          } else {
-            for(var key in context) {
-              if(context.hasOwnProperty(key)) {
-                if(data) { 
-                  data.key = key; 
-                  data.index = i;
-                  data.first = (i === 0);
-                }
-                ret = ret + fn(context[key], {data: data});
-                i++;
-              }
-            }
-          }
-        }
-
-        if(i === 0){
-          ret = inverse(this);
-        }
-
-        return ret;
-      });
-
-      instance.registerHelper('if', function(conditional, options) {
-        if (isFunction(conditional)) { conditional = conditional.call(this); }
-
-        // Default behavior is to render the positive path if the value is truthy and not empty.
-        // The `includeZero` option may be set to treat the condtional as purely not empty based on the
-        // behavior of isEmpty. Effectively this determines if 0 is handled by the positive path or negative.
-        if ((!options.hash.includeZero && !conditional) || Utils.isEmpty(conditional)) {
-          return options.inverse(this);
-        } else {
-          return options.fn(this);
-        }
-      });
-
-      instance.registerHelper('unless', function(conditional, options) {
-        return instance.helpers['if'].call(this, conditional, {fn: options.inverse, inverse: options.fn, hash: options.hash});
-      });
-
-      instance.registerHelper('with', function(context, options) {
-        if (isFunction(context)) { context = context.call(this); }
-
-        if (!Utils.isEmpty(context)) return options.fn(context);
-      });
-
-      instance.registerHelper('log', function(context, options) {
-        var level = options.data && options.data.level != null ? parseInt(options.data.level, 10) : 1;
-        instance.log(level, context);
-      });
-    }
-
-    var logger = {
-      methodMap: { 0: 'debug', 1: 'info', 2: 'warn', 3: 'error' },
-
-      // State enum
-      DEBUG: 0,
-      INFO: 1,
-      WARN: 2,
-      ERROR: 3,
-      level: 3,
-
-      // can be overridden in the host environment
-      log: function(level, obj) {
-        if (logger.level <= level) {
-          var method = logger.methodMap[level];
-          if (typeof console !== 'undefined' && console[method]) {
-            console[method].call(console, obj);
-          }
-        }
-      }
-    };
-    __exports__.logger = logger;
-    function log(level, obj) { logger.log(level, obj); }
-
-    __exports__.log = log;var createFrame = function(object) {
-      var obj = {};
-      Utils.extend(obj, object);
-      return obj;
-    };
-    __exports__.createFrame = createFrame;
-  });
-define(
-  'handlebars/runtime',["./utils","./exception","./base","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
-    
-    var Utils = __dependency1__;
-    var Exception = __dependency2__["default"];
-    var COMPILER_REVISION = __dependency3__.COMPILER_REVISION;
-    var REVISION_CHANGES = __dependency3__.REVISION_CHANGES;
-
-    function checkRevision(compilerInfo) {
-      var compilerRevision = compilerInfo && compilerInfo[0] || 1,
-          currentRevision = COMPILER_REVISION;
-
-      if (compilerRevision !== currentRevision) {
-        if (compilerRevision < currentRevision) {
-          var runtimeVersions = REVISION_CHANGES[currentRevision],
-              compilerVersions = REVISION_CHANGES[compilerRevision];
-          throw new Exception("Template was precompiled with an older version of Handlebars than the current runtime. "+
-                "Please update your precompiler to a newer version ("+runtimeVersions+") or downgrade your runtime to an older version ("+compilerVersions+").");
-        } else {
-          // Use the embedded version info since the runtime doesn't know about this revision yet
-          throw new Exception("Template was precompiled with a newer version of Handlebars than the current runtime. "+
-                "Please update your runtime to a newer version ("+compilerInfo[1]+").");
-        }
-      }
-    }
-
-    __exports__.checkRevision = checkRevision;// TODO: Remove this line and break up compilePartial
-
-    function template(templateSpec, env) {
-      if (!env) {
-        throw new Exception("No environment passed to template");
-      }
-
-      // Note: Using env.VM references rather than local var references throughout this section to allow
-      // for external users to override these as psuedo-supported APIs.
-      var invokePartialWrapper = function(partial, name, context, helpers, partials, data) {
-        var result = env.VM.invokePartial.apply(this, arguments);
-        if (result != null) { return result; }
-
-        if (env.compile) {
-          var options = { helpers: helpers, partials: partials, data: data };
-          partials[name] = env.compile(partial, { data: data !== undefined }, env);
-          return partials[name](context, options);
-        } else {
-          throw new Exception("The partial " + name + " could not be compiled when running in runtime-only mode");
-        }
-      };
-
-      // Just add water
-      var container = {
-        escapeExpression: Utils.escapeExpression,
-        invokePartial: invokePartialWrapper,
-        programs: [],
-        program: function(i, fn, data) {
-          var programWrapper = this.programs[i];
-          if(data) {
-            programWrapper = program(i, fn, data);
-          } else if (!programWrapper) {
-            programWrapper = this.programs[i] = program(i, fn);
-          }
-          return programWrapper;
-        },
-        merge: function(param, common) {
-          var ret = param || common;
-
-          if (param && common && (param !== common)) {
-            ret = {};
-            Utils.extend(ret, common);
-            Utils.extend(ret, param);
-          }
-          return ret;
-        },
-        programWithDepth: env.VM.programWithDepth,
-        noop: env.VM.noop,
-        compilerInfo: null
-      };
-
-      return function(context, options) {
-        options = options || {};
-        var namespace = options.partial ? options : env,
-            helpers,
-            partials;
-
-        if (!options.partial) {
-          helpers = options.helpers;
-          partials = options.partials;
-        }
-        var result = templateSpec.call(
-              container,
-              namespace, context,
-              helpers,
-              partials,
-              options.data);
-
-        if (!options.partial) {
-          env.VM.checkRevision(container.compilerInfo);
-        }
-
-        return result;
-      };
-    }
-
-    __exports__.template = template;function programWithDepth(i, fn, data /*, $depth */) {
-      var args = Array.prototype.slice.call(arguments, 3);
-
-      var prog = function(context, options) {
-        options = options || {};
-
-        return fn.apply(this, [context, options.data || data].concat(args));
-      };
-      prog.program = i;
-      prog.depth = args.length;
-      return prog;
-    }
-
-    __exports__.programWithDepth = programWithDepth;function program(i, fn, data) {
-      var prog = function(context, options) {
-        options = options || {};
-
-        return fn(context, options.data || data);
-      };
-      prog.program = i;
-      prog.depth = 0;
-      return prog;
-    }
-
-    __exports__.program = program;function invokePartial(partial, name, context, helpers, partials, data) {
-      var options = { partial: true, helpers: helpers, partials: partials, data: data };
-
-      if(partial === undefined) {
-        throw new Exception("The partial " + name + " could not be found");
-      } else if(partial instanceof Function) {
-        return partial(context, options);
-      }
-    }
-
-    __exports__.invokePartial = invokePartial;function noop() { return ""; }
-
-    __exports__.noop = noop;
-  });
-define(
-  'handlebars.runtime',["./handlebars/base","./handlebars/safe-string","./handlebars/exception","./handlebars/utils","./handlebars/runtime","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __exports__) {
-    
-    /*globals Handlebars: true */
-    var base = __dependency1__;
-
-    // Each of these augment the Handlebars object. No need to setup here.
-    // (This is done to easily share code between commonjs and browse envs)
-    var SafeString = __dependency2__["default"];
-    var Exception = __dependency3__["default"];
-    var Utils = __dependency4__;
-    var runtime = __dependency5__;
-
-    // For compatibility and usage outside of module systems, make the Handlebars object a namespace
-    var create = function() {
-      var hb = new base.HandlebarsEnvironment();
-
-      Utils.extend(hb, base);
-      hb.SafeString = SafeString;
-      hb.Exception = Exception;
-      hb.Utils = Utils;
-
-      hb.VM = runtime;
-      hb.template = function(spec) {
-        return runtime.template(spec, hb);
-      };
-
-      return hb;
-    };
-
-    var Handlebars = create();
-    Handlebars.create = create;
-
-    __exports__["default"] = Handlebars;
-  });define("bootstrap.wysihtml5.templates", ["handlebars.runtime", "wysihtml5"], function(HandlebarsEnv, wysihtml5) {
-    this["wysihtml5"] = wysihtml5;
-    var Handlebars = HandlebarsEnv.default;
-
-this["wysihtml5"] = this["wysihtml5"] || {};
+var Handlebars=function(){var a=function(){"use strict";function a(a){this.string=a}var b;return a.prototype.toString=function(){return""+this.string},b=a}(),b=function(a){"use strict";function b(a){return h[a]||"&amp;"}function c(a,b){for(var c in b)Object.prototype.hasOwnProperty.call(b,c)&&(a[c]=b[c])}function d(a){return a instanceof g?a.toString():a||0===a?(a=""+a,j.test(a)?a.replace(i,b):a):""}function e(a){return a||0===a?m(a)&&0===a.length?!0:!1:!0}var f={},g=a,h={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},i=/[&<>"'`]/g,j=/[&<>"'`]/;f.extend=c;var k=Object.prototype.toString;f.toString=k;var l=function(a){return"function"==typeof a};l(/x/)&&(l=function(a){return"function"==typeof a&&"[object Function]"===k.call(a)});var l;f.isFunction=l;var m=Array.isArray||function(a){return a&&"object"==typeof a?"[object Array]"===k.call(a):!1};return f.isArray=m,f.escapeExpression=d,f.isEmpty=e,f}(a),c=function(){"use strict";function a(a,b){var d;b&&b.firstLine&&(d=b.firstLine,a+=" - "+d+":"+b.firstColumn);for(var e=Error.prototype.constructor.call(this,a),f=0;f<c.length;f++)this[c[f]]=e[c[f]];d&&(this.lineNumber=d,this.column=b.firstColumn)}var b,c=["description","fileName","lineNumber","message","name","number","stack"];return a.prototype=new Error,b=a}(),d=function(a,b){"use strict";function c(a,b){this.helpers=a||{},this.partials=b||{},d(this)}function d(a){a.registerHelper("helperMissing",function(a){if(2===arguments.length)return void 0;throw new h("Missing helper: '"+a+"'")}),a.registerHelper("blockHelperMissing",function(b,c){var d=c.inverse||function(){},e=c.fn;return m(b)&&(b=b.call(this)),b===!0?e(this):b===!1||null==b?d(this):l(b)?b.length>0?a.helpers.each(b,c):d(this):e(b)}),a.registerHelper("each",function(a,b){var c,d=b.fn,e=b.inverse,f=0,g="";if(m(a)&&(a=a.call(this)),b.data&&(c=q(b.data)),a&&"object"==typeof a)if(l(a))for(var h=a.length;h>f;f++)c&&(c.index=f,c.first=0===f,c.last=f===a.length-1),g+=d(a[f],{data:c});else for(var i in a)a.hasOwnProperty(i)&&(c&&(c.key=i,c.index=f,c.first=0===f),g+=d(a[i],{data:c}),f++);return 0===f&&(g=e(this)),g}),a.registerHelper("if",function(a,b){return m(a)&&(a=a.call(this)),!b.hash.includeZero&&!a||g.isEmpty(a)?b.inverse(this):b.fn(this)}),a.registerHelper("unless",function(b,c){return a.helpers["if"].call(this,b,{fn:c.inverse,inverse:c.fn,hash:c.hash})}),a.registerHelper("with",function(a,b){return m(a)&&(a=a.call(this)),g.isEmpty(a)?void 0:b.fn(a)}),a.registerHelper("log",function(b,c){var d=c.data&&null!=c.data.level?parseInt(c.data.level,10):1;a.log(d,b)})}function e(a,b){p.log(a,b)}var f={},g=a,h=b,i="1.3.0";f.VERSION=i;var j=4;f.COMPILER_REVISION=j;var k={1:"<= 1.0.rc.2",2:"== 1.0.0-rc.3",3:"== 1.0.0-rc.4",4:">= 1.0.0"};f.REVISION_CHANGES=k;var l=g.isArray,m=g.isFunction,n=g.toString,o="[object Object]";f.HandlebarsEnvironment=c,c.prototype={constructor:c,logger:p,log:e,registerHelper:function(a,b,c){if(n.call(a)===o){if(c||b)throw new h("Arg not supported with multiple helpers");g.extend(this.helpers,a)}else c&&(b.not=c),this.helpers[a]=b},registerPartial:function(a,b){n.call(a)===o?g.extend(this.partials,a):this.partials[a]=b}};var p={methodMap:{0:"debug",1:"info",2:"warn",3:"error"},DEBUG:0,INFO:1,WARN:2,ERROR:3,level:3,log:function(a,b){if(p.level<=a){var c=p.methodMap[a];"undefined"!=typeof console&&console[c]&&console[c].call(console,b)}}};f.logger=p,f.log=e;var q=function(a){var b={};return g.extend(b,a),b};return f.createFrame=q,f}(b,c),e=function(a,b,c){"use strict";function d(a){var b=a&&a[0]||1,c=m;if(b!==c){if(c>b){var d=n[c],e=n[b];throw new l("Template was precompiled with an older version of Handlebars than the current runtime. Please update your precompiler to a newer version ("+d+") or downgrade your runtime to an older version ("+e+").")}throw new l("Template was precompiled with a newer version of Handlebars than the current runtime. Please update your runtime to a newer version ("+a[1]+").")}}function e(a,b){if(!b)throw new l("No environment passed to template");var c=function(a,c,d,e,f,g){var h=b.VM.invokePartial.apply(this,arguments);if(null!=h)return h;if(b.compile){var i={helpers:e,partials:f,data:g};return f[c]=b.compile(a,{data:void 0!==g},b),f[c](d,i)}throw new l("The partial "+c+" could not be compiled when running in runtime-only mode")},d={escapeExpression:k.escapeExpression,invokePartial:c,programs:[],program:function(a,b,c){var d=this.programs[a];return c?d=g(a,b,c):d||(d=this.programs[a]=g(a,b)),d},merge:function(a,b){var c=a||b;return a&&b&&a!==b&&(c={},k.extend(c,b),k.extend(c,a)),c},programWithDepth:b.VM.programWithDepth,noop:b.VM.noop,compilerInfo:null};return function(c,e){e=e||{};var f,g,h=e.partial?e:b;e.partial||(f=e.helpers,g=e.partials);var i=a.call(d,h,c,f,g,e.data);return e.partial||b.VM.checkRevision(d.compilerInfo),i}}function f(a,b,c){var d=Array.prototype.slice.call(arguments,3),e=function(a,e){return e=e||{},b.apply(this,[a,e.data||c].concat(d))};return e.program=a,e.depth=d.length,e}function g(a,b,c){var d=function(a,d){return d=d||{},b(a,d.data||c)};return d.program=a,d.depth=0,d}function h(a,b,c,d,e,f){var g={partial:!0,helpers:d,partials:e,data:f};if(void 0===a)throw new l("The partial "+b+" could not be found");return a instanceof Function?a(c,g):void 0}function i(){return""}var j={},k=a,l=b,m=c.COMPILER_REVISION,n=c.REVISION_CHANGES;return j.checkRevision=d,j.template=e,j.programWithDepth=f,j.program=g,j.invokePartial=h,j.noop=i,j}(b,c,d),f=function(a,b,c,d,e){"use strict";var f,g=a,h=b,i=c,j=d,k=e,l=function(){var a=new g.HandlebarsEnvironment;return j.extend(a,g),a.SafeString=h,a.Exception=i,a.Utils=j,a.VM=k,a.template=function(b){return k.template(b,a)},a},m=l();return m.create=l,f=m}(d,a,c,b,e);return f}();this["wysihtml5"] = this["wysihtml5"] || {};
 this["wysihtml5"]["tpl"] = this["wysihtml5"]["tpl"] || {};
 
 this["wysihtml5"]["tpl"]["blockquote"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -15080,25 +14582,7 @@ function program17(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </a>\n  </div>\n</li>\n";
   return buffer;
-  });
-
-});define("bootstrap.wysihtml5.commands", ["wysihtml5"], function(wysihtml5) {
-
-(function(wysihtml5) {
-  wysihtml5.commands.small = {
-    exec: function(composer, command) {
-      return wysihtml5.commands.formatInline.exec(composer, command, "small");
-    },
-
-    state: function(composer, command) {
-      return wysihtml5.commands.formatInline.state(composer, command, "small");
-    }
-  };
-})(wysihtml5);
-
-
-
-});(function (factory) {
+  });(function (factory) {
   'use strict';
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -15415,4 +14899,77 @@ function program17(depth0,data) {
     var locale = $.fn.wysihtml5.locale = {};
   };
   bsWysihtml5($, wysihtml5);
+}));
+(function(wysihtml5) {
+  wysihtml5.commands.small = {
+    exec: function(composer, command) {
+      return wysihtml5.commands.formatInline.exec(composer, command, "small");
+    },
+
+    state: function(composer, command) {
+      return wysihtml5.commands.formatInline.state(composer, command, "small");
+    }
+  };
+})(wysihtml5);
+
+/**
+ * English translation for bootstrap-wysihtml5
+ */
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.en-US', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+  $.fn.wysihtml5.locale.en = $.fn.wysihtml5.locale['en-US'] = {
+    font_styles: {
+      normal: 'Normal text',
+      h1: 'Heading 1',
+      h2: 'Heading 2',
+      h3: 'Heading 3',
+      h4: 'Heading 4',
+      h5: 'Heading 5',
+      h6: 'Heading 6'
+    },
+    emphasis: {
+      bold: 'Bold',
+      italic: 'Italic',
+      underline: 'Underline',
+      small: 'Small'
+    },
+    lists: {
+      unordered: 'Unordered list',
+      ordered: 'Ordered list',
+      outdent: 'Outdent',
+      indent: 'Indent'
+    },
+    link: {
+      insert: 'Insert link',
+      cancel: 'Cancel',
+      target: 'Open link in new window'
+    },
+    image: {
+      insert: 'Insert image',
+      cancel: 'Cancel'
+    },
+    html: {
+      edit: 'Edit HTML'
+    },
+    colours: {
+      black: 'Black',
+      silver: 'Silver',
+      gray: 'Grey',
+      maroon: 'Maroon',
+      red: 'Red',
+      purple: 'Purple',
+      green: 'Green',
+      olive: 'Olive',
+      navy: 'Navy',
+      blue: 'Blue',
+      orange: 'Orange'
+    }
+  };
 }));
