@@ -13,7 +13,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    'default/js/lib/bootstrap-editable',
+    'default/js/components/bootstrap3-editable',
     'default/js/lib/jquery.maskedinput',
     'default/js/lib/bootstrap-switch'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts,

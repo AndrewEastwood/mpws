@@ -76,7 +76,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
                 else
                     _options[key] = item;
             });
-            console.log(_options);
+            // console.log(_options);
             return APP.getApiLink(_.extend({}, _options, {
                 source: 'shop',
                 fn: 'catalog'}));
@@ -109,6 +109,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             // debugger;
             this.filter = filter;
             this._location = data._location;
+            this.category = filter.info.category;
             // debugger;
             this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
 

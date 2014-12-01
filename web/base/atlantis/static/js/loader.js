@@ -61,7 +61,8 @@ var APP = {
         // set requirejs configuration
         require.config(this.getRJConfig());
     },
-    backgroundTaskIds: {}
+    backgroundTaskIds: {},
+    dfd: {}
 };
 
 APP.init();
@@ -230,7 +231,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
     $(window).on('hashchange', function () {
         // set page name
         var fragment = Backbone.history.getFragment();
-        var _hashTags = fragment.split('/');
+        var _hashTags = fragment.replace(/#!\/|#|!\//g, '').split('/');
         $('body').attr('class', "MPWSPage");
         if (_hashTags && _hashTags[0])
             $('body').addClass("Page" + _hashTags[0].ucWords());
@@ -242,7 +243,7 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         Sandbox.eventNotify('global:route', fragment);
 
         // save location
-        if (fragment !== "signout" && fragment !== "signin")
+        if (fragment !== "!/signout" && fragment !== "!/signin")
             Cache.saveInLocalStorage("location", fragment);
     });
 

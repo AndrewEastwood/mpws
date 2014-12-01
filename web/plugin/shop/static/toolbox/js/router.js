@@ -26,26 +26,26 @@ define("plugin/shop/toolbox/js/router", [
 
     var routes = {
         // "shop/stats": "stats",
-        "shop/content": "contentList",
-        "shop/content/:status": "contentListPage",
-        "shop/product/new": "productCreate",
-        "shop/product/edit/:id": "productEdit",
-        "shop/orders": "ordersList",
-        "shop/orders/:status": "ordersListPage",
-        "shop/order/edit/:id": "orderEdit",
-        "shop/order/print/:id": "orderPrint",
-        "shop/order/email_tracking/:id": "orderEmailTracking",
-        "shop/order/email_reciept/:id": "orderEmailReceipt",
-        "shop/origin/new": "originCreate",
-        "shop/origin/edit/:id": "originEdit",
-        "shop/category/new": "categoryCreate",
-        "shop/category/edit/:id": "categoryEdit",
-        "shop/reports": "reports",
-        "shop/settings": "shopSettings",
-        "shop/promo": "promo",
-        "shop/promo/edit/:id": "promoEdit",
-        "shop/promo/new": "promoCreate",
-        "shop/feeds": "feeds"
+        "!/shop/content": "contentList",
+        "!/shop/content/:status": "contentListPage",
+        "!/shop/product/new": "productCreate",
+        "!/shop/product/edit/:id": "productEdit",
+        "!/shop/orders": "ordersList",
+        "!/shop/orders/:status": "ordersListPage",
+        "!/shop/order/edit/:id": "orderEdit",
+        "!/shop/order/print/:id": "orderPrint",
+        "!/shop/order/email_tracking/:id": "orderEmailTracking",
+        "!/shop/order/email_reciept/:id": "orderEmailReceipt",
+        "!/shop/origin/new": "originCreate",
+        "!/shop/origin/edit/:id": "originEdit",
+        "!/shop/category/new": "categoryCreate",
+        "!/shop/category/edit/:id": "categoryEdit",
+        "!/shop/reports": "reports",
+        "!/shop/settings": "shopSettings",
+        "!/shop/promo": "promo",
+        "!/shop/promo/edit/:id": "promoEdit",
+        "!/shop/promo/new": "promoCreate",
+        "!/shop/feeds": "feeds"
     };
 
     var Router = Backbone.Router.extend({
@@ -58,9 +58,11 @@ define("plugin/shop/toolbox/js/router", [
 
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
-                self.dashboard();
-            });
+            if (APP.dfd.dashboard) {
+                APP.dfd.dashboard.done(function () {
+                    self.dashboard();
+                });
+            }
         },
 
         dashboard: function () {

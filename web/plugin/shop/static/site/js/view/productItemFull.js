@@ -55,6 +55,8 @@ define("plugin/shop/site/js/view/productItemFull", [
                 product: data
             });
 
+            Sandbox.eventNotify('global:page:setTitle', data._origin.Name + ' ' + data.Model + ' ' + data.Name);
+
             return this;
         },
         openPopupShipping: function (event) {

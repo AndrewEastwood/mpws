@@ -40,9 +40,9 @@ define("customer/js/router", [
         // debugger;
         if (!Auth.getAccountID()) {
             APP.xhrAbortAll();
-            if (!/signin/.test(Backbone.history.getHash())) {
+            if (!/!\/signin/.test(Backbone.history.getHash())) {
                 Backbone.history.fragment = false;
-                window.location.href = '/#signin';
+                window.location.href = '/#!/signin';
                 // Backbone.history.navigate('signin', true);
                 window.location.reload();
             }

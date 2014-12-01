@@ -32,7 +32,7 @@ define("plugin/shop/site/js/router", [
         "!/shop/cart": "shop_cart",
         "!/shop/wishlist": "shop_wishlist",
         "!/shop/compare": "shop_compare",
-        "!/shop/tracking(/)(:id)": "shop_tracking",
+        "!/shop/tracking/(:id)": "shop_tracking",
         "!/shop/profile/orders": "shop_profile_orders"
     };
 
@@ -51,7 +51,6 @@ define("plugin/shop/site/js/router", [
             var self = this;
 
             Backbone.on('appinstance:added', function (key) {
-                debugger;
                 if (key !== self.name) {
                     return;
                 }

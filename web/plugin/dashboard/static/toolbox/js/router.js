@@ -5,6 +5,8 @@ define("plugin/dashboard/toolbox/js/router", [
     'default/js/lib/backbone'
 ], function (Sandbox, $, Auth, Backbone) {
 
+    APP.dfd.dashboard = new $.Deferred();
+
     Sandbox.eventSubscribe('global:page:index', function () {
         if (!Auth.getAccountID())
             return;
@@ -15,7 +17,8 @@ define("plugin/dashboard/toolbox/js/router", [
                 name: 'CommonBodyCenter',
                 el: dashboard.$el
             });
-            Sandbox.eventNotify('plugin:dashboard:ready', dashboard);
+            APP.dfd.dashboard.resolve();
+            // Sandbox.eventNotify('plugin:dashboard:ready', dashboard);
         });
     });
 

@@ -15,7 +15,7 @@ define("plugin/dashboard/toolbox/js/view/dashboard", [
             this.$el.empty();
             // debugger;
             _(APP.instances).each(function (pluginInstance, pluginName) {
-                if (pluginInstance.dashboard)
+                if (pluginName !== 'dashboard')
                     self.$el.append($('<div/>').attr({
                         name: 'DashboardForPlugin_' + pluginName,
                         "class": 'dashboard-container'

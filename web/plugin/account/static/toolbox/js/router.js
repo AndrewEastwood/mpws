@@ -50,16 +50,21 @@ define("plugin/account/toolbox/js/router", [
 
     var Router = Backbone.Router.extend({
         routes: {
-            "account/overview": "overview",
-            "account/accounts": "accounts",
-            "account/account/:id": "accounts"
+            "!/account/overview": "overview",
+            "!/account/accounts": "accounts",
+            "!/account/account/:id": "accounts"
         },
 
         initialize: function () {
             var self = this;
-            Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
-                self.dashboard();
-            });
+            if (APP.dfd.dashboard) {
+                APP.dfd.dashboard.done(function () {
+                    self.dashboard();
+                });
+            }
+            // Sandbox.eventSubscribe('plugin:dashboard:ready', function () {
+            //     self.dashboard();
+            // });
         },
 
         dashboard: function () {

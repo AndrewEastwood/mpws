@@ -1,4 +1,5 @@
 define("plugin/shop/site/js/view/listProductCatalog", [
+    'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'plugin/shop/site/js/collection/listProductCatalog',
@@ -11,7 +12,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',
     "default/js/lib/jquery.cookie"
-], function (_, Backbone, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
+], function (Sandbox, _, Backbone, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
@@ -55,6 +56,8 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             APP.getCustomer().setBreadcrumb({
                 categories: this.collection._location
             });
+
+            Sandbox.eventNotify('global:page:setTitle', this.collection.category.Name);
             return this;
         },
         filterProducts_Other: function (event) {

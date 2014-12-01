@@ -9,9 +9,9 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/popupSettingsAddress',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/toolbox/nls/translation',
-    'default/js/lib/bootstrap-editable',
+    'default/js/components/bootstrap3-editable',
     'default/js/components/x-bootstrap-wysihtml5'
-], function (Sandbox, Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlert, tpl, lang, x, dfdXEditWysi) {
+], function (Sandbox, Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlert, tpl, lang, dfdEditable, dfdXEditWysi) {
 
     function _getTitle(isNew) {
         if (isNew) {

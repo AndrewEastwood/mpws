@@ -474,7 +474,10 @@ define("default/js/lib/handlebarsHelpers", [
             url = "/#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
         }
         _(options.hash).each(function (v, k) {
-            url = url.replace(":" + k, v);
+            if (/^_/.test(k))
+                url = url.replace("(:" + k.substr(1) + ")", v);
+            else
+                url = url.replace(":" + k, v);
         });
         return url;
     }

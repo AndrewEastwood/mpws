@@ -8,13 +8,13 @@
     </div>
     <div class="panel panel-heading">
         <h4 class="text-center">
-            <a href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}">{{data._origin.Name}} - {{data.Name}}</a>
+            <a title="{{data._origin.Name}} - {{data.Name}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}">{{data._origin.Name}} - {{data.Name}}</a>
         </h4>
     </div>
     <div class="panel-body">
         <div class="shop-component shop-product-images">
             <div class="shop-product-image shop-product-image-main">
-                <a href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" class="link">
+                <a title="{{data._origin.Name}} - {{data.Name}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" class="link">
                     <div class="image productimage noimage image_{{data.ID}}">
                         {{#if data.Images.[0].sm}}
                         <div id="facebookG">
@@ -98,7 +98,7 @@
             {{/if}}
             </p>
             <p class="button-details">
-                <a href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" class="btn btn-success btn-block btn-warning">
+                <a title="Дивитися деталі товару {{data._origin.Name}} - {{data.Name}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" class="btn btn-success btn-block btn-warning">
                 Детальніше <span class="fa fa-chevron-right"></span>
                 </a>
             </p>

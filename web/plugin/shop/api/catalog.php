@@ -375,7 +375,8 @@ class catalog extends \engine\objects\api {
             'filterOptionsAvailable' => $filterOptionsAvailable,
             'filterOptionsApplied' => $filterOptionsApplied,
             'info' => array(
-                "count" => $currentProductCount
+                "count" => $currentProductCount,
+                "category" => $this->getAPI()->categories->getCategoryByID($categoryID)
             )
         );
         $data['_location'] = $this->getAPI()->categories->getCategoryLocationByCategoryID($categoryID);
