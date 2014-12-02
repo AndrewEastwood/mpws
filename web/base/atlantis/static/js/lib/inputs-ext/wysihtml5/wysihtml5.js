@@ -41,6 +41,7 @@ $(function(){
 
     $.extend(Wysihtml5.prototype, {
         render: function () {
+            debugger;
             var deferred = $.Deferred(),
             msieOld;
             

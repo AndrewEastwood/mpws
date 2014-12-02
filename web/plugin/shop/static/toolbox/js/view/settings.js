@@ -9,6 +9,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'plugin/shop/toolbox/js/view/settingsWebsiteFormOrder',
     'plugin/shop/toolbox/js/view/settingsAddress',
     'plugin/shop/toolbox/js/view/settinsProductView',
+    'plugin/shop/toolbox/js/view/settingsSEO',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
@@ -17,7 +18,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/jquery.maskedinput',
     'default/js/lib/bootstrap-switch'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts,
-    ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress, ViewSettingsProduct, tpl, lang) {
+    ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress, ViewSettingsProduct, ViewSettingsSEO, tpl, lang) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -32,6 +33,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             this.viewWebsiteFormOrder = new ViewSettingsWebsiteFormOrder();
             this.viewAddress = new ViewSettingsAddress();
             this.viewProduct = new ViewSettingsProduct();
+            this.viewSEO = new ViewSettingsSEO();
 
             // // subscribe on events
             // this.listenTo(this.viewProductsList.collection, 'reset', this.render);
@@ -48,6 +50,7 @@ define('plugin/shop/toolbox/js/view/settings', [
                 this.$('.website-form-order').html(this.viewWebsiteFormOrder.$el);
                 this.$('.shop-address').html(this.viewAddress.$el);
                 this.$('.shop-product').html(this.viewProduct.$el);
+                this.$('.shop-seo').html(this.viewSEO.$el);
                 // this.$('.shop-settings .switcher').bootstrapSwitch({
                 //     size: 'mini',
                 //     wrapperClass: 'delivery'

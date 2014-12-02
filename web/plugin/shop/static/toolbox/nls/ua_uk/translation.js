@@ -201,6 +201,15 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         managerFeeds: {
             titleImport: 'Згенеровані фіди',
             titleExport: 'Завантажені фіди'
-        }
+        },
+        setting_property_ProductKeywords: 'Ключові слова товару',
+        setting_property_CategoryKeywords: 'Ключові слова категорії',
+        setting_property_HomePageKeywords: 'Ключові слова головної сторінки',
+        setting_property_ProductDescription: 'Опис товару',
+        setting_property_CategoryDescription: 'Опис категорії',
+        setting_property_HomePageDescription: 'Опис головної сторінки',
+        setting_property_ProductPageTitle: 'Зголовок товару',
+        setting_property_CategoryPageTitle: 'Зголовок категорії',
+        setting_property_HomePageTitle: 'Зголовок головної сторінки'
     }, CustomerPluginShop);
 });

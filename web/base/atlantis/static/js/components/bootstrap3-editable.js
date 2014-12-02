@@ -4,8 +4,7 @@ define("default/js/components/bootstrap3-editable", [
 
     var require = APP.getRequireJS({
         shim: {
-            '//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js': {
-            }
+            '//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js': {}
         }
     });
     QbDfdEditable = new $.Deferred();
