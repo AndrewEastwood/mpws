@@ -1,0 +1,15 @@
+<div class="panel-heading">
+    <i class="fa fa-chart fa-fw"></i>
+    ! ( В процесі розробки ) ! SEO Оптимізація
+    <span class="switcher-main pull-right"></span>
+</div>
+<div class="panel-body">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item shop-property-{{Property}}" data-id="{{ID}}">
+            <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
+            <span class="property-label">{{mpwsGetValueByKey ../lang Property "setting_property_" }}</span>
+            <span class="property-value">ред.</span>
+        </a>
+    {{/each}}
+</div>
+<!-- /.panel-body -->
