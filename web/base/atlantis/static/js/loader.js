@@ -62,7 +62,17 @@ var APP = {
         require.config(this.getRJConfig());
     },
     backgroundTaskIds: {},
-    dfd: {}
+    dfd: {},
+    utils: {
+        replaceArray: function (replaceString, find, replace) {
+            var regex; 
+            for (var i = 0; i < find.length; i++) {
+                regex = new RegExp(find[i], "g");
+                replaceString = replaceString.replace(regex, replace[i]);
+            }
+            return replaceString;
+        }
+    }
 };
 
 APP.init();
@@ -189,11 +199,18 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
 
     Sandbox.eventSubscribe('global:page:setTitle', function (title) {
         if (_.isArray(title))
-            $('title').text(title.join(' - '));
+            $('head title').text(title.join(' - '));
         else if (_.isString(title))
-            $('title').text(title);
+            $('head title').text(title);
     });
 
+    Sandbox.eventSubscribe('global:page:setKeywords', function (keywords) {
+        $('head meta[name="keywords"]').attr('content', keywords);
+    });
+
+    Sandbox.eventSubscribe('global:page:setDescription', function (description) {
+        $('head meta[name="description"]').attr('content', description);
+    });
     // find links and set them active accordint to current route
     // Sandbox.eventSubscribe('global:menu:set-active', function (selector) {
     //     // debugger;

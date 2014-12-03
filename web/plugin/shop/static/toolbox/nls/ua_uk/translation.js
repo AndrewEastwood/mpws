@@ -193,8 +193,9 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_ShowWarrantyInfo: 'показувати інформацію про гарантії',
         productManager_Button_Upload_ProductFeed: 'Імпортувати',
         productManager_Button_Download_ProductFeed: 'Завантажити',
-        settings_value_editable_emptytext: 'пусто',
+        settings_value_editable_emptytext: 'порожнє значення',
         settings_error_save: 'Помилка оновлення параметру',
+        settings_message_success: 'Параметр успішно збережений',
         settings_validation_emptyDeliveryAgentName: 'Введіть назву перевізника',
         settings_msg_confirmation_delete_delivery: 'Видалити цей сервіс?',
         settings_msg_confirmation_delete_address: 'Видалити цю адресу?',
@@ -210,6 +211,8 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_HomePageDescription: 'Опис головної сторінки',
         setting_property_ProductPageTitle: 'Зголовок товару',
         setting_property_CategoryPageTitle: 'Зголовок категорії',
-        setting_property_HomePageTitle: 'Зголовок головної сторінки'
+        setting_property_HomePageTitle: 'Зголовок головної сторінки',
+        popup_seo_button_Close: 'Закрити',
+        popup_seo_button_Save: 'Зберегти'
     }, CustomerPluginShop);
 });

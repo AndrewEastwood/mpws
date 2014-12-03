@@ -27,6 +27,7 @@ define("plugin/shop/site/js/router", [
     var routes = {
         "!/shop": "home",
         "!/shop/catalog/:category": "shop_catalog_category",
+        "!/shop/catalog/:category/all": "shop_catalog_category_all",
         "!/shop/catalog/": "shop_catalog",
         "!/shop/product/:product": "shop_product",
         "!/shop/cart": "shop_cart",
@@ -108,6 +109,24 @@ define("plugin/shop/site/js/router", [
                 var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
                 });
+                listProductCatalog.collection.fetch({
+                    reset: true
+                });
+
+                Sandbox.eventNotify('global:content:render', {
+                    name: 'CommonBodyCenter',
+                    el: listProductCatalog.el
+                });
+            });
+        },
+
+        shop_catalog_category_all: function (categoryID) {
+            require(['plugin/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
+                // create new view
+                var listProductCatalog = new ListProductCatalog({
+                    categoryID: categoryID
+                });
+                listProductCatalog.collection
                 listProductCatalog.collection.fetch({
                     reset: true
                 });

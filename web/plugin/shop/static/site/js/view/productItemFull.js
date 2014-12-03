@@ -55,7 +55,31 @@ define("plugin/shop/site/js/view/productItemFull", [
                 product: data
             });
 
-            Sandbox.eventNotify('global:page:setTitle', data._origin.Name + ' ' + data.Model + ' ' + data.Name);
+            // seo start
+            var formatTitle = "",
+                formatKeywords = "",
+                formatDescription = "";
+            if (APP.instances.shop.settings.ProductPageTitle.Value) {
+                formatTitle = APP.instances.shop.settings.ProductPageTitle.Value;
+            }
+            if (APP.instances.shop.settings.ProductKeywords.Value) {
+                formatKeywords = APP.instances.shop.settings.ProductKeywords.Value;
+            }
+            if (APP.instances.shop.settings.ProductDescription.Value) {
+                formatDescription = APP.instances.shop.settings.ProductDescription.Value;
+            }
+
+            var searchValues = ['\\[ProductName\\]', '\\[CategoryName\\]', '\\[OriginName\\]', '\\[ProductModel\\]'];
+            var replaceValues = [data.Name, data._category.Name, data._origin.Name, data.Model];
+
+            var title = APP.utils.replaceArray(formatTitle, searchValues, replaceValues);
+            var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
+            var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
+
+            Sandbox.eventNotify('global:page:setTitle', title);
+            Sandbox.eventNotify('global:page:setKeywords', keywords);
+            Sandbox.eventNotify('global:page:setDescription', description);
+            // seo end
 
             return this;
         },

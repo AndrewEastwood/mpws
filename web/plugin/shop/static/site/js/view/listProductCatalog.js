@@ -57,7 +57,48 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                 categories: this.collection._location
             });
 
-            Sandbox.eventNotify('global:page:setTitle', this.collection.category.Name);
+            // seo start
+            var formatTitle = "",
+                formatKeywords = "",
+                formatDescription = "";
+            if (APP.instances.shop.settings.CategoryPageTitle.Value) {
+                formatTitle = APP.instances.shop.settings.CategoryPageTitle.Value;
+            }
+            if (APP.instances.shop.settings.CategoryKeywords.Value) {
+                formatKeywords = APP.instances.shop.settings.CategoryKeywords.Value;
+            }
+            if (APP.instances.shop.settings.CategoryDescription.Value) {
+                formatDescription = APP.instances.shop.settings.CategoryDescription.Value;
+            }
+
+            var categoryFirst5Products = [];
+            var catalogFirst5ProductNames = [], catalogFirst5OriginNames = [], catalogFirst5ProductModels = [];
+            if (this.collection.length) {
+                for (var i = 0, len = this.collection.length > 5 ? 5 : this.collection.length; i < len; i++) {
+                    var productModel = this.collection.at(i);
+                    catalogFirst5ProductNames.push(productModel.get('Name'));
+                    catalogFirst5OriginNames.push(productModel.get('_origin')['Name']);
+                    catalogFirst5ProductModels.push(productModel.get('Model'));
+                }
+            }
+
+            // make them uniq
+            catalogFirst5ProductNames = _(catalogFirst5ProductNames).uniq();
+            catalogFirst5OriginNames = _(catalogFirst5OriginNames).uniq();
+            catalogFirst5ProductModels = _(catalogFirst5ProductModels).uniq();
+
+            var searchValues = ['\\[CatalogFirst5ProductNames\\]', '\\[CategoryName\\]', '\\[CatalogFirst5OriginNames\\]', '\\[CatalogFirst5ProductModels\\]'];
+            var replaceValues = [catalogFirst5ProductNames.join(', '), this.collection.category.Name, catalogFirst5OriginNames.join(', '), catalogFirst5ProductModels.join(', ')];
+
+            var title = APP.utils.replaceArray(formatTitle, searchValues, replaceValues);
+            var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);
+            var description = APP.utils.replaceArray(formatDescription, searchValues, replaceValues);
+
+            Sandbox.eventNotify('global:page:setTitle', title);
+            Sandbox.eventNotify('global:page:setKeywords', keywords);
+            Sandbox.eventNotify('global:page:setDescription', description);
+            // seo end
+
             return this;
         },
         filterProducts_Other: function (event) {

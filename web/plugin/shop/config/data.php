@@ -141,8 +141,10 @@ class data extends \engine\objects\configuration {
     public function jsapiShopUpdateProduct ($ProductID, $data) {
         $data["DateUpdated"] = $this->getDate();
         $ExternalKey = array();
-        if (isset($data['Name']))
+        if (isset($data['Name'])) {
             $ExternalKey[] = $data['Name'];
+            $data["Name"] = substr($data["Name"], 0, 300);
+        }
         if (isset($data['Model']))
             $ExternalKey[] = $data['Model'];
         if (isset($data['SKU']))
@@ -151,7 +153,6 @@ class data extends \engine\objects\configuration {
             $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
-        $data["Name"] = substr($data["Name"], 0, 300);
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_products",
             "action" => "update",

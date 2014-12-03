@@ -12,18 +12,20 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
 ], function (Backbone, CollectionSettings, Utils, BootstrapDialog, BSAlerts, tpl, lang) {
 
     return Backbone.View.extend({
-        className: "panel panel-yellow shop-settings-alerts",
+        className: "panel panel-green shop-settings-seo",
         template: tpl,
         lang: lang,
         events: {
-            'switchChange.bootstrapSwitch .switcher': 'setSettingState'
+            'click .list-group-item': 'editValue'
         },
         initialize: function () {
             this.options = {};
-            this.options.switchOptions = {
-                size: 'mini',
-                onText: '<i class="fa fa-check fa-fw"></i>',
-                offText: '<i class="fa fa-times fa-fw"></i>'
+            this.options.editableOptions = {
+                mode: 'inline',
+                name: 'Value',
+                emptytext: lang.settings_value_editable_emptytext,
+                savenochange: true,
+                unsavedclass: ''
             };
             this.collection = new CollectionSettings();
             this.collection.setCustomQueryField('Type', 'SEO');
@@ -31,38 +33,43 @@ define("plugin/shop/toolbox/js/view/settingsSEO", [
         },
         render: function () {
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
-            this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
-            this.$('.property-value').editable(this.options.editableOptions)
-                .on('save', function (e, params) {
-                    self.setSettingValue(e, params.newValue, params.oldValue);
-                });
             return this;
         },
-        setSettingState: function (event, state, skip) {
-            if (skip === true) {
-                return;
-            }
+        editValue: function (event) {
             var self = this,
                 $item = $(event.target).closest('.list-group-item'),
                 id = $item.data('id'),
                 model = this.collection.get(id);
-
             if (model) {
-                model.save({
-                    Status: !!state ? 'ACTIVE' : 'DISABLED'
-                }, {
-                    patch: true,
-                    success: function (model) {
-                        $item.find('.switcher').bootstrapSwitch('state', model.get('_isActive'), true);
-                        if (model.get('Property') === 'AllowAlerts') {
-                            self.$('.panel-body .list-group-item').toggleClass('disabled', !model.get('_isActive'));
-                            self.$('.panel-body .switcher').bootstrapSwitch('disabled', !model.get('_isActive'));
+                BootstrapDialog.show({
+                    cssClass: 'popup-settings-seo',
+                    title: $item.find('.property-label').text(),
+                    message: $('<textarea>').text(model.get('Value')),
+                    buttons: [{
+                        label: lang.popup_seo_button_Close,
+                        cssClass: 'btn-default btn-link',
+                        action: function (dialog) {
+                            dialog.close();
                         }
-                    },
-                    error: function (model) {
-                        BSAlerts.danger(lang.settings_error_save);
-                        $item.find('.switcher').bootstrapSwitch('state', !state, true);
-                    }
+                    }, {
+                        label: lang.popup_seo_button_Save,
+                        cssClass: 'btn-success btn-outline',
+                        action: function (dialog) {
+                            model.save({
+                                Value: dialog.getMessage().val()
+                            }, {
+                                wait: true,
+                                patch: true,
+                                success: function (model) {
+                                    BSAlerts.success(lang.settings_message_success);
+                                    dialog.close();
+                                },
+                                error: function (model) {
+                                    BSAlerts.danger(lang.settings_error_save);
+                                }
+                            });
+                        }
+                    }]
                 });
             }
         }
