@@ -2,6 +2,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'default/js/lib/utils',
     'plugin/shop/site/js/collection/listProductCatalog',
     'plugin/shop/site/js/view/productItemShort',
     'default/js/lib/bootstrap-dialog',
@@ -12,7 +13,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',
     "default/js/lib/jquery.cookie"
-], function (Sandbox, _, Backbone, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
@@ -42,10 +43,12 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             });
 
             // debugger;
+            var data = Utils.getHBSTemplateData(this);
             this.$el.html(this.template({
                 displayItems: displayItems,
                 filter: _filterData,
                 pagination: this.collection.pagintaion,
+                instances: data.instances,
                 lang: lang
             }));
 

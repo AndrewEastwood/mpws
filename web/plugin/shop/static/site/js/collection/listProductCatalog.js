@@ -114,9 +114,9 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             // this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
 
             // pagination
-            var pagintaion = {};
+            var pagintaion = {items:[]};
             pagintaion.current = this.filter.filterOptionsApplied.filter_viewPageNum;
-            pagintaion.pages = Math.round(filter.info.count / PAGE_SIZE + 0.49);
+            pagintaion.pages = Math.round(filter.info.count / this.filter.filterOptionsApplied.filter_viewItemsOnPage + 0.49);
             var leftDelata = 0;
             var left = 1;
             if (pagintaion.current - 5 < 0) {
@@ -139,7 +139,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             for (var i = left; i <= right; i++) {
                 pagintaion.items.push(i);
             }
-
+            // debugger;
             this.pagintaion = pagintaion;
 
             // debugger;

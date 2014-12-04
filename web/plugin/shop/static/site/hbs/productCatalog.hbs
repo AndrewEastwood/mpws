@@ -21,7 +21,7 @@
                     <div class="list-group">
                     {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="#/shop/catalog/{{ExternalKey}}" rel="category" title="{{Name}}">
+                        <a class="list-group-item" href="/#!/shop/catalog/{{ExternalKey}}" rel="category" title="{{Name}}">
                             {{Name}}
                             <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                         </a>
@@ -184,21 +184,21 @@
     </div>
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div class="row">
-            {{#if_gte data.pages 2}}
+            {{#gte pagination.pages 2}}
             <nav>
                 <ul class="pagination">
-                    <li><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
-                    {{#each data.pagination }}
-                        {{#ifEq ../data.current this }}
-                            <li data-page="{{ this }}" class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(current)</span></span></a></li>
+                    <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+                    {{#each pagination.items }}
+                        {{#is ../pagination.current this }}
+                            <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(current)</span></span></a></li>
                         {{else}}
-                            <li data-page="{{ this }}"><a href="javascript://"><span>{{ this }}</span></a></li>
-                        {{/ifEq}}
+                            <li ><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
+                        {{/is}}
                     {{/each}}
-                    <li><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+                    <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
                 </ul>
             </nav>
-            {{/if_gte}}
+            {{/gte}}
             {{#mpwsIsNotEmpty displayItems }}
                 {{#each displayItems }}
                 <div class="shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4">
