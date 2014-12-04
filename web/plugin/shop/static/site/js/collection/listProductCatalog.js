@@ -111,7 +111,36 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             this._location = data._location;
             this.category = filter.info.category;
             // debugger;
-            this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
+            // this.filter.info.hasMoreProducts = filter.info.count > productItems.length + this.length;
+
+            // pagination
+            var pagintaion = {};
+            pagintaion.current = this.filter.filterOptionsApplied.filter_viewPageNum;
+            pagintaion.pages = Math.round(filter.info.count / PAGE_SIZE + 0.49);
+            var leftDelata = 0;
+            var left = 1;
+            if (pagintaion.current - 5 < 0) {
+                leftDelata = Math.abs(pagintaion.current - 5);
+            } else {
+                left = pagintaion.current - 5 || 1;
+            }
+            var right = pagintaion.current + 5 + leftDelata;
+            if (right > pagintaion.pages) {
+                var rightDelta = right - pagintaion.pages;
+                right = pagintaion.pages;
+                var leftAdjustment = left - rightDelta + 1 || 1;
+                if (leftAdjustment > 0) {
+                    left -= rightDelta;
+                }
+                if (left <= 0) {
+                    left = 1;
+                }
+            }
+            for (var i = left; i <= right; i++) {
+                pagintaion.items.push(i);
+            }
+
+            this.pagintaion = pagintaion;
 
             // debugger;
             return productItems;

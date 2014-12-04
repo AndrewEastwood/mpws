@@ -27,7 +27,7 @@ define("plugin/shop/site/js/router", [
     var routes = {
         "!/shop": "home",
         "!/shop/catalog/:category": "shop_catalog_category",
-        "!/shop/catalog/:category/all": "shop_catalog_category_all",
+        "!/shop/catalog/:category/:page": "shop_catalog_category_page",
         "!/shop/catalog/": "shop_catalog",
         "!/shop/product/:product": "shop_product",
         "!/shop/cart": "shop_cart",
@@ -120,13 +120,16 @@ define("plugin/shop/site/js/router", [
             });
         },
 
-        shop_catalog_category_all: function (categoryID) {
+        shop_catalog_category_page: function (categoryID, pageNo) {
             require(['plugin/shop/site/js/view/listProductCatalog'], function (ListProductCatalog) {
                 // create new view
                 var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
                 });
-                listProductCatalog.collection
+                pageNo = parseInt(pageNo, 10);
+                if (pageNo.toString() === pageNo) {
+                    listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
+                }
                 listProductCatalog.collection.fetch({
                     reset: true
                 });

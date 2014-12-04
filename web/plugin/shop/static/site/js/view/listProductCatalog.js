@@ -45,6 +45,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.$el.html(this.template({
                 displayItems: displayItems,
                 filter: _filterData,
+                pagination: this.collection.pagintaion,
                 lang: lang
             }));
 
@@ -176,11 +177,11 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                 return false;
         },
         filterProducts_LoadMore: function () {
-            var _filter_viewPageNum = this.collection.getFilter('filter_viewPageNum');
-            _filter_viewPageNum++;
-            this.collection.setFilter('filter_viewPageNum', _filter_viewPageNum);
-            // debugger;
-            this.collection.fetch({update: true, remove: false});
+            // var _filter_viewPageNum = this.collection.getFilter('filter_viewPageNum');
+            // _filter_viewPageNum++;
+            // this.collection.setFilter('filter_viewPageNum', _filter_viewPageNum);
+            // // debugger;
+            // this.collection.fetch({update: true, remove: false});
         }
     });
 
