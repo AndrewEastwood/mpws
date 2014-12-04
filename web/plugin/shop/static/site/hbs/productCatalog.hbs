@@ -192,7 +192,7 @@
                         {{#is ../pagination.current this }}
                             <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(current)</span></span></a></li>
                         {{else}}
-                            <li ><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
+                            <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
                         {{/is}}
                     {{/each}}
                     <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
