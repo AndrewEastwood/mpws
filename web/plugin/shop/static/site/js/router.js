@@ -126,8 +126,8 @@ define("plugin/shop/site/js/router", [
                 var listProductCatalog = new ListProductCatalog({
                     categoryID: categoryID
                 });
-                pageNo = parseInt(pageNo, 10);
-                if (pageNo.toString() === pageNo) {
+                var _pageNo = parseInt(pageNo, 10);
+                if (_pageNo.toString() === pageNo) {
                     listProductCatalog.collection.setFilter('filter_viewPageNum', pageNo);
                 }
                 listProductCatalog.collection.fetch({
