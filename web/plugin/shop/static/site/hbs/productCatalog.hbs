@@ -1,5 +1,5 @@
 <div class="alert alert-success" role="alert">
-    В поточній та у всіх вкладених категоріях товарів: <strong>{{filter.info.count}}</strong>
+    В категорії <strong>{{filter.info.category.Name}}</strong> та у всіх її вкладених категоріях к-сть товарів: <strong>{{filter.info.count}}</strong>
 </div>
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
@@ -21,7 +21,7 @@
                     <div class="list-group">
                     {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
                         {{#if ProductCount }}
-                        <a class="list-group-item" href="/#!/shop/catalog/{{ExternalKey}}" rel="category" title="{{Name}}">
+                        <a class="list-group-item" href="{{bb_link instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}" rel="category" title="{{Name}}">
                             {{Name}}
                             <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                         </a>
@@ -186,15 +186,15 @@
         {{#gte pagination.pages 2}}
         <nav>
             <ul class="pagination">
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
                 {{#each pagination.items }}
                     {{#is ../pagination.current this }}
-                        <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(current)</span></span></a></li>
+                        <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
                     {{else}}
                         <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
                     {{/is}}
                 {{/each}}
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
             </ul>
         </nav>
         {{/gte}}
@@ -212,15 +212,15 @@
         {{#gte pagination.pages 2}}
         <nav>
             <ul class="pagination">
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
                 {{#each pagination.items }}
                     {{#is ../pagination.current this }}
-                        <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(current)</span></span></a></li>
+                        <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
                     {{else}}
                         <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
                     {{/is}}
                 {{/each}}
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
             </ul>
         </nav>
         {{/gte}}

@@ -87,7 +87,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
                             modelID = $(this).attr('id');
                             property = $(this).data('property');
                             value = $(this).val() || $(this).text();
-                            if (/Shipping|Payment/.test(property)) {
+                            if (/Shipping|Payment|Warranty/.test(property)) {
                                 value = $(this).editable('getValue', true);
                             }
                             if (modelID) {

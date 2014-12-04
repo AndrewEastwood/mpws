@@ -1,0 +1,30 @@
+<div class="panel-heading">
+    <i class="fa fa-exchange fa-fw add-currency text-info"></i> Обмін валют
+</div>
+<!-- /.panel-heading -->
+<div class="panel-body">
+    <div class="list-group">
+        <a href="javascript://" class="list-group-item">
+            основна валюта документу:
+            <select class="list-ratest-names">
+                {{#each data.availableRatesNames}}
+                <option value="{{ID}}">{{Name}}</option>
+                {{/each}}
+            </select>
+        </a>
+    {{#each data.items}}
+        <a href="javascript://" class="list-group-item currency" data-id="{{ID}}">
+            <i class="fa fa-times fa-fw text-danger remove-currency"></i>
+            <span class="editable name">{{Name}}</span>
+            <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
+        </a>
+    {{/each}}
+    </div>
+</div>
+<!-- /.panel-body -->
+<a href="javascript://" class="list-group-item currency is-new currency-template hidden">
+    <i class="fa fa-times fa-fw text-danger remove-currency"></i>
+    <span class="editable name">Без назви</span>
+    <input type="checkbox" class="switcher pull-right">
+    <button type="button" class="btn btn-success btn-xs pull-right create-currency">Зберегти</button>
+</a>

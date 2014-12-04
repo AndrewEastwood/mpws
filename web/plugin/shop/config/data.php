@@ -1246,6 +1246,91 @@ class data extends \engine\objects\configuration {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // shop delivery agencies >>>>>
+    public function jsapiShopGetExchangeRateByID ($id = null) {
+        $config = $this->jsapiGetDataSourceConfig(array(
+            "action" => "select",
+            "source" => "shop_currency",
+            "condition" => array(),
+            "fields" => array("ID", "IsMain", "CurrencyA", "RateA", "CurrencyB", "RateB", "Status"),
+            "options" => array(
+                "expandSingleRecord" => true
+            ),
+            "limit" => 1
+        ));
+
+        if (!is_null($id))
+            $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($id);
+
+        return $config;
+    }
+
+    public function jsapiShopGetExchangeRatesList (array $options = array()) {
+        $config = $this->jsapiShopGetExchangeRateByID();
+        $config['fields'] = array("ID");
+        $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        return $config;
+    }
+
+    public function jsapiShopCreateExchangeRate ($data) {
+        $data["DateUpdated"] = $this->getDate();
+        $data["DateCreated"] = $this->getDate();
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "shop_currency",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    public function jsapiShopUpdateExchangeRate ($id, $data) {
+        $data["DateUpdated"] = $this->getDate();
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "shop_currency",
+            "action" => "update",
+            "condition" => array(
+                "ID" => $this->jsapiCreateDataSourceCondition($id)
+            ),
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
+    public function jsapiShopDeleteExchangeRate ($id) {
+        return $this->jsapiGetDataSourceConfig(array(
+            "source" => "shop_currency",
+            "action" => "update",
+            "condition" => array(
+                "ID" => $this->jsapiCreateDataSourceCondition($id)
+            ),
+            "data" => array(
+                "Status" => 'REMOVED',
+                "DateUpdated" => $this->getDate()
+            ),
+            "options" => null
+        ));
+    }
+    // <<<<< shop delivery agencies
+
+
+
+
+
 }
 
 ?>
