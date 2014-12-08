@@ -1314,14 +1314,14 @@ class data extends \engine\objects\configuration {
     public function jsapiShopDeleteExchangeRate ($id) {
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_currency",
-            "action" => "update",
+            "action" => "delete",
             "condition" => array(
                 "ID" => $this->jsapiCreateDataSourceCondition($id)
             ),
-            "data" => array(
-                "Status" => 'REMOVED',
-                "DateUpdated" => $this->getDate()
-            ),
+            // "data" => array(
+            //     "Status" => 'REMOVED',
+            //     "DateUpdated" => $this->getDate()
+            // ),
             "options" => null
         ));
     }

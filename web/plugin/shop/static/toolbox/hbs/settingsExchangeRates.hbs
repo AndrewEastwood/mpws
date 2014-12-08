@@ -1,22 +1,17 @@
 <div class="panel-heading">
-    <i class="fa fa-exchange fa-fw add-currency text-info"></i> Обмін валют
+    <i class="fa fa-plus fa-fw add-currency text-info"></i> Обмін валют
 </div>
 <!-- /.panel-heading -->
 <div class="panel-body">
     <div class="list-group">
-        <a href="javascript://" class="list-group-item">
-            основна валюта документу:
-            <select class="list-ratest-names">
-                {{#each data.availableRatesNames}}
-                <option value="{{ID}}">{{Name}}</option>
-                {{/each}}
-            </select>
-        </a>
     {{#each data.items}}
         <a href="javascript://" class="list-group-item currency" data-id="{{ID}}">
             <i class="fa fa-times fa-fw text-danger remove-currency"></i>
-            <span class="editable name">{{Name}}</span>
-            <input type="checkbox" class="switcher pull-right"{{#if _isActive}}checked{{/if}}>
+            <input class="rate-a" value="{{RarteA}}">
+            <input class="currency-list currency-a">
+            <i class="fa-arrow-right fa-fw"></i>
+            <input class="rate-b" value="{{RateB}}">
+            <input class="currency-list currency-a">
         </a>
     {{/each}}
     </div>
@@ -24,7 +19,10 @@
 <!-- /.panel-body -->
 <a href="javascript://" class="list-group-item currency is-new currency-template hidden">
     <i class="fa fa-times fa-fw text-danger remove-currency"></i>
-    <span class="editable name">Без назви</span>
-    <input type="checkbox" class="switcher pull-right">
+    <input class="rate-a">
+    <input class="currency-list currency-a">
+    <i class="fa fa-arrow-right fa-fw"></i>
+    <input class="rate-b">
+    <input class="currency-list currency-a">
     <button type="button" class="btn btn-success btn-xs pull-right create-currency">Зберегти</button>
 </a>
