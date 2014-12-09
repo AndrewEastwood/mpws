@@ -29,12 +29,20 @@ class exchangerates extends \engine\objects\api {
     // DELIVERY AGENCIES
     // -----------------------------------------------
     // -----------------------------------------------
+    private function __adjustExchangeRate (&$data) {
+        if (isset($data['ID']))
+            $data['ID'] = intval($data['ID']);
+        if (isset($data['RateA']))
+            $data['RateA'] = floatval($data['RateA']);
+        if (isset($data['RateB']))
+            $data['RateB'] = floatval($data['RateB']);
+        return $data;
+    }
+
     public function getExchangeRateByID ($agencyID) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateByID($agencyID);
         $data = $this->getCustomer()->fetch($config);
-        $data['ID'] = intval($data['ID']);
-        $data['RateA'] = floatval($data['RateA']);
-        $data['RateB'] = floatval($data['RateB']);
+        $data = $this->__adjustExchangeRate($data);
         return $data;
     }
 
@@ -71,6 +79,13 @@ class exchangerates extends \engine\objects\api {
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+
+                if (isset($validatedValues['RateA'])) {
+                    $validatedValues['RateA'] = floatval($validatedValues['RateA']);
+                }
+                if (isset($validatedValues['RateB'])) {
+                    $validatedValues['RateB'] = floatval($validatedValues['RateB']);
+                }
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
@@ -116,6 +131,13 @@ class exchangerates extends \engine\objects\api {
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+
+                if (isset($validatedValues['RateA'])) {
+                    $validatedValues['RateA'] = floatval($validatedValues['RateA']);
+                }
+                if (isset($validatedValues['RateB'])) {
+                    $validatedValues['RateB'] = floatval($validatedValues['RateB']);
+                }
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -168,6 +190,76 @@ class exchangerates extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
 
+    public function convertToDefinedRates ($value, $valueCurrency = false) {
+        if ($valueCurrency === false) {
+            $prop = $this->getAPI()->settings->findByName('DBPriceCurrencyType');
+            if ($prop === null) {
+                throw 'NeedToDefineDBPriceCurrencyType';
+            }
+            $valueCurrency = $prop['Value'];
+        }
+        $rates = $this->getActiveExchangeRatesAll();
+        $conversions = array();
+
+        // this is the value for base currency
+        $conversions[$valueCurrency] = $value;
+
+        foreach ($rates as $exchnageRate) {
+            if ($exchnageRate['name'] === $valueCurrency) {
+                $conversions[$exchnageRate['currency']] = floatval(number_format($value * $exchnageRate['rate'], 0, '.', ''));
+                // $conversions[$exchnageRate['currency']] = intval($value * $exchnageRate['rate']);
+            }
+        }
+
+        return $conversions;
+    }
+
+    public function getAvailableConversionOptions () {
+        $prop = $this->getAPI()->settings->findByName('DBPriceCurrencyType');
+        if ($prop === null) {
+            throw 'NeedToDefineDBPriceCurrencyType';
+        }
+        $valueCurrency = $prop['Value'];
+        $rates = $this->getActiveExchangeRatesAll();
+        $options = array();
+
+        // this is the value for base currency
+        $options[] = $valueCurrency;
+
+        foreach ($rates as $exchnageRate) {
+            if ($exchnageRate['name'] === $valueCurrency) {
+                $options[] = $exchnageRate['currency'];
+            }
+        }
+        return $options;
+    }
+
+    public function getActiveExchangeRatesAll () {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
+            'fields' => array('RateA', 'RateB', 'CurrencyA', 'CurrencyB'),
+            'limit' => 0
+        ));
+        $userRates = $this->getCustomer()->fetch($config) ?: array();
+        $data = array();
+
+        foreach ($userRates as $value) {
+            $value = $this->__adjustExchangeRate($value);
+            if ($value['RateA'] === 1.0) {
+                $data[] = array(
+                    'name' => $value['CurrencyA'],
+                    'rate' => $value['RateB'],
+                    'currency' => $value['CurrencyB']
+                );
+            } else {
+                $data[] = array(
+                    'name' => $value['CurrencyB'],
+                    'rate' => $value['RateA'],
+                    'currency' => $value['CurrencyA']
+                );
+            }
+        }
+        return $data;
+    }
     public function getActiveExchangeRatesList () {
         $deliveries = $this->getExchangeRates_List(array(
             "limit" => 0
@@ -182,7 +274,7 @@ class exchangerates extends \engine\objects\api {
             'fields' => array('CurrencyA', 'CurrencyB'),
             'limit' => 0
         ));
-        $userRates = $this->getCustomer()->fetch($config);
+        $userRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 
         foreach ($userRates as $value) {

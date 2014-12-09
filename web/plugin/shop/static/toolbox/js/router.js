@@ -290,6 +290,7 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewExchangeRates.collection.fetch({
                     reset: true
                 });
+                pluginSettings.viewExchangeRatesDisplay.modelDBPriceCurrency.fetch();
                 pluginSettings.viewExchangeRatesDisplay.collection.fetch({
                     reset: true
                 });

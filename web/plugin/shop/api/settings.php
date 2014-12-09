@@ -92,7 +92,6 @@ class settings extends \engine\objects\api {
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
-
                 $validatedValues = $validatedDataObj['values'];
                 $CustomerID = $this->getCustomer()->getCustomerID();
                 $validatedValues["CustomerID"] = $CustomerID;
@@ -233,7 +232,15 @@ class settings extends \engine\objects\api {
             $resp['error'] = "AccessDenied";
             return;
         }
-        $resp = $this->create($req->data);
+        $prop = null;
+        if (isset($req->data['Property'])) {
+            $prop = $this->findByName($req->data['Property']);
+        }
+        if (empty($prop)) {
+            $resp = $this->create($req->data);
+        } else {
+            $resp = $this->update($prop['ID'], $req->data);
+        }
         // $this->_getOrSetCachedState('changed:settings', true);
     }
 

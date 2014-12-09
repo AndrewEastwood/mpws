@@ -19,6 +19,9 @@ define('plugin/shop/common/js/model/setting', [
         isAddress: function () {
             return this.get('Type') === 'ADDRESS';
         },
+        isCurrency: function () {
+            return this.get('Type') === 'EXCHANGERATES';
+        },
         getAddressUID: function () {
             if (this.isAddress()) {
                 var addressMatch = this.get('Property').match(/\w+_([0-9]+)_\w+/),

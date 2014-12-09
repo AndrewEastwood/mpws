@@ -172,7 +172,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRates", [
                 // show add-new button
                 this.$('.add-currency').removeClass('hidden');
                 $item.remove();
-                if (this.collection.isEmpty()) {
+                if (!this.$('.list-group .list-group-item').length) {
                     this.$('.list-group').addClass('hidden');
                     this.$('.label-no-data').removeClass('hidden');
                 }

@@ -50,6 +50,7 @@ define('plugin/shop/common/js/collection/settings', [
                 openHoursData = null,
                 settings = {},
                 addresses = {},
+                currencyList = {},
                 openHoursReg = /.*OpenHoursOn(.*)/,
                 contactReg = /.*_(\w+)_contact.*/;
             this.each(function (model) {
@@ -87,7 +88,15 @@ define('plugin/shop/common/js/collection/settings', [
                         addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().locale('en').format('ddd')];
                     }
                 }
+                if (model.isCurrency()) {
+                    currencyList[model.get('Property')] = {
+                        name: model.get('Property'),
+                        text: model.get('Label'),
+                        showBeforeValue: model.get('Value') === "1"
+                    };
+                }
             });
+            settings.currencyList = currencyList;
             settings.addresses = addresses
             settings.addressCount = Object.getOwnPropertyNames(addresses).length;
             return settings;

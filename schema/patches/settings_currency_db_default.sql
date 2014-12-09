@@ -1,0 +1,1 @@
+INSERT INTO `shop_settings` (`ID`, `CustomerID`, `Property`, `Label`, `Value`, `Status`, `Type`, `DateCreated`, `DateUpdated`) VALUES (NULL, '1', 'DBPriceCurrencyType', NULL, 'USD', 'ACTIVE', 'MISC', NOW(), NOW());

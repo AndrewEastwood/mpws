@@ -3,18 +3,30 @@
 </div>
 <!-- /.panel-heading -->
 <div class="panel-body">
+    <div class="list-group-misc">
+        <a href="javascript://" class="list-group-item db-currency-type" data-id="{{ID}}">
+            <span>Всі ціни в базі подані в:</span>
+            <span class="currency-list"></span>
+        </a>
+    </div>
+    <hr>
+    {{#if data}}
     <div class="list-group">
     {{#each data}}
         <a href="javascript://" class="list-group-item currency-display" data-id="{{ID}}">
-            <span class="name">{{Property}}</span>
-            <span class="alias">, <strong class="editable">{{Label}}</strong></span>
+            <span class="name">{{Property}}</span>,
+            <span class="alias">знак <strong class="editable">{{Label}}</strong></span>
             <span class="show-before-value-switcher">
-                Перед значенням
+                чи перед значенням
                 <input type="checkbox" class="switcher"{{#is Value "1"}}checked{{/is}}>
             </span>
         </a>
     {{/each}}
     </div>
+    {{else}}
+    <div class="label label-default label-no-data">Немає даних</div>
+    <div class="list-group hidden"></div>
+    {{/if}}
 </div>
 <!-- /.panel-body -->
 <a href="javascript://" class="list-group-item currency-display is-new currency-display-template hidden">
