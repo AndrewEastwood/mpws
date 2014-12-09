@@ -100,8 +100,8 @@ class products extends \engine\objects\api {
         }
 
         // apply currencies
-        $rates = $this->getAPI()->exchangerates->getAvailableConversionOptions();
-        $product['rates'] = $rates;
+        // $rates = $this->getAPI()->exchangerates->getAvailableConversionOptions();
+        // $product['rates'] = $rates;
 
         $convertedSellingPrices = $this->getAPI()->exchangerates->convertToDefinedRates($product['SellingPrice']);
         $product['convertedSellingPrices'] = $convertedSellingPrices;

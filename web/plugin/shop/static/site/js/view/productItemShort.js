@@ -21,7 +21,6 @@ define("plugin/shop/site/js/view/productItemShort", [
                 this.listenTo(this.model, 'change', this.render);
         },
         refresh: function (data) {
-            // debugger;
             if (this.model) {
                 if (data && data.id && (data.id === this.model.id || data.id === "*")) {
                     this.model.fetch();

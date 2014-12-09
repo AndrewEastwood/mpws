@@ -21,6 +21,7 @@ define('plugin/shop/common/js/collection/settings', [
         },
 
         parse: function (data) {
+            this.availableConversions = data.availableConversions;
             return data.items;
         },
 
@@ -45,7 +46,8 @@ define('plugin/shop/common/js/collection/settings', [
         },
 
         toSettings: function () {
-            var uid = null;
+            var that = this,
+                uid = null;
                 property = null,
                 openHoursData = null,
                 settings = {},
@@ -88,7 +90,7 @@ define('plugin/shop/common/js/collection/settings', [
                         addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().locale('en').format('ddd')];
                     }
                 }
-                if (model.isCurrency()) {
+                if (_(that.availableConversions).indexOf(model.get('Property')) >= 0) {
                     currencyList[model.get('Property')] = {
                         name: model.get('Property'),
                         text: model.get('Label'),

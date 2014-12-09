@@ -1,0 +1,9 @@
+<span type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" aria-expanded="false">
+    <span class="active-currency">gfdgddfgdfgdfgdfgdgdf</span>
+    <span class="caret"></span>
+</span>
+<ul class="dropdown-menu" role="menu">
+    {{#each instances.shop.settings.currencyList}}
+    <li class="currency {{name}}" data-currency="{{name}}"><a href="javascript://">{{name}} ({{text}})</a></li>
+    {{/each}}
+</ul>

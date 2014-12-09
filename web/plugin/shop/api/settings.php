@@ -74,6 +74,7 @@ class settings extends \engine\objects\api {
             }
         );
         $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList['availableConversions'] = $this->getAPI()->exchangerates->getAvailableConversionOptions();
         return $dataList;
     }
 

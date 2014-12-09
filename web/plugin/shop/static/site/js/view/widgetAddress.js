@@ -3,7 +3,7 @@ define("plugin/shop/site/js/view/widgetAddress", [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'default/js/lib/cache',
-    /* model */
+    /* collection */
     'plugin/shop/common/js/collection/settings',
     /* template */
     'default/js/plugin/hbs!plugin/shop/site/hbs/widgetAddress',

@@ -3,7 +3,8 @@ define("plugin/shop/site/js/view/siteWidgets", [
     'plugin/shop/site/js/view/cartEmbedded',
     'plugin/shop/site/js/view/orderTrackingButton',
     'plugin/shop/site/js/view/widgetAddress',
-], function (Sandbox, CartEmbedded, OrderTrackingButton, Address) {
+    'plugin/shop/site/js/view/widgetExchangeRates'
+], function (Sandbox, CartEmbedded, OrderTrackingButton, Address, ExchangeRates) {
 
     return function (models) {
 
@@ -20,8 +21,16 @@ define("plugin/shop/site/js/view/siteWidgets", [
         var addr = new Address();
         addr.collection.fetch({reset: true});
 
+        var rates = new ExchangeRates();
+        rates.render();
+
         Sandbox.eventSubscribe('global:loader:complete', function () {
             Sandbox.eventNotify('global:content:render', [
+                {
+                    name: 'CommonWidgetsTop',
+                    el: rates.$el,
+                    append: true
+                },
                 {
                     name: 'CommonWidgetsTop',
                     el: orderTrackingButton.$el,
