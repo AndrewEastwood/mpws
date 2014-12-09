@@ -33,8 +33,8 @@ class exchangerates extends \engine\objects\api {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateByID($agencyID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
-        $data['_isRemoved'] = $data['Status'] === 'REMOVED';
-        $data['_isActive'] = $data['Status'] === 'ACTIVE';
+        $data['RateA'] = floatval($data['RateA']);
+        $data['RateB'] = floatval($data['RateB']);
         return $data;
     }
 
@@ -50,6 +50,7 @@ class exchangerates extends \engine\objects\api {
             }
         );
         $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList['currencyList'] = $this->getCurrencyList();
         return $dataList;
     }
 
@@ -62,8 +63,8 @@ class exchangerates extends \engine\objects\api {
         $validatedDataObj = Validate::getValidData($reqData, array(
             'CurrencyA' => array('string', 'notEmpty'),
             'CurrencyB' => array('string', 'notEmpty'),
-            'RateA' => array('float', 'notEmpty'),
-            'RateB' => array('float', 'notEmpty')
+            'RateA' => array('numeric', 'notEmpty'),
+            'RateB' => array('numeric', 'notEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -79,7 +80,7 @@ class exchangerates extends \engine\objects\api {
                 $rateID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
 
                 if (empty($rateID))
-                    throw new Exception('DeliveryCreateError');
+                    throw new Exception('CurrencyCreateError');
 
                 $this->getCustomerDataBase()->commit();
 
@@ -105,9 +106,10 @@ class exchangerates extends \engine\objects\api {
         $success = false;
 
         $validatedDataObj = Validate::getValidData($reqData, array(
-            'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 100),
-            'HomePage' => array('string', 'skipIfUnset', 'max' => 300),
-            'Status' => array('string', 'skipIfUnset')
+            'CurrencyA' => array('string', 'skipIfUnset'),
+            'CurrencyB' => array('string', 'skipIfUnset'),
+            'RateA' => array('numeric', 'skipIfUnset'),
+            'RateB' => array('numeric', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -152,10 +154,9 @@ class exchangerates extends \engine\objects\api {
             $success = true;
         } catch (Exception $e) {
             $this->getCustomerDataBase()->rollBack();
-            $errors[] = 'OriginUpdateError';
+            $errors[] = 'CurrencyDeleteError';
         }
 
-        $result = $this->getExchangeRateByID($id);
         $result['errors'] = $errors;
         $result['success'] = $success;
         return $result;
@@ -169,13 +170,27 @@ class exchangerates extends \engine\objects\api {
 
     public function getActiveExchangeRatesList () {
         $deliveries = $this->getExchangeRates_List(array(
-            "limit" => 0,
-            "_fStatus" => "ACTIVE"
+            "limit" => 0
         ));
         return $deliveries;
     }
     public function getCurrencyList () {
         return $this->_currencies;
+    }
+    public function getAllUserUniqCurrencyNames () {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
+            'fields' => array('CurrencyA', 'CurrencyB'),
+            'limit' => 0
+        ));
+        $userRates = $this->getCustomer()->fetch($config);
+        $data = array();
+
+        foreach ($userRates as $value) {
+            $data[$value['CurrencyA']] = true;
+            $data[$value['CurrencyB']] = true;
+        }
+
+        return array_keys($data);
     }
 
     // -----------------------------------------------
@@ -187,6 +202,8 @@ class exchangerates extends \engine\objects\api {
     public function get (&$resp, $req) {
         if (isset($req->get['type']) && $req->get['type'] === 'currencylist') {
             $resp = $this->getCurrencyList();
+        } elseif (isset($req->get['type']) && $req->get['type'] === 'userlist') {
+            $resp = $this->getAllUserUniqCurrencyNames();
         } elseif (empty($req->get['id'])) {
             $resp = $this->getExchangeRates_List($req->get);
         } else {

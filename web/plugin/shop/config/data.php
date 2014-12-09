@@ -1266,7 +1266,7 @@ class data extends \engine\objects\configuration {
             "action" => "select",
             "source" => "shop_currency",
             "condition" => array(),
-            "fields" => array("ID", "IsMain", "CurrencyA", "RateA", "CurrencyB", "RateB", "Status"),
+            "fields" => array("ID", "CurrencyA", "RateA", "CurrencyB", "RateB"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -1283,6 +1283,21 @@ class data extends \engine\objects\configuration {
         $config = $this->jsapiShopGetExchangeRateByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
+        $config['options']['expandSingleRecord'] = false;
+        if (isset($options['fields'])) {
+            $config['fields'] = $options['fields'];
+        }
+        if (isset($options['limit'])) {
+            $config['limit'] = $options['limit'];
+        }
+        return $config;
+    }
+
+    public function jsapiShopGetUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
+        $config = $this->jsapiShopGetExchangeRateByID();
+        $config['fields'] = array($fieldToGroupBy);
+        $config['limit'] = 0;
+        $config['group'] = $fieldToGroupBy;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }

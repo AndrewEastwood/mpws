@@ -11,6 +11,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'plugin/shop/toolbox/js/view/settinsProductView',
     'plugin/shop/toolbox/js/view/settingsSEO',
     'plugin/shop/toolbox/js/view/settingsExchangeRates',
+    'plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay',
     /* template */
     'default/js/plugin/hbs!plugin/shop/toolbox/hbs/settings',
     /* lang */
@@ -20,7 +21,7 @@ define('plugin/shop/toolbox/js/view/settings', [
     'default/js/lib/bootstrap-switch'
 ], function (Sandbox, _, Backbone, Utils, Cache, ViewSettingsAlerts,
     ViewSettingsDeiveryAgencies, ViewSettingsWebsiteFormOrder, ViewSettingsAddress,
-    ViewSettingsProduct, ViewSettingsSEO, ViewExchangeRates, tpl, lang) {
+    ViewSettingsProduct, ViewSettingsSEO, ViewExchangeRates, ViewExchangeRatesDisplay, tpl, lang) {
 
     var Settings = Backbone.View.extend({
         template: tpl,
@@ -37,6 +38,7 @@ define('plugin/shop/toolbox/js/view/settings', [
             this.viewProduct = new ViewSettingsProduct();
             this.viewSEO = new ViewSettingsSEO();
             this.viewExchangeRates = new ViewExchangeRates();
+            this.viewExchangeRatesDisplay = new ViewExchangeRatesDisplay();
 
             // // subscribe on events
             // this.listenTo(this.viewProductsList.collection, 'reset', this.render);
@@ -55,6 +57,7 @@ define('plugin/shop/toolbox/js/view/settings', [
                 this.$('.shop-product').html(this.viewProduct.$el);
                 this.$('.shop-seo').html(this.viewSEO.$el);
                 this.$('.shop-exchange-rates').html(this.viewExchangeRates.$el);
+                this.$('.shop-exchange-rates-display').html(this.viewExchangeRatesDisplay.$el);
                 // this.$('.shop-settings .switcher').bootstrapSwitch({
                 //     size: 'mini',
                 //     wrapperClass: 'delivery'

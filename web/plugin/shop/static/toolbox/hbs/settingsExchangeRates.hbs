@@ -3,26 +3,32 @@
 </div>
 <!-- /.panel-heading -->
 <div class="panel-body">
+    {{#if data}}
     <div class="list-group">
-    {{#each data.items}}
+    {{#each data}}
         <a href="javascript://" class="list-group-item currency" data-id="{{ID}}">
             <i class="fa fa-times fa-fw text-danger remove-currency"></i>
-            <input class="rate-a" value="{{RarteA}}">
-            <input class="currency-list currency-a">
-            <i class="fa-arrow-right fa-fw"></i>
-            <input class="rate-b" value="{{RateB}}">
-            <input class="currency-list currency-a">
+            <span class="rate-value rate-a editable" data-name="RateA">{{currency RateA}}</span>
+            <span class="currency-text currency-a">{{CurrencyA}}</span>
+            <i class="fa fa-arrow-right fa-fw"></i>
+            <span class="rate-value rate-b editable" data-name="RateB">{{currency RateB}}</span>
+            <span class="currency-text currency-b">{{CurrencyB}}</span>
         </a>
     {{/each}}
     </div>
+    {{else}}
+    <div class="label label-default label-no-data">Немає даних</div>
+    <div class="list-group hidden"></div>
+    {{/if}}
 </div>
 <!-- /.panel-body -->
 <a href="javascript://" class="list-group-item currency is-new currency-template hidden">
+    <ul class="list errors hidden"></ul>
     <i class="fa fa-times fa-fw text-danger remove-currency"></i>
-    <input class="rate-a">
-    <input class="currency-list currency-a">
+    <span class="rate-input rate-a editable"></span>
+    <span class="currency-text currency-a editable-select2"></span>
     <i class="fa fa-arrow-right fa-fw"></i>
-    <input class="rate-b">
-    <input class="currency-list currency-a">
+    <span class="rate-input rate-b editable"></span>
+    <span class="currency-text currency-b editable-select2"></span>
     <button type="button" class="btn btn-success btn-xs pull-right create-currency">Зберегти</button>
 </a>

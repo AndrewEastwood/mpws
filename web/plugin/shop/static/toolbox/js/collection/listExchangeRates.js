@@ -53,6 +53,7 @@ define('plugin/shop/toolbox/js/collection/listExchangeRates', [
         },
 
         parseRecords: function (resp, options) {
+            this.currencyList = resp.currencyList;
             return resp.items;
         }
 

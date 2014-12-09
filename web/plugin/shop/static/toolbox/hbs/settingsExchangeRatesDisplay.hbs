@@ -1,0 +1,30 @@
+<div class="panel-heading">
+    <i class="fa fa-refresh fa-fw refresh-userlist-currencies text-info" title="Обновити список валют"></i> Відображення валют
+</div>
+<!-- /.panel-heading -->
+<div class="panel-body">
+    <div class="list-group">
+    {{#each data}}
+        <a href="javascript://" class="list-group-item currency-display" data-id="{{ID}}">
+            <span class="name">{{Property}}</span>
+            <span class="alias">, <strong class="editable">{{Label}}</strong></span>
+            <span class="show-before-value-switcher">
+                Перед значенням
+                <input type="checkbox" class="switcher"{{#is Value "1"}}checked{{/is}}>
+            </span>
+        </a>
+    {{/each}}
+    </div>
+</div>
+<!-- /.panel-body -->
+<a href="javascript://" class="list-group-item currency-display is-new currency-display-template hidden">
+    <span class="name"></span>,
+    <span class="alias">знак <strong class="editable"></strong></span>
+    <span class="show-before-value-switcher">
+        чи перед значенням
+        <input type="checkbox" class="switcher">
+    </span>
+</a>
+<div class="panel-footer">
+    <button type="button" class="btn btn-success btn-xs save-currency-display">Зберегти</button>
+</div>

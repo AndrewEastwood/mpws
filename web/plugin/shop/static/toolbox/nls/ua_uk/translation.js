@@ -213,6 +213,14 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         setting_property_CategoryPageTitle: 'Зголовок категорії',
         setting_property_HomePageTitle: 'Зголовок головної сторінки',
         popup_seo_button_Close: 'Закрити',
-        popup_seo_button_Save: 'Зберегти'
+        popup_seo_button_Save: 'Зберегти',
+        rates: {
+            message_error_negativeRate: 'Відємне значення',
+            message_error_wrongValue: 'Неправильне значення',
+            message_error_emptyValue: 'Пороженє значення',
+            editableEmptyRateValue: 'значення',
+            editableEmptyCurrencyValue: 'валюта',
+            message_confirmation_delete: 'Видалити цю валюту?'
+        }
     }, CustomerPluginShop);
 });
