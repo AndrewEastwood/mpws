@@ -33,8 +33,9 @@ define("plugin/shop/site/js/view/widgetExchangeRates", [
             Backbone.trigger('changed:plugin-shop-currency', currencyName);
         }
     }, {
-        getActiveCurrencyName: function () {
-            return Cache.get('userСurrencyName') || APP.instances.shop.settings.DBPriceCurrencyType.Value;
+        getActiveCurrencyName: function (defaultCurrency) {
+            return Cache.get('userСurrencyName') ||
+                (APP.instances.shop && APP.instances.shop.settings && APP.instances.shop.settings.DBPriceCurrencyType.Value) || defaultCurrency;
         }
     });
 

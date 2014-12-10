@@ -6,7 +6,7 @@ define("plugin/shop/site/js/view/siteWidgets", [
     'plugin/shop/site/js/view/widgetExchangeRates'
 ], function (Sandbox, CartEmbedded, OrderTrackingButton, Address, ExchangeRates) {
 
-    return function (models) {
+    var SiteWidgets = function (models) {
 
         // inject tracking order
         var orderTrackingButton = new OrderTrackingButton();
@@ -48,6 +48,10 @@ define("plugin/shop/site/js/view/siteWidgets", [
                 }
             ]);
         });
-    }
+    };
+
+    SiteWidgets.ExchangeRates = ExchangeRates;
+
+    return SiteWidgets;
 
 });

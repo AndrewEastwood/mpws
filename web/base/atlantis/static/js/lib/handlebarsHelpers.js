@@ -429,6 +429,9 @@ define("default/js/lib/handlebarsHelpers", [
         var _key = prefix + key + suffix;
         return dictionary[_key];
     }
+    helpers.withItem = function(object, options) {
+        return options.fn(object[options.hash.key]);
+    }
     // Warning: untested code
     helpers.each_upto = function (ary, max, options) {
         if (!ary || ary.length == 0)

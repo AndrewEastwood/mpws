@@ -267,7 +267,11 @@ define("plugin/shop/site/js/router", [
     }, {
         preload: function (callback) {
             $dfdSettings.done(function () {
-                Router.prototype.settings = settings.toSettings();
+                var _s = settings.toSettings();
+                Router.prototype.settings = _s;
+                Router.prototype.settings._user = {
+                    activeCurrency: SiteWidgets.ExchangeRates.getActiveCurrencyName(_s.DBPriceCurrencyType && _s.DBPriceCurrencyType.Value)
+                }
                 // console.log('shop settings ready: calling callback');
                 callback();
             });

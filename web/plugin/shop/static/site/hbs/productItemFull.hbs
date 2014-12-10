@@ -113,16 +113,21 @@
                     {{#unless data._archived}}
                     <div class="shop-component shop-product-attr shop-product-attr-price">
                         {{#if data._promoIsApplied }}
-                        <span class="value-prefix">
-                            Ціна зі знижкою {{data.promo.Discount}}%
-                        </span>
-                        <strong>{{currency data.DiscountPrice}}грн.</strong>
+                        <span class="value-prefix">Ціна зі знижкою {{data.promo.Discount}}%</span>
+                        {{!-- <strong>{{currency data.DiscountPrice}}грн.</strong> --}}
                         {{else}}
-                        <span class="value-prefix">
-                            Ціна:
-                        </span>
-                        <strong>{{currency data.Price}}грн.</strong>
+                        <span class="value-prefix">Ціна:</span>
+                        {{!-- <strong>{{currency data.Price}}грн.</strong> --}}
                         {{/if}}
+                        {{#each data.convertedSellingPrices}}
+                            <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                                {{#withItem ../instances.shop.settings.currencyList key=@key}}
+                                    {{#if showBeforeValue}}<span class="value-prefix moneyType">{{text}}</span>{{/if}}
+                                    <strong class="value">{{currency ../this}}</strong>
+                                    {{#unless showBeforeValue}}<span class="value-suffix moneyType">{{text}}</span>{{/unless}}
+                                {{/withItem}}
+                            </strong>
+                        {{/each}}
                         {{#if data._promoIsApplied }}
                         <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b></sub>
                         {{/if}}

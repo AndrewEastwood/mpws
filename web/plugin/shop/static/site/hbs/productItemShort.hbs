@@ -48,10 +48,26 @@
             {{/if}}
             </div>
             {{#if data._promoIsApplied }}
-            <div class="label label-success">{{currency data.DiscountPrice}}<span class="value-suffix moneyType">грн.</span></div>
+            {{#each data.convertedSellingPrices}}
+                <span class="label label-success moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                    {{#withItem ../instances.shop.settings.currencyList key=@key}}
+                        {{#if showBeforeValue}}<span class="value-prefix moneyType">{{text}}</span>{{/if}}
+                        <strong class="value">{{currency ../this}}</strong>
+                        {{#unless showBeforeValue}}<span class="value-suffix moneyType">{{text}}</span>{{/unless}}
+                    {{/withItem}}
+                </span>
+            {{/each}}
             <sub class="promocode">(Знижка: {{data.promo.Discount}}%)</sub>
             {{else}}
-            <strong>{{currency data.Price}}<span class="value-suffix moneyType">грн.</span></strong>
+            {{#each data.convertedSellingPrices}}
+                <span class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                    {{#withItem ../instances.shop.settings.currencyList key=@key}}
+                        {{#if showBeforeValue}}<span class="value-prefix moneyType">{{text}}</span>{{/if}}
+                        <strong class="value">{{currency ../this}}</strong>
+                        {{#unless showBeforeValue}}<span class="value-suffix moneyType">{{text}}</span>{{/unless}}
+                    {{/withItem}}
+                </span>
+            {{/each}}
             {{/if}}
         </div>
         {{/unless}}

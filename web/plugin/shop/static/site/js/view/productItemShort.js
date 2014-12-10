@@ -17,6 +17,9 @@ define("plugin/shop/site/js/view/productItemShort", [
             Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
+            Backbone.on('changed:plugin-shop-currency', function (selectedCurrencyName) {
+                
+            });
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
         },
