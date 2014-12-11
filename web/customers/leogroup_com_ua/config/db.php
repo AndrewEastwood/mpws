@@ -9,7 +9,9 @@ class db extends \web\base\atlantis\config\db {
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
             $this->connection['db'] = $metadata['db_name'];
             $this->connection['connection_string'] = "mysql:dbname=mpws_light;host=localhost;charset=utf8";
-        } elseif ($_SERVER['SERVER_NAME'] === 'leogroup.com.ua' || $_SERVER['SERVER_NAME'] === 'toolbox.leogroup.com.ua') {
+        } elseif ($_SERVER['SERVER_NAME'] === 'www.leogroup.com.ua' ||
+            $_SERVER['SERVER_NAME'] === 'leogroup.com.ua' ||
+            $_SERVER['SERVER_NAME'] === 'toolbox.leogroup.com.ua') {
             $this->connection['username'] = $metadata['db_user'];
             $this->connection['password'] = $metadata['db_pwd'];
             $this->connection['host'] = $metadata['db_host'];

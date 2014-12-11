@@ -13,13 +13,11 @@ define("plugin/shop/site/js/view/productItemShort", [
         template: tpl,
         lang: lang,
         initialize: function () {
-            _.bindAll(this, 'refresh');
+            _.bindAll(this, 'refresh', 'switchCurrency');
             Sandbox.eventSubscribe('plugin:shop:list_wish:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:list_compare:changed', this.refresh);
             Sandbox.eventSubscribe('plugin:shop:order:changed', this.refresh);
-            Backbone.on('changed:plugin-shop-currency', function (selectedCurrencyName) {
-                
-            });
+            Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
             if (this.model)
                 this.listenTo(this.model, 'change', this.render);
         },
@@ -39,6 +37,10 @@ define("plugin/shop/site/js/view/productItemShort", [
                 });
             this.$('[data-toggle="tooltip"]').tooltip();
             return this;
+        },
+        switchCurrency: function (visibleCurrencyName) {
+            this.$('.moneyValue').addClass('hidden');
+            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
         }
     });
 
