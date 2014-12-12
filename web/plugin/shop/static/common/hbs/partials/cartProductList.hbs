@@ -20,7 +20,7 @@
                 <i class="fa fa-trash-o"></i>
             </a>
             <div class="shop-product-image shop-product-image-main">
-                <a href="/#shop/product/{{ExternalKey}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                <a href="/#!/shop/product/{{ExternalKey}}" class="link" title="{{_origin.Name}} - {{Name}}">
                     <div class="image productimage noimage image_{{ID}}">
                         {{#if Images.[0].sm}}
                         <div id="facebookG">
@@ -46,7 +46,7 @@
             {{#if ../isToolbox}}
                 <a href="{{bb_link ../../urls.productEdit id=ExternalKey asRoot=true}}" class="product-name" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
             {{else}}
-                <a href="/#shop/product/{{ExternalKey}}" class="product-name" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                <a href="/#!/shop/product/{{ExternalKey}}" class="product-name" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
             {{/if}}
             </span>
             <span class="label label-warning product-price">{{currency Price}}<span class="moneyType">грн.</span></span>

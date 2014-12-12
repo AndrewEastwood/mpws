@@ -106,6 +106,7 @@ class products extends \engine\objects\api {
         $convertedSellingPrices = $this->getAPI()->exchangerates->convertToDefinedRates($product['SellingPrice']);
         $product['convertedSellingPrices'] = $convertedSellingPrices;
 
+        // var_dump($product);
         return $product;
     }
 

@@ -56,6 +56,10 @@ define('plugin/shop/toolbox/js/collection/listProducts', [
             return this.queryParams["_p" + param];
         },
 
+        removeCustomQueryField: function (field) {
+            delete this.queryParams["_f" + field];
+        },
+
         parseState: function (resp, queryParams, state, options) {
             var state = {
                 totalRecords: 0,

@@ -21,7 +21,9 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
         events: {
             'click .refresh-userlist-currencies': 'refreshUserCurrencyList',
             'click .save-currency-display': 'saveCurrencyDisplay',
-            'change .currency-list': 'saveDBCurrencyType'
+            'change .currency-list-db-default': 'saveDBCurrencyType',
+            'change .currency-list-site-default': 'saveSiteCurrencyType',
+            'switchChange.bootstrapSwitch .switcher-show-currency-switcher': 'setShowSiteCurrencySwitcher'
         },
         initialize: function () {
             this.currencyList = null;
@@ -41,36 +43,33 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
             this.modelDBPriceCurrency = new ModelSetting({
                 name: 'DBPriceCurrencyType'
             });
+            this.modelSiteDefaultCurrency = new ModelSetting({
+                name: 'SiteDefaultPriceCurrencyType'
+            });
+            this.modelShowSiteCurrencySwitcher = new ModelSetting({
+                name: 'ShowSiteCurrencySelector'
+            });
             this.collection = new CollectionSettings();
             this.collection.setCustomQueryField('Type', 'EXCHANGERATES');
             this.collection.setCustomQueryField('Status', 'REMOVED:!=');
-            this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.modelDBPriceCurrency, 'change', this.renderDBCurrencyType);
-            _.bindAll(this, 'refreshUserCurrencyList', 'saveCurrencyDisplay', 'saveDBCurrencyType');
+            this.listenTo(this.modelSiteDefaultCurrency, 'change', this.renderSiteDefaultCurrency);
+            this.listenTo(this.modelShowSiteCurrencySwitcher, 'change', this.renderShowSiteCurrencySwitcher);
+            this.listenTo(this.collection, 'reset', this.render);
+            this.dfdRenderComplete = new $.Deferred();
+            _.bindAll(this, 'refreshUserCurrencyList', 'saveCurrencyDisplay', 'saveDBCurrencyType',
+                'renderDBCurrencyType', 'renderSiteDefaultCurrency', 'renderShowSiteCurrencySwitcher');
         },
         render: function () {
+            var that = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             this.$('.editable:visible').editable(this.options.editableOptions);
-            this.initializeCurrencyList(this.$('.currency-list'));
-            return this;
-        },
-        initializeCurrencyList: function ($item) {
-            var that = this;
-            if (this.currencyList === null) {
-                $.get(APP.getApiLink({
-                    source: 'shop',
-                    fn: 'exchangerates',
-                    type: 'currencylist'
-                }), function (data) {
-                    that.currencyList = data;
-                    that.initializeCurrencyList($item);
-                });
-            } else {
-                $item.select2({
+            this.initializeCurrencyList(this.$('.currency-list'), function (item, currencyList) {
+                that.$('.currency-list-db-default').select2({
                     width: 150,
                     placeholder: 'Виберіть валюту',
-                    data: _(that.currencyList).map(function (item) {
+                    data: _(currencyList).map(function (item) {
                         return {
                             id: item,
                             text: item
@@ -87,16 +86,102 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                         }
                     }
                 });
+                that.$('.currency-list-site-default').select2({
+                    width: 150,
+                    placeholder: 'Виберіть валюту',
+                    data: _(currencyList).map(function (item) {
+                        return {
+                            id: item,
+                            text: item
+                        }
+                    }),
+                    initSelection: function (e, callback) {
+                        if (that.siteDefaultCurrencyType) {
+                            callback({
+                                id: that.siteDefaultCurrencyType,
+                                text: that.siteDefaultCurrencyType
+                            });
+                        } else {
+                            callback();
+                        }
+                    }
+                });
                 if (this.dbCurrencyType) {
                     $item.select2('val', this.dbCurrencyType);
                 }
+                if (this.siteDefaultCurrencyType) {
+                    $item.select2('val', this.siteDefaultCurrencyType);
+                }
+                that.dfdRenderComplete.resolve();
+            });
+            return this;
+        },
+        initializeCurrencyList: function ($item, callback) {
+            var that = this;
+            if (this.currencyList === null) {
+                $.get(APP.getApiLink({
+                    source: 'shop',
+                    fn: 'exchangerates',
+                    type: 'currencylist'
+                }), function (data) {
+                    that.currencyList = data;
+                    that.initializeCurrencyList($item, callback);
+                    callback($item, that.currencyList);
+                });
+            } else {
+                callback($item, this.currencyList);
             }
         },
         renderDBCurrencyType: function (e) {
-            this.dbCurrencyType = this.modelDBPriceCurrency.get('Value');
-            if (this.$('.currency-list').length) {
-                this.$('.currency-list').select2("val", this.dbCurrencyType);
-            }
+            var that = this;
+            this.dfdRenderComplete.done(function () {
+                that.dbCurrencyType = that.modelDBPriceCurrency.get('Value');
+                if (that.$('.currency-list-db-default').length) {
+                    that.$('.currency-list-db-default').select2("val", that.dbCurrencyType);
+                }
+            });
+        },
+        renderSiteDefaultCurrency: function () {
+            var that = this;
+            this.dfdRenderComplete.done(function () {
+                that.siteDefaultCurrencyType = that.modelSiteDefaultCurrency.get('Value');
+                if (that.$('.currency-list-site-default').length) {
+                    that.$('.currency-list-site-default').select2("val", that.siteDefaultCurrencyType);
+                }
+            });
+        },
+        renderShowSiteCurrencySwitcher: function () {
+            this.$('.switcher-show-currency-switcher').bootstrapSwitch('state', this.modelShowSiteCurrencySwitcher.get('_isActive'), true);
+        },
+        saveSiteCurrencyType: function (e) {
+            this.modelSiteDefaultCurrency.save({
+                Value: e.val
+            }, {
+                patch: true,
+                silent: true,
+                success: function () {
+                    BSAlerts.success(lang.settings_message_success);
+                },
+                error: function () {
+                    BSAlerts.danger(lang.settings_error_save);
+                }
+            });
+        },
+        setShowSiteCurrencySwitcher: function (event, state, skip) {
+            var self = this;
+            this.modelShowSiteCurrencySwitcher.save({
+                Status: !!state ? 'ACTIVE' : 'DISABLED'
+            }, {
+                patch: true,
+                success: function (model) {
+                    BSAlerts.success(lang.settings_message_success);
+                    self.$('.switcher-config-self-pickup').bootstrapSwitch('state', model.get('_isActive'), true);
+                },
+                error: function (model) {
+                    BSAlerts.danger(lang.settings_error_save);
+                    self.$('.switcher-config-self-pickup').bootstrapSwitch('state', !state, true);
+                }
+            });
         },
         saveDBCurrencyType: function (e) {
             this.modelDBPriceCurrency.save({

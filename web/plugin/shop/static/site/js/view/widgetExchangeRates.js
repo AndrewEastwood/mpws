@@ -20,7 +20,7 @@ define("plugin/shop/site/js/view/widgetExchangeRates", [
         render: function () {
             var data = Utils.getHBSTemplateData(this);
             this.$el.html(this.template(data));
-            var currencyName = WidgetExchangeRates.getActiveCurrencyName();
+            var currencyName = WidgetExchangeRates.getActiveCurrencyName(APP.instances.shop.settings.SiteDefaultPriceCurrencyType.Value, APP.instances.shop.settings.ShowSiteCurrencySelector);
             if (currencyName) {
                 this.$('.active-currency').text(this.$('.dropdown-menu .' + currencyName).text());
             }
@@ -33,9 +33,13 @@ define("plugin/shop/site/js/view/widgetExchangeRates", [
             Backbone.trigger('changed:plugin-shop-currency', currencyName);
         }
     }, {
-        getActiveCurrencyName: function (defaultCurrency) {
-            return Cache.get('userСurrencyName') ||
-                (APP.instances.shop && APP.instances.shop.settings && APP.instances.shop.settings.DBPriceCurrencyType.Value) || defaultCurrency;
+        getActiveCurrencyName: function (defaultCurrency, isSwitcherActive) {
+            var displayCurrency = Cache.get('userСurrencyName') || defaultCurrency;
+            if (!isSwitcherActive && defaultCurrency !== displayCurrency) {
+                displayCurrency = defaultCurrency
+                Cache.set('userСurrencyName', displayCurrency);
+            }
+            return displayCurrency;
         }
     });
 

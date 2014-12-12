@@ -112,24 +112,24 @@
 
                     {{#unless data._archived}}
                     <div class="shop-component shop-product-attr shop-product-attr-price">
+                        <div class="value-prefix">
                         {{#if data._promoIsApplied }}
-                        <span class="value-prefix">Ціна зі знижкою {{data.promo.Discount}}%</span>
-                        {{!-- <strong>{{currency data.DiscountPrice}}грн.</strong> --}}
+                            Ваша ціна:
                         {{else}}
-                        <span class="value-prefix">Ціна:</span>
-                        {{!-- <strong>{{currency data.Price}}грн.</strong> --}}
+                            Ціна:
                         {{/if}}
+                        </div>
                         {{#each data.convertedSellingPrices}}
                             <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
                                 {{#withItem ../instances.shop.settings.currencyList key=@key}}
-                                    {{#if showBeforeValue}}<span class="value-prefix moneyType">{{text}}</span>{{/if}}
+                                    {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                                     <strong class="value">{{currency ../this}}</strong>
-                                    {{#unless showBeforeValue}}<span class="value-suffix moneyType">{{text}}</span>{{/unless}}
+                                    {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
                                 {{/withItem}}
                             </strong>
                         {{/each}}
                         {{#if data._promoIsApplied }}
-                        <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b></sub>
+                        <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%) | Ваш промокод <b>{{../data._promo.Code}}</b> діє до <b>{{../data._promo.DateExpire}}</b></div>
                         {{/if}}
                     </div>
                     {{#if instances.shop.settings.ShowPriceChart._isActive}}

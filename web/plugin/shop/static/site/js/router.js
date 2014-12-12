@@ -270,7 +270,7 @@ define("plugin/shop/site/js/router", [
                 var _s = settings.toSettings();
                 Router.prototype.settings = _s;
                 Router.prototype.settings._user = {
-                    activeCurrency: SiteWidgets.ExchangeRates.getActiveCurrencyName(_s.DBPriceCurrencyType && _s.DBPriceCurrencyType.Value)
+                    activeCurrency: SiteWidgets.ExchangeRates.getActiveCurrencyName(_s.SiteDefaultPriceCurrencyType && _s.SiteDefaultPriceCurrencyType.Value, !!_s.ShowSiteCurrencySelector)
                 }
                 // console.log('shop settings ready: calling callback');
                 callback();

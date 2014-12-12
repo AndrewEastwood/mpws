@@ -8,50 +8,52 @@ define("plugin/shop/site/js/view/siteWidgets", [
 
     var SiteWidgets = function (models) {
 
+        var renderItems = [];
+
+        // show exchange rates selector
+        // debugger;
+        if (APP.instances.shop.settings.ShowSiteCurrencySelector) {
+            var rates = new ExchangeRates();
+            rates.render();
+            renderItems.push({
+                name: 'CommonWidgetsTop',
+                el: rates.$el,
+                append: true
+            });
+        }
+
         // inject tracking order
         var orderTrackingButton = new OrderTrackingButton();
         orderTrackingButton.render();
+        renderItems.push({
+            name: 'CommonWidgetsTop',
+            el: orderTrackingButton.$el,
+            append: true
+        });
 
         // inject embedded shopping cart
-        var cartEmbedded = new CartEmbedded({
-            model: models.order
-        });
+        var cartEmbedded = new CartEmbedded({model: models.order});
         cartEmbedded.render();
+        renderItems.push({
+            name: 'CommonWidgetsTop',
+            el: cartEmbedded.$el,
+            append: true
+        });
 
         var addr = new Address();
         addr.collection.fetch({reset: true});
-
-        var rates = new ExchangeRates();
-        rates.render();
+        renderItems.push({
+            name: 'CommonWidgetsTop',
+            el: addr.$el,
+            append: true
+        });
 
         Sandbox.eventSubscribe('global:loader:complete', function () {
-            Sandbox.eventNotify('global:content:render', [
-                {
-                    name: 'CommonWidgetsTop',
-                    el: rates.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonWidgetsTop',
-                    el: orderTrackingButton.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonWidgetsTop',
-                    el: cartEmbedded.$el,
-                    append: true
-                },
-                {
-                    name: 'CommonWidgetsTop',
-                    el: addr.$el,
-                    append: true
-                }
-            ]);
+            Sandbox.eventNotify('global:content:render', renderItems);
         });
     };
 
     SiteWidgets.ExchangeRates = ExchangeRates;
-
     return SiteWidgets;
 
 });

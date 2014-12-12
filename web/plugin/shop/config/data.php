@@ -95,12 +95,19 @@ class data extends \engine\objects\configuration {
                                 $valToSearch = '%' . $valToSearch . '%';
                                 $conditionOp = 'like';
                                 break;
+                            case 'm':
+                                $conditionField = "shop_products.Model";
+                                $valToSearch = '%' . $valToSearch . '%';
+                                $conditionOp = 'like';
+                                break;
                         }
-                        if (!empty($conditionField))
+                        // var_dump($conditionField);
+                        // var_dump($valToSearch);
+                        // var_dump($conditionOp);
+                        if (!empty($conditionField)) {
                             $config['condition'][$conditionField] = $this->jsapiCreateDataSourceCondition($valToSearch, $conditionOp);
+                        }
                     }
-
-
                     // $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
                     // $config['condition']["shop_products.Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
                     // $config['condition']["shop_products.Description"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
@@ -808,7 +815,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopGetSettingsList (array $options = array()) {
         $config = $this->jsapiShopGetSettingByID();
         $config['fields'] = array("ID");
-        $config['limit'] = -1;
+        $config['limit'] = 0;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }

@@ -23,10 +23,11 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         initialize: function (options) {
             this.options = options || {};
             ViewListProducts.prototype.initialize.call(this, options);
-            // debugger;
             this.grid.emptyText = lang.pluginMenu_Products_Grid_noData_ByStatus;
             if (this.options.status) {
                 this.collection.setCustomQueryField("Status", this.options.status.toUpperCase());
+            } else {
+                this.collection.removeCustomQueryField("Status");
             }
             this.collection.setCustomQueryParam("Stats", true);
 
@@ -64,9 +65,11 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
         render: function () {
             // debugger;
             if (this.$el.is(':empty')) {
-                this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+                var data = Utils.getHBSTemplateData(this);
+                this.$el.html(tpl(data));
                 this.$('.products').append(this.grid.render().$el);
                 this.$('.products').append(this.paginator.render().$el);
+                // debugger;
                 this.$('.search').tagsinput();
             }
             if (this.collection.extras._category) {
@@ -75,10 +78,14 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             } else {
                 this.$('.category-title').addClass('hidden');
             }
+            // debugger;
+            var searchItems = this.collection.getCustomQueryParam("Search");
+            // debugger;
+            this.$('.search').tagsinput('add', searchItems.join(','));
             return this;
         },
         search: function () {
-            this.collection.setCustomQueryParam("Search", $(".search").tagsinput('items'));
+            this.collection.setCustomQueryParam("Search", this.$(".search").tagsinput('items'));
             this.collection.fetch();
         }
     });
