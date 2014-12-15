@@ -112,14 +112,8 @@
 
                     {{#unless data._archived}}
                     <div class="shop-component shop-product-attr shop-product-attr-price">
-                        <div class="value-prefix">
-                        {{#if data._promoIsApplied }}
-                            Ваша ціна:
-                        {{else}}
-                            Ціна:
-                        {{/if}}
-                        </div>
-                        {{#each data.convertedSellingPrices}}
+                        <div class="value-prefix">Ціна:</div>
+                        {{#each data._prices.others}}
                             <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
                                 {{#withItem ../instances.shop.settings.currencyList key=@key}}
                                     {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
@@ -133,7 +127,7 @@
                         {{/if}}
                     </div>
                     {{#if instances.shop.settings.ShowPriceChart._isActive}}
-                    {{#mpwsIsNotEmpty data.Prices }}
+                    {{#mpwsIsNotEmpty data._prices.history }}
                         <div class="shop-component shop-product-attr shop-product-attr-price">
                             <span class="value-prefix">Діаграма ціни:</span>
                             <span id="sparkline" class="productSparkline"></span>

@@ -5,16 +5,22 @@ use \engine\lib\utils as Utils;
 class configuration {
 
     private $customer;
+    private $app;
     public $DATE_FORMAT = 'Y-m-d H:i:s';
     public $DEFAULT_COMPARATOR = '=';
     public $DEFAULT_CONCATENATE = 'AND';
 
-    function __construct ($customer) {
+    function __construct ($customer, $app) {
         $this->customer = $customer;
+        $this->app = $app;
     }
 
     public function getCustomer () {
         return $this->customer;
+    }
+
+    public function getApp () {
+        return $this->app;
     }
 
     public function getDate ($strDate = '') {

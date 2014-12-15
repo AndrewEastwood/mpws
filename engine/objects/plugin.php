@@ -23,7 +23,7 @@ class plugin {
         $pluginConfigs = Path::getPluginConfigNames($pluginName);
         foreach ($pluginConfigs as $configName) {
             $configClass = Utils::getPluginConfigClassName($configName, $pluginName);// '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
-            $configuration[$configName] = new $configClass($customer);
+            $configuration[$configName] = new $configClass($customer, $app);
         }
         $this->configuration = (object)$configuration;
 

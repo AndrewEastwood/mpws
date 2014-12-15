@@ -54,13 +54,13 @@ class products extends \engine\objects\api {
         $product['_origin'] = $this->getAPI()->origins->getOriginByID($product['OriginID']);
         $product['Attributes'] = $this->getProductAttributes($productID);
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
-        $product['Price'] = floatval($product['Price']);
 
         // misc data
         if (!$skipRelations) {
             $product['Relations'] = $this->getProductRelations($productID);
         }
-        $product['Prices'] = $this->getProductPriceHistory($productID);
+
+        // features
         $product['Features'] = $this->getProductFeatures($productID);
 
         // media
@@ -73,38 +73,45 @@ class products extends \engine\objects\api {
         $product['_viewExtras']['InCompare'] = $this->getAPI()->comparelists->productIsInCompareList($productID);
         $product['_viewExtras']['InCartCount'] = $this->getAPI()->orders->productCountInCart($productID);
 
-        // promo
-        $promo = $this->getAPI()->promos->getSessionPromo();
-        $product['_promoIsApplied'] = false;
-        if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
-            $product['_promoIsApplied'] = true;
-            $product['DiscountPrice'] = (100 - intval($promo['Discount'])) / 100 * $product['Price'];
-            $product['_promo'] = $promo;
-        }
-
-        $product['SellingPrice'] = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
-        $product['SellingPrice'] = floatval($product['SellingPrice']);
-
         // is available
         $product['_available'] = in_array($product['Status'], $this->getProductStatusesWhenAvailable());
         $product['_archived'] = in_array($product['Status'], $this->getProductStatusesWhenDisabled());
-        // need to use as separate request
-        // $product['_featuresTree'] = $this->getAPI()->productfeatures->getFeatures_Tree();
 
-        // $product['_statuses'] = $this->_getCachedTableStatuses($this->getPluginConfiguration()->data->Table_ShopProducts);
+        // promo
+        $promo = $this->getAPI()->promos->getSessionPromo();
+        $product['_promo'] = $promo;
+
+        // prices and actual price
+        $price = floatval($product['Price']);
+        $actualPrice = 0;
+        $priceHistory = $this->getProductPriceHistory($productID);
+        if ($product['IsPromo'] && !empty($promo) && !empty($promo['Discount']) && $promo['Discount'] > 0) {
+            $product['_promoIsApplied'] = true;
+            $actualPrice = (100 - intval($promo['Discount'])) / 100 * $price;
+        } else {
+            $product['_promoIsApplied'] = false;
+            $actualPrice = $price;
+        }
+        $actualPrice = floatval($actualPrice);
+        unset($product['Price']);
+
+        // apply currencies
+        $convertedPrices = $this->getAPI()->exchangerates->convertToDefinedRates($actualPrice);
+
+        // create product prices object
+        $product['_prices'] = array(
+            'price' => $price,
+            'actual' => $actualPrice,
+            'others' => $convertedPrices,
+            'history' => $priceHistory
+        );
+
         // save product into recently viewed list
         if (Request::isGET() && !$this->getApp()->isToolbox()) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[$productID] = $product;
             $_SESSION[$this->_listKey_Recent] = $recentProducts;
         }
-
-        // apply currencies
-        // $rates = $this->getAPI()->exchangerates->getAvailableConversionOptions();
-        // $product['rates'] = $rates;
-
-        $convertedSellingPrices = $this->getAPI()->exchangerates->convertToDefinedRates($product['SellingPrice']);
-        $product['convertedSellingPrices'] = $convertedSellingPrices;
 
         // var_dump($product);
         return $product;

@@ -17,10 +17,15 @@ define("plugin/shop/site/js/view/listProductWish", [
         initialize: function () {
             this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.collection, 'sync', this.render);
+            Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
         },
         render: function() {
             this.$el.html(this.template(Utils.getHBSTemplateData(this)));
             return this;
+        },
+        switchCurrency: function (visibleCurrencyName) {
+            this.$('.moneyValue').addClass('hidden');
+            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
         }
     });
 

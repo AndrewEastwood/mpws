@@ -109,9 +109,8 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRates", [
                 return;
             $errorsList.empty();
             this.collection.create({
-                RateA: parseFloat($item.find('.rate-a').text(), 10),
                 CurrencyA: $item.find('.currency-a').text(),
-                RateB: parseFloat($item.find('.rate-b').text(), 10),
+                Rate: parseFloat($item.find('.rate').text(), 10),
                 CurrencyB: $item.find('.currency-b').text()
             }, {
                 success: function (model, resp) {

@@ -131,7 +131,7 @@ define("plugin/shop/site/js/view/cartStandalone", [
 
             $formPreview.on('submit', function () {
                 return false;
-            })
+            });
 
             this.$('.button-order-back').click(function () {
                 self.$('.wizard').wizard('previous');
@@ -161,6 +161,8 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 _(formDataArray).each(function (item) {
                     result[item.name] = item.value;
                 });
+                debugger;
+                result.userCurrency = APP.instances.shop.settings._user.activeCurrency;
                 self.model.saveOrder(result);
             });
 

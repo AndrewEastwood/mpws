@@ -430,6 +430,7 @@ define("default/js/lib/handlebarsHelpers", [
         return dictionary[_key];
     }
     helpers.withItem = function(object, options) {
+        object = object || {};
         return options.fn(object[options.hash.key]);
     }
     // Warning: untested code

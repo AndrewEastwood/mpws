@@ -749,36 +749,29 @@ i.fa {cursor: pointer;}
 }
 
 .shop-cart-embedded {
+  margin-left: 10px;
+  margin-bottom: 10px;
   .discount-helptext {
     display: none;
   }
   .btn.dropdown-toggle {
     width: 190px;
   }
-  .dropdown-menu {
-    width: 300px;
-    margin-left: -110px;
-    &:before {
-      content: '';
-      display: block;
-      border: 10px solid rgba(0, 0, 0, 0);
-      width: 0px;
-      border-bottom: 10px solid #FFF;
-      position: absolute;
-      top: -18px;
-      right: 27px;
-    }
+}
+
+.shop-cart-embedded-modal {
+  .shop-widget-productlist {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
   }
   .shop-widget-productlist {
     .discount-availability {
       display: none;
     }
-    .wrapper:nth-child(n+4) {
-      display: none;
-    }
     .wrapper {
-      text-align: left;
-      padding: 10px;
+      // text-align: left;
+      // padding: 10px;
       .shop-product-image-main {
         width: 32px;
         height: 32px;
@@ -804,12 +797,12 @@ i.fa {cursor: pointer;}
           text-decoration: none;
         }
       }
-      .product-name {display: block;}
-      .product-price {width: 50px; display: none;}
-      .product-quantity {width: 25px; display: none;}
-      .product-total {width: 50px; display: none;}
-      .label-default {display: none;}
-      .productQuantityAction {display: none;}
+      .product-name {display: inline-block; text-overflow: ellipsis; overflow: hidden; width: 200px; white-space: nowrap; vertical-align: middle;}
+      .product-price {margin-right: 3px;}
+      // .product-quantity {width: 25px; display: none;}
+      // .product-total {width: 50px; display: none;}
+      // .label-default {display: none;}
+      // .productQuantityAction {display: none;}
       input.quantity {display: none;}
     }
   }
@@ -834,10 +827,6 @@ i.fa {cursor: pointer;}
   .cart-message {
     font-weight: bold;
     padding: 5px 10px 8px;
-  }
-  .open-cart-standalone {
-    padding: 10px;
-    text-align: right;
   }
 }
 
@@ -879,8 +868,8 @@ i.fa {cursor: pointer;}
     }
     .product-name {
       display: inline-block;
-      width: 300px;
-      max-width: 300px;
+      width: 45%;
+      max-width: 500px;
       min-width: 100px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -888,9 +877,9 @@ i.fa {cursor: pointer;}
       vertical-align: middle;
       margin-left: 10px;
     }
-    .product-price {display: inline-block; width: 80px;}
+    .product-price {display: inline-block; width: 150px;}
     .product-quantity {display: none;}
-    .product-total {display: inline-block; width: 80px;}
+    .product-total {display: inline-block; width: 150px;}
     .form-control.quantity {
       display: inline-block;
       width: 80px;
@@ -930,7 +919,7 @@ i.fa {cursor: pointer;}
       .form-control.quantity {display: none;}
       .product-quantity {display: inline-block; width: 40px;}
     }
-    .promocode {
+    .btn-promo-cancel {
       display: none;
     }
   }
@@ -940,14 +929,9 @@ i.fa {cursor: pointer;}
   .shop-widget-productlist {
     overflow: hidden;
     .wrapper {
-      overflow: hidden;
-      width: 23%;
-      float: left;
       border: 1px solid #ddd;
-      position: relative;
       min-height: 150px;
       margin-bottom: 20px;
-      margin-right: 20px;
       .shop-product-remove {
         position: absolute;
         left: 5px;
@@ -963,13 +947,18 @@ i.fa {cursor: pointer;}
       }
       .product-price {
         position: absolute;
-        position: absolute;
         right: 0px;
         bottom: 0px;
         padding-right: 45px;
         font-size: 16px;
         border-radius: 0px;
         z-index: 5;
+        width: 100%;
+        background-color: rgb(240, 173, 78, 0.5);
+        padding-left: 10px;
+        .value-prefix {
+          display: inline;
+        }
       }
       .shop-product-image-main {
         position: absolute;
@@ -1017,7 +1006,8 @@ i.fa {cursor: pointer;}
 }
 
 .shop-order-tracking-button {
-  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
   .btn {
     padding-left: 30px;
   }
@@ -1329,16 +1319,16 @@ i.fa {cursor: pointer;}
 }
 
 .address-widget {
-  .title {
-    .clearfix();
-  }
-  .pull-left();
+  margin-bottom: 10px;
   text-align: left;
   background: rgba(80, 80, 80, 0.5);
   border-radius: 5px;
   color: #fff;
   padding: 5px 10px;
-  margin-left: 25px;
+  .pull-left();
+  .title {
+    .clearfix();
+  }
   .block {
     vertical-align: top;
     display: inline-block;
@@ -1381,10 +1371,14 @@ i.fa {cursor: pointer;}
 
 .exchange-rates-widget {
   margin-right: 30px;
+  margin-bottom: 10px;
 }
 
-.MPWSWidgetsTop {
-  height: 120px;
+.MPWSLayout {
+  .MPWSWidgetsTop {
+    height: 120px;
+    margin-left: 10px;
+  }
 }
 
 .alert-not-all-products-promo {

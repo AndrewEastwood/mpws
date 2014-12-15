@@ -30,7 +30,64 @@
         </div>
     </div>
     <div class="well">
-        {{>plugin/shop/common/hbs/partials/wishProductList data }}
+      <div class="shop-widget-productlist row">
+      {{#each data }}
+        <div class="col-md-3">
+          <div class="wrapper">
+            <a href="javascript://" class="shop-product-remove" data-action="plugin:shop:list_wish:remove" data-id="{{ID}}">
+                <i class="fa fa-trash-o"></i>
+            </a>
+            <a href="javascript://" class="shop-product-buy" data-action="plugin:shop:order:add" data-id="{{ID}}">
+                <i class="fa fa-shopping-cart"></i>
+            </a>
+            <div class="shop-product-image shop-product-image-main">
+                <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                    <div class="image productimage noimage image_{{ID}}">
+                        {{#if Images.[0].sm}}
+                        <div id="facebookG">
+                            <div id="blockG_1" class="facebook_blockG"></div>
+                            <div id="blockG_2" class="facebook_blockG"></div>
+                            <div id="blockG_3" class="facebook_blockG"></div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{#if Images.[0].sm}}
+                    <script>
+                    (function() {
+                        require(["default/js/plugin/image!{{Images.[0].sm}}"], function(img){
+                            img.title = "{{Name}}";
+                            img.className = "image img-responsive";
+                            $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                        }, function () { $('.image_{{ID}} #facebookG').remove(); });
+                    })();
+                    </script>
+                    {{/if}}
+                </a>
+            </div>
+            <div class="product-row">
+                <span class="product-name"><a href="{{bb_link ../../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a></span>
+                {{#unless _archived}}
+                <div class="shop-component shop-product-attr shop-product-attr-price label-warning product-price">
+                    <div class="value-prefix">Ціна:</div>
+                    {{#each convertedSellingPrices}}
+                        <span class="moneyValue {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                            {{#withItem ../../../instances.shop.settings.currencyList key=@key}}
+                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                                <strong class="value">{{currency ../this}}</strong>
+                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                            {{/withItem}}
+                        </span>
+                    {{/each}}
+                    {{#if _promoIsApplied }}
+                    <sub class="promocode label label-success">(Знижка: {{../_promo.Discount}}%)</sub>
+                    {{/if}}
+                </div>
+                {{/unless}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+      </div>
     </div>
     <div class="well">
         <div class="actions">

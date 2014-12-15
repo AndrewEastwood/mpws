@@ -8,10 +8,9 @@
     {{#each data}}
         <a href="javascript://" class="list-group-item currency" data-id="{{ID}}">
             <i class="fa fa-times fa-fw text-danger remove-currency"></i>
-            <span class="rate-value rate-a editable" data-name="RateA">{{currency RateA}}</span>
             <span class="currency-text currency-a">{{CurrencyA}}</span>
             <i class="fa fa-arrow-right fa-fw"></i>
-            <span class="rate-value rate-b editable" data-name="RateB">{{currency RateB}}</span>
+            <span class="rate-value rate editable" data-name="Rate">{{currency Rate}}</span>
             <span class="currency-text currency-b">{{CurrencyB}}</span>
         </a>
     {{/each}}
@@ -25,10 +24,9 @@
 <a href="javascript://" class="list-group-item currency is-new currency-template hidden">
     <ul class="list errors hidden"></ul>
     <i class="fa fa-times fa-fw text-danger remove-currency"></i>
-    <span class="rate-input rate-a editable"></span>
     <span class="currency-text currency-a editable-select2"></span>
     <i class="fa fa-arrow-right fa-fw"></i>
-    <span class="rate-input rate-b editable"></span>
+    <span class="rate-input rate editable"></span>
     <span class="currency-text currency-b editable-select2"></span>
     <button type="button" class="btn btn-success btn-xs pull-right create-currency">Зберегти</button>
 </a>

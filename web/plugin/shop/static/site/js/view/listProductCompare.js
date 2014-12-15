@@ -20,6 +20,7 @@ define("plugin/shop/site/js/view/listProductCompare", [
         initialize: function () {
             this.listenTo(this.collection, 'reset', this.render);
             this.listenTo(this.collection, 'sync', this.render);
+            Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
             _.bindAll(this, 'toggleCompareMode');
         },
         render: function() {
@@ -66,6 +67,10 @@ define("plugin/shop/site/js/view/listProductCompare", [
             } else {
                 this.$('.can-toggle, .feature-group').removeClass('hidden');
             }
+        },
+        switchCurrency: function (visibleCurrencyName) {
+            this.$('.moneyValue').addClass('hidden');
+            this.$('.moneyValue.' + visibleCurrencyName).removeClass('hidden');
         }
     });
 

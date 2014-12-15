@@ -46,7 +46,7 @@ class customer {
             } else {
                 $configClass = Utils::getDefaultConfigClassName($this->getVersion(), $configName);
             }
-            $configuration[$configName] = new $configClass($this);
+            $configuration[$configName] = new $configClass($this, $app);
         }
         $this->configuration = (object)$configuration;
 

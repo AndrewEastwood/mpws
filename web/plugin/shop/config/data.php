@@ -885,7 +885,7 @@ class data extends \engine\objects\configuration {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "DeliveryID", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "DeliveryID", "CurrencyName", "CurrencyRate", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -1273,7 +1273,7 @@ class data extends \engine\objects\configuration {
             "action" => "select",
             "source" => "shop_currency",
             "condition" => array(),
-            "fields" => array("ID", "CurrencyA", "RateA", "CurrencyB", "RateB"),
+            "fields" => array("ID", "CurrencyA", "CurrencyB", "Rate"),
             "options" => array(
                 "expandSingleRecord" => true
             ),
@@ -1283,6 +1283,20 @@ class data extends \engine\objects\configuration {
         if (!is_null($id))
             $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($id);
 
+        return $config;
+    }
+    public function jsapiShopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
+        $config = $this->jsapiShopGetExchangeRateByID();
+        $config["condition"] = array(
+            "CurrencyB" => $this->jsapiCreateDataSourceCondition($currencyNameTo)
+        );
+        return $config;
+    }
+    public function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameTo = null) {
+        $config = $this->jsapiShopGetExchangeRateByID();
+        $config["condition"] = array(
+            "CurrencyA" => $this->jsapiCreateDataSourceCondition($currencyNameTo)
+        );
         return $config;
     }
 

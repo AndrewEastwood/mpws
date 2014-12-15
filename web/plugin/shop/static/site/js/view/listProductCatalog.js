@@ -6,7 +6,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'plugin/shop/site/js/collection/listProductCatalog',
     'plugin/shop/site/js/view/productItemShort',
     'default/js/lib/bootstrap-dialog',
-    'default/js/plugin/hbs!plugin/shop/site/hbs/productCatalog',
+    'default/js/plugin/hbs!plugin/shop/site/hbs/listProductCatalog',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation',
     'default/js/lib/bootstrap',
@@ -18,6 +18,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
         template: tpl,
+        lang: lang,
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_Other',
@@ -33,24 +34,22 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         },
         render: function () {
             // debugger;
-            var self = this;
-            var displayItems = [];
-            var _filterData = this.collection.filter;
+            var that = this;
+            // var displayItems = [];
+            // var _filterData = ;
+            // debugger;
+            var data = Utils.getHBSTemplateData(this);
+            data.filter = this.collection.filter;
+            data.pagination = this.collection.pagintaion;
+            this.$el.html(this.template(data));
 
             this.collection.each(function(model){
                 var productView = new ProductItemShort({model: model});
-                displayItems.push(productView.render().el);
+                productView.render();
+                // displayItems.push(productView.$el);
+                productView.$el.attr('class', 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4');
+                that.$('.displayItems').append(productView.$el);
             });
-
-            // debugger;
-            var data = Utils.getHBSTemplateData(this);
-            this.$el.html(this.template({
-                displayItems: displayItems,
-                filter: _filterData,
-                pagination: this.collection.pagintaion,
-                instances: data.instances,
-                lang: lang
-            }));
 
             // // enhance ui components
             // debugger;

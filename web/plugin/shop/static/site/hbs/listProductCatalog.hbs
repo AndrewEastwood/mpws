@@ -198,16 +198,10 @@
             </ul>
         </nav>
         {{/gte}}
-        <div class="row">
-            {{#mpwsIsNotEmpty displayItems }}
-                {{#each displayItems }}
-                <div class="shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    {{{ this.innerHTML }}}
-                </div>
-                {{/each}}
-            {{else}}
-                <div class="alert alert-warning">Немає товарів в цій категорії</div>
-            {{/mpwsIsNotEmpty}}
+        <div class="row displayItems">
+            {{#unless filter.info.count }}
+            <div class="alert alert-warning">Немає товарів в цій категорії</div>
+            {{/unless}}
         </div>
         {{#gte pagination.pages 2}}
         <nav>

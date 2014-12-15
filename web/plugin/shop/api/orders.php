@@ -165,6 +165,23 @@ class orders extends \engine\objects\api {
         $formSettings = $this->getAPI()->settings->getSettingsMapFormOrder();
 
         try {
+
+            $orderCurrency = false;
+            $orderRate = 1;
+
+            // customer currency
+            $selectedCustomerCurrencyName = $reqData['form']['userCurrency'];
+            // customer's used default currency
+            if (empty($selectedCustomerCurrencyName)) {
+                $orderCurrency = $this->getAPI()->exchangerates->getDefaultDBPriceCurrencyType();
+            } else {
+                // get conversion rate
+                $rateTo = $this->getAPI()->exchangerates->getExchangeRateTo_ByCurrencyName($selectedCustomerCurrencyName);
+                $orderCurrency = $selectedCustomerCurrencyName;
+                $orderRate = $rateTo['RateB'];
+            }
+            $orderRate = floatval($orderRate);
+
             $this->getCustomerDataBase()->beginTransaction();
             $this->getCustomerDataBase()->disableTransactions();
 
@@ -267,12 +284,15 @@ class orders extends \engine\objects\api {
             $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : null;
             $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
             $dataOrder["PromoID"] = $orderPromoID;
+            $dataOrder["CurrencyName"] = $orderCurrency;
+            $dataOrder["CurrencyRate"] = $orderRate;
 
             $configOrder = $this->getPluginConfiguration()->data->jsapiShopCreateOrder($dataOrder);
             $orderID = $this->getCustomer()->fetch($configOrder);
 
-            if (empty($orderID))
+            if (empty($orderID)) {
                 throw new Exception("OrderCreateError", 1);
+            }
 
             // save products
             // -----------------------
@@ -285,8 +305,8 @@ class orders extends \engine\objects\api {
                 $dataBought["CustomerID"] = $this->getCustomer()->getCustomerID();
                 $dataBought["ProductID"] = $productItem["ID"];
                 $dataBought["OrderID"] = $orderID;
-                $dataBought["Price"] = $productItem["Price"];
-                $dataBought["SellingPrice"] = $productItem["SellingPrice"];
+                $dataBought["Price"] = $productItem["_prices"]["price"];
+                $dataBought["SellingPrice"] = $productItem["_prices"]["actual"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
                 $configBought = $this->getPluginConfiguration()->data->jsapiShopCreateOrderBought($dataBought);
@@ -402,6 +422,10 @@ class orders extends \engine\objects\api {
         $order['address'] = null;
         $order['delivery'] = null;
         $productItems = array();
+
+        $defaultDBCurrency = $this->getAPI()->exchangerates->getDefaultDBPriceCurrencyType();
+        $rates = $this->getAPI()->exchangerates->getActiveExchangeRatesAll();
+
         // var_dump($order);
         // if orderID is set then the order is saved
         if (isset($orderID) && !isset($order['temp'])) {
@@ -425,21 +449,31 @@ class orders extends \engine\objects\api {
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
                     $product = $this->getAPI()->products->getProductByID($soldItem['ProductID']);
+
                     // save current product info
-                    $product["CurrentIsPromo"] = $product['IsPromo'];
-                    $product["CurrentPrice"] = $product['Price'];
-                    $product["CurrentSellingPrice"] = $product['SellingPrice'];
+                    $product["_original"] = array(
+                        "IsPromo" => $product['IsPromo'],
+                        "_prices" => $product['_prices']
+                    );
                     // restore product info at purchase moment
-                    $product["Price"] = floatval($soldItem['Price']);
-                    $product["SellingPrice"] = floatval($soldItem['SellingPrice']);
                     $product["IsPromo"] = intval($soldItem['IsPromo']) === 1;
+                    $product["_prices"] = array(
+                        'price' => $soldItem['Price'],
+                        'actual' => $soldItem['SellingPrice']
+                    );
                     // get purchased product quantity
                     $product["_orderQuantity"] = floatval($soldItem['Quantity']);
-                    // actual price (with discount if promo is active)
-                    // $price = isset($product['DiscountPrice']) ? $product['DiscountPrice'] : $product['Price'];
-                    // set product gross and net totals
-                    $product["_orderProductSubTotal"] = $product['Price'] * $product['_orderQuantity'];
-                    $product["_orderProductTotal"] = $product['SellingPrice'] * $product['_orderQuantity'];
+                    // get product sub and total by raw price
+                    $_subTotal = $product['_prices']['price'] * $soldItem['Quantity'];
+                    $_total = $product['_prices']['actual'] * $soldItem['Quantity'];
+                    // conversions
+                    $product['_totalSummary'] = array(
+                        "_sub" => $_subTotal,
+                        "_total" => $_total,
+                        "_sub" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $rates),
+                        "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $rates)
+                    );
+
                     // add into list
                     $productItems[$product['ID']] = $product;
                 }
@@ -458,39 +492,59 @@ class orders extends \engine\objects\api {
                     $order['promo'] = null;
                 }
             }
-            // get prodcut items
+            // get product items
             foreach ($sessionOrderProducts as $purchasingProduct) {
+                // get product
                 $product = $this->getAPI()->products->getProductByID($purchasingProduct['ID']);
-                // actual price (with discount if promo is active)
-                // set product gross and net totals
                 // get purchased product quantity
                 $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
-                $product["_orderProductSubTotal"] = $product['Price'] * $purchasingProduct['_orderQuantity'];
-                $product["_orderProductTotal"] = $product['SellingPrice'] * $purchasingProduct['_orderQuantity'];
+                // get product sub and total by raw price
+                $_subTotal = $product['_prices']['price'] * $purchasingProduct['_orderQuantity'];
+                $_total = $product['_prices']['actual'] * $purchasingProduct['_orderQuantity'];
+                // conversions
+                $product['_totalSummary'] = array(
+                    "_sub" => $_subTotal,
+                    "_total" => $_total,
+                    "_subs" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $rates),
+                    "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $rates)
+                );
                 // add into list
                 $productItems[$product['ID']] = $product;
             }
         }
-        // append info
+        // create info data
+        $totals = array(
+            "_sub" => 0,
+            "_total" => 0,
+            "_subs" => array(),
+            "_totals" => array()
+        );
         $info = array(
-            "subTotal" => 0.0,
-            "total" => 0.0,
             "productCount" => 0,
             "productUniqueCount" => count($productItems),
             "hasPromo" => isset($order['promo']['Discount']) && $order['promo']['Discount'] > 0,
-            "allProductsWithPromo" => true,
-            "deliveries" => $this->getAPI()->delivery->getActiveDeliveryList()
+            "allProductsWithPromo" => true
         );
         // calc order totals
         foreach ($productItems as $product) {
             // update order totals
-            $info["total"] += floatval($product['_orderProductTotal']);
-            $info["subTotal"] += floatval($product['_orderProductSubTotal']);
+            $totals["_sub"] += floatval($product['_totalSummary']['_sub']);
+            $totals["_total"] += floatval($product['_totalSummary']['_total']);
             $info["productCount"] += intval($product['_orderQuantity']);
             $info["allProductsWithPromo"] = $info["allProductsWithPromo"] && $product['IsPromo'];
         }
+        // show available cargo-services
+        if (isset($order['temp'])) {
+            $info["deliveries"] = $this->getAPI()->delivery->getActiveDeliveryList();
+        }
+        $totals['_subs'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_sub"], $defaultDBCurrency, $rates);
+        $totals['_totals'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_total"], $defaultDBCurrency, $rates);
+        // append info
         $order['items'] = $productItems;
         $order['info'] = $info;
+        $order['totalSummary'] = $totals;
+
+        // TODO: need to calculate subs and totals according to selected currency and rate by customer
     }
 
     private function _getOrderTemp () {

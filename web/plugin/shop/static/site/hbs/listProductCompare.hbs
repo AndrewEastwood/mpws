@@ -86,7 +86,22 @@
             <tr class="can-toggle">
                 <td><strong>Ціна</strong></td>
                 {{#each data }}
-                <td class="product-param"><span class="label label-warning product-price">{{Price}}<span class="moneyType">грн.</span></span></td>
+                <td class="product-param">
+                {{#unless _archived}}
+                    {{#each convertedSellingPrices}}
+                        <span class="moneyValue {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                            {{#withItem ../../../instances.shop.settings.currencyList key=@key}}
+                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                                <strong class="value">{{currency ../this}}</strong>
+                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                            {{/withItem}}
+                        </span>
+                    {{/each}}
+                    {{#if _promoIsApplied }}
+                    <div class="promocode label label-success">(Знижка: {{../_promo.Discount}}%)</div>
+                    {{/if}}
+                {{/unless}}
+                </td>
                 {{/each}}
             </tr>
             <tr class="can-toggle">
