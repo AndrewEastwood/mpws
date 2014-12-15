@@ -257,24 +257,22 @@ class exchangerates extends \engine\objects\api {
     public function getAvailableConversionOptions () {
         $valueCurrency = $this->getDefaultDBPriceCurrencyType();
 
-        $condition = array();
-        $condition['CurrencyA'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($valueCurrency);
-
         $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
-            'condition' => $condition,
             'limit' => 0
         ));
+        $config['condition']['CurrencyA'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($valueCurrency);
         $availableRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 
+        $data[$valueCurrency] = 1.0;
+
         foreach ($availableRates as $value) {
             $value = $this->__adjustExchangeRate($value);
-            $data[$value['CurrencyA']] = array(
-                'rate' => $value['Rate'],
-                'currency' => $value['CurrencyB']
-            );
+            $data[$value['CurrencyB']] = $value['Rate'];
         }
+
+        // var_dump($data);
         
         // $rates = $this->getActiveExchangeRatesAll();
 

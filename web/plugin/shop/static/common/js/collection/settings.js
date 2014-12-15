@@ -90,7 +90,7 @@ define('plugin/shop/common/js/collection/settings', [
                         addresses[uid].OpenHoursToday = addresses[uid].OpenHoursDaysMap[moment().locale('en').format('ddd')];
                     }
                 }
-                if (_(that.availableConversions).indexOf(model.get('Property')) >= 0) {
+                if (that.availableConversions[model.get('Property')]) {
                     currencyList[model.get('Property')] = {
                         name: model.get('Property'),
                         text: model.get('Label'),
