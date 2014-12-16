@@ -430,15 +430,15 @@ class orders extends \engine\objects\api {
         $ratesCurrent = $rates->getArrayCopy();
         $ratesCustomer = $rates->getArrayCopy();
 
-        if (isset($ratesCustomer[$order['CurrencyName']])) {
-            $ratesCustomer[$order['CurrencyName']] = floatval($order['CurrencyRate']);
-        }
         // var_dump($ratesCurrent);
         // var_dump($ratesCustomer);
         // var_dump($order['CurrencyRate']);
         // var_dump($order['CurrencyName']);
         // if orderID is set then the order is saved
         if (isset($orderID) && !isset($order['temp'])) {
+            if (isset($ratesCustomer[$order['CurrencyName']])) {
+                $ratesCustomer[$order['CurrencyName']] = floatval($order['CurrencyRate']);
+            }
             // attach account and address
             if ($this->getCustomer()->hasPlugin('account')) {
                 if (isset($order['AccountAddressesID']))
@@ -450,7 +450,7 @@ class orders extends \engine\objects\api {
             }
             // get promo
             if (!empty($order['PromoID']))
-                $order['promo'] = $this->getPromoByID($order['PromoID']);
+                $order['promo'] = $this->getAPI()->promos->getPromoByID($order['PromoID']);
             if (!empty($order['DeliveryID']))
                 $order['delivery'] = $this->getAPI()->delivery->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();

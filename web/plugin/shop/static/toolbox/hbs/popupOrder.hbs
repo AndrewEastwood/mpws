@@ -132,6 +132,14 @@
                         <span class="prefix">Активний до:</span>
                         <span><strong>{{data.promo.DateExpire}}</strong></span>
                     </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Статус:</span>
+                        <span>
+                            {{#if data.promo._isActive}}<i class="fa fa-check-circle fa-fw text-success"></i>{{/if}}
+                            {{#if data.promo._isExpired}}<i class="fa fa-minus-circle fa-fw text-success"></i>{{/if}}
+                            {{#if data.promo._isFuture}}<i class="fa fa-clock-o fa-fw text-success"></i>{{/if}}
+                        </span>
+                    </li>
                 </ul>
             </div>
         </div>
