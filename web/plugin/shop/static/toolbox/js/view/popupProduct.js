@@ -24,7 +24,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
     'default/js/lib/bootstrap-editable'
 ], function (Sandbox, Backbone, ModelProduct, Utils, Cache, BootstrapDialog, BSAlert, tpl, lang) {
 
-    function _getTitle(isEdit) {
+    function _getTitle (isEdit) {
         if (isEdit) {
             return $('<span/>').addClass('fa fa-pencil').append(' ', lang.popup_product_title_edit);
         } else {
@@ -43,7 +43,8 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             'click .feature-types a': 'selectFeatureGroup',
         },
         initialize: function () {
-            var self = this;
+            var self = this,
+                isEdit = this.model.id;
             this.model = new ModelProduct();
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
@@ -85,9 +86,18 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             success: function (model, response) {
                                 if (!response || !response.success) {
                                     self.render();
+                                    BSAlert.danger('Помилка під час оновлення замовлення');
                                 } else {
+                                    if (isEdit) {
+                                        BSAlert.success('Товар успішно оновлено');
+                                    } else {
+                                        BSAlert.success('Товар успішно створено');
+                                    }
                                     dialog.close();
                                 }
+                            },
+                            error: function () {
+                                BSAlert.danger('Помилка під час оновлення замовлення');
                             }
                         });
                     }

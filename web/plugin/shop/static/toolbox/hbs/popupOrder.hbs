@@ -3,7 +3,13 @@
     <li class="tab tab-products"><a href="#products" data-toggle="tab">Товари</a></li>
     <li class="tab tab-analytics"><a href="#analytics" data-toggle="tab">Аналіз</a></li>
 </ul>
-<div class="tab-content">
+
+<h6>Внутрішній коментар (для адміністратора)</h6>
+<div class="form-group">
+    <textarea class="form-control" name="InternalComment" id="shop-order-internalComment-ID">{{data.InternalComment}}</textarea>
+</div>
+
+<div class="tab-content well">
     
     {{!-- general --}}
     <div class="tab-pane fade in active" id="general">
@@ -26,7 +32,13 @@
                     {{#if instances.shop.settings.ShowDeliveryAganet._isActive}}
                     <li class="list-group-item">
                         <span class="prefix">Тип доставки:</span>
-                        <span><strong>{{data.delivery.Name}}</strong></span>
+                        <span>
+                            {{#if data.delivery}}
+                                <strong>{{data.delivery.Name}}</strong>
+                            {{else}}
+                                <strong>Самовивіз</strong>
+                            {{/if}}
+                        </span>
                     </li>
                     {{#if data.Warehouse }}
                     <li class="list-group-item">
@@ -70,7 +82,7 @@
                     <li class="list-group-item">
                         <span class="prefix">Ел.адреса:</span>
                         {{#if data.account.EMail}}
-                            <i title="Надіслати повторно лист-підтвредження замовлення" class="fa fa-refresh helper helper-left"></i>
+                            <i title="Надіслати повторно лист-підтвредження замовлення" class="fa fa-refresh helper helper-left hidden"></i>
                         {{/if}}
                         <span><strong>{{data.account.EMail}}</strong></span>
                     </li>
@@ -144,7 +156,6 @@
 
     {{!-- products --}}    
     <div class="tab-pane fade in" id="products">
-        <h4>{{lang.popup_order_section_boughts}}</h4>
         <div class="alert alert-info">
             Оформлено у валюті по курсу
             <strong>{{data.CurrencyRate}} {{data.CurrencyName}}</strong>
@@ -170,10 +181,7 @@
                             {{/if}}
                         {{/unless}}
                     {{/if}}
-                    <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
-                        <i class="fa fa-trash-o"></i>
-                    </a>
-                    <div class="shop-product-image shop-product-image-main">
+{{!--                     <div class="shop-product-image shop-product-image-main">
                         <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                             <div class="image productimage noimage image_{{ID}}">
                                 {{#if Images.[0].xs}}
@@ -196,9 +204,12 @@
                             </script>
                             {{/if}}
                         </a>
-                    </div>
+                    </div> --}}
+                    <span class="label label-info">#{{ID}}</span>
                     <span class="product-name">
-                        <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                        <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" title="{{_origin.Name}} - {{Name}}">
+                            {{_origin.Name}} - {{Name}}
+                        </a>
                     </span>
                     {{#each _prices.others}}
                         <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../data.CurrencyName @key}} hidden{{/isnt}}">
@@ -306,47 +317,39 @@
     </div>
 </div>
 
-<div class="panel">
-    <h5>Внутрішній коментар (для адміністратора)</h5>
-    <div class="form-group">
-        <textarea class="form-control" name="InternalComment" id="shop-order-internalComment-ID">{{data.InternalComment}}</textarea>
+<div class="well cartInfo">
+    {{#if data.info.hasPromo }}
+    <div class="shopCartPromo">
+        <span class="value-prefix">Покупець використав промокод:</span>
+        <span class="value"> <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></span>
     </div>
-
-    <div class="well cartInfo">
-        {{#if data.info.hasPromo }}
-        <div class="shopCartPromo">
-            <span class="value-prefix">Покупець використав промокод:</span>
-            <span class="value"> <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></span>
-        </div>
-        <div class="shopCartTotal">
-            <span class="value-prefix">Сума без знижки:</span>
-            {{#each data.totalSummary._subs}}
-                <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
-                    {{#withItem ../instances.shop.settings.currencyList key=@key}}
-                        {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                        <strong class="value">{{currency ../this}}</strong>
-                        {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                    {{/withItem}}
-                </span>
-            {{/each}}
-        </div>
-        <div class="shopCartDiscount">
-            <span class="value-prefix">Знижка:</span>
-            <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
-        </div>
-        {{/if}}
-        <div class="shopCartTotal">
-            <span class="value-prefix">До оплати:</span>
-            {{#each data.totalSummary._totals}}
-                <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
-                    {{#withItem ../instances.shop.settings.currencyList key=@key}}
-                        {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                        <strong class="value">{{currency ../this}}</strong>
-                        {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                    {{/withItem}}
-                </span>
-            {{/each}}
-        </div>
+    <div class="shopCartTotal">
+        <span class="value-prefix">Сума без знижки:</span>
+        {{#each data.totalSummary._subs}}
+            <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
+                {{#withItem ../instances.shop.settings.currencyList key=@key}}
+                    {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                    <strong class="value">{{currency ../this}}</strong>
+                    {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                {{/withItem}}
+            </span>
+        {{/each}}
     </div>
-
+    <div class="shopCartDiscount">
+        <span class="value-prefix">Знижка:</span>
+        <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+    </div>
+    {{/if}}
+    <div class="shopCartTotal">
+        <span class="value-prefix">До оплати:</span>
+        {{#each data.totalSummary._totals}}
+            <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
+                {{#withItem ../instances.shop.settings.currencyList key=@key}}
+                    {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                    <strong class="value">{{currency ../this}}</strong>
+                    {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                {{/withItem}}
+            </span>
+        {{/each}}
+    </div>
 </div>

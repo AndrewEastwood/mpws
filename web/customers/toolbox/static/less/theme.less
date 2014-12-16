@@ -130,30 +130,41 @@ body {
         margin-top: 20px;
     }
     .modal-dialog {
-        width: 60%;
+        .tab-content {
+            max-height: 280px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     }
     .shop-widget-productlist {
         .wrapper {
             position: relative;
-            padding: 3px 0px 14px;
-            border-top: 1px solid #ddd;
+            padding: 3px;
+            // border-top: 1px solid #ddd;
             &:nth-child(odd) {
-                background-color: #f9f9f9;
+                background-color: #eaeaea;
             }
             &:nth-child(even) {
-                background-color: #fff;
+                background-color: #dadada;
             }
-            .shop-product-image-main {
-                height: 32px;
-                max-width: 32px;
-                max-height: 32px;
+            // .shop-product-image-main {
+            //     height: 32px;
+            //     max-width: 32px;
+            //     max-height: 32px;
+            //     display: none;
+            // }
+            .product-name {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: 200px;
                 display: inline-block;
+                vertical-align: middle;
             }
-            .product-name {} .product-price {} .label-default {} .product-quantity {} .product-total {} .productQuantityAction {} .form-control.quantity {
-                display: none;
-            }
-            .shop-product-remove {
-                display: none;
+            .product-price {
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 3px;
             }
         }
     }
@@ -177,6 +188,9 @@ body {
     }
     .list-group-item-status_SHOP_CLOSED {
         background-color: #DDD;
+    }
+    #shop-order-internalComment-ID {
+        height: 45px;
     }
 }
 .shop-toolbox-orders {

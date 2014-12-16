@@ -161,7 +161,6 @@ define("plugin/shop/site/js/view/cartStandalone", [
                 _(formDataArray).each(function (item) {
                     result[item.name] = item.value;
                 });
-                debugger;
                 result.userCurrency = APP.instances.shop.settings._user.activeCurrency;
                 self.model.saveOrder(result);
             });

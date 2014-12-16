@@ -166,6 +166,7 @@ class orders extends \engine\objects\api {
 
         $formSettings = $this->getAPI()->settings->getSettingsMapFormOrder();
 
+        // var_dump($formSettings);
         try {
 
             // customer's used default currency (shop default)
@@ -285,6 +286,15 @@ class orders extends \engine\objects\api {
             $dataOrder["PromoID"] = $orderPromoID;
             $dataOrder["CurrencyName"] = $orderCurrency;
             $dataOrder["CurrencyRate"] = $orderRate;
+
+            if (empty($dataOrder["DeliveryID"])) {
+                $dataOrder["DeliveryID"] = null;
+            } else {
+                $dataOrder["DeliveryID"] = intval($dataOrder["DeliveryID"]);
+            }
+
+            // var_dump($dataOrder);
+            // return;
 
             $configOrder = $this->getPluginConfiguration()->data->jsapiShopCreateOrder($dataOrder);
             $orderID = $this->getCustomer()->fetch($configOrder);

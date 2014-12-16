@@ -157,7 +157,7 @@ class delivery extends \engine\objects\api {
             "limit" => 0,
             "_fStatus" => "ACTIVE"
         ));
-        return $deliveries;
+        return $deliveries['items'];
     }
 
     // -----------------------------------------------

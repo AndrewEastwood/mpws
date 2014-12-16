@@ -124,6 +124,9 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                         if (!response || !response.success) {
                             BSAlert.danger('Помилка під час оновлення замовлення');
                         }
+                    },
+                    error: function () {
+                        BSAlert.danger('Помилка під час оновлення замовлення');
                     }
                 });
             });
@@ -137,6 +140,9 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                         if (!response || !response.success) {
                             BSAlert.danger('Помилка під час оновлення замовлення');
                         }
+                    },
+                    error: function () {
+                        BSAlert.danger('Помилка під час оновлення замовлення');
                     }
                 });
             }, 300);
