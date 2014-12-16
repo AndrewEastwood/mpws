@@ -180,11 +180,21 @@ define("plugin/shop/toolbox/js/view/listProducts", [
                 }
             }),
             formatter: {
-                fromRaw: function (value) {
-                    return parseInt(value, 10).toFixed(0);
+                fromRaw: function (value, model) {
+                    var _prices = model.get('_prices'),
+                        _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
+                    if (_currencyDisplay) {
+                        if (_currencyDisplay.showBeforeValue) {
+                            return _currencyDisplay.text + _prices.price;
+                        } else {
+                            return _prices.price + _currencyDisplay.text;
+                        }
+                    } else {
+                        return _prices.price;
+                    }
                 },
                 toRaw: function (value) {
-                    var matches = value.match(/^([0-9\.]+)/)
+                    var matches = value.replace( /^\D+/g, '').match(/^([0-9\.]+)/)
                     if (matches && matches[1])
                         return parseFloat(matches[0]);
                     throw "CanParseProductPrise"

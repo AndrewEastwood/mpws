@@ -126,7 +126,7 @@ class exchangerates extends \engine\objects\api {
                 $validatedValues = $validatedDataObj['values'];
 
                 if (isset($validatedValues['Rate'])) {
-                    $validatedValues['Rate'] = floatval($validatedValues['RateA']);
+                    $validatedValues['Rate'] = floatval($validatedValues['Rate']);
                 }
 
                 $this->getCustomerDataBase()->beginTransaction();
@@ -247,8 +247,11 @@ class exchangerates extends \engine\objects\api {
         // this is the value for base currency
         $conversions[$valueCurrency] = $value;
         // and here we go through others
-        foreach ($rates as $exchnageRate) {
-            $conversions[$exchnageRate['currency']] = floatval(number_format($value * $exchnageRate['rate'], 0, '.', ''));
+        foreach ($rates as $currencyName => $exchangeRate) {
+            // var_dump($currencyName);
+            // var_dump($exchangeRate);
+            // var_dump($value);
+            $conversions[$currencyName] = floatval(number_format($value * $exchangeRate, 0, '.', ''));
         }
 
         return $conversions;
@@ -279,9 +282,9 @@ class exchangerates extends \engine\objects\api {
         // // this is the value for base currency
         // $options[] = $valueCurrency;
 
-        // foreach ($rates as $exchnageRate) {
-        //     if ($exchnageRate['name'] === $valueCurrency) {
-        //         $options[] = $exchnageRate['currency'];
+        // foreach ($rates as $exchangeRate) {
+        //     if ($exchangeRate['name'] === $valueCurrency) {
+        //         $options[] = $exchangeRate['currency'];
         //     }
         // }
         return $data;

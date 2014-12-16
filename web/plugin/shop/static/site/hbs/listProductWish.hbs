@@ -69,7 +69,7 @@
                 {{#unless _archived}}
                 <div class="shop-component shop-product-attr shop-product-attr-price label-warning product-price">
                     <div class="value-prefix">Ціна:</div>
-                    {{#each convertedSellingPrices}}
+                    {{#each _prices.others}}
                         <span class="moneyValue {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
                             {{#withItem ../../../instances.shop.settings.currencyList key=@key}}
                                 {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}

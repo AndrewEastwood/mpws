@@ -36,7 +36,16 @@ define("plugin/shop/toolbox/js/view/statsProductsPopular", [
                         editable: false,
                         formatter: {
                             fromRaw: function (value) {
-                                return value + ' грн.';
+                                var _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
+                                if (_currencyDisplay) {
+                                    if (_currencyDisplay.showBeforeValue) {
+                                        return _currencyDisplay.text + value;
+                                    } else {
+                                        return value + _currencyDisplay.text;
+                                    }
+                                } else {
+                                    return value;
+                                }
                             }
                         }
                     };

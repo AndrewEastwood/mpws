@@ -29,6 +29,7 @@ define("plugin/shop/toolbox/js/view/popupOrigin", [
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
             this.$dialog = new BootstrapDialog({
+                closable: false,
                 title: this.$title,
                 message: this.$el,
                 cssClass: 'pluginShopOriginPopup',

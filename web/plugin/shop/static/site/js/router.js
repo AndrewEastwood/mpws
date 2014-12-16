@@ -274,6 +274,10 @@ define("plugin/shop/site/js/router", [
                 }
                 // console.log('shop settings ready: calling callback');
                 callback();
+
+                Backbone.on('changed:plugin-shop-currency', function (currencyName) {
+                    Router.prototype.settings._user.activeCurrency = currencyName;
+                });
             });
         }
     });

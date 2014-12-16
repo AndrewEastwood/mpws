@@ -107,9 +107,30 @@ body {
     }
 }
 
-.pluginShopOrderPopup {
+.popup-plugin-shop-order {
+    .nav-pills {
+        li {
+            background: none;
+            a {
+                text-decoration: none;
+                background: none;
+                color: #428BCA;
+                padding: 0px 10px 0px 0px;
+            }
+            &.active {
+                a, a:hover {
+                    background: none;
+                    color: #428BCA;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+    .tab-content {
+        margin-top: 20px;
+    }
     .modal-dialog {
-        width: 50%;
+        width: 60%;
     }
     .shop-widget-productlist {
         .wrapper {

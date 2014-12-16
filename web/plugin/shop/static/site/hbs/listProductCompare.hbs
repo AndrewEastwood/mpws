@@ -88,7 +88,7 @@
                 {{#each data }}
                 <td class="product-param">
                 {{#unless _archived}}
-                    {{#each convertedSellingPrices}}
+                    {{#each _prices.others}}
                         <span class="moneyValue {{@key}}{{#isnt ../../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
                             {{#withItem ../../../instances.shop.settings.currencyList key=@key}}
                                 {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}

@@ -48,14 +48,16 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
     var PopupOrder = Backbone.View.extend({
         template: tpl,
         lang: lang,
+        className: 'plugin-shop-order',
         initialize: function () {
             this.model = new ModelOrder();
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
             this.$dialog = new BootstrapDialog({
+                closable: false,
                 title: this.$title,
                 message: this.$el,
-                cssClass: 'pluginShopOrderPopup',
+                cssClass: 'popup-plugin-shop-order',
                 buttons: [{
                     label: "Надіслати фактуру",
                     action: function (dialog) {

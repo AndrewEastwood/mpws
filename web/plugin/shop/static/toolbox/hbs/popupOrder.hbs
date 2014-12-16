@@ -1,120 +1,258 @@
-<div class="panel">
-
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Деталі замовлення:</h4>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <span class="prefix">Дата створення:</span>
-                    <span><strong>{{data.DateCreated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix">Дата оновлення:</span>
-                    <span><strong>{{data.DateUpdated}}</strong></span>
-                </li>
-                <li class="list-group-item">
-                    <span class="prefix"><i title="Код відстеження вантажу дає можливість покупцям дізнаватися поточний статус замовлення" class="fa fa-question-circle helper helper-left"></i> Код відстеження:</span>
-                    <span><strong>{{data.Hash}}</strong></span>
-                </li>
-                {{#if instances.shop.settings.ShowDeliveryAganet._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Тип доставки:</span>
-                    <span><strong>{{data.delivery.Name}}</strong></span>
-                </li>
-                {{#if data.Warehouse }}
-                <li class="list-group-item">
-                    <span class="prefix">Номер складу:</span>
-                    <span><strong>{{data.Warehouse}}</strong></span>
-                </li>
-                {{/if}}
-                {{/if}}
-                <li class="list-group-item list-group-item-status_{{data.Status}}">
-                    <span class="prefix">Статус:</span>
-                    <span class="editable">
-                        <select class="form-control hide" id="order-status-control-ID">
-                            {{#each data._statuses}}
-                            <option value="{{this}}">{{mpwsGetValueByKey ../lang this "order_status_" }}</option>
-                            {{/each}}
-                        </select>
-                        <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang data.order.Status "order_status_" }}</a>
-                    </span>
-                </li>
-                {{#if instances.shop.settings.ShowComment._isActive}}
-                {{#if data.Comment }}
-                <li class="list-group-item">
-                    <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i> Коментар:</span>
-                    <span><strong>{{data.Comment}}</strong></span>
-                </li>
-                {{/if}}
-                {{/if}}
-            </ul>
-        </div>
-        
-        <div class="col-md-6">
-            <h4>Покупець:</h4>
-            <ul class="list-group">
-                {{#if instances.shop.settings.ShowName._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Імя:</span>
-                    <span><strong>{{data.account.FirstName}} {{data.account.LastName}}</strong></span>
-                </li>
-                {{/if}}
-                {{#if instances.shop.settings.ShowEMail._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Ел.адреса:</span>
-                    {{#if data.account.EMail}}
-                        <i title="Надіслати повторно лист-підтвредження замовлення" class="fa fa-refresh helper helper-left"></i>
+<ul class="nav nav-pills">
+    <li class="tab tab-general active"><a href="#general" data-toggle="tab">Огляд</a></li>
+    <li class="tab tab-products"><a href="#products" data-toggle="tab">Товари</a></li>
+    <li class="tab tab-analytics"><a href="#analytics" data-toggle="tab">Аналіз</a></li>
+</ul>
+<div class="tab-content">
+    
+    {{!-- general --}}
+    <div class="tab-pane fade in active" id="general">
+        <div class="row">
+            <div class="{{#if data.info.hasPromo }}col-md-4{{else}}col-md-6{{/if}}">
+                <h5>Деталі замовлення:</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="prefix">Дата створення:</span>
+                        <span><strong>{{data.DateCreated}}</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Дата оновлення:</span>
+                        <span><strong>{{data.DateUpdated}}</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix"><i title="Код відстеження вантажу дає можливість покупцям дізнаватися поточний статус замовлення" class="fa fa-question-circle fa-fw helper helper-left"></i>Код відстеження:</span>
+                        <span><strong>{{data.Hash}}</strong></span>
+                    </li>
+                    {{#if instances.shop.settings.ShowDeliveryAganet._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Тип доставки:</span>
+                        <span><strong>{{data.delivery.Name}}</strong></span>
+                    </li>
+                    {{#if data.Warehouse }}
+                    <li class="list-group-item">
+                        <span class="prefix">Номер складу:</span>
+                        <span><strong>{{data.Warehouse}}</strong></span>
+                    </li>
                     {{/if}}
-                    <span><strong>{{data.account.EMail}}</strong></span>
-                </li>
-                {{/if}}
-                {{#if instances.shop.settings.ShowPhone._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Телефон:</span>
-                    <span><strong>{{data.account.Phone}}</strong></span>
-                </li>
-                {{/if}}
-            </ul>
-            {{#ifAny instances.shop.settings.ShowAddress._isActive instances.shop.settings.ShowCity._isActive instances.shop.settings.ShowPOBox._isActive instances.shop.settings.ShowCountry._isActive }}
-            <h4>Адреса доставки:</h4>
-            <ul class="list-group">
-                {{#if instances.shop.settings.ShowAddress._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Адреса:</span>
-                    <span><strong>{{data.address.Address}}</strong></span>
-                </li>
-                {{/if}}
-                {{#if instances.shop.settings.ShowCountry._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Країна:</span>
-                    <span><strong>{{data.address.Country}}</strong></span>
-                </li>
-                {{/if}}
-                {{#if instances.shop.settings.ShowCity._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Місто:</span>
-                    <span><strong>{{data.address.City}}</strong></span>
-                </li>
-                {{/if}}
-                {{#if instances.shop.settings.ShowPOBox._isActive}}
-                <li class="list-group-item">
-                    <span class="prefix">Поштовий індекс:</span>
-                    <span><strong>{{data.address.POBox}}</strong></span>
-                </li>
-                {{/if}}
-            </ul>
-            {{/ifAny}}
+                    {{/if}}
+                    <li class="list-group-item list-group-item-status_{{data.Status}}">
+                        <span class="prefix">Статус:</span>
+                        <span class="editable">
+                            <select class="form-control hide" id="order-status-control-ID">
+                                {{#each data._statuses}}
+                                <option value="{{this}}">{{mpwsGetValueByKey ../lang this "order_status_" }}</option>
+                                {{/each}}
+                            </select>
+                            <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang data.order.Status "order_status_" }}</a>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Оформлено у валюті:</span>
+                        <span><strong>{{data.CurrencyName}}</strong> по курсу <strong>{{data.CurrencyRate}}</strong></span>
+                    </li>
+                    {{#if instances.shop.settings.ShowComment._isActive}}
+                    {{#if data.Comment }}
+                    <li class="list-group-item">
+                        <span class="prefix"><i title="Додаткові побажання покупця" class="fa fa-question-circle helper helper-left"></i> Коментар:</span>
+                        <span><strong>{{data.Comment}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{/if}}
+                </ul>
+            </div>
+            
+            <div class="{{#if data.info.hasPromo }}col-md-4{{else}}col-md-6{{/if}}">
+                <h5>Покупець:</h5>
+                <ul class="list-group">
+                    {{#if instances.shop.settings.ShowName._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Імя:</span>
+                        <span><strong>{{data.account.FirstName}} {{data.account.LastName}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowEMail._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Ел.адреса:</span>
+                        {{#if data.account.EMail}}
+                            <i title="Надіслати повторно лист-підтвредження замовлення" class="fa fa-refresh helper helper-left"></i>
+                        {{/if}}
+                        <span><strong>{{data.account.EMail}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowPhone._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Телефон:</span>
+                        <span><strong>{{data.account.Phone}}</strong></span>
+                    </li>
+                    {{/if}}
+                </ul>
+                {{#ifAny instances.shop.settings.ShowAddress._isActive instances.shop.settings.ShowCity._isActive instances.shop.settings.ShowPOBox._isActive instances.shop.settings.ShowCountry._isActive }}
+                <h5>Адреса доставки:</h5>
+                <ul class="list-group">
+                    {{#if instances.shop.settings.ShowAddress._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Адреса:</span>
+                        <span><strong>{{data.address.Address}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowCountry._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Країна:</span>
+                        <span><strong>{{data.address.Country}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowCity._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Місто:</span>
+                        <span><strong>{{data.address.City}}</strong></span>
+                    </li>
+                    {{/if}}
+                    {{#if instances.shop.settings.ShowPOBox._isActive}}
+                    <li class="list-group-item">
+                        <span class="prefix">Поштовий індекс:</span>
+                        <span><strong>{{data.address.POBox}}</strong></span>
+                    </li>
+                    {{/if}}
+                </ul>
+                {{/ifAny}}
+            </div>
+
+            <div class="{{#if data.info.hasPromo }}col-md-4{{else}}hidden{{/if}}">
+                <h5>Промокод:</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="prefix">Знижка:</span>
+                        <span><strong>{{data.promo.Discount}}%</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Промокод:</span>
+                        <span><strong>{{data.promo.Code}}%</strong></span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="prefix">Активний до:</span>
+                        <span><strong>{{data.promo.DateExpire}}</strong></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+
+    {{!-- products --}}    
+    <div class="tab-pane fade in" id="products">
+        <h4>{{lang.popup_order_section_boughts}}</h4>
+        {{#if data.info.hasPromo }}
+            {{#unless data.info.allProductsWithPromo }}
+            <div class="alert alert-danger alert-not-all-products-promo" role="alert">
+                <i class="fa fa-exclamation-circle fa-fw"></i>Не на всі товари діє знижка <strong>{{data.promo.Discount}}<span class="percentType">%</span></strong>
+            </div>
+            {{/unless}}
+        {{/if}}
+        <div class="shop-widget-productlist">
+        {{#each data.items }}
+            <div class="wrapper">
+                <div class="product-row">
+                    {{#if ../data.info.hasPromo}}
+                        {{#unless ../../data.info.allProductsWithPromo}}
+                            {{#if ../../IsPromo }}
+                                <i class="fa fa-check-circle text-success discount-availability" data-toggle="tooltip" title="Знижка: {{../../promo.Discount}}%"></i>
+                            {{else}}
+                                <i class="fa fa-exclamation-circle text-danger discount-availability" data-toggle="tooltip" title="На цей товар не діє знижка"></i>
+                            {{/if}}
+                        {{/unless}}
+                    {{/if}}
+                    <a href="javascript://" class="shop-product-remove" title="Видалити товар з кошика" data-action="plugin:shop:order:remove" data-id="{{ID}}">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                    <div class="shop-product-image shop-product-image-main">
+                        <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                            <div class="image productimage noimage image_{{ID}}">
+                                {{#if Images.[0].xs}}
+                                <div id="facebookG">
+                                    <div id="blockG_1" class="facebook_blockG"></div>
+                                    <div id="blockG_2" class="facebook_blockG"></div>
+                                    <div id="blockG_3" class="facebook_blockG"></div>
+                                </div>
+                                {{/if}}
+                            </div>
+                            {{#if Images.[0].xs}}
+                            <script>
+                            (function() {
+                                require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                    img.title = "{{Name}}";
+                                    img.className = "image img-responsive";
+                                    $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                }, function () { $('.image_{{ID}} #facebookG').remove(); });
+                            })();
+                            </script>
+                            {{/if}}
+                        </a>
+                    </div>
+                    <span class="product-name">
+                        <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                    </span>
+                    {{#each _prices.others}}
+                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                            {{#withItem ../../instances.shop.settings.currencyList key=@key}}
+                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                                <strong class="value">{{currency ../this}}</strong>
+                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                            {{/withItem}}
+                        </span>
+                    {{/each}}
+                    {{#if _promoIsApplied}}
+                    <span class="label label-success">- {{_promo.Discount}}%</span>
+                    {{/if}}
+                    <span class="label label-default">x</span>
+                    <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
+                    <span class="label label-default">=</span>
+                    {{#each _totalSummary._totals}}
+                        <span class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                            {{#withItem ../../instances.shop.settings.currencyList key=@key}}
+                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                                <strong class="value">{{currency ../this}}</strong>
+                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                            {{/withItem}}
+                        </span>
+                    {{/each}}
+                </div>
+            </div>
+        {{/each}}
         </div>
     </div>
 
+    {{!-- analytics --}}
+    <div class="tab-pane fade in" id="analytics">
+        
+    </div>
+</div>
+
+<div class="panel">
+    <h5>Внутрішній коментар (для адміністратора)</h5>
     <div class="form-group">
-        <label for="shop-order-internalComment-ID">Внутрішній коментар (для адміністратора)</label>
         <textarea class="form-control" name="InternalComment" id="shop-order-internalComment-ID">{{data.InternalComment}}</textarea>
     </div>
 
-    <h4>{{lang.popup_order_section_boughts}}</h4>
+    <div class="well cartInfo">
+        {{#if data.info.hasPromo }}
+        <div class="shopCartDiscount">
+            <span class="value-prefix">Знижка:</span>
+            <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
+            <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
+        </div>
+        {{/if}}
+        <div class="shopCartTotal">
+            <span class="value-prefix">До оплати:</span>
+            {{#each data.totalSummary._totals}}
+                <span class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                    {{#withItem ../../instances.shop.settings.currencyList key=@key}}
+                        {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                        <strong class="value">{{currency ../this}}</strong>
+                        {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                    {{/withItem}}
+                </span>
+            {{/each}}
+        </div>
+    </div>
 
-    {{>plugin/shop/common/hbs/partials/cartProductList data }}
-
-    {{>plugin/shop/common/hbs/partials/cartInfo data }}
 </div>

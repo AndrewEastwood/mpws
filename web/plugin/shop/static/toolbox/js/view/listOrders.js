@@ -71,8 +71,18 @@ define("plugin/shop/toolbox/js/view/listOrders", [
             cell: "string",
             editable: false,
             formatter: {
-                fromRaw: function (value) {
-                    return value + ' грн.';
+                fromRaw: function (value, model) {
+                    var totalSummary = model.get('totalSummary')
+                        _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
+                    if (_currencyDisplay) {
+                        if (_currencyDisplay.showBeforeValue) {
+                            return _currencyDisplay.text + totalSummary._total;
+                        } else {
+                            return totalSummary._total + _currencyDisplay.text;
+                        }
+                    } else {
+                        return totalSummary._total;
+                    }
                 }
             }
         };

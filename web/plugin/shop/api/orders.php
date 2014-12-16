@@ -32,6 +32,7 @@ class orders extends \engine\objects\api {
             // return glWrap('error', 'OrderDoesNotExist');
         }
         $order['ID'] = intval($order['ID']);
+        $order['CurrencyRate'] = floatval($order['CurrencyRate']);
         $this->__attachOrderDetails($order);
         if ($this->getCustomer()->ifYouCan('Admin')) {
             $order['_statuses'] = $this->getOrderStatuses();
@@ -49,6 +50,7 @@ class orders extends \engine\objects\api {
         }
 
         $order['ID'] = intval($order['ID']);
+        $order['CurrencyRate'] = floatval($order['CurrencyRate']);
         $this->__attachOrderDetails($order);
         return $order;
     }
@@ -178,7 +180,7 @@ class orders extends \engine\objects\api {
                 // get conversion rate
                 $rateTo = $this->getAPI()->exchangerates->getExchangeRateTo_ByCurrencyName($selectedCustomerCurrencyName);
                 $orderCurrency = $selectedCustomerCurrencyName;
-                $orderRate = $rateTo['RateB'];
+                $orderRate = $rateTo['Rate'];
             }
             $orderRate = floatval($orderRate);
 
@@ -424,9 +426,17 @@ class orders extends \engine\objects\api {
         $productItems = array();
 
         $defaultDBCurrency = $this->getAPI()->exchangerates->getDefaultDBPriceCurrencyType();
-        $rates = $this->getAPI()->exchangerates->getActiveExchangeRatesAll();
+        $rates = new ArrayObject($this->getAPI()->exchangerates->getAvailableConversionOptions());
+        $ratesCurrent = $rates->getArrayCopy();
+        $ratesCustomer = $rates->getArrayCopy();
 
-        // var_dump($order);
+        if (isset($ratesCustomer[$order['CurrencyName']])) {
+            $ratesCustomer[$order['CurrencyName']] = floatval($order['CurrencyRate']);
+        }
+        // var_dump($ratesCurrent);
+        // var_dump($ratesCustomer);
+        // var_dump($order['CurrencyRate']);
+        // var_dump($order['CurrencyName']);
         // if orderID is set then the order is saved
         if (isset($orderID) && !isset($order['temp'])) {
             // attach account and address
@@ -449,7 +459,10 @@ class orders extends \engine\objects\api {
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
                     $product = $this->getAPI()->products->getProductByID($soldItem['ProductID']);
-
+                    
+                    $soldItem['Price'] = floatval($soldItem['Price']);
+                    $soldItem['SellingPrice'] = floatval($soldItem['SellingPrice']);
+                    
                     // save current product info
                     $product["_original"] = array(
                         "IsPromo" => $product['IsPromo'],
@@ -459,7 +472,8 @@ class orders extends \engine\objects\api {
                     $product["IsPromo"] = intval($soldItem['IsPromo']) === 1;
                     $product["_prices"] = array(
                         'price' => $soldItem['Price'],
-                        'actual' => $soldItem['SellingPrice']
+                        'actual' => $soldItem['SellingPrice'],
+                        'others' => $this->getAPI()->exchangerates->convertToDefinedRates($soldItem['SellingPrice'])
                     );
                     // get purchased product quantity
                     $product["_orderQuantity"] = floatval($soldItem['Quantity']);
@@ -470,8 +484,10 @@ class orders extends \engine\objects\api {
                     $product['_totalSummary'] = array(
                         "_sub" => $_subTotal,
                         "_total" => $_total,
-                        "_sub" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $rates),
-                        "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $rates)
+                        "_sub" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCurrent),
+                        "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $ratesCurrent),
+                        "_customer_sub" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCustomer),
+                        "_customer_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $ratesCustomer)
                     );
 
                     // add into list
@@ -505,8 +521,10 @@ class orders extends \engine\objects\api {
                 $product['_totalSummary'] = array(
                     "_sub" => $_subTotal,
                     "_total" => $_total,
-                    "_subs" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $rates),
-                    "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $rates)
+                    "_subs" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCurrent),
+                    "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $ratesCurrent),
+                    "_customer_subs" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCustomer),
+                    "_customer_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $ratesCustomer)
                 );
                 // add into list
                 $productItems[$product['ID']] = $product;
@@ -517,7 +535,9 @@ class orders extends \engine\objects\api {
             "_sub" => 0,
             "_total" => 0,
             "_subs" => array(),
-            "_totals" => array()
+            "_totals" => array(),
+            "_customer_subs" => array(),
+            "_customer_totals" => array()
         );
         $info = array(
             "productCount" => 0,
@@ -537,8 +557,10 @@ class orders extends \engine\objects\api {
         if (isset($order['temp'])) {
             $info["deliveries"] = $this->getAPI()->delivery->getActiveDeliveryList();
         }
-        $totals['_subs'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_sub"], $defaultDBCurrency, $rates);
-        $totals['_totals'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_total"], $defaultDBCurrency, $rates);
+        $totals['_subs'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_sub"], $defaultDBCurrency, $ratesCurrent);
+        $totals['_totals'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_total"], $defaultDBCurrency, $ratesCurrent);
+        $totals['_customer_subs'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_sub"], $defaultDBCurrency, $ratesCustomer);
+        $totals['_customer_totals'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_total"], $defaultDBCurrency, $ratesCustomer);
         // append info
         $order['items'] = $productItems;
         $order['info'] = $info;

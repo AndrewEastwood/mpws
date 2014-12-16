@@ -191,6 +191,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                 silent: true,
                 success: function () {
                     BSAlerts.success(lang.settings_message_success);
+                    Backbone.trigger('changed:plugin-shop-currency');
                 },
                 error: function () {
                     BSAlerts.danger(lang.settings_error_save);
@@ -264,6 +265,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                     }, {
                         patch: true,
                         success: function (model, resp) {
+                            Backbone.trigger('changed:plugin-shop-currency');
                             BSAlerts.success(lang.settings_message_success);
                         }
                     });
@@ -278,6 +280,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                     }, {
                         success: function (model, resp) {
                             if (_.isEmpty(resp.errors)) {
+                                Backbone.trigger('changed:plugin-shop-currency');
                                 BSAlerts.success(lang.settings_message_success);
                                 $item.attr('data-id', model.id).data('id', model.id);
                                 $item.removeClass('is-new');

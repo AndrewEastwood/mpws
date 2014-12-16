@@ -25,5 +25,5 @@ INSERT INTO  `shop_settings` (
 `DateUpdated`
 )
 VALUES (
-NULL ,  '1',  'ShowSiteCurrencySelector', NULL , NULL ,  'ACTIVE',  'WEBSITE',  NOW(),  NOW()
+NULL ,  '1',  'ShowSiteCurrencySelector', NULL , "0" ,  'ACTIVE',  'WEBSITE',  NOW(),  NOW()
 );

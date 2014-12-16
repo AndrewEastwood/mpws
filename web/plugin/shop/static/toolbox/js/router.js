@@ -24,6 +24,14 @@ define("plugin/shop/toolbox/js/router", [
         });
     });
 
+    Backbone.on('changed:plugin-shop-currency', function () {
+        settings.fetch({
+            success: function() {
+                Router.prototype.settings = settings.toSettings();
+            }
+        });
+    });
+
     var routes = {
         // "shop/stats": "stats",
         "!/shop/content": "contentList",

@@ -32,9 +32,9 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             this.collection.setCustomQueryParam("Stats", true);
 
             this.listenTo(this.collection, 'sync', $.proxy(function (collection, resp) {
-                if (this && resp.stats) {
-                    this.refreshBadges(resp.stats);
-                }
+                this.refreshBadges(resp.stats);
+                // if (this && resp.stats) {
+                // }
             }, this));
         },
         setTitle: function () {
@@ -45,12 +45,13 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             return status.toLowerCase();
         },
         refreshBadges: function (stats) {
-            var self = this;
-            this.$('.tab-link .badge').html("0");
+            // var self = this;
+            // debugger;
+            // this.$('.tab-link .badge').html("0");
             this.$('.tab-link.products-' + this.getDisplayStatus()).addClass('active');
-            _(stats).each(function(count, status) {
-                self.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
-            });
+            // _(stats).each(function(count, status) {
+            //     self.$('.tab-link.products-' + status.toLowerCase() + ' .badge').html(parseInt(count, 10) || 0);
+            // });
         },
         startLoadingAnim: function () {
             var self = this;
@@ -60,7 +61,10 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             }, 0);
         },
         stopLoadingAnim: function () {
-            this.$('.fa-plus').removeClass('fa-spin');
+            var self = this;
+            setTimeout(function(){
+                self.$('.fa-plus').removeClass('fa-spin');
+            }, 0);
         },
         render: function () {
             // debugger;
@@ -81,7 +85,9 @@ define("plugin/shop/toolbox/js/view/managerProducts", [
             // debugger;
             var searchItems = this.collection.getCustomQueryParam("Search");
             // debugger;
-            this.$('.search').tagsinput('add', searchItems.join(','));
+            if (_.isArray(searchItems)) {
+                this.$('.search').tagsinput('add', searchItems.join(','));
+            }
             return this;
         },
         search: function () {

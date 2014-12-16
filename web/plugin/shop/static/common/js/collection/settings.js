@@ -101,6 +101,9 @@ define('plugin/shop/common/js/collection/settings', [
             settings.currencyList = currencyList;
             settings.addresses = addresses
             settings.addressCount = Object.getOwnPropertyNames(addresses).length;
+            if (settings.DBPriceCurrencyType) {
+                settings.DBPriceCurrencyType._display = currencyList[settings.DBPriceCurrencyType.Value];
+            }
             return settings;
         }
     });

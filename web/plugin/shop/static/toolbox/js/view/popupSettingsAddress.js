@@ -126,6 +126,7 @@ define("plugin/shop/toolbox/js/view/popupSettingsAddress", [
             this.listenTo(this.collection, 'reset', this.render);
             this.$title = $('<span/>');
             this.$dialog = new BootstrapDialog({
+                closable: false,
                 title: this.$title,
                 message: this.$el,
                 cssClass: 'popup-settings-address',

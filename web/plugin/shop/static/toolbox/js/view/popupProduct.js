@@ -48,6 +48,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
             this.$dialog = new BootstrapDialog({
+                closable: false,
                 title: this.$title,
                 message: this.$el,
                 cssClass: 'shop-popup-product',
@@ -66,7 +67,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                             OriginID: parseInt(self.$('#origin').select2('val'), 10),
                             Name: self.$('#name').val(),
                             Model: self.$('#model').val(),
-                            Price: parseFloat(self.$('#price').val(), 10),
+                            Price: parseFloat(self.$('#price').val().replace( /^\D+/g, ''), 10),
                             Description: self.$('#description').val(),
                             IsPromo: self.$('#ispromo').is(':checked'),
                             Tags: self.$('#tags').val(),
@@ -212,12 +213,22 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 this.$('#category').select2('val', _initCategory.ID);
             }
 
-            this.$('#price').maskMoney({
-                suffix: 'грн.',
+            // configure price display
+            var _options = {
                 thousands: ' ',
                 decimal: '.',
                 precision: 0
-            });
+            };
+            var _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
+            if (_currencyDisplay) {
+                if (_currencyDisplay.showBeforeValue) {
+                    _options.prefix = _currencyDisplay.text
+                } else {
+                    _options.suffix = _currencyDisplay.text;
+                }
+            }
+
+            this.$('#price').maskMoney(_options);
             this.$('#price').maskMoney('mask');
 
             this.$('#tags').tagsinput();

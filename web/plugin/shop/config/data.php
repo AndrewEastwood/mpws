@@ -1104,7 +1104,7 @@ class data extends \engine\objects\configuration {
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => $this->jsapiCreateDataSourceCondition($status, $comparator),
-            'DateUpdated' => $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), "<=")
+            'DateUpdated' => $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -1115,6 +1115,7 @@ class data extends \engine\objects\configuration {
         $config['group'] = 'Date(DateUpdated)';
         $config['limit'] = 0;
         unset($config['additional']);
+        // var_dump($config);
         return $config;
     }
 
@@ -1123,7 +1124,7 @@ class data extends \engine\objects\configuration {
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => $this->jsapiCreateDataSourceCondition($status),
-            'DateUpdated' => $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), "<=")
+            'DateUpdated' => $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
