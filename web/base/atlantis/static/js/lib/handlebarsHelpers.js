@@ -430,6 +430,8 @@ define("default/js/lib/handlebarsHelpers", [
         return dictionary[_key];
     }
     helpers.withItem = function(object, options) {
+        // debugger;
+        console.log(object);
         object = object || {};
         return options.fn(object[options.hash.key]);
     }
@@ -462,7 +464,22 @@ define("default/js/lib/handlebarsHelpers", [
         var dec = rounded % 100;
         var whole = Math.round(rounded / 100 - dec / 100);
         var decStr = '' + dec;
-        return /*'$' + */ whole + '.' + decStr + (decStr.length < 2 ? '0' : '');
+        // return /*'$' + */
+        var value = whole + '.' + decStr + (decStr.length < 2 ? '0' : '');
+        if (options.hash.display && options.hash.currency && options.hash.display[options.hash.currency]) {
+            var display = options.hash.display[options.hash.currency];
+            if (display.showBeforeValue) {
+                value = display.text + ' ' + value;
+            } else {
+                value = value + ' ' + display.text;
+            }
+        }
+        return value;
+    }
+    helpers.selectValueByCurrency = function (listWithAmounts, options) {
+        if (options.hash.currency && listWithAmounts[options.hash.currency]) {
+            return helpers.currency(listWithAmounts[options.hash.currency], options);
+        }
     }
     helpers.array_length = function (value) {
         if (_.isArray(value))
@@ -500,6 +517,7 @@ define("default/js/lib/handlebarsHelpers", [
             return options.inverse(this);
         }
     }
+
 
     // Export helpers
     for (var helper in helpers)

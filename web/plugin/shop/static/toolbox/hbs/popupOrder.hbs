@@ -46,10 +46,6 @@
                             <a href="javascript://" id="order-status-ID" class="editable">{{mpwsGetValueByKey lang data.order.Status "order_status_" }}</a>
                         </span>
                     </li>
-                    <li class="list-group-item">
-                        <span class="prefix">Оформлено у валюті:</span>
-                        <span><strong>{{data.CurrencyName}}</strong> по курсу <strong>{{data.CurrencyRate}}</strong></span>
-                    </li>
                     {{#if instances.shop.settings.ShowComment._isActive}}
                     {{#if data.Comment }}
                     <li class="list-group-item">
@@ -126,7 +122,7 @@
                     </li>
                     <li class="list-group-item">
                         <span class="prefix">Промокод:</span>
-                        <span><strong>{{data.promo.Code}}%</strong></span>
+                        <span><strong>{{data.promo.Code}}</strong></span>
                     </li>
                     <li class="list-group-item">
                         <span class="prefix">Активний до:</span>
@@ -149,6 +145,11 @@
     {{!-- products --}}    
     <div class="tab-pane fade in" id="products">
         <h4>{{lang.popup_order_section_boughts}}</h4>
+        <div class="alert alert-info">
+            Оформлено у валюті по курсу
+            <strong>{{data.CurrencyRate}} {{data.CurrencyName}}</strong>
+            за <strong>1 {{instances.shop.settings.DBPriceCurrencyType.Value}}</strong>
+        </div>
         {{#if data.info.hasPromo }}
             {{#unless data.info.allProductsWithPromo }}
             <div class="alert alert-danger alert-not-all-products-promo" role="alert">
@@ -173,7 +174,7 @@
                         <i class="fa fa-trash-o"></i>
                     </a>
                     <div class="shop-product-image shop-product-image-main">
-                        <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
+                        <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" class="link" title="{{_origin.Name}} - {{Name}}">
                             <div class="image productimage noimage image_{{ID}}">
                                 {{#if Images.[0].xs}}
                                 <div id="facebookG">
@@ -197,10 +198,10 @@
                         </a>
                     </div>
                     <span class="product-name">
-                        <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
+                        <a href="{{bb_link ../instances.shop.urls.productEdit id=ID asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
                     </span>
                     {{#each _prices.others}}
-                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../data.CurrencyName @key}} hidden{{/isnt}}">
                             {{#withItem ../../instances.shop.settings.currencyList key=@key}}
                                 {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                                 <strong class="value">{{currency ../this}}</strong>
@@ -215,7 +216,7 @@
                     <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
                     <span class="label label-default">=</span>
                     {{#each _totalSummary._totals}}
-                        <span class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
+                        <span class="product-total moneyValue {{@key}}{{#isnt ../../data.CurrencyName @key}} hidden{{/isnt}}">
                             {{#withItem ../../instances.shop.settings.currencyList key=@key}}
                                 {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                                 <strong class="value">{{currency ../this}}</strong>
@@ -231,7 +232,77 @@
 
     {{!-- analytics --}}
     <div class="tab-pane fade in" id="analytics">
-        
+        <ul class="list-group">
+            <li class="list-group-item">
+                Основна валюта магазину
+                <strong>{{instances.shop.settings.DBPriceCurrencyType.Value}}</strong>
+            </li>
+            <li class="list-group-item">
+                Покупець обрав валюту
+                <strong>{{data.CurrencyName}}</strong>
+                {{#isnt data.CurrencyName instances.shop.settings.DBPriceCurrencyType.Value}}
+                де курс до основної валюти був
+                <strong>
+                    {{currency data.CurrencyRate currency=data.CurrencyName display=instances.shop.settings.currencyList}}
+                </strong>
+                {{/isnt}}
+            </li>
+            {{#isnt data.CurrencyName instances.shop.settings.DBPriceCurrencyType.Value}}
+            <li class="list-group-item">
+                Поточний курс валюти <strong>
+                {{currency data.rates.actualRate currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong> за <strong>
+                {{currency 1 currency=instances.shop.settings.DBPriceCurrencyType.Value display=instances.shop.settings.currencyList}}</strong>
+            </li>
+            {{/isnt}}
+            {{#isnt data.rates.ourBenefit 0}}
+            <li class="list-group-item">
+                {{#gt data.rates.ourBenefit 0}}
+                    <i class="fa fa-check-circle fa-fw text-success"></i>
+                    Це замовлення є для нас прибуткове
+                {{else}}
+                    <i class="fa fa-minus-circle fa-fw text-danger"></i>
+                    Це замовлення є для нас збиткове
+                {{/gt}}
+            </li>
+            {{/isnt}}
+            <li class="list-group-item">
+                Сума грошей, яку покупець має заплатити
+                <strong>
+                {{selectValueByCurrency data.totalSummary._customer_totals currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+            </li>
+            {{#isnt data.rates.ourBenefit 0}}
+            <li class="list-group-item">
+                Вартість цього замовлення на поточний момент
+                <strong>
+                {{selectValueByCurrency data.totalSummary._totals currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+            </li>
+            <li class="list-group-item">
+                {{#gt data.rates.ourBenefit 0}}
+                    <i class="fa fa-check-circle fa-fw text-success"></i>
+                    Сума грошей, які ми заробляємо
+                {{else}}
+                    <i class="fa fa-minus-circle fa-fw text-danger"></i>
+                    Сума грошей, які ми втрачаємо
+                {{/gt}}
+                становить
+                <strong>
+                {{selectValueByCurrency data.totalSummary._diff_totals currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+            </li>
+            {{/isnt}}
+            {{#if data.info.hasPromo }}
+            <li class="list-group-item">
+                Також, покупець, скористався промокодм, де знижка <strong>{{data.promo.Discount}}%</strong>
+            </li>
+            <li class="list-group-item">
+                Сума без знижки становить: <strong>
+                {{selectValueByCurrency data.totalSummary._customer_subs currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+            </li>
+            <li class="list-group-item">
+                Знижка в грошовому еквіваленті: <strong>
+                {{selectValueByCurrency data.totalSummary._diff_promo currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+            </li>
+            {{/if}}
+        </ul>
     </div>
 </div>
 
@@ -243,17 +314,32 @@
 
     <div class="well cartInfo">
         {{#if data.info.hasPromo }}
+        <div class="shopCartPromo">
+            <span class="value-prefix">Покупець використав промокод:</span>
+            <span class="value"> <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></span>
+        </div>
+        <div class="shopCartTotal">
+            <span class="value-prefix">Сума без знижки:</span>
+            {{#each data.totalSummary._subs}}
+                <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
+                    {{#withItem ../instances.shop.settings.currencyList key=@key}}
+                        {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
+                        <strong class="value">{{currency ../this}}</strong>
+                        {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
+                    {{/withItem}}
+                </span>
+            {{/each}}
+        </div>
         <div class="shopCartDiscount">
             <span class="value-prefix">Знижка:</span>
             <span class="value"><strong>{{data.promo.Discount}}<span class="percentType">%</span></strong></span>
-            <sub class="promocode">Ваш промокод <b>{{data.promo.Code}}</b> діє до <b>{{data.promo.DateExpire}}</b> <i class="fa fa-times text-danger btn-promo-cancel" data-toggle="tooltip" title="Скасувати промо-код"></i></sub>
         </div>
         {{/if}}
         <div class="shopCartTotal">
             <span class="value-prefix">До оплати:</span>
             {{#each data.totalSummary._totals}}
-                <span class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
-                    {{#withItem ../../instances.shop.settings.currencyList key=@key}}
+                <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
+                    {{#withItem ../instances.shop.settings.currencyList key=@key}}
                         {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                         <strong class="value">{{currency ../this}}</strong>
                         {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}

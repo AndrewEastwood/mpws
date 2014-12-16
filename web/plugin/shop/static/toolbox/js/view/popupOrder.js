@@ -60,16 +60,19 @@ define("plugin/shop/toolbox/js/view/popupOrder", [
                 cssClass: 'popup-plugin-shop-order',
                 buttons: [{
                     label: "Надіслати фактуру",
+                    cssClass: 'hidden',
                     action: function (dialog) {
                         dialog.close();
                     }
                 }, {
                     label: "Друкувати фактуру",
+                    cssClass: 'hidden',
                     action: function (dialog) {
                         dialog.close();
                     }
                 }, {
                     label: "Надіслати код-відстеження",
+                    cssClass: 'hidden',
                     action: function (dialog) {
                         dialog.close();
                     }

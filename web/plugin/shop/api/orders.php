@@ -168,15 +168,13 @@ class orders extends \engine\objects\api {
 
         try {
 
-            $orderCurrency = false;
+            // customer's used default currency (shop default)
+            $orderCurrency = $this->getAPI()->exchangerates->getDefaultDBPriceCurrencyType();
             $orderRate = 1;
 
             // customer currency
             $selectedCustomerCurrencyName = $reqData['form']['userCurrency'];
-            // customer's used default currency
-            if (empty($selectedCustomerCurrencyName)) {
-                $orderCurrency = $this->getAPI()->exchangerates->getDefaultDBPriceCurrencyType();
-            } else {
+            if (!empty($selectedCustomerCurrencyName) && $orderCurrency !== $selectedCustomerCurrencyName) {
                 // get conversion rate
                 $rateTo = $this->getAPI()->exchangerates->getExchangeRateTo_ByCurrencyName($selectedCustomerCurrencyName);
                 $orderCurrency = $selectedCustomerCurrencyName;
@@ -186,7 +184,6 @@ class orders extends \engine\objects\api {
 
             $this->getCustomerDataBase()->beginTransaction();
             $this->getCustomerDataBase()->disableTransactions();
-
 
             // check if matches
             if ($accountToken !== $formAccountToken)
@@ -439,6 +436,13 @@ class orders extends \engine\objects\api {
             if (isset($ratesCustomer[$order['CurrencyName']])) {
                 $ratesCustomer[$order['CurrencyName']] = floatval($order['CurrencyRate']);
             }
+            $order['rates'] = array(
+                'actual' => $ratesCurrent,
+                'customer' => $ratesCustomer,
+                'actualRate' => $ratesCurrent[$order['CurrencyName']],
+                'customerRate' => $ratesCustomer[$order['CurrencyName']],
+                'ourBenefit' => $ratesCustomer[$order['CurrencyName']] - $ratesCurrent[$order['CurrencyName']]
+            );
             // attach account and address
             if ($this->getCustomer()->hasPlugin('account')) {
                 if (isset($order['AccountAddressesID']))
@@ -473,7 +477,7 @@ class orders extends \engine\objects\api {
                     $product["_prices"] = array(
                         'price' => $soldItem['Price'],
                         'actual' => $soldItem['SellingPrice'],
-                        'others' => $this->getAPI()->exchangerates->convertToDefinedRates($soldItem['SellingPrice'])
+                        'others' => $this->getAPI()->exchangerates->convertToDefinedRates($soldItem['SellingPrice'], $defaultDBCurrency, $ratesCustomer)
                     );
                     // get purchased product quantity
                     $product["_orderQuantity"] = floatval($soldItem['Quantity']);
@@ -484,7 +488,7 @@ class orders extends \engine\objects\api {
                     $product['_totalSummary'] = array(
                         "_sub" => $_subTotal,
                         "_total" => $_total,
-                        "_sub" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCurrent),
+                        "_subs" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCurrent),
                         "_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $ratesCurrent),
                         "_customer_sub" => $this->getAPI()->exchangerates->convertToDefinedRates($_subTotal, $defaultDBCurrency, $ratesCustomer),
                         "_customer_totals" => $this->getAPI()->exchangerates->convertToDefinedRates($_total, $defaultDBCurrency, $ratesCustomer)
@@ -561,6 +565,19 @@ class orders extends \engine\objects\api {
         $totals['_totals'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_total"], $defaultDBCurrency, $ratesCurrent);
         $totals['_customer_subs'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_sub"], $defaultDBCurrency, $ratesCustomer);
         $totals['_customer_totals'] =  $this->getAPI()->exchangerates->convertToDefinedRates($totals["_total"], $defaultDBCurrency, $ratesCustomer);
+        // calc diffs
+        $totals['_diff_subs'] = array();
+        $totals['_diff_totals'] = array();
+        $totals['_diff_promo'] = array();
+        foreach ($totals['_totals'] as $key => $value) {
+            $totals['_diff_totals'][$key] = $totals['_customer_totals'][$key] - $value;
+        }
+        foreach ($totals['_subs'] as $key => $value) {
+            $totals['_diff_subs'][$key] = $totals['_customer_subs'][$key] - $value;
+        }
+        foreach ($totals['_customer_subs'] as $key => $value) {
+            $totals['_diff_promo'][$key] = $totals['_customer_totals'][$key] - $value;
+        }
         // append info
         $order['items'] = $productItems;
         $order['info'] = $info;
