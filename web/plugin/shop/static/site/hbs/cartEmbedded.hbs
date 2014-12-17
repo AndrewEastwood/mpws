@@ -62,13 +62,7 @@
                         <a href="{{bb_link ../instances.shop.urls.shop_product product=ExternalKey asRoot=true}}" title="{{_origin.Name}} - {{Name}}">{{_origin.Name}} - {{Name}}</a>
                     </span>
                     {{#each _prices.others}}
-                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
-                            {{#withItem ../../instances.shop.settings.currencyList key=@key}}
-                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                                <strong class="value">{{currency ../this}}</strong>
-                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                            {{/withItem}}
-                        </span>
+                        <strong class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
                     {{/each}}
                     {{#if _promoIsApplied}}
                     <span class="label label-success">- {{_promo.Discount}}%</span>
@@ -77,13 +71,7 @@
                     <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
                     <span class="label label-default">=</span>
                     {{#each _totalSummary._totals}}
-                        <span class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
-                            {{#withItem ../../instances.shop.settings.currencyList key=@key}}
-                                {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                                <strong class="value">{{currency ../this}}</strong>
-                                {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                            {{/withItem}}
-                        </span>
+                        <strong class="product-total moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
                     {{/each}}
                 </div>
             </div>
@@ -93,13 +81,7 @@
             <div class="shopCartSubTotal">
                 <span class="value-prefix">Сума:</span>
                 {{#each data.totalSummary._subs}}
-                    <span class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
-                        {{#withItem ../../instances.shop.settings.currencyList key=@key}}
-                            {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                            <strong class="value">{{currency ../this}}</strong>
-                            {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                        {{/withItem}}
-                    </span>
+                    <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
                 {{/each}}
             </div>
             {{#if data.info.hasPromo }}
@@ -112,13 +94,7 @@
             <div class="shopCartTotal">
                 <span class="value-prefix">До оплати:</span>
                 {{#each data.totalSummary._totals}}
-                    <span class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">
-                        {{#withItem ../../instances.shop.settings.currencyList key=@key}}
-                            {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
-                            <strong class="value">{{currency ../this}}</strong>
-                            {{#unless showBeforeValue}}<span class="currency-suffix moneyType">{{text}}</span>{{/unless}}
-                        {{/withItem}}
-                    </span>
+                    <strong class="value moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
                 {{/each}}
             </div>
         </div>
