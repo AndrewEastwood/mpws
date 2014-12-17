@@ -4,17 +4,17 @@
 <!-- /.panel-heading -->
 <div class="panel-body">
     <div class="list-group-misc">
-        <a href="javascript://" class="list-group-item db-currency-type" data-id="{{ID}}">
+        <a href="javascript://" class="list-group-item db-currency-type" data-id="{{extras.modelDBPriceCurrency.ID}}">
             <span>Всі ціни в базі подані в:</span>
             <span class="currency-list currency-list-db-default"></span>
         </a>
-        <a href="javascript://" class="list-group-item default-site-currency-type" data-id="{{ID}}">
+        <a href="javascript://" class="list-group-item default-site-currency-type" data-id="{{extras.renderSiteDefaultCurrency.ID}}">
             <span>Основна валюта сайту:</span>
             <span class="currency-list currency-list-site-default"></span>
         </a>
-        <a href="javascript://" class="list-group-item show-currency-switcher" data-id="{{ID}}">
+        <a href="javascript://" class="list-group-item show-currency-switcher" data-id="{{extras.modelShowSiteCurrencySwitcher.ID}}">
             <span>Показувати вибір валюти:</span>
-            <input type="checkbox" class="switcher switcher-show-currency-switcher"{{#is Value "1"}}checked{{/is}}>
+            <input type="checkbox" class="switcher switcher-show-currency-switcher">
         </a>
     </div>
     <hr>

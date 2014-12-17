@@ -61,8 +61,12 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
                 'renderDBCurrencyType', 'renderSiteDefaultCurrency', 'renderShowSiteCurrencySwitcher');
         },
         render: function () {
-            var that = this;
-            this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            var that = this,
+                tplData = Utils.getHBSTemplateData(this);
+            tplData.extras.modelDBPriceCurrency = this.modelDBPriceCurrency.toJSON();
+            tplData.extras.modelSiteDefaultCurrency = this.modelSiteDefaultCurrency.toJSON();
+            tplData.extras.modelShowSiteCurrencySwitcher = this.modelShowSiteCurrencySwitcher.toJSON();
+            this.$el.html(tpl(tplData));
             this.$('.switcher:visible').bootstrapSwitch(this.options.switchOptions);
             this.$('.editable:visible').editable(this.options.editableOptions);
             this.initializeCurrencyList(this.$('.currency-list'), function (item, currencyList) {
@@ -151,7 +155,10 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRatesDisplay", [
             });
         },
         renderShowSiteCurrencySwitcher: function () {
-            this.$('.switcher-show-currency-switcher').bootstrapSwitch('state', this.modelShowSiteCurrencySwitcher.get('_isActive'), true);
+            var that = this;
+            this.dfdRenderComplete.done(function () {
+                that.$('.switcher-show-currency-switcher').bootstrapSwitch('state', that.modelShowSiteCurrencySwitcher.get('_isActive'), true);
+            });
         },
         saveSiteCurrencyType: function (e) {
             this.modelSiteDefaultCurrency.save({

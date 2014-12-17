@@ -104,6 +104,9 @@ define('plugin/shop/common/js/collection/settings', [
             if (settings.DBPriceCurrencyType) {
                 settings.DBPriceCurrencyType._display = currencyList[settings.DBPriceCurrencyType.Value];
             }
+            if (settings.ShowSiteCurrencySelector) {
+                settings.ShowSiteCurrencySelector = settings.ShowSiteCurrencySelector._isActive;
+            }
             return settings;
         }
     });

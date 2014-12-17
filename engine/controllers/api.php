@@ -6,7 +6,7 @@
 
     use \app as App;
 
-    $app = new App('api', 'Content-Type: application/json; charset=utf-8');
+    $app = new App('api', array('Content-Type: application/json; charset=utf-8', 'Access-Control-Allow-Origin: *'));
 
     $app->startApplication();
 

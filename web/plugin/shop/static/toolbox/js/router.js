@@ -304,6 +304,7 @@ define("plugin/shop/toolbox/js/router", [
                 pluginSettings.viewExchangeRatesDisplay.collection.fetch({
                     reset: true
                 });
+                pluginSettings.viewWidgetPrivatBankExchageRates.model.fetch();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
                     el: pluginSettings.$el

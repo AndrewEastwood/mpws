@@ -431,7 +431,7 @@ define("default/js/lib/handlebarsHelpers", [
     }
     helpers.withItem = function(object, options) {
         // debugger;
-        console.log(object);
+        // console.log(object);
         object = object || {};
         return options.fn(object[options.hash.key]);
     }

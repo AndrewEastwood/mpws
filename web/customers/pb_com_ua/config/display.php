@@ -7,7 +7,7 @@ class display extends \web\base\atlantis\config\display {
     public $Title = 'Побутова техніка';
     public $Scheme = 'http';
     public $Host = 'leogroup.com.ua';
-    public $Homepage = 'http://leogroup.com.ua';
+    public $Homepage = '//leogroup.com.ua';
     public $Plugins = array("shop", "account", "dashboard");
 
 }

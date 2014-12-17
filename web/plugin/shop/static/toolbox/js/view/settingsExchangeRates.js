@@ -34,7 +34,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRates", [
                     unsavedclass: '',
                     emptytext: lang.rates.editableEmptyRateValue,
                     validate: function (value) {
-                        var _rate = parseFloat(value, 10);
+                        var _rate = parseFloat(value, 10).toFixed(2);
                         if ($.trim(value) === '') {
                             return lang.rates.message_error_emptyValue;
                         }
@@ -110,7 +110,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRates", [
             $errorsList.empty();
             this.collection.create({
                 CurrencyA: $item.find('.currency-a').text(),
-                Rate: parseFloat($item.find('.rate').text(), 10),
+                Rate: parseFloat($item.find('.rate').text(), 10).toFixed(2),
                 CurrencyB: $item.find('.currency-b').text()
             }, {
                 success: function (model, resp) {
@@ -143,7 +143,7 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRates", [
                 model = this.collection.get(id);
 
             if (model && editData && editData.newValue) {
-                newData[updatingKey] = parseFloat(editData.newValue, 10);
+                newData[updatingKey] = parseFloat(editData.newValue, 10).toFixed(2);
                 model.save(newData, {
                     patch: true,
                     success: function () {

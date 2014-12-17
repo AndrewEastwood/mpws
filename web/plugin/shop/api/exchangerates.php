@@ -7,6 +7,7 @@ use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
+use curl_init;
 
 class exchangerates extends \engine\objects\api {
 
@@ -339,10 +340,25 @@ class exchangerates extends \engine\objects\api {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        if (isset($req->get['type']) && $req->get['type'] === 'currencylist') {
-            $resp = $this->getCurrencyList();
-        } elseif (isset($req->get['type']) && $req->get['type'] === 'userlist') {
-            $resp = $this->getAllUserUniqCurrencyNames();
+        if (isset($req->get['type'])) {
+            switch ($req->get['type']) {
+                case 'currencylist':
+                    $resp = $this->getCurrencyList();
+                    break;
+                case 'userlist':
+                    $resp = $this->getAllUserUniqCurrencyNames();
+                    break;
+                case 'privatbank': {
+                    $ch = curl_init();
+                    $url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=11';
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    $resp = json_decode(curl_exec($ch), true);
+                    curl_close($ch);
+                    break;
+                }
+            }
         } elseif (empty($req->get['id'])) {
             $resp = $this->getExchangeRates_List($req->get);
         } else {

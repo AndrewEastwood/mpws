@@ -1,5 +1,4 @@
 <?php
-
 define('MPWS_ROOT', dirname(__FILE__) . '/');
 
 spl_autoload_register(function ($className) {
@@ -69,7 +68,7 @@ class app {
         // header data
         $this->header = $header;
         // request type
-        $this->runMode = $runMode;
+        $this->runMode = empty($runMode) ? 'display' : $runMode;
         // check whether we runt toolbox mode
         $this->isToolbox = preg_match("/^" . 'toolbox' . "\./", $_SERVER['HTTP_HOST']) > 0;
         // get customer name
@@ -125,7 +124,12 @@ class app {
     }
 
     public function startApplication () {
-        header($this->header);
+        if (is_array($this->header))
+            foreach ($this->header as $value) {
+                header($value);
+            }
+        else
+            header($this->header);
         session_start();
         $_customerScript = Utils::getCustomerClassName($this->customerName());// '\\web\\customers\\' . $this->customerName() . '\\customer';
         // glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);

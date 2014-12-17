@@ -734,3 +734,22 @@ input[type="radio"], input[type="checkbox"] {
         }
     }
 }
+
+.shop-widget-privatbank-exchnage-rates {
+    .list-group-item {
+        display: none;
+        &.header {
+            color: #555;
+        }
+        .name, .sale, .buy {
+            font-weight: bold;
+        }
+        .sale, .buy {
+            float: right;
+            margin-left: 10px;
+        }
+        &.header, &.USD, &.EUR, &.PLZ {
+            display: block;
+        }
+    }
+}
