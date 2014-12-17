@@ -3,6 +3,7 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
     'default/js/lib/backbone',
     'default/js/lib/utils',
     'default/js/lib/bootstrap-dialog',
+    'plugin/shop/toolbox/js/view/feed',
     /* collection */
     "plugin/shop/toolbox/js/collection/feeds",
     /* template */
@@ -13,7 +14,7 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
     'default/js/lib/jquery.fileupload/jquery.iframe-transport',
     'default/js/lib/jquery.fileupload/jquery.fileupload-validate',
     'default/js/lib/jquery.fileupload/jquery.fileupload',
-], function (Sandbox, Backbone, Utils, BootstrapDialog, CollectionFeeds, tpl, lang) {
+], function (Sandbox, Backbone, Utils, BootstrapDialog, ViewFeed, CollectionFeeds, tpl, lang) {
 
     var ManagerFeeds = Backbone.View.extend({
         template: tpl,
@@ -34,6 +35,16 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
         render: function () {
             var that = this;
             this.$el.html(tpl(Utils.getHBSTemplateData(this)));
+            this.collection.each(function (feedModel) {
+                var feedView = new ViewFeed({model: feedModel});
+                feedView.render();
+                feedView.$el.addClass('list-group-item');
+                if (feedModel.isGenerated()) {
+                    that.$('.feeds-generated').append(feedView.$el);
+                } else {
+                    that.$('.feeds-uploaded').append(feedView.$el);
+                }
+            });
             this.$('#fileFeed').fileupload({
                 url: APP.getUploadUrl({
                     source: 'shop',
@@ -73,6 +84,13 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
             }
             BootstrapDialog.confirm('Import ' + feedModel.get('name') + ' feed?', function (rez) {
                 if (rez) {
+                    feedModel.set({
+                        scheduled: 0,
+                        running: 1,
+                        complete: 0,
+                        canceled: 0
+                    });
+                    feedModel.collection.trigger('feed:started');
                     feedModel.importUploadedProductFeed({
                         patch: true,
                         success: function () {

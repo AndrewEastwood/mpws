@@ -862,11 +862,11 @@ class products extends \engine\objects\api {
         if (isset($category['ID']) && isset($origin['ID'])) {
             // we have the product item already in db
             if (isset($data['ID'])) {
-                echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
+                //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
                 $productID = $this->getProductIDByID($data['ID']);
                 // try to get product item by name and model
             } elseif (isset($data['Model']) && isset($data['OriginName'])) {
-                echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
+                //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
                 $productID = $this->getProductIDByModelAndOriginName($data['Model'], $data['OriginName']);
             }
             // var_dump($category);

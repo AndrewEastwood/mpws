@@ -187,7 +187,7 @@ class feeds extends \engine\objects\api {
         // convert to native structure
         foreach ($namedDataArray as &$rawProductData) {
 
-            echo "processing product " . $rawProductData['Name'] . PHP_EOL;
+            //-- echo "processing product " . $rawProductData['Name'] . PHP_EOL;
             $results[] = "processing product " . $rawProductData['Name'];
             ob_flush();
             flush();
@@ -207,7 +207,7 @@ class feeds extends \engine\objects\api {
 
 
             // $results[] = "[INFO] " . "set encoding";
-            echo "[INFO] " . "set encoding" . PHP_EOL;
+            //-- echo "[INFO] " . "set encoding" . PHP_EOL;
             foreach ($keysToEncode as $key) {
                 $productItem[$key] = mb_convert_encoding((string)$productItem[$key], 'UTF-8', mb_list_encodings());
             }
@@ -221,7 +221,7 @@ class feeds extends \engine\objects\api {
             }
 
             // $results[] = "[INFO] " . "adjusting features";
-            echo "[INFO] " . "adjusting features" . PHP_EOL;
+            //-- echo "[INFO] " . "adjusting features" . PHP_EOL;
             $featureChunks = explode('|', $rawProductData['Features']);
             $features = array();
             foreach ($featureChunks as $featureChunkItem) {
@@ -235,7 +235,7 @@ class feeds extends \engine\objects\api {
             $productItem['Features'] = $features;
 
             // $results[] = "[INFO] " . "downloading images";
-            echo "[INFO] " . "downloading images" . PHP_EOL;
+            //-- echo "[INFO] " . "downloading images" . PHP_EOL;
             // var_dump($rawProductData['Images']);
             $images = array();
             $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
@@ -257,7 +257,7 @@ class feeds extends \engine\objects\api {
                 if ($urlInfo['host'] !== $this->getCustomerConfiguration()->display->Host) {
                     // $imagesToDownload[] = $imgUrl;
                     // $results[] = "[INFO] " . "downloading image: " . $imgUrl;
-                    echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
+                    //-- echo "[INFO] " . "downloading image" . $imgUrl . PHP_EOL;
                     $res = $upload_handler->importFromUrl($imgUrl, false);
                     foreach ($res['web'] as $impageUploadInfo) {
                         $images[] = $impageUploadInfo->name;
@@ -292,11 +292,11 @@ class feeds extends \engine\objects\api {
             // var_dump("***************** result *****************");
             // var_dump($res);
             if ($res['created']) {
-                echo "[INFO] new product created" . PHP_EOL;
+                //-- echo "[INFO] new product created" . PHP_EOL;
                 $results[] = "[INFO] new product created";
                 $addedCount++;
             } elseif ($res['updated']) {
-                echo "[INFO] updating existent product " . $res['ID'] . PHP_EOL;
+                //-- echo "[INFO] updating existent product " . $res['ID'] . PHP_EOL;
                 $results[] = "[INFO] updating existent product " . $res['ID'];
                 $updatedCount++;
             } else {
@@ -305,19 +305,19 @@ class feeds extends \engine\objects\api {
             if (!empty($res['errors'])) {
                 $results[] = "[FAILED] " . $rawProductData['Name'];
                 $results[] = print_r($res['errors'], true);
-                echo "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
-                var_dump($res['errors']);
+                //-- echo "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
+                // var_dump($res['errors']);
                 ob_flush();
                 flush();
             }
             if ($res['success']) {
                 $results[] = "[SUCCESS] " . $rawProductData['Name'];
-                echo "[SUCCESS] " . $rawProductData['Name'] . PHP_EOL;
+                //-- echo "[SUCCESS] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
             } else {
                 $results[] = "[ERROR] " . $rawProductData['Name'];
-                echo "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
+                //-- echo "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
             }
@@ -327,9 +327,9 @@ class feeds extends \engine\objects\api {
             //     break;
             // }
             $processed++;
-            echo "[INFO] " . "parsed products count " . $processed . " of " . $total . PHP_EOL;
+            //-- echo "[INFO] " . "parsed products count " . $processed . " of " . $total . PHP_EOL;
             set_time_limit(30);
-            var_dump("********************************************");
+            // var_dump("********************************************");
         }
 
         // disable all products
@@ -435,7 +435,7 @@ class feeds extends \engine\objects\api {
             $objPHPExcel->getActiveSheet()->setCellValueExplicit('B' . $j, $dataList['items'][$i]['Model']);
             $objPHPExcel->getActiveSheet()->setCellValueExplicit('C' . $j, $dataList['items'][$i]['_category']['Name']);
             $objPHPExcel->getActiveSheet()->setCellValueExplicit('D' . $j, $dataList['items'][$i]['_origin']['Name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E' . $j, $dataList['items'][$i]['Price']);
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $j, $dataList['items'][$i]['_prices']['price']);
             $objPHPExcel->getActiveSheet()->setCellValue('F' . $j, $dataList['items'][$i]['Status']);
             $objPHPExcel->getActiveSheet()->setCellValue('G' . $j, $dataList['items'][$i]['IsPromo'] ? '+' : '');
             $objPHPExcel->getActiveSheet()->setCellValueExplicit('H' . $j, $warranty);//$dataList['items'][$i]['Features']);
@@ -504,7 +504,10 @@ class feeds extends \engine\objects\api {
                     // $this->getCustomer()->scheduleTask('shop', 'importProductFeed', $req->get['name']);
                     // this part must be moved into separated process >>>>
                     $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
+                    // temporary solution to output json results
+                    //-- echo "{ dump: '";
                     $this->importProductFeed($req->get['name']);
+                    //-- echo "',";
                     $resp = $this->getFeeds();
                     // <<<< this part must be moved into separated process
                     $resp['success'] = true;

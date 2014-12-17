@@ -50,6 +50,9 @@ define('plugin/shop/toolbox/js/model/feed', [
                     cancel: true
                 }, ajaxOptions);
             }
+        },
+        isGenerated: function () {
+            return this.get('type') === 'generated';
         }
     });
 

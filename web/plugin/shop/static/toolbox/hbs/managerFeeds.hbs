@@ -6,17 +6,7 @@
                 <span class="title">{{lang.managerFeeds.titleImport}}</span>
             </div>
             <div class="panel-body panel-group">
-                <ul class="list-group feeds feeds-generated">
-                {{#each data}}
-                    {{#if_eq type 'generated'}}
-                    <a class="list-group-item feed-item" href="{{link}}" target="_blank" title="{{name}}" data-id="{{ID}}">
-                        <span class="time label label-default pull-left">{{fromNowHumanized}}</span>
-                        <span class="name">{{name}}</span>
-                        <i class="fa fa-download pull-right text-info"></i>
-                    </a>
-                    {{/if_eq}}
-                {{/each}}
-                </ul>
+                <ul class="list-group feeds feeds-generated"></ul>
             </div>
         </div>
     </div>
@@ -30,66 +20,7 @@
                 <span class="title">{{lang.managerFeeds.titleExport}}</span>
             </div>
             <div class="panel-body panel-group" id="uploaded-feeds">
-
-                <ul class="list-group feeds feeds-uploaded">
-                {{#each data}}
-                    {{#if_eq type 'uploaded'}}
-                    {{#if running}}
-                    <div class="list-group-item progress progress-striped active feed-item">
-                        <div class="progress-bar" style="width: 100%;">
-                            <a class="feed-item {{status}}" href="javascript://" title="{{name}}" data-id="{{ID}}">
-                                <span class="sr-only"></span>
-                                <span class="time label label-warning pull-left">{{fromNowHumanized}}</span>
-                                <span class="name">{{name}}</span>
-                                <i class="btn fa fa-times pull-right text-warning cancel-import"></i>
-                            </a>
-                        </div>
-                    </div>
-                    {{/if}}
-                    {{#if complete}}
-                    <div class="list-group-item {{status}}">
-                        <div class="panel-heading" role="tab" id="heading{{ID}}">
-                            <a data-toggle="collapse" data-parent="#uploaded-feeds" data-id="{{ID}}" href="#{{ID}}" aria-expanded="true" aria-controls="{{ID}}">
-                                <i class="fa fa-check-circle fa-fw pull-left text-success"></i>
-                                <span class="time label label-success pull-left">{{fromNowHumanized}}</span>
-                                <span class="name">{{name}}</span>
-                                <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
-                            </a>
-                        </div>
-                        <div id="{{ID}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ID}}">
-                            <div class="panel-body feed-results"><pre>{{results}}</pre></div>
-                        </div>
-                    </div>
-                    {{/if}}
-                    {{#if scheduled}}
-                    <div class="list-group-item {{status}}">
-                        <div class="panel-heading" id="{{ID}}">
-                            <a class="feed-item {{status}}" href="javascript://" title="{{name}}" data-id="{{ID}}">
-                                <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
-                                <span class="time label label-default pull-left">{{fromNowHumanized}}</span>
-                                <span class="name">{{name}}</span>
-                                <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
-                                <i class="fa fa-spinner fa-spin fa-fw pull-right text-info"></i>
-                            </a>
-                        </div>
-                    </div>
-                    {{/if}}
-                    {{#or new canceled}}
-                    <div class="list-group-item {{status}}">
-                        <div class="panel-heading" id="{{ID}}">
-                            <a class="feed-item {{status}}" href="javascript://" title="{{name}}" data-id="{{ID}}">
-                                <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
-                                <span class="time label label-warning pull-left">{{fromNowHumanized}}</span>
-                                <span class="name">{{name}}</span>
-                                <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
-                                <i class="fa fa-play fa-fw pull-right text-success start-import"></i>
-                            </a>
-                        </div>
-                    </div>
-                    {{/or}}
-                    {{/if_eq}}
-                {{/each}}
-                </ul>
+                <ul class="list-group feeds feeds-uploaded"></ul>
             </div>
         </div>
     </div>
