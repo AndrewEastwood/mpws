@@ -38,8 +38,10 @@
                             require(["default/js/plugin/image!{{data.Images.[0].sm}}"], function(img){
                                 img.title = "{{data._origin.Name}} - {{data.Name}} ({{data.Model}})";
                                 img.className = "image img-responsive";
-                                img.itemprop = "image";
                                 img.alt = "{{data._origin.Name}} - {{data.Name}} ({{data.Model}})";
+                                var ip = document.createAttribute('itemprop');
+                                ip.value = "image";
+                                img.setAttributeNode(ip);
                                 $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
                             }, function () { $('.image_{{data.ID}} #facebookG').remove(); });
                         })();
@@ -248,8 +250,12 @@
                                         <script>
                                         (function() {
                                             require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
-                                                img.title = "{{Name}}";
+                                                img.title = "{{_origin.Name}} - {{Name}} ({{Model}})";
                                                 img.className = "image img-responsive";
+                                                img.alt = "{{_origin.Name}} - {{Name}} ({{Model}})";
+                                                var ip = document.createAttribute('itemprop');
+                                                ip.value = "image";
+                                                img.setAttributeNode(ip);
                                                 $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
                                             });
                                         })();
