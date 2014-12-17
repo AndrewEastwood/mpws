@@ -469,9 +469,9 @@ define("default/js/lib/handlebarsHelpers", [
         if (options.hash.display && options.hash.currency && options.hash.display[options.hash.currency]) {
             var display = options.hash.display[options.hash.currency];
             if (display.showBeforeValue) {
-                value = display.text + ' ' + value;
+                value = display.text + value;
             } else {
-                value = value + ' ' + display.text;
+                value = value + display.text;
             }
         }
         return value;
