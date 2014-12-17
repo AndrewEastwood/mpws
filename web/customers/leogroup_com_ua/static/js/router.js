@@ -17,7 +17,8 @@ define("customer/js/router", [
     $('head title').text(_customerOptions.site.title);
     $('#site-logo-ID').attr({
         src: _customerOptions.site.logoImageUrl,
-        title: _customerOptions.site.title
+        title: _customerOptions.site.title,
+        itemprop: 'logo'
     });
     $('.navbar-brand').removeClass('hide');
     var breadcrumb = new Breadcrumb();

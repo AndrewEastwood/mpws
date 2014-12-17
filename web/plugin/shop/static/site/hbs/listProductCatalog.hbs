@@ -1,227 +1,230 @@
-<div class="alert alert-success" role="alert">
-    В категорії <strong>{{filter.info.category.Name}}</strong> та у всіх її вкладених категоріях к-сть товарів: <strong>{{filter.info.count}}</strong>
-</div>
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+<div itemtype="http://schema.org/ItemList">
+    <link itemprop="url" href="{{bb_link instances.shop.urls.shop_catalog_category category=filter.info.category.ExternalKey asRoot=true fullUrl=true}}" />
+    <div class="alert alert-success" role="alert">
+        В категорії <strong>{{filter.info.category.Name}}</strong> та у всіх її вкладених категоріях к-сть товарів: <strong itemprop="numberOfItems">{{filter.info.count}}</strong>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
-        <div class="shop-component-catalog-filtering">
-            <button class="btn btn-success btn-block shop-filter-cancel">Скасувати фільтр</button>
-        </div>
-
-        {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categorySubCategories }}
-        <div class="shop-component-catalog-filtering subcategories">
-            <div class="title row">
-                <strong><span>Підкатегорії:</span></strong>
+            <div class="shop-component-catalog-filtering">
+                <button class="btn btn-success btn-block shop-filter-cancel">Скасувати фільтр</button>
             </div>
-            <div class="content row">
 
-                <div class="spacer"></div>
-                <div class="row">
-                    <span class="helptext">К-ість товарів відповідно до фільтру у підкатегоріях <i class="fa fa-level-down"></i></span>
-                    <div class="list-group">
-                    {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
-                        {{#if ProductCount }}
-                        <a class="list-group-item" href="{{bb_link instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}" rel="category" title="{{Name}}">
-                            {{Name}}
-                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
-                        </a>
-                        {{else}}
-                        <a class="list-group-item disabled" href="javascript://" rel="category" title="{{Name}}">
-                            {{Name}}
-                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
-                        </a>
-                        {{/if}}
-                    {{/each}}
-                    </div>
+            {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categorySubCategories }}
+            <div class="shop-component-catalog-filtering subcategories">
+                <div class="title row">
+                    <strong><span>Підкатегорії:</span></strong>
                 </div>
-                <div class="spacer"></div>
+                <div class="content row">
 
-            </div>
-        </div>
-        {{/mpwsIsNotEmpty}}
-
-        {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categoryBrands }}
-        <div class="shop-component-catalog-filtering{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_categoryBrands }} applied{{/mpwsIsNotEmpty}}">
-            <div class="title row">
-                <strong><span>Виробники:</span></strong>
-            </div>
-            <div class="content row">
-                <div class="spacer"></div>
-                <div class="row">
-                    <span class="helptext">К-ість товарів у цій категорії <i class="fa fa-level-down"></i></span>
-                    <div class="list-group list-group-category-brands">
-                    {{#each filter.filterOptionsAvailable.filter_categoryBrands }}
-                        {{#in_array ../filter.filterOptionsApplied.filter_categoryBrands ID }}
-                        <a class="list-group-item active" href="javascript://" rel="brand" title="{{Name}}">
-                            <label>
-                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
+                    <div class="spacer"></div>
+                    <div class="row">
+                        <span class="helptext">К-ість товарів відповідно до фільтру у підкатегоріях <i class="fa fa-level-down"></i></span>
+                        <div class="list-group">
+                        {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
+                            {{#if ProductCount }}
+                            <a class="list-group-item" href="{{bb_link instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}" rel="category" title="{{Name}}">
                                 {{Name}}
-                            </label>
-                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
-                        </a>
-                        {{else}}
-                        <a class="list-group-item" href="javascript://" rel="brand" title="{{Name}}">
-                            <label>
-                                <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
+                                <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
+                            </a>
+                            {{else}}
+                            <a class="list-group-item disabled" href="javascript://" rel="category" title="{{Name}}">
                                 {{Name}}
-                            </label>
-                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
-                        </a>
-                        {{/in_array}}
-                    {{/each}}
+                                <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
+                            </a>
+                            {{/if}}
+                        {{/each}}
+                        </div>
                     </div>
-                </div>
-                <div class="spacer"></div>
+                    <div class="spacer"></div>
 
-            </div>
-        </div>
-        {{/mpwsIsNotEmpty}}
-
-        {{#isnt filter.filterOptionsAvailable.filter_commonPriceMax filter.filterOptionsAvailable.filter_commonPriceMin }}
-        <div class="shop-component-catalog-filtering">
-            <div class="title row">
-                <strong><span>Ціна:</span></strong>
-            </div>
-            <div class="content row">
-                <div class="spacer"></div>
-                <div class="subtitle row">
-                        <span>від</span>
-                        <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMin}}</span>
-                        <span>грн. </span>
-                        <span> до </span>
-                        <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMax}}</span>
-                        <span>грн. </span>
-                        <span>включно</span>
                 </div>
-                <div class="row">
-                    <input type="text" class="form-control slider" value=""
-                        data-slider-min="{{mpwsToInt filter.filterOptionsAvailable.filter_commonPriceMin}}"
-                        data-slider-max="{{mpwsToInt filter.filterOptionsAvailable.filter_commonPriceMax}}"
-                        data-slider-step="1"
-                        data-slider-value="[{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMax}}]"
-                        data-slider-selection="after">
-                </div>
-                <div class="spacer"></div>
-        </div>handle
-        </div>
-        {{/isnt}}
-
-        {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
-        <div class="shop-component-catalog-filtering{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_commonFeatures }} applied{{/mpwsIsNotEmpty}}">
-            <div class="title row">
-                <strong><span>Параметри:</span></strong>
             </div>
-            <div class="content row">
-                <div class="spacer"></div>
-                {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
-                    <span class="helptext">К-ість товарів за характеристиками<i class="fa fa-level-down"></i></span>
-                    <div class="list-group list-group-category-features">
-                    {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
-                        <h4>{{@key}}</h4>
-                        {{#each this }}
-                            {{#in_array ../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
-                            <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
+            {{/mpwsIsNotEmpty}}
+
+            {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_categoryBrands }}
+            <div class="shop-component-catalog-filtering{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_categoryBrands }} applied{{/mpwsIsNotEmpty}}">
+                <div class="title row">
+                    <strong><span>Виробники:</span></strong>
+                </div>
+                <div class="content row">
+                    <div class="spacer"></div>
+                    <div class="row">
+                        <span class="helptext">К-ість товарів у цій категорії <i class="fa fa-level-down"></i></span>
+                        <div class="list-group list-group-category-brands">
+                        {{#each filter.filterOptionsAvailable.filter_categoryBrands }}
+                            {{#in_array ../filter.filterOptionsApplied.filter_categoryBrands ID }}
+                            <a class="list-group-item active" href="javascript://" rel="brand" title="{{Name}}">
                                 <label>
-                                    <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked">
+                                    <input type="checkbox" value="{{ID}}" name="filter_categoryBrands" checked="checked">
                                     {{Name}}
                                 </label>
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                             </a>
                             {{else}}
-                            <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
+                            <a class="list-group-item" href="javascript://" rel="brand" title="{{Name}}">
                                 <label>
-                                    <input type="checkbox" value="{{ID}}" name="filter_commonFeatures">
+                                    <input type="checkbox" value="{{ID}}" name="filter_categoryBrands">
                                     {{Name}}
                                 </label>
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
                             </a>
                             {{/in_array}}
                         {{/each}}
-
-
-                    {{/each}}
+                        </div>
                     </div>
-                {{/mpwsIsNotEmpty}}
-                <div class="spacer"></div>
-            </div>
-        </div>
-        {{/mpwsIsNotEmpty}}
+                    <div class="spacer"></div>
 
-        <div class="shop-component-catalog-filtering{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_commonStatus }} applied{{/mpwsIsNotEmpty}}">
-            <div class="title row">
-                <strong><span>Наявність:</span></strong>
+                </div>
             </div>
-            <div class="content row">
-                <div class="spacer"></div>
-                {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonStatus }}
-                    <span class="helptext">К-ість товарів за типом продажу<i class="fa fa-level-down"></i></span>
-                    <div class="list-group list-group-category-brands">
-                    {{#each filter.filterOptionsAvailable.filter_commonStatus }}
-                        {{#in_array ../filter.filterOptionsApplied.filter_commonStatus ID }}
-                        <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
-                            <label>
-                                <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
-                                {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
-                            </label>
-                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
-                        </a>
+            {{/mpwsIsNotEmpty}}
+
+            {{#isnt filter.filterOptionsAvailable.filter_commonPriceMax filter.filterOptionsAvailable.filter_commonPriceMin }}
+            <div class="shop-component-catalog-filtering">
+                <div class="title row">
+                    <strong><span>Ціна:</span></strong>
+                </div>
+                <div class="content row">
+                    <div class="spacer"></div>
+                    <div class="subtitle row">
+                            <span>від</span>
+                            <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMin}}</span>
+                            <span>грн. </span>
+                            <span> до </span>
+                            <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMax}}</span>
+                            <span>грн. </span>
+                            <span>включно</span>
+                    </div>
+                    <div class="row">
+                        <input type="text" class="form-control slider" value=""
+                            data-slider-min="{{mpwsToInt filter.filterOptionsAvailable.filter_commonPriceMin}}"
+                            data-slider-max="{{mpwsToInt filter.filterOptionsAvailable.filter_commonPriceMax}}"
+                            data-slider-step="1"
+                            data-slider-value="[{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMin}},{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMax}}]"
+                            data-slider-selection="after">
+                    </div>
+                    <div class="spacer"></div>
+            </div>handle
+            </div>
+            {{/isnt}}
+
+            {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
+            <div class="shop-component-catalog-filtering{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_commonFeatures }} applied{{/mpwsIsNotEmpty}}">
+                <div class="title row">
+                    <strong><span>Параметри:</span></strong>
+                </div>
+                <div class="content row">
+                    <div class="spacer"></div>
+                    {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
+                        <span class="helptext">К-ість товарів за характеристиками<i class="fa fa-level-down"></i></span>
+                        <div class="list-group list-group-category-features">
+                        {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
+                            <h4>{{@key}}</h4>
+                            {{#each this }}
+                                {{#in_array ../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
+                                <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
+                                    <label>
+                                        <input type="checkbox" value="{{ID}}" name="filter_commonFeatures" checked="checked">
+                                        {{Name}}
+                                    </label>
+                                    <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
+                                </a>
+                                {{else}}
+                                <a class="list-group-item" href="javascript://" rel="feature" title="{{Name}}">
+                                    <label>
+                                        <input type="checkbox" value="{{ID}}" name="filter_commonFeatures">
+                                        {{Name}}
+                                    </label>
+                                    <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
+                                </a>
+                                {{/in_array}}
+                            {{/each}}
+
+
+                        {{/each}}
+                        </div>
+                    {{/mpwsIsNotEmpty}}
+                    <div class="spacer"></div>
+                </div>
+            </div>
+            {{/mpwsIsNotEmpty}}
+
+            <div class="shop-component-catalog-filtering{{#mpwsIsNotEmpty filter.filterOptionsApplied.filter_commonStatus }} applied{{/mpwsIsNotEmpty}}">
+                <div class="title row">
+                    <strong><span>Наявність:</span></strong>
+                </div>
+                <div class="content row">
+                    <div class="spacer"></div>
+                    {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonStatus }}
+                        <span class="helptext">К-ість товарів за типом продажу<i class="fa fa-level-down"></i></span>
+                        <div class="list-group list-group-category-brands">
+                        {{#each filter.filterOptionsAvailable.filter_commonStatus }}
+                            {{#in_array ../filter.filterOptionsApplied.filter_commonStatus ID }}
+                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
+                                <label>
+                                    <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
+                                    {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
+                                </label>
+                                <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
+                            </a>
+                            {{else}}
+                            <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
+                                <label>
+                                    <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
+                                    {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
+                                </label>
+                                <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
+                            </a>
+                            {{/in_array}}
+                        {{/each}}
+                        </div>
+                    {{/mpwsIsNotEmpty}}
+                    <div class="spacer"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+            {{#gte pagination.pages 2}}
+            <nav>
+                <ul class="pagination">
+                    <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
+                    {{#each pagination.items }}
+                        {{#is ../pagination.current this }}
+                            <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
                         {{else}}
-                        <a class="list-group-item" href="javascript://" rel="status" title="{{Name}}">
-                            <label>
-                                <input type="checkbox" value="{{ID}}" name="filter_commonStatus">
-                                {{mpwsGetValueByKey ../../../lang ID "product_status_"}}
-                            </label>
-                            <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{#if ProductCount}}{{ProductCount}}{{else}}{{Total}}{{/if}}</span>
-                        </a>
-                        {{/in_array}}
+                            <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
+                        {{/is}}
                     {{/each}}
-                    </div>
-                {{/mpwsIsNotEmpty}}
-                <div class="spacer"></div>
+                    <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
+                </ul>
+            </nav>
+            {{/gte}}
+            <div class="row displayItems">
+                {{#unless filter.info.count }}
+                <div class="alert alert-warning">Немає товарів в цій категорії</div>
+                {{/unless}}
             </div>
+            {{#gte pagination.pages 2}}
+            <nav>
+                <ul class="pagination">
+                    <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
+                    {{#each pagination.items }}
+                        {{#is ../pagination.current this }}
+                            <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
+                        {{else}}
+                            <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
+                        {{/is}}
+                    {{/each}}
+                    <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
+                </ul>
+            </nav>
+            {{/gte}}
+            {{#if filter.info.hasMoreProducts }}
+            <div class="row">
+                <button class="btn btn-success btn-block shop-load-more">Завантажити ще</button>
+            </div>
+            {{/if}}
         </div>
-
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-        {{#gte pagination.pages 2}}
-        <nav>
-            <ul class="pagination">
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
-                {{#each pagination.items }}
-                    {{#is ../pagination.current this }}
-                        <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
-                    {{else}}
-                        <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
-                    {{/is}}
-                {{/each}}
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
-            </ul>
-        </nav>
-        {{/gte}}
-        <div class="row displayItems">
-            {{#unless filter.info.count }}
-            <div class="alert alert-warning">Немає товарів в цій категорії</div>
-            {{/unless}}
-        </div>
-        {{#gte pagination.pages 2}}
-        <nav>
-            <ul class="pagination">
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=1 asRoot=true}}"><span aria-hidden="true">&laquo;</span><span class="sr-only">попередня</span></a></li>
-                {{#each pagination.items }}
-                    {{#is ../pagination.current this }}
-                        <li class="active"><a href="javascript://"><span>{{ this }} <span class="sr-only">(поточна)</span></span></a></li>
-                    {{else}}
-                        <li ><a href="{{bb_link ../../instances.shop.urls.shop_catalog_category_page category=../../filter.info.category.ExternalKey page=this asRoot=true}}"><span>{{ this }}</span></a></li>
-                    {{/is}}
-                {{/each}}
-                <li><a href="{{bb_link instances.shop.urls.shop_catalog_category_page category=filter.info.category.ExternalKey page=pagination.pages asRoot=true}}"><span aria-hidden="true">&raquo;</span><span class="sr-only">наступна</span></a></li>
-            </ul>
-        </nav>
-        {{/gte}}
-        {{#if filter.info.hasMoreProducts }}
-        <div class="row">
-            <button class="btn btn-success btn-block shop-load-more">Завантажити ще</button>
-        </div>
-        {{/if}}
     </div>
 </div>

@@ -494,6 +494,12 @@ define("default/js/lib/handlebarsHelpers", [
         if (options.hash.asRoot) {
             url = "/#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
         }
+        if (options.hash.fullUrl) {
+            if (url[0] !== '/') {
+                url = '/' + url;
+            }
+            url = location.protocol + '//' + location.hostname + url;
+        }
         _(options.hash).each(function (v, k) {
             if (/^_/.test(k))
                 url = url.replace("(:" + k.substr(1) + ")", v);

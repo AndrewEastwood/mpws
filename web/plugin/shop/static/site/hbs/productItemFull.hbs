@@ -1,7 +1,9 @@
-<div class="container">
+<div class="container" itemscope itemtype="http://schema.org/Product">
+    <link itemprop="url" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true fullUrl=true}}"/>
+    <meta itemprop="category" content="{{data._category.Name}}" />
     <div class="row">
         <div class="col-md-12">
-            <div class="product-name">
+            <div class="product-name" itemprop="name">
                 <h3>{{data._origin.Name}} - {{data.Name}} ({{data.Model}})</h3>
             </div>
         </div>
@@ -34,8 +36,10 @@
                         <script>
                         (function() {
                             require(["default/js/plugin/image!{{data.Images.[0].sm}}"], function(img){
-                                img.title = "{{data.Name}}";
+                                img.title = "{{data._origin.Name}} - {{data.Name}} ({{data.Model}})";
                                 img.className = "image img-responsive";
+                                img.itemprop = "image";
+                                img.alt = "{{data._origin.Name}} - {{data.Name}} ({{data.Model}})";
                                 $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
                             }, function () { $('.image_{{data.ID}} #facebookG').remove(); });
                         })();
@@ -64,279 +68,303 @@
         <div class="col-md-12">
         {{/if}}
 
-            <ul class="list-group">
+        <ul class="list-group">
 
-                <li class="list-group-item">
-                    <div class="shop-component shop-product-attr shop-product-attr-availability">
-                        <span class="value-prefix">Цей товар:</span>
-                        {{#if data._archived}}
-                            <span class="label label-default">архівний</strong>
+            <li class="list-group-item">
+                <div class="shop-component shop-product-attr shop-product-attr-availability">
+                    <span class="value-prefix">Цей товар:</span>
+                    {{#if data._archived}}
+                        <span class="label label-default">архівний</strong>
+                    {{else}}
+                        {{#if data._available }}
+                        <span class="label label-success">є в наявності</span>
                         {{else}}
-                            {{#if data._available }}
-                            <span class="label label-success">є в наявності</span>
-                            {{else}}
-                            <span class="label label-danger">немає в наявності</strong>
-                            {{/if}}
+                        <span class="label label-danger">немає в наявності</strong>
                         {{/if}}
-                    </div>
-                    <div class="shop-component shop-product-attr shop-product-attr-origin">
-                        <span class="value-prefix">Виробник:</span>
-                        <strong>{{data._origin.Name}}</strong>
-                    </div>
-                    <div class="shop-component shop-product-attr shop-product-attr-model">
-                        <span class="value-prefix">Модель:</span>
-                        <strong>{{data.Model}}</strong>
-                    </div>
-                    <div class="shop-component shop-product-attr shop-product-attr-code">
-                        <span class="value-prefix">Код товару:</span>
-                        <strong>#{{data.ID}}</strong>
-                    </div>
-                    {{#if data.Attributes.WARRANTY}}
-                    <div class="shop-component shop-product-attr shop-product-attr-code">
-                        <span class="value-prefix">Гарантія:</span>
-                        <strong>{{data.Attributes.WARRANTY}}</strong>
-                    </div>
                     {{/if}}
-                    {{#if data.Attributes.ISBN}}
-                    <div class="shop-component shop-product-attr shop-product-attr-code">
-                        <span class="value-prefix">ISBN:</span>
-                        <strong>{{data.Attributes.ISBN}}</strong>
-                    </div>
-                    {{/if}}
-                    {{#if data.Attributes.TAGS}}
-                    <div class="shop-component shop-product-attr shop-product-attr-code">
-                        <span class="value-prefix">Теги:</span>
-                        <strong>{{data.Attributes.TAGS}}</strong>
-                    </div>
-                    {{/if}}
-
-                    {{#unless data._archived}}
-                    <div class="shop-component shop-product-attr shop-product-attr-price">
-                        <div class="value-prefix">Ціна:</div>
-                        {{#each data._prices.others}}
-                            <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
-                        {{/each}}
-                        {{#if data._promoIsApplied }}
-                        <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%) | Ваш промокод <b>{{../data._promo.Code}}</b> діє до <b>{{../data._promo.DateExpire}}</b></div>
-                        {{/if}}
-                    </div>
-                    {{#if instances.shop.settings.ShowPriceChart._isActive}}
-                    {{#mpwsIsNotEmpty data._prices.history }}
-                        <div class="shop-component shop-product-attr shop-product-attr-price">
-                            <span class="value-prefix">Діаграма ціни:</span>
-                            <span id="sparkline" class="productSparkline"></span>
-                        </div>
-                    {{/mpwsIsNotEmpty}}
-                    {{/if}}
-                    {{/unless}}
-                </li>
-
-                <li class="list-group-item">
-                    <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
-                </li>
-
-                {{#if instances.shop.settings.addressCount }}
-                {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowWarrantyInfo._isActive instances.shop.settings.ShowContacts._isActive }}
-                <li class="list-group-item list-group-item-service-info">
-
-                    {{#if instances.shop.settings.ShowDeliveryInfo._isActive}}
-                    <span class="product-info product-info-delivery">
-                        <a href="javascript://" class="link dashed open-popup-shipping">
-                            <i class="fa fa-truck fa-fw"></i> Доставка
-                        </a>
-                    </span>
-                    {{/if}}
-
-                    {{#if instances.shop.settings.ShowPaymentInfo._isActive}}
-                    <span class="product-info product-info-payments">
-                        <a href="javascript://" class="link dashed  open-popup-payments">
-                            <i class="fa fa-btc fa-fw"></i> Оплата товару
-                        </a>
-                    </span>
-                    {{/if}}
-
-                    {{#if instances.shop.settings.ShowOpenHours._isActive}}
-                    <span class="product-info product-info-openhours">
-                        <a href="javascript://" class="link dashed open-popup-openhours">
-                            <i class="fa fa-clock-o fa-fw"></i>Графік роботи
-                        </a>
-                    </span>
-                    {{/if}}
-
-                    {{#if instances.shop.settings.ShowContacts._isActive}}
-                    <span class="product-info product-info-contacts">
-                        <a href="javascript://" class="link dashed open-popup-phones">
-                            <i class="fa fa-phone-square fa-fw"></i> Телефони
-                        </a>
-                    </span>
-                    {{/if}}
-
-                    {{#if instances.shop.settings.ShowWarrantyInfo._isActive}}
-                    <span class="product-info product-info-warranty">
-                        <a href="javascript://" class="link dashed open-popup-warranty">
-                            <i class="fa fa-shield fa-fw"></i> Гарантії
-                        </a>
-                    </span>
-                    {{/if}}
-                </li>
-                {{/ifAny}}
+                </div>
+                <div class="shop-component shop-product-attr shop-product-attr-origin" itemprop="brand" itemscope itemtype="http://schema.org/Organization">
+                    <span class="value-prefix">Виробник:</span>
+                    <strong itemprop="name">{{data._origin.Name}}</strong>
+                </div>
+                <div class="shop-component shop-product-attr shop-product-attr-model">
+                    <span class="value-prefix">Модель:</span>
+                    <strong itemprop="model">{{data.Model}}</strong>
+                </div>
+                <div class="shop-component shop-product-attr shop-product-attr-code">
+                    <span class="value-prefix">Код товару:</span>
+                    <strong itemprop="productID" content="{{data.ID}}">#{{data.ID}}</strong>
+                </div>
+                {{#if data.Attributes.WARRANTY}}
+                <div class="shop-component shop-product-attr shop-product-attr-code">
+                    <span class="value-prefix">Гарантія:</span>
+                    <strong>{{data.Attributes.WARRANTY}}</strong>
+                </div>
                 {{/if}}
-
-                {{#if instances.shop.settings.ShowSocialSharing._isActive}}
-                <li class="list-group-item list-group-item-service-info">
-                    <div id="fb-root"></div>
-                    <script>(function(d, s, id) {
-                      var js, fjs = d.getElementsByTagName(s)[0];
-                      if (d.getElementById(id)) return;
-                      js = d.createElement(s); js.id = id;
-                      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.0";
-                      fjs.parentNode.insertBefore(js, fjs);
-                    }(document, 'script', 'facebook-jssdk'));</script>
-                    <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" data-layout="icon"></div>
-                </li>
+                {{#if data.Attributes.ISBN}}
+                <div class="shop-component shop-product-attr shop-product-attr-code">
+                    <span class="value-prefix">ISBN:</span>
+                    <strong>{{data.Attributes.ISBN}}</strong>
+                </div>
                 {{/if}}
-
-                {{#if data.Relations }}
-                <li class="list-group-item">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Можливо Вам знадобиться також це:</div>
-                        <div class="panel-body">
-                            <div id="carousel-product-relations" class="carousel slide product-relations" data-ride="carousel">
-                                <!-- Indicators -->
-                                <ol class="carousel-indicators">
-                                {{#each data.Relations }}
-                                    <li data-target="#carousel-product-relations" data-slide-to="{{ID}}" class="{{#if @first }}active{{/if}}"></li>
-                                {{/each}}
-                                </ol>
-                                <!-- Wrapper for slides -->
-                                <div class="carousel-inner">
-                                {{#each data.Relations }}
-                                    <div class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}">
-                                        <div class="shop-product-image shop-product-image-main">
-                                            <div class="productBadge {{Status}}">
-                                               <div class="ribbon-wrapper">
-                                                    <div class="ribbon">
-                                                        {{mpwsGetValueByKey ../../lang Status "product_badge_"}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="image productimage noimage image_{{ID}}">
-                                                {{#if Images.[0].xs}}
-                                                <div id="facebookG">
-                                                    <div id="blockG_1" class="facebook_blockG"></div>
-                                                    <div id="blockG_2" class="facebook_blockG"></div>
-                                                    <div id="blockG_3" class="facebook_blockG"></div>
-                                                </div>
-                                                {{/if}}
-                                            </div>
-                                            {{#if Images.[0].xs}}
-                                            <script>
-                                            (function() {
-                                                require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
-                                                    img.title = "{{Name}}";
-                                                    img.className = "image img-responsive";
-                                                    $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
-                                                });
-                                            })();
-                                            </script>
-                                            {{/if}}
-                                        </div>
-                                        <div class="carousel-caption">{{_origin.Name}} - {{Name}} ({{Model}})</div>
-                                        <div class="carousel-caption price">
-                                            Всього за:
-                                            <span class="label label-warning moneyType">{{Price}} грн.</span>
-                                            {{#if _promoIsApplied }}
-                                                <span class="label label-success">(Знижка {{promo.Discount}}%)</span>
-                                            {{/if}}
-                                        </div>
-                                    </div>
-                                {{/each}}
-                                </div>
-                                <!-- Controls -->
-                                <a class="left carousel-control" href="#carousel-product-relations" role="button" data-slide="prev">
-                                    <span class="glyphicon glyphicon-chevron-left"></span>
-                                </a>
-                                <a class="right carousel-control" href="#carousel-product-relations" role="button" data-slide="next">
-                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                {{#if data.Attributes.TAGS}}
+                <div class="shop-component shop-product-attr shop-product-attr-code">
+                    <span class="value-prefix">Теги:</span>
+                    <strong>{{data.Attributes.TAGS}}</strong>
+                </div>
                 {{/if}}
 
                 {{#unless data._archived}}
-                <li class="list-group-item">
-                    <div class="shop-component shop-product-buttons-addto">
-                        {{#if data._viewExtras.InCartCount }}
-                            <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-shopping-cart"></i> +1 в кошик
-                                {{#gt data._viewExtras.InCartCount 99}}
-                                <sub class="badge wide animated">&gt;99</sub>
-                                {{else}}
-                                <sub class="badge animated">{{data._viewExtras.InCartCount}}</sub>
-                                {{/gt}}
-                            </button>
+                <div class="shop-component shop-product-attr shop-product-attr-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                    <meta itemprop="condition" content="new" />
+                    {{#if data._archived}}
+                        <meta itemprop="availability" content="out_of_stock" />
+                    {{else}}
+                        {{#if data._available }}
+                        <meta itemprop="availability" content="in_stock" />
                         {{else}}
-                            <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-shopping-cart"></i> +1 в кошик
-                            </button>
+                        <meta itemprop="availability" content="out_of_stock" />
                         {{/if}}
-                        {{#if data._viewExtras.InWish }}
-                            <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="забрати з мого списку" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-check-square-o"></i> мій список
-                            </button>
-                        {{else}}
-                            <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-square-o"></i> мій список
-                            </button>
-                        {{/if}}
-                        {{#if data._viewExtras.InCompare }}
-                            <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="забрати з порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-check-square-o"></i> порівняння
-                            </button>
-                        {{else}}
-                            <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="додати до порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
-                                <i class="fa fa-square-o"></i> порівняння
-                            </button>
-                        {{/if}}
+                    {{/if}}
+                    <div class="value-prefix">Ціна:</div>
+                    {{#each data._prices.others}}
+                        <meta itemprop="priceCurrency" content="{{@key}}" />
+                        <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                    {{/each}}
+                    {{#if data._promoIsApplied }}
+                    <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%) | Ваш промокод <b>{{../data._promo.Code}}</b> діє до <b>{{../data._promo.DateExpire}}</b></div>
+                    {{/if}}
+                </div>
+                {{#if instances.shop.settings.ShowPriceChart._isActive}}
+                {{#mpwsIsNotEmpty data._prices.history }}
+                    <div class="shop-component shop-product-attr shop-product-attr-price">
+                        <span class="value-prefix">Діаграма ціни:</span>
+                        <span id="sparkline" class="productSparkline"></span>
                     </div>
-                </li>
+                {{/mpwsIsNotEmpty}}
+                {{/if}}
                 {{/unless}}
+            </li>
 
-                <li class="list-group-item">
-                    <div class="shop-product-social"></div>
-                </li>
+            <li class="list-group-item">
+                <div class="shop-component shop-product-description shop-product-description-short">{{data.Description}}</div>
+            </li>
 
-                <li class="list-group-item">
-                    <div class="shop-component shop-product-tabs">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#shop-product-overview-genereal-ID" data-toggle="tab">Опис</a></li>
-                            <li><a href="#shop-product-overview-technical-ID" data-toggle="tab">Характеристики</a></li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="shop-product-overview-genereal-ID">
-                                <p>{{data.Description}}</p>
-                            </div>
-                            <div class="tab-pane" id="shop-product-overview-technical-ID">
-                                <p>
-                                    <ul class="list-group feature-list">
-                                        {{#each data.Features}}
-                                        <li class="list-group-item title">{{@key}}</li>
-                                        {{#each this}}
-                                        <li class="list-group-item sub">{{this}}</li>
+            {{#if instances.shop.settings.addressCount }}
+            {{#ifAny instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowPaymentInfo._isActive instances.shop.settings.ShowOpenHours._isActive instances.shop.settings.ShowDeliveryInfo._isActive instances.shop.settings.ShowWarrantyInfo._isActive instances.shop.settings.ShowContacts._isActive }}
+            <li class="list-group-item list-group-item-service-info">
+
+                {{#if instances.shop.settings.ShowDeliveryInfo._isActive}}
+                <span class="product-info product-info-delivery">
+                    <a href="javascript://" class="link dashed open-popup-shipping">
+                        <i class="fa fa-truck fa-fw"></i> Доставка
+                    </a>
+                </span>
+                {{/if}}
+
+                {{#if instances.shop.settings.ShowPaymentInfo._isActive}}
+                <span class="product-info product-info-payments">
+                    <a href="javascript://" class="link dashed  open-popup-payments">
+                        <i class="fa fa-btc fa-fw"></i> Оплата товару
+                    </a>
+                </span>
+                {{/if}}
+
+                {{#if instances.shop.settings.ShowOpenHours._isActive}}
+                <span class="product-info product-info-openhours">
+                    <a href="javascript://" class="link dashed open-popup-openhours">
+                        <i class="fa fa-clock-o fa-fw"></i>Графік роботи
+                    </a>
+                </span>
+                {{/if}}
+
+                {{#if instances.shop.settings.ShowContacts._isActive}}
+                <span class="product-info product-info-contacts">
+                    <a href="javascript://" class="link dashed open-popup-phones">
+                        <i class="fa fa-phone-square fa-fw"></i> Телефони
+                    </a>
+                </span>
+                {{/if}}
+
+                {{#if instances.shop.settings.ShowWarrantyInfo._isActive}}
+                <span class="product-info product-info-warranty">
+                    <a href="javascript://" class="link dashed open-popup-warranty">
+                        <i class="fa fa-shield fa-fw"></i> Гарантії
+                    </a>
+                </span>
+                {{/if}}
+            </li>
+            {{/ifAny}}
+            {{/if}}
+
+            {{#if instances.shop.settings.ShowSocialSharing._isActive}}
+            <li class="list-group-item list-group-item-service-info">
+                <div id="fb-root"></div>
+                <script>(function(d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.0";
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
+                <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" data-layout="icon"></div>
+            </li>
+            {{/if}}
+
+            {{#if data.Relations }}
+            <li class="list-group-item">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Можливо Вам знадобиться також це:</div>
+                    <div class="panel-body">
+                        <div id="carousel-product-relations" class="carousel slide product-relations" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                            {{#each data.Relations }}
+                                <li data-target="#carousel-product-relations" data-slide-to="{{ID}}" class="{{#if @first }}active{{/if}}"></li>
+                            {{/each}}
+                            </ol>
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                            {{#each data.Relations }}
+                                <div class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}">
+                                    <div class="shop-product-image shop-product-image-main">
+                                        <div class="productBadge {{Status}}">
+                                           <div class="ribbon-wrapper">
+                                                <div class="ribbon">
+                                                    {{mpwsGetValueByKey ../../lang Status "product_badge_"}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="image productimage noimage image_{{ID}}">
+                                            {{#if Images.[0].xs}}
+                                            <div id="facebookG">
+                                                <div id="blockG_1" class="facebook_blockG"></div>
+                                                <div id="blockG_2" class="facebook_blockG"></div>
+                                                <div id="blockG_3" class="facebook_blockG"></div>
+                                            </div>
+                                            {{/if}}
+                                        </div>
+                                        {{#if Images.[0].xs}}
+                                        <script>
+                                        (function() {
+                                            require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                                img.title = "{{Name}}";
+                                                img.className = "image img-responsive";
+                                                $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
+                                            });
+                                        })();
+                                        </script>
+                                        {{/if}}
+                                    </div>
+                                    <div class="carousel-caption">{{_origin.Name}} - {{Name}} ({{Model}})</div>
+                                    <div class="carousel-caption price">
+                                        Всього за:
+                                        {{#each _prices.others}}
+                                            <meta itemprop="priceCurrency" content="{{@key}}" />
+                                            <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
                                         {{/each}}
-                                        {{/each}}
-                                    </ul>
-                                </p>
+                                        {{#if _promoIsApplied }}
+                                            <span class="label label-success">(Знижка {{promo.Discount}}%)</span>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/each}}
                             </div>
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-product-relations" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-product-relations" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
                         </div>
                     </div>
-                </li>
+                </div>
+            </li>
+            {{/if}}
 
-            </ul>
+            {{#unless data._archived}}
+            <li class="list-group-item">
+                <div class="shop-component shop-product-buttons-addto">
+                    {{#if data._viewExtras.InCartCount }}
+                        <button class="btn btn-warning btn-xs btn-add-to-cart withNotificationBadge" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-shopping-cart"></i> +1 в кошик
+                            {{#gt data._viewExtras.InCartCount 99}}
+                            <sub class="badge wide animated">&gt;99</sub>
+                            {{else}}
+                            <sub class="badge animated">{{data._viewExtras.InCartCount}}</sub>
+                            {{/gt}}
+                        </button>
+                    {{else}}
+                        <button class="btn btn-success btn-xs btn-add-to-cart" data-action="plugin:shop:order:add" data-id="{{data.ID}}" data-title="+1 в кошик" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-shopping-cart"></i> +1 в кошик
+                        </button>
+                    {{/if}}
+                    {{#if data._viewExtras.InWish }}
+                        <button class="btn btn-warning btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:remove" data-id="{{data.ID}}" data-title="забрати з мого списку" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-check-square-o"></i> мій список
+                        </button>
+                    {{else}}
+                        <button class="btn btn-success btn-xs btn-add-to-wish" data-action="plugin:shop:list_wish:add" data-id="{{data.ID}}" data-title="+ в мій список" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-square-o"></i> мій список
+                        </button>
+                    {{/if}}
+                    {{#if data._viewExtras.InCompare }}
+                        <button class="btn btn-warning btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:remove" data-id="{{data.ID}}" data-title="забрати з порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-check-square-o"></i> порівняння
+                        </button>
+                    {{else}}
+                        <button class="btn btn-success btn-xs btn-add-to-compare" data-action="plugin:shop:list_compare:add" data-id="{{data.ID}}" data-title="додати до порівняння" data-placement="top" data-toggle="tooltip" data-original-title="" title="">
+                            <i class="fa fa-square-o"></i> порівняння
+                        </button>
+                    {{/if}}
+                </div>
+            </li>
+            {{/unless}}
+
+            <li class="list-group-item">
+                <div class="shop-product-social"></div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="shop-component shop-product-tabs">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#shop-product-overview-genereal-ID" data-toggle="tab">Опис</a></li>
+                        <li><a href="#shop-product-overview-technical-ID" data-toggle="tab">Характеристики</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="shop-product-overview-genereal-ID" itemprop="description">
+                            <p>{{data.Description}}</p>
+                            <p>
+                                <ul class="list-group feature-list">
+                                    {{#each data.Features}}
+                                    <li class="list-group-item title">{{@key}}</li>
+                                    {{#each this}}
+                                    <li class="list-group-item sub">{{this}}</li>
+                                    {{/each}}
+                                    {{/each}}
+                                </ul>
+                            </p>
+                        </div>
+                        <div class="tab-pane" id="shop-product-overview-technical-ID">
+                            <p>
+                                <ul class="list-group feature-list">
+                                    {{#each data.Features}}
+                                    <li class="list-group-item title">{{@key}}</li>
+                                    {{#each this}}
+                                    <li class="list-group-item sub">{{this}}</li>
+                                    {{/each}}
+                                    {{/each}}
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
 
         </div>
     </div>

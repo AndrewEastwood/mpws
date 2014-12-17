@@ -12,14 +12,15 @@
 </div>
 {{/gt}}
 {{#each extras.addresses}}
-<div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{uid}}">
+<div class="address-item{{#unless isActive}} hidden{{/unless}}" id="{{uid}}" itemscope itemtype="http://schema.org/Organization">
     {{#is ../extras.addressCount 1}}
-    <b>{{ShopName.Value}}</b>
+    <b itemprop="name">{{ShopName.Value}}</b>
+    <meta href="{{../../app.location.protocol}}//{{../../app.location.host}}" itemprop="url" />
     {{/is}}
-    <div class="block addresses">
-    {{#if AddressLine1.Value}}<span class="addressLine addressLine1">{{AddressLine1.Value}}</span>{{/if}}
-    {{#if AddressLine2.Value}}<span class="addressLine addressLine2">{{AddressLine2.Value}}</span>{{/if}}
-    {{#if AddressLine3.Value}}<span class="addressLine addressLine3">{{AddressLine3.Value}}</span>{{/if}}
+    <div class="block addresses" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+    {{#if AddressLine1.Value}}<span class="addressLine addressLine1" itemprop="streetAddress">{{AddressLine1.Value}}</span>{{/if}}
+    {{#if AddressLine2.Value}}<span class="addressLine addressLine2" itemprop="addressLocality">{{AddressLine2.Value}}</span>{{/if}}
+    {{#if AddressLine3.Value}}<span class="addressLine addressLine3" itemprop="addressRegion">{{AddressLine3.Value}}</span>{{/if}}
     </div>
     <div class="block openHours btn-group">
         <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -41,7 +42,7 @@
 <div class="button-phones btn-group">
     <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         {{#each_upto Contacts 1}}
-        <span class="preffix">{{label}}:</span> <span class="contact">{{contact}}</span>
+        <span class="preffix">{{label}}:</span> <span class="contact" itemprop="telephone">{{contact}}</span>
         {{/each_upto}}
         <span class="caret"></span>
     </span>
