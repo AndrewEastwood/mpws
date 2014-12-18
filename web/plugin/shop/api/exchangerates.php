@@ -252,7 +252,7 @@ class exchangerates extends \engine\objects\api {
             // var_dump($currencyName);
             // var_dump($exchangeRate);
             // var_dump($value);
-            $conversions[$currencyName] = floatval(number_format($value * $exchangeRate, 0, '.', ''));
+            $conversions[$currencyName] = floatval(number_format($value * $exchangeRate['rate'], 0, '.', ''));
         }
 
         return $conversions;
@@ -269,11 +269,15 @@ class exchangerates extends \engine\objects\api {
         $availableRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 
-        $data[$valueCurrency] = 1.0;
+        $data[$valueCurrency] = array(
+            'rate' => 1.0
+        );
 
         foreach ($availableRates as $value) {
             $value = $this->__adjustExchangeRate($value);
-            $data[$value['CurrencyB']] = $value['Rate'];
+            $data[$value['CurrencyB']] = array(
+                'rate' => $value['Rate']
+            );
         }
 
         // var_dump($data);
