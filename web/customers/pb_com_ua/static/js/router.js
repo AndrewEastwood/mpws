@@ -10,7 +10,7 @@ define("customer/js/router", [
 
     _customerOptions.site = {
         title: APP.config.URL_PUBLIC_TITLE,
-        logoImageUrl: APP.config.URL_STATIC_CUSTOMER + '/img/logo.png'
+        logoImageUrl: APP.config.URL_PUBLIC_HOMEPAGE + APP.config.URL_STATIC_CUSTOMER + 'img/logo.png'
     };
 
     // configure titles and brand images
@@ -37,8 +37,6 @@ define("customer/js/router", [
             el: breadcrumb.$el.clone()
         });
     }
-
-    CustomerClass.waitPlugins = true;
 
     return CustomerClass;
 

@@ -141,7 +141,8 @@ define("default/js/lib/utils", [
                 location: {
                     fragment: Backbone.history.fragment,
                     host: location.hostname,
-                    protocol: location.protocol
+                    protocol: location.protocol,
+                    homepage: APP.config.URL_PUBLIC_SCHEME + '://' + APP.config.URL_PUBLIC_HOSTNAME
                 }
             },
             data: _tplData,

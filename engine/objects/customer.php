@@ -111,6 +111,8 @@ class customer {
             MPWS_CUSTOMER: '" . $displayCustomer . "',
             PATH_STATIC_BASE: '/',
             URL_PUBLIC_HOMEPAGE: '" . $this->getConfiguration()->display->Homepage . "',
+            URL_PUBLIC_HOSTNAME: '" . $this->getConfiguration()->display->Host . "',
+            URL_PUBLIC_SCHEME: '" . $this->getConfiguration()->display->Scheme . "',
             URL_PUBLIC_TITLE: '" . $this->getConfiguration()->display->Title . "',
             URL_API: '/api.js',
             URL_AUTH: '/auth.js',

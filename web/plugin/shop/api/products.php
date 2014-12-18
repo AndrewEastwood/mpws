@@ -55,6 +55,19 @@ class products extends \engine\objects\api {
         $product['Attributes'] = $this->getProductAttributes($productID);
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
 
+        // create display product title
+        $displayName = array();
+        if (!empty($product['_origin'])) {
+            $displayName[] = $product['_origin']['Name'];
+        }
+        if (!empty($product['Name'])) {
+            $displayName[] = $product['Name'];
+        }
+        if (!empty($product['Model'])) {
+            $displayName[] = '(' . $product['Model'] . ')';
+        }
+        $product['_displayName'] = implode(' ', $displayName);
+
         // misc data
         if (!$skipRelations) {
             $product['Relations'] = $this->getProductRelations($productID);
@@ -205,12 +218,14 @@ class products extends \engine\objects\api {
         // var_dump($data);
         if (!empty($data)) {
             foreach ($data as $item) {
-                $images[] = array(
-                    'name' => $item['Value'],
-                    'normal' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
-                    'sm' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'sm'),
-                    'xs' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'xs')
-                );
+                if (!empty($item['Value'])) {
+                    $images[] = array(
+                        'name' => $item['Value'],
+                        'normal' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID),
+                        'sm' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'sm'),
+                        'xs' => '/' . Path::getUploadDirectory() . $this->getProductUploadInnerImagePath($item['Value'], $productID, 'xs')
+                    );
+                }
             }
         }
         return $images;

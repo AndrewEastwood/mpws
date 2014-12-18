@@ -97,7 +97,7 @@
             {{#if $last}}
                 <li class="active">{{Name}}</li>
             {{else}}
-                <li><a title="Категорія {{Name}}" href="/#!/shop/catalog/{{ExternalKey}}">{{Name}}</a></li>
+                <li><a title="Категорія {{Name}}" href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}">{{Name}}</a></li>
             {{/if}}
         {{/foreach}}
     {{/srtStartsWith}}
@@ -105,10 +105,10 @@
     {{#srtStartsWith app.location.fragment "!/shop/product/" }}
         <li><a title="Головна" href="/">Головна</a></li>
         {{#foreach data.categories}}
-        <li><a title="Категорія {{Name}}" href="/#!/shop/catalog/{{ExternalKey}}">{{Name}}</a></li>
+        <li><a title="Категорія {{Name}}" href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}">{{Name}}</a></li>
         {{/foreach}}
         {{#if data.product}}
-        <li class="active">{{data.product.Name}}</li>
+        <li class="active"><a title="{{data.product._displayName}}" href="{{bb_link ../../instances.shop.urls.shop_product product=data.product.ExternalKey asRoot=true}}">{{data.product._displayName}}</a></li>
         {{/if}}
     {{/srtStartsWith}}
 </ol>

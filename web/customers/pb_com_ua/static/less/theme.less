@@ -125,6 +125,22 @@ a:hover, a:focus {color: lighten(@mainColor, 20%);}
 
 span { cursor: default; }
 
+// pagination
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background-color: #cf7400;
+  border-color: #cf7400;
+}
+.pagination > li > a:hover, .pagination > li > span:hover,
+.pagination > li > a:focus, .pagination > li > span:focus,
+.pagination > li > a, .pagination > li > span {
+  color: #cf7400;
+}
+
 /* controls */
 .form-control,
 .form-control:focus {
@@ -345,9 +361,16 @@ i.fa {cursor: pointer;}
   }
 }
 
+/* = PRODUCT ITEM FULL
+*/
 .shop-product-item-full {
   .product-name {color: @textForegroundColor;}
   .productSparkline {}
+  .product-title-url {
+    float: left;
+    font-size: 1.45em;
+    vertical-align: middle;
+  }
   .shop-product-image-main {
     .link {
       display: block;
@@ -402,11 +425,16 @@ i.fa {cursor: pointer;}
   }
 }
 
+/* = PRODUCT ITEM SHORT
+*/
 .shop-product-item-short {
-  min-height: 450px;
+  min-height: 350px;
   & > .panel {
-    min-height: 450px;
+    min-height: 350px;
     position: relative;
+    .panel-body {
+      padding-top: 0px;
+    }
   }
   .panel-heading {
     h4 {
@@ -416,19 +444,22 @@ i.fa {cursor: pointer;}
       padding-bottom: 1px;
     }
   }
-  .shop-product-image-main {
-    .link {
-      display: block;
-      background-color: #fff;
-    }
-    .productimage {
-      max-height: 150px;
-      height: 150px;
-      margin: 0px auto;
-      text-align: center;
-      img {
-        display: inline-block;
-        max-height: 120px;
+  .shop-product-images {
+    div.shop-product-image-main {
+      margin-bottom: 0px;
+      .link {
+        display: block;
+        background-color: #fff;
+      }
+      .productimage {
+        max-height: 150px;
+        height: 150px;
+        margin: 0px auto;
+        text-align: center;
+        img {
+          display: inline-block;
+          max-height: 120px;
+        }
       }
     }
   }
@@ -464,6 +495,46 @@ i.fa {cursor: pointer;}
   }
   .promocode {
     bottom: 0px;
+  }
+  .product-availability {
+    text-transform: lowercase;
+    .fa {
+      font-size: 0.7em;
+      vertical-align: middle;
+    }
+  }
+  .product-availability-ACTIVE {
+    display: none;
+  }
+  .product-availability-ARCHIVED {
+    .fa {
+      color: #555;
+      text-shadow: 0px 0px 5px #000;
+    }
+  }
+  .product-availability-DISCOUNT {
+    .fa {
+      color: #42D57C;
+      text-shadow: 0px 0px 5px #318128;
+    }
+  }
+  .product-availability-DEFECT {
+    .fa {
+      color: #D54242;
+      text-shadow: 0px 0px 5px #7C2E2E;
+    }
+  }
+  .product-availability-WAITING {
+    .fa {
+      color: #FFB800;
+      text-shadow: 0px 0px 5px #C8782A;
+    }
+  }
+  .product-availability-PREORDER {
+    .fa {
+      color: #FFB800;
+      text-shadow: 0px 0px 5px #C8782A;
+    }
   }
 }
 

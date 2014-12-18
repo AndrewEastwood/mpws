@@ -69,8 +69,8 @@ define("plugin/shop/site/js/view/productItemFull", [
                 formatDescription = APP.instances.shop.settings.ProductDescription.Value;
             }
 
-            var searchValues = ['\\[ProductName\\]', '\\[CategoryName\\]', '\\[OriginName\\]', '\\[ProductModel\\]'];
-            var replaceValues = [data.Name, data._category.Name, data._origin.Name, data.Model];
+            var searchValues = ['\\[ProductName\\]', '\\[CategoryName\\]', '\\[OriginName\\]', '\\[ProductModel\\]', '\\[ProductDisplayTitle\\]'];
+            var replaceValues = [data.Name, data._category.Name, data._origin.Name, data.Model, data._displayName];
 
             var title = APP.utils.replaceArray(formatTitle, searchValues, replaceValues);
             var keywords = APP.utils.replaceArray(formatKeywords, searchValues, replaceValues);

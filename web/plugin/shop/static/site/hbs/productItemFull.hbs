@@ -1,10 +1,12 @@
 <div class="container" itemscope itemtype="http://schema.org/Product">
-    <link itemprop="url" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true fullUrl=true}}"/>
-    <meta itemprop="category" content="{{data._category.Name}}" />
     <div class="row">
         <div class="col-md-12">
-            <div class="product-name" itemprop="name">
-                <h3>{{data._origin.Name}} - {{data.Name}} ({{data.Model}})</h3>
+            <div class="product-name">
+                <a itemprop="url" title="Огляд {{data._displayName}}" href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true fullUrl=true}}" class="product-title-url">
+                    <i class="fa fa-link fa-fw"></i>
+                    <span class="sr-only">{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true fullUrl=true}}</span>
+                </a>
+                <h3 itemprop="name">{{data._displayName}}</h3>
             </div>
         </div>
     </div>
@@ -22,7 +24,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{data.Images.[0].normal}}" class="link" data-lightbox="shop-product-image-main">
+                    <a href="{{app.location.homepage}}{{data.Images.[0].normal}}" class="link" data-lightbox="shop-product-image-main">
                         <div class="image productimage noimage image_{{data.ID}}">
                             {{#if data.Images.[0].sm}}
                             <div id="facebookG">
@@ -36,13 +38,13 @@
                         <script>
                         (function() {
                             require(["default/js/plugin/image!{{data.Images.[0].sm}}"], function(img){
-                                img.title = "{{data._origin.Name}} - {{data.Name}} ({{data.Model}})";
-                                img.className = "image img-responsive";
-                                img.alt = "{{data._origin.Name}} - {{data.Name}} ({{data.Model}})";
-                                var ip = document.createAttribute('itemprop');
-                                ip.value = "image";
-                                img.setAttributeNode(ip);
-                                $('.image_{{data.ID}}').removeClass('noimage').html($(img).clone());
+                                $('.image_{{data.ID}}').removeClass('noimage').html($(img).attr({
+                                    title: "{{data._displayName}}",
+                                    alt: "{{data._displayName}}",
+                                    class: "image img-responsive",
+                                    src: img.src,
+                                    itemprop: "image"
+                                }).clone());
                             }, function () { $('.image_{{data.ID}} #facebookG').remove(); });
                         })();
                         </script>
@@ -56,7 +58,7 @@
                         {{#each data.Images}}
                         <div class="col-xs-3 col-md-2 shop-product-image-additional-entry">
                             <a href="{{normal}}" class="link" data-lightbox="shop-product-image-additional">
-                                <img src="{{xs}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
+                                <img src="{{app.location.homepage}}{{xs}}" class="image img-responsive" alt="{{data.Name}}" title="{{data.Name}}" />
                             </a>
                         </div>
                         {{/each}}
@@ -73,19 +75,20 @@
         <ul class="list-group">
 
             <li class="list-group-item">
-                <div class="shop-component shop-product-attr shop-product-attr-availability">
+                <div class="shop-component shop-product-attr shop-product-attr-availability" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                    <link itemprop="itemCondition" href="http://schema.org/NewCondition" />
                     <span class="value-prefix">Цей товар:</span>
                     {{#if data._archived}}
-                        <span class="label label-default">архівний</strong>
+                        <span itemprop="availability" href="http://schema.org/OutOfStock" class="label label-default">архівний</strong>
                     {{else}}
                         {{#if data._available }}
-                        <span class="label label-success">є в наявності</span>
+                        <span itemprop="availability" href="http://schema.org/InStock" class="label label-success">є в наявності</span>
                         {{else}}
-                        <span class="label label-danger">немає в наявності</strong>
+                        <span itemprop="availability" href="http://schema.org/OutOfStock" class="label label-danger">немає в наявності</strong>
                         {{/if}}
                     {{/if}}
                 </div>
-                <div class="shop-component shop-product-attr shop-product-attr-origin" itemprop="brand" itemscope itemtype="http://schema.org/Organization">
+                <div itemprop="brand" itemscope itemtype="http://schema.org/Brand" class="shop-component shop-product-attr shop-product-attr-origin">
                     <span class="value-prefix">Виробник:</span>
                     <strong itemprop="name">{{data._origin.Name}}</strong>
                 </div>
@@ -95,7 +98,7 @@
                 </div>
                 <div class="shop-component shop-product-attr shop-product-attr-code">
                     <span class="value-prefix">Код товару:</span>
-                    <strong itemprop="productID" content="{{data.ID}}">#{{data.ID}}</strong>
+                    <strong itemprop="productID" content="{{data.ID}}" class="label label-warning">{{data.ID}}</strong>
                 </div>
                 {{#if data.Attributes.WARRANTY}}
                 <div class="shop-component shop-product-attr shop-product-attr-code">
@@ -115,23 +118,13 @@
                     <strong>{{data.Attributes.TAGS}}</strong>
                 </div>
                 {{/if}}
-
-                {{#unless data._archived}}
-                <div class="shop-component shop-product-attr shop-product-attr-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <meta itemprop="condition" content="new" />
-                    {{#if data._archived}}
-                        <meta itemprop="availability" content="out_of_stock" />
-                    {{else}}
-                        {{#if data._available }}
-                        <meta itemprop="availability" content="in_stock" />
-                        {{else}}
-                        <meta itemprop="availability" content="out_of_stock" />
-                        {{/if}}
-                    {{/if}}
-                    <div class="value-prefix">Ціна:</div>
+                <div class="shop-component shop-product-attr shop-product-attr-price">
+                    <span class="value-prefix">Ціна:</span>
                     {{#each data._prices.others}}
-                        <meta itemprop="priceCurrency" content="{{@key}}" />
-                        <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                        <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                            <meta itemprop="priceCurrency" content="{{@key}}" />
+                            <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                        </span>
                     {{/each}}
                     {{#if data._promoIsApplied }}
                     <div class="promocode label label-success">(Знижка: {{../data._promo.Discount}}%) | Ваш промокод <b>{{../data._promo.Code}}</b> діє до <b>{{../data._promo.DateExpire}}</b></div>
@@ -145,7 +138,6 @@
                     </div>
                 {{/mpwsIsNotEmpty}}
                 {{/if}}
-                {{/unless}}
             </li>
 
             <li class="list-group-item">
@@ -209,83 +201,7 @@
                   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=346829335460205&version=v2.0";
                   fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));</script>
-                <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey asRoot=true}}" data-layout="icon"></div>
-            </li>
-            {{/if}}
-
-            {{#if data.Relations }}
-            <li class="list-group-item">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Можливо Вам знадобиться також це:</div>
-                    <div class="panel-body">
-                        <div id="carousel-product-relations" class="carousel slide product-relations" data-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators">
-                            {{#each data.Relations }}
-                                <li data-target="#carousel-product-relations" data-slide-to="{{ID}}" class="{{#if @first }}active{{/if}}"></li>
-                            {{/each}}
-                            </ol>
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner">
-                            {{#each data.Relations }}
-                                <div class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shop_product product=ExternalKey asRoot=true}}">
-                                    <div class="shop-product-image shop-product-image-main">
-                                        <div class="productBadge {{Status}}">
-                                           <div class="ribbon-wrapper">
-                                                <div class="ribbon">
-                                                    {{mpwsGetValueByKey ../../lang Status "product_badge_"}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="image productimage noimage image_{{ID}}">
-                                            {{#if Images.[0].xs}}
-                                            <div id="facebookG">
-                                                <div id="blockG_1" class="facebook_blockG"></div>
-                                                <div id="blockG_2" class="facebook_blockG"></div>
-                                                <div id="blockG_3" class="facebook_blockG"></div>
-                                            </div>
-                                            {{/if}}
-                                        </div>
-                                        {{#if Images.[0].xs}}
-                                        <script>
-                                        (function() {
-                                            require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
-                                                img.title = "{{_origin.Name}} - {{Name}} ({{Model}})";
-                                                img.className = "image img-responsive";
-                                                img.alt = "{{_origin.Name}} - {{Name}} ({{Model}})";
-                                                var ip = document.createAttribute('itemprop');
-                                                ip.value = "image";
-                                                img.setAttributeNode(ip);
-                                                $('.image_{{ID}}').removeClass('noimage').html($(img).clone());
-                                            });
-                                        })();
-                                        </script>
-                                        {{/if}}
-                                    </div>
-                                    <div class="carousel-caption">{{_origin.Name}} - {{Name}} ({{Model}})</div>
-                                    <div class="carousel-caption price">
-                                        Всього за:
-                                        {{#each _prices.others}}
-                                            <meta itemprop="priceCurrency" content="{{@key}}" />
-                                            <strong itemprop="price" content="{{this}}" class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
-                                        {{/each}}
-                                        {{#if _promoIsApplied }}
-                                            <span class="label label-success">(Знижка {{promo.Discount}}%)</span>
-                                        {{/if}}
-                                    </div>
-                                </div>
-                            {{/each}}
-                            </div>
-                            <!-- Controls -->
-                            <a class="left carousel-control" href="#carousel-product-relations" role="button" data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </a>
-                            <a class="right carousel-control" href="#carousel-product-relations" role="button" data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <div class="fb-share-button" data-href="{{bb_link instances.shop.urls.shop_product product=data.ExternalKey fullUrl=true}}" data-layout="icon"></div>
             </li>
             {{/if}}
 
@@ -375,15 +291,82 @@
         </div>
     </div>
 
+    {{#if data.Relations }}
     <div class="row">
-
         <div class="col-md-12">
-            <div class="ma-upsellslider-container">
-                <div class="ma-upsellslider-title">
-                    <h4>Також рекомендуємо:</h4>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Можливо Вам знадобиться також це:</h4>
+                </div>
+                <div class="panel-body">
+                    <div id="carousel-product-relations" class="carousel slide product-relations" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                        {{#each data.Relations }}
+                            <li data-target="#carousel-product-relations" data-slide-to="{{ID}}" class="{{#if @first }}active{{/if}}"></li>
+                        {{/each}}
+                        </ol>
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                        {{#each data.Relations }}
+                            <div title="Характеристики {{_displayName}}" class="item{{#if @first }} active{{/if}}" data-action="plugin:shop:product:open" data-page="{{bb_link instances.shop.urls.shop_product product=ExternalKey}}" itemprop="isRelatedTo" itemscope itemtype="http://schema.org/Product">
+                                <div class="shop-product-image shop-product-image-main">
+                                    <div class="productBadge {{Status}}">
+                                       <div class="ribbon-wrapper">
+                                            <div class="ribbon">
+                                                {{mpwsGetValueByKey ../../lang Status "product_badge_"}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="image productimage noimage image_{{ID}}">
+                                        {{#if Images.[0].xs}}
+                                        <div id="facebookG">
+                                            <div id="blockG_1" class="facebook_blockG"></div>
+                                            <div id="blockG_2" class="facebook_blockG"></div>
+                                            <div id="blockG_3" class="facebook_blockG"></div>
+                                        </div>
+                                        {{/if}}
+                                    </div>
+                                    {{#if Images.[0].xs}}
+                                    <script>
+                                    (function() {
+                                        require(["default/js/plugin/image!{{Images.[0].xs}}"], function(img){
+                                            $('.image_{{ID}}').removeClass('noimage').html($(img).attr({
+                                                title: "{{_displayName}}",
+                                                alt: "{{_displayName}}",
+                                                class: "image img-responsive",
+                                                src: img.src
+                                            }).clone());
+                                        });
+                                    })();
+                                    </script>
+                                    {{/if}}
+                                </div>
+                                <div class="carousel-caption" itemprop="name">{{_displayName}}</div>
+                                <div class="carousel-caption price">
+                                    Всього за:
+                                    {{#each _prices.others}}
+                                        <strong class="moneyValue {{@key}}{{#isnt ../../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../../instances.shop.settings.currencyList}}</strong>
+                                    {{/each}}
+                                    {{#if _promoIsApplied }}
+                                        <span class="label label-success">(Знижка {{promo.Discount}}%)</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/each}}
+                        </div>
+                        <!-- Controls -->
+                        <a class="left carousel-control" href="#carousel-product-relations" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-product-relations" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
+    {{/if}}
+
 </div>

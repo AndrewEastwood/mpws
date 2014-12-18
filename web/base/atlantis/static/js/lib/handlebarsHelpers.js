@@ -491,8 +491,9 @@ define("default/js/lib/handlebarsHelpers", [
     }
     helpers.bb_link = function (url, options) {
         url = url || "";
+        url = "#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
         if (options.hash.asRoot) {
-            url = "/#!" + url.replace(/^(\/#)|^#|^!|^(\/#!)|^\//, '');
+            url = '/' + url;
         }
         if (options.hash.fullUrl) {
             if (url[0] !== '/') {

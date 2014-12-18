@@ -23,7 +23,7 @@
                         <div class="list-group">
                         {{#each filter.filterOptionsAvailable.filter_categorySubCategories }}
                             {{#if ProductCount }}
-                            <a class="list-group-item" href="{{bb_link instances.shop.urls.shop_catalog_category category=ExternalKey asRoot=true}}" rel="category" title="{{Name}}">
+                            <a class="list-group-item" href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}" rel="category" title="{{Name}}">
                                 {{Name}}
                                 <span class="badge {{#if ProductCount}}label-success{{/if}} product-count">{{ProductCount}}</span>
                             </a>
