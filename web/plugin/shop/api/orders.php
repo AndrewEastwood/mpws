@@ -432,27 +432,46 @@ class orders extends \engine\objects\api {
         $order['delivery'] = null;
         $productItems = array();
 
+
+        if (isset($order['CurrencyRate'])) {
+            $order['CurrencyRate'] = floatval($order['CurrencyRate']);
+        }
+
         $defaultDBCurrency = $this->getAPI()->exchangerates->getDefaultDBPriceCurrencyType();
-        $rates = new ArrayObject($this->getAPI()->exchangerates->getAvailableConversionOptions());
-        $ratesCurrent = $rates->getArrayCopy();
-        $ratesCustomer = $rates->getArrayCopy();
+        // $rates = new ArrayObject($this->getAPI()->exchangerates->getAvailableConversionOptions());
+        // $ratesCurrent = $rates->getArrayCopy();
+        // $ratesCustomer = $rates->getArrayCopy();
+        $ratesCurrent = array();
+        $ratesCurrent[$defaultDBCurrency] = 1;
+        $ratesCustomer = array();
+
+        if ($defaultDBCurrency === $order['CurrencyName']) {
+            $ratesCustomer = $ratesCurrent;
+        } else {
+            $rateTo = $this->getAPI()->exchangerates->getExchangeRateFrom_ByCurrencyName($order['CurrencyName']);
+            // var_dump($rateTo);
+            $ratesCurrent[$order['CurrencyName']] = $getExchangeRateTo_ByCurrencyName['Rate'];
+            $ratesCustomer[$order['CurrencyName']] = $order['CurrencyRate'];
+        }
+
+        // $rateFrom = $this->getAPI()->exchangerates->getExchangeRateFrom_ByCurrencyName();
 
         var_dump($ratesCurrent);
         var_dump($ratesCustomer);
-        var_dump($this->getAPI()->exchangerates->getAvailableConversionOptions());
+        // var_dump($this->getAPI()->exchangerates->getAvailableConversionOptions());
         var_dump('CurrencyRate'. $order['CurrencyRate']);
         var_dump('CurrencyName'. $order['CurrencyName']);
         // if orderID is set then the order is saved
         if (isset($orderID) && !isset($order['temp'])) {
             if (isset($ratesCustomer[$order['CurrencyName']])) {
-                $ratesCustomer[$order['CurrencyName']]['rate'] = floatval($order['CurrencyRate']);
+                $ratesCustomer[$order['CurrencyName']] = $order['CurrencyRate'];
             }
             $order['rates'] = array(
                 'actual' => $ratesCurrent,
                 'customer' => $ratesCustomer,
                 'actualRate' => $ratesCurrent[$order['CurrencyName']],
                 'customerRate' => $ratesCustomer[$order['CurrencyName']],
-                'ourBenefit' => $ratesCustomer[$order['CurrencyName']]['rate'] - $ratesCurrent[$order['CurrencyName']]['rate']
+                'ourBenefit' => $ratesCustomer[$order['CurrencyName']] - $ratesCurrent[$order['CurrencyName']]
             );
             // attach account and address
             if ($this->getCustomer()->hasPlugin('account')) {

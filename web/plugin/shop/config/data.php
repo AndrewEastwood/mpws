@@ -1293,10 +1293,18 @@ class data extends \engine\objects\configuration {
         );
         return $config;
     }
-    public function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameTo = null) {
+    public function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
         $config = $this->jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyA" => $this->jsapiCreateDataSourceCondition($currencyNameTo)
+            "CurrencyA" => $this->jsapiCreateDataSourceCondition($currencyNameFrom)
+        );
+        return $config;
+    }
+    public function jsapiShopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
+        $config = $this->jsapiShopGetExchangeRateByID();
+        $config["condition"] = array(
+            "CurrencyA" => $this->jsapiCreateDataSourceCondition($currencyNameFrom),
+            "CurrencyB" => $this->jsapiCreateDataSourceCondition($currencyNameTo)
         );
         return $config;
     }
@@ -1311,6 +1319,9 @@ class data extends \engine\objects\configuration {
         }
         if (isset($options['limit'])) {
             $config['limit'] = $options['limit'];
+        }
+        if (empty($options['removed'])) {
+            $config['condition']['Status'] = $this->jsapiCreateDataSourceCondition('ACTIVE');
         }
         return $config;
     }
@@ -1351,14 +1362,14 @@ class data extends \engine\objects\configuration {
     public function jsapiShopDeleteExchangeRate ($id) {
         return $this->jsapiGetDataSourceConfig(array(
             "source" => "shop_currency",
-            "action" => "delete",
+            "action" => "update",
             "condition" => array(
                 "ID" => $this->jsapiCreateDataSourceCondition($id)
             ),
-            // "data" => array(
-            //     "Status" => 'REMOVED',
-            //     "DateUpdated" => $this->getDate()
-            // ),
+            "data" => array(
+                "Status" => 'REMOVED',
+                "DateUpdated" => $this->getDate()
+            ),
             "options" => null
         ));
     }

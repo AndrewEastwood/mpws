@@ -118,7 +118,8 @@ class exchangerates extends \engine\objects\api {
         $validatedDataObj = Validate::getValidData($reqData, array(
             'CurrencyA' => array('string', 'skipIfUnset'),
             'CurrencyB' => array('string', 'skipIfUnset'),
-            'Rate' => array('numeric', 'skipIfUnset')
+            'Rate' => array('numeric', 'skipIfUnset'),
+            'Status' => array('string', 'skipIfUnset')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -150,6 +151,19 @@ class exchangerates extends \engine\objects\api {
         $result['success'] = $success;
 
         return $result;
+    }
+
+    public function createOrUpdateExchangeRate ($reqData) {
+        $rate = null;
+        if (isset($reqData['CurrencyA']) && isset($reqData['CurrencyB'])) {
+            $rate = $this->getExchangeRateByBothRateNames($reqData['CurrencyA'], $reqData['CurrencyB']);
+        }
+        if (isset($rate['ID'])) {
+            $reqData['Status'] = 'ACTIVE';
+            return $this->updateExchangeRate($rate['ID'], $reqData);
+        } else {
+            return $this->createExchangeRate($reqData);
+        }
     }
 
     public function deleteExchangeRate ($id) {
@@ -210,29 +224,29 @@ class exchangerates extends \engine\objects\api {
         return $rate;
     }
 
-    public function convertBaseValueToRate ($value, $toCurrency, $rate = 0) {
-        $convertedValue = -1;
-        $baseCurrency = $this->getExchangeRateFrom_ByCurrencyName();
-        $rateFrom = $this->getExchangeRateToByCurrencyName($baseCurrency);
-        if ($rateFrom !== null) {
-            if ($rate > 0) {
-                $convertedValue = floatval(number_format($value * $rate, 0, '.', ''));
-            } else {
-                // use current rate value
-                $rateTo = $this->getExchangeRateTo_ByCurrencyName($toCurrency);
-                if ($rateTo === null) {
-                    throw new Exception("#[ShopExRt0001] CanNotFindRateTo", 1);
-                }
-                $convertedValue = floatval(number_format($value * $rateTo['rate'], 0, '.', ''));
-            }
-        } else {
-            throw new Exception("#[ShopExRt0004] CanNotFindBaseCurrency_" . $toCurrency);
-        }
-        if ($convertedValue < 0) {
-            throw new Exception("#[ShopExRt0002] UnableToConvertValueTo_" . $toCurrency . "_from_" . $baseCurrency . "_value_" . $value);
-        }
-        return $convertedValue;
-    }
+    // public function convertBaseValueToRate ($value, $toCurrency, $rate = 0) {
+    //     $convertedValue = -1;
+    //     $baseCurrency = $this->getExchangeRateFrom_ByCurrencyName();
+    //     $rateFrom = $this->getExchangeRateTo_ByCurrencyName($baseCurrency);
+    //     if ($rateFrom !== null) {
+    //         if ($rate > 0) {
+    //             $convertedValue = floatval(number_format($value * $rate, 0, '.', ''));
+    //         } else {
+    //             // use current rate value
+    //             $rateTo = $this->getExchangeRateTo_ByCurrencyName($toCurrency);
+    //             if ($rateTo === null) {
+    //                 throw new Exception("#[ShopExRt0001] CanNotFindRateTo", 1);
+    //             }
+    //             $convertedValue = floatval(number_format($value * $rateTo['rate'], 0, '.', ''));
+    //         }
+    //     } else {
+    //         throw new Exception("#[ShopExRt0004] CanNotFindBaseCurrency_" . $toCurrency);
+    //     }
+    //     if ($convertedValue < 0) {
+    //         throw new Exception("#[ShopExRt0002] UnableToConvertValueTo_" . $toCurrency . "_from_" . $baseCurrency . "_value_" . $value);
+    //     }
+    //     return $convertedValue;
+    // }
 
     public function convertToDefinedRates ($value, $valueCurrency = false, $rates = array()) {
         $conversions = array();
@@ -252,7 +266,7 @@ class exchangerates extends \engine\objects\api {
             // var_dump($currencyName);
             // var_dump($exchangeRate);
             // var_dump($value);
-            $conversions[$currencyName] = floatval(number_format($value * $exchangeRate['rate'], 0, '.', ''));
+            $conversions[$currencyName] = floatval(number_format($value * $exchangeRate, 0, '.', ''));
         }
 
         return $conversions;
@@ -269,15 +283,11 @@ class exchangerates extends \engine\objects\api {
         $availableRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 
-        $data[$valueCurrency] = array(
-            'rate' => 1.0
-        );
+        $data[$valueCurrency] = 1.0;
 
         foreach ($availableRates as $value) {
             $value = $this->__adjustExchangeRate($value);
-            $data[$value['CurrencyB']] = array(
-                'rate' => $value['Rate']
-            );
+            $data[$value['CurrencyB']] = $value['Rate'];
         }
 
         // var_dump($data);
@@ -336,6 +346,11 @@ class exchangerates extends \engine\objects\api {
 
         return array_keys($data);
     }
+    public function getExchangeRateByBothRateNames ($baseCCY, $CCY) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateByBothNames($baseCCY, $CCY);
+        $rate = $this->getCustomer()->fetch($config) ?: array();
+        return $rate;
+    }
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -376,7 +391,7 @@ class exchangerates extends \engine\objects\api {
             $resp['error'] = "AccessDenied";
             return;
         }
-        $resp = $this->createExchangeRate($req->data);
+        $resp = $this->createOrUpdateExchangeRate($req->data);
         // $this->_getOrSetCachedState('changed:agencies', true);
     }
 
