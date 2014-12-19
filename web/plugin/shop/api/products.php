@@ -109,7 +109,7 @@ class products extends \engine\objects\api {
         unset($product['Price']);
 
         // apply currencies
-        $convertedPrices = $this->getAPI()->exchangerates->convertToDefinedRates($actualPrice);
+        $convertedPrices = $this->getAPI()->exchangerates->convertToRates($actualPrice);
 
         // create product prices object
         $product['_prices'] = array(

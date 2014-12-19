@@ -195,7 +195,7 @@ class exchangerates extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
 
-    public function getDefaultDBPriceCurrencyType ($returnFullRate = false) {
+    public function getDefaultDBPriceCurrency () {
         $currencyName = null;
         $prop = $this->getAPI()->settings->findByName('DBPriceCurrencyType');
         if ($prop === null) {
@@ -206,10 +206,10 @@ class exchangerates extends \engine\objects\api {
         if ($rate === null) {
             throw new Exception("#[ShopExRt0004] DefaultCurrencyNameIsMissingInDB_" . $currencyName, 1);
         }
-        if ($returnFullRate) {
-            return $rate;
-        }
-        return $currencyName;
+        return $rate;
+        // if ($returnFullRate) {
+        // }
+        // return $currencyName;
     }
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {
@@ -224,109 +224,64 @@ class exchangerates extends \engine\objects\api {
         return $rate;
     }
 
-    // public function convertBaseValueToRate ($value, $toCurrency, $rate = 0) {
-    //     $convertedValue = -1;
-    //     $baseCurrency = $this->getExchangeRateFrom_ByCurrencyName();
-    //     $rateFrom = $this->getExchangeRateTo_ByCurrencyName($baseCurrency);
-    //     if ($rateFrom !== null) {
-    //         if ($rate > 0) {
-    //             $convertedValue = floatval(number_format($value * $rate, 0, '.', ''));
-    //         } else {
-    //             // use current rate value
-    //             $rateTo = $this->getExchangeRateTo_ByCurrencyName($toCurrency);
-    //             if ($rateTo === null) {
-    //                 throw new Exception("#[ShopExRt0001] CanNotFindRateTo", 1);
-    //             }
-    //             $convertedValue = floatval(number_format($value * $rateTo['rate'], 0, '.', ''));
-    //         }
-    //     } else {
-    //         throw new Exception("#[ShopExRt0004] CanNotFindBaseCurrency_" . $toCurrency);
-    //     }
-    //     if ($convertedValue < 0) {
-    //         throw new Exception("#[ShopExRt0002] UnableToConvertValueTo_" . $toCurrency . "_from_" . $baseCurrency . "_value_" . $value);
-    //     }
-    //     return $convertedValue;
-    // }
-
-    public function convertToDefinedRates ($value, $valueCurrency = false, $rates = array()) {
+    public function convertToRates ($value, $baseCurrencyName = false, $exchangeRates = array()) {
         $conversions = array();
 
-        if ($valueCurrency === false) {
-            $valueCurrency = $this->getDefaultDBPriceCurrencyType();
+        if ($baseCurrencyName === false) {
+            $defaultRate = $this->getDefaultDBPriceCurrency();
+            $baseCurrencyName = $defaultRate['CurrencyA'];
         }
 
-        if (count($rates) === 0) {
-            $rates = $this->getAvailableConversionOptions();
+        if (count($exchangeRates) === 0) {
+            $exchangeRates = $this->getAvailableConversionOptions($baseCurrencyName);
         }
 
         // this is the value for base currency
-        $conversions[$valueCurrency] = $value;
+        $conversions[$baseCurrencyName] = $value;
         // and here we go through others
-        foreach ($rates as $currencyName => $exchangeRate) {
+        foreach ($exchangeRates as $currencyName => $exchangeRate) {
             // var_dump($currencyName);
             // var_dump($exchangeRate);
             // var_dump($value);
-            $conversions[$currencyName] = floatval(number_format($value * $exchangeRate, 0, '.', ''));
+            if ($baseCurrencyName !== $currencyName)
+                $conversions[$currencyName] = floatval(number_format($value * $exchangeRate, 0, '.', ''));
         }
 
         return $conversions;
     }
 
-    public function getAvailableConversionOptions () {
-        $valueCurrency = $this->getDefaultDBPriceCurrencyType();
+    public function getAvailableConversionOptions ($baseCurrencyName = false) {
+        $valueCurrencyName = null;
+        if (empty($baseCurrencyName)) {
+            $rate = $this->getDefaultDBPriceCurrency();
+            $valueCurrencyName = $rate['CurrencyA'];
+        } else {
+            $valueCurrencyName = $baseCurrencyName;
+        }
 
         $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
             'limit' => 0
         ));
-        $config['condition']['CurrencyA'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($valueCurrency);
+        $config['condition']['CurrencyA'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($valueCurrencyName);
         $availableRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 
-        $data[$valueCurrency] = 1.0;
+        $data[$valueCurrencyName] = 1.0;
 
         foreach ($availableRates as $value) {
             $value = $this->__adjustExchangeRate($value);
             $data[$value['CurrencyB']] = $value['Rate'];
         }
 
-        // var_dump($data);
-        
-        // $rates = $this->getActiveExchangeRatesAll();
-
-        // // this is the value for base currency
-        // $options[] = $valueCurrency;
-
-        // foreach ($rates as $exchangeRate) {
-        //     if ($exchangeRate['name'] === $valueCurrency) {
-        //         $options[] = $exchangeRate['currency'];
-        //     }
-        // }
         return $data;
     }
 
-    public function getActiveExchangeRatesAll () {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
-            'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
-            'limit' => 0
-        ));
-        $userRates = $this->getCustomer()->fetch($config) ?: array();
-        $data = array();
-
-        foreach ($userRates as $value) {
-            $value = $this->__adjustExchangeRate($value);
-            $data[$value['CurrencyA']] = array(
-                'rate' => $value['Rate'],
-                'currency' => $value['CurrencyB']
-            );
-        }
-        return $data;
-    }
     public function getActiveExchangeRatesList () {
-        $deliveries = $this->getExchangeRates_List(array(
+        $rates = $this->getExchangeRates_List(array(
             "limit" => 0
         ));
-        return $deliveries;
+        return $rates;
     }
     public function getCurrencyList () {
         return $this->_currencies;

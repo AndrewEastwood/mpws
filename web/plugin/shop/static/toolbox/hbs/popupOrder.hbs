@@ -158,7 +158,7 @@
     <div class="tab-pane fade in" id="products">
         <div class="alert alert-info">
             Оформлено у валюті по курсу
-            <strong>{{data.CurrencyRate}} {{data.CurrencyName}}</strong>
+            <strong>{{data.CustomerCurrencyRate}} {{data._currencyName}}</strong>
             за <strong>1 {{instances.shop.settings.DBPriceCurrencyType.Value}}</strong>
         </div>
         {{#if data.info.hasPromo }}
@@ -212,7 +212,7 @@
                         </a>
                     </span>
                     {{#each _prices.others}}
-                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../data.CurrencyName @key}} hidden{{/isnt}}">
+                        <span class="label label-warning product-price moneyValue {{@key}}{{#isnt ../../data._currencyName @key}} hidden{{/isnt}}">
                             {{#withItem ../../instances.shop.settings.currencyList key=@key}}
                                 {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                                 <strong class="value">{{currency ../this}}</strong>
@@ -226,8 +226,8 @@
                     <span class="label label-default">x</span>
                     <span class="label label-warning product-quantity">{{_orderQuantity}}</span>
                     <span class="label label-default">=</span>
-                    {{#each _totalSummary._totals}}
-                        <span class="product-total moneyValue {{@key}}{{#isnt ../../data.CurrencyName @key}} hidden{{/isnt}}">
+                    {{#each _totalSummary._customer_totals}}
+                        <span class="product-total moneyValue {{@key}}{{#isnt ../../data._currencyName @key}} hidden{{/isnt}}">
                             {{#withItem ../../instances.shop.settings.currencyList key=@key}}
                                 {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                                 <strong class="value">{{currency ../this}}</strong>
@@ -250,18 +250,18 @@
             </li>
             <li class="list-group-item">
                 Покупець обрав валюту
-                <strong>{{data.CurrencyName}}</strong>
-                {{#isnt data.CurrencyName instances.shop.settings.DBPriceCurrencyType.Value}}
-                де курс до основної валюти був
+                <strong>{{data._currencyName}}</strong>
+                {{#isnt data._currencyName instances.shop.settings.DBPriceCurrencyType.Value}}
+                де курс до основної валюти в момент купівлі був
                 <strong>
-                    {{currency data.CurrencyRate currency=data.CurrencyName display=instances.shop.settings.currencyList}}
+                    {{currency data.CustomerCurrencyRate currency=data._currencyName display=instances.shop.settings.currencyList}}
                 </strong>
                 {{/isnt}}
             </li>
-            {{#isnt data.CurrencyName instances.shop.settings.DBPriceCurrencyType.Value}}
+            {{#isnt data._currencyName instances.shop.settings.DBPriceCurrencyType.Value}}
             <li class="list-group-item">
                 Поточний курс валюти <strong>
-                {{currency data.rates.actualRate currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong> за <strong>
+                {{currency data.rates.actual currency=data._currencyName display=instances.shop.settings.currencyList}}</strong> за <strong>
                 {{currency 1 currency=instances.shop.settings.DBPriceCurrencyType.Value display=instances.shop.settings.currencyList}}</strong>
             </li>
             {{/isnt}}
@@ -279,13 +279,13 @@
             <li class="list-group-item">
                 Сума грошей, яку покупець має заплатити
                 <strong>
-                {{selectValueByCurrency data.totalSummary._customer_totals currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+                {{selectValueByCurrency data.totalSummary._customer_totals currency=data._currencyName display=instances.shop.settings.currencyList}}</strong>
             </li>
             {{#isnt data.rates.ourBenefit 0}}
             <li class="list-group-item">
                 Вартість цього замовлення на поточний момент
                 <strong>
-                {{selectValueByCurrency data.totalSummary._totals currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+                {{selectValueByCurrency data.totalSummary._totals currency=data._currencyName display=instances.shop.settings.currencyList}}</strong>
             </li>
             <li class="list-group-item">
                 {{#gt data.rates.ourBenefit 0}}
@@ -297,7 +297,7 @@
                 {{/gt}}
                 становить
                 <strong>
-                {{selectValueByCurrency data.totalSummary._diff_totals currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+                {{selectValueByCurrency data.totalSummary._diff_totals currency=data._currencyName display=instances.shop.settings.currencyList}}</strong>
             </li>
             {{/isnt}}
             {{#if data.info.hasPromo }}
@@ -306,11 +306,11 @@
             </li>
             <li class="list-group-item">
                 Сума без знижки становить: <strong>
-                {{selectValueByCurrency data.totalSummary._customer_subs currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+                {{selectValueByCurrency data.totalSummary._customer_subs currency=data._currencyName display=instances.shop.settings.currencyList}}</strong>
             </li>
             <li class="list-group-item">
                 Знижка в грошовому еквіваленті: <strong>
-                {{selectValueByCurrency data.totalSummary._diff_promo currency=data.CurrencyName display=instances.shop.settings.currencyList}}</strong>
+                {{selectValueByCurrency data.totalSummary._diff_promo currency=data._currencyName display=instances.shop.settings.currencyList}}</strong>
             </li>
             {{/if}}
         </ul>
@@ -325,8 +325,8 @@
     </div>
     <div class="shopCartTotal">
         <span class="value-prefix">Сума без знижки:</span>
-        {{#each data.totalSummary._subs}}
-            <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
+        {{#each data.totalSummary._customer_subs}}
+            <span class="value moneyValue {{@key}}{{#isnt ../data._currencyName @key}} hidden{{/isnt}}">
                 {{#withItem ../instances.shop.settings.currencyList key=@key}}
                     {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                     <strong class="value">{{currency ../this}}</strong>
@@ -342,8 +342,8 @@
     {{/if}}
     <div class="shopCartTotal">
         <span class="value-prefix">До оплати:</span>
-        {{#each data.totalSummary._totals}}
-            <span class="value moneyValue {{@key}}{{#isnt ../data.CurrencyName @key}} hidden{{/isnt}}">
+        {{#each data.totalSummary._customer_totals}}
+            <span class="value moneyValue {{@key}}{{#isnt ../data._currencyName @key}} hidden{{/isnt}}">
                 {{#withItem ../instances.shop.settings.currencyList key=@key}}
                     {{#if showBeforeValue}}<span class="currency-prefix moneyType">{{text}}</span>{{/if}}
                     <strong class="value">{{currency ../this}}</strong>
