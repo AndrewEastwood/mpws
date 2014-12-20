@@ -43,8 +43,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             'click .feature-types a': 'selectFeatureGroup',
         },
         initialize: function () {
-            var self = this,
-                isEdit = this.model.id;
+            var self = this;
             this.model = new ModelProduct();
             this.listenTo(this.model, 'change', this.render);
             this.$title = $('<span/>');
@@ -88,10 +87,10 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                                     self.render();
                                     BSAlert.danger('Помилка під час оновлення замовлення');
                                 } else {
-                                    if (isEdit) {
-                                        BSAlert.success('Товар успішно оновлено');
-                                    } else {
+                                    if (dialog.getData('isNew')) {
                                         BSAlert.success('Товар успішно створено');
+                                    } else {
+                                        BSAlert.success('Товар успішно оновлено');
                                     }
                                     dialog.close();
                                 }
@@ -123,6 +122,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
 
             if (!this.$dialog.isOpened()) {
                 this.$dialog.open();
+                this.$dialog.setData('isNew', this.model.isNew())
             }
 
             var _initCategory = {};
@@ -227,7 +227,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
             var _options = {
                 thousands: ' ',
                 decimal: '.',
-                precision: 0
+                precision: 2
             };
             var _currencyDisplay = APP.instances.shop.settings.DBPriceCurrencyType._display;
             if (_currencyDisplay) {

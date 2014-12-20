@@ -206,6 +206,7 @@ class exchangerates extends \engine\objects\api {
         if ($rate === null) {
             throw new Exception("#[ShopExRt0004] DefaultCurrencyNameIsMissingInDB_" . $currencyName, 1);
         }
+        $this->__adjustExchangeRate($rate);
         return $rate;
         // if ($returnFullRate) {
         // }

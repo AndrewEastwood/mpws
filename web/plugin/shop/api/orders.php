@@ -260,8 +260,20 @@ class orders extends \engine\objects\api {
                  throw new Exception("NoProudctsToPurchase", 1);
 
             $orderPromoID = empty($order['promo']) ? null : $order['promo']['ID'];
-
-            $rate = $this->getAPI()->exchangerates->getDefaultDBPriceCurrency();
+            $rateDefault = $this->getAPI()->exchangerates->getDefaultDBPriceCurrency();
+            $customerCurrencyName = $rateDefault['CurrencyA'];
+            $customerRate = 1;
+            if (empty($reqData['form']['customerCurrencyName']) || $customerCurrencyName !== $reqData['form']['customerCurrencyName']) {
+                $customerCurrencyName = $reqData['form']['customerCurrencyName'];
+                try {
+                    $rate = $this->getAPI()->exchangerates->getExchangeRateByBothRateNames($rateDefault['CurrencyA'], $customerCurrencyName);
+                    if (!empty($rate)) {
+                        $customerRate = $rate['Rate'];
+                    }
+                } catch (Exception $ex) {
+                    $customerCurrencyName = $rateDefault['CurrencyA'];
+                }
+            }
 
             // start creating order
             $dataOrder = array();
@@ -272,8 +284,9 @@ class orders extends \engine\objects\api {
             $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : null;
             $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
             $dataOrder["PromoID"] = $orderPromoID;
-            $dataOrder["ExchangeRateID"] = $rate['ID'];
-            $dataOrder["CustomerCurrencyRate"] = $rate['Rate']; // save rate value because we can change it any time in future
+            $dataOrder["ExchangeRateID"] = $rateDefault['ID'];
+            $dataOrder["CustomerCurrencyRate"] = $customerRate; // save rate value because we can change it any time in future
+            $dataOrder['CustomerCurrencyName'] = $customerCurrencyName;
 
             if (empty($dataOrder["DeliveryID"])) {
                 $dataOrder["DeliveryID"] = null;
@@ -422,10 +435,11 @@ class orders extends \engine\objects\api {
 
         // set order exchange rates
         $orderRate = null;
+        $dbDefaultRate = $this->getAPI()->exchangerates->getDefaultDBPriceCurrency();
         if (isset($orderID) && !isset($order['temp'])) {
             $orderRate = new ArrayObject($this->getAPI()->exchangerates->getExchangeRateByID($order['ExchangeRateID']));
         } else {
-            $orderRate = new ArrayObject($this->getAPI()->exchangerates->getDefaultDBPriceCurrency());
+            $orderRate = new ArrayObject($dbDefaultRate);
         }
         $orderBaseCurrencyName = $orderRate['CurrencyA'];
         $customerCurrencyName = $orderRate['CurrencyB'];
@@ -437,6 +451,8 @@ class orders extends \engine\objects\api {
         $currentRates = $orderRates->getArrayCopy();
         $customerRates = $orderRates->getArrayCopy();
 
+        $dbCurrencyIsChanged = $orderBaseCurrencyName !== $dbDefaultRate['CurrencyA'];
+
         // if orderID is set then the order is saved
         if (isset($orderID) && !isset($order['temp'])) {
 
@@ -446,7 +462,15 @@ class orders extends \engine\objects\api {
 
             // $currentRate = $orderRate->getArrayCopy();
             // $customerRate = $orderRate->getArrayCopy();
-            $customerRate['Rate'] = floatval($order['CustomerCurrencyRate']);
+            $customerCurrencyName = $order['CustomerCurrencyName'];
+            if ($customerCurrencyName === $orderRate['CurrencyB']) {
+                $customerRate['Rate'] = floatval($order['CustomerCurrencyRate']);
+            }
+
+            // if ($dbCurrencyIsChanged) {
+            //     $currentRate['Rate'] = 1;
+            //     $customerRate['Rate'] = 1;
+            // }
 
             // $currentRates = $orderRates->getArrayCopy();
             // $customerRates = $orderRates->getArrayCopy();
@@ -456,9 +480,12 @@ class orders extends \engine\objects\api {
                 'rate' => $customerRate,
                 'actual' => $currentRate['Rate'],
                 'customer' => $customerRate['Rate'],
-                'ourBenefit' => $customerRate['Rate'] - $currentRate['Rate']
+                'ourBenefit' => $customerRate['Rate'] - $currentRate['Rate'],
+                'dbCurrencyIsChanged' => $dbCurrencyIsChanged,
+                'orderBaseCurrencyName' => $orderBaseCurrencyName,
+                'defaultDBCurrency' => $dbDefaultRate
             );
-            $order['_currencyName'] = $customerCurrencyName;
+            // $order['_currencyName'] = $customerCurrencyName;
             // attach account and address
             if ($this->getCustomer()->hasPlugin('account')) {
                 if (isset($order['AccountAddressesID']))

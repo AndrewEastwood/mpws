@@ -885,7 +885,7 @@ class data extends \engine\objects\configuration {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "DeliveryID", "ExchangeRateID", "CustomerCurrencyRate", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "AccountID", "AccountAddressesID", "DeliveryID", "ExchangeRateID", "CustomerCurrencyRate", "CustomerCurrencyName", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),

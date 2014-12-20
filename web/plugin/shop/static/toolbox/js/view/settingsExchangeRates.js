@@ -41,9 +41,9 @@ define("plugin/shop/toolbox/js/view/settingsExchangeRates", [
                         if (_rate <= 0) {
                             return lang.rates.message_error_negativeRate;
                         }
-                        if (_rate.toString() !== value) {
-                            return lang.rates.message_error_wrongValue;
-                        }
+                        // if (_rate.toString() !== value) {
+                        //     return lang.rates.message_error_wrongValue;
+                        // }
                     }
                 },
                 currency: {

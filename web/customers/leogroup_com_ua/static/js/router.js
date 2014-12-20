@@ -24,6 +24,10 @@ define("customer/js/router", [
     var breadcrumb = new Breadcrumb();
     // breadcrumb.render();
 
+    // add banner image
+    var $banner = $('<div>').addClass('banner-decor');
+    $('.MPWSBannerHeaderTop').append($banner);
+
     function CustomerClass () {}
 
     CustomerClass.prototype.setBreadcrumb = function (options) {

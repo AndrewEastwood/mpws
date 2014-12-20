@@ -457,15 +457,16 @@ define("default/js/lib/handlebarsHelpers", [
         return out;
     }
     helpers.currency = function (amount, options) {
-        if (typeof (amount) === 'string') {
-            amount = options.contexts[0].get(amount);
-        }
-        var rounded = Math.round(amount * 100);
-        var dec = rounded % 100;
-        var whole = Math.round(rounded / 100 - dec / 100);
-        var decStr = '' + dec;
-        // return /*'$' + */
-        var value = whole + '.' + decStr + (decStr.length < 2 ? '0' : '');
+        // if (typeof (amount) === 'string') {
+        //     amount = options.contexts[0].get(amount);
+        // }
+        // var rounded = Math.round(amount * 100);
+        // var dec = rounded % 100;
+        // var whole = Math.round(rounded / 100 - dec / 100);
+        // var decStr = '' + dec;
+        // // return /*'$' + */
+        // var value = whole + '.' + decStr + (decStr.length < 2 ? '0' : '');
+        var value = parseFloat(amount, 10).toFixed(2);
         if (options.hash.display && options.hash.currency && options.hash.display[options.hash.currency]) {
             var display = options.hash.display[options.hash.currency];
             if (display.showBeforeValue) {
