@@ -79,12 +79,15 @@
                     <link itemprop="itemCondition" href="http://schema.org/NewCondition" />
                     <span class="value-prefix">Цей товар:</span>
                     {{#if data._archived}}
-                        <span itemprop="availability" href="http://schema.org/OutOfStock" class="label label-default">архівний</strong>
+                        <link itemprop="availability" href="http://schema.org/OutOfStock" content="архівний"/>
+                        <strong class="label label-default">архівний</strong>
                     {{else}}
                         {{#if data._available }}
-                        <span itemprop="availability" href="http://schema.org/InStock" class="label label-success">є в наявності</span>
+                        <link itemprop="availability" href="http://schema.org/InStock" content="в наявності"/>
+                        <strong class="label label-success">є в наявності</strong>
                         {{else}}
-                        <span itemprop="availability" href="http://schema.org/OutOfStock" class="label label-danger">немає в наявності</strong>
+                        <link itemprop="availability" href="http://schema.org/OutOfStock" content="немає в наявності"/>
+                        <strong class="label label-danger">немає в наявності</strong>
                         {{/if}}
                     {{/if}}
                 </div>

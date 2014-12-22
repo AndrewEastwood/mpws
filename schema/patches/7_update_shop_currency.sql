@@ -10,3 +10,5 @@ ALTER TABLE `shop_currency` ADD `CurrencyB` ENUM('AFN', 'ALL', 'AMD', 'ANG', 'AO
 ALTER TABLE  `shop_settings` CHANGE  `Type`  `Type` ENUM(  'ADDRESS',  'ALERTS',  'EXCHANGERATES',  'OPENHOURS',  'FORMORDER',  'WEBSITE',  'MISC',  'PRODUCT',  'SEO' ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT  'MISC';
 
 INSERT INTO `shop_settings` (`ID`, `CustomerID`, `Property`, `Label`, `Value`, `Status`, `Type`, `DateCreated`, `DateUpdated`) VALUES (NULL, '1', 'DBPriceCurrencyType', NULL, 'USD', 'ACTIVE', 'MISC', NOW(), NOW());
+
+UPDATE  `mpws_patches` SET LastPatchNo=7

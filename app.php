@@ -151,6 +151,12 @@ class app {
             case 'display':
                 $this->customer->runAsDISPLAY($options);
                 break;
+            case 'snapshot':
+                $this->customer->runAsSNAPSHOT($options);
+                break;
+            case 'sitemap':
+                $this->customer->runAsSITEMAP($options);
+                break;
             // case 'background':
             //     $this->customer->runAsBACKGROUND($options);
             //     // $this->startBackgroundTask($options);

@@ -1,2 +1,7 @@
 User-agent: *
-Sitemap: /sitemap.xml
+Sitemap: http://leogroup.com.ua/sitemap.xml
+Disallow: /static/
+Disallow: /web/
+Disallow: /engine/
+Disallow: /deploy/
+Disallow: /tooling/

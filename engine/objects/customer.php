@@ -193,6 +193,28 @@ class customer {
         Response::setResponse($this->getHtmlPage());
     }
 
+    public function runAsSNAPSHOT () {
+        $ch = curl_init();
+        $url = 'http://api.seo4ajax.com/ca6a7f515d9ff96c30c21373a1b7da66/?_escaped_fragment_=' . $_GET['_escaped_fragment_'];
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        Response::setResponse($resp);
+    }
+
+    public function runAsSITEMAP () {
+        $ch = curl_init();
+        $url = 'http://api.seo4ajax.com/ca6a7f515d9ff96c30c21373a1b7da66/sitemap.xml';
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        Response::setResponse($resp);
+    }
+
     public function runAsAPI () {
 
         // if (glIsToolbox()) {
@@ -240,6 +262,7 @@ class customer {
         $fn = join("_", $requestFnElements);
         $this->$fn(Response::$_RESPONSE, $_REQ);
     }
+
     public function runAsUPLOAD () {
         /*
          * jQuery File Upload Plugin PHP Example 5.14

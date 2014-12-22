@@ -3,6 +3,16 @@ RewriteEngine On
 RewriteBase /
 DirectoryIndex /engine/controllers/display.php
 
+# SEO
+RewriteRule ^sitemap\.xml /engine/controllers/sitemap.php [L]
+# RewriteRule ^\?_escaped_fragment_=(.*)$ /engine/controllers/snapshot.php?params=$1 [L]
+# RequestHeader set Host "api.seo4ajax.com"
+### If a bot requests an escaped URL then proxify the request to SEO4Ajax
+#RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$ [NC]
+#RewriteRule ^(.*?)_escaped_fragment_=(.*)$ /engine/controllers/snapshot.php?params=$1 [QSA,L]
+RewriteCond %{QUERY_STRING} ^_escaped_fragment_= [NC]
+RewriteRule ^(.*)$ /engine/controllers/snapshot.php?$1 [QSA,L]
+
 # STATIC:
 RewriteRule ^static/customers/(.*)/nls/(.*) /engine/controllers/nls.php?customer=$1&lang=$2 [L]
 RewriteRule ^static/(customers|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 [L]
@@ -13,11 +23,6 @@ RewriteRule ^auth\.js?(.*) /engine/controllers/auth.php?$1 [QSA,L]
 RewriteRule ^upload\.js?(.*) /engine/controllers/upload.php?$1 [QSA,L]
 RewriteRule ^background/?(.*) /engine/controllers/background.php?$1 [QSA,L]
 
-
 # NEW API
 #RewriteRule ^static/(.*) /resources/$1 [QSA,L]
 #RewriteRule ^api/(\w+)/?(.*) /engine/controllers/_api.php?name=$1$2 [QSA,L]
-
-### If a bot requests an escaped URL then proxify the request to SEO4Ajax
-RewriteCond %{QUERY_STRING}  _escaped_fragment_=  [NC]
-RewriteRule ^(.*)$ http://api.seo4ajax.com/ca6a7f515d9ff96c30c21373a1b7da66/$1 [P,QSA,L]
