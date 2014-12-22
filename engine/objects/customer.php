@@ -196,6 +196,10 @@ class customer {
     public function runAsSNAPSHOT () {
         $ch = curl_init();
         $url = $this->getConfiguration()->display->SeoSnapshotURL. $_GET['_escaped_fragment_'];
+        if (empty($url)) {
+            Response::setResponse('empty SeoSnapshotURL occured');
+            return;
+        }
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -207,6 +211,10 @@ class customer {
     public function runAsSITEMAP () {
         $ch = curl_init();
         $url = $this->getConfiguration()->display->SeoSiteMapUrl;
+        if (empty($url)) {
+            Response::setResponse('empty SeoSiteMapUrl occured');
+            return;
+        }
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

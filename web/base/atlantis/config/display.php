@@ -36,8 +36,8 @@ class display extends baseConfig {
 
     // var $pageCharset = 'utf-8';
     // seo
-    public $SeoSnapshotURL = 'http://api.seo4ajax.com/ca6a7f515d9ff96c30c21373a1b7da66/?_escaped_fragment_=';
-    public $SeoSiteMapUrl = 'http://api.seo4ajax.com/ca6a7f515d9ff96c30c21373a1b7da66/sitemap.xml';
+    public $SeoSnapshotURL = '';
+    public $SeoSiteMapUrl = '';
 }
 
 ?>
