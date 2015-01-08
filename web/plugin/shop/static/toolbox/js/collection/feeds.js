@@ -26,6 +26,10 @@ define('plugin/shop/toolbox/js/collection/feeds', [
             Backbone.$.post(jobUrl, function () {
                 that.fetch({reset: true});
             });
+        },
+        parse: function (data) {
+            // debugger;
+            return data;
         }
     });
 

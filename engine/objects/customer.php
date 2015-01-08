@@ -594,6 +594,7 @@ class customer {
             $this->getDataBase()->commit();
             $success = true;
         } catch (Exception $e) {
+            echo '# ..error setting up task result: ' . $e . PHP_EOL;
             $this->getDataBase()->rollBack();
             $errors[] = $e->getMessage();
         }

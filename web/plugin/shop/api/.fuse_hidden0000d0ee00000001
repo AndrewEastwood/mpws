@@ -188,7 +188,7 @@ class feeds extends \engine\objects\api {
         foreach ($namedDataArray as &$rawProductData) {
 
             //-- echo "processing product " . $rawProductData['Name'] . PHP_EOL;
-            $results[] .= $rawProductData['Name'];
+            $results[] = "processing product " . $rawProductData['Name'];
             ob_flush();
             flush();
 
@@ -295,17 +295,17 @@ class feeds extends \engine\objects\api {
             // var_dump($res);
             if ($res['created']) {
                 //-- echo "[INFO] new product created" . PHP_EOL;
-                $results[] = "[I] cr";
+                $results[] = "[INFO] new product created";
                 $addedCount++;
             } elseif ($res['updated']) {
                 //-- echo "[INFO] updating existent product " . $res['ID'] . PHP_EOL;
-                $results[] = "[I] up. " . $res['ID'];
+                $results[] = "[INFO] updating existent product " . $res['ID'];
                 $updatedCount++;
             } else {
                 $errorCount++;
             }
             if (!empty($res['errors'])) {
-                $results[] = "[F] " . $rawProductData['Name'];
+                $results[] = "[FAILED] " . $rawProductData['Name'];
                 $results[] = print_r($res['errors'], true);
                 //-- echo "[FAILED] " . $rawProductData['Name'] . PHP_EOL;
                 // var_dump($res['errors']);
@@ -313,12 +313,12 @@ class feeds extends \engine\objects\api {
                 flush();
             }
             if ($res['success']) {
-                $results[] = "[S] " . $rawProductData['Name'];
+                $results[] = "[SUCCESS] " . $rawProductData['Name'];
                 //-- echo "[SUCCESS] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();
             } else {
-                $results[] = "[E] " . $rawProductData['Name'];
+                $results[] = "[ERROR] " . $rawProductData['Name'];
                 //-- echo "[ERROR] " . $rawProductData['Name'] . PHP_EOL;
                 ob_flush();
                 flush();

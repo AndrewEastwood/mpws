@@ -174,8 +174,14 @@ require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Au
         });
         if (!jqXHR.responseText)
             return;
-        // debugger;
-        var response = JSON.parse(jqXHR.responseText);
+        var response = jqXHR.responseText;
+        try {
+            // debugger;
+            response = JSON.parse(jqXHR.responseText);
+        } catch (exception) {
+            // debugger;
+            console.log(exception);
+        }
         // if (response && response.error && response.error === "InvalidTokenKey") {
         //     window.location.reload();
         // }

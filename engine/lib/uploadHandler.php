@@ -1374,7 +1374,11 @@ class uploadHandler
         }
         foreach ($urls as $fileUrl) {
             $pInfo = pathinfo($fileUrl);
-            $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($pInfo['extension']);
+            $imgExtension = 'jpg';
+            if (isset($pInfo['extension'])) {
+                $imgExtension = $pInfo['extension'];
+            }
+            $fileName = mt_rand(1, 99999) . '_' . time() . '.' . strtolower($imgExtension);
             $tmpFile = $this->get_upload_path($fileName, null, 'web_import_temp_dir');
             $content = file_get_contents($fileUrl);
             $size = file_put_contents($tmpFile, $content);

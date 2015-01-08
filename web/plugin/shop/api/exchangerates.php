@@ -230,7 +230,9 @@ class exchangerates extends \engine\objects\api {
 
         if ($baseCurrencyName === false) {
             $defaultRate = $this->getDefaultDBPriceCurrency();
-            $baseCurrencyName = $defaultRate['CurrencyA'];
+            if (!empty($defaultRate)) {
+                $baseCurrencyName = $defaultRate['CurrencyA'];
+            }
         }
 
         if (count($exchangeRates) === 0) {
@@ -255,7 +257,9 @@ class exchangerates extends \engine\objects\api {
         $valueCurrencyName = null;
         if (empty($baseCurrencyName)) {
             $rate = $this->getDefaultDBPriceCurrency();
-            $valueCurrencyName = $rate['CurrencyA'];
+            if (!empty($rate)) {
+                $valueCurrencyName = $rate['CurrencyA'];
+            }
         } else {
             $valueCurrencyName = $baseCurrencyName;
         }

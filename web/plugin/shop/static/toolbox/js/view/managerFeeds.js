@@ -93,8 +93,16 @@ define('plugin/shop/toolbox/js/view/managerFeeds', [
                     feedModel.collection.trigger('feed:started');
                     feedModel.importUploadedProductFeed({
                         patch: true,
-                        success: function () {
+                        // contentType: 'text',
+                        dataFilter: function (data) {
+                            return data.replace(/[#;].*\n/g, '');
+                        },
+                        success: function (resp) {
+                            // debugger;
                             that.collection.fetch({reset: true});
+                        },
+                        error: function () {
+                            // debugger;
                         }
                     });
                 }

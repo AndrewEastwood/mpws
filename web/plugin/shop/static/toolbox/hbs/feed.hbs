@@ -18,7 +18,7 @@
             <i class="fa fa-check-circle fa-fw pull-left text-success"></i>
             <span class="time label label-success pull-left">{{data.fromNowHumanized}}</span>
             <span class="name">{{data.name}}</span>
-            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
+            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{data.link}}"></i>
         </a>
     </div>
     <div id="{{data.ID}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{data.ID}}">
@@ -33,7 +33,7 @@
             <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
             <span class="time label label-default pull-left">{{data.fromNowHumanized}}</span>
             <span class="name">{{data.name}}</span>
-            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
+            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{data.link}}"></i>
             <i class="fa fa-spinner fa-spin fa-fw pull-right text-info"></i>
         </a>
     </div>
@@ -46,7 +46,7 @@
             <i class="fa fa-times fa-fw pull-left text-danger delete-uploaded"></i>
             <span class="time label label-warning pull-left">{{data.fromNowHumanized}}</span>
             <span class="name">{{data.name}}</span>
-            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{link}}"></i>
+            <i class="fa fa-download download-import fa-fw pull-right text-info" data-href="{{data.link}}"></i>
             <i class="fa fa-play fa-fw pull-right text-success start-import"></i>
         </a>
     </div>
