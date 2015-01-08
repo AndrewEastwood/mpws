@@ -10,7 +10,7 @@
         </a>
     </div>
 </div>
-{{/if}}
+{{else}}
 {{#if data.complete}}
 <div class="feed-item {{data.status}}">
     <div class="panel-heading" role="tab" id="heading{{data.ID}}">
@@ -52,6 +52,7 @@
     </div>
 </div>
 {{/or}}
+{{/if}}
 {{/if_eq}}
 {{#if_eq data.type 'generated'}}
 <a class="feed-item" href="{{data.link}}" target="_blank" title="{{data.name}}" data-id="{{data.ID}}">
