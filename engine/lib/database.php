@@ -249,12 +249,15 @@ class database {
         if (!empty($config['limit']) && $config['limit'] >= 0)
             $this->dbo->limit($config['limit']);
 
-        if (!empty($config['order']) && !empty($config['order']['field'])) {
-
-            if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
-                $this->dbo->order_by_desc($config['order']['field']);
-            else
-                $this->dbo->order_by_asc($config['order']['field']);
+        if (!empty($config['order'])) {
+            if (!empty($config['order']['expr'])) {
+                $this->dbo->order_by_expr($config['order']['expr']);
+            } elseif (!empty($config['order']['field'])) {
+                if (!empty($config['order']['ordering']) && $config['order']['ordering'] === 'DESC')
+                    $this->dbo->order_by_desc($config['order']['field']);
+                else
+                    $this->dbo->order_by_asc($config['order']['field']);
+            }
         }
 
         // echo '>>>>>>>>>>>>>>>>>>>>>>>.dbo:';

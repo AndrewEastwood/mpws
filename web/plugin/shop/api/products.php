@@ -120,7 +120,8 @@ class products extends \engine\objects\api {
         );
 
         // save product into recently viewed list
-        if (Request::isGET() && !$this->getApp()->isToolbox()) {
+        $isDirectRequestToProduct = Request::hasInGet('id');
+        if (Request::isGET() && !$this->getApp()->isToolbox() && !empty($isDirectRequestToProduct)) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[$productID] = $product;
             $_SESSION[$this->_listKey_Recent] = $recentProducts;
@@ -201,7 +202,7 @@ class products extends \engine\objects\api {
         return intval($product['ID']);
     }
 
-    public function getProductIDByID ($productID) {
+    public function verifyProductByID ($productID) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
         $config['fields'] = array("ID");
         $config['condition']['ID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productID);
@@ -328,6 +329,51 @@ class products extends \engine\objects\api {
         //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
         // }
 
+        return $dataList;
+    }
+
+    public function getLatestProducts_List (array $options = array(), $skipRelations = false) {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductList($options);
+        $self = $this;
+
+        $callbacks = array(
+            "parse" => function ($items) use($self, $skipRelations) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+
+        // $dataList['_category'] = null;
+
+        // if (isset($options['_pStats'])) {
+        //     $filter = array();
+        //     if (isset($options['_fCategoryID'])) {
+        //         $filter['_fCategoryID'] = $options['_fCategoryID'];
+        //         $dataList['_category'] = $this->getAPI()->categories->getCategoryByID($options['_fCategoryID']);
+        //     }
+        //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
+        // }
+
+        return $dataList;
+    }
+
+    public function getProducts_List_Latest () {
+        $config = $this->getPluginConfiguration()->data->jsapiShopGetLatestProductsList();
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $this->getCustomer()->getDataList($config, array(), $callbacks);
         return $dataList;
     }
 
@@ -878,7 +924,7 @@ class products extends \engine\objects\api {
             // we have the product item already in db
             if (isset($data['ID'])) {
                 //-- echo "[INFO] using product ID " . $data['ID'] . PHP_EOL;
-                $productID = $this->getProductIDByID($data['ID']);
+                $productID = $this->verifyProductByID($data['ID']);
                 // try to get product item by name and model
             } elseif (isset($data['Model']) && isset($data['OriginName'])) {
                 //-- echo "[INFO] using product Model and OriginName " . $data['Model'] . ' + ' . $data['OriginName'] . PHP_EOL;
@@ -1061,14 +1107,22 @@ class products extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
-        if (empty($req->get['id'])) {
-            $resp = $this->getProducts_List($req->get);
-        } else {
+        if (!empty($req->get['id'])) {
             if (is_numeric($req->get['id'])) {
                 $ProductID = intval($req->get['id']);
                 $resp = $this->getProductByID($ProductID);
             } else {
                 $resp = $this->getProductByExternalKey($req->get['id']);
+            }
+        } else {
+            if (isset($req->get['type'])) {
+                switch ($req->get['type']) {
+                    case 'latest': {
+                        $resp = $this->getProducts_List_Latest($req->get);
+                    }
+                }
+            } else {
+                $resp = $this->getProducts_List($req->get);
             }
         }
     }

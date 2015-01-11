@@ -85,6 +85,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupShipping: function (event) {
             BootstrapDialog.show({
+                cssClass: 'popup-shop-info popup-shop-shipping',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
                 message: APP.instances.shop.settings._activeAddress.Shipping.Value
@@ -92,6 +93,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupPayments: function (event) {
             BootstrapDialog.show({
+                cssClass: 'popup-shop-info popup-shop-payments',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
                 message: APP.instances.shop.settings._activeAddress.Payment.Value
@@ -99,6 +101,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupOpenHours: function (event) {
             BootstrapDialog.show({
+                cssClass: 'popup-shop-info popup-shop-openhours',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
                 message: function () {
@@ -116,6 +119,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupPhones: function (event) {
             BootstrapDialog.show({
+                cssClass: 'popup-shop-info popup-shop-phones',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
                 message: function () {
@@ -132,6 +136,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupWarranty: function (event) {
             BootstrapDialog.show({
+                cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
                 message: APP.instances.shop.settings._activeAddress.Warranty.Value
