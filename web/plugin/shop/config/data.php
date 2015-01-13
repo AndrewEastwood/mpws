@@ -61,7 +61,7 @@ class data extends \engine\objects\configuration {
             )
         );
         $config['order'] = array(
-            "expr" => "CASE shop_products.Status WHEN 'ACTIVE' THEN 1 WHEN 'DISCOUNT' THEN 2 WHEN 'DEFECT' THEN 3 WHEN 'WAITING' THEN 4 WHEN 'PREORDER' THEN 5 ELSE 6 END"
+            "expr" => "shop_products.Status"
         );
         unset($config['options']);
 
@@ -146,7 +146,7 @@ class data extends \engine\objects\configuration {
             )
         );
         $config['order'] = array(
-            "expr" => "CASE shop_products.Status WHEN 'ACTIVE' THEN 1 WHEN 'DISCOUNT' THEN 2 WHEN 'DEFECT' THEN 3 WHEN 'WAITING' THEN 4 WHEN 'PREORDER' THEN 5 ELSE 6 END; shop_products.DateCreated DESC"
+            "expr" => "shop_products.Status, shop_products.DateCreated DESC"
         );
         unset($config['options']);
         return $config;
