@@ -30,10 +30,10 @@ define('plugin/shop/toolbox/js/collection/listProducts', [
             // the default to those your server supports
             this.queryParams = Cache.get('shopProductsListRD') || {
                 totalPages: null,
-                totalRecords: null,
-                pageSize: "limit",
-                sortKey: "sort"
+                totalRecords: null
             };
+            this.queryParams.pageSize = "limit";
+            this.queryParams.sortKey = "sort";
         },
 
         setCustomQueryField: function (field, value) {
@@ -68,7 +68,7 @@ define('plugin/shop/toolbox/js/collection/listProducts', [
 
             if (resp) {
                 if (resp.info) {
-                    state.totalRecords = parseInt(resp.items.length, 10) || 0;
+                    state.totalRecords = parseInt(resp.info.total_entries, 10) || 0;
                     state.currentPage = parseInt(resp.info.page, 10) || 1;
                 }
                 this.extras._category = resp._category || null;
