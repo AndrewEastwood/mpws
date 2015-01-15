@@ -31,6 +31,7 @@ use \engine\lib\request as Request;
 use \engine\lib\response as Response;
 use \engine\lib\path as Path;
 use \engine\lib\utils as Utils;
+use \engine\lib\database as DB;
 
 // detect running customer name
 // define('DR', glGetDocumentRoot());
@@ -63,6 +64,45 @@ class app {
     private $customer = false;
     private $header = false;
     private $buildVersion = false;
+    private $environment = 'development';
+    private $appName = 'atlantis';
+    private $settings = array(
+        'sessionTime' => 1800,
+        'defaultDisplay'=> 'layout',
+        'layout' =>'layout.hbs',
+        'layoutBody' =>'layoutBody.hbs',
+        'database' => array(
+            'development' => array (
+                'host' => 'localhost',
+                'username' => 'root',
+                'password' => '1111',
+                'db' => 'mpws_default',
+                "id_column" => 'ID',
+                'charset' => 'utf8',
+                'connection_string' => "mysql:dbname=mpws_default;host=localhost;charset=utf8",
+                "driver_options" => array(
+                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
+                    PDO::ATTR_AUTOCOMMIT => false,
+                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+                )
+            ),
+            'production' => array (
+                'host' => 'localhost',
+                'username' => 'root',
+                'password' => '1111',
+                'db' => 'mpws_default',
+                "id_column" => 'ID',
+                'charset' => 'utf8',
+                'connection_string' => "mysql:dbname=mpws_default;host=localhost;charset=utf8",
+                "driver_options" => array(
+                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
+                    PDO::ATTR_AUTOCOMMIT => false,
+                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+                )
+            )
+        )
+    );
+    private $db = null;
 
     function __construct ($runMode = 'display', $header = 'Content-Type: text/html; charset=utf-8') {
         // header data
@@ -85,6 +125,31 @@ class app {
         $this->displayCustomer = $this->isToolbox() ? 'toolbox' : $this->customerName();
         // get build version
         $this->buildVersion = file_get_contents(Path::createPathWithRoot('version.txt'));
+        // get runtime env
+        $this->environment = file_get_contents(Path::createPathWithRoot('environment.txt'));
+        if (empty($this->environment)) {
+            $this->environment = 'development';
+        }
+        // setup DB
+        $this->db = new DB($this->getDBConnection());
+    }
+
+    private function getDBConnection () {
+        $dbConfig = $this->getSettings('database');
+        $env = $this->getEnvironment();
+        return isset($dbConfig[$env]) ? $dbConfig[$env] : die("No database configuration for '$env' environment");
+    }
+
+    public function getAppName () {
+        return $this->appName;
+    }
+
+    public function getDB () {
+        return $this->dbo;
+    }
+
+    public function getEnvironment () {
+        return $this->environment;
     }
 
     public function getBuildVersion () {
@@ -164,6 +229,13 @@ class app {
             // default:
             //     throw new Exception("Error Processing Request: Unknown request type", 1);
         }
+    }
+
+    public function getSettings ($option = false) {
+        if (isset($this->settings[$option])) {
+            return $this->settings[$option];
+        }
+        return $this->settings;
     }
 
     // public function startBackgroundTask ($name = false) {

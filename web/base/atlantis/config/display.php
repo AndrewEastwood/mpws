@@ -23,16 +23,16 @@ class display extends baseConfig {
     public $LayoutBody = 'layoutBody.hbs';
 
     // security
-    public $MasterJsApiKey = 'UUUDemo1!!!MstPwd#123!@#';
+    // public $MasterJsApiKey = 'UUUDemo1!!!MstPwd#123!@#';
 
     // features
-    public $IsManaged = true;
-    public $AllowWideJsApi = false;
-    public $AllowJobInstallerLink = true;
+    // public $IsManaged = true;
+    // public $AllowWideJsApi = false;
+    // public $AllowJobInstallerLink = true;
     public $Plugins = array();
 
     // encoding key
-    public $EncKey = 'Qqq!@SdfTo__56%$#';
+    // public $EncKey = 'Qqq!@SdfTo__56%$#';
 
     // var $pageCharset = 'utf-8';
     // seo

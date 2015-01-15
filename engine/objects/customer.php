@@ -16,78 +16,82 @@ use Exception;
 class customer {
 
     private $version = 'atlantis';
-    private $app;
-    private $dbo;
+    // private $app;
+    // private $dbo;
     private $plugins;
     private $configuration;
     // private $extensions;
     private $customerInfo;
     private $htmlPage;
     private $permissions;
+    private $apis;
 
-    function __construct($app) {
+    function __construct(/*$app*/) {
 
-        $this->app = $app;
+        // $this->app = $app;
 
-        $this->metadata = Path::getCustomerMetaData($this->getApp()->customerName());
-        if (empty($this->metadata)) {
-            throw new Exception("Customer metadata file is missing", 1);
-        }
+        // $this->metadata = Path::getCustomerMetaData($this->getApp()->customerName());
+        // if (empty($this->metadata)) {
+        //     throw new Exception("Customer metadata file is missing", 1);
+        // }
 
-        // init configuration
-        $configuration = array();
-        $defaultConfigs = Path::getDefaultConfigNames($this->getVersion());
-        $customerConfigs = Path::getCustomerConfigNames($this->getApp()->customerName());
-        // var_dump($defaultConfigs);
-        // var_dump($customerConfigs);
-        foreach ($defaultConfigs as $configName) {
-            if (in_array($configName, $customerConfigs)) {
-                $configClass = Utils::getCustomerConfigClassName($this->customerName(), $configName);
-            } else {
-                $configClass = Utils::getDefaultConfigClassName($this->getVersion(), $configName);
-            }
-            $configuration[$configName] = new $configClass($this, $app);
-        }
-        $this->configuration = (object)$configuration;
+        // // init configuration
+        // $configuration = array();
+        // $defaultConfigs = Path::getDefaultConfigNames($this->getVersion());
+        // $customerConfigs = Path::getCustomerConfigNames($this->getApp()->customerName());
+        // // var_dump($defaultConfigs);
+        // // var_dump($customerConfigs);
+        // foreach ($defaultConfigs as $configName) {
+        //     if (in_array($configName, $customerConfigs)) {
+        //         $configClass = Utils::getCustomerConfigClassName($this->customerName(), $configName);
+        //     } else {
+        //         $configClass = Utils::getDefaultConfigClassName($this->getVersion(), $configName);
+        //     }
+        //     $configuration[$configName] = new $configClass($this, $app);
+        // }
+        // $this->configuration = (object)$configuration;
 
         // var_dump($this->configuration);
 
         // init dbo
-        $this->dbo = new DB($this->getConfiguration()->db->getConnectionParams($this->getApp()->isDebug()));
+        // $this->dbo = new DB($this->getConfiguration()->db->getConnectionParams($this->getApp()->isDebug()));
 
         // init extensions
         // $this->addExtension(new \engine\extension\auth($this)); // move to middleware
         // $this->addExtension(new \engine\extension\dataInterface($this)); // thinnk to optmize
 
         // init plugins
-        $_pluginPath = Path::createPathWithRoot('web', 'plugin');
-        foreach ($this->getConfiguration()->display->Plugins as $pluginName) {
-            // load plugin
-            $pluginClass = Utils::getPluginClassName($pluginName);// '\\web\\plugin\\' . $pluginName . '\\plugin';
-            // save plugin instance
-            $this->plugins[$pluginName] = new $pluginClass($this, $pluginName, $app);
-        }
+        // $_pluginPath = Path::createPathWithRoot('web', 'plugin');
+        // foreach ($this->getConfiguration()->display->Plugins as $pluginName) {
+        //     // load plugin
+        //     $pluginClass = Utils::getPluginClassName($pluginName);// '\\web\\plugin\\' . $pluginName . '\\plugin';
+        //     // save plugin instance
+        //     $this->plugins[$pluginName] = new $pluginClass($this, $pluginName, $app);
+        // }
 
         $this->customerInfo = $this->getCustomerInfo();
     }
 
-    public function getApp () {
-        return $this->app;
-    }
+    // public function getApp () {
+    //     return $this->app;
+    // }
 
-    public function customerName () {
-        return $this->getApp()->customerName();
-    }
+    // public function customerName () {
+    //     return $this->getApp()->customerName();
+    // }
 
-    public function getConfiguration () {
-        return $this->configuration;
-    }
+    // public function getConfiguration () {
+    //     return $this->configuration;
+    // }
 
     public function getVersion () {
         return $this->version;
     }
 
     public function getHtmlPage () {
+        // TODO: get Plugins, Title, Locale, Lang and all other public customer's settings from DB
+        // and expose in the template
+
         $displayCustomer = $this->getApp()->displayCustomer();
         $layout = $this->getConfiguration()->display->Layout;
         $layoutBody = $this->getConfiguration()->display->LayoutBody;
@@ -153,9 +157,9 @@ class customer {
         return $this->customerInfo;
     }
 
-    public function getDataBase () {
-        return $this->dbo;
-    }
+    // public function getDataBase () {
+    //     return $this->dbo;
+    // }
 
     public function getMetaData () {
         return $this->metadata;
@@ -177,17 +181,17 @@ class customer {
         return $this->dbo->getData($config);
     }
 
-    public function getAllPlugins () {
-        return $this->plugins;
-    }
+    // public function getAllPlugins () {
+    //     return $this->plugins;
+    // }
 
-    public function getPlugin ($key) {
-        return $this->plugins[$key] ?: null;
-    }
+    // public function getPlugin ($key) {
+    //     return $this->plugins[$key] ?: null;
+    // }
 
-    public function hasPlugin ($pluginName) {
-        return !empty($this->plugins[$pluginName]);
-    }
+    // public function hasPlugin ($pluginName) {
+    //     return !empty($this->plugins[$pluginName]);
+    // }
 
     public function runAsDISPLAY () {
         Response::setResponse($this->getHtmlPage());
@@ -224,36 +228,42 @@ class customer {
     }
 
     public function runAsAPI () {
-
-        // if (glIsToolbox()) {
-        //     $publicKey = "";
-        //     if (Request::hasInGet('token'))
-        //         $publicKey = Request::pickFromGET('token');
-
-        // // // check page token
-        // // if (empty($publicKey)) {
-        // //     \engine\lib\response::setError('EmptyToken', "HTTP/1.0 500 EmptyToken");
-        // //     return;
-        // // }
-
-        // // if (!Request::getOrValidatePageSecurityToken($this->getConfiguration()->display->MasterJsApiKey, $publicKey)) {
-        // //     \engine\lib\response::setError('InvalidTokenKey', "HTTP/1.0 500 InvalidTokenKey");
-        // //     return;
-        // // }
-
-        // // if (MPWS_IS_TOOLBOX && !$this->getConfiguration()->display->IsManaged) {
-        // //     \engine\lib\response::setError('AccessDenied', "HTTP/1.0 500 AccessDenied");
-        // //     return;
-        // // }
-        // }
-
-        // \engine\lib\response::$_RESPONSE['authenticated'] = $this->getPlugin('account')->isAuthenticated();
-        // \engine\lib\response::$_RESPONSE['script'] = Request::getScriptName();
-
         // refresh auth
         $this->updateSessionAuth();
-        foreach ($this->plugins as $plugin)
-            $plugin->run();
+        // foreach ($this->plugins as $plugin)
+        //     $plugin->run();
+        // init apis
+        $api = array();
+        $pluginApis = Path::getPluginApiNames($pluginName);
+        foreach ($pluginApis as $apiName) {
+            $apiClass = Utils::getApiClassName($apiName, $pluginName);
+            // $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
+            // save plugin instance
+            $api[$apiName] = new $apiClass($customer, $this, $pluginName, $app);
+        }
+        $this->api = (object)$api;
+
+
+
+        $_REQ = Request::getRequestData();
+        $_source = Request::pickFromGET('source');
+        $_fn = Request::pickFromGET('fn');
+        $_method = strtolower($_SERVER['REQUEST_METHOD']);
+        $requestFnElements = array($_method);
+
+        if (Request::hasInGet('source'))
+            $requestFnElements[] = $_source;
+        
+        if (Request::hasInGet('fn'))
+            $requestFnElements[] = $_fn;
+
+        $fn = join("_", $requestFnElements);
+        if (isset($this->getAPI()->$_fn) && method_exists($this->getAPI()->$_fn, $_method)) {
+            $this->getAPI()->$_fn->$_method(Response::$_RESPONSE, $_REQ);
+            // var_dump(\engine\lib\response::$_RESPONSE);
+        } elseif (method_exists($this, $fn)) {
+            $this->$fn(Response::$_RESPONSE, $_REQ);
+        }
     }
 
     public function runAsAUTH () {

@@ -1,8 +1,14 @@
 <?php
+namespace web\plugin\shop\api;
 
-namespace web\plugin\shop\config;
+use \engine\objects\plugin as basePlugin;
+use \engine\lib\validate as Validate;
+use \engine\lib\secure as Secure;
+use \engine\lib\path as Path;
+use Exception;
+use ArrayObject;
 
-class data extends \engine\objects\configuration {
+class shared {
 
     var $Table_ShopOrders = "shop_orders";
     var $Table_ShopProducts = "shop_products";
@@ -59,6 +65,9 @@ class data extends \engine\objects\configuration {
                 "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
                 "fields" => array("FeatureID")
             )
+        );
+        $config['order'] = array(
+            "expr" => "shop_products.Status"
         );
         unset($config['options']);
 
@@ -119,6 +128,33 @@ class data extends \engine\objects\configuration {
         }
 
         // var_dump($config['condition']);
+        return $config;
+    }
+
+    public function jsapiShopGetLatestProductsList () {
+        $config = $this->jsapiShopGetProductItem();
+        $config['condition'] = array();
+        $config["fields"] = array("ID");
+        $config['limit'] = 64;
+        $config['group'] = 'shop_products.ID';
+        $config['additional'] = array(
+            "shop_categories" => array(
+                "constraint" => array("shop_products.CategoryID", "=", "shop_categories.ID"),
+                "fields" => array("@shop_categories.Status AS CategoryStatus")
+            ),
+            "shop_origins" => array(
+                "constraint" => array("shop_products.OriginID", "=", "shop_origins.ID"),
+                "fields" => array("@shop_origins.Status AS OriginStatus")
+            ),
+            "shop_productFeatures" => array(
+                "constraint" => array("shop_products.ID", "=", "shop_productFeatures.ProductID"),
+                "fields" => array("FeatureID")
+            )
+        );
+        $config['order'] = array(
+            "expr" => "shop_products.Status, shop_products.DateCreated DESC"
+        );
+        unset($config['options']);
         return $config;
     }
 

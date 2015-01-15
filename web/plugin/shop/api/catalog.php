@@ -228,7 +228,7 @@ class catalog extends \engine\objects\api {
         // adjust brands, categories and features
         $brands = array();
         $categories = array();
-        $statuses = array();//$this->getCustomerDataBase()->getTableStatusFieldOptions($this->getPluginConfiguration()->data->Table_ShopProducts);
+        $statuses = array();
         $features = array();
         // var_dump($filterOptionsApplied['filter_categoryBrands']);
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
