@@ -171,25 +171,25 @@ class catalog extends \engine\objects\api {
 
         // filter: price 
         if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMax'] <= $filterOptionsAvailable['filter_commonPriceMax'])
-            $dataConfigProducts['condition']['Price'][] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
+            $dataConfigProducts['condition']['Price'][] = $this->getPluginConfiguration()->data->createCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
         else
             $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
 
         if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMin'] >= $filterOptionsAvailable['filter_commonPriceMin'])
-            $dataConfigProducts['condition']['Price'][] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
+            $dataConfigProducts['condition']['Price'][] = $this->getPluginConfiguration()->data->createCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
         else
             $filterOptionsApplied['filter_commonPriceMin'] = $filterOptionsAvailable['filter_commonPriceMin'];
 
         // var_dump($filterOptionsApplied);
         if (count($filterOptionsApplied['filter_commonFeatures']))
-            $dataConfigProducts['condition']["FeatureID"] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
+            $dataConfigProducts['condition']["FeatureID"] = $this->getPluginConfiguration()->data->createCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
 
         if (count($filterOptionsApplied['filter_commonStatus']))
-            $dataConfigProducts['condition']["shop_products.Status"] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_commonStatus'], 'in');
+            $dataConfigProducts['condition']["shop_products.Status"] = $this->getPluginConfiguration()->data->createCondition($filterOptionsApplied['filter_commonStatus'], 'in');
 
         // filter: brands
         if (count($filterOptionsApplied['filter_categoryBrands']))
-            $dataConfigProducts['condition']['OriginID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
+            $dataConfigProducts['condition']['OriginID'] = $this->getPluginConfiguration()->data->createCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
 
         // var_dump($dataConfigProducts);
         // get products
@@ -240,7 +240,7 @@ class catalog extends \engine\objects\api {
             }
             $arrValues = array_unique($arrValues);
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->createCondition($arrValues, 'IN');
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // if ($brand['Name'] === 'SONY') {
@@ -262,7 +262,7 @@ class catalog extends \engine\objects\api {
                 $brands[$brand['ID']]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($brand['ID']);
+            $dataConfigCategoryInfo['condition']['OriginID'] = $this->getPluginConfiguration()->data->createCondition($brand['ID']);
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $brands[$brand['ID']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
@@ -277,7 +277,7 @@ class catalog extends \engine\objects\api {
             $arrValues = array_unique($arrValues);
             // var_dump(">>> values >>>>>>");
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->createCondition($arrValues, 'IN');
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // var_dump(">>>>results>>>>>>>");
@@ -294,7 +294,7 @@ class catalog extends \engine\objects\api {
                 $categories[$categoryItem['ExternalKey']]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($categoryID);
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $this->getPluginConfiguration()->data->createCondition($categoryID);
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $categories[$categoryItem['ExternalKey']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
@@ -308,7 +308,7 @@ class catalog extends \engine\objects\api {
             }
             $arrValues = array_unique($arrValues);
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->createCondition($arrValues, 'IN');
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // if (isset($filterData) && isset($filterData['ItemsCount'])) {
@@ -329,7 +329,7 @@ class catalog extends \engine\objects\api {
                 $statuses[$status]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($status);
+            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $this->getPluginConfiguration()->data->createCondition($status);
             $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
             $statuses[$status]['Total'] = $this->getUniqueProductsCount($filterData);
         }
@@ -344,7 +344,7 @@ class catalog extends \engine\objects\api {
                 }
                 $arrValues = array_unique($arrValues);
                 // var_dump($arrValues);
-                $dataConfigCategoryInfo['condition']['FeatureID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($arrValues, 'IN');
+                $dataConfigCategoryInfo['condition']['FeatureID'] = $this->getPluginConfiguration()->data->createCondition($arrValues, 'IN');
                 // var_dump($dataConfigCategoryInfo);
                 $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
                 $count = $this->getUniqueProductsCount($filterData);
@@ -357,7 +357,7 @@ class catalog extends \engine\objects\api {
                     $group[$key]['ProductCount'] -= $currentProductCount;
                     $group[$key]['Active'] = true;
                 }
-                $dataConfigCategoryInfo['condition']['FeatureID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition(array($key), 'IN');
+                $dataConfigCategoryInfo['condition']['FeatureID'] = $this->getPluginConfiguration()->data->createCondition(array($key), 'IN');
                 $filterData = $this->getCustomer()->fetch($dataConfigCategoryInfo);
                 $group[$key]['Total'] = $this->getUniqueProductsCount($filterData);
             }

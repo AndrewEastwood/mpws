@@ -151,7 +151,7 @@ class products extends \engine\objects\api {
 
     public function getProductByName ($productName, $skipRelations = false) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productName);
+        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($productName);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -160,7 +160,7 @@ class products extends \engine\objects\api {
 
     public function getProductByModel ($productModel, $skipRelations = false) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
-        $config['condition']['Model'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productModel);
+        $config['condition']['Model'] = $this->getPluginConfiguration()->data->createCondition($productModel);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -169,8 +169,8 @@ class products extends \engine\objects\api {
 
     public function getProductByModelAndOriginName ($productName, $originName, $skipRelations = false) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productName);
-        $config['condition']['OriginName'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($originName);
+        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($productName);
+        $config['condition']['OriginName'] = $this->getPluginConfiguration()->data->createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -188,8 +188,8 @@ class products extends \engine\objects\api {
     public function getProductIDByModelAndOriginName ($productName, $originName) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['Model'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productName);
-        $config['condition']['shop_origins.Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($originName);
+        $config['condition']['Model'] = $this->getPluginConfiguration()->data->createCondition($productName);
+        $config['condition']['shop_origins.Name'] = $this->getPluginConfiguration()->data->createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -205,7 +205,7 @@ class products extends \engine\objects\api {
     public function verifyProductByID ($productID) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['ID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($productID);
+        $config['condition']['ID'] = $this->getPluginConfiguration()->data->createCondition($productID);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;

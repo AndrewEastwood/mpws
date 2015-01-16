@@ -8,6 +8,9 @@ class database {
     var $dbo;
     var $transactionIsActive = false;
     var $disableTransactions = false;
+    public $DATE_FORMAT = 'Y-m-d H:i:s';
+    public $DEFAULT_COMPARATOR = '=';
+    public $DEFAULT_CONCATENATE = 'AND';
 
     public function __construct($config = false) {
         $this->config = $config;
@@ -92,21 +95,11 @@ class database {
         return json_encode($this->_fetchData($config));
     }
 
-    // public function getTableStatusFieldOptions($table) {
-    //     ObjectConfiguration
-    //     $config = ::jsapiUtil_GetTableStatusFieldOptions($table);
-    //     $data = $this->getData($config);
-    //     // var_dump($data);
-    //     preg_match('#^enum\((.*?)\)$#ism', $data['Type'], $matches);
-    //     $enum = str_getcsv($matches[1], ",", "'");
-    //     return $enum;
-    // }
-
     public function getLastInsertId () {
         return $this->dbo->mpwsGetLastInsertId();
     }
 
-    public function getData ($config) {
+    public function getData ($config, $skipCustomerID = false) {
         return $this->_fetchData($config);
     }
 
@@ -349,6 +342,192 @@ class database {
             $data = $dbData;
 
         return $data;
+    }
+
+    public function getDate ($strDate = '') {
+        if (!empty($strDate)) {
+            $time = strtotime($strDate);
+            return date($this->DATE_FORMAT, $time);
+        }
+        return date($this->DATE_FORMAT);
+    }
+
+    public function createCondition ($value, $comparator = null, $concatenate = null) {
+        $condition = array(
+            "comparator" => $comparator,
+            "value" => $value,
+            "concatenate" => $concatenate
+        );
+        if (!is_string($condition['comparator']))
+            $condition['comparator'] = $this->DEFAULT_COMPARATOR;
+        if (!is_string($condition['concatenate']))
+            $condition['concatenate'] = $this->DEFAULT_CONCATENATE;
+        return $condition;
+    }
+
+    public function createDBQuery ($queryExtend = null) {
+        $queryDefault = array(
+            "source" => "",
+            "action" => "select",
+            "procedure" => array(
+                "name" => "",
+                "parameters" => array()
+            ),
+            "condition" => array(), // use fieldName => createCondition()
+            "data" => array(),
+            "useFieldPrefix" => true,
+            "fields" => array(/*"ID", "CategoryID", "OriginID", "Name", "Model", "SKU", "Description", "DateCreated"*/),
+            "offset" => 0,
+            "limit" => 0,
+            "group" => "", // "ProductID"
+            "additional" => array(
+                // example of join configuration
+                // "shop_categories" => array(
+                //     "constraint" => array("shop_categories.ID", "=", "shop_products.CategoryID"),
+                //     "fields" => array(
+                //         "CategoryName" => "Name",
+                //         "CategoryEnable" => "Enabled"
+                //     )
+                // ),
+                // "shop_origins" => array(
+                //     "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"],
+                //     "fields" => array(
+                //         "CategoryName" => "Name",
+                //         "CategoryEnable" => "Enabled"
+                //     )
+                // )
+            ),
+            "order" => array(
+                // "field" => "shop_productPrices.DateCreated",
+                // "ordering" => "DESC"
+            ),
+            "options" => array(
+                "expandSingleRecord" => false
+            )
+        );
+
+        return Utils::array_merge_recursive_distinct ($queryDefault, $queryExtend);
+        // return $this->extendConfigs($queryDefault, $queryExtend, true);
+    }
+
+    // public function extendConfigs ($configA, $configB = null) {
+    //     return Utils::array_merge_recursive_distinct ($configA, $configB);
+    // }
+
+    public function jsapiUtil_GetTableRecordsCount ($table, $condition = array()) {
+        return $this->createDBQuery(array(
+            "action" => "select",
+            "source" => $table,
+            "condition" => $condition,
+            "fields" => array("@COUNT(*) AS ItemsCount"),
+            "offset" => 0,
+            "limit" => 1,
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+    }
+
+    public function getDataList ($dsConfig, array $options = array(), array $callbacks = array()) {
+        $limit = $dsConfig['limit'];
+        $page = 1;
+        $items = array();
+
+        if ($dsConfig['action'] !== "select")
+            throw new Exception("ErrorProcessingDataListMethod", 1);
+
+        // grab other fields
+        foreach ($options as $key => $value) {
+            $matches = array();
+            if (preg_match("/^_f(\w+)$/", $key, $matches)) {
+                // $matches
+                $field = $matches[1];
+                // parse value
+                $parsedValue = array();
+                preg_match("/([0-9A-Za-z%\,_-]+)\:(.*)$/", $value, $parsedValue);
+                // var_dump($field);
+                // var_dump($value);
+                $count = count($parsedValue);
+                // var_dump($parsedValue);
+                // var_dump($count);
+                if ($count === 0)
+                    $dsConfig['condition'][$field] = $app->getDB()->createCondition($value);
+                elseif ($count === 3) {
+                    $value = $parsedValue[1];
+                    $comparator = $parsedValue[2];
+                    if (strtolower($comparator) === 'in')
+                        $value = explode(',', $parsedValue[1]);
+                    $dsConfig['condition'][$field] = $app->getDB()->createCondition($value, $comparator);
+                }
+            }
+        }
+
+        // var_dump($dsConfig['condition']);
+        // get data total records
+        $configCount = $app->getSettings()->data->jsapiUtil_GetTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
+        
+        $countData = $this->fetch($configCount);
+        $count = intval($countData["ItemsCount"]);
+
+        if (!empty($options)) {
+            if (isset($options['sort']))
+                $dsConfig['order']['field'] = $options['sort'];
+            if (isset($options['order']))
+                $dsConfig['order']['ordering'] = $options['order'];
+
+            if (isset($options['page']))
+                $page = intval($options['page']);
+            if (isset($options['limit']))
+                $limit = intval($options['limit']);
+
+            if ($count > 0) {
+                if ($limit >= 1) {
+                    $dsConfig['limit'] = $limit;
+                }
+                if ($limit === 0) {
+                    unset($dsConfig['limit']);
+                }
+                if ($page >= 1 && $limit >= 1) {
+                    if ($page > round($count / $limit + 0.49)) {
+                        $page = round($count / $limit + 0.49);
+                    }
+                    $dsConfig['offset'] = ($page - 1) * $limit;
+                } elseif ($page === 0)
+                    $page = 1;
+            }
+        }
+
+        // var_dump($dsConfig);
+        // get data
+        $items = $this->fetch($dsConfig) ?: array();
+        // var_dump($items);
+
+        if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {
+            $parseFn = $callbacks['parse'];
+            $items = $parseFn($items) ?: array();
+        }
+
+        $rez = array();
+
+        $listInfo = array(
+            "page" => $page,
+            "limit" => $limit,
+            "total_pages" => empty($limit) ? 1 : round($count / $limit + 0.49),
+            "total_entries" => $count
+        );
+
+        if (isset($dsConfig['order']['field'])) {
+            $listInfo["order_by"] = $dsConfig['order']['field'];
+        }
+
+        if (isset($dsConfig['order']['ordering'])) {
+            $listInfo["order"] = $dsConfig['order']['ordering'];
+        }
+
+        $rez["info"] = $listInfo;
+        $rez["items"] = $items ?: array();
+
+        return $rez;
     }
 
 }

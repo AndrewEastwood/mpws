@@ -268,7 +268,7 @@ class exchangerates extends \engine\objects\api {
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
             'limit' => 0
         ));
-        $config['condition']['CurrencyA'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($valueCurrencyName);
+        $config['condition']['CurrencyA'] = $this->getPluginConfiguration()->data->createCondition($valueCurrencyName);
         $availableRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 

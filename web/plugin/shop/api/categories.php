@@ -39,7 +39,7 @@ class categories extends \engine\objects\api {
 
     public function getCategoryByName ($categoryName) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($categoryName);
+        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($categoryName);
         $category = $this->getCustomer()->fetch($config);
         if (empty($category))
             return null;
@@ -48,7 +48,7 @@ class categories extends \engine\objects\api {
 
     public function getCategoryByExternalKey ($externalKey) {
         $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
-        $config['condition']['ExternalKey'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($externalKey);
+        $config['condition']['ExternalKey'] = $this->getPluginConfiguration()->data->createCondition($externalKey);
         $category = $this->getCustomer()->fetch($config);
         if (empty($category))
             return null;

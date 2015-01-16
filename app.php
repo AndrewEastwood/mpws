@@ -32,6 +32,7 @@ use \engine\lib\response as Response;
 use \engine\lib\path as Path;
 use \engine\lib\utils as Utils;
 use \engine\lib\database as DB;
+use \engine\lib\site as Site;
 
 // detect running customer name
 // define('DR', glGetDocumentRoot());
@@ -61,7 +62,7 @@ class app {
     private $customerName = false;
     private $displayCustomer = false;
     private $runMode = false;
-    private $customer = false;
+    private $site = false;
     private $header = false;
     private $buildVersion = false;
     private $environment = 'development';
@@ -76,10 +77,10 @@ class app {
                 'host' => 'localhost',
                 'username' => 'root',
                 'password' => '1111',
-                'db' => 'mpws_default',
+                'db' => 'mpws_light',
                 "id_column" => 'ID',
                 'charset' => 'utf8',
-                'connection_string' => "mysql:dbname=mpws_default;host=localhost;charset=utf8",
+                'connection_string' => "mysql:dbname=mpws_light;host=localhost;charset=utf8",
                 "driver_options" => array(
                     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
                     PDO::ATTR_AUTOCOMMIT => false,
@@ -90,16 +91,19 @@ class app {
                 'host' => 'localhost',
                 'username' => 'root',
                 'password' => '1111',
-                'db' => 'mpws_default',
+                'db' => 'mpws_light',
                 "id_column" => 'ID',
                 'charset' => 'utf8',
-                'connection_string' => "mysql:dbname=mpws_default;host=localhost;charset=utf8",
+                'connection_string' => "mysql:dbname=mpws_light;host=localhost;charset=utf8",
                 "driver_options" => array(
                     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
                     PDO::ATTR_AUTOCOMMIT => false,
                     PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
                 )
             )
+        ),
+        'urls' => array(
+            'upload' => '/upload.js?'
         )
     );
     private $db = null;
@@ -126,7 +130,9 @@ class app {
         // get build version
         $this->buildVersion = file_get_contents(Path::createPathWithRoot('version.txt'));
         // get runtime env
-        $this->environment = file_get_contents(Path::createPathWithRoot('environment.txt'));
+        if (file_exists('env.txt')) {
+            $this->environment = file_get_contents(Path::createPathWithRoot('env.txt'));
+        }
         if (empty($this->environment)) {
             $this->environment = 'development';
         }
@@ -145,7 +151,7 @@ class app {
     }
 
     public function getDB () {
-        return $this->dbo;
+        return $this->db;
     }
 
     public function getEnvironment () {
@@ -176,8 +182,8 @@ class app {
         return $this->runMode;
     }
 
-    public function customer () {
-        return $this->customer;
+    public function getSite () {
+        return $this->site;
     }
 
     public function getResponse () {
@@ -196,31 +202,33 @@ class app {
         else
             header($this->header);
         session_start();
-        $_customerScript = Utils::getCustomerClassName($this->customerName());// '\\web\\customers\\' . $this->customerName() . '\\customer';
+        $this->site = new Site();
+
+        // $_customerScript = Utils::getCustomerClassName($this->customerName());// '\\web\\customers\\' . $this->customerName() . '\\customer';
         // glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);
         // $_customerClass = OBJECT_T_CUSTOMER . BS . MPWS_CUSTOMER;
         // include_once $_customerScript;
         // $customer = new $_customerClass();
-        $this->customer = new $_customerScript($this);
+        // $this->customer = new $_customerScript($this);
         $options = func_get_args();
         switch ($this->runMode()) {
             case 'api':
-                $this->customer->runAsAPI($options);
+                $this->getSite()->runAsAPI($options);
                 break;
             case 'auth':
-                $this->customer->runAsAUTH($options);
+                $this->getSite()->runAsAUTH($options);
                 break;
             case 'upload':
-                $this->customer->runAsUPLOAD($options);
+                $this->getSite()->runAsUPLOAD($options);
                 break;
             case 'display':
-                $this->customer->runAsDISPLAY($options);
+                $this->getSite()->runAsDISPLAY($options);
                 break;
             case 'snapshot':
-                $this->customer->runAsSNAPSHOT($options);
+                $this->getSite()->runAsSNAPSHOT($options);
                 break;
             case 'sitemap':
-                $this->customer->runAsSITEMAP($options);
+                $this->getSite()->runAsSITEMAP($options);
                 break;
             // case 'background':
             //     $this->customer->runAsBACKGROUND($options);

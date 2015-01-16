@@ -1,11 +1,40 @@
 <?php
 namespace web\plugin\system\api;
 
-class customers extends \engine\objects\api {
+class customers {
 
     private $_statuses = array('ACTIVE','REMOVED');
 
+    function __construct() {
+        $this->shared = new shared();
+    }
+
+    public function getRuntimeCustomer () {
+        global $app;
+        $customer = null;
+        // we can access to all customer via toolbox only
+        if ($app->isToolbox()) {
+            // ability to switch customers
+            $activeCustomerID = $_SESSION['site_id'];
+            if ($activeCustomerID >= 0)
+                $customer = $this->getCustomerByID($activeCustomerID);
+            else {
+                $customer = $this->getCustomerByName($app->customerName());
+                if (isset($customer['ID'])) {
+                    $_SESSION['site_id'] = $customers['ID'];
+                }
+            }
+        } else {
+            $customer = $this->getCustomerByName($app->customerName());
+        }
+        return $customer;
+    }
+
     public function getCustomerByID () {
+
+    }
+
+    public function getCustomerByName () {
 
     }
 

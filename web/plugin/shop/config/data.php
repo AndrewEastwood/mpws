@@ -15,7 +15,7 @@ class data extends \engine\objects\configuration {
 
     // products >>>>>
     public function jsapiShopGetProductItem ($ProductID = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_products",
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
@@ -28,7 +28,7 @@ class data extends \engine\objects\configuration {
 
         if (!is_null($ProductID))
             $config["condition"] = array(
-                "shop_products.ID" => $this->jsapiCreateDataSourceCondition($ProductID)
+                "shop_products.ID" => $this->createCondition($ProductID)
             );
 
         return $config;
@@ -36,7 +36,7 @@ class data extends \engine\objects\configuration {
 
     public function jsapiShopGetProductItemByExternalKey ($externalKey) {
         $config = $this->jsapiShopGetProductItem();
-        $config['condition']["shop_products.ExternalKey"] = $this->jsapiCreateDataSourceCondition($externalKey);
+        $config['condition']["shop_products.ExternalKey"] = $this->createCondition($externalKey);
         return $config;
     }
 
@@ -71,9 +71,9 @@ class data extends \engine\objects\configuration {
 
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $options['_pSearch'] . '%', 'like');
-                // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+                $config['condition']["shop_products.Name"] = $this->createCondition('%' . $options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = $this->createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = $this->createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
                     $chunks = explode('=', $value);
@@ -108,15 +108,15 @@ class data extends \engine\objects\configuration {
                         // var_dump($valToSearch);
                         // var_dump($conditionOp);
                         if (!empty($conditionField)) {
-                            $config['condition'][$conditionField] = $this->jsapiCreateDataSourceCondition($valToSearch, $conditionOp);
+                            $config['condition'][$conditionField] = $this->createCondition($valToSearch, $conditionOp);
                         }
                     }
-                    // $config['condition']["shop_products.Name"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
-                    // $config['condition']["shop_products.Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["shop_products.Description"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["shop_products.SKU"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Name"] = $this->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Model"] = $this->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.Description"] = $this->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.SKU"] = $this->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["Model"] = $this->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = $this->createCondition('%' . $value . '%', 'like');
                 }
             }
         }
@@ -167,7 +167,7 @@ class data extends \engine\objects\configuration {
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_products",
             "action" => "insert",
             "data" => $data,
@@ -190,11 +190,11 @@ class data extends \engine\objects\configuration {
             $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($ProductID)
+                "ID" => $this->createCondition($ProductID)
             ),
             "data" => $data,
             "options" => null
@@ -202,11 +202,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopDeleteProduct ($ProductID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($ProductID)
+                "ID" => $this->createCondition($ProductID)
             ),
             "data" => array(
                 "Status" => 'ARCHIVED',
@@ -221,7 +221,7 @@ class data extends \engine\objects\configuration {
     // Product category (catalog)
     public function jsapiGetShopCatalogProductList ($ids) {
         $config = $this->jsapiShopGetProductList();
-        $config['condition']["shop_products.CategoryID"] = $this->jsapiCreateDataSourceCondition($ids, "IN");
+        $config['condition']["shop_products.CategoryID"] = $this->createCondition($ids, "IN");
         return $config;
     }
 
@@ -261,11 +261,11 @@ class data extends \engine\objects\configuration {
 
     // Product price stats >>>>>
     public function jsapiShopGetProductPriceStats ($id) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_productPrices",
             "condition" => array(
-                "ProductID" => $this->jsapiCreateDataSourceCondition($id)
+                "ProductID" => $this->createCondition($id)
             ),
             "fields" => array("ID", "ProductID", "Price", "DateCreated"),
             "offset" => 0,
@@ -295,11 +295,11 @@ class data extends \engine\objects\configuration {
 
     // Product relations >>>>>
     public function jsapiShopGetProductRelations ($id) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_relations",
             "condition" => array(
-                "ProductA_ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ProductA_ID" => $this->createCondition($id)
             ),
             "fields" => array("ProductB_ID"),
             "offset" => 0,
@@ -322,7 +322,7 @@ class data extends \engine\objects\configuration {
 
     // product features & attributes >>>>>
     public function jsapiShopGetProductFeatures ($id) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_productFeatures",
             "fields" => array("FeatureID"),
@@ -333,7 +333,7 @@ class data extends \engine\objects\configuration {
                 )
             ),
             "condition" => array(
-                "ProductID" => $this->jsapiCreateDataSourceCondition($id)
+                "ProductID" => $this->createCondition($id)
             ),
             "limit" => 0,
             "options" => array()
@@ -341,7 +341,7 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopGetProductAttributes ($id = null, $type = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(),
@@ -354,10 +354,10 @@ class data extends \engine\objects\configuration {
         ));
 
         if (!empty($id)) {
-            $config['condition']['ProductID'] = $this->jsapiCreateDataSourceCondition($id);
+            $config['condition']['ProductID'] = $this->createCondition($id);
         }
         if (!empty($type)) {
-            $config['condition']['Attribute'] = $this->jsapiCreateDataSourceCondition($type);
+            $config['condition']['Attribute'] = $this->createCondition($type);
         }
 
         return $config;
@@ -368,7 +368,7 @@ class data extends \engine\objects\configuration {
         $data["DateCreated"] = $this->getDate();
         $data["FieldName"] = substr($data["FieldName"], 0, 200);
         $data["GroupName"] = substr($data["GroupName"], 0, 100);
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_features",
             "action" => "insert",
             "data" => $data,
@@ -377,7 +377,7 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopGetFeatures () {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_features",
             "fields" => array("ID", "FieldName", "GroupName"),
@@ -389,7 +389,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopAddFeatureToProduct ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_productFeatures",
             "action" => "insert",
             "data" => $data,
@@ -398,7 +398,7 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopAddAttributeToProduct ($data) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_productAttributes",
             "action" => "insert",
             "data" => $data,
@@ -407,27 +407,27 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopClearProductFeatures ($ProductID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_productFeatures",
             "action" => "delete",
             "condition" => array(
-                "ProductID" => $this->jsapiCreateDataSourceCondition($ProductID)
+                "ProductID" => $this->createCondition($ProductID)
             ),
             "options" => null
         ));
     }
 
     public function jsapiShopClearProductAttributes ($ProductID, $attributeType = false) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "source" => "shop_productAttributes",
             "action" => "delete",
             "condition" => array(
-                "ProductID" => $this->jsapiCreateDataSourceCondition($ProductID)
+                "ProductID" => $this->createCondition($ProductID)
             ),
             "options" => null
         ));
         if (!empty($attributeType)) {
-            $config['condition']['Attribute'] = $this->jsapiCreateDataSourceCondition(strtoupper($attributeType));
+            $config['condition']['Attribute'] = $this->createCondition(strtoupper($attributeType));
         }
         return $config;
     }
@@ -442,7 +442,7 @@ class data extends \engine\objects\configuration {
 
     // Product category (catalog) >>>>>
     public function jsapiShopCatalogBrands ($categoryID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogBrands",
@@ -452,7 +452,7 @@ class data extends \engine\objects\configuration {
     }
 
     // public function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
-    //     return $this->jsapiGetDataSourceConfig(array(
+    //     return $this->createDBQuery(array(
     //         "action" => "call",
     //         "procedure" => array(
     //             "name" => "getAllShopCategorySubCategories",
@@ -462,7 +462,7 @@ class data extends \engine\objects\configuration {
     // }
 
     public function jsapiGetShopCatalogPriceEdges ($categoryID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogPriceEdges",
@@ -482,7 +482,7 @@ class data extends \engine\objects\configuration {
 
     // Additional: category location >>>>>
     public function jsapiShopCategoryLocationGet ($id) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogLocation",
@@ -500,16 +500,16 @@ class data extends \engine\objects\configuration {
 
     // Shop catalog tree >>>>>
     public function jsapiShopCatalogTree ($selectedCategoryID = false) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(
-                "Status" => $this->jsapiCreateDataSourceCondition("ACTIVE")
+                "Status" => $this->createCondition("ACTIVE")
             ),
             "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
         if ($selectedCategoryID !== false) {
-            $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($selectedCategoryID);
+            $config["condition"]["ID"] = $this->createCondition($selectedCategoryID);
         }
         return $config;
     }
@@ -532,7 +532,7 @@ class data extends \engine\objects\configuration {
 
     // shop cetegories >>>>>
     public function jsapiShopGetCategoryItem ($id = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(),
@@ -545,7 +545,7 @@ class data extends \engine\objects\configuration {
 
         if (!is_null($id)) {
             $config["condition"] = array(
-                "shop_categories.ID" => $this->jsapiCreateDataSourceCondition($id)
+                "shop_categories.ID" => $this->createCondition($id)
             );
         }
 
@@ -558,7 +558,7 @@ class data extends \engine\objects\configuration {
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->jsapiCreateDataSourceCondition('ACTIVE');
+            $config['condition']['Status'] = $this->createCondition('ACTIVE');
         }
         return $config;
     }
@@ -570,7 +570,7 @@ class data extends \engine\objects\configuration {
         $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_categories",
             "action" => "insert",
             "data" => $data,
@@ -586,11 +586,11 @@ class data extends \engine\objects\configuration {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
         // var_dump($data);
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_categories",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($CategoryID)
+                "ID" => $this->createCondition($CategoryID)
             ),
             "data" => $data,
             "options" => null
@@ -598,11 +598,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopDeleteCategory ($CategoryID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_categories",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($CategoryID)
+                "ID" => $this->createCondition($CategoryID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
@@ -626,7 +626,7 @@ class data extends \engine\objects\configuration {
 
     // shop origins <<<<<
     public function jsapiShopGetOriginItem ($id = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_origins",
             "condition" => array(),
@@ -639,7 +639,7 @@ class data extends \engine\objects\configuration {
 
         if (!is_null($id)) {
             $config["condition"] = array(
-                "shop_origins.ID" => $this->jsapiCreateDataSourceCondition($id)
+                "shop_origins.ID" => $this->createCondition($id)
             );
         }
 
@@ -652,7 +652,7 @@ class data extends \engine\objects\configuration {
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->jsapiCreateDataSourceCondition('ACTIVE');
+            $config['condition']['Status'] = $this->createCondition('ACTIVE');
         }
         return $config;
     }
@@ -664,7 +664,7 @@ class data extends \engine\objects\configuration {
         $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_origins",
             "action" => "insert",
             "data" => $data,
@@ -681,11 +681,11 @@ class data extends \engine\objects\configuration {
         if (isset($data["Name"])) {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_origins",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($OriginID)
+                "ID" => $this->createCondition($OriginID)
             ),
             "data" => $data,
             "options" => null
@@ -693,11 +693,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopDeleteOrigin ($OriginID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_origins",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($OriginID)
+                "ID" => $this->createCondition($OriginID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
@@ -729,7 +729,7 @@ class data extends \engine\objects\configuration {
 
     // shop delivery agencies >>>>>
     public function jsapiShopGetDeliveryAgencyByID ($id = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_deliveryAgencies",
             "condition" => array(),
@@ -741,7 +741,7 @@ class data extends \engine\objects\configuration {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($id);
+            $config["condition"]["ID"] = $this->createCondition($id);
 
         return $config;
     }
@@ -757,7 +757,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateDeliveryAgent ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "insert",
             "data" => $data,
@@ -767,11 +767,11 @@ class data extends \engine\objects\configuration {
 
     public function jsapiShopUpdateDeliveryAgent ($id, $data) {
         $data["DateUpdated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ID" => $this->createCondition($id)
             ),
             "data" => $data,
             "options" => null
@@ -779,11 +779,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopDeleteDeliveryAgent ($id) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ID" => $this->createCondition($id)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
@@ -810,7 +810,7 @@ class data extends \engine\objects\configuration {
 
     // shop delivery agencies >>>>>
     public function jsapiShopGetSettingByID ($id = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_settings",
             "condition" => array(),
@@ -822,7 +822,7 @@ class data extends \engine\objects\configuration {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($id);
+            $config["condition"]["ID"] = $this->createCondition($id);
 
         return $config;
     }
@@ -830,7 +830,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopGetSettingByName ($name = null) {
         $config = $this->jsapiShopGetSettingByID();
         unset($config['condition']['ID']);
-        $config['condition']['Property'] = $this->jsapiCreateDataSourceCondition($name);
+        $config['condition']['Property'] = $this->createCondition($name);
         return $config;
     }
 
@@ -838,7 +838,7 @@ class data extends \engine\objects\configuration {
         $config = $this->jsapiShopGetSettingByID();
         unset($config['condition']['ID']);
         $config['limit'] = 0;
-        $config['condition']['Type'] = $this->jsapiCreateDataSourceCondition($type);
+        $config['condition']['Type'] = $this->createCondition($type);
         return $config;
     }
 
@@ -854,7 +854,7 @@ class data extends \engine\objects\configuration {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
         $data["Status"] = 'ACTIVE';
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_settings",
             "action" => "insert",
             "data" => $data,
@@ -867,11 +867,11 @@ class data extends \engine\objects\configuration {
 
     public function jsapiShopUpdateSetting ($id, $data) {
         $data["DateUpdated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_settings",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ID" => $this->createCondition($id)
             ),
             "data" => $data,
             "options" => null
@@ -881,18 +881,18 @@ class data extends \engine\objects\configuration {
     public function jsapiShopUpdateSettingByName ($id, $data) {
         $config = $this->jsapiShopUpdateSetting($id, $data);
         unset($config['condition']['ID']);
-        $config['condition']['Property'] = $this->jsapiCreateDataSourceCondition($id);
+        $config['condition']['Property'] = $this->createCondition($id);
         return $config;
     }
 
     public function jsapiShopRemoveSetting ($id) {
         $data["DateUpdated"] = $this->getDate();
         $data["Status"] = 'REMOVED';
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_settings",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ID" => $this->createCondition($id)
             ),
             "data" => $data,
             "options" => null
@@ -911,7 +911,7 @@ class data extends \engine\objects\configuration {
 
     // Shop order >>>>>
     public function jsapiShopGetOrderItem ($orderID = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
@@ -924,7 +924,7 @@ class data extends \engine\objects\configuration {
 
         if (!is_null($orderID))
             $config["condition"] = array(
-                "shop_orders.ID" => $this->jsapiCreateDataSourceCondition($orderID)
+                "shop_orders.ID" => $this->createCondition($orderID)
             );
 
         return $config;
@@ -936,14 +936,14 @@ class data extends \engine\objects\configuration {
         $config['options']['expandSingleRecord'] = false;
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["Hash"] = $this->jsapiCreateDataSourceCondition($options['_pSearch'] . '%', 'like');
-                // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $options['search'] . '%', 'like');
+                $config['condition']["Hash"] = $this->createCondition($options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = $this->createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = $this->createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
-                    $config['condition']["Hash"] = $this->jsapiCreateDataSourceCondition($value . '%', 'like');
-                    // $config['condition']["Model"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $this->jsapiCreateDataSourceCondition('%' . $value . '%', 'like');
+                    $config['condition']["Hash"] = $this->createCondition($value . '%', 'like');
+                    // $config['condition']["Model"] = $this->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = $this->createCondition('%' . $value . '%', 'like');
                 }
             }
         }
@@ -951,18 +951,18 @@ class data extends \engine\objects\configuration {
     }
     public function jsapiGetShopOrderList_Pending () {
         $config = $this->jsapiGetShopOrderList();
-        $config['condition']['Status'] = $this->jsapiCreateDataSourceCondition('NEW');
+        $config['condition']['Status'] = $this->createCondition('NEW');
         return $config;
     }
     public function jsapiGetShopOrderList_Todays () {
         $config = $this->jsapiGetShopOrderList();
-        $config['condition']['DateCreated'] = $this->jsapiCreateDataSourceCondition(date('Y-m-d'), ">");
+        $config['condition']['DateCreated'] = $this->createCondition(date('Y-m-d'), ">");
         return $config;
     }
     public function jsapiGetShopOrderList_Expired () {
         $config = $this->jsapiGetShopOrderList();
-        $config['condition']['Status'] = $this->jsapiCreateDataSourceCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
-        $config['condition']['DateCreated'] = $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 week")), "<");
+        $config['condition']['Status'] = $this->createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
+        $config['condition']['DateCreated'] = $this->createCondition(date('Y-m-d', strtotime("-1 week")), "<");
         return $config;
     }
     public function jsapiShopCreateOrder ($data) {
@@ -976,7 +976,7 @@ class data extends \engine\objects\configuration {
         if (is_string($data["Warehouse"])) {
             $data["Warehouse"] = null;
         }
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_orders",
             "action" => "insert",
             "data" => $data,
@@ -986,7 +986,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateOrderBought ($data) {
         $data["DateCreated"] = $this->getDate();
         $data["IsPromo"] = empty($data["IsPromo"]) ? 0 : 1;
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_boughts",
             "action" => "insert",
             "data" => $data,
@@ -994,11 +994,11 @@ class data extends \engine\objects\configuration {
         ));
     }
     public function jsapiShopGetOrderBoughts ($orderID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
             "condition" => array(
-                "OrderID" => $this->jsapiCreateDataSourceCondition($orderID)
+                "OrderID" => $this->createCondition($orderID)
             ),
             "fields" => array("ID", "ProductID", "Price", "SellingPrice", "Quantity", "IsPromo", "DateCreated"),
             "offset" => 0,
@@ -1008,7 +1008,7 @@ class data extends \engine\objects\configuration {
     public function jsapiGetShopOrderByHash ($orderHash) {
         $config = $this->jsapiShopGetOrderItem();
         $config['condition'] = array(
-            "Hash" => $this->jsapiCreateDataSourceCondition($orderHash)
+            "Hash" => $this->createCondition($orderHash)
         );
         $config['options'] = array(
             "expandSingleRecord" => true
@@ -1018,22 +1018,22 @@ class data extends \engine\objects\configuration {
     }
     public function jsapiShopUpdateOrder ($orderID, $data) {
         $data["DateUpdated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "update",
             "source" => "shop_orders",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($orderID)
+                "ID" => $this->createCondition($orderID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
     public function jsapiShopDisableOrder ($OrderID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_orders",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($OrderID)
+                "ID" => $this->createCondition($OrderID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
@@ -1058,7 +1058,7 @@ class data extends \engine\objects\configuration {
 
     // >>>> Shop statistics
     public function jsapiShopStat_PopularProducts () {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
             "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
@@ -1073,13 +1073,13 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopStat_NonPopularProducts () {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_products",
             "fields" => array("ID"),
             "condition" => array(
-                "Status" => $this->jsapiCreateDataSourceCondition("ACTIVE"),
-                "ID" => $this->jsapiCreateDataSourceCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
+                "Status" => $this->createCondition("ACTIVE"),
+                "ID" => $this->createCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
             ),
             "order" => array(
                 "field" => "DateCreated",
@@ -1106,7 +1106,7 @@ class data extends \engine\objects\configuration {
         // var_dump($requestGetData);
         if (!empty($filter)) {
             if (isset($filter['_fCategoryID']))
-                $config['condition']['CategoryID'] = $this->jsapiCreateDataSourceCondition($filter['_fCategoryID']);
+                $config['condition']['CategoryID'] = $this->createCondition($filter['_fCategoryID']);
         }
         return $config;
     }
@@ -1133,8 +1133,8 @@ class data extends \engine\objects\configuration {
         $config = $this->jsapiShopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
-            'Status' => $this->jsapiCreateDataSourceCondition($status, $comparator),
-            'DateUpdated' => $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), ">")
+            'Status' => $this->createCondition($status, $comparator),
+            'DateUpdated' => $this->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -1153,8 +1153,8 @@ class data extends \engine\objects\configuration {
         $config = $this->jsapiShopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
-            'Status' => $this->jsapiCreateDataSourceCondition($status),
-            'DateUpdated' => $this->jsapiCreateDataSourceCondition(date('Y-m-d', strtotime("-1 month")), ">")
+            'Status' => $this->createCondition($status),
+            'DateUpdated' => $this->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -1189,11 +1189,11 @@ class data extends \engine\objects\configuration {
 
     // <<<< Promo area
     public function jsapiShopGetPromoByHash ($hash, $activeOnly) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_promo",
             "condition" => array(
-                "Code" => $this->jsapiCreateDataSourceCondition($hash)
+                "Code" => $this->createCondition($hash)
             ),
             "options" => array(
                 "expandSingleRecord" => true
@@ -1201,15 +1201,15 @@ class data extends \engine\objects\configuration {
         ));
 
         if ($activeOnly) {
-            $config['condition']['DateStart'] = $this->jsapiCreateDataSourceCondition($this->getDate(), '<=');
-            $config['condition']['DateExpire'] = $this->jsapiCreateDataSourceCondition($this->getDate(), '>=');
+            $config['condition']['DateStart'] = $this->createCondition($this->getDate(), '<=');
+            $config['condition']['DateExpire'] = $this->createCondition($this->getDate(), '>=');
         }
 
         return $config;
     }
 
     public function jsapiShopGetPromoByID ($promoID = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_promo",
             "condition" => array(),
@@ -1221,7 +1221,7 @@ class data extends \engine\objects\configuration {
 
         if (!is_null($promoID))
             $config["condition"] = array(
-                "ID" => $this->jsapiCreateDataSourceCondition($promoID)
+                "ID" => $this->createCondition($promoID)
             );
         return $config;
     }
@@ -1232,17 +1232,17 @@ class data extends \engine\objects\configuration {
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['expired'])) {
-            $config['condition']['DateExpire'] = $this->jsapiCreateDataSourceCondition($this->getDate(), '>=');
+            $config['condition']['DateExpire'] = $this->createCondition($this->getDate(), '>=');
         }
         // if (empty($options['future'])) {
-            // $config['condition']['DateStart'] = $this->jsapiCreateDataSourceCondition($this->getDate(), '<=');
+            // $config['condition']['DateStart'] = $this->createCondition($this->getDate(), '<=');
         // }
         return $config;
     }
 
     public function jsapiShopCreatePromo ($data) {
         $data["DateCreated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "insert",
             "source" => "shop_promo",
             "data" => $data,
@@ -1251,11 +1251,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopUpdatePromo ($promoID, $data) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "update",
             "source" => "shop_promo",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($promoID)
+                "ID" => $this->createCondition($promoID)
             ),
             "data" => $data,
             "options" => null
@@ -1263,11 +1263,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopExpirePromo ($promoID) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "action" => "update",
             "source" => "shop_promo",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($promoID)
+                "ID" => $this->createCondition($promoID)
             ),
             "data" => array(
                 "DateExpire" => $this->getDate()
@@ -1300,7 +1300,7 @@ class data extends \engine\objects\configuration {
 
     // shop delivery agencies >>>>>
     public function jsapiShopGetExchangeRateByID ($id = null) {
-        $config = $this->jsapiGetDataSourceConfig(array(
+        $config = $this->createDBQuery(array(
             "action" => "select",
             "source" => "shop_currency",
             "condition" => array(),
@@ -1312,29 +1312,29 @@ class data extends \engine\objects\configuration {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $this->jsapiCreateDataSourceCondition($id);
+            $config["condition"]["ID"] = $this->createCondition($id);
 
         return $config;
     }
     public function jsapiShopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
         $config = $this->jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyB" => $this->jsapiCreateDataSourceCondition($currencyNameTo)
+            "CurrencyB" => $this->createCondition($currencyNameTo)
         );
         return $config;
     }
     public function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
         $config = $this->jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyA" => $this->jsapiCreateDataSourceCondition($currencyNameFrom)
+            "CurrencyA" => $this->createCondition($currencyNameFrom)
         );
         return $config;
     }
     public function jsapiShopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
         $config = $this->jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyA" => $this->jsapiCreateDataSourceCondition($currencyNameFrom),
-            "CurrencyB" => $this->jsapiCreateDataSourceCondition($currencyNameTo)
+            "CurrencyA" => $this->createCondition($currencyNameFrom),
+            "CurrencyB" => $this->createCondition($currencyNameTo)
         );
         return $config;
     }
@@ -1351,7 +1351,7 @@ class data extends \engine\objects\configuration {
             $config['limit'] = $options['limit'];
         }
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->jsapiCreateDataSourceCondition('ACTIVE');
+            $config['condition']['Status'] = $this->createCondition('ACTIVE');
         }
         return $config;
     }
@@ -1368,7 +1368,7 @@ class data extends \engine\objects\configuration {
     public function jsapiShopCreateExchangeRate ($data) {
         $data["DateUpdated"] = $this->getDate();
         $data["DateCreated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_currency",
             "action" => "insert",
             "data" => $data,
@@ -1378,11 +1378,11 @@ class data extends \engine\objects\configuration {
 
     public function jsapiShopUpdateExchangeRate ($id, $data) {
         $data["DateUpdated"] = $this->getDate();
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_currency",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ID" => $this->createCondition($id)
             ),
             "data" => $data,
             "options" => null
@@ -1390,11 +1390,11 @@ class data extends \engine\objects\configuration {
     }
 
     public function jsapiShopDeleteExchangeRate ($id) {
-        return $this->jsapiGetDataSourceConfig(array(
+        return $this->createDBQuery(array(
             "source" => "shop_currency",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->jsapiCreateDataSourceCondition($id)
+                "ID" => $this->createCondition($id)
             ),
             "data" => array(
                 "Status" => 'REMOVED',

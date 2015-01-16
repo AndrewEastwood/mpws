@@ -60,7 +60,7 @@ class orders extends \engine\objects\api {
         $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -80,7 +80,7 @@ class orders extends \engine\objects\api {
         $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList_Todays();
         // set permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -100,7 +100,7 @@ class orders extends \engine\objects\api {
         $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList_Pending();
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -120,7 +120,7 @@ class orders extends \engine\objects\api {
         $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList($options);
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->jsapiCreateDataSourceCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(

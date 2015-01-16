@@ -1,10 +1,7 @@
 <?php
+namespace web\plugin\account\api;
 
-namespace web\base\atlantis\config;
-
-use \engine\objects\configuration as baseConfig;
-
-class data extends baseConfig {
+class shared {
 
     public $Table_SystemAccounts = "mpws_accounts";
 
@@ -321,9 +318,3 @@ class data extends baseConfig {
         return $config;
     }
     // <<<< Account statistics
-
-
-}
-
-
-?>
