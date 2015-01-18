@@ -17,21 +17,6 @@ class shared {
         return $perms;
     }
 
-    public static function jsapiGetCustomer ($ExternalKey) {
-        global $app;
-        return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_customer",
-            "fields" => array("*"),
-            "condition" => array(
-                "ExternalKey" => $app->getDB()->createCondition($ExternalKey),
-                "Status" => $app->getDB()->createCondition("ACTIVE")
-            ),
-            "limit" => 1,
-            "options" => array(
-                "expandSingleRecord" => true
-            )
-        ));
-    }
 
     public static function jsapiGetAccount () {
         global $app;

@@ -47,7 +47,7 @@ class products extends \engine\objects\api {
     private function __adjustProduct (&$product, $skipRelations = false) {
         // adjusting
         $productID = intval($product['ID']);
-        $product['ID'] = intval($product['ID']);
+        $product['ID'] = $productID;
         $product['OriginID'] = intval($product['OriginID']);
         $product['CategoryID'] = intval($product['CategoryID']);
         $product['_category'] = $this->getAPI()->categories->getCategoryByID($product['CategoryID']);

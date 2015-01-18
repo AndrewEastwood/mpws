@@ -102,19 +102,16 @@ class database {
     public function query ($config, $useCustomerID = true) {
         global $app;
         // $customerInfo = $this->getCustomerInfo();
-        // var_dump($config);
         if ($useCustomerID) {
+            $source = $config["source"];
+            $key = $source . '.CustomerID';
+            // $addCustomerID = false;
             $runtimeCustomerID = $app->getSite()->getRuntimeCustomerID();
-            if ($runtimeCustomerID >= 0) {
-                $source = $config["source"];
-                $key = $source . '.CustomerID';
-                // $addCustomerID = false;
-                if (isset($config["condition"]["CustomerID"])) {
-                    $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
-                    unset($config["condition"]["CustomerID"]);
-                } else if (!isset($config["condition"][$key])) {
-                    $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
-                }
+            if (isset($config["condition"]["CustomerID"])) {
+                $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
+                unset($config["condition"]["CustomerID"]);
+            } else if (!isset($config["condition"][$key])) {
+                $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
             }
         }
         return $this->_fetchData($config);

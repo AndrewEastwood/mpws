@@ -168,7 +168,7 @@ class utils {
         // $configClass = '\\web\\plugin\\' . $pluginName . '\\config\\' . $configName;
         return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameConfig() . '\\' . $configName;
     }
-    static function getApiClassName ($apiName, $pluginName) {
+    static function getApiClassName ($pluginName, $apiName) {
         // $apiClass = '\\web\\plugin\\' . $pluginName . '\\api\\' . $apiName;
         return '\\' . Path::getDirNameWeb() . '\\' . Path::getDirNamePlugin() . '\\' . $pluginName . '\\' . Path::getDirNameApi() . '\\' . $apiName;
     }

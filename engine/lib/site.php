@@ -23,13 +23,17 @@ class site {
     // private $permissions;
     // private $apis;
 
-    function __construct() {
-        $apiCustomer = API::getAPI('system:customers');
-        $apiCustomer->switchToDefaultCustomer();
+    function __construct () {
         // $apiAuth = $this->getRuntimeAPIClass('system:auth'); // ????
         // $this->apis['system:customers'] = $apiCustomer;
         // $this->apis['system:auth'] = $apiAuth;
         // $this->customerInfo = $this->getCustomerInfo();
+    }
+
+    public function init () {
+        session_start();
+        $apiCustomer = API::getAPI('system:customers');
+        $apiCustomer->switchToDefaultCustomer();
     }
 
     public function getHtmlPage () {
@@ -49,8 +53,8 @@ class site {
         // and expose in the template : >>>>>
         $lang = 'en';
         $locale = '';
-        $plugins = array();
-        $Homepage = '';
+        $plugins = $customer['Settings']['plugins'];
+        $Homepage = $customer['HomePage'];
         $Host = '';
         $Scheme = '';
         $Title = '';
@@ -64,7 +68,8 @@ class site {
         // var_dump($layoutCustomer, 'layoutCustomer');
         // var_dump($layoutDefault, 'layoutDefault');
 
-        $staticPath = $app->getSettings('urls')->static;
+        $urls = $app->getSettings('urls');
+        $staticPath = $urls['static'];
         $initialJS = "{
             LOCALE: '" . $locale . "',
             BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
@@ -78,8 +83,8 @@ class site {
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
             URL_PUBLIC_TITLE: '" . $Title . "',
-            URL_API: '" . $app->getSettings('urls')->api . "',
-            URL_UPLOAD: '" . $app->getSettings('urls')->upload . "',
+            URL_API: '" . $urls['api'] . "',
+            URL_UPLOAD: '" . $urls['upload'] . "',
             URL_STATIC_CUSTOMER: '/" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_WEBSITE: '/" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_PLUGIN: '/" . Path::createPath('plugin', true) . "',
@@ -205,8 +210,9 @@ class site {
          * Licensed under the MIT license:
          * http://www.opensource.org/licenses/MIT
          */
+        $urls = $app->getSettings('urls');
         $options = array(
-            'script_url' => $app->getSettings('urls')->upload,
+            'script_url' => $urls['upload'],
             'download_via_php' => true,
             'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
             'print_response' => Request::isGET()

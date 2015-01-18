@@ -1,13 +1,15 @@
 <?php
 namespace web\plugin\system\api;
 
+use Exception;
+
 class customers {
 
     var $customersCache = array();
 
     public function switchToDefaultCustomer () {
         global $app;
-        return $this->switchToCustomerByName($app->customerName(););
+        return $this->switchToCustomerByName($app->customerName());
     }
 
     public function switchToCustomerByName ($customerName) {
@@ -16,33 +18,33 @@ class customers {
             return $this->customersCache[$customerName];
         }
         if (empty($customerName)) {
-            return false
+            return false;
         }
         $customer = $this->getCustomerByName($customerName);
         if (!isset($customer)) {
             return false;
         }
-        $id = $customer['ID'];
-        $_SESSION['site_id'] = $id;
-        $this->customersCache[$id] = $customer;
+        $ID = $customer['ID'];
+        $_SESSION['site_id'] = $ID;
+        $this->customersCache[$ID] = $customer;
         $this->customersCache[$customer['Name']] = $customer;
         return $customer;
     }
 
-    public function switchToCustomerByID ($id) {
-        if (isset($this->customersCache[$id])) {
-            $_SESSION['site_id'] = $id;
-            return $this->customersCache[$id];
+    public function switchToCustomerByID ($ID) {
+        if (isset($this->customersCache[$ID])) {
+            $_SESSION['site_id'] = $ID;
+            return $this->customersCache[$ID];
         }
-        if (empty($id)) {
-            return false
+        if (empty($ID)) {
+            return false;
         }
-        $customer = $this->getCustomerByID($id);
+        $customer = $this->getCustomerByID($ID);
         if (!isset($customer)) {
             return false;
         }
-        $_SESSION['site_id'] = $id;
-        $this->customersCache[$id] = $customer;
+        $_SESSION['site_id'] = $ID;
+        $this->customersCache[$ID] = $customer;
         $this->customersCache[$customer['Name']] = $customer;
         return $customer;
     }
@@ -69,28 +71,70 @@ class customers {
     }
 
     public function getRuntimeCustomerID () {
-        $id = $_SESSION['site_id'];
-        if (isset($this->customersCache[$id])) {
-            return $id;
+        $ID = isset($_SESSION['site_id']) ? $_SESSION['site_id'] : null;
+        if (isset($this->customersCache[$ID])) {
+            return $ID;
         }
-        throw new Exception("Exception at getRuntimeCustomerID. Cannot find customer by current id=" . $id, 1);
-        
+        unset($this->customersCache[$ID]);
+        throw new Exception("Exception at getRuntimeCustomerID. Cannot find customer by current id=" . $ID, 1);
     }
 
-    public function getCustomerByID ($id) {
+    private function __adjustCustomer (&$customer) {
+        // adjusting
+        $ID = intval($customer['ID']);
+        $customer['ID'] = $ID;
+        $customer['Settings'] = $this->getCustomerSettings($ID);
+        // var_dump($customer);
+        return $customer;
+    }
+
+    public function getCustomerByID ($ID) {
+        global $app;
+        $config = shared::jsapiGetCustomer($ID);
+        $customer = $app->getDB()->query($config);
+        return $settings;
 
     }
 
-    public function getCustomerByName ($name) {
-
+    public function getCustomerByName ($customerName) {
+        global $app;
+        $config = shared::jsapiGetCustomer();
+        $config['condition']['Name'] = $app->getDB()->createCondition($customerName);
+        $customer = $app->getDB()->query($config, false);
+        // echo 2121212;
+        // var_dump($customer);
+        if (empty($customer))
+            return null;
+        return $this->__adjustCustomer($customer);
     }
 
-    public function getCustomers () {
-
+    public function getCustomers_List (array $options = array()) {
+        global $app;
+        $config = shared::jsapiGetCustomerList($options);
+        $self = $this;
+        $callbacks = array(
+            "parse" => function ($items) use($self) {
+                $_items = array();
+                foreach ($items as $key => $orderRawItem) {
+                    $_items[] = $self->getCustomerByID($orderRawItem['ID']);
+                }
+                return $_items;
+            }
+        );
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        return $dataList;
     }
 
-    public function getCustomerSettings () {
-
+    public function getCustomerSettings ($ID) {
+        global $app;
+        $config = shared::getCustomerSettings($ID);
+        $settingsRaw = $app->getDB()->query($config, false);
+        $settings = array();
+        foreach ($settingsRaw as $key => $value) {
+            $settings[$value['Property']] = $value['Value'];
+        }
+        // var_dump($settings);
+        return $settings;
     }
 
     public function addCustomer () {

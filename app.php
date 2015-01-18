@@ -204,7 +204,8 @@ class app {
             }
         else
             header($this->header);
-        session_start();
+
+        $this->site->init();
 
         // $_customerScript = Utils::getCustomerClassName($this->customerName());// '\\web\\customers\\' . $this->customerName() . '\\customer';
         // glGetFullPath(DIR_WEB, DIR_CUSTOMER, MPWS_CUSTOMER, OBJECT_T_CUSTOMER . DOT . MPWS_CUSTOMER . EXT_SCRIPT);

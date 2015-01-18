@@ -1,5 +1,5 @@
 <?php
-namespace \engine\lib;
+namespace engine\lib;
 
 use \engine\lib\request as Request;
 use \engine\lib\response as Response;
@@ -15,12 +15,13 @@ class api {
             $apiKey = Request::pickFromGET('api');
         }
         $api = null;
-        if (isset(self::cacheApis[$apiKey]))
-            $api = self::cacheApis[$apiKey];
-        else {
-            $apiClass = Utils::getApiClassName($_fn, $_source);
-            self::cacheApis[$apiKey] = new $apiClass();
-            $api = self::cacheApis[$apiKey];
+        if (isset(self::$cacheApis[$apiKey])) {
+            $api = self::$cacheApis[$apiKey];
+        } else {
+            $parts = explode(':', $apiKey);
+            $apiClass = Utils::getApiClassName($parts[0], $parts[1]);
+            self::$cacheApis[$apiKey] = new $apiClass();
+            $api = self::$cacheApis[$apiKey];
         }
         return $api;
     }
