@@ -3,6 +3,50 @@ namespace web\plugin\system\api;
 
 class customers {
 
+    var $customersCache = array();
+
+    public function switchToDefaultCustomer () {
+        global $app;
+        return $this->switchToCustomerByName($app->customerName(););
+    }
+
+    public function switchToCustomerByName ($customerName) {
+        if (isset($this->customersCache[$customerName])) {
+            $_SESSION['site_id'] = $this->customersCache[$customerName]['ID'];
+            return $this->customersCache[$customerName];
+        }
+        if (empty($customerName)) {
+            return false
+        }
+        $customer = $this->getCustomerByName($customerName);
+        if (!isset($customer)) {
+            return false;
+        }
+        $id = $customer['ID'];
+        $_SESSION['site_id'] = $id;
+        $this->customersCache[$id] = $customer;
+        $this->customersCache[$customer['Name']] = $customer;
+        return $customer;
+    }
+
+    public function switchToCustomerByID ($id) {
+        if (isset($this->customersCache[$id])) {
+            $_SESSION['site_id'] = $id;
+            return $this->customersCache[$id];
+        }
+        if (empty($id)) {
+            return false
+        }
+        $customer = $this->getCustomerByID($id);
+        if (!isset($customer)) {
+            return false;
+        }
+        $_SESSION['site_id'] = $id;
+        $this->customersCache[$id] = $customer;
+        $this->customersCache[$customer['Name']] = $customer;
+        return $customer;
+    }
+
     public function getRuntimeCustomer () {
         global $app;
         $customer = null;
@@ -24,11 +68,20 @@ class customers {
         return $customer;
     }
 
-    public function getCustomerByID () {
+    public function getRuntimeCustomerID () {
+        $id = $_SESSION['site_id'];
+        if (isset($this->customersCache[$id])) {
+            return $id;
+        }
+        throw new Exception("Exception at getRuntimeCustomerID. Cannot find customer by current id=" . $id, 1);
+        
+    }
+
+    public function getCustomerByID ($id) {
 
     }
 
-    public function getCustomerByName () {
+    public function getCustomerByName ($name) {
 
     }
 

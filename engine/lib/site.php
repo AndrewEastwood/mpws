@@ -9,6 +9,7 @@ use \engine\lib\response as Response;
 use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
+use \engine\lib\api as API;
 use Exception;
 // use app;
 // use \engine\interfaces\ICustomer as ICustomer;
@@ -17,17 +18,24 @@ use Exception;
 class site {
 
     // private $version = 'atlantis';
-    private $customerInfo;
-    private $htmlPage;
-    private $permissions;
-    private $apis;
+    // private $customerInfo;
+    // private $htmlPage;
+    // private $permissions;
+    // private $apis;
 
     function __construct() {
-        $this->customerInfo = $this->getCustomerInfo();
+        $apiCustomer = API::getAPI('system:customers');
+        $apiCustomer->switchToDefaultCustomer();
+        // $apiAuth = $this->getRuntimeAPIClass('system:auth'); // ????
+        // $this->apis['system:customers'] = $apiCustomer;
+        // $this->apis['system:auth'] = $apiAuth;
+        // $this->customerInfo = $this->getCustomerInfo();
     }
 
     public function getHtmlPage () {
         global $app;
+        $apiCustomer = API::getAPI('system:customers');
+        $customer = $apiCustomer->getRuntimeCustomer();
 
         // get customer name
         $displayCustomer = $app->displayCustomer();
@@ -56,7 +64,7 @@ class site {
         // var_dump($layoutCustomer, 'layoutCustomer');
         // var_dump($layoutDefault, 'layoutDefault');
 
-        $staticPath = 'static';
+        $staticPath = $app->getSettings('urls')->static;
         $initialJS = "{
             LOCALE: '" . $locale . "',
             BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
@@ -65,17 +73,17 @@ class site {
             PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
             MPWS_VERSION: '" . $version . "',
             MPWS_CUSTOMER: '" . $displayCustomer . "',
-            PATH_STATIC_BASE: '/',
+            PATH_STATIC_BASE: '" . $staticPath . "',
             URL_PUBLIC_HOMEPAGE: '" . $Homepage . "',
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
             URL_PUBLIC_TITLE: '" . $Title . "',
-            URL_API: '/api/',
-            URL_UPLOAD: '/upload/',
-            URL_STATIC_CUSTOMER: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
-            URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
-            URL_STATIC_PLUGIN: '/" . Path::createPath($staticPath, 'plugin', true) . "',
-            URL_STATIC_DEFAULT: '/" . Path::createPath($staticPath, 'base', $version, true) . "',
+            URL_API: '" . $app->getSettings('urls')->api . "',
+            URL_UPLOAD: '" . $app->getSettings('urls')->upload . "',
+            URL_STATIC_CUSTOMER: '/" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
+            URL_STATIC_WEBSITE: '/" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
+            URL_STATIC_PLUGIN: '/" . Path::createPath('plugin', true) . "',
+            URL_STATIC_DEFAULT: '/" . Path::createPath('base', $version, true) . "',
             ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
@@ -94,23 +102,21 @@ class site {
         return $html;
     }
 
-    public function switchToCustomerByName ($customerName) {
-
+    public function getRuntimeCustomerID () {
+        $apiCustomer = API::getAPI('system:customers');
+        return $apiCustomer->getRuntimeCustomerID();
+        // $info = $this->getCustomerInfo();
+        // return isset($info['ID']) ? intval($info['ID']) : null;
     }
 
-    public function getCustomerID () {
-        $info = $this->getCustomerInfo();
-        return isset($info['ID']) ? intval($info['ID']) : null;
-    }
+    // public function getCustomerInfo () {
+    //     global $app;
+    //     if (empty($this->customerInfo)) {
+    //         $this->customerInfo = $api->getRuntimeCustomer();
+    //     }
+    //     return $this->customerInfo;
+    // }
 
-    public function getCustomerInfo () {
-        global $app;
-        if (empty($this->customerInfo)) {
-            $api = $this->getRuntimeAPIClass('system:customers');
-            $this->customerInfo = $api->getRuntimeCustomer();
-        }
-        return $this->customerInfo;
-    }
 
     // public function fetch ($config, $skipCustomerID = false) {
     //     global $app;
@@ -165,32 +171,11 @@ class site {
         Response::setResponse($resp);
     }
 
-    public function getRuntimeAPIClass ($apiKey = false) {
-        if (empty($apiKey)) {
-            $apiKey = Request::pickFromGET('api');
-            // $_source = Request::pickFromGET('source');
-            // $_fn = Request::pickFromGET('api');
-            // $apiKey = $_source . ':' . $_fn;
-        }
-        $api = null;
-        if (isset($this->apis[$apiKey]))
-            $api = $this->apis[$apiKey];
-        else {
-            $apiClass = Utils::getApiClassName($_fn, $_source);
-            $this->apis[$apiKey] = new $apiClass();
-            $api = $this->apis[$apiKey];
-        }
-        return $api;
-    }
-
     public function runAsAPI () {
         global $app;
         // refresh auth
         $this->updateSessionAuth();
-        // get api
-        $api = $this->getRuntimeAPIClass();
-        // invoke api request method
-        $api->$_method(Response::$_RESPONSE, $_REQ);
+        API::execAPI();
     }
 
     // public function runAsAUTH () {

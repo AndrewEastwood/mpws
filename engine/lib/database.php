@@ -99,7 +99,21 @@ class database {
         return $this->dbo->mpwsGetLastInsertId();
     }
 
-    public function getData ($config, $skipCustomerID = false) {
+    public function query ($config, $skipCustomerID = false) {
+        global $app;
+        // $customerInfo = $this->getCustomerInfo();
+        if (!$skipCustomerID) {
+            $source = $config["source"];
+            $key = $source . '.CustomerID';
+            // $addCustomerID = false;
+            $runtimeCustomerID = $app->getSite()->getRuntimeCustomerID();
+            if (isset($config["condition"]["CustomerID"])) {
+                $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
+                unset($config["condition"]["CustomerID"]);
+            } else if (!isset($config["condition"][$key])) {
+                $config["condition"][$key] = $app->getDB()->createCondition($runtimeCustomerID);
+            }
+        }
         return $this->_fetchData($config);
     }
 

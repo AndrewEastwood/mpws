@@ -87,45 +87,45 @@ require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/undersc
             });
         return _url.toString();
     }
-    APP.getAuthLink = function (extraOptions) {
-        var _url = new JSUrl(APP.config.URL_AUTH);
-        // _url.query.token = APP.config.TOKEN;
-        if (!_.isEmpty(extraOptions))
-            _(extraOptions).each(function (v, k) {
-                _url.query[k] = !!v ? v : "";
-            });
-        return _url.toString();
-    }
-    APP.getUploadUrl = function (extraOptions) {
-        var _url = new JSUrl(APP.config.URL_UPLOAD);
-        // _url.query.token = APP.config.TOKEN;
-        if (!_.isEmpty(extraOptions))
-            _(extraOptions).each(function (v, k) {
-                _url.query[k] = !!v ? v : "";
-            });
-        return _url.toString();
-    }
-    APP.triggerBackgroundTask = function (name, params) {
-        var _url = new JSUrl(APP.config.URL_TASK);
-        _url.query.name = name;
-        if (params) {
-            if (_.isString(params))
-                _url.query.name = params;
-            if (_.isArray(params))
-                _url.query.params = params.join(',');
-        }
-        if (APP.backgroundTaskIds[name] === null) {
-            APP.backgroundTaskId[name] = setInterval(function () {
-                var bgtask = Cache.getCookie('bgtask');
-                if (!!!bgtask) {
-                    Sandbox.eventNotify('backgroundtask:complete', name);
-                }
-                clearInterval(APP.backgroundTaskId[name]);
-                APP.backgroundTaskId[name] = null;
-            }, 5000);
-        }
-        return $.post(_url.toString());
-    }
+    // APP.getAuthLink = function (extraOptions) {
+    //     var _url = new JSUrl(APP.config.URL_AUTH);
+    //     // _url.query.token = APP.config.TOKEN;
+    //     if (!_.isEmpty(extraOptions))
+    //         _(extraOptions).each(function (v, k) {
+    //             _url.query[k] = !!v ? v : "";
+    //         });
+    //     return _url.toString();
+    // }
+    // APP.getUploadUrl = function (extraOptions) {
+    //     var _url = new JSUrl(APP.config.URL_UPLOAD);
+    //     // _url.query.token = APP.config.TOKEN;
+    //     if (!_.isEmpty(extraOptions))
+    //         _(extraOptions).each(function (v, k) {
+    //             _url.query[k] = !!v ? v : "";
+    //         });
+    //     return _url.toString();
+    // }
+    // APP.triggerBackgroundTask = function (name, params) {
+    //     var _url = new JSUrl(APP.config.URL_TASK);
+    //     _url.query.name = name;
+    //     if (params) {
+    //         if (_.isString(params))
+    //             _url.query.name = params;
+    //         if (_.isArray(params))
+    //             _url.query.params = params.join(',');
+    //     }
+    //     if (APP.backgroundTaskIds[name] === null) {
+    //         APP.backgroundTaskId[name] = setInterval(function () {
+    //             var bgtask = Cache.getCookie('bgtask');
+    //             if (!!!bgtask) {
+    //                 Sandbox.eventNotify('backgroundtask:complete', name);
+    //             }
+    //             clearInterval(APP.backgroundTaskId[name]);
+    //             APP.backgroundTaskId[name] = null;
+    //         }, 5000);
+    //     }
+    //     return $.post(_url.toString());
+    // }
 })
 
 require(APP.getModulesToDownload(), function (Sandbox, $, _, Backbone, Cache, Auth, contentInjection, CssInjection /* plugins goes here */ ) {
