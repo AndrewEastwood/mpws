@@ -215,9 +215,9 @@ class app {
             case 'api':
                 $this->getSite()->runAsAPI($options);
                 break;
-            case 'auth':
-                $this->getSite()->runAsAUTH($options);
-                break;
+            // case 'auth':
+            //     $this->getSite()->runAsAUTH($options);
+            //     break;
             case 'upload':
                 $this->getSite()->runAsUPLOAD($options);
                 break;

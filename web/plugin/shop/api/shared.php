@@ -10,18 +10,19 @@ use ArrayObject;
 
 class shared {
 
-    var $Table_ShopOrders = "shop_orders";
-    var $Table_ShopProducts = "shop_products";
-    var $Table_ShopOrigins = "shop_origins";
-    var $Table_ShopCategories = "shop_categories";
-    var $Table_ShopProductAttr = "shop_productAttributes";
-    var $Table_ShopDeliveryAgencies = "shop_deliveryAgencies";
-    var $Table_ShopFeatures = "shop_features";
-    var $Table_ShopSettings = "shop_settings";
+    // var $Table_ShopOrders = "shop_orders";
+    // var $Table_ShopProducts = "shop_products";
+    // var $Table_ShopOrigins = "shop_origins";
+    // var $Table_ShopCategories = "shop_categories";
+    // var $Table_ShopProductAttr = "shop_productAttributes";
+    // var $Table_ShopDeliveryAgencies = "shop_deliveryAgencies";
+    // var $Table_ShopFeatures = "shop_features";
+    // var $Table_ShopSettings = "shop_settings";
 
     // products >>>>>
-    public function jsapiShopGetProductItem ($ProductID = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetProductItem ($ProductID = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_products",
             "fields" => array("ID", "CategoryID", "OriginID", "ExternalKey", "Name", "Description", "Model", "SKU", "Price", "IsPromo", "Status", "DateUpdated", "DateCreated"),
@@ -34,20 +35,22 @@ class shared {
 
         if (!is_null($ProductID))
             $config["condition"] = array(
-                "shop_products.ID" => $this->createCondition($ProductID)
+                "shop_products.ID" => $app->getDB()->createCondition($ProductID)
             );
 
         return $config;
     }
 
-    public function jsapiShopGetProductItemByExternalKey ($externalKey) {
-        $config = $this->jsapiShopGetProductItem();
-        $config['condition']["shop_products.ExternalKey"] = $this->createCondition($externalKey);
+    public static function jsapiShopGetProductItemByExternalKey ($externalKey) {
+        global $app;
+        $config = self::jsapiShopGetProductItem();
+        $config['condition']["shop_products.ExternalKey"] = $app->getDB()->createCondition($externalKey);
         return $config;
     }
 
-    public function jsapiShopGetProductList (array $options = array()) {
-        $config = $this->jsapiShopGetProductItem();
+    public static function jsapiShopGetProductList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
@@ -77,9 +80,9 @@ class shared {
 
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["shop_products.Name"] = $this->createCondition('%' . $options['_pSearch'] . '%', 'like');
-                // $config['condition']["Model"] = $this->createCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $this->createCondition('%' . $options['search'] . '%', 'like');
+                $config['condition']["shop_products.Name"] = $app->getDB()->createCondition('%' . $options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
                     $chunks = explode('=', $value);
@@ -114,15 +117,15 @@ class shared {
                         // var_dump($valToSearch);
                         // var_dump($conditionOp);
                         if (!empty($conditionField)) {
-                            $config['condition'][$conditionField] = $this->createCondition($valToSearch, $conditionOp);
+                            $config['condition'][$conditionField] = $app->getDB()->createCondition($valToSearch, $conditionOp);
                         }
                     }
-                    // $config['condition']["shop_products.Name"] = $this->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["shop_products.Model"] = $this->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["shop_products.Description"] = $this->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["shop_products.SKU"] = $this->createCondition('%' . $value . '%', 'like', 'OR');
-                    // $config['condition']["Model"] = $this->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $this->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Name"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["shop_products.Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.Description"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["shop_products.SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like', 'OR');
+                    // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
                 }
             }
         }
@@ -131,8 +134,9 @@ class shared {
         return $config;
     }
 
-    public function jsapiShopGetLatestProductsList () {
-        $config = $this->jsapiShopGetProductItem();
+    public static function jsapiShopGetLatestProductsList () {
+        global $app;
+        $config = self::jsapiShopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
@@ -158,9 +162,10 @@ class shared {
         return $config;
     }
 
-    public function jsapiShopCreateProduct ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateProduct ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $ExternalKey = array();
         if (isset($data['Name']))
             $ExternalKey[] = $data['Name'];
@@ -173,7 +178,7 @@ class shared {
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "insert",
             "data" => $data,
@@ -181,8 +186,9 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdateProduct ($ProductID, $data) {
-        $data["DateUpdated"] = $this->getDate();
+    public static function jsapiShopUpdateProduct ($ProductID, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
         $ExternalKey = array();
         if (isset($data['Name'])) {
             $ExternalKey[] = $data['Name'];
@@ -196,27 +202,28 @@ class shared {
             $data["ExternalKey"] = \engine\lib\utils::url_slug(implode('_', $ExternalKey), array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         }
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($ProductID)
+                "ID" => $app->getDB()->createCondition($ProductID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopDeleteProduct ($ProductID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopDeleteProduct ($ProductID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($ProductID)
+                "ID" => $app->getDB()->createCondition($ProductID)
             ),
             "data" => array(
                 "Status" => 'ARCHIVED',
-                "DateUpdated" => $this->getDate()
+                "DateUpdated" => $app->getDB()->getDate()
             ),
             "options" => null
         ));
@@ -225,28 +232,32 @@ class shared {
 
 
     // Product category (catalog)
-    public function jsapiGetShopCatalogProductList ($ids) {
-        $config = $this->jsapiShopGetProductList();
-        $config['condition']["shop_products.CategoryID"] = $this->createCondition($ids, "IN");
+    public static function jsapiGetShopCatalogProductList ($ids) {
+        global $app;
+        $config = self::jsapiShopGetProductList();
+        $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids, "IN");
         return $config;
     }
 
-    // public function jsapiGetShopCategoryProductInfo ($ids) {
-    //     $config = $this->jsapiGetShopCategoryProductList($ids);
+    // public static function jsapiGetShopCategoryProductInfo ($ids) {
+        global $app;
+    //     $config = self::jsapiGetShopCategoryProductList($ids);
     //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
     //     return $config;
     // }
 
-    // public function jsapiGetShopCategoryProductInfo ($ids) {
-    //     $config = $this->jsapiGetShopCategoryProductList($ids);
+    // public static function jsapiGetShopCategoryProductInfo ($ids) {
+        global $app;
+    //     $config = self::jsapiGetShopCategoryProductList($ids);
     //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
     //     return $config;
     // }
 
-    public function jsapiGetShopCategoryProductInfo () {
-        $config = $this->jsapiShopGetProductList();
+    public static function jsapiGetShopCategoryProductInfo () {
+        global $app;
+        $config = self::jsapiShopGetProductList();
         // $config['fields'] = array("ID", "Name");
         $config['fields'] = array("ID");
         $config['limit'] = 0;
@@ -266,12 +277,13 @@ class shared {
 
 
     // Product price stats >>>>>
-    public function jsapiShopGetProductPriceStats ($id) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopGetProductPriceStats ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_productPrices",
             "condition" => array(
-                "ProductID" => $this->createCondition($id)
+                "ProductID" => $app->getDB()->createCondition($id)
             ),
             "fields" => array("ID", "ProductID", "Price", "DateCreated"),
             "offset" => 0,
@@ -300,12 +312,13 @@ class shared {
 
 
     // Product relations >>>>>
-    public function jsapiShopGetProductRelations ($id) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopGetProductRelations ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_relations",
             "condition" => array(
-                "ProductA_ID" => $this->createCondition($id)
+                "ProductA_ID" => $app->getDB()->createCondition($id)
             ),
             "fields" => array("ProductB_ID"),
             "offset" => 0,
@@ -327,8 +340,9 @@ class shared {
 
 
     // product features & attributes >>>>>
-    public function jsapiShopGetProductFeatures ($id) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopGetProductFeatures ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_productFeatures",
             "fields" => array("FeatureID"),
@@ -339,15 +353,16 @@ class shared {
                 )
             ),
             "condition" => array(
-                "ProductID" => $this->createCondition($id)
+                "ProductID" => $app->getDB()->createCondition($id)
             ),
             "limit" => 0,
             "options" => array()
         ));
     }
 
-    public function jsapiShopGetProductAttributes ($id = null, $type = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetProductAttributes ($id = null, $type = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_productAttributes",
             "condition" => array(),
@@ -360,21 +375,22 @@ class shared {
         ));
 
         if (!empty($id)) {
-            $config['condition']['ProductID'] = $this->createCondition($id);
+            $config['condition']['ProductID'] = $app->getDB()->createCondition($id);
         }
         if (!empty($type)) {
-            $config['condition']['Attribute'] = $this->createCondition($type);
+            $config['condition']['Attribute'] = $app->getDB()->createCondition($type);
         }
 
         return $config;
     }
 
-    public function jsapiShopCreateFeature ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateFeature ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $data["FieldName"] = substr($data["FieldName"], 0, 200);
         $data["GroupName"] = substr($data["GroupName"], 0, 100);
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_features",
             "action" => "insert",
             "data" => $data,
@@ -382,8 +398,9 @@ class shared {
         ));
     }
 
-    public function jsapiShopGetFeatures () {
-        return $this->createDBQuery(array(
+    public static function jsapiShopGetFeatures () {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_features",
             "fields" => array("ID", "FieldName", "GroupName"),
@@ -392,10 +409,11 @@ class shared {
         ));
     }
 
-    public function jsapiShopAddFeatureToProduct ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopAddFeatureToProduct ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_productFeatures",
             "action" => "insert",
             "data" => $data,
@@ -403,8 +421,9 @@ class shared {
         ));
     }
 
-    public function jsapiShopAddAttributeToProduct ($data) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopAddAttributeToProduct ($data) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_productAttributes",
             "action" => "insert",
             "data" => $data,
@@ -412,28 +431,30 @@ class shared {
         ));
     }
 
-    public function jsapiShopClearProductFeatures ($ProductID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopClearProductFeatures ($ProductID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_productFeatures",
             "action" => "delete",
             "condition" => array(
-                "ProductID" => $this->createCondition($ProductID)
+                "ProductID" => $app->getDB()->createCondition($ProductID)
             ),
             "options" => null
         ));
     }
 
-    public function jsapiShopClearProductAttributes ($ProductID, $attributeType = false) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopClearProductAttributes ($ProductID, $attributeType = false) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "source" => "shop_productAttributes",
             "action" => "delete",
             "condition" => array(
-                "ProductID" => $this->createCondition($ProductID)
+                "ProductID" => $app->getDB()->createCondition($ProductID)
             ),
             "options" => null
         ));
         if (!empty($attributeType)) {
-            $config['condition']['Attribute'] = $this->createCondition(strtoupper($attributeType));
+            $config['condition']['Attribute'] = $app->getDB()->createCondition(strtoupper($attributeType));
         }
         return $config;
     }
@@ -447,8 +468,9 @@ class shared {
 
 
     // Product category (catalog) >>>>>
-    public function jsapiShopCatalogBrands ($categoryID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopCatalogBrands ($categoryID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogBrands",
@@ -457,8 +479,9 @@ class shared {
         ));
     }
 
-    // public function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
-    //     return $this->createDBQuery(array(
+    // public static function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
+        global $app;
+    //     return $app->getDB()->createDBQuery(array(
     //         "action" => "call",
     //         "procedure" => array(
     //             "name" => "getAllShopCategorySubCategories",
@@ -467,8 +490,9 @@ class shared {
     //     ));
     // }
 
-    public function jsapiGetShopCatalogPriceEdges ($categoryID) {
-        return $this->createDBQuery(array(
+    public static function jsapiGetShopCatalogPriceEdges ($categoryID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogPriceEdges",
@@ -487,8 +511,9 @@ class shared {
 
 
     // Additional: category location >>>>>
-    public function jsapiShopCategoryLocationGet ($id) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopCategoryLocationGet ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "call",
             "procedure" => array(
                 "name" => "getShopCatalogLocation",
@@ -505,17 +530,18 @@ class shared {
 
 
     // Shop catalog tree >>>>>
-    public function jsapiShopCatalogTree ($selectedCategoryID = false) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopCatalogTree ($selectedCategoryID = false) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(
-                "Status" => $this->createCondition("ACTIVE")
+                "Status" => $app->getDB()->createCondition("ACTIVE")
             ),
             "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Status"),
         ));
         if ($selectedCategoryID !== false) {
-            $config["condition"]["ID"] = $this->createCondition($selectedCategoryID);
+            $config["condition"]["ID"] = $app->getDB()->createCondition($selectedCategoryID);
         }
         return $config;
     }
@@ -537,8 +563,9 @@ class shared {
 
 
     // shop cetegories >>>>>
-    public function jsapiShopGetCategoryItem ($id = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetCategoryItem ($id = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(),
@@ -551,32 +578,34 @@ class shared {
 
         if (!is_null($id)) {
             $config["condition"] = array(
-                "shop_categories.ID" => $this->createCondition($id)
+                "shop_categories.ID" => $app->getDB()->createCondition($id)
             );
         }
 
         return $config;
     }
 
-    public function jsapiShopGetCategoryList (array $options = array()) {
-        $config = $this->jsapiShopGetCategoryItem();
+    public static function jsapiShopGetCategoryList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetCategoryItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->createCondition('ACTIVE');
+            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
         }
         return $config;
     }
 
-    public function jsapiShopCreateCategory ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateCategory ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
         $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_categories",
             "action" => "insert",
             "data" => $data,
@@ -584,35 +613,37 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdateCategory ($CategoryID, $data) {
-        $data["DateUpdated"] = $this->getDate();
+    public static function jsapiShopUpdateCategory ($CategoryID, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
         if (isset($data['Name'])) {
             $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
             $data["Name"] = substr($data["Name"], 0, 300);
         }
         // var_dump($data);
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_categories",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($CategoryID)
+                "ID" => $app->getDB()->createCondition($CategoryID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopDeleteCategory ($CategoryID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopDeleteCategory ($CategoryID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_categories",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($CategoryID)
+                "ID" => $app->getDB()->createCondition($CategoryID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $this->getDate()
+                "DateUpdated" => $app->getDB()->getDate()
             ),
             "options" => null
         ));
@@ -631,8 +662,9 @@ class shared {
 
 
     // shop origins <<<<<
-    public function jsapiShopGetOriginItem ($id = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetOriginItem ($id = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_origins",
             "condition" => array(),
@@ -645,32 +677,34 @@ class shared {
 
         if (!is_null($id)) {
             $config["condition"] = array(
-                "shop_origins.ID" => $this->createCondition($id)
+                "shop_origins.ID" => $app->getDB()->createCondition($id)
             );
         }
 
         return $config;
     }
 
-    public function jsapiShopGetOriginList (array $options = array()) {
-        $config = $this->jsapiShopGetOriginItem();
+    public static function jsapiShopGetOriginList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetOriginItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->createCondition('ACTIVE');
+            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
         }
         return $config;
     }
 
-    public function jsapiShopCreateOrigin ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateOrigin ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $data["Description"] = empty($data["Description"]) ? "" : $data["Description"];
         $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
         $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
         $data["Name"] = substr($data["Name"], 0, 300);
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_origins",
             "action" => "insert",
             "data" => $data,
@@ -678,8 +712,9 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdateOrigin ($OriginID, $data) {
-        $data["DateUpdated"] = $this->getDate();
+    public static function jsapiShopUpdateOrigin ($OriginID, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
         if (isset($data['Name'])) {
             $data["ExternalKey"] = \engine\lib\utils::url_slug($data['Name'], array('transliterate' => true));
             $data["ExternalKey"] = substr($data["ExternalKey"], 0, 50);
@@ -687,27 +722,28 @@ class shared {
         if (isset($data["Name"])) {
             $data["Name"] = substr($data["Name"], 0, 300);
         }
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_origins",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($OriginID)
+                "ID" => $app->getDB()->createCondition($OriginID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopDeleteOrigin ($OriginID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopDeleteOrigin ($OriginID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_origins",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($OriginID)
+                "ID" => $app->getDB()->createCondition($OriginID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $this->getDate()
+                "DateUpdated" => $app->getDB()->getDate()
             ),
             "options" => null
         ));
@@ -734,8 +770,9 @@ class shared {
 
 
     // shop delivery agencies >>>>>
-    public function jsapiShopGetDeliveryAgencyByID ($id = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetDeliveryAgencyByID ($id = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_deliveryAgencies",
             "condition" => array(),
@@ -747,23 +784,25 @@ class shared {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $this->createCondition($id);
+            $config["condition"]["ID"] = $app->getDB()->createCondition($id);
 
         return $config;
     }
 
-    public function jsapiShopGetDeliveriesList (array $options = array()) {
-        $config = $this->jsapiShopGetDeliveryAgencyByID();
+    public static function jsapiShopGetDeliveriesList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetDeliveryAgencyByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    public function jsapiShopCreateDeliveryAgent ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopCreateDeliveryAgent ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "insert",
             "data" => $data,
@@ -771,29 +810,31 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdateDeliveryAgent ($id, $data) {
-        $data["DateUpdated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopUpdateDeliveryAgent ($id, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($id)
+                "ID" => $app->getDB()->createCondition($id)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopDeleteDeliveryAgent ($id) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopDeleteDeliveryAgent ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($id)
+                "ID" => $app->getDB()->createCondition($id)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $this->getDate()
+                "DateUpdated" => $app->getDB()->getDate()
             ),
             "options" => null
         ));
@@ -815,8 +856,9 @@ class shared {
 
 
     // shop delivery agencies >>>>>
-    public function jsapiShopGetSettingByID ($id = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetSettingByID ($id = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_settings",
             "condition" => array(),
@@ -828,39 +870,43 @@ class shared {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $this->createCondition($id);
+            $config["condition"]["ID"] = $app->getDB()->createCondition($id);
 
         return $config;
     }
 
-    public function jsapiShopGetSettingByName ($name = null) {
-        $config = $this->jsapiShopGetSettingByID();
+    public static function jsapiShopGetSettingByName ($name = null) {
+        global $app;
+        $config = self::jsapiShopGetSettingByID();
         unset($config['condition']['ID']);
-        $config['condition']['Property'] = $this->createCondition($name);
+        $config['condition']['Property'] = $app->getDB()->createCondition($name);
         return $config;
     }
 
-    public function jsapiShopGetSettingByType ($type = null) {
-        $config = $this->jsapiShopGetSettingByID();
+    public static function jsapiShopGetSettingByType ($type = null) {
+        global $app;
+        $config = self::jsapiShopGetSettingByID();
         unset($config['condition']['ID']);
         $config['limit'] = 0;
-        $config['condition']['Type'] = $this->createCondition($type);
+        $config['condition']['Type'] = $app->getDB()->createCondition($type);
         return $config;
     }
 
-    public function jsapiShopGetSettingsList (array $options = array()) {
-        $config = $this->jsapiShopGetSettingByID();
+    public static function jsapiShopGetSettingsList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetSettingByID();
         $config['fields'] = array("ID");
         $config['limit'] = 0;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    public function jsapiShopCreateSetting ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateSetting ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $data["Status"] = 'ACTIVE';
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_settings",
             "action" => "insert",
             "data" => $data,
@@ -871,34 +917,37 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdateSetting ($id, $data) {
-        $data["DateUpdated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopUpdateSetting ($id, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_settings",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($id)
+                "ID" => $app->getDB()->createCondition($id)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopUpdateSettingByName ($id, $data) {
-        $config = $this->jsapiShopUpdateSetting($id, $data);
+    public static function jsapiShopUpdateSettingByName ($id, $data) {
+        global $app;
+        $config = self::jsapiShopUpdateSetting($id, $data);
         unset($config['condition']['ID']);
-        $config['condition']['Property'] = $this->createCondition($id);
+        $config['condition']['Property'] = $app->getDB()->createCondition($id);
         return $config;
     }
 
-    public function jsapiShopRemoveSetting ($id) {
-        $data["DateUpdated"] = $this->getDate();
+    public static function jsapiShopRemoveSetting ($id) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
         $data["Status"] = 'REMOVED';
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_settings",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($id)
+                "ID" => $app->getDB()->createCondition($id)
             ),
             "data" => $data,
             "options" => null
@@ -916,8 +965,9 @@ class shared {
 
 
     // Shop order >>>>>
-    public function jsapiShopGetOrderItem ($orderID = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetOrderItem ($orderID = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
@@ -930,50 +980,55 @@ class shared {
 
         if (!is_null($orderID))
             $config["condition"] = array(
-                "shop_orders.ID" => $this->createCondition($orderID)
+                "shop_orders.ID" => $app->getDB()->createCondition($orderID)
             );
 
         return $config;
     }
-    public function jsapiGetShopOrderList (array $options = array()) {
-        $config = $this->jsapiShopGetOrderItem();
+    public static function jsapiGetShopOrderList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (!empty($options['_pSearch'])) {
             if (is_string($options['_pSearch'])) {
-                $config['condition']["Hash"] = $this->createCondition($options['_pSearch'] . '%', 'like');
-                // $config['condition']["Model"] = $this->createCondition('%' . $options['search'] . '%', 'like');
-                // $config['condition']["SKU"] = $this->createCondition('%' . $options['search'] . '%', 'like');
+                $config['condition']["Hash"] = $app->getDB()->createCondition($options['_pSearch'] . '%', 'like');
+                // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
+                // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $options['search'] . '%', 'like');
             } elseif (is_array($options['_pSearch'])) {
                 foreach ($options['_pSearch'] as $value) {
-                    $config['condition']["Hash"] = $this->createCondition($value . '%', 'like');
-                    // $config['condition']["Model"] = $this->createCondition('%' . $value . '%', 'like');
-                    // $config['condition']["SKU"] = $this->createCondition('%' . $value . '%', 'like');
+                    $config['condition']["Hash"] = $app->getDB()->createCondition($value . '%', 'like');
+                    // $config['condition']["Model"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
+                    // $config['condition']["SKU"] = $app->getDB()->createCondition('%' . $value . '%', 'like');
                 }
             }
         }
         return $config;
     }
-    public function jsapiGetShopOrderList_Pending () {
-        $config = $this->jsapiGetShopOrderList();
-        $config['condition']['Status'] = $this->createCondition('NEW');
+    public static function jsapiGetShopOrderList_Pending () {
+        global $app;
+        $config = self::jsapiGetShopOrderList();
+        $config['condition']['Status'] = $app->getDB()->createCondition('NEW');
         return $config;
     }
-    public function jsapiGetShopOrderList_Todays () {
-        $config = $this->jsapiGetShopOrderList();
-        $config['condition']['DateCreated'] = $this->createCondition(date('Y-m-d'), ">");
+    public static function jsapiGetShopOrderList_Todays () {
+        global $app;
+        $config = self::jsapiGetShopOrderList();
+        $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d'), ">");
         return $config;
     }
-    public function jsapiGetShopOrderList_Expired () {
-        $config = $this->jsapiGetShopOrderList();
-        $config['condition']['Status'] = $this->createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
-        $config['condition']['DateCreated'] = $this->createCondition(date('Y-m-d', strtotime("-1 week")), "<");
+    public static function jsapiGetShopOrderList_Expired () {
+        global $app;
+        $config = self::jsapiGetShopOrderList();
+        $config['condition']['Status'] = $app->getDB()->createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
+        $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 week")), "<");
         return $config;
     }
-    public function jsapiShopCreateOrder ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateOrder ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $data["Hash"] = substr(md5(time() . md5(time())), 0, 5);
         // adjust values
         if (is_string($data["DeliveryID"])) {
@@ -982,39 +1037,42 @@ class shared {
         if (is_string($data["Warehouse"])) {
             $data["Warehouse"] = null;
         }
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_orders",
             "action" => "insert",
             "data" => $data,
             "options" => null
         ));
     }
-    public function jsapiShopCreateOrderBought ($data) {
-        $data["DateCreated"] = $this->getDate();
+    public static function jsapiShopCreateOrderBought ($data) {
+        global $app;
+        $data["DateCreated"] = $app->getDB()->getDate();
         $data["IsPromo"] = empty($data["IsPromo"]) ? 0 : 1;
-        return $this->createDBQuery(array(
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_boughts",
             "action" => "insert",
             "data" => $data,
             "options" => null
         ));
     }
-    public function jsapiShopGetOrderBoughts ($orderID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopGetOrderBoughts ($orderID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
             "condition" => array(
-                "OrderID" => $this->createCondition($orderID)
+                "OrderID" => $app->getDB()->createCondition($orderID)
             ),
             "fields" => array("ID", "ProductID", "Price", "SellingPrice", "Quantity", "IsPromo", "DateCreated"),
             "offset" => 0,
             "limit" => 0
         ));
     }
-    public function jsapiGetShopOrderByHash ($orderHash) {
-        $config = $this->jsapiShopGetOrderItem();
+    public static function jsapiGetShopOrderByHash ($orderHash) {
+        global $app;
+        $config = self::jsapiShopGetOrderItem();
         $config['condition'] = array(
-            "Hash" => $this->createCondition($orderHash)
+            "Hash" => $app->getDB()->createCondition($orderHash)
         );
         $config['options'] = array(
             "expandSingleRecord" => true
@@ -1022,28 +1080,30 @@ class shared {
         $config['limit'] = 1;
         return $config;
     }
-    public function jsapiShopUpdateOrder ($orderID, $data) {
-        $data["DateUpdated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopUpdateOrder ($orderID, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "action" => "update",
             "source" => "shop_orders",
             "condition" => array(
-                "ID" => $this->createCondition($orderID)
+                "ID" => $app->getDB()->createCondition($orderID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
-    public function jsapiShopDisableOrder ($OrderID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopDisableOrder ($OrderID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_orders",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($OrderID)
+                "ID" => $app->getDB()->createCondition($OrderID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $this->getDate()
+                "DateUpdated" => $app->getDB()->getDate()
             ),
             "options" => null
         ));
@@ -1063,8 +1123,9 @@ class shared {
 
 
     // >>>> Shop statistics
-    public function jsapiShopStat_PopularProducts () {
-        return $this->createDBQuery(array(
+    public static function jsapiShopStat_PopularProducts () {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_boughts",
             "fields" => array("ProductID", "@SUM(Quantity) AS SoldTotal", "@SUM(Price * Quantity) AS SumTotal"),
@@ -1078,14 +1139,15 @@ class shared {
         ));
     }
 
-    public function jsapiShopStat_NonPopularProducts () {
-        return $this->createDBQuery(array(
+    public static function jsapiShopStat_NonPopularProducts () {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_products",
             "fields" => array("ID"),
             "condition" => array(
-                "Status" => $this->createCondition("ACTIVE"),
-                "ID" => $this->createCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
+                "Status" => $app->getDB()->createCondition("ACTIVE"),
+                "ID" => $app->getDB()->createCondition("SELECT ProductID AS ID FROM shop_boughts", "NOT IN")
             ),
             "order" => array(
                 "field" => "DateCreated",
@@ -1096,8 +1158,9 @@ class shared {
         ));
     }
 
-    public function jsapiShopStat_ProductsOverview ($filter = null) {
-        $config = $this->jsapiShopGetProductItem();
+    public static function jsapiShopStat_ProductsOverview ($filter = null) {
+        global $app;
+        $config = self::jsapiShopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -1112,13 +1175,14 @@ class shared {
         // var_dump($requestGetData);
         if (!empty($filter)) {
             if (isset($filter['_fCategoryID']))
-                $config['condition']['CategoryID'] = $this->createCondition($filter['_fCategoryID']);
+                $config['condition']['CategoryID'] = $app->getDB()->createCondition($filter['_fCategoryID']);
         }
         return $config;
     }
 
-    public function jsapiShopStat_OrdersOverview () {
-        $config = $this->jsapiShopGetOrderItem();
+    public static function jsapiShopStat_OrdersOverview () {
+        global $app;
+        $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -1133,14 +1197,15 @@ class shared {
         return $config;
     }
 
-    public function jsapiShopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
+    public static function jsapiShopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
+        global $app;
         if (!is_string($comparator))
-            $comparator = $this->DEFAULT_COMPARATOR;
-        $config = $this->jsapiShopGetOrderItem();
+            $comparator = self::DEFAULT_COMPARATOR;
+        $config = self::jsapiShopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
-            'Status' => $this->createCondition($status, $comparator),
-            'DateUpdated' => $this->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
+            'Status' => $app->getDB()->createCondition($status, $comparator),
+            'DateUpdated' => $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -1155,12 +1220,13 @@ class shared {
         return $config;
     }
 
-    public function jsapiShopStat_ProductsIntensityLastMonth ($status) {
-        $config = $this->jsapiShopGetProductItem();
+    public static function jsapiShopStat_ProductsIntensityLastMonth ($status) {
+        global $app;
+        $config = self::jsapiShopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
-            'Status' => $this->createCondition($status),
-            'DateUpdated' => $this->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
+            'Status' => $app->getDB()->createCondition($status),
+            'DateUpdated' => $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 month")), ">")
         );
         $config['options'] = array(
             'asDict' => array(
@@ -1194,12 +1260,13 @@ class shared {
 
 
     // <<<< Promo area
-    public function jsapiShopGetPromoByHash ($hash, $activeOnly) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetPromoByHash ($hash, $activeOnly) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_promo",
             "condition" => array(
-                "Code" => $this->createCondition($hash)
+                "Code" => $app->getDB()->createCondition($hash)
             ),
             "options" => array(
                 "expandSingleRecord" => true
@@ -1207,15 +1274,16 @@ class shared {
         ));
 
         if ($activeOnly) {
-            $config['condition']['DateStart'] = $this->createCondition($this->getDate(), '<=');
-            $config['condition']['DateExpire'] = $this->createCondition($this->getDate(), '>=');
+            $config['condition']['DateStart'] = $app->getDB()->createCondition($app->getDB()->getDate(), '<=');
+            $config['condition']['DateExpire'] = $app->getDB()->createCondition($app->getDB()->getDate(), '>=');
         }
 
         return $config;
     }
 
-    public function jsapiShopGetPromoByID ($promoID = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetPromoByID ($promoID = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_promo",
             "condition" => array(),
@@ -1227,28 +1295,30 @@ class shared {
 
         if (!is_null($promoID))
             $config["condition"] = array(
-                "ID" => $this->createCondition($promoID)
+                "ID" => $app->getDB()->createCondition($promoID)
             );
         return $config;
     }
 
-    public function jsapiShopGetPromoList (array $options = array()) {
-        $config = $this->jsapiShopGetPromoByID();
+    public static function jsapiShopGetPromoList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetPromoByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         if (empty($options['expired'])) {
-            $config['condition']['DateExpire'] = $this->createCondition($this->getDate(), '>=');
+            $config['condition']['DateExpire'] = $app->getDB()->createCondition($app->getDB()->getDate(), '>=');
         }
         // if (empty($options['future'])) {
-            // $config['condition']['DateStart'] = $this->createCondition($this->getDate(), '<=');
+            // $config['condition']['DateStart'] = $app->getDB()->createCondition($app->getDB()->getDate(), '<=');
         // }
         return $config;
     }
 
-    public function jsapiShopCreatePromo ($data) {
-        $data["DateCreated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopCreatePromo ($data) {
+        global $app;
+        $data["DateCreated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "action" => "insert",
             "source" => "shop_promo",
             "data" => $data,
@@ -1256,27 +1326,29 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdatePromo ($promoID, $data) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopUpdatePromo ($promoID, $data) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "update",
             "source" => "shop_promo",
             "condition" => array(
-                "ID" => $this->createCondition($promoID)
+                "ID" => $app->getDB()->createCondition($promoID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopExpirePromo ($promoID) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopExpirePromo ($promoID) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "action" => "update",
             "source" => "shop_promo",
             "condition" => array(
-                "ID" => $this->createCondition($promoID)
+                "ID" => $app->getDB()->createCondition($promoID)
             ),
             "data" => array(
-                "DateExpire" => $this->getDate()
+                "DateExpire" => $app->getDB()->getDate()
             ),
             "options" => null
         ));
@@ -1305,8 +1377,9 @@ class shared {
 
 
     // shop delivery agencies >>>>>
-    public function jsapiShopGetExchangeRateByID ($id = null) {
-        $config = $this->createDBQuery(array(
+    public static function jsapiShopGetExchangeRateByID ($id = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
             "source" => "shop_currency",
             "condition" => array(),
@@ -1318,35 +1391,39 @@ class shared {
         ));
 
         if (!is_null($id))
-            $config["condition"]["ID"] = $this->createCondition($id);
+            $config["condition"]["ID"] = $app->getDB()->createCondition($id);
 
         return $config;
     }
-    public function jsapiShopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
-        $config = $this->jsapiShopGetExchangeRateByID();
+    public static function jsapiShopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
+        global $app;
+        $config = self::jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyB" => $this->createCondition($currencyNameTo)
+            "CurrencyB" => $app->getDB()->createCondition($currencyNameTo)
         );
         return $config;
     }
-    public function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
-        $config = $this->jsapiShopGetExchangeRateByID();
+    public static function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
+        global $app;
+        $config = self::jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyA" => $this->createCondition($currencyNameFrom)
+            "CurrencyA" => $app->getDB()->createCondition($currencyNameFrom)
         );
         return $config;
     }
-    public function jsapiShopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
-        $config = $this->jsapiShopGetExchangeRateByID();
+    public static function jsapiShopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
+        global $app;
+        $config = self::jsapiShopGetExchangeRateByID();
         $config["condition"] = array(
-            "CurrencyA" => $this->createCondition($currencyNameFrom),
-            "CurrencyB" => $this->createCondition($currencyNameTo)
+            "CurrencyA" => $app->getDB()->createCondition($currencyNameFrom),
+            "CurrencyB" => $app->getDB()->createCondition($currencyNameTo)
         );
         return $config;
     }
 
-    public function jsapiShopGetExchangeRatesList (array $options = array()) {
-        $config = $this->jsapiShopGetExchangeRateByID();
+    public static function jsapiShopGetExchangeRatesList (array $options = array()) {
+        global $app;
+        $config = self::jsapiShopGetExchangeRateByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
@@ -1357,13 +1434,14 @@ class shared {
             $config['limit'] = $options['limit'];
         }
         if (empty($options['removed'])) {
-            $config['condition']['Status'] = $this->createCondition('ACTIVE');
+            $config['condition']['Status'] = $app->getDB()->createCondition('ACTIVE');
         }
         return $config;
     }
 
-    public function jsapiShopGetUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
-        $config = $this->jsapiShopGetExchangeRateByID();
+    public static function jsapiShopGetUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
+        global $app;
+        $config = self::jsapiShopGetExchangeRateByID();
         $config['fields'] = array($fieldToGroupBy);
         $config['limit'] = 0;
         $config['group'] = $fieldToGroupBy;
@@ -1371,10 +1449,11 @@ class shared {
         return $config;
     }
 
-    public function jsapiShopCreateExchangeRate ($data) {
-        $data["DateUpdated"] = $this->getDate();
-        $data["DateCreated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopCreateExchangeRate ($data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_currency",
             "action" => "insert",
             "data" => $data,
@@ -1382,29 +1461,31 @@ class shared {
         ));
     }
 
-    public function jsapiShopUpdateExchangeRate ($id, $data) {
-        $data["DateUpdated"] = $this->getDate();
-        return $this->createDBQuery(array(
+    public static function jsapiShopUpdateExchangeRate ($id, $data) {
+        global $app;
+        $data["DateUpdated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_currency",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($id)
+                "ID" => $app->getDB()->createCondition($id)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public function jsapiShopDeleteExchangeRate ($id) {
-        return $this->createDBQuery(array(
+    public static function jsapiShopDeleteExchangeRate ($id) {
+        global $app;
+        return $app->getDB()->createDBQuery(array(
             "source" => "shop_currency",
             "action" => "update",
             "condition" => array(
-                "ID" => $this->createCondition($id)
+                "ID" => $app->getDB()->createCondition($id)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
-                "DateUpdated" => $this->getDate()
+                "DateUpdated" => $app->getDB()->getDate()
             ),
             "options" => null
         ));

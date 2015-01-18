@@ -32,19 +32,19 @@ class settings extends \engine\objects\api {
     public function findByID ($id) {
         if (empty($id) || !is_numeric($id))
             return null;
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingByID($id);
+        $config = shared::jsapiShopGetSettingByID($id);
         $setting = $this->getCustomer()->fetch($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function findByName ($name) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingByName($name);
+        $config = shared::jsapiShopGetSettingByName($name);
         $setting = $this->getCustomer()->fetch($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function getSettingsByType ($type) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingByType($type);
+        $config = shared::jsapiShopGetSettingByType($type);
         $settings = $this->getCustomer()->fetch($config);
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->__adjustSettingItem($value);
@@ -62,7 +62,7 @@ class settings extends \engine\objects\api {
     }
 
     public function toList (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetSettingsList($options);
+        $config = shared::jsapiShopGetSettingsList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -97,7 +97,7 @@ class settings extends \engine\objects\api {
                 $CustomerID = $this->getCustomer()->getCustomerID();
                 $validatedValues["CustomerID"] = $CustomerID;
 
-                $config = $this->getPluginConfiguration()->data->jsapiShopCreateSetting($validatedValues);
+                $config = shared::jsapiShopCreateSetting($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
 
@@ -142,9 +142,9 @@ class settings extends \engine\objects\api {
                 if (!empty($validatedValues)) {
                     $this->getCustomerDataBase()->beginTransaction();
                     if (is_numeric($nameOrID)) {
-                        $configSettingUpdate = $this->getPluginConfiguration()->data->jsapiShopUpdateSetting($nameOrID, $validatedValues);
+                        $configSettingUpdate = shared::jsapiShopUpdateSetting($nameOrID, $validatedValues);
                     } else {
-                        $configSettingUpdate = $this->getPluginConfiguration()->data->jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
+                        $configSettingUpdate = shared::jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
                     }
                     $this->getCustomer()->fetch($configSettingUpdate);
                     $this->getCustomerDataBase()->commit();
@@ -175,7 +175,7 @@ class settings extends \engine\objects\api {
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
-            $config = $this->getPluginConfiguration()->data->jsapiShopRemoveSetting($settingID);
+            $config = shared::jsapiShopRemoveSetting($settingID);
             $this->getCustomer()->fetch($config);
             $this->getCustomerDataBase()->commit();
             $success = true;

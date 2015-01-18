@@ -30,7 +30,7 @@ class categories extends \engine\objects\api {
     public function getCategoryByID ($categoryID) {
         if (empty($categoryID) || !is_numeric($categoryID))
             return null;
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem($categoryID);
+        $config = shared::jsapiShopGetCategoryItem($categoryID);
         $category = $this->getCustomer()->fetch($config);
         if (empty($category))
             return null;
@@ -38,8 +38,8 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategoryByName ($categoryName) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($categoryName);
+        $config = shared::jsapiShopGetCategoryItem();
+        $config['condition']['Name'] = shared::createCondition($categoryName);
         $category = $this->getCustomer()->fetch($config);
         if (empty($category))
             return null;
@@ -47,8 +47,8 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategoryByExternalKey ($externalKey) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryItem();
-        $config['condition']['ExternalKey'] = $this->getPluginConfiguration()->data->createCondition($externalKey);
+        $config = shared::jsapiShopGetCategoryItem();
+        $config['condition']['ExternalKey'] = shared::createCondition($externalKey);
         $category = $this->getCustomer()->fetch($config);
         if (empty($category))
             return null;
@@ -56,7 +56,7 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategories_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetCategoryList($options);
+        $config = shared::jsapiShopGetCategoryList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -91,7 +91,7 @@ class categories extends \engine\objects\api {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopCreateCategory($validatedValues);
+                $configCreateCategory = shared::jsapiShopCreateCategory($validatedValues);
                 $CategoryID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
@@ -134,7 +134,7 @@ class categories extends \engine\objects\api {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateCategory($CategoryID, $validatedValues);
+                $configCreateCategory = shared::jsapiShopUpdateCategory($CategoryID, $validatedValues);
                 $this->getCustomer()->fetch($configCreateCategory);
 
                 $this->getCustomerDataBase()->commit();
@@ -161,7 +161,7 @@ class categories extends \engine\objects\api {
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteCategory($CategoryID);
+            $config = shared::jsapiShopDeleteCategory($CategoryID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -185,7 +185,7 @@ class categories extends \engine\objects\api {
     // -----------------------------------------------
     public function getCategoryLocationByCategoryID ($categoryID) {
         // var_dump($categoryID);
-        $configLocation = $this->getPluginConfiguration()->data->jsapiShopCategoryLocationGet($categoryID);
+        $configLocation = shared::jsapiShopCategoryLocationGet($categoryID);
         $location = $this->getCustomer()->fetch($configLocation);
         foreach ($location as &$categoryItem) {
             $categoryItem['ID'] = intval($categoryItem['ID']);
@@ -218,7 +218,7 @@ class categories extends \engine\objects\api {
             return $branch;
         }
 
-        $config = $this->getPluginConfiguration()->data->jsapiShopCatalogTree($selectedCategoryID);
+        $config = shared::jsapiShopCatalogTree($selectedCategoryID);
         $categories = $this->getCustomer()->fetch($config);
         $map = array();
         foreach ($categories as $key => $value)

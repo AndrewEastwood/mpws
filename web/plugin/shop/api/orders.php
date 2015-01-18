@@ -24,7 +24,7 @@ class orders extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetOrderItem($orderID);
+        $config = shared::jsapiShopGetOrderItem($orderID);
         $order = null;
         $order = $this->getCustomer()->fetch($config);
         if (empty($order)) {
@@ -41,7 +41,7 @@ class orders extends \engine\objects\api {
     }
 
     public function getOrderByHash ($orderHash) {
-        $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderByHash($orderHash);
+        $config = shared::jsapiGetShopOrderByHash($orderHash);
         $order = $this->getCustomer()->fetch($config);
 
         if (empty($order)) {
@@ -57,10 +57,10 @@ class orders extends \engine\objects\api {
 
     public function getOrders_ListExpired (array $options = array()) {
         // get expired orders
-        $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList_Expired();
+        $config = shared::jsapiGetShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -77,10 +77,10 @@ class orders extends \engine\objects\api {
 
     public function getOrders_ListTodays (array $options = array()) {
         // get todays orders
-        $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList_Todays();
+        $config = shared::jsapiGetShopOrderList_Todays();
         // set permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -97,10 +97,10 @@ class orders extends \engine\objects\api {
 
     public function getOrders_ListPending (array $options = array()) {
         // get expired orders
-        $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList_Pending();
+        $config = shared::jsapiGetShopOrderList_Pending();
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -117,10 +117,10 @@ class orders extends \engine\objects\api {
 
     public function getOrders_List (array $options = array()) {
         // get all orders
-        $config = $this->getPluginConfiguration()->data->jsapiGetShopOrderList($options);
+        $config = shared::jsapiGetShopOrderList($options);
         // check permissions
         if (!$this->getCustomer()->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $this->getPluginConfiguration()->data->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -297,7 +297,7 @@ class orders extends \engine\objects\api {
             // var_dump($dataOrder);
             // return;
 
-            $configOrder = $this->getPluginConfiguration()->data->jsapiShopCreateOrder($dataOrder);
+            $configOrder = shared::jsapiShopCreateOrder($dataOrder);
             $orderID = $this->getCustomer()->fetch($configOrder);
 
             if (empty($orderID)) {
@@ -319,7 +319,7 @@ class orders extends \engine\objects\api {
                 $dataBought["SellingPrice"] = $productItem["_prices"]["actual"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
-                $configBought = $this->getPluginConfiguration()->data->jsapiShopCreateOrderBought($dataBought);
+                $configBought = shared::jsapiShopCreateOrderBought($dataBought);
                 $boughtID = $this->getCustomer()->fetch($configBought);
 
                 // check for created bought
@@ -375,7 +375,7 @@ class orders extends \engine\objects\api {
 
                     $validatedValues = $validatedDataObj['values'];
 
-                    $configUpdateOrder = $this->getPluginConfiguration()->data->jsapiShopUpdateOrder($OrderID, $validatedValues);
+                    $configUpdateOrder = shared::jsapiShopUpdateOrder($OrderID, $validatedValues);
 
                     $this->getCustomer()->fetch($configUpdateOrder, true);
 
@@ -404,7 +404,7 @@ class orders extends \engine\objects\api {
 
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopDisableOrder($OrderID);
+            $config = shared::jsapiShopDisableOrder($OrderID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -501,7 +501,7 @@ class orders extends \engine\objects\api {
             if (!empty($order['DeliveryID']))
                 $order['delivery'] = $this->getAPI()->delivery->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
-            $configBoughts = $this->getPluginConfiguration()->data->jsapiShopGetOrderBoughts($orderID);
+            $configBoughts = shared::jsapiShopGetOrderBoughts($orderID);
             $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
@@ -698,7 +698,7 @@ class orders extends \engine\objects\api {
             return null;
         }
         // get orders count for each states
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_OrdersOverview();
+        $config = shared::jsapiShopStat_OrdersOverview();
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
         $res = array();
@@ -719,7 +719,7 @@ class orders extends \engine\objects\api {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
+        $config = shared::jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }
@@ -728,7 +728,7 @@ class orders extends \engine\objects\api {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
+        $config = shared::jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }

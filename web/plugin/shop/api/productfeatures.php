@@ -16,14 +16,14 @@ class productfeatures extends \engine\objects\api {
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
         // var_dump($data);
-        $config = $this->getPluginConfiguration()->data->jsapiShopCreateFeature($data);
+        $config = shared::jsapiShopCreateFeature($data);
         $featureID = $this->getCustomer()->fetch($config);
         return $featureID;
     }
 
     public function getFeatures () {
         $tree = array();
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetFeatures();
+        $config = shared::jsapiShopGetFeatures();
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $value) {

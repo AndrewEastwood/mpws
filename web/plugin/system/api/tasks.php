@@ -3,19 +3,13 @@ namespace web\plugin\system\api;
 
 class tasks {
 
-    var $shared = null;
-
-    function __construct() {
-        $this->shared = new shared();
-    }
-
     public function addTask ($group, $name, $params) {
         global $app;
         $result = array();
         $success = false;
         $errors = array();
         // echo 1111;
-        $config = $this->shared->addTask(array(
+        $config = shared::addTask(array(
             'CustomerID' => $this->getCustomerID(),
             'Group' => $group,
             'Name' => $name,
@@ -42,7 +36,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = $this->shared->startTask(md5($group.$name.$params));
+        $config = shared::startTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -63,7 +57,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = $this->shared->scheduleTask(md5($group.$name.$params));
+        $config = shared::scheduleTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -84,7 +78,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = $this->shared->stopTask($id);
+        $config = shared::stopTask($id);
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -104,7 +98,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = $this->shared->setTaskResult($id, $taskResult);
+        $config = shared::setTaskResult($id, $taskResult);
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -123,7 +117,7 @@ class tasks {
     public function isTaskAdded ($group, $name, $params) {
         global $app;
         $result = array();
-        $config = $this->shared->getTaskByHash(md5($group . $name . $params));
+        $config = shared::getTaskByHash(md5($group . $name . $params));
         $result = $this->fetch($config);
         $this->__adjustTask($result);
         return $result;
@@ -138,7 +132,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = $this->shared->deleteTaskByHash($hash);
+        $config = shared::deleteTaskByHash($hash);
         try {
             $app->getDB()->beginTransaction();
             $result = $this->fetch($config);
@@ -156,7 +150,7 @@ class tasks {
     public function getActiveTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = $this->shared->getGroupTasks($groupName, true, false, false);
+        $config = shared::getGroupTasks($groupName, true, false, false);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -169,7 +163,7 @@ class tasks {
     public function getCompletedTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = $this->shared->getGroupTasks($groupName, false, true, false);
+        $config = shared::getGroupTasks($groupName, false, true, false);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -182,7 +176,7 @@ class tasks {
     public function getNewTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = $this->shared->getGroupTasks($groupName, false, false, false);
+        $config = shared::getGroupTasks($groupName, false, false, false);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -195,7 +189,7 @@ class tasks {
     public function getCanceledTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = $this->shared->getGroupTasks($groupName, false, false, true);
+        $config = shared::getGroupTasks($groupName, false, false, true);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -208,7 +202,7 @@ class tasks {
     public function getNextNewTaskToProcess ($group, $name) {
         global $app;
         $result = array();
-        $config = $this->shared->getNextTaskToProcess($group, $name);
+        $config = shared::getNextTaskToProcess($group, $name);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {

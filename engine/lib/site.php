@@ -23,7 +23,7 @@ class site {
     private $apis;
 
     function __construct() {
-        // $this->customerInfo = $this->getCustomerInfo();
+        $this->customerInfo = $this->getCustomerInfo();
     }
 
     public function getHtmlPage () {
@@ -62,7 +62,7 @@ class site {
             BUILD: " . ($app->isDebug() ? 'null' : $app->getBuildVersion()) . ",
             ISDEV: " . ($app->isDebug() ? 'true' : 'false') . ",
             ISTOOLBOX: " . ($app->isToolbox() ? 'true' : 'false') . ",
-            PLUGINS: ['" . implode("', '", $plugins) . "'],
+            PLUGINS: " . (count($plugins) ? "['" . implode("', '", $plugins) . "']" : '[]') . ",
             MPWS_VERSION: '" . $version . "',
             MPWS_CUSTOMER: '" . $displayCustomer . "',
             PATH_STATIC_BASE: '/',
@@ -70,10 +70,8 @@ class site {
             URL_PUBLIC_HOSTNAME: '" . $Host . "',
             URL_PUBLIC_SCHEME: '" . $Scheme . "',
             URL_PUBLIC_TITLE: '" . $Title . "',
-            URL_API: '/api.js',
-            URL_AUTH: '/auth.js',
-            URL_TASK: '/background/',
-            URL_UPLOAD: '/upload.js',
+            URL_API: '/api/',
+            URL_UPLOAD: '/upload/',
             URL_STATIC_CUSTOMER: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_WEBSITE: '/" . Path::createPath($staticPath, Path::getDirNameCustomer(), $displayCustomer, true) . "',
             URL_STATIC_PLUGIN: '/" . Path::createPath($staticPath, 'plugin', true) . "',
@@ -96,6 +94,10 @@ class site {
         return $html;
     }
 
+    public function switchToCustomerByName ($customerName) {
+
+    }
+
     public function getCustomerID () {
         $info = $this->getCustomerInfo();
         return isset($info['ID']) ? intval($info['ID']) : null;
@@ -110,22 +112,22 @@ class site {
         return $this->customerInfo;
     }
 
-    public function fetch ($config, $skipCustomerID = false) {
-        global $app;
-        $customerInfo = $this->getCustomerInfo();
-        $source = $config["source"];
-        $key = $source . '.CustomerID';
-        $addCustomerID = false;
-        if (!$skipCustomerID) {
-            if (isset($config["condition"]["CustomerID"])) {
-                $config["condition"][$key] = $app->getDB()->createCondition($customerInfo['ID']);
-                unset($config["condition"]["CustomerID"]);
-            } else if (!isset($config["condition"][$key])) {
-                $config["condition"][$key] = $app->getDB()->createCondition($customerInfo['ID']);
-            }
-        }
-        return $app->getDB()->getData($config);
-    }
+    // public function fetch ($config, $skipCustomerID = false) {
+    //     global $app;
+    //     $customerInfo = $this->getCustomerInfo();
+    //     $source = $config["source"];
+    //     $key = $source . '.CustomerID';
+    //     $addCustomerID = false;
+    //     if (!$skipCustomerID) {
+    //         if (isset($config["condition"]["CustomerID"])) {
+    //             $config["condition"][$key] = $app->getDB()->createCondition($customerInfo['ID']);
+    //             unset($config["condition"]["CustomerID"]);
+    //         } else if (!isset($config["condition"][$key])) {
+    //             $config["condition"][$key] = $app->getDB()->createCondition($customerInfo['ID']);
+    //         }
+    //     }
+    //     return $app->getDB()->getData($config);
+    // }
 
     public function runAsDISPLAY () {
         Response::setResponse($this->getHtmlPage());
@@ -165,9 +167,10 @@ class site {
 
     public function getRuntimeAPIClass ($apiKey = false) {
         if (empty($apiKey)) {
-            $_source = Request::pickFromGET('source');
-            $_fn = Request::pickFromGET('fn');
-            $apiKey = $_source . ':' . $_fn;
+            $apiKey = Request::pickFromGET('api');
+            // $_source = Request::pickFromGET('source');
+            // $_fn = Request::pickFromGET('api');
+            // $apiKey = $_source . ':' . $_fn;
         }
         $api = null;
         if (isset($this->apis[$apiKey]))
@@ -190,20 +193,20 @@ class site {
         $api->$_method(Response::$_RESPONSE, $_REQ);
     }
 
-    public function runAsAUTH () {
-        // Request::processRequest($this);
-        $_REQ = Request::getRequestData();
-        $_source = Request::pickFromGET('source');
-        $_fn = Request::pickFromGET('fn');
-        $_method = strtolower($_SERVER['REQUEST_METHOD']);
-        $requestFnElements = array($_method);
-        if (Request::hasInGet('source'))
-            $requestFnElements[] = $_source;
-        if (Request::hasInGet('fn'))
-            $requestFnElements[] = $_fn;
-        $fn = join("_", $requestFnElements);
-        $this->$fn(Response::$_RESPONSE, $_REQ);
-    }
+    // public function runAsAUTH () {
+    //     // Request::processRequest($this);
+    //     $_REQ = Request::getRequestData();
+    //     $_source = Request::pickFromGET('source');
+    //     $_fn = Request::pickFromGET('fn');
+    //     $_method = strtolower($_SERVER['REQUEST_METHOD']);
+    //     $requestFnElements = array($_method);
+    //     if (Request::hasInGet('source'))
+    //         $requestFnElements[] = $_source;
+    //     if (Request::hasInGet('fn'))
+    //         $requestFnElements[] = $_fn;
+    //     $fn = join("_", $requestFnElements);
+    //     $this->$fn(Response::$_RESPONSE, $_REQ);
+    // }
 
     public function runAsUPLOAD () {
         global $app;

@@ -27,7 +27,7 @@ class origins extends \engine\objects\api {
     public function getOriginByID ($originID) {
         if (empty($originID) || !is_numeric($originID))
             return null;
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginItem($originID);
+        $config = shared::jsapiShopGetOriginItem($originID);
         $origin = $this->getCustomer()->fetch($config);
         if (empty($origin))
             return null;
@@ -35,8 +35,8 @@ class origins extends \engine\objects\api {
     }
 
     public function getOriginByName ($originName) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($originName);
+        $config = shared::jsapiShopGetOriginItem();
+        $config['condition']['Name'] = shared::createCondition($originName);
         $origin = $this->getCustomer()->fetch($config);
         if (empty($origin))
             return null;
@@ -44,7 +44,7 @@ class origins extends \engine\objects\api {
     }
 
     public function getOrigins_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetOriginList($options);
+        $config = shared::jsapiShopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -77,7 +77,7 @@ class origins extends \engine\objects\api {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateOrigin($validatedValues);
+                $configCreateOrigin = shared::jsapiShopCreateOrigin($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $OriginID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
@@ -123,7 +123,7 @@ class origins extends \engine\objects\api {
 
                 if (count($validatedValues)) {
                     $this->getCustomerDataBase()->beginTransaction();
-                    $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateOrigin($OriginID, $validatedValues);
+                    $configCreateCategory = shared::jsapiShopUpdateOrigin($OriginID, $validatedValues);
                     $this->getCustomer()->fetch($configCreateCategory);
                     $this->getCustomerDataBase()->commit();
                 }
@@ -150,7 +150,7 @@ class origins extends \engine\objects\api {
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteOrigin($OriginID);
+            $config = shared::jsapiShopDeleteOrigin($OriginID);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();

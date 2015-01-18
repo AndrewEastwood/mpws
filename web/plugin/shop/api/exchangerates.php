@@ -39,14 +39,14 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function getExchangeRateByID ($agencyID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateByID($agencyID);
+        $config = shared::jsapiShopGetExchangeRateByID($agencyID);
         $data = $this->getCustomer()->fetch($config);
         $data = $this->__adjustExchangeRate($data);
         return $data;
     }
 
     public function getExchangeRates_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList($options);
+        $config = shared::jsapiShopGetExchangeRatesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -84,7 +84,7 @@ class exchangerates extends \engine\objects\api {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateExchangeRate($validatedValues);
+                $configCreateOrigin = shared::jsapiShopCreateExchangeRate($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $rateID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
@@ -133,7 +133,7 @@ class exchangerates extends \engine\objects\api {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateExchangeRate($id, $validatedValues);
+                $configCreateCategory = shared::jsapiShopUpdateExchangeRate($id, $validatedValues);
                 $this->getCustomer()->fetch($configCreateCategory);
 
                 $this->getCustomerDataBase()->commit();
@@ -173,7 +173,7 @@ class exchangerates extends \engine\objects\api {
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteExchangeRate($id);
+            $config = shared::jsapiShopDeleteExchangeRate($id);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -214,13 +214,13 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateTo_ByCurrencyName($currencyName);
+        $config = shared::jsapiShopGetExchangeRateTo_ByCurrencyName($currencyName);
         $rate = $this->getCustomer()->fetch($config) ?: array();
         return $rate;
     }
 
     public function getExchangeRateFrom_ByCurrencyName ($currencyName) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateFrom_ByCurrencyName($currencyName);
+        $config = shared::jsapiShopGetExchangeRateFrom_ByCurrencyName($currencyName);
         $rate = $this->getCustomer()->fetch($config) ?: array();
         return $rate;
     }
@@ -264,11 +264,11 @@ class exchangerates extends \engine\objects\api {
             $valueCurrencyName = $baseCurrencyName;
         }
 
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
+        $config = shared::jsapiShopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
             'limit' => 0
         ));
-        $config['condition']['CurrencyA'] = $this->getPluginConfiguration()->data->createCondition($valueCurrencyName);
+        $config['condition']['CurrencyA'] = shared::createCondition($valueCurrencyName);
         $availableRates = $this->getCustomer()->fetch($config) ?: array();
         $data = array();
 
@@ -292,7 +292,7 @@ class exchangerates extends \engine\objects\api {
         return $this->_currencies;
     }
     public function getAllUserUniqCurrencyNames () {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRatesList(array(
+        $config = shared::jsapiShopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB'),
             'limit' => 0
         ));
@@ -307,7 +307,7 @@ class exchangerates extends \engine\objects\api {
         return array_keys($data);
     }
     public function getExchangeRateByBothRateNames ($baseCCY, $CCY) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetExchangeRateByBothNames($baseCCY, $CCY);
+        $config = shared::jsapiShopGetExchangeRateByBothNames($baseCCY, $CCY);
         $rate = $this->getCustomer()->fetch($config) ?: array();
         return $rate;
     }

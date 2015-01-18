@@ -4,9 +4,12 @@ namespace web\plugin\system\api;
 
 class shared {
 
-    public function addTask ($data) {
+    public static $statusCustomer = array('ACTIVE','REMOVED');
+    public static $statusCustomerSettings = array('ACTIVE','DISABLED');
+
+    public static function addTask ($data) {
         global $app;
-        $data["DateCreated"] = $this->getDate();
+        $data["DateCreated"] = $app->getDB()->getDate();
         $params = isset($data['Params']) ? $data['Params'] : '';
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -25,7 +28,7 @@ class shared {
         ));
     }
 
-    public function scheduleTask ($hash) {
+    public static function scheduleTask ($hash) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -43,7 +46,7 @@ class shared {
         ));
     }
 
-    public function startTask ($hash) {
+    public static function startTask ($hash) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -61,7 +64,7 @@ class shared {
         ));
     }
 
-    public function getGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
+    public static function getGroupTasks ($groupName, $active = false, $completed = false, $canceled = false) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -83,7 +86,7 @@ class shared {
         return $config;
     }
 
-    public function stopTask ($id) {
+    public static function stopTask ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -101,7 +104,7 @@ class shared {
         ));
     }
 
-    public function setTaskResult ($id, $result) {
+    public static function setTaskResult ($id, $result) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -120,7 +123,7 @@ class shared {
         ));
     }
 
-    public function getTaskByHash ($hash) {
+    public static function getTaskByHash ($hash) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -135,7 +138,7 @@ class shared {
         return $config;
     }
 
-    public function deleteTaskByHash ($hash) {
+    public static function deleteTaskByHash ($hash) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -147,7 +150,7 @@ class shared {
         ));
     }
 
-    public function getNextTaskToProcess ($group, $name) {
+    public static function getNextTaskToProcess ($group, $name) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_tasks",
@@ -165,6 +168,44 @@ class shared {
             )
         ));
     }
+
+    public static function getCustomerSetting ($customerID, $id = null) {
+        global $app;
+        $config = $app->getDB()->createDBQuery(array(
+            "source" => "mpws_customerSettings",
+            "fields" => array("ID", "CustomerID", "Property", "Value", "Status"),
+            "condition" = array(
+                "CustomerID" => $app->getDB()->createCondition($customerID)
+            ),
+            "action" => "select",
+            "options" => array(
+                "expandSingleRecord" => true
+            )
+        ));
+        if ($id !== null) {
+            $config['condition']['ID'] = $app->getDB()->createCondition($id);
+        }
+        return $config;
+    }
+
+    public static function getCustomerSettings ($customerID) {
+        $config = self::getCustomerSetting();
+        unset($config['options']);
+        return $config;
+    }
+
+
+    public static function addCustomerParame ($data) {
+        global $app;
+        $data["DateCreated"] = $app->getDB()->getDate();
+        return $app->getDB()->createDBQuery(array(
+            "source" => "mpws_customerSettings",
+            "action" => "insert",
+            "data" => $data,
+            "options" => null
+        ));
+    }
+
 }
 
 ?>

@@ -17,7 +17,7 @@ class delivery extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getDeliveryAgencyByID ($agencyID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveryAgencyByID($agencyID);
+        $config = shared::jsapiShopGetDeliveryAgencyByID($agencyID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['_isRemoved'] = $data['Status'] === 'REMOVED';
@@ -26,7 +26,7 @@ class delivery extends \engine\objects\api {
     }
 
     public function getDeliveries_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetDeliveriesList($options);
+        $config = shared::jsapiShopGetDeliveriesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -58,7 +58,7 @@ class delivery extends \engine\objects\api {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = $this->getPluginConfiguration()->data->jsapiShopCreateDeliveryAgent($validatedValues);
+                $configCreateOrigin = shared::jsapiShopCreateDeliveryAgent($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
@@ -102,7 +102,7 @@ class delivery extends \engine\objects\api {
 
                 $this->getCustomerDataBase()->beginTransaction();
 
-                $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdateDeliveryAgent($id, $validatedValues);
+                $configCreateCategory = shared::jsapiShopUpdateDeliveryAgent($id, $validatedValues);
                 $this->getCustomer()->fetch($configCreateCategory);
 
                 $this->getCustomerDataBase()->commit();
@@ -129,7 +129,7 @@ class delivery extends \engine\objects\api {
         try {
             $this->getCustomerDataBase()->beginTransaction();
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopDeleteDeliveryAgent($id);
+            $config = shared::jsapiShopDeleteDeliveryAgent($id);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();

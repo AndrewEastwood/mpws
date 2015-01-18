@@ -134,7 +134,7 @@ class products extends \engine\objects\api {
     public function getProductByID ($productID, $skipRelations = false) {
         if (empty($productID) || !is_numeric($productID))
             return null;
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem($productID);
+        $config = shared::jsapiShopGetProductItem($productID);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -142,7 +142,7 @@ class products extends \engine\objects\api {
     }
 
     public function getProductByExternalKey ($productExternalKey, $skipRelations = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItemByExternalKey($productExternalKey);
+        $config = shared::jsapiShopGetProductItemByExternalKey($productExternalKey);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -150,8 +150,8 @@ class products extends \engine\objects\api {
     }
 
     public function getProductByName ($productName, $skipRelations = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($productName);
+        $config = shared::jsapiShopGetProductItem();
+        $config['condition']['Name'] = shared::createCondition($productName);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -159,8 +159,8 @@ class products extends \engine\objects\api {
     }
 
     public function getProductByModel ($productModel, $skipRelations = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
-        $config['condition']['Model'] = $this->getPluginConfiguration()->data->createCondition($productModel);
+        $config = shared::jsapiShopGetProductItem();
+        $config['condition']['Model'] = shared::createCondition($productModel);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -168,9 +168,9 @@ class products extends \engine\objects\api {
     }
 
     public function getProductByModelAndOriginName ($productName, $originName, $skipRelations = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
-        $config['condition']['Name'] = $this->getPluginConfiguration()->data->createCondition($productName);
-        $config['condition']['OriginName'] = $this->getPluginConfiguration()->data->createCondition($originName);
+        $config = shared::jsapiShopGetProductItem();
+        $config['condition']['Name'] = shared::createCondition($productName);
+        $config['condition']['OriginName'] = shared::createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -186,10 +186,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProductIDByModelAndOriginName ($productName, $originName) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
+        $config = shared::jsapiShopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['Model'] = $this->getPluginConfiguration()->data->createCondition($productName);
-        $config['condition']['shop_origins.Name'] = $this->getPluginConfiguration()->data->createCondition($originName);
+        $config['condition']['Model'] = shared::createCondition($productName);
+        $config['condition']['shop_origins.Name'] = shared::createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -203,9 +203,9 @@ class products extends \engine\objects\api {
     }
 
     public function verifyProductByID ($productID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductItem();
+        $config = shared::jsapiShopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['ID'] = $this->getPluginConfiguration()->data->createCondition($productID);
+        $config['condition']['ID'] = shared::createCondition($productID);
         $product = $this->getCustomer()->fetch($config);
         if (empty($product))
             return null;
@@ -214,7 +214,7 @@ class products extends \engine\objects\api {
 
     public function getProductImages ($productID) {
         $images = array();
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductAttributes($productID, 'IMAGE');
+        $config = shared::jsapiShopGetProductAttributes($productID, 'IMAGE');
         $data = $this->getCustomer()->fetch($config);
         // var_dump($data);
         if (!empty($data)) {
@@ -234,7 +234,7 @@ class products extends \engine\objects\api {
 
     public function getProductVideos ($productID) {
         $videos = array();
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductAttributes($productID, 'VIDEO');
+        $config = shared::jsapiShopGetProductAttributes($productID, 'VIDEO');
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -246,7 +246,7 @@ class products extends \engine\objects\api {
 
     public function getProductAttributes ($productID) {
         $attr = array();
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductAttributes($productID);
+        $config = shared::jsapiShopGetProductAttributes($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -261,7 +261,7 @@ class products extends \engine\objects\api {
 
     public function getProductFeatures ($productID) {
         $featuresGroups = array();
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductFeatures($productID);
+        $config = shared::jsapiShopGetProductFeatures($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $value) {
@@ -276,7 +276,7 @@ class products extends \engine\objects\api {
 
     public function getProductPriceHistory ($productID) {
         $prices = array();
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductPriceStats($productID);
+        $config = shared::jsapiShopGetProductPriceStats($productID);
         $data = $this->getCustomer()->fetch($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -288,7 +288,7 @@ class products extends \engine\objects\api {
 
     public function getProductRelations ($productID) {
         $relations = array();
-        $configProductsRelations = $this->getPluginConfiguration()->data->jsapiShopGetProductRelations($productID);
+        $configProductsRelations = shared::jsapiShopGetProductRelations($productID);
         $relatedItemsIDs = $this->getCustomer()->fetch($configProductsRelations);
         if (isset($relatedItemsIDs)) {
             foreach ($relatedItemsIDs as $relationItem) {
@@ -304,7 +304,7 @@ class products extends \engine\objects\api {
     }
 
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductList($options);
+        $config = shared::jsapiShopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
@@ -333,7 +333,7 @@ class products extends \engine\objects\api {
     }
 
     public function getLatestProducts_List (array $options = array(), $skipRelations = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetProductList($options);
+        $config = shared::jsapiShopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
@@ -362,7 +362,7 @@ class products extends \engine\objects\api {
     }
 
     public function getProducts_List_Latest () {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetLatestProductsList();
+        $config = shared::jsapiShopGetLatestProductsList();
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -507,7 +507,7 @@ class products extends \engine\objects\api {
                 //     } else {
                 //         $data["FieldName"] = $value;
                 //         $data["CustomerID"] = $CustomerID;
-                //         $config = $this->getPluginConfiguration()->data->jsapiShopCreateFeature($data);
+                //         $config = shared::jsapiShopCreateFeature($data);
                 //         $featureID = $this->getCustomer()->fetch($config) ?: null;
                 //         if (isset($featureID) && $featureID >= 0) {
                 //             $productFeaturesIDs[] = $featureID;
@@ -522,7 +522,7 @@ class products extends \engine\objects\api {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
                 // var_dump($validatedValues);
-                $config = $this->getPluginConfiguration()->data->jsapiShopCreateProduct($validatedValues);
+                $config = shared::jsapiShopCreateProduct($validatedValues);
                 // var_dump($config);
                 $ProductID = null;
                 try {
@@ -542,7 +542,7 @@ class products extends \engine\objects\api {
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
-                        $config = $this->getPluginConfiguration()->data->jsapiShopAddFeatureToProduct($featureData);
+                        $config = shared::jsapiShopAddFeatureToProduct($featureData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -577,7 +577,7 @@ class products extends \engine\objects\api {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = $this->getPluginConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
+                            $config = shared::jsapiShopAddAttributeToProduct($attrData);
                             $this->getCustomer()->fetch($config);
                         }
                     }
@@ -592,7 +592,7 @@ class products extends \engine\objects\api {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
-                        $config = $this->getPluginConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
+                        $config = shared::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -744,7 +744,7 @@ class products extends \engine\objects\api {
                 if (isset($validatedValues["IsPromo"])) {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
-                $config = $this->getPluginConfiguration()->data->jsapiShopUpdateProduct($ProductID, $validatedValues);
+                $config = shared::jsapiShopUpdateProduct($ProductID, $validatedValues);
                 try {
                     $this->getCustomer()->fetch($config);
                 } catch (Exception $ep) {
@@ -754,14 +754,14 @@ class products extends \engine\objects\api {
                 // set new features
                 if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
-                    $config = $this->getPluginConfiguration()->data->jsapiShopClearProductFeatures($ProductID);
+                    $config = shared::jsapiShopClearProductFeatures($ProductID);
                     $this->getCustomer()->fetch($config);
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         // var_dump($featureData);
-                        $config = $this->getPluginConfiguration()->data->jsapiShopAddFeatureToProduct($featureData);
+                        $config = shared::jsapiShopAddFeatureToProduct($featureData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -819,7 +819,7 @@ class products extends \engine\objects\api {
                     // $attrData = $initAttrData->getArrayCopy();
                     // $attrData['Attribute'] = 'IMAGE';
                     // $attrData['Value'] = $uploadInfo['filename'];
-                    // $config = $this->getPluginConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
+                    // $config = shared::jsapiShopAddAttributeToProduct($attrData);
                     // $this->getCustomer()->fetch($config);
 
                     // $newFileName = $ProductID . uniqid(time());
@@ -852,13 +852,13 @@ class products extends \engine\objects\api {
                     ));
                     // -- IMAGE
                     if (isset($attributes["IMAGE"])) {
-                        $config = $this->getPluginConfiguration()->data->jsapiShopClearProductAttributes($ProductID, 'IMAGE');
+                        $config = shared::jsapiShopClearProductAttributes($ProductID, 'IMAGE');
                         $this->getCustomer()->fetch($config);
                         foreach ($attributes["IMAGE"] as $imageName) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $imageName;
-                            $config = $this->getPluginConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
+                            $config = shared::jsapiShopAddAttributeToProduct($attrData);
                             $this->getCustomer()->fetch($config);
                         }
                     }
@@ -871,12 +871,12 @@ class products extends \engine\objects\api {
                             continue;
                         }
                         // clear existed tags before adding new ones
-                        $config = $this->getPluginConfiguration()->data->jsapiShopClearProductAttributes($ProductID, $key);
+                        $config = shared::jsapiShopClearProductAttributes($ProductID, $key);
                         $this->getCustomer()->fetch($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = $this->getPluginConfiguration()->data->jsapiShopAddAttributeToProduct($attrData);
+                        $config = shared::jsapiShopAddAttributeToProduct($attrData);
                         $this->getCustomer()->fetch($config);
                     }
                 }
@@ -979,7 +979,7 @@ class products extends \engine\objects\api {
                 'Status' => 'ARCHIVED'
             );
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopUpdateProduct($ProductID, $data);
+            $config = shared::jsapiShopUpdateProduct($ProductID, $data);
             $this->getCustomer()->fetch($config);
 
             $this->getCustomerDataBase()->commit();
@@ -1012,7 +1012,7 @@ class products extends \engine\objects\api {
                 'Status' => 'ARCHIVED'
             );
 
-            $config = $this->getPluginConfiguration()->data->jsapiShopUpdateProduct(null, $data);
+            $config = shared::jsapiShopUpdateProduct(null, $data);
             $config['condition'] = null;
             $this->getCustomer()->fetch($config);
 
@@ -1032,7 +1032,7 @@ class products extends \engine\objects\api {
 
     public function getProducts_TopNonPopular () {
         // get non-popuplar 15 products
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_NonPopularProducts();
+        $config = shared::jsapiShopStat_NonPopularProducts();
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($productIDs)) {
@@ -1045,7 +1045,7 @@ class products extends \engine\objects\api {
 
     public function getProducts_TopPopular () {
         // get top 15 products
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_PopularProducts();
+        $config = shared::jsapiShopStat_PopularProducts();
         $productIDs = $this->getCustomer()->fetch($config);
         $data = array();
         if (!empty($productIDs)) {
@@ -1064,7 +1064,7 @@ class products extends \engine\objects\api {
             return null;
         }
         // get shop products overview:
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsOverview($filter);
+        $config = shared::jsapiShopStat_ProductsOverview($filter);
         $data = $this->getCustomer()->fetch($config) ?: array();
         $total = 0;
         $res = array();
@@ -1085,7 +1085,7 @@ class products extends \engine\objects\api {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth('ACTIVE');
+        $config = shared::jsapiShopStat_ProductsIntensityLastMonth('ACTIVE');
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }
@@ -1093,7 +1093,7 @@ class products extends \engine\objects\api {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth('PREORDER');
+        $config = shared::jsapiShopStat_ProductsIntensityLastMonth('PREORDER');
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }
@@ -1101,7 +1101,7 @@ class products extends \engine\objects\api {
         if (!$this->getCustomer()->ifYouCan('Admin')) {
             return null;
         }
-        $config = $this->getPluginConfiguration()->data->jsapiShopStat_ProductsIntensityLastMonth('DISCOUNT');
+        $config = shared::jsapiShopStat_ProductsIntensityLastMonth('DISCOUNT');
         $data = $this->getCustomer()->fetch($config) ?: array();
         return $data;
     }

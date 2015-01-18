@@ -3,12 +3,6 @@ namespace web\plugin\system\api;
 
 class auth {
 
-    var $shared = null;
-
-    function __construct() {
-        $this->shared = new shared();
-    }
-
     private function _setPermissions ($perms) {
         $listOfDOs = array();
         // adjust permission values
@@ -59,48 +53,53 @@ class auth {
         return null;
     }
 
-    public function get_status (&$resp) {
+    public function get (&$resp) {
         $resp['auth_id'] = $this->getAuthID();
         $this->updateSessionAuth();
     }
 
-    public function post_signin (&$resp, $req) {
+    public function post (&$resp, $req) {
+        if (isset($req->get['signin'])) {
+            $password = $req->post['password'];
+            $email = $req->post['email'];
+            $remember = $req->post['remember'];
 
-        $password = $req->post['password'];
-        $email = $req->post['email'];
-        $remember = $req->post['remember'];
+            if (empty($email) || empty($password)) {
+                $resp['error'] = 'WrongCredentials';
+                return;
+            }
 
-        if (empty($email) || empty($password)) {
-            $resp['error'] = 'WrongCredentials';
-            return;
+            $password = Secure::EncodeAccountPassword($password);
+
+            $config = $app->getSettings()->data->jsapiGetAccountByCredentials($email, $password);
+            // avoid removed account
+            $config["fields"] = array("ID");
+            $config["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
+            $account = $this->fetch($config);
+            $AccountID = null;
+            // var_dump($config);
+            if (empty($account))
+                $resp['error'] = 'WrongCredentials';
+            else {
+                $AccountID = intval($account['ID']);
+                $_SESSION['AccountID'] = $AccountID;
+                // set online state for account
+                $configOnline = $app->getSettings()->data->jsapiSetOnlineAccount($AccountID);
+                $this->fetch($configOnline);
+            }
+            $resp['auth_id'] = $this->getAuthID();
+            $this->updateSessionAuth();
         }
-
-        $password = Secure::EncodeAccountPassword($password);
-
-        $config = $app->getSettings()->data->jsapiGetAccountByCredentials($email, $password);
-        // avoid removed account
-        $config["fields"] = array("ID");
-        $config["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
-        $account = $this->fetch($config);
-        $AccountID = null;
-        // var_dump($config);
-        if (empty($account))
-            $resp['error'] = 'WrongCredentials';
-        else {
-            $AccountID = intval($account['ID']);
-            $_SESSION['AccountID'] = $AccountID;
-            // set online state for account
-            $configOnline = $app->getSettings()->data->jsapiSetOnlineAccount($AccountID);
-            $this->fetch($configOnline);
+        if (isset($req->get['signout'])) {
+            $resp['auth_id'] = $this->clearAuthID();
+            $this->updateSessionAuth();
         }
-        $resp['auth_id'] = $this->getAuthID();
-        $this->updateSessionAuth();
     }
 
-    public function post_signout (&$resp) {
-        $resp['auth_id'] = $this->clearAuthID();
-        $this->updateSessionAuth();
-    }
+    // public function post_signout (&$resp) {
+    //     $resp['auth_id'] = $this->clearAuthID();
+    //     $this->updateSessionAuth();
+    // }
 
 }
 

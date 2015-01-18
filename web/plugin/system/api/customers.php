@@ -3,12 +3,6 @@ namespace web\plugin\system\api;
 
 class customers {
 
-    private $_statuses = array('ACTIVE','REMOVED');
-
-    function __construct() {
-        $this->shared = new shared();
-    }
-
     public function getRuntimeCustomer () {
         global $app;
         $customer = null;
@@ -40,6 +34,22 @@ class customers {
 
     public function getCustomers () {
 
+    }
+
+    public function getCustomerSettings () {
+
+    }
+
+    public function addCustomer () {
+
+    }
+
+    public function updateCustomer () {
+        
+    }
+
+    public function removeCustomer () {
+        
     }
 
 /*    public function get (&$resp, $req) {

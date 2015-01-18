@@ -17,18 +17,18 @@ class promos extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getPromoByID ($promoID) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetPromoByID($promoID);
+        $config = shared::jsapiShopGetPromoByID($promoID);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
-        $data['_isExpired'] = strtotime($this->getPluginConfiguration()->data->getDate()) > strtotime($data['DateExpire']);
-        $data['_isFuture'] = strtotime($this->getPluginConfiguration()->data->getDate()) < strtotime($data['DateStart']);
+        $data['_isExpired'] = strtotime(shared::getDate()) > strtotime($data['DateExpire']);
+        $data['_isFuture'] = strtotime(shared::getDate()) < strtotime($data['DateStart']);
         $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
         return $data;
     }
 
     public function getPromoByHash ($hash, $activeOnly = false) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetPromoByHash($hash, $activeOnly);
+        $config = shared::jsapiShopGetPromoByHash($hash, $activeOnly);
         $data = $this->getCustomer()->fetch($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
@@ -36,7 +36,7 @@ class promos extends \engine\objects\api {
     }
 
     public function getPromoCodes_List (array $options = array()) {
-        $config = $this->getPluginConfiguration()->data->jsapiShopGetPromoList($options);
+        $config = shared::jsapiShopGetPromoList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -69,7 +69,7 @@ class promos extends \engine\objects\api {
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreatePromo = $this->getPluginConfiguration()->data->jsapiShopCreatePromo($validatedValues);
+                $configCreatePromo = shared::jsapiShopCreatePromo($validatedValues);
 
                 $this->getCustomerDataBase()->beginTransaction();
                 $promoID = $this->getCustomer()->fetch($configCreatePromo) ?: null;
@@ -113,7 +113,7 @@ class promos extends \engine\objects\api {
 
                 if (count($validatedValues)) {
                     $this->getCustomerDataBase()->beginTransaction();
-                    $configCreateCategory = $this->getPluginConfiguration()->data->jsapiShopUpdatePromo($promoID, $validatedValues);
+                    $configCreateCategory = shared::jsapiShopUpdatePromo($promoID, $validatedValues);
                     $this->getCustomer()->fetch($configCreateCategory);
                     $this->getCustomerDataBase()->commit();
                 }
@@ -140,7 +140,7 @@ class promos extends \engine\objects\api {
 
         try {
             $this->getCustomerDataBase()->beginTransaction();
-            $config = $this->getPluginConfiguration()->data->jsapiShopExpirePromo($promoID);
+            $config = shared::jsapiShopExpirePromo($promoID);
             $this->getCustomer()->fetch($config);
             $this->getCustomerDataBase()->commit();
             $success = true;
