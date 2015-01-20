@@ -325,7 +325,6 @@ class products {
 
         $callbacks = array(
             "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
-        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
@@ -356,7 +355,6 @@ class products {
 
         $callbacks = array(
             "parse" => function ($items) use($self, $skipRelations) {
-        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
@@ -386,7 +384,6 @@ class products {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], true);
@@ -429,7 +426,7 @@ class products {
         if ($validatedDataObj["totalErrors"] == 0)
             try {
                 $validatedValues = $validatedDataObj['values'];
-                $CustomerID = $this->getCustomer()->getCustomerID();
+                $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $attributes = array();
                 $attributes["IMAGE"] = array();
                 $features = array();
@@ -668,7 +665,7 @@ class products {
             try {
 
                 $validatedValues = $validatedDataObj['values'];
-                $CustomerID = $this->getCustomer()->getCustomerID();
+                $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $attributes = array();
                 $attributes["IMAGE"] = array();
                 $features = array();
@@ -995,7 +992,7 @@ class products {
         $success = false;
         try {
 
-            $CustomerID = $this->getCustomer()->getCustomerID();
+            $CustomerID = $app->getSite()->getRuntimeCustomerID();
 
             $app->getDB()->beginTransaction();
 
@@ -1029,7 +1026,7 @@ class products {
         $success = false;
         try {
 
-            $CustomerID = $this->getCustomer()->getCustomerID();
+            $CustomerID = $app->getSite()->getRuntimeCustomerID();
 
             $app->getDB()->beginTransaction();
 
@@ -1139,7 +1136,6 @@ class products {
     }
 
     public function get (&$resp, $req) {
-        global $app;
         if (!empty($req->get['id'])) {
             if (is_numeric($req->get['id'])) {
                 $ProductID = intval($req->get['id']);
@@ -1161,7 +1157,6 @@ class products {
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -1171,7 +1166,6 @@ class products {
     }
 
     public function patch (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -1186,7 +1180,6 @@ class products {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;

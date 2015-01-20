@@ -21,7 +21,6 @@ class categories {
     // -----------------------------------------------
     // -----------------------------------------------
     private function __adjustCategory (&$category) {
-        global $app;
         $category['ID'] = intval($category['ID']);
         $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
         $category['_isRemoved'] = $category['Status'] === 'REMOVED';
@@ -66,7 +65,6 @@ class categories {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getCategoryByID($val['ID']);
@@ -97,7 +95,7 @@ class categories {
 
                 $app->getDB()->beginTransaction();
 
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
                 $configCreateCategory = dbquery::shopCreateCategory($validatedValues);
                 $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
@@ -213,7 +211,6 @@ class categories {
         global $app;
 
         function getTree (array &$elements, $parentId = null) {
-        global $app;
             $branch = array();
             // echo "#######Looking for element where parentid ==", $parentId, PHP_EOL;
             foreach ($elements as $key => $element) {
@@ -243,7 +240,6 @@ class categories {
     }
 
     public function get (&$resp, $req) {
-        global $app;
         if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
         } else if (empty($req->get['id'])) {
@@ -259,7 +255,6 @@ class categories {
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -269,7 +264,6 @@ class categories {
     }
 
     public function patch (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -284,7 +278,6 @@ class categories {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;

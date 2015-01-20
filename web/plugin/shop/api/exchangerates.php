@@ -32,7 +32,6 @@ class exchangerates {
     // -----------------------------------------------
     // -----------------------------------------------
     private function __adjustExchangeRate (&$data) {
-        global $app;
         if (isset($data['ID']))
             $data['ID'] = intval($data['ID']);
         if (isset($data['Rate']))
@@ -54,7 +53,6 @@ class exchangerates {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getExchangeRateByID($val['ID']);
@@ -88,7 +86,7 @@ class exchangerates {
                     $validatedValues['Rate'] = floatval($validatedValues['Rate']);
                 }
 
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
                 $configCreateOrigin = dbquery::shopCreateExchangeRate($validatedValues);
 
@@ -161,7 +159,6 @@ class exchangerates {
     }
 
     public function createOrUpdateExchangeRate ($reqData) {
-        global $app;
         $rate = null;
         if (isset($reqData['CurrencyA']) && isset($reqData['CurrencyB'])) {
             $rate = $this->getExchangeRateByBothRateNames($reqData['CurrencyA'], $reqData['CurrencyB']);
@@ -205,7 +202,6 @@ class exchangerates {
     // -----------------------------------------------
 
     public function getDefaultDBPriceCurrency () {
-        global $app;
         $currencyName = null;
         $prop = API::getAPI('shop:settings')->findByName('DBPriceCurrencyType');
         if ($prop === null) {
@@ -297,14 +293,12 @@ class exchangerates {
     }
 
     public function getActiveExchangeRatesList () {
-        global $app;
         $rates = $this->getExchangeRates_List(array(
             "limit" => 0
         ));
         return $rates;
     }
     public function getCurrencyList () {
-        global $app;
         return $this->_currencies;
     }
     public function getAllUserUniqCurrencyNames () {
@@ -337,7 +331,6 @@ class exchangerates {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        global $app;
         if (isset($req->get['type'])) {
             switch ($req->get['type']) {
                 case 'currencylist':
@@ -366,7 +359,6 @@ class exchangerates {
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -376,7 +368,6 @@ class exchangerates {
     }
 
     public function patch (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -391,7 +382,6 @@ class exchangerates {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;

@@ -20,7 +20,6 @@ class origins {
     // -----------------------------------------------
 
     private function __adjustOrigin (&$origin) {
-        global $app;
         $origin['ID'] = intval($origin['ID']);
         $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
         return $origin;
@@ -53,7 +52,6 @@ class origins {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getOriginByID($val['ID']);
@@ -82,7 +80,7 @@ class origins {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
                 $configCreateOrigin = dbquery::shopCreateOrigin($validatedValues);
 
@@ -177,7 +175,6 @@ class origins {
     }
 
     public function get (&$resp, $req) {
-        global $app;
         if (empty($req->get['id'])) {
             $resp = $this->getOrigins_List($req->get);
         } else {
@@ -187,7 +184,6 @@ class origins {
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -197,7 +193,6 @@ class origins {
     }
 
     public function patch (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -212,7 +207,6 @@ class origins {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;

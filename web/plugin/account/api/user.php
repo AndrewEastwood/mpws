@@ -96,7 +96,7 @@ class user {
                 $app->getDB()->beginTransaction();
 
                 $data = array();
-                $data["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $data["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $data["FirstName"] = $validatedValues['FirstName'];
                 $data["LastName"] = $validatedValues['LastName'];
                 $data["EMail"] = $validatedValues['EMail'];

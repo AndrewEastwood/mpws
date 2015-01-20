@@ -78,9 +78,18 @@ var APP = {
 APP.init();
 
 require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/underscore", "default/js/lib/cache"], function (Sandbox, JSUrl, _, Cache) {
-    APP.getApiLink = function (/* args */) {
+    APP.getApiLink = function (extraOptions /* or args */) {
         var _url = new JSUrl(APP.config.URL_API);
-        _url.path += [].slice.call(arguments).join('/') + '/';
+        if (typeof extraOptions === "object" && extraOptions.source && extraOptions.fn) {
+            // backward compatibility
+            _url.path += extraOptions.source + '/' + extraOptions.fn + '/';
+            var queryItems = _.omit(extraOptions, 'source', 'fn');
+            _(queryItems).each(function (v, k) {
+                _url.query[k] = !!v ? v : "";
+            });
+        } else {
+            _url.path += [].slice.call(arguments).join('/') + '/';
+        }
         return _url.toString();
     }
     // APP.getApiLink = function (extraOptions) {

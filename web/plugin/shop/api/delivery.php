@@ -32,7 +32,6 @@ class delivery {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getDeliveryAgencyByID($val['ID']);
@@ -60,7 +59,7 @@ class delivery {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
                 $configCreateOrigin = dbquery::shopCreateDeliveryAgent($validatedValues);
 
@@ -159,7 +158,6 @@ class delivery {
     // -----------------------------------------------
 
     public function getActiveDeliveryList () {
-        global $app;
         $deliveries = $this->getDeliveries_List(array(
             "limit" => 0,
             "_fStatus" => "ACTIVE"
@@ -174,7 +172,6 @@ class delivery {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        global $app;
         if (empty($req->get['id'])) {
             $resp = $this->getDeliveries_List($req->get);
         } else {
@@ -184,7 +181,6 @@ class delivery {
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -194,7 +190,6 @@ class delivery {
     }
 
     public function patch (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -209,7 +204,6 @@ class delivery {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;

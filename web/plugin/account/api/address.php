@@ -62,7 +62,7 @@ class address {
                 $validatedValues = $validatedDataObj['values'];
 
                 $data = array();
-                $data["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $data["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $data["UserID"] = $UserID;
                 $data["Address"] = $validatedValues['Address'];
                 $data["POBox"] = $validatedValues['POBox'];

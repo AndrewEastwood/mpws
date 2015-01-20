@@ -69,7 +69,6 @@ class settings {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $key => $settingItem) {
                     $_items[] = $self->findByID($settingItem['ID']);
@@ -99,7 +98,7 @@ class settings {
         if ($validatedDataObj["totalErrors"] == 0)
             try {
                 $validatedValues = $validatedDataObj['values'];
-                $CustomerID = $this->getCustomer()->getCustomerID();
+                $CustomerID = $app->getSite()->getRuntimeCustomerID();
                 $validatedValues["CustomerID"] = $CustomerID;
 
                 $config = dbquery::shopCreateSetting($validatedValues);
@@ -204,11 +203,9 @@ class settings {
     // -----------------------------------------------
 
     public function getSettingsFormOrder () {
-        global $app;
         return $this->getSettingsByType($this->SETTING_TYPE->FORMORDER);
     }
     public function getSettingsMapFormOrder () {
-        global $app;
         $map = array();
         $items = $this->getSettingsFormOrder();
         foreach ($items as $value) {
@@ -224,7 +221,6 @@ class settings {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
-        global $app;
         $data = $req->get;
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $data['_fStatus'] = "ACTIVE";
@@ -239,7 +235,6 @@ class settings {
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -257,7 +252,6 @@ class settings {
     }
 
     public function patch (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
@@ -275,7 +269,6 @@ class settings {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;

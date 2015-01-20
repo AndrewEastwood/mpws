@@ -14,7 +14,6 @@ use ArrayObject;
 class catalog {
 
     private function getCategoriesFromCategoryTree ($categoryTree, $selectedCategoryID, &$list = array(), $inSelectedNode = false) {
-        global $app;
         foreach ($categoryTree as $key => $node) {
             $this->getCategoriesFromCategoryTree($node['childNodes'], $selectedCategoryID, $list, $key === $selectedCategoryID);
             if ($inSelectedNode || $key === $selectedCategoryID) {
@@ -25,11 +24,9 @@ class catalog {
     }
 
     public function getUniqueProductsCount ($productItems) {
-        global $app;
         return count($this->getUniqueProductsIDs($productItems));
     }
     public function getUniqueProductsIDs ($productItems) {
-        global $app;
         $currentProductsIDs = array();
         $productItems = $productItems ?: array();
         foreach ($productItems as $value) {
@@ -94,6 +91,12 @@ class catalog {
 
         $activeTree = API::getAPI('shop:categories')->getCatalogTree();
         $cetegories = $this->getCategoriesFromCategoryTree($activeTree, $categoryID);
+
+        if (empty($cetegories)) {
+            header("HTTP/1.0 404 Not Found");
+            die();
+        }
+
         $cetegoriesIDs = array();
         $cetegoriesNodes = array();
 
@@ -390,13 +393,12 @@ class catalog {
     }
 
     public function get (&$resp, $req) {
-        global $app;
         if (isset($req->get['id'])) {
             if (is_numeric($req->get['id'])) {
                 $CategoryID = intval($req->get['id']);
                 $resp = $this->getCatalogBrowse($CategoryID);
             } else {
-                $category = API::getAPI('shop:categories->getCategoryByExternalKey($req')->get['id']);
+                $category = API::getAPI('shop:categories')->getCategoryByExternalKey($req->get['id']);
                 if (isset($category['ID'])) {
                     $resp = $this->getCatalogBrowse($category['ID']);
                 } else {

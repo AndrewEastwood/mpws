@@ -43,7 +43,6 @@ class promos {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getPromoByID($val['ID']);
@@ -72,7 +71,7 @@ class promos {
 
                 $validatedValues = $validatedDataObj['values'];
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
-                $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
 
                 $configCreatePromo = dbquery::shopCreatePromo($validatedValues);
 

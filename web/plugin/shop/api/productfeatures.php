@@ -40,7 +40,6 @@ class productfeatures {
     }
 
     public function get (&$resp, $req) {
-        global $app;
         $resp = $this->getFeatures();
     }
 

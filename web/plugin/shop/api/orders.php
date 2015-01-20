@@ -17,7 +17,6 @@ class orders {
         'CUSTOMER_CANCELED','LOGISTIC_DELIVERED',
         'SHOP_CLOSED','SHOP_REFUNDED','NEW');
     public function getOrderStatuses () {
-        global $app;
         return $this->_statuses;
     }
     // -----------------------------------------------
@@ -70,7 +69,6 @@ class orders {
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
-        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem)
                     $_items[] = $self->getOrderByID($orderRawItem['ID']);
@@ -289,7 +287,7 @@ class orders {
             $dataOrder = array();
             $dataOrder["AccountID"] = $accountID;
             $dataOrder["AccountAddressesID"] = $addressID;
-            $dataOrder["CustomerID"] = $this->getCustomer()->getCustomerID();
+            $dataOrder["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
             $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
             $dataOrder["Warehouse"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartWarehouse'] : null;
             $dataOrder["Comment"] = $formSettings['ShowComment']['_isActive'] ? $reqData['form']['shopCartComment'] : '';
@@ -322,7 +320,7 @@ class orders {
             // _orderQuantity
             foreach ($order['items'] as $productItem) {
                 $dataBought = array();
-                $dataBought["CustomerID"] = $this->getCustomer()->getCustomerID();
+                $dataBought["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
                 $dataBought["ProductID"] = $productItem["ID"];
                 $dataBought["OrderID"] = $orderID;
                 $dataBought["Price"] = $productItem["_prices"]["price"];
@@ -434,7 +432,7 @@ class orders {
     }
 
     private function __attachOrderDetails (&$order) {
-        global $app;
+        // global $app;
         // echo "__attachOrderDetails";
         if (empty($order))
             return;
@@ -670,39 +668,33 @@ class orders {
     }
 
     private function _getOrderTemp () {
-        global $app;
         $order['temp'] = true;
         $this->__attachOrderDetails($order);
         return $order;
     }
 
     private function _resetOrderTemp () {
-        global $app;
         API::getAPI('shop:promos')->resetSessionPromo();
         $this->_resetSessionOrderProducts();
     }
 
     public function productCountInCart ($id) {
-        global $app;
         // $order = $this->_getOrderTemp();
         $sessionOrderProducts = $this->_getSessionOrderProducts();
         return isset($sessionOrderProducts[$id]) ? $sessionOrderProducts[$id]['_orderQuantity'] : 0;
     }
 
     private function _setSessionOrderProducts ($order) {
-        global $app;
         $_SESSION[$this->_listKey_Cart] = $order;
     }
 
     private function _getSessionOrderProducts () {
-        global $app;
         if (!isset($_SESSION[$this->_listKey_Cart]))
             $_SESSION[$this->_listKey_Cart] = array();
         return $_SESSION[$this->_listKey_Cart];
     }
 
     private function _resetSessionOrderProducts () {
-        global $app;
         $_SESSION[$this->_listKey_Cart] = array();
     }
 
@@ -772,7 +764,7 @@ class orders {
         } else if (isset($req->get['hash'])) {
             $resp = $this->getOrderByHash($req->get['hash']);
             return;
-        } else if ($this->getApp()->isToolbox()) {
+        } else if ($app->isToolbox()) {
             $resp = $this->getOrders_List($req->get);
         } else {
             $resp = $this->_getOrderTemp();
@@ -782,7 +774,6 @@ class orders {
     // create new order
     // public useres do that
     public function post (&$resp, $req) {
-        global $app;
         $resp = $this->createOrder($req->data);
     }
 
@@ -798,7 +789,7 @@ class orders {
         // $options = array();
         $isTemp = !isset($req->get['id']);
 
-        if (!$isTemp && $this->getApp()->isToolbox()) {
+        if (!$isTemp && $app->isToolbox()) {
             // if (API::getAPI('system:auth')->ifYouCan('Admin')) {
                 // here we're gonna change order's status only
         // check permissions
@@ -845,7 +836,7 @@ class orders {
     // removes particular product or clears whole shopping cart
     public function delete (&$resp, $req) { // ????? we must keep all orders
         global $app;
-        if (!$this->getApp()->isToolbox()) {
+        if (!$app->isToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;
         }

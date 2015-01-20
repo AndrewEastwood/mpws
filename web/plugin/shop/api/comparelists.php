@@ -15,18 +15,15 @@ class comparelists {
     private $_listKey_Compare = 'shop:listCompare';
 
     public function getProductsLimit () {
-        global $app;
         return $this->_productsLimit;
     }
 
     public function get (&$resp) {
-        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         $resp = array_values($items);
     }
 
     public function post (&$resp, $req) {
-        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (count($items) >= $this->getProductsLimit()) {
             $items['error'] = "ProductLimitExceeded";
@@ -45,7 +42,6 @@ class comparelists {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
@@ -60,7 +56,6 @@ class comparelists {
     }
 
     public function productIsInCompareList ($id) {
-        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         return isset($items[$id]);
     }

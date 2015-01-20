@@ -12,48 +12,39 @@ use PHPExcel_Shared_File as PHPExcel_Shared_File;
 class feeds {
 
     public function getDirNameFeeds () {
-        global $app;
         return 'feeds';
     }
 
     public function getUploadedFeedName () {
-        global $app;
         return 'import_' . date('Ymd_His');
     }
 
     public function getGeneratedFeedName () {
-        global $app;
         return 'gen_' . date('Ymd_His');
     }
 
     public function getGeneratedFeedDownloadLink ($name) {
-        global $app;
         return $this->getFeedsUploadDir() . $name;
     }
 
     public function getFeedsUploadInnerDir () {
-        global $app;
         $path = Path::createDirPath('shop', $this->getDirNameFeeds());
         return $path;
     }
 
     public function getFeedsUploadDir () {
-        global $app;
         return Path::getUploadDirectory($this->getFeedsUploadInnerDir());
     }
 
     public function getFeedFilePathByName ($feedName) {
-        global $app;
         return $this->getFeedsUploadDir() . $feedName . '.xls';
     }
 
     public function getGeneratedFeedsFilesList () {
-        global $app;
         return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsFilesList () {
-        global $app;
         return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*\.xls');
     }
 
@@ -68,7 +59,7 @@ class feeds {
                 $pInfo = pathinfo($listFeedsGenerated[0]);
                 $success = unlink($listFeedsGenerated[0]);
                 if ($success)
-                    $this->getCustomer()->deleteTaskByParams('shop', 'importProductFeed', $pInfo['filename']);
+                    API::getAPI('system:tasks')->deleteTaskByParams('shop', 'importProductFeed', $pInfo['filename']);
             }
             $attempts--;
         } while (count($listFeedsGenerated) > 10 && $attempts > 0);
@@ -96,10 +87,10 @@ class feeds {
                 );
             }
         if ($listFeedsUploaded) {
-            // $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
-            // $completeTasks = $this->getCustomer()->getCompletedTasksByGroupName('shop');
-            // $newTasks = $this->getCustomer()->getNewTasksByGroupName('shop');
-            // $canceledTasks = $this->getCustomer()->getCanceledTasksByGroupName('shop');
+            // $activeTasks = API::getAPI('system:tasks')->getActiveTasksByGroupName('shop');
+            // $completeTasks = API::getAPI('system:tasks')->getCompletedTasksByGroupName('shop');
+            // $newTasks = API::getAPI('system:tasks')->getNewTasksByGroupName('shop');
+            // $canceledTasks = API::getAPI('system:tasks')->getCanceledTasksByGroupName('shop');
             // $runningFeedNames = array();
             // $completeFeedNames = array();
             // $newFeedNames = array();
@@ -124,7 +115,7 @@ class feeds {
             foreach ($listFeedsUploaded as $value) {
                 $pInfo = pathinfo($value);
                 $ftime = filectime($value);
-                $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $pInfo['filename']);
+                $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $pInfo['filename']);
                 // $isActive = in_array($pInfo['filename'], $runningFeedNames);
                 // $isCompleted = in_array($pInfo['filename'], $completeFeedNames);
                 // $isAdded = in_array($pInfo['filename'], $newFeedNames);
@@ -158,7 +149,7 @@ class feeds {
         global $app;
 
         $results = array();
-        $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $name);
+        $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $name);
 
         if (ob_get_level() == 0) ob_start();
 
@@ -252,8 +243,9 @@ class feeds {
             $images = array();
             $imagesUrls = explode(PHP_EOL, $rawProductData['Images']);
             // $imagesToDownload = array();
+            $urls = $app->getSettings('urls');
             $options = array(
-                'script_url' =>  $this->getCustomer()->getConfiguration()->urls->upload,
+                'script_url' =>  $urls->upload,
                 'download_via_php' => true,
                 'web_import_temp_dir' => Path::rootPath() . Path::getAppTemporaryDirectory(),
                 'upload_dir' => Path::rootPath() . Path::getUploadTemporaryDirectory(),
@@ -362,8 +354,8 @@ class feeds {
         );
 
         // var_dump($task);
-        // $this->getCustomer()->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
-        $this->getCustomer()->setTaskResult($task['ID'], print_r($res, true));
+        // API::getAPI('system:tasks')->setTaskResult($task['ID'], utf8_encode(json_encode($results)));
+        API::getAPI('system:tasks')->setTaskResult($task['ID'], print_r($res, true));
 
         ob_end_flush();
         // if (ob_get_length()) ob_end_clean();
@@ -378,7 +370,7 @@ class feeds {
         // $urls[] = 'http://upload.wikimedia.org/wikipedia/commons/6/66/Android_robot.png';
         // $urls[] = 'http://www.notebookcheck.net/uploads/tx_nbc2/delXPS14.jpg';
         // $options = array(
-        //     'script_url' =>  $this->getCustomer()->getConfiguration()->urls->upload,
+        //     'script_url' =>  API::getAPI('system:tasks')->getConfiguration()->urls->upload,
         //     'download_via_php' => true,
         //     'web_import_temp_dir' => Path::getAppTemporaryDirectory(),
         //     'upload_dir' => Path::getUploadTemporaryDirectory(),
@@ -495,33 +487,30 @@ class feeds {
     }
 
     public function get (&$resp, $req) {
-        global $app;
         $resp = $this->getFeeds();
     }
 
     public function post (&$resp, $req) {
-        global $app;
         if (isset($req->get['generate'])) {
             $resp = $this->generateProductFeed();
         } elseif (isset($resp['files'])) {
             // var_dump($resp['files']);
             foreach ($resp['files'] as $tempFileItem) {
                 $res = Path::moveTemporaryFile($tempFileItem->name, $this->getFeedsUploadInnerDir(), $this->getUploadedFeedName());
-                $this->getCustomer()->addTask('shop', 'importProductFeed', $res['basename']);
+                API::getAPI('system:tasks')->addTask('shop', 'importProductFeed', $res['basename']);
                 // $this->getPlugin()->saveOwnTemporaryUploadedFile(, , );
             }
         }
     }
     public function patch (&$resp, $req) {
-        global $app;
-        $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
+        $activeTasks = API::getAPI('system:tasks')->getActiveTasksByGroupName('shop');
         if (isset($req->data['schedule']) && isset($req->get['name'])) {
-            $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
+            $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
             if (!empty($task)) {
                 if (!$task['Scheduled']) {
-                    // $this->getCustomer()->scheduleTask('shop', 'importProductFeed', $req->get['name']);
+                    // API::getAPI('system:tasks')->scheduleTask('shop', 'importProductFeed', $req->get['name']);
                     // this part must be moved into separated process >>>>
-                    $this->getCustomer()->startTask('shop', 'importProductFeed', $req->get['name']);
+                    API::getAPI('system:tasks')->startTask('shop', 'importProductFeed', $req->get['name']);
                     // temporary solution to output json results
                     //-- echo "{ dump: '";
                     $this->importProductFeed($req->get['name']);
@@ -538,9 +527,9 @@ class feeds {
                 $resp['error'] = 'UnknownTask';
             }
         } else if (isset($req->data['cancel']) && isset($req->get['name'])) {
-            $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
+            $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
             if (isset($task['Hash'])) {
-                $this->getCustomer()->cancelTask($task['ID']);
+                API::getAPI('system:tasks')->cancelTask($task['ID']);
                 $this->getFeeds();
                 $resp['success'] = true;
             } else {
@@ -554,10 +543,9 @@ class feeds {
     }
 
     public function delete (&$resp, $req) {
-        global $app;
         $success = false;
         if (isset($req->get['name'])) {
-            $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
+            $task = API::getAPI('system:tasks')->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
             if (isset($taks) && $task['IsRunning']) {
                 $resp['error'] = 'UnableToRemoveActiveTask';
             } else {
@@ -565,7 +553,7 @@ class feeds {
                 if (file_exists($feedPath)) {
                     $success = unlink($feedPath);
                     if (isset($task['Hash']) && $success)
-                        $this->getCustomer()->deleteTaskByHash($task['Hash']);
+                        API::getAPI('system:tasks')->deleteTaskByHash($task['Hash']);
                 }
             }
         }

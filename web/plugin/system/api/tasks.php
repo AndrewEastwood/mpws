@@ -10,7 +10,7 @@ class tasks {
         $errors = array();
         // echo 1111;
         $config = dbquery::addTask(array(
-            'CustomerID' => $this->getCustomerID(),
+            'CustomerID' => $app->getSite()->getRuntimeCustomerID(),
             'Group' => $group,
             'Name' => $name,
             'Params' => $params
@@ -18,7 +18,7 @@ class tasks {
         // var_dump($config);
         try {
             $app->getDB()->beginTransaction();
-            $this->fetch($config);
+            $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
@@ -39,7 +39,7 @@ class tasks {
         $config = dbquery::startTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
-            $this->fetch($config);
+            $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
@@ -60,7 +60,7 @@ class tasks {
         $config = dbquery::scheduleTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
-            $this->fetch($config);
+            $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
@@ -81,7 +81,7 @@ class tasks {
         $config = dbquery::stopTask($id);
         try {
             $app->getDB()->beginTransaction();
-            $this->fetch($config);
+            $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
@@ -101,7 +101,7 @@ class tasks {
         $config = dbquery::setTaskResult($id, $taskResult);
         try {
             $app->getDB()->beginTransaction();
-            $this->fetch($config);
+            $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
@@ -118,7 +118,7 @@ class tasks {
         global $app;
         $result = array();
         $config = dbquery::getTaskByHash(md5($group . $name . $params));
-        $result = $this->fetch($config);
+        $result = $app->getDB()->query($config);
         $this->__adjustTask($result);
         return $result;
     }
@@ -135,7 +135,7 @@ class tasks {
         $config = dbquery::deleteTaskByHash($hash);
         try {
             $app->getDB()->beginTransaction();
-            $result = $this->fetch($config);
+            $result = $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
@@ -151,7 +151,7 @@ class tasks {
         global $app;
         $result = array();
         $config = dbquery::getGroupTasks($groupName, true, false, false);
-        $result = $this->fetch($config);
+        $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
                 $this->__adjustTask($value);
@@ -164,7 +164,7 @@ class tasks {
         global $app;
         $result = array();
         $config = dbquery::getGroupTasks($groupName, false, true, false);
-        $result = $this->fetch($config);
+        $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
                 $this->__adjustTask($value);
@@ -177,7 +177,7 @@ class tasks {
         global $app;
         $result = array();
         $config = dbquery::getGroupTasks($groupName, false, false, false);
-        $result = $this->fetch($config);
+        $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
                 $this->__adjustTask($value);
@@ -190,7 +190,7 @@ class tasks {
         global $app;
         $result = array();
         $config = dbquery::getGroupTasks($groupName, false, false, true);
-        $result = $this->fetch($config);
+        $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
                 $this->__adjustTask($value);
@@ -203,7 +203,7 @@ class tasks {
         global $app;
         $result = array();
         $config = dbquery::getNextTaskToProcess($group, $name);
-        $result = $this->fetch($config);
+        $result = $app->getDB()->query($config);
         if ($result) {
             foreach ($result as &$value) {
                 $this->__adjustTask($value);
