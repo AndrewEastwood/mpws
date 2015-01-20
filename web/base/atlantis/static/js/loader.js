@@ -78,15 +78,20 @@ var APP = {
 APP.init();
 
 require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/underscore", "default/js/lib/cache"], function (Sandbox, JSUrl, _, Cache) {
-    APP.getApiLink = function (extraOptions) {
+    APP.getApiLink = function (/* args */) {
         var _url = new JSUrl(APP.config.URL_API);
-        // _url.query.token = APP.config.TOKEN;
-        if (!_.isEmpty(extraOptions))
-            _(extraOptions).each(function (v, k) {
-                _url.query[k] = !!v ? v : "";
-            });
+        _url.path += [].slice.call(arguments).join('/') + '/';
         return _url.toString();
     }
+    // APP.getApiLink = function (extraOptions) {
+    //     var _url = new JSUrl(APP.config.URL_API);
+    //     // _url.query.token = APP.config.TOKEN;
+    //     if (!_.isEmpty(extraOptions))
+    //         _(extraOptions).each(function (v, k) {
+    //             _url.query[k] = !!v ? v : "";
+    //         });
+    //     return _url.toString();
+    // }
     // APP.getAuthLink = function (extraOptions) {
     //     var _url = new JSUrl(APP.config.URL_AUTH);
     //     // _url.query.token = APP.config.TOKEN;

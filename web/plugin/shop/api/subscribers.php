@@ -8,7 +8,7 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class subscribers extends \engine\objects\api {
+class subscribers {
 
     private $_statuses = array(
         'ACTIVE','LOGISTIC_DELIVERING',

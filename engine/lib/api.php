@@ -33,6 +33,7 @@ class api {
         }
         $api = self::getAPI($apiKey);
         // invoke api request method
+        $_REQ = Request::getRequestData();
         if (isset($api)) {
             $api->$method(Response::$_RESPONSE, $_REQ);
         } else {

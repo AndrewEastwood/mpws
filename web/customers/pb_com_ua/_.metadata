@@ -1,0 +1,4 @@
+db_user=root
+db_pwd=1111
+db_name=mpws_light
+db_host=localhost

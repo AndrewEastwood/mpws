@@ -5,10 +5,11 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class wishlists extends \engine\objects\api {
+class wishlists {
 
     private $_productsLimit = 10;
     private $_listKey_Wish = 'shop:wishList';
@@ -26,7 +27,7 @@ class wishlists extends \engine\objects\api {
         $resp = array_values($items);
     }
 
-    public function post (&$resp, $req) { 
+    public function post (&$resp, $req) {
         $items = isset($_SESSION[$this->_listKey_Wish]) ? $_SESSION[$this->_listKey_Wish] : array();
         if (count($items) >= $this->getProductsLimit()) {
             $resp['error'] = "ProductLimitExceeded";
@@ -35,7 +36,7 @@ class wishlists extends \engine\objects\api {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($items[$productID])) {
-                $product = $this->getAPI()->products->getProductByID($productID);
+                $product = API::getAPI('shop:products')->getProductByID($productID);
                 $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Wish] = $items;
             }

@@ -5,30 +5,13 @@ use \engine\lib\utils as Utils;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
 use \engine\lib\response as Response;
-// use \engine\lib\database as DB;
 use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\api as API;
 use Exception;
-// use app;
-// use \engine\interfaces\ICustomer as ICustomer;
-// use \engine\object\multiExtendable as MultiExtendable;
 
 class site {
-
-    // private $version = 'atlantis';
-    // private $customerInfo;
-    // private $htmlPage;
-    // private $permissions;
-    // private $apis;
-
-    function __construct () {
-        // $apiAuth = $this->getRuntimeAPIClass('system:auth'); // ????
-        // $this->apis['system:customers'] = $apiCustomer;
-        // $this->apis['system:auth'] = $apiAuth;
-        // $this->customerInfo = $this->getCustomerInfo();
-    }
 
     public function init () {
         session_start();
@@ -51,13 +34,13 @@ class site {
 
         // TODO: get Plugins, Title, Locale, Lang and all other public customer's settings from DB
         // and expose in the template : >>>>>
-        $lang = 'en';
-        $locale = '';
-        $plugins = $customer['Settings']['plugins'];
+        $lang = $customer['Settings']['lang'];
+        $locale = $customer['Settings']['locale'];
+        $plugins = explode(',', $customer['Settings']['plugins']);
         $Homepage = $customer['HomePage'];
-        $Host = '';
-        $Scheme = '';
-        $Title = '';
+        $Host = $customer['Settings']['host'];
+        $Scheme = $customer['Settings']['scheme'];
+        $Title = $customer['Settings']['title'];
         // <<< get from db according to display customer
 
         $layoutCustomer = Path::getWebStaticTemplateFilePath($displayCustomer, $version, $layout, $app->isDebug());
@@ -85,10 +68,10 @@ class site {
             URL_PUBLIC_TITLE: '" . $Title . "',
             URL_API: '" . $urls['api'] . "',
             URL_UPLOAD: '" . $urls['upload'] . "',
-            URL_STATIC_CUSTOMER: '/" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
-            URL_STATIC_WEBSITE: '/" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
-            URL_STATIC_PLUGIN: '/" . Path::createPath('plugin', true) . "',
-            URL_STATIC_DEFAULT: '/" . Path::createPath('base', $version, true) . "',
+            URL_STATIC_CUSTOMER: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
+            URL_STATIC_WEBSITE: '" . Path::createPath(Path::getDirNameCustomer(), $displayCustomer, true) . "',
+            URL_STATIC_PLUGIN: '" . Path::createPath('plugin', true) . "',
+            URL_STATIC_DEFAULT: '" . Path::createPath('base', $version, true) . "',
             ROUTER: '" . join(Path::getDirectorySeparator(), array('customer', 'js', 'router')) . "'
         }";
         $initialJS = str_replace(array("\r","\n", '  '), '', $initialJS);
@@ -110,35 +93,7 @@ class site {
     public function getRuntimeCustomerID () {
         $apiCustomer = API::getAPI('system:customers');
         return $apiCustomer->getRuntimeCustomerID();
-        // $info = $this->getCustomerInfo();
-        // return isset($info['ID']) ? intval($info['ID']) : null;
     }
-
-    // public function getCustomerInfo () {
-    //     global $app;
-    //     if (empty($this->customerInfo)) {
-    //         $this->customerInfo = $api->getRuntimeCustomer();
-    //     }
-    //     return $this->customerInfo;
-    // }
-
-
-    // public function fetch ($config, $skipCustomerID = false) {
-    //     global $app;
-    //     $customerInfo = $this->getCustomerInfo();
-    //     $source = $config["source"];
-    //     $key = $source . '.CustomerID';
-    //     $addCustomerID = false;
-    //     if (!$skipCustomerID) {
-    //         if (isset($config["condition"]["CustomerID"])) {
-    //             $config["condition"][$key] = $app->getDB()->createCondition($customerInfo['ID']);
-    //             unset($config["condition"]["CustomerID"]);
-    //         } else if (!isset($config["condition"][$key])) {
-    //             $config["condition"][$key] = $app->getDB()->createCondition($customerInfo['ID']);
-    //         }
-    //     }
-    //     return $app->getDB()->getData($config);
-    // }
 
     public function runAsDISPLAY () {
         Response::setResponse($this->getHtmlPage());
@@ -179,24 +134,9 @@ class site {
     public function runAsAPI () {
         global $app;
         // refresh auth
-        $this->updateSessionAuth();
+        // $this->updateSessionAuth();
         API::execAPI();
     }
-
-    // public function runAsAUTH () {
-    //     // Request::processRequest($this);
-    //     $_REQ = Request::getRequestData();
-    //     $_source = Request::pickFromGET('source');
-    //     $_fn = Request::pickFromGET('fn');
-    //     $_method = strtolower($_SERVER['REQUEST_METHOD']);
-    //     $requestFnElements = array($_method);
-    //     if (Request::hasInGet('source'))
-    //         $requestFnElements[] = $_source;
-    //     if (Request::hasInGet('fn'))
-    //         $requestFnElements[] = $_fn;
-    //     $fn = join("_", $requestFnElements);
-    //     $this->$fn(Response::$_RESPONSE, $_REQ);
-    // }
 
     public function runAsUPLOAD () {
         global $app;
@@ -225,12 +165,6 @@ class site {
         foreach ($this->plugins as $plugin)
             $plugin->run();
     }
-
-    // public function runAsBACKGROUND () {
-    //     foreach ($this->plugins as $plugin) {
-    //         $plugin->task();
-    //     }
-    // }
 
 }
 

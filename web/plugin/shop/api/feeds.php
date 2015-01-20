@@ -3,51 +3,62 @@ namespace web\plugin\shop\api;
 
 use \engine\lib\uploadHandler as JqUploadLib;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use PHPExcel as PHPExcel;
 use PHPExcel_IOFactory as PHPExcel_IOFactory;
 use PHPExcel_Cell_DataValidation as PHPExcel_Cell_DataValidation;
 use PHPExcel_Shared_File as PHPExcel_Shared_File;
 
-class feeds extends \engine\objects\api {
+class feeds {
 
     public function getDirNameFeeds () {
+        global $app;
         return 'feeds';
     }
 
     public function getUploadedFeedName () {
+        global $app;
         return 'import_' . date('Ymd_His');
     }
 
     public function getGeneratedFeedName () {
+        global $app;
         return 'gen_' . date('Ymd_His');
     }
 
     public function getGeneratedFeedDownloadLink ($name) {
+        global $app;
         return $this->getFeedsUploadDir() . $name;
     }
 
     public function getFeedsUploadInnerDir () {
+        global $app;
         $path = Path::createDirPath('shop', $this->getDirNameFeeds());
         return $path;
     }
 
     public function getFeedsUploadDir () {
+        global $app;
         return Path::getUploadDirectory($this->getFeedsUploadInnerDir());
     }
 
     public function getFeedFilePathByName ($feedName) {
+        global $app;
         return $this->getFeedsUploadDir() . $feedName . '.xls';
     }
 
     public function getGeneratedFeedsFilesList () {
+        global $app;
         return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'gen_*\.xls');
     }
 
     public function getUploadedFeedsFilesList () {
+        global $app;
         return glob(Path::rootPath() . $this->getFeedsUploadDir() . 'import_*\.xls');
     }
 
     public function getFeeds () {
+        global $app;
         $attempts = 20;
         $feeds = array();
 
@@ -144,6 +155,7 @@ class feeds extends \engine\objects\api {
         return $feeds;
     }
     public function importProductFeed ($name) {
+        global $app;
 
         $results = array();
         $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $name);
@@ -290,7 +302,7 @@ class feeds extends \engine\objects\api {
             // var_dump($productItem);
             // $results[] = "[INFO] " . "saving product";
             // echo "[INFO] " . "saving product" . PHP_EOL;
-            $res = $this->getAPI()->products->updateOrInsertProduct($productItem);
+            $res = API::getAPI('shop:products')->updateOrInsertProduct($productItem);
             // var_dump("***************** result *****************");
             // var_dump($res);
             if ($res['created']) {
@@ -335,7 +347,7 @@ class feeds extends \engine\objects\api {
         }
 
         // disable all products
-        // $this->getAPI()->products->archiveAllProducts();
+        // API::getAPI('shop:products')->archiveAllProducts();
 
         // var_dump($errors);
         $res = array(
@@ -378,6 +390,7 @@ class feeds extends \engine\objects\api {
     }
 
     public function generateProductFeed () {
+        global $app;
         $options = array('limit' => 0);
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
@@ -387,7 +400,7 @@ class feeds extends \engine\objects\api {
             ->setDescription("Test document for PHPExcel, generated using PHP classes.")
             ->setKeywords("office PHPExcel php")
             ->setCategory("Test result file");
-        $dataList = $this->getAPI()->products->getProducts_List($options, false, false);
+        $dataList = API::getAPI('shop:products')->getProducts_List($options, false, false);
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'Name')
             ->setCellValue('B1', 'Model')
@@ -458,7 +471,7 @@ class feeds extends \engine\objects\api {
             $objValidation->setError('Value is not in list.');
             $objValidation->setPromptTitle('Pick from list');
             $objValidation->setPrompt('Please pick a value from the drop-down list.');
-            $objValidation->setFormula1('"' . join(',', $this->getAPI()->products->getProductStatuses()) . '"'); //note this!
+            $objValidation->setFormula1('"' . join(',', API::getAPI('shop:products')->getProductStatuses()) . '"'); //note this!
         }
         // foreach($objPHPExcel->getActiveSheet()->getRowDimensions() as $rd) { $rd->setRowHeight(-1); }
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(50);
@@ -482,10 +495,12 @@ class feeds extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
+        global $app;
         $resp = $this->getFeeds();
     }
 
     public function post (&$resp, $req) {
+        global $app;
         if (isset($req->get['generate'])) {
             $resp = $this->generateProductFeed();
         } elseif (isset($resp['files'])) {
@@ -498,6 +513,7 @@ class feeds extends \engine\objects\api {
         }
     }
     public function patch (&$resp, $req) {
+        global $app;
         $activeTasks = $this->getCustomer()->getActiveTasksByGroupName('shop');
         if (isset($req->data['schedule']) && isset($req->get['name'])) {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);
@@ -538,6 +554,7 @@ class feeds extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
+        global $app;
         $success = false;
         if (isset($req->get['name'])) {
             $task = $this->getCustomer()->isTaskAdded('shop', 'importProductFeed', $req->get['name']);

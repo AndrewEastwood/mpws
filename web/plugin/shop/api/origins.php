@@ -5,10 +5,11 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class origins extends \engine\objects\api {
+class origins {
 
 
     private $_statuses = array('ACTIVE', 'REMOVED');
@@ -19,46 +20,52 @@ class origins extends \engine\objects\api {
     // -----------------------------------------------
 
     private function __adjustOrigin (&$origin) {
+        global $app;
         $origin['ID'] = intval($origin['ID']);
         $origin['_isRemoved'] = $origin['Status'] === 'REMOVED';
         return $origin;
     }
 
     public function getOriginByID ($originID) {
+        global $app;
         if (empty($originID) || !is_numeric($originID))
             return null;
         $config = shared::jsapiShopGetOriginItem($originID);
-        $origin = $this->getCustomer()->fetch($config);
+        $origin = $app->getDB()->query($config);
         if (empty($origin))
             return null;
         return $this->__adjustOrigin($origin);
     }
 
     public function getOriginByName ($originName) {
+        global $app;
         $config = shared::jsapiShopGetOriginItem();
         $config['condition']['Name'] = shared::createCondition($originName);
-        $origin = $this->getCustomer()->fetch($config);
+        $origin = $app->getDB()->query($config);
         if (empty($origin))
             return null;
         return $this->__adjustOrigin($origin);
     }
 
     public function getOrigins_List (array $options = array()) {
+        global $app;
         $config = shared::jsapiShopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getOriginByID($val['ID']);
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function createOrigin ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -79,18 +86,18 @@ class origins extends \engine\objects\api {
 
                 $configCreateOrigin = shared::jsapiShopCreateOrigin($validatedValues);
 
-                $this->getCustomerDataBase()->beginTransaction();
-                $OriginID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                $app->getDB()->beginTransaction();
+                $OriginID = $app->getDB()->query($configCreateOrigin) ?: null;
                 // var_dump($OriginID);
 
                 if (empty($OriginID))
                     throw new Exception('OriginCreateError');
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -105,6 +112,7 @@ class origins extends \engine\objects\api {
     }
 
     public function updateOrigin ($OriginID, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -122,15 +130,15 @@ class origins extends \engine\objects\api {
                 $validatedValues = $validatedDataObj['values'];
 
                 if (count($validatedValues)) {
-                    $this->getCustomerDataBase()->beginTransaction();
+                    $app->getDB()->beginTransaction();
                     $configCreateCategory = shared::jsapiShopUpdateOrigin($OriginID, $validatedValues);
-                    $this->getCustomer()->fetch($configCreateCategory);
-                    $this->getCustomerDataBase()->commit();
+                    $app->getDB()->query($configCreateCategory);
+                    $app->getDB()->commit();
                 }
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -144,20 +152,21 @@ class origins extends \engine\objects\api {
     }
 
     public function disableOrigin ($OriginID) {
+        global $app;
         $errors = array();
         $success = false;
 
         try {
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $config = shared::jsapiShopDeleteOrigin($OriginID);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = 'OriginUpdateError';
         }
 
@@ -168,6 +177,7 @@ class origins extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
+        global $app;
         if (empty($req->get['id'])) {
             $resp = $this->getOrigins_List($req->get);
         } else {
@@ -177,7 +187,8 @@ class origins extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -186,7 +197,8 @@ class origins extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -200,7 +212,8 @@ class origins extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;
         }

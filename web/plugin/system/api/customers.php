@@ -171,7 +171,7 @@ class customers {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -180,7 +180,7 @@ class customers {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -194,7 +194,7 @@ class customers {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }

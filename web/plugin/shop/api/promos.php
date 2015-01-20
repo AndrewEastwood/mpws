@@ -8,7 +8,7 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class promos extends \engine\objects\api {
+class promos {
 
     private $_listKey_Promo = 'shop:promo';
     // -----------------------------------------------
@@ -17,8 +17,9 @@ class promos extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getPromoByID ($promoID) {
+        global $app;
         $config = shared::jsapiShopGetPromoByID($promoID);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
         $data['_isExpired'] = strtotime(shared::getDate()) > strtotime($data['DateExpire']);
@@ -28,29 +29,33 @@ class promos extends \engine\objects\api {
     }
 
     public function getPromoByHash ($hash, $activeOnly = false) {
+        global $app;
         $config = shared::jsapiShopGetPromoByHash($hash, $activeOnly);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
         return $data;
     }
 
     public function getPromoCodes_List (array $options = array()) {
+        global $app;
         $config = shared::jsapiShopGetPromoList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getPromoByID($val['ID']);
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function createPromo ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -71,17 +76,17 @@ class promos extends \engine\objects\api {
 
                 $configCreatePromo = shared::jsapiShopCreatePromo($validatedValues);
 
-                $this->getCustomerDataBase()->beginTransaction();
-                $promoID = $this->getCustomer()->fetch($configCreatePromo) ?: null;
+                $app->getDB()->beginTransaction();
+                $promoID = $app->getDB()->query($configCreatePromo) ?: null;
 
                 if (empty($promoID))
                     throw new Exception('PromoCreateError');
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -96,6 +101,7 @@ class promos extends \engine\objects\api {
     }
 
     public function updatePromo ($promoID, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -112,15 +118,15 @@ class promos extends \engine\objects\api {
                 $validatedValues = $validatedDataObj['values'];
 
                 if (count($validatedValues)) {
-                    $this->getCustomerDataBase()->beginTransaction();
+                    $app->getDB()->beginTransaction();
                     $configCreateCategory = shared::jsapiShopUpdatePromo($promoID, $validatedValues);
-                    $this->getCustomer()->fetch($configCreateCategory);
-                    $this->getCustomerDataBase()->commit();
+                    $app->getDB()->query($configCreateCategory);
+                    $app->getDB()->commit();
                 }
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -134,18 +140,19 @@ class promos extends \engine\objects\api {
     }
 
     public function expirePromo ($promoID) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
 
         try {
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
             $config = shared::jsapiShopExpirePromo($promoID);
-            $this->getCustomer()->fetch($config);
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->query($config);
+            $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = $e->getMessage();
         }
 
@@ -172,7 +179,7 @@ class promos extends \engine\objects\api {
 
 
     public function get (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -185,7 +192,7 @@ class promos extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -193,7 +200,7 @@ class promos extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -206,7 +213,7 @@ class promos extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }

@@ -5,24 +5,28 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class comparelists extends \engine\objects\api {
+class comparelists {
 
     private $_productsLimit = 10;
     private $_listKey_Compare = 'shop:listCompare';
 
     public function getProductsLimit () {
+        global $app;
         return $this->_productsLimit;
     }
 
     public function get (&$resp) {
+        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         $resp = array_values($items);
     }
 
     public function post (&$resp, $req) {
+        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (count($items) >= $this->getProductsLimit()) {
             $items['error'] = "ProductLimitExceeded";
@@ -31,7 +35,7 @@ class comparelists extends \engine\objects\api {
         if (isset($req->data['productID'])) {
             $productID = $req->data['productID'];
             if (!isset($items[$productID])) {
-                $product = $this->getAPI()->products->getProductByID($productID);
+                $product = API::getAPI('shop:products')->getProductByID($productID);
                 $items[$productID] = $product;
                 $_SESSION[$this->_listKey_Compare] = $items;
             }
@@ -41,6 +45,7 @@ class comparelists extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
+        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         if (isset($req->get['productID'])) {
             $productID = $req->get['productID'];
@@ -55,6 +60,7 @@ class comparelists extends \engine\objects\api {
     }
 
     public function productIsInCompareList ($id) {
+        global $app;
         $items = isset($_SESSION[$this->_listKey_Compare]) ? $_SESSION[$this->_listKey_Compare] : array();
         return isset($items[$id]);
     }

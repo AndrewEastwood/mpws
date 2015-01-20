@@ -5,10 +5,11 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class orders extends \engine\objects\api {
+class orders {
 
     private $_listKey_Cart = 'shop:cart';
     private $_statuses = array(
@@ -16,6 +17,7 @@ class orders extends \engine\objects\api {
         'CUSTOMER_CANCELED','LOGISTIC_DELIVERED',
         'SHOP_CLOSED','SHOP_REFUNDED','NEW');
     public function getOrderStatuses () {
+        global $app;
         return $this->_statuses;
     }
     // -----------------------------------------------
@@ -24,9 +26,10 @@ class orders extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
+        global $app;
         $config = shared::jsapiShopGetOrderItem($orderID);
         $order = null;
-        $order = $this->getCustomer()->fetch($config);
+        $order = $app->getDB()->query($config);
         if (empty($order)) {
             return null;
             // return glWrap('error', 'OrderDoesNotExist');
@@ -34,15 +37,16 @@ class orders extends \engine\objects\api {
         $order['ID'] = intval($order['ID']);
         $order['CustomerCurrencyRate'] = floatval($order['CustomerCurrencyRate']);
         $this->__attachOrderDetails($order);
-        if ($this->getCustomer()->ifYouCan('Admin')) {
+        if (API::getAPI('system:auth')->ifYouCan('Admin')) {
             $order['_statuses'] = $this->getOrderStatuses();
         }
         return $order;
     }
 
     public function getOrderByHash ($orderHash) {
+        global $app;
         $config = shared::jsapiGetShopOrderByHash($orderHash);
-        $order = $this->getCustomer()->fetch($config);
+        $order = $app->getDB()->query($config);
 
         if (empty($order)) {
             return null;
@@ -56,30 +60,33 @@ class orders extends \engine\objects\api {
     }
 
     public function getOrders_ListExpired (array $options = array()) {
+        global $app;
         // get expired orders
         $config = shared::jsapiGetShopOrderList_Expired();
         // check permissions to display either all or user's orders only
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem)
                     $_items[] = $self->getOrderByID($orderRawItem['ID']);
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getOrders_ListTodays (array $options = array()) {
+        global $app;
         // get todays orders
         $config = shared::jsapiGetShopOrderList_Todays();
         // set permissions
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
@@ -91,15 +98,16 @@ class orders extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getOrders_ListPending (array $options = array()) {
+        global $app;
         // get expired orders
         $config = shared::jsapiGetShopOrderList_Pending();
         // check permissions
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
@@ -111,15 +119,16 @@ class orders extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function getOrders_List (array $options = array()) {
+        global $app;
         // get all orders
         $config = shared::jsapiGetShopOrderList($options);
         // check permissions
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
@@ -132,7 +141,7 @@ class orders extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
 
         if (isset($options['_pStats']))
             $dataList['stats'] = $this->getStats_OrdersOverview();
@@ -141,6 +150,7 @@ class orders extends \engine\objects\api {
     }
 
     public function createOrder ($reqData) {
+        global $app;
 
         $result = array();
         $errors = array();
@@ -164,12 +174,12 @@ class orders extends \engine\objects\api {
 
         $pluginAccount = $this->getPlugin('account');
 
-        $formSettings = $this->getAPI()->settings->getSettingsMapFormOrder();
+        $formSettings = API::getAPI('shop:settings')->getSettingsMapFormOrder();
 
         // var_dump($formSettings);
         try {
 
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
             $this->getCustomerDataBase()->disableTransactions();
 
             // check if matches
@@ -260,13 +270,13 @@ class orders extends \engine\objects\api {
                  throw new Exception("NoProudctsToPurchase", 1);
 
             $orderPromoID = empty($order['promo']) ? null : $order['promo']['ID'];
-            $rateDefault = $this->getAPI()->exchangerates->getDefaultDBPriceCurrency();
+            $rateDefault = API::getAPI('shop:exchangerates')->getDefaultDBPriceCurrency();
             $customerCurrencyName = $rateDefault['CurrencyA'];
             $customerRate = 1;
             if (empty($reqData['form']['customerCurrencyName']) || $customerCurrencyName !== $reqData['form']['customerCurrencyName']) {
                 $customerCurrencyName = $reqData['form']['customerCurrencyName'];
                 try {
-                    $rate = $this->getAPI()->exchangerates->getExchangeRateByBothRateNames($rateDefault['CurrencyA'], $customerCurrencyName);
+                    $rate = API::getAPI('shop:exchangerates')->getExchangeRateByBothRateNames($rateDefault['CurrencyA'], $customerCurrencyName);
                     if (!empty($rate)) {
                         $customerRate = $rate['Rate'];
                     }
@@ -298,7 +308,7 @@ class orders extends \engine\objects\api {
             // return;
 
             $configOrder = shared::jsapiShopCreateOrder($dataOrder);
-            $orderID = $this->getCustomer()->fetch($configOrder);
+            $orderID = $app->getDB()->query($configOrder);
 
             if (empty($orderID)) {
                 throw new Exception("OrderCreateError", 1);
@@ -320,7 +330,7 @@ class orders extends \engine\objects\api {
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
                 $configBought = shared::jsapiShopCreateOrderBought($dataBought);
-                $boughtID = $this->getCustomer()->fetch($configBought);
+                $boughtID = $app->getDB()->query($configBought);
 
                 // check for created bought
                 if (empty($boughtID))
@@ -331,12 +341,12 @@ class orders extends \engine\objects\api {
             //     throw new Exception("UnableToLinkAccountOrAddress", 1);
 
             $this->getCustomerDataBase()->enableTransactions();
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
             $this->getCustomerDataBase()->enableTransactions();
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors['Order'][] = $e->getMessage();
             $success = false;
         }
@@ -356,6 +366,7 @@ class orders extends \engine\objects\api {
     }
 
     public function updateOrder ($OrderID, $reqData) {
+        global $app;
         $errors = array();
         $success = false;
 
@@ -371,19 +382,19 @@ class orders extends \engine\objects\api {
             if ($validatedDataObj["totalErrors"] == 0)
                 try {
 
-                    $this->getCustomerDataBase()->beginTransaction();
+                    $app->getDB()->beginTransaction();
 
                     $validatedValues = $validatedDataObj['values'];
 
                     $configUpdateOrder = shared::jsapiShopUpdateOrder($OrderID, $validatedValues);
 
-                    $this->getCustomer()->fetch($configUpdateOrder, true);
+                    $app->getDB()->query($configUpdateOrder, true);
 
-                    $this->getCustomerDataBase()->commit();
+                    $app->getDB()->commit();
 
                     $success = true;
                 } catch (Exception $e) {
-                    $this->getCustomerDataBase()->rollBack();
+                    $app->getDB()->rollBack();
                     $errors[] = 'OrderUpdateError';
                 }
             else
@@ -397,21 +408,22 @@ class orders extends \engine\objects\api {
     }
 
     public function disableOrderByID ($OrderID) {
+        global $app;
         $errors = array();
         $success = false;
 
         try {
 
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $config = shared::jsapiShopDisableOrder($OrderID);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = 'OrderUpdateError';
         }
 
@@ -422,6 +434,7 @@ class orders extends \engine\objects\api {
     }
 
     private function __attachOrderDetails (&$order) {
+        global $app;
         // echo "__attachOrderDetails";
         if (empty($order))
             return;
@@ -435,15 +448,15 @@ class orders extends \engine\objects\api {
 
         // set order exchange rates
         $orderRate = null;
-        $dbDefaultRate = $this->getAPI()->exchangerates->getDefaultDBPriceCurrency();
+        $dbDefaultRate = API::getAPI('shop:exchangerates')->getDefaultDBPriceCurrency();
         if (isset($orderID) && !isset($order['temp'])) {
-            $orderRate = new ArrayObject($this->getAPI()->exchangerates->getExchangeRateByID($order['ExchangeRateID']));
+            $orderRate = new ArrayObject(API::getAPI('shop:exchangerates')->getExchangeRateByID($order['ExchangeRateID']));
         } else {
             $orderRate = new ArrayObject($dbDefaultRate);
         }
         $orderBaseCurrencyName = $orderRate['CurrencyA'];
         $customerCurrencyName = $orderRate['CurrencyB'];
-        $orderRates = new ArrayObject($this->getAPI()->exchangerates->getAvailableConversionOptions($orderBaseCurrencyName));
+        $orderRates = new ArrayObject(API::getAPI('shop:exchangerates')->getAvailableConversionOptions($orderBaseCurrencyName));
 
         $currentRate = $orderRate->getArrayCopy();
         $customerRate = $orderRate->getArrayCopy();
@@ -458,7 +471,7 @@ class orders extends \engine\objects\api {
 
             // $orderBaseCurrencyName = $orderRate['CurrencyA'];
             // $customerCurrencyName = $orderRate['CurrencyB'];
-            // $orderRates = new ArrayObject($this->getAPI()->exchangerates->getAvailableConversionOptions($orderBaseCurrencyName));
+            // $orderRates = new ArrayObject(API::getAPI('shop:exchangerates')->getAvailableConversionOptions($orderBaseCurrencyName));
 
             // $currentRate = $orderRate->getArrayCopy();
             // $customerRate = $orderRate->getArrayCopy();
@@ -497,15 +510,15 @@ class orders extends \engine\objects\api {
             }
             // get promo
             if (!empty($order['PromoID']))
-                $order['promo'] = $this->getAPI()->promos->getPromoByID($order['PromoID']);
+                $order['promo'] = API::getAPI('shop:promos')->getPromoByID($order['PromoID']);
             if (!empty($order['DeliveryID']))
-                $order['delivery'] = $this->getAPI()->delivery->getDeliveryAgencyByID($order['DeliveryID']);
+                $order['delivery'] = API::getAPI('shop:delivery')->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
             $configBoughts = shared::jsapiShopGetOrderBoughts($orderID);
-            $boughts = $this->getCustomer()->fetch($configBoughts) ?: array();
+            $boughts = $app->getDB()->query($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
-                    $product = $this->getAPI()->products->getProductByID($soldItem['ProductID']);
+                    $product = API::getAPI('shop:products')->getProductByID($soldItem['ProductID']);
                     
                     $soldItem['Price'] = floatval($soldItem['Price']);
                     $soldItem['SellingPrice'] = floatval($soldItem['SellingPrice']);
@@ -520,7 +533,7 @@ class orders extends \engine\objects\api {
                     $product["_prices"] = array(
                         'price' => $soldItem['Price'],
                         'actual' => $soldItem['SellingPrice'],
-                        'others' => $this->getAPI()->exchangerates->convertToRates($soldItem['SellingPrice'], $orderBaseCurrencyName, $customerRates)
+                        'others' => API::getAPI('shop:exchangerates')->convertToRates($soldItem['SellingPrice'], $orderBaseCurrencyName, $customerRates)
                     );
                     // get purchased product quantity
                     $product["_orderQuantity"] = floatval($soldItem['Quantity']);
@@ -531,10 +544,10 @@ class orders extends \engine\objects\api {
                     $product['_totalSummary'] = array(
                         "_sub" => $_subTotal,
                         "_total" => $_total,
-                        "_subs" => $this->getAPI()->exchangerates->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
-                        "_totals" => $this->getAPI()->exchangerates->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
-                        "_customer_subs" => $this->getAPI()->exchangerates->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
-                        "_customer_totals" => $this->getAPI()->exchangerates->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
+                        "_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
+                        "_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
+                        "_customer_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
+                        "_customer_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
                     );
 
                     // add into list
@@ -544,23 +557,23 @@ class orders extends \engine\objects\api {
 
 
             // $productItems = !empty($order['items']) ? $order['items'] : array();
-            $sessionPromo = $this->getAPI()->promos->getSessionPromo();
+            $sessionPromo = API::getAPI('shop:promos')->getSessionPromo();
             $sessionOrderProducts = $this->_getSessionOrderProducts();
             // re-validate promo
             if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
-                $sessionPromo = $this->getAPI()->promos->getPromoByHash($sessionPromo['Code'], true);
+                $sessionPromo = API::getAPI('shop:promos')->getPromoByHash($sessionPromo['Code'], true);
                 if (!empty($sessionPromo) && isset($sessionPromo['Code'])) {
-                    $this->getAPI()->promos->setSessionPromo($sessionPromo);
+                    API::getAPI('shop:promos')->setSessionPromo($sessionPromo);
                     $order['promo'] = $sessionPromo;
                 } else {
-                    $this->getAPI()->promos->resetSessionPromo();
+                    API::getAPI('shop:promos')->resetSessionPromo();
                     $order['promo'] = null;
                 }
             }
             // get product items
             foreach ($sessionOrderProducts as $purchasingProduct) {
                 // get product
-                $product = $this->getAPI()->products->getProductByID($purchasingProduct['ID']);
+                $product = API::getAPI('shop:products')->getProductByID($purchasingProduct['ID']);
                 // get purchased product quantity
                 $product["_orderQuantity"] = $purchasingProduct['_orderQuantity'];
                 // get product sub and total by raw price
@@ -570,10 +583,10 @@ class orders extends \engine\objects\api {
                 $product['_totalSummary'] = array(
                     "_sub" => $_subTotal,
                     "_total" => $_total,
-                    "_subs" => $this->getAPI()->exchangerates->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
-                    "_totals" => $this->getAPI()->exchangerates->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
-                    "_customer_subs" => $this->getAPI()->exchangerates->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
-                    "_customer_totals" => $this->getAPI()->exchangerates->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
+                    "_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $currentRates),
+                    "_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $currentRates),
+                    "_customer_subs" => API::getAPI('shop:exchangerates')->convertToRates($_subTotal, $orderBaseCurrencyName, $customerRates),
+                    "_customer_totals" => API::getAPI('shop:exchangerates')->convertToRates($_total, $orderBaseCurrencyName, $customerRates)
                 );
                 // add into list
                 $productItems[$product['ID']] = $product;
@@ -629,12 +642,12 @@ class orders extends \engine\objects\api {
         }
         // show available cargo-services
         if (isset($order['temp'])) {
-            $info["deliveries"] = $this->getAPI()->delivery->getActiveDeliveryList();
+            $info["deliveries"] = API::getAPI('shop:delivery')->getActiveDeliveryList();
         }
-        // $totals['_subs'] =  $this->getAPI()->exchangerates->convertToRates($totals["_sub"], $orderBaseCurrencyName, $currentRates);
-        // $totals['_totals'] =  $this->getAPI()->exchangerates->convertToRates($totals["_total"], $orderBaseCurrencyName, $currentRates);
-        // $totals['_customer_subs'] =  $this->getAPI()->exchangerates->convertToRates($totals["_sub"], $orderBaseCurrencyName, $customerRates);
-        // $totals['_customer_totals'] =  $this->getAPI()->exchangerates->convertToRates($totals["_total"], $orderBaseCurrencyName, $customerRates);
+        // $totals['_subs'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_sub"], $orderBaseCurrencyName, $currentRates);
+        // $totals['_totals'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_total"], $orderBaseCurrencyName, $currentRates);
+        // $totals['_customer_subs'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_sub"], $orderBaseCurrencyName, $customerRates);
+        // $totals['_customer_totals'] =  API::getAPI('shop:exchangerates')->convertToRates($totals["_total"], $orderBaseCurrencyName, $customerRates);
         // calc diffs
         $totals['_diff_subs'] = array();
         $totals['_diff_totals'] = array();
@@ -657,33 +670,39 @@ class orders extends \engine\objects\api {
     }
 
     private function _getOrderTemp () {
+        global $app;
         $order['temp'] = true;
         $this->__attachOrderDetails($order);
         return $order;
     }
 
     private function _resetOrderTemp () {
-        $this->getAPI()->promos->resetSessionPromo();
+        global $app;
+        API::getAPI('shop:promos')->resetSessionPromo();
         $this->_resetSessionOrderProducts();
     }
 
     public function productCountInCart ($id) {
+        global $app;
         // $order = $this->_getOrderTemp();
         $sessionOrderProducts = $this->_getSessionOrderProducts();
         return isset($sessionOrderProducts[$id]) ? $sessionOrderProducts[$id]['_orderQuantity'] : 0;
     }
 
     private function _setSessionOrderProducts ($order) {
+        global $app;
         $_SESSION[$this->_listKey_Cart] = $order;
     }
 
     private function _getSessionOrderProducts () {
+        global $app;
         if (!isset($_SESSION[$this->_listKey_Cart]))
             $_SESSION[$this->_listKey_Cart] = array();
         return $_SESSION[$this->_listKey_Cart];
     }
 
     private function _resetSessionOrderProducts () {
+        global $app;
         $_SESSION[$this->_listKey_Cart] = array();
     }
 
@@ -694,12 +713,13 @@ class orders extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getStats_OrdersOverview () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         // get orders count for each states
         $config = shared::jsapiShopStat_OrdersOverview();
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
         $availableStatuses = $this->getOrderStatuses();
@@ -716,20 +736,22 @@ class orders extends \engine\objects\api {
     }
 
     public function getStats_OrdersIntensityClosedLastMonth () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = shared::jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
 
     public function getStats_OrdersIntensityAliveLastMonth () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = shared::jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
 
@@ -740,8 +762,9 @@ class orders extends \engine\objects\api {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
+        global $app;
         if (isset($req->get['id']) && $req->get['id'] !== "temp") {
-            if ($this->getCustomer()->ifYouCan('Admin'))
+            if (API::getAPI('system:auth')->ifYouCan('Admin'))
                 $resp = $this->getOrderByID($req->get['id']);
             else
                 $resp['error'] = 'AccessDenied';
@@ -759,6 +782,7 @@ class orders extends \engine\objects\api {
     // create new order
     // public useres do that
     public function post (&$resp, $req) {
+        global $app;
         $resp = $this->createOrder($req->data);
     }
 
@@ -766,6 +790,7 @@ class orders extends \engine\objects\api {
     // product quantity in the shopping cart list of temporary order
     // both admin can update any order and public uses as well
     public function patch (&$resp, $req) {
+        global $app;
         // var_dump($req);
         // var_dump($_SERVER['REQUEST_METHOD']);
         // var_dump($_POST);
@@ -774,10 +799,10 @@ class orders extends \engine\objects\api {
         $isTemp = !isset($req->get['id']);
 
         if (!$isTemp && $this->getApp()->isToolbox()) {
-            // if ($this->getCustomer()->ifYouCan('Admin')) {
+            // if (API::getAPI('system:auth')->ifYouCan('Admin')) {
                 // here we're gonna change order's status only
         // check permissions
-            if (!$this->getCustomer()->ifYouCan('Edit')) {
+            if (!API::getAPI('system:auth')->ifYouCan('Edit')) {
                 $resp["error"] = "AccessDenied";
             } else {
                 $resp = $this->updateOrder($req->get['id'], $req->data);
@@ -809,9 +834,9 @@ class orders extends \engine\objects\api {
                 }
             } elseif (isset($req->data['promo'])) {
                 if (empty($req->data['promo']))
-                    $this->getAPI()->promos->resetSessionPromo();
+                    API::getAPI('shop:promos')->resetSessionPromo();
                 else
-                    $this->getAPI()->promos->setSessionPromo($this->getAPI()->promos->getPromoByHash($req->data['promo'], true));
+                    API::getAPI('shop:promos->setSessionPromo($this->getAPI()->promos->getPromoByHash($req')->data['promo'], true));
             }
             $resp = $this->_getOrderTemp();
         }
@@ -819,6 +844,7 @@ class orders extends \engine\objects\api {
 
     // removes particular product or clears whole shopping cart
     public function delete (&$resp, $req) { // ????? we must keep all orders
+        global $app;
         if (!$this->getApp()->isToolbox()) {
             $resp['error'] = 'AccessDenied';
             return;

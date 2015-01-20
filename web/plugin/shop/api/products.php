@@ -6,10 +6,11 @@ use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class products extends \engine\objects\api {
+class products {
 
     private $_listKey_Recent = 'shop:listRecent';
     private $_statuses = array('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER');
@@ -45,13 +46,14 @@ class products extends \engine\objects\api {
     // -----------------------------------------------
 
     private function __adjustProduct (&$product, $skipRelations = false) {
+        global $app;
         // adjusting
         $productID = intval($product['ID']);
         $product['ID'] = $productID;
         $product['OriginID'] = intval($product['OriginID']);
         $product['CategoryID'] = intval($product['CategoryID']);
-        $product['_category'] = $this->getAPI()->categories->getCategoryByID($product['CategoryID']);
-        $product['_origin'] = $this->getAPI()->origins->getOriginByID($product['OriginID']);
+        $product['_category'] = API::getAPI('shop:categories')->getCategoryByID($product['CategoryID']);
+        $product['_origin'] = API::getAPI('shop:origins')->getOriginByID($product['OriginID']);
         $product['Attributes'] = $this->getProductAttributes($productID);
         $product['IsPromo'] = intval($product['IsPromo']) === 1;
 
@@ -82,16 +84,16 @@ class products extends \engine\objects\api {
 
         // Utils
         $product['_viewExtras'] = array();
-        $product['_viewExtras']['InWish'] = $this->getAPI()->wishlists->productIsInWishList($productID);
-        $product['_viewExtras']['InCompare'] = $this->getAPI()->comparelists->productIsInCompareList($productID);
-        $product['_viewExtras']['InCartCount'] = $this->getAPI()->orders->productCountInCart($productID);
+        $product['_viewExtras']['InWish'] = API::getAPI('shop:wishlists')->productIsInWishList($productID);
+        $product['_viewExtras']['InCompare'] = API::getAPI('shop:comparelists')->productIsInCompareList($productID);
+        $product['_viewExtras']['InCartCount'] = API::getAPI('shop:orders')->productCountInCart($productID);
 
         // is available
         $product['_available'] = in_array($product['Status'], $this->getProductStatusesWhenAvailable());
         $product['_archived'] = in_array($product['Status'], $this->getProductStatusesWhenDisabled());
 
         // promo
-        $promo = $this->getAPI()->promos->getSessionPromo();
+        $promo = API::getAPI('shop:promos')->getSessionPromo();
         $product['_promo'] = $promo;
 
         // prices and actual price
@@ -109,7 +111,7 @@ class products extends \engine\objects\api {
         unset($product['Price']);
 
         // apply currencies
-        $convertedPrices = $this->getAPI()->exchangerates->convertToRates($actualPrice);
+        $convertedPrices = API::getAPI('shop:exchangerates')->convertToRates($actualPrice);
 
         // create product prices object
         $product['_prices'] = array(
@@ -132,42 +134,47 @@ class products extends \engine\objects\api {
     }
 
     public function getProductByID ($productID, $skipRelations = false) {
+        global $app;
         if (empty($productID) || !is_numeric($productID))
             return null;
         $config = shared::jsapiShopGetProductItem($productID);
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return $this->__adjustProduct($product, $skipRelations);
     }
 
     public function getProductByExternalKey ($productExternalKey, $skipRelations = false) {
+        global $app;
         $config = shared::jsapiShopGetProductItemByExternalKey($productExternalKey);
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return $this->__adjustProduct($product, $skipRelations);
     }
 
     public function getProductByName ($productName, $skipRelations = false) {
+        global $app;
         $config = shared::jsapiShopGetProductItem();
         $config['condition']['Name'] = shared::createCondition($productName);
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return $this->__adjustProduct($product, $skipRelations);
     }
 
     public function getProductByModel ($productModel, $skipRelations = false) {
+        global $app;
         $config = shared::jsapiShopGetProductItem();
         $config['condition']['Model'] = shared::createCondition($productModel);
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return $this->__adjustProduct($product, $skipRelations);
     }
 
     public function getProductByModelAndOriginName ($productName, $originName, $skipRelations = false) {
+        global $app;
         $config = shared::jsapiShopGetProductItem();
         $config['condition']['Name'] = shared::createCondition($productName);
         $config['condition']['OriginName'] = shared::createCondition($originName);
@@ -179,13 +186,14 @@ class products extends \engine\objects\api {
                 )
             )
         );
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return $this->__adjustProduct($product, $skipRelations);
     }
 
     public function getProductIDByModelAndOriginName ($productName, $originName) {
+        global $app;
         $config = shared::jsapiShopGetProductItem();
         $config['fields'] = array("ID");
         $config['condition']['Model'] = shared::createCondition($productName);
@@ -196,26 +204,28 @@ class products extends \engine\objects\api {
                 "fields" => array("Name")
             )
         );
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return intval($product['ID']);
     }
 
     public function verifyProductByID ($productID) {
+        global $app;
         $config = shared::jsapiShopGetProductItem();
         $config['fields'] = array("ID");
         $config['condition']['ID'] = shared::createCondition($productID);
-        $product = $this->getCustomer()->fetch($config);
+        $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
         return intval($product['ID']);
     }
 
     public function getProductImages ($productID) {
+        global $app;
         $images = array();
         $config = shared::jsapiShopGetProductAttributes($productID, 'IMAGE');
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         // var_dump($data);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -233,9 +243,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProductVideos ($productID) {
+        global $app;
         $videos = array();
         $config = shared::jsapiShopGetProductAttributes($productID, 'VIDEO');
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 $videos[] = $item['Value'];
@@ -245,9 +256,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProductAttributes ($productID) {
+        global $app;
         $attr = array();
         $config = shared::jsapiShopGetProductAttributes($productID);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 if ($item['Attribute'] === 'IMAGE' || $item['Attribute'] === 'VIDEO') {
@@ -260,9 +272,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProductFeatures ($productID) {
+        global $app;
         $featuresGroups = array();
         $config = shared::jsapiShopGetProductFeatures($productID);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {
                 if (!isset($featuresGroups[$value['GroupName']])) {
@@ -275,9 +288,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProductPriceHistory ($productID) {
+        global $app;
         $prices = array();
         $config = shared::jsapiShopGetProductPriceStats($productID);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
                 $prices[$item['DateCreated']] = floatval($item['Price']);
@@ -287,9 +301,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProductRelations ($productID) {
+        global $app;
         $relations = array();
         $configProductsRelations = shared::jsapiShopGetProductRelations($productID);
-        $relatedItemsIDs = $this->getCustomer()->fetch($configProductsRelations);
+        $relatedItemsIDs = $app->getDB()->query($configProductsRelations);
         if (isset($relatedItemsIDs)) {
             foreach ($relatedItemsIDs as $relationItem) {
                 $relatedProductID = intval($relationItem['ProductB_ID']);
@@ -304,11 +319,13 @@ class products extends \engine\objects\api {
     }
 
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
+        global $app;
         $config = shared::jsapiShopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
             "parse" => function ($items) use($self, $saveIntoRecent, $skipRelations) {
+        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
@@ -316,7 +333,7 @@ class products extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
 
         // $dataList['_category'] = null;
 
@@ -324,7 +341,7 @@ class products extends \engine\objects\api {
         //     $filter = array();
         //     if (isset($options['_fCategoryID'])) {
         //         $filter['_fCategoryID'] = $options['_fCategoryID'];
-        //         $dataList['_category'] = $this->getAPI()->categories->getCategoryByID($options['_fCategoryID']);
+        //         $dataList['_category'] = API::getAPI('shop:categories')->getCategoryByID($options['_fCategoryID']);
         //     }
         //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
         // }
@@ -333,11 +350,13 @@ class products extends \engine\objects\api {
     }
 
     public function getLatestProducts_List (array $options = array(), $skipRelations = false) {
+        global $app;
         $config = shared::jsapiShopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
             "parse" => function ($items) use($self, $skipRelations) {
+        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], $skipRelations);
@@ -345,7 +364,7 @@ class products extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
 
         // $dataList['_category'] = null;
 
@@ -353,7 +372,7 @@ class products extends \engine\objects\api {
         //     $filter = array();
         //     if (isset($options['_fCategoryID'])) {
         //         $filter['_fCategoryID'] = $options['_fCategoryID'];
-        //         $dataList['_category'] = $this->getAPI()->categories->getCategoryByID($options['_fCategoryID']);
+        //         $dataList['_category'] = API::getAPI('shop:categories')->getCategoryByID($options['_fCategoryID']);
         //     }
         //     $dataList['stats'] = $this->getStats_ProductsOverview($filter);
         // }
@@ -362,10 +381,12 @@ class products extends \engine\objects\api {
     }
 
     public function getProducts_List_Latest () {
+        global $app;
         $config = shared::jsapiShopGetLatestProductsList();
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $key => $orderRawItem) {
                     $_items[] = $self->getProductByID($orderRawItem['ID'], true);
@@ -373,11 +394,12 @@ class products extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, array(), $callbacks);
+        $dataList = $app->getDB()->getDataList($config, array(), $callbacks);
         return $dataList;
     }
 
     public function createProduct ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -464,7 +486,7 @@ class products extends \engine\objects\api {
                 unset($validatedValues['file4']);
                 unset($validatedValues['file5']);
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 // adjust features
                 foreach ($features as $groupName => $value) {
@@ -472,7 +494,7 @@ class products extends \engine\objects\api {
                 }
 
                 // add new features
-                $featureMap = $this->getAPI()->productfeatures->getFeatures();
+                $featureMap = API::getAPI('shop:productfeatures')->getFeatures();
                 foreach ($features as $groupName => $featureList) {
                     if (isset($featureMap[$groupName])) {
                         foreach ($featureList as $featureName) {
@@ -482,7 +504,7 @@ class products extends \engine\objects\api {
                                 $data["CustomerID"] = $CustomerID;
                                 $data["FieldName"] = substr($featureName, 0, 200);
                                 $data["GroupName"] = substr($groupName, 0, 100);
-                                $featureID = $this->getAPI()->productfeatures->createFeature($data);
+                                $featureID = API::getAPI('shop:productfeatures')->createFeature($data);
                                 $productFeaturesIDs[] = intval($featureID);
                             } else {
                                 $productFeaturesIDs[] = $featureID;
@@ -494,7 +516,7 @@ class products extends \engine\objects\api {
                             $data["CustomerID"] = $CustomerID;
                             $data["FieldName"] = substr($featureName, 0, 200);
                             $data["GroupName"] = substr($groupName, 0, 100);
-                            $featureID = $this->getAPI()->productfeatures->createFeature($data);
+                            $featureID = API::getAPI('shop:productfeatures')->createFeature($data);
                             $productFeaturesIDs[] = $featureID;
                         }
                     }
@@ -508,7 +530,7 @@ class products extends \engine\objects\api {
                 //         $data["FieldName"] = $value;
                 //         $data["CustomerID"] = $CustomerID;
                 //         $config = shared::jsapiShopCreateFeature($data);
-                //         $featureID = $this->getCustomer()->fetch($config) ?: null;
+                //         $featureID = $app->getDB()->query($config) ?: null;
                 //         if (isset($featureID) && $featureID >= 0) {
                 //             $productFeaturesIDs[] = $featureID;
                 //             // $this->_getOrSetCachedState('changed:features', true);
@@ -526,7 +548,7 @@ class products extends \engine\objects\api {
                 // var_dump($config);
                 $ProductID = null;
                 try {
-                    $ProductID = $this->getCustomer()->fetch($config) ?: null;
+                    $ProductID = $app->getDB()->query($config) ?: null;
                 } catch (Exception $ep) {
                     $errors[] = $ep->getMessage();
                 }
@@ -543,7 +565,7 @@ class products extends \engine\objects\api {
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         $config = shared::jsapiShopAddFeatureToProduct($featureData);
-                        $this->getCustomer()->fetch($config);
+                        $app->getDB()->query($config);
                     }
                 }
 
@@ -578,7 +600,7 @@ class products extends \engine\objects\api {
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
                             $config = shared::jsapiShopAddAttributeToProduct($attrData);
-                            $this->getCustomer()->fetch($config);
+                            $app->getDB()->query($config);
                         }
                     }
                     // -- ISBN
@@ -593,15 +615,15 @@ class products extends \engine\objects\api {
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
                         $config = shared::jsapiShopAddAttributeToProduct($attrData);
-                        $this->getCustomer()->fetch($config);
+                        $app->getDB()->query($config);
                     }
                 }
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -616,6 +638,7 @@ class products extends \engine\objects\api {
     }
 
     public function updateProduct ($ProductID, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -699,7 +722,7 @@ class products extends \engine\objects\api {
                 unset($validatedValues['file4']);
                 unset($validatedValues['file5']);
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 // adjust features
                 foreach ($features as $groupName => $value) {
@@ -707,7 +730,7 @@ class products extends \engine\objects\api {
                 }
 
                 // add new features
-                $featureMap = $this->getAPI()->productfeatures->getFeatures();
+                $featureMap = API::getAPI('shop:productfeatures')->getFeatures();
                 foreach ($features as $groupName => $featureList) {
                     if (isset($featureMap[$groupName])) {
                         foreach ($featureList as $featureName) {
@@ -717,7 +740,7 @@ class products extends \engine\objects\api {
                                 $data["CustomerID"] = $CustomerID;
                                 $data["FieldName"] = substr($featureName, 0, 200);
                                 $data["GroupName"] = substr($groupName, 0, 100);
-                                $featureID = $this->getAPI()->productfeatures->createFeature($data);
+                                $featureID = API::getAPI('shop:productfeatures')->createFeature($data);
                                 $productFeaturesIDs[] = intval($featureID);
                             } else {
                                 $productFeaturesIDs[] = $featureID;
@@ -729,7 +752,7 @@ class products extends \engine\objects\api {
                             $data["CustomerID"] = $CustomerID;
                             $data["FieldName"] = substr($featureName, 0, 200);
                             $data["GroupName"] = substr($groupName, 0, 100);
-                            $featureID = $this->getAPI()->productfeatures->createFeature($data);
+                            $featureID = API::getAPI('shop:productfeatures')->createFeature($data);
                             $productFeaturesIDs[] = $featureID;
                         }
                     }
@@ -746,7 +769,7 @@ class products extends \engine\objects\api {
                 }
                 $config = shared::jsapiShopUpdateProduct($ProductID, $validatedValues);
                 try {
-                    $this->getCustomer()->fetch($config);
+                    $app->getDB()->query($config);
                 } catch (Exception $ep) {
                     $errors[] = $ep->getMessage();
                 }
@@ -755,14 +778,14 @@ class products extends \engine\objects\api {
                 if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
                     $config = shared::jsapiShopClearProductFeatures($ProductID);
-                    $this->getCustomer()->fetch($config);
+                    $app->getDB()->query($config);
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         // var_dump($featureData);
                         $config = shared::jsapiShopAddFeatureToProduct($featureData);
-                        $this->getCustomer()->fetch($config);
+                        $app->getDB()->query($config);
                     }
                 }
 
@@ -820,7 +843,7 @@ class products extends \engine\objects\api {
                     // $attrData['Attribute'] = 'IMAGE';
                     // $attrData['Value'] = $uploadInfo['filename'];
                     // $config = shared::jsapiShopAddAttributeToProduct($attrData);
-                    // $this->getCustomer()->fetch($config);
+                    // $app->getDB()->query($config);
 
                     // $newFileName = $ProductID . uniqid(time());
                     // $uploadInfo = $this->saveOwnTemporaryUploadedFile('sm' . Path::getDirectorySeparator() . $fileName, $this->getProductUploadInnerDir($ProductID, 'sm'), $newFileName);
@@ -853,13 +876,13 @@ class products extends \engine\objects\api {
                     // -- IMAGE
                     if (isset($attributes["IMAGE"])) {
                         $config = shared::jsapiShopClearProductAttributes($ProductID, 'IMAGE');
-                        $this->getCustomer()->fetch($config);
+                        $app->getDB()->query($config);
                         foreach ($attributes["IMAGE"] as $imageName) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $imageName;
                             $config = shared::jsapiShopAddAttributeToProduct($attrData);
-                            $this->getCustomer()->fetch($config);
+                            $app->getDB()->query($config);
                         }
                     }
                     // -- ISBN
@@ -872,20 +895,20 @@ class products extends \engine\objects\api {
                         }
                         // clear existed tags before adding new ones
                         $config = shared::jsapiShopClearProductAttributes($ProductID, $key);
-                        $this->getCustomer()->fetch($config);
+                        $app->getDB()->query($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
                         $config = shared::jsapiShopAddAttributeToProduct($attrData);
-                        $this->getCustomer()->fetch($config);
+                        $app->getDB()->query($config);
                     }
                 }
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -899,6 +922,7 @@ class products extends \engine\objects\api {
     }
 
     public function updateOrInsertProduct ($data) {
+        global $app;
         $result = array();
         $errors = array();
         $product = null;
@@ -906,17 +930,17 @@ class products extends \engine\objects\api {
         $origin = null;
         $productID = null;
         // get category by name
-        $category = $this->getAPI()->categories->getCategoryByName($data['CategoryName']);
+        $category = API::getAPI('shop:categories')->getCategoryByName($data['CategoryName']);
         // get origin by name
-        $origin = $this->getAPI()->origins->getOriginByName($data['OriginName']);
+        $origin = API::getAPI('shop:origins')->getOriginByName($data['OriginName']);
         // create non-existent category and/or origin
         if ($category === null) {
-            $category = $this->getAPI()->categories->createCategory(array(
+            $category = API::getAPI('shop:categories')->createCategory(array(
                 'Name' => $data['CategoryName']
             ));
         }
         if ($origin === null) {
-            $origin = $this->getAPI()->origins->createOrigin(array(
+            $origin = API::getAPI('shop:origins')->createOrigin(array(
                 'Name' => $data['OriginName']
             ));
         }
@@ -965,6 +989,7 @@ class products extends \engine\objects\api {
     }
 
     public function archiveProduct ($ProductID) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -972,7 +997,7 @@ class products extends \engine\objects\api {
 
             $CustomerID = $this->getCustomer()->getCustomerID();
 
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $data = array(
                 'CustomerID' => $CustomerID,
@@ -980,13 +1005,13 @@ class products extends \engine\objects\api {
             );
 
             $config = shared::jsapiShopUpdateProduct($ProductID, $data);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = $e->getMessage();
         }
 
@@ -998,6 +1023,7 @@ class products extends \engine\objects\api {
     }
 
     public function archiveAllProducts () {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -1005,7 +1031,7 @@ class products extends \engine\objects\api {
 
             $CustomerID = $this->getCustomer()->getCustomerID();
 
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $data = array(
                 'CustomerID' => $CustomerID,
@@ -1014,13 +1040,13 @@ class products extends \engine\objects\api {
 
             $config = shared::jsapiShopUpdateProduct(null, $data);
             $config['condition'] = null;
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = $e->getMessage();
         }
 
@@ -1031,9 +1057,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProducts_TopNonPopular () {
+        global $app;
         // get non-popuplar 15 products
         $config = shared::jsapiShopStat_NonPopularProducts();
-        $productIDs = $this->getCustomer()->fetch($config);
+        $productIDs = $app->getDB()->query($config);
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
@@ -1044,9 +1071,10 @@ class products extends \engine\objects\api {
     }
 
     public function getProducts_TopPopular () {
+        global $app;
         // get top 15 products
         $config = shared::jsapiShopStat_PopularProducts();
-        $productIDs = $this->getCustomer()->fetch($config);
+        $productIDs = $app->getDB()->query($config);
         $data = array();
         if (!empty($productIDs)) {
             foreach ($productIDs as $val) {
@@ -1060,12 +1088,13 @@ class products extends \engine\objects\api {
     }
 
     public function getStats_ProductsOverview ($filter = null) {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         // get shop products overview:
         $config = shared::jsapiShopStat_ProductsOverview($filter);
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
         $availableStatuses = $this->getProductStatuses();
@@ -1082,31 +1111,35 @@ class products extends \engine\objects\api {
     }
 
     public function getStats_ProductsIntensityActiveLastMonth () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = shared::jsapiShopStat_ProductsIntensityLastMonth('ACTIVE');
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
     public function getStats_ProductsIntensityPreorderLastMonth () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = shared::jsapiShopStat_ProductsIntensityLastMonth('PREORDER');
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
     public function getStats_ProductsIntensityDiscountLastMonth () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = shared::jsapiShopStat_ProductsIntensityLastMonth('DISCOUNT');
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
 
     public function get (&$resp, $req) {
+        global $app;
         if (!empty($req->get['id'])) {
             if (is_numeric($req->get['id'])) {
                 $ProductID = intval($req->get['id']);
@@ -1128,7 +1161,8 @@ class products extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -1137,7 +1171,8 @@ class products extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -1151,7 +1186,8 @@ class products extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }

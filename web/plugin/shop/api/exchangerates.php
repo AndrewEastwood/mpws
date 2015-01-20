@@ -5,11 +5,12 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 use curl_init;
 
-class exchangerates extends \engine\objects\api {
+class exchangerates {
 
     private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
     private $_currencies = array('AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN',
@@ -31,6 +32,7 @@ class exchangerates extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     private function __adjustExchangeRate (&$data) {
+        global $app;
         if (isset($data['ID']))
             $data['ID'] = intval($data['ID']);
         if (isset($data['Rate']))
@@ -39,29 +41,33 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function getExchangeRateByID ($agencyID) {
+        global $app;
         $config = shared::jsapiShopGetExchangeRateByID($agencyID);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         $data = $this->__adjustExchangeRate($data);
         return $data;
     }
 
     public function getExchangeRates_List (array $options = array()) {
+        global $app;
         $config = shared::jsapiShopGetExchangeRatesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getExchangeRateByID($val['ID']);
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         $dataList['currencyList'] = $this->getCurrencyList();
         return $dataList;
     }
 
     public function createExchangeRate ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -86,17 +92,17 @@ class exchangerates extends \engine\objects\api {
 
                 $configCreateOrigin = shared::jsapiShopCreateExchangeRate($validatedValues);
 
-                $this->getCustomerDataBase()->beginTransaction();
-                $rateID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                $app->getDB()->beginTransaction();
+                $rateID = $app->getDB()->query($configCreateOrigin) ?: null;
 
                 if (empty($rateID))
                     throw new Exception('CurrencyCreateError');
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -111,6 +117,7 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function updateExchangeRate ($id, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -131,16 +138,16 @@ class exchangerates extends \engine\objects\api {
                     $validatedValues['Rate'] = floatval($validatedValues['Rate']);
                 }
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $configCreateCategory = shared::jsapiShopUpdateExchangeRate($id, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
+                $app->getDB()->query($configCreateCategory);
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -154,6 +161,7 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function createOrUpdateExchangeRate ($reqData) {
+        global $app;
         $rate = null;
         if (isset($reqData['CurrencyA']) && isset($reqData['CurrencyB'])) {
             $rate = $this->getExchangeRateByBothRateNames($reqData['CurrencyA'], $reqData['CurrencyB']);
@@ -167,20 +175,21 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function deleteExchangeRate ($id) {
+        global $app;
         $errors = array();
         $success = false;
 
         try {
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $config = shared::jsapiShopDeleteExchangeRate($id);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = 'CurrencyDeleteError';
         }
 
@@ -196,8 +205,9 @@ class exchangerates extends \engine\objects\api {
     // -----------------------------------------------
 
     public function getDefaultDBPriceCurrency () {
+        global $app;
         $currencyName = null;
-        $prop = $this->getAPI()->settings->findByName('DBPriceCurrencyType');
+        $prop = API::getAPI('shop:settings')->findByName('DBPriceCurrencyType');
         if ($prop === null) {
             throw new Exception('#[ShopExRt0003] NeedToDefineDBPriceCurrencyType');
         }
@@ -214,18 +224,21 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {
+        global $app;
         $config = shared::jsapiShopGetExchangeRateTo_ByCurrencyName($currencyName);
-        $rate = $this->getCustomer()->fetch($config) ?: array();
+        $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
 
     public function getExchangeRateFrom_ByCurrencyName ($currencyName) {
+        global $app;
         $config = shared::jsapiShopGetExchangeRateFrom_ByCurrencyName($currencyName);
-        $rate = $this->getCustomer()->fetch($config) ?: array();
+        $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
 
     public function convertToRates ($value, $baseCurrencyName = false, $exchangeRates = array()) {
+        global $app;
         $conversions = array();
 
         if ($baseCurrencyName === false) {
@@ -254,6 +267,7 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function getAvailableConversionOptions ($baseCurrencyName = false) {
+        global $app;
         $valueCurrencyName = null;
         if (empty($baseCurrencyName)) {
             $rate = $this->getDefaultDBPriceCurrency();
@@ -269,7 +283,7 @@ class exchangerates extends \engine\objects\api {
             'limit' => 0
         ));
         $config['condition']['CurrencyA'] = shared::createCondition($valueCurrencyName);
-        $availableRates = $this->getCustomer()->fetch($config) ?: array();
+        $availableRates = $app->getDB()->query($config) ?: array();
         $data = array();
 
         $data[$valueCurrencyName] = 1.0;
@@ -283,20 +297,23 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function getActiveExchangeRatesList () {
+        global $app;
         $rates = $this->getExchangeRates_List(array(
             "limit" => 0
         ));
         return $rates;
     }
     public function getCurrencyList () {
+        global $app;
         return $this->_currencies;
     }
     public function getAllUserUniqCurrencyNames () {
+        global $app;
         $config = shared::jsapiShopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB'),
             'limit' => 0
         ));
-        $userRates = $this->getCustomer()->fetch($config) ?: array();
+        $userRates = $app->getDB()->query($config) ?: array();
         $data = array();
 
         foreach ($userRates as $value) {
@@ -307,8 +324,9 @@ class exchangerates extends \engine\objects\api {
         return array_keys($data);
     }
     public function getExchangeRateByBothRateNames ($baseCCY, $CCY) {
+        global $app;
         $config = shared::jsapiShopGetExchangeRateByBothNames($baseCCY, $CCY);
-        $rate = $this->getCustomer()->fetch($config) ?: array();
+        $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
 
@@ -319,6 +337,7 @@ class exchangerates extends \engine\objects\api {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
+        global $app;
         if (isset($req->get['type'])) {
             switch ($req->get['type']) {
                 case 'currencylist':
@@ -347,7 +366,8 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -356,7 +376,8 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -370,7 +391,8 @@ class exchangerates extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;
         }

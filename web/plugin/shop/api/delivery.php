@@ -8,7 +8,7 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class delivery extends \engine\objects\api {
+class delivery {
 
     private $_statuses = array('ACTIVE', 'DISABLED', 'REMOVED');
     // -----------------------------------------------
@@ -17,8 +17,9 @@ class delivery extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getDeliveryAgencyByID ($agencyID) {
+        global $app;
         $config = shared::jsapiShopGetDeliveryAgencyByID($agencyID);
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['_isRemoved'] = $data['Status'] === 'REMOVED';
         $data['_isActive'] = $data['Status'] === 'ACTIVE';
@@ -26,21 +27,24 @@ class delivery extends \engine\objects\api {
     }
 
     public function getDeliveries_List (array $options = array()) {
+        global $app;
         $config = shared::jsapiShopGetDeliveriesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getDeliveryAgencyByID($val['ID']);
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function createDeliveryAgency ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -60,17 +64,17 @@ class delivery extends \engine\objects\api {
 
                 $configCreateOrigin = shared::jsapiShopCreateDeliveryAgent($validatedValues);
 
-                $this->getCustomerDataBase()->beginTransaction();
-                $deliveryID = $this->getCustomer()->fetch($configCreateOrigin) ?: null;
+                $app->getDB()->beginTransaction();
+                $deliveryID = $app->getDB()->query($configCreateOrigin) ?: null;
 
                 if (empty($deliveryID))
                     throw new Exception('DeliveryCreateError');
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -85,6 +89,7 @@ class delivery extends \engine\objects\api {
     }
 
     public function updateDeliveryAgency ($id, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -100,16 +105,16 @@ class delivery extends \engine\objects\api {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $configCreateCategory = shared::jsapiShopUpdateDeliveryAgent($id, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
+                $app->getDB()->query($configCreateCategory);
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -123,20 +128,21 @@ class delivery extends \engine\objects\api {
     }
 
     public function deleteDeliveryAgency ($id) {
+        global $app;
         $errors = array();
         $success = false;
 
         try {
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $config = shared::jsapiShopDeleteDeliveryAgent($id);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = 'OriginUpdateError';
         }
 
@@ -153,6 +159,7 @@ class delivery extends \engine\objects\api {
     // -----------------------------------------------
 
     public function getActiveDeliveryList () {
+        global $app;
         $deliveries = $this->getDeliveries_List(array(
             "limit" => 0,
             "_fStatus" => "ACTIVE"
@@ -167,6 +174,7 @@ class delivery extends \engine\objects\api {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
+        global $app;
         if (empty($req->get['id'])) {
             $resp = $this->getDeliveries_List($req->get);
         } else {
@@ -176,7 +184,8 @@ class delivery extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -185,7 +194,8 @@ class delivery extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -199,7 +209,8 @@ class delivery extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;
         }

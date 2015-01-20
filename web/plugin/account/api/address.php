@@ -3,8 +3,9 @@ namespace web\plugin\system\api;
 
 class address {
     public function getAddressByID ($AddressID) {
+        global $app;
         $config = $this->getCustomerConfiguration()->data->jsapiGetAddress($AddressID);
-        $address = $this->getCustomer()->fetch($config);
+        $address = $app->getDB()->query($config);
         // adjust values
         $address['ID'] = intval($address['ID']);
         $address['AccountID'] = intval($address['AccountID']);
@@ -12,6 +13,7 @@ class address {
     }
 
     public function createAddress ($AccountID, $reqData, $allowStandalone = false) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -38,7 +40,7 @@ class address {
                         $AccountID = null;
                 }
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $validatedValues = $validatedDataObj['values'];
 
@@ -52,15 +54,15 @@ class address {
 
                 $configCreateAccount = $this->getCustomerConfiguration()->data->jsapiAddAddress($data);
 
-                $AddressID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
+                $AddressID = $app->getDB()->query($configCreateAccount) ?: null;
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $result = $this->getAddressByID($AddressID);
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = 'AccountAddressCreateError';
                 $errors[] = $e->getMessage();
             }
@@ -74,6 +76,7 @@ class address {
     }
 
     private function _updateAddressByID ($AddressID, $reqData) {
+        global $app;
         $errors = array();
         $success = false;
 
@@ -87,19 +90,19 @@ class address {
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $data = $validatedDataObj['values'];
 
                 $configUpdateAddress = $this->getCustomerConfiguration()->data->jsapiUpdateAddress($AddressID, $data);
 
-                $this->getCustomer()->fetch($configUpdateAddress);
+                $app->getDB()->query($configUpdateAddress);
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 // return glWrap("error", 'AddressUpdateError');
                 $errors[] = 'AddressUpdateError';
             }
@@ -114,8 +117,9 @@ class address {
     }
 
     private function _disableAddressByID ($AddressID) {
+        global $app;
         $config = $this->getCustomerConfiguration()->data->jsapiDisableAddress($AddressID);
-        $this->getCustomer()->fetch($config);
+        $app->getDB()->query($config);
         return glWrap("ok", true);
     }
 

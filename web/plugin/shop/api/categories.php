@@ -7,10 +7,11 @@ use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
 use \engine\lib\request as Request;
 use \engine\lib\utils as Utils;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class categories extends \engine\objects\api {
+class categories {
 
     private $_statuses = array('ACTIVE', 'REMOVED');
 
@@ -20,6 +21,7 @@ class categories extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     private function __adjustCategory (&$category) {
+        global $app;
         $category['ID'] = intval($category['ID']);
         $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
         $category['_isRemoved'] = $category['Status'] === 'REMOVED';
@@ -28,49 +30,55 @@ class categories extends \engine\objects\api {
     }
 
     public function getCategoryByID ($categoryID) {
+        global $app;
         if (empty($categoryID) || !is_numeric($categoryID))
             return null;
         $config = shared::jsapiShopGetCategoryItem($categoryID);
-        $category = $this->getCustomer()->fetch($config);
+        $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
         return $this->__adjustCategory($category);
     }
 
     public function getCategoryByName ($categoryName) {
+        global $app;
         $config = shared::jsapiShopGetCategoryItem();
         $config['condition']['Name'] = shared::createCondition($categoryName);
-        $category = $this->getCustomer()->fetch($config);
+        $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
         return $this->__adjustCategory($category);
     }
 
     public function getCategoryByExternalKey ($externalKey) {
+        global $app;
         $config = shared::jsapiShopGetCategoryItem();
         $config['condition']['ExternalKey'] = shared::createCondition($externalKey);
-        $category = $this->getCustomer()->fetch($config);
+        $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
         return $this->__adjustCategory($category);
     }
 
     public function getCategories_List (array $options = array()) {
+        global $app;
         $config = shared::jsapiShopGetCategoryList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $val)
                     $_items[] = $self->getCategoryByID($val['ID']);
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         return $dataList;
     }
 
     public function createCategory ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -87,21 +95,21 @@ class categories extends \engine\objects\api {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
                 $configCreateCategory = shared::jsapiShopCreateCategory($validatedValues);
-                $CategoryID = $this->getCustomer()->fetch($configCreateCategory) ?: null;
+                $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
                     throw new Exception('CategoryCreateError');
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -116,6 +124,7 @@ class categories extends \engine\objects\api {
     }
 
     public function updateCategory ($CategoryID, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -132,16 +141,16 @@ class categories extends \engine\objects\api {
 
                 $validatedValues = $validatedDataObj['values'];
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $configCreateCategory = shared::jsapiShopUpdateCategory($CategoryID, $validatedValues);
-                $this->getCustomer()->fetch($configCreateCategory);
+                $app->getDB()->query($configCreateCategory);
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -155,20 +164,21 @@ class categories extends \engine\objects\api {
     }
 
     public function disableCategory ($CategoryID) {
+        global $app;
         $errors = array();
         $success = false;
 
         try {
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
 
             $config = shared::jsapiShopDeleteCategory($CategoryID);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
 
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = 'CategoryUpdateError';
         }
 
@@ -184,9 +194,10 @@ class categories extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getCategoryLocationByCategoryID ($categoryID) {
+        global $app;
         // var_dump($categoryID);
         $configLocation = shared::jsapiShopCategoryLocationGet($categoryID);
-        $location = $this->getCustomer()->fetch($configLocation);
+        $location = $app->getDB()->query($configLocation);
         foreach ($location as &$categoryItem) {
             $categoryItem['ID'] = intval($categoryItem['ID']);
         }
@@ -199,8 +210,10 @@ class categories extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function getCatalogTree ($selectedCategoryID = false) {
+        global $app;
 
         function getTree (array &$elements, $parentId = null) {
+        global $app;
             $branch = array();
             // echo "#######Looking for element where parentid ==", $parentId, PHP_EOL;
             foreach ($elements as $key => $element) {
@@ -219,7 +232,7 @@ class categories extends \engine\objects\api {
         }
 
         $config = shared::jsapiShopCatalogTree($selectedCategoryID);
-        $categories = $this->getCustomer()->fetch($config);
+        $categories = $app->getDB()->query($config);
         $map = array();
         foreach ($categories as $key => $value)
             $map[$value['ID']] = $value;
@@ -230,6 +243,7 @@ class categories extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
+        global $app;
         if (isset($req->get['tree'])) {
             $resp = $this->getCatalogTree();
         } else if (empty($req->get['id'])) {
@@ -245,7 +259,8 @@ class categories extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -254,7 +269,8 @@ class categories extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -268,7 +284,8 @@ class categories extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = 'AccessDenied';
             return;
         }

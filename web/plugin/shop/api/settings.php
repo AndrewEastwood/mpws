@@ -8,21 +8,18 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class settings extends \engine\objects\api {
+class settings {
 
-    function __construct ($customer, $plugin, $pluginName, $app) {
-        parent::__construct($customer, $plugin, $pluginName, $app);
-        $this->SETTING_TYPE = (object) array(
-            'ADDRESS' => 'ADDRESS',
-            'ALERTS' => 'ALERTS',
-            'EXCHANAGERATES' => 'EXCHANAGERATES',
-            'OPENHOURS' => 'OPENHOURS',
-            'FORMORDER' => 'FORMORDER',
-            'WEBSITE' => 'WEBSITE',
-            'MISC' => 'MISC',
-            'PRODUCT' => 'PRODUCT'
-        );
-    }
+    public $SETTING_TYPE = array(
+        'ADDRESS' => 'ADDRESS',
+        'ALERTS' => 'ALERTS',
+        'EXCHANAGERATES' => 'EXCHANAGERATES',
+        'OPENHOURS' => 'OPENHOURS',
+        'FORMORDER' => 'FORMORDER',
+        'WEBSITE' => 'WEBSITE',
+        'MISC' => 'MISC',
+        'PRODUCT' => 'PRODUCT'
+    );
 
     // -----------------------------------------------
     // -----------------------------------------------
@@ -30,22 +27,25 @@ class settings extends \engine\objects\api {
     // -----------------------------------------------
     // -----------------------------------------------
     public function findByID ($id) {
+        global $app;
         if (empty($id) || !is_numeric($id))
             return null;
         $config = shared::jsapiShopGetSettingByID($id);
-        $setting = $this->getCustomer()->fetch($config);
+        $setting = $app->getDB()->query($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function findByName ($name) {
+        global $app;
         $config = shared::jsapiShopGetSettingByName($name);
-        $setting = $this->getCustomer()->fetch($config);
+        $setting = $app->getDB()->query($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function getSettingsByType ($type) {
+        global $app;
         $config = shared::jsapiShopGetSettingByType($type);
-        $settings = $this->getCustomer()->fetch($config);
+        $settings = $app->getDB()->query($config);
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->__adjustSettingItem($value);
         }
@@ -53,6 +53,7 @@ class settings extends \engine\objects\api {
     }
 
     private function __adjustSettingItem ($setting) {
+        global $app;
         if (empty($setting))
             return null;
         $setting['ID'] = intval($setting['ID']);
@@ -62,10 +63,12 @@ class settings extends \engine\objects\api {
     }
 
     public function toList (array $options = array()) {
+        global $app;
         $config = shared::jsapiShopGetSettingsList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
+        global $app;
                 $_items = array();
                 foreach ($items as $key => $settingItem) {
                     $_items[] = $self->findByID($settingItem['ID']);
@@ -73,12 +76,13 @@ class settings extends \engine\objects\api {
                 return $_items;
             }
         );
-        $dataList = $this->getCustomer()->getDataList($config, $options, $callbacks);
-        $dataList['availableConversions'] = $this->getAPI()->exchangerates->getAvailableConversionOptions();
+        $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
+        $dataList['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
         return $dataList;
     }
 
     public function create ($reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -99,19 +103,19 @@ class settings extends \engine\objects\api {
 
                 $config = shared::jsapiShopCreateSetting($validatedValues);
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
-                $settingID = $this->getCustomer()->fetch($config) ?: null;
+                $settingID = $app->getDB()->query($config) ?: null;
 
                 if (empty($settingID)) {
                     throw new Exception('SettingCreateError');
                 }
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -125,6 +129,7 @@ class settings extends \engine\objects\api {
     }
 
     public function update ($nameOrID, $reqData) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
@@ -140,18 +145,18 @@ class settings extends \engine\objects\api {
 
                 $validatedValues = $validatedDataObj['values'];
                 if (!empty($validatedValues)) {
-                    $this->getCustomerDataBase()->beginTransaction();
+                    $app->getDB()->beginTransaction();
                     if (is_numeric($nameOrID)) {
                         $configSettingUpdate = shared::jsapiShopUpdateSetting($nameOrID, $validatedValues);
                     } else {
                         $configSettingUpdate = shared::jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
                     }
-                    $this->getCustomer()->fetch($configSettingUpdate);
-                    $this->getCustomerDataBase()->commit();
+                    $app->getDB()->query($configSettingUpdate);
+                    $app->getDB()->commit();
                 }
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -169,18 +174,19 @@ class settings extends \engine\objects\api {
     }
 
     public function remove ($settingID) {
+        global $app;
         $result = array();
         $errors = array();
         $success = false;
 
         try {
-            $this->getCustomerDataBase()->beginTransaction();
+            $app->getDB()->beginTransaction();
             $config = shared::jsapiShopRemoveSetting($settingID);
-            $this->getCustomer()->fetch($config);
-            $this->getCustomerDataBase()->commit();
+            $app->getDB()->query($config);
+            $app->getDB()->commit();
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->rollBack();
+            $app->getDB()->rollBack();
             $errors[] = $e->getMessage();
         }
 
@@ -197,9 +203,11 @@ class settings extends \engine\objects\api {
     // -----------------------------------------------
 
     public function getSettingsFormOrder () {
+        global $app;
         return $this->getSettingsByType($this->SETTING_TYPE->FORMORDER);
     }
     public function getSettingsMapFormOrder () {
+        global $app;
         $map = array();
         $items = $this->getSettingsFormOrder();
         foreach ($items as $value) {
@@ -215,8 +223,9 @@ class settings extends \engine\objects\api {
     // -----------------------------------------------
 
     public function get (&$resp, $req) {
+        global $app;
         $data = $req->get;
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             $data['_fStatus'] = "ACTIVE";
         }
         if (!empty($data['id'])) {
@@ -229,7 +238,8 @@ class settings extends \engine\objects\api {
     }
 
     public function post (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Create')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Create')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -246,7 +256,8 @@ class settings extends \engine\objects\api {
     }
 
     public function patch (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }
@@ -263,7 +274,8 @@ class settings extends \engine\objects\api {
     }
 
     public function delete (&$resp, $req) {
-        if (!$this->getCustomer()->ifYouCan('Admin') && !$this->getCustomer()->ifYouCan('Edit')) {
+        global $app;
+        if (!API::getAPI('system:auth')->ifYouCan('Admin') && !API::getAPI('system:auth')->ifYouCan('Edit')) {
             $resp['error'] = "AccessDenied";
             return;
         }

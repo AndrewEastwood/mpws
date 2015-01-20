@@ -5,54 +5,54 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class shopstats extends \engine\objects\api {
+class shopstats {
 
     public function get (&$resp, $req) {
-
         $self = $this;
         $sources = array();
         // $sources['orders_new'] = function ($req) use ($self) {
         //     return $self->getOrders_ListPending($req);
         // };
         $sources['orders_list_pending'] = function ($req) use ($self) {
-            return $self->getAPI()->orders->getOrders_ListPending($req->get);
+            return API::getAPI('shop:orders')->getOrders_ListPending($req);
         };
         $sources['orders_list_todays'] = function ($req) use ($self) {
-            return $self->getAPI()->orders->getOrders_ListTodays($req->get);
+            return API::getAPI('shop:orders')->getOrders_ListTodays($req);
         };
         $sources['orders_list_expired'] = function ($req) use ($self) {
-            return $self->getAPI()->orders->getOrders_ListExpired($req->get);
+            return API::getAPI('shop:orders')->getOrders_ListExpired($req);
         };
         $sources['orders_intensity_last_month'] = function ($req) use ($self) {
             $res = array();
-            $res['OPEN'] = $self->getAPI()->orders->getStats_OrdersIntensityAliveLastMonth();
-            $res['CLOSED'] = $self->getAPI()->orders->getStats_OrdersIntensityClosedLastMonth();
+            $res['OPEN'] = API::getAPI('shop:orders')->getStats_OrdersIntensityAliveLastMonth();
+            $res['CLOSED'] = API::getAPI('shop:orders')->getStats_OrdersIntensityClosedLastMonth();
             return $res;
         };
         $sources['overview_orders'] = function () use ($self) {
-            return $self->getAPI()->orders->getStats_OrdersOverview();
+            return API::getAPI('shop:orders')->getStats_OrdersOverview();
         };
         $sources['overview_products'] = function () use ($self) {
-            return $self->getAPI()->products->getStats_ProductsOverview();
+            return API::getAPI('shop:products')->getStats_ProductsOverview();
         };
         $sources['products_list_popular'] = function () use ($self) {
             $res = array();
-            $res['items'] = $self->getAPI()->products->getProducts_TopPopular();
+            $res['items'] = API::getAPI('shop:products')->getProducts_TopPopular();
             return $res;
         };
         $sources['products_list_non_popular'] = function () use ($self) {
             $res = array();
-            $res['items'] = $self->getAPI()->products->getProducts_TopNonPopular();
+            $res['items'] = API::getAPI('shop:products')->getProducts_TopNonPopular();
             return $res;
         };
         $sources['products_intensity_last_month'] = function () use ($self) {
             $res = array();
-            $res['ACTIVE'] = $self->getAPI()->products->getStats_ProductsIntensityActiveLastMonth();
-            $res['PREORDER'] = $self->getAPI()->products->getStats_ProductsIntensityPreorderLastMonth();
-            $res['DISCOUNT'] = $self->getAPI()->products->getStats_ProductsIntensityDiscountLastMonth();
+            $res['ACTIVE'] = API::getAPI('shop:products')->getStats_ProductsIntensityActiveLastMonth();
+            $res['PREORDER'] = API::getAPI('shop:products')->getStats_ProductsIntensityPreorderLastMonth();
+            $res['DISCOUNT'] = API::getAPI('shop:products')->getStats_ProductsIntensityDiscountLastMonth();
             return $res;
         };
 

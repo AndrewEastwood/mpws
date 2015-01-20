@@ -12,10 +12,10 @@ class account {
         // get account info
         // get account addresses
         $configAddresses = $this->getCustomerConfiguration()->data->jsapiGetAccountAddresses($AccountID, $this->getCustomer()->getApp()->isToolbox());
-        $account['Addresses'] = $this->getCustomer()->fetch($configAddresses) ?: array();
+        $account['Addresses'] = $app->getDB()->query($configAddresses) ?: array();
         
         $configPermissions = $this->getCustomerConfiguration()->data->jsapiGetPermissions($AccountID);
-        $account['Permissions'] = $this->getCustomer()->fetch($configPermissions, true) ?: array();
+        $account['Permissions'] = $app->getDB()->query($configPermissions, true) ?: array();
 
         // adjust values
         $account['ID'] = intval($account['ID']);
@@ -44,7 +44,7 @@ class account {
 
     public function getAccountByValidationString ($ValidationString) {
         $config = $this->getCustomerConfiguration()->data->jsapiGetAccountByValidationString($ValidationString);
-        $account = $this->getCustomer()->fetch($config);
+        $account = $app->getDB()->query($config);
         // var_dump('getAccountByValidationString', $config);
         if (is_null($account)) {
             return glWrap('error', 'Account does not exist');
@@ -57,7 +57,7 @@ class account {
 
     public function getAccountByID ($AccountID) {
         $config = $this->getCustomerConfiguration()->data->jsapiGetAccountByID($AccountID);
-        $account = $this->getCustomer()->fetch($config);
+        $account = $app->getDB()->query($config);
         // var_dump('getAccountByID', $AccountID);
         if (!is_null($account))
             $account = $this->__attachAccountDetails($account);
@@ -66,7 +66,7 @@ class account {
 
     public function isEmailAllowedToRegister ($email) {
         $config = $this->getCustomerConfiguration()->data->jsapiGetAccountByEMail($email);
-        $accountWithEmail = $this->getCustomer()->fetch($config);
+        $accountWithEmail = $app->getDB()->query($config);
         return empty($accountWithEmail);
     }
 
@@ -92,7 +92,7 @@ class account {
                 // if (!$this->isEmailAllowedToRegister($validatedValues['EMail']))
                 //     throw new Exception("EmailAlreadyInUse", 1);
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $data = array();
                 $data["CustomerID"] = $this->getCustomer()->getCustomerID();
@@ -103,7 +103,7 @@ class account {
                 $data["Password"] = Secure::EncodeAccountPassword($validatedValues['Password']);
                 $data["ValidationString"] = Secure::EncodeAccountPassword(time());
                 $configCreateAccount = $this->getCustomerConfiguration()->data->jsapiAddAccount($data);
-                $AccountID = $this->getCustomer()->fetch($configCreateAccount) ?: null;
+                $AccountID = $app->getDB()->query($configCreateAccount) ?: null;
 
                 if (empty($AccountID))
                     throw new Exception('AccountCreateError');
@@ -112,18 +112,18 @@ class account {
                 $data = $this->getCustomerConfiguration()->data->jsapiGetNewPermission();
                 $data['AccountID'] = $AccountID;
                 $configCreatePermission = $this->getCustomerConfiguration()->data->jsapiAddPermissions($data);
-                $PermissionID = $this->getCustomer()->fetch($configCreatePermission) ?: null;
+                $PermissionID = $app->getDB()->query($configCreatePermission) ?: null;
 
                 if (empty($PermissionID))
                     throw new Exception('PermissionCreateError');
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $result = $this->getAccountByID($AccountID);
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 $errors[] = $e->getMessage();
             }
         else
@@ -157,7 +157,7 @@ class account {
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
-                $this->getCustomerDataBase()->beginTransaction();
+                $app->getDB()->beginTransaction();
 
                 $validatedValues = $validatedDataObj['values'];
 
@@ -178,7 +178,7 @@ class account {
                         unset($dataAccount['ConfirmPassword']);
                     }
                     $configUpdateAccount = $this->getCustomerConfiguration()->data->jsapiUpdateAccount($AccountID, $dataAccount);
-                    $this->getCustomer()->fetch($configUpdateAccount);
+                    $app->getDB()->query($configUpdateAccount);
                     // var_dump($configUpdateAccount);
                 }
 
@@ -188,14 +188,14 @@ class account {
                     // }
                     $configUpdatePermissions = $this->getCustomerConfiguration()->data->jsapiUpdatePermissions($AccountID, $dataPermission);
                     // var_dump($configUpdatePermissions);
-                    $this->getCustomer()->fetch($configUpdatePermissions, true);
+                    $app->getDB()->query($configUpdatePermissions, true);
                 }
 
-                $this->getCustomerDataBase()->commit();
+                $app->getDB()->commit();
 
                 $success = true;
             } catch (Exception $e) {
-                $this->getCustomerDataBase()->rollBack();
+                $app->getDB()->rollBack();
                 // echo $this->getCustomerDataBase()->getLastErrorCode();
                 // echo $e;
                 // return glWrap("error", 'AccountUpdateError');
@@ -215,7 +215,7 @@ class account {
         $account = $this->getAccountByValidationString($ValidationString);
         if ($account['Status'] === "TEMP" || glIsToolbox()) {
             $config = $this->getCustomerConfiguration()->data->jsapiActivateAccount($ValidationString);
-            $this->getCustomer()->fetch($config);
+            $app->getDB()->query($config);
             $account = $this->getAccountByValidationString($ValidationString);
             if ($account['Status'] === 'ACTIVE')
                 return $account;
@@ -226,7 +226,7 @@ class account {
 
     private function _disableAccountByID ($AccountID) {
         $config = $this->getCustomerConfiguration()->data->jsapiDisableAccount($AccountID);
-        $this->getCustomer()->fetch($config);
+        $app->getDB()->query($config);
         // disable all related addresses
         $account = $this->getAccountByID($AccountID);
         if ($account['Addresses'])
@@ -240,20 +240,20 @@ class account {
     // stats
     // -----------------------------------------------
     private function _getStats_AccountsOverview () {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = $this->getCustomerConfiguration()->data->jsapiStat_AccountsOverview();
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
 
     private function _getStats_AccountsIntensityLastMonth ($status) {
-        if (!$this->getCustomer()->ifYouCan('Admin')) {
+        if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = $this->getCustomerConfiguration()->data->jsapiStat_AccountsIntensityLastMonth($status);
-        $data = $this->getCustomer()->fetch($config) ?: array();
+        $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
 

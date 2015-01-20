@@ -8,13 +8,15 @@ define('plugin/shop/common/js/collection/settings', [
 
     return Backbone.Collection.extend({
         model: ModelSetting,
-        url: function () {
-            var _params = _.extend({
-                source: 'shop',
-                fn: 'settings'
-            }, this.queryParams);
-            return APP.getApiLink(_params);
-        },
+        url: APP.getApiLink('shop', 'settings'),
+        // url: '/settings',
+        // url: function () {
+        //     var _params = _.extend({
+        //         source: 'shop',
+        //         fn: 'settings'
+        //     }, this.queryParams);
+        //     return APP.getApiLink(_params);
+        // },
 
         initialize: function () {
             this.queryParams = {};

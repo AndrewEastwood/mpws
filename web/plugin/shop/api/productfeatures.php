@@ -5,26 +5,29 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
-class productfeatures extends \engine\objects\api {
+class productfeatures {
 
     public function createFeature ($itemData) {
+        global $app;
         $data = array();
         $data["CustomerID"] = $itemData["CustomerID"];
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
         // var_dump($data);
         $config = shared::jsapiShopCreateFeature($data);
-        $featureID = $this->getCustomer()->fetch($config);
+        $featureID = $app->getDB()->query($config);
         return $featureID;
     }
 
     public function getFeatures () {
+        global $app;
         $tree = array();
         $config = shared::jsapiShopGetFeatures();
-        $data = $this->getCustomer()->fetch($config);
+        $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {
                 if (!isset($tree[$value['GroupName']])) {
@@ -37,6 +40,7 @@ class productfeatures extends \engine\objects\api {
     }
 
     public function get (&$resp, $req) {
+        global $app;
         $resp = $this->getFeatures();
     }
 

@@ -135,7 +135,6 @@ class shared {
     }
 
     public static function jsapiShopGetLatestProductsList () {
-        global $app;
         $config = self::jsapiShopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
@@ -163,7 +162,6 @@ class shared {
     }
 
     public static function jsapiShopCreateProduct ($data) {
-        global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $ExternalKey = array();
@@ -187,7 +185,6 @@ class shared {
     }
 
     public static function jsapiShopUpdateProduct ($ProductID, $data) {
-        global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $ExternalKey = array();
         if (isset($data['Name'])) {
@@ -214,7 +211,6 @@ class shared {
     }
 
     public static function jsapiShopDeleteProduct ($ProductID) {
-        global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
@@ -240,7 +236,7 @@ class shared {
     }
 
     // public static function jsapiGetShopCategoryProductInfo ($ids) {
-        global $app;
+        // global $app;
     //     $config = self::jsapiGetShopCategoryProductList($ids);
     //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
@@ -248,7 +244,7 @@ class shared {
     // }
 
     // public static function jsapiGetShopCategoryProductInfo ($ids) {
-        global $app;
+        // global $app;
     //     $config = self::jsapiGetShopCategoryProductList($ids);
     //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
@@ -256,7 +252,7 @@ class shared {
     // }
 
     public static function jsapiGetShopCategoryProductInfo () {
-        global $app;
+        // global $app;
         $config = self::jsapiShopGetProductList();
         // $config['fields'] = array("ID", "Name");
         $config['fields'] = array("ID");
@@ -480,7 +476,7 @@ class shared {
     }
 
     // public static function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
-        global $app;
+        // global $app;
     //     return $app->getDB()->createDBQuery(array(
     //         "action" => "call",
     //         "procedure" => array(
