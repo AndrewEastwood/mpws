@@ -1,7 +1,8 @@
 <?php
-namespace web\plugin\system\api;
+namespace web\plugin\account\api;
 
 use \engine\lib\api as API;
+use \engine\lib\secure as Secure;
 
 class user {
 
@@ -57,11 +58,12 @@ class user {
 
     public function getActiveUserByCredentials ($login, $password) {
         global $app;
-        $query = dbquery::getUserByCredentials($login, $password, 'ACTIVE')
+        $query = dbquery::getUserByCredentials($login, $password);
         // avoid removed account
         $query["fields"] = array("ID");
-        $query["condition"]["Status"] = $app->getDB()->createCondition($status, '!=');
+        $query["condition"]["Status"] = $app->getDB()->createCondition('REMOVED', '!=');
         $user = $app->getDB()->query($query);
+        return $user;
     }
 
     public function isEmailAllowedToRegister ($email) {
@@ -232,12 +234,12 @@ class user {
         return glWrap("ok", true);
     }
 
-    public function setOffline ($userID) {
+    public function setOffline ($UserID) {
         global $app;
         $app->getDB()->query(dbquery::offline($UserID));
     }
 
-    public function setOnline ($userID) {
+    public function setOnline ($UserID) {
         global $app;
         $app->getDB()->query(dbquery::online($UserID));
     }
@@ -276,16 +278,11 @@ class user {
             $resp = $this->getUserByID($UserID);
             return;
         }
-        $resp['error'] = 'MissedParameter_id';
-    }
-
-    public function get (&$resp, $req) {
         if (!empty($req->get['hash'])) {
             $ValidationString = $req->get['hash'];
             $resp = $this->_activateUserByValidationStyring($ValidationString);
             return;
         }
-        $resp['error'] = 'MissedParameter_hash';
     }
 
     public function post (&$resp, $req) {

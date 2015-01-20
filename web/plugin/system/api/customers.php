@@ -83,7 +83,7 @@ class customers {
         // adjusting
         $ID = intval($customer['ID']);
         $customer['ID'] = $ID;
-        $customer['Settings'] = $this->getCustomerSettings($ID);
+        $customer['Settings'] = $this->getCustomerSettings($ID) ?: array();
         // var_dump($customer);
         return $customer;
     }
@@ -91,9 +91,8 @@ class customers {
     public function getCustomerByID ($ID) {
         global $app;
         $config = dbquery::getCustomer($ID);
-        $customer = $app->getDB()->query($config);
-        return $settings;
-
+        $customer = $app->getDB()->query($config, false);
+        return $this->__adjustCustomer($customer);
     }
 
     public function getCustomerByName ($customerName) {

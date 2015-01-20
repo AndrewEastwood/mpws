@@ -135,6 +135,7 @@ class site {
         global $app;
         // refresh auth
         // $this->updateSessionAuth();
+        API::getAPI('system:auth')->updateSessionAuth();
         API::execAPI();
     }
 

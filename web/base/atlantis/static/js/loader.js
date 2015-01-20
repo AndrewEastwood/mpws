@@ -92,6 +92,10 @@ require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/undersc
         }
         return _url.toString();
     }
+    APP.getAuthLink = function (extraOptions) {
+        var _url = new JSUrl(APP.config.URL_API + '/system/auth/');
+        return _url.toString();
+    }
     // APP.getApiLink = function (extraOptions) {
     //     var _url = new JSUrl(APP.config.URL_API);
     //     // _url.query.token = APP.config.TOKEN;
@@ -110,15 +114,15 @@ require(["default/js/lib/sandbox", "default/js/lib/url", "default/js/lib/undersc
     //         });
     //     return _url.toString();
     // }
-    // APP.getUploadUrl = function (extraOptions) {
-    //     var _url = new JSUrl(APP.config.URL_UPLOAD);
-    //     // _url.query.token = APP.config.TOKEN;
-    //     if (!_.isEmpty(extraOptions))
-    //         _(extraOptions).each(function (v, k) {
-    //             _url.query[k] = !!v ? v : "";
-    //         });
-    //     return _url.toString();
-    // }
+    APP.getUploadUrl = function (extraOptions) {
+        var _url = new JSUrl(APP.config.URL_UPLOAD);
+        // _url.query.token = APP.config.TOKEN;
+        if (!_.isEmpty(extraOptions))
+            _(extraOptions).each(function (v, k) {
+                _url.query[k] = !!v ? v : "";
+            });
+        return _url.toString();
+    }
     // APP.triggerBackgroundTask = function (name, params) {
     //     var _url = new JSUrl(APP.config.URL_TASK);
     //     _url.query.name = name;

@@ -1,5 +1,5 @@
 <?php
-namespace web\plugin\user\api;
+namespace web\plugin\account\api;
 
 class dbquery {
 
@@ -206,7 +206,6 @@ class dbquery {
     }
 
     // public static function getUserAddress ($UserID, $AddressID) {
-    global $app;
     //     return $app->getDB()->createDBQuery(array(
     //         "source" => "mpws_userAddresses",
     //         "fields" => array("*"),
@@ -315,3 +314,7 @@ class dbquery {
         return $config;
     }
     // <<<< User statistics
+
+}
+
+?>

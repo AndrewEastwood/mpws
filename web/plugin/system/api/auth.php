@@ -2,6 +2,7 @@
 namespace web\plugin\system\api;
 
 use \engine\lib\api as API;
+use \engine\lib\secure as Secure;
 
 class auth {
 
@@ -9,17 +10,17 @@ class auth {
     private $authKey = 'auth_id';
 
     public function getAuthID () {
-        if (!isset($_SESSION[$authKey]))
-            $_SESSION[$authKey] = null;
-        if (isset($_SESSION[$authKey])) {
-            $this->permissions = API::getAPI('account:permissions')->getPermissions($_SESSION[$authKey]);
+        if (!isset($_SESSION[$this->authKey]))
+            $_SESSION[$this->authKey] = null;
+        if (isset($_SESSION[$this->authKey])) {
+            $this->permissions = API::getAPI('account:permissions')->getPermissions($_SESSION[$this->authKey]);
             // $configPermissions = $app->getSettings()->data->getPermissions($_SESSION['AccountID']);
             // $permissions = $this->fetch($configPermissions, true) ?: array();
             if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
                 return $this->clearAuthID();
             }
         }
-        return $_SESSION[$authKey];
+        return $_SESSION[$this->authKey];
     }
 
     public function ifYouCan ($action) {
@@ -30,25 +31,25 @@ class auth {
 
     public function updateSessionAuth () {
         $authID = $this->getAuthID();
-        setcookie($authKey, $authID, time() + 3600, '/');
+        setcookie($this->authKey, $authID, time() + 3600, '/');
     }
 
     public function clearAuthID () {
-        if (!empty($_SESSION[$authKey])) {
-            API::getAPI('account:user')->setOffline($_SESSION[$authKey]);
+        if (!empty($_SESSION[$this->authKey])) {
+            API::getAPI('account:user')->setOffline($_SESSION[$this->authKey]);
         }
-        $_SESSION[$authKey] = null;
+        $_SESSION[$this->authKey] = null;
         $this->permissions = array();
         return null;
     }
 
     public function get (&$resp) {
-        $resp[$authKey] = $this->getAuthID();
+        $resp[$this->authKey] = $this->getAuthID();
         $this->updateSessionAuth();
     }
 
     public function delete (&$resp, $req) {
-        $resp[$authKey] = $this->clearAuthID();
+        $resp[$this->authKey] = $this->clearAuthID();
         $this->updateSessionAuth();
     }
 
@@ -72,11 +73,11 @@ class auth {
                 $resp['error'] = 'WrongCredentials';
             else {
                 $UserID = intval($user['ID']);
-                $_SESSION[$authKey] = $user;
+                $_SESSION[$this->authKey] = $UserID;
                 // set online state for account
                 API::getAPI('account:user')->setOnline($UserID);
             }
-            $resp[$authKey] = $this->getAuthID();
+            $resp[$this->authKey] = $this->getAuthID();
             $this->updateSessionAuth();
         // }
         // if (isset($req->get['signout'])) {

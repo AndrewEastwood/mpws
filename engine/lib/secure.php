@@ -4,7 +4,7 @@ namespace engine\lib;
 
 class secure {
 
-    public static function EncodeAccountPassword ($rawPassword) {
+    public static function EncodeUserPassword ($rawPassword) {
         $key = '!MPWSservice123';
         return md5($key . $rawPassword);
     }

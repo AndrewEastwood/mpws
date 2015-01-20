@@ -1,5 +1,5 @@
 <?php
-namespace web\plugin\system\api;
+namespace web\plugin\account\api;
 
 class permissions {
 
@@ -17,7 +17,7 @@ class permissions {
 
     public function getPermissions ($userID) {
         global $app;
-        $query = dbquery::getPermissions();
+        $query = dbquery::getPermissions($userID);
         $userPermissions = $app->getDB()->query($query);
         return $this->_adjustPermissions($userPermissions);
     }
