@@ -123,7 +123,7 @@ class products {
 
         // save product into recently viewed list
         $isDirectRequestToProduct = Request::hasInGet('id');
-        if (Request::isGET() && !$this->getApp()->isToolbox() && !empty($isDirectRequestToProduct)) {
+        if (Request::isGET() && !$app->isToolbox() && !empty($isDirectRequestToProduct)) {
             $recentProducts = isset($_SESSION[$this->_listKey_Recent]) ? $_SESSION[$this->_listKey_Recent] : array();
             $recentProducts[$productID] = $product;
             $_SESSION[$this->_listKey_Recent] = $recentProducts;

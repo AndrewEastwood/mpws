@@ -836,7 +836,7 @@ class orders {
                 if (empty($req->data['promo']))
                     API::getAPI('shop:promos')->resetSessionPromo();
                 else
-                    API::getAPI('shop:promos->setSessionPromo($this->getAPI()->promos->getPromoByHash($req')->data['promo'], true));
+                    API::getAPI('shop:promos')->setSessionPromo(API::getAPI('shop:promos')->getPromoByHash($req->data['promo'], true));
             }
             $resp = $this->_getOrderTemp();
         }
