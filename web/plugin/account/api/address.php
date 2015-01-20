@@ -2,17 +2,34 @@
 namespace web\plugin\system\api;
 
 class address {
-    public function getAddressByID ($AddressID) {
-        global $app;
-        $config = $this->getCustomerConfiguration()->data->jsapiGetAddress($AddressID);
-        $address = $app->getDB()->query($config);
-        // adjust values
+
+    private function __adjustAddress (&$address) {
+        if (empty($address))
+            return null;
         $address['ID'] = intval($address['ID']);
-        $address['AccountID'] = intval($address['AccountID']);
+        $address['UserID'] = intval($address['UserID']);
         return $address;
     }
 
-    public function createAddress ($AccountID, $reqData, $allowStandalone = false) {
+    public function getAddressByID ($AddressID) {
+        global $app;
+        $config = dbquery::getAddress($AddressID);
+        $address = $app->getDB()->query($config);
+        // adjust values
+        return $this->__adjustAddress($address);
+    }
+
+    public function getAddresses ($UserID) {
+        global $app;
+        $configAddresses = dbquery::getUserAddresses($UserID, $app()->isToolbox());
+        $addresses = $app->getDB()->query($configAddresses) ?: array();
+        foreach ($addresses as &$item) {
+            $this->__adjustAddress($item);
+        }
+        return $addresses;
+    }
+
+    public function createAddress ($UserID, $reqData, $allowStandalone = false) {
         global $app;
         $result = array();
         $errors = array();
@@ -28,16 +45,16 @@ class address {
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
-                // TODO: if account is authorized and do not have maximum addresses
-                // we must link new address to the account otherwise create unlinked account
-                $account = $this->getAccountByID($AccountID);
-                if (empty($account))
-                    throw new Exception("WrongAccount", 1);
-                elseif (count($account['Addresses']) >= 3) {
+                // TODO: if user is authorized and do not have maximum addresses
+                // we must link new address to the user otherwise create unlinked user
+                $user = $this->getUserByID($UserID);
+                if (empty($user))
+                    throw new Exception("WrongUser", 1);
+                elseif (count($user['Addresses']) >= 3) {
                     if (!$allowStandalone)
                         throw new Exception("AddressLimitExceeded", 1);
                     else
-                        $AccountID = null;
+                        $UserID = null;
                 }
 
                 $app->getDB()->beginTransaction();
@@ -46,15 +63,15 @@ class address {
 
                 $data = array();
                 $data["CustomerID"] = $this->getCustomer()->getCustomerID();
-                $data["AccountID"] = $AccountID;
+                $data["UserID"] = $UserID;
                 $data["Address"] = $validatedValues['Address'];
                 $data["POBox"] = $validatedValues['POBox'];
                 $data["Country"] = $validatedValues['Country'];
                 $data["City"] = $validatedValues['City'];
 
-                $configCreateAccount = $this->getCustomerConfiguration()->data->jsapiAddAddress($data);
+                $configCreateUser = dbquery::addAddress($data);
 
-                $AddressID = $app->getDB()->query($configCreateAccount) ?: null;
+                $AddressID = $app->getDB()->query($configCreateUser) ?: null;
 
                 $app->getDB()->commit();
 
@@ -63,7 +80,7 @@ class address {
                 $success = true;
             } catch (Exception $e) {
                 $app->getDB()->rollBack();
-                $errors[] = 'AccountAddressCreateError';
+                $errors[] = 'UserAddressCreateError';
                 $errors[] = $e->getMessage();
             }
         else
@@ -94,7 +111,7 @@ class address {
 
                 $data = $validatedDataObj['values'];
 
-                $configUpdateAddress = $this->getCustomerConfiguration()->data->jsapiUpdateAddress($AddressID, $data);
+                $configUpdateAddress = dbquery::updateAddress($AddressID, $data);
 
                 $app->getDB()->query($configUpdateAddress);
 
@@ -118,12 +135,15 @@ class address {
 
     private function _disableAddressByID ($AddressID) {
         global $app;
-        $config = $this->getCustomerConfiguration()->data->jsapiDisableAddress($AddressID);
+        $config = dbquery::disableAddress($AddressID);
         $app->getDB()->query($config);
         return glWrap("ok", true);
     }
 
-    public function patch_account_address (&$resp, $req) {
+    // we disallow getting user address
+    public function get () {}
+
+    public function patch (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $AddressID = intval($req->get['id']);
             $resp = $this->_updateAddressByID($AddressID, $req->data);
@@ -132,16 +152,16 @@ class address {
         $resp['error'] = 'MissedParameter_id';
     }
 
-    public function post_account_address (&$resp, $req) {
-        if (!empty($req->data['AccountID'])) {
-            $AccountID = intval($req->data['AccountID']);
-            $resp = $this->createAddress($AccountID, $req->data);
+    public function post (&$resp, $req) {
+        if (!empty($req->data['UserID'])) {
+            $UserID = intval($req->data['UserID']);
+            $resp = $this->createAddress($UserID, $req->data);
             return;
         }
-        $resp['error'] = 'MissedParameter_AccountID';
+        $resp['error'] = 'MissedParameter_UserID';
     }
 
-    public function delete_account_address (&$resp, $req) {
+    public function delete (&$resp, $req) {
         if (!empty($req->get['id'])) {
             $AddressID = intval($req->get['id']);
             $resp = $this->_disableAddressByID($AddressID);

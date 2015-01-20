@@ -9,7 +9,7 @@ class tasks {
         $success = false;
         $errors = array();
         // echo 1111;
-        $config = shared::addTask(array(
+        $config = dbquery::addTask(array(
             'CustomerID' => $this->getCustomerID(),
             'Group' => $group,
             'Name' => $name,
@@ -36,7 +36,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = shared::startTask(md5($group.$name.$params));
+        $config = dbquery::startTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -57,7 +57,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = shared::scheduleTask(md5($group.$name.$params));
+        $config = dbquery::scheduleTask(md5($group.$name.$params));
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -78,7 +78,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = shared::stopTask($id);
+        $config = dbquery::stopTask($id);
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -98,7 +98,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = shared::setTaskResult($id, $taskResult);
+        $config = dbquery::setTaskResult($id, $taskResult);
         try {
             $app->getDB()->beginTransaction();
             $this->fetch($config);
@@ -117,7 +117,7 @@ class tasks {
     public function isTaskAdded ($group, $name, $params) {
         global $app;
         $result = array();
-        $config = shared::getTaskByHash(md5($group . $name . $params));
+        $config = dbquery::getTaskByHash(md5($group . $name . $params));
         $result = $this->fetch($config);
         $this->__adjustTask($result);
         return $result;
@@ -132,7 +132,7 @@ class tasks {
         $result = array();
         $success = false;
         $errors = array();
-        $config = shared::deleteTaskByHash($hash);
+        $config = dbquery::deleteTaskByHash($hash);
         try {
             $app->getDB()->beginTransaction();
             $result = $this->fetch($config);
@@ -150,7 +150,7 @@ class tasks {
     public function getActiveTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = shared::getGroupTasks($groupName, true, false, false);
+        $config = dbquery::getGroupTasks($groupName, true, false, false);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -163,7 +163,7 @@ class tasks {
     public function getCompletedTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = shared::getGroupTasks($groupName, false, true, false);
+        $config = dbquery::getGroupTasks($groupName, false, true, false);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -176,7 +176,7 @@ class tasks {
     public function getNewTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = shared::getGroupTasks($groupName, false, false, false);
+        $config = dbquery::getGroupTasks($groupName, false, false, false);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -189,7 +189,7 @@ class tasks {
     public function getCanceledTasksByGroupName ($groupName) {
         global $app;
         $result = array();
-        $config = shared::getGroupTasks($groupName, false, false, true);
+        $config = dbquery::getGroupTasks($groupName, false, false, true);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {
@@ -202,7 +202,7 @@ class tasks {
     public function getNextNewTaskToProcess ($group, $name) {
         global $app;
         $result = array();
-        $config = shared::getNextTaskToProcess($group, $name);
+        $config = dbquery::getNextTaskToProcess($group, $name);
         $result = $this->fetch($config);
         if ($result) {
             foreach ($result as &$value) {

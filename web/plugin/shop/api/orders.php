@@ -27,7 +27,7 @@ class orders {
     // -----------------------------------------------
     public function getOrderByID ($orderID) {
         global $app;
-        $config = shared::jsapiShopGetOrderItem($orderID);
+        $config = dbquery::shopGetOrderItem($orderID);
         $order = null;
         $order = $app->getDB()->query($config);
         if (empty($order)) {
@@ -45,7 +45,7 @@ class orders {
 
     public function getOrderByHash ($orderHash) {
         global $app;
-        $config = shared::jsapiGetShopOrderByHash($orderHash);
+        $config = dbquery::getShopOrderByHash($orderHash);
         $order = $app->getDB()->query($config);
 
         if (empty($order)) {
@@ -62,10 +62,10 @@ class orders {
     public function getOrders_ListExpired (array $options = array()) {
         global $app;
         // get expired orders
-        $config = shared::jsapiGetShopOrderList_Expired();
+        $config = dbquery::getShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -84,10 +84,10 @@ class orders {
     public function getOrders_ListTodays (array $options = array()) {
         global $app;
         // get todays orders
-        $config = shared::jsapiGetShopOrderList_Todays();
+        $config = dbquery::getShopOrderList_Todays();
         // set permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -105,10 +105,10 @@ class orders {
     public function getOrders_ListPending (array $options = array()) {
         global $app;
         // get expired orders
-        $config = shared::jsapiGetShopOrderList_Pending();
+        $config = dbquery::getShopOrderList_Pending();
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -126,10 +126,10 @@ class orders {
     public function getOrders_List (array $options = array()) {
         global $app;
         // get all orders
-        $config = shared::jsapiGetShopOrderList($options);
+        $config = dbquery::getShopOrderList($options);
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = shared::createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -307,7 +307,7 @@ class orders {
             // var_dump($dataOrder);
             // return;
 
-            $configOrder = shared::jsapiShopCreateOrder($dataOrder);
+            $configOrder = dbquery::shopCreateOrder($dataOrder);
             $orderID = $app->getDB()->query($configOrder);
 
             if (empty($orderID)) {
@@ -329,7 +329,7 @@ class orders {
                 $dataBought["SellingPrice"] = $productItem["_prices"]["actual"];
                 $dataBought["Quantity"] = $productItem["_orderQuantity"];
                 $dataBought["IsPromo"] = $productItem["IsPromo"];
-                $configBought = shared::jsapiShopCreateOrderBought($dataBought);
+                $configBought = dbquery::shopCreateOrderBought($dataBought);
                 $boughtID = $app->getDB()->query($configBought);
 
                 // check for created bought
@@ -386,7 +386,7 @@ class orders {
 
                     $validatedValues = $validatedDataObj['values'];
 
-                    $configUpdateOrder = shared::jsapiShopUpdateOrder($OrderID, $validatedValues);
+                    $configUpdateOrder = dbquery::shopUpdateOrder($OrderID, $validatedValues);
 
                     $app->getDB()->query($configUpdateOrder, true);
 
@@ -416,7 +416,7 @@ class orders {
 
             $app->getDB()->beginTransaction();
 
-            $config = shared::jsapiShopDisableOrder($OrderID);
+            $config = dbquery::shopDisableOrder($OrderID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -514,7 +514,7 @@ class orders {
             if (!empty($order['DeliveryID']))
                 $order['delivery'] = API::getAPI('shop:delivery')->getDeliveryAgencyByID($order['DeliveryID']);
             // $order['items'] = array();
-            $configBoughts = shared::jsapiShopGetOrderBoughts($orderID);
+            $configBoughts = dbquery::shopGetOrderBoughts($orderID);
             $boughts = $app->getDB()->query($configBoughts) ?: array();
             if (!empty($boughts))
                 foreach ($boughts as $soldItem) {
@@ -718,7 +718,7 @@ class orders {
             return null;
         }
         // get orders count for each states
-        $config = shared::jsapiShopStat_OrdersOverview();
+        $config = dbquery::shopStat_OrdersOverview();
         $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
@@ -740,7 +740,7 @@ class orders {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = shared::jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
+        $config = dbquery::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -750,7 +750,7 @@ class orders {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = shared::jsapiShopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
+        $config = dbquery::shopStat_OrdersIntensityLastMonth('SHOP_CLOSED', '!=');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }

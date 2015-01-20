@@ -8,7 +8,7 @@ use \engine\lib\path as Path;
 use Exception;
 use ArrayObject;
 
-class shared {
+class dbquery {
 
     // var $Table_ShopOrders = "shop_orders";
     // var $Table_ShopProducts = "shop_products";
@@ -20,7 +20,7 @@ class shared {
     // var $Table_ShopSettings = "shop_settings";
 
     // products >>>>>
-    public static function jsapiShopGetProductItem ($ProductID = null) {
+    public static function shopGetProductItem ($ProductID = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -41,16 +41,16 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetProductItemByExternalKey ($externalKey) {
+    public static function shopGetProductItemByExternalKey ($externalKey) {
         global $app;
-        $config = self::jsapiShopGetProductItem();
+        $config = self::shopGetProductItem();
         $config['condition']["shop_products.ExternalKey"] = $app->getDB()->createCondition($externalKey);
         return $config;
     }
 
-    public static function jsapiShopGetProductList (array $options = array()) {
+    public static function shopGetProductList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetProductItem();
+        $config = self::shopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
@@ -134,8 +134,8 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetLatestProductsList () {
-        $config = self::jsapiShopGetProductItem();
+    public static function shopGetLatestProductsList () {
+        $config = self::shopGetProductItem();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;
@@ -161,7 +161,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopCreateProduct ($data) {
+    public static function shopCreateProduct ($data) {
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $ExternalKey = array();
@@ -184,7 +184,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateProduct ($ProductID, $data) {
+    public static function shopUpdateProduct ($ProductID, $data) {
         $data["DateUpdated"] = $app->getDB()->getDate();
         $ExternalKey = array();
         if (isset($data['Name'])) {
@@ -210,7 +210,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopDeleteProduct ($ProductID) {
+    public static function shopDeleteProduct ($ProductID) {
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_products",
             "action" => "update",
@@ -228,32 +228,32 @@ class shared {
 
 
     // Product category (catalog)
-    public static function jsapiGetShopCatalogProductList ($ids) {
+    public static function getShopCatalogProductList ($ids) {
         global $app;
-        $config = self::jsapiShopGetProductList();
+        $config = self::shopGetProductList();
         $config['condition']["shop_products.CategoryID"] = $app->getDB()->createCondition($ids, "IN");
         return $config;
     }
 
-    // public static function jsapiGetShopCategoryProductInfo ($ids) {
+    // public static function getShopCategoryProductInfo ($ids) {
         // global $app;
-    //     $config = self::jsapiGetShopCategoryProductList($ids);
+    //     $config = self::getShopCategoryProductList($ids);
     //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
     //     return $config;
     // }
 
-    // public static function jsapiGetShopCategoryProductInfo ($ids) {
+    // public static function getShopCategoryProductInfo ($ids) {
         // global $app;
-    //     $config = self::jsapiGetShopCategoryProductList($ids);
+    //     $config = self::getShopCategoryProductList($ids);
     //     $config["fields"] = array("ID", "CategoryID", "OriginID");
     //     $config['limit'] = 0;
     //     return $config;
     // }
 
-    public static function jsapiGetShopCategoryProductInfo () {
+    public static function getShopCategoryProductInfo () {
         // global $app;
-        $config = self::jsapiShopGetProductList();
+        $config = self::shopGetProductList();
         // $config['fields'] = array("ID", "Name");
         $config['fields'] = array("ID");
         $config['limit'] = 0;
@@ -273,7 +273,7 @@ class shared {
 
 
     // Product price stats >>>>>
-    public static function jsapiShopGetProductPriceStats ($id) {
+    public static function shopGetProductPriceStats ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -308,7 +308,7 @@ class shared {
 
 
     // Product relations >>>>>
-    public static function jsapiShopGetProductRelations ($id) {
+    public static function shopGetProductRelations ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -336,7 +336,7 @@ class shared {
 
 
     // product features & attributes >>>>>
-    public static function jsapiShopGetProductFeatures ($id) {
+    public static function shopGetProductFeatures ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -356,7 +356,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopGetProductAttributes ($id = null, $type = null) {
+    public static function shopGetProductAttributes ($id = null, $type = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -380,7 +380,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopCreateFeature ($data) {
+    public static function shopCreateFeature ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -394,7 +394,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopGetFeatures () {
+    public static function shopGetFeatures () {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -405,7 +405,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopAddFeatureToProduct ($data) {
+    public static function shopAddFeatureToProduct ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -417,7 +417,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopAddAttributeToProduct ($data) {
+    public static function shopAddAttributeToProduct ($data) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_productAttributes",
@@ -427,7 +427,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopClearProductFeatures ($ProductID) {
+    public static function shopClearProductFeatures ($ProductID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_productFeatures",
@@ -439,7 +439,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopClearProductAttributes ($ProductID, $attributeType = false) {
+    public static function shopClearProductAttributes ($ProductID, $attributeType = false) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "source" => "shop_productAttributes",
@@ -464,7 +464,7 @@ class shared {
 
 
     // Product category (catalog) >>>>>
-    public static function jsapiShopCatalogBrands ($categoryID) {
+    public static function shopCatalogBrands ($categoryID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "call",
@@ -475,7 +475,7 @@ class shared {
         ));
     }
 
-    // public static function jsapiShopCategoryAllSubCategoriesGet ($categoryID) {
+    // public static function shopCategoryAllSubCategoriesGet ($categoryID) {
         // global $app;
     //     return $app->getDB()->createDBQuery(array(
     //         "action" => "call",
@@ -486,7 +486,7 @@ class shared {
     //     ));
     // }
 
-    public static function jsapiGetShopCatalogPriceEdges ($categoryID) {
+    public static function getShopCatalogPriceEdges ($categoryID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "call",
@@ -507,7 +507,7 @@ class shared {
 
 
     // Additional: category location >>>>>
-    public static function jsapiShopCategoryLocationGet ($id) {
+    public static function shopCategoryLocationGet ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "call",
@@ -526,7 +526,7 @@ class shared {
 
 
     // Shop catalog tree >>>>>
-    public static function jsapiShopCatalogTree ($selectedCategoryID = false) {
+    public static function shopCatalogTree ($selectedCategoryID = false) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -559,7 +559,7 @@ class shared {
 
 
     // shop cetegories >>>>>
-    public static function jsapiShopGetCategoryItem ($id = null) {
+    public static function shopGetCategoryItem ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -581,9 +581,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetCategoryList (array $options = array()) {
+    public static function shopGetCategoryList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetCategoryItem();
+        $config = self::shopGetCategoryItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
@@ -593,7 +593,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopCreateCategory ($data) {
+    public static function shopCreateCategory ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -609,7 +609,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateCategory ($CategoryID, $data) {
+    public static function shopUpdateCategory ($CategoryID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         if (isset($data['Name'])) {
@@ -629,7 +629,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopDeleteCategory ($CategoryID) {
+    public static function shopDeleteCategory ($CategoryID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_categories",
@@ -658,7 +658,7 @@ class shared {
 
 
     // shop origins <<<<<
-    public static function jsapiShopGetOriginItem ($id = null) {
+    public static function shopGetOriginItem ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -680,9 +680,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetOriginList (array $options = array()) {
+    public static function shopGetOriginList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetOriginItem();
+        $config = self::shopGetOriginItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
@@ -692,7 +692,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopCreateOrigin ($data) {
+    public static function shopCreateOrigin ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -708,7 +708,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateOrigin ($OriginID, $data) {
+    public static function shopUpdateOrigin ($OriginID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         if (isset($data['Name'])) {
@@ -729,7 +729,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopDeleteOrigin ($OriginID) {
+    public static function shopDeleteOrigin ($OriginID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_origins",
@@ -766,7 +766,7 @@ class shared {
 
 
     // shop delivery agencies >>>>>
-    public static function jsapiShopGetDeliveryAgencyByID ($id = null) {
+    public static function shopGetDeliveryAgencyByID ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -785,16 +785,16 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetDeliveriesList (array $options = array()) {
+    public static function shopGetDeliveriesList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetDeliveryAgencyByID();
+        $config = self::shopGetDeliveryAgencyByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    public static function jsapiShopCreateDeliveryAgent ($data) {
+    public static function shopCreateDeliveryAgent ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -806,7 +806,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateDeliveryAgent ($id, $data) {
+    public static function shopUpdateDeliveryAgent ($id, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
@@ -820,7 +820,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopDeleteDeliveryAgent ($id) {
+    public static function shopDeleteDeliveryAgent ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_deliveryAgencies",
@@ -852,7 +852,7 @@ class shared {
 
 
     // shop delivery agencies >>>>>
-    public static function jsapiShopGetSettingByID ($id = null) {
+    public static function shopGetSettingByID ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -871,33 +871,33 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetSettingByName ($name = null) {
+    public static function shopGetSettingByName ($name = null) {
         global $app;
-        $config = self::jsapiShopGetSettingByID();
+        $config = self::shopGetSettingByID();
         unset($config['condition']['ID']);
         $config['condition']['Property'] = $app->getDB()->createCondition($name);
         return $config;
     }
 
-    public static function jsapiShopGetSettingByType ($type = null) {
+    public static function shopGetSettingByType ($type = null) {
         global $app;
-        $config = self::jsapiShopGetSettingByID();
+        $config = self::shopGetSettingByID();
         unset($config['condition']['ID']);
         $config['limit'] = 0;
         $config['condition']['Type'] = $app->getDB()->createCondition($type);
         return $config;
     }
 
-    public static function jsapiShopGetSettingsList (array $options = array()) {
+    public static function shopGetSettingsList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetSettingByID();
+        $config = self::shopGetSettingByID();
         $config['fields'] = array("ID");
         $config['limit'] = 0;
         $config['options']['expandSingleRecord'] = false;
         return $config;
     }
 
-    public static function jsapiShopCreateSetting ($data) {
+    public static function shopCreateSetting ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -913,7 +913,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateSetting ($id, $data) {
+    public static function shopUpdateSetting ($id, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
@@ -927,15 +927,15 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateSettingByName ($id, $data) {
+    public static function shopUpdateSettingByName ($id, $data) {
         global $app;
-        $config = self::jsapiShopUpdateSetting($id, $data);
+        $config = self::shopUpdateSetting($id, $data);
         unset($config['condition']['ID']);
         $config['condition']['Property'] = $app->getDB()->createCondition($id);
         return $config;
     }
 
-    public static function jsapiShopRemoveSetting ($id) {
+    public static function shopRemoveSetting ($id) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["Status"] = 'REMOVED';
@@ -961,7 +961,7 @@ class shared {
 
 
     // Shop order >>>>>
-    public static function jsapiShopGetOrderItem ($orderID = null) {
+    public static function shopGetOrderItem ($orderID = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -981,9 +981,9 @@ class shared {
 
         return $config;
     }
-    public static function jsapiGetShopOrderList (array $options = array()) {
+    public static function getShopOrderList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetOrderItem();
+        $config = self::shopGetOrderItem();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
@@ -1002,26 +1002,26 @@ class shared {
         }
         return $config;
     }
-    public static function jsapiGetShopOrderList_Pending () {
+    public static function getShopOrderList_Pending () {
         global $app;
-        $config = self::jsapiGetShopOrderList();
+        $config = self::getShopOrderList();
         $config['condition']['Status'] = $app->getDB()->createCondition('NEW');
         return $config;
     }
-    public static function jsapiGetShopOrderList_Todays () {
+    public static function getShopOrderList_Todays () {
         global $app;
-        $config = self::jsapiGetShopOrderList();
+        $config = self::getShopOrderList();
         $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d'), ">");
         return $config;
     }
-    public static function jsapiGetShopOrderList_Expired () {
+    public static function getShopOrderList_Expired () {
         global $app;
-        $config = self::jsapiGetShopOrderList();
+        $config = self::getShopOrderList();
         $config['condition']['Status'] = $app->getDB()->createCondition(array("SHOP_CLOSED", "SHOP_REFUNDED", "CUSTOMER_CANCELED"), "NOT IN");
         $config['condition']['DateCreated'] = $app->getDB()->createCondition(date('Y-m-d', strtotime("-1 week")), "<");
         return $config;
     }
-    public static function jsapiShopCreateOrder ($data) {
+    public static function shopCreateOrder ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -1040,7 +1040,7 @@ class shared {
             "options" => null
         ));
     }
-    public static function jsapiShopCreateOrderBought ($data) {
+    public static function shopCreateOrderBought ($data) {
         global $app;
         $data["DateCreated"] = $app->getDB()->getDate();
         $data["IsPromo"] = empty($data["IsPromo"]) ? 0 : 1;
@@ -1051,7 +1051,7 @@ class shared {
             "options" => null
         ));
     }
-    public static function jsapiShopGetOrderBoughts ($orderID) {
+    public static function shopGetOrderBoughts ($orderID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1064,9 +1064,9 @@ class shared {
             "limit" => 0
         ));
     }
-    public static function jsapiGetShopOrderByHash ($orderHash) {
+    public static function getShopOrderByHash ($orderHash) {
         global $app;
-        $config = self::jsapiShopGetOrderItem();
+        $config = self::shopGetOrderItem();
         $config['condition'] = array(
             "Hash" => $app->getDB()->createCondition($orderHash)
         );
@@ -1076,7 +1076,7 @@ class shared {
         $config['limit'] = 1;
         return $config;
     }
-    public static function jsapiShopUpdateOrder ($orderID, $data) {
+    public static function shopUpdateOrder ($orderID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
@@ -1089,7 +1089,7 @@ class shared {
             "options" => null
         ));
     }
-    public static function jsapiShopDisableOrder ($OrderID) {
+    public static function shopDisableOrder ($OrderID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_orders",
@@ -1119,7 +1119,7 @@ class shared {
 
 
     // >>>> Shop statistics
-    public static function jsapiShopStat_PopularProducts () {
+    public static function shopStat_PopularProducts () {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1135,7 +1135,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopStat_NonPopularProducts () {
+    public static function shopStat_NonPopularProducts () {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1154,9 +1154,9 @@ class shared {
         ));
     }
 
-    public static function jsapiShopStat_ProductsOverview ($filter = null) {
+    public static function shopStat_ProductsOverview ($filter = null) {
         global $app;
-        $config = self::jsapiShopGetProductItem();
+        $config = self::shopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -1176,9 +1176,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopStat_OrdersOverview () {
+    public static function shopStat_OrdersOverview () {
         global $app;
-        $config = self::jsapiShopGetOrderItem();
+        $config = self::shopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -1193,11 +1193,11 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
+    public static function shopStat_OrdersIntensityLastMonth ($status, $comparator = null) {
         global $app;
         if (!is_string($comparator))
             $comparator = self::DEFAULT_COMPARATOR;
-        $config = self::jsapiShopGetOrderItem();
+        $config = self::shopGetOrderItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => $app->getDB()->createCondition($status, $comparator),
@@ -1216,9 +1216,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopStat_ProductsIntensityLastMonth ($status) {
+    public static function shopStat_ProductsIntensityLastMonth ($status) {
         global $app;
-        $config = self::jsapiShopGetProductItem();
+        $config = self::shopGetProductItem();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateUpdated) AS CloseDate");
         $config['condition'] = array(
             'Status' => $app->getDB()->createCondition($status),
@@ -1256,7 +1256,7 @@ class shared {
 
 
     // <<<< Promo area
-    public static function jsapiShopGetPromoByHash ($hash, $activeOnly) {
+    public static function shopGetPromoByHash ($hash, $activeOnly) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1277,7 +1277,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetPromoByID ($promoID = null) {
+    public static function shopGetPromoByID ($promoID = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1296,9 +1296,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetPromoList (array $options = array()) {
+    public static function shopGetPromoList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetPromoByID();
+        $config = self::shopGetPromoByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
@@ -1311,7 +1311,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopCreatePromo ($data) {
+    public static function shopCreatePromo ($data) {
         global $app;
         $data["DateCreated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
@@ -1322,7 +1322,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdatePromo ($promoID, $data) {
+    public static function shopUpdatePromo ($promoID, $data) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "update",
@@ -1335,7 +1335,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopExpirePromo ($promoID) {
+    public static function shopExpirePromo ($promoID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "action" => "update",
@@ -1373,7 +1373,7 @@ class shared {
 
 
     // shop delivery agencies >>>>>
-    public static function jsapiShopGetExchangeRateByID ($id = null) {
+    public static function shopGetExchangeRateByID ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "action" => "select",
@@ -1391,25 +1391,25 @@ class shared {
 
         return $config;
     }
-    public static function jsapiShopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
+    public static function shopGetExchangeRateTo_ByCurrencyName ($currencyNameTo = null) {
         global $app;
-        $config = self::jsapiShopGetExchangeRateByID();
+        $config = self::shopGetExchangeRateByID();
         $config["condition"] = array(
             "CurrencyB" => $app->getDB()->createCondition($currencyNameTo)
         );
         return $config;
     }
-    public static function jsapiShopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
+    public static function shopGetExchangeRateFrom_ByCurrencyName ($currencyNameFrom = null) {
         global $app;
-        $config = self::jsapiShopGetExchangeRateByID();
+        $config = self::shopGetExchangeRateByID();
         $config["condition"] = array(
             "CurrencyA" => $app->getDB()->createCondition($currencyNameFrom)
         );
         return $config;
     }
-    public static function jsapiShopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
+    public static function shopGetExchangeRateByBothNames ($currencyNameFrom, $currencyNameTo) {
         global $app;
-        $config = self::jsapiShopGetExchangeRateByID();
+        $config = self::shopGetExchangeRateByID();
         $config["condition"] = array(
             "CurrencyA" => $app->getDB()->createCondition($currencyNameFrom),
             "CurrencyB" => $app->getDB()->createCondition($currencyNameTo)
@@ -1417,9 +1417,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetExchangeRatesList (array $options = array()) {
+    public static function shopGetExchangeRatesList (array $options = array()) {
         global $app;
-        $config = self::jsapiShopGetExchangeRateByID();
+        $config = self::shopGetExchangeRateByID();
         $config['fields'] = array("ID");
         $config['limit'] = 64;
         $config['options']['expandSingleRecord'] = false;
@@ -1435,9 +1435,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopGetUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
+    public static function shopGetUniqueAvailableCurrencyNamesByField ($fieldToGroupBy) {
         global $app;
-        $config = self::jsapiShopGetExchangeRateByID();
+        $config = self::shopGetExchangeRateByID();
         $config['fields'] = array($fieldToGroupBy);
         $config['limit'] = 0;
         $config['group'] = $fieldToGroupBy;
@@ -1445,7 +1445,7 @@ class shared {
         return $config;
     }
 
-    public static function jsapiShopCreateExchangeRate ($data) {
+    public static function shopCreateExchangeRate ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -1457,7 +1457,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopUpdateExchangeRate ($id, $data) {
+    public static function shopUpdateExchangeRate ($id, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
@@ -1471,7 +1471,7 @@ class shared {
         ));
     }
 
-    public static function jsapiShopDeleteExchangeRate ($id) {
+    public static function shopDeleteExchangeRate ($id) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "shop_currency",

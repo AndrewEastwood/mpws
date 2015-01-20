@@ -58,27 +58,20 @@ server {
         include fastcgi_params;
     }
 
-
     location /static {
       rewrite ^/static/customers/([\.a-z_-]+)/nls/(.*) /engine/controllers/nls.php?customer=$1&lang=$2 last;
       rewrite ^/static/(customers|plugin|default)/([\.a-z_-]+)/(.*) /web/$1/$2/static/$3 break;
     }
 
-    location /toolbox {
-        rewrite ^/toolbox/api\.js?(.*) /engine/controllers/api.php?$1 last;
-        rewrite ^/toolbox/?(.*) /engine/controllers/display.php?$1 last;
-    }
-
     location /api {
-      rewrite ^/api\.js(.*) /engine/controllers/api.php?$1 last;
+      rewrite ^/api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 last;
+      rewrite ^/api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 last;
+      rewrite ^/api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&$3 last;
     }
 
-    location /auth {
-      rewrite ^/auth\.js(.*) /engine/controllers/auth.php?$1 last;
-    }
 
     location /upload {
-      rewrite ^/upload\.js(.*) /engine/controllers/upload.php?$1 last;
+      rewrite ^/upload/?(.*) /engine/controllers/upload.php?$1 last;
     }
 
 }

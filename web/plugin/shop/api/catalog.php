@@ -110,7 +110,7 @@ class catalog {
 
         // var_dump($activeTree);
         //filter: get category price edges
-        $dataConfigCategoryPriceEdges = shared::jsapiGetShopCatalogPriceEdges(implode(',', $cetegoriesIDs));
+        $dataConfigCategoryPriceEdges = dbquery::getShopCatalogPriceEdges(implode(',', $cetegoriesIDs));
         $dataCategoryPriceEdges = $app->getDB()->query($dataConfigCategoryPriceEdges);
         $filterOptionsAvailable['filter_commonPriceMax'] = floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10;
         $filterOptionsAvailable['filter_commonPriceMin'] = floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10;
@@ -120,7 +120,7 @@ class catalog {
         // var_dump($dataConfigCategoryPriceEdges);
 
         // get all brands for both current category and sub-categories
-        $dataConfigCategoryAllBrands = shared::jsapiShopCatalogBrands(implode(',', $cetegoriesIDs));
+        $dataConfigCategoryAllBrands = dbquery::shopCatalogBrands(implode(',', $cetegoriesIDs));
         $dataCategoryAllBrands = $app->getDB()->query($dataConfigCategoryAllBrands);
         if ($dataCategoryAllBrands)
             foreach ($dataCategoryAllBrands as $key => $brandItem) {
@@ -137,7 +137,7 @@ class catalog {
         // return;
 
         // get catalog features
-        $dataConfigAllMatchedProducts = shared::jsapiGetShopCatalogProductList($cetegoriesIDs);
+        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($cetegoriesIDs);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $catalogProductIDs = $this->getUniqueProductsIDs($dataProductsMatches);
         foreach ($catalogProductIDs as $productItemID) {
@@ -154,7 +154,7 @@ class catalog {
 
         // set data source
         // ---
-        $dataConfigProducts = shared::jsapiGetShopCatalogProductList($cetegoriesIDs);
+        $dataConfigProducts = dbquery::getShopCatalogProductList($cetegoriesIDs);
 
         // filter: display intems count
         if (!empty($filterOptionsApplied['filter_viewItemsOnPage']))
@@ -176,32 +176,32 @@ class catalog {
 
         // filter: price 
         if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMax'] <= $filterOptionsAvailable['filter_commonPriceMax'])
-            $dataConfigProducts['condition']['Price'][] = shared::createCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
+            $dataConfigProducts['condition']['Price'][] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonPriceMax'], '<=');
         else
             $filterOptionsApplied['filter_commonPriceMax'] = $filterOptionsAvailable['filter_commonPriceMax'];
 
         if ($filterOptionsApplied['filter_commonPriceMax'] > $filterOptionsApplied['filter_commonPriceMin'] && $filterOptionsApplied['filter_commonPriceMin'] >= $filterOptionsAvailable['filter_commonPriceMin'])
-            $dataConfigProducts['condition']['Price'][] = shared::createCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
+            $dataConfigProducts['condition']['Price'][] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonPriceMin'], '>=');
         else
             $filterOptionsApplied['filter_commonPriceMin'] = $filterOptionsAvailable['filter_commonPriceMin'];
 
         // var_dump($filterOptionsApplied);
         if (count($filterOptionsApplied['filter_commonFeatures']))
-            $dataConfigProducts['condition']["FeatureID"] = shared::createCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
+            $dataConfigProducts['condition']["FeatureID"] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonFeatures'], 'in');
 
         if (count($filterOptionsApplied['filter_commonStatus']))
-            $dataConfigProducts['condition']["shop_products.Status"] = shared::createCondition($filterOptionsApplied['filter_commonStatus'], 'in');
+            $dataConfigProducts['condition']["shop_products.Status"] = $app->getDB()->createCondition($filterOptionsApplied['filter_commonStatus'], 'in');
 
         // filter: brands
         if (count($filterOptionsApplied['filter_categoryBrands']))
-            $dataConfigProducts['condition']['OriginID'] = shared::createCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
+            $dataConfigProducts['condition']['OriginID'] = $app->getDB()->createCondition($filterOptionsApplied['filter_categoryBrands'], 'in');
 
         // var_dump($dataConfigProducts);
         // get products
         $dataProducts = $app->getDB()->query($dataConfigProducts);
 
         // get products count for current filter
-        $dataConfigAllMatchedProducts = shared::jsapiGetShopCatalogProductList($cetegoriesIDs);
+        $dataConfigAllMatchedProducts = dbquery::getShopCatalogProductList($cetegoriesIDs);
         $dataConfigAllMatchedProducts['condition'] = new ArrayObject($dataConfigProducts['condition']);
         $dataProductsMatches = $app->getDB()->query($dataConfigAllMatchedProducts);
         $currentProductCount = $this->getUniqueProductsCount($dataProductsMatches);
@@ -237,7 +237,7 @@ class catalog {
         $features = array();
         // var_dump($filterOptionsApplied['filter_categoryBrands']);
         foreach ($filterOptionsAvailable['filter_categoryBrands'] as $brand) {
-            $dataConfigCategoryInfo = shared::jsapiGetShopCategoryProductInfo();
+            $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($brand['ID']);
             if (!empty($filterOptionsApplied['filter_categoryBrands'])) {
@@ -245,7 +245,7 @@ class catalog {
             }
             $arrValues = array_unique($arrValues);
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['OriginID'] = shared::createCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['OriginID'] = $app->getDB()->createCondition($arrValues, 'IN');
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // if ($brand['Name'] === 'SONY') {
@@ -267,13 +267,13 @@ class catalog {
                 $brands[$brand['ID']]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['OriginID'] = shared::createCondition($brand['ID']);
+            $dataConfigCategoryInfo['condition']['OriginID'] = $app->getDB()->createCondition($brand['ID']);
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $brands[$brand['ID']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
         foreach ($filterOptionsAvailable['filter_categorySubCategories'] as $categoryID => $categoryItem) {
             // $count = 0;
-            $dataConfigCategoryInfo = shared::jsapiGetShopCategoryProductInfo();
+            $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($categoryID);
             if (!empty($filterOptionsApplied['filter_categorySubCategories'])) {
@@ -282,7 +282,7 @@ class catalog {
             $arrValues = array_unique($arrValues);
             // var_dump(">>> values >>>>>>");
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['CategoryID'] = shared::createCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $app->getDB()->createCondition($arrValues, 'IN');
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // var_dump(">>>>results>>>>>>>");
@@ -299,13 +299,13 @@ class catalog {
                 $categories[$categoryItem['ExternalKey']]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['CategoryID'] = shared::createCondition($categoryID);
+            $dataConfigCategoryInfo['condition']['CategoryID'] = $app->getDB()->createCondition($categoryID);
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $categories[$categoryItem['ExternalKey']]['Total'] = $this->getUniqueProductsCount($filterData);
         }
         foreach ($filterOptionsAvailable['filter_commonStatus'] as $status) {
             // $count = 0;
-            $dataConfigCategoryInfo = shared::jsapiGetShopCategoryProductInfo();
+            $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
             $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
             $arrValues = array($status);
             if (!empty($filterOptionsApplied['filter_commonStatus'])) {
@@ -313,7 +313,7 @@ class catalog {
             }
             $arrValues = array_unique($arrValues);
             // var_dump($arrValues);
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = shared::createCondition($arrValues, 'IN');
+            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $app->getDB()->createCondition($arrValues, 'IN');
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $count = $this->getUniqueProductsCount($filterData);
             // if (isset($filterData) && isset($filterData['ItemsCount'])) {
@@ -334,14 +334,14 @@ class catalog {
                 $statuses[$status]['Active'] = true;
             }
 
-            $dataConfigCategoryInfo['condition']['shop_products.Status'] = shared::createCondition($status);
+            $dataConfigCategoryInfo['condition']['shop_products.Status'] = $app->getDB()->createCondition($status);
             $filterData = $app->getDB()->query($dataConfigCategoryInfo);
             $statuses[$status]['Total'] = $this->getUniqueProductsCount($filterData);
         }
         foreach ($filterOptionsAvailable['filter_commonFeatures'] as $featureGroup => $featureList) {
             $group = array();
             foreach ($featureList as $key => $featureName) {
-                $dataConfigCategoryInfo = shared::jsapiGetShopCategoryProductInfo();
+                $dataConfigCategoryInfo = dbquery::getShopCategoryProductInfo();
                 $dataConfigCategoryInfo['condition'] = new ArrayObject($dataConfigProducts['condition']);
                 $arrValues = array($key);
                 if (!empty($filterOptionsApplied['filter_commonFeatures'])) {
@@ -349,7 +349,7 @@ class catalog {
                 }
                 $arrValues = array_unique($arrValues);
                 // var_dump($arrValues);
-                $dataConfigCategoryInfo['condition']['FeatureID'] = shared::createCondition($arrValues, 'IN');
+                $dataConfigCategoryInfo['condition']['FeatureID'] = $app->getDB()->createCondition($arrValues, 'IN');
                 // var_dump($dataConfigCategoryInfo);
                 $filterData = $app->getDB()->query($dataConfigCategoryInfo);
                 $count = $this->getUniqueProductsCount($filterData);
@@ -362,7 +362,7 @@ class catalog {
                     $group[$key]['ProductCount'] -= $currentProductCount;
                     $group[$key]['Active'] = true;
                 }
-                $dataConfigCategoryInfo['condition']['FeatureID'] = shared::createCondition(array($key), 'IN');
+                $dataConfigCategoryInfo['condition']['FeatureID'] = $app->getDB()->createCondition(array($key), 'IN');
                 $filterData = $app->getDB()->query($dataConfigCategoryInfo);
                 $group[$key]['Total'] = $this->getUniqueProductsCount($filterData);
             }

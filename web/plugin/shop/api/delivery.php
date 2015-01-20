@@ -18,7 +18,7 @@ class delivery {
     // -----------------------------------------------
     public function getDeliveryAgencyByID ($agencyID) {
         global $app;
-        $config = shared::jsapiShopGetDeliveryAgencyByID($agencyID);
+        $config = dbquery::shopGetDeliveryAgencyByID($agencyID);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['_isRemoved'] = $data['Status'] === 'REMOVED';
@@ -28,7 +28,7 @@ class delivery {
 
     public function getDeliveries_List (array $options = array()) {
         global $app;
-        $config = shared::jsapiShopGetDeliveriesList($options);
+        $config = dbquery::shopGetDeliveriesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -62,7 +62,7 @@ class delivery {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = shared::jsapiShopCreateDeliveryAgent($validatedValues);
+                $configCreateOrigin = dbquery::shopCreateDeliveryAgent($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $deliveryID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -107,7 +107,7 @@ class delivery {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = shared::jsapiShopUpdateDeliveryAgent($id, $validatedValues);
+                $configCreateCategory = dbquery::shopUpdateDeliveryAgent($id, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -135,7 +135,7 @@ class delivery {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = shared::jsapiShopDeleteDeliveryAgent($id);
+            $config = dbquery::shopDeleteDeliveryAgent($id);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

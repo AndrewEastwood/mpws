@@ -5,6 +5,7 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
@@ -30,21 +31,21 @@ class settings {
         global $app;
         if (empty($id) || !is_numeric($id))
             return null;
-        $config = shared::jsapiShopGetSettingByID($id);
+        $config = dbquery::shopGetSettingByID($id);
         $setting = $app->getDB()->query($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function findByName ($name) {
         global $app;
-        $config = shared::jsapiShopGetSettingByName($name);
+        $config = dbquery::shopGetSettingByName($name);
         $setting = $app->getDB()->query($config);
         return $this->__adjustSettingItem($setting);
     }
 
     public function getSettingsByType ($type) {
         global $app;
-        $config = shared::jsapiShopGetSettingByType($type);
+        $config = dbquery::shopGetSettingByType($type);
         $settings = $app->getDB()->query($config);
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->__adjustSettingItem($value);
@@ -64,7 +65,7 @@ class settings {
 
     public function toList (array $options = array()) {
         global $app;
-        $config = shared::jsapiShopGetSettingsList($options);
+        $config = dbquery::shopGetSettingsList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -101,7 +102,7 @@ class settings {
                 $CustomerID = $this->getCustomer()->getCustomerID();
                 $validatedValues["CustomerID"] = $CustomerID;
 
-                $config = shared::jsapiShopCreateSetting($validatedValues);
+                $config = dbquery::shopCreateSetting($validatedValues);
 
                 $app->getDB()->beginTransaction();
 
@@ -147,9 +148,9 @@ class settings {
                 if (!empty($validatedValues)) {
                     $app->getDB()->beginTransaction();
                     if (is_numeric($nameOrID)) {
-                        $configSettingUpdate = shared::jsapiShopUpdateSetting($nameOrID, $validatedValues);
+                        $configSettingUpdate = dbquery::shopUpdateSetting($nameOrID, $validatedValues);
                     } else {
-                        $configSettingUpdate = shared::jsapiShopUpdateSettingByName($nameOrID, $validatedValues);
+                        $configSettingUpdate = dbquery::shopUpdateSettingByName($nameOrID, $validatedValues);
                     }
                     $app->getDB()->query($configSettingUpdate);
                     $app->getDB()->commit();
@@ -181,7 +182,7 @@ class settings {
 
         try {
             $app->getDB()->beginTransaction();
-            $config = shared::jsapiShopRemoveSetting($settingID);
+            $config = dbquery::shopRemoveSetting($settingID);
             $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;

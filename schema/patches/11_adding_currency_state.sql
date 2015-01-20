@@ -1,4 +1,4 @@
-ALTER TABLE `shop_currency` ADD  `Status` ENUM(  'ACTIVE',  'REMOVED',  '',  '' ) NOT NULL DEFAULT  'ACTIVE' AFTER  `Rate` ;
+ALTER TABLE `shop_currency` ADD  `Status` ENUM(  'ACTIVE',  'REMOVED' ) NOT NULL DEFAULT  'ACTIVE' AFTER  `Rate` ;
 ALTER TABLE `shop_orders` CHANGE `CurrencyName` `ExchangeRateID` INT NOT NULL;
 ALTER TABLE `shop_orders` CHANGE `CurrencyRate` `CustomerCurrencyRate` DECIMAL(10,2) NOT NULL;
 ALTER TABLE `shop_orders` ADD INDEX(`ExchangeRateID`);

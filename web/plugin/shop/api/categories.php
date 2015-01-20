@@ -33,7 +33,7 @@ class categories {
         global $app;
         if (empty($categoryID) || !is_numeric($categoryID))
             return null;
-        $config = shared::jsapiShopGetCategoryItem($categoryID);
+        $config = dbquery::shopGetCategoryItem($categoryID);
         $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
@@ -42,8 +42,8 @@ class categories {
 
     public function getCategoryByName ($categoryName) {
         global $app;
-        $config = shared::jsapiShopGetCategoryItem();
-        $config['condition']['Name'] = shared::createCondition($categoryName);
+        $config = dbquery::shopGetCategoryItem();
+        $config['condition']['Name'] = $app->getDB()->createCondition($categoryName);
         $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
@@ -52,8 +52,8 @@ class categories {
 
     public function getCategoryByExternalKey ($externalKey) {
         global $app;
-        $config = shared::jsapiShopGetCategoryItem();
-        $config['condition']['ExternalKey'] = shared::createCondition($externalKey);
+        $config = dbquery::shopGetCategoryItem();
+        $config['condition']['ExternalKey'] = $app->getDB()->createCondition($externalKey);
         $category = $app->getDB()->query($config);
         if (empty($category))
             return null;
@@ -62,7 +62,7 @@ class categories {
 
     public function getCategories_List (array $options = array()) {
         global $app;
-        $config = shared::jsapiShopGetCategoryList($options);
+        $config = dbquery::shopGetCategoryList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -99,7 +99,7 @@ class categories {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateCategory = shared::jsapiShopCreateCategory($validatedValues);
+                $configCreateCategory = dbquery::shopCreateCategory($validatedValues);
                 $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
 
                 if (empty($CategoryID))
@@ -143,7 +143,7 @@ class categories {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = shared::jsapiShopUpdateCategory($CategoryID, $validatedValues);
+                $configCreateCategory = dbquery::shopUpdateCategory($CategoryID, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -171,7 +171,7 @@ class categories {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = shared::jsapiShopDeleteCategory($CategoryID);
+            $config = dbquery::shopDeleteCategory($CategoryID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -196,7 +196,7 @@ class categories {
     public function getCategoryLocationByCategoryID ($categoryID) {
         global $app;
         // var_dump($categoryID);
-        $configLocation = shared::jsapiShopCategoryLocationGet($categoryID);
+        $configLocation = dbquery::shopCategoryLocationGet($categoryID);
         $location = $app->getDB()->query($configLocation);
         foreach ($location as &$categoryItem) {
             $categoryItem['ID'] = intval($categoryItem['ID']);
@@ -231,7 +231,7 @@ class categories {
             return $branch;
         }
 
-        $config = shared::jsapiShopCatalogTree($selectedCategoryID);
+        $config = dbquery::shopCatalogTree($selectedCategoryID);
         $categories = $app->getDB()->query($config);
         $map = array();
         foreach ($categories as $key => $value)

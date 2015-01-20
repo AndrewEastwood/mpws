@@ -30,7 +30,7 @@ class origins {
         global $app;
         if (empty($originID) || !is_numeric($originID))
             return null;
-        $config = shared::jsapiShopGetOriginItem($originID);
+        $config = dbquery::shopGetOriginItem($originID);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
             return null;
@@ -39,8 +39,8 @@ class origins {
 
     public function getOriginByName ($originName) {
         global $app;
-        $config = shared::jsapiShopGetOriginItem();
-        $config['condition']['Name'] = shared::createCondition($originName);
+        $config = dbquery::shopGetOriginItem();
+        $config['condition']['Name'] = $app->getDB()->createCondition($originName);
         $origin = $app->getDB()->query($config);
         if (empty($origin))
             return null;
@@ -49,7 +49,7 @@ class origins {
 
     public function getOrigins_List (array $options = array()) {
         global $app;
-        $config = shared::jsapiShopGetOriginList($options);
+        $config = dbquery::shopGetOriginList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -84,7 +84,7 @@ class origins {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = shared::jsapiShopCreateOrigin($validatedValues);
+                $configCreateOrigin = dbquery::shopCreateOrigin($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $OriginID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -131,7 +131,7 @@ class origins {
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
-                    $configCreateCategory = shared::jsapiShopUpdateOrigin($OriginID, $validatedValues);
+                    $configCreateCategory = dbquery::shopUpdateOrigin($OriginID, $validatedValues);
                     $app->getDB()->query($configCreateCategory);
                     $app->getDB()->commit();
                 }
@@ -159,7 +159,7 @@ class origins {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = shared::jsapiShopDeleteOrigin($OriginID);
+            $config = dbquery::shopDeleteOrigin($OriginID);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();

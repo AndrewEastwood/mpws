@@ -42,7 +42,7 @@ class exchangerates {
 
     public function getExchangeRateByID ($agencyID) {
         global $app;
-        $config = shared::jsapiShopGetExchangeRateByID($agencyID);
+        $config = dbquery::shopGetExchangeRateByID($agencyID);
         $data = $app->getDB()->query($config);
         $data = $this->__adjustExchangeRate($data);
         return $data;
@@ -50,7 +50,7 @@ class exchangerates {
 
     public function getExchangeRates_List (array $options = array()) {
         global $app;
-        $config = shared::jsapiShopGetExchangeRatesList($options);
+        $config = dbquery::shopGetExchangeRatesList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -90,7 +90,7 @@ class exchangerates {
 
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreateOrigin = shared::jsapiShopCreateExchangeRate($validatedValues);
+                $configCreateOrigin = dbquery::shopCreateExchangeRate($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $rateID = $app->getDB()->query($configCreateOrigin) ?: null;
@@ -140,7 +140,7 @@ class exchangerates {
 
                 $app->getDB()->beginTransaction();
 
-                $configCreateCategory = shared::jsapiShopUpdateExchangeRate($id, $validatedValues);
+                $configCreateCategory = dbquery::shopUpdateExchangeRate($id, $validatedValues);
                 $app->getDB()->query($configCreateCategory);
 
                 $app->getDB()->commit();
@@ -182,7 +182,7 @@ class exchangerates {
         try {
             $app->getDB()->beginTransaction();
 
-            $config = shared::jsapiShopDeleteExchangeRate($id);
+            $config = dbquery::shopDeleteExchangeRate($id);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -225,14 +225,14 @@ class exchangerates {
 
     public function getExchangeRateTo_ByCurrencyName ($currencyName) {
         global $app;
-        $config = shared::jsapiShopGetExchangeRateTo_ByCurrencyName($currencyName);
+        $config = dbquery::shopGetExchangeRateTo_ByCurrencyName($currencyName);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
 
     public function getExchangeRateFrom_ByCurrencyName ($currencyName) {
         global $app;
-        $config = shared::jsapiShopGetExchangeRateFrom_ByCurrencyName($currencyName);
+        $config = dbquery::shopGetExchangeRateFrom_ByCurrencyName($currencyName);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
@@ -278,11 +278,11 @@ class exchangerates {
             $valueCurrencyName = $baseCurrencyName;
         }
 
-        $config = shared::jsapiShopGetExchangeRatesList(array(
+        $config = dbquery::shopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB', 'Rate'),
             'limit' => 0
         ));
-        $config['condition']['CurrencyA'] = shared::createCondition($valueCurrencyName);
+        $config['condition']['CurrencyA'] = $app->getDB()->createCondition($valueCurrencyName);
         $availableRates = $app->getDB()->query($config) ?: array();
         $data = array();
 
@@ -309,7 +309,7 @@ class exchangerates {
     }
     public function getAllUserUniqCurrencyNames () {
         global $app;
-        $config = shared::jsapiShopGetExchangeRatesList(array(
+        $config = dbquery::shopGetExchangeRatesList(array(
             'fields' => array('CurrencyA', 'CurrencyB'),
             'limit' => 0
         ));
@@ -325,7 +325,7 @@ class exchangerates {
     }
     public function getExchangeRateByBothRateNames ($baseCCY, $CCY) {
         global $app;
-        $config = shared::jsapiShopGetExchangeRateByBothNames($baseCCY, $CCY);
+        $config = dbquery::shopGetExchangeRateByBothNames($baseCCY, $CCY);
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }

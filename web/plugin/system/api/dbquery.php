@@ -2,7 +2,7 @@
 
 namespace web\plugin\system\api;
 
-class shared {
+class dbquery {
 
     public static $statusCustomer = array('ACTIVE','REMOVED');
     public static $statusCustomerSettings = array('ACTIVE','DISABLED');
@@ -169,7 +169,7 @@ class shared {
         ));
     }
 
-    public static function jsapiGetCustomer ($id = null) {
+    public static function getCustomer ($id = null) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
             "source" => "mpws_customer",
@@ -189,9 +189,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiGetCustomerList (array $options = array()) {
+    public static function getCustomerList (array $options = array()) {
         global $app;
-        $config = self::jsapiGetCustomer();
+        $config = self::getCustomer();
         $config['condition'] = array();
         $config["fields"] = array("ID");
         $config['limit'] = 64;

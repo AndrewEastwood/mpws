@@ -90,7 +90,7 @@ class customers {
 
     public function getCustomerByID ($ID) {
         global $app;
-        $config = shared::jsapiGetCustomer($ID);
+        $config = dbquery::getCustomer($ID);
         $customer = $app->getDB()->query($config);
         return $settings;
 
@@ -98,7 +98,7 @@ class customers {
 
     public function getCustomerByName ($customerName) {
         global $app;
-        $config = shared::jsapiGetCustomer();
+        $config = dbquery::getCustomer();
         $config['condition']['Name'] = $app->getDB()->createCondition($customerName);
         $customer = $app->getDB()->query($config, false);
         // echo 2121212;
@@ -110,7 +110,7 @@ class customers {
 
     public function getCustomers_List (array $options = array()) {
         global $app;
-        $config = shared::jsapiGetCustomerList($options);
+        $config = dbquery::getCustomerList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -127,7 +127,7 @@ class customers {
 
     public function getCustomerSettings ($ID) {
         global $app;
-        $config = shared::getCustomerSettings($ID);
+        $config = dbquery::getCustomerSettings($ID);
         $settingsRaw = $app->getDB()->query($config, false);
         $settings = array();
         foreach ($settingsRaw as $key => $value) {

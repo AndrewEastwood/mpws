@@ -1,27 +1,15 @@
 <?php
-namespace web\plugin\account\api;
+namespace web\plugin\user\api;
 
-class shared {
+class dbquery {
 
-    public $Table_SystemAccounts = "mpws_accounts";
-
-    public static function jsapiGetNewPermission () {
-        global $app;
-        $perms = array(
-            "CanAdmin" => 0,
-            "CanCreate" => 0,
-            "CanEdit" => 0,
-            "CanViewReports" => 0,
-            "CanAddUsers" => 0
-        );
-        return $perms;
-    }
+    public $Table_SystemUsers = "mpws_users";
 
 
-    public static function jsapiGetAccount () {
+    public static function getUser () {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "fields" => array("*"),
             "limit" => 1,
             "condition" => array(),
@@ -32,26 +20,26 @@ class shared {
         return $config;
     }
 
-    public static function jsapiGetAccountByCredentials ($login, $password) {
+    public static function getUserByCredentials ($login, $password) {
         global $app;
-        $config = self::jsapiGetAccount();
+        $config = self::getUser();
         $config["condition"]["EMail"] = $app->getDB()->createCondition($login);
         $config["condition"]["Password"] = $app->getDB()->createCondition($password);
         return $config;
     }
 
-    public static function jsapiGetAccountByID ($id) {
+    public static function getUserByID ($id) {
         global $app;
-        $config = self::jsapiGetAccount();
+        $config = self::getUser();
         $config["condition"] = array(
             "ID" => $app->getDB()->createCondition($id)
         );
         return $config;
     }
 
-    public static function jsapiGetAccountByEMail ($email) {
+    public static function getUserByEMail ($email) {
         global $app;
-        $config = self::jsapiGetAccount();
+        $config = self::getUser();
         $config["condition"] = array(
             "EMail" => $app->getDB()->createCondition($email)
         );
@@ -59,49 +47,49 @@ class shared {
     }
 
 
-    public static function jsapiGetAccountByValidationString ($ValidationString) {
+    public static function getUserByValidationString ($ValidationString) {
         global $app;
-        $config = self::jsapiGetAccount();
+        $config = self::getUser();
         $config["condition"] = array(
             "ValidationString" => $app->getDB()->createCondition($ValidationString)
         );
         return $config;
     }
 
-    public static function jsapiAddAccount ($data) {
+    public static function addUser ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         $data["DateLastAccess"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "action" => "insert",
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function jsapiUpdateAccount ($AccountID, $data) {
+    public static function updateUser ($UserID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($AccountID)
+                "ID" => $app->getDB()->createCondition($UserID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function jsapiDisableAccount ($AccountID) {
+    public static function disableUser ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($AccountID)
+                "ID" => $app->getDB()->createCondition($UserID)
             ),
             "data" => array(
                 "Status" => 'REMOVED',
@@ -111,10 +99,10 @@ class shared {
         ));
     }
 
-    public static function jsapiActivateAccount ($ValidationString) {
+    public static function activateUser ($ValidationString) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
                 "ValidationString" => $app->getDB()->createCondition($ValidationString)
@@ -127,13 +115,13 @@ class shared {
         ));
     }
 
-    public static function jsapiSetOnlineAccount ($AccountID) {
+    public static function online ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($AccountID)
+                "ID" => $app->getDB()->createCondition($UserID)
             ),
             "data" => array(
                 "IsOnline" => true,
@@ -143,13 +131,13 @@ class shared {
         ));
     }
 
-    public static function jsapiSetOfflineAccount ($AccountID) {
+    public static function offline ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accounts",
+            "source" => "mpws_users",
             "action" => "update",
             "condition" => array(
-                "ID" => $app->getDB()->createCondition($AccountID)
+                "ID" => $app->getDB()->createCondition($UserID)
             ),
             "data" => array(
                 "IsOnline" => true,
@@ -159,13 +147,13 @@ class shared {
         ));
     }
 
-    public static function jsapiGetPermissions ($AccountID) {
+    public static function getPermissions ($UserID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_permissions",
             "fields" => array("*"),
             "condition" => array(
-                "AccountID" => $app->getDB()->createCondition($AccountID)
+                "UserID" => $app->getDB()->createCondition($UserID)
             ),
             "limit" => 1,
             "options" => array(
@@ -174,7 +162,7 @@ class shared {
         ));
     }
 
-    public static function jsapiAddPermissions ($data) {
+    public static function addPermissions ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
@@ -186,27 +174,27 @@ class shared {
         ));
     }
 
-    public static function jsapiUpdatePermissions ($AccountID, $data) {
+    public static function updatePermissions ($UserID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
             "source" => "mpws_permissions",
             "action" => "update",
             "condition" => array(
-                "AccountID" => $app->getDB()->createCondition($AccountID)
+                "UserID" => $app->getDB()->createCondition($UserID)
             ),
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function jsapiGetAccountAddresses ($AccountID, $withRemoved = false) {
+    public static function getUserAddresses ($UserID, $withRemoved = false) {
         global $app;
         $config = $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accountAddresses",
-            "fields" => array("ID", "AccountID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
+            "source" => "mpws_userAddresses",
+            "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
             "condition" => array(
-                "AccountID" => $app->getDB()->createCondition($AccountID)
+                "UserID" => $app->getDB()->createCondition($UserID)
             ),
             "options" => array(
                 "asDict" => "ID"
@@ -217,14 +205,14 @@ class shared {
         return $config;
     }
 
-    // public static function jsapiGetAccountAddress ($AccountID, $AddressID) {
+    // public static function getUserAddress ($UserID, $AddressID) {
     global $app;
     //     return $app->getDB()->createDBQuery(array(
-    //         "source" => "mpws_accountAddresses",
+    //         "source" => "mpws_userAddresses",
     //         "fields" => array("*"),
     //         "condition" => array(
     //             "ID" => $app->getDB()->createCondition($AddressID),
-    //             "AccountID" => $app->getDB()->createCondition($AccountID),
+    //             "UserID" => $app->getDB()->createCondition($UserID),
     //             "Status" => $app->getDB()->createCondition("ACTIVE")
     //         ),
     //         "options" => array(
@@ -233,11 +221,11 @@ class shared {
     //     ));
     // }
 
-    public static function jsapiGetAddress ($AddressID) {
+    public static function getAddress ($AddressID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accountAddresses",
-            "fields" => array("ID", "AccountID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
+            "source" => "mpws_userAddresses",
+            "fields" => array("ID", "UserID", "Address", "POBox", "Country", "City", "Status", "DateCreated", "DateUpdated"),
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($AddressID),
             ),
@@ -247,23 +235,23 @@ class shared {
         ));
     }
 
-    public static function jsapiAddAddress ($data) {
+    public static function addAddress ($data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $data["DateCreated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accountAddresses",
+            "source" => "mpws_userAddresses",
             "action" => "insert",
             "data" => $data,
             "options" => null
         ));
     }
 
-    public static function jsapiUpdateAddress ($AddressID, $data) {
+    public static function updateAddress ($AddressID, $data) {
         global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accountAddresses",
+            "source" => "mpws_userAddresses",
             "action" => "update",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($AddressID)
@@ -273,10 +261,10 @@ class shared {
         ));
     }
 
-    public static function jsapiDisableAddress ($AddressID) {
+    public static function disableAddress ($AddressID) {
         global $app;
         return $app->getDB()->createDBQuery(array(
-            "source" => "mpws_accountAddresses",
+            "source" => "mpws_userAddresses",
             "action" => "update",
             "condition" => array(
                 "ID" => $app->getDB()->createCondition($AddressID)
@@ -289,10 +277,10 @@ class shared {
         ));
     }
 
-    // >>>> Account statistics
-    public static function jsapiStat_AccountsOverview () {
+    // >>>> User statistics
+    public static function stat_UsersOverview () {
         global $app;
-        $config = self::jsapiGetAccount();
+        $config = self::getUser();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "Status");
         $config['group'] = "Status";
         $config['limit'] = 0;
@@ -307,9 +295,9 @@ class shared {
         return $config;
     }
 
-    public static function jsapiStat_AccountsIntensityLastMonth ($status) {
+    public static function stat_UsersIntensityLastMonth ($status) {
         global $app;
-        $config = self::jsapiGetAccount();
+        $config = self::getUser();
         $config['fields'] = array("@COUNT(*) AS ItemsCount", "@Date(DateCreated) AS IncomeDate");
         $config['condition'] = array(
             'Status' => $app->getDB()->createCondition($status),
@@ -326,4 +314,4 @@ class shared {
         unset($config['additional']);
         return $config;
     }
-    // <<<< Account statistics
+    // <<<< User statistics

@@ -18,7 +18,7 @@ class productfeatures {
         $data["FieldName"] = $itemData["FieldName"];
         $data["GroupName"] = $itemData["GroupName"];
         // var_dump($data);
-        $config = shared::jsapiShopCreateFeature($data);
+        $config = dbquery::shopCreateFeature($data);
         $featureID = $app->getDB()->query($config);
         return $featureID;
     }
@@ -26,7 +26,7 @@ class productfeatures {
     public function getFeatures () {
         global $app;
         $tree = array();
-        $config = shared::jsapiShopGetFeatures();
+        $config = dbquery::shopGetFeatures();
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {

@@ -137,7 +137,7 @@ class products {
         global $app;
         if (empty($productID) || !is_numeric($productID))
             return null;
-        $config = shared::jsapiShopGetProductItem($productID);
+        $config = dbquery::shopGetProductItem($productID);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -146,7 +146,7 @@ class products {
 
     public function getProductByExternalKey ($productExternalKey, $skipRelations = false) {
         global $app;
-        $config = shared::jsapiShopGetProductItemByExternalKey($productExternalKey);
+        $config = dbquery::shopGetProductItemByExternalKey($productExternalKey);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -155,8 +155,8 @@ class products {
 
     public function getProductByName ($productName, $skipRelations = false) {
         global $app;
-        $config = shared::jsapiShopGetProductItem();
-        $config['condition']['Name'] = shared::createCondition($productName);
+        $config = dbquery::shopGetProductItem();
+        $config['condition']['Name'] = $app->getDB()->createCondition($productName);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -165,8 +165,8 @@ class products {
 
     public function getProductByModel ($productModel, $skipRelations = false) {
         global $app;
-        $config = shared::jsapiShopGetProductItem();
-        $config['condition']['Model'] = shared::createCondition($productModel);
+        $config = dbquery::shopGetProductItem();
+        $config['condition']['Model'] = $app->getDB()->createCondition($productModel);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -175,9 +175,9 @@ class products {
 
     public function getProductByModelAndOriginName ($productName, $originName, $skipRelations = false) {
         global $app;
-        $config = shared::jsapiShopGetProductItem();
-        $config['condition']['Name'] = shared::createCondition($productName);
-        $config['condition']['OriginName'] = shared::createCondition($originName);
+        $config = dbquery::shopGetProductItem();
+        $config['condition']['Name'] = $app->getDB()->createCondition($productName);
+        $config['condition']['OriginName'] = $app->getDB()->createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -194,10 +194,10 @@ class products {
 
     public function getProductIDByModelAndOriginName ($productName, $originName) {
         global $app;
-        $config = shared::jsapiShopGetProductItem();
+        $config = dbquery::shopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['Model'] = shared::createCondition($productName);
-        $config['condition']['shop_origins.Name'] = shared::createCondition($originName);
+        $config['condition']['Model'] = $app->getDB()->createCondition($productName);
+        $config['condition']['shop_origins.Name'] = $app->getDB()->createCondition($originName);
         $config['additional'] = array(
             "shop_origins" => array(
                 "constraint" => array("shop_origins.ID", "=", "shop_products.OriginID"),
@@ -212,9 +212,9 @@ class products {
 
     public function verifyProductByID ($productID) {
         global $app;
-        $config = shared::jsapiShopGetProductItem();
+        $config = dbquery::shopGetProductItem();
         $config['fields'] = array("ID");
-        $config['condition']['ID'] = shared::createCondition($productID);
+        $config['condition']['ID'] = $app->getDB()->createCondition($productID);
         $product = $app->getDB()->query($config);
         if (empty($product))
             return null;
@@ -224,7 +224,7 @@ class products {
     public function getProductImages ($productID) {
         global $app;
         $images = array();
-        $config = shared::jsapiShopGetProductAttributes($productID, 'IMAGE');
+        $config = dbquery::shopGetProductAttributes($productID, 'IMAGE');
         $data = $app->getDB()->query($config);
         // var_dump($data);
         if (!empty($data)) {
@@ -245,7 +245,7 @@ class products {
     public function getProductVideos ($productID) {
         global $app;
         $videos = array();
-        $config = shared::jsapiShopGetProductAttributes($productID, 'VIDEO');
+        $config = dbquery::shopGetProductAttributes($productID, 'VIDEO');
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -258,7 +258,7 @@ class products {
     public function getProductAttributes ($productID) {
         global $app;
         $attr = array();
-        $config = shared::jsapiShopGetProductAttributes($productID);
+        $config = dbquery::shopGetProductAttributes($productID);
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -274,7 +274,7 @@ class products {
     public function getProductFeatures ($productID) {
         global $app;
         $featuresGroups = array();
-        $config = shared::jsapiShopGetProductFeatures($productID);
+        $config = dbquery::shopGetProductFeatures($productID);
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $value) {
@@ -290,7 +290,7 @@ class products {
     public function getProductPriceHistory ($productID) {
         global $app;
         $prices = array();
-        $config = shared::jsapiShopGetProductPriceStats($productID);
+        $config = dbquery::shopGetProductPriceStats($productID);
         $data = $app->getDB()->query($config);
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -303,7 +303,7 @@ class products {
     public function getProductRelations ($productID) {
         global $app;
         $relations = array();
-        $configProductsRelations = shared::jsapiShopGetProductRelations($productID);
+        $configProductsRelations = dbquery::shopGetProductRelations($productID);
         $relatedItemsIDs = $app->getDB()->query($configProductsRelations);
         if (isset($relatedItemsIDs)) {
             foreach ($relatedItemsIDs as $relationItem) {
@@ -320,7 +320,7 @@ class products {
 
     public function getProducts_List (array $options = array(), $saveIntoRecent = false, $skipRelations = false) {
         global $app;
-        $config = shared::jsapiShopGetProductList($options);
+        $config = dbquery::shopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
@@ -351,7 +351,7 @@ class products {
 
     public function getLatestProducts_List (array $options = array(), $skipRelations = false) {
         global $app;
-        $config = shared::jsapiShopGetProductList($options);
+        $config = dbquery::shopGetProductList($options);
         $self = $this;
 
         $callbacks = array(
@@ -382,7 +382,7 @@ class products {
 
     public function getProducts_List_Latest () {
         global $app;
-        $config = shared::jsapiShopGetLatestProductsList();
+        $config = dbquery::shopGetLatestProductsList();
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -529,7 +529,7 @@ class products {
                 //     } else {
                 //         $data["FieldName"] = $value;
                 //         $data["CustomerID"] = $CustomerID;
-                //         $config = shared::jsapiShopCreateFeature($data);
+                //         $config = dbquery::shopCreateFeature($data);
                 //         $featureID = $app->getDB()->query($config) ?: null;
                 //         if (isset($featureID) && $featureID >= 0) {
                 //             $productFeaturesIDs[] = $featureID;
@@ -544,7 +544,7 @@ class products {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
                 // var_dump($validatedValues);
-                $config = shared::jsapiShopCreateProduct($validatedValues);
+                $config = dbquery::shopCreateProduct($validatedValues);
                 // var_dump($config);
                 $ProductID = null;
                 try {
@@ -564,7 +564,7 @@ class products {
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
-                        $config = shared::jsapiShopAddFeatureToProduct($featureData);
+                        $config = dbquery::shopAddFeatureToProduct($featureData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -599,7 +599,7 @@ class products {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $uploadInfo['filename'];
-                            $config = shared::jsapiShopAddAttributeToProduct($attrData);
+                            $config = dbquery::shopAddAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -614,7 +614,7 @@ class products {
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $value;
-                        $config = shared::jsapiShopAddAttributeToProduct($attrData);
+                        $config = dbquery::shopAddAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -767,7 +767,7 @@ class products {
                 if (isset($validatedValues["IsPromo"])) {
                     $validatedValues["IsPromo"] = $validatedValues["IsPromo"] ? 1 : 0;
                 }
-                $config = shared::jsapiShopUpdateProduct($ProductID, $validatedValues);
+                $config = dbquery::shopUpdateProduct($ProductID, $validatedValues);
                 try {
                     $app->getDB()->query($config);
                 } catch (Exception $ep) {
@@ -777,14 +777,14 @@ class products {
                 // set new features
                 if (count($productFeaturesIDs)) {
                     // clear existed features before adding new
-                    $config = shared::jsapiShopClearProductFeatures($ProductID);
+                    $config = dbquery::shopClearProductFeatures($ProductID);
                     $app->getDB()->query($config);
                     $featureData['ProductID'] = $ProductID;
                     $featureData['CustomerID'] = $CustomerID;
                     foreach ($productFeaturesIDs as $value) {
                         $featureData['FeatureID'] = $value;
                         // var_dump($featureData);
-                        $config = shared::jsapiShopAddFeatureToProduct($featureData);
+                        $config = dbquery::shopAddFeatureToProduct($featureData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -842,7 +842,7 @@ class products {
                     // $attrData = $initAttrData->getArrayCopy();
                     // $attrData['Attribute'] = 'IMAGE';
                     // $attrData['Value'] = $uploadInfo['filename'];
-                    // $config = shared::jsapiShopAddAttributeToProduct($attrData);
+                    // $config = dbquery::shopAddAttributeToProduct($attrData);
                     // $app->getDB()->query($config);
 
                     // $newFileName = $ProductID . uniqid(time());
@@ -875,13 +875,13 @@ class products {
                     ));
                     // -- IMAGE
                     if (isset($attributes["IMAGE"])) {
-                        $config = shared::jsapiShopClearProductAttributes($ProductID, 'IMAGE');
+                        $config = dbquery::shopClearProductAttributes($ProductID, 'IMAGE');
                         $app->getDB()->query($config);
                         foreach ($attributes["IMAGE"] as $imageName) {
                             $attrData = $initAttrData->getArrayCopy();
                             $attrData['Attribute'] = 'IMAGE';
                             $attrData['Value'] = $imageName;
-                            $config = shared::jsapiShopAddAttributeToProduct($attrData);
+                            $config = dbquery::shopAddAttributeToProduct($attrData);
                             $app->getDB()->query($config);
                         }
                     }
@@ -894,12 +894,12 @@ class products {
                             continue;
                         }
                         // clear existed tags before adding new ones
-                        $config = shared::jsapiShopClearProductAttributes($ProductID, $key);
+                        $config = dbquery::shopClearProductAttributes($ProductID, $key);
                         $app->getDB()->query($config);
                         $attrData = $initAttrData->getArrayCopy();
                         $attrData['Attribute'] = $key;
                         $attrData['Value'] = $attributes[$key];
-                        $config = shared::jsapiShopAddAttributeToProduct($attrData);
+                        $config = dbquery::shopAddAttributeToProduct($attrData);
                         $app->getDB()->query($config);
                     }
                 }
@@ -1004,7 +1004,7 @@ class products {
                 'Status' => 'ARCHIVED'
             );
 
-            $config = shared::jsapiShopUpdateProduct($ProductID, $data);
+            $config = dbquery::shopUpdateProduct($ProductID, $data);
             $app->getDB()->query($config);
 
             $app->getDB()->commit();
@@ -1038,7 +1038,7 @@ class products {
                 'Status' => 'ARCHIVED'
             );
 
-            $config = shared::jsapiShopUpdateProduct(null, $data);
+            $config = dbquery::shopUpdateProduct(null, $data);
             $config['condition'] = null;
             $app->getDB()->query($config);
 
@@ -1059,7 +1059,7 @@ class products {
     public function getProducts_TopNonPopular () {
         global $app;
         // get non-popuplar 15 products
-        $config = shared::jsapiShopStat_NonPopularProducts();
+        $config = dbquery::shopStat_NonPopularProducts();
         $productIDs = $app->getDB()->query($config);
         $data = array();
         if (!empty($productIDs)) {
@@ -1073,7 +1073,7 @@ class products {
     public function getProducts_TopPopular () {
         global $app;
         // get top 15 products
-        $config = shared::jsapiShopStat_PopularProducts();
+        $config = dbquery::shopStat_PopularProducts();
         $productIDs = $app->getDB()->query($config);
         $data = array();
         if (!empty($productIDs)) {
@@ -1093,7 +1093,7 @@ class products {
             return null;
         }
         // get shop products overview:
-        $config = shared::jsapiShopStat_ProductsOverview($filter);
+        $config = dbquery::shopStat_ProductsOverview($filter);
         $data = $app->getDB()->query($config) ?: array();
         $total = 0;
         $res = array();
@@ -1115,7 +1115,7 @@ class products {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = shared::jsapiShopStat_ProductsIntensityLastMonth('ACTIVE');
+        $config = dbquery::shopStat_ProductsIntensityLastMonth('ACTIVE');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -1124,7 +1124,7 @@ class products {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = shared::jsapiShopStat_ProductsIntensityLastMonth('PREORDER');
+        $config = dbquery::shopStat_ProductsIntensityLastMonth('PREORDER');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }
@@ -1133,7 +1133,7 @@ class products {
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
-        $config = shared::jsapiShopStat_ProductsIntensityLastMonth('DISCOUNT');
+        $config = dbquery::shopStat_ProductsIntensityLastMonth('DISCOUNT');
         $data = $app->getDB()->query($config) ?: array();
         return $data;
     }

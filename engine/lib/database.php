@@ -431,7 +431,7 @@ class database {
     //     return Utils::array_merge_recursive_distinct ($configA, $configB);
     // }
 
-    public function jsapiUtil_GetTableRecordsCount ($table, $condition = array()) {
+    public function getTableRecordsCount ($table, $condition = array()) {
         return $this->createDBQuery(array(
             "action" => "select",
             "source" => $table,
@@ -468,22 +468,22 @@ class database {
                 // var_dump($parsedValue);
                 // var_dump($count);
                 if ($count === 0)
-                    $dsConfig['condition'][$field] = $app->getDB()->createCondition($value);
+                    $dsConfig['condition'][$field] = $this->createCondition($value);
                 elseif ($count === 3) {
                     $value = $parsedValue[1];
                     $comparator = $parsedValue[2];
                     if (strtolower($comparator) === 'in')
                         $value = explode(',', $parsedValue[1]);
-                    $dsConfig['condition'][$field] = $app->getDB()->createCondition($value, $comparator);
+                    $dsConfig['condition'][$field] = $this->createCondition($value, $comparator);
                 }
             }
         }
 
         // var_dump($dsConfig['condition']);
         // get data total records
-        $configCount = $app->getSettings()->data->jsapiUtil_GetTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
+        $configCount = $this->getTableRecordsCount($dsConfig['source'], $dsConfig['condition']);
         
-        $countData = $this->fetch($configCount);
+        $countData = $this->query($configCount);
         $count = intval($countData["ItemsCount"]);
 
         if (!empty($options)) {
@@ -516,7 +516,7 @@ class database {
 
         // var_dump($dsConfig);
         // get data
-        $items = $this->fetch($dsConfig) ?: array();
+        $items = $this->query($dsConfig) ?: array();
         // var_dump($items);
 
         if (isset($callbacks['parse']) && is_callable($callbacks['parse'])) {

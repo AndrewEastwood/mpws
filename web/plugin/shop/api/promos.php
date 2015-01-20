@@ -18,19 +18,19 @@ class promos {
     // -----------------------------------------------
     public function getPromoByID ($promoID) {
         global $app;
-        $config = shared::jsapiShopGetPromoByID($promoID);
+        $config = dbquery::shopGetPromoByID($promoID);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
-        $data['_isExpired'] = strtotime(shared::getDate()) > strtotime($data['DateExpire']);
-        $data['_isFuture'] = strtotime(shared::getDate()) < strtotime($data['DateStart']);
+        $data['_isExpired'] = strtotime(dbquery::getDate()) > strtotime($data['DateExpire']);
+        $data['_isFuture'] = strtotime(dbquery::getDate()) < strtotime($data['DateStart']);
         $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
         return $data;
     }
 
     public function getPromoByHash ($hash, $activeOnly = false) {
         global $app;
-        $config = shared::jsapiShopGetPromoByHash($hash, $activeOnly);
+        $config = dbquery::shopGetPromoByHash($hash, $activeOnly);
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
@@ -39,7 +39,7 @@ class promos {
 
     public function getPromoCodes_List (array $options = array()) {
         global $app;
-        $config = shared::jsapiShopGetPromoList($options);
+        $config = dbquery::shopGetPromoList($options);
         $self = $this;
         $callbacks = array(
             "parse" => function ($items) use($self) {
@@ -74,7 +74,7 @@ class promos {
                 $validatedValues["Code"] = rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999) . '-' . rand(1000, 9999);
                 $validatedValues["CustomerID"] = $this->getCustomer()->getCustomerID();
 
-                $configCreatePromo = shared::jsapiShopCreatePromo($validatedValues);
+                $configCreatePromo = dbquery::shopCreatePromo($validatedValues);
 
                 $app->getDB()->beginTransaction();
                 $promoID = $app->getDB()->query($configCreatePromo) ?: null;
@@ -119,7 +119,7 @@ class promos {
 
                 if (count($validatedValues)) {
                     $app->getDB()->beginTransaction();
-                    $configCreateCategory = shared::jsapiShopUpdatePromo($promoID, $validatedValues);
+                    $configCreateCategory = dbquery::shopUpdatePromo($promoID, $validatedValues);
                     $app->getDB()->query($configCreateCategory);
                     $app->getDB()->commit();
                 }
@@ -147,7 +147,7 @@ class promos {
 
         try {
             $app->getDB()->beginTransaction();
-            $config = shared::jsapiShopExpirePromo($promoID);
+            $config = dbquery::shopExpirePromo($promoID);
             $app->getDB()->query($config);
             $app->getDB()->commit();
             $success = true;
