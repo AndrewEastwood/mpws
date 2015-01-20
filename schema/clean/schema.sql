@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mpws_light
 -- ------------------------------------------------------
--- Server version	5.5.40-0ubuntu0.14.04.1
+-- Server version	5.5.40-0ubuntu0.12.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,62 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `mpws_accountAddresses`
---
-
-DROP TABLE IF EXISTS `mpws_accountAddresses`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mpws_accountAddresses` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `AccountID` int(11) DEFAULT NULL,
-  `Address` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `POBox` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `Country` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `City` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','REMOVED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `AccountID` (`AccountID`),
-  KEY `AccountID_2` (`AccountID`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_accountAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `mpws_accountAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `mpws_accounts`
---
-
-DROP TABLE IF EXISTS `mpws_accounts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mpws_accounts` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `CustomerID` int(11) NOT NULL,
-  `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
-  `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
-  `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
-  `EMail` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Phone` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `Password` varchar(50) COLLATE utf8_bin NOT NULL,
-  `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
-  `Status` enum('ACTIVE','REMOVED','TEMP') COLLATE utf8_bin NOT NULL DEFAULT 'TEMP',
-  `DateLastAccess` datetime NOT NULL,
-  `DateCreated` datetime NOT NULL,
-  `DateUpdated` datetime NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID` (`ID`),
-  KEY `EMail` (`EMail`),
-  KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_accounts_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `mpws_customer`
 --
 
@@ -80,7 +24,6 @@ DROP TABLE IF EXISTS `mpws_customer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_customer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `ExternalKey` varchar(100) COLLATE utf8_bin NOT NULL,
   `Name` text COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `HomePage` varchar(200) COLLATE utf8_bin NOT NULL,
@@ -88,6 +31,26 @@ CREATE TABLE `mpws_customer` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mpws_customerSettings`
+--
+
+DROP TABLE IF EXISTS `mpws_customerSettings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_customerSettings` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `Property` varchar(100) COLLATE utf8_bin NOT NULL,
+  `Value` text COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','DISABLED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `DateCreated` datetime NOT NULL,
+  KEY `CustomerID` (`CustomerID`),
+  KEY `ID` (`ID`),
+  CONSTRAINT `mpws_customerSettings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,6 +78,18 @@ CREATE TABLE `mpws_jobs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mpws_patches`
+--
+
+DROP TABLE IF EXISTS `mpws_patches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_patches` (
+  `LastPatchNo` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `mpws_permissions`
 --
 
@@ -134,7 +109,7 @@ CREATE TABLE `mpws_permissions` (
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`AccountID`),
-  CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -156,7 +131,7 @@ CREATE TABLE `mpws_subscribers` (
   UNIQUE KEY `ID` (`ID`),
   KEY `AccountID` (`AccountID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_subscribers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mpws_subscribers_ibfk_2` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_subscribers_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -177,7 +152,7 @@ CREATE TABLE `mpws_tasks` (
   `PrcPath` varchar(300) COLLATE utf8_bin DEFAULT NULL,
   `Params` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
   `PID` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `Result` mediumtext COLLATE utf8_bin,
+  `Result` text COLLATE utf8_bin,
   `Scheduled` tinyint(1) NOT NULL DEFAULT '0',
   `IsRunning` tinyint(1) NOT NULL DEFAULT '0',
   `Complete` tinyint(1) NOT NULL DEFAULT '0',
@@ -208,6 +183,62 @@ CREATE TABLE `mpws_uploads` (
   PRIMARY KEY (`ID`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `mpws_uploads_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mpws_userAddresses`
+--
+
+DROP TABLE IF EXISTS `mpws_userAddresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_userAddresses` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `AccountID` int(11) DEFAULT NULL,
+  `Address` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `POBox` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Country` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `City` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','REMOVED') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `AccountID` (`AccountID`),
+  KEY `AccountID_2` (`AccountID`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `mpws_userAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mpws_userAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mpws_users`
+--
+
+DROP TABLE IF EXISTS `mpws_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mpws_users` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
+  `IsOnline` tinyint(1) NOT NULL DEFAULT '0',
+  `FirstName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `LastName` varchar(200) COLLATE utf8_bin NOT NULL,
+  `EMail` varchar(100) COLLATE utf8_bin NOT NULL,
+  `Phone` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+  `Password` varchar(50) COLLATE utf8_bin NOT NULL,
+  `ValidationString` varchar(400) COLLATE utf8_bin NOT NULL,
+  `Status` enum('ACTIVE','REMOVED','TEMP') COLLATE utf8_bin NOT NULL DEFAULT 'TEMP',
+  `DateLastAccess` datetime NOT NULL,
+  `DateCreated` datetime NOT NULL,
+  `DateUpdated` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID` (`ID`),
+  KEY `EMail` (`EMail`),
+  KEY `CustomerID` (`CustomerID`),
+  CONSTRAINT `mpws_users_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -252,6 +283,7 @@ CREATE TABLE `shop_categories` (
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Name` varchar(200) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
+  `Image` varchar(200) COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -300,6 +332,7 @@ CREATE TABLE `shop_currency` (
   `CurrencyA` enum('AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAM','BBD','BDT','BGN','BHD','BIF','BMD','BND','BOB','BRL','BSD','BTN','BWP','BYR','BZD','CAD','CDF','CHF','CLP','CNY','COP','CRC','CUP','CVE','CZK','DJF','DKK','DOP','DZD','ECS','EGP','ERN','ETB','EUR','FJD','FKP','GBP','GEL','GGP','GHS','GIP','GMD','GNF','GWP','GYD','HKD','HNL','HRK','HTG','HUF','IDR','ILS','INR','IQD','IRR','ISK','JMD','JOD','JPY','KES','KGS','KHR','KMF','KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL','LTL','LVL','LYD','MAD','MDL','MGF','MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD','NGN','NIO','NOK','NPR','NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','QTQ','RON','RSD','RUB','RWF','SAR','SBD','SCR','SDG','SEK','SGD','SHP','SLL','SOS','SRD','SSP','STD','SVC','SYP','SZL','THB','TJS','TMT','TND','TOP','TRY','TTD','TWD','TZS','UAH','UGX','USD','UYU','UZS','VEF','VND','VUV','WST','XAF','XCD','XOF','XPF','YER','ZAR','ZMW','ZWD') COLLATE utf8_bin NOT NULL DEFAULT 'USD',
   `CurrencyB` enum('AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAM','BBD','BDT','BGN','BHD','BIF','BMD','BND','BOB','BRL','BSD','BTN','BWP','BYR','BZD','CAD','CDF','CHF','CLP','CNY','COP','CRC','CUP','CVE','CZK','DJF','DKK','DOP','DZD','ECS','EGP','ERN','ETB','EUR','FJD','FKP','GBP','GEL','GGP','GHS','GIP','GMD','GNF','GWP','GYD','HKD','HNL','HRK','HTG','HUF','IDR','ILS','INR','IQD','IRR','ISK','JMD','JOD','JPY','KES','KGS','KHR','KMF','KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL','LTL','LVL','LYD','MAD','MDL','MGF','MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD','NGN','NIO','NOK','NPR','NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','QTQ','RON','RSD','RUB','RWF','SAR','SBD','SCR','SDG','SEK','SGD','SHP','SLL','SOS','SRD','SSP','STD','SVC','SYP','SZL','THB','TJS','TMT','TND','TOP','TRY','TTD','TWD','TZS','UAH','UGX','USD','UYU','UZS','VEF','VND','VUV','WST','XAF','XCD','XOF','XPF','YER','ZAR','ZMW','ZWD') COLLATE utf8_bin NOT NULL DEFAULT 'USD',
   `Rate` decimal(10,2) NOT NULL,
+  `Status` enum('ACTIVE','REMOVED','','') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   UNIQUE KEY `ID` (`ID`),
@@ -462,9 +495,9 @@ CREATE TABLE `shop_orders` (
   KEY `CustomerID` (`CustomerID`),
   KEY `AccountAddressesID` (`AccountAddressesID`),
   KEY `DeliveryID` (`DeliveryID`),
-  CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_accounts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_accountAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_userAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_4` FOREIGN KEY (`DeliveryID`) REFERENCES `shop_deliveryAgencies` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -578,7 +611,7 @@ CREATE TABLE `shop_products` (
   `SKU` text COLLATE utf8_bin,
   `Price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `IsPromo` tinyint(1) NOT NULL DEFAULT '0',
-  `Status` enum('ACTIVE','ARCHIVED','DISCOUNT','DEFECT','WAITING','PREORDER') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
+  `Status` enum('DISCOUNT','ACTIVE','WAITING','PREORDER','DEFECT','ARCHIVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
@@ -763,4 +796,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-12-17  1:38:39
+-- Dump completed on 2015-01-21  1:53:21
