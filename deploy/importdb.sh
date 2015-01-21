@@ -1,4 +1,9 @@
 #!/bin/bash
 DBUSER=root
 DBPWD=1111
-mysql -u$DBUSER -p$DBPWD < schema/clean/mpws_light_full_test.sql
+DB=mpws_light
+echo importing $1
+if [ "$1" ]
+then
+    mysql -u$DBUSER -p$DBPWD $DB < $1
+fi
