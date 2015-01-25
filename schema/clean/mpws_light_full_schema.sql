@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `mpws_permissions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mpws_permissions` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `AccountID` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL,
   `CanAdmin` tinyint(1) NOT NULL,
   `CanCreate` tinyint(1) NOT NULL,
   `CanEdit` tinyint(1) NOT NULL,
@@ -118,8 +118,8 @@ CREATE TABLE `mpws_permissions` (
   `DateUpdated` datetime NOT NULL,
   `DateCreated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY `AccountID` (`AccountID`),
-  CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `mpws_permissions_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -206,7 +206,7 @@ DROP TABLE IF EXISTS `mpws_userAddresses`;
 CREATE TABLE `mpws_userAddresses` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `AccountID` int(11) DEFAULT NULL,
+  `UserID` int(11) DEFAULT NULL,
   `Address` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `POBox` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `Country` varchar(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -215,10 +215,9 @@ CREATE TABLE `mpws_userAddresses` (
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY `AccountID` (`AccountID`),
-  KEY `AccountID_2` (`AccountID`),
+  KEY `AccountID` (`UserID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_userAddresses_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mpws_userAddresses_ibfk_3` FOREIGN KEY (`UserID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mpws_userAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -485,11 +484,12 @@ DROP TABLE IF EXISTS `shop_orders`;
 CREATE TABLE `shop_orders` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(11) NOT NULL,
-  `AccountID` int(11) DEFAULT NULL,
+  `UserID` int(11) DEFAULT NULL,
   `AccountAddressesID` int(11) NOT NULL,
   `DeliveryID` int(11) DEFAULT NULL,
-  `CurrencyName` varchar(10) COLLATE utf8_bin NOT NULL,
-  `CurrencyRate` decimal(10,2) NOT NULL,
+  `ExchangeRateID` int(11) NOT NULL,
+  `CustomerCurrencyRate` decimal(10,2) NOT NULL,
+  `CustomerCurrencyName` varchar(10) COLLATE utf8_bin NOT NULL,
   `Warehouse` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   `Comment` varchar(500) COLLATE utf8_bin DEFAULT NULL,
   `InternalComment` varchar(300) COLLATE utf8_bin DEFAULT NULL,
@@ -500,15 +500,17 @@ CREATE TABLE `shop_orders` (
   `DateUpdated` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`),
-  KEY `AccountID` (`AccountID`),
+  KEY `AccountID` (`UserID`),
   KEY `Hash` (`Hash`),
   KEY `CustomerID` (`CustomerID`),
   KEY `AccountAddressesID` (`AccountAddressesID`),
   KEY `DeliveryID` (`DeliveryID`),
-  CONSTRAINT `shop_orders_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `ExchangeRateID` (`ExchangeRateID`),
   CONSTRAINT `shop_orders_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_orders_ibfk_3` FOREIGN KEY (`AccountAddressesID`) REFERENCES `mpws_userAddresses` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `shop_orders_ibfk_4` FOREIGN KEY (`DeliveryID`) REFERENCES `shop_deliveryAgencies` (`ID`)
+  CONSTRAINT `shop_orders_ibfk_4` FOREIGN KEY (`DeliveryID`) REFERENCES `shop_deliveryAgencies` (`ID`),
+  CONSTRAINT `shop_orders_ibfk_5` FOREIGN KEY (`UserID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shop_orders_ibfk_6` FOREIGN KEY (`ExchangeRateID`) REFERENCES `shop_currency` (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -553,7 +555,7 @@ CREATE TABLE `shop_productAttributes` (
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_productAttributes_ibfk_3` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productAttributes_ibfk_4` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4272 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4279 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -578,7 +580,7 @@ CREATE TABLE `shop_productFeatures` (
   CONSTRAINT `shop_productFeatures_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productFeatures_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `shop_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `shop_productFeatures_ibfk_3` FOREIGN KEY (`FeatureID`) REFERENCES `shop_features` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2358 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2360 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -671,7 +673,7 @@ CREATE TABLE `shop_promo` (
   UNIQUE KEY `Code` (`Code`),
   KEY `CustomerID` (`CustomerID`),
   CONSTRAINT `shop_promo_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -806,4 +808,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-21 12:11:21
+-- Dump completed on 2015-01-26  0:20:16
