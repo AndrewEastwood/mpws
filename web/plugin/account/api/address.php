@@ -1,5 +1,5 @@
 <?php
-namespace web\plugin\system\api;
+namespace web\plugin\account\api;
 
 class address {
 
@@ -21,7 +21,7 @@ class address {
 
     public function getAddresses ($UserID) {
         global $app;
-        $configAddresses = dbquery::getUserAddresses($UserID, $app()->isToolbox());
+        $configAddresses = dbquery::getUserAddresses($UserID, $app->isToolbox());
         $addresses = $app->getDB()->query($configAddresses) ?: array();
         foreach ($addresses as &$item) {
             $this->__adjustAddress($item);

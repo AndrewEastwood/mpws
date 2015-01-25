@@ -32,7 +32,7 @@ define("plugin/account/site/js/router", [
     var _navigateToHomeIfNotAuthorizedFn = function () {
         var isAccountPage = /^account/.test(Backbone.history.fragment);
         var isSignUp = /^account\/create/.test(Backbone.history.fragment);
-        if (!Auth.getAccountID() && !isSignUp && isAccountPage) {
+        if (!Auth.getUserID() && !isSignUp && isAccountPage) {
             Backbone.history.navigate("", true);
             return true;
         }
@@ -42,7 +42,7 @@ define("plugin/account/site/js/router", [
     var _navigateToAccountIfAuthorizedFn = function () {
         var isAccountPage = /^account/.test(Backbone.history.fragment);
         var isSignUp = /^account\/create/.test(Backbone.history.fragment);
-        if (Auth.getAccountID() && isSignUp) {
+        if (Auth.getUserID() && isSignUp) {
             Backbone.history.navigate("account/summary", true);
             return true;
         }
@@ -50,9 +50,9 @@ define("plugin/account/site/js/router", [
     }
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        var authAccountID = Auth.getAccountID();
-        if (authAccountID) {
-            account.set('ID', authAccountID);
+        var authUserID = Auth.getUserID();
+        if (authUserID) {
+            account.set('ID', authUserID);
             account.fetch();
         }
     });

@@ -12,7 +12,7 @@ define("plugin/account/common/js/model/account", [
         url: function () {
             var _params =  {
                 source: 'account',
-                fn: 'account'
+                fn: 'user'
             };
             if (!this.isNew())
                 _params.id = this.id;

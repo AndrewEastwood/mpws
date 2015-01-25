@@ -19,7 +19,7 @@ define("plugin/account/common/js/view/accountAddress", [
         initialize: function (options) {
             // debugger;
             this.model = new ModelAccountAddress(options.address || {});
-            this.model.set('AccountID', options.AccountID);
+            this.model.set('UserID', options.UserID);
             this.listenTo(this.model, 'change', this.render);
             _.bindAll(this, 'saveAddress', 'removeAddress');
         },

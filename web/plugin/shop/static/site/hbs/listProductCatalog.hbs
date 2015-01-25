@@ -157,10 +157,10 @@
                     <div class="spacer"></div>
                     {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonStatus }}
                         <span class="helptext">К-ість товарів за типом продажу<i class="fa fa-level-down"></i></span>
-                        <div class="list-group list-group-category-brands">
+                        <div class="list-group list-group-category-availability">
                         {{#each filter.filterOptionsAvailable.filter_commonStatus }}
                             {{#in_array ../filter.filterOptionsApplied.filter_commonStatus ID }}
-                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}">
+                            <a class="list-group-item active" href="javascript://" rel="status" title="{{Name}}" for="{{ID}}">
                                 <label>
                                     <input type="checkbox" value="{{ID}}" name="filter_commonStatus" checked="checked">
                                     {{mpwsGetValueByKey ../../../lang ID "product_status_"}}

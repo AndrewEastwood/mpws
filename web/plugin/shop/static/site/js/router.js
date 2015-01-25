@@ -238,7 +238,7 @@ define("plugin/shop/site/js/router", [
         //
         shop_profile_orders: function () {
             APP.getCustomer().setBreadcrumb();
-            if (!Site.hasPlugin('account') || !Auth.getAccountID()) {
+            if (!Site.hasPlugin('account') || !Auth.getUserID()) {
                 Backbone.history.navigate("", true);
                 return;
             }

@@ -550,7 +550,7 @@ class products {
                     $errors[] = $ep->getMessage();
                 }
                 // var_dump($productID);
-                // var_dump($this->getCustomerDataBase()->get_last_query());
+                // var_dump($app->getDB()->get_last_query());
                 if (empty($ProductID)) {
                     throw new Exception('ProductCreateError');
                 }

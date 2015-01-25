@@ -20,7 +20,7 @@ RewriteRule ^static/(customers|plugin|base)/([\.a-z_-]+)/(.*) /web/$1/$2/static/
 # API
 #RewriteRule ^api\.js?(.*) /engine/controllers/api.php?$1 [QSA,L]
 #RewriteRule ^auth\.js?(.*) /engine/controllers/auth.php?$1 [QSA,L]
-RewriteRule ^upload/?(.*) /engine/controllers/upload.php?$1 [QSA,L]
+#RewriteRule ^upload/?(.*) /engine/controllers/upload.php?$1 [QSA,L]
 #RewriteRule ^background/?(.*) /engine/controllers/background.php?$1 [QSA,L]
 
 # NEW API
@@ -28,3 +28,4 @@ RewriteRule ^upload/?(.*) /engine/controllers/upload.php?$1 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+) /engine/controllers/api.php?api=$1:$2 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)/ /engine/controllers/api.php?api=$1:$2 [QSA,L]
 RewriteRule ^api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&$3 [QSA,L]
+RewriteRule ^upload/$ /engine/controllers/upload.php [QSA,L]

@@ -12,9 +12,9 @@ define("plugin/account/toolbox/js/router", [
     var account = new Account();
 
     Sandbox.eventSubscribe('global:auth:status:active', function (data) {
-        var authAccountID = Auth.getAccountID();
-        if (authAccountID) {
-            account.set('ID', authAccountID);
+        var authUserID = Auth.getUserID();
+        if (authUserID) {
+            account.set('ID', authUserID);
             account.fetch();
             require(['plugin/account/toolbox/js/view/buttonAccount'], function (ViewButtonAccount) {
                 var buttonAccount = new ViewButtonAccount({
@@ -35,7 +35,7 @@ define("plugin/account/toolbox/js/router", [
 
     Sandbox.eventSubscribe('global:page:signin', function (data) {
         var self = this;
-        if (Auth.getAccountID())
+        if (Auth.getUserID())
             return;
         require(['plugin/account/toolbox/js/view/signin'], function (SignIn) {
             var signin = new SignIn();

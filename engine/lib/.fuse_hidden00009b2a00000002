@@ -95,13 +95,6 @@ class site {
         return $apiCustomer->getRuntimeCustomerID();
     }
 
-    public function hasPlugin ($pluginName) {
-        $apiCustomer = API::getAPI('system:customers');
-        $customer = $apiCustomer->getRuntimeCustomer();
-        $plugins = $customer['Settings']['plugins'];
-        return isset($plugins[$pluginName]);
-    }
-
     public function runAsDISPLAY () {
         Response::setResponse($this->getHtmlPage());
     }
@@ -168,8 +161,10 @@ class site {
         $upload_handler = new JqUploadLib($options);
         Response::setResponse($upload_handler->get_response());
         // refresh auth
-        API::getAPI('system:auth')->updateSessionAuth();
-        // API::execAPI();
+        $this->updateSessionAuth();
+        // bypass response to all plugins
+        foreach ($this->plugins as $plugin)
+            $plugin->run();
     }
 
 }

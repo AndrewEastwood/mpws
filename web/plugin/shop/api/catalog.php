@@ -136,7 +136,7 @@ class catalog {
         // var_dump($dataCategoryPriceEdges);
         // var_dump($dataCategoryAllBrands);
 
-        // var_dump($this->getCustomerDataBase()->get_last_query());
+        // var_dump($app->getDB()->get_last_query());
         // return;
 
         // get catalog features
@@ -255,7 +255,7 @@ class catalog {
                 // var_dump($brand);
                 // var_dump($filterData);
                 // var_dump($dataConfigCategoryInfo);
-                // var_dump($this->getCustomerDataBase()->get_last_query());
+                // var_dump($app->getDB()->get_last_query());
                 // echo PHP_EOL;
                 // echo PHP_EOL;
             // }

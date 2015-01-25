@@ -38,7 +38,7 @@ define("customer/js/router", [
 
     var _ifNotAuthorizedNavigateToSignin = function () {
         // debugger;
-        if (!Auth.getAccountID()) {
+        if (!Auth.getUserID()) {
             APP.xhrAbortAll();
             if (!/!\/signin/.test(Backbone.history.getHash())) {
                 Backbone.history.fragment = false;
@@ -54,7 +54,7 @@ define("customer/js/router", [
     });
 
     Sandbox.eventSubscribe('global:page:signin', function () {
-        if (Auth.getAccountID()) {
+        if (Auth.getUserID()) {
             Backbone.history.navigate("", true);
         }
     });

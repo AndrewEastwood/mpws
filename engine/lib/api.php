@@ -18,6 +18,9 @@ class api {
         if (isset(self::$cacheApis[$apiKey])) {
             $api = self::$cacheApis[$apiKey];
         } else {
+            if (empty($apiKey)) {
+                return $api;
+            }
             $parts = explode(':', $apiKey);
             $apiClass = Utils::getApiClassName($parts[0], $parts[1]);
             self::$cacheApis[$apiKey] = new $apiClass();

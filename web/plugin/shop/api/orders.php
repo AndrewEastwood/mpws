@@ -64,7 +64,7 @@ class orders {
         $config = dbquery::getShopOrderList_Expired();
         // check permissions to display either all or user's orders only
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -85,7 +85,7 @@ class orders {
         $config = dbquery::getShopOrderList_Todays();
         // set permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -106,7 +106,7 @@ class orders {
         $config = dbquery::getShopOrderList_Pending();
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -127,7 +127,7 @@ class orders {
         $config = dbquery::getShopOrderList($options);
         // check permissions
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
-            $config['condition']['AccountID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
+            $config['condition']['UserID'] = $app->getDB()->createCondition($this->getCustomer()->getAuthID());
         }
         $self = $this;
         $callbacks = array(
@@ -178,7 +178,7 @@ class orders {
         try {
 
             $app->getDB()->beginTransaction();
-            $this->getCustomerDataBase()->disableTransactions();
+            $app->getDB()->disableTransactions();
 
             // check if matches
             if ($accountToken !== $formAccountToken)
@@ -285,7 +285,7 @@ class orders {
 
             // start creating order
             $dataOrder = array();
-            $dataOrder["AccountID"] = $accountID;
+            $dataOrder["UserID"] = $accountID;
             $dataOrder["AccountAddressesID"] = $addressID;
             $dataOrder["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
             $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
@@ -338,12 +338,12 @@ class orders {
             // if (empty($accountID) || empty($addressID))
             //     throw new Exception("UnableToLinkAccountOrAddress", 1);
 
-            $this->getCustomerDataBase()->enableTransactions();
+            $app->getDB()->enableTransactions();
             $app->getDB()->commit();
 
             $success = true;
         } catch (Exception $e) {
-            $this->getCustomerDataBase()->enableTransactions();
+            $app->getDB()->enableTransactions();
             $app->getDB()->rollBack();
             $errors['Order'][] = $e->getMessage();
             $success = false;
@@ -432,7 +432,7 @@ class orders {
     }
 
     private function __attachOrderDetails (&$order) {
-        // global $app;
+        global $app;
         // echo "__attachOrderDetails";
         if (empty($order))
             return;
@@ -498,12 +498,12 @@ class orders {
             );
             // $order['_currencyName'] = $customerCurrencyName;
             // attach account and address
-            if ($this->getCustomer()->hasPlugin('account')) {
+            if ($app->getSite()->hasPlugin('account')) {
                 if (isset($order['AccountAddressesID']))
-                    $order['address'] = $this->getPlugin('account')->getAddressByID($order['AccountAddressesID']);
-                if (isset($order['AccountID']))
-                    $order['account'] = $this->getPlugin('account')->getAccountByID($order['AccountID']);
-                unset($order['AccountID']);
+                    $order['address'] = API::getAPI('account:address')->getAddressByID($order['AccountAddressesID']);
+                if (isset($order['UserID']))
+                    $order['account'] = API::getAPI('account:user')->getUserByID($order['UserID']);
+                unset($order['UserID']);
                 unset($order['AccountAddressesID']);
             }
             // get promo

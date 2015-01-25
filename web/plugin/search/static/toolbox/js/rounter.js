@@ -6,7 +6,7 @@ define("plugin/search/toolbox/js/router", [
 ], function (Sandbox, $, Auth, Backbone) {
 
     Sandbox.eventSubscribe('global:route', function () {
-        if (&& Auth.getAccountID())
+        if (&& Auth.getUserID())
         require(['plugin/search/toolbox/js/view/searchMenuEmbedded'], function (ViewSearchEmbedded) {
             var searchEmbedded = new ViewSearchEmbedded();
             searchEmbedded.render();

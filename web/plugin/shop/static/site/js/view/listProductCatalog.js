@@ -22,6 +22,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
             "change input[name^='filter_']": 'filterProducts_Other',
+            // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_Other',
             "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
             "slideStop .slider": 'filterProducts_PriceChanged',
             "click .shop-filter-cancel": 'filterProducts_CancelFilter',
@@ -105,7 +106,11 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             return this;
         },
         filterProducts_Other: function (event) {
-            // console.log(event);
+            console.log('filterProducts_Other');
+
+            // event.preventDefault();
+            // if (event && event.stopPropagation)
+            //     event.stopPropagation();
             // debugger;
             var _targetFilterName = $(event.target).attr('name');
 
@@ -131,6 +136,8 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.collection.setFilter(_targetFilterName, _filterOptions[_targetFilterName]);
 
             this.collection.fetch();
+
+            // return false;
         },
         filterProducts_Dropdowns: function (event) {
             // console.log(event);
@@ -164,6 +171,10 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function (event) {
+            console.log('filterProducts_ListItemClicked');
+            if ($(event.target).is(':input')) {
+                return;
+            }
             var $el = $(event.target);
             var _innerCheckbox = null;
             if ($el.is(':checkbox')) {
@@ -171,10 +182,13 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             } else {
                 _innerCheckbox = $el.find('input[type="checkbox"]');
             }
-            _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
-            _innerCheckbox.trigger('change');
             if (event && event.stopPropagation)
                 event.stopPropagation();
+            if (event && event.preventDefault)
+                event.preventDefault();
+            // debugger;
+            _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
+            _innerCheckbox.trigger('change');
             if ($el.parents('a').attr('rel') !== 'category' && $el.attr('rel') !== 'category')
                 return false;
         },

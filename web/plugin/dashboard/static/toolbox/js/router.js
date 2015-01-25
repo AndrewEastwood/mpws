@@ -8,7 +8,7 @@ define("plugin/dashboard/toolbox/js/router", [
     APP.dfd.dashboard = new $.Deferred();
 
     Sandbox.eventSubscribe('global:page:index', function () {
-        if (!Auth.getAccountID())
+        if (!Auth.getUserID())
             return;
         require(['plugin/dashboard/toolbox/js/view/dashboard'], function (ViewDashboard) {
             var dashboard = new ViewDashboard();

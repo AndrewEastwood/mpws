@@ -9,7 +9,7 @@ define("default/js/lib/auth", [
     var Auth = _.extend({
         verifyStatus: function () {
             // debugger;
-            var auth_id = Auth.getAccountID();
+            var auth_id = Auth.getUserID();
             if (Auth.auth_id === auth_id) {
                 return;
             }
@@ -22,7 +22,7 @@ define("default/js/lib/auth", [
                 Sandbox.eventNotify("global:auth:status:inactive");
             }
         },
-        getAccountID: function () {
+        getUserID: function () {
             return Cache.getCookie('auth_id') || null;
         },
         getStatus: function (callback) {
@@ -31,7 +31,7 @@ define("default/js/lib/auth", [
             };
             return $.get(APP.getAuthLink(query), function (response) {
                 if (_.isFunction(callback))
-                    callback(Auth.getAccountID(), response);
+                    callback(Auth.getUserID(), response);
             });
         },
         signin: function (email, password, remember, callback) {
@@ -44,7 +44,7 @@ define("default/js/lib/auth", [
                 remember: remember,
             }, function (response) {
                 if (_.isFunction(callback))
-                    callback(Auth.getAccountID(), response);
+                    callback(Auth.getUserID(), response);
             });
         },
         signout: function (callback) {
@@ -53,7 +53,7 @@ define("default/js/lib/auth", [
             };
             return $.post(APP.getAuthLink(query), function (response) {
                 if (_.isFunction(callback))
-                    callback(Auth.getAccountID(), response);
+                    callback(Auth.getUserID(), response);
             });
         }
     }, Backbone.Events);

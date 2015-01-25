@@ -185,6 +185,7 @@ class dbquery {
     }
 
     public static function shopUpdateProduct ($ProductID, $data) {
+        global $app;
         $data["DateUpdated"] = $app->getDB()->getDate();
         $ExternalKey = array();
         if (isset($data['Name'])) {
@@ -967,7 +968,7 @@ class dbquery {
             "action" => "select",
             "source" => "shop_orders",
             "condition" => array(),
-            "fields" => array("ID", "AccountID", "AccountAddressesID", "DeliveryID", "ExchangeRateID", "CustomerCurrencyRate", "CustomerCurrencyName", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "UserID", "AccountAddressesID", "DeliveryID", "ExchangeRateID", "CustomerCurrencyRate", "CustomerCurrencyName", "Warehouse", "Comment", "InternalComment", "Status", "Hash", "PromoID", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),

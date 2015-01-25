@@ -5,6 +5,7 @@ use \engine\objects\plugin as basePlugin;
 use \engine\lib\validate as Validate;
 use \engine\lib\secure as Secure;
 use \engine\lib\path as Path;
+use \engine\lib\api as API;
 use Exception;
 use ArrayObject;
 
@@ -22,8 +23,8 @@ class promos {
         $data = $app->getDB()->query($config);
         $data['ID'] = intval($data['ID']);
         $data['Discount'] = floatval($data['Discount']);
-        $data['_isExpired'] = strtotime(dbquery::getDate()) > strtotime($data['DateExpire']);
-        $data['_isFuture'] = strtotime(dbquery::getDate()) < strtotime($data['DateStart']);
+        $data['_isExpired'] = strtotime($app->getDB()->getDate()) > strtotime($data['DateExpire']);
+        $data['_isFuture'] = strtotime($app->getDB()->getDate()) < strtotime($data['DateStart']);
         $data['_isActive'] = !$data['_isExpired'] && !$data['_isFuture'];
         return $data;
     }

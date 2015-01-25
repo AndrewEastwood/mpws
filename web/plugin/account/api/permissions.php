@@ -4,7 +4,6 @@ namespace web\plugin\account\api;
 class permissions {
 
     public static function getNewPermissions () {
-        global $app;
         $perms = array(
             "CanAdmin" => 0,
             "CanCreate" => 0,
@@ -18,7 +17,7 @@ class permissions {
     public function getPermissions ($userID) {
         global $app;
         $query = dbquery::getPermissions($userID);
-        $userPermissions = $app->getDB()->query($query);
+        $userPermissions = $app->getDB()->query($query, false);
         return $this->_adjustPermissions($userPermissions);
     }
 

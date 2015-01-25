@@ -194,7 +194,7 @@ class user {
                 $success = true;
             } catch (Exception $e) {
                 $app->getDB()->rollBack();
-                // echo $this->getCustomerDataBase()->getLastErrorCode();
+                // echo $app->getDB()->getLastErrorCode();
                 // echo $e;
                 // return glWrap("error", 'UserUpdateError');
                 $errors[] = 'UserUpdateError';

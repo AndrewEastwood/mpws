@@ -55,7 +55,7 @@ define("plugin/account/site/js/view/accountProfileAddresses", [
 
             // debugger;
             var addressView = new ViewAccountAddress({
-                AccountID: this.model.id,
+                UserID: this.model.id,
                 address: address
             });
             addressView.render();

@@ -10,12 +10,11 @@ class auth {
     private $authKey = 'auth_id';
 
     public function getAuthID () {
-        global $app;
         if (!isset($_SESSION[$this->authKey]))
             $_SESSION[$this->authKey] = null;
         if (isset($_SESSION[$this->authKey])) {
             $this->permissions = API::getAPI('account:permissions')->getPermissions($_SESSION[$this->authKey]);
-            // $configPermissions = $app->getSettings()->data->getPermissions($_SESSION['UserID']);
+            // $configPermissions = $app->getSettings()->data->getPermissions($_SESSION['AccountID']);
             // $permissions = $this->fetch($configPermissions, true) ?: array();
             if ($app->isToolbox() && !$this->ifYouCan('Admin')) {
                 return $this->clearAuthID();

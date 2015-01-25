@@ -406,10 +406,7 @@ define("plugin/shop/toolbox/js/view/popupProduct", [
                 self.refreshUploadButton($(this));
             });
             $items.fileupload({
-                url: APP.getUploadUrl({
-                    source: 'shop',
-                    realm: 'products'
-                }),
+                url: APP.getUploadUrl(),
                 dataType: 'json',
                 autoUpload: true,
                 limitMultiFileUploads: 1,
