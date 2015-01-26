@@ -67,6 +67,7 @@ define("plugin/shop/toolbox/nls/ua_uk/translation", [
         popup_category_title_new: "Створення категорії",
         popup_category_section_details_filed_name: "Назва:",
         popup_category_section_details_filed_description: "Опис:",
+        popup_category_section_details_filed_image: "Зображення",
         popup_category_section_details_filed_parentCategory: "Вкласти в категорію:",
         popup_category_section_props_field_name: "Назва:",
         popup_category_section_props_field_defaultValue: "Початкове значення:",

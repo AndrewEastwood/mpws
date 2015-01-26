@@ -566,7 +566,7 @@ class dbquery {
             "action" => "select",
             "source" => "shop_categories",
             "condition" => array(),
-            "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Description", "Status", "DateCreated", "DateUpdated"),
+            "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Description", "Image", "Status", "DateCreated", "DateUpdated"),
             "options" => array(
                 "expandSingleRecord" => true
             ),

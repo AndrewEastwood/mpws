@@ -117,9 +117,9 @@
                     <div class="spacer"></div>
                     {{#mpwsIsNotEmpty filter.filterOptionsAvailable.filter_commonFeatures }}
                         <span class="helptext">К-ість товарів за характеристиками<i class="fa fa-level-down"></i></span>
-                        <div class="list-group list-group-category-features">
                         {{#each filter.filterOptionsAvailable.filter_commonFeatures }}
                             <h4>{{@key}}</h4>
+                            <div class="list-group list-group-category-features">
                             {{#each this }}
                                 {{#in_array ../../../filter.filterOptionsApplied.filter_commonFeatures ID }}
                                 <a class="list-group-item active" href="javascript://" rel="feature" title="{{Name}}">
@@ -139,10 +139,9 @@
                                 </a>
                                 {{/in_array}}
                             {{/each}}
-
+                            </div>
 
                         {{/each}}
-                        </div>
                     {{/mpwsIsNotEmpty}}
                     <div class="spacer"></div>
                 </div>

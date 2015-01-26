@@ -292,7 +292,7 @@ CREATE TABLE `shop_categories` (
   `ExternalKey` varchar(50) COLLATE utf8_bin NOT NULL,
   `Name` varchar(200) COLLATE utf8_bin NOT NULL,
   `Description` text COLLATE utf8_bin NOT NULL,
-  `Image` varchar(200) COLLATE utf8_bin NOT NULL,
+  `Image` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   `Status` enum('ACTIVE','REMOVED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
   `DateUpdated` datetime NOT NULL,
@@ -808,4 +808,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-26  0:20:16
+-- Dump completed on 2015-01-26  2:09:35

@@ -15,16 +15,38 @@ class categories {
 
     private $_statuses = array('ACTIVE', 'REMOVED');
 
+    public function getCategoryUploadInnerDir ($subDir = '') {
+        $path = '';
+        if (empty($subDir))
+            $path = Path::createDirPath('shop', 'categories');
+        else
+            $path = Path::createDirPath('shop', 'categories', $subDir);
+        return $path;
+    }
+    public function getCategoryUploadInnerImagePath ($name, $subDir = false) {
+        $path = $this->getCategoryUploadInnerDir($subDir);
+        return $path . $name;
+    }
+
     // -----------------------------------------------
     // -----------------------------------------------
     // CATEGORIES
     // -----------------------------------------------
     // -----------------------------------------------
     private function __adjustCategory (&$category) {
-        $category['ID'] = intval($category['ID']);
+        $categoryID = intval($category['ID']);
+        $category['ID'] = $categoryID;
         $category['ParentID'] = is_null($category['ParentID']) ? null : intval($category['ParentID']);
         $category['_isRemoved'] = $category['Status'] === 'REMOVED';
-        $category['_location'] = $this->getCategoryLocationByCategoryID($category['ID']);
+        $category['_location'] = $this->getCategoryLocationByCategoryID($categoryID);
+        if (!empty($category['Image'])) {
+            $category['Image'] = array(
+                'name' => $category['Image'],
+                'normal' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image']),
+                'sm' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'sm'),
+                'xs' => '/' . Path::getUploadDirectory() . $this->getCategoryUploadInnerImagePath($category['Image'], 'xs')
+            );
+        }
         return $category;
     }
 
@@ -85,7 +107,8 @@ class categories {
         $validatedDataObj = Validate::getValidData($reqData, array(
             'Name' => array('string', 'notEmpty', 'min' => 1, 'max' => 200),
             'ParentID' => array('int', 'skipIfUnset'),
-            'Description' => array('string', 'skipIfUnset', 'max' => 5000)
+            'Description' => array('string', 'skipIfUnset', 'max' => 5000),
+            'file1' => array('string', 'skipIfEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
@@ -96,6 +119,19 @@ class categories {
                 $app->getDB()->beginTransaction();
 
                 $validatedValues["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
+
+                if (!empty($validatedValues['file1'])) {
+                    $newFileName = uniqid(time());
+                    $fileName = $validatedValues['file1'];
+                    $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
+                    $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                    $normalImagePath = $fileName;
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getProductUploadInnerDir('sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getProductUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                    $validatedValues['Image'] = $uploadInfo['filename'];
+                }
+                unset($validatedValues['file1']);
 
                 $configCreateCategory = dbquery::shopCreateCategory($validatedValues);
                 $CategoryID = $app->getDB()->query($configCreateCategory) ?: null;
@@ -131,13 +167,42 @@ class categories {
             'Name' => array('string', 'skipIfUnset', 'min' => 1, 'max' => 200),
             'Description' => array('string', 'skipIfUnset', 'max' => 5000),
             'ParentID' => array('int', 'null', 'skipIfUnset'),
-            'Status' => array('string', 'skipIfUnset')
+            'Status' => array('string', 'skipIfUnset'),
+            'file1' => array('string', 'skipIfEmpty')
         ));
 
         if ($validatedDataObj["totalErrors"] == 0)
             try {
 
                 $validatedValues = $validatedDataObj['values'];
+
+                $category = $this->getCategoryByID($CategoryID);
+
+                $fileName = empty($category['Image']) ? "" : $category['Image']['name'];
+                $newFileName = null;
+
+                if (!empty($validatedValues['file1'])) {
+                    $newFileName = $validatedValues['file1'];
+                    unset($validatedValues['file1']);
+                }
+
+                if (empty($newFileName) && !empty($fileName)) {
+                    Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($fileName, 'sm'));
+                    Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($fileName, 'xs'));
+                    Path::deleteUploadedFile($this->getCategoryUploadInnerImagePath($fileName));
+                    $validatedValues['Image'] = null;
+                }
+                if (!empty($newFileName)) {
+                    $fileName = $newFileName;
+                    $newFileName = uniqid(time());
+                    $smImagePath = 'sm' . Path::getDirectorySeparator() . $fileName;
+                    $xsImagePath = 'xs' . Path::getDirectorySeparator() . $fileName;
+                    $normalImagePath = $fileName;
+                    $uploadInfo = Path::moveTemporaryFile($smImagePath, $this->getCategoryUploadInnerDir('sm'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($xsImagePath, $this->getCategoryUploadInnerDir('xs'), $newFileName);
+                    $uploadInfo = Path::moveTemporaryFile($normalImagePath, $this->getCategoryUploadInnerDir(), $newFileName);
+                    $validatedValues['Image'] = $uploadInfo['filename'];
+                }
 
                 $app->getDB()->beginTransaction();
 

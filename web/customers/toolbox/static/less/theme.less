@@ -483,6 +483,115 @@ body {
     }
 
 }
+.shop-popup-category {
+    .bootstrap-dialog-message {
+        #progress {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            height: 2px;
+            background: none;
+            box-shadow: none;
+            .progress-bar {
+                height: 2px;
+                box-shadow: none;
+            }
+        }
+        .upload-wrapper {
+            display: inline-block;
+            position: relative;
+            margin-right: 20px;
+            .del-image {
+                position: absolute;
+                left: -10px;
+                top: -11px;
+                width: 16px;
+                height: 16px;
+                display: block;
+                font-size: 1.2rem;
+                color: #CA4541;
+                line-height: normal;
+                white-space: normal;
+                cursor: pointer;
+                &:hover {
+                    text-shadow: 0 0 2px #DA5C5C;
+                }
+            }
+            .restore-image {
+                position: absolute;
+                left: -10px;
+                top: -11px;
+                width: 16px;
+                height: 16px;
+                display: block;
+                font-size: 1.2rem;
+                color: #FFA100;
+                line-height: normal;
+                white-space: normal;
+                cursor: pointer;
+                &:hover {
+                    text-shadow: 0 0 2px #DAA100;
+                }
+            }
+            .fileinput-button {
+                position: relative;
+                overflow: hidden;
+                background: none;
+                border-style: dashed;
+                display: inline-block;
+                width: 60px;
+                height: 60px;
+                margin: 0px;
+                padding: 0px;
+
+                &:hover {
+                    background: #eee;
+                }
+                input {
+                    z-index: 99999;
+                }
+            }
+            .uploaded-image {
+                display: block;
+                max-height: 75px;
+                max-width: 75px;
+                position: absolute;
+                left: -5px;
+                top: -5px;
+            }
+            &.none {
+                .fa-plus {display: block;}
+            }
+            &.original {
+                .del-image {display: block;}
+            }
+            &.temp {
+                .preview-image {display: block;}
+                .uploaded-image {display: none;}
+                .del-image {display: block;}
+            }
+            &.error {
+                .fa-plus {display: none;}
+                .fa-warning {display: block;}
+            }
+            &.restore {
+                .restore-image {display: block;}
+                .uploaded-image {display: none;}
+                .preview-image {display: none;}
+                .fa-plus {display: block;}
+            }
+            .restore-image, .del-image {display: none;}
+            .fa-plus, .fa-warning {
+                display: none;
+                font-size: 1.5em;
+                position: relative;
+                top: 30%;
+            }
+            .preview-image {display: none;}
+        }
+    }
+}
 .dndrow {
     color: #ddd;
     cursor: -webkit-grabbing;
