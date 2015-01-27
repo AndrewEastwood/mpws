@@ -3,10 +3,15 @@ define("plugin/shop/site/js/view/productItemShort", [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
     'default/js/lib/utils',
+    'default/js/lib/handlebars',
     'default/js/plugin/hbs!plugin/shop/site/hbs/productItemShort',
     /* lang */
     'default/js/plugin/i18n!plugin/shop/site/nls/translation'
-], function (Sandbox, _, Backbone, Utils, tpl, lang) {
+], function (Sandbox, _, Backbone, Utils, Handlebars, tpl, lang) {
+
+    // Handlebars.registerDynamicHelper('shopProductTitle', function (data, opts) {
+    //     return opts.fn(data._origin.Name + ' ' + data.Model);
+    // });
 
     var ProductItemShort = Backbone.View.extend({
         className: 'shop-product-item shop-product-item-short col-xs-12 col-sm-6 col-md-3 col-lg-3',

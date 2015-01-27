@@ -69,9 +69,8 @@ server {
       rewrite ^/api/(\w+)/(\w+)/?(.*) /engine/controllers/api.php?api=$1:$2&$3 last;
     }
 
-
     location /upload {
-      rewrite ^/upload/?(.*) /engine/controllers/upload.php?$1 last;
+      rewrite ^/upload/$ /engine/controllers/upload.php last;
     }
 
 }

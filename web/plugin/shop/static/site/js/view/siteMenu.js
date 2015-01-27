@@ -4,8 +4,10 @@ define("plugin/shop/site/js/view/siteMenu", [
     'plugin/shop/site/js/view/menuCart',
     'plugin/shop/site/js/view/menuWishList',
     'plugin/shop/site/js/view/menuCompare',
+    'plugin/shop/site/js/view/menuPayment'
     // 'plugin/shop/site/js/view/menuProfileOrders',
-], function (Sandbox, MenuCatalog, MenuCart, MenuWishList, MenuCompare, MenuProfileOrders) {
+], function (Sandbox, MenuCatalog, MenuCart, MenuWishList, MenuCompare,
+    MenuProfileOrders, MenuPayment) {
 
     return function (models) {
 
@@ -25,6 +27,10 @@ define("plugin/shop/site/js/view/siteMenu", [
         // inject shop menu (category menu)
         var menuCompare = new MenuCompare();
         menuCompare.collection.fetch();
+
+        // inject shop menu (category menu)
+        var menuPayment = new MenuPayment();
+        menuPayment.render();
 
         // inject into account page shop menu items
         // var menuProfileOrders = new MenuProfileOrders();
@@ -56,6 +62,11 @@ define("plugin/shop/site/js/view/siteMenu", [
                 {
                     name: 'CommonMenuLeft',
                     el: menuCompare.$el,
+                    append: true
+                },
+                {
+                    name: 'CommonMenuLeft',
+                    el: menuPayment.$el,
                     append: true
                 }
             ]);

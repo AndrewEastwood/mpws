@@ -362,6 +362,7 @@ class products {
                 return $_items;
             }
         );
+        // var_dump($options);
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
 
         // $dataList['_category'] = null;
@@ -378,22 +379,22 @@ class products {
         return $dataList;
     }
 
-    public function getProducts_List_Latest () {
-        global $app;
-        $config = dbquery::shopGetLatestProductsList();
-        $self = $this;
-        $callbacks = array(
-            "parse" => function ($items) use($self) {
-                $_items = array();
-                foreach ($items as $key => $orderRawItem) {
-                    $_items[] = $self->getProductByID($orderRawItem['ID'], true);
-                }
-                return $_items;
-            }
-        );
-        $dataList = $app->getDB()->getDataList($config, array(), $callbacks);
-        return $dataList;
-    }
+    // public function getProducts_List_Latest () {
+    //     global $app;
+    //     $config = dbquery::shopGetLatestProductsList();
+    //     $self = $this;
+    //     $callbacks = array(
+    //         "parse" => function ($items) use($self) {
+    //             $_items = array();
+    //             foreach ($items as $key => $orderRawItem) {
+    //                 $_items[] = $self->getProductByID($orderRawItem['ID'], true);
+    //             }
+    //             return $_items;
+    //         }
+    //     );
+    //     $dataList = $app->getDB()->getDataList($config, array(), $callbacks);
+    //     return $dataList;
+    // }
 
     public function createProduct ($reqData) {
         global $app;
@@ -1147,7 +1148,8 @@ class products {
             if (isset($req->get['type'])) {
                 switch ($req->get['type']) {
                     case 'latest': {
-                        $resp = $this->getProducts_List_Latest($req->get);
+                        $resp = $this->getLatestProducts_List($req->get);
+                        // $resp = $this->getProducts_List_Latest($req->get);
                     }
                 }
             } else {

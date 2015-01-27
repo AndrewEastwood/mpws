@@ -9,7 +9,8 @@ define('plugin/shop/site/js/collection/listProductLatest', [
         url: APP.getApiLink({
             source: 'shop',
             fn: 'products',
-            type: 'latest'
+            type: 'latest',
+            limit: 16
         }),
         parse: function (data) {
             return data.items;

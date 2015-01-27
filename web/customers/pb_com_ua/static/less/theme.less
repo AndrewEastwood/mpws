@@ -1470,7 +1470,8 @@ i.fa {cursor: pointer;}
     width: 100%;
     height: 500px;
     background-size: contain;
-    opacity: 0.05;
+    // opacity: 0.05;
+    .opacity(0.05);
     max-width: 1210px;
     top: 0px;
     z-index: -1;
@@ -1485,5 +1486,42 @@ i.fa {cursor: pointer;}
   .bootstrap-dialog-message {
     overflow-y: auto;
     max-height: 400px;
+  }
+}
+
+.shop-page-home {
+  & > h3 {
+    color: #eee;
+  }
+  .product-title-name {
+    display: none;
+  }
+  .category-nav-item {
+    .well {
+      position: relative;
+      overflow: hidden;
+    }
+    a, h4, ul, ul li {
+      position: relative;
+      z-index: 100;
+      color: #333;
+    }
+    ul {
+      margin-left: 20px;
+    }
+  }
+  .category-image {
+    margin: 0px auto;
+    position: absolute;
+    max-width: 300px;
+    max-height: 300px;
+    margin-left: -100px;
+    .opacity(0.12);
+    z-index: 2;
+  }
+  .separator {
+    height: 20px;
+    clear: both;
+    margin: 0px 5px;
   }
 }

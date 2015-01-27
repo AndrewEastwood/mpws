@@ -9,20 +9,26 @@ define("plugin/shop/site/js/view/home", [
     var PageHome = Backbone.View.extend({
         className: 'shop-page-home',
         template: tpl,
+        listProductLatest: new ListProductLatest(),
+        categoryNav: new CategoryNavigation(),
         initialize: function () {
             // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
             // debugger;
-        },
-        render: function() {
-            var listProductLatest = new ListProductLatest();
-            var categoryNav = new CategoryNavigation();
-            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
-            this.$('.shop-products-latest').html(listProductLatest.el);
-            this.$('.shop-category-nav').html(categoryNav.el);
-            listProductLatest.collection.fetch({
+            this.listProductLatest.collection.fetch({
                 reset: true
             });
-            categoryNav.model.fetch();
+            this.categoryNav.model.fetch({
+                reset: true
+            });
+        },
+        render: function() {
+            this.$el.html(this.template(Utils.getHBSTemplateData(this)));
+            if (this.$('.shop-products-latest').is(':empty')) {
+                this.$('.shop-products-latest').html(this.listProductLatest.$el);
+            }
+            if (this.$('.shop-category-nav').is(':empty')) {
+                this.$('.shop-category-nav').html(this.categoryNav.$el);
+            }
             return this;
         }
     });

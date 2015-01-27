@@ -525,11 +525,41 @@ define("default/js/lib/handlebarsHelpers", [
             return options.inverse(this);
         }
     }
+    helpers.ifModulEq = function (value, mod, eq, opt) {
+        if (value % mod === eq) {
+            return opt.fn(this);
+        } else {
+            return opt.inverse(this);
+        }
+    }
+    // helpers.invoke = function () {
+    //     var fnToInvoke = [].slice.call(arguments, 0, 1);
+    //     var params = [].slice.call(arguments, 1);
+    //     if (!Handlebars.dfd) {
+    //         Handlebars.dfd = {};
+    //     }
+    //     Handlebars.dfd[fnToInvoke] = params;
+    //     if (Handlebars.partials[fnToInvoke]) {
+    //         Handlebars.partials[fnToInvoke].apply(null, params);
+    //     }
+    //     //     Handlebars.dfd[fnToInvoke].resolve.apply(null, params);
+    //     // } else {
+    //     //     Handlebars.dfd[fnToInvoke] = new $.Deferred();
+    //     // }
+    // }
 
 
     // Export helpers
     for (var helper in helpers)
         Handlebars.registerHelper(helper, helpers[helper]);
+
+    // Handlebars.registerDynamicHelper = function (key, fn) {
+    //     Handlebars.registerHelper(key, fn);
+    //     if (Handlebars.dfd[key]) {
+
+    //     }
+    // }
+
 
     return helpers;
 
