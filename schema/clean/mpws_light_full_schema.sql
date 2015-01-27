@@ -58,6 +58,7 @@ CREATE TABLE `mpws_customerSettings` (
   `Value` text COLLATE utf8_bin NOT NULL,
   `Status` enum('ACTIVE','DISABLED') COLLATE utf8_bin NOT NULL DEFAULT 'ACTIVE',
   `DateCreated` datetime NOT NULL,
+  UNIQUE KEY `ID_2` (`ID`),
   KEY `CustomerID` (`CustomerID`),
   KEY `ID` (`ID`),
   CONSTRAINT `mpws_customerSettings_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -217,8 +218,8 @@ CREATE TABLE `mpws_userAddresses` (
   PRIMARY KEY (`ID`),
   KEY `AccountID` (`UserID`),
   KEY `CustomerID` (`CustomerID`),
-  CONSTRAINT `mpws_userAddresses_ibfk_3` FOREIGN KEY (`UserID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `mpws_userAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `mpws_userAddresses_ibfk_2` FOREIGN KEY (`CustomerID`) REFERENCES `mpws_customer` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mpws_userAddresses_ibfk_3` FOREIGN KEY (`UserID`) REFERENCES `mpws_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -808,4 +809,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-26  2:09:35
+-- Dump completed on 2015-01-27  2:41:33
