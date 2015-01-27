@@ -29,7 +29,7 @@ define("plugin/account/toolbox/js/view/dashboard", [
             // debugger;
             if (google) {
 
-                var usersByStatus = this.model.get('overview_accounts');
+                var usersByStatus = this.model.get('overview_users');
 
                 var dounutData = [
                     ['Статус', 'К-сть']
@@ -49,24 +49,24 @@ define("plugin/account/toolbox/js/view/dashboard", [
                 var chart = new google.visualization.PieChart(this.$('.chart-users-interrelation').get(0));
                 chart.draw(data, optionsPie);
 
-                // accounts interrelation for last month by states
-                var accountsInstensityActive = this.model.get('accounts_intensity_last_month_active');
-                var accountsInstensityTemp = this.model.get('accounts_intensity_last_month_temp');
-                var accountsInstensityRemoved = this.model.get('accounts_intensity_last_month_removed');
+                // users interrelation for last month by states
+                var usersInstensityActive = this.model.get('users_intensity_last_month_active');
+                var usersInstensityTemp = this.model.get('users_intensity_last_month_temp');
+                var usersInstensityRemoved = this.model.get('users_intensity_last_month_removed');
 
                 var mergedOrdersDataOfIntensity = {};
 
-                _(accountsInstensityActive).each(function (count, date) {
+                _(usersInstensityActive).each(function (count, date) {
                     mergedOrdersDataOfIntensity[date] = mergedOrdersDataOfIntensity[date] || {};
                     mergedOrdersDataOfIntensity[date]['active'] = parseInt(count, 10);
                 });
 
-                _(accountsInstensityTemp).each(function (count, date) {
+                _(usersInstensityTemp).each(function (count, date) {
                     mergedOrdersDataOfIntensity[date] = mergedOrdersDataOfIntensity[date] || {};
                     mergedOrdersDataOfIntensity[date]['temp'] = parseInt(count, 10);
                 });
 
-                _(accountsInstensityRemoved).each(function (count, date) {
+                _(usersInstensityRemoved).each(function (count, date) {
                     mergedOrdersDataOfIntensity[date] = mergedOrdersDataOfIntensity[date] || {};
                     mergedOrdersDataOfIntensity[date]['removed'] = parseInt(count, 10);
                 });

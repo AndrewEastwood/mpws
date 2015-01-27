@@ -535,7 +535,7 @@ class dbquery {
             "condition" => array(
                 "Status" => $app->getDB()->createCondition("ACTIVE")
             ),
-            "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Status"),
+            "fields" => array("ID", "ParentID", "ExternalKey", "Name", "Image", "Status"),
         ));
         if ($selectedCategoryID !== false) {
             $config["condition"]["ID"] = $app->getDB()->createCondition($selectedCategoryID);

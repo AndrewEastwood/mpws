@@ -1,0 +1,21 @@
+{{#each data}}
+    <div class="col-md-4 col-xs-12">
+    {{#isNull ParentID}}
+        {{#if Image}}
+        <a href="{{bb_link ../../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">
+            <img src="{{Image.xs}}" class="uploaded-image" alt="{{Name}}">
+        </a>
+        {{/if}}
+        <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+        {{#if childNodes}}
+        <ul>
+            {{#each childNodes}}
+            <li>
+                <a href="{{bb_link ../../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+            </li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    {{/isNull}}
+    </div>
+{{/each}}

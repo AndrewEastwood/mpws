@@ -5,7 +5,8 @@ define('plugin/account/toolbox/js/model/dashboard', [
     var Dashboard = Backbone.Model.extend({
         url: APP.getApiLink({
             source: 'account',
-            fn: 'overview'
+            fn: 'stats',
+            type: 'overview'
         })
     });
 

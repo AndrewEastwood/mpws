@@ -247,7 +247,8 @@ class user {
 
     // stats
     // -----------------------------------------------
-    private function _getStats_UsersOverview () {
+    public function getStats_UsersOverview () {
+        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
@@ -256,20 +257,14 @@ class user {
         return $data;
     }
 
-    private function _getStats_UsersIntensityLastMonth ($status) {
+    public function getStats_UsersIntensityLastMonth ($status) {
+        global $app;
         if (!API::getAPI('system:auth')->ifYouCan('Admin')) {
             return null;
         }
         $config = dbquery::stat_UsersIntensityLastMonth($status);
         $data = $app->getDB()->query($config) ?: array();
         return $data;
-    }
-
-    public function get_overview (&$resp) {
-        $resp['overview_users'] = $this->_getStats_UsersOverview();
-        $resp['users_intensity_last_month_active'] = $this->_getStats_UsersIntensityLastMonth('ACTIVE');
-        $resp['users_intensity_last_month_temp'] = $this->_getStats_UsersIntensityLastMonth('TEMP');
-        $resp['users_intensity_last_month_removed'] = $this->_getStats_UsersIntensityLastMonth('REMOVED');
     }
 
     public function get (&$resp, $req) {

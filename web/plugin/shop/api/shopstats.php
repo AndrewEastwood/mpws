@@ -18,13 +18,13 @@ class shopstats {
         //     return $self->getOrders_ListPending($req);
         // };
         $sources['orders_list_pending'] = function ($req) use ($self) {
-            return API::getAPI('shop:orders')->getOrders_ListPending($req);
+            return API::getAPI('shop:orders')->getOrders_ListPending();
         };
         $sources['orders_list_todays'] = function ($req) use ($self) {
-            return API::getAPI('shop:orders')->getOrders_ListTodays($req);
+            return API::getAPI('shop:orders')->getOrders_ListTodays();
         };
         $sources['orders_list_expired'] = function ($req) use ($self) {
-            return API::getAPI('shop:orders')->getOrders_ListExpired($req);
+            return API::getAPI('shop:orders')->getOrders_ListExpired();
         };
         $sources['orders_intensity_last_month'] = function ($req) use ($self) {
             $res = array();

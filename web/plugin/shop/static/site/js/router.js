@@ -86,18 +86,12 @@ define("plugin/shop/site/js/router", [
 
         home: function () {
             APP.getCustomer().setBreadcrumb();
-            require(['plugin/shop/site/js/view/listProductLatest'], function (ListProductLatest) {
-                // create new view
-                var listProductLatest = new ListProductLatest();
-                // Site.placeholders.shop.productListOverview.html(listProductLatest.el);
-                // debugger;
-                listProductLatest.collection.fetch({
-                    reset: true
-                });
-
+            require(['plugin/shop/site/js/view/home'], function (PageHome) {
+                var pageHome = new PageHome();
+                pageHome.render();
                 Sandbox.eventNotify('global:content:render', {
                     name: 'CommonBodyCenter',
-                    el: listProductLatest.el
+                    el: pageHome.el
                 });
             });
 

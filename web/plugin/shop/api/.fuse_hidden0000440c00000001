@@ -297,7 +297,7 @@ class categories {
         $categories = $app->getDB()->query($config);
         $map = array();
         foreach ($categories as $key => $value)
-            $map[$value['ID']] = $this->__adjustCategory($value);
+            $map[$value['ID']] = $value;
 
         $tree = getTree($map);
 
