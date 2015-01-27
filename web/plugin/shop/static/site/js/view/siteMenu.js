@@ -4,10 +4,12 @@ define("plugin/shop/site/js/view/siteMenu", [
     'plugin/shop/site/js/view/menuCart',
     'plugin/shop/site/js/view/menuWishList',
     'plugin/shop/site/js/view/menuCompare',
-    'plugin/shop/site/js/view/menuPayment'
+    'plugin/shop/site/js/view/menuPayment',
+    'plugin/shop/site/js/view/menuWarranty',
+    'plugin/shop/site/js/view/menuShipping'
     // 'plugin/shop/site/js/view/menuProfileOrders',
 ], function (Sandbox, MenuCatalog, MenuCart, MenuWishList, MenuCompare,
-    MenuProfileOrders, MenuPayment) {
+    MenuPayment, MenuWarranty, MenuShipping, MenuProfileOrders) {
 
     return function (models) {
 
@@ -31,6 +33,14 @@ define("plugin/shop/site/js/view/siteMenu", [
         // inject shop menu (category menu)
         var menuPayment = new MenuPayment();
         menuPayment.render();
+
+        // inject shop menu (category menu)
+        var menuWarranty = new MenuWarranty();
+        menuWarranty.render();
+
+        // inject shop menu (category menu)
+        var menuShipping = new MenuShipping();
+        menuShipping.render();
 
         // inject into account page shop menu items
         // var menuProfileOrders = new MenuProfileOrders();
@@ -67,6 +77,16 @@ define("plugin/shop/site/js/view/siteMenu", [
                 {
                     name: 'CommonMenuLeft',
                     el: menuPayment.$el,
+                    append: true
+                },
+                {
+                    name: 'CommonMenuLeft',
+                    el: menuWarranty.$el,
+                    append: true
+                },
+                {
+                    name: 'CommonMenuLeft',
+                    el: menuShipping.$el,
                     append: true
                 }
             ]);

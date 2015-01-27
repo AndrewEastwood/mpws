@@ -3,8 +3,9 @@ define("plugin/shop/site/js/view/siteWidgets", [
     'plugin/shop/site/js/view/cartEmbedded',
     'plugin/shop/site/js/view/orderTrackingButton',
     'plugin/shop/site/js/view/widgetAddress',
-    'plugin/shop/site/js/view/widgetExchangeRates'
-], function (Sandbox, CartEmbedded, OrderTrackingButton, Address, ExchangeRates) {
+    'plugin/shop/site/js/view/widgetExchangeRates',
+    'plugin/shop/site/js/view/menuCatalogBar'
+], function (Sandbox, CartEmbedded, OrderTrackingButton, Address, ExchangeRates, CatalogBar) {
 
     var SiteWidgets = function (models) {
 
@@ -45,6 +46,14 @@ define("plugin/shop/site/js/view/siteWidgets", [
         renderItems.push({
             name: 'CommonWidgetsTop',
             el: addr.$el,
+            append: true
+        });
+
+        var cBar = new CatalogBar();
+        cBar.model.fetch({reset: true});
+        renderItems.push({
+            name: 'CommonWidgetsTop',
+            el: cBar.$el,
             append: true
         });
 

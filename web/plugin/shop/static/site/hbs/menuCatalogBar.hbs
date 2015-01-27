@@ -1,0 +1,22 @@
+<ul class="" role="menu" aria-labelledby="dropdownMenu">
+{{#each data}}
+    <li class="dropdown-submenu">
+        <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+        {{#if childNodes}}
+        <ul class="dropdown-menu">
+            {{#recursive childNodes}}
+            <li>
+                <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+                {{#if childNodes}}
+                <ul>
+                    {{{recursive childNodes}}}
+                </ul>
+                {{/if}}
+            </li>
+            {{/recursive}}
+        </ul>
+        {{/if}}
+    </li>
+{{/each}}
+</ul>
+<!--end nav-->
