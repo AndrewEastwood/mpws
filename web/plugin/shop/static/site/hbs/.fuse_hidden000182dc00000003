@@ -1,0 +1,24 @@
+{{#each data}}
+    {{#if childNodes}}
+    <li>
+        <a href="{{bb_link ../instances.shop.urls.shop_catalog_category category=ExternalKey}}" class="dropdown-toggle" data-toggle="dropdown">{{Name}}</a>
+        <ul>
+            <li class="dropdown-submenu">
+                <div class="row">
+                    {{#recursive childNodes}}
+                    <ul class="col-sm-2 list-unstyled">
+                        <li>
+                            <a href="{{bb_link ../../instances.shop.urls.shop_catalog_category category=ExternalKey}}">{{Name}}</a>
+                            {{#if childNodes}}
+                            {{{recursive childNodes}}}
+                            {{/if}}
+                        </li>
+                    </ul>
+                    {{/recursive}}
+                </div>
+            </li>
+        </ul>
+    </li>
+    {{/if}}
+{{/each}}
+<!--end nav-->

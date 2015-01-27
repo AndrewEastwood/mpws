@@ -6,10 +6,11 @@ define("plugin/shop/site/js/view/menuCatalogBar", [
 ], function (Backbone, modelCatalogStructureMenu, Utils, tpl) {
 
     var MenuCatalogBar = Backbone.View.extend({
-        className: 'shop-catelog-bar',
+        // tagName: 'ul',
+        className: 'navbar yamm navbar-default navbar-fixed-top shop-catalog-bar',
         template: tpl,
-        model: new modelCatalogStructureMenu(),
         initialize: function () {
+            this.model = new modelCatalogStructureMenu();
             this.model.on('change', this.render, this);
         },
         render: function() {

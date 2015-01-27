@@ -11,6 +11,14 @@ define("plugin/shop/site/js/view/siteWidgets", [
 
         var renderItems = [];
 
+        var addr = new Address();
+        addr.collection.fetch({reset: true});
+        renderItems.push({
+            name: 'CommonWidgetsTop',
+            el: addr.$el,
+            append: true
+        });
+
         // show exchange rates selector
         // debugger;
         if (APP.instances.shop.settings.ShowSiteCurrencySelector) {
@@ -38,14 +46,6 @@ define("plugin/shop/site/js/view/siteWidgets", [
         renderItems.push({
             name: 'CommonWidgetsTop',
             el: cartEmbedded.$el,
-            append: true
-        });
-
-        var addr = new Address();
-        addr.collection.fetch({reset: true});
-        renderItems.push({
-            name: 'CommonWidgetsTop',
-            el: addr.$el,
             append: true
         });
 

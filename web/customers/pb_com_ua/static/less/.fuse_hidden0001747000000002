@@ -1392,8 +1392,8 @@ i.fa {cursor: pointer;}
 .address-widget {
   margin-bottom: 10px;
   text-align: left;
-  // background: rgba(80, 80, 80, 0.5);
-  // border-radius: 5px;
+  background: rgba(80, 80, 80, 0.5);
+  border-radius: 5px;
   color: #fff;
   padding: 5px 10px;
   .pull-left();
@@ -1447,9 +1447,8 @@ i.fa {cursor: pointer;}
 
 .MPWSLayout {
   .MPWSWidgetsTop {
-    min-height: 120px;
-    margin: 0px 10px 10px;
-    padding: 0px;
+    height: 120px;
+    margin-left: 10px;
   }
 }
 
@@ -1529,80 +1528,25 @@ i.fa {cursor: pointer;}
 
 
 
-.shop-catalog-bar {
-  clear: both;
-  padding: 20px 0px 20px;
-  background: none;
-  border: 0px none;
-  // background: #212121;
-  // background: -webkit-linear-gradient(top,#333 0%,#181818);
-  // background: -moz-linear-gradient(top,#333333 0%,#181818);
-  // background: -o-linear-gradient(top,#333333 0%,#181818);
-  // background: -ms-linear-gradient(top,#333333 0%,#181818);
-  // background: linear-gradient(top,#333333 0%,#181818);
-  // border: 1px solid #171717;
-  // -webkit-box-shadow: inset 0px 0px 2px rgba(40, 40, 40, 0.7);
-  // -moz-box-shadow: inset 0px 0px 2px rgba(40,40,40,0.7);
-  // box-shadow: inset 0px 0px 2px rgba(40, 40, 40, 0.7);
-  .catalog-title {
-    margin: 0px;
-    display: block;
-    border-bottom: 1px solid #aaa;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
+.shop-catelog-bar {
+  background: #212121;
+  background: -webkit-linear-gradient(top,#333 0%,#181818);
+  background: -moz-linear-gradient(top,#333333 0%,#181818);
+  background: -o-linear-gradient(top,#333333 0%,#181818);
+  background: -ms-linear-gradient(top,#333333 0%,#181818);
+  background: linear-gradient(top,#333333 0%,#181818);
+  border: 1px solid #171717;
+  -webkit-box-shadow: inset 0px 0px 2px rgba(40, 40, 40, 0.7);
+  -moz-box-shadow: inset 0px 0px 2px rgba(40,40,40,0.7);
+  box-shadow: inset 0px 0px 2px rgba(40, 40, 40, 0.7);
+  li {
+    float: left;
+    margin: 0;
+    border: none;
+    -webkit-transition: background 0.5s ease;
+    -moz-transition: background 0.5s ease;
+    -o-transition: background 0.5s ease;
+    -ms-transition: background 0.5s ease;
+    transition: background 0.5s ease;
   }
-  .navbar-nav > li > a {
-    color: #CF7400;
-    text-decoration: underline;
-  }
-  .navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
-    color: #9C5700;
-  }
-  .navbar-nav > .open > a, .navbar-nav > .open > a:hover, .navbar-nav > .open > a:focus {
-    background: #fff;
-    border: 0px none;
-  }
-  .navbar-nav > li > .dropdown-menu {
-    border: 0px none;
-    margin-top: -20px;
-    width: 100%;
-    left: 0;
-  }
-  // li {
-  //   float: left;
-  //   margin: 0;
-  //   border: none;
-  //   -webkit-transition: background 0.5s ease;
-  //   -moz-transition: background 0.5s ease;
-  //   -o-transition: background 0.5s ease;
-  //   -ms-transition: background 0.5s ease;
-  //   transition: background 0.5s ease;
-  // }
-}
-
-
-/*!
- * Yamm!3 - Yet another megamenu for Bootstrap 3
- * http://geedmo.github.com/yamm3
- * 
- * @geedmo - Licensed under the MIT license
- */
-.yamm .nav,
-.yamm .collapse,
-.yamm .dropup,
-.yamm .dropdown {
-  position: static;
-}
-.yamm .container {
-  position: relative;
-}
-.yamm .dropdown-menu {
-  left: auto;
-}
-.yamm .yamm-content {
-  padding: 20px 30px;
-}
-.yamm .dropdown.yamm-fw .dropdown-menu {
-  left: 0;
-  right: 0;
 }

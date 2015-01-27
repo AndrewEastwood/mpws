@@ -14,8 +14,8 @@ define("plugin/shop/site/js/view/siteMenu", [
     return function (models) {
 
         // inject shop menu (category menu)
-        var menuCatalog = new MenuCatalog();
-        menuCatalog.model.fetch();
+        // var menuCatalog = new MenuCatalog();
+        // menuCatalog.model.fetch();
 
         // inject shop menu (category menu)
         var menuCart = new MenuCart({
@@ -54,11 +54,11 @@ define("plugin/shop/site/js/view/siteMenu", [
         Sandbox.eventSubscribe('global:loader:complete', function () {
             // placeholders.common.menu
             Sandbox.eventNotify('global:content:render', [
-                {
-                    name: 'CommonMenuLeft',
-                    el: menuCatalog.$el,
-                    append: true
-                },
+                // {
+                //     name: 'CommonMenuLeft',
+                //     el: menuCatalog.$el,
+                //     append: true
+                // },
                 {
                     name: 'CommonMenuLeft',
                     el: menuCart.$el,
