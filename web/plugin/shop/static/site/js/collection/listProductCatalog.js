@@ -1,10 +1,11 @@
 define('plugin/shop/site/js/collection/listProductCatalog', [
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'default/js/lib/cache',
     'plugin/shop/site/js/model/product',
     'plugin/shop/common/js/lib/utils',
     'default/js/lib/jquery.cookie',
-], function (_, Backbone, ModelProduct, ShopUtils) {
+], function (_, Backbone, Cache, ModelProduct, ShopUtils) {
 
     var ListProductCatalog = Backbone.Collection.extend({
         model: ModelProduct,
@@ -27,7 +28,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
 
                 // filter_viewItemsOnPage: 3,
 
-                filter_viewPageNum: reset ? null : this.restoreFilter('filter_viewPageNum') || 1,
+                filter_viewPageNum: 1,//reset ? null : this.restoreFilter('filter_viewPageNum') || 1,
 
                 // common
                 // these options are common for all existed categories
@@ -51,11 +52,13 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             return this;
         },
         generateFilterStorageKey: function (filterKey) {
-            return Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
+            return filterKey;
+            // return Backbone.history.fragment.replace(/\//gi, '_') + '_' + filterKey;
         },
         restoreFilter: function (filterKey) {
             var key = this.generateFilterStorageKey(filterKey);
-            return this.savedFilters[key] || null;
+            return Cache.get(filterKey) || null;
+            // return this.savedFilters[key] || null;
         },
         getFilter: function (filterKey) {
             return this.filter.filterOptionsApplied[filterKey];
@@ -63,7 +66,8 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
         setFilter: function (filterKey, value) {
             var key = this.generateFilterStorageKey(filterKey);
             this.filter.filterOptionsApplied[filterKey] = value;
-            this.savedFilters[key] = value;
+            Cache.set(filterKey, this.filter.filterOptionsApplied[filterKey]);
+            // this.savedFilters[key] = value;
         },
         url: function () {
             var _options = {};
@@ -116,7 +120,7 @@ define('plugin/shop/site/js/collection/listProductCatalog', [
             // pagination
             var pagintaion = {items:[]};
             pagintaion.current = this.filter.filterOptionsApplied.filter_viewPageNum;
-            pagintaion.pages = Math.round(filter.info.count / this.filter.filterOptionsApplied.filter_viewItemsOnPage + 0.49);
+            pagintaion.pages = Math.ceil(filter.info.count / this.filter.filterOptionsApplied.filter_viewItemsOnPage);
             var leftDelata = 0;
             var left = 1;
             if (pagintaion.current - 5 < 0) {

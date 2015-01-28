@@ -22,10 +22,10 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         lang: lang,
         events: {
             "change .selectpicker": 'filterProducts_Dropdowns',
-            "change input[name^='filter_']": 'filterProducts_Other',
-            // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_Other',
+            "change input[name^='filter_']": 'filterProducts_InputChecked',
+            // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_InputChecked',
             "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
-            "slideStop": 'filterProducts_PriceChanged',
+            "slideStop input.slider": 'filterProducts_PriceChanged',
             "click .shop-filter-cancel": 'filterProducts_CancelFilter'
         },
         initialize: function (options) {
@@ -69,9 +69,10 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                 selection: 'after',
                 value: [data.filter.filterOptionsApplied.filter_commonPriceMin, data.filter.filterOptionsApplied.filter_commonPriceMax],
                 formatter: function (val) {
-                    var activeCurr = APP.instances.shop.settings._user.activeCurrency;
-                    var rate = APP.instances.shop.settings.currencyList[activeCurr];
-                    if (rate && val && val[0]) {
+                    // debugger
+                    if (val instanceof Array) {
+                        var activeCurr = APP.instances.shop.settings._user.activeCurrency;
+                        var rate = APP.instances.shop.settings.currencyList[activeCurr];
                         var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
                         var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
                         var $leftEdgeTooltip = $('<span>').addClass('left').text(Handlebars.helpers.currency(leftEdge, {hash:{display:APP.instances.shop.settings.currencyList, currency: activeCurr}}));
@@ -79,7 +80,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
                         var tooltip = [$leftEdgeTooltip, $rightEdgeTooltip];
                         return tooltip;
                     }
-                    return false;
+                    return val;
                 }
             });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
@@ -132,8 +133,8 @@ define("plugin/shop/site/js/view/listProductCatalog", [
 
             return this;
         },
-        filterProducts_Other: function (event) {
-            // console.log('filterProducts_Other');
+        filterProducts_InputChecked: function (event) {
+            // console.log('filterProducts_InputChecked');
             // event.preventDefault();
             // if (event && event.stopPropagation)
             //     event.stopPropagation();
@@ -177,6 +178,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         },
         filterProducts_PriceChanged: function (event) {
             // console.log(event);
+            // debugger;
             if (event && event.stopPropagation)
                 event.stopPropagation();
             if (event && event.preventDefault)
@@ -202,26 +204,30 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function (event) {
-            // console.log('filterProducts_ListItemClicked');
+            console.log('filterProducts_ListItemClicked');
+            // debugger;
+            var $el = $(event.target);
+            if ($el.parents('a').attr('rel') === 'category' || $el.attr('rel') === 'category') {
+                return;
+            }
             if ($(event.target).is(':input')) {
                 return;
             }
-            var $el = $(event.target);
             var _innerCheckbox = null;
             if ($el.is(':checkbox')) {
                 _innerCheckbox = $el;
             } else {
                 _innerCheckbox = $el.find('input[type="checkbox"]');
             }
+            // if ($el.parents('a').attr('rel') !== 'category' && $el.attr('rel') !== 'category') {
             if (event && event.stopPropagation)
                 event.stopPropagation();
             if (event && event.preventDefault)
                 event.preventDefault();
-            // debugger;
+            //     return false;
+            // }
             _innerCheckbox.prop('checked', !_innerCheckbox.prop('checked'));
             _innerCheckbox.trigger('change');
-            if ($el.parents('a').attr('rel') !== 'category' && $el.attr('rel') !== 'category')
-                return false;
         }
     });
 

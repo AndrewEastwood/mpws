@@ -23,7 +23,8 @@ module.exports = function(grunt) {
 
             var _dirDefaultLess = 'static/less';
 
-            var _srcLessCustomer = '../web/customers/' + customer + '/' + _dirAppLess + '/';
+            var _srcLessCustomerDir = '../web/customers/';
+            var _srcLessCustomer = customer + '/' + _dirAppLess + '/';
             // var _srcLessCustomerCommon = '../customer/' + customer + '/' + _dirCommonLess + '/';
             var _srcLessDefault = '../web/base/' + version + '/' + _dirDefaultLess;
 
@@ -39,6 +40,7 @@ module.exports = function(grunt) {
                 // dirCommonLess : _dirCommonLess,
                 dirDefaultLess : _dirDefaultLess,
                 srcLessCustomer : _srcLessCustomer,
+                srcLessCustomerDir : _srcLessCustomerDir,
                 // srcLessCustomerCommon : _srcLessCustomerCommon,
                 srcLessDefault : _srcLessDefault,
                 devLessCustomer : _devLessCustomer,
@@ -53,7 +55,7 @@ module.exports = function(grunt) {
             _baseConfigLess['development'] = {
                 options: {
                     paths: [
-                        _paths.srcLessCustomer,
+                        _paths.srcLessCustomerDir,
                         _paths.srcLessDefault
                     ]
                 },
@@ -62,34 +64,35 @@ module.exports = function(grunt) {
                     {
                         // no need for files, the config below should work
                         expand: true,
-                        cwd: _paths.srcLessCustomer,
-                        src: ["**/*", "*.less"],
+                        cwd: _paths.srcLessCustomerDir,
+                        src: [_paths.srcLessCustomer + "**/*", _paths.srcLessCustomer + "*.less"],
                         dest: _paths.devLessCustomer,
                         ext: '.css'
                     }
                 ]
             };
 
-            _baseConfigLess['production'] = {
-                options: {
-                    paths: [
-                        _paths.srcLessCustomer,
-                        _paths.srcLessDefault
-                    ],
-                    cleancss: true
-                },
-                files: [
-                    // target name
-                    {
-                        // no need for files, the config below should work
-                        expand: true,
-                        cwd: _paths.srcLessCustomer,
-                        src: ["**/*", "*.less"],
-                        dest: _paths.buildLessCustomer,
-                        ext: '.css'
-                    }
-                ]
-            };
+            // unless we have production ready we keep this commented
+            // _baseConfigLess['production'] = {
+            //     options: {
+            //         paths: [
+            //             _paths.srcLessCustomerDir,
+            //             _paths.srcLessDefault
+            //         ],
+            //         cleancss: true
+            //     },
+            //     files: [
+            //         // target name
+            //         {
+            //             // no need for files, the config below should work
+            //             expand: true,
+            //             cwd: _paths.srcLessCustomerDir,
+            //             src: [_paths.srcLessCustomer + "**/*", _paths.srcLessCustomer + "*.less"],
+            //             dest: _paths.buildLessCustomer,
+            //             ext: '.css'
+            //         }
+            //     ]
+            // };
 
         }
 
@@ -99,8 +102,8 @@ module.exports = function(grunt) {
             _baseConfigWatch['less'] = {
                 // Which files to watch (all .less files recursively in the less directory)
                 files: [
-                    _paths.srcLessCustomer + '*.less',
-                    _paths.srcLessCustomer + '**/*.less',
+                    _paths.srcLessCustomerDir + _paths.srcLessCustomer + '*.less',
+                    _paths.srcLessCustomerDir + _paths.srcLessCustomer + '**/*.less',
                     _paths.srcLessDefault + '*.less',
                     _paths.srcLessDefault + '**/*.less'
                 ],

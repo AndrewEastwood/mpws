@@ -792,6 +792,7 @@
 	 			var formattedTooltipVal;
 
 				if (this.options.range) {
+					// debugger;
 					formattedTooltipVal = this.options.formatter(this.options.value);
 					this._setText(this.tooltipInner, formattedTooltipVal);
 					this.tooltip.style[this.stylePos] = (positionPercentages[1] + positionPercentages[0])/2 + '%';
