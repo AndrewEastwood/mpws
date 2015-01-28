@@ -78,6 +78,7 @@ class settings {
         );
         $dataList = $app->getDB()->getDataList($config, $options, $callbacks);
         $dataList['availableConversions'] = API::getAPI('shop:exchangerates')->getAvailableConversionOptions();
+        $dataList['availableMutipliers'] = API::getAPI('shop:exchangerates')->getActiveRateMultipliers();
         return $dataList;
     }
 

@@ -2,6 +2,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'default/js/lib/sandbox',
     'default/js/lib/underscore',
     'default/js/lib/backbone',
+    'default/js/lib/handlebars',
     'default/js/lib/utils',
     'plugin/shop/site/js/collection/listProductCatalog',
     'plugin/shop/site/js/view/productItemShort',
@@ -13,7 +14,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
     'default/js/lib/bootstrap-combobox',
     'default/js/lib/bootstrap-slider',
     "default/js/lib/jquery.cookie"
-], function (Sandbox, _, Backbone, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
+], function (Sandbox, _, Backbone, Handlebars, Utils, CollListProductCatalog, ProductItemShort, dlg, tpl, lang) {
 
     var ListProductCatalog = Backbone.View.extend({
         className: 'shop-product-list shop-product-list-catalog',
@@ -24,14 +25,20 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             "change input[name^='filter_']": 'filterProducts_Other',
             // "change .list-group-category-availability input[name^='filter_']": 'filterProducts_Other',
             "click a.list-group-item:not(.disabled)": 'filterProducts_ListItemClicked',
-            "slideStop .slider": 'filterProducts_PriceChanged',
-            "click .shop-filter-cancel": 'filterProducts_CancelFilter',
-            "click .shop-load-more": 'filterProducts_LoadMore',
+            "slideStop": 'filterProducts_PriceChanged',
+            "click .shop-filter-cancel": 'filterProducts_CancelFilter'
         },
         initialize: function (options) {
+            _.bindAll(this, 'render', 'switchCurrency');
             this.collection = new CollListProductCatalog(options.categoryID);
             this.collection.on('sync', this.render, this);
             this.collection.on('reset', this.render, this);
+            Backbone.on('changed:plugin-shop-currency', this.switchCurrency);
+        },
+        switchCurrency: function () {
+            if (this.filterPrice && this.filterPrice.slider) {
+                this.filterPrice.slider('refresh');
+            }
         },
         render: function () {
             // debugger;
@@ -54,7 +61,27 @@ define("plugin/shop/site/js/view/listProductCatalog", [
 
             // // enhance ui components
             // debugger;
-            var _filterPrice = this.$('.slider').slider();
+            this.filterPrice = this.$('.slider').slider({
+                tooltip: 'always',
+                min: data.filter.filterOptionsAvailable.filter_commonPriceMin,
+                max: data.filter.filterOptionsAvailable.filter_commonPriceMax,
+                step: 1,
+                selection: 'after',
+                value: [data.filter.filterOptionsApplied.filter_commonPriceMin, data.filter.filterOptionsApplied.filter_commonPriceMax],
+                formatter: function (val) {
+                    var activeCurr = APP.instances.shop.settings._user.activeCurrency;
+                    var rate = APP.instances.shop.settings.currencyList[activeCurr];
+                    if (rate && val && val[0]) {
+                        var leftEdge = val[0].toFixed(2) * rate.fromBaseToThis;
+                        var rightEdge = val[1].toFixed(2) * rate.fromBaseToThis;
+                        var $leftEdgeTooltip = $('<span>').addClass('left').text(Handlebars.helpers.currency(leftEdge, {hash:{display:APP.instances.shop.settings.currencyList, currency: activeCurr}}));
+                        var $rightEdgeTooltip = $('<span>').addClass('right').text(Handlebars.helpers.currency(rightEdge, {hash:{display:APP.instances.shop.settings.currencyList, currency: activeCurr}}));
+                        var tooltip = [$leftEdgeTooltip, $rightEdgeTooltip];
+                        return tooltip;
+                    }
+                    return false;
+                }
+            });
             var _filterDropdowns = this.$('.selectpicker').selectpicker();
 
             APP.getCustomer().setBreadcrumb({
@@ -106,8 +133,7 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             return this;
         },
         filterProducts_Other: function (event) {
-            console.log('filterProducts_Other');
-
+            // console.log('filterProducts_Other');
             // event.preventDefault();
             // if (event && event.stopPropagation)
             //     event.stopPropagation();
@@ -136,7 +162,6 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.collection.setFilter(_targetFilterName, _filterOptions[_targetFilterName]);
 
             this.collection.fetch();
-
             // return false;
         },
         filterProducts_Dropdowns: function (event) {
@@ -152,8 +177,12 @@ define("plugin/shop/site/js/view/listProductCatalog", [
         },
         filterProducts_PriceChanged: function (event) {
             // console.log(event);
+            if (event && event.stopPropagation)
+                event.stopPropagation();
+            if (event && event.preventDefault)
+                event.preventDefault();
             // debugger;
-            var _priceRange = $(event.target).data('value');
+            var _priceRange = this.filterPrice.slider('getValue');// $(event.target).slider('getValue');
 
             var filter_commonPriceMin = _priceRange[0];
             var filter_commonPriceMax = _priceRange[1];
@@ -162,16 +191,18 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             this.collection.setFilter('filter_commonPriceMin', filter_commonPriceMin);
             this.collection.setFilter('filter_commonPriceMax', filter_commonPriceMax);
 
-            this.$('.shop-filter-price-start').text(filter_commonPriceMin);
-            this.$('.shop-filter-price-end').text(filter_commonPriceMax);
+            // this.$('.shop-filter-price-start').text(filter_commonPriceMin);
+            // this.$('.shop-filter-price-end').text(filter_commonPriceMax);
 
             this.collection.fetch();
+            return false;
         },
         filterProducts_CancelFilter: function () {
+            // console.log('cancel filtering');
             this.collection.resetFilter().fetch({reset: true});
         },
         filterProducts_ListItemClicked: function (event) {
-            console.log('filterProducts_ListItemClicked');
+            // console.log('filterProducts_ListItemClicked');
             if ($(event.target).is(':input')) {
                 return;
             }
@@ -191,13 +222,6 @@ define("plugin/shop/site/js/view/listProductCatalog", [
             _innerCheckbox.trigger('change');
             if ($el.parents('a').attr('rel') !== 'category' && $el.attr('rel') !== 'category')
                 return false;
-        },
-        filterProducts_LoadMore: function () {
-            // var _filter_viewPageNum = this.collection.getFilter('filter_viewPageNum');
-            // _filter_viewPageNum++;
-            // this.collection.setFilter('filter_viewPageNum', _filter_viewPageNum);
-            // // debugger;
-            // this.collection.fetch({update: true, remove: false});
         }
     });
 

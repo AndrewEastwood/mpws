@@ -80,23 +80,27 @@
             {{/mpwsIsNotEmpty}}
 
             {{#isnt filter.filterOptionsAvailable.filter_commonPriceMax filter.filterOptionsAvailable.filter_commonPriceMin }}
-            <div class="shop-component-catalog-filtering">
+            <div class="shop-component-catalog-filtering shop-component-catalog-filtering-price">
                 <div class="title row">
                     <strong><span>Ціна:</span></strong>
                 </div>
                 <div class="content row">
                     <div class="spacer"></div>
                     <div class="subtitle row">
-                            <span>від</span>
-                            <span class="shop-filter-price-start mpwsPrice">{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMin}}</span>
-                            <span>грн. </span>
-                            <span> до </span>
-                            <span class="shop-filter-price-end mpwsPrice">{{mpwsToInt filter.filterOptionsApplied.filter_commonPriceMax}}</span>
-                            <span>грн. </span>
-                            <span>включно</span>
+                        <span class="shop-filter-price shop-filter-price-start">
+                        {{#each filter.info.priceEdgesAppliedConverted.min}}
+                            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                        {{/each}}
+                        </span>
+                        <span class="shop-filter-price shop-filter-price-end">
+                        {{#each filter.info.priceEdgesAppliedConverted.max}}
+                            <strong class="moneyValue {{@key}}{{#isnt ../instances.shop.settings._user.activeCurrency @key}} hidden{{/isnt}}">{{currency this currency=@key display=../instances.shop.settings.currencyList}}</strong>
+                        {{/each}}
+                        </span>
                     </div>
                     <div class="row">
-                        <input type="text" class="form-control slider" value=""
+                        <input type="text" class="form-control slider">
+                        <input type="text" class="form-control hidden old_slider" value=""
                             data-slider-min="{{mpwsToInt filter.filterOptionsAvailable.filter_commonPriceMin}}"
                             data-slider-max="{{mpwsToInt filter.filterOptionsAvailable.filter_commonPriceMax}}"
                             data-slider-step="1"
@@ -104,7 +108,7 @@
                             data-slider-selection="after">
                     </div>
                     <div class="spacer"></div>
-            </div>handle
+            </div>
             </div>
             {{/isnt}}
 

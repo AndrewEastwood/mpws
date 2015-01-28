@@ -323,6 +323,14 @@ class exchangerates {
         $rate = $app->getDB()->query($config) ?: array();
         return $rate;
     }
+    public function getActiveRateMultipliers () {
+        $baseRate = $this->getDefaultDBPriceCurrency();
+        $rates = $this->getAvailableConversionOptions();
+        foreach ($rates as $key => $value) {
+            $rates[$key] = 1 / $value;
+        }
+        return $rates;
+    }
 
     // -----------------------------------------------
     // -----------------------------------------------

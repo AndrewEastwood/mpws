@@ -24,6 +24,7 @@ define('plugin/shop/common/js/collection/settings', [
 
         parse: function (data) {
             this.availableConversions = data.availableConversions;
+            this.availableMutipliers = data.availableMutipliers;
             return data.items;
         },
 
@@ -96,7 +97,9 @@ define('plugin/shop/common/js/collection/settings', [
                     currencyList[model.get('Property')] = {
                         name: model.get('Property'),
                         text: model.get('Label'),
-                        showBeforeValue: model.get('Value') === "1"
+                        showBeforeValue: model.get('Value') === "1",
+                        fromBaseToThis: that.availableConversions[model.get('Property')],
+                        fromThisToBase: that.availableMutipliers[model.get('Property')]
                     };
                 }
             });

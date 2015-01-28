@@ -115,8 +115,8 @@ class catalog {
         //filter: get category price edges
         $dataConfigCategoryPriceEdges = dbquery::getShopCatalogPriceEdges(implode(',', $cetegoriesIDs));
         $dataCategoryPriceEdges = $app->getDB()->query($dataConfigCategoryPriceEdges);
-        $filterOptionsAvailable['filter_commonPriceMax'] = floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10;
-        $filterOptionsAvailable['filter_commonPriceMin'] = floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10;
+        $filterOptionsAvailable['filter_commonPriceMax'] = intval(floatval($dataCategoryPriceEdges['PriceMax'] ?: 0) + 10);
+        $filterOptionsAvailable['filter_commonPriceMin'] = intval(floatval($dataCategoryPriceEdges['PriceMin'] ?: 0) - 10);
         if ($filterOptionsAvailable['filter_commonPriceMin'] < 0) {
             $filterOptionsAvailable['filter_commonPriceMin'] = 0;
         }
@@ -384,7 +384,15 @@ class catalog {
             'filterOptionsApplied' => $filterOptionsApplied,
             'info' => array(
                 "count" => $currentProductCount,
-                "category" => API::getAPI('shop:categories')->getCategoryByID($categoryID)
+                "category" => API::getAPI('shop:categories')->getCategoryByID($categoryID),
+                "priceEdgesAvailableConverted" => array(
+                    "min" => API::getAPI('shop:exchangerates')->convertToRates($filterOptionsAvailable['filter_commonPriceMin']),
+                    "max" => API::getAPI('shop:exchangerates')->convertToRates($filterOptionsAvailable['filter_commonPriceMax'])
+                ),
+                "priceEdgesAppliedConverted" => array(
+                    "min" => API::getAPI('shop:exchangerates')->convertToRates($filterOptionsApplied['filter_commonPriceMin']),
+                    "max" => API::getAPI('shop:exchangerates')->convertToRates($filterOptionsApplied['filter_commonPriceMax'])
+                )
             )
         );
         $data['_location'] = API::getAPI('shop:categories')->getCategoryLocationByCategoryID($categoryID);
