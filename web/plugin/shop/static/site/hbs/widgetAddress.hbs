@@ -47,13 +47,17 @@
             {{#each_upto Contacts 1}}
             <span class="preffix">{{label}}:</span> <span class="contact">{{contact}}</span>
             {{/each_upto}}
+            {{#isnt ../../extras.addressCount 1}}
             <span class="caret"></span>
+            {{/isnt}}
         </span>
+        {{#isnt ../../extras.addressCount 1}}
         <ul class="dropdown-menu" role="menu">
             {{#each Contacts}}
             <li><a href="javascript://"><span class="preffix">{{label}}:</span> <span class="contact" itemprop="telephone">{{contact}}</span></a></li>
             {{/each}}
         </ul>
+        {{/isnt}}
     </div>
     {{/if}}
 </div>

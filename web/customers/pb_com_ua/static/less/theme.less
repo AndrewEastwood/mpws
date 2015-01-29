@@ -21,6 +21,27 @@
 @buttonTextColor: #333;
 @buttonColorHover: darken(@mainColor, 10%);
 
+.MPWSLayout {
+  .MPWSWidgetsTop {
+    min-height: 120px;
+    margin: 0px 10px 10px;
+    padding: 0px;
+  }
+  .banner-decor {
+    display: none;
+    background: url('@{imgPath}banner.png') no-repeat center;
+    position: absolute;
+    width: 100%;
+    height: 273px;
+    background-size: contain;
+    // opacity: 0.05;
+    .opacity(0.05);
+    max-width: 1210px;
+    top: 0px;
+    z-index: -1;
+  }
+}
+
 .actions {
   background: none;
   a {
@@ -168,7 +189,13 @@ select, select option {cursor: pointer;}
 
 /* components */
 .breadcrumb {
-  background-color: rgba(47, 47, 47, 0.6);
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 0px;
+  a, li, li.active {color: #fff;}
+  li.active {cursor: default;}
+  & > li + li:before {
+    color: #FFF;
+  }
 }
 
 .well {
@@ -190,10 +217,11 @@ select, select option {cursor: pointer;}
 .MPWSPageHeader {
   .nav > li > a {
     display: block;
+    color: #fff;
   }
   .nav > li > a:hover, .nav > li > a:focus {
       text-shadow: 0px 0px 3px @mainColor;
-      color: #333;
+      color: #ff;
   }
   .nav > li > a:after {
     border-bottom: 2px solid @textForegroundColor;
@@ -643,6 +671,7 @@ i.fa {cursor: pointer;}
       }
     }
   }
+  .btn sub {font-size: 90%;}
 }
 
 .shop-products-compare {
@@ -1499,29 +1528,6 @@ i.fa {cursor: pointer;}
   margin-bottom: 10px;
 }
 
-.MPWSBannerHeaderTop {
-  color: red;
-}
-.MPWSLayout {
-  .MPWSWidgetsTop {
-    min-height: 120px;
-    margin: 0px 10px 10px;
-    padding: 0px;
-  }
-  .banner-decor {
-    background: url('@{imgPath}banner.png') repeat-x -72px 0px;
-    position: absolute;
-    width: 100%;
-    height: 500px;
-    background-size: contain;
-    // opacity: 0.05;
-    .opacity(0.05);
-    max-width: 1210px;
-    top: 0px;
-    z-index: -1;
-  }
-}
-
 .alert-not-all-products-promo {
   margin-top: 25px;
 }
@@ -1547,6 +1553,9 @@ i.fa {cursor: pointer;}
 .shop-page-home {
   & > h3 {
     color: #eee;
+    &:first-child {
+      margin-top: 0px;
+    }
   }
   .product-title-name {
     display: inline;
