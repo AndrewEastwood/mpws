@@ -64,8 +64,8 @@ module.exports = function(grunt) {
                     {
                         // no need for files, the config below should work
                         expand: true,
-                        cwd: _paths.srcLessCustomerDir,
-                        src: [_paths.srcLessCustomer + "**/*", _paths.srcLessCustomer + "*.less"],
+                        cwd: _paths.srcLessCustomerDir + _paths.srcLessCustomer,
+                        src: [ "**/*", "*.less"],
                         dest: _paths.devLessCustomer,
                         ext: '.css'
                     }
