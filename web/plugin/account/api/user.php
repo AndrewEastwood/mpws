@@ -3,6 +3,7 @@ namespace web\plugin\account\api;
 
 use \engine\lib\api as API;
 use \engine\lib\secure as Secure;
+use \engine\lib\validate as Validate;
 
 class user {
 
@@ -119,6 +120,7 @@ class user {
                 $app->getDB()->commit();
 
                 $result = $this->getUserByID($UserID);
+
 
                 $success = true;
             } catch (Exception $e) {

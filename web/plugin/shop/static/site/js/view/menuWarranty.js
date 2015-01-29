@@ -17,6 +17,7 @@ define("plugin/shop/site/js/view/menuWarranty", [
         },
         showPopup: function () {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),

@@ -24,6 +24,7 @@ class permissions {
     public function createPermissions ($userID, $permissions = array()) {
         global $app;
         $perms = array_merge(self::getNewPermissions(), $permissions);
+        $perms['UserID'] = $userID;
         $query = dbquery::addPermissions($perms);
         $PermissionID = $app->getDB()->query($query) ?: null;
         return $PermissionID;
@@ -32,7 +33,7 @@ class permissions {
     public function updatePermissions ($userID, $permissions = array()) {
         global $app;
         $perms = array_merge(self::getNewPermissions(), $permissions);
-        $query = dbquery::addPermissions($perms);
+        $query = dbquery::updatePermissions($userID, $perms);
         $PermissionID = $app->getDB()->query($query) ?: null;
         return $PermissionID;
     }

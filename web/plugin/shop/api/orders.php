@@ -35,6 +35,7 @@ class orders {
         }
         $order['ID'] = intval($order['ID']);
         $order['CustomerCurrencyRate'] = floatval($order['CustomerCurrencyRate']);
+        $order['ExchangeRateID'] = intval($order['ExchangeRateID']);
         $this->__attachOrderDetails($order);
         if (API::getAPI('system:auth')->ifYouCan('Admin')) {
             $order['_statuses'] = $this->getOrderStatuses();
@@ -54,6 +55,7 @@ class orders {
 
         $order['ID'] = intval($order['ID']);
         $order['CustomerCurrencyRate'] = floatval($order['CustomerCurrencyRate']);
+        $order['ExchangeRateID'] = intval($order['ExchangeRateID']);
         $this->__attachOrderDetails($order);
         return $order;
     }
@@ -157,12 +159,12 @@ class orders {
         // var_dump($order);
         // var_dump($reqData);
 
-        $accountToken =  "";
+        $userToken =  "";
         $formAccountToken = "";
         $formAddressID = "";
 
         if (!empty($reqData['account']))
-            $accountToken = $reqData['account']['ValidationString'];
+            $userToken = $reqData['account']['ValidationString'];
 
         if (!empty($reqData['form']['shopCartAccountValidationString']))
             $formAccountToken = $reqData['form']['shopCartAccountValidationString'];
@@ -170,8 +172,8 @@ class orders {
         if (!empty($reqData['form']['shopCartAccountValidationString']))
             $formAddressID = $reqData['form']['shopCartAccountAddressID'];
 
-        $pluginAccount = $this->getPlugin('account');
-
+        $apiAccountUser = API::getAPI('account:user');
+        $apiAccountAddr = API::getAPI('account:address');
         $formSettings = API::getAPI('shop:settings')->getSettingsMapFormOrder();
 
         // var_dump($formSettings);
@@ -181,11 +183,11 @@ class orders {
             $app->getDB()->disableTransactions();
 
             // check if matches
-            if ($accountToken !== $formAccountToken)
+            if ($userToken !== $formAccountToken)
                 throw new Exception("WrongTokensOccured", 1);
 
             // create new profile
-            if (empty($accountToken) && empty($formAccountToken)) {
+            if (empty($userToken) && empty($formAccountToken)) {
 
                 // reset address id becuase empty account is occured
                 $formAddressID = null;
@@ -193,72 +195,72 @@ class orders {
                 // create new account
                 $new_password = Secure::generateStrongPassword();
 
-                $account = $pluginAccount->createAccount(array(
-                    "FirstName" => $formSettings['ShowName']['_isActive'] ? $reqData['form']['shopCartUserName'] : $pluginAccount->getEmptyUserName(),
+                $user = $apiAccountUser->createUser(array(
+                    "FirstName" => $formSettings['ShowName']['_isActive'] ? $reqData['form']['shopCartUserName'] : $apiAccountUser->getEmptyUserName(),
                     "EMail" => $formSettings['ShowEMail']['_isActive'] ? $reqData['form']['shopCartUserEmail'] : Validate::getEmptyEmail(),
                     "Phone" => $formSettings['ShowPhone']['_isActive'] ? $reqData['form']['shopCartUserPhone'] : Validate::getEmptyPhoneNumber(),
                     "Password" => $new_password,
                     "ConfirmPassword" => $new_password
                 ));
 
-                if (count($account['errors']))
-                    $errors['Account'] = $account['errors'];
+                if (count($user['errors']))
+                    $errors['Account'] = $user['errors'];
 
-                if ($account['success'] === false)
+                if ($user['success'] === false)
                     throw new Exception("AccountCreateError", 1);
 
             } else {
 
                 // get account by token string (ValidationString)
-                $account = $pluginAccount->getAccountByValidationString($formAccountToken);
+                $user = $apiAccountUser->getUserByValidationString($formAccountToken);
 
-                if (empty($account))
+                if (empty($user))
                     throw new Exception("WrongAccount", 1);
 
-                if ($account['Status'] !== "ACTIVE")
+                if ($user['Status'] !== "ACTIVE")
                     throw new Exception("AccountIsBlocked", 1);
 
                 // need to validate account
                 // if account exits
                 // if account is active
-                if ($account["FirstName"] !== $reqData["form"]["shopCartAccountFirstName"] ||
-                    $account["LastName"] !== $reqData["form"]["shopCartAccountLastName"] ||
-                    $account["EMail"] !== $reqData["form"]["shopCartAccountEMail"] ||
-                    $account["Phone"] !== $reqData["form"]["shopCartAccountPhone"])
+                if ($user["FirstName"] !== $reqData["form"]["shopCartAccountFirstName"] ||
+                    $user["LastName"] !== $reqData["form"]["shopCartAccountLastName"] ||
+                    $user["EMail"] !== $reqData["form"]["shopCartAccountEMail"] ||
+                    $user["Phone"] !== $reqData["form"]["shopCartAccountPhone"])
                     throw new Exception("AccountDataMismatch", 1);
 
                 // at this point we have a valid account
             }
 
-            $accountID = $account['ID'];
+            $userID = $user['ID'];
 
             // create new address for account
             if (empty($formAddressID) || empty($formAccountToken)) {
 
                 // create account address
-                $accountAddress = $pluginAccount->createAddress($accountID, array(
+                $userAddress = $apiAccountAddr->createAddress($userID, array(
                     "Address" => $formSettings['ShowAddress']['_isActive'] ? $reqData['form']['shopCartUserAddress'] : 'n/a',
                     "POBox" => $formSettings['ShowPOBox']['_isActive'] ? $reqData['form']['shopCartUserPOBox'] : 'n/a',
                     "Country" => $formSettings['ShowCountry']['_isActive'] ? $reqData['form']['shopCartUserCountry'] : 'n/a',
                     "City" => $formSettings['ShowCity']['_isActive'] ? $reqData['form']['shopCartUserCity'] : 'n/a'
                 ), true); // <= this allows creating unliked addresses or add new address to account when it's possible
 
-                if (count($accountAddress['errors']))
-                    $errors['Account'] = $accountAddress['errors'];
+                if (count($userAddress['errors']))
+                    $errors['Account'] = $userAddress['errors'];
 
-                if ($accountAddress['success'] === false)
+                if ($userAddress['success'] === false)
                     throw new Exception("AccountAddressCreateError", 1);
 
             } else {
                 // validate provided address id for account
                 // we must check it if the authenticated account has this address id
-                if (!isset($account['Addresses'][$formAddressID]))
+                if (!isset($user['Addresses'][$formAddressID]))
                     throw new Exception("WrongAccountAddressID", 1);
                 else
-                    $accountAddress = $account['Addresses'][$formAddressID];
+                    $userAddress = $user['Addresses'][$formAddressID];
             }
 
-            $addressID = $accountAddress['ID'];
+            $addressID = $userAddress['ID'];
 
             $order = $this->_getOrderTemp();
             // $sessionOrderProducts = $this->_getSessionOrderProducts();
@@ -285,7 +287,7 @@ class orders {
 
             // start creating order
             $dataOrder = array();
-            $dataOrder["UserID"] = $accountID;
+            $dataOrder["UserID"] = $userID;
             $dataOrder["AccountAddressesID"] = $addressID;
             $dataOrder["CustomerID"] = $app->getSite()->getRuntimeCustomerID();
             $dataOrder["DeliveryID"] = $formSettings['ShowDeliveryAganet']['_isActive'] ? $reqData['form']['shopCartLogistic'] : null;
@@ -335,7 +337,7 @@ class orders {
                     throw new Exception("BoughtCreateError", 1);
             }
 
-            // if (empty($accountID) || empty($addressID))
+            // if (empty($userID) || empty($addressID))
             //     throw new Exception("UnableToLinkAccountOrAddress", 1);
 
             $app->getDB()->enableTransactions();

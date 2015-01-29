@@ -17,6 +17,7 @@ define("plugin/shop/site/js/view/menuPayment", [
         },
         showPopup: function () {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-payments',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),

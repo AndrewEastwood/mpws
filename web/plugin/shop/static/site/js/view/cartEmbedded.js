@@ -28,6 +28,7 @@ define("plugin/shop/site/js/view/cartEmbedded", [
         },
         openShoppingCartModal: function () {
             BootstrapDialog.show({
+                draggable: false,
                 type: BootstrapDialog.TYPE_WARNING,
                 cssClass: 'shop-cart-embedded-modal',
                 title: function () {

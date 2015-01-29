@@ -17,6 +17,7 @@ define("plugin/shop/site/js/view/menuShipping", [
         },
         showPopup: function () {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-shipping',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),

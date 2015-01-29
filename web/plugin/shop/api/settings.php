@@ -22,6 +22,10 @@ class settings {
         'PRODUCT' => 'PRODUCT'
     );
 
+    public function __construct () {
+        $this->SETTING_TYPE = (object)$this->SETTING_TYPE;
+    }
+
     // -----------------------------------------------
     // -----------------------------------------------
     // SETTINGS

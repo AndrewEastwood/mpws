@@ -85,6 +85,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupShipping: function (event) {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-shipping',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
@@ -93,6 +94,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupPayments: function (event) {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-payments',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
@@ -101,6 +103,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupOpenHours: function (event) {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-openhours',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
@@ -119,6 +122,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupPhones: function (event) {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-phones',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),
@@ -136,6 +140,7 @@ define("plugin/shop/site/js/view/productItemFull", [
         },
         openPopupWarranty: function (event) {
             BootstrapDialog.show({
+                draggable: false,
                 cssClass: 'popup-shop-info popup-shop-warranty',
                 type: BootstrapDialog.TYPE_WARNING,
                 title: $(event.target).html().trim(),

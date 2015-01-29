@@ -1,5 +1,7 @@
 <?php
 namespace web\plugin\account\api;
+use \engine\lib\validate as Validate;
+use \engine\lib\api as API;
 
 class address {
 
@@ -47,7 +49,7 @@ class address {
 
                 // TODO: if user is authorized and do not have maximum addresses
                 // we must link new address to the user otherwise create unlinked user
-                $user = $this->getUserByID($UserID);
+                $user = API::getAPI('account:user')->getUserByID($UserID);
                 if (empty($user))
                     throw new Exception("WrongUser", 1);
                 elseif (count($user['Addresses']) >= 3) {

@@ -195,6 +195,10 @@ define("plugin/shop/site/js/view/cartStandalone", [
                         validators: {
                             notEmpty: {
                                 message: 'Це поле не може бути порожнім'
+                            },
+                            regexp: {
+                                message: "Не правильний формат телефону",
+                                regexp: /\(\d{3}\)\s\d{3}-\d{2}-\d{2}/
                             }
                         }
                     },

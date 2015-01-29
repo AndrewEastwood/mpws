@@ -99,7 +99,11 @@ class site {
         $apiCustomer = API::getAPI('system:customers');
         $customer = $apiCustomer->getRuntimeCustomer();
         $plugins = $customer['Settings']['plugins'];
-        return isset($plugins[$pluginName]);
+        if (empty($plugins)) {
+            return false;
+        }
+        return in_array($pluginName, explode(',', $plugins));
+        // return isset($plugins[$pluginName]);
     }
 
     public function runAsDISPLAY () {
