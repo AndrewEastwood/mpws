@@ -745,79 +745,88 @@ i.fa {cursor: pointer;}
       }
     }
   }
-}
-
-.shop-component-catalog-filtering {
-  margin-bottom: 20px;
-  &.applied {
-    .label-success.product-count {
-      &:before {
-        content: '+';
+  .shop-component-catalog-filtering {
+    margin-bottom: 20px;
+    &.applied {
+      .label-success.product-count {
+        &:before {
+          content: '+';
+        }
       }
     }
-  }
-  .title {
-    background: @buttonColorHover;
-    padding: 8px 12px;
-    strong {
-      display:block;
-      font: normal 14px/16px Arial, Helvetica, sans-serif;
-      min-height: 16px;
-      padding: 2px 0 2px;
-      text-transform: uppercase;
-      color: @textForegroundColor;
-      text-shadow: 2px 2px 4px #000;
+    .title {
+      background: @buttonColorHover;
+      padding: 8px 12px;
+      strong {
+        display:block;
+        font: normal 14px/16px Arial, Helvetica, sans-serif;
+        min-height: 16px;
+        padding: 2px 0 2px;
+        text-transform: uppercase;
+        color: @textForegroundColor;
+        text-shadow: 2px 2px 4px #000;
+      }
+      a { text-decoration:none !important; }
     }
-    a { text-decoration:none !important; }
-  }
-  .helptext {
-    text-align: right;
-    display: block;
-    margin-bottom: 10px;
-    padding-right: 25px;
-    font-size: 0.9em;
-    text-shadow: 2px 2px 2px #000;
-    i {margin-left: 5px;}
-  }
-  .row {
-    margin: 0;
-    padding: 5px 9px;
-    color: #eee;
-  }
-  .subtitle {
-    font-size: 1em;
-    font-weight: bold;
-  }
-  // >>> temporary
-  // .list-group-item {
-  //   .product-count {
-  //     display: none;
-  //   }
-  // }
-  // <<< temporary section
-  // >>> uncomment following when product counter is implemented
-  // &.applied {
-  //   .list-group-item.active {
-  //     .product-count {
-  //       display: none;
-  //     }
-  //   }
-  //   .list-group-item:not(disabled) {
-  //     .product-count {
-  //       &:before {
-  //         content: '+';
-  //       }
-  //     }
-  //   }
-  // }
-  // <<< uncomment following when product counter is implemented
-  &.subcategories {
-    .list-group-item {
-      .product-count {
-        display: inline;
-        &:before {
-          content: '';
+    .helptext {
+      text-align: right;
+      display: block;
+      margin-bottom: 10px;
+      padding-right: 25px;
+      font-size: 0.9em;
+      text-shadow: 2px 2px 2px #000;
+      i {margin-left: 5px;}
+    }
+    .row {
+      margin: 0;
+      padding: 5px 9px;
+      color: #eee;
+    }
+    .subtitle {
+      font-size: 1em;
+      font-weight: bold;
+    }
+    // >>> temporary
+    // .list-group-item {
+    //   .product-count {
+    //     display: none;
+    //   }
+    // }
+    // <<< temporary section
+    // >>> uncomment following when product counter is implemented
+    // &.applied {
+    //   .list-group-item.active {
+    //     .product-count {
+    //       display: none;
+    //     }
+    //   }
+    //   .list-group-item:not(disabled) {
+    //     .product-count {
+    //       &:before {
+    //         content: '+';
+    //       }
+    //     }
+    //   }
+    // }
+    // <<< uncomment following when product counter is implemented
+    &.subcategories {
+      .list-group-item {
+        .product-count {
+          display: inline;
+          &:before {
+            content: '';
+          }
         }
+      }
+    }
+    .slider {
+      .slider-handle {
+        background-color: #CF7400;
+        #gradient > .vertical(#CF7400, #9C5700);
+        cursor: pointer;
+      }
+      .tooltip-min, .tooltip-max {
+        display: none;
       }
     }
   }
@@ -1543,6 +1552,7 @@ i.fa {cursor: pointer;}
     display: inline;
   }
   .category-nav-item {
+    text-shadow: 0px 0px 1px #fff;
     .well {
       position: relative;
       overflow: hidden;
@@ -1554,6 +1564,7 @@ i.fa {cursor: pointer;}
     }
     ul {
       margin-left: 20px;
+      font-weight: bold;
     }
   }
   .category-image {
@@ -1562,7 +1573,7 @@ i.fa {cursor: pointer;}
     max-width: 300px;
     max-height: 300px;
     margin-left: -100px;
-    .opacity(0.12);
+    .opacity(0.4);
     z-index: 2;
   }
   .separator {

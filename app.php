@@ -89,12 +89,12 @@ class app {
             ),
             'production' => array (
                 'host' => 'localhost',
-                'username' => 'root',
-                'password' => '1111',
-                'db' => 'mpws_light',
+                'username' => 'leogroup',
+                'password' => 'ukx8Y6tz',
+                'db' => 'leogroup',
                 "id_column" => 'ID',
                 'charset' => 'utf8',
-                'connection_string' => "mysql:dbname=mpws_light;host=localhost;charset=utf8",
+                'connection_string' => "mysql:dbname=leogroup;host=localhost;charset=utf8",
                 "driver_options" => array(
                     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_ALL_TABLES"',
                     PDO::ATTR_AUTOCOMMIT => false,
@@ -132,8 +132,9 @@ class app {
         // get build version
         $this->buildVersion = file_get_contents(Path::createPathWithRoot('version.txt'));
         // get runtime env
-        if (file_exists('env.txt')) {
-            $this->environment = file_get_contents(Path::createPathWithRoot('env.txt'));
+        $evnFilePath = Path::createPathWithRoot('env.txt');
+        if (file_exists($evnFilePath)) {
+            $this->environment = file_get_contents($evnFilePath);
         }
         if (empty($this->environment)) {
             $this->environment = 'development';
